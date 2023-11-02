@@ -99,9 +99,10 @@ class StoryBuilder extends React.Component<
   @action.bound
   removeAction() {
     if (this.state.storyToRemove && this.state.storyRemoveIndex !== undefined) {
-      this.props.viewState.terria.stories = this.props.viewState.terria.stories.filter(
-        st => st.id !== this.state.storyToRemove!.id
-      );
+      this.props.viewState.terria.stories =
+        this.props.viewState.terria.stories.filter(
+          (st) => st.id !== this.state.storyToRemove!.id
+        );
       if (this.state.storyRemoveIndex < this.props.viewState.currentStoryId) {
         this.props.viewState.currentStoryId -= 1;
       }
@@ -143,7 +144,7 @@ class StoryBuilder extends React.Component<
     );
 
     const storyIndex = (this.props.viewState.terria.stories || []).findIndex(
-      story => story.id === _story.id
+      (story) => story.id === _story.id
     );
 
     if (storyIndex >= 0) {
@@ -182,7 +183,7 @@ class StoryBuilder extends React.Component<
     this.closeShareRemoving();
     this.clearRecaptureSuccessTimeout?.();
     const storyIndex = (this.props.viewState.terria.stories || []).findIndex(
-      st => st.id === story.id
+      (st) => st.id === story.id
     );
     if (storyIndex >= 0) {
       story.shareData = JSON.parse(
@@ -388,7 +389,7 @@ class StoryBuilder extends React.Component<
             position="static"
             css={`
               ${(this.state.isRemoving || this.state.isSharing) &&
-                `opacity: 0.3`}
+              `opacity: 0.3`}
             `}
           >
             <Box
@@ -454,7 +455,7 @@ class StoryBuilder extends React.Component<
     this.props.viewState.toggleStoryBuilder();
     this.props.viewState.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
-    setTimeout(function() {
+    setTimeout(function () {
       triggerResize();
     }, this.props.animationDuration || 1);
     this.props.viewState.toggleFeaturePrompt("story", false, true);
@@ -524,13 +525,13 @@ type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
 const Panel = styled(Box)<PanelProps>`
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  ${props =>
+  ${(props) =>
     props.isVisible &&
     `
     visibility: visible;
     margin-right: 0;
   `}
-  ${props =>
+  ${(props) =>
     props.isHidden &&
     `
     visibility: hidden;
@@ -543,7 +544,7 @@ interface CaptureSceneProps {
   disabled?: boolean;
 }
 
-const CaptureScene: React.FC<CaptureSceneProps> = props => {
+const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
   const { t } = useTranslation();
   return (
     <StoryButton
@@ -563,7 +564,7 @@ type StoryButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
   children: React.ReactNode;
 };
 
-export const StoryButton: React.FC<StoryButtonProps> = props => {
+export const StoryButton: React.FC<StoryButtonProps> = (props) => {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -586,7 +587,7 @@ interface RemoveDialogProps {
   closeDialog: () => void;
 }
 
-const RemoveDialog: React.FC<RemoveDialogProps> = props => {
+const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Box

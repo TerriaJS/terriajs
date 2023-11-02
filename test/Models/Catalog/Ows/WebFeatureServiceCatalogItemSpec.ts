@@ -3,8 +3,8 @@ import { autorun, runInAction } from "mobx";
 import Terria from "../../../../lib/Models/Terria";
 import WebFeatureServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogItem";
 
-describe("WebFeatureServiceCatalogItem", function() {
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
+describe("WebFeatureServiceCatalogItem", function () {
+  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function () {
     const terria = new Terria();
     const wfs = new WebFeatureServiceCatalogItem("test", terria);
     wfs.setTrait("definition", "url", "foo.bar.baz");
@@ -16,7 +16,7 @@ describe("WebFeatureServiceCatalogItem", function() {
     ).toBe(true);
   });
 
-  it("loads", function() {
+  it("loads", function () {
     expect().nothing();
     const terria = new Terria();
     const wfs = new WebFeatureServiceCatalogItem("test", terria);
@@ -31,7 +31,7 @@ describe("WebFeatureServiceCatalogItem", function() {
     return wfs.loadMetadata();
   });
 
-  it("updates description from a GetCapabilities", async function() {
+  it("updates description from a GetCapabilities", async function () {
     let wfs: WebFeatureServiceCatalogItem;
     const terria = new Terria();
     wfs = new WebFeatureServiceCatalogItem("test", terria);
@@ -47,7 +47,7 @@ describe("WebFeatureServiceCatalogItem", function() {
     const cleanup = autorun(() => {
       if (wfs.info !== undefined) {
         const descSection = wfs.info.find(
-          section =>
+          (section) =>
             section.name ===
             i18next.t("models.webFeatureServiceCatalogItem.abstract")
         );

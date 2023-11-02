@@ -30,7 +30,7 @@ import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
 
 const RawButtonAndHighlight = styled(RawButton)`
-  ${p => `
+  ${(p) => `
   &:hover, &:focus {
     background-color: ${p.theme.greyLighter};
     ${StyledIcon} {
@@ -79,7 +79,7 @@ class LocationSearchResults extends React.Component<PropsType> {
     }
 
     const validResults = filterResults
-      ? search.results.filter(function(r: any) {
+      ? search.results.filter(function (r: any) {
           return (
             r.location.longitude > west! &&
             r.location.longitude < east! &&
@@ -93,7 +93,8 @@ class LocationSearchResults extends React.Component<PropsType> {
 
   render() {
     const { search } = this.props;
-    const searchProvider: LocationSearchProviderMixin.LocationSearchProviderMixin = search.searchProvider as any;
+    const searchProvider: LocationSearchProviderMixin.LocationSearchProviderMixin =
+      search.searchProvider as any;
 
     const maxResults = searchProvider.recommendedListLength || 5;
     const validResults = this.validResults;
@@ -217,7 +218,7 @@ const NameWithLoader: React.FC<NameWithLoaderProps> = observer(
             <Loader hideMessage boxProps={{ fullWidth: false }} />
           )}
       </BoxSpan>
-    )
+    );
   }
 );
 export default withTranslation()(LocationSearchResults);

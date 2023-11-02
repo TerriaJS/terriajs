@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Loader from "../../Loader";
 
-const Loading = styled(Loader).attrs(props => ({
+const Loading = styled(Loader).attrs((props) => ({
   light: true,
   message: props.children
 }))`

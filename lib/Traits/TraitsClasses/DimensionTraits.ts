@@ -8,8 +8,10 @@ import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import { JsonObject } from "../../Core/Json";
 
-export class DimensionOptionTraits extends ModelTraits
-  implements EnumDimensionOption {
+export class DimensionOptionTraits
+  extends ModelTraits
+  implements EnumDimensionOption
+{
   @primitiveTrait({
     type: "string",
     name: "ID",
@@ -31,8 +33,10 @@ export class DimensionOptionTraits extends ModelTraits
   value?: JsonObject;
 }
 
-export default class EnumDimensionTraits extends ModelTraits
-  implements EnumDimension {
+export default class EnumDimensionTraits
+  extends ModelTraits
+  implements EnumDimension
+{
   @primitiveTrait({
     type: "string",
     name: "ID",

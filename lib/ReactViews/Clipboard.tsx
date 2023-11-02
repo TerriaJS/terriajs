@@ -23,7 +23,7 @@ interface ClipboardProps {
   onCopy?: (contents: string) => void;
 }
 
-const Clipboard: React.FC<ClipboardProps> = props => {
+const Clipboard: React.FC<ClipboardProps> = (props) => {
   const { id, source, theme, rounded } = props;
   const { t } = useTranslation();
   const [status, setStatus] = useState<CopyStatus>(
@@ -45,7 +45,7 @@ const Clipboard: React.FC<ClipboardProps> = props => {
         setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
-    clipboardBtn.on("success", evt => {
+    clipboardBtn.on("success", (evt) => {
       props.onCopy?.(evt.text);
       setStatus(CopyStatus.Success);
       resetTooltipLater();

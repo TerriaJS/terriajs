@@ -8,7 +8,7 @@
       }
     ],
     "@babel/preset-react",
-    ["@babel/typescript", {"allowNamespaces": true}]
+    ["@babel/typescript", { "allowNamespaces": true }]
   ],
   "plugins": [
     "babel-plugin-jsx-control-statements",

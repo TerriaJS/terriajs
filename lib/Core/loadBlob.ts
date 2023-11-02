@@ -62,13 +62,13 @@ function getZipReader(blob: Blob): any {
 export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
   const reader = getZipReader(blob);
 
-  return reader.getEntries().then(function(entries: any) {
+  return reader.getEntries().then(function (entries: any) {
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
       if (isJson(entry.filename)) {
         return entry
           .getData(new zip.Data64URIWriter())
-          .then(function(uri: string) {
+          .then(function (uri: string) {
             return loadJson(uri);
           });
       }

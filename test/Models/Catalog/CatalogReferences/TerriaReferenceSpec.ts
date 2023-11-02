@@ -7,8 +7,8 @@ import hasTraits from "../../../../lib/Models/Definition/hasTraits";
 import Terria from "../../../../lib/Models/Terria";
 import CatalogMemberTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
-describe("TerriaReference", function() {
-  it("can load a full terria catalog", async function() {
+describe("TerriaReference", function () {
+  it("can load a full terria catalog", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "isGroup", true);
@@ -21,7 +21,7 @@ describe("TerriaReference", function() {
     }
   });
 
-  it("can load a group inside the catalog", async function() {
+  it("can load a group inside the catalog", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "isGroup", true);
@@ -36,7 +36,7 @@ describe("TerriaReference", function() {
     }
   });
 
-  it("can load an item inside the catalog", async function() {
+  it("can load an item inside the catalog", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "path", ["MLzS8W", "fCUx4Y"]);
@@ -46,7 +46,7 @@ describe("TerriaReference", function() {
     expect(target instanceof WebMapServiceCatalogItem).toBe(true);
   });
 
-  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {
+  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "itemProperties", {
@@ -84,7 +84,7 @@ describe("TerriaReference", function() {
     expect(wmsItem1.url).toBe("some url");
 
     const wmsItem2 = nestedGroup.memberModels.find(
-      m => m.uniqueId === "Chuj4y"
+      (m) => m.uniqueId === "Chuj4y"
     ) as WebMapServiceCatalogItem;
 
     expect(wmsItem2.name).toBe("some WMS name (byID)");
@@ -93,7 +93,7 @@ describe("TerriaReference", function() {
     await target.loadMembers();
   });
 
-  it("the target item should use the name of the terria reference item", async function() {
+  it("the target item should use the name of the terria reference item", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "isGroup", true);

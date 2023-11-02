@@ -3,11 +3,11 @@ import ViewState, {
   DATA_CATALOG_NAME
 } from "../../lib/ReactViewModels/ViewState";
 
-describe("ViewState", function() {
+describe("ViewState", function () {
   var terria;
   var viewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -16,14 +16,14 @@ describe("ViewState", function() {
     });
   });
 
-  it("opens Add Data when openAddData is set to true in config file", function() {
+  it("opens Add Data when openAddData is set to true in config file", function () {
     terria.configParameters.openAddData = true;
     viewState.afterTerriaStarted();
     expect(viewState.explorerPanelIsVisible).toEqual(true);
     expect(viewState.activeTabCategory).toEqual(DATA_CATALOG_NAME);
   });
 
-  it("does not open Add Data when openAddData is set to false in config file", function() {
+  it("does not open Add Data when openAddData is set to false in config file", function () {
     terria.configParameters.openAddData = false;
     viewState.afterTerriaStarted();
     expect(viewState.explorerPanelIsVisible).toEqual(false);

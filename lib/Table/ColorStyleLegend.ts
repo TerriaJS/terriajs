@@ -283,9 +283,8 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     value: number,
     format: Intl.NumberFormatOptions | JsonObject | undefined
   ): string {
-    return (format?.maximumFractionDigits
-      ? value
-      : Math.round(value)
+    return (
+      format?.maximumFractionDigits ? value : Math.round(value)
     ).toLocaleString(undefined, format);
   }
 }

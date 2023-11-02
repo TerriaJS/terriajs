@@ -57,14 +57,14 @@ const RegionParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter.
  * @param {Object} previewed Previewed.
  */
-RegionParameterEditor.selectOnMap = function(viewState, parameter, previewed) {
+RegionParameterEditor.selectOnMap = function (viewState, parameter, previewed) {
   const terria = previewed.terria;
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
 
   const pickPointMode = new MapInteractionMode({
     message: "Select a region on the map",
-    onCancel: function() {
+    onCancel: function () {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
     },

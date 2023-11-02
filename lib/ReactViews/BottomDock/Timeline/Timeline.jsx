@@ -90,7 +90,7 @@ export const Timeline = observer(
           <div
             className={Styles.textRow}
             css={`
-              background: ${p => p.theme.dark};
+              background: ${(p) => p.theme.dark};
             `}
           >
             <div

@@ -9,15 +9,15 @@ const Terria = require("../../lib/Models/Terria");
 const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 import { Timeline } from "../../lib/ReactViews/BottomDock/Timeline/Timeline";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-const DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
-  .default;
+const DataSourceClock =
+  require("terriajs-cesium/Source/DataSources/DataSourceClock").default;
 
-describe("Timeline", function() {
-  describe("dateTime format", function() {
+describe("Timeline", function () {
+  describe("dateTime format", function () {
     let terria;
     let catalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -26,7 +26,7 @@ describe("Timeline", function() {
       catalogItem.clock = new DataSourceClock();
     });
 
-    it("currentTime should be used if provided", function() {
+    it("currentTime should be used if provided", function () {
       const timeline = <Timeline terria={terria} t={() => {}} />;
       catalogItem.dateFormat.currentTime = "mmm";
       terria.timelineStack.addToTop(catalogItem);
@@ -37,7 +37,7 @@ describe("Timeline", function() {
       expect(result.state.currentTimeString).toBe("Jan");
     });
 
-    it("currentTime should not be used if not provided", function() {
+    it("currentTime should not be used if not provided", function () {
       const timeline = <Timeline terria={terria} t={() => {}} />;
       terria.timelineStack.addToTop(catalogItem);
       terria.clock.currentTime = JulianDate.fromIso8601("2016-01-01T00:00");

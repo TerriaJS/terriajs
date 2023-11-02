@@ -39,9 +39,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
         menuComponent={
           terria.selectableDimensionWorkflow.menu ? (
             <PanelMenu {...terria.selectableDimensionWorkflow.menu} />
-          ) : (
-            undefined
-          )
+          ) : undefined
         }
       >
         <WorkbenchItemControls
@@ -75,7 +73,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
               onToggle={groupDim.onToggle}
               collapsible={true}
             >
-              {childDims.map(childDim => (
+              {childDims.map((childDim) => (
                 <SelectableDimension
                   key={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}-fragment`}
                   id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}`}

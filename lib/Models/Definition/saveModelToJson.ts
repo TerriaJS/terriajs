@@ -16,12 +16,12 @@ export default function saveModelToJson(
     : Array.from(model.strata.keys());
   const excludeStrata = options.excludeStrata ? options.excludeStrata : [];
   const strata = includeStrata.filter(
-    stratum => excludeStrata.indexOf(stratum) < 0
+    (stratum) => excludeStrata.indexOf(stratum) < 0
   );
 
   const result: JsonObject = {};
 
-  strata.forEach(stratumId => {
+  strata.forEach((stratumId) => {
     const stratum = model.strata.get(stratumId);
     if (stratum === undefined) {
       return;

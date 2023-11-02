@@ -8,7 +8,8 @@ import HasLocalData from "../../HasLocalData";
 
 export default class GltfCatalogItem
   extends UrlMixin(GltfMixin(CreateModel(GltfCatalogItemTraits)))
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "gltf";
 
   get type() {

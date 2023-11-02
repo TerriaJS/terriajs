@@ -30,11 +30,11 @@ export default function addModelStrataView<
   const propertyTarget = typeof model === "function" ? model.prototype : model;
 
   const traitsInstance: any = new Traits();
-  Object.keys(traits).forEach(traitName => {
+  Object.keys(traits).forEach((traitName) => {
     const trait = traits[traitName];
     const defaultValue = traitsInstance[traitName];
     Object.defineProperty(propertyTarget, traitName, {
-      get: function() {
+      get: function () {
         const value = trait.getValue(this);
         return value === undefined ? defaultValue : value;
       },

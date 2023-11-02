@@ -8,25 +8,25 @@ import { getMountedInstance } from "./MoreShallowTools";
 import { MeasureTool } from "../../lib/ReactViews/Map/Navigation/MeasureTool";
 const Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
 const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
-const ConstantPositionProperty = require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js")
-  .default;
+const ConstantPositionProperty =
+  require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js").default;
 const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-const Cartographic = require("terriajs-cesium/Source/Core/Cartographic")
-  .default;
-const CustomDataSource = require("terriajs-cesium/Source/DataSources/CustomDataSource")
-  .default;
+const Cartographic =
+  require("terriajs-cesium/Source/Core/Cartographic").default;
+const CustomDataSource =
+  require("terriajs-cesium/Source/DataSources/CustomDataSource").default;
 const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 
-describe("MeasureTool-jsx", function() {
+describe("MeasureTool-jsx", function () {
   let terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("prettifies distance when distance is in metres", function() {
+  it("prettifies distance when distance is in metres", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     let squared = false;
@@ -40,7 +40,7 @@ describe("MeasureTool-jsx", function() {
     expect(prettyDistSquared).toEqual("480.00 m\u00B2");
   });
 
-  it("prettifies distance when distance is in kilometres", function() {
+  it("prettifies distance when distance is in kilometres", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(1280.23, false);
@@ -48,7 +48,7 @@ describe("MeasureTool-jsx", function() {
     expect(prettyDistance).toEqual("1.28 km");
   });
 
-  it("prettifies distance when distance is very large", function() {
+  it("prettifies distance when distance is very large", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(123123280.23, false);
@@ -56,7 +56,7 @@ describe("MeasureTool-jsx", function() {
     expect(prettyDistance).toEqual("123,123.28 km");
   });
 
-  it("measures geodesic distance in 3D mode", function() {
+  it("measures geodesic distance in 3D mode", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -80,7 +80,7 @@ describe("MeasureTool-jsx", function() {
     expect(Math.abs(distance_m - 10476961.667267017) < 2e-9).toBeTruthy();
   });
 
-  it("measures geodesic distance in 2D mode", function() {
+  it("measures geodesic distance in 2D mode", function () {
     terria.viewerMode = "2d";
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
@@ -105,7 +105,7 @@ describe("MeasureTool-jsx", function() {
     expect(Math.abs(distance_m - 10476961.667267017) < 2e-9).toBeTruthy();
   });
 
-  it("measures distance accurately", function() {
+  it("measures distance accurately", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -142,7 +142,7 @@ describe("MeasureTool-jsx", function() {
     expect(instance.onMakeDialogMessage()).toEqual("273.23 m");
   });
 
-  it("measures distance accurately with geoscience australia test", function() {
+  it("measures distance accurately with geoscience australia test", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -153,17 +153,15 @@ describe("MeasureTool-jsx", function() {
       CesiumMath.toRadians(-37.951033),
       CesiumMath.toRadians(0)
     );
-    const flindersPeakCartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      flindersPeakPosition
-    );
+    const flindersPeakCartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(flindersPeakPosition);
     const buninyongPosition = new Cartographic(
       CesiumMath.toRadians(143.926496),
       CesiumMath.toRadians(-37.652821),
       CesiumMath.toRadians(0)
     );
-    const buninyongCartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      buninyongPosition
-    );
+    const buninyongCartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(buninyongPosition);
 
     pointEntities.entities.add(
       new Entity({
@@ -183,7 +181,7 @@ describe("MeasureTool-jsx", function() {
     expect(instance.onMakeDialogMessage()).toEqual("54.97 km");
   });
 
-  it("measures distance accurately with more points", function() {
+  it("measures distance accurately with more points", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -261,7 +259,7 @@ describe("MeasureTool-jsx", function() {
     expect(instance.onMakeDialogMessage()).toEqual("272.46 m");
   });
 
-  it("updates distance when a point is removed", function() {
+  it("updates distance when a point is removed", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -331,7 +329,7 @@ describe("MeasureTool-jsx", function() {
     expect(instance.onMakeDialogMessage()).toEqual("54.66 m");
   });
 
-  it("measures area correctly compared to hand-calculated area", function() {
+  it("measures area correctly compared to hand-calculated area", function () {
     const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
@@ -341,33 +339,29 @@ describe("MeasureTool-jsx", function() {
       CesiumMath.toRadians(-35.309),
       CesiumMath.toRadians(0)
     );
-    const pt1CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      pt1Position
-    );
+    const pt1CartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(pt1Position);
     const pt2Position = new Cartographic(
       CesiumMath.toRadians(149.124),
       CesiumMath.toRadians(-35.311),
       CesiumMath.toRadians(0)
     );
-    const pt2CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      pt2Position
-    );
+    const pt2CartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(pt2Position);
     const pt3Position = new Cartographic(
       CesiumMath.toRadians(149.127),
       CesiumMath.toRadians(-35.308),
       CesiumMath.toRadians(0)
     );
-    const pt3CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      pt3Position
-    );
+    const pt3CartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(pt3Position);
     const pt4Position = new Cartographic(
       CesiumMath.toRadians(149.124),
       CesiumMath.toRadians(-35.306),
       CesiumMath.toRadians(0)
     );
-    const pt4CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      pt4Position
-    );
+    const pt4CartesianPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(pt4Position);
 
     pointEntities.entities.add(
       new Entity({

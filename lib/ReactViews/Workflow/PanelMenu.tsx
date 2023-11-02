@@ -48,7 +48,7 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
           {options.map(({ text, onSelect, disabled }) => (
             <li key={text}>
               <PanelMenuItem
-                onClick={e => handleClick(onSelect, e)}
+                onClick={(e) => handleClick(onSelect, e)}
                 disabled={disabled}
               >
                 <Text noWrap medium textLight>
@@ -74,13 +74,13 @@ const PanelMenuContainer = styled.div`
     padding: 0;
     list-style: none;
     border-radius: 3px;
-    border: 1px solid ${p => p.theme.grey};
-    background-color: ${p => p.theme.dark};
+    border: 1px solid ${(p) => p.theme.grey};
+    background-color: ${(p) => p.theme.dark};
   }
 
   ul > li {
     border: 0px;
-    border-bottom: 1px solid ${p => p.theme.grey};
+    border-bottom: 1px solid ${(p) => p.theme.grey};
   }
 
   ul > li:last-child {
@@ -94,15 +94,15 @@ const PanelMenuItem = styled.button`
   padding: 8px 10px;
   border: 0;
   border-radius: 2px;
-  background-color: ${p => p.theme.dark};
+  background-color: ${(p) => p.theme.dark};
 
   :disabled > ${Text} {
-    color: ${p => p.theme.textLightDimmed};
+    color: ${(p) => p.theme.textLightDimmed};
   }
 
   :hover {
     cursor: pointer;
-    background-color: ${p => p.theme.colorPrimary};
+    background-color: ${(p) => p.theme.colorPrimary};
   }
 `;
 
@@ -115,12 +115,12 @@ const PanelMenuButton = styled.button<{ isOpen: boolean }>`
   border-radius: 2px;
 
   svg {
-    fill: ${props => props.theme.greyLighter};
+    fill: ${(props) => props.theme.greyLighter};
     width: 16px;
     height: 16px;
   }
 
-  ${p => p.isOpen && `background-color: ${p.theme.dark}`};
+  ${(p) => p.isOpen && `background-color: ${p.theme.dark}`};
 
   :hover {
     cursor: pointer;

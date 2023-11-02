@@ -1,61 +1,61 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Group with popup",
+      "type": "group",
+      "initialMessage": {
+        "title": "Group",
+        "content": "This is the <strong>message</strong>."
+      },
+      "items": [
         {
-            "name": "Group with popup",
-            "type": "group",
-            "initialMessage": {
-                "title": "Group",
-                "content": "This is the <strong>message</strong>."
-            },
-            "items": [
-                {
-                    "name": "Sub-group with popup",
-                    "type": "group",
-                    "initialMessage": {
-                        "title": "Sub-group",
-                        "content": "This is the <strong>message</strong>."
-                    }
-                },
-                {
-                    "name": "Item with popup",
-                    "type": "csv",
-                    "url": "http://nationalmap.gov.au/test/incidents.csv",
-                    "initialMessage": {
-                        "title": "This is the title",
-                        "content": "This is the <strong>message</strong>."
-                    }
-                }
-            ]
+          "name": "Sub-group with popup",
+          "type": "group",
+          "initialMessage": {
+            "title": "Sub-group",
+            "content": "This is the <strong>message</strong>."
+          }
         },
         {
-            "name": "Group with confirmation",
-            "type": "group",
-            "initialMessage": {
-                "title": "Group",
-                "content": "This is the <strong>message</strong>.",
-                "confirmation": true
-            },
-            "items": [
-                {
-                    "name": "Sub-group with popup",
-                    "type": "group",
-                    "initialMessage": {
-                        "title": "Sub-group",
-                        "content": "This is the <strong>message</strong>.",
-                        "confirmation": true
-                    }
-                },
-                {
-                    "name": "Item with popup",
-                    "type": "csv",
-                    "url": "http://nationalmap.gov.au/test/incidents.csv",
-                    "initialMessage": {
-                        "title": "Item",
-                        "content": "This is the <strong>message</strong>.",
-                        "confirmation": true
-                    }
-                }
-            ]
+          "name": "Item with popup",
+          "type": "csv",
+          "url": "http://nationalmap.gov.au/test/incidents.csv",
+          "initialMessage": {
+            "title": "This is the title",
+            "content": "This is the <strong>message</strong>."
+          }
         }
-    ]
+      ]
+    },
+    {
+      "name": "Group with confirmation",
+      "type": "group",
+      "initialMessage": {
+        "title": "Group",
+        "content": "This is the <strong>message</strong>.",
+        "confirmation": true
+      },
+      "items": [
+        {
+          "name": "Sub-group with popup",
+          "type": "group",
+          "initialMessage": {
+            "title": "Sub-group",
+            "content": "This is the <strong>message</strong>.",
+            "confirmation": true
+          }
+        },
+        {
+          "name": "Item with popup",
+          "type": "csv",
+          "url": "http://nationalmap.gov.au/test/incidents.csv",
+          "initialMessage": {
+            "title": "Item",
+            "content": "This is the <strong>message</strong>.",
+            "confirmation": true
+          }
+        }
+      ]
+    }
+  ]
 }

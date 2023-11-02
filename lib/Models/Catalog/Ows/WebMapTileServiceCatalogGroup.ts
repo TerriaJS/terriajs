@@ -132,13 +132,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.capabilities.layers.map(layer => this.getLayerId(layer))
+      this.capabilities.layers.map((layer) => this.getLayerId(layer))
     );
   }
 
   @action
   createMembersFromLayers() {
-    this.capabilities.layers.forEach(layer =>
+    this.capabilities.layers.forEach((layer) =>
       this.createMemberFromLayer(layer)
     );
   }

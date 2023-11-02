@@ -125,7 +125,7 @@ const featureCodesToNamesMap = new Map([
   ["YD", "Yard"]
 ]);
 
-const featureToSearchResultFunction = function(feature: any): SearchResult {
+const featureToSearchResultFunction = function (feature: any): SearchResult {
   let featureTypeString = "";
   const featureType = featureCodesToNamesMap.get(
     feature.Gazetteer_of_Australia.Feature_code
@@ -142,7 +142,7 @@ const featureToSearchResultFunction = function(feature: any): SearchResult {
   });
 };
 
-const searchResultFilterFunction = function(feature: any): boolean {
+const searchResultFilterFunction = function (feature: any): boolean {
   return (
     // search results with state ID of N/A seem to be poor quality
     feature.Gazetteer_of_Australia.State_ID !== "N/A" &&
@@ -151,7 +151,7 @@ const searchResultFilterFunction = function(feature: any): boolean {
   );
 };
 
-const searchResultScoreFunction = function(
+const searchResultScoreFunction = function (
   feature: any,
   searchText: string
 ): number {
@@ -241,15 +241,13 @@ export default class AustralianGazetteerSearchProvider extends WebFeatureService
     );
   }
 
-  featureToSearchResultFunction: (
-    feature: any
-  ) => SearchResult = featureToSearchResultFunction;
-  transformSearchText:
-    | ((searchText: string) => string)
-    | undefined = searchText => searchText.toUpperCase();
-  searchResultFilterFunction:
-    | ((feature: any) => boolean)
-    | undefined = searchResultFilterFunction;
+  featureToSearchResultFunction: (feature: any) => SearchResult =
+    featureToSearchResultFunction;
+  transformSearchText: ((searchText: string) => string) | undefined = (
+    searchText
+  ) => searchText.toUpperCase();
+  searchResultFilterFunction: ((feature: any) => boolean) | undefined =
+    searchResultFilterFunction;
   searchResultScoreFunction:
     | ((feature: any, searchText: string) => number)
     | undefined = searchResultScoreFunction;

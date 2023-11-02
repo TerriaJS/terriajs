@@ -67,12 +67,12 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
     const startIndex = sortedIndexBy(
       idValuePairs,
       { dataRowId: 0, value: startValue },
-      entry => entry.value
+      (entry) => entry.value
     );
     const endIndex = sortedLastIndexBy(
       idValuePairs,
       { dataRowId: 0, value: endValue },
-      entry => entry.value
+      (entry) => entry.value
     );
     const matchingIds = idValuePairs
       .slice(startIndex, endIndex)

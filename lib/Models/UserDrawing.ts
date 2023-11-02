@@ -150,7 +150,7 @@ export default class UserDrawing extends MappableMixin(
     this.invisible = options.invisible;
 
     // helper for dragging points around
-    this.dragHelper = new DragPoints(options.terria, customDataSource => {
+    this.dragHelper = new DragPoints(options.terria, (customDataSource) => {
       if (typeof this.onPointMoved === "function") {
         this.onPointMoved(customDataSource);
       }
@@ -277,7 +277,7 @@ export default class UserDrawing extends MappableMixin(
       this.otherEntities.entities.add(<any>{
         name: "Line",
         polyline: <any>{
-          positions: new CallbackProperty(function() {
+          positions: new CallbackProperty(function () {
             const pos = that.getPointsForShape();
             if (isDefined(pos) && that.closeLoop) {
               pos.push(pos[0]);
@@ -381,7 +381,7 @@ export default class UserDrawing extends MappableMixin(
         if (this.drawRectangle) {
           this.mouseMoveDispose = reaction(
             () => this.terria.currentViewer.mouseCoords.cartographic,
-            mouseCoordsCartographic => {
+            (mouseCoordsCartographic) => {
               if (!isDefined(mouseCoordsCartographic)) return;
 
               if (isDefined(this.mousePointEntity)) {
@@ -456,7 +456,7 @@ export default class UserDrawing extends MappableMixin(
 
     const that = this;
 
-    features.forEach(feature => {
+    features.forEach((feature) => {
       let index = -1;
       for (let i = 0; i < this.pointEntities.entities.values.length; i++) {
         const pointFeature = this.pointEntities.entities.values[i];
@@ -474,7 +474,7 @@ export default class UserDrawing extends MappableMixin(
         this.polygon = <Entity>this.otherEntities.entities.add(<any>{
           name: "User polygon",
           polygon: <any>{
-            hierarchy: new CallbackProperty(function() {
+            hierarchy: new CallbackProperty(function () {
               return new PolygonHierarchy(that.getPointsForShape());
             }, false),
             material: new Color(0.0, 0.666, 0.843, 0.25),

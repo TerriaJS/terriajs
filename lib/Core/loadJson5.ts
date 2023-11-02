@@ -27,7 +27,7 @@ export default function loadJson5(
   }
 
   const promise = resource.fetchText()!;
-  return promise.then(function(value: string) {
+  return promise.then(function (value: string) {
     return json5.parse(value);
   });
 }

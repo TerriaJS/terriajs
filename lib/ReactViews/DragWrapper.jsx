@@ -11,7 +11,7 @@ class DragWrapper extends React.Component {
   componentDidMount() {
     const node = this.node;
 
-    const dragMoveListener = event => {
+    const dragMoveListener = (event) => {
       const target = event.target;
       // keep the dragged position in the data-x/data-y attributes
       const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
@@ -55,7 +55,7 @@ class DragWrapper extends React.Component {
   }
 
   render() {
-    return <div ref={node => (this.node = node)}>{this.props.children}</div>;
+    return <div ref={(node) => (this.node = node)}>{this.props.children}</div>;
   }
 }
 

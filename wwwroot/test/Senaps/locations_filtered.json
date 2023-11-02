@@ -16,10 +16,7 @@
         "description": "Boorowa TempRH Site5a",
         "geojson": {
           "type": "Point",
-          "coordinates": [
-            148.699683,
-            -34.470083
-          ]
+          "coordinates": [148.699683, -34.470083]
         },
         "id": "boorowa.temprh.site5a",
         "usermetadata": null,

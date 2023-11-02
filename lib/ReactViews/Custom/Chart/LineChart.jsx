@@ -18,8 +18,8 @@ export default class LineChart extends React.PureComponent {
     if (!el) return;
     const { chartItem } = this.props;
     const path = line()
-      .x(p => scales.x(p.x))
-      .y(p => scales.y(p.y));
+      .x((p) => scales.x(p.x))
+      .y((p) => scales.y(p.y));
     el.setAttribute("d", path(chartItem.points));
   }
 
@@ -30,8 +30,8 @@ export default class LineChart extends React.PureComponent {
       <g id={this.props.id}>
         <LinePath
           data={chartItem.points}
-          x={p => scales.x(p.x)}
-          y={p => scales.y(p.y)}
+          x={(p) => scales.x(p.x)}
+          y={(p) => scales.y(p.y)}
           stroke={stroke}
           strokeWidth={2}
         />

@@ -155,7 +155,7 @@ export class FeatureServerStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.layers.map(layer => {
+      this.layers.map((layer) => {
         if (!isDefined(layer.id)) {
           return undefined;
         }
@@ -171,7 +171,7 @@ export class FeatureServerStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    this.layers.forEach(layer => this.createMemberFromLayer(layer));
+    this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
@@ -230,7 +230,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
+    return FeatureServerStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(FeatureServerStratum.stratumName, stratum);
       });

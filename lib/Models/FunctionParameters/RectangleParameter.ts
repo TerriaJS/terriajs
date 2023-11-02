@@ -16,9 +16,7 @@ export type RectangleCoordinates = {
   north: number;
 };
 
-export default class RectangleParameter extends FunctionParameter<
-  RectangleCoordinates
-> {
+export default class RectangleParameter extends FunctionParameter<RectangleCoordinates> {
   static readonly type = "rectangle";
   readonly type = "rectangle";
 

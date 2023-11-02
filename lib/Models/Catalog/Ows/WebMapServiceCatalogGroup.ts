@@ -130,7 +130,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.topLevelLayers.map(layer => this.getLayerId(layer))
+      this.topLevelLayers.map((layer) => this.getLayerId(layer))
     );
   }
 
@@ -138,8 +138,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (this.catalogGroup.flatten) {
       return this.capabilities.allLayers;
     } else {
-      let rootLayers: readonly CapabilitiesLayer[] = this.capabilities
-        .rootLayers;
+      let rootLayers: readonly CapabilitiesLayer[] =
+        this.capabilities.rootLayers;
       while (
         rootLayers &&
         rootLayers.length === 1 &&
@@ -163,7 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    this.topLevelLayers.forEach(layer => this.createMemberFromLayer(layer));
+    this.topLevelLayers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
@@ -184,7 +184,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         members = [layer.Layer as CapabilitiesLayer];
       }
 
-      members.forEach(member => this.createMemberFromLayer(member));
+      members.forEach((member) => this.createMemberFromLayer(member));
 
       // Create group
       const existingModel = this.catalogGroup.terria.getModelById(
@@ -214,7 +214,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       model.setTrait(
         CommonStrata.definition,
         "members",
-        filterOutUndefined(members.map(member => this.getLayerId(member)))
+        filterOutUndefined(members.map((member) => this.getLayerId(member)))
       );
 
       // Set group `info` trait if applicable

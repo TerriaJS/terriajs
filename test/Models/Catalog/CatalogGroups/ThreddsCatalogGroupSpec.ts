@@ -12,12 +12,12 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("ThreddsCatalogGroup", function() {
+describe("ThreddsCatalogGroup", function () {
   let terria: Terria;
   let threddsCatalogGroup: ThreddsCatalogGroup;
   let threddsStratum: ThreddsStratum;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -31,14 +31,14 @@ describe("ThreddsCatalogGroup", function() {
     );
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(threddsCatalogGroup.type).toBe("thredds-group");
     expect(threddsCatalogGroup.typeName).toBe(
       i18next.t("models.thredds.nameGroup")
     );
   });
 
-  it("properly creates members ", async function() {
+  it("properly creates members ", async function () {
     expect(threddsCatalogGroup.members).toBeDefined();
     expect(threddsCatalogGroup.members.length).toBe(3);
     let member0 = <CatalogGroup>threddsCatalogGroup.memberModels[0];

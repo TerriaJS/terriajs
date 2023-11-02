@@ -21,8 +21,8 @@ type PositionRightOfWorkbenchProps = {
  *    `;
  *
  */
-const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> = observer(
-  props => {
+const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> =
+  observer((props) => {
     return (
       <Container
         className={props.className}
@@ -31,8 +31,7 @@ const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> = observ
         {props.children}
       </Container>
     );
-  }
-);
+  });
 
 const Container = styled.div<{ isMapFullScreen: boolean }>`
   position: absolute;
@@ -40,7 +39,7 @@ const Container = styled.div<{ isMapFullScreen: boolean }>`
   left: 0;
   right: unset;
   bottom: unset;
-  margin-left: ${props =>
+  margin-left: ${(props) =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 16}px};
   transition: margin-left 0.25s;
 `;

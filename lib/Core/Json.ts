@@ -22,7 +22,7 @@ export function isJsonObject(
     typeof value === "object" &&
     value !== null &&
     !Array.isArray(value) &&
-    (!deep || Object.values(value).every(v => isJsonValue(v, true)))
+    (!deep || Object.values(value).every((v) => isJsonValue(v, true)))
   );
 }
 
@@ -56,7 +56,7 @@ export function isJsonArray(
 ): value is JsonArray {
   return (
     Array.isArray(value) &&
-    (!deep || value.every(child => isJsonValue(child, true)))
+    (!deep || value.every((child) => isJsonValue(child, true)))
   );
 }
 
@@ -65,20 +65,20 @@ export function isJsonObjectArray(
   deep = true
 ): value is JsonArray<JsonObject> {
   return (
-    Array.isArray(value) && value.every(child => isJsonObject(child, deep))
+    Array.isArray(value) && value.every((child) => isJsonObject(child, deep))
   );
 }
 
 export function isJsonStringArray(
   value: unknown | undefined
 ): value is JsonArray<string> {
-  return Array.isArray(value) && value.every(child => isJsonString(child));
+  return Array.isArray(value) && value.every((child) => isJsonString(child));
 }
 
 export function isJsonNumberArray(
   value: unknown | undefined
 ): value is JsonArray<number> {
-  return Array.isArray(value) && value.every(child => isJsonNumber(child));
+  return Array.isArray(value) && value.every((child) => isJsonNumber(child));
 }
 
 export function assertObject(

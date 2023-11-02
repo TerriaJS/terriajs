@@ -144,7 +144,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       geojsonCatalogItem.setTrait(
         CommonStrata.definition,
         "geoJsonData",
-        (fc as any) as JsonObject
+        fc as any as JsonObject
       );
 
       geojsonCatalogItem.setTrait(
@@ -244,7 +244,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return SenapsLocationsStratum.load(this).then(stratum => {
+    return SenapsLocationsStratum.load(this).then((stratum) => {
       if (stratum === undefined) return;
       runInAction(() => {
         this.strata.set(SenapsLocationsStratum.stratumName, stratum);
@@ -261,7 +261,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
 
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
+      return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
         return mapItem;
       });

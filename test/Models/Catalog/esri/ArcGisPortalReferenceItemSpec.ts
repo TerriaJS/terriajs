@@ -23,13 +23,13 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisPortalItemReference", function() {
+describe("ArcGisPortalItemReference", function () {
   let terria: Terria;
   let arcGisPortalItemReference: ArcGisPortalItemReference;
   let arcGisPortalItemStratum: ArcGisPortalItemStratum;
   let portalItemTarget: any;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -41,7 +41,7 @@ describe("ArcGisPortalItemReference", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       if (args[0].indexOf("/data") > -1) {
         args[0] = "test/ArcGisPortal/item-data.json";
       } else args[0] = "test/ArcGisPortal/item.json";
@@ -49,15 +49,15 @@ describe("ArcGisPortalItemReference", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(arcGisPortalItemReference.type).toBe("arcgis-portal-item");
     expect(arcGisPortalItemReference.typeName).toBe(
       i18next.t("models.arcgisPortal.name")
     );
   });
 
-  describe("Can load an item by datasetId - ", function() {
-    beforeEach(async function() {
+  describe("Can load an item by datasetId - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         arcGisPortalItemReference.setTrait(
           "definition",
@@ -86,7 +86,7 @@ describe("ArcGisPortalItemReference", function() {
       portalItemTarget = arcGisPortalItemReference.target;
     });
 
-    it("properly creates item", function() {
+    it("properly creates item", function () {
       // when creating a single item directly name is retained from the definition stratum
       expect(arcGisPortalItemReference.name).toBe("Road Segments");
 

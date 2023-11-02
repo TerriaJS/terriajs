@@ -22,8 +22,8 @@ jobs:
         uses: steve9164/action-detect-and-tag-new-version@v1
         id: detect
         with:
-          tag-template: '{VERSION}'
-          use-annotated-tag: 'true'
+          tag-template: "{VERSION}"
+          use-annotated-tag: "true"
           tagger-name: Terria Bot via GitHub Actions
           tagger-email: TerriaBot@users.noreply.github.com
 
@@ -35,8 +35,8 @@ jobs:
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         uses: actions/setup-node@v2
         with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version: '14.x'
+          registry-url: "https://registry.npmjs.org"
+          node-version: "14.x"
 
       - name: Install yarn
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
@@ -46,19 +46,19 @@ jobs:
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: yarn install --ignore-engines
         env:
-          NODE_OPTIONS: '--max_old_space_size=8192'
+          NODE_OPTIONS: "--max_old_space_size=8192"
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npx gulp lint release
         env:
-          NODE_OPTIONS: '--max_old_space_size=8192'
+          NODE_OPTIONS: "--max_old_space_size=8192"
 
       - name: Publish package to NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npm publish --tag ${NPM_TAG}
         env:
-          NODE_OPTIONS: '--max_old_space_size=8192'
+          NODE_OPTIONS: "--max_old_space_size=8192"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
@@ -72,7 +72,7 @@ jobs:
           author_name: ${{ github.workflow }}
           mention: here
           if_mention: always
-          text: ':white_check_mark: Published v${{ steps.detect.outputs.current-version }} to https://www.npmjs.com/package/terriajs'
+          text: ":white_check_mark: Published v${{ steps.detect.outputs.current-version }} to https://www.npmjs.com/package/terriajs"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 

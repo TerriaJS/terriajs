@@ -36,7 +36,7 @@ export default function sendFeedback(options: {
     : Promise.resolve("Not shared");
 
   return shareLinkPromise
-    .then(shareLink => {
+    .then((shareLink) => {
       const feedbackData: Record<string, string | undefined> = {
         title: options.title,
         name: options.name,
@@ -65,7 +65,7 @@ export default function sendFeedback(options: {
         }
       });
     })
-    .then(function(json) {
+    .then(function (json) {
       if (json instanceof String) {
         json = JSON.parse(json.toString());
       }
@@ -89,7 +89,7 @@ export default function sendFeedback(options: {
         return true;
       }
     })
-    .catch(function(e) {
+    .catch(function (e) {
       raiseError(terria, e);
       return false;
     });

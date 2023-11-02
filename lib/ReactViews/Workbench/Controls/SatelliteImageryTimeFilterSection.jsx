@@ -61,9 +61,9 @@ const SatelliteImageryTimeFilterSection = observer(
       // discrete times
       const disposer = reaction(
         () => pickPointMode.pickedFeatures,
-        async pickedFeatures => {
+        async (pickedFeatures) => {
           runInAction(() => {
-            pickPointMode.customUi = function() {
+            pickPointMode.customUi = function () {
               return <Loader message={t("satellite.querying")} />;
             };
           });
@@ -80,10 +80,10 @@ const SatelliteImageryTimeFilterSection = observer(
           }
 
           const item = this.props.item;
-          const thisLayerFeature = pickedFeatures.features.filter(feature => {
+          const thisLayerFeature = pickedFeatures.features.filter((feature) => {
             return (
               item.mapItems.find(
-                mapItem =>
+                (mapItem) =>
                   mapItem.imageryProvider &&
                   mapItem.imageryProvider ===
                     feature.imageryLayer?.imageryProvider
@@ -146,7 +146,7 @@ const SatelliteImageryTimeFilterSection = observer(
         <div
           className={Styles.active}
           css={`
-            background: ${p => p.theme.colorPrimary};
+            background: ${(p) => p.theme.colorPrimary};
           `}
         >
           <div className={Styles.infoGroup}>

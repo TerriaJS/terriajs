@@ -8,16 +8,16 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import Text from "../../../../../lib/Styled/Text";
 import { createWithContexts } from "../../../withContext";
-const HelpPanel: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel")
-  .default;
+const HelpPanel: any =
+  require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel").default;
 
-describe("HelpPanel", function() {
+describe("HelpPanel", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -28,8 +28,8 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with no help content in config", function() {
-    it("does not render any items in help", function() {
+  describe("with no help content in config", function () {
+    it("does not render any items in help", function () {
       act(() => {
         testRenderer = createWithContexts(viewState, <HelpPanel />);
       });
@@ -39,7 +39,7 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with no text, videos and images in helpContent", function() {
+  describe("with no text, videos and images in helpContent", function () {
     beforeEach(() => {
       runInAction(() => {
         terria.configParameters.helpContent = [
@@ -53,19 +53,19 @@ describe("HelpPanel", function() {
       });
     });
 
-    it("renders 1 help menu item", function() {
+    it("renders 1 help menu item", function () {
       const helpItems = testRenderer.root.findAllByType(HelpPanelItem);
       expect(helpItems.length).toBe(1);
     });
 
-    it("does not render any text on the help menu buttons", function() {
+    it("does not render any text on the help menu buttons", function () {
       const helpItem = testRenderer.root.findByType(HelpPanelItem);
       expect(() => {
         helpItem.findByType(Text);
       }).toThrow();
     });
 
-    it("does not render any text in video panel", function() {
+    it("does not render any text in video panel", function () {
       const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
       expect(videoPanel.props.htmlContent).toBeFalsy();
       expect(() => {
@@ -73,7 +73,7 @@ describe("HelpPanel", function() {
       }).toThrow();
     });
 
-    it("does not render any images in video panel", function() {
+    it("does not render any images in video panel", function () {
       const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
       expect(() => {
         videoPanel.findByProps({ className: "tjs-help-panel__videoLink" });
@@ -81,7 +81,7 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("when help item with text, video and image in helpContent is selected", function() {
+  describe("when help item with text, video and image in helpContent is selected", function () {
     beforeEach(() => {
       runInAction(() => {
         terria.configParameters.helpContent = [
@@ -101,13 +101,13 @@ describe("HelpPanel", function() {
       });
     });
 
-    it("renders 3 styled html components", function() {
+    it("renders 3 styled html components", function () {
       const styledHtml = testRenderer.root.findByType(StyledHtml);
       expect(styledHtml).toBeDefined();
       expect(styledHtml.findAllByType(Text).length).toBe(3);
     });
 
-    it("renders the video component", function() {
+    it("renders the video component", function () {
       const videoComponent = testRenderer.root.findByProps({
         className: "tjs-help-panel__videoLink"
       });

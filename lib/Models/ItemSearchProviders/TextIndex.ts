@@ -39,7 +39,7 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
       .then((json: any) =>
         MiniSearch.loadJS(
           json.index as any,
-          (json.options as any) as MiniSearchOptions
+          json.options as any as MiniSearchOptions
         )
       );
     this.miniSearchIndex = promise;
@@ -61,7 +61,7 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
       throw new Error(`Text index not loaded`);
     const miniSearchIndex = await this.miniSearchIndex;
     const results = miniSearchIndex.search(value, queryOptions);
-    const ids = new Set(results.map(r => r.id));
+    const ids = new Set(results.map((r) => r.id));
     return ids;
   }
 }

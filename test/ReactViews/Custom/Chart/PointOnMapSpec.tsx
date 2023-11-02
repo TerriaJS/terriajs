@@ -5,17 +5,17 @@ import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJ
 import Terria from "../../../../lib/Models/Terria";
 import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
 
-describe("PointOnMap", function() {
+describe("PointOnMap", function () {
   let terria: Terria;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("adds the point as an overlay on mount", async function() {
+  it("adds the point as an overlay on mount", async function () {
     act(() => {
       testRenderer = TestRenderer.create(
         <PointOnMap
@@ -38,7 +38,7 @@ describe("PointOnMap", function() {
     }
   });
 
-  it("it removes the point from overlay on umount", function() {
+  it("it removes the point from overlay on umount", function () {
     act(() => {
       testRenderer = TestRenderer.create(
         <PointOnMap

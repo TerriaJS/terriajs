@@ -17,7 +17,7 @@ interface Props {
   viewState: ViewState;
 }
 
-const MapDataCount = observer(function(props: Props) {
+const MapDataCount = observer(function (props: Props) {
   const { t } = useTranslation();
   const { terria, viewState } = props;
   if (viewState.useSmallScreenInterface) {
@@ -26,7 +26,7 @@ const MapDataCount = observer(function(props: Props) {
 
   // Can't simply use number of items given they can exist in workbench
   // without being shown on map
-  const numberOfDatasets = terria.workbench.items.filter(item => {
+  const numberOfDatasets = terria.workbench.items.filter((item) => {
     if (MappableMixin.isMixedInto(item)) {
       return item.show;
     }

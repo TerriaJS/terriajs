@@ -47,7 +47,7 @@ export default class CatalogIndexReference extends ReferenceMixin(
       ...model.memberKnownContainerUniqueIds,
       ...flatten(
         filterOutUndefined(
-          model.memberKnownContainerUniqueIds.map(parentId => {
+          model.memberKnownContainerUniqueIds.map((parentId) => {
             const parent = model.terria.catalogIndex?.models?.get(parentId);
             if (parent) {
               return findContainers(parent);

@@ -24,7 +24,8 @@ import { sdmxErrorString, SdmxHttpErrorCodes } from "./SdmxJsonServerStratum";
 
 export default class SdmxJsonCatalogItem
   extends TableMixin(UrlMixin(CreateModel(SdmxCatalogItemTraits)))
-  implements SelectableDimensions {
+  implements SelectableDimensions
+{
   static get type() {
     return "sdmx-json";
   }
@@ -67,7 +68,7 @@ export default class SdmxJsonCatalogItem
    */
   @computed
   get sdmxSelectableDimensions(): SelectableDimension[] {
-    return this.dimensions.map(dim => {
+    return this.dimensions.map((dim) => {
       return {
         id: dim.id,
         name: dim.name,
@@ -76,13 +77,13 @@ export default class SdmxJsonCatalogItem
         allowUndefined: dim.allowUndefined,
         disable:
           dim.disable ||
-          this.columns.find(col => col.name === dim.id)?.type === "region",
+          this.columns.find((col) => col.name === dim.id)?.type === "region",
         setDimensionValue: async (
           stratumId: string,
           value: string | undefined
         ) => {
           let dimensionTraits = this.dimensions?.find(
-            sdmxDim => sdmxDim.id === dim.id
+            (sdmxDim) => sdmxDim.id === dim.id
           );
           if (!isDefined(dimensionTraits)) {
             dimensionTraits = this.addObject(stratumId, "dimensions", dim.id!)!;
@@ -100,7 +101,7 @@ export default class SdmxJsonCatalogItem
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       ...super.selectableDimensions.filter(
-        d => d.id !== this.styleDimensions?.id
+        (d) => d.id !== this.styleDimensions?.id
       ),
       ...this.sdmxSelectableDimensions
     ]);
@@ -129,9 +130,9 @@ export default class SdmxJsonCatalogItem
           (isDefined(b.position) ? b.position : this.dimensions.length)
       )
       // If a dimension is disabled, use empty string (which is wildcard)
-      .map(dim =>
+      .map((dim) =>
         !dim.disable &&
-        this.columns.find(col => col.name === dim.id)?.type !== "region"
+        this.columns.find((col) => col.name === dim.id)?.type !== "region"
           ? dim.selectedId
           : ""
       )
@@ -178,13 +179,15 @@ export default class SdmxJsonCatalogItem
               "models.sdmxCatalogItem.noResultsWithDimensions",
               {
                 dimensions: filterEnums(this.selectableDimensions)
-                  .filter(dim => !dim.disable && dim.options?.length !== 1)
+                  .filter((dim) => !dim.disable && dim.options?.length !== 1)
                   .map(
-                    dim =>
+                    (dim) =>
                       // Format string into `${dimenion name} = ${dimenion selected value}
-                      `- ${dim.name} = \`${dim.options?.find(
-                        option => option.id === dim.selectedId
-                      )?.name ?? dim.selectedId}\``
+                      `- ${dim.name} = \`${
+                        dim.options?.find(
+                          (option) => option.id === dim.selectedId
+                        )?.name ?? dim.selectedId
+                      }\``
                   )
                   .join("\n")
               }

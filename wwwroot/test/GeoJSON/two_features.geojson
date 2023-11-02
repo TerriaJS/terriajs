@@ -1,80 +1,80 @@
 {
-	"type":"FeatureCollection",
-	"totalFeatures":315,
-	"features":	[
-		{
-			"type":"Feature",
-			"id":"a58544a9_86de_4c26_90db_3e7c103ded50.1",
-			"geometry":{
-				"type":"Point",
-				"coordinates":[542876.9802999999,6898697.6111]
-			},
-			"geometry_name":"geom",
-			"properties":{
-				"status":"CURRENT",
-				"asset_numb":"BIKE970",
-				"type":"Hoop_Big",
-				"material":"Stainless Steel",
-				"number_of_":2,
-				"comments":"Also associated with projects CCR6 and CKE6",
-				"documents":{"#1":4, "#2":5},
-				"inspectors":null,
-				"inspection":"2009-12-14Z",
-				"constructi":"2009-12-17Z",
-				"record_cre":"2009-12-14Z",
-				"last_updat":null,
-				"update_dat":"2010-11-19Z",
-				"disposal_d":null,
-				"positional":"GPS Corrected 1.0M",
-				"owner":"Jay<br>",
-				"project_nu":"CLE5",
-				"file.number.":10,
-				"folder_num":null,
-				"drawing_nu":null,
-				"survey_num":null,
-				"condition":2,
-				"historic#.":-12,
-				"big":1234567,
-				"decimal":3.1415926,
-				"funding_ba":"Capex"
-			}
-		},
-		{
-			"type":"Feature",
-			"id":"a58544a9_86de_4c26_90db_3e7c103ded50.314",
-			"geometry":{
-				"type":"Point",
-				"coordinates":[541015.7613000004,6895442.2138]
-			},
-			"geometry_name":"geom",
-			"properties":{
-				"status":"CURRENT",
-				"asset_numb":"BIKE1855",
-				"type":"Hoop_Half",
-				"material":"Stainless Steel",
-				"number_of_":1,
-				"comments":null,
-				"documents":{"#1":-4, "#2":15},
-				"inspectors":null,
-				"inspection":"2012-09-11Z",
-				"constructi":null,
-				"record_cre":"2012-09-11Z",
-				"last_updat":null,
-				"update_dat":"2012-09-18Z",
-				"disposal_d":null,
-				"positional":"GPS Corrected 1.0M",
-				"owner":"TBA",
-				"project_nu":null,
-				"file.number.":11,
-				"folder_num":null,
-				"drawing_nu":null,
-				"survey_num":null,
-				"condition":1,
-				"historic#.":-11,
-				"big":234567,
-				"decimal":2.7182818,
-				"funding_ba":"Initial"
-			}
-		}
-	]
+  "type": "FeatureCollection",
+  "totalFeatures": 315,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "a58544a9_86de_4c26_90db_3e7c103ded50.1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [542876.9802999999, 6898697.6111]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "status": "CURRENT",
+        "asset_numb": "BIKE970",
+        "type": "Hoop_Big",
+        "material": "Stainless Steel",
+        "number_of_": 2,
+        "comments": "Also associated with projects CCR6 and CKE6",
+        "documents": { "#1": 4, "#2": 5 },
+        "inspectors": null,
+        "inspection": "2009-12-14Z",
+        "constructi": "2009-12-17Z",
+        "record_cre": "2009-12-14Z",
+        "last_updat": null,
+        "update_dat": "2010-11-19Z",
+        "disposal_d": null,
+        "positional": "GPS Corrected 1.0M",
+        "owner": "Jay<br>",
+        "project_nu": "CLE5",
+        "file.number.": 10,
+        "folder_num": null,
+        "drawing_nu": null,
+        "survey_num": null,
+        "condition": 2,
+        "historic#.": -12,
+        "big": 1234567,
+        "decimal": 3.1415926,
+        "funding_ba": "Capex"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "a58544a9_86de_4c26_90db_3e7c103ded50.314",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [541015.7613000004, 6895442.2138]
+      },
+      "geometry_name": "geom",
+      "properties": {
+        "status": "CURRENT",
+        "asset_numb": "BIKE1855",
+        "type": "Hoop_Half",
+        "material": "Stainless Steel",
+        "number_of_": 1,
+        "comments": null,
+        "documents": { "#1": -4, "#2": 15 },
+        "inspectors": null,
+        "inspection": "2012-09-11Z",
+        "constructi": null,
+        "record_cre": "2012-09-11Z",
+        "last_updat": null,
+        "update_dat": "2012-09-18Z",
+        "disposal_d": null,
+        "positional": "GPS Corrected 1.0M",
+        "owner": "TBA",
+        "project_nu": null,
+        "file.number.": 11,
+        "folder_num": null,
+        "drawing_nu": null,
+        "survey_num": null,
+        "condition": 1,
+        "historic#.": -11,
+        "big": 234567,
+        "decimal": 2.7182818,
+        "funding_ba": "Initial"
+      }
+    }
+  ]
 }

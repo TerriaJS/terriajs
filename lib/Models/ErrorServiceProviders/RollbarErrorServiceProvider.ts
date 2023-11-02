@@ -3,7 +3,8 @@ import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import { ErrorServiceProvider } from "./ErrorService";
 
 export default class RollbarErrorServiceProvider
-  implements ErrorServiceProvider {
+  implements ErrorServiceProvider
+{
   readonly rollbar: Rollbar;
 
   /**

@@ -9,12 +9,12 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   paddedVertically: props.isCollapsed ? 0 : 2
 }))<{ isCollapsed: boolean }>`
   padding-top: 0;
-  max-height: ${props => (props.isCollapsed ? 0 : "100px")};
+  max-height: ${(props) => (props.isCollapsed ? 0 : "100px")};
   @media (min-height: 700px) {
-    max-height: ${props => (props.isCollapsed ? 0 : "200px")};
+    max-height: ${(props) => (props.isCollapsed ? 0 : "200px")};
   }
   @media (min-height: 900px) {
-    max-height: ${props => (props.isCollapsed ? 0 : "400px")};
+    max-height: ${(props) => (props.isCollapsed ? 0 : "400px")};
   }
 
   transition: max-height 0.2s, padding 0.2s;

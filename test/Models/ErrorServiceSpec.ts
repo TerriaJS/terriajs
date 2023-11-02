@@ -1,8 +1,8 @@
 import { initializeErrorServiceProvider } from "../../lib/Models/ErrorServiceProviders/ErrorService";
 import RollbarErrorServiceProvider from "../../lib/Models/ErrorServiceProviders/RollbarErrorServiceProvider";
 
-describe("initializeErrorServiceProvider", function() {
-  it("can initialize RollbarErrorServiceProvider", async function() {
+describe("initializeErrorServiceProvider", function () {
+  it("can initialize RollbarErrorServiceProvider", async function () {
     const errorService = await initializeErrorServiceProvider({
       provider: "rollbar",
       configuration: {}
@@ -10,7 +10,7 @@ describe("initializeErrorServiceProvider", function() {
     expect(errorService instanceof RollbarErrorServiceProvider).toBe(true);
   });
 
-  it("throws an error when an invalid provider type is given", async function() {
+  it("throws an error when an invalid provider type is given", async function () {
     let error;
     try {
       await initializeErrorServiceProvider({

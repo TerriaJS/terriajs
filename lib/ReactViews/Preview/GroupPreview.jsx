@@ -41,7 +41,7 @@ const GroupPreview = observer(
         <div>
           <div
             className={Styles.titleAndShareWrapper}
-            ref={component => (this.refToMeasure = component)}
+            ref={(component) => (this.refToMeasure = component)}
           >
             <h3>{this.props.previewed.name}</h3>
             <div className={Styles.shareLinkWrapper}>

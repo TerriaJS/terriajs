@@ -35,7 +35,7 @@ class ChartPanel extends React.Component {
   }
 
   closePanel() {
-    this.chartView.chartItems.forEach(chartItem => {
+    this.chartView.chartItems.forEach((chartItem) => {
       chartItem.updateIsSelectedInWorkbench(false);
     });
   }
@@ -52,7 +52,7 @@ class ChartPanel extends React.Component {
   render() {
     const chartableCatalogItems = this.chartView.chartableItems;
     const chartItems = this.chartView.chartItems.filter(
-      c => c.showInChartPanel
+      (c) => c.showInChartPanel
     );
     this.props.terria.currentViewer.notifyRepaintRequired();
     if (chartItems.length === 0) {
@@ -74,9 +74,9 @@ class ChartPanel extends React.Component {
       // Load all items
       Promise.all(
         items
-          .filter(item => MappableMixin.isMixedInto(item))
-          .map(item => item.loadMapItems())
-      ).then(results =>
+          .filter((item) => MappableMixin.isMixedInto(item))
+          .map((item) => item.loadMapItems())
+      ).then((results) =>
         Result.combine(results, {
           message: "Failed to load chart items",
           importance: -1

@@ -3,27 +3,27 @@
 var NowViewing = require("../../lib/Models/NowViewing");
 var Terria = require("../../lib/Models/Terria");
 var Cesium = require("../../lib/Models/Cesium");
-var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget")
-  .default;
+var CesiumWidget =
+  require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget").default;
 var Leaflet = require("../../lib/Models/Leaflet");
 var L = require("leaflet");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var supportsWebGL = require("../../lib/Core/supportsWebGL");
-var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider")
-  .default;
+var TileCoordinatesImageryProvider =
+  require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider").default;
 
-describe("NowViewing without a viewer", function() {
+describe("NowViewing without a viewer", function () {
   var terria;
   var nowViewing;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
     nowViewing = new NowViewing(terria);
   });
 
-  it("can add an item", function() {
+  it("can add an item", function () {
     var item = new CatalogItem(terria);
     expect(nowViewing.items.length).toEqual(0);
     nowViewing.add(item);
@@ -36,14 +36,14 @@ var describeIfSupported = supportsWebGL() ? describe : xdescribe;
 // only run these tests if the browser supports WebGL
 // the browser may still not show WebGL properly - see TerriaViewer.js for a more precise test if needed
 
-describeIfSupported("NowViewing with a minimal Cesium viewer", function() {
+describeIfSupported("NowViewing with a minimal Cesium viewer", function () {
   var container;
   var widget;
   var cesium;
   var terria;
   var nowViewing;
 
-  beforeEach(function() {
+  beforeEach(function () {
     container = document.createElement("div");
     document.body.appendChild(container);
 
@@ -59,14 +59,14 @@ describeIfSupported("NowViewing with a minimal Cesium viewer", function() {
     nowViewing = terria.nowViewing;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     if (widget && !widget.isDestroyed()) {
       widget = widget.destroy();
     }
     document.body.removeChild(container);
   });
 
-  it("can raise an item", function() {
+  it("can raise an item", function () {
     var item1 = new CatalogItem(terria);
     var item2 = new CatalogItem(terria);
     nowViewing.add(item1);
@@ -76,7 +76,7 @@ describeIfSupported("NowViewing with a minimal Cesium viewer", function() {
     expect(nowViewing.items.indexOf(item1)).toEqual(0);
   });
 
-  it("can lower an item", function() {
+  it("can lower an item", function () {
     var item1 = new CatalogItem(terria);
     var item2 = new CatalogItem(terria);
     nowViewing.add(item1);
@@ -87,13 +87,13 @@ describeIfSupported("NowViewing with a minimal Cesium viewer", function() {
   });
 });
 
-describe("NowViewing with a minimal Leaflet viewer", function() {
+describe("NowViewing with a minimal Leaflet viewer", function () {
   var container;
   var leaflet;
   var terria;
   var nowViewing;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -108,11 +108,11 @@ describe("NowViewing with a minimal Leaflet viewer", function() {
     nowViewing = terria.nowViewing;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     document.body.removeChild(container);
   });
 
-  it("can raise an item", function() {
+  it("can raise an item", function () {
     var item1 = new CatalogItem(terria);
     var item2 = new CatalogItem(terria);
     nowViewing.add(item1);
@@ -122,7 +122,7 @@ describe("NowViewing with a minimal Leaflet viewer", function() {
     expect(nowViewing.items.indexOf(item1)).toEqual(0);
   });
 
-  it("can lower an item", function() {
+  it("can lower an item", function () {
     var item1 = new CatalogItem(terria);
     var item2 = new CatalogItem(terria);
     nowViewing.add(item1);

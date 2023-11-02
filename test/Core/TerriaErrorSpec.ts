@@ -1,15 +1,15 @@
 import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
 
-describe("TerriaError", function() {
-  beforeEach(function() {});
+describe("TerriaError", function () {
+  beforeEach(function () {});
 
-  it("Can create TerriaError", function() {
+  it("Can create TerriaError", function () {
     const test = new TerriaError({ message: "some message" });
     expect(test.message).toBe("some message");
     expect(test.title).toBe("core.terriaError.defaultTitle");
   });
 
-  it("Can create TerriaError from string", function() {
+  it("Can create TerriaError from string", function () {
     const test = TerriaError.from("What what");
     expect(test.message).toBe("What what");
     expect(test.title).toBe("core.terriaError.defaultTitle");
@@ -19,7 +19,7 @@ describe("TerriaError", function() {
     expect(test2.title).toBe("Some title");
   });
 
-  it("Can create TerriaError from Error", function() {
+  it("Can create TerriaError from Error", function () {
     const error = new Error("What what what");
     const test = TerriaError.from(error);
     expect(test.message).toBe("What what what");
@@ -33,7 +33,7 @@ describe("TerriaError", function() {
     expect(test2.originalError?.[0]).toBe(error2);
   });
 
-  it("Can create TerriaError from Object", function() {
+  it("Can create TerriaError from Object", function () {
     const error = new Object("some stringy object");
     const test = TerriaError.from(error);
     expect(test.message).toBe("some stringy object");
@@ -41,7 +41,7 @@ describe("TerriaError", function() {
     expect(test.originalError?.[0]).toEqual(new Error("some stringy object"));
   });
 
-  it("Can create chain of TerriaErrors and combine them", function() {
+  it("Can create chain of TerriaErrors and combine them", function () {
     const error = new TerriaError({ message: "some message" });
     const test = TerriaError.from(error);
     expect(test).toBe(error);
@@ -84,7 +84,7 @@ describe("TerriaError", function() {
     expect(combined?.flatten().length).toBe(7);
   });
 
-  it("Combines correctly with overrideRaiseToUser", function() {
+  it("Combines correctly with overrideRaiseToUser", function () {
     const errorTrueOverride = new TerriaError({
       message: "some message",
       overrideRaiseToUser: true,
@@ -125,7 +125,7 @@ describe("TerriaError", function() {
     expect(combinedFalse?.overrideRaiseToUser).toBe(false);
   });
 
-  it("Combines correctly with overrideRaiseToUser and severity", function() {
+  it("Combines correctly with overrideRaiseToUser and severity", function () {
     const error = new TerriaError({
       message: "some message",
       overrideRaiseToUser: true,
@@ -158,7 +158,7 @@ describe("TerriaError", function() {
     expect(combined?.shouldRaiseToUser).toBeTruthy();
   });
 
-  it("Correctly uses importance and highestImportanceError", function() {
+  it("Correctly uses importance and highestImportanceError", function () {
     const error = new TerriaError({ message: "some message" });
     const test = TerriaError.from(error);
     expect(test).toBe(error);
@@ -173,7 +173,7 @@ describe("TerriaError", function() {
     expect(test3.highestImportanceError).toBe(test3);
   });
 
-  it("If one error is shown to user in tree, it will flag all errors in tree", function() {
+  it("If one error is shown to user in tree, it will flag all errors in tree", function () {
     const error = new TerriaError({ message: "some message" });
     const test = TerriaError.from(error);
     expect(test).toBe(error);

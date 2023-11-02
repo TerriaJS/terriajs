@@ -1,5 +1,5 @@
 {
-    "env": {
-        "jasmine": true
-    }
+  "env": {
+    "jasmine": true
+  }
 }

@@ -18,7 +18,7 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisMapServerCatalogGroup", function() {
+describe("ArcGisMapServerCatalogGroup", function () {
   const mapServerUrl =
     "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer";
   const mapServerErrorUrl =
@@ -26,7 +26,7 @@ describe("ArcGisMapServerCatalogGroup", function() {
   let terria: Terria;
   let group: ArcGisMapServerCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -34,7 +34,7 @@ describe("ArcGisMapServerCatalogGroup", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
 
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
@@ -48,22 +48,22 @@ describe("ArcGisMapServerCatalogGroup", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(group.type).toBe("esri-mapServer-group");
     expect(group.typeName).toBe(
       i18next.t("models.arcGisMapServerCatalogGroup.name")
     );
   });
 
-  describe("after loading metadata", function() {
-    beforeEach(async function() {
+  describe("after loading metadata", function () {
+    beforeEach(async function () {
       runInAction(() => {
         group.setTrait("definition", "url", mapServerUrl);
       });
       await group.loadMetadata();
     });
 
-    it("defines info", function() {
+    it("defines info", function () {
       const serviceDescription = i18next.t(
         "models.arcGisMapServerCatalogGroup.serviceDescription"
       );
@@ -87,8 +87,8 @@ describe("ArcGisMapServerCatalogGroup", function() {
     });
   });
 
-  describe("loadMembers", function() {
-    it("properly creates members", async function() {
+  describe("loadMembers", function () {
+    it("properly creates members", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
@@ -134,7 +134,7 @@ describe("ArcGisMapServerCatalogGroup", function() {
       expect(member5.url).toBe(mapServerUrl + "/27");
     });
 
-    it("throws error on unavailable url", async function() {
+    it("throws error on unavailable url", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerErrorUrl);
       });
@@ -144,7 +144,7 @@ describe("ArcGisMapServerCatalogGroup", function() {
       expect(error).toBeDefined("Load member should error");
     });
 
-    it("throws error if it's not mapserver ", async function() {
+    it("throws error if it's not mapserver ", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerErrorUrl);
       });
@@ -156,7 +156,7 @@ describe("ArcGisMapServerCatalogGroup", function() {
   });
 });
 
-describe("ArcGisMapServerCatalogGroup creates its layer members with given traits", function() {
+describe("ArcGisMapServerCatalogGroup creates its layer members with given traits", function () {
   const mapServerUrl =
     "http://example.com/arcgis/rest/services/Residential_Dwelling_Density/MapServer";
   const rectangle = { east: 158, north: -8, south: -45, west: 109 };
@@ -173,7 +173,7 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
   let terria: Terria;
   let group: ArcGisMapServerCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -181,7 +181,7 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
 
       if (url.match("Residential_Dwelling_Density/MapServer")) {
@@ -194,8 +194,8 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
     });
   });
 
-  describe("loadMembers", function() {
-    it("properly creates members with parent's traits", async function() {
+  describe("loadMembers", function () {
+    it("properly creates members with parent's traits", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerUrl);
         group.setTrait(CommonStrata.definition, "itemProperties", {

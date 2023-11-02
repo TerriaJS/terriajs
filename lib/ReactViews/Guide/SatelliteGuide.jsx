@@ -38,7 +38,7 @@ class SatelliteGuide extends React.Component {
         terria={terria}
         guideKey={SATELLITE_GUIDE_KEY}
         guideData={guideData}
-        setShowGuide={bool => {
+        setShowGuide={(bool) => {
           this.setShowSatelliteGuidance(bool);
           // If we're closing for any reason, set prompted to true
           if (!bool) {

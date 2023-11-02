@@ -57,15 +57,15 @@ const BoxViewingControl = styled(Box).attrs({
 const ViewingControlMenuButton = styled(RawButton).attrs({
   // primaryHover: true
 })`
-  color: ${props => props.theme.textDarker};
-  background-color: ${props => props.theme.textLight};
+  color: ${(props) => props.theme.textDarker};
+  background-color: ${(props) => props.theme.textLight};
 
   ${StyledIcon} {
     width: 35px;
   }
 
   svg {
-    fill: ${props => props.theme.textDarker};
+    fill: ${(props) => props.theme.textDarker};
     width: 18px;
     height: 18px;
   }
@@ -83,10 +83,10 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 
   &:hover,
   &:focus {
-    color: ${props => props.theme.textLight};
-    background-color: ${props => props.theme.colorPrimary};
+    color: ${(props) => props.theme.textLight};
+    background-color: ${(props) => props.theme.colorPrimary};
     svg {
-      fill: ${props => props.theme.textLight};
+      fill: ${(props) => props.theme.textLight};
     }
   }
 `;
@@ -273,7 +273,7 @@ class ViewingControls extends React.Component<
     this.props.viewState.openTool({
       toolName: "Difference",
       getToolComponent: () =>
-        import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        import("../../Tools/DiffTool/DiffTool").then((m) => m.default),
       showCloseButton: true,
       params: {
         sourceItem: this.props.item
@@ -310,8 +310,8 @@ class ViewingControls extends React.Component<
     let item = this.props.item;
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
     getAncestors(this.props.item)
-      .map(item => getDereferencedIfExists(item))
-      .forEach(group => {
+      .map((item) => getDereferencedIfExists(item))
+      .forEach((group) => {
         runInAction(() => {
           group.setTrait(CommonStrata.user, "isOpen", true);
         });
@@ -324,7 +324,7 @@ class ViewingControls extends React.Component<
 
     if (!ExportableMixin.isMixedInto(item)) return;
 
-    exportData(item).catch(e => {
+    exportData(item).catch((e) => {
       this.props.item.terria.raiseErrorToUser(e);
     });
   }
@@ -343,7 +343,7 @@ class ViewingControls extends React.Component<
     // Global viewing controls (usually defined by plugins).
     const globalViewingControls = filterOutUndefined(
       viewState.globalViewingControlOptions.map(
-        generateViewingControlForItem => {
+        (generateViewingControlForItem) => {
           try {
             return generateViewingControlForItem(item);
           } catch (err) {
@@ -384,7 +384,7 @@ class ViewingControls extends React.Component<
 
     return (
       <ul>
-        {this.viewingControls.map(viewingControl => (
+        {this.viewingControls.map((viewingControl) => (
           <li key={viewingControl.id}>
             <ViewingControlMenuButton
               onClick={() => handleOnClick(viewingControl)}
@@ -529,7 +529,7 @@ class ViewingControls extends React.Component<
           </WorkbenchButton>
           <WorkbenchButton
             css="flex-grow:0;"
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               runInAction(() => {
                 if (viewState.workbenchItemWithOpenControls === item.uniqueId) {

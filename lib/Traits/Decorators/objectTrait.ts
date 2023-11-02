@@ -24,7 +24,7 @@ export interface ObjectTraitOptions<T extends ModelTraits>
 export default function objectTrait<T extends ModelTraits>(
   options: ObjectTraitOptions<T>
 ) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
@@ -73,7 +73,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
 
     const errors: TerriaError[] = [];
 
-    Object.keys(jsonValue).forEach(propertyName => {
+    Object.keys(jsonValue).forEach((propertyName) => {
       const trait = ResultType.traits[propertyName];
       if (trait === undefined) {
         errors.push(

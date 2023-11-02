@@ -84,8 +84,8 @@ class OuterTraitsNoMerge extends ModelTraits {
 class TestModel extends CreateModel(OuterTraits) {}
 class TestModelNoMerge extends CreateModel(OuterTraitsNoMerge) {}
 
-describe("objectArrayTrait", function() {
-  it("returns an empty model if all strata are undefined", function() {
+describe("objectArrayTrait", function () {
+  it("returns an empty model if all strata are undefined", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
     model.strata.set("definition", createStratumInstance(OuterTraits));
@@ -93,7 +93,7 @@ describe("objectArrayTrait", function() {
     expect(model.inner).toBeDefined();
   });
 
-  it("combines values from different strata", function() {
+  it("combines values from different strata", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -125,9 +125,9 @@ describe("objectArrayTrait", function() {
     if (model.inner !== undefined) {
       expect(model.inner.length).toEqual(3);
 
-      const a = model.inner.filter(x => x.foo === "a")[0];
-      const b = model.inner.filter(x => x.foo === "b")[0];
-      const c = model.inner.filter(x => x.foo === "c")[0];
+      const a = model.inner.filter((x) => x.foo === "a")[0];
+      const b = model.inner.filter((x) => x.foo === "b")[0];
+      const c = model.inner.filter((x) => x.foo === "c")[0];
       expect(a).toBeDefined();
       expect(b).toBeDefined();
       expect(c).toBeDefined();
@@ -141,7 +141,7 @@ describe("objectArrayTrait", function() {
     }
   });
 
-  it("updates to reflect array elements added after evaluation", function() {
+  it("updates to reflect array elements added after evaluation", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -182,13 +182,13 @@ describe("objectArrayTrait", function() {
 
       expect(model.inner.length).toEqual(3);
 
-      const c = model.inner.filter(x => x.foo === "c")[0];
+      const c = model.inner.filter((x) => x.foo === "c")[0];
       expect(c.bar).toEqual(3);
       expect(c.baz).toEqual(true);
     }
   });
 
-  it("allows strata to remove elements from top level", function() {
+  it("allows strata to remove elements from top level", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -226,7 +226,7 @@ describe("objectArrayTrait", function() {
     expect(model.inner[1].foo).toEqual("c");
   });
 
-  it("allows strata to remove elements from bottom level", function() {
+  it("allows strata to remove elements from bottom level", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -280,7 +280,7 @@ describe("objectArrayTrait", function() {
     expect(model.inner[2].baz).toBeUndefined();
   });
 
-  it("updates to reflect new strata added after evaluation", function() {
+  it("updates to reflect new strata added after evaluation", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -301,7 +301,7 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].baz).toBe(true);
   });
 
-  it("handles idProperty = index", function() {
+  it("handles idProperty = index", function () {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -346,7 +346,7 @@ describe("objectArrayTrait", function() {
     expect(model.innerByIndex[2].foo).toBe("user2");
   });
 
-  it("updates to reflect new strata added after evaluation (with no merge)", function() {
+  it("updates to reflect new strata added after evaluation (with no merge)", function () {
     const terria = new Terria();
     const model = new TestModelNoMerge("test", terria);
 

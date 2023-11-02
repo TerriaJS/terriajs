@@ -42,7 +42,7 @@ export function loadAndSearchCatalogRecursively(
       // saveModelToJson(modelToSave, {
       //   includeStrata: [CommonStrata.definition]
       // });
-      autorun(reaction => {
+      autorun((reaction) => {
         const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
         const matchesString =
           searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
@@ -75,9 +75,9 @@ export function loadAndSearchCatalogRecursively(
     return Promise.resolve();
   }
   return new Promise((resolve, reject) => {
-    autorun(reaction => {
+    autorun((reaction) => {
       Promise.all(
-        referencesAndGroupsToLoad.map(async model => {
+        referencesAndGroupsToLoad.map(async (model) => {
           if (ReferenceMixin.isMixedInto(model)) {
             // TODO: could handle errors better here
             (await model.loadReference()).throwIfError();
@@ -100,7 +100,7 @@ export function loadAndSearchCatalogRecursively(
             )
           );
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error);
         });
       reaction.dispose();
@@ -134,7 +134,7 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
       fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
     );
   }
-  
+
   protected logEvent(searchText: string) {
     this.terria.analytics?.logEvent(
       Category.search,

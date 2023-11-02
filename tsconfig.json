@@ -1,24 +1,24 @@
 {
-    "compilerOptions": {
-        "target": "es2019",
-        "experimentalDecorators": true,
-        "module": "esNext",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "strict": true,
-        "allowJs": true,
-        "jsx": "preserve",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "outDir": "ts-out",
-        "resolveJsonModule": true,
-        "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
-        "types": ["terriajs-cesium"]
-    },
-    "include": [
-        "./lib/**/*",
-        "./test/**/*",
-        "./buildprocess/generateDocs.ts",
-        "./buildprocess/**/*",
-    ]
+  "compilerOptions": {
+    "target": "es2019",
+    "experimentalDecorators": true,
+    "module": "esNext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "ts-out",
+    "resolveJsonModule": true,
+    "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
+    "types": ["terriajs-cesium"]
+  },
+  "include": [
+    "./lib/**/*",
+    "./test/**/*",
+    "./buildprocess/generateDocs.ts",
+    "./buildprocess/**/*"
+  ]
 }

@@ -1,75 +1,75 @@
 {
-	"catalog": [
-		{
-			"name": "WMS",
-			"type": "group",
-			"isPromoted": true,
-			"isOpen": true,
-			"items": [
-				// {
-				// 	"name": "ncWMS2 with multiple styles",
-				// 	"type": "wms",
-				// 	"url": "http://www.smast.umassd.edu:8080/ncWMS2/wms",
-				// 	"layers": "FVCOM-NECOFS-GOM3/x"
-				// },
-				{
-					"name": "TDS with multiple styles, COLORSCALERANGE, and a time dimension",
-					"type": "wms",
-					"url": "http://thredds.ucar.edu/thredds/wms/grib/NCEP/WW3/Global/Best",
-					"layers": "Significant_height_of_wind_waves_surface"
-				},
-				{
-					"name": "ncWMS with multiple dimensions, including time",
-					"type": "wms",
-					"url": "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?service=WMS&version=1.3.0&request=GetCapabilities",
-					"layers": "temp"
-				},
-				{
-					"name": "ncWMS with multiple dimensions, including time, with initialTimeSource",
-					"type": "wms",
-					"url": "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?service=WMS&version=1.3.0&request=GetCapabilities",
-					"layers": "temp",
-					"initialTimeSource": "2017-07-31T12:00:00Z"
-				},
-				{
-					"name": "Total Vegetation Cover (PV + NPV)",
-					"type": "wms",
-					"url": "http://gsky.nci.org.au/ows",
-					"cacheDuration": "2h",
-					"layers": "global:totalcover",
-					"opacity": 1,
-					"initialTimeSource": "end",
-					"ignoreUnknownTileErrors": true,
-					"getFeatureInfoFormats": [{"type": "none"}]
-                },
-				{
-					"name": "Solar Satellite DNI & GHI, with initialTimeSource",
-					"layers": "Solar_Satellite_DNI_2014",
-					"url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
-					"type": "wms",
-					"maxRefreshIntervals": 9000,
-					"initialTimeSource": "2014-06-30T22:00:00Z",
-					"featureInfoTemplate": {
-						"name":"{{GRAY_INDEX}} W/m2"
-					}
-				},
-				{
-					"name": "Climate change data",
-					"layers": "air_temperature_anomaly",
-					"url": "http://tds.gisclimatechange.ucar.edu/thredds/wms/products/products_best.ncd",
-					"type": "wms",
-					"maxRefreshIntervals": 9000,
-					"initialTimeSource": "2016-12-12T12:00:00.000Z",
-					"featureInfoTemplate": {
-						"name":"{{GRAY_INDEX}} W/m2"
-					}
-				},
-				{
-					"name": "US Monthly Temperature and Precipitation",
-					"type": "wms-getCapabilities",
-					"url": "http://geoport.whoi.edu/thredds/wms/prism3/monthly"
-				}
-			]
-		}
-	]
+  "catalog": [
+    {
+      "name": "WMS",
+      "type": "group",
+      "isPromoted": true,
+      "isOpen": true,
+      "items": [
+        // {
+        // 	"name": "ncWMS2 with multiple styles",
+        // 	"type": "wms",
+        // 	"url": "http://www.smast.umassd.edu:8080/ncWMS2/wms",
+        // 	"layers": "FVCOM-NECOFS-GOM3/x"
+        // },
+        {
+          "name": "TDS with multiple styles, COLORSCALERANGE, and a time dimension",
+          "type": "wms",
+          "url": "http://thredds.ucar.edu/thredds/wms/grib/NCEP/WW3/Global/Best",
+          "layers": "Significant_height_of_wind_waves_surface"
+        },
+        {
+          "name": "ncWMS with multiple dimensions, including time",
+          "type": "wms",
+          "url": "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?service=WMS&version=1.3.0&request=GetCapabilities",
+          "layers": "temp"
+        },
+        {
+          "name": "ncWMS with multiple dimensions, including time, with initialTimeSource",
+          "type": "wms",
+          "url": "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?service=WMS&version=1.3.0&request=GetCapabilities",
+          "layers": "temp",
+          "initialTimeSource": "2017-07-31T12:00:00Z"
+        },
+        {
+          "name": "Total Vegetation Cover (PV + NPV)",
+          "type": "wms",
+          "url": "http://gsky.nci.org.au/ows",
+          "cacheDuration": "2h",
+          "layers": "global:totalcover",
+          "opacity": 1,
+          "initialTimeSource": "end",
+          "ignoreUnknownTileErrors": true,
+          "getFeatureInfoFormats": [{ "type": "none" }]
+        },
+        {
+          "name": "Solar Satellite DNI & GHI, with initialTimeSource",
+          "layers": "Solar_Satellite_DNI_2014",
+          "url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
+          "type": "wms",
+          "maxRefreshIntervals": 9000,
+          "initialTimeSource": "2014-06-30T22:00:00Z",
+          "featureInfoTemplate": {
+            "name": "{{GRAY_INDEX}} W/m2"
+          }
+        },
+        {
+          "name": "Climate change data",
+          "layers": "air_temperature_anomaly",
+          "url": "http://tds.gisclimatechange.ucar.edu/thredds/wms/products/products_best.ncd",
+          "type": "wms",
+          "maxRefreshIntervals": 9000,
+          "initialTimeSource": "2016-12-12T12:00:00.000Z",
+          "featureInfoTemplate": {
+            "name": "{{GRAY_INDEX}} W/m2"
+          }
+        },
+        {
+          "name": "US Monthly Temperature and Precipitation",
+          "type": "wms-getCapabilities",
+          "url": "http://geoport.whoi.edu/thredds/wms/prism3/monthly"
+        }
+      ]
+    }
+  ]
 }

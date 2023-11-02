@@ -8,11 +8,11 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { USER_ADDED_CATEGORY_ID } from "../../lib/Core/addedByUser";
 
-describe("DataCatalog", function() {
+describe("DataCatalog", function () {
   let terria;
   let viewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -21,7 +21,7 @@ describe("DataCatalog", function() {
     });
   });
 
-  it("does not show the My Data group", function() {
+  it("does not show the My Data group", function () {
     const someGroup = new CatalogGroup(terria);
     someGroup.name = "Some Group";
     terria.catalog.userAddedDataGroup.add(someGroup);
@@ -42,7 +42,7 @@ describe("DataCatalog", function() {
     const memberComponents = findAllWithType(result, DataCatalogMember);
 
     let foundAnotherGroup = false;
-    memberComponents.forEach(member => {
+    memberComponents.forEach((member) => {
       expect(member.props.member).not.toBe(terria.catalog.userAddedDataGroup);
       expect(member.props.member.name).not.toEqual(USER_ADDED_CATEGORY_ID);
       foundAnotherGroup =

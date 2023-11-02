@@ -15,7 +15,7 @@ export const SelectableDimensionText: React.FC<{
       border
       name={id}
       value={dim.value}
-      onChange={evt => {
+      onChange={(evt) => {
         runInAction(() =>
           dim.setDimensionValue(CommonStrata.user, evt.target.value)
         );

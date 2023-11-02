@@ -18,7 +18,7 @@ const LocationBar = observer(
       t: PropTypes.func.isRequired
     },
 
-    getDefaultProps: function() {
+    getDefaultProps: function () {
       return {
         showUtmZone: true
       };
@@ -39,7 +39,7 @@ const LocationBar = observer(
           onClick={this.toggleUseProjection}
           css={`
             &:hover {
-              background: ${p => p.theme.colorPrimary};
+              background: ${(p) => p.theme.colorPrimary};
             }
           `}
         >

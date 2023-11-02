@@ -23,8 +23,8 @@ interface IStyledWorkbenchButton {
 // styles half ripped from nav.scss
 const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
   border-radius: 3px;
-  background: ${props => props.theme.dark};
-  color: ${props => props.theme.textLight};
+  background: ${(props) => props.theme.dark};
+  color: ${(props) => props.theme.textLight};
   flex-grow: 1;
 
   height: 32px;
@@ -34,17 +34,17 @@ const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
   svg {
     height: 16px;
     width: 16px;
-    fill: ${props => props.theme.textLight};
+    fill: ${(props) => props.theme.textLight};
   }
 
   &:hover,
   &:focus {
-    background: ${props => props.theme.colorPrimary};
+    background: ${(props) => props.theme.colorPrimary};
   }
 
   // disabled
 
-  ${props =>
+  ${(props) =>
     props.disabled &&
     `
     opacity:0.5;
@@ -56,7 +56,7 @@ const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
     }
     `}
 
-  ${props =>
+  ${(props) =>
     props.primary &&
     `
     background: ${props.theme.colorPrimary};A
@@ -66,7 +66,7 @@ const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
     }
   `}
 
-  ${props =>
+  ${(props) =>
     props.inverted &&
     `
     background: ${props.theme.textDarker};

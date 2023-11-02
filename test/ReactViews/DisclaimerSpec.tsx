@@ -7,13 +7,13 @@ import Box from "../../lib/Styled/Box";
 import { createWithContexts } from "./withContext";
 const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 
-describe("Disclaimer", function() {
+describe("Disclaimer", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -24,8 +24,8 @@ describe("Disclaimer", function() {
     });
   });
 
-  describe("with basic disclaimerSettings and disclaimerVisible set to true", function() {
-    it("renders", function() {
+  describe("with basic disclaimerSettings and disclaimerVisible set to true", function () {
+    it("renders", function () {
       runInAction(() => {
         viewState.disclaimerSettings = {
           title: "Disclaimer",
@@ -46,8 +46,8 @@ describe("Disclaimer", function() {
     });
   });
 
-  describe("with limited disclaimerSettings and disclaimerVisible set to true", function() {
-    it("renders", function() {
+  describe("with limited disclaimerSettings and disclaimerVisible set to true", function () {
+    it("renders", function () {
       runInAction(() => {
         viewState.disclaimerSettings = {};
         viewState.disclaimerVisible = true;
@@ -63,8 +63,8 @@ describe("Disclaimer", function() {
     });
   });
 
-  describe("with disclaimerVisible set to false", function() {
-    it("does not render", function() {
+  describe("with disclaimerVisible set to false", function () {
+    it("does not render", function () {
       runInAction(() => {
         terria.configParameters.globalDisclaimer = undefined;
         viewState.disclaimerVisible = false;

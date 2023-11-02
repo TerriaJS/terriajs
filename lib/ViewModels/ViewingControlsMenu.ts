@@ -30,7 +30,7 @@ export function addMenuItem(
   generateViewingControl: ViewingControlGenerateFunction
 ): () => void {
   runInAction(() => {
-    viewState.globalViewingControlOptions.push(item => {
+    viewState.globalViewingControlOptions.push((item) => {
       const viewingControl = generateViewingControl(item);
       return viewingControl === undefined
         ? undefined
@@ -45,7 +45,7 @@ export function addMenuItem(
     runInAction(() => {
       remove(
         viewState.globalViewingControlOptions,
-        fn => fn === generateViewingControl
+        (fn) => fn === generateViewingControl
       );
     });
   };

@@ -1,17 +1,13 @@
 {
   "aspects": {
     "terria-config": {
-      "v7initializationUrls": [
-        "https://example.foo.bar/initv7.json"
-      ],
+      "v7initializationUrls": ["https://example.foo.bar/initv7.json"],
       "parameters": {
         "appName": "TestTerriaMap"
       }
     },
     "group": {
-      "members": [
-        "a-member"
-      ]
+      "members": ["a-member"]
     }
   },
   "id": "map-config-basic",

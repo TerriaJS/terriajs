@@ -11,9 +11,8 @@ export default function LocationItem(props) {
   let longitude = "";
   if (props.position) {
     const cartesianPosition = props.position;
-    const catographic = Ellipsoid.WGS84.cartesianToCartographic(
-      cartesianPosition
-    );
+    const catographic =
+      Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     const latitudeRaw = CesiumMath.toDegrees(catographic.latitude);
     const longitudeRaw = CesiumMath.toDegrees(catographic.longitude);
     const pretty = prettifyCoordinates(longitudeRaw, latitudeRaw);

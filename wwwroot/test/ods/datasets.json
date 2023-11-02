@@ -132,28 +132,17 @@
             "modified": "2020-09-16T10:42:08+00:00",
             "source_domain_address": null,
             "references": null,
-            "keyword": [
-              "heat",
-              "urban heat",
-              "temperature",
-              "climate"
-            ],
+            "keyword": ["heat", "urban heat", "temperature", "climate"],
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_40_1"
-            ],
+            "geographic_reference": ["au_40_1"],
             "timezone": null,
             "title": "Benchmarking Heat across Campbelltown - aggregated measures",
             "parent_domain": "westernparklands",
-            "theme": [
-              "Environmental Protection"
-            ],
+            "theme": ["Environmental Protection"],
             "modified_updates_on_data_change": false,
             "metadata_processed": "2021-02-03T01:35:32.280000+00:00",
             "data_processed": "2020-09-16T10:47:19+00:00",
-            "territory": [
-              "New South Wales"
-            ],
+            "territory": ["New South Wales"],
             "description": "<p><span style=\"color: rgb(86, 86, 86); font-family: Barlow; font-size: 16px;\">Contains location and aggregated heat measures captured via a network of more than 100 heat loggers installed in the council area.\u00a0</span><br/></p>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -166,19 +155,13 @@
             "language": "en",
             "license": null,
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": null
           }
         },
-        "features": [
-          "analyze",
-          "geo",
-          "custom_view"
-        ]
+        "features": ["analyze", "geo", "custom_view"]
       }
     },
     {
@@ -240,12 +223,8 @@
             "name": "metadata_time",
             "annotations": {
               "facet": [],
-              "facetsort": [
-                "-alphanum"
-              ],
-              "timeserie_precision": [
-                "hour"
-              ]
+              "facetsort": ["-alphanum"],
+              "timeserie_precision": ["hour"]
             }
           },
           {
@@ -254,12 +233,8 @@
             "type": "double",
             "name": "heat_stress_index",
             "annotations": {
-              "decimals": [
-                1
-              ],
-              "facetsort": [
-                "-count"
-              ]
+              "decimals": [1],
+              "facetsort": ["-count"]
             }
           },
           {
@@ -268,9 +243,7 @@
             "type": "double",
             "name": "payload_fields_uvindex",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -279,9 +252,7 @@
             "type": "double",
             "name": "payload_fields_wshumidity",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -290,9 +261,7 @@
             "type": "double",
             "name": "payload_fields_wstemperature",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -301,9 +270,7 @@
             "type": "double",
             "name": "payload_fields_airpressure",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -312,9 +279,7 @@
             "type": "double",
             "name": "payload_fields_brightness",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -323,9 +288,7 @@
             "type": "double",
             "name": "payload_fields_gustdirection",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -334,9 +297,7 @@
             "type": "double",
             "name": "payload_fields_gustspeed",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -345,9 +306,7 @@
             "type": "double",
             "name": "payload_fields_precip",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -356,9 +315,7 @@
             "type": "double",
             "name": "payload_fields_precipint",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -367,9 +324,7 @@
             "type": "double",
             "name": "payload_fields_radiation",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -378,9 +333,7 @@
             "type": "double",
             "name": "payload_fields_winddirection",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -389,9 +342,7 @@
             "type": "double",
             "name": "payload_fields_windspeed",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -400,9 +351,7 @@
             "type": "double",
             "name": "payload_fields_averagespl",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -411,9 +360,7 @@
             "type": "double",
             "name": "payload_fields_carbonmonoxide",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -422,9 +369,7 @@
             "type": "double",
             "name": "payload_fields_humidity",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -433,9 +378,7 @@
             "type": "double",
             "name": "payload_fields_ibatt",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -444,9 +387,7 @@
             "type": "double",
             "name": "payload_fields_nitrogendioxide",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -455,9 +396,7 @@
             "type": "double",
             "name": "payload_fields_ozone",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -466,9 +405,7 @@
             "type": "double",
             "name": "payload_fields_particulateserr",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -477,9 +414,7 @@
             "type": "double",
             "name": "payload_fields_particulatesvsn",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -488,9 +423,7 @@
             "type": "double",
             "name": "payload_fields_peakspl",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -499,9 +432,7 @@
             "type": "double",
             "name": "payload_fields_pm1",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -510,9 +441,7 @@
             "type": "double",
             "name": "payload_fields_pm10",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -521,9 +450,7 @@
             "type": "double",
             "name": "payload_fields_pm25",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -532,9 +459,7 @@
             "type": "double",
             "name": "payload_fields_temperature",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -543,9 +468,7 @@
             "type": "double",
             "name": "payload_fields_vbatt",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -554,9 +477,7 @@
             "type": "double",
             "name": "payload_fields_vpanel",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -565,9 +486,7 @@
             "type": "double",
             "name": "payload_fields_fixstatus",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -576,9 +495,7 @@
             "type": "double",
             "name": "payload_fields_hdop",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -587,9 +504,7 @@
             "type": "double",
             "name": "payload_fields_nsat",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -613,27 +528,17 @@
             "modified": "2020-12-07T05:27:41+00:00",
             "source_domain_address": null,
             "references": null,
-            "keyword": [
-              "weather"
-            ],
+            "keyword": ["weather"],
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_80_11978",
-              "au_80_10780"
-            ],
+            "geographic_reference": ["au_80_11978", "au_80_10780"],
             "timezone": null,
             "title": "Environmental sensors",
             "parent_domain": "westernparklands",
-            "theme": [
-              "Environmental Protection"
-            ],
+            "theme": ["Environmental Protection"],
             "modified_updates_on_data_change": false,
             "metadata_processed": "2021-06-18T06:00:13.031000+00:00",
             "data_processed": "2021-06-18T05:50:48+00:00",
-            "territory": [
-              "Ingleburn",
-              "Campbelltown (NSW)"
-            ],
+            "territory": ["Ingleburn", "Campbelltown (NSW)"],
             "description": "<p>Two environmental monitoring stations (EMS) were installed in December 2020. The EMS measures: particulate matter (PM 1.0, PM 2.5, PM 10), Nitrogen Dioxide, Carbon Monoxide, Ozone, temperature, relative humidity, and ambient noise.\u00a0<br/></p>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -646,19 +551,13 @@
             "language": "en",
             "license": "CC BY",
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": "https://creativecommons.org/licenses/by/4.0/"
           }
         },
-        "features": [
-          "geo",
-          "analyze",
-          "timeserie"
-        ]
+        "features": ["geo", "analyze", "timeserie"]
       }
     },
     {
@@ -731,9 +630,7 @@
             "type": "text",
             "name": "postcode",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -749,9 +646,7 @@
             "type": "geo_point_2d",
             "name": "lat_long",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -854,21 +749,15 @@
               "Local Businesses"
             ],
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_60_11500"
-            ],
+            "geographic_reference": ["au_60_11500"],
             "timezone": "Australia/Sydney",
             "title": "Local Business Directory - Campbelltown",
             "parent_domain": "westernparklands",
-            "theme": [
-              "Investment, Tourism and Growth"
-            ],
+            "theme": ["Investment, Tourism and Growth"],
             "modified_updates_on_data_change": true,
             "metadata_processed": "2021-03-19T02:18:52.513000+00:00",
             "data_processed": "2021-03-19T02:18:51+00:00",
-            "territory": [
-              "Campbelltown"
-            ],
+            "territory": ["Campbelltown"],
             "description": "<p><font face=\"Arial\"><span style=\"font-size: 14px;\">Our local businesses are the heartbeat of our community. To support our local businesses, we encourage our community to use the local business directory to spend local, to keep jobs local.\u00a0\u00a0</span></font></p><p><span style=\"color: rgb(32, 32, 32); font-family: Arial; font-size: 14px;\">If you are a business in the Campbelltown City Council local government area add yourself to our business directory.</span><br/></p>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -881,19 +770,13 @@
             "language": "en",
             "license": "CC BY",
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": "https://creativecommons.org/licenses/by/4.0/"
           }
         },
-        "features": [
-          "analyze",
-          "geo",
-          "custom_view"
-        ]
+        "features": ["analyze", "geo", "custom_view"]
       }
     },
     {
@@ -1057,9 +940,7 @@
             "type": "geo_point_2d",
             "name": "site_location",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           }
         ],
@@ -1088,10 +969,7 @@
               "Campbelltown City Council"
             ],
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_60_11500",
-              "au_60_18400"
-            ],
+            "geographic_reference": ["au_60_11500", "au_60_18400"],
             "timezone": null,
             "title": "Services, Facilities & POI - Campbelltown",
             "parent_domain": "westernparklands",
@@ -1105,10 +983,7 @@
             "modified_updates_on_data_change": false,
             "metadata_processed": "2021-02-19T02:05:18.161000+00:00",
             "data_processed": "2021-02-19T02:05:17+00:00",
-            "territory": [
-              "Campbelltown",
-              "Wollondilly"
-            ],
+            "territory": ["Campbelltown", "Wollondilly"],
             "description": "<p><span style=\"font-size: 12.495px;\">We provide a wide range of services and facilities including Libraries; Parks, Sport &amp; Recreation; Child Care; Arts &amp; Culture; Aquatics, Fitness &amp; Indoor Sports; Facilities for Hire; Animal Care Facility; Sports Stadium &amp; Athletics Centre.</span><br/></p>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -1121,19 +996,13 @@
             "language": "en",
             "license": "CC BY",
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": "https://creativecommons.org/licenses/by/4.0/"
           }
         },
-        "features": [
-          "analyze",
-          "geo",
-          "custom_view"
-        ]
+        "features": ["analyze", "geo", "custom_view"]
       }
     },
     {
@@ -1211,9 +1080,7 @@
             "type": "int",
             "name": "_0_to_4_years_number_of_people",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1236,9 +1103,7 @@
             "type": "int",
             "name": "_65_years_and_over_number_of_pe",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1261,9 +1126,7 @@
             "type": "int",
             "name": "not_fluent_in_english_number_o",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1286,9 +1149,7 @@
             "type": "int",
             "name": "low_income_650_w_number_of_h",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1304,9 +1165,7 @@
             "type": "int",
             "name": "households",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1315,9 +1174,7 @@
             "type": "int",
             "name": "housing_stress_number_of_house",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1333,9 +1190,7 @@
             "type": "int",
             "name": "housing_stress_households",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1344,9 +1199,7 @@
             "type": "int",
             "name": "mortgage_stress_number_of_hous",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1355,9 +1208,7 @@
             "type": "int",
             "name": "mortgage_stress_percent_of_hou",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1366,9 +1217,7 @@
             "type": "int",
             "name": "households1",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1377,9 +1226,7 @@
             "type": "int",
             "name": "rental_stress_number_of_househ",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1388,9 +1235,7 @@
             "type": "double",
             "name": "rental_stress_percent_of_house",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           },
           {
@@ -1399,9 +1244,7 @@
             "type": "int",
             "name": "households2",
             "annotations": {
-              "facetsort": [
-                "-count"
-              ]
+              "facetsort": ["-count"]
             }
           }
         ],
@@ -1413,21 +1256,15 @@
             "references": null,
             "keyword": null,
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_60_11500"
-            ],
+            "geographic_reference": ["au_60_11500"],
             "timezone": null,
             "title": "Vulnerability",
             "parent_domain": "westernparklands",
-            "theme": [
-              "Community, Events and Education"
-            ],
+            "theme": ["Community, Events and Education"],
             "modified_updates_on_data_change": false,
             "metadata_processed": "2021-04-05T22:51:07.462000+00:00",
             "data_processed": "2021-04-05T22:51:06+00:00",
-            "territory": [
-              "Campbelltown"
-            ],
+            "territory": ["Campbelltown"],
             "description": "<p><b><span style='font-size:10.0pt;line-height:107%;\nfont-family:\"Verdana\",sans-serif;mso-fareast-font-family:\"Times New Roman\";\nmso-bidi-font-family:\"Times New Roman\";color:#3F5469;mso-ansi-language:EN-AU;\nmso-fareast-language:EN-AU;mso-bidi-language:AR-SA'>Vulnerability </span></b><span style='font-size:10.0pt;line-height:107%;font-family:\"Verdana\",sans-serif;\nmso-fareast-font-family:\"Times New Roman\";mso-bidi-font-family:\"Times New Roman\";\ncolor:#3F5469;mso-ansi-language:EN-AU;mso-fareast-language:EN-AU;mso-bidi-language:\nAR-SA'>dataset provides statistics on the multiple stressors and shocks within\nthe community including population, social, and economic factors. Data\ncomponents include Population (Susceptible groups); Social (Language); Economic\nstress (Income, Household, Mortgage, Rental).</span><br/></p>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -1440,19 +1277,13 @@
             "language": "en",
             "license": null,
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": null
           }
         },
-        "features": [
-          "analyze",
-          "geo",
-          "custom_view"
-        ]
+        "features": ["analyze", "geo", "custom_view"]
       }
     },
     {
@@ -1557,21 +1388,15 @@
               "Western Parkland city Waste Collection"
             ],
             "source_domain_title": null,
-            "geographic_reference": [
-              "au_60_11500"
-            ],
+            "geographic_reference": ["au_60_11500"],
             "timezone": "Australia/Sydney",
             "title": "Waste Bin Collection Zones - Campbelltown",
             "parent_domain": "westernparklands",
-            "theme": [
-              "Waste and Recycling"
-            ],
+            "theme": ["Waste and Recycling"],
             "modified_updates_on_data_change": false,
             "metadata_processed": "2021-03-10T00:22:08.651000+00:00",
             "data_processed": "2021-02-11T09:55:21+00:00",
-            "territory": [
-              "Campbelltown"
-            ],
+            "territory": ["Campbelltown"],
             "description": "<p><span style=\"font-size: 11pt; font-family: Arial, sans-serif;\">Waste bin collection is just one of the key services Council do for our community.\u00a0 Waste bin collection zones provide the collection day information.</span></p><p><font face=\"Arial, sans-serif\"><span style=\"font-size: 14.6667px;\"><b>Data Currency<br/></b></span></font><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">Council will endeavour to refresh the dataset every six months until such time we can integrate our systems.\u00a0\u00a0</span></p><p><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">This dataset is due to be refreshed in September 2021.<br/><br/></span></p><p><font face=\"Arial, sans-serif\"><span style=\"font-size: 14.6667px;\"><b>Data Accuracy\u00a0<br/></b></span></font><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">The spatial accuracy of this information is reliant upon the NSW Spatial Services cadastre datasets. Dataset information is sourced from the Campbelltown City Council GIS dataset.\u00a0 All information is provided and updated by the various stakeholders and custodians within the Council.</span></p><p><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\"><br/></span></p><span style=\"font-size: medium;\"></span>",
             "modified_updates_on_metadata_change": false,
             "shared_catalog": null,
@@ -1584,19 +1409,13 @@
             "language": "en",
             "license": "CC BY",
             "source_dataset": null,
-            "metadata_languages": [
-              "en"
-            ],
+            "metadata_languages": ["en"],
             "oauth_scope": null,
             "federated": false,
             "license_url": "https://creativecommons.org/licenses/by/4.0/"
           }
         },
-        "features": [
-          "analyze",
-          "geo",
-          "custom_view"
-        ]
+        "features": ["analyze", "geo", "custom_view"]
       }
     }
   ]

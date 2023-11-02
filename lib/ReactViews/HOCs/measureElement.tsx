@@ -18,9 +18,10 @@ interface MeasureElementComponent<P>
 }
 
 interface MeasureElementClass<P> {
-  new (props: P & MeasureElementProps, context?: any): MeasureElementComponent<
-    P
-  >;
+  new (
+    props: P & MeasureElementProps,
+    context?: any
+  ): MeasureElementComponent<P>;
 }
 
 interface IState {

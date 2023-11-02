@@ -1,37 +1,37 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Terria Analytics",
+      "type": "group",
+      "isOpen": true,
+      "isPromoted": true,
+      "items": [
         {
-            "name": "Terria Analytics",
-            "type": "group",
-            "isOpen": true,
-            "isPromoted": true,
-            "items": [
-                {
-                    "name": "What makes this region unique or special?",
-                    "type": "why-am-i-special-function",
-                    "url": "http://analytics.terria.io:31113/jobs"
-                },
-                {
-                    "name": "Spatial Detailing",
-                    "type": "spatial-detailing-function",
-                    "url": "http://analytics.terria.io:31113/jobs"
-                },
-                {
-                    "name": "Regions like this",
-                    "type": "places-like-me-function",
-                    "url": "http://analytics.terria.io:31113/jobs"
-                },
-                {
-                    "name": "Victoria Crime (LGA)",
-                    "type": "csv",
-                    "url": "test/vic_assault.csv"
-                },
-                {
-                    "name": "NSW NEXIS 2012 (LGA)",
-                    "type": "csv",
-                    "url": "test/NSW_LGA_NEXIS_201212.csv"
-                }
-            ]
+          "name": "What makes this region unique or special?",
+          "type": "why-am-i-special-function",
+          "url": "http://analytics.terria.io:31113/jobs"
+        },
+        {
+          "name": "Spatial Detailing",
+          "type": "spatial-detailing-function",
+          "url": "http://analytics.terria.io:31113/jobs"
+        },
+        {
+          "name": "Regions like this",
+          "type": "places-like-me-function",
+          "url": "http://analytics.terria.io:31113/jobs"
+        },
+        {
+          "name": "Victoria Crime (LGA)",
+          "type": "csv",
+          "url": "test/vic_assault.csv"
+        },
+        {
+          "name": "NSW NEXIS 2012 (LGA)",
+          "type": "csv",
+          "url": "test/NSW_LGA_NEXIS_201212.csv"
         }
-    ]
+      ]
+    }
+  ]
 }

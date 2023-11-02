@@ -24,8 +24,10 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
 function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
   Base: T
 ) {
-  abstract class ReferenceMixinClass extends Base
-    implements ReferenceInterface {
+  abstract class ReferenceMixinClass
+    extends Base
+    implements ReferenceInterface
+  {
     /** A "weak" reference has a target which doesn't include the `sourceReference` property.
      * This means the reference is treated more like a shortcut to the target. So share links, for example, will use the target instead of sourceReference. */
     protected readonly weakReference: boolean = false;

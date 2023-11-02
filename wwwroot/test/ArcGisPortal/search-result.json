@@ -36,18 +36,10 @@
       "thumbnail": "thumbnail/thumbnail1581028005916.png",
       "documentation": null,
       "extent": [
-        [
-          140.9839,
-          -37.5043
-        ],
-        [
-          159.0979,
-          -28.1555
-        ]
+        [140.9839, -37.5043],
+        [159.0979, -28.1555]
       ],
-      "categories": [
-        "/Categories/Transport"
-      ],
+      "categories": ["/Categories/Transport"],
       "spatialReference": null,
       "accessInformation": null,
       "licenseInfo": "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>Spatial\nServices, a division of the Department of Customer Service creates and manages\nIntellectual Property for the Crown in right of New South Wales. Acquisition of\nthis data is subject to the customer entering into an appropriate Creative\nCommons license agreement. To the extent that Creative Commons licensing\napplies, all data and other material produced by Spatial Services constitutes Crown\ncopyright. Spatial Services has applied the Creative Commons Attribution 4.0\nAustralia Licence. Spatial Services asserts the right to be attributed as\nauthor of the original material in the following manner: </span></p>\n\n<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><img alt='' src='https://i.creativecommons.org/l/by/3.0/88x31.png' style='background-color: transparent;' /> <span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>©\nSpatial Services 2019.</span></p>\n\n<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>Additional\nterms for the use of Spatial Services material. Any derived products which are\ncreated will be required to clearly mark the date that any extractions from the\nSpatial Services Spatial Database occurred. All Intellectual Property which is\nowned by Spatial Services should only be loaded on any external cloud platforms\nif Spatial Services’ Intellectual Property remains unchanged, maintained and\npreserved.</span></p>",
@@ -91,21 +83,13 @@
         "Hosted Service"
       ],
       "description": "<p>Add a description of the item.</p><p>Use multiple paragraphs if necessary.</p><p><font size='5'>Metadata</font></p><table><tbody><tr><td style='width:50%;'>Type</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Update Frequency</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Contact Details</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Relationship to Themes and Datasets</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Accuracy</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Standards and Specifications</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Aggregators</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Distributors</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Dataset Producers and Contributors</td><td style='border: 1px solid #ccc'><br /></td></tr></tbody></table><a style='-webkit-border-radius:4;-moz-border-radius:4;border-radius:4px;font-family:Arial;color:#ffffff;font-size:18px;background:#0079c1;padding:8px 16px 8px 16px;text-decoration:none;' href='/static/exportcontent.html?featureservername=TopoShp'>Export Data</a>",
-      "tags": [
-        "topo"
-      ],
+      "tags": ["topo"],
       "snippet": null,
       "thumbnail": null,
       "documentation": null,
       "extent": [
-        [
-          140.999279035799,
-          -37.505942651320034
-        ],
-        [
-          159.2566666637356,
-          -28.12499999956465
-        ]
+        [140.999279035799, -37.505942651320034],
+        [159.2566666637356, -28.12499999956465]
       ],
       "categories": [],
       "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
@@ -163,14 +147,8 @@
       "thumbnail": "thumbnail/thumbnail1583993368746.jpeg",
       "documentation": null,
       "extent": [
-        [
-          140,
-          -37
-        ],
-        [
-          153,
-          -28
-        ]
+        [140, -37],
+        [153, -28]
       ],
       "categories": [],
       "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
@@ -215,21 +193,13 @@
         "Hosted Service"
       ],
       "description": "<p>Add a description of the item.</p><p>Use multiple paragraphs if necessary.</p><p><font size='5'>Metadata</font></p><table><tbody><tr><td style='width:50%;'>Type</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Update Frequency</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Contact Details</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Relationship to Themes and Datasets</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Accuracy</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Standards and Specifications</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Aggregators</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Distributors</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Dataset Producers and Contributors</td><td style='border: 1px solid #ccc'><br /></td></tr></tbody></table>",
-      "tags": [
-        "HAP"
-      ],
+      "tags": ["HAP"],
       "snippet": "Historical Imagery 1970s",
       "thumbnail": "thumbnail/thumbnail.JPEG",
       "documentation": null,
       "extent": [
-        [
-          150,
-          -33
-        ],
-        [
-          151,
-          -33
-        ]
+        [150, -33],
+        [151, -33]
       ],
       "categories": [],
       "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",

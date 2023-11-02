@@ -13,13 +13,13 @@ import {
   PEDESTRIAN_HEIGHT
 } from "../../../../lib/ReactViews/Tools/PedestrianMode/PedestrianMode";
 
-describe("MovementsController", function() {
+describe("MovementsController", function () {
   let cesium: Cesium;
   let scene: Scene;
   let camera: Camera;
   let controller: MovementsController;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     const terria = new Terria();
     const container = document.createElement("div");
     terria.mainViewer.attach(container);
@@ -35,10 +35,10 @@ describe("MovementsController", function() {
     camera = scene.camera;
   });
 
-  describe("when activated", function() {
+  describe("when activated", function () {
     it(
       "disables all default map interactions",
-      action(function() {
+      action(function () {
         controller.activate();
         expect(scene.screenSpaceCameraController.enableTranslate).toBe(false);
         expect(scene.screenSpaceCameraController.enableRotate).toBe(false);
@@ -49,29 +49,29 @@ describe("MovementsController", function() {
       })
     );
 
-    it("sets up the key map", function() {
+    it("sets up the key map", function () {
       const setupKeyMap = spyOn(controller, "setupKeyMap");
       controller.activate();
       expect(setupKeyMap).toHaveBeenCalled();
     });
 
-    it("sets up the mouse map", function() {
+    it("sets up the mouse map", function () {
       const setupMouseMap = spyOn(controller, "setupMouseMap");
       controller.activate();
       expect(setupMouseMap).toHaveBeenCalled();
     });
 
-    it("starts animating", function() {
+    it("starts animating", function () {
       const startAnimating = spyOn(controller, "startAnimating");
       controller.activate();
       expect(startAnimating).toHaveBeenCalled();
     });
   });
 
-  describe("when deactivated", function() {
+  describe("when deactivated", function () {
     it(
       "re-enables all default map interactions",
-      action(function() {
+      action(function () {
         const deactivate = controller.activate();
         deactivate();
         expect(scene.screenSpaceCameraController.enableTranslate).toBe(true);
@@ -83,7 +83,7 @@ describe("MovementsController", function() {
       })
     );
 
-    it("destroys the key map", function() {
+    it("destroys the key map", function () {
       const destroyKeyMap = jasmine.createSpy("destroyKeyMap");
       spyOn(controller, "setupKeyMap").and.returnValue(destroyKeyMap);
       const deactivate = controller.activate();
@@ -91,7 +91,7 @@ describe("MovementsController", function() {
       expect(destroyKeyMap).toHaveBeenCalled();
     });
 
-    it("destroys the mouse map", function() {
+    it("destroys the mouse map", function () {
       const destroyMouseMap = jasmine.createSpy("destroyMouseMap");
       spyOn(controller, "setupMouseMap").and.returnValue(destroyMouseMap);
       const deactivate = controller.activate();
@@ -99,7 +99,7 @@ describe("MovementsController", function() {
       expect(destroyMouseMap).toHaveBeenCalled();
     });
 
-    it("stops animating", function() {
+    it("stops animating", function () {
       const stopAnimating = jasmine.createSpy("stopAnimating");
       spyOn(controller, "startAnimating").and.returnValue(stopAnimating);
       const deactivate = controller.activate();
@@ -108,15 +108,15 @@ describe("MovementsController", function() {
     });
   });
 
-  describe("moveAmount", function() {
-    describe("in walk mode", function() {
-      it("is a constant", function() {
+  describe("moveAmount", function () {
+    describe("in walk mode", function () {
+      it("is a constant", function () {
         expect(controller.moveAmount).toBe(0.2);
       });
     });
 
-    describe("in fly mode", function() {
-      it("is proportional to the height", function() {
+    describe("in fly mode", function () {
+      it("is proportional to the height", function () {
         controller.mode = "fly";
         spyOnProperty(
           controller,
@@ -125,7 +125,7 @@ describe("MovementsController", function() {
         expect(controller.moveAmount).toBe(1);
       });
 
-      it("is never below baseAmount", function() {
+      it("is never below baseAmount", function () {
         controller.mode = "fly";
         spyOnProperty(
           controller,
@@ -136,15 +136,15 @@ describe("MovementsController", function() {
     });
   });
 
-  describe("when animating", function() {
-    it("automatically switches to fly mode when moving up", function() {
+  describe("when animating", function () {
+    it("automatically switches to fly mode when moving up", function () {
       controller.mode = "walk";
       controller.activeMovements.add("up");
       controller.animate();
       expect(controller.mode).toEqual("fly");
     });
 
-    it("automatically switches to walk mode when moving down and hitting ground", function() {
+    it("automatically switches to walk mode when moving down and hitting ground", function () {
       controller.mode = "fly";
       controller.activeMovements.add("down");
       controller.animate();
@@ -152,14 +152,14 @@ describe("MovementsController", function() {
     });
   });
 
-  describe("movements", function() {
-    beforeEach(function() {
+  describe("movements", function () {
+    beforeEach(function () {
       camera.position = Cartographic.toCartesian(
         Cartographic.fromDegrees(76.93, 8.52, 100)
       );
     });
 
-    it("can move forward", function() {
+    it("can move forward", function () {
       spyOnProperty(controller, "moveAmount").and.returnValue(100000);
       controller.move("forward");
       expect(toLatLonHeight(camera.position)).toEqual({
@@ -169,7 +169,7 @@ describe("MovementsController", function() {
       });
     });
 
-    it("can move backward", function() {
+    it("can move backward", function () {
       spyOnProperty(controller, "moveAmount").and.returnValue(100000);
       controller.move("backward");
       expect(toLatLonHeight(camera.position)).toEqual({
@@ -179,7 +179,7 @@ describe("MovementsController", function() {
       });
     });
 
-    it("can move up", function() {
+    it("can move up", function () {
       spyOnProperty(controller, "moveAmount").and.returnValue(100);
       controller.move("up");
       expect(toLatLonHeight(camera.position)).toEqual({
@@ -189,7 +189,7 @@ describe("MovementsController", function() {
       });
     });
 
-    it("can move down", function() {
+    it("can move down", function () {
       spyOnProperty(controller, "moveAmount").and.returnValue(100);
       controller.move("down");
       expect(toLatLonHeight(camera.position)).toEqual({

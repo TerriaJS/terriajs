@@ -10,9 +10,7 @@ interface SOSChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
   name?: string;
 }
-export default class SOSChartCustomComponent extends ChartCustomComponent<
-  SensorObservationServiceCatalogItem
-> {
+export default class SOSChartCustomComponent extends ChartCustomComponent<SensorObservationServiceCatalogItem> {
   get name(): string {
     return "sos-chart";
   }

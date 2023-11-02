@@ -3,19 +3,19 @@ import { autorun, runInAction } from "mobx";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 
-describe("WebMapTileServiceCatalogItem", function() {
+describe("WebMapTileServiceCatalogItem", function () {
   let terria: Terria;
   let wmts: WebMapTileServiceCatalogItem;
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     wmts = new WebMapTileServiceCatalogItem("test", terria);
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(wmts.type).toBe("wmts");
   });
 
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function() {
+  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function () {
     wmts.setTrait("definition", "url", "http://www.example.com");
     expect(wmts.url).toBeDefined();
     expect(
@@ -24,7 +24,7 @@ describe("WebMapTileServiceCatalogItem", function() {
     ).toBeTruthy();
   });
 
-  it("updates description from a GetCapabilities", async function() {
+  it("updates description from a GetCapabilities", async function () {
     runInAction(() => {
       wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       wmts.setTrait("definition", "layer", "Some_Layer1");
@@ -34,7 +34,7 @@ describe("WebMapTileServiceCatalogItem", function() {
     const cleanup = autorun(() => {
       if (wmts.info !== undefined) {
         const descSection = wmts.info.find(
-          section =>
+          (section) =>
             section.name ===
             i18next.t("models.webMapTileServiceCatalogItem.dataDescription")
         );
@@ -121,7 +121,7 @@ describe("WebMapTileServiceCatalogItem", function() {
   //   }
   // });
 
-  it("calculates correct tileMatrixSet", async function() {
+  it("calculates correct tileMatrixSet", async function () {
     runInAction(() => {
       wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       wmts.setTrait("definition", "layer", "Some_Layer1");
@@ -137,7 +137,7 @@ describe("WebMapTileServiceCatalogItem", function() {
     expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
   });
 
-  it("non existing tile matrix set", async function() {
+  it("non existing tile matrix set", async function () {
     runInAction(() => {
       wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       wmts.setTrait("definition", "layer", "Layer_With_Bad_Tilematrixset");

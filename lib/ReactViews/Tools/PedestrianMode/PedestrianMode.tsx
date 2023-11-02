@@ -21,7 +21,7 @@ type PedestrianModeProps = {
 };
 export const PEDESTRIAN_MODE_ID = "pedestrian-mode";
 
-const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
+const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
   const { viewState } = props;
 
   const cesium = viewState.terria.currentViewer;
@@ -37,8 +37,9 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const updateView = () => setView(getViewFromScene(cesium.scene));
 
   useEffect(() => {
-    const item = viewState.terria.mapNavigationModel.findItem(MeasureTool.id)
-      ?.controller;
+    const item = viewState.terria.mapNavigationModel.findItem(
+      MeasureTool.id
+    )?.controller;
     if (item && item.active) {
       item.deactivate();
     }
@@ -51,7 +52,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   useEffect(function closeOnZoomTo() {
     return reaction(
       () => cesium.isMapZooming,
-      isMapZooming => {
+      (isMapZooming) => {
         if (isMapZooming) viewState.closeTool();
       }
     );

@@ -1,20 +1,20 @@
 {
-    "_links": {
-        "self": {
-            "href": "https://senaps.io/api/sensor/v2/streams?id=*SHT31DIS_ALL*&locationid=boorowa.temprh.site5a"
-        }
-    },
-    "count": 1,
-    "_embedded": {
-        "streams": [
-            {
-                "_links": {
-                    "self": {
-                        "href": "https://senaps.io/api/sensor/v2/streams/tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature"
-                    }
-                },
-                "id": "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature"
-            }
-        ]
+  "_links": {
+    "self": {
+      "href": "https://senaps.io/api/sensor/v2/streams?id=*SHT31DIS_ALL*&locationid=boorowa.temprh.site5a"
     }
+  },
+  "count": 1,
+  "_embedded": {
+    "streams": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://senaps.io/api/sensor/v2/streams/tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature"
+          }
+        },
+        "id": "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature"
+      }
+    ]
+  }
 }

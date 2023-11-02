@@ -126,7 +126,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset === undefined) return undefined;
     if (this.ckanDataset.extras !== undefined) {
       const out: number[] = [];
-      const bboxExtras = this.ckanDataset.extras.forEach(e => {
+      const bboxExtras = this.ckanDataset.extras.forEach((e) => {
         if (e.key === "bbox-west-long") out[0] = parseFloat(e.value);
         if (e.key === "bbox-south-lat") out[1] = parseFloat(e.value);
         if (e.key === "bbox-north-lat") out[2] = parseFloat(e.value);
@@ -183,8 +183,9 @@ export class CkanDatasetStratum extends LoadableStratum(
       outArray.push(
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t("models.ckan.licence"),
-          content: `[${this.ckanDataset.license_title ||
-            this.ckanDataset.license_url}](${this.ckanDataset.license_url})`
+          content: `[${
+            this.ckanDataset.license_title || this.ckanDataset.license_url
+          }](${this.ckanDataset.license_url})`
         })
       );
     } else if (this.ckanDataset.license_title !== undefined) {
@@ -399,10 +400,10 @@ export default class CkanItemReference extends UrlMixin(
 
     const layersFromItemProperties =
       this.itemPropertiesByIds?.find(
-        itemProps => this.uniqueId && itemProps.ids.includes(this.uniqueId)
+        (itemProps) => this.uniqueId && itemProps.ids.includes(this.uniqueId)
       )?.itemProperties?.layers ??
       this.itemPropertiesByType?.find(
-        itemProps => itemProps.type === WebMapServiceCatalogItem.type
+        (itemProps) => itemProps.type === WebMapServiceCatalogItem.type
       )?.itemProperties?.layers ??
       this.itemProperties?.layers;
 
@@ -417,7 +418,7 @@ export default class CkanItemReference extends UrlMixin(
     // Improve the robustness.
     const cleanLayers = rawLayers
       ?.split(",")
-      .map(layer => layer.trim())
+      .map((layer) => layer.trim())
       .join(",");
     return cleanLayers;
   }

@@ -3,8 +3,8 @@ import { getShallowRenderedOutput } from "../MoreShallowTools";
 import React from "react";
 import { sortable } from "react-anything-sortable";
 
-describe("Story", function() {
-  it("should be wrapped with the sortable HOC as the first HOC", function() {
+describe("Story", function () {
+  it("should be wrapped with the sortable HOC as the first HOC", function () {
     expect(Object.keys(sortable(StoryRaw).propTypes)).toEqual(
       Object.keys(Story.propTypes)
     );

@@ -19,10 +19,10 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
 
-const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
-  .default;
-const writeTextToCanvas = require("terriajs-cesium/Source/Core/writeTextToCanvas")
-  .default;
+const destroyObject =
+  require("terriajs-cesium/Source/Core/destroyObject").default;
+const writeTextToCanvas =
+  require("terriajs-cesium/Source/Core/writeTextToCanvas").default;
 
 interface PointDetails {
   layer?: L.CircleMarker;
@@ -473,7 +473,7 @@ class LeafletGeomVisualizer {
 
     if (redrawIcon) {
       const recolorNeeded = !color.equals(defaultColor);
-      const drawBillboard = function(
+      const drawBillboard = function (
         image: HTMLImageElement,
         dataurl: string | undefined
       ) {
@@ -493,7 +493,7 @@ class LeafletGeomVisualizer {
         marker.setIcon(L.icon(iconOptions));
       };
       const img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         drawBillboard(img, imageUrl);
       };
       if (isDefined(imageUrl)) {
@@ -543,10 +543,10 @@ class LeafletGeomVisualizer {
       CesiumMath.toDegrees(cart.longitude)
     );
     const text = getValue(labelGraphics.text, time);
-    const font = getValue((labelGraphics.font as unknown) as Property, time);
+    const font = getValue(labelGraphics.font as unknown as Property, time);
     const scale = getValueOrDefault(labelGraphics.scale, time, 1.0);
     const fillColor = getValueOrDefault(
-      (labelGraphics.fillColor as unknown) as Property,
+      labelGraphics.fillColor as unknown as Property,
       time,
       defaultColor
     );
@@ -601,7 +601,10 @@ class LeafletGeomVisualizer {
     }
 
     if (redrawLabel) {
-      const drawBillboard = function(image: HTMLImageElement, dataurl: string) {
+      const drawBillboard = function (
+        image: HTMLImageElement,
+        dataurl: string
+      ) {
         iconOptions.iconUrl = dataurl || image;
         if (!isDefined(iconOptions.iconSize)) {
           iconOptions.iconSize = [image.width * scale, image.height * scale];
@@ -621,7 +624,7 @@ class LeafletGeomVisualizer {
       const imageUrl = canvas.toDataURL();
 
       const img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         drawBillboard(img, imageUrl);
       };
       img.src = imageUrl;
@@ -676,7 +679,7 @@ class LeafletGeomVisualizer {
       };
     }
     const fill = getValueOrDefault(
-      (rectangleGraphics.fill as unknown) as Property,
+      rectangleGraphics.fill as unknown as Property,
       time,
       true
     );
@@ -687,19 +690,19 @@ class LeafletGeomVisualizer {
     }
 
     const outlineWidth = getValueOrDefault(
-      (rectangleGraphics.outlineWidth as unknown) as Property,
+      rectangleGraphics.outlineWidth as unknown as Property,
       time,
       defaultOutlineWidth
     );
 
     const outlineColor = getValueOrDefault(
-      (rectangleGraphics.outlineColor as unknown) as Property,
+      rectangleGraphics.outlineColor as unknown as Property,
       time,
       defaultOutlineColor
     );
 
     const material = getValueOrUndefined(
-      (rectangleGraphics.material as unknown) as Property,
+      rectangleGraphics.material as unknown as Property,
       time
     );
     let fillColor;
@@ -722,7 +725,7 @@ class LeafletGeomVisualizer {
 
       if (outline && dashArray) {
         polygonOptions.dashArray = dashArray
-          .map(x => x * outlineWidth)
+          .map((x) => x * outlineWidth)
           .join(",");
       }
 
@@ -814,7 +817,7 @@ class LeafletGeomVisualizer {
     }
 
     const fill = getValueOrDefault(
-      (polygonGraphics.fill as unknown) as Property,
+      polygonGraphics.fill as unknown as Property,
       time,
       true
     );
@@ -825,19 +828,19 @@ class LeafletGeomVisualizer {
     }
 
     const outlineWidth = getValueOrDefault(
-      (polygonGraphics.outlineWidth as unknown) as Property,
+      polygonGraphics.outlineWidth as unknown as Property,
       time,
       defaultOutlineWidth
     );
 
     const outlineColor = getValueOrDefault(
-      (polygonGraphics.outlineColor as unknown) as Property,
+      polygonGraphics.outlineColor as unknown as Property,
       time,
       defaultOutlineColor
     );
 
     const material = getValueOrUndefined(
-      (polygonGraphics.material as unknown) as Property,
+      polygonGraphics.material as unknown as Property,
       time
     );
     let fillColor;
@@ -860,7 +863,7 @@ class LeafletGeomVisualizer {
 
       if (outline && dashArray) {
         polygonOptions.dashArray = dashArray
-          .map(x => x * outlineWidth)
+          .map((x) => x * outlineWidth)
           .join(",");
       }
 
@@ -975,7 +978,7 @@ class LeafletGeomVisualizer {
       }
       color = color || defaultColor;
       width = getValueOrDefault(
-        (polylineGraphics.width as unknown) as Property,
+        polylineGraphics.width as unknown as Property,
         time,
         defaultWidth
       );
@@ -991,7 +994,7 @@ class LeafletGeomVisualizer {
     };
 
     if (dashArray) {
-      polylineOptions.dashArray = dashArray.map(x => x * width).join(",");
+      polylineOptions.dashArray = dashArray.map((x) => x * width).join(",");
     }
 
     if (!isDefined(geomLayer)) {
@@ -1062,10 +1065,10 @@ class LeafletGeomVisualizer {
   getLatLngBounds(): LatLngBounds | undefined {
     let result: LatLngBounds | undefined;
 
-    Object.keys(this._entityHash).forEach(entityId => {
+    Object.keys(this._entityHash).forEach((entityId) => {
       const entityDetails: any = this._entityHash[entityId];
 
-      Object.keys(entityDetails).forEach(primitiveId => {
+      Object.keys(entityDetails).forEach((primitiveId) => {
         const primitive = entityDetails[primitiveId];
 
         if (isDefined(primitive.layer)) {
@@ -1232,7 +1235,7 @@ function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
   let holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
   if (hierarchy.holes.length > 0) {
-    hierarchy.holes.forEach(hole => {
+    hierarchy.holes.forEach((hole) => {
       holes.push(convertEntityPositionsToLatLons(hole.positions));
     });
     return [convertEntityPositionsToLatLons(positions), ...holes];

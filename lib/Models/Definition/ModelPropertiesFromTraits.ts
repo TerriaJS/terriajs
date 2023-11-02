@@ -19,9 +19,8 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type ModelPropertiesFromTraits<
-  TDefinition extends ModelTraits
-> = ModelPropertiesFromCompleteTraits<Complete<TDefinition>>;
+type ModelPropertiesFromTraits<TDefinition extends ModelTraits> =
+  ModelPropertiesFromCompleteTraits<Complete<TDefinition>>;
 
 type ModelPropertiesFromCompleteTraits<TDefinition> = {
   readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<

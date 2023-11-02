@@ -10,9 +10,8 @@ import SelectableDimensions, {
 
 describe("SelectableDimension", () => {
   describe("filterSelectableDimensions", () => {
-    const filterDefaultPlacement = filterSelectableDimensions(
-      DEFAULT_PLACEMENT
-    );
+    const filterDefaultPlacement =
+      filterSelectableDimensions(DEFAULT_PLACEMENT);
 
     it("should filter out selectable dimensions with no options", () => {
       const dimWithNoOptions: SelectableDimension = {
@@ -60,9 +59,8 @@ describe("SelectableDimension", () => {
     });
   });
   it("should return disabled for checkboxes with no selection", () => {
-    const checkboxWithNoSelection: SelectableDimension = mkSelectableCheckbox(
-      DEFAULT_PLACEMENT
-    );
+    const checkboxWithNoSelection: SelectableDimension =
+      mkSelectableCheckbox(DEFAULT_PLACEMENT);
     expect(findSelectedValueName(checkboxWithNoSelection)).toBe("Disabled");
   });
   it("should return enabled for checkboxes with true selection", () => {

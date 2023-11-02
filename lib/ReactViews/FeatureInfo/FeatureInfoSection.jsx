@@ -28,7 +28,7 @@ import { runInAction } from "mobx";
 import TableMixin from "../../ModelMixins/TableMixin";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
-Mustache.escape = function(string) {
+Mustache.escape = function (string) {
   return string;
 };
 
@@ -92,8 +92,8 @@ export const FeatureInfoSection = observer(
       let aliases = [];
       if (TableMixin.isMixedInto(this.props.catalogItem)) {
         aliases = this.props.catalogItem.columns
-          .filter(col => col.name && col.title && col.name !== col.title)
-          .map(col => [col.name, col.title]);
+          .filter((col) => col.name && col.title && col.name !== col.title)
+          .map((col) => [col.name, col.title]);
       }
 
       // Always overwrite using aliases so that applying titles to columns doesn't break feature info templates
@@ -407,16 +407,15 @@ function currentTimeIfAvailable(featureInfoSection) {
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
   featureInfoSection.setState({
-    removeFeatureChangedSubscription: feature.definitionChanged.addEventListener(
-      function(changedFeature) {
+    removeFeatureChangedSubscription:
+      feature.definitionChanged.addEventListener(function (changedFeature) {
         runInAction(() => {
           setCurrentFeatureValues(
             changedFeature,
             currentTimeIfAvailable(featureInfoSection)
           );
         });
-      }
-    )
+      })
   });
 
   // setTimeoutsForUpdatingCustomComponents(featureInfoSection);
@@ -433,7 +432,7 @@ function removeSubscriptionsAndTimeouts(featureInfoSection) {
       removeFeatureChangedSubscription: undefined
     });
   }
-  featureInfoSection.state.timeoutIds.forEach(id => {
+  featureInfoSection.state.timeoutIds.forEach((id) => {
     clearTimeout(id);
   });
 }
@@ -604,7 +603,7 @@ function setCurrentFeatureValues(feature, currentTime) {
  * @private
  */
 function mustacheJsonSubOptions(customProcessing) {
-  return function(text, render) {
+  return function (text, render) {
     // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
     // Note this won't work with nested objects in the options (but these aren't used yet).
     // Note I use [\s\S]* instead of .* at the end - .* does not match newlines, [\s\S]* does.
@@ -714,7 +713,7 @@ function mustacheFormatDateTime() {
  * @private
  */
 function mustacheURLEncodeTextComponent() {
-  return function(text, render) {
+  return function (text, render) {
     return encodeURIComponent(render(text));
   };
 }
@@ -727,7 +726,7 @@ function mustacheURLEncodeTextComponent() {
  * @private
  */
 function mustacheURLEncodeText() {
-  return function(text, render) {
+  return function (text, render) {
     return encodeURI(render(text));
   };
 }

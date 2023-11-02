@@ -42,33 +42,34 @@ Below is sample catalog item configuration:
 }
 ```
 
-You can host the generated index anywhere, the above configuration assumes that you have added it to `terriamap/wwwroot`. 
+You can host the generated index anywhere, the above configuration assumes that you have added it to `terriamap/wwwroot`.
 
 Search provider configuration:
 
 `search: SearchableItemTraits`
-  - `providerType: "indexed"`
-    - Required
-    - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
-  - `providerOptions: any`
-    - Required
-    - Options for the indexed item search provider
-      - `indexRootUrl: string`
-        - Required
-        - The URL of `indexRoot.json` file that was generted using `terriajs-indexer`.
-  - `resultTemplate: string`
-    - Optional
-    - A [Mustache](https://mustache.github.io/) formatted template string used to generate a title text for each result in the search results listing. The columns in `resultsData.csv` can be used as variables in the template string. If not provided, the text defaults to the ID of the feature.
-   
-  - `parameters: SearchParameterTraits[]`
-    - Optional
-    - Additional configuration for each search parameter. This is given as an array of `SearchParameterTraits` indexed by the parameter ID.
-    - `id: string`
+
+- `providerType: "indexed"`
+  - Required
+  - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
+- `providerOptions: any`
+  - Required
+  - Options for the indexed item search provider
+    - `indexRootUrl: string`
       - Required
-      - ID of the parameter
-    - `name?: string`
-      - Optional
-      - A human readable name to assign to the parameter which will be shown to the user in the search form instead of the ID.
-    - `queryOptions?: any`
-      - Query options to be passed to the index when searching. Currently only `text` parameters accept `queryOptions`. For `text` parameter `queryOptions` is expected to be a valid [Minisearch Search Options](https://lucaong.github.io/minisearch/modules/_minisearch_.html#searchoptions-1) object.
-      
+      - The URL of `indexRoot.json` file that was generted using `terriajs-indexer`.
+- `resultTemplate: string`
+
+  - Optional
+  - A [Mustache](https://mustache.github.io/) formatted template string used to generate a title text for each result in the search results listing. The columns in `resultsData.csv` can be used as variables in the template string. If not provided, the text defaults to the ID of the feature.
+
+- `parameters: SearchParameterTraits[]`
+  - Optional
+  - Additional configuration for each search parameter. This is given as an array of `SearchParameterTraits` indexed by the parameter ID.
+  - `id: string`
+    - Required
+    - ID of the parameter
+  - `name?: string`
+    - Optional
+    - A human readable name to assign to the parameter which will be shown to the user in the search form instead of the ID.
+  - `queryOptions?: any`
+    - Query options to be passed to the index when searching. Currently only `text` parameters accept `queryOptions`. For `text` parameter `queryOptions` is expected to be a valid [Minisearch Search Options](https://lucaong.github.io/minisearch/modules/_minisearch_.html#searchoptions-1) object.

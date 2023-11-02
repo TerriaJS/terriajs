@@ -16,17 +16,19 @@ import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 
 const CatalogGroupButton = styled.button`
-  ${props => `
+  ${(props) => `
     &:hover,
     &:focus {
       color: ${props.theme.textLight};
       background-color: ${props.theme.modalHighlight};
     }
-    ${props.active &&
+    ${
+      props.active &&
       `
         color: ${props.theme.textLight};
         background-color: ${props.theme.modalHighlight};
-      `}
+      `
+    }
     `}
 `;
 

@@ -27,7 +27,8 @@ class KmlCatalogItem
   extends MappableMixin(
     UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
   )
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "kml";
   get type() {
     return KmlCatalogItem.type;
@@ -54,7 +55,7 @@ class KmlCatalogItem
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string | Resource | Document | Blob>(resolve => {
+    return new Promise<string | Resource | Document | Blob>((resolve) => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
         resolve(parser.parseFromString(this.kmlString, "text/xml"));
@@ -74,14 +75,14 @@ class KmlCatalogItem
         });
       }
     })
-      .then(kmlLoadInput => {
+      .then((kmlLoadInput) => {
         return KmlDataSource.load(kmlLoadInput);
       })
-      .then(dataSource => {
+      .then((dataSource) => {
         this._dataSource = dataSource;
         this.doneLoading(dataSource); // Unsure if this is necessary
       })
-      .catch(e => {
+      .catch((e) => {
         throw networkRequestError(
           TerriaError.from(e, {
             sender: this,
@@ -119,7 +120,7 @@ class KmlCatalogItem
 
         const polygon = entity.polygon;
         if (isDefined(polygon)) {
-          polygon.perPositionHeight = (true as unknown) as Property;
+          polygon.perPositionHeight = true as unknown as Property;
           const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
@@ -133,7 +134,7 @@ class KmlCatalogItem
         }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
-      sampleTerrain(terrainProvider, 11, positionsToSample).then(function() {
+      sampleTerrain(terrainProvider, 11, positionsToSample).then(function () {
         for (let i = 0; i < positionsToSample.length; ++i) {
           const position = positionsToSample[i];
           if (!isDefined(position.height)) {

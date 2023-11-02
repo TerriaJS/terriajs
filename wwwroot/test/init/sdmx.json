@@ -1,251 +1,237 @@
-
 {
-    "catalog": [{
-        "name": "SDMX-JSON testing",
-        "type": "group",
-        "isOpen": true,
-        "items": [
+  "catalog": [
+    {
+      "name": "SDMX-JSON testing",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "Local files",
+          "type": "group",
+          "isOpen": true,
+          "items": [
             {
-                "name": "Local files",
-                "type": "group",
-                "isOpen": true,
-                "items": [
-                    {
-                        "name": "Simple example",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo-2013.json",
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Example with no choices",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-no-concepts-2013.json",
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Two dimensions",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo2-2013.json",
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Time varying",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo-BD2-2011_2013.json",
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Data as observations not series",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-as-observations.json",
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Data as observations, hidden repeated dimension",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-as-obs-repeated-dim.json",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "dataflowUrlComponent": ""
-                    },
-                    {
-                        "name": "Non-spatial",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "build/TerriaJS/test/SDMX-JSON/data-nonspatial.json",
-                        "dataflowUrlComponent": ""
-                    }
-                ]
+              "name": "Simple example",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-foo-2013.json",
+              "dataflowUrlComponent": ""
             },
             {
-                "name": "OECD data",
-                "type": "group",
-                "isOpen": true,
-                "items": [
-                    {
-                        "name": "Annual GDP VOBARSA (online)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stats.oecd.org/sdmx-json/data/QNA/.B1_GE.VOBARSA.A/all",
-                        "regionDimensionId": "LOCATION",
-                        "regionType": "ISO3",
-                        "featureInfoTemplate": {
-                            "template": "<p>Annual {{date}} GDP: {{Value}}</p><p>(expenditure approach, seasonally adjusted, units TBC)</p>",
-                            "formats": {
-                                "Value": {
-                                    "maximumFractionDigits": 0,
-                                    "useGrouping": true
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "Quarterly National Accounts (QNA)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stats.oecd.org/sdmx-json/data/QNA",
-                        "regionDimensionId": "LOCATION",
-                        "regionType": "ISO3",
-                        "startTime": "1970",
-                        "endTime": "2016",
-                        "whitelist": {
-                            "SUBJECT": [
-                                "B1_GA", "B1_GE", "B1GD"
-                            ],
-                            "MEASURE": [
-                                "VOBARSA", "VPVOBARSA", "LNBQRSA"
-                            ],
-                            "FREQUENCY": [
-                                "A"
-                            ]
-                        },
-                        "selectedInitially": {
-                            "SUBJECT": [
-                                "B1_GE"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "OECD QNA 2005 only",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stats.oecd.org/sdmx-json/data/QNA",
-                        "regionDimensionId": "LOCATION",
-                        "regionType": "ISO3",
-                        "startTime": "2005",
-                        "endTime": "2005",
-                        "whitelist": {
-                            "SUBJECT": [
-                                "B1_GE", "B1_GA", "B1GD"
-                            ],
-                            "MEASURE": [
-                                "VOBARSA", "VPVOBARSA", "LNBQRSA"
-                            ],
-                            "FREQUENCY": [
-                                "A"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Economic Outlook 97 Annual Projections, June 2015",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stats.oecd.org/sdmx-json/data/EO97_INTERNET",
-                        "regionDimensionId": "LOCATION",
-                        "regionType": "ISO3"
-                    }
-                ]
+              "name": "Example with no choices",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-no-concepts-2013.json",
+              "dataflowUrlComponent": ""
             },
             {
-                "name": "ABS examples",
-                 "type": "group",
-                 "isOpen": true,
-                 "items": [
-                     {
-                        "name": "Age",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "MEASURE": ["3"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        },
-                        "whitelist": {
-                            "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
-                        }
-                    },
-                    {
-                        "name": "Ancestry",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "ANCP": ["TOTP"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Country of birth",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "MEASURE": ["3"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Religious affiliation",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "MEASURE": ["3"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Occupation",
-                         "type": "sdmx-json",
-                         "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
-                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                     },
-                     {
-                        "name": "Method of travel to work",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "MEASURE": ["3"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    }
-                ]
+              "name": "Two dimensions",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-foo2-2013.json",
+              "dataflowUrlComponent": ""
+            },
+            {
+              "name": "Time varying",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-foo-BD2-2011_2013.json",
+              "dataflowUrlComponent": ""
+            },
+            {
+              "name": "Data as observations not series",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-as-observations.json",
+              "dataflowUrlComponent": ""
+            },
+            {
+              "name": "Data as observations, hidden repeated dimension",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-as-obs-repeated-dim.json",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "AGE": ["TT", "O15"]
+              },
+              "dataflowUrlComponent": ""
+            },
+            {
+              "name": "Non-spatial",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "build/TerriaJS/test/SDMX-JSON/data-nonspatial.json",
+              "dataflowUrlComponent": ""
             }
-        ]
-    }]
+          ]
+        },
+        {
+          "name": "OECD data",
+          "type": "group",
+          "isOpen": true,
+          "items": [
+            {
+              "name": "Annual GDP VOBARSA (online)",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stats.oecd.org/sdmx-json/data/QNA/.B1_GE.VOBARSA.A/all",
+              "regionDimensionId": "LOCATION",
+              "regionType": "ISO3",
+              "featureInfoTemplate": {
+                "template": "<p>Annual {{date}} GDP: {{Value}}</p><p>(expenditure approach, seasonally adjusted, units TBC)</p>",
+                "formats": {
+                  "Value": {
+                    "maximumFractionDigits": 0,
+                    "useGrouping": true
+                  }
+                }
+              }
+            },
+            {
+              "name": "Quarterly National Accounts (QNA)",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stats.oecd.org/sdmx-json/data/QNA",
+              "regionDimensionId": "LOCATION",
+              "regionType": "ISO3",
+              "startTime": "1970",
+              "endTime": "2016",
+              "whitelist": {
+                "SUBJECT": ["B1_GA", "B1_GE", "B1GD"],
+                "MEASURE": ["VOBARSA", "VPVOBARSA", "LNBQRSA"],
+                "FREQUENCY": ["A"]
+              },
+              "selectedInitially": {
+                "SUBJECT": ["B1_GE"]
+              }
+            },
+            {
+              "name": "OECD QNA 2005 only",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stats.oecd.org/sdmx-json/data/QNA",
+              "regionDimensionId": "LOCATION",
+              "regionType": "ISO3",
+              "startTime": "2005",
+              "endTime": "2005",
+              "whitelist": {
+                "SUBJECT": ["B1_GE", "B1_GA", "B1GD"],
+                "MEASURE": ["VOBARSA", "VPVOBARSA", "LNBQRSA"],
+                "FREQUENCY": ["A"]
+              }
+            },
+            {
+              "name": "Economic Outlook 97 Annual Projections, June 2015",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stats.oecd.org/sdmx-json/data/EO97_INTERNET",
+              "regionDimensionId": "LOCATION",
+              "regionType": "ISO3"
+            }
+          ]
+        },
+        {
+          "name": "ABS examples",
+          "type": "group",
+          "isOpen": true,
+          "items": [
+            {
+              "name": "Age",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "MEASURE": ["3"],
+                "AGE": ["TT", "O15"]
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              },
+              "whitelist": {
+                "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
+              }
+            },
+            {
+              "name": "Ancestry",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "ANCP": ["TOTP"],
+                "AGE": ["TT", "O15"]
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              }
+            },
+            {
+              "name": "Country of birth",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "MEASURE": ["3"],
+                "AGE": ["TT", "O15"]
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              }
+            },
+            {
+              "name": "Religious affiliation",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "MEASURE": ["3"],
+                "AGE": ["TT", "O15"]
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              }
+            },
+            {
+              "name": "Occupation",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                "MEASURE": ["O15"] // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              }
+            },
+            {
+              "name": "Method of travel to work",
+              "type": "sdmx-json",
+              "sortValues": true,
+              "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
+              "aggregatedDimensionIds": ["STATE"],
+              "totalValueIds": {
+                "*": ["TOT"],
+                "MEASURE": ["3"],
+                "AGE": ["TT", "O15"]
+              },
+              "selectedInitially": {
+                "REGIONTYPE": ["SA4"]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
-

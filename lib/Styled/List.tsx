@@ -12,7 +12,7 @@ export const Ul = styled(Box).attrs({
 })<IUlProps>`
   list-style: none;
   margin: 0;
-  ${props =>
+  ${(props) =>
     props.fullWidth &&
     css`
       width: 100%;
@@ -20,14 +20,14 @@ export const Ul = styled(Box).attrs({
         width: 100%;
       }
     `}
-  ${props =>
+  ${(props) =>
     props.spaced &&
     css`
       ${Li}:not(:first-child) {
         padding-top: 5px;
       }
     `}
-  ${props =>
+  ${(props) =>
     props.lined &&
     css`
       ${Li}:first-child {

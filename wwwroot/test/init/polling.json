@@ -76,34 +76,34 @@
           "featureInfoTemplate": "<p>Enum: {{enum}}</p><chart poll-seconds='5' poll-sources='build/TerriaJS/test/csv_nongeo/B_2d.csv' sources='build/TerriaJS/test/csv_nongeo/A_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart><chart poll-seconds='8' poll-sources='build/TerriaJS/test/csv_nongeo/B_2d.csv' sources='build/TerriaJS/test/csv_nongeo/A_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='2'></chart>"
         },
         {
-            "name": "Moving features (sampled) updated in 20s",
-            "type": "csv",
-            "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-            "idColumns": ["id"],
-            "polling": {
-              "seconds": 20,
-              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id_update.csv",
-              "replace": false
-            },
-            "tableStyle": {
-                "dataVariable": "value",
-                "scaleByValue": true
-            }
+          "name": "Moving features (sampled) updated in 20s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+          "idColumns": ["id"],
+          "polling": {
+            "seconds": 20,
+            "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id_update.csv",
+            "replace": false
+          },
+          "tableStyle": {
+            "dataVariable": "value",
+            "scaleByValue": true
+          }
         },
         {
-            "name": "Moving features (sampled) replaced in 20s",
-            "type": "csv",
-            "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-            "idColumns": ["id"],
-            "polling": {
-              "seconds": 20,
-              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id2.csv",
-              "replace": true
-            },
-            "tableStyle": {
-                "dataVariable": "value",
-                "scaleByValue": true
-            }
+          "name": "Moving features (sampled) replaced in 20s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+          "idColumns": ["id"],
+          "polling": {
+            "seconds": 20,
+            "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id2.csv",
+            "replace": true
+          },
+          "tableStyle": {
+            "dataVariable": "value",
+            "scaleByValue": true
+          }
         }
       ]
     }

@@ -151,7 +151,7 @@ export default class CesiumRenderLoopPauser {
     // // Hacky way to force a repaint when a web worker sends something back.
     this._originalScheduleTask = TaskProcessor.prototype.scheduleTask;
     const that = this;
-    TaskProcessor.prototype.scheduleTask = function(
+    TaskProcessor.prototype.scheduleTask = function (
       this: any,
       parameters,
       transferableObjects
@@ -166,7 +166,7 @@ export default class CesiumRenderLoopPauser {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
         var taskProcessor = this;
-        this._worker.onmessage = function(event: any) {
+        this._worker.onmessage = function (event: any) {
           taskProcessor._originalWorkerMessageSinkRepaint(event);
 
           if (that.isDestroyed()) {

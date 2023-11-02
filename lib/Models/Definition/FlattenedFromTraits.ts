@@ -19,18 +19,16 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<
-  {
-    readonly [P in keyof TDefinition]: NotUndefined<
-      TDefinition[P]
-    > extends Array<infer TElement>
-      ? ArrayTrait<TDefinition[P], TElement> extends infer R
-        ? CopyNull<TDefinition[P], R> | undefined
-        : never
-      : SingleTrait<TDefinition[P]> extends infer R
+type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<{
+  readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
+    infer TElement
+  >
+    ? ArrayTrait<TDefinition[P], TElement> extends infer R
       ? CopyNull<TDefinition[P], R> | undefined
-      : never;
-  }
->;
+      : never
+    : SingleTrait<TDefinition[P]> extends infer R
+    ? CopyNull<TDefinition[P], R> | undefined
+    : never;
+}>;
 
 export default FlattenedFromTraits;

@@ -79,7 +79,7 @@ export const ShareUrl = forwardRef<
         buildShortShareLink(terria, viewState, {
           includeStories
         })
-          .then(shareUrl => setShareUrl(shareUrl))
+          .then((shareUrl) => setShareUrl(shareUrl))
           .catch(() => {
             setShareUrl(
               buildShareLink(terria, viewState, {
@@ -115,7 +115,7 @@ export const ShareUrl = forwardRef<
               value={shareUrl}
               placeholder={placeholder ?? t("share.shortLinkShortening")}
               readOnly
-              onClick={e => e.currentTarget.select()}
+              onClick={(e) => e.currentTarget.select()}
               css={`
                 ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
               `}
@@ -124,7 +124,7 @@ export const ShareUrl = forwardRef<
           }
           id="share-url"
           rounded={rounded}
-          onCopy={text =>
+          onCopy={(text) =>
             terria.analytics?.logEvent(
               Category.share,
               ShareAction.storyCopy,

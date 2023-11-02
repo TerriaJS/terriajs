@@ -24,37 +24,37 @@ import {
   FilterTraits
 } from "../../../../lib/Traits/TraitsClasses/Cesium3dTilesTraits";
 
-describe("Cesium3DTilesCatalogItemSpec", function() {
+describe("Cesium3DTilesCatalogItemSpec", function () {
   let item: Cesium3DTilesCatalogItem;
   const testUrl = "/test/Cesium3DTiles/tileset.json";
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new Cesium3DTilesCatalogItem("test", new Terria());
     runInAction(() => {
       item.setTrait("definition", "url", testUrl);
     });
   });
 
-  it("should have a type and a typeName", function() {
+  it("should have a type and a typeName", function () {
     expect(Cesium3DTilesCatalogItem.type).toBe("3d-tiles");
     expect(item.type).toBe("3d-tiles");
     expect(item.typeName).toBe(i18next.t("models.cesiumTerrain.name3D"));
   });
 
-  it("supports zooming", function() {
+  it("supports zooming", function () {
     expect(item.disableZoomTo).toBeFalsy();
   });
 
-  it("supports show info", function() {
+  it("supports show info", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  it("is mappable", function() {
+  it("is mappable", function () {
     expect(item.isMappable).toBeTruthy();
   });
 
-  describe("showExpressionFromFilters", function() {
-    it("correctly converts filters to show expression", function() {
+  describe("showExpressionFromFilters", function () {
+    it("correctly converts filters to show expression", function () {
       runInAction(() =>
         item.setTrait("definition", "filters", [
           createStratumLevelFilter(-2, 11, -1, 10)
@@ -66,8 +66,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       );
     });
 
-    describe("when minimumShown and maximumShown are outside the value range", function() {
-      it("should be undefined", function() {
+    describe("when minimumShown and maximumShown are outside the value range", function () {
+      it("should be undefined", function () {
         runInAction(() =>
           item.setTrait("definition", "filters", [
             createStratumLevelFilter(-2, 11, -2, 11)
@@ -79,9 +79,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     });
   });
 
-  describe("cesiumTileStyle", function() {
+  describe("cesiumTileStyle", function () {
     let style: any;
-    beforeEach(async function() {
+    beforeEach(async function () {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -95,16 +95,16 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       style = item.cesiumTileStyle;
     });
 
-    it("is a Cesium3DTileStyle", function() {
+    it("is a Cesium3DTileStyle", function () {
       expect(style instanceof Cesium3DTileStyle).toBeTruthy();
     });
 
-    it("creates the style correctly", function() {
+    it("creates the style correctly", function () {
       expect(style.show._expression).toBe("${Height} > 30");
       expect(style.color._expression).toBe("vec4(${Height})");
     });
 
-    it("reflects changes to the catalog item's opacity in its style", async function() {
+    it("reflects changes to the catalog item's opacity in its style", async function () {
       item.setTrait("definition", "style", {
         color: "#ff0000"
       });
@@ -117,8 +117,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       expect(style.color._expression).toBe("color('#ff0000', ${opacity})");
     });
 
-    describe("when filters are specified", function() {
-      it("adds the filters to the style", async function() {
+    describe("when filters are specified", function () {
+      it("adds the filters to the style", async function () {
         runInAction(() =>
           item.setTrait("definition", "filters", [
             createStratumLevelFilter(-2, 11, 5, 8)
@@ -133,9 +133,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     });
   });
 
-  describe("when loading", function() {
-    describe("if ionAssetId is provided", function() {
-      it("loads the IonResource", async function() {
+  describe("when loading", function () {
+    describe("if ionAssetId is provided", function () {
+      it("loads the IonResource", async function () {
         runInAction(() => {
           item.setTrait("definition", "ionAssetId", 4242);
           item.setTrait("definition", "ionAccessToken", "fakeToken");
@@ -152,7 +152,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       });
     });
 
-    xit("sets the extra options", async function() {
+    xit("sets the extra options", async function () {
       runInAction(() => {
         item.setTrait(
           "definition",
@@ -168,9 +168,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     });
   });
 
-  describe("after loading", function() {
+  describe("after loading", function () {
     let dispose: () => void;
-    beforeEach(async function() {
+    beforeEach(async function () {
       try {
         await item.loadMapItems();
       } catch {}
@@ -181,33 +181,33 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       );
     });
 
-    afterEach(function() {
+    afterEach(function () {
       dispose();
     });
 
-    describe("mapItems", function() {
-      it("has exactly 1 mapItem", function() {
+    describe("mapItems", function () {
+      it("has exactly 1 mapItem", function () {
         expect(item.mapItems.length).toBe(1);
       });
 
-      describe("the mapItem", function() {
-        it("should be a Cesium3DTileset", function() {
+      describe("the mapItem", function () {
+        it("should be a Cesium3DTileset", function () {
           expect(item.mapItems[0] instanceof Cesium3DTileset).toBeTruthy();
         });
 
-        describe("the tileset", function() {
-          it("sets `show`", function() {
+        describe("the tileset", function () {
+          it("sets `show`", function () {
             runInAction(() => item.setTrait("definition", "show", false));
             expect(item.mapItems[0].show).toBe(false);
           });
 
-          it("sets the shadow mode", function() {
+          it("sets the shadow mode", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
-          it("sets the color blend mode", function() {
+          it("sets the color blend mode", function () {
             runInAction(() => {
               item.setTrait("definition", "colorBlendMode", "REPLACE");
               const tileset = item.mapItems[0] as Cesium3DTileset;
@@ -217,7 +217,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
             });
           });
 
-          it("sets the color blend amount", function() {
+          it("sets the color blend amount", function () {
             runInAction(() => {
               item.setTrait("user", "colorBlendAmount", 0.42);
               const tileset = item.mapItems[0] as Cesium3DTileset;
@@ -225,13 +225,13 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
             });
           });
 
-          it("sets the shadow mode", function() {
+          it("sets the shadow mode", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
-          it("sets the style", function() {
+          it("sets the style", function () {
             runInAction(() =>
               item.setTrait("definition", "style", {
                 show: "${ZipCode} === '19341'"
@@ -255,14 +255,14 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           //   });
           // });
 
-          it("sets the rootTransform to IDENTITY", function() {
+          it("sets the rootTransform to IDENTITY", function () {
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(
               Matrix4.equals(tileset.root.transform, Matrix4.IDENTITY)
             ).toBeTruthy();
           });
 
-          it("computes a new model matrix from the given transformations", async function() {
+          it("computes a new model matrix from the given transformations", async function () {
             item.setTrait(
               CommonStrata.user,
               "rotation",
@@ -310,7 +310,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     });
   });
 
-  it("correctly builds `Feature` from picked Cesium3DTileFeature", function() {
+  it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
     const picked = new Cesium3DTileFeature();
     spyOn(picked, "getPropertyNames").and.returnValue([]);
     const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
@@ -320,7 +320,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     }
   });
 
-  it("can change the visibility of a feature", function() {
+  it("can change the visibility of a feature", function () {
     const feature = new Cesium3DTileFeature();
     spyOn(feature, "getProperty").and.callFake((prop: string) => {
       const props: any = { doorNumber: 10, color: "red" };

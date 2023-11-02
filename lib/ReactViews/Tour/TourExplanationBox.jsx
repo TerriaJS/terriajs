@@ -6,11 +6,11 @@ export const TourExplanationBoxZIndex = 10000;
 
 export const TourExplanationBox = styled(Box)`
   position: absolute;
-  width: ${p => (p.longer ? `${TOUR_WIDTH + 55}` : `${TOUR_WIDTH}`)}px;
+  width: ${(p) => (p.longer ? `${TOUR_WIDTH + 55}` : `${TOUR_WIDTH}`)}px;
   // background-color: $modal-bg;
   z-index: ${TourExplanationBoxZIndex};
   background: white;
-  // color: ${p => p.theme.textDarker};
+  // color: ${(p) => p.theme.textDarker};
 
   min-height: 136px;
   border-radius: 4px;
@@ -31,7 +31,7 @@ export const TourExplanationBox = styled(Box)`
   h1,
   h2,
   h3 {
-    margin-bottom: ${p => p.theme.spacing * 3}px;
+    margin-bottom: ${(p) => p.theme.spacing * 3}px;
     font-size: 16px;
     font-weight: bold;
   }
@@ -43,7 +43,7 @@ export const TourExplanationBox = styled(Box)`
 
   p {
     margin: 0;
-    margin-bottom: ${p => p.theme.spacing}px;
+    margin-bottom: ${(p) => p.theme.spacing}px;
   }
   p:last-child {
     margin-bottom: 0;

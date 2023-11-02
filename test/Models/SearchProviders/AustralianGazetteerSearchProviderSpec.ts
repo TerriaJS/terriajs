@@ -9,20 +9,20 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("GazetteerSearchProvider", function() {
+describe("GazetteerSearchProvider", function () {
   let searchProvider: AustralianGazetteerSearchProvider;
-  beforeEach(function() {
+  beforeEach(function () {
     searchProvider = new AustralianGazetteerSearchProvider(
       "test",
       new Terria()
     );
   });
 
-  it(" type", function() {
+  it(" type", function () {
     expect(searchProvider.type).toEqual(AustralianGazetteerSearchProvider.type);
   });
 
-  it("queries the web feature service and returns search results", async function() {
+  it("queries the web feature service and returns search results", async function () {
     spyOn(searchProvider, "getXml").and.returnValue(
       Promise.resolve(wfsResponseXml)
     );

@@ -155,23 +155,22 @@ export function getRectangleFromLayer(
 }
 
 export default class WebMapServiceCapabilities {
-  static fromUrl: (
-    url: string
-  ) => Promise<WebMapServiceCapabilities> = createTransformer((url: string) => {
-    return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
-      const json = xml2json(capabilitiesXml);
-      if (!defined(json.Capability)) {
-        throw networkRequestError({
-          title: "Invalid GetCapabilities",
-          message:
-            `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Service (WMS) GetCapabilities document.` +
-            `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
-        });
-      }
+  static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> =
+    createTransformer((url: string) => {
+      return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
+        const json = xml2json(capabilitiesXml);
+        if (!defined(json.Capability)) {
+          throw networkRequestError({
+            title: "Invalid GetCapabilities",
+            message:
+              `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Service (WMS) GetCapabilities document.` +
+              `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
+          });
+        }
 
-      return new WebMapServiceCapabilities(capabilitiesXml, json);
+        return new WebMapServiceCapabilities(capabilitiesXml, json);
+      });
     });
-  });
 
   get Service(): CapabilitiesService {
     return this.json.Service;
@@ -197,10 +196,10 @@ export default class WebMapServiceCapabilities {
     const allLayers = this.allLayers;
     const rootLayers = this.rootLayers;
     const topLevelNamedLayers = this.topLevelNamedLayers;
-    const layersByName: { [name: string]: CapabilitiesLayer } = this
-      .layersByName;
-    const layersByTitle: { [name: string]: CapabilitiesLayer } = this
-      .layersByTitle;
+    const layersByName: { [name: string]: CapabilitiesLayer } =
+      this.layersByName;
+    const layersByTitle: { [name: string]: CapabilitiesLayer } =
+      this.layersByTitle;
 
     function traverseLayer(
       layer: Mutable<CapabilitiesLayer>,
@@ -240,7 +239,7 @@ export default class WebMapServiceCapabilities {
         rootLayers.push(layerElements);
       }
 
-      rootLayers.forEach(layer => traverseLayer(layer, true));
+      rootLayers.forEach((layer) => traverseLayer(layer, true));
     }
   }
 

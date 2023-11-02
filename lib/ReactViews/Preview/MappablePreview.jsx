@@ -93,7 +93,7 @@ class MappablePreview extends React.Component {
         <div className={Styles.previewedInfo}>
           <div
             className={Styles.titleAndShareWrapper}
-            ref={component => (this.refToMeasure = component)}
+            ref={(component) => (this.refToMeasure = component)}
           >
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If

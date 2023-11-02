@@ -16,8 +16,8 @@ export default function loadCsv(
       new Promise((resolve, reject) =>
         Papa.parse(text, {
           worker: true,
-          complete: result => resolve(result.data),
-          error: error => reject(error),
+          complete: (result) => resolve(result.data),
+          error: (error) => reject(error),
           ...options
         })
       )

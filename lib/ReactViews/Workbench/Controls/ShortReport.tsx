@@ -24,7 +24,7 @@ export default class ShortReport extends React.Component<{
   ) {
     const shortReportSections = item.shortReportSections;
     const clickedReport = shortReportSections.find(
-      report => report.name === reportName
+      (report) => report.name === reportName
     );
 
     if (isDefined(clickedReport)) {
@@ -35,7 +35,7 @@ export default class ShortReport extends React.Component<{
          * reports - a stopgap for the lack of consistent behavior surrounding
          * removals / re-ordering of objectArrayTraits
          */
-        shortReportSections.forEach(report =>
+        shortReportSections.forEach((report) =>
           report.setTrait(CommonStrata.user, "show", report.show)
         );
         clickedReport.setTrait(CommonStrata.user, "show", isOpen);
@@ -49,7 +49,7 @@ export default class ShortReport extends React.Component<{
 
     const item = this.props.item;
 
-    const shortReportSections = item.shortReportSections?.filter(r =>
+    const shortReportSections = item.shortReportSections?.filter((r) =>
       isDefined(r.name)
     );
 
@@ -75,14 +75,14 @@ export default class ShortReport extends React.Component<{
          * use `Collapsible` if `content` is defined, otherwise just use `name`
          */}
         {shortReportSections
-          .filter(r => r.name)
+          .filter((r) => r.name)
           .map((r, i) => (
             <React.Fragment key={r.name}>
               {r.content ? (
                 <Collapsible
                   title={r.name!}
                   isOpen={r.show}
-                  onToggle={show => this.clickShortReport(item, r.name, show)}
+                  onToggle={(show) => this.clickShortReport(item, r.name, show)}
                 >
                   {parseCustomMarkdownToReact(r.content!, {
                     catalogItem: item

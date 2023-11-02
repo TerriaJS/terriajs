@@ -173,7 +173,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       // This function is deliberately not a computed,
       // this.terria.notificationState.addNotificationToQueue changes state
       this.initialMessageShown = true;
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.terria.notificationState.addNotificationToQueue({
           title: this.initialMessage.title ?? i18next.t("notification.title"),
           width: this.initialMessage.width,

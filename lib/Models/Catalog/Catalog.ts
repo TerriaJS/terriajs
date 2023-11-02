@@ -26,7 +26,7 @@ export default class Catalog {
       // group or group members are reset.
       if (
         !this.group.memberModels.find(
-          m => m.uniqueId === USER_ADDED_CATEGORY_ID
+          (m) => m.uniqueId === USER_ADDED_CATEGORY_ID
         )
       ) {
         let userAddedDataGroup = this.terria.getModelById(
@@ -68,7 +68,7 @@ export default class Catalog {
 
   get userAddedDataGroup(): CatalogGroup {
     const group = this.group.memberModels.find(
-      m => m.uniqueId === USER_ADDED_CATEGORY_ID
+      (m) => m.uniqueId === USER_ADDED_CATEGORY_ID
     );
     return <CatalogGroup>group;
   }

@@ -10,7 +10,7 @@ export const PrefaceBox = styled(Box)<PropTypes>`
   position: fixed;
   width: 100%;
   height: 100%;
-  background: ${p => (p.pseudoBg ? "black" : "transparent")};
+  background: ${(p) => (p.pseudoBg ? "black" : "transparent")};
   z-index: 1000;
-  opacity: ${p => (p.pseudoBg ? 0.45 : 1)};
+  opacity: ${(p) => (p.pseudoBg ? 0.45 : 1)};
 `;

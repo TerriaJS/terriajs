@@ -18,13 +18,13 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisFeatureServerCatalogGroup", function() {
+describe("ArcGisFeatureServerCatalogGroup", function () {
   const featureServerUrl =
     "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/FeatureServer";
   let terria: Terria;
   let group: ArcGisFeatureServerCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -32,7 +32,7 @@ describe("ArcGisFeatureServerCatalogGroup", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       if (url.match("Redlands_Emergency_Vehicles/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
@@ -44,22 +44,22 @@ describe("ArcGisFeatureServerCatalogGroup", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(group.type).toBe("esri-featureServer-group");
     expect(group.typeName).toBe(
       i18next.t("models.arcGisFeatureServerCatalogGroup.name")
     );
   });
 
-  describe("after loading metadata", function() {
-    beforeEach(async function() {
+  describe("after loading metadata", function () {
+    beforeEach(async function () {
       runInAction(() => {
         group.setTrait("definition", "url", featureServerUrl);
       });
       await group.loadMetadata();
     });
 
-    it("defines info", function() {
+    it("defines info", function () {
       const serviceDescription = i18next.t(
         "models.arcGisFeatureServerCatalogGroup.serviceDescription"
       );
@@ -83,8 +83,8 @@ describe("ArcGisFeatureServerCatalogGroup", function() {
     });
   });
 
-  describe("loadMembers", function() {
-    it("properly creates members", async function() {
+  describe("loadMembers", function () {
+    it("properly creates members", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", featureServerUrl);
       });

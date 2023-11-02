@@ -26,7 +26,7 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   @computed
   get mapItems() {
     return (
-      this.previewed?.mapItems.map(m =>
+      this.previewed?.mapItems.map((m) =>
         ImageryParts.is(m)
           ? {
               ...m,
@@ -94,7 +94,7 @@ class DataPreviewMap extends React.Component {
     /**
      * @param {HTMLElement | null} container
      */
-    this.containerRef = action(container => {
+    this.containerRef = action((container) => {
       this.previewViewer.attached && this.previewViewer.detach();
       if (container !== null) {
         this.initPreview(container);
@@ -135,7 +135,7 @@ class DataPreviewMap extends React.Component {
     const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
     // Find preview basemap using `terria.previewBaseMapId`
     const initPreviewBaseMap = baseMapItems.find(
-      baseMap =>
+      (baseMap) =>
         baseMap.item.uniqueId ===
         this.props.terria.baseMapsModel.previewBaseMapId
     );

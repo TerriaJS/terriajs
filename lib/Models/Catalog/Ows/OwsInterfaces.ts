@@ -43,7 +43,7 @@ export function parseOwsKeywordList(json: any): OwsKeywordList | undefined {
     ? json.Keyword
     : Array.isArray(json.Keyword)
     ? filterOutUndefined(
-        json.Keyword.map(s => (isJsonString(s) ? s : undefined))
+        json.Keyword.map((s) => (isJsonString(s) ? s : undefined))
       )
     : [];
   return {

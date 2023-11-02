@@ -215,7 +215,7 @@ export default class CameraView {
    * @param headingPitchRange The offset of the camera from the target position.
    * @return The camera view.
    */
-  static fromLookAt = function(
+  static fromLookAt = function (
     targetPosition: Readonly<Cartographic>,
     headingPitchRange: Readonly<HeadingPitchRange>
   ): CameraView {

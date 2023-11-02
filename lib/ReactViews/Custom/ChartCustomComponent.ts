@@ -271,7 +271,7 @@ export default abstract class ChartCustomComponent<
             : this.constructCatalogItem(id, context, undefined);
 
           return Promise.resolve(itemOrPromise).then(
-            action(item => {
+            action((item) => {
               if (item) {
                 this.setTraitsFromParent(item, context.catalogItem!);
                 this.setTraitsFromAttrs(item, attrs, i);
@@ -481,7 +481,7 @@ export default abstract class ChartCustomComponent<
       splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
 
     const columnTitles = filterOutUndefined(
-      (nodeAttrs["column-titles"] || "").split(",").map(s => {
+      (nodeAttrs["column-titles"] || "").split(",").map((s) => {
         const [a, b] = rsplit2(s, ":");
         if (a && b) {
           return { name: a, title: b };
@@ -493,7 +493,7 @@ export default abstract class ChartCustomComponent<
     );
 
     const columnUnits = filterOutUndefined(
-      (nodeAttrs["column-units"] || "").split(",").map(s => {
+      (nodeAttrs["column-units"] || "").split(",").map((s) => {
         const [a, b] = rsplit2(s, ":");
         if (a && b) {
           return { name: a, units: b };

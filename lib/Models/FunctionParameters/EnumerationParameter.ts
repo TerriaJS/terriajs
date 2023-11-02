@@ -44,6 +44,6 @@ export default class EnumerationParameter extends FunctionParameter<string> {
       return !this.isRequired;
     }
 
-    return isDefined(this.options.find(option => option.id === this.value));
+    return isDefined(this.options.find((option) => option.id === this.value));
   }
 }

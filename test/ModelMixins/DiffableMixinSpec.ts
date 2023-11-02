@@ -9,11 +9,11 @@ import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTra
 import DiffableTraits from "../../lib/Traits/TraitsClasses/DiffableTraits";
 import SplitterTraits from "../../lib/Traits/TraitsClasses/SplitterTraits";
 
-describe("DiffableMixin", function() {
-  describe("canFilterTimeByFeature", function() {
+describe("DiffableMixin", function () {
+  describe("canFilterTimeByFeature", function () {
     it(
       "returns false if the item is showing diff",
-      action(function() {
+      action(function () {
         const testItem = new TestDiffableItem("test", new Terria());
         testItem.setTrait(CommonStrata.user, "isShowingDiff", true);
         expect(testItem.canFilterTimeByFeature).toBe(false);
@@ -22,7 +22,7 @@ describe("DiffableMixin", function() {
 
     it(
       "otherwise returns the inherited value",
-      action(function() {
+      action(function () {
         const testItem = new TestDiffableItem("test", new Terria());
         testItem.setTrait(CommonStrata.user, "isShowingDiff", false);
         testItem.setTrait(CommonStrata.user, "timeFilterPropertyName", "foo");

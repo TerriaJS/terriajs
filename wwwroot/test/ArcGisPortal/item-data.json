@@ -1,311 +1,301 @@
 {
-    "layers": [
-        {
-            "popupInfo": {
-                "title": "RoadSegment: {roadnamebase}",
-                "fieldInfos": [
-                    {
-                        "fieldName": "objectid",
-                        "label": "objectid",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": false,
-                        "stringFieldOption": "textbox",
-                        "format": {
-                            "places": 0,
-                            "digitSeparator": true
-                        }
-                    },
-                    {
-                        "fieldName": "topoid",
-                        "label": "topoid",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "createdate",
-                        "label": "createdate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox",
-                        "format": {
-                            "dateFormat": "shortDateShortTime"
-                        }
-                    },
-                    {
-                        "fieldName": "objectmoddate",
-                        "label": "objectmoddate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "featuremoddate",
-                        "label": "featuremoddate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "classsubtype",
-                        "label": "classsubtype",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "featurereliabilitydate",
-                        "label": "featurereliabilitydate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "attributereliabilitydate",
-                        "label": "attributereliabilitydate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "capturesourcecode",
-                        "label": "capturesourcecode",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "capturemethodcode",
-                        "label": "capturemethodcode",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "planimetricaccuracy",
-                        "label": "planimetricaccuracy",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "verticalaccuracy",
-                        "label": "verticalaccuracy",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "operationalstatus",
-                        "label": "operationalstatus",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadnameoid",
-                        "label": "roadnameoid",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadnamebase",
-                        "label": "roadnamebase",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadnametype",
-                        "label": "roadnametype",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadnamesuffix",
-                        "label": "roadnamesuffix",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "functionhierarchy",
-                        "label": "functionhierarchy",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadontype",
-                        "label": "roadontype",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "surface",
-                        "label": "surface",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "lanecount",
-                        "label": "lanecount",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "roadnameextentoid",
-                        "label": "roadnameextentoid",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "relevance",
-                        "label": "relevance",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox"
-                    },
-                    {
-                        "fieldName": "startdate",
-                        "label": "startdate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox",
-                        "format": {
-                            "dateFormat": "shortDateShortTime"
-                        }
-                    },
-                    {
-                        "fieldName": "enddate",
-                        "label": "enddate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox",
-                        "format": {
-                            "dateFormat": "shortDateShortTime"
-                        }
-                    },
-                    {
-                        "fieldName": "lastupdate",
-                        "label": "lastupdate",
-                        "isEditable": true,
-                        "tooltip": "",
-                        "visible": true,
-                        "stringFieldOption": "textbox",
-                        "format": {
-                            "dateFormat": "shortDateShortTime"
-                        }
-                    },
-                    {
-                        "fieldName": "FID",
-                        "label": "FID",
-                        "isEditable": false,
-                        "tooltip": "",
-                        "visible": false,
-                        "stringFieldOption": "textbox"
-                    }
-                ],
-                "description": null,
-                "showAttachments": true,
-                "mediaInfos": []
-            },
-            "layerDefinition": {
-                "drawingInfo": {
-                    "renderer": {
-                        "type": "simple",
-                        "symbol": {
-                            "color": [
-                                153,
-                                67,
-                                56,
-                                255
-                            ],
-                            "width": 1,
-                            "type": "esriSLS",
-                            "style": "esriSLSSolid"
-                        }
-                    },
-                    "labelingInfo": [
-                        {
-                            "labelExpression": null,
-                            "labelExpressionInfo": {
-                                "expression": "$feature[\"roadnamebase\"]",
-                                "value": "{roadnamebase}"
-                            },
-                            "useCodedValues": true,
-                            "maxScale": 0,
-                            "minScale": 42537,
-                            "where": null,
-                            "labelPlacement": "esriServerLinePlacementAboveAlong",
-                            "symbol": {
-                                "color": [
-                                    51,
-                                    51,
-                                    51,
-                                    255
-                                ],
-                                "type": "esriTS",
-                                "backgroundColor": null,
-                                "borderLineColor": null,
-                                "haloSize": 0,
-                                "haloColor": null,
-                                "horizontalAlignment": "center",
-                                "rightToLeft": false,
-                                "angle": 0,
-                                "xoffset": 0,
-                                "yoffset": 0,
-                                "text": "",
-                                "rotated": false,
-                                "kerning": true,
-                                "font": {
-                                    "size": 9.75,
-                                    "style": "normal",
-                                    "decoration": "none",
-                                    "weight": "bold",
-                                    "family": "Arial Unicode MS"
-                                }
-                            }
-                        }
-                    ]
-                },
-                "minScale": 3750891,
-                "maxScale": 0,
-                "defaultVisibility": true
-            },
-            "showLabels": true,
-            "id": 5
-        }
-    ]
+  "layers": [
+    {
+      "popupInfo": {
+        "title": "RoadSegment: {roadnamebase}",
+        "fieldInfos": [
+          {
+            "fieldName": "objectid",
+            "label": "objectid",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": false,
+            "stringFieldOption": "textbox",
+            "format": {
+              "places": 0,
+              "digitSeparator": true
+            }
+          },
+          {
+            "fieldName": "topoid",
+            "label": "topoid",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "createdate",
+            "label": "createdate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox",
+            "format": {
+              "dateFormat": "shortDateShortTime"
+            }
+          },
+          {
+            "fieldName": "objectmoddate",
+            "label": "objectmoddate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "featuremoddate",
+            "label": "featuremoddate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "classsubtype",
+            "label": "classsubtype",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "featurereliabilitydate",
+            "label": "featurereliabilitydate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "attributereliabilitydate",
+            "label": "attributereliabilitydate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "capturesourcecode",
+            "label": "capturesourcecode",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "capturemethodcode",
+            "label": "capturemethodcode",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "planimetricaccuracy",
+            "label": "planimetricaccuracy",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "verticalaccuracy",
+            "label": "verticalaccuracy",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "operationalstatus",
+            "label": "operationalstatus",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadnameoid",
+            "label": "roadnameoid",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadnamebase",
+            "label": "roadnamebase",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadnametype",
+            "label": "roadnametype",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadnamesuffix",
+            "label": "roadnamesuffix",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "functionhierarchy",
+            "label": "functionhierarchy",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadontype",
+            "label": "roadontype",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "surface",
+            "label": "surface",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "lanecount",
+            "label": "lanecount",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "roadnameextentoid",
+            "label": "roadnameextentoid",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "relevance",
+            "label": "relevance",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox"
+          },
+          {
+            "fieldName": "startdate",
+            "label": "startdate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox",
+            "format": {
+              "dateFormat": "shortDateShortTime"
+            }
+          },
+          {
+            "fieldName": "enddate",
+            "label": "enddate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox",
+            "format": {
+              "dateFormat": "shortDateShortTime"
+            }
+          },
+          {
+            "fieldName": "lastupdate",
+            "label": "lastupdate",
+            "isEditable": true,
+            "tooltip": "",
+            "visible": true,
+            "stringFieldOption": "textbox",
+            "format": {
+              "dateFormat": "shortDateShortTime"
+            }
+          },
+          {
+            "fieldName": "FID",
+            "label": "FID",
+            "isEditable": false,
+            "tooltip": "",
+            "visible": false,
+            "stringFieldOption": "textbox"
+          }
+        ],
+        "description": null,
+        "showAttachments": true,
+        "mediaInfos": []
+      },
+      "layerDefinition": {
+        "drawingInfo": {
+          "renderer": {
+            "type": "simple",
+            "symbol": {
+              "color": [153, 67, 56, 255],
+              "width": 1,
+              "type": "esriSLS",
+              "style": "esriSLSSolid"
+            }
+          },
+          "labelingInfo": [
+            {
+              "labelExpression": null,
+              "labelExpressionInfo": {
+                "expression": "$feature[\"roadnamebase\"]",
+                "value": "{roadnamebase}"
+              },
+              "useCodedValues": true,
+              "maxScale": 0,
+              "minScale": 42537,
+              "where": null,
+              "labelPlacement": "esriServerLinePlacementAboveAlong",
+              "symbol": {
+                "color": [51, 51, 51, 255],
+                "type": "esriTS",
+                "backgroundColor": null,
+                "borderLineColor": null,
+                "haloSize": 0,
+                "haloColor": null,
+                "horizontalAlignment": "center",
+                "rightToLeft": false,
+                "angle": 0,
+                "xoffset": 0,
+                "yoffset": 0,
+                "text": "",
+                "rotated": false,
+                "kerning": true,
+                "font": {
+                  "size": 9.75,
+                  "style": "normal",
+                  "decoration": "none",
+                  "weight": "bold",
+                  "family": "Arial Unicode MS"
+                }
+              }
+            }
+          ]
+        },
+        "minScale": 3750891,
+        "maxScale": 0,
+        "defaultVisibility": true
+      },
+      "showLabels": true,
+      "id": 5
+    }
+  ]
 }

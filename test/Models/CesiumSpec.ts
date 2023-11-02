@@ -29,14 +29,14 @@ const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
-describeIfSupported("Cesium Model", function() {
+describeIfSupported("Cesium Model", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
   let container: HTMLElement;
   let cesium: Cesium;
   let terriaProgressEvt: jasmine.Spy;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -53,18 +53,18 @@ describeIfSupported("Cesium Model", function() {
     cesium = new Cesium(terriaViewer, container);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     cesium.destroy();
     document.body.removeChild(container);
   });
 
-  it("should trigger terria.tileLoadProgressEvent on globe tileLoadProgressEvent", function() {
+  it("should trigger terria.tileLoadProgressEvent on globe tileLoadProgressEvent", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(3);
 
     expect(terriaProgressEvt).toHaveBeenCalledWith(3, 3);
   });
 
-  it("should retain the maximum length of tiles to be loaded", function() {
+  it("should retain the maximum length of tiles to be loaded", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(3);
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(7);
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(4);
@@ -73,7 +73,7 @@ describeIfSupported("Cesium Model", function() {
     expect(terriaProgressEvt).toHaveBeenCalledWith(2, 7);
   });
 
-  it("should reset maximum length when the number of tiles to be loaded reaches 0", function() {
+  it("should reset maximum length when the number of tiles to be loaded reaches 0", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(3);
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(7);
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(4);
@@ -86,14 +86,14 @@ describeIfSupported("Cesium Model", function() {
     expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
   });
 
-  describe("zoomTo", function() {
+  describe("zoomTo", function () {
     let initialCameraPosition: Cartesian3;
 
-    beforeEach(function() {
+    beforeEach(function () {
       initialCameraPosition = cesium.scene.camera.position.clone();
     });
 
-    it("can zoomTo a rectangle", async function() {
+    it("can zoomTo a rectangle", async function () {
       const [west, south, east, north] = [0, 0, 0, 0];
       await cesium.zoomTo(Rectangle.fromDegrees(west, south, east, north), 0);
       expect(initialCameraPosition.equals(cesium.scene.camera.position)).toBe(
@@ -101,8 +101,8 @@ describeIfSupported("Cesium Model", function() {
       );
     });
 
-    describe("if the target is a TimeVarying item", function() {
-      it("sets the target item as the timeline source", async function() {
+    describe("if the target is a TimeVarying item", function () {
+      it("sets the target item as the timeline source", async function () {
         const targetItem = new WebMapServiceCatalogItem("test", terria);
         targetItem.setTrait(
           CommonStrata.user,
@@ -121,7 +121,7 @@ describeIfSupported("Cesium Model", function() {
     });
   });
 
-  it("correctly removes all the primitives from the scene when they are removed from the viewer", async function() {
+  it("correctly removes all the primitives from the scene when they are removed from the viewer", async function () {
     const items = observable([
       new MappablePrimitiveItem("1", terria),
       new MappablePrimitiveItem("2", terria),
@@ -142,7 +142,7 @@ describeIfSupported("Cesium Model", function() {
     // Return urls of all tilesets in the scene
     const tilesetUrls = () =>
       filterOutUndefined(
-        range(cesium.scene.primitives.length).map(i => {
+        range(cesium.scene.primitives.length).map((i) => {
           const prim = cesium.scene.primitives.get(i);
           return prim.allTilesLoaded && prim._url;
         })
@@ -150,13 +150,15 @@ describeIfSupported("Cesium Model", function() {
 
     // Return names of all datasources in the scene
     const dataSourceNames = () =>
-      range(cesium.dataSources.length).map(i => cesium.dataSources.get(i).name);
+      range(cesium.dataSources.length).map(
+        (i) => cesium.dataSources.get(i).name
+      );
 
     // Return urls of all imagery providers in the scene
     const imageryProviderUrls = () =>
       range(cesium.scene.imageryLayers.length)
         .map(
-          i => (cesium.scene.imageryLayers.get(i).imageryProvider as any).url
+          (i) => (cesium.scene.imageryLayers.get(i).imageryProvider as any).url
         )
         .reverse();
 
@@ -176,12 +178,12 @@ describeIfSupported("Cesium Model", function() {
     expect(imageryProviderUrls()).toEqual(["img3"]);
   });
 
-  describe("Terrain provider selection", function() {
+  describe("Terrain provider selection", function () {
     let workbenchTerrainItem: CesiumTerrainCatalogItem;
     let scene: Scene;
 
     beforeEach(
-      action(async function() {
+      action(async function () {
         // We need a cesium instance bound to terria.mainViewer for workbench
         // changes to be reflected in these specs
         cesium = new Cesium(terria.mainViewer, container);
@@ -215,7 +217,7 @@ describeIfSupported("Cesium Model", function() {
       })
     );
 
-    it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", function() {
+    it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", function () {
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         false
       );
@@ -229,12 +231,12 @@ describeIfSupported("Cesium Model", function() {
 
     it(
       "should otherwise use the first terrain provider from the workbench or overlay",
-      action(async function() {
+      action(async function () {
         expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
       })
     );
 
-    it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", function() {
+    it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", function () {
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
@@ -246,7 +248,7 @@ describeIfSupported("Cesium Model", function() {
       expect(scene.terrainProvider).toEqual(ionAssetTerrainProvider);
     });
 
-    it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", function() {
+    it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", function () {
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromUrl"
@@ -262,7 +264,7 @@ describeIfSupported("Cesium Model", function() {
       expect(scene.terrainProvider).toEqual(urlTerrainProvider);
     });
 
-    it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", function() {
+    it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", function () {
       const createSpy = spyOn(
         cesium as any,
         "createWorldTerrain"
@@ -276,12 +278,12 @@ describeIfSupported("Cesium Model", function() {
 
       expect(terria.configParameters.useCesiumIonTerrain).toBe(true);
       expect(createSpy).toHaveBeenCalledTimes(1);
-      const cesiumWorldTerrainProvider = createSpy.calls.mostRecent()
-        .returnValue;
+      const cesiumWorldTerrainProvider =
+        createSpy.calls.mostRecent().returnValue;
       expect(scene.terrainProvider).toEqual(cesiumWorldTerrainProvider);
     });
 
-    it("should otherwise fallback to Elliposidal/3d-smooth", function() {
+    it("should otherwise fallback to Elliposidal/3d-smooth", function () {
       runInAction(() => {
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;

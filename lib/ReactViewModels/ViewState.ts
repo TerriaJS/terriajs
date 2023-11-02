@@ -222,7 +222,7 @@ export default class ViewState {
         return a.priority - b.priority;
       })
       .filter(
-        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        (tourPoint) => (<any>this.appRefs).get(tourPoint.appRefName)?.current
       );
   }
   @action
@@ -366,7 +366,7 @@ export default class ViewState {
     // of the original camera set from config once they acknowdge
     this._disclaimerVisibleSubscription = reaction(
       () => this.disclaimerVisible,
-      disclaimerVisible => {
+      (disclaimerVisible) => {
         if (disclaimerVisible) {
           this.isMapFullScreen = true;
         } else if (!disclaimerVisible && this.isMapFullScreen) {
@@ -471,7 +471,7 @@ export default class ViewState {
 
     this._storyBeforeUnloadSubscription = reaction(
       () => this.terria.stories.length > 0,
-      hasScenes => {
+      (hasScenes) => {
         if (hasScenes) {
           window.addEventListener("beforeunload", handleWindowClose);
         } else {
@@ -509,7 +509,7 @@ export default class ViewState {
 
     // (wing): much better to do by listening for transitionend, but will leave
     // this as is until that's in place
-    setTimeout(function() {
+    setTimeout(function () {
       // should we do this here in viewstate? it pulls in browser dependent things,
       // and (defensively) calls it.
       // but only way to ensure we trigger this resize, by standardising fullscreen
@@ -779,7 +779,7 @@ export default class ViewState {
     this.storyBuilderShown = false;
     this.storyShown = true;
 
-    setTimeout(function() {
+    setTimeout(function () {
       triggerResize();
     }, animationDuration || 1);
 

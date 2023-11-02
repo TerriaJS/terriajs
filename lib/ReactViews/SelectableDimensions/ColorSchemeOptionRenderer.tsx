@@ -127,7 +127,7 @@ function swatches(name: string | undefined) {
 /** numBins = undefined - indicates continuous color scheme */
 export const QuantitativeColorSchemeOptionRenderer: (
   numBins: number | undefined
-) => OptionRenderer = numBins => option => ramp(option.value, numBins);
+) => OptionRenderer = (numBins) => (option) => ramp(option.value, numBins);
 
-export const QualitativeColorSchemeOptionRenderer: OptionRenderer = option =>
+export const QualitativeColorSchemeOptionRenderer: OptionRenderer = (option) =>
   swatches(option.value);

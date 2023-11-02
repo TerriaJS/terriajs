@@ -69,7 +69,7 @@ const PolygonParameterEditor = observer(
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-PolygonParameterEditor.setValueFromText = function(e, parameter) {
+PolygonParameterEditor.setValueFromText = function (e, parameter) {
   parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
 };
 
@@ -114,9 +114,8 @@ function getPointsLongLats(pointEntities, terria) {
     const currentPointPos = currentPoint.position.getValue(
       terria.timelineClock.currentTime
     );
-    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      currentPointPos
-    );
+    const cartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
     const points = [];
     points.push(CesiumMath.toDegrees(cartographic.longitude));
     points.push(CesiumMath.toDegrees(cartographic.latitude));
@@ -140,17 +139,17 @@ function getPointsLongLats(pointEntities, terria) {
 export function selectOnMap(terria, viewState, parameter) {
   const userDrawing = new UserDrawing({
     terria: terria,
-    onPointClicked: function(pointEntities) {
+    onPointClicked: function (pointEntities) {
       runInAction(() => {
         parameter.setValue(CommonStrata.user, [
           getPointsLongLats(pointEntities, terria)
         ]);
       });
     },
-    onCleanUp: function() {
+    onCleanUp: function () {
       viewState.openAddData();
     },
-    onPointMoved: function(customDataSource) {
+    onPointMoved: function (customDataSource) {
       runInAction(() => {
         parameter.setValue(CommonStrata.user, [
           getPointsLongLats(customDataSource, terria)

@@ -12,12 +12,12 @@ import EnumDimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
 
-describe("CatalogMemberMixin", function() {
-  describe(" - infoWithoutSources", function() {
+describe("CatalogMemberMixin", function () {
+  describe(" - infoWithoutSources", function () {
     let terria: Terria;
     let wmsItem: WebMapServiceCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -33,7 +33,7 @@ describe("CatalogMemberMixin", function() {
       await wmsItem.loadMetadata();
     });
 
-    it(" - infoAsObject exists", function() {
+    it(" - infoAsObject exists", function () {
       expect(wmsItem.info.length).toBe(6);
       expect(Object.keys(wmsItem.infoAsObject).length).toBe(6);
       expect(wmsItem.infoAsObject.WebMapServiceLayerDescription).toBe(
@@ -41,8 +41,8 @@ describe("CatalogMemberMixin", function() {
       );
     });
 
-    it(" - info section can contain both content and contentAsObject ", function() {
-      wmsItem.info.forEach(i => {
+    it(" - info section can contain both content and contentAsObject ", function () {
+      wmsItem.info.forEach((i) => {
         // Something a bit funky with i18n strings not yet being transformed
         if (i.name === "models.webMapServiceCatalogItem.dataDescription") {
           expect(i.content).toBeUndefined();
@@ -54,7 +54,7 @@ describe("CatalogMemberMixin", function() {
       });
     });
 
-    it(" - info and infoWithoutSources can produce different results", function() {
+    it(" - info and infoWithoutSources can produce different results", function () {
       expect(wmsItem.info.length).toBe(6);
       if (wmsItem._sourceInfoItemNames !== undefined) {
         expect(wmsItem._sourceInfoItemNames.length).toBe(1);
@@ -62,13 +62,13 @@ describe("CatalogMemberMixin", function() {
       expect(wmsItem.infoWithoutSources.length).toBe(5);
     });
 
-    it(" - has metadataUrls", function() {
+    it(" - has metadataUrls", function () {
       expect(wmsItem.metadataUrls.length).toBe(1);
       expect(wmsItem.metadataUrls[0].url).toBe("http://examplemetadata.com");
       expect(wmsItem.metadataUrls[0].title).toBeUndefined();
     });
 
-    it(" - can add metadataUrls title", function() {
+    it(" - can add metadataUrls title", function () {
       runInAction(() => {
         updateModelFromJson(wmsItem, "definition", {
           metadataUrls: [{ title: "Some Title" }]
@@ -81,11 +81,11 @@ describe("CatalogMemberMixin", function() {
     });
   });
 
-  describe(" - AsyncLoaders work as expected", function() {
+  describe(" - AsyncLoaders work as expected", function () {
     let terria: Terria;
     let wmsItem: WebMapServiceCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -110,7 +110,7 @@ describe("CatalogMemberMixin", function() {
       let dispose: IReactionDisposer | undefined;
 
       // Wait for isLoadingMapItems to be true -> then check isLoadingMetadata and isLoading
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         dispose = reaction(
           () => wmsItem.isLoadingMapItems,
           () => {
@@ -159,7 +159,7 @@ describe("CatalogMemberMixin", function() {
       expect(wmsItem.layers).toBe("init-layers");
 
       const result = wmsItem.selectableDimensions.find(
-        dim => dim.id === "modelDimensions"
+        (dim) => dim.id === "modelDimensions"
       );
 
       expect(result).toBeDefined();

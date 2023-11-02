@@ -1,45 +1,39 @@
 {
   "aspects": {
-      "group": {
-          "members": [
-              {
-                  "aspects": {
-                      "terria": {
-                          "definition": {
-                              "description": "Some description",
-                              "members": [
-                                  "deeper-1",
-                                  "deeper-2"
-                              ],
-                              "name": "A dereferenced member"
-                          },
-                          "id": "mochi",
-                          "type": "group"
-                      }
-                  },
-                  "id": "mochi",
-                  "name": "A dereferenced member"
+    "group": {
+      "members": [
+        {
+          "aspects": {
+            "terria": {
+              "definition": {
+                "description": "Some description",
+                "members": ["deeper-1", "deeper-2"],
+                "name": "A dereferenced member"
               },
-              {
-                  "aspects": {
-                      "terria": {
-                          "definition": {
-                              "description": "Some description",
-                              "members": [
-                                  "deeper-3",
-                                  "deeper-4"
-                              ],
-                              "name": "A second dereferenced member"
-                          },
-                          "id": "neko",
-                          "type": "group"
-                      }
-                  },
-                  "id": "neko",
-                  "name": "A second dereferenced member"
-              }
-          ]
-      }
+              "id": "mochi",
+              "type": "group"
+            }
+          },
+          "id": "mochi",
+          "name": "A dereferenced member"
+        },
+        {
+          "aspects": {
+            "terria": {
+              "definition": {
+                "description": "Some description",
+                "members": ["deeper-3", "deeper-4"],
+                "name": "A second dereferenced member"
+              },
+              "id": "neko",
+              "type": "group"
+            }
+          },
+          "id": "neko",
+          "name": "A second dereferenced member"
+        }
+      ]
+    }
   },
   "id": "map-config-dereferenced",
   "name": "Terria Configuration",

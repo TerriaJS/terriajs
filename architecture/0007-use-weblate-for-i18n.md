@@ -24,7 +24,6 @@ For new (lang_code)/translation.json files, the initial import will cause the tr
 
 As part of the v8 release, we will merge the v7 and v8 translation files together to retain the work of our translation community and post v8 release, we will have only one single weblate project to avoid confusion in the future.
 
-
 ![weblate workflow](./imgs/weblate_process.png)
 
 ## Consequences
@@ -34,4 +33,3 @@ This will allow external translators to contribute translations via the hosted w
 This will tie our translation process into the weblate ecosystem which is a paid service and will also add additional complexity to terriajs. This is also currently only set up for terriajs and will require additional set up to provide translations for map specific strings. We also do not have RTL language set up and additional work will be required to support these langauges.
 
 As we currently have two weblate components projects set up representing master & next, we have the current risk of duplication and conflict if two different translators provide translations for the same key.
-

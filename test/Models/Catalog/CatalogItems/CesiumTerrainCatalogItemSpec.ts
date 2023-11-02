@@ -4,7 +4,7 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import { runInAction } from "mobx";
 
-describe("CesiumTerrainCatalogItem", function() {
+describe("CesiumTerrainCatalogItem", function () {
   let terria: Terria;
   let item: CesiumTerrainCatalogItem;
 
@@ -16,18 +16,18 @@ describe("CesiumTerrainCatalogItem", function() {
     tiles: ["{z}/{x}/{y}.terrain?v={version}"]
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     item = new CesiumTerrainCatalogItem(undefined, terria);
     jasmine.Ajax.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  describe("loading", function() {
-    it("rejects with an error when there is a network error", async function() {
+  describe("loading", function () {
+    it("rejects with an error when there is a network error", async function () {
       jasmine.Ajax.stubRequest(/no-such-server/).andReturn({
         status: undefined
       });
@@ -38,7 +38,7 @@ describe("CesiumTerrainCatalogItem", function() {
       );
     });
 
-    it("can load terrain from a URL", async function() {
+    it("can load terrain from a URL", async function () {
       jasmine.Ajax.stubRequest(/foo/).andReturn({
         status: 200,
         responseJSON: validResponse
@@ -52,7 +52,7 @@ describe("CesiumTerrainCatalogItem", function() {
       });
     });
 
-    it("can load terrain from `ionAssetId`", async function() {
+    it("can load terrain from `ionAssetId`", async function () {
       // Stub request from IonResource
       jasmine.Ajax.stubRequest(/424242/).andReturn({
         status: 200,
@@ -77,8 +77,8 @@ describe("CesiumTerrainCatalogItem", function() {
     });
   });
 
-  describe("mapItems", function() {
-    it("should be empty when `show` is false", async function() {
+  describe("mapItems", function () {
+    it("should be empty when `show` is false", async function () {
       jasmine.Ajax.stubRequest(/foo/).andReturn({
         status: 200,
         responseJSON: validResponse

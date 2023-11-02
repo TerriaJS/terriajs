@@ -8,13 +8,13 @@ interface Args {
 }
 
 export default function autoUpdate(updater: (...args: any[]) => void) {
-  return function(
+  return function (
     target: any,
     propertyName: string,
     property: PropertyDescriptor
   ) {
     const transformer = createTransformer(
-      function(args: Args) {
+      function (args: Args) {
         return autorun(() => {
           updater.call(args.context, args.value);
         });
@@ -29,7 +29,7 @@ export default function autoUpdate(updater: (...args: any[]) => void) {
 
     const originalGet = property.get;
     if (originalGet) {
-      property.get = function() {
+      property.get = function () {
         const value = originalGet.call(this);
         if (defined(value)) {
           console.log("auto-updating result of " + propertyName);

@@ -23,8 +23,7 @@ export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
 
   @primitiveTrait({
     type: "boolean",
-    name:
-      "Use combination of dataset and resource name where multiple resources",
+    name: "Use combination of dataset and resource name where multiple resources",
     description: `Use a combination of the name and the resource and dataset name where there are multiple resources for a single dataset.`
   })
   useCombinationNameWhereMultipleResources: boolean = false;

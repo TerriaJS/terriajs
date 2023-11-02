@@ -15,8 +15,10 @@ interface Options extends FunctionParameterOptions {
   falseDescription?: string;
 }
 
-export default class BooleanParameter extends FunctionParameter<boolean>
-  implements Options {
+export default class BooleanParameter
+  extends FunctionParameter<boolean>
+  implements Options
+{
   static readonly type = "boolean";
   readonly type = "boolean";
   readonly trueName?: string;

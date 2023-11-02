@@ -14,9 +14,9 @@ See `lib\Core\Result.ts` for more documentation.
 ```ts
 function someFn(someArg: boolean): Result<string | undefined> {
   if (someArg) {
-    return new Result('success')
+    return new Result("success");
   }
-  return new Result(undefined, TerriaError.from("SOME ERROR"))
+  return new Result(undefined, TerriaError.from("SOME ERROR"));
 }
 ```
 
@@ -25,35 +25,37 @@ function someFn(someArg: boolean): Result<string | undefined> {
 ##### Ignore error and just return value
 
 ```ts
-const value = someFn(true).ignoreError()
+const value = someFn(true).ignoreError();
 // value = "success"
 
-const value = someFn(false).ignoreError()
+const value = someFn(false).ignoreError();
 // value = undefined
 ```
 
 ##### Catch error, do something with it and then return value
 
 ```ts
-const value = someFn(someArg).catchError((error) => doSomethingWithError(error))
+const value = someFn(someArg).catchError((error) =>
+  doSomethingWithError(error)
+);
 ```
 
 ##### Throw error OR return value
 
 ```ts
-const value = someFn(someArg).throwIfError()
+const value = someFn(someArg).throwIfError();
 ```
 
 ##### Throw if value is undefined, otherwise return value
 
 ```ts
-const value = someFn(someArg).throwIfUndefined()
+const value = someFn(someArg).throwIfUndefined();
 ```
 
 ##### Raise error to user if error, and return value
 
 ```ts
-const value = someFn(someArg).raiseError(terria)
+const value = someFn(someArg).raiseError(terria);
 ```
 
 ### `TerriaErrorOverrides`
@@ -72,16 +74,16 @@ Valid `TerriaErrorOverrides` include:
 ```ts
 function someFn(someArg): Result<string | undefined> {
   if (someArg) {
-    return new Result('success')
+    return new Result("success");
   }
   // Here we create a TerriaError with message "Some Error inside result"
-  return new Result(undefined, TerriaError.from("Some error inside result"))
+  return new Result(undefined, TerriaError.from("Some error inside result"));
 }
 
 // Here we add `TerriaErrorOverrides` in throwIfError.
 // This is equivalent to calling `createParentError()` on the error inside inside result.
 // Eg. error.createParentError("Some error outside of result")
-const value = someFn(someArg).throwIfError("Some error outside of result")
+const value = someFn(someArg).throwIfError("Some error outside of result");
 ```
 
 This will now throw a chain of TerriaErrors - which provides a good stack trace:
@@ -123,10 +125,10 @@ See `lib\Core\TerriaError.ts` for more documentation.
 
 `TerriaErrorSeverity` enum values can be `Error` or `Warning`.
 
-* Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
-* By default, errors will use `Error`
-* `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
-* Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+- Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+- By default, errors will use `Error`
+- `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+- Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
 
 #### Example of severity propagation
 
@@ -134,15 +136,15 @@ Say we have this error with severity `Warning`:
 
 ```ts
 const error = {
-  "message": "some message",
-  "severity": TerriaErrorSeverity.Warning
-}
+  message: "some message",
+  severity: TerriaErrorSeverity.Warning
+};
 ```
 
 And then we call:
 
 ```ts
-error.createParentError("some higher message")
+error.createParentError("some higher message");
 ```
 
 It will return a new TerriaError with the same severity - `Warning` - **not** the default severity `Error`.

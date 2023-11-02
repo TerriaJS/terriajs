@@ -108,16 +108,16 @@ const ItemTitleButton = styled(RawButton)<{
 
   &:focus,
   &:hover {
-    color: ${p => p.theme.modalHighlight};
+    color: ${(p) => p.theme.modalHighlight};
   }
 
-  ${p => p.selected && `color: ${p.theme.modalHighlight};`}
+  ${(p) => p.selected && `color: ${p.theme.modalHighlight};`}
 
-  @media (max-width: ${p => p.theme.sm}px) {
+  @media (max-width: ${(p) => p.theme.sm}px) {
     font-size: 0.9rem;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid ${p => p.theme.greyLighter};
+    border-bottom: 1px solid ${(p) => p.theme.greyLighter};
   }
 `;
 
@@ -126,13 +126,13 @@ const ActionButton = styled(RawButton)`
     height: 20px;
     width: 20px;
     margin: 5px;
-    fill: ${p => p.theme.charcoalGrey};
+    fill: ${(p) => p.theme.charcoalGrey};
   }
 
   &:hover,
   &:focus {
     svg {
-      fill: ${p => p.theme.modalHighlight};
+      fill: ${(p) => p.theme.modalHighlight};
     }
   }
 `;

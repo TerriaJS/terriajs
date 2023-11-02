@@ -3,14 +3,14 @@ import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
 
-describe("getAncestors", function() {
+describe("getAncestors", function () {
   let terria: Terria,
     wms: WebMapServiceCatalogItem,
     groupLevelOne: CatalogGroup,
     groupLevelTwo: CatalogGroup,
     groupLevelThree: CatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({ baseUrl: "./" });
     wms = new WebMapServiceCatalogItem("id", terria);
     groupLevelOne = new CatalogGroup("groupLevelOneId", terria);
@@ -35,7 +35,7 @@ describe("getAncestors", function() {
    * See `getAncestors.ts` for full details
    */
   describe("getCatalogMembersToSave", () => {
-    it("returns ancestors from top down with groups and wms", function() {
+    it("returns ancestors from top down with groups and wms", function () {
       groupLevelThree.add("definition", wms);
       const ancestors = getAncestors(wms);
       expect(ancestors.length).toEqual(3);
@@ -43,13 +43,13 @@ describe("getAncestors", function() {
       expect(ancestors[1]).toEqual(groupLevelTwo);
       expect(ancestors[2]).toEqual(groupLevelThree);
     });
-    it("returns ancestors from top down with groups", function() {
+    it("returns ancestors from top down with groups", function () {
       const ancestors = getAncestors(groupLevelThree);
       expect(ancestors.length).toEqual(2);
       expect(ancestors[0]).toEqual(groupLevelOne);
       expect(ancestors[1]).toEqual(groupLevelTwo);
     });
-    it("returns no root group", function() {
+    it("returns no root group", function () {
       const ancestors = getAncestors(groupLevelOne);
       expect(ancestors.length).toEqual(0);
     });

@@ -36,9 +36,8 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     super(props);
     this.changeDateTime = this.changeDateTime.bind(this);
     this.onTimelineButtonClicked = this.onTimelineButtonClicked.bind(this);
-    this.onShowOnChartButtonClicked = this.onShowOnChartButtonClicked.bind(
-      this
-    );
+    this.onShowOnChartButtonClicked =
+      this.onShowOnChartButtonClicked.bind(this);
     this.onPreviousButtonClicked = this.onPreviousButtonClicked.bind(this);
     this.onNextButtonClicked = this.onNextButtonClicked.bind(this);
     this.onOpen = this.onOpen.bind(this);
@@ -254,7 +253,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
 
 const StyledButton = styled(RawButton)`
   padding: 10px;
-  ${props =>
+  ${(props) =>
     props.disabled &&
     `&[disabled],
     &[disabled]:hover,
@@ -271,7 +270,7 @@ const TimelineButton = styled(RawButton)<{ active: boolean }>`
   padding: 0 5px;
   border-radius: 2px;
   background-color: rgba(250, 250, 250, 0.2);
-  ${props =>
+  ${(props) =>
     props.active &&
     `
       background-color: ${props.theme.colorPrimary};

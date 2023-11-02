@@ -15,7 +15,7 @@ export function getParentGroups(item: BaseModel) {
     ...getAncestors(dereferenced).map(getDereferencedIfExists),
     dereferenced
   ].map(
-    ancestor =>
+    (ancestor) =>
       (CatalogMemberMixin.isMixedInto(ancestor) && ancestor.nameInCatalog) ||
       ancestor.uniqueId
   );

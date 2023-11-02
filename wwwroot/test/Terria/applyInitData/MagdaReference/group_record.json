@@ -54,12 +54,7 @@
       "contactPoint": "todd.walmsley@fcnsw.com.au",
       "description": "Forest Management Zones (97mb full extent shapefile download) created by FCNSW from a range of environmental data sets from environmental modelling processes and continually updated due to improved data, mapping and environmental surveys.",
       "issued": "2018-09-06T07:52:18Z",
-      "keywords": [
-        "Environment",
-        "Forests",
-        "Management",
-        "Zones"
-      ],
+      "keywords": ["Environment", "Forests", "Management", "Zones"],
       "landingPage": "https://datasets.seed.nsw.gov.au/dataset/forest-management-zones",
       "languages": [],
       "modified": "2019-08-19T03:00:12Z",

@@ -3,16 +3,16 @@ import markdownToHtml from "../../lib/Core/markdownToHtml";
 import Terria from "../../lib/Models/Terria";
 import CustomComponent from "../../lib/ReactViews/Custom/CustomComponent";
 
-describe("markdownToHtml", function() {
+describe("markdownToHtml", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
     registerCustomComponentTypes();
   });
-  it("correctly injects terria's custom tooltips", function() {
+  it("correctly injects terria's custom tooltips", function () {
     const spatialDataTerm = {
       term: "spatial data",
       content: "data that is spatial, spluh"

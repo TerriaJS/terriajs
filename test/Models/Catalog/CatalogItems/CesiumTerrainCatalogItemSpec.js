@@ -1,29 +1,29 @@
 "use strict";
 
 var CesiumTerrainCatalogItem = require("../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem");
-var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
-  .default;
+var CesiumTerrainProvider =
+  require("terriajs-cesium/Source/Core/CesiumTerrainProvider").default;
 var loadWithXhr = require("../../../../lib/Core/loadWithXhr");
 var Terria = require("../../../../lib/Models/Terria");
 
-describe("CesiumTerrainCatalogItem", function() {
+describe("CesiumTerrainCatalogItem", function () {
   var terria;
   var item;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
     item = new CesiumTerrainCatalogItem(terria);
   });
 
-  it("has correct type", function() {
+  it("has correct type", function () {
     expect(item.type).toBe("cesium-terrain");
     expect(item.typeName).toContain("Cesium");
   });
 
-  it("creates imagery provider with correct URL", function(done) {
-    spyOn(loadWithXhr, "load").and.callFake(function(
+  it("creates imagery provider with correct URL", function (done) {
+    spyOn(loadWithXhr, "load").and.callFake(function (
       url,
       responseType,
       method,
@@ -50,7 +50,7 @@ describe("CesiumTerrainCatalogItem", function() {
     var terrainProvider = item._createTerrainProvider();
     expect(terrainProvider instanceof CesiumTerrainProvider).toBe(true);
     terrainProvider.readyPromise
-      .then(function() {
+      .then(function () {
         expect(loadWithXhr.load.calls.any()).toBe(true);
       })
       .then(done);

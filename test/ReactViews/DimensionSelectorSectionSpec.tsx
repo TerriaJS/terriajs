@@ -22,7 +22,8 @@ import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTra
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
-  implements SelectableDimensions {
+  implements SelectableDimensions
+{
   static readonly type = "stub";
   get type() {
     return "test";
@@ -79,16 +80,16 @@ export default class TestCatalogItem
   ];
 }
 
-describe("DimensionSelectorSection", function() {
+describe("DimensionSelectorSection", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("shows all dimensions and styles for a mock layer", function(done) {
+  it("shows all dimensions and styles for a mock layer", function (done) {
     const mockItem = new TestCatalogItem("what", terria);
 
     const section = TestRenderer.create(
@@ -109,7 +110,7 @@ describe("DimensionSelectorSection", function() {
     done();
   });
 
-  it("show dimensions and styles for a 'real' WMS layer", function(done) {
+  it("show dimensions and styles for a 'real' WMS layer", function (done) {
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
       wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
@@ -133,7 +134,7 @@ describe("DimensionSelectorSection", function() {
 
     wmsItem
       .loadMetadata()
-      .then(function() {
+      .then(function () {
         const section = TestRenderer.create(
           <ThemeProvider theme={terriaTheme}>
             <SelectableDimensionSection
@@ -154,7 +155,7 @@ describe("DimensionSelectorSection", function() {
       .catch(done.fail);
   });
 
-  it("shows csv region mapping options", async function(done) {
+  it("shows csv region mapping options", async function (done) {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
@@ -214,10 +215,10 @@ describe("DimensionSelectorSection", function() {
     jasmine.Ajax.uninstall();
   });
 
-  describe("when given a SelectableDimensionCheckboxGroup", function() {
+  describe("when given a SelectableDimensionCheckboxGroup", function () {
     let mockItem: TestCatalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
       mockItem.selectableDimensions = [
         {
@@ -276,10 +277,10 @@ describe("DimensionSelectorSection", function() {
     });
   });
 
-  describe("when given a SelectableDimensionGroup", function() {
+  describe("when given a SelectableDimensionGroup", function () {
     let mockItem: TestCatalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
       mockItem.selectableDimensions = [
         {
@@ -327,7 +328,7 @@ describe("DimensionSelectorSection", function() {
       ];
     });
 
-    it("renders the group", function() {
+    it("renders the group", function () {
       const section = TestRenderer.create(
         <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection
@@ -341,7 +342,7 @@ describe("DimensionSelectorSection", function() {
       expect(group.props.dim.type).toEqual("group");
     });
 
-    it("renders all the group children", function() {
+    it("renders all the group children", function () {
       const section = TestRenderer.create(
         <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection

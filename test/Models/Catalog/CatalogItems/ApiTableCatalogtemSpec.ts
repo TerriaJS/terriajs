@@ -16,21 +16,21 @@ const valueApiResponse = JSON.stringify(
   require("../../../../wwwroot/test/JSON-api/value_api_response.json")
 );
 
-describe("ApiTableCatalogItem", function() {
+describe("ApiTableCatalogItem", function () {
   let terria: Terria;
   let apiCatalogItem: ApiTableCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     apiCatalogItem = new ApiTableCatalogItem("test", terria);
     jasmine.Ajax.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("creates a table from api calls", async function() {
+  it("creates a table from api calls", async function () {
     const valueApiIdx = 0;
     const positionApiIdx = 1;
     runInAction(() => {

@@ -29,8 +29,10 @@ export interface DiscreteTimeAsJS {
 function DiscretelyTimeVaryingMixin<
   T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
-  abstract class DiscretelyTimeVaryingMixin extends ChartableMixin(Base)
-    implements TimeVarying {
+  abstract class DiscretelyTimeVaryingMixin
+    extends ChartableMixin(Base)
+    implements TimeVarying
+  {
     get hasDiscreteTimes() {
       return true;
     }
@@ -83,7 +85,7 @@ function DiscretelyTimeVaryingMixin<
         return { index: [], dates: [] };
       }
 
-      const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
+      const jsDates = this.discreteTimesAsSortedJulianDates.map((julianDate) =>
         JulianDate.toDate(julianDate.time)
       );
 
@@ -331,7 +333,7 @@ function DiscretelyTimeVaryingMixin<
       if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
         return;
       const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
-        dt => ({
+        (dt) => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
           isSelected:

@@ -42,10 +42,14 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     const override = {
       ...(this._item.activeTableStyle.tableColorMap.type === "constant"
         ? {
-            color: (this._item.activeTableStyle.tableColorMap
-              .colorMap as ConstantColorMap).color.toCssColorString(),
-            title: (this._item.activeTableStyle.tableColorMap
-              .colorMap as ConstantColorMap).title
+            color: (
+              this._item.activeTableStyle.tableColorMap
+                .colorMap as ConstantColorMap
+            ).color.toCssColorString(),
+            title: (
+              this._item.activeTableStyle.tableColorMap
+                .colorMap as ConstantColorMap
+            ).title
           }
         : {}),
       ...(this.showPointLegend &&
@@ -94,7 +98,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
 
   @computed get showPointLegend() {
     return !!this._item.mapItems.find(
-      d => isDataSource(d) && d.entities.values.length > 0
+      (d) => isDataSource(d) && d.entities.values.length > 0
     );
   }
 
@@ -105,11 +109,11 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
       this._item.activeTableStyle.tableColorMap.type,
       this._item.activeTableStyle.pointStyleMap.styleMap.type,
       this._item.activeTableStyle.outlineStyleMap.styleMap.type
-    ].filter(type => type !== "constant");
+    ].filter((type) => type !== "constant");
 
     const canMergeStyleTypes =
-      mergableStyleTypes.every(type => type === "enum") ||
-      mergableStyleTypes.every(type => type === "bin");
+      mergableStyleTypes.every((type) => type === "enum") ||
+      mergableStyleTypes.every((type) => type === "bin");
 
     const canMergeColumns =
       uniq(

@@ -6,13 +6,13 @@ var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var CustomMatchers = require("../Utility/CustomMatchers");
 var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
-var HeadingPitchRange = require("terriajs-cesium/Source/Core/HeadingPitchRange")
-  .default;
+var HeadingPitchRange =
+  require("terriajs-cesium/Source/Core/HeadingPitchRange").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
-describe("CameraView", function() {
-  describe("fromJson", function() {
-    it("can deserialize rectangle alone", function() {
+describe("CameraView", function () {
+  describe("fromJson", function () {
+    it("can deserialize rectangle alone", function () {
       var view = CameraView.fromJson({
         west: 45,
         south: -20,
@@ -23,7 +23,7 @@ describe("CameraView", function() {
       expect(view.rectangle).toEqual(Rectangle.fromDegrees(45, -20, 55, -10));
     });
 
-    it("can deserialize rectangle plus position/direction/up", function() {
+    it("can deserialize rectangle plus position/direction/up", function () {
       var view = CameraView.fromJson({
         west: 45,
         south: -20,
@@ -52,7 +52,7 @@ describe("CameraView", function() {
       expect(view.up).toEqual(new Cartesian3(0.0, 1.0, 0.1));
     });
 
-    it("can deserialize lookAt", function() {
+    it("can deserialize lookAt", function () {
       var view = CameraView.fromJson({
         lookAt: {
           targetLongitude: 45,
@@ -76,7 +76,7 @@ describe("CameraView", function() {
       );
     });
 
-    it("can deserialize position/heading/pitch/roll", function() {
+    it("can deserialize position/heading/pitch/roll", function () {
       var view = CameraView.fromJson({
         positionHeadingPitchRoll: {
           cameraLongitude: 45,
@@ -99,9 +99,9 @@ describe("CameraView", function() {
     });
   });
 
-  describe("fromLookAt", function() {
-    it("throws when targetPosition is not specified", function() {
-      expect(function() {
+  describe("fromLookAt", function () {
+    it("throws when targetPosition is not specified", function () {
+      expect(function () {
         return CameraView.fromLookAt(
           undefined,
           new HeadingPitchRange(
@@ -113,8 +113,8 @@ describe("CameraView", function() {
       }).toThrow();
     });
 
-    it("throws when headingPitchRange is not specified", function() {
-      expect(function() {
+    it("throws when headingPitchRange is not specified", function () {
+      expect(function () {
         return CameraView.fromLookAt(
           Cartographic.fromDegrees(45, -20, 100),
           undefined
@@ -122,7 +122,7 @@ describe("CameraView", function() {
       }).toThrow();
     });
 
-    it("can look straight down at a point on the equator", function() {
+    it("can look straight down at a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromLookAt(
@@ -141,9 +141,8 @@ describe("CameraView", function() {
       );
       expect(cartographic.height).toEqualEpsilon(10000 + 100, 1);
 
-      var surfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        cartographic
-      );
+      var surfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
       expect(
         Cartesian3.equalsEpsilon(
           view.direction,
@@ -156,7 +155,7 @@ describe("CameraView", function() {
       );
     });
 
-    it("can look north at a point on the equator", function() {
+    it("can look north at a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromLookAt(
@@ -172,16 +171,15 @@ describe("CameraView", function() {
       expect(cartographic.latitude).toBeLessThan(0);
       expect(cartographic.height).toBeGreaterThan(100.0);
 
-      var surfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        cartographic
-      );
+      var surfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
       expect(Cartesian3.equalsEpsilon(view.up, surfaceNormal, 1e-2)).toBe(true);
       expect(
         Cartesian3.equalsEpsilon(view.direction, Cartesian3.UNIT_Z, 1e-7)
       ).toBe(true);
     });
 
-    it("can look east at a point on the equator", function() {
+    it("can look east at a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromLookAt(
@@ -194,9 +192,10 @@ describe("CameraView", function() {
       expect(cartographic.latitude).toEqualEpsilon(0, 1e-7);
       expect(cartographic.height).toBeGreaterThan(100.0);
 
-      var targetSurfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        Cartographic.fromDegrees(45, 0)
-      );
+      var targetSurfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
+          Cartographic.fromDegrees(45, 0)
+        );
       expect(Cartesian3.equalsEpsilon(view.up, targetSurfaceNormal, 1e-7)).toBe(
         true
       );
@@ -214,15 +213,15 @@ describe("CameraView", function() {
     });
   });
 
-  describe("fromPositionHeadingPitchRoll", function() {
-    it("throws when cameraPosition is not specified", function() {
-      expect(function() {
+  describe("fromPositionHeadingPitchRoll", function () {
+    it("throws when cameraPosition is not specified", function () {
+      expect(function () {
         return CameraView.fromPositionHeadingPitchRoll(undefined, 0, 0, 0);
       }).toThrow();
     });
 
-    it("throws when heading is not specified", function() {
-      expect(function() {
+    it("throws when heading is not specified", function () {
+      expect(function () {
         return CameraView.fromPositionHeadingPitchRoll(
           Cartographic.fromDegrees(45, -20, 100),
           undefined,
@@ -232,8 +231,8 @@ describe("CameraView", function() {
       }).toThrow();
     });
 
-    it("throws when pitch is not specified", function() {
-      expect(function() {
+    it("throws when pitch is not specified", function () {
+      expect(function () {
         return CameraView.fromPositionHeadingPitchRoll(
           Cartographic.fromDegrees(45, -20, 100),
           0,
@@ -243,8 +242,8 @@ describe("CameraView", function() {
       }).toThrow();
     });
 
-    it("throws when roll is not specified", function() {
-      expect(function() {
+    it("throws when roll is not specified", function () {
+      expect(function () {
         return CameraView.fromPositionHeadingPitchRoll(
           Cartographic.fromDegrees(45, -20, 100),
           0,
@@ -254,7 +253,7 @@ describe("CameraView", function() {
       }).toThrow();
     });
 
-    it("can look straight down from a point on the equator", function() {
+    it("can look straight down from a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromPositionHeadingPitchRoll(
@@ -275,9 +274,8 @@ describe("CameraView", function() {
       );
       expect(cartographic.height).toEqualEpsilon(100, 1);
 
-      var surfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        cartographic
-      );
+      var surfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
       expect(
         Cartesian3.equalsEpsilon(
           view.direction,
@@ -290,7 +288,7 @@ describe("CameraView", function() {
       );
     });
 
-    it("can look north from a point on the equator", function() {
+    it("can look north from a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromPositionHeadingPitchRoll(
@@ -308,16 +306,15 @@ describe("CameraView", function() {
       expect(cartographic.latitude).toEqualEpsilon(0, 1e-10);
       expect(cartographic.height).toEqualEpsilon(100.0, 1e-9);
 
-      var surfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        cartographic
-      );
+      var surfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
       expect(Cartesian3.equalsEpsilon(view.up, surfaceNormal, 1e-7)).toBe(true);
       expect(
         Cartesian3.equalsEpsilon(view.direction, Cartesian3.UNIT_Z, 1e-7)
       ).toBe(true);
     });
 
-    it("can look east from a point on the equator", function() {
+    it("can look east from a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
       var view = CameraView.fromPositionHeadingPitchRoll(
@@ -335,9 +332,10 @@ describe("CameraView", function() {
       expect(cartographic.latitude).toEqualEpsilon(0, 1e-10);
       expect(cartographic.height).toEqualEpsilon(100.0, 1e-9);
 
-      var targetSurfaceNormal = Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
-        Cartographic.fromDegrees(45, 0)
-      );
+      var targetSurfaceNormal =
+        Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(
+          Cartographic.fromDegrees(45, 0)
+        );
       expect(Cartesian3.equalsEpsilon(view.up, targetSurfaceNormal, 1e-7)).toBe(
         true
       );

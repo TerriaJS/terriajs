@@ -7,7 +7,7 @@ export default function waitForDataSourceToLoad(
   dataSource: DataSource
 ): Promise<void> {
   if (dataSource.isLoading && dataSource.loadingEvent) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const removeEventListener = dataSource.loadingEvent.addEventListener(
         () => {
           removeEventListener();

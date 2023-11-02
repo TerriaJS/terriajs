@@ -1,6 +1,7 @@
 This has been tested on Google Kubernetes Engine - it should work with other cluster types, but if you run into problems open an issue.
 
 # Deploy a Basic TerriaMap Instance
+
 From within TerriaMap...
 
 ```bash
@@ -11,9 +12,11 @@ helm upgrade --install -f deploy/helm/example-prod.yml terria deploy/helm/terria
 ```
 
 # Config Customization
+
 You can customize TerriaMap through helm by either modifying example-prod or creating your own helm config file. Server config is available at `terriamap.serverConfig`, init config at `terriamap.initConfig` and client config at `terriamap.clientConfig`. Changes that you make will be merged with the default values in `deploy/terria/charts/terriamap/values.yaml`.
 
 E.g.
+
 ```yaml
 global:
   rollingUpdate:
@@ -23,8 +26,8 @@ global:
 terriamap:
   clientConfig:
     parameters:
-        disclaimer:
-        text: "This is a disclaimer"
+      disclaimer:
+      text: "This is a disclaimer"
   serverConfig:
     port: 8080
   initConfig:
@@ -36,9 +39,11 @@ terriamap:
 ```
 
 # Building Your Own Image
+
 You can build your own TerriaMap image by changing the `config.docker.name` key in `package.json`, then running `yarn docker-build-prod`.
 
 # Working Locally
+
 If you want to run a local version of TerriaMap then you can use [minikube](https://kubernetes.io/docs/getting-started-guides/minikube/).
 
 ```bash

@@ -12,11 +12,11 @@ const search = JSON.stringify(
   require("../../../../wwwroot/test/Socrata/search.json")
 );
 
-describe("SocrataCatalogGroup", function() {
+describe("SocrataCatalogGroup", function () {
   let terria: Terria;
   let socrataGroup: SocrataCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "http://example.com/api/catalog/v1/domains/example.com/facets?only=dataset%2Cmap"
@@ -36,15 +36,15 @@ describe("SocrataCatalogGroup", function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(socrataGroup.type).toBe("socrata-group");
   });
 
-  it("loads members", async function() {
+  it("loads members", async function () {
     await socrataGroup.loadMembers();
     const facets = socrataGroup.memberModels;
     expect(facets.length).toEqual(2);

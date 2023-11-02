@@ -7,6 +7,7 @@ Date: 2020-07-15
 Accepted
 
 ## Context
+
 Mobx build times are slow.
 
 With the addition of our migration away from knockout to mobx, we've bloated out
@@ -44,6 +45,7 @@ Some other information:
 https://babeljs.io/docs/en/babel-plugin-transform-typescript#caveats
 
 ## Decision
+
 Given the TypeScript support with babel is mature enough for our codebase, using
 _just_ babel seems like the best path for now.
 
@@ -66,16 +68,19 @@ All builds under a I9-9980HK, so there are better single threaded processors out
 #### Fresh build samples
 
 `npm run gulp watch` without these changes
+
 ```
 Time: 76565ms
 ```
 
 `npm run gulp watch` with these changes & empty babel loader cache:
+
 ```
 Time: 40781ms
 ```
 
 `npm run gulp watch` with these changes & cached babel loader files:
+
 ```
 Time: 19542ms
 ```
@@ -83,16 +88,19 @@ Time: 19542ms
 #### Incremental build samples
 
 Changing a `.ts` file being watched without these changes (Generally 10~15 seconds)
+
 ```
 Time: 14201ms
 ```
 
 Changing a `.ts` file being watched with these changes (Generally 500~1000ms)
+
 ```
 Time: 734ms
 ```
 
 ## Consequences
+
 Any differences in how babel transpiles TypeScript can surface some runtime
 issues. The only suspected bug observed so far was a logic error in terriajs -
 an incorrect class property re-declaration resulting in a more-correct

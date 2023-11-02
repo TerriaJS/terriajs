@@ -5,10 +5,10 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
 
-describe("GtfsCatalogItem", function() {
+describe("GtfsCatalogItem", function () {
   let item: GtfsCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new GtfsCatalogItem("test", new Terria({ baseUrl: "./" }));
     item.setTrait(
       CommonStrata.definition,
@@ -17,11 +17,11 @@ describe("GtfsCatalogItem", function() {
     );
   });
 
-  it("is Mappable", function() {
+  it("is Mappable", function () {
     expect(MappableMixin.isMixedInto(item)).toBeTruthy();
   });
 
-  it("creates a DataSource with points", async function() {
+  it("creates a DataSource with points", async function () {
     await item.loadMapItems();
     expect(item.mapItems.length).toBe(1);
     expect(item.mapItems[0].entities.values.length).toBe(123);
@@ -31,7 +31,7 @@ describe("GtfsCatalogItem", function() {
     expect(item.mapItems[0].entities.values[0].polygon).toBeUndefined();
   });
 
-  it("creates a DataSource with billboards when an image is given", async function() {
+  it("creates a DataSource with billboards when an image is given", async function () {
     item.setTrait(CommonStrata.definition, "image", "test/gtfs/bus.png");
     await item.loadMapItems();
     expect(item.mapItems.length).toBe(1);
@@ -42,7 +42,7 @@ describe("GtfsCatalogItem", function() {
     expect(item.mapItems[0].entities.values[0].polygon).toBeUndefined();
   });
 
-  it("creates a DataSource with billboards and models when an image and a model is given", async function() {
+  it("creates a DataSource with billboards and models when an image and a model is given", async function () {
     item.setTrait(CommonStrata.definition, "image", "test/gtfs/bus.png");
     updateModelFromJson(item, CommonStrata.definition, {
       model: { url: "models/prism-train.glb" }
@@ -56,7 +56,7 @@ describe("GtfsCatalogItem", function() {
     expect(item.mapItems[0].entities.values[0].polygon).toBeUndefined();
   });
 
-  it("creates a Datasource with multiple models coloured by attribute when model.colorModelsByProperty is used", async function() {
+  it("creates a Datasource with multiple models coloured by attribute when model.colorModelsByProperty is used", async function () {
     updateModelFromJson(item, CommonStrata.definition, {
       model: {
         url: "models/prism-train.glb",

@@ -53,7 +53,7 @@ const Checkbox = memo(
     const id = useUID();
 
     // Add props to children
-    const childrenWithProps = React.Children.map(children, child => {
+    const childrenWithProps = React.Children.map(children, (child) => {
       // Checking isValidElement is the safe way and avoids a typescript
       // error too.
       if (React.isValidElement(child)) {
@@ -81,14 +81,14 @@ const Checkbox = memo(
             outline: 3px solid #c390f9;
           }
           ${!isDisabled &&
-            `
+          `
             cursor: pointer;
             &:hover svg {
               opacity: 0.6;
             }
           `}
           ${isDisabled &&
-            `
+          `
             cursor: not-allowed;
           `}
         `}

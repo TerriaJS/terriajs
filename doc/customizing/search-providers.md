@@ -7,10 +7,10 @@ Terriajs supports 2 types of search providers
 
 Each search provider can be configured using following options
 
-|Name|Required|Type|Default|Description|
-|----|--------|----|-------|-----------|
-|name|no|**string**|`unknown`|Name of the search provider.|
-|minCharacters|no|**number**|`catalogParameters.searchBar.minCharacters`|Minimum number of characters required for search to start.|
+| Name          | Required | Type       | Default                                     | Description                                                |
+| ------------- | -------- | ---------- | ------------------------------------------- | ---------------------------------------------------------- |
+| name          | no       | **string** | `unknown`                                   | Name of the search provider.                               |
+| minCharacters | no       | **number** | `catalogParameters.searchBar.minCharacters` | Minimum number of characters required for search to start. |
 
 ## Catalog search provider
 
@@ -30,6 +30,7 @@ To generate the catalog index:
 
 - `yarn build-tools`
 - `node .\build\generateCatalogIndex.js config-url base-url` where
+
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
   - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
@@ -56,12 +57,12 @@ Location search providers are used to search for locations on the map. TerriaJS 
 
 Each `LocationSearchProvider support following confing options
 
-|Name|Required|Type|Default|Description|
-|----|--------|----|-------|-----------|
-|url|yes|**string**|`""`|The URL of search provider.|
-|recommendedListLength|no|**number**|`5`|Default amount of entries in the suggestion list.|
-|flightDurationSeconds|no|**number**|`1.5`|Time to move to the result location.|
-|isOpen|no|**boolean**|`true`|True if the search results of this search provider are visible by default; otherwise, false (user manually open search results).|
+| Name                  | Required | Type        | Default | Description                                                                                                                      |
+| --------------------- | -------- | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| url                   | yes      | **string**  | `""`    | The URL of search provider.                                                                                                      |
+| recommendedListLength | no       | **number**  | `5`     | Default amount of entries in the suggestion list.                                                                                |
+| flightDurationSeconds | no       | **number**  | `1.5`   | Time to move to the result location.                                                                                             |
+| isOpen                | no       | **boolean** | `true`  | True if the search results of this search provider are visible by default; otherwise, false (user manually open search results). |
 
 ### BingMapsSearchProvider
 
@@ -69,12 +70,12 @@ Each `LocationSearchProvider support following confing options
 
 Bing maps search provider is based on commercial API which is provided by BingMaps. To enable it, it is necessary to add an apropriate Bing Maps API key as config parameter. This search provider as results returns addresses and a place name locations.
 
-|Name|Required|Type|Default|Description|
-|----|--------|----|-------|-----------|
-|`key`|no|**string**|`configParameters.bingMapsKey`|The Bing Maps key.|
-|primaryCountry|no|**string**|`Australia`|Name of the country to prioritize the search results.|
-|`culture`|no|**string**|`en-au`|Use the culture parameter to specify a culture for your request.The culture parameter provides the result in the language of the culture. For a list of supported cultures, see [Supported Culture Codes](https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes)|
-|`mapCenter`|no|**boolean**|`true`|Whether the current location of the map center is supplied with search request|
+| Name           | Required | Type        | Default                        | Description                                                                                                                                                                                                                                                                                                            |
+| -------------- | -------- | ----------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`          | no       | **string**  | `configParameters.bingMapsKey` | The Bing Maps key.                                                                                                                                                                                                                                                                                                     |
+| primaryCountry | no       | **string**  | `Australia`                    | Name of the country to prioritize the search results.                                                                                                                                                                                                                                                                  |
+| `culture`      | no       | **string**  | `en-au`                        | Use the culture parameter to specify a culture for your request.The culture parameter provides the result in the language of the culture. For a list of supported cultures, see [Supported Culture Codes](https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes) |
+| `mapCenter`    | no       | **boolean** | `true`                         | Whether the current location of the map center is supplied with search request                                                                                                                                                                                                                                         |
 
 It provides a default value for `url: https://dev.virtualearth.net/`
 
@@ -99,10 +100,10 @@ It provides a default value for `url: https://dev.virtualearth.net/`
 Australian gazzetteer search provider is based on web feature service that uses an official place names of Australia. It is based on `WebFeatureServiceProvider`.
 It can be configured using following options
 
-|Name|Required|Type|Default|Description|
-|----|--------|----|-------|-----------|
-|`searchPropertyName`|yes|**string**|`undefined`|Which property to look for the search text in|
-|`searchPropertyTypeName`|yes|**string**|`undefined`|Type of the properties to search|
+| Name                     | Required | Type       | Default     | Description                                   |
+| ------------------------ | -------- | ---------- | ----------- | --------------------------------------------- |
+| `searchPropertyName`     | yes      | **string** | `undefined` | Which property to look for the search text in |
+| `searchPropertyTypeName` | yes      | **string** | `undefined` | Type of the properties to search              |
 
 **Example**
 

@@ -1,1 +1,3087 @@
-{"data":{"dataflows":[{"id":"RT","links":[{"rel":"self","type":"dataflow"},{"rel":"structure","type":"datastructure"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Retail Trade","names":{"en":"Retail Trade"},"annotations":[{"type":"NonProductionDataflow","text":"true","texts":{"en":"true"}},{"title":"INDUSTRY","type":"LAYOUT_COLUMN"},{"title":"TIME_PERIOD","type":"LAYOUT_ROW"},{"title":"MEASURE,TSEST","type":"LAYOUT_ROW_SECTION"},{"title":"REGION=AUS,INDUSTRY=41+42+43+44+45+46+20,FREQ=M,LASTNOBSERVATIONS=12","type":"DEFAULT"}],"structure":"urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ABS:RT(1.0.0)"}],"categorySchemes":[{"id":"ABS_TOPICS","links":[{"rel":"self","type":"categoryscheme"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"ABS Topics","names":{"en":"ABS Topics"},"description":"Australian Bureau of Statistics - Topics Framework","descriptions":{"en":"Australian Bureau of Statistics - Topics Framework"},"isPartial":false,"categories":[{"id":"ECONOMY","name":"ECONOMY","names":{"en":"ECONOMY"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"PRICE_INDEX_INFLATION","name":"Price Indexes and Inflation","names":{"en":"Price Indexes and Inflation"},"links":[{"rel":"self","type":"category"}]},{"id":"INTERNATIONAL_TRADE","name":"International Trade","names":{"en":"International Trade"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"IMPORTS","name":"Imports","names":{"en":"Imports"},"links":[{"rel":"self","type":"category"}]},{"id":"BOP_IIP","name":"Balance of Payments and International Investment Position","names":{"en":"Balance of Payments and International Investment Position"},"links":[{"rel":"self","type":"category"}]},{"id":"EXPORTS","name":"Exports","names":{"en":"Exports"},"links":[{"rel":"self","type":"category"}]}]},{"id":"BUSINESS_INDICATORS","name":"Business Indicators","names":{"en":"Business Indicators"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"COUNTS_OF_BUSINESSES","name":"Counts of Businesses","names":{"en":"Counts of Businesses"},"links":[{"rel":"self","type":"category"}]}]},{"id":"NATIONAL_ACCOUNTS","name":"National Accounts","names":{"en":"National Accounts"},"links":[{"rel":"self","type":"category"}]},{"id":"FINANCE","name":"Finance","names":{"en":"Finance"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"LENDING_FINANCE","name":"Lending Income","names":{"en":"Lending Income"},"links":[{"rel":"self","type":"category"}]}]},{"id":"INDICATORS","name":"Key Economic Indicators","names":{"en":"Key Economic Indicators"},"links":[{"rel":"self","type":"category"}]}]},{"id":"INDUSTRY","name":"INDUSTRY","names":{"en":"INDUSTRY"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"TECHNOLOGY","name":"Technology and Innovation","names":{"en":"Technology and Innovation"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"INTERNET","name":"Internet","names":{"en":"Internet"},"links":[{"rel":"self","type":"category"}]},{"id":"RESEARCH","name":"Research","names":{"en":"Research"},"links":[{"rel":"self","type":"category"}]}]},{"id":"MINING","name":"Mining","names":{"en":"Mining"},"links":[{"rel":"self","type":"category"}]},{"id":"BUILDING_CONSTRUCTION","name":"Building and Construction","names":{"en":"Building and Construction"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"BUILDING_ACTIVITY","name":"Building Activity","names":{"en":"Building Activity"},"links":[{"rel":"self","type":"category"}]},{"id":"ENGINEERING_CONSTRUCTION","name":"Engineering Construction","names":{"en":"Engineering Construction"},"links":[{"rel":"self","type":"category"}]},{"id":"BUILDING_APPROVALS","name":"Building Approvals","names":{"en":"Building Approvals"},"links":[{"rel":"self","type":"category"}]}]},{"id":"TOURISM_TRANSPORT","name":"Tourism and Transport","names":{"en":"Tourism and Transport"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"ACCOMODATION","name":"Accomodation","names":{"en":"Accomodation"},"links":[{"rel":"self","type":"category"}]},{"id":"VEHICE_USAGE","name":"Vehicle Usage","names":{"en":"Vehicle Usage"},"links":[{"rel":"self","type":"category"}]}]},{"id":"RETAIL_WHOLESALE","name":"Retail and Wholesale Trade","names":{"en":"Retail and Wholesale Trade"},"links":[{"rel":"self","type":"category"}]},{"id":"ENERGY","name":"Energy","names":{"en":"Energy"},"links":[{"rel":"self","type":"category"}]},{"id":"AGRICULTURE","name":"Agriculture","names":{"en":"Agriculture"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"LAND_USE","name":"Land Use","names":{"en":"Land Use"},"links":[{"rel":"self","type":"category"}]},{"id":"LAND_COVER","name":"Land Cover","names":{"en":"Land Cover"},"links":[{"rel":"self","type":"category"}]}]}]},{"id":"PEOPLE","name":"PEOPLE","names":{"en":"PEOPLE"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"PEOPLE_COMMUNITIES","name":"People and Communities","names":{"en":"People and Communities"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"ANCESTRY","name":"Ancestry","names":{"en":"Ancestry"},"links":[{"rel":"self","type":"category"}]},{"id":"MARITAL_STATUS","name":"Marital Status","names":{"en":"Marital Status"},"links":[{"rel":"self","type":"category"}]},{"id":"RELIGION","name":"Religion","names":{"en":"Religion"},"links":[{"rel":"self","type":"category"}]},{"id":"HOUSEHOLD_COMPOSITION","name":"Household Composition","names":{"en":"Household Composition"},"links":[{"rel":"self","type":"category"}]},{"id":"PERSON_CHARACTERISTICS","name":"Person Characteristics","names":{"en":"Person Characteristics"},"links":[{"rel":"self","type":"category"}]},{"id":"LANGUAGE","name":"Language","names":{"en":"Language"},"links":[{"rel":"self","type":"category"}]},{"id":"FAMILY","name":"Family","names":{"en":"Family"},"links":[{"rel":"self","type":"category"}]}]},{"id":"INCOME","name":"Income","names":{"en":"Income"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"FAMILY_INCOME","name":"Family Income","names":{"en":"Family Income"},"links":[{"rel":"self","type":"category"}]},{"id":"PERSONAL_INCOME","name":"Personal Income","names":{"en":"Personal Income"},"links":[{"rel":"self","type":"category"}]},{"id":"HOUSEHOLD_INCOME","name":"Household Income","names":{"en":"Household Income"},"links":[{"rel":"self","type":"category"}]}]},{"id":"ATSIP","name":"Aboriginal and Torres Strait Islander Peoples","names":{"en":"Aboriginal and Torres Strait Islander Peoples"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"INDIGENOUS_STATUS","name":"Indigenous Status","names":{"en":"Indigenous Status"},"links":[{"rel":"self","type":"category"}]},{"id":"POPULATION_PROJECTIONS","name":"Aboriginal and Torres Strait Islander Population Projections","names":{"en":"Aboriginal and Torres Strait Islander Population Projections"},"links":[{"rel":"self","type":"category"}]}]},{"id":"EDUCATION","name":"Education","names":{"en":"Education"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"CHILD_EDUCATION_CARE","name":"Child Education and Care","names":{"en":"Child Education and Care"},"links":[{"rel":"self","type":"category"}]},{"id":"SCHOOLS","name":"Schools","names":{"en":"Schools"},"links":[{"rel":"self","type":"category"}]},{"id":"TYPE_EDUCATION","name":"Type of Education","names":{"en":"Type of Education"},"links":[{"rel":"self","type":"category"}]},{"id":"LEVEL_EDUCATION","name":"Level of Education","names":{"en":"Level of Education"},"links":[{"rel":"self","type":"category"}]}]},{"id":"POPULATION","name":"Population","names":{"en":"Population"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"RIM","name":"Regional Internal Migration","names":{"en":"Regional Internal Migration"},"links":[{"rel":"self","type":"category"}]},{"id":"ERP","name":"Estimated Resident Population","names":{"en":"Estimated Resident Population"},"links":[{"rel":"self","type":"category"}]},{"id":"OVERSEAS_MIGRATION","name":"Overseas Migration","names":{"en":"Overseas Migration"},"links":[{"rel":"self","type":"category"}]},{"id":"BIRTHS","name":"Births","names":{"en":"Births"},"links":[{"rel":"self","type":"category"}]},{"id":"USUAL_HOME","name":"Usual Home","names":{"en":"Usual Home"},"links":[{"rel":"self","type":"category"}]},{"id":"POP_PROJ","name":"Population Projections","names":{"en":"Population Projections"},"links":[{"rel":"self","type":"category"}]},{"id":"INTERSTATE_MIGRATION","name":"Interstate Migration","names":{"en":"Interstate Migration"},"links":[{"rel":"self","type":"category"}]},{"id":"DEATHS","name":"Deaths","names":{"en":"Deaths"},"links":[{"rel":"self","type":"category"}]}]},{"id":"HOUSING","name":"Housing","names":{"en":"Housing"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"DWELLING_STRUCTURE","name":"Dwelling Structure","names":{"en":"Dwelling Structure"},"links":[{"rel":"self","type":"category"}]},{"id":"RENT","name":"Rent","names":{"en":"Rent"},"links":[{"rel":"self","type":"category"}]},{"id":"TENURE_LANDLORD","name":"Tenure and Landlord Type","names":{"en":"Tenure and Landlord Type"},"links":[{"rel":"self","type":"category"}]},{"id":"MORTGAGE","name":"Mortgage","names":{"en":"Mortgage"},"links":[{"rel":"self","type":"category"}]},{"id":"INTERNET_ACCESS","name":"Internet Access","names":{"en":"Internet Access"},"links":[{"rel":"self","type":"category"}]}]},{"id":"CRIME_JUSTICE","name":"Crime and Justice","names":{"en":"Crime and Justice"},"links":[{"rel":"self","type":"category"}]}]},{"id":"LABOUR","name":"LABOUR","names":{"en":"LABOUR"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"TRAVEL","name":"Travel to Work","names":{"en":"Travel to Work"},"links":[{"rel":"self","type":"category"}]},{"id":"EARNINGS_HOURS","name":"Earnings and Work Hours","names":{"en":"Earnings and Work Hours"},"links":[{"rel":"self","type":"category"}]},{"id":"INDUSTRY_EMPLOYMENT","name":"Industry of Employment","names":{"en":"Industry of Employment"},"links":[{"rel":"self","type":"category"}]},{"id":"EMPLOYMENT_UNEMPLOYMENT","name":"Employment and Unemployment","names":{"en":"Employment and Unemployment"},"links":[{"rel":"self","type":"category"}]},{"id":"UNPAID_WORK","name":"Unpaid Work","names":{"en":"Unpaid Work"},"links":[{"rel":"self","type":"category"}]},{"id":"OCCUPATION","name":"Occupation","names":{"en":"Occupation"},"links":[{"rel":"self","type":"category"}]},{"id":"INDUSTRIAL_DISPUTES","name":"Industrial Disputes","names":{"en":"Industrial Disputes"},"links":[{"rel":"self","type":"category"}]},{"id":"LABOUR_FORCE_STATUS","name":"Labour Force Status","names":{"en":"Labour Force Status"},"links":[{"rel":"self","type":"category"}]}]},{"id":"HEALTH","name":"HEALTH","names":{"en":"HEALTH"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"HEALTH_CONDITIONS","name":"Health Conditions and Risk Factors","names":{"en":"Health Conditions and Risk Factors"},"links":[{"rel":"self","type":"category"}]},{"id":"MENTAL_HEALTH","name":"Mental Health","names":{"en":"Mental Health"},"links":[{"rel":"self","type":"category"}]},{"id":"CAUSE_DEATH","name":"Causes of Death","names":{"en":"Causes of Death"},"links":[{"rel":"self","type":"category"}]},{"id":"FERTILITY_BIRTHS","name":"Fertility and Births","names":{"en":"Fertility and Births"},"links":[{"rel":"self","type":"category"}]},{"id":"HEALTH_SERVICES","name":"Health Services","names":{"en":"Health Services"},"links":[{"rel":"self","type":"category"}]},{"id":"DISABILITY","name":"Disability","names":{"en":"Disability"},"links":[{"rel":"self","type":"category"}]}]},{"id":"ENVIRONMENT","name":"ENVIRONMENT","names":{"en":"ENVIRONMENT"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"ENVIRONMENTAL_MANAGEMENT","name":"Environmental Management","names":{"en":"Environmental Management"},"links":[{"rel":"self","type":"category"}]}]},{"id":"SNAPSHOTS","name":"SNAPSHOTS","names":{"en":"SNAPSHOTS"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"SEIFA","name":"Socio-Economic Indexes for Areas (SEIFA)","names":{"en":"Socio-Economic Indexes for Areas (SEIFA)"},"links":[{"rel":"self","type":"category"}]},{"id":"REGIONAL_STATISTICS","name":"Regional Statistics","names":{"en":"Regional Statistics"},"links":[{"rel":"self","type":"category"}]}]},{"id":"CENSUS","name":"CENSUS","names":{"en":"CENSUS"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"CENSUS_2021","name":"2021 Census of Population and Housing","names":{"en":"2021 Census of Population and Housing"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"2021_COMM_PROFILE","name":"Basic Community Profiles","names":{"en":"Basic Community Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2021_TIME_PROFILE_LGA","name":"Time Series Profiles (Local Government Areas)","names":{"en":"Time Series Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]},{"id":"2021_COMM_PROFILE_SA1","name":"Basic Community Profiles (South Australia SA1)","names":{"en":"Basic Community Profiles (South Australia SA1)"},"links":[{"rel":"self","type":"category"}]},{"id":"2021_TIME_PROFILE","name":"Time Series Profiles","names":{"en":"Time Series Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2021_COMM_PROFILE_LGA","name":"Basic Community Profiles (Local Government Areas)","names":{"en":"Basic Community Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]}]},{"id":"CENSUS_2016","name":"2016 Census of Population and Housing","names":{"en":"2016 Census of Population and Housing"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"2016_COMM_PROFILE_SA1","name":"Basic Community Profiles (South Australia SA1)","names":{"en":"Basic Community Profiles (South Australia SA1)"},"links":[{"rel":"self","type":"category"}]},{"id":"2016_TIME_PROFILE_LGA","name":"Time Series Profiles (Local Government Areas)","names":{"en":"Time Series Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]},{"id":"2016_COMM_PROFILE","name":"Basic Community Profiles","names":{"en":"Basic Community Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2016_TIME_PROFILE","name":"Time Series Profiles","names":{"en":"Time Series Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2016_COMM_PROFILE_LGA","name":"Basic Community Profiles (Local Government Areas)","names":{"en":"Basic Community Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]}]},{"id":"CENSUS_2011","name":"2011 Census of Population and Housing","names":{"en":"2011 Census of Population and Housing"},"links":[{"rel":"self","type":"category"}],"categories":[{"id":"2011_TIME_PROFILE_LGA","name":"Time Series Profiles (Local Government Areas)","names":{"en":"Time Series Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]},{"id":"2011_COMM_PROFILE","name":"Basic Community Profiles","names":{"en":"Basic Community Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2011_COMM_PROFILE_SA1","name":"Basic Community Profiles (South Australia SA1)","names":{"en":"Basic Community Profiles (South Australia SA1)"},"links":[{"rel":"self","type":"category"}]},{"id":"2011_TIME_PROFILE","name":"Time Series Profiles","names":{"en":"Time Series Profiles"},"links":[{"rel":"self","type":"category"}]},{"id":"2011_COMM_PROFILE_LGA","name":"Basic Community Profiles (Local Government Areas)","names":{"en":"Basic Community Profiles (Local Government Areas)"},"links":[{"rel":"self","type":"category"}]}]}]}]}],"categorisations":[{"id":"CAT_RT","links":[{"rel":"self","type":"categorisation"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Retail Trade Categorisation","names":{"en":"Retail Trade Categorisation"},"source":"urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)","target":"urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=ABS:ABS_TOPICS(1.0.0).INDUSTRY.RETAIL_WHOLESALE"}],"conceptSchemes":[{"id":"CS_ATTRIBUTE","links":[{"rel":"self","type":"conceptscheme"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Attribute Concepts","names":{"en":"Attribute Concepts"},"isPartial":false,"concepts":[{"id":"UNIT_MEASURE","name":"Unit of Measure","names":{"en":"Unit of Measure"},"description":"Base unit in which the observation value is expressed.","descriptions":{"en":"Base unit in which the observation value is expressed."},"annotations":[{"type":"CONTEXT","text":"If a unit multiplier exists the data is recorded according to the combination of the unit multiplier and the unit of measure.","texts":{"en":"If a unit multiplier exists the data is recorded according to the combination of the unit multiplier and the unit of measure."}}],"links":[{"rel":"self","type":"concept"}]},{"id":"UNIT_MULT","name":"Unit of Multiplier","names":{"en":"Unit of Multiplier"},"description":"The multiple of the unit of measure for which the data is expressed.","descriptions":{"en":"The multiple of the unit of measure for which the data is expressed."},"annotations":[{"type":"CONTEXT","text":"Codes for unit of multiplier are the exponent in base 10 so that multiplying the observation by 10^UNIT_MULT gives a value expressed in the unit of measure.","texts":{"en":"Codes for unit of multiplier are the exponent in base 10 so that multiplying the observation by 10^UNIT_MULT gives a value expressed in the unit of measure."}}],"links":[{"rel":"self","type":"concept"}]},{"id":"OBS_STATUS","name":"Observation Status","names":{"en":"Observation Status"},"links":[{"rel":"self","type":"concept"}]},{"id":"OBS_COMMENT","name":"Observation Comment","names":{"en":"Observation Comment"},"links":[{"rel":"self","type":"concept"}]},{"id":"REPYEAREND","name":"Reporting Year End Day","names":{"en":"Reporting Year End Day"},"description":"A month day that specifies the ending day of the reporting periods (e.g. YYYY-A1) within the datastucture.","descriptions":{"en":"A month day that specifies the ending day of the reporting periods (e.g. YYYY-A1) within the datastucture."},"annotations":[{"type":"CONTEXT","text":"The use of reporting year end day also specifies that the reporting period of YYYY-A1 references an earlier period (e.g. 2018-A1 will be equivalent to 2017/18 and not 2018/19).","texts":{"en":"The use of reporting year end day also specifies that the reporting period of YYYY-A1 references an earlier period (e.g. 2018-A1 will be equivalent to 2017/18 and not 2018/19)."}}],"links":[{"rel":"self","type":"concept"}]},{"id":"BASE_PERIOD","name":"Reference Base Period","names":{"en":"Reference Base Period"},"description":"Reference Period that the value has been based against.","descriptions":{"en":"Reference Period that the value has been based against."},"links":[{"rel":"self","type":"concept"}]}]},{"id":"CS_COMMON","links":[{"rel":"self","type":"conceptscheme"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Common Concepts","names":{"en":"Common Concepts"},"isPartial":false,"concepts":[{"id":"OBS_VALUE","name":"Observation Value","names":{"en":"Observation Value"},"description":"The observed value of the variable identified by the series dimension values.","descriptions":{"en":"The observed value of the variable identified by the series dimension values."},"links":[{"rel":"self","type":"concept"}]},{"id":"TIME_PERIOD","name":"Time Period","names":{"en":"Time Period"},"description":"Timespan or point in time for which the observation refers.","descriptions":{"en":"Timespan or point in time for which the observation refers."},"annotations":[{"type":"CONTEXT","text":"The measurement represented by each observation corresponds to a specific point in time (e.g. a single day) or a period (e.g. a month, a fiscal year, or a calendar year).","texts":{"en":"The measurement represented by each observation corresponds to a specific point in time (e.g. a single day) or a period (e.g. a month, a fiscal year, or a calendar year)."}}],"links":[{"rel":"self","type":"concept"}]},{"id":"FREQ","name":"Frequency","names":{"en":"Frequency"},"description":"Rate at which data is collated.","descriptions":{"en":"Rate at which data is collated."},"links":[{"rel":"self","type":"concept"}]},{"id":"MEASURE","name":"Measure","names":{"en":"Measure"},"links":[{"rel":"self","type":"concept"}]},{"id":"TSEST","name":"Adjustment Type","names":{"en":"Adjustment Type"},"description":"An original time series can be decomposed into three components: the trend (the general direction of the series), the seasonal component (systematic, calendar related movements) and the irregular component (unsystematic, short term fluctuations). Seasonally adjusted series are produced by estimating the seasonal component and removing this from the original series. In most economic data the seasonal component is a combination of seasonal influences (e.g. the effect of the weather or social traditions) plus other kinds of calendar related variations such as Chinese New Year and Christmas. The seasonal adjustment methodology takes into account both seasonal and other calendar related factors that evolve over time to reflect changes in activity patterns.","descriptions":{"en":"An original time series can be decomposed into three components: the trend (the general direction of the series), the seasonal component (systematic, calendar related movements) and the irregular component (unsystematic, short term fluctuations). Seasonally adjusted series are produced by estimating the seasonal component and removing this from the original series. In most economic data the seasonal component is a combination of seasonal influences (e.g. the effect of the weather or social traditions) plus other kinds of calendar related variations such as Chinese New Year and Christmas. The seasonal adjustment methodology takes into account both seasonal and other calendar related factors that evolve over time to reflect changes in activity patterns."},"annotations":[{"type":"OTHER_LINKS","text":"https://www.abs.gov.au/websitedbs/D3310114.nsf/home/Time+Series+Analysis:+The+Basics","texts":{"en":"https://www.abs.gov.au/websitedbs/D3310114.nsf/home/Time+Series+Analysis:+The+Basics"}}],"links":[{"rel":"self","type":"concept"}]}]},{"id":"CS_GEOGRAPHY","links":[{"rel":"self","type":"conceptscheme"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Geography Concepts","names":{"en":"Geography Concepts"},"isPartial":false,"concepts":[{"id":"REGION","name":"Region","names":{"en":"Region"},"links":[{"rel":"self","type":"concept"}]},{"id":"REGION_ARR","name":"Region of Arrival","names":{"en":"Region of Arrival"},"links":[{"rel":"self","type":"concept"}],"parent":"REGION"},{"id":"REGION_DEP","name":"Region of Departure","names":{"en":"Region of Departure"},"links":[{"rel":"self","type":"concept"}],"parent":"REGION"},{"id":"REGION_TYPE","name":"Region Type","names":{"en":"Region Type"},"links":[{"rel":"self","type":"concept"}]},{"id":"GEO_LEVEL","name":"Geography Level","names":{"en":"Geography Level"},"links":[{"rel":"self","type":"concept"}]},{"id":"STATE","name":"State","names":{"en":"State"},"links":[{"rel":"self","type":"concept"}]},{"id":"STATE_ORIGIN","name":"State of Origin","names":{"en":"State of Origin"},"links":[{"rel":"self","type":"concept"}],"parent":"STATE"},{"id":"STATE_DEST","name":"State of Destination","names":{"en":"State of Destination"},"links":[{"rel":"self","type":"concept"}],"parent":"STATE"},{"id":"STATE_ARR","name":"State of Arrival","names":{"en":"State of Arrival"},"links":[{"rel":"self","type":"concept"}],"parent":"STATE"},{"id":"STATE_DEP","name":"State of Departure","names":{"en":"State of Departure"},"links":[{"rel":"self","type":"concept"}],"parent":"STATE"},{"id":"STATE_TERR","name":"States and Territories","names":{"en":"States and Territories"},"links":[{"rel":"self","type":"concept"}]},{"id":"COUNTRY","name":"Country","names":{"en":"Country"},"links":[{"rel":"self","type":"concept"}]},{"id":"COUNTRY_ORIGIN","name":"Country of Origin","names":{"en":"Country of Origin"},"links":[{"rel":"self","type":"concept"}],"parent":"COUNTRY"},{"id":"COUNTRY_DEST","name":"Country of Destination","names":{"en":"Country of Destination"},"links":[{"rel":"self","type":"concept"}],"parent":"COUNTRY"},{"id":"COUNTRY_BIRTH","name":"Country of Birth","names":{"en":"Country of Birth"},"links":[{"rel":"self","type":"concept"}],"parent":"COUNTRY"},{"id":"COUNTRY_RESID","name":"Country of Stay/Residence","names":{"en":"Country of Stay/Residence"},"links":[{"rel":"self","type":"concept"}],"parent":"COUNTRY"},{"id":"FED","name":"Federal Electoral Division","names":{"en":"Federal Electoral Division"},"links":[{"rel":"self","type":"concept"}]},{"id":"IND_REGION","name":"Indigenous Region","names":{"en":"Indigenous Region"},"links":[{"rel":"self","type":"concept"}]},{"id":"LGA","name":"Local Government Area","names":{"en":"Local Government Area"},"links":[{"rel":"self","type":"concept"}]},{"id":"LGA_2011","name":"Local Government Areas - 2011","names":{"en":"Local Government Areas - 2011"},"links":[{"rel":"self","type":"concept"}],"parent":"LGA"},{"id":"LGA_2016","name":"Local Government Areas - 2016","names":{"en":"Local Government Areas - 2016"},"links":[{"rel":"self","type":"concept"}],"parent":"LGA"},{"id":"POA","name":"Postal Area Code","names":{"en":"Postal Area Code"},"links":[{"rel":"self","type":"concept"}]},{"id":"REMOTE","name":"Remoteness Area","names":{"en":"Remoteness Area"},"links":[{"rel":"self","type":"concept"}]},{"id":"SA2","name":"Statistical Area Level 2 (SA2)","names":{"en":"Statistical Area Level 2 (SA2)"},"links":[{"rel":"self","type":"concept"}]},{"id":"SSC","name":"State Suburb","names":{"en":"State Suburb"},"links":[{"rel":"self","type":"concept"}]}]},{"id":"CS_INDUSTRY","links":[{"rel":"self","type":"conceptscheme"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Industry Concepts","names":{"en":"Industry Concepts"},"isPartial":false,"concepts":[{"id":"INDUSTRY","name":"Industry","names":{"en":"Industry"},"links":[{"rel":"self","type":"concept"}]},{"id":"INDUSTRY_ORIGIN","name":"Industry of Origin","names":{"en":"Industry of Origin"},"links":[{"rel":"self","type":"concept"}],"parent":"INDUSTRY"},{"id":"INDUSTRY_EMP","name":"Industry of Employment","names":{"en":"Industry of Employment"},"links":[{"rel":"self","type":"concept"}],"parent":"INDUSTRY"},{"id":"INDUSTRY_RETAIL","name":"Retail Industry","names":{"en":"Retail Industry"},"links":[{"rel":"self","type":"concept"}]}]}],"codelists":[{"id":"CL_FREQ","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Frequency","names":{"en":"Frequency"},"isPartial":false,"codes":[{"id":"H","name":"Hourly","names":{"en":"Hourly"},"description":"To be used for data collected or disseminated every hour.","descriptions":{"en":"To be used for data collected or disseminated every hour."},"links":[{"rel":"self","type":"code"}]},{"id":"D","name":"Daily","names":{"en":"Daily"},"description":"To be used for data collected or disseminated every day.","descriptions":{"en":"To be used for data collected or disseminated every day."},"links":[{"rel":"self","type":"code"}]},{"id":"N","name":"Minutely","names":{"en":"Minutely"},"description":"While N denotes \"minutely\", usually, there may be no observations every minute (for several series the frequency is usually \"irregular\" within a day/days). And though observations may be sparse (not collected or disseminated every minute), missing values do not need to be given for the minutes when no observations exist: in any case the time stamp determines when an observation is observed.","descriptions":{"en":"While N denotes \"minutely\", usually, there may be no observations every minute (for several series the frequency is usually \"irregular\" within a day/days). And though observations may be sparse (not collected or disseminated every minute), missing values do not need to be given for the minutes when no observations exist: in any case the time stamp determines when an observation is observed."},"links":[{"rel":"self","type":"code"}]},{"id":"B","name":"Daily or businessweek","names":{"en":"Daily or businessweek"},"description":"Similar to \"daily\", however there are no observations for Saturdays and Sundays (so, neither \"missing values\" nor \"numeric values\" should be provided for Saturday and Sunday). This treatment (\"business\") is one way to deal with such cases, but it is not the only option. Such a time series could alternatively be considered daily (\"D\"), thus, with missing values in the weekend.","descriptions":{"en":"Similar to \"daily\", however there are no observations for Saturdays and Sundays (so, neither \"missing values\" nor \"numeric values\" should be provided for Saturday and Sunday). This treatment (\"business\") is one way to deal with such cases, but it is not the only option. Such a time series could alternatively be considered daily (\"D\"), thus, with missing values in the weekend."},"links":[{"rel":"self","type":"code"}]},{"id":"W","name":"Weekly","names":{"en":"Weekly"},"description":"To be used for data collected or disseminated every week.","descriptions":{"en":"To be used for data collected or disseminated every week."},"links":[{"rel":"self","type":"code"}]},{"id":"S","name":"Half-yearly, semester","names":{"en":"Half-yearly, semester"},"description":"To be used for data collected or disseminated every semester.","descriptions":{"en":"To be used for data collected or disseminated every semester."},"links":[{"rel":"self","type":"code"}]},{"id":"A","name":"Annual","names":{"en":"Annual"},"description":"To be used for data collected or disseminated every year.","descriptions":{"en":"To be used for data collected or disseminated every year."},"links":[{"rel":"self","type":"code"}]},{"id":"M","name":"Monthly","names":{"en":"Monthly"},"description":"To be used for data collected or disseminated every month.","descriptions":{"en":"To be used for data collected or disseminated every month."},"links":[{"rel":"self","type":"code"}]},{"id":"Q","name":"Quarterly","names":{"en":"Quarterly"},"description":"To be used for data collected or disseminated every quarter.","descriptions":{"en":"To be used for data collected or disseminated every quarter."},"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_OBS_STATUS","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Observation Status","names":{"en":"Observation Status"},"isPartial":false,"codes":[{"id":"k","name":"estimate","names":{"en":"estimate"},"links":[{"rel":"self","type":"code"}]},{"id":"l","name":"not elsewhere included","names":{"en":"not elsewhere included"},"links":[{"rel":"self","type":"code"}]},{"id":"m","name":"not recorded","names":{"en":"not recorded"},"links":[{"rel":"self","type":"code"}]},{"id":"n","name":"not available for publication but included in totals where applicable, unless otherwise indicated","names":{"en":"not available for publication but included in totals where applicable, unless otherwise indicated"},"links":[{"rel":"self","type":"code"}]},{"id":"o","name":"nil or rounded to zero, including null cells","names":{"en":"nil or rounded to zero, including null cells"},"links":[{"rel":"self","type":"code"}]},{"id":"p","name":"preliminary figure or series subject to revision","names":{"en":"preliminary figure or series subject to revision"},"links":[{"rel":"self","type":"code"}]},{"id":"q","name":"not available","names":{"en":"not available"},"links":[{"rel":"self","type":"code"}]},{"id":"r","name":"revised","names":{"en":"revised"},"links":[{"rel":"self","type":"code"}]},{"id":"s","name":"not currently available due to break in time series","names":{"en":"not currently available due to break in time series"},"links":[{"rel":"self","type":"code"}]},{"id":"t","name":"not yet available","names":{"en":"not yet available"},"links":[{"rel":"self","type":"code"}]},{"id":"u","name":"not applicable","names":{"en":"not applicable"},"links":[{"rel":"self","type":"code"}]},{"id":"v","name":"not available for publication but included in totals where applicable, unless otherwise indicated","names":{"en":"not available for publication but included in totals where applicable, unless otherwise indicated"},"links":[{"rel":"self","type":"code"}]},{"id":"w","name":"estimate is subject to sampling variability too high for most practical purposes","names":{"en":"estimate is subject to sampling variability too high for most practical purposes"},"links":[{"rel":"self","type":"code"}]},{"id":"x","name":"estimate has a relative standard error of 10% to less than 25% and should be used with caution","names":{"en":"estimate has a relative standard error of 10% to less than 25% and should be used with caution"},"links":[{"rel":"self","type":"code"}]},{"id":"y","name":"estimate has a relative standard error between 25% and 50% and should be used with caution","names":{"en":"estimate has a relative standard error between 25% and 50% and should be used with caution"},"links":[{"rel":"self","type":"code"}]},{"id":"z","name":"estimate has a relative standard error greater than 50% and is considered too unreliable for general use","names":{"en":"estimate has a relative standard error greater than 50% and is considered too unreliable for general use"},"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_RT_IND","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Retail Sales Industry (Introduction of ANZSIC 2006 - July 2009 redesign)","names":{"en":"Retail Sales Industry (Introduction of ANZSIC 2006 - July 2009 redesign)"},"isPartial":false,"codes":[{"id":"20","name":"Total","names":{"en":"Total"},"description":"Total","descriptions":{"en":"Total"},"annotations":[{"type":"ORDER","text":"220","texts":{"en":"220"}},{"type":"FULL_NAME","text":"Total","texts":{"en":"Total"}}],"links":[{"rel":"self","type":"code"}]},{"id":"41","name":"Food retailing","names":{"en":"Food retailing"},"description":"Food retailing","descriptions":{"en":"Food retailing"},"annotations":[{"type":"ORDER","text":"40","texts":{"en":"40"}},{"type":"FULL_NAME","text":"Food retailing","texts":{"en":"Food retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"01","name":"Supermarket and grocery stores","names":{"en":"Supermarket and grocery stores"},"description":"Supermarket and grocery stores","descriptions":{"en":"Supermarket and grocery stores"},"annotations":[{"type":"ORDER","text":"10","texts":{"en":"10"}},{"type":"FULL_NAME","text":"Supermarket and grocery stores","texts":{"en":"Supermarket and grocery stores"}}],"links":[{"rel":"self","type":"code"}],"parent":"41"},{"id":"02","name":"Liquor retailing","names":{"en":"Liquor retailing"},"description":"Liquor retailing","descriptions":{"en":"Liquor retailing"},"annotations":[{"type":"ORDER","text":"20","texts":{"en":"20"}},{"type":"FULL_NAME","text":"Liquor retailing","texts":{"en":"Liquor retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"41"},{"id":"03","name":"Other specialised food retailing","names":{"en":"Other specialised food retailing"},"description":"Other specialised food retailing","descriptions":{"en":"Other specialised food retailing"},"annotations":[{"type":"ORDER","text":"30","texts":{"en":"30"}},{"type":"FULL_NAME","text":"Other specialised food retailing","texts":{"en":"Other specialised food retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"41"},{"id":"42","name":"Household goods retailing","names":{"en":"Household goods retailing"},"description":"Household goods retailing","descriptions":{"en":"Household goods retailing"},"annotations":[{"type":"ORDER","text":"80","texts":{"en":"80"}},{"type":"FULL_NAME","text":"Household goods retailing","texts":{"en":"Household goods retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"04","name":"Furniture, floor coverings, houseware and textile goods retailing","names":{"en":"Furniture, floor coverings, houseware and textile goods retailing"},"description":"Furniture, floor coverings, houseware and textile goods retailing","descriptions":{"en":"Furniture, floor coverings, houseware and textile goods retailing"},"annotations":[{"type":"ORDER","text":"50","texts":{"en":"50"}},{"type":"FULL_NAME","text":"Furniture, floor coverings, houseware and textile goods retailing","texts":{"en":"Furniture, floor coverings, houseware and textile goods retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"42"},{"id":"05","name":"Electrical and electronic goods retailing","names":{"en":"Electrical and electronic goods retailing"},"description":"Electrical and electronic goods retailing","descriptions":{"en":"Electrical and electronic goods retailing"},"annotations":[{"type":"ORDER","text":"60","texts":{"en":"60"}},{"type":"FULL_NAME","text":"Electrical and electronic goods retailing","texts":{"en":"Electrical and electronic goods retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"42"},{"id":"06","name":"Hardware, building and garden supplies retailing","names":{"en":"Hardware, building and garden supplies retailing"},"description":"Hardware, building and garden supplies retailing","descriptions":{"en":"Hardware, building and garden supplies retailing"},"annotations":[{"type":"ORDER","text":"70","texts":{"en":"70"}},{"type":"FULL_NAME","text":"Hardware, building and garden supplies retailing","texts":{"en":"Hardware, building and garden supplies retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"42"},{"id":"43","name":"Clothing, footwear and personal accessory retailing","names":{"en":"Clothing, footwear and personal accessory retailing"},"description":"Clothing, footwear and personal accessory retailing","descriptions":{"en":"Clothing, footwear and personal accessory retailing"},"annotations":[{"type":"ORDER","text":"110","texts":{"en":"110"}},{"type":"FULL_NAME","text":"Clothing, footwear and personal accessory retailing","texts":{"en":"Clothing, footwear and personal accessory retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"07","name":"Clothing retailing","names":{"en":"Clothing retailing"},"description":"Clothing retailing","descriptions":{"en":"Clothing retailing"},"annotations":[{"type":"ORDER","text":"90","texts":{"en":"90"}},{"type":"FULL_NAME","text":"Clothing retailing","texts":{"en":"Clothing retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"43"},{"id":"08","name":"Footwear and other personal accessory retailing","names":{"en":"Footwear and other personal accessory retailing"},"description":"Footwear and other personal accessory retailing","descriptions":{"en":"Footwear and other personal accessory retailing"},"annotations":[{"type":"ORDER","text":"100","texts":{"en":"100"}},{"type":"FULL_NAME","text":"Footwear and other personal accessory retailing","texts":{"en":"Footwear and other personal accessory retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"43"},{"id":"44","name":"Department stores","names":{"en":"Department stores"},"description":"Department stores","descriptions":{"en":"Department stores"},"annotations":[{"type":"ORDER","text":"130","texts":{"en":"130"}},{"type":"FULL_NAME","text":"Department stores","texts":{"en":"Department stores"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"09","name":"Department stores","names":{"en":"Department stores"},"description":"Department stores","descriptions":{"en":"Department stores"},"annotations":[{"type":"ORDER","text":"120","texts":{"en":"120"}},{"type":"FULL_NAME","text":"Department stores","texts":{"en":"Department stores"}}],"links":[{"rel":"self","type":"code"}],"parent":"44"},{"id":"45","name":"Other retailing","names":{"en":"Other retailing"},"description":"Other retailing","descriptions":{"en":"Other retailing"},"annotations":[{"type":"ORDER","text":"180","texts":{"en":"180"}},{"type":"FULL_NAME","text":"Other retailing","texts":{"en":"Other retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"10","name":"Newspaper and book retailing","names":{"en":"Newspaper and book retailing"},"description":"Newspaper and book retailing","descriptions":{"en":"Newspaper and book retailing"},"annotations":[{"type":"ORDER","text":"140","texts":{"en":"140"}},{"type":"FULL_NAME","text":"Newspaper and book retailing","texts":{"en":"Newspaper and book retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"45"},{"id":"11","name":"Other recreational goods retailing","names":{"en":"Other recreational goods retailing"},"description":"Other recreational goods retailing","descriptions":{"en":"Other recreational goods retailing"},"annotations":[{"type":"ORDER","text":"150","texts":{"en":"150"}},{"type":"FULL_NAME","text":"Other recreational goods retailing","texts":{"en":"Other recreational goods retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"45"},{"id":"12","name":"Pharmaceutical, cosmetic and toiletry goods retailing","names":{"en":"Pharmaceutical, cosmetic and toiletry goods retailing"},"description":"Pharmaceutical, cosmetic and toiletry goods retailing","descriptions":{"en":"Pharmaceutical, cosmetic and toiletry goods retailing"},"annotations":[{"type":"ORDER","text":"160","texts":{"en":"160"}},{"type":"FULL_NAME","text":"Pharmaceutical, cosmetic and toiletry goods retailing","texts":{"en":"Pharmaceutical, cosmetic and toiletry goods retailing"}}],"links":[{"rel":"self","type":"code"}],"parent":"45"},{"id":"13","name":"Other retailing n.e.c.","names":{"en":"Other retailing n.e.c."},"description":"Other retailing n.e.c.","descriptions":{"en":"Other retailing n.e.c."},"annotations":[{"type":"ORDER","text":"170","texts":{"en":"170"}},{"type":"FULL_NAME","text":"Other retailing n.e.c.","texts":{"en":"Other retailing n.e.c."}}],"links":[{"rel":"self","type":"code"}],"parent":"45"},{"id":"46","name":"Cafes, restaurants and takeaway food services","names":{"en":"Cafes, restaurants and takeaway food services"},"description":"Cafes, restaurants and takeaway food services","descriptions":{"en":"Cafes, restaurants and takeaway food services"},"annotations":[{"type":"ORDER","text":"210","texts":{"en":"210"}},{"type":"FULL_NAME","text":"Cafes, restaurants and takeaway food services","texts":{"en":"Cafes, restaurants and takeaway food services"}}],"links":[{"rel":"self","type":"code"}],"parent":"20"},{"id":"14","name":"Cafes, restaurants and catering services","names":{"en":"Cafes, restaurants and catering services"},"description":"Cafes, restaurants and catering services","descriptions":{"en":"Cafes, restaurants and catering services"},"annotations":[{"type":"ORDER","text":"190","texts":{"en":"190"}},{"type":"FULL_NAME","text":"Cafes, restaurants and catering services","texts":{"en":"Cafes, restaurants and catering services"}}],"links":[{"rel":"self","type":"code"}],"parent":"46"},{"id":"15","name":"Takeaway food services","names":{"en":"Takeaway food services"},"description":"Takeaway food services","descriptions":{"en":"Takeaway food services"},"annotations":[{"type":"ORDER","text":"200","texts":{"en":"200"}},{"type":"FULL_NAME","text":"Takeaway food services","texts":{"en":"Takeaway food services"}}],"links":[{"rel":"self","type":"code"}],"parent":"46"}]},{"id":"CL_RT_MEASURE","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Retail Trade Measures","names":{"en":"Retail Trade Measures"},"isPartial":false,"codes":[{"id":"M1","name":"Current Prices","names":{"en":"Current Prices"},"annotations":[{"type":"ORDER","text":"10","texts":{"en":"10"}}],"links":[{"rel":"self","type":"code"}]},{"id":"M2","name":"Current Prices Percantage Change from Previous Period","names":{"en":"Current Prices Percantage Change from Previous Period"},"annotations":[{"type":"ORDER","text":"20","texts":{"en":"20"}}],"links":[{"rel":"self","type":"code"}]},{"id":"M3","name":"Chain Volume Measures","names":{"en":"Chain Volume Measures"},"annotations":[{"type":"ORDER","text":"30","texts":{"en":"30"}}],"links":[{"rel":"self","type":"code"}]},{"id":"M4","name":"Chain Volume Measures Percentage Change from Previous Period","names":{"en":"Chain Volume Measures Percentage Change from Previous Period"},"annotations":[{"type":"ORDER","text":"40","texts":{"en":"40"}}],"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_STATE","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"State","names":{"en":"State"},"isPartial":false,"codes":[{"id":"AUS","name":"Australia","names":{"en":"Australia"},"annotations":[{"type":"ORDER","text":"10","texts":{"en":"10"}}],"links":[{"rel":"self","type":"code"}]},{"id":"1","name":"New South Wales","names":{"en":"New South Wales"},"annotations":[{"type":"ORDER","text":"20","texts":{"en":"20"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"2","name":"Victoria","names":{"en":"Victoria"},"annotations":[{"type":"ORDER","text":"30","texts":{"en":"30"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"3","name":"Queensland","names":{"en":"Queensland"},"annotations":[{"type":"ORDER","text":"40","texts":{"en":"40"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"4","name":"South Australia","names":{"en":"South Australia"},"annotations":[{"type":"ORDER","text":"50","texts":{"en":"50"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"5","name":"Western Australia","names":{"en":"Western Australia"},"annotations":[{"type":"ORDER","text":"60","texts":{"en":"60"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"6","name":"Tasmania","names":{"en":"Tasmania"},"annotations":[{"type":"ORDER","text":"70","texts":{"en":"70"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"7","name":"Northern Territory","names":{"en":"Northern Territory"},"annotations":[{"type":"ORDER","text":"80","texts":{"en":"80"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"8","name":"Australian Capital Territory","names":{"en":"Australian Capital Territory"},"annotations":[{"type":"ORDER","text":"90","texts":{"en":"90"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"},{"id":"9","name":"Other Territories","names":{"en":"Other Territories"},"annotations":[{"type":"ORDER","text":"100","texts":{"en":"100"}}],"links":[{"rel":"self","type":"code"}],"parent":"AUS"}]},{"id":"CL_TSEST","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Time Series Estimates","names":{"en":"Time Series Estimates"},"isPartial":false,"codes":[{"id":"10","name":"Original","names":{"en":"Original"},"description":"Original","descriptions":{"en":"Original"},"annotations":[{"type":"ORDER","text":"1","texts":{"en":"1"}},{"type":"FULL_NAME","text":"Original","texts":{"en":"Original"}}],"links":[{"rel":"self","type":"code"}]},{"id":"20","name":"Seasonally Adjusted","names":{"en":"Seasonally Adjusted"},"description":"Seasonally Adjusted","descriptions":{"en":"Seasonally Adjusted"},"annotations":[{"type":"ORDER","text":"2","texts":{"en":"2"}},{"type":"FULL_NAME","text":"Seasonally Adjusted","texts":{"en":"Seasonally Adjusted"}}],"links":[{"rel":"self","type":"code"}]},{"id":"30","name":"Trend","names":{"en":"Trend"},"description":"Trend","descriptions":{"en":"Trend"},"annotations":[{"type":"ORDER","text":"3","texts":{"en":"3"}},{"type":"FULL_NAME","text":"Trend","texts":{"en":"Trend"}}],"links":[{"rel":"self","type":"code"}]},{"id":"40","name":"Sensitivity Upper","names":{"en":"Sensitivity Upper"},"description":"Sensitivity Upper","descriptions":{"en":"Sensitivity Upper"},"annotations":[{"type":"ORDER","text":"4","texts":{"en":"4"}},{"type":"FULL_NAME","text":"Sensitivity Upper","texts":{"en":"Sensitivity Upper"}}],"links":[{"rel":"self","type":"code"}]},{"id":"50","name":"Sensitivity Lower","names":{"en":"Sensitivity Lower"},"description":"Sensitivity Lower","descriptions":{"en":"Sensitivity Lower"},"annotations":[{"type":"ORDER","text":"5","texts":{"en":"5"}},{"type":"FULL_NAME","text":"Sensitivity Lower","texts":{"en":"Sensitivity Lower"}}],"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_UNIT_MEASURE","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Unit of Measure","names":{"en":"Unit of Measure"},"isPartial":false,"codes":[{"id":"AUD","name":"Australian Dollars","names":{"en":"Australian Dollars"},"links":[{"rel":"self","type":"code"}]},{"id":"NUM","name":"Number","names":{"en":"Number"},"links":[{"rel":"self","type":"code"}]},{"id":"PCT","name":"Percent","names":{"en":"Percent"},"links":[{"rel":"self","type":"code"}]},{"id":"PCT_PTS","name":"Percentage Points","names":{"en":"Percentage Points"},"links":[{"rel":"self","type":"code"}]},{"id":"PROP","name":"Proportion","names":{"en":"Proportion"},"links":[{"rel":"self","type":"code"}]},{"id":"IN","name":"Index Numbers","names":{"en":"Index Numbers"},"links":[{"rel":"self","type":"code"}]},{"id":"IP","name":"Index Points","names":{"en":"Index Points"},"links":[{"rel":"self","type":"code"}]},{"id":"VAR","name":"Variance","names":{"en":"Variance"},"links":[{"rel":"self","type":"code"}]},{"id":"NA","name":"Not Applicable","names":{"en":"Not Applicable"},"links":[{"rel":"self","type":"code"}]},{"id":"PSNS","name":"Persons","names":{"en":"Persons"},"links":[{"rel":"self","type":"code"}]},{"id":"PSN_YR","name":"Person Years","names":{"en":"Person Years"},"links":[{"rel":"self","type":"code"}]},{"id":"JOB","name":"Jobs","names":{"en":"Jobs"},"links":[{"rel":"self","type":"code"}]},{"id":"M_G","name":"Milligrams","names":{"en":"Milligrams"},"links":[{"rel":"self","type":"code"}]},{"id":"G","name":"Grams","names":{"en":"Grams"},"links":[{"rel":"self","type":"code"}]},{"id":"KG","name":"Kilograms","names":{"en":"Kilograms"},"links":[{"rel":"self","type":"code"}]},{"id":"CT","name":"Carat (metric)","names":{"en":"Carat (metric)"},"links":[{"rel":"self","type":"code"}]},{"id":"MCT","name":"Megacarat (metric)","names":{"en":"Megacarat (metric)"},"links":[{"rel":"self","type":"code"}]},{"id":"T","name":"Tonnes","names":{"en":"Tonnes"},"links":[{"rel":"self","type":"code"}]},{"id":"MT","name":"Megatonnes","names":{"en":"Megatonnes"},"links":[{"rel":"self","type":"code"}]},{"id":"GT","name":"Gigatonnes","names":{"en":"Gigatonnes"},"links":[{"rel":"self","type":"code"}]},{"id":"TKM","name":"Tonnes-kilometres","names":{"en":"Tonnes-kilometres"},"links":[{"rel":"self","type":"code"}]},{"id":"M_M","name":"Millimetres","names":{"en":"Millimetres"},"links":[{"rel":"self","type":"code"}]},{"id":"M","name":"Metres","names":{"en":"Metres"},"links":[{"rel":"self","type":"code"}]},{"id":"KM","name":"Kilometres","names":{"en":"Kilometres"},"links":[{"rel":"self","type":"code"}]},{"id":"SQM","name":"Square Metres","names":{"en":"Square Metres"},"links":[{"rel":"self","type":"code"}]},{"id":"SQKM","name":"Square Kilometres","names":{"en":"Square Kilometres"},"links":[{"rel":"self","type":"code"}]},{"id":"HA","name":"Hectares","names":{"en":"Hectares"},"links":[{"rel":"self","type":"code"}]},{"id":"CBM","name":"Cubic Metres","names":{"en":"Cubic Metres"},"links":[{"rel":"self","type":"code"}]},{"id":"L","name":"Litres","names":{"en":"Litres"},"links":[{"rel":"self","type":"code"}]},{"id":"KL","name":"Kilolitres","names":{"en":"Kilolitres"},"links":[{"rel":"self","type":"code"}]},{"id":"ML","name":"Megalitres","names":{"en":"Megalitres"},"links":[{"rel":"self","type":"code"}]},{"id":"GL","name":"Gigalitres","names":{"en":"Gigalitres"},"links":[{"rel":"self","type":"code"}]},{"id":"A","name":"Ampere","names":{"en":"Ampere"},"links":[{"rel":"self","type":"code"}]},{"id":"KVA","name":"Kilovolt Amperes","names":{"en":"Kilovolt Amperes"},"links":[{"rel":"self","type":"code"}]},{"id":"W","name":"Watts","names":{"en":"Watts"},"links":[{"rel":"self","type":"code"}]},{"id":"KW","name":"Kilowatts","names":{"en":"Kilowatts"},"links":[{"rel":"self","type":"code"}]},{"id":"KWH","name":"Kilowatt Hours","names":{"en":"Kilowatt Hours"},"links":[{"rel":"self","type":"code"}]},{"id":"GWH","name":"Gigawatt Hours","names":{"en":"Gigawatt Hours"},"links":[{"rel":"self","type":"code"}]},{"id":"J","name":"Joules","names":{"en":"Joules"},"links":[{"rel":"self","type":"code"}]},{"id":"KJ","name":"Kilojoules","names":{"en":"Kilojoules"},"links":[{"rel":"self","type":"code"}]},{"id":"MJ","name":"Megajoules","names":{"en":"Megajoules"},"links":[{"rel":"self","type":"code"}]},{"id":"GJ","name":"Gigajoules","names":{"en":"Gigajoules"},"links":[{"rel":"self","type":"code"}]},{"id":"TJ","name":"Terajoules","names":{"en":"Terajoules"},"links":[{"rel":"self","type":"code"}]},{"id":"PJ","name":"Petajoules","names":{"en":"Petajoules"},"links":[{"rel":"self","type":"code"}]},{"id":"C","name":"Coulumb","names":{"en":"Coulumb"},"links":[{"rel":"self","type":"code"}]},{"id":"CD","name":"Candela","names":{"en":"Candela"},"links":[{"rel":"self","type":"code"}]},{"id":"K","name":"Kelvin","names":{"en":"Kelvin"},"links":[{"rel":"self","type":"code"}]},{"id":"DEG_CEL","name":"Degrees Celsius","names":{"en":"Degrees Celsius"},"links":[{"rel":"self","type":"code"}]},{"id":"S","name":"Seconds","names":{"en":"Seconds"},"links":[{"rel":"self","type":"code"}]},{"id":"MIN","name":"Minutes","names":{"en":"Minutes"},"links":[{"rel":"self","type":"code"}]},{"id":"HR","name":"Hours","names":{"en":"Hours"},"links":[{"rel":"self","type":"code"}]},{"id":"DAY","name":"Days","names":{"en":"Days"},"links":[{"rel":"self","type":"code"}]},{"id":"WK","name":"Weeks","names":{"en":"Weeks"},"links":[{"rel":"self","type":"code"}]},{"id":"MTH","name":"Months","names":{"en":"Months"},"links":[{"rel":"self","type":"code"}]},{"id":"YR","name":"Years","names":{"en":"Years"},"links":[{"rel":"self","type":"code"}]},{"id":"B","name":"Bytes","names":{"en":"Bytes"},"links":[{"rel":"self","type":"code"}]},{"id":"KB","name":"Kilobytes","names":{"en":"Kilobytes"},"links":[{"rel":"self","type":"code"}]},{"id":"MB","name":"Megabytes","names":{"en":"Megabytes"},"links":[{"rel":"self","type":"code"}]},{"id":"GB","name":"Gigabytes","names":{"en":"Gigabytes"},"links":[{"rel":"self","type":"code"}]},{"id":"TB","name":"Terabytes","names":{"en":"Terabytes"},"links":[{"rel":"self","type":"code"}]},{"id":"DEG","name":"Degrees","names":{"en":"Degrees"},"links":[{"rel":"self","type":"code"}]},{"id":"RAD","name":"Radians","names":{"en":"Radians"},"links":[{"rel":"self","type":"code"}]},{"id":"DOZ","name":"Dozen","names":{"en":"Dozen"},"links":[{"rel":"self","type":"code"}]},{"id":"PR","name":"Pairs","names":{"en":"Pairs"},"links":[{"rel":"self","type":"code"}]},{"id":"ROOM","name":"Rooms","names":{"en":"Rooms"},"links":[{"rel":"self","type":"code"}]},{"id":"SITE","name":"Sites","names":{"en":"Sites"},"links":[{"rel":"self","type":"code"}]},{"id":"BUNDLE","name":"Bundles","names":{"en":"Bundles"},"links":[{"rel":"self","type":"code"}]},{"id":"CARTON","name":"Cartons","names":{"en":"Cartons"},"links":[{"rel":"self","type":"code"}]},{"id":"UNK","name":"Unknown","names":{"en":"Unknown"},"links":[{"rel":"self","type":"code"}]},{"id":"GBP","name":"Pound Sterling","names":{"en":"Pound Sterling"},"links":[{"rel":"self","type":"code"}]},{"id":"CENT","name":"Cents","names":{"en":"Cents"},"links":[{"rel":"self","type":"code"}]},{"id":"FAM","name":"Families","names":{"en":"Families"},"links":[{"rel":"self","type":"code"}]},{"id":"HH","name":"Households","names":{"en":"Households"},"links":[{"rel":"self","type":"code"}]},{"id":"RATE","name":"Rate","names":{"en":"Rate"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_EMP","name":"Australian Dollars per Employee","names":{"en":"Australian Dollars per Employee"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_PSN","name":"Australian Dollars per Person","names":{"en":"Australian Dollars per Person"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_KL","name":"Australian Dollars per Kilolitre","names":{"en":"Australian Dollars per Kilolitre"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_KG","name":"Australian Dollars per Kilogram","names":{"en":"Australian Dollars per Kilogram"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_T","name":"Australian Dollars per Tonne","names":{"en":"Australian Dollars per Tonne"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_CT","name":"Australian Dollars per Carat","names":{"en":"Australian Dollars per Carat"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_SQM","name":"Australian Dollars per Square Metre","names":{"en":"Australian Dollars per Square Metre"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_PER_1000CBM","name":"Australian Dollars per thousand cubic metres","names":{"en":"Australian Dollars per thousand cubic metres"},"links":[{"rel":"self","type":"code"}]},{"id":"L_PER_100KM","name":"Litres per 100 Kilometres","names":{"en":"Litres per 100 Kilometres"},"links":[{"rel":"self","type":"code"}]},{"id":"L_PER_KM","name":"Litres per Kilometre","names":{"en":"Litres per Kilometre"},"links":[{"rel":"self","type":"code"}]},{"id":"ML_PER_HA","name":"Megalitres per Hectare","names":{"en":"Megalitres per Hectare"},"links":[{"rel":"self","type":"code"}]},{"id":"T_PER_HA","name":"Tonnes per Hectare","names":{"en":"Tonnes per Hectare"},"links":[{"rel":"self","type":"code"}]},{"id":"PSNS_PER_SQKM","name":"Persons per Square Kilometre","names":{"en":"Persons per Square Kilometre"},"links":[{"rel":"self","type":"code"}]},{"id":"KG_PER_TREE","name":"Kilograms per Tree","names":{"en":"Kilograms per Tree"},"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_UNIT_MULT","links":[{"rel":"self","type":"codelist"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Unit Multiplier","names":{"en":"Unit Multiplier"},"isPartial":false,"codes":[{"id":"0","name":"Units","names":{"en":"Units"},"links":[{"rel":"self","type":"code"}]},{"id":"1","name":"Tens","names":{"en":"Tens"},"links":[{"rel":"self","type":"code"}]},{"id":"2","name":"Hundreds","names":{"en":"Hundreds"},"links":[{"rel":"self","type":"code"}]},{"id":"3","name":"Thousands","names":{"en":"Thousands"},"links":[{"rel":"self","type":"code"}]},{"id":"4","name":"Tens of thousands","names":{"en":"Tens of thousands"},"links":[{"rel":"self","type":"code"}]},{"id":"5","name":"Hundreds of thousands","names":{"en":"Hundreds of thousands"},"links":[{"rel":"self","type":"code"}]},{"id":"6","name":"Millions","names":{"en":"Millions"},"links":[{"rel":"self","type":"code"}]},{"id":"7","name":"Tens of millions","names":{"en":"Tens of millions"},"links":[{"rel":"self","type":"code"}]},{"id":"8","name":"Hundreds of millions","names":{"en":"Hundreds of millions"},"links":[{"rel":"self","type":"code"}]},{"id":"9","name":"Billions","names":{"en":"Billions"},"links":[{"rel":"self","type":"code"}]},{"id":"10","name":"Tens of billions","names":{"en":"Tens of billions"},"links":[{"rel":"self","type":"code"}]},{"id":"11","name":"Hundreds of billions","names":{"en":"Hundreds of billions"},"links":[{"rel":"self","type":"code"}]},{"id":"12","name":"Trillions","names":{"en":"Trillions"},"links":[{"rel":"self","type":"code"}]},{"id":"13","name":"Tens of trillions","names":{"en":"Tens of trillions"},"links":[{"rel":"self","type":"code"}]},{"id":"14","name":"Hundred of trillions","names":{"en":"Hundred of trillions"},"links":[{"rel":"self","type":"code"}]},{"id":"15","name":"Quadrillions","names":{"en":"Quadrillions"},"links":[{"rel":"self","type":"code"}]},{"id":"-1","name":"Tenths","names":{"en":"Tenths"},"links":[{"rel":"self","type":"code"}]},{"id":"-2","name":"Hundredths","names":{"en":"Hundredths"},"links":[{"rel":"self","type":"code"}]},{"id":"-3","name":"Thousandths","names":{"en":"Thousandths"},"links":[{"rel":"self","type":"code"}]},{"id":"-4","name":"Ten-thousandths","names":{"en":"Ten-thousandths"},"links":[{"rel":"self","type":"code"}]},{"id":"-5","name":"Hundred-thousandths","names":{"en":"Hundred-thousandths"},"links":[{"rel":"self","type":"code"}]},{"id":"-6","name":"Millionths","names":{"en":"Millionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-7","name":"Ten-millionths","names":{"en":"Ten-millionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-8","name":"Hundred-millionths","names":{"en":"Hundred-millionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-9","name":"Billionths","names":{"en":"Billionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-10","name":"Ten-billionths","names":{"en":"Ten-billionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-11","name":"Hundred-billionths","names":{"en":"Hundred-billionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-12","name":"Trillionths","names":{"en":"Trillionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-13","name":"Ten-trillionths","names":{"en":"Ten-trillionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-14","name":"Hundred-trillionths","names":{"en":"Hundred-trillionths"},"links":[{"rel":"self","type":"code"}]},{"id":"-15","name":"Quadrillionths","names":{"en":"Quadrillionths"},"links":[{"rel":"self","type":"code"}]}]}],"dataStructures":[{"id":"RT","links":[{"rel":"self","type":"datastructure"}],"version":"1.0.0","agencyID":"ABS","isFinal":true,"name":"Retail Trade Datastructure","names":{"en":"Retail Trade Datastructure"},"dataStructureComponents":{"attributeList":{"id":"AttributeDescriptor","links":[{"rel":"self","type":"attributedescriptor"}],"attributes":[{"id":"UNIT_MEASURE","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).UNIT_MEASURE","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_UNIT_MEASURE(1.0.0)"},"assignmentStatus":"Mandatory","attributeRelationship":{"dimensions":["MEASURE"]}},{"id":"UNIT_MULT","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).UNIT_MULT","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_UNIT_MULT(1.0.0)"},"assignmentStatus":"Conditional","attributeRelationship":{"dimensions":["MEASURE"]}},{"id":"OBS_STATUS","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).OBS_STATUS","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_OBS_STATUS(1.0.0)"},"assignmentStatus":"Conditional","attributeRelationship":{"primaryMeasure":"OBS_VALUE"}},{"id":"OBS_COMMENT","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).OBS_COMMENT","assignmentStatus":"Conditional","attributeRelationship":{"primaryMeasure":"OBS_VALUE"}}]},"dimensionList":{"id":"DimensionDescriptor","links":[{"rel":"self","type":"dimensiondescriptor"}],"dimensions":[{"id":"MEASURE","links":[{"rel":"self","type":"dimension"}],"position":0,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).MEASURE","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_RT_MEASURE(1.0.0)"}},{"id":"INDUSTRY","links":[{"rel":"self","type":"dimension"}],"position":1,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_INDUSTRY(1.0.0).INDUSTRY","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_RT_IND(1.0.0)"}},{"id":"TSEST","links":[{"rel":"self","type":"dimension"}],"position":2,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).TSEST","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_TSEST(1.0.0)"}},{"id":"REGION","links":[{"rel":"self","type":"dimension"}],"position":3,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_GEOGRAPHY(1.0.0).REGION","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)"}},{"id":"FREQ","links":[{"rel":"self","type":"dimension"}],"position":4,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).FREQ","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_FREQ(1.0.0)"}}],"timeDimensions":[{"id":"TIME_PERIOD","links":[{"rel":"self","type":"timedimension"}],"position":5,"type":"TimeDimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).TIME_PERIOD","localRepresentation":{"textFormat":{"textType":"ObservationalTimePeriod","isSequence":false,"isMultiLingual":false}}}]},"measureList":{"id":"MeasureDescriptor","links":[{"rel":"self","type":"measuredescriptor"}],"primaryMeasure":{"id":"OBS_VALUE","links":[{"rel":"self","type":"primarymeasure"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).OBS_VALUE"}}}}],"contentConstraints":[{"id":"CR_A_RT","links":[{"rel":"self","type":"contentconstraint"}],"version":"1.0.0","agencyID":"ABS","isFinal":false,"validFrom":"2021-04-08T16:00:00","name":"Availability (A) for RT","names":{"en":"Availability (A) for RT"},"annotations":[{"title":"A","type":"ReleaseVersion"}],"type":"Actual","constraintAttachment":{"dataflows":["urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)"]},"cubeRegions":[{"isIncluded":true,"keyValues":[{"id":"MEASURE","values":["M1","M2","M3","M4"]},{"id":"INDUSTRY","values":["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","20","41","42","43","44","45","46"]},{"id":"TSEST","values":["10","20"]},{"id":"REGION","values":["1","2","3","4","5","6","7","8","AUS"]},{"id":"FREQ","values":["M","Q"]},{"id":"TIME_PERIOD","timeRange":{"startPeriod":{"period":"1982-04-01T00:00:00Z","isInclusive":true},"endPeriod":{"period":"2021-02-28T23:59:59Z","isInclusive":true}}}]}]},{"id":"CR_B_RT","links":[{"rel":"self","type":"contentconstraint"}],"version":"1.0.0","agencyID":"ABS","isFinal":false,"validTo":"2021-04-08T15:59:59","name":"Availability (B) for RT","names":{"en":"Availability (B) for RT"},"annotations":[{"title":"B","type":"ReleaseVersion"}],"type":"Actual","constraintAttachment":{"dataflows":["urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)"]},"cubeRegions":[{"isIncluded":true,"keyValues":[{"id":"MEASURE","values":["M1","M2","M3","M4"]},{"id":"INDUSTRY","values":["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","20","41","42","43","44","45","46"]},{"id":"TSEST","values":["10","20"]},{"id":"REGION","values":["1","2","3","4","5","6","7","8","AUS"]},{"id":"FREQ","values":["M","Q"]},{"id":"TIME_PERIOD","timeRange":{"startPeriod":{"period":"1982-04-01T00:00:00Z","isInclusive":true},"endPeriod":{"period":"2021-01-31T23:59:59Z","isInclusive":true}}}]}]}]},"meta":{"schema":"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json","content-languages":["en"],"id":"IDREF73591","prepared":"2021-05-11T08:15:38.9274167Z","test":false,"sender":{"id":"Unknown"},"receiver":[{"id":"Unknown"}]}}
+{
+  "data": {
+    "dataflows": [
+      {
+        "id": "RT",
+        "links": [
+          { "rel": "self", "type": "dataflow" },
+          { "rel": "structure", "type": "datastructure" }
+        ],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Retail Trade",
+        "names": { "en": "Retail Trade" },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": { "en": "true" }
+          },
+          { "title": "INDUSTRY", "type": "LAYOUT_COLUMN" },
+          { "title": "TIME_PERIOD", "type": "LAYOUT_ROW" },
+          { "title": "MEASURE,TSEST", "type": "LAYOUT_ROW_SECTION" },
+          {
+            "title": "REGION=AUS,INDUSTRY=41+42+43+44+45+46+20,FREQ=M,LASTNOBSERVATIONS=12",
+            "type": "DEFAULT"
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ABS:RT(1.0.0)"
+      }
+    ],
+    "categorySchemes": [
+      {
+        "id": "ABS_TOPICS",
+        "links": [{ "rel": "self", "type": "categoryscheme" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "ABS Topics",
+        "names": { "en": "ABS Topics" },
+        "description": "Australian Bureau of Statistics - Topics Framework",
+        "descriptions": {
+          "en": "Australian Bureau of Statistics - Topics Framework"
+        },
+        "isPartial": false,
+        "categories": [
+          {
+            "id": "ECONOMY",
+            "name": "ECONOMY",
+            "names": { "en": "ECONOMY" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "PRICE_INDEX_INFLATION",
+                "name": "Price Indexes and Inflation",
+                "names": { "en": "Price Indexes and Inflation" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "INTERNATIONAL_TRADE",
+                "name": "International Trade",
+                "names": { "en": "International Trade" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "IMPORTS",
+                    "name": "Imports",
+                    "names": { "en": "Imports" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "BOP_IIP",
+                    "name": "Balance of Payments and International Investment Position",
+                    "names": {
+                      "en": "Balance of Payments and International Investment Position"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "EXPORTS",
+                    "name": "Exports",
+                    "names": { "en": "Exports" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "BUSINESS_INDICATORS",
+                "name": "Business Indicators",
+                "names": { "en": "Business Indicators" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "COUNTS_OF_BUSINESSES",
+                    "name": "Counts of Businesses",
+                    "names": { "en": "Counts of Businesses" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "NATIONAL_ACCOUNTS",
+                "name": "National Accounts",
+                "names": { "en": "National Accounts" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "FINANCE",
+                "name": "Finance",
+                "names": { "en": "Finance" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "LENDING_FINANCE",
+                    "name": "Lending Income",
+                    "names": { "en": "Lending Income" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "INDICATORS",
+                "name": "Key Economic Indicators",
+                "names": { "en": "Key Economic Indicators" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "INDUSTRY",
+            "name": "INDUSTRY",
+            "names": { "en": "INDUSTRY" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "TECHNOLOGY",
+                "name": "Technology and Innovation",
+                "names": { "en": "Technology and Innovation" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "INTERNET",
+                    "name": "Internet",
+                    "names": { "en": "Internet" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "RESEARCH",
+                    "name": "Research",
+                    "names": { "en": "Research" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "MINING",
+                "name": "Mining",
+                "names": { "en": "Mining" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "BUILDING_CONSTRUCTION",
+                "name": "Building and Construction",
+                "names": { "en": "Building and Construction" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "BUILDING_ACTIVITY",
+                    "name": "Building Activity",
+                    "names": { "en": "Building Activity" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "ENGINEERING_CONSTRUCTION",
+                    "name": "Engineering Construction",
+                    "names": { "en": "Engineering Construction" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "BUILDING_APPROVALS",
+                    "name": "Building Approvals",
+                    "names": { "en": "Building Approvals" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "TOURISM_TRANSPORT",
+                "name": "Tourism and Transport",
+                "names": { "en": "Tourism and Transport" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "ACCOMODATION",
+                    "name": "Accomodation",
+                    "names": { "en": "Accomodation" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "VEHICE_USAGE",
+                    "name": "Vehicle Usage",
+                    "names": { "en": "Vehicle Usage" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "RETAIL_WHOLESALE",
+                "name": "Retail and Wholesale Trade",
+                "names": { "en": "Retail and Wholesale Trade" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "ENERGY",
+                "name": "Energy",
+                "names": { "en": "Energy" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "AGRICULTURE",
+                "name": "Agriculture",
+                "names": { "en": "Agriculture" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "LAND_USE",
+                    "name": "Land Use",
+                    "names": { "en": "Land Use" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "LAND_COVER",
+                    "name": "Land Cover",
+                    "names": { "en": "Land Cover" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "PEOPLE",
+            "name": "PEOPLE",
+            "names": { "en": "PEOPLE" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "PEOPLE_COMMUNITIES",
+                "name": "People and Communities",
+                "names": { "en": "People and Communities" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "ANCESTRY",
+                    "name": "Ancestry",
+                    "names": { "en": "Ancestry" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "MARITAL_STATUS",
+                    "name": "Marital Status",
+                    "names": { "en": "Marital Status" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "RELIGION",
+                    "name": "Religion",
+                    "names": { "en": "Religion" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "HOUSEHOLD_COMPOSITION",
+                    "name": "Household Composition",
+                    "names": { "en": "Household Composition" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "PERSON_CHARACTERISTICS",
+                    "name": "Person Characteristics",
+                    "names": { "en": "Person Characteristics" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "LANGUAGE",
+                    "name": "Language",
+                    "names": { "en": "Language" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "FAMILY",
+                    "name": "Family",
+                    "names": { "en": "Family" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "INCOME",
+                "name": "Income",
+                "names": { "en": "Income" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "FAMILY_INCOME",
+                    "name": "Family Income",
+                    "names": { "en": "Family Income" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "PERSONAL_INCOME",
+                    "name": "Personal Income",
+                    "names": { "en": "Personal Income" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "HOUSEHOLD_INCOME",
+                    "name": "Household Income",
+                    "names": { "en": "Household Income" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "ATSIP",
+                "name": "Aboriginal and Torres Strait Islander Peoples",
+                "names": {
+                  "en": "Aboriginal and Torres Strait Islander Peoples"
+                },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "INDIGENOUS_STATUS",
+                    "name": "Indigenous Status",
+                    "names": { "en": "Indigenous Status" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "POPULATION_PROJECTIONS",
+                    "name": "Aboriginal and Torres Strait Islander Population Projections",
+                    "names": {
+                      "en": "Aboriginal and Torres Strait Islander Population Projections"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "EDUCATION",
+                "name": "Education",
+                "names": { "en": "Education" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "CHILD_EDUCATION_CARE",
+                    "name": "Child Education and Care",
+                    "names": { "en": "Child Education and Care" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "SCHOOLS",
+                    "name": "Schools",
+                    "names": { "en": "Schools" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "TYPE_EDUCATION",
+                    "name": "Type of Education",
+                    "names": { "en": "Type of Education" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "LEVEL_EDUCATION",
+                    "name": "Level of Education",
+                    "names": { "en": "Level of Education" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "POPULATION",
+                "name": "Population",
+                "names": { "en": "Population" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "RIM",
+                    "name": "Regional Internal Migration",
+                    "names": { "en": "Regional Internal Migration" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "ERP",
+                    "name": "Estimated Resident Population",
+                    "names": { "en": "Estimated Resident Population" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "OVERSEAS_MIGRATION",
+                    "name": "Overseas Migration",
+                    "names": { "en": "Overseas Migration" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "BIRTHS",
+                    "name": "Births",
+                    "names": { "en": "Births" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "USUAL_HOME",
+                    "name": "Usual Home",
+                    "names": { "en": "Usual Home" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "POP_PROJ",
+                    "name": "Population Projections",
+                    "names": { "en": "Population Projections" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "INTERSTATE_MIGRATION",
+                    "name": "Interstate Migration",
+                    "names": { "en": "Interstate Migration" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "DEATHS",
+                    "name": "Deaths",
+                    "names": { "en": "Deaths" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "HOUSING",
+                "name": "Housing",
+                "names": { "en": "Housing" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "DWELLING_STRUCTURE",
+                    "name": "Dwelling Structure",
+                    "names": { "en": "Dwelling Structure" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "RENT",
+                    "name": "Rent",
+                    "names": { "en": "Rent" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "TENURE_LANDLORD",
+                    "name": "Tenure and Landlord Type",
+                    "names": { "en": "Tenure and Landlord Type" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "MORTGAGE",
+                    "name": "Mortgage",
+                    "names": { "en": "Mortgage" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "INTERNET_ACCESS",
+                    "name": "Internet Access",
+                    "names": { "en": "Internet Access" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "CRIME_JUSTICE",
+                "name": "Crime and Justice",
+                "names": { "en": "Crime and Justice" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "LABOUR",
+            "name": "LABOUR",
+            "names": { "en": "LABOUR" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "TRAVEL",
+                "name": "Travel to Work",
+                "names": { "en": "Travel to Work" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "EARNINGS_HOURS",
+                "name": "Earnings and Work Hours",
+                "names": { "en": "Earnings and Work Hours" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "INDUSTRY_EMPLOYMENT",
+                "name": "Industry of Employment",
+                "names": { "en": "Industry of Employment" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "EMPLOYMENT_UNEMPLOYMENT",
+                "name": "Employment and Unemployment",
+                "names": { "en": "Employment and Unemployment" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "UNPAID_WORK",
+                "name": "Unpaid Work",
+                "names": { "en": "Unpaid Work" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "OCCUPATION",
+                "name": "Occupation",
+                "names": { "en": "Occupation" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "INDUSTRIAL_DISPUTES",
+                "name": "Industrial Disputes",
+                "names": { "en": "Industrial Disputes" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "LABOUR_FORCE_STATUS",
+                "name": "Labour Force Status",
+                "names": { "en": "Labour Force Status" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "HEALTH",
+            "name": "HEALTH",
+            "names": { "en": "HEALTH" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "HEALTH_CONDITIONS",
+                "name": "Health Conditions and Risk Factors",
+                "names": { "en": "Health Conditions and Risk Factors" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "MENTAL_HEALTH",
+                "name": "Mental Health",
+                "names": { "en": "Mental Health" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "CAUSE_DEATH",
+                "name": "Causes of Death",
+                "names": { "en": "Causes of Death" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "FERTILITY_BIRTHS",
+                "name": "Fertility and Births",
+                "names": { "en": "Fertility and Births" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "HEALTH_SERVICES",
+                "name": "Health Services",
+                "names": { "en": "Health Services" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "DISABILITY",
+                "name": "Disability",
+                "names": { "en": "Disability" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "ENVIRONMENT",
+            "name": "ENVIRONMENT",
+            "names": { "en": "ENVIRONMENT" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "ENVIRONMENTAL_MANAGEMENT",
+                "name": "Environmental Management",
+                "names": { "en": "Environmental Management" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "SNAPSHOTS",
+            "name": "SNAPSHOTS",
+            "names": { "en": "SNAPSHOTS" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "SEIFA",
+                "name": "Socio-Economic Indexes for Areas (SEIFA)",
+                "names": { "en": "Socio-Economic Indexes for Areas (SEIFA)" },
+                "links": [{ "rel": "self", "type": "category" }]
+              },
+              {
+                "id": "REGIONAL_STATISTICS",
+                "name": "Regional Statistics",
+                "names": { "en": "Regional Statistics" },
+                "links": [{ "rel": "self", "type": "category" }]
+              }
+            ]
+          },
+          {
+            "id": "CENSUS",
+            "name": "CENSUS",
+            "names": { "en": "CENSUS" },
+            "links": [{ "rel": "self", "type": "category" }],
+            "categories": [
+              {
+                "id": "CENSUS_2021",
+                "name": "2021 Census of Population and Housing",
+                "names": { "en": "2021 Census of Population and Housing" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "2021_COMM_PROFILE",
+                    "name": "Basic Community Profiles",
+                    "names": { "en": "Basic Community Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2021_TIME_PROFILE_LGA",
+                    "name": "Time Series Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Time Series Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2021_COMM_PROFILE_SA1",
+                    "name": "Basic Community Profiles (South Australia SA1)",
+                    "names": {
+                      "en": "Basic Community Profiles (South Australia SA1)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2021_TIME_PROFILE",
+                    "name": "Time Series Profiles",
+                    "names": { "en": "Time Series Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2021_COMM_PROFILE_LGA",
+                    "name": "Basic Community Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Basic Community Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "CENSUS_2016",
+                "name": "2016 Census of Population and Housing",
+                "names": { "en": "2016 Census of Population and Housing" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "2016_COMM_PROFILE_SA1",
+                    "name": "Basic Community Profiles (South Australia SA1)",
+                    "names": {
+                      "en": "Basic Community Profiles (South Australia SA1)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2016_TIME_PROFILE_LGA",
+                    "name": "Time Series Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Time Series Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2016_COMM_PROFILE",
+                    "name": "Basic Community Profiles",
+                    "names": { "en": "Basic Community Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2016_TIME_PROFILE",
+                    "name": "Time Series Profiles",
+                    "names": { "en": "Time Series Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2016_COMM_PROFILE_LGA",
+                    "name": "Basic Community Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Basic Community Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              },
+              {
+                "id": "CENSUS_2011",
+                "name": "2011 Census of Population and Housing",
+                "names": { "en": "2011 Census of Population and Housing" },
+                "links": [{ "rel": "self", "type": "category" }],
+                "categories": [
+                  {
+                    "id": "2011_TIME_PROFILE_LGA",
+                    "name": "Time Series Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Time Series Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2011_COMM_PROFILE",
+                    "name": "Basic Community Profiles",
+                    "names": { "en": "Basic Community Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2011_COMM_PROFILE_SA1",
+                    "name": "Basic Community Profiles (South Australia SA1)",
+                    "names": {
+                      "en": "Basic Community Profiles (South Australia SA1)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2011_TIME_PROFILE",
+                    "name": "Time Series Profiles",
+                    "names": { "en": "Time Series Profiles" },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  },
+                  {
+                    "id": "2011_COMM_PROFILE_LGA",
+                    "name": "Basic Community Profiles (Local Government Areas)",
+                    "names": {
+                      "en": "Basic Community Profiles (Local Government Areas)"
+                    },
+                    "links": [{ "rel": "self", "type": "category" }]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categorisations": [
+      {
+        "id": "CAT_RT",
+        "links": [{ "rel": "self", "type": "categorisation" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Retail Trade Categorisation",
+        "names": { "en": "Retail Trade Categorisation" },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=ABS:ABS_TOPICS(1.0.0).INDUSTRY.RETAIL_WHOLESALE"
+      }
+    ],
+    "conceptSchemes": [
+      {
+        "id": "CS_ATTRIBUTE",
+        "links": [{ "rel": "self", "type": "conceptscheme" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Attribute Concepts",
+        "names": { "en": "Attribute Concepts" },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Unit of Measure",
+            "names": { "en": "Unit of Measure" },
+            "description": "Base unit in which the observation value is expressed.",
+            "descriptions": {
+              "en": "Base unit in which the observation value is expressed."
+            },
+            "annotations": [
+              {
+                "type": "CONTEXT",
+                "text": "If a unit multiplier exists the data is recorded according to the combination of the unit multiplier and the unit of measure.",
+                "texts": {
+                  "en": "If a unit multiplier exists the data is recorded according to the combination of the unit multiplier and the unit of measure."
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "UNIT_MULT",
+            "name": "Unit of Multiplier",
+            "names": { "en": "Unit of Multiplier" },
+            "description": "The multiple of the unit of measure for which the data is expressed.",
+            "descriptions": {
+              "en": "The multiple of the unit of measure for which the data is expressed."
+            },
+            "annotations": [
+              {
+                "type": "CONTEXT",
+                "text": "Codes for unit of multiplier are the exponent in base 10 so that multiplying the observation by 10^UNIT_MULT gives a value expressed in the unit of measure.",
+                "texts": {
+                  "en": "Codes for unit of multiplier are the exponent in base 10 so that multiplying the observation by 10^UNIT_MULT gives a value expressed in the unit of measure."
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "OBS_STATUS",
+            "name": "Observation Status",
+            "names": { "en": "Observation Status" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "OBS_COMMENT",
+            "name": "Observation Comment",
+            "names": { "en": "Observation Comment" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "REPYEAREND",
+            "name": "Reporting Year End Day",
+            "names": { "en": "Reporting Year End Day" },
+            "description": "A month day that specifies the ending day of the reporting periods (e.g. YYYY-A1) within the datastucture.",
+            "descriptions": {
+              "en": "A month day that specifies the ending day of the reporting periods (e.g. YYYY-A1) within the datastucture."
+            },
+            "annotations": [
+              {
+                "type": "CONTEXT",
+                "text": "The use of reporting year end day also specifies that the reporting period of YYYY-A1 references an earlier period (e.g. 2018-A1 will be equivalent to 2017/18 and not 2018/19).",
+                "texts": {
+                  "en": "The use of reporting year end day also specifies that the reporting period of YYYY-A1 references an earlier period (e.g. 2018-A1 will be equivalent to 2017/18 and not 2018/19)."
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "BASE_PERIOD",
+            "name": "Reference Base Period",
+            "names": { "en": "Reference Base Period" },
+            "description": "Reference Period that the value has been based against.",
+            "descriptions": {
+              "en": "Reference Period that the value has been based against."
+            },
+            "links": [{ "rel": "self", "type": "concept" }]
+          }
+        ]
+      },
+      {
+        "id": "CS_COMMON",
+        "links": [{ "rel": "self", "type": "conceptscheme" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Common Concepts",
+        "names": { "en": "Common Concepts" },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "OBS_VALUE",
+            "name": "Observation Value",
+            "names": { "en": "Observation Value" },
+            "description": "The observed value of the variable identified by the series dimension values.",
+            "descriptions": {
+              "en": "The observed value of the variable identified by the series dimension values."
+            },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "TIME_PERIOD",
+            "name": "Time Period",
+            "names": { "en": "Time Period" },
+            "description": "Timespan or point in time for which the observation refers.",
+            "descriptions": {
+              "en": "Timespan or point in time for which the observation refers."
+            },
+            "annotations": [
+              {
+                "type": "CONTEXT",
+                "text": "The measurement represented by each observation corresponds to a specific point in time (e.g. a single day) or a period (e.g. a month, a fiscal year, or a calendar year).",
+                "texts": {
+                  "en": "The measurement represented by each observation corresponds to a specific point in time (e.g. a single day) or a period (e.g. a month, a fiscal year, or a calendar year)."
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "FREQ",
+            "name": "Frequency",
+            "names": { "en": "Frequency" },
+            "description": "Rate at which data is collated.",
+            "descriptions": { "en": "Rate at which data is collated." },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "MEASURE",
+            "name": "Measure",
+            "names": { "en": "Measure" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "TSEST",
+            "name": "Adjustment Type",
+            "names": { "en": "Adjustment Type" },
+            "description": "An original time series can be decomposed into three components: the trend (the general direction of the series), the seasonal component (systematic, calendar related movements) and the irregular component (unsystematic, short term fluctuations). Seasonally adjusted series are produced by estimating the seasonal component and removing this from the original series. In most economic data the seasonal component is a combination of seasonal influences (e.g. the effect of the weather or social traditions) plus other kinds of calendar related variations such as Chinese New Year and Christmas. The seasonal adjustment methodology takes into account both seasonal and other calendar related factors that evolve over time to reflect changes in activity patterns.",
+            "descriptions": {
+              "en": "An original time series can be decomposed into three components: the trend (the general direction of the series), the seasonal component (systematic, calendar related movements) and the irregular component (unsystematic, short term fluctuations). Seasonally adjusted series are produced by estimating the seasonal component and removing this from the original series. In most economic data the seasonal component is a combination of seasonal influences (e.g. the effect of the weather or social traditions) plus other kinds of calendar related variations such as Chinese New Year and Christmas. The seasonal adjustment methodology takes into account both seasonal and other calendar related factors that evolve over time to reflect changes in activity patterns."
+            },
+            "annotations": [
+              {
+                "type": "OTHER_LINKS",
+                "text": "https://www.abs.gov.au/websitedbs/D3310114.nsf/home/Time+Series+Analysis:+The+Basics",
+                "texts": {
+                  "en": "https://www.abs.gov.au/websitedbs/D3310114.nsf/home/Time+Series+Analysis:+The+Basics"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "concept" }]
+          }
+        ]
+      },
+      {
+        "id": "CS_GEOGRAPHY",
+        "links": [{ "rel": "self", "type": "conceptscheme" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Geography Concepts",
+        "names": { "en": "Geography Concepts" },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "REGION",
+            "name": "Region",
+            "names": { "en": "Region" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "REGION_ARR",
+            "name": "Region of Arrival",
+            "names": { "en": "Region of Arrival" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "REGION"
+          },
+          {
+            "id": "REGION_DEP",
+            "name": "Region of Departure",
+            "names": { "en": "Region of Departure" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "REGION"
+          },
+          {
+            "id": "REGION_TYPE",
+            "name": "Region Type",
+            "names": { "en": "Region Type" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "GEO_LEVEL",
+            "name": "Geography Level",
+            "names": { "en": "Geography Level" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "STATE",
+            "name": "State",
+            "names": { "en": "State" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "STATE_ORIGIN",
+            "name": "State of Origin",
+            "names": { "en": "State of Origin" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "STATE"
+          },
+          {
+            "id": "STATE_DEST",
+            "name": "State of Destination",
+            "names": { "en": "State of Destination" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "STATE"
+          },
+          {
+            "id": "STATE_ARR",
+            "name": "State of Arrival",
+            "names": { "en": "State of Arrival" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "STATE"
+          },
+          {
+            "id": "STATE_DEP",
+            "name": "State of Departure",
+            "names": { "en": "State of Departure" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "STATE"
+          },
+          {
+            "id": "STATE_TERR",
+            "name": "States and Territories",
+            "names": { "en": "States and Territories" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "COUNTRY",
+            "name": "Country",
+            "names": { "en": "Country" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "COUNTRY_ORIGIN",
+            "name": "Country of Origin",
+            "names": { "en": "Country of Origin" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "COUNTRY"
+          },
+          {
+            "id": "COUNTRY_DEST",
+            "name": "Country of Destination",
+            "names": { "en": "Country of Destination" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "COUNTRY"
+          },
+          {
+            "id": "COUNTRY_BIRTH",
+            "name": "Country of Birth",
+            "names": { "en": "Country of Birth" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "COUNTRY"
+          },
+          {
+            "id": "COUNTRY_RESID",
+            "name": "Country of Stay/Residence",
+            "names": { "en": "Country of Stay/Residence" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "COUNTRY"
+          },
+          {
+            "id": "FED",
+            "name": "Federal Electoral Division",
+            "names": { "en": "Federal Electoral Division" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "IND_REGION",
+            "name": "Indigenous Region",
+            "names": { "en": "Indigenous Region" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "LGA",
+            "name": "Local Government Area",
+            "names": { "en": "Local Government Area" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "LGA_2011",
+            "name": "Local Government Areas - 2011",
+            "names": { "en": "Local Government Areas - 2011" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "LGA"
+          },
+          {
+            "id": "LGA_2016",
+            "name": "Local Government Areas - 2016",
+            "names": { "en": "Local Government Areas - 2016" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "LGA"
+          },
+          {
+            "id": "POA",
+            "name": "Postal Area Code",
+            "names": { "en": "Postal Area Code" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "REMOTE",
+            "name": "Remoteness Area",
+            "names": { "en": "Remoteness Area" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "SA2",
+            "name": "Statistical Area Level 2 (SA2)",
+            "names": { "en": "Statistical Area Level 2 (SA2)" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "SSC",
+            "name": "State Suburb",
+            "names": { "en": "State Suburb" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          }
+        ]
+      },
+      {
+        "id": "CS_INDUSTRY",
+        "links": [{ "rel": "self", "type": "conceptscheme" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Industry Concepts",
+        "names": { "en": "Industry Concepts" },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "INDUSTRY",
+            "name": "Industry",
+            "names": { "en": "Industry" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "INDUSTRY_ORIGIN",
+            "name": "Industry of Origin",
+            "names": { "en": "Industry of Origin" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "INDUSTRY"
+          },
+          {
+            "id": "INDUSTRY_EMP",
+            "name": "Industry of Employment",
+            "names": { "en": "Industry of Employment" },
+            "links": [{ "rel": "self", "type": "concept" }],
+            "parent": "INDUSTRY"
+          },
+          {
+            "id": "INDUSTRY_RETAIL",
+            "name": "Retail Industry",
+            "names": { "en": "Retail Industry" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          }
+        ]
+      }
+    ],
+    "codelists": [
+      {
+        "id": "CL_FREQ",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Frequency",
+        "names": { "en": "Frequency" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "H",
+            "name": "Hourly",
+            "names": { "en": "Hourly" },
+            "description": "To be used for data collected or disseminated every hour.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every hour."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "D",
+            "name": "Daily",
+            "names": { "en": "Daily" },
+            "description": "To be used for data collected or disseminated every day.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every day."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "N",
+            "name": "Minutely",
+            "names": { "en": "Minutely" },
+            "description": "While N denotes \"minutely\", usually, there may be no observations every minute (for several series the frequency is usually \"irregular\" within a day/days). And though observations may be sparse (not collected or disseminated every minute), missing values do not need to be given for the minutes when no observations exist: in any case the time stamp determines when an observation is observed.",
+            "descriptions": {
+              "en": "While N denotes \"minutely\", usually, there may be no observations every minute (for several series the frequency is usually \"irregular\" within a day/days). And though observations may be sparse (not collected or disseminated every minute), missing values do not need to be given for the minutes when no observations exist: in any case the time stamp determines when an observation is observed."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "B",
+            "name": "Daily or businessweek",
+            "names": { "en": "Daily or businessweek" },
+            "description": "Similar to \"daily\", however there are no observations for Saturdays and Sundays (so, neither \"missing values\" nor \"numeric values\" should be provided for Saturday and Sunday). This treatment (\"business\") is one way to deal with such cases, but it is not the only option. Such a time series could alternatively be considered daily (\"D\"), thus, with missing values in the weekend.",
+            "descriptions": {
+              "en": "Similar to \"daily\", however there are no observations for Saturdays and Sundays (so, neither \"missing values\" nor \"numeric values\" should be provided for Saturday and Sunday). This treatment (\"business\") is one way to deal with such cases, but it is not the only option. Such a time series could alternatively be considered daily (\"D\"), thus, with missing values in the weekend."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "W",
+            "name": "Weekly",
+            "names": { "en": "Weekly" },
+            "description": "To be used for data collected or disseminated every week.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every week."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "S",
+            "name": "Half-yearly, semester",
+            "names": { "en": "Half-yearly, semester" },
+            "description": "To be used for data collected or disseminated every semester.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every semester."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "A",
+            "name": "Annual",
+            "names": { "en": "Annual" },
+            "description": "To be used for data collected or disseminated every year.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every year."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M",
+            "name": "Monthly",
+            "names": { "en": "Monthly" },
+            "description": "To be used for data collected or disseminated every month.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every month."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "Q",
+            "name": "Quarterly",
+            "names": { "en": "Quarterly" },
+            "description": "To be used for data collected or disseminated every quarter.",
+            "descriptions": {
+              "en": "To be used for data collected or disseminated every quarter."
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_OBS_STATUS",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Observation Status",
+        "names": { "en": "Observation Status" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "k",
+            "name": "estimate",
+            "names": { "en": "estimate" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "l",
+            "name": "not elsewhere included",
+            "names": { "en": "not elsewhere included" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "m",
+            "name": "not recorded",
+            "names": { "en": "not recorded" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "n",
+            "name": "not available for publication but included in totals where applicable, unless otherwise indicated",
+            "names": {
+              "en": "not available for publication but included in totals where applicable, unless otherwise indicated"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "o",
+            "name": "nil or rounded to zero, including null cells",
+            "names": { "en": "nil or rounded to zero, including null cells" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "p",
+            "name": "preliminary figure or series subject to revision",
+            "names": {
+              "en": "preliminary figure or series subject to revision"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "q",
+            "name": "not available",
+            "names": { "en": "not available" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "r",
+            "name": "revised",
+            "names": { "en": "revised" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "s",
+            "name": "not currently available due to break in time series",
+            "names": {
+              "en": "not currently available due to break in time series"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "t",
+            "name": "not yet available",
+            "names": { "en": "not yet available" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "u",
+            "name": "not applicable",
+            "names": { "en": "not applicable" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "v",
+            "name": "not available for publication but included in totals where applicable, unless otherwise indicated",
+            "names": {
+              "en": "not available for publication but included in totals where applicable, unless otherwise indicated"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "w",
+            "name": "estimate is subject to sampling variability too high for most practical purposes",
+            "names": {
+              "en": "estimate is subject to sampling variability too high for most practical purposes"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "x",
+            "name": "estimate has a relative standard error of 10% to less than 25% and should be used with caution",
+            "names": {
+              "en": "estimate has a relative standard error of 10% to less than 25% and should be used with caution"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "y",
+            "name": "estimate has a relative standard error between 25% and 50% and should be used with caution",
+            "names": {
+              "en": "estimate has a relative standard error between 25% and 50% and should be used with caution"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "z",
+            "name": "estimate has a relative standard error greater than 50% and is considered too unreliable for general use",
+            "names": {
+              "en": "estimate has a relative standard error greater than 50% and is considered too unreliable for general use"
+            },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_RT_IND",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Retail Sales Industry (Introduction of ANZSIC 2006 - July 2009 redesign)",
+        "names": {
+          "en": "Retail Sales Industry (Introduction of ANZSIC 2006 - July 2009 redesign)"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "20",
+            "name": "Total",
+            "names": { "en": "Total" },
+            "description": "Total",
+            "descriptions": { "en": "Total" },
+            "annotations": [
+              { "type": "ORDER", "text": "220", "texts": { "en": "220" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Total",
+                "texts": { "en": "Total" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "41",
+            "name": "Food retailing",
+            "names": { "en": "Food retailing" },
+            "description": "Food retailing",
+            "descriptions": { "en": "Food retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "40", "texts": { "en": "40" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Food retailing",
+                "texts": { "en": "Food retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "01",
+            "name": "Supermarket and grocery stores",
+            "names": { "en": "Supermarket and grocery stores" },
+            "description": "Supermarket and grocery stores",
+            "descriptions": { "en": "Supermarket and grocery stores" },
+            "annotations": [
+              { "type": "ORDER", "text": "10", "texts": { "en": "10" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Supermarket and grocery stores",
+                "texts": { "en": "Supermarket and grocery stores" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "41"
+          },
+          {
+            "id": "02",
+            "name": "Liquor retailing",
+            "names": { "en": "Liquor retailing" },
+            "description": "Liquor retailing",
+            "descriptions": { "en": "Liquor retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "20", "texts": { "en": "20" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Liquor retailing",
+                "texts": { "en": "Liquor retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "41"
+          },
+          {
+            "id": "03",
+            "name": "Other specialised food retailing",
+            "names": { "en": "Other specialised food retailing" },
+            "description": "Other specialised food retailing",
+            "descriptions": { "en": "Other specialised food retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "30", "texts": { "en": "30" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Other specialised food retailing",
+                "texts": { "en": "Other specialised food retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "41"
+          },
+          {
+            "id": "42",
+            "name": "Household goods retailing",
+            "names": { "en": "Household goods retailing" },
+            "description": "Household goods retailing",
+            "descriptions": { "en": "Household goods retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "80", "texts": { "en": "80" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Household goods retailing",
+                "texts": { "en": "Household goods retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "04",
+            "name": "Furniture, floor coverings, houseware and textile goods retailing",
+            "names": {
+              "en": "Furniture, floor coverings, houseware and textile goods retailing"
+            },
+            "description": "Furniture, floor coverings, houseware and textile goods retailing",
+            "descriptions": {
+              "en": "Furniture, floor coverings, houseware and textile goods retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "50", "texts": { "en": "50" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Furniture, floor coverings, houseware and textile goods retailing",
+                "texts": {
+                  "en": "Furniture, floor coverings, houseware and textile goods retailing"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "42"
+          },
+          {
+            "id": "05",
+            "name": "Electrical and electronic goods retailing",
+            "names": { "en": "Electrical and electronic goods retailing" },
+            "description": "Electrical and electronic goods retailing",
+            "descriptions": {
+              "en": "Electrical and electronic goods retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "60", "texts": { "en": "60" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Electrical and electronic goods retailing",
+                "texts": { "en": "Electrical and electronic goods retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "42"
+          },
+          {
+            "id": "06",
+            "name": "Hardware, building and garden supplies retailing",
+            "names": {
+              "en": "Hardware, building and garden supplies retailing"
+            },
+            "description": "Hardware, building and garden supplies retailing",
+            "descriptions": {
+              "en": "Hardware, building and garden supplies retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "70", "texts": { "en": "70" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Hardware, building and garden supplies retailing",
+                "texts": {
+                  "en": "Hardware, building and garden supplies retailing"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "42"
+          },
+          {
+            "id": "43",
+            "name": "Clothing, footwear and personal accessory retailing",
+            "names": {
+              "en": "Clothing, footwear and personal accessory retailing"
+            },
+            "description": "Clothing, footwear and personal accessory retailing",
+            "descriptions": {
+              "en": "Clothing, footwear and personal accessory retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "110", "texts": { "en": "110" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Clothing, footwear and personal accessory retailing",
+                "texts": {
+                  "en": "Clothing, footwear and personal accessory retailing"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "07",
+            "name": "Clothing retailing",
+            "names": { "en": "Clothing retailing" },
+            "description": "Clothing retailing",
+            "descriptions": { "en": "Clothing retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "90", "texts": { "en": "90" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Clothing retailing",
+                "texts": { "en": "Clothing retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "43"
+          },
+          {
+            "id": "08",
+            "name": "Footwear and other personal accessory retailing",
+            "names": {
+              "en": "Footwear and other personal accessory retailing"
+            },
+            "description": "Footwear and other personal accessory retailing",
+            "descriptions": {
+              "en": "Footwear and other personal accessory retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "100", "texts": { "en": "100" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Footwear and other personal accessory retailing",
+                "texts": {
+                  "en": "Footwear and other personal accessory retailing"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "43"
+          },
+          {
+            "id": "44",
+            "name": "Department stores",
+            "names": { "en": "Department stores" },
+            "description": "Department stores",
+            "descriptions": { "en": "Department stores" },
+            "annotations": [
+              { "type": "ORDER", "text": "130", "texts": { "en": "130" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Department stores",
+                "texts": { "en": "Department stores" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "09",
+            "name": "Department stores",
+            "names": { "en": "Department stores" },
+            "description": "Department stores",
+            "descriptions": { "en": "Department stores" },
+            "annotations": [
+              { "type": "ORDER", "text": "120", "texts": { "en": "120" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Department stores",
+                "texts": { "en": "Department stores" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "44"
+          },
+          {
+            "id": "45",
+            "name": "Other retailing",
+            "names": { "en": "Other retailing" },
+            "description": "Other retailing",
+            "descriptions": { "en": "Other retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "180", "texts": { "en": "180" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Other retailing",
+                "texts": { "en": "Other retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "10",
+            "name": "Newspaper and book retailing",
+            "names": { "en": "Newspaper and book retailing" },
+            "description": "Newspaper and book retailing",
+            "descriptions": { "en": "Newspaper and book retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "140", "texts": { "en": "140" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Newspaper and book retailing",
+                "texts": { "en": "Newspaper and book retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "45"
+          },
+          {
+            "id": "11",
+            "name": "Other recreational goods retailing",
+            "names": { "en": "Other recreational goods retailing" },
+            "description": "Other recreational goods retailing",
+            "descriptions": { "en": "Other recreational goods retailing" },
+            "annotations": [
+              { "type": "ORDER", "text": "150", "texts": { "en": "150" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Other recreational goods retailing",
+                "texts": { "en": "Other recreational goods retailing" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "45"
+          },
+          {
+            "id": "12",
+            "name": "Pharmaceutical, cosmetic and toiletry goods retailing",
+            "names": {
+              "en": "Pharmaceutical, cosmetic and toiletry goods retailing"
+            },
+            "description": "Pharmaceutical, cosmetic and toiletry goods retailing",
+            "descriptions": {
+              "en": "Pharmaceutical, cosmetic and toiletry goods retailing"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "160", "texts": { "en": "160" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Pharmaceutical, cosmetic and toiletry goods retailing",
+                "texts": {
+                  "en": "Pharmaceutical, cosmetic and toiletry goods retailing"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "45"
+          },
+          {
+            "id": "13",
+            "name": "Other retailing n.e.c.",
+            "names": { "en": "Other retailing n.e.c." },
+            "description": "Other retailing n.e.c.",
+            "descriptions": { "en": "Other retailing n.e.c." },
+            "annotations": [
+              { "type": "ORDER", "text": "170", "texts": { "en": "170" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Other retailing n.e.c.",
+                "texts": { "en": "Other retailing n.e.c." }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "45"
+          },
+          {
+            "id": "46",
+            "name": "Cafes, restaurants and takeaway food services",
+            "names": { "en": "Cafes, restaurants and takeaway food services" },
+            "description": "Cafes, restaurants and takeaway food services",
+            "descriptions": {
+              "en": "Cafes, restaurants and takeaway food services"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "210", "texts": { "en": "210" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Cafes, restaurants and takeaway food services",
+                "texts": {
+                  "en": "Cafes, restaurants and takeaway food services"
+                }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "20"
+          },
+          {
+            "id": "14",
+            "name": "Cafes, restaurants and catering services",
+            "names": { "en": "Cafes, restaurants and catering services" },
+            "description": "Cafes, restaurants and catering services",
+            "descriptions": {
+              "en": "Cafes, restaurants and catering services"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "190", "texts": { "en": "190" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Cafes, restaurants and catering services",
+                "texts": { "en": "Cafes, restaurants and catering services" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "46"
+          },
+          {
+            "id": "15",
+            "name": "Takeaway food services",
+            "names": { "en": "Takeaway food services" },
+            "description": "Takeaway food services",
+            "descriptions": { "en": "Takeaway food services" },
+            "annotations": [
+              { "type": "ORDER", "text": "200", "texts": { "en": "200" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Takeaway food services",
+                "texts": { "en": "Takeaway food services" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "46"
+          }
+        ]
+      },
+      {
+        "id": "CL_RT_MEASURE",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Retail Trade Measures",
+        "names": { "en": "Retail Trade Measures" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "M1",
+            "name": "Current Prices",
+            "names": { "en": "Current Prices" },
+            "annotations": [
+              { "type": "ORDER", "text": "10", "texts": { "en": "10" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M2",
+            "name": "Current Prices Percantage Change from Previous Period",
+            "names": {
+              "en": "Current Prices Percantage Change from Previous Period"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "20", "texts": { "en": "20" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M3",
+            "name": "Chain Volume Measures",
+            "names": { "en": "Chain Volume Measures" },
+            "annotations": [
+              { "type": "ORDER", "text": "30", "texts": { "en": "30" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M4",
+            "name": "Chain Volume Measures Percentage Change from Previous Period",
+            "names": {
+              "en": "Chain Volume Measures Percentage Change from Previous Period"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "40", "texts": { "en": "40" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_STATE",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "State",
+        "names": { "en": "State" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "AUS",
+            "name": "Australia",
+            "names": { "en": "Australia" },
+            "annotations": [
+              { "type": "ORDER", "text": "10", "texts": { "en": "10" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "1",
+            "name": "New South Wales",
+            "names": { "en": "New South Wales" },
+            "annotations": [
+              { "type": "ORDER", "text": "20", "texts": { "en": "20" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "2",
+            "name": "Victoria",
+            "names": { "en": "Victoria" },
+            "annotations": [
+              { "type": "ORDER", "text": "30", "texts": { "en": "30" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "3",
+            "name": "Queensland",
+            "names": { "en": "Queensland" },
+            "annotations": [
+              { "type": "ORDER", "text": "40", "texts": { "en": "40" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "4",
+            "name": "South Australia",
+            "names": { "en": "South Australia" },
+            "annotations": [
+              { "type": "ORDER", "text": "50", "texts": { "en": "50" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "5",
+            "name": "Western Australia",
+            "names": { "en": "Western Australia" },
+            "annotations": [
+              { "type": "ORDER", "text": "60", "texts": { "en": "60" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "6",
+            "name": "Tasmania",
+            "names": { "en": "Tasmania" },
+            "annotations": [
+              { "type": "ORDER", "text": "70", "texts": { "en": "70" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "7",
+            "name": "Northern Territory",
+            "names": { "en": "Northern Territory" },
+            "annotations": [
+              { "type": "ORDER", "text": "80", "texts": { "en": "80" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "8",
+            "name": "Australian Capital Territory",
+            "names": { "en": "Australian Capital Territory" },
+            "annotations": [
+              { "type": "ORDER", "text": "90", "texts": { "en": "90" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          },
+          {
+            "id": "9",
+            "name": "Other Territories",
+            "names": { "en": "Other Territories" },
+            "annotations": [
+              { "type": "ORDER", "text": "100", "texts": { "en": "100" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }],
+            "parent": "AUS"
+          }
+        ]
+      },
+      {
+        "id": "CL_TSEST",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Time Series Estimates",
+        "names": { "en": "Time Series Estimates" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "10",
+            "name": "Original",
+            "names": { "en": "Original" },
+            "description": "Original",
+            "descriptions": { "en": "Original" },
+            "annotations": [
+              { "type": "ORDER", "text": "1", "texts": { "en": "1" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Original",
+                "texts": { "en": "Original" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "20",
+            "name": "Seasonally Adjusted",
+            "names": { "en": "Seasonally Adjusted" },
+            "description": "Seasonally Adjusted",
+            "descriptions": { "en": "Seasonally Adjusted" },
+            "annotations": [
+              { "type": "ORDER", "text": "2", "texts": { "en": "2" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Seasonally Adjusted",
+                "texts": { "en": "Seasonally Adjusted" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "30",
+            "name": "Trend",
+            "names": { "en": "Trend" },
+            "description": "Trend",
+            "descriptions": { "en": "Trend" },
+            "annotations": [
+              { "type": "ORDER", "text": "3", "texts": { "en": "3" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Trend",
+                "texts": { "en": "Trend" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "40",
+            "name": "Sensitivity Upper",
+            "names": { "en": "Sensitivity Upper" },
+            "description": "Sensitivity Upper",
+            "descriptions": { "en": "Sensitivity Upper" },
+            "annotations": [
+              { "type": "ORDER", "text": "4", "texts": { "en": "4" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Sensitivity Upper",
+                "texts": { "en": "Sensitivity Upper" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "50",
+            "name": "Sensitivity Lower",
+            "names": { "en": "Sensitivity Lower" },
+            "description": "Sensitivity Lower",
+            "descriptions": { "en": "Sensitivity Lower" },
+            "annotations": [
+              { "type": "ORDER", "text": "5", "texts": { "en": "5" } },
+              {
+                "type": "FULL_NAME",
+                "text": "Sensitivity Lower",
+                "texts": { "en": "Sensitivity Lower" }
+              }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_UNIT_MEASURE",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Unit of Measure",
+        "names": { "en": "Unit of Measure" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "AUD",
+            "name": "Australian Dollars",
+            "names": { "en": "Australian Dollars" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NUM",
+            "name": "Number",
+            "names": { "en": "Number" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PCT",
+            "name": "Percent",
+            "names": { "en": "Percent" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PCT_PTS",
+            "name": "Percentage Points",
+            "names": { "en": "Percentage Points" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PROP",
+            "name": "Proportion",
+            "names": { "en": "Proportion" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "IN",
+            "name": "Index Numbers",
+            "names": { "en": "Index Numbers" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "IP",
+            "name": "Index Points",
+            "names": { "en": "Index Points" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "VAR",
+            "name": "Variance",
+            "names": { "en": "Variance" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NA",
+            "name": "Not Applicable",
+            "names": { "en": "Not Applicable" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PSNS",
+            "name": "Persons",
+            "names": { "en": "Persons" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PSN_YR",
+            "name": "Person Years",
+            "names": { "en": "Person Years" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "JOB",
+            "name": "Jobs",
+            "names": { "en": "Jobs" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M_G",
+            "name": "Milligrams",
+            "names": { "en": "Milligrams" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "G",
+            "name": "Grams",
+            "names": { "en": "Grams" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KG",
+            "name": "Kilograms",
+            "names": { "en": "Kilograms" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CT",
+            "name": "Carat (metric)",
+            "names": { "en": "Carat (metric)" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MCT",
+            "name": "Megacarat (metric)",
+            "names": { "en": "Megacarat (metric)" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "T",
+            "name": "Tonnes",
+            "names": { "en": "Tonnes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MT",
+            "name": "Megatonnes",
+            "names": { "en": "Megatonnes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GT",
+            "name": "Gigatonnes",
+            "names": { "en": "Gigatonnes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TKM",
+            "name": "Tonnes-kilometres",
+            "names": { "en": "Tonnes-kilometres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M_M",
+            "name": "Millimetres",
+            "names": { "en": "Millimetres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M",
+            "name": "Metres",
+            "names": { "en": "Metres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KM",
+            "name": "Kilometres",
+            "names": { "en": "Kilometres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SQM",
+            "name": "Square Metres",
+            "names": { "en": "Square Metres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SQKM",
+            "name": "Square Kilometres",
+            "names": { "en": "Square Kilometres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "HA",
+            "name": "Hectares",
+            "names": { "en": "Hectares" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CBM",
+            "name": "Cubic Metres",
+            "names": { "en": "Cubic Metres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "L",
+            "name": "Litres",
+            "names": { "en": "Litres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KL",
+            "name": "Kilolitres",
+            "names": { "en": "Kilolitres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "ML",
+            "name": "Megalitres",
+            "names": { "en": "Megalitres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GL",
+            "name": "Gigalitres",
+            "names": { "en": "Gigalitres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "A",
+            "name": "Ampere",
+            "names": { "en": "Ampere" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KVA",
+            "name": "Kilovolt Amperes",
+            "names": { "en": "Kilovolt Amperes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "W",
+            "name": "Watts",
+            "names": { "en": "Watts" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KW",
+            "name": "Kilowatts",
+            "names": { "en": "Kilowatts" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KWH",
+            "name": "Kilowatt Hours",
+            "names": { "en": "Kilowatt Hours" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GWH",
+            "name": "Gigawatt Hours",
+            "names": { "en": "Gigawatt Hours" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "J",
+            "name": "Joules",
+            "names": { "en": "Joules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KJ",
+            "name": "Kilojoules",
+            "names": { "en": "Kilojoules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MJ",
+            "name": "Megajoules",
+            "names": { "en": "Megajoules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GJ",
+            "name": "Gigajoules",
+            "names": { "en": "Gigajoules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TJ",
+            "name": "Terajoules",
+            "names": { "en": "Terajoules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PJ",
+            "name": "Petajoules",
+            "names": { "en": "Petajoules" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "C",
+            "name": "Coulumb",
+            "names": { "en": "Coulumb" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CD",
+            "name": "Candela",
+            "names": { "en": "Candela" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "K",
+            "name": "Kelvin",
+            "names": { "en": "Kelvin" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "DEG_CEL",
+            "name": "Degrees Celsius",
+            "names": { "en": "Degrees Celsius" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "S",
+            "name": "Seconds",
+            "names": { "en": "Seconds" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MIN",
+            "name": "Minutes",
+            "names": { "en": "Minutes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "HR",
+            "name": "Hours",
+            "names": { "en": "Hours" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "DAY",
+            "name": "Days",
+            "names": { "en": "Days" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WK",
+            "name": "Weeks",
+            "names": { "en": "Weeks" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MTH",
+            "name": "Months",
+            "names": { "en": "Months" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "YR",
+            "name": "Years",
+            "names": { "en": "Years" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "B",
+            "name": "Bytes",
+            "names": { "en": "Bytes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KB",
+            "name": "Kilobytes",
+            "names": { "en": "Kilobytes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MB",
+            "name": "Megabytes",
+            "names": { "en": "Megabytes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GB",
+            "name": "Gigabytes",
+            "names": { "en": "Gigabytes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TB",
+            "name": "Terabytes",
+            "names": { "en": "Terabytes" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "DEG",
+            "name": "Degrees",
+            "names": { "en": "Degrees" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RAD",
+            "name": "Radians",
+            "names": { "en": "Radians" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "DOZ",
+            "name": "Dozen",
+            "names": { "en": "Dozen" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PR",
+            "name": "Pairs",
+            "names": { "en": "Pairs" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "ROOM",
+            "name": "Rooms",
+            "names": { "en": "Rooms" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SITE",
+            "name": "Sites",
+            "names": { "en": "Sites" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BUNDLE",
+            "name": "Bundles",
+            "names": { "en": "Bundles" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CARTON",
+            "name": "Cartons",
+            "names": { "en": "Cartons" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "UNK",
+            "name": "Unknown",
+            "names": { "en": "Unknown" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GBP",
+            "name": "Pound Sterling",
+            "names": { "en": "Pound Sterling" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CENT",
+            "name": "Cents",
+            "names": { "en": "Cents" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "FAM",
+            "name": "Families",
+            "names": { "en": "Families" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "HH",
+            "name": "Households",
+            "names": { "en": "Households" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RATE",
+            "name": "Rate",
+            "names": { "en": "Rate" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_EMP",
+            "name": "Australian Dollars per Employee",
+            "names": { "en": "Australian Dollars per Employee" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_PSN",
+            "name": "Australian Dollars per Person",
+            "names": { "en": "Australian Dollars per Person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_KL",
+            "name": "Australian Dollars per Kilolitre",
+            "names": { "en": "Australian Dollars per Kilolitre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_KG",
+            "name": "Australian Dollars per Kilogram",
+            "names": { "en": "Australian Dollars per Kilogram" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_T",
+            "name": "Australian Dollars per Tonne",
+            "names": { "en": "Australian Dollars per Tonne" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_CT",
+            "name": "Australian Dollars per Carat",
+            "names": { "en": "Australian Dollars per Carat" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_SQM",
+            "name": "Australian Dollars per Square Metre",
+            "names": { "en": "Australian Dollars per Square Metre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_PER_1000CBM",
+            "name": "Australian Dollars per thousand cubic metres",
+            "names": { "en": "Australian Dollars per thousand cubic metres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "L_PER_100KM",
+            "name": "Litres per 100 Kilometres",
+            "names": { "en": "Litres per 100 Kilometres" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "L_PER_KM",
+            "name": "Litres per Kilometre",
+            "names": { "en": "Litres per Kilometre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "ML_PER_HA",
+            "name": "Megalitres per Hectare",
+            "names": { "en": "Megalitres per Hectare" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "T_PER_HA",
+            "name": "Tonnes per Hectare",
+            "names": { "en": "Tonnes per Hectare" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PSNS_PER_SQKM",
+            "name": "Persons per Square Kilometre",
+            "names": { "en": "Persons per Square Kilometre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KG_PER_TREE",
+            "name": "Kilograms per Tree",
+            "names": { "en": "Kilograms per Tree" },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_UNIT_MULT",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Unit Multiplier",
+        "names": { "en": "Unit Multiplier" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "0",
+            "name": "Units",
+            "names": { "en": "Units" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "1",
+            "name": "Tens",
+            "names": { "en": "Tens" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "2",
+            "name": "Hundreds",
+            "names": { "en": "Hundreds" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "3",
+            "name": "Thousands",
+            "names": { "en": "Thousands" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "4",
+            "name": "Tens of thousands",
+            "names": { "en": "Tens of thousands" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "5",
+            "name": "Hundreds of thousands",
+            "names": { "en": "Hundreds of thousands" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "6",
+            "name": "Millions",
+            "names": { "en": "Millions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "7",
+            "name": "Tens of millions",
+            "names": { "en": "Tens of millions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "8",
+            "name": "Hundreds of millions",
+            "names": { "en": "Hundreds of millions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "9",
+            "name": "Billions",
+            "names": { "en": "Billions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "10",
+            "name": "Tens of billions",
+            "names": { "en": "Tens of billions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "11",
+            "name": "Hundreds of billions",
+            "names": { "en": "Hundreds of billions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "12",
+            "name": "Trillions",
+            "names": { "en": "Trillions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "13",
+            "name": "Tens of trillions",
+            "names": { "en": "Tens of trillions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "14",
+            "name": "Hundred of trillions",
+            "names": { "en": "Hundred of trillions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "15",
+            "name": "Quadrillions",
+            "names": { "en": "Quadrillions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-1",
+            "name": "Tenths",
+            "names": { "en": "Tenths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-2",
+            "name": "Hundredths",
+            "names": { "en": "Hundredths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-3",
+            "name": "Thousandths",
+            "names": { "en": "Thousandths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-4",
+            "name": "Ten-thousandths",
+            "names": { "en": "Ten-thousandths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-5",
+            "name": "Hundred-thousandths",
+            "names": { "en": "Hundred-thousandths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-6",
+            "name": "Millionths",
+            "names": { "en": "Millionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-7",
+            "name": "Ten-millionths",
+            "names": { "en": "Ten-millionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-8",
+            "name": "Hundred-millionths",
+            "names": { "en": "Hundred-millionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-9",
+            "name": "Billionths",
+            "names": { "en": "Billionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-10",
+            "name": "Ten-billionths",
+            "names": { "en": "Ten-billionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-11",
+            "name": "Hundred-billionths",
+            "names": { "en": "Hundred-billionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-12",
+            "name": "Trillionths",
+            "names": { "en": "Trillionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-13",
+            "name": "Ten-trillionths",
+            "names": { "en": "Ten-trillionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-14",
+            "name": "Hundred-trillionths",
+            "names": { "en": "Hundred-trillionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "-15",
+            "name": "Quadrillionths",
+            "names": { "en": "Quadrillionths" },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      }
+    ],
+    "dataStructures": [
+      {
+        "id": "RT",
+        "links": [{ "rel": "self", "type": "datastructure" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": true,
+        "name": "Retail Trade Datastructure",
+        "names": { "en": "Retail Trade Datastructure" },
+        "dataStructureComponents": {
+          "attributeList": {
+            "id": "AttributeDescriptor",
+            "links": [{ "rel": "self", "type": "attributedescriptor" }],
+            "attributes": [
+              {
+                "id": "UNIT_MEASURE",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).UNIT_MEASURE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_UNIT_MEASURE(1.0.0)"
+                },
+                "assignmentStatus": "Mandatory",
+                "attributeRelationship": { "dimensions": ["MEASURE"] }
+              },
+              {
+                "id": "UNIT_MULT",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).UNIT_MULT",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_UNIT_MULT(1.0.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": { "dimensions": ["MEASURE"] }
+              },
+              {
+                "id": "OBS_STATUS",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).OBS_STATUS",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_OBS_STATUS(1.0.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": { "primaryMeasure": "OBS_VALUE" }
+              },
+              {
+                "id": "OBS_COMMENT",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_ATTRIBUTE(1.0.0).OBS_COMMENT",
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": { "primaryMeasure": "OBS_VALUE" }
+              }
+            ]
+          },
+          "dimensionList": {
+            "id": "DimensionDescriptor",
+            "links": [{ "rel": "self", "type": "dimensiondescriptor" }],
+            "dimensions": [
+              {
+                "id": "MEASURE",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 0,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).MEASURE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_RT_MEASURE(1.0.0)"
+                }
+              },
+              {
+                "id": "INDUSTRY",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 1,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_INDUSTRY(1.0.0).INDUSTRY",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_RT_IND(1.0.0)"
+                }
+              },
+              {
+                "id": "TSEST",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 2,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).TSEST",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_TSEST(1.0.0)"
+                }
+              },
+              {
+                "id": "REGION",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 3,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_GEOGRAPHY(1.0.0).REGION",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)"
+                }
+              },
+              {
+                "id": "FREQ",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 4,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).FREQ",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_FREQ(1.0.0)"
+                }
+              }
+            ],
+            "timeDimensions": [
+              {
+                "id": "TIME_PERIOD",
+                "links": [{ "rel": "self", "type": "timedimension" }],
+                "position": 5,
+                "type": "TimeDimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).TIME_PERIOD",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "ObservationalTimePeriod",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                }
+              }
+            ]
+          },
+          "measureList": {
+            "id": "MeasureDescriptor",
+            "links": [{ "rel": "self", "type": "measuredescriptor" }],
+            "primaryMeasure": {
+              "id": "OBS_VALUE",
+              "links": [{ "rel": "self", "type": "primarymeasure" }],
+              "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_COMMON(1.0.0).OBS_VALUE"
+            }
+          }
+        }
+      }
+    ],
+    "contentConstraints": [
+      {
+        "id": "CR_A_RT",
+        "links": [{ "rel": "self", "type": "contentconstraint" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": false,
+        "validFrom": "2021-04-08T16:00:00",
+        "name": "Availability (A) for RT",
+        "names": { "en": "Availability (A) for RT" },
+        "annotations": [{ "title": "A", "type": "ReleaseVersion" }],
+        "type": "Actual",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              { "id": "MEASURE", "values": ["M1", "M2", "M3", "M4"] },
+              {
+                "id": "INDUSTRY",
+                "values": [
+                  "01",
+                  "02",
+                  "03",
+                  "04",
+                  "05",
+                  "06",
+                  "07",
+                  "08",
+                  "09",
+                  "10",
+                  "11",
+                  "12",
+                  "13",
+                  "14",
+                  "15",
+                  "20",
+                  "41",
+                  "42",
+                  "43",
+                  "44",
+                  "45",
+                  "46"
+                ]
+              },
+              { "id": "TSEST", "values": ["10", "20"] },
+              {
+                "id": "REGION",
+                "values": ["1", "2", "3", "4", "5", "6", "7", "8", "AUS"]
+              },
+              { "id": "FREQ", "values": ["M", "Q"] },
+              {
+                "id": "TIME_PERIOD",
+                "timeRange": {
+                  "startPeriod": {
+                    "period": "1982-04-01T00:00:00Z",
+                    "isInclusive": true
+                  },
+                  "endPeriod": {
+                    "period": "2021-02-28T23:59:59Z",
+                    "isInclusive": true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CR_B_RT",
+        "links": [{ "rel": "self", "type": "contentconstraint" }],
+        "version": "1.0.0",
+        "agencyID": "ABS",
+        "isFinal": false,
+        "validTo": "2021-04-08T15:59:59",
+        "name": "Availability (B) for RT",
+        "names": { "en": "Availability (B) for RT" },
+        "annotations": [{ "title": "B", "type": "ReleaseVersion" }],
+        "type": "Actual",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ABS:RT(1.0.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              { "id": "MEASURE", "values": ["M1", "M2", "M3", "M4"] },
+              {
+                "id": "INDUSTRY",
+                "values": [
+                  "01",
+                  "02",
+                  "03",
+                  "04",
+                  "05",
+                  "06",
+                  "07",
+                  "08",
+                  "09",
+                  "10",
+                  "11",
+                  "12",
+                  "13",
+                  "14",
+                  "15",
+                  "20",
+                  "41",
+                  "42",
+                  "43",
+                  "44",
+                  "45",
+                  "46"
+                ]
+              },
+              { "id": "TSEST", "values": ["10", "20"] },
+              {
+                "id": "REGION",
+                "values": ["1", "2", "3", "4", "5", "6", "7", "8", "AUS"]
+              },
+              { "id": "FREQ", "values": ["M", "Q"] },
+              {
+                "id": "TIME_PERIOD",
+                "timeRange": {
+                  "startPeriod": {
+                    "period": "1982-04-01T00:00:00Z",
+                    "isInclusive": true
+                  },
+                  "endPeriod": {
+                    "period": "2021-01-31T23:59:59Z",
+                    "isInclusive": true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "content-languages": ["en"],
+    "id": "IDREF73591",
+    "prepared": "2021-05-11T08:15:38.9274167Z",
+    "test": false,
+    "sender": { "id": "Unknown" },
+    "receiver": [{ "id": "Unknown" }]
+  }
+}

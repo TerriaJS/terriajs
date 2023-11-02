@@ -7,11 +7,11 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
-describe("CsvCatalogItem", function() {
+describe("CsvCatalogItem", function () {
   let terria: Terria;
   let csv: CsvCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     csv = new CsvCatalogItem("test", terria, undefined);
     jasmine.Ajax.install();
@@ -20,11 +20,11 @@ describe("CsvCatalogItem", function() {
     ).andReturn({ responseText: regionMapping });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("filters out duplicate discrete times", async function() {
+  it("filters out duplicate discrete times", async function () {
     runInAction(() => {
       csv.setTrait("definition", "url", "test/csv/lat_lon_date_value.csv");
     });

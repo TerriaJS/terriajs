@@ -58,8 +58,8 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
 
       // We want to show only one source item at a time, so remove any
       // existing source items from the workbench
-      sourceItems.forEach(sourceItem => {
-        workbench.items.forEach(workbenchItem => {
+      sourceItems.forEach((sourceItem) => {
+        workbench.items.forEach((workbenchItem) => {
           if (sourceItem.uniqueId === workbenchItem.uniqueId) {
             workbench.remove(workbenchItem);
           }
@@ -75,9 +75,9 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
 
   resolveSourceItems() {
     Promise.all(
-      this.props.sourceItems.map(sourceItem => Promise.resolve(sourceItem))
+      this.props.sourceItems.map((sourceItem) => Promise.resolve(sourceItem))
     ).then(
-      action(results => {
+      action((results) => {
         this.sourceItems = filterOutUndefined(results);
       })
     );
@@ -101,7 +101,7 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
     // The downloads and download names default to the sources and source names if not defined.
     let downloads: string[] = filterOutUndefined(
       this.props.downloads ||
-        this.sourceItems.map(item =>
+        this.sourceItems.map((item) =>
           hasTraits(item, UrlTraits, "url") ? item.url : undefined
         )
     );
@@ -136,7 +136,7 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
   }
 }
 
-const ExpandAndDownloadDropdowns = function(props: {
+const ExpandAndDownloadDropdowns = function (props: {
   sourceNames: string[];
   canDownload: boolean;
   downloads: { name: string; href: string }[];
@@ -165,7 +165,7 @@ const ExpandAndDownloadDropdowns = function(props: {
       <div className={Styles.chartDropdownButton}>
         <Dropdown
           selectOption={props.onExpand}
-          options={props.sourceNames.map(name => ({ name }))}
+          options={props.sourceNames.map((name) => ({ name }))}
           theme={expandDropdownTheme}
         >
           {props.t("chart.expand") + " ▾"}
@@ -180,7 +180,7 @@ const ExpandAndDownloadDropdowns = function(props: {
   );
 };
 
-const ExpandAndDownloadButtons = function(props: {
+const ExpandAndDownloadButtons = function (props: {
   onExpand: () => void;
   downloadUrl?: string;
   t: TFunction;

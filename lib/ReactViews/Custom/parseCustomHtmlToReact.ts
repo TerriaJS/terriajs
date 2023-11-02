@@ -24,11 +24,11 @@ const htmlToReactParser = new HtmlToReact.Parser({
 });
 const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
 
-const isValidNode = function() {
+const isValidNode = function () {
   return true;
 };
 
-const shouldProcessEveryNodeExceptWhiteSpace = function(node: DomElement) {
+const shouldProcessEveryNodeExceptWhiteSpace = function (node: DomElement) {
   // Use this to avoid white space between table elements, eg.
   //     <table> <tbody> <tr>\n<td>x</td> <td>3</td> </tr> </tbody> </table>
   // being rendered as empty <span> elements, and causing React errors.
@@ -80,7 +80,7 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
    */
   processingInstructions.push({
     shouldProcessNode: (node: DomElement) => node.name === "a",
-    processNode: function(node: DomElement, children, index) {
+    processNode: function (node: DomElement, children, index) {
       // Make sure any <a href> tags open in a new window
       // eslint-disable-line react/display-name
       const elementProps = {

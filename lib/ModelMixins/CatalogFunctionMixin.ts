@@ -64,7 +64,9 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
-        this.terria.workbench.add(newJob).then(r => r.raiseError(this.terria));
+        this.terria.workbench
+          .add(newJob)
+          .then((r) => r.raiseError(this.terria));
 
         await newJob.invoke();
 

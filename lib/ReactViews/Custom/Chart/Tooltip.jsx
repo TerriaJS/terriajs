@@ -52,7 +52,7 @@ class Tooltip extends React.Component {
         chartItem.type !== "momentLines" && chartItem.type !== "momentPoints"
     );
     return Object.entries(groupBy(tooltipItems, "chartItem.categoryName")).map(
-      o => ({
+      (o) => ({
         name: o[0],
         items: o[1]
       })

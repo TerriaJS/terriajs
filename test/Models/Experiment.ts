@@ -11,8 +11,8 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("NewStuff", function() {
-  it("test", function() {
+describe("NewStuff", function () {
+  it("test", function () {
     const terria = new Terria();
     const wms = new WebMapServiceCatalogGroup(
       "Taxation Statistics 2011-2012",
@@ -49,9 +49,9 @@ describe("NewStuff", function() {
       );
     });
 
-    autorun(dispose => {
+    autorun((dispose) => {
       console.log("Run: " + wms.memberModels.length);
-      wms.memberModels.forEach(model => {
+      wms.memberModels.forEach((model) => {
         if (CatalogMemberMixin.isMixedInto(model)) {
           console.log(`${model.name}: ${model.uniqueId}`);
         }

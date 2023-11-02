@@ -2739,10 +2739,7 @@
                 },
                 "assignmentStatus": "Conditional",
                 "attributeRelationship": {
-                  "dimensions": [
-                    "GEO_PICT",
-                    "INDICATOR"
-                  ]
+                  "dimensions": ["GEO_PICT", "INDICATOR"]
                 }
               },
               {
@@ -2759,10 +2756,7 @@
                 },
                 "assignmentStatus": "Conditional",
                 "attributeRelationship": {
-                  "dimensions": [
-                    "GEO_PICT",
-                    "INDICATOR"
-                  ]
+                  "dimensions": ["GEO_PICT", "INDICATOR"]
                 }
               },
               {
@@ -2783,10 +2777,7 @@
                 },
                 "assignmentStatus": "Conditional",
                 "attributeRelationship": {
-                  "dimensions": [
-                    "GEO_PICT",
-                    "INDICATOR"
-                  ]
+                  "dimensions": ["GEO_PICT", "INDICATOR"]
                 }
               },
               {
@@ -2954,15 +2945,11 @@
             "keyValues": [
               {
                 "id": "FREQ",
-                "values": [
-                  "A"
-                ]
+                "values": ["A"]
               },
               {
                 "id": "INDICATOR",
-                "values": [
-                  "INF"
-                ]
+                "values": ["INF"]
               },
               {
                 "id": "GEO_PICT",
@@ -3028,9 +3015,7 @@
             "keyValues": [
               {
                 "id": "FREQ",
-                "values": [
-                  "A"
-                ]
+                "values": ["A"]
               },
               {
                 "id": "GEO_PICT",
@@ -3061,15 +3046,11 @@
               },
               {
                 "id": "INDICATOR",
-                "values": [
-                  "INF"
-                ]
+                "values": ["INF"]
               },
               {
                 "id": "COMMODITY",
-                "values": [
-                  "_T"
-                ]
+                "values": ["_T"]
               },
               {
                 "id": "TIME_PERIOD",
@@ -3092,9 +3073,7 @@
   },
   "meta": {
     "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
-    "content-languages": [
-      "en"
-    ],
+    "content-languages": ["en"],
     "id": "IDREF2930",
     "prepared": "2020-09-22T03:37:04.9410168Z",
     "test": false,

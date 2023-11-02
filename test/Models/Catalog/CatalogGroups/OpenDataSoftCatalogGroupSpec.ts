@@ -13,11 +13,11 @@ const datasets = JSON.stringify(
   require("../../../../wwwroot/test/ods/datasets.json")
 );
 
-describe("OpenDataSoftCatalogGroup", function() {
+describe("OpenDataSoftCatalogGroup", function () {
   let terria: Terria;
   let odsGroup: OpenDataSoftCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     fetchMock.mock("https://example.com/api/v2/catalog/facets/", {
       body: facets
     });
@@ -31,22 +31,22 @@ describe("OpenDataSoftCatalogGroup", function() {
     odsGroup = new OpenDataSoftCatalogGroup("test", terria);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     fetchMock.restore();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(odsGroup.type).toBe("opendatasoft-group");
   });
 
-  describe("loads facets", function() {
-    beforeEach(async function() {
+  describe("loads facets", function () {
+    beforeEach(async function () {
       runInAction(() => {
         odsGroup.setTrait("definition", "url", "https://example.com");
       });
     });
 
-    it("loadsNestedMembers", async function() {
+    it("loadsNestedMembers", async function () {
       await odsGroup.loadMembers();
       const facets = odsGroup.memberModels;
       expect(facets.length).toEqual(6);

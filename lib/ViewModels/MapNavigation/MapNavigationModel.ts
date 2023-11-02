@@ -19,9 +19,7 @@ export interface IMapNavigationItem
   render?: ReactNode;
 }
 
-export default class MapNavigationModel extends CompositeBarModel<
-  IMapNavigationItem
-> {
+export default class MapNavigationModel extends CompositeBarModel<IMapNavigationItem> {
   constructor(
     protected readonly terria: Terria,
     items?: IMapNavigationItem[],

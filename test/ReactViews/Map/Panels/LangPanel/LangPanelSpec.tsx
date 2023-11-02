@@ -7,13 +7,13 @@ import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 
 import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPanel";
 
-describe("LangPanel", function() {
+describe("LangPanel", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -25,7 +25,7 @@ describe("LangPanel", function() {
     });
   });
 
-  it("should not render if there is no langauge config", function() {
+  it("should not render if there is no langauge config", function () {
     act(() => {
       testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
     });
@@ -33,7 +33,7 @@ describe("LangPanel", function() {
     expect(testRenderer.toJSON()).toBeNull();
   });
 
-  it("should render if language are provided in config", function() {
+  it("should render if language are provided in config", function () {
     terria.updateParameters({
       languageConfiguration: {
         enabled: true,

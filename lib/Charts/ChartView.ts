@@ -16,7 +16,7 @@ export default class ChartView {
   get chartableItems(): ChartableMixin.Instance[] {
     return <any>(
       this.terria.workbench.items.filter(
-        item => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
+        (item) => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
       )
     );
   }
@@ -48,7 +48,7 @@ export default class ChartView {
   get chartItems(): ChartItem[] {
     return this.chartableItems.reduce((acc: ChartItem[], item) => {
       return acc.concat(
-        item.chartItems.map(chartItem => {
+        item.chartItems.map((chartItem) => {
           if (this.xAxis && !axesMatch(this.xAxis, chartItem.xAxis)) {
             chartItem = {
               ...chartItem,

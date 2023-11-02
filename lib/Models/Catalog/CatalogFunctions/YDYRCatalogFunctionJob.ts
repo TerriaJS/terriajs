@@ -38,7 +38,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
 
     const tableCatalogItem = this.terria.workbench.items
       .filter(TableMixin.isMixedInto)
-      .filter(item => item.uniqueId === this.parameters!["Input Layer"])[0];
+      .filter((item) => item.uniqueId === this.parameters!["Input Layer"])[0];
 
     if (!isDefined(tableCatalogItem)) {
       throw `Layer ${
@@ -77,7 +77,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       "content",
       `${dataColumnName}: "${
         DATASETS.find(
-          d => d.geographyName === regionColumn?.regionType?.regionType
+          (d) => d.geographyName === regionColumn?.regionType?.regionType
         )?.title
       }" to "${outputGeographyName}"`
     );
@@ -105,14 +105,15 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       data,
       data_column: dataColumnName,
       geom_column: regionColumnName,
-      side_data: DATASETS.find(d => d.title === outputGeographyName)?.sideData,
-      dst_geom: DATASETS.find(d => d.title === outputGeographyName)
+      side_data: DATASETS.find((d) => d.title === outputGeographyName)
+        ?.sideData,
+      dst_geom: DATASETS.find((d) => d.title === outputGeographyName)
         ?.geographyName,
       src_geom:
         tableCatalogItem?.activeTableStyle.regionColumn?.regionType?.regionType,
       averaged_counts: false,
-      algorithms: ALGORITHMS.filter(alg => this.parameters![alg[0]]).map(
-        alg => alg[0]
+      algorithms: ALGORITHMS.filter((alg) => this.parameters![alg[0]]).map(
+        (alg) => alg[0]
       )
     };
 
@@ -237,7 +238,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     );
 
     let regionColumnSplit = DATASETS.find(
-      d => d.title === this.parameters?.["Output Geography"]
+      (d) => d.title === this.parameters?.["Output Geography"]
     )?.geographyName.split("_");
     let regionColumn = "";
 

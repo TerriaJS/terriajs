@@ -36,10 +36,10 @@ const failedExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WP
 
 const pendingExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/PendingExecuteResponse.xml");
 
-describe("WebProcessingServiceCatalogFunction", function() {
+describe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;
 
-  beforeEach(function() {
+  beforeEach(function () {
     const terria = initTerria();
     wps = new WebProcessingServiceCatalogFunction("test", terria);
     runInAction(() => {
@@ -64,17 +64,17 @@ describe("WebProcessingServiceCatalogFunction", function() {
     ).andReturn({ responseText: regionMapping });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type & typeName", function() {
+  it("has a type & typeName", function () {
     expect(WebProcessingServiceCatalogFunction.type).toBe("wps");
     expect(wps.typeName).toBe("Web Processing Service (WPS)");
   });
 
-  describe("when loading", function() {
-    it("should correctly query the DescribeProcess endpoint", async function() {
+  describe("when loading", function () {
+    it("should correctly query the DescribeProcess endpoint", async function () {
       await wps.loadMetadata();
       expect(wps.functionParameters.length).toBe(2);
       expect(wps.functionParameters.map(({ type }) => type)).toEqual([
@@ -84,12 +84,12 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
   });
 
-  describe("when invoked", function() {
+  describe("when invoked", function () {
     let dispose: () => void;
     let disposeMapItems: () => void;
     let job: WebProcessingServiceCatalogFunctionJob;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       dispose = reaction(
         () => wps.parameters,
         () => {}
@@ -97,7 +97,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       await wps.loadMetadata();
       runInAction(() => {
         const param = <GeoJsonParameter>(
-          wps.functionParameters.find(p => p.type === "geojson")
+          wps.functionParameters.find((p) => p.type === "geojson")
         );
         param.subtype = GeoJsonParameter.PointType;
         param.setValue(CommonStrata.user, {
@@ -114,18 +114,18 @@ describe("WebProcessingServiceCatalogFunction", function() {
       );
     });
 
-    afterEach(function() {
+    afterEach(function () {
       dispose();
       disposeMapItems();
     });
 
-    it("makes a POST request to the Execute endpoint", async function() {
+    it("makes a POST request to the Execute endpoint", async function () {
       expect(job.identifier).toBe("someId");
       // expect(job.).toMatch(/geometry=/);
       expect(job.jobStatus).toBe("finished");
     });
 
-    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function() {
+    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function () {
       runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
 
       expect(job.identifier).toBe("someId");
@@ -134,14 +134,14 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(job.jobStatus).toBe("finished");
     });
 
-    it("adds a ResultPendingCatalogItem to the workbench", async function() {
+    it("adds a ResultPendingCatalogItem to the workbench", async function () {
       expect(job.inWorkbench).toBeTruthy();
     });
   });
 
-  describe("on success", function() {
+  describe("on success", function () {
     let job: WebProcessingServiceCatalogFunctionJob;
-    beforeEach(async function() {
+    beforeEach(async function () {
       let dispose: any;
       job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
@@ -158,11 +158,11 @@ describe("WebProcessingServiceCatalogFunction", function() {
       dispose();
     });
 
-    it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function() {
+    it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 
-    it("adds result to workbench", async function() {
+    it("adds result to workbench", async function () {
       expect(job.results.length).toBe(2);
       expect(MappableMixin.isMixedInto(job.results[0])).toBeTruthy();
       expect(MappableMixin.isMixedInto(job.results[1])).toBeTruthy();
@@ -170,27 +170,27 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(job.results[1].inWorkbench).toBeTruthy();
     });
 
-    it("adds a new catalog member for the output", async function() {
+    it("adds a new catalog member for the output", async function () {
       expect(job.results[0].type).toBe(CsvCatalogItem.type);
     });
 
-    it("adds a short report", async function() {
+    it("adds a short report", async function () {
       expect(job.shortReportSections[0].content).toBe(
         "Chart Vegetation Cover generated."
       );
     });
-    it("returns mapItems", async function() {
+    it("returns mapItems", async function () {
       expect(job.mapItems.length).toBe(1);
       expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
     });
 
-    it("defines a rectangle", async function() {
+    it("defines a rectangle", async function () {
       expect(job.rectangle).toBeDefined();
     });
   });
 
-  describe("otherwise if `statusLocation` is set", function() {
-    it("polls the statusLocation for the result", async function() {
+  describe("otherwise if `statusLocation` is set", function () {
+    it("polls the statusLocation for the result", async function () {
       jasmine.Ajax.stubRequest(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       ).andReturn({ responseText: pendingExecuteResponseXml });
@@ -228,7 +228,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       dispose2();
     });
 
-    it("stops polling if pendingItem is removed from the workbench", async function() {
+    it("stops polling if pendingItem is removed from the workbench", async function () {
       spyOn(wps.terria.workbench, "add").and.returnValue(
         Promise.resolve(Result.none())
       ); // do nothing
@@ -243,10 +243,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
   });
 
-  describe("on failure", function() {
+  describe("on failure", function () {
     let dispose: () => void;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       dispose = reaction(
         () => wps.parameters,
         () => {}
@@ -254,7 +254,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       await wps.loadMetadata();
       runInAction(() => {
         const param = <GeoJsonParameter>(
-          wps.functionParameters.find(p => p.type === "geojson")
+          wps.functionParameters.find((p) => p.type === "geojson")
         );
         param.subtype = GeoJsonParameter.PointType;
         param.setValue(CommonStrata.user, {
@@ -265,11 +265,11 @@ describe("WebProcessingServiceCatalogFunction", function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       dispose();
     });
 
-    it("marks the ResultPendingCatalogItem as failed - for polling results", async function() {
+    it("marks the ResultPendingCatalogItem as failed - for polling results", async function () {
       jasmine.Ajax.stubRequest(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       ).andReturn({ responseText: pendingExecuteResponseXml });
@@ -278,7 +278,8 @@ describe("WebProcessingServiceCatalogFunction", function() {
         "http://example.com/ows?check_status/123"
       ).andReturn({ responseText: failedExecuteResponseXml });
 
-      const job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
+      const job =
+        (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
       const dispose1 = reaction(
         () => job.mapItems,
@@ -308,7 +309,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       dispose2();
     });
 
-    it("marks the ResultPendingCatalogItem as failed", async function() {
+    it("marks the ResultPendingCatalogItem as failed", async function () {
       jasmine.Ajax.stubRequest(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       ).andReturn({ responseText: failedExecuteResponseXml });
@@ -326,8 +327,8 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
   });
 
-  describe("convertInputToParameter", function() {
-    it("works for a simple input", function() {
+  describe("convertInputToParameter", function () {
+    it("works for a simple input", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         Title: "Geometry ID",
@@ -344,7 +345,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       }
     });
 
-    it("converts LiteralData input with `AllowedValues` to EnumerationParameter", function() {
+    it("converts LiteralData input with `AllowedValues` to EnumerationParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AllowedValues: { Value: ["Point", "Polygon"] } }
@@ -359,7 +360,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       }
     });
 
-    it("converts LiteralData input with `AllowedValue` to EnumerationParameter", function() {
+    it("converts LiteralData input with `AllowedValue` to EnumerationParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AllowedValue: { Value: "Point" } }
@@ -371,7 +372,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       }
     });
 
-    it("converts LiteralData input with `AnyValue` to StringParameter", function() {
+    it("converts LiteralData input with `AnyValue` to StringParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AnyValue: {} }
@@ -379,7 +380,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(StringParameter));
     });
 
-    it("converts ComplexData input with datetime schema to DateTimeParameter", function() {
+    it("converts ComplexData input with datetime schema to DateTimeParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
@@ -391,7 +392,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(DateTimeParameter));
     });
 
-    it("converts ComplexData input with point schema to PointParameter", function() {
+    it("converts ComplexData input with point schema to PointParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
@@ -403,7 +404,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(PointParameter));
     });
 
-    it("converts ComplexData input with line schema to LineParameter", function() {
+    it("converts ComplexData input with line schema to LineParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
@@ -417,7 +418,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(LineParameter));
     });
 
-    it("converts ComplexData input with polygon schema to PolygonParameter", function() {
+    it("converts ComplexData input with polygon schema to PolygonParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
@@ -429,7 +430,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(PolygonParameter));
     });
 
-    it("converts ComplexData input with GeoJson schema to GeoJsonParameter", function() {
+    it("converts ComplexData input with GeoJson schema to GeoJsonParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
@@ -441,7 +442,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(GeoJsonParameter));
     });
 
-    it("converts input with BoundingBoxData to RectangleParameter", function() {
+    it("converts input with BoundingBoxData to RectangleParameter", function () {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         BoundingBoxData: {
@@ -452,7 +453,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
   });
 
-  it("can convert a parameter to data input", async function() {
+  it("can convert a parameter to data input", async function () {
     const parameter = new PointParameter(wps, {
       id: "foo"
     });

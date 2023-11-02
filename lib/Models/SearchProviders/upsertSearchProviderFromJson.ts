@@ -62,7 +62,7 @@ export default function upsertSearchProviderFromJson(
 
   setDefaultTraits(model);
 
-  updateModelFromJson(model, stratumName, json).catchError(error => {
+  updateModelFromJson(model, stratumName, json).catchError((error) => {
     errors.push(error);
     model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   });

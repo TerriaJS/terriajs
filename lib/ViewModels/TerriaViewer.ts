@@ -187,7 +187,7 @@ export default class TerriaViewer {
   })
   private get _cesiumPromise() {
     return fromPromise(
-      import("../Models/Cesium").then(Cesium => Cesium.default)
+      import("../Models/Cesium").then((Cesium) => Cesium.default)
     );
   }
 
@@ -207,7 +207,7 @@ export default class TerriaViewer {
   })
   private get _leafletPromise() {
     return fromPromise(
-      import("../Models/Leaflet").then(Leaflet => Leaflet.default)
+      import("../Models/Leaflet").then((Leaflet) => Leaflet.default)
     );
   }
 

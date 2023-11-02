@@ -65,8 +65,8 @@ const ChartItemSelector: React.FC<IChartItemSelector> = observer(
     // We don't need to show selectors for moment datasets. They are part of
     // discretelytimevarying items and have a separate chart button to enable/disable.
     const chartItems = chartView.chartItems
-      .filter(c => c.item === item)
-      .filter(c => c.type !== "momentPoints" && c.type !== "momentLines")
+      .filter((c) => c.item === item)
+      .filter((c) => c.type !== "momentPoints" && c.type !== "momentLines")
       .sort((a, b) => (a.name >= b.name ? 1 : -1));
 
     if (chartItems && chartItems.length === 0) return null;
@@ -82,7 +82,7 @@ const ChartItemSelector: React.FC<IChartItemSelector> = observer(
           margin: 10px 0;
         `}
       >
-        {chartItems.map(chartItem => (
+        {chartItems.map((chartItem) => (
           <Li key={`li-${chartItem.key}`}>
             <ChartItem chartItem={chartItem} />
           </Li>
@@ -96,9 +96,9 @@ function unselectChartItemsWithXAxisNotMatching(
   items: BaseModel[],
   requiredAxis: ChartAxis
 ) {
-  items.forEach(item => {
+  items.forEach((item) => {
     if (ChartableMixin.isMixedInto(item)) {
-      item.chartItems.forEach(chartItem => {
+      item.chartItems.forEach((chartItem) => {
         if (!axesMatch(chartItem.xAxis, requiredAxis)) {
           chartItem.updateIsSelectedInWorkbench(false);
         }

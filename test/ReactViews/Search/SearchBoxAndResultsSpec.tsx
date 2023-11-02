@@ -10,13 +10,13 @@ import SearchBoxAndResults, {
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 
-describe("SearchBoxAndResults", function() {
+describe("SearchBoxAndResults", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -31,7 +31,7 @@ describe("SearchBoxAndResults", function() {
     });
   });
 
-  it("renders with an input(SearchBox), but no SearchInDataCatalog without showLocationSearchResults", function() {
+  it("renders with an input(SearchBox), but no SearchInDataCatalog without showLocationSearchResults", function () {
     const searchText = "neko";
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
@@ -58,7 +58,7 @@ describe("SearchBoxAndResults", function() {
     expect(searchBox.props.value).toEqual(searchText);
   });
 
-  it("renders with an input & SearchInDataCatalog when showLocationSearchResults", function() {
+  it("renders with an input & SearchInDataCatalog when showLocationSearchResults", function () {
     const searchText = "mochi";
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
@@ -83,7 +83,7 @@ describe("SearchBoxAndResults", function() {
     expect(searchBox.props.value).toEqual(searchText);
   });
 
-  it("renders with an input & no SearchInDataCatalog without catalogSearchProvider", function() {
+  it("renders with an input & no SearchInDataCatalog without catalogSearchProvider", function () {
     const searchText = "timmynook";
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;

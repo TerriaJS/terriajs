@@ -14,9 +14,7 @@ interface ApiTableCustomChartComponentAttributes
   apiTableCatalogItemJson: string;
 }
 
-export default class ApiTableChartCustomComponent extends ChartCustomComponent<
-  ApiTableCatalogItem
-> {
+export default class ApiTableChartCustomComponent extends ChartCustomComponent<ApiTableCatalogItem> {
   get name(): string {
     return "api-chart";
   }

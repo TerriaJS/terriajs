@@ -38,24 +38,26 @@ see a swathe of yellow-green color across Victoria. Without the json, the csv fi
 have appeared using the default shades of red.
 
 To remove the invalid region name warning, just add this to the json (at the same level as "name" and "type"):
+
 ```
             "showWarnings": false,
 ```
+
 This same option can be used with any tabular data type, eg. Sensor Observation Service and SDMX-JSON items as well.
 
 Please note this documentation is still being developed, and does not cover everything
 that is possible.
 The definitive source of what you can do with `tableStyle` is this pair:
 
-* [TableStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableStyle.js)
-* [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js)
-
+- [TableStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableStyle.js)
+- [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js)
 
 ## Referencing your data
 
 As you can see in the example above, you need to provide a URL to the csv data in the json file. If your data can be made accessible publicly, [github gists](https://gist.github.com/) are a convenient way to do this.
 
 For small data files, you can embed the data directly in the json too, eg. instead of `"url"`, use:
+
 ```
             "data": "lon,lat,value\n134.384,-26.716,5\n121.659,-33.592,10"
 ```
@@ -172,10 +174,13 @@ you can use this alternative syntax:
 ### colorBins
 
 You can explicitly state how many colors (color "bins") you want to divide the data into, eg.
+
 ```
                 "colorBins": 16
 ```
+
 or, if you have specific boundaries in mind, you can list them, eg.
+
 ```
                 "colorBins": [3000, 3100, 3800, 3850, 3950, 4000]
 ```
@@ -191,10 +196,10 @@ palette directly, eg.
                 "colorBins": 10
             }
 ```
+
 `"10-class BrBG"` is also a valid choice.
 
 This property is ignored if colorMap is defined.
-
 
 ### colorBinMethod
 
@@ -246,7 +251,6 @@ All data values greater than or equal to this are considered equal for the purpo
 
 A Boolean - if true, display values that fall outside the display range show as min and max colors.
 
-
 ## Other settings
 
 For a full list of the available settings, see the `TableStyle` and `TableColumnStyle` models mentioned earlier.
@@ -257,6 +261,3 @@ Some examples are here:
 [https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json)
 
 You can add this directly to your catalog by appending `#build/TerriaJS/test/init/test-tablestyle.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/test-tablestyle.json`.
-
-
-

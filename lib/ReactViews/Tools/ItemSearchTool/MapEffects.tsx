@@ -38,7 +38,7 @@ export type HideAllResultsProps = {
   results: ItemSearchResult[];
 };
 
-export const HideAllResults: React.FC<HideAllResultsProps> = props => {
+export const HideAllResults: React.FC<HideAllResultsProps> = (props) => {
   const { item, results } = props;
   useEffect(() => {
     const disposer = item.hideFeaturesNotInItemSearchResults(results);
@@ -52,7 +52,7 @@ export type HighlightResultsProps = {
   results: ItemSearchResult | ItemSearchResult[];
 };
 
-export const HighlightResults: React.FC<HighlightResultsProps> = props => {
+export const HighlightResults: React.FC<HighlightResultsProps> = (props) => {
   useEffect(() => {
     const item = props.item;
     const results = Array.isArray(props.results)

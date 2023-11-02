@@ -13,7 +13,7 @@ export interface PrimitiveArrayTraitOptions<T> extends TraitOptions {
 export default function primitiveArrayTrait<T>(
   options: PrimitiveArrayTraitOptions<T>
 ) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
@@ -86,6 +86,6 @@ export class PrimitiveArrayTrait<T> extends Trait {
       return false;
     }
 
-    return jsonValue.every(item => typeof item === this.type);
+    return jsonValue.every((item) => typeof item === this.type);
   }
 }

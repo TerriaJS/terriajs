@@ -1,148 +1,148 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Date format test",
+      "type": "group",
+      "items": [
         {
-            "name": "Date format test",
-            "type": "group",
-            "items": [
-                {
-                    "name": "Existing date format in AREMI",
-                    "type": "group",
-                    "isOpen": false,
-                    "items": [
-                        {
-                            "name": "Available Distribution Capacity Sample",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/sample_aremi_available_distribution_capacity.csv",
-                            "dateFormat": {
-                                "timelineTic": "yyyy",
-                                "currentTime": "'Year: 'yyyy"
-                            }
-                        },
-                        {
-                            "name": "Peak Day Available Capacity Sample",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/sample_aremi_peak_day_capacity.csv",
-                            "dateFormat": {
-                                "timelineTic": "hh tt",
-                                "currentTime": "'Hour of day:' hh tt"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "Time-based intervals",
-                    "type": "group",
-                    "isOpen": false,
-                    "items": [
-                        {
-                            "name": "Date format in seconds",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
-                            "dateFormat": {
-                                "timelineTic": "HH:MM",
-                                "currentTime": "ss 'seconds'"
-                            }
-                        },
-                        {
-                            "name": "Date format in minutes",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
-                            "dateFormat": {
-                                "timelineTic": "HH:MM",
-                                "currentTime": "MM 'minutes'"
-                            }
-                        },
-                        {
-                            "name": "Date format in minutes and seconds",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
-                            "dateFormat": {
-                                "timelineTic": "HH:MM",
-                                "currentTime": "MM'm'ss's'"
-                            }
-                        },
-                        {
-                            "name": "Date format in hours and minutes",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
-                            "dateFormat": {
-                                "timelineTic": "HH:MM",
-                                "currentTime": "HH:MM"
-                            }
-                        },
-                        {
-                            "name": "Date format in hours, minutes and seconds",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
-                            "dateFormat": {
-                                "timelineTic": "HH:MM",
-                                "currentTime": "HH:MM:ss"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "Date-based intervals (using named formats)",
-                    "type": "group",
-                    "isOpen": false,
-                    "items": [
-                        {
-                            "name": "Default date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "default"
-                            }
-                        },
-                        {
-                            "name": "Short date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "shortDate"
-                            }
-                        },
-                        {
-                            "name": "Medium date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "mediumDate"
-                            }
-                        },
-                        {
-                            "name": "Long date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "longDate"
-                            }
-                        },
-                        {
-                            "name": "Full date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "fullDate"
-                            }
-                        },
-                        {
-                            "name": "ISO date format",
-                            "type": "csv",
-                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
-                            "dateFormat": {
-                                "timelineTic": "mm/dd",
-                                "currentTime": "isoDate"
-                            }
-                        }
-                    ]
-                }
-            ]
+          "name": "Existing date format in AREMI",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Available Distribution Capacity Sample",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/sample_aremi_available_distribution_capacity.csv",
+              "dateFormat": {
+                "timelineTic": "yyyy",
+                "currentTime": "'Year: 'yyyy"
+              }
+            },
+            {
+              "name": "Peak Day Available Capacity Sample",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/sample_aremi_peak_day_capacity.csv",
+              "dateFormat": {
+                "timelineTic": "hh tt",
+                "currentTime": "'Hour of day:' hh tt"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Time-based intervals",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Date format in seconds",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
+              "dateFormat": {
+                "timelineTic": "HH:MM",
+                "currentTime": "ss 'seconds'"
+              }
+            },
+            {
+              "name": "Date format in minutes",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
+              "dateFormat": {
+                "timelineTic": "HH:MM",
+                "currentTime": "MM 'minutes'"
+              }
+            },
+            {
+              "name": "Date format in minutes and seconds",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
+              "dateFormat": {
+                "timelineTic": "HH:MM",
+                "currentTime": "MM'm'ss's'"
+              }
+            },
+            {
+              "name": "Date format in hours and minutes",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
+              "dateFormat": {
+                "timelineTic": "HH:MM",
+                "currentTime": "HH:MM"
+              }
+            },
+            {
+              "name": "Date format in hours, minutes and seconds",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
+              "dateFormat": {
+                "timelineTic": "HH:MM",
+                "currentTime": "HH:MM:ss"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Date-based intervals (using named formats)",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Default date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "default"
+              }
+            },
+            {
+              "name": "Short date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "shortDate"
+              }
+            },
+            {
+              "name": "Medium date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "mediumDate"
+              }
+            },
+            {
+              "name": "Long date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "longDate"
+              }
+            },
+            {
+              "name": "Full date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "fullDate"
+              }
+            },
+            {
+              "name": "ISO date format",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+              "dateFormat": {
+                "timelineTic": "mm/dd",
+                "currentTime": "isoDate"
+              }
+            }
+          ]
         }
-    ]
+      ]
+    }
+  ]
 }

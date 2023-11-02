@@ -73,7 +73,7 @@ const TimerSection = observer(
       const date = new Date(null);
       date.setSeconds(this.state.secondsLeft);
 
-      const addLeadingZeroIfRequired = numString =>
+      const addLeadingZeroIfRequired = (numString) =>
         numString.length < 2 ? "0" + numString : numString;
 
       const minutes = addLeadingZeroIfRequired(date.getMinutes().toString());

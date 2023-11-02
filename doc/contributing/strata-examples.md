@@ -23,7 +23,7 @@
   "aspects": {
     "terria": {
       "definition": {
-        "url": "some-wms-server.com/layer",
+        "url": "some-wms-server.com/layer"
       },
       "underride": {
         "name": "A WMS layer name that has been updated by Magda Minion"
@@ -47,7 +47,7 @@ Will contain `name` property defined in the Magda record. In provided example `"
 
 ### Loadable `getCapabilities`
 
-Will contain properties loaded from WMS `GetCapabilities` request. For example: 
+Will contain properties loaded from WMS `GetCapabilities` request. For example:
 
 ```json
 {
@@ -71,12 +71,11 @@ In provided example, this would be:
 
 This will contain values copied from the Magda record's Terria aspect (property).
 
-
 In provided example, this would be:
 
 ```json
 {
-  "url": "some-wms-server.com/layer",
+  "url": "some-wms-server.com/layer"
 }
 ```
 

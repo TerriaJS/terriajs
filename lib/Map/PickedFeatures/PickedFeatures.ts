@@ -18,7 +18,7 @@ export function isProviderCoords(obj: any): obj is ProviderCoords {
 }
 
 export function isProviderCoordsMap(obj: any): obj is ProviderCoordsMap {
-  return Object.keys(obj).every(url => isProviderCoords(obj[url]));
+  return Object.keys(obj).every((url) => isProviderCoords(obj[url]));
 }
 
 /**
@@ -69,7 +69,7 @@ export function featureBelongsToCatalogItem(
   const imageryProvider = feature.imageryLayer?.imageryProvider;
 
   // Test whether the catalog item has a matching dataSource or an imageryProvider
-  const match = catalogItem.mapItems.some(mapItem => {
+  const match = catalogItem.mapItems.some((mapItem) => {
     if (dataSource && mapItem === dataSource) {
       return true;
     }

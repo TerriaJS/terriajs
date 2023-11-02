@@ -36,7 +36,7 @@ class FeatureInfoPanelChart extends React.Component {
   @computed
   get chartItem() {
     return this.props.item.chartItems.find(
-      chartItem =>
+      (chartItem) =>
         chartItem.type === "line" || chartItem.type === "lineAndPoint"
     );
   }
@@ -211,8 +211,8 @@ const ChartStatusText = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: ${p => p.width}px;
-  height: ${p => p.height}px;
+  width: ${(p) => p.width}px;
+  height: ${(p) => p.height}px;
 `;
 
 export default FeatureInfoPanelChart;

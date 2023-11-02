@@ -44,7 +44,7 @@ export default class SearchResult {
     if (this.isOpen && GroupMixin.isMixedInto(this.catalogItem)) {
       this.catalogItem
         .loadMembers()
-        .then(result => result.raiseError(this.catalogItem!.terria));
+        .then((result) => result.raiseError(this.catalogItem!.terria));
     }
   }
 }

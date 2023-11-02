@@ -1,9 +1,6 @@
 {
   "currentVersion": 10.71,
-  "folders": [
-    "AGP",
-    "Elevation"
-  ],
+  "folders": ["AGP", "Elevation"],
   "services": [
     {
       "name": "911CallsHotspotGP",

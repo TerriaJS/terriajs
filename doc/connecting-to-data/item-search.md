@@ -53,20 +53,20 @@ The search tool can be opened from the expand menu for the catalog item in the w
 - GeoJSON search provider, for searching inside a geojson catalog item using its properties.
 - WPS search provider, for searching any item using a remote server.
 
-## Implementing your own search provider 
+## Implementing your own search provider
 
 You can implement your own custom search provider by providing a class that implements the `ItemSearchProvider` API and registering it as a search provider using the [registerItemSearchProvider](../../lib/Models/ItemSearchProviders/ItemSearchProviders.ts) method.
 
 ```
   import ItemSearchProvider from "lib/Models/ItemSearchProvider";
   import { registerItemSearchProvider } from "lib/Models/ItemSearchProviders";
-  
+
   class MyCustomItemSearchProvider extends ItemSearchProvider {
     ...
   }
-  
+
   registerItemSearchProvider(
-    "my-custom-item-search-provider", 
+    "my-custom-item-search-provider",
     MyCustomItemSearchProvider
   );
 ```

@@ -33,7 +33,7 @@ export default class NotificationState {
   addNotificationToQueue(notification: Notification) {
     const alreadyQueued =
       this.notifications.filter(
-        item =>
+        (item) =>
           item.title === notification.title &&
           item.message === notification.message
       ).length !== 0;
@@ -61,7 +61,7 @@ export default class NotificationState {
     // Remove all ignored notifications
     // This is needed here as the action of dismissing the current notification may change "ignore" status of notifications in stack
     this.notifications = this.notifications.filter(
-      n => !(typeof n.ignore === "function" ? n.ignore() : n.ignore ?? false)
+      (n) => !(typeof n.ignore === "function" ? n.ignore() : n.ignore ?? false)
     );
     return removed;
   }

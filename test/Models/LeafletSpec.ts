@@ -9,7 +9,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
-describe("Leaflet Model", function() {
+describe("Leaflet Model", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
   let container: HTMLElement;
@@ -18,7 +18,7 @@ describe("Leaflet Model", function() {
   let layers: any[];
   let terriaProgressEvt: jasmine.Spy;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -40,12 +40,12 @@ describe("Leaflet Model", function() {
       new L.ImageOverlay("http://example.com", L.latLngBounds([1, 1], [3, 3]))
     ];
 
-    layers.forEach(function(layer) {
+    layers.forEach(function (layer) {
       leaflet.map.addLayer(layer);
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     // TODO: calling destroy on our mobx leaflet model results in a tile error
     try {
       leaflet.destroy();
@@ -55,9 +55,9 @@ describe("Leaflet Model", function() {
 
   function initLeaflet() {}
 
-  describe("should trigger a tileLoadProgressEvent", function() {
-    ["tileloadstart", "tileload", "load"].forEach(function(event) {
-      it("on " + event, function() {
+  describe("should trigger a tileLoadProgressEvent", function () {
+    ["tileloadstart", "tileload", "load"].forEach(function (event) {
+      it("on " + event, function () {
         initLeaflet();
 
         layers[0].fire(event);
@@ -67,13 +67,13 @@ describe("Leaflet Model", function() {
     });
   });
 
-  it("should be able to reference its container", function() {
+  it("should be able to reference its container", function () {
     initLeaflet();
 
     expect(leaflet.getContainer()).toBe(container);
   });
 
-  it("should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers", function() {
+  it("should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers", function () {
     initLeaflet();
     layers[0]._tiles = {
       1: { loaded: undefined },
@@ -93,8 +93,8 @@ describe("Leaflet Model", function() {
     expect(terriaProgressEvt).toHaveBeenCalledWith(5, 5);
   });
 
-  describe("should change the max", function() {
-    it("to whatever the highest count of loading tiles so far was", function() {
+  describe("should change the max", function () {
+    it("to whatever the highest count of loading tiles so far was", function () {
       initLeaflet();
 
       changeTileLoadingCount(3);
@@ -105,7 +105,7 @@ describe("Leaflet Model", function() {
       expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 8]);
     });
 
-    it("to 0 when loading tile count reaches 0", function() {
+    it("to 0 when loading tile count reaches 0", function () {
       initLeaflet();
 
       changeTileLoadingCount(3);
@@ -132,9 +132,9 @@ describe("Leaflet Model", function() {
     }
   });
 
-  describe("zoomTo", function() {
-    describe("if the target is a TimeVarying item", function() {
-      it("sets the target item as the timeline source", async function() {
+  describe("zoomTo", function () {
+    describe("if the target is a TimeVarying item", function () {
+      it("sets the target item as the timeline source", async function () {
         const targetItem = new WebMapServiceCatalogItem("test", terria);
         targetItem.setTrait(
           CommonStrata.user,

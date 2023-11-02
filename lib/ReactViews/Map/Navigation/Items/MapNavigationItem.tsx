@@ -61,12 +61,12 @@ export const Control = styled(Box).attrs({
   column: true
 })`
   pointer-events: auto;
-  @media (min-width: ${props => props.theme.sm}px) {
+  @media (min-width: ${(props) => props.theme.sm}px) {
     margin: 0;
     padding-top: 10px;
     height: auto;
   }
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${(props) => props.theme.mobile}px) {
     padding-right: 10px;
     margin-bottom: 5px;
   }

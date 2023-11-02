@@ -28,7 +28,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
   const rowIds = style.tableModel.rowIds;
 
   return filterOutUndefined(
-    rowIds.map(rowId => {
+    rowIds.map((rowId) => {
       const longitude = longitudes[rowId];
       const latitude = latitudes[rowId];
       if (longitude === null || latitude === null) {
@@ -91,7 +91,7 @@ export function getRowValues(
 ): JsonObject {
   const result: JsonObject = {};
 
-  tableColumns.forEach(column => {
+  tableColumns.forEach((column) => {
     result[column.name] = column.valueFunctionForType(index);
   });
 

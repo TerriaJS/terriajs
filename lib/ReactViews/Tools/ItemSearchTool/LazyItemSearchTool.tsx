@@ -13,7 +13,7 @@ const ItemSearchTool = React.lazy(() => import("./ItemSearchTool"));
 /**
  * Lazily loads the item search tool while showing a the search window and an animated spinner.
  */
-const LazyItemSearchTool: React.FC<PropsType> = props => {
+const LazyItemSearchTool: React.FC<PropsType> = (props) => {
   const { viewState, item } = props;
   const itemName = CatalogMemberMixin.isMixedInto(item) ? item.name : "Item";
   const [t] = useTranslation();

@@ -3,8 +3,8 @@
 
 var formatNumberForLocale = require("../../lib/Core/formatNumberForLocale");
 
-describe("formatNumberForLocale", function() {
-  describe("with Intl", function() {
+describe("formatNumberForLocale", function () {
+  describe("with Intl", function () {
     var separator = ",";
     var decimalPoint = ".";
     if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -12,21 +12,21 @@ describe("formatNumberForLocale", function() {
       decimalPoint = Intl.NumberFormat().format(0.5)[1];
     }
 
-    it("returns strings for small integers", function() {
+    it("returns strings for small integers", function () {
       expect(formatNumberForLocale(0)).toBe("0");
       expect(formatNumberForLocale(1)).toBe("1");
       expect(formatNumberForLocale(123)).toBe("123");
       expect(formatNumberForLocale(-10)).toBe("-10");
     });
 
-    it("handles non-numeric input", function() {
+    it("handles non-numeric input", function () {
       expect(formatNumberForLocale(null)).toBe("");
       expect(formatNumberForLocale(undefined)).toBe("");
       expect(formatNumberForLocale("NA")).toBe("NA");
       expect(formatNumberForLocale("-")).toBe("-");
     });
 
-    it("does not truncate decimals or group 000s by default", function() {
+    it("does not truncate decimals or group 000s by default", function () {
       expect(formatNumberForLocale(6789123.4567891)).toBe(
         "6789123" + decimalPoint + "4567891"
       );
@@ -35,7 +35,7 @@ describe("formatNumberForLocale", function() {
       );
     });
 
-    it("maximumFractionDigits works with rounding", function() {
+    it("maximumFractionDigits works with rounding", function () {
       expect(formatNumberForLocale(-1.66, { maximumFractionDigits: 0 })).toBe(
         "-2"
       );
@@ -53,7 +53,7 @@ describe("formatNumberForLocale", function() {
       ).toContain("-10");
     });
 
-    it("minimumFractionDigits works", function() {
+    it("minimumFractionDigits works", function () {
       expect(formatNumberForLocale(3, { minimumFractionDigits: 2 })).toBe(
         "3" + decimalPoint + "00"
       );
@@ -74,7 +74,7 @@ describe("formatNumberForLocale", function() {
       ).toContain("-10.0"); // Accept -10.0 or -10.00 (but not 10).
     });
 
-    it("useGrouping works", function() {
+    it("useGrouping works", function () {
       expect(formatNumberForLocale(-6789123.4, { useGrouping: true })).toBe(
         "-6" + separator + "789" + separator + "123" + decimalPoint + "4"
       );
@@ -86,7 +86,7 @@ describe("formatNumberForLocale", function() {
       ).toBe("-6" + separator + "789" + separator + "123" + decimalPoint + "4");
     });
 
-    it("style percent works", function() {
+    it("style percent works", function () {
       expect(formatNumberForLocale(0.934, { style: "percent" })).toBe(
         "93" + decimalPoint + "4%"
       );
@@ -105,10 +105,10 @@ describe("formatNumberForLocale", function() {
     });
   });
 
-  describe("without Intl", function() {
+  describe("without Intl", function () {
     var realIntl;
 
-    beforeEach(function() {
+    beforeEach(function () {
       if (typeof Intl === "object") {
         realIntl = Intl;
         // eslint-disable-next-line no-global-assign
@@ -116,7 +116,7 @@ describe("formatNumberForLocale", function() {
       }
     });
 
-    afterEach(function() {
+    afterEach(function () {
       if (realIntl) {
         // eslint-disable-next-line no-global-assign
         Intl = realIntl;
@@ -125,26 +125,26 @@ describe("formatNumberForLocale", function() {
 
     var separator = ",";
 
-    it("returns strings for small integers", function() {
+    it("returns strings for small integers", function () {
       expect(formatNumberForLocale(0)).toBe("0");
       expect(formatNumberForLocale(1)).toBe("1");
       expect(formatNumberForLocale(123)).toBe("123");
       expect(formatNumberForLocale(-10)).toBe("-10");
     });
 
-    it("handles non-numeric input", function() {
+    it("handles non-numeric input", function () {
       expect(formatNumberForLocale(null)).toBe("");
       expect(formatNumberForLocale(undefined)).toBe("");
       expect(formatNumberForLocale("NA")).toBe("NA");
       expect(formatNumberForLocale("-")).toBe("-");
     });
 
-    it("does not truncate decimals or group 000s by default", function() {
+    it("does not truncate decimals or group 000s by default", function () {
       expect(formatNumberForLocale(6789123.4567891)).toBe("6789123.4567891");
       expect(formatNumberForLocale(-6789123.4567891)).toBe("-6789123.4567891");
     });
 
-    it("maximumFractionDigits works with rounding", function() {
+    it("maximumFractionDigits works with rounding", function () {
       expect(
         formatNumberForLocale(-6789123.45678901, { maximumFractionDigits: 2 })
       ).toBe("-6789123.46");
@@ -159,7 +159,7 @@ describe("formatNumberForLocale", function() {
       ).toContain("-10");
     });
 
-    it("useGrouping works", function() {
+    it("useGrouping works", function () {
       expect(formatNumberForLocale(-6789123.4, { useGrouping: true })).toBe(
         "-6" + separator + "789" + separator + "123.4"
       );
@@ -171,7 +171,7 @@ describe("formatNumberForLocale", function() {
       ).toBe("-6" + separator + "789" + separator + "123.4");
     });
 
-    it("style percent works", function() {
+    it("style percent works", function () {
       expect(formatNumberForLocale(0.934, { style: "percent" })).toBe("93.4%");
       expect(formatNumberForLocale(1.555555, { style: "percent" })).toBe(
         "155.5555%"

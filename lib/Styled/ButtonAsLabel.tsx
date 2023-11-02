@@ -11,13 +11,13 @@ const ButtonAsLabel = styled(Box).attrs({
   styledMinHeight: "32px"
 })<IButtonAsLabelProps>`
   border-radius: 0 16px 16px 0;
-  ${props =>
+  ${(props) =>
     props.light &&
     `
       background: ${props.theme.textLight};
       color: ${props.theme.textDark};
     `}
-  ${props =>
+  ${(props) =>
     !props.light &&
     `
       background: ${props.theme.textBlack};

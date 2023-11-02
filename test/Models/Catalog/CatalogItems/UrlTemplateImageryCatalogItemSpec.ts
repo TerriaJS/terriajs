@@ -10,22 +10,22 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("UrlTemplateImageryCatalogItem", function() {
+describe("UrlTemplateImageryCatalogItem", function () {
   let item: UrlTemplateImageryCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new UrlTemplateImageryCatalogItem("test", new Terria());
     runInAction(() => item.setTrait("definition", "url", "some-url"));
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(UrlTemplateImageryCatalogItem.type).toBe(
       UrlTemplateImageryCatalogItem.type
     );
   });
 
-  describe("when url has been set", function() {
-    it("should create an imageryProvider with correct properties", function() {
+  describe("when url has been set", function () {
+    it("should create an imageryProvider with correct properties", function () {
       expect(
         item.imageryProvider instanceof UrlTemplateImageryProvider
       ).toBeTruthy();
@@ -67,8 +67,8 @@ describe("UrlTemplateImageryCatalogItem", function() {
       }
     });
 
-    describe("mapItem", function() {
-      it("has the correct `alpha` value", function() {
+    describe("mapItem", function () {
+      it("has the correct `alpha` value", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "opacity", 0.42));
@@ -77,7 +77,7 @@ describe("UrlTemplateImageryCatalogItem", function() {
         expect(item.mapItems[0].alpha).toBe(0.9);
       });
 
-      it("has the correct `show` value", function() {
+      it("has the correct `show` value", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "show", false));
@@ -86,7 +86,7 @@ describe("UrlTemplateImageryCatalogItem", function() {
         expect(item.mapItems[0].show).toBe(true);
       });
 
-      it("has the correct `clippingRectangle` value", function() {
+      it("has the correct `clippingRectangle` value", function () {
         const rectangleDegrees = {
           west: 10,
           south: -15,

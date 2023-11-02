@@ -6,24 +6,24 @@ import Icon from "../../Styled/Icon";
 import { RawButton } from "../../Styled/Button";
 
 const StyledCloseButton = styled(RawButton)`
-  ${p => !p.noAbsolute && `position: absolute;`}
+  ${(p) => !p.noAbsolute && `position: absolute;`}
   // width: 20px;
   // height: 20px;
   width: 14px;
   height: 14px;
-  ${p =>
+  ${(p) =>
     p.topRight &&
     `
     top: 15px;
     right:15px;
     `}
   svg {
-    // fill: ${p => p.color || p.theme.darkWithOverlay};
-    fill: ${p => p.color};
+    // fill: ${(p) => p.color || p.theme.darkWithOverlay};
+    fill: ${(p) => p.color};
   }
 `;
 
-const CloseButton = props => {
+const CloseButton = (props) => {
   return (
     <StyledCloseButton {...props}>
       <Icon glyph={Icon.GLYPHS.closeLight} />

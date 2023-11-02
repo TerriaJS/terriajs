@@ -17,7 +17,7 @@ interface GetDataTypes {
   localDataType: LocalDataType[];
 }
 
-export default function(): GetDataTypes {
+export default function (): GetDataTypes {
   return {
     remoteDataType: [
       {

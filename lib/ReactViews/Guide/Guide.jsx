@@ -42,7 +42,7 @@ import {
   GuideAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 
-const GuideProgress = props => {
+const GuideProgress = (props) => {
   // doesn't work for IE11
   // const countArray = Array.from(Array(props.maxStepCount).keys()).map(e => e++);
 
@@ -53,7 +53,7 @@ const GuideProgress = props => {
   const currentStep = props.currentStep;
   return (
     <div className={Styles.indicatorWrapper}>
-      {countArray.map(count => {
+      {countArray.map((count) => {
         return (
           <div
             key={count}
@@ -136,7 +136,7 @@ export const GuidePure = ({
   };
 
   const { t } = useTranslation();
-  const handleSetShowGuide = bool => {
+  const handleSetShowGuide = (bool) => {
     analyticsSetShowGuide(bool, currentGuideIndex, guideKey, terria, {
       setCalledFromInside: true
     });

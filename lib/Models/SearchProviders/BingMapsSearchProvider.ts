@@ -87,7 +87,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     const promise: Promise<any> = loadJsonp(searchQuery, "jsonp");
 
     return promise
-      .then(result => {
+      .then((result) => {
         if (searchResults.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
@@ -191,7 +191,7 @@ function createZoomToFunction(model: BingMapsSearchProvider, resource: any) {
   const [south, west, north, east] = resource.bbox;
   const rectangle = Rectangle.fromDegrees(west, south, east, north);
 
-  return function() {
+  return function () {
     const terria = model.terria;
     terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds);
   };

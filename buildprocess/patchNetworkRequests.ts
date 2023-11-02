@@ -20,7 +20,10 @@ export default function patchNetworkRequests(
 
   // Adapted from https://stackoverflow.com/a/43875390
   const open = window.XMLHttpRequest.prototype.open;
-  window.XMLHttpRequest.prototype.open = function(method: string, url: string) {
+  window.XMLHttpRequest.prototype.open = function (
+    method: string,
+    url: string
+  ) {
     open.apply(this, arguments as any);
 
     console.log("\x1b[35m%s\x1b[0m", `Making XHR: ${url}`);
@@ -32,7 +35,7 @@ export default function patchNetworkRequests(
     }
 
     if (logFailedRequest) {
-      this.onloadend = req => {
+      this.onloadend = (req) => {
         if (this.status < 200 || this.status >= 300) {
           console.log("\n\n\n");
           console.log(this.responseURL);

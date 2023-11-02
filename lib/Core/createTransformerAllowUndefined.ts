@@ -30,7 +30,7 @@ export default function createTransformerAllowUndefined<A, B>(
   const unwrapOnCleanup =
     onCleanup == undefined
       ? undefined
-      : function(
+      : function (
           resultObject: B | undefined,
           sourceObject?: A | UndefinedObject
         ): void {

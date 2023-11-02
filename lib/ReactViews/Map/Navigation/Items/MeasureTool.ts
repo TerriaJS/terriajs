@@ -193,12 +193,10 @@ export default class MeasureTool extends MapNavigationItemController {
   getGeodesicDistance(pointOne: Cartesian3, pointTwo: Cartesian3) {
     // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
     // curvature. This is not what we want.
-    const pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pointOne
-    );
-    const lastPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pointTwo
-    );
+    const pickedPointCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pointOne);
+    const lastPointCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pointTwo);
     const geodesic = new EllipsoidGeodesic(
       pickedPointCartographic,
       lastPointCartographic

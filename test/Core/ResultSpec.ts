@@ -1,10 +1,10 @@
 import TerriaError from "../../lib/Core/TerriaError";
 import Result from "../../lib/Core/Result";
 
-describe("Result", function() {
-  beforeEach(function() {});
+describe("Result", function () {
+  beforeEach(function () {});
 
-  it("Can create Result without error", function() {
+  it("Can create Result without error", function () {
     const result = new Result("what");
 
     expect(result.ignoreError()).toBe("what");
@@ -36,7 +36,7 @@ describe("Result", function() {
     expect(caughtError2).toBeFalsy();
   });
 
-  it("Can create Result with error", function() {
+  it("Can create Result with error", function () {
     const result = new Result(
       "what",
       new TerriaError({ message: "some error" })

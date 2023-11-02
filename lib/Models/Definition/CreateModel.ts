@@ -181,7 +181,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       // This method `isRemoval` and `idProperty="index"` into account.
       else {
         let maxIndex = -1;
-        this.strata.forEach(s =>
+        this.strata.forEach((s) =>
           (s[traitId] as Array<unknown> | undefined)?.forEach(
             (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
           )
@@ -211,7 +211,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         ...model.knownContainerUniqueIds,
         ...flatten(
           filterOutUndefined(
-            model.knownContainerUniqueIds.map(parentId => {
+            model.knownContainerUniqueIds.map((parentId) => {
               const parent = this.terria.getModelById(BaseModel, parentId);
               if (parent) {
                 return findContainers(parent);

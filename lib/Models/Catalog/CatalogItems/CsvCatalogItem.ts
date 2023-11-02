@@ -32,7 +32,8 @@ export default class CsvCatalogItem
       UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
     )
   )
-  implements HasLocalData {
+  implements HasLocalData
+{
   static get type() {
     return "csv";
   }
@@ -134,7 +135,7 @@ export default class CsvCatalogItem
       proxyCatalogItemUrl(this, this.refreshUrl),
       true,
       this.ignoreRowsStartingWithComment
-    ).then(dataColumnMajor => {
+    ).then((dataColumnMajor) => {
       runInAction(() => {
         if (this.polling.shouldReplaceData) {
           this.dataColumnMajor = dataColumnMajor;

@@ -1,8 +1,8 @@
 import NumericIndex from "../../../lib/Models/ItemSearchProviders/NumericIndex";
 
-describe("NumericIndex", function() {
-  describe("search", function() {
-    it("returns all matching IDs when the search query is within the index range", async function() {
+describe("NumericIndex", function () {
+  describe("search", function () {
+    it("returns all matching IDs when the search query is within the index range", async function () {
       const index = new NumericIndex("", { min: 0, max: 10 });
       index.idValuePairs = Promise.resolve([
         { dataRowId: 0, value: 0 },
@@ -20,7 +20,7 @@ describe("NumericIndex", function() {
       expect([...ids]).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
-    it("returns all matching IDs when the end value of the search query is outside the index range", async function() {
+    it("returns all matching IDs when the end value of the search query is outside the index range", async function () {
       const index = new NumericIndex("", { min: 0, max: 10 });
       index.idValuePairs = Promise.resolve([
         { dataRowId: 0, value: 0 },
@@ -38,7 +38,7 @@ describe("NumericIndex", function() {
       expect([...ids]).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     });
 
-    it("returns all matching IDs when the start and end values are the same", async function() {
+    it("returns all matching IDs when the start and end values are the same", async function () {
       const index = new NumericIndex("", { min: 0, max: 10 });
       index.idValuePairs = Promise.resolve([
         { dataRowId: 0, value: 0 },
@@ -56,7 +56,7 @@ describe("NumericIndex", function() {
       expect([...ids]).toEqual([3, 4, 5, 6, 7]);
     });
 
-    it("returns an empty set when the start and end values are outside the range of the index", async function() {
+    it("returns an empty set when the start and end values are outside the range of the index", async function () {
       const index = new NumericIndex("", { min: 0, max: 10 });
       index.idValuePairs = Promise.resolve([
         { dataRowId: 0, value: 0 },

@@ -43,17 +43,14 @@ function buildBaseShareUrl(
   if (terria.developmentEnv) {
     uri.addSearch(toJS(terria.userProperties));
   } else {
-    userPropsToShare.forEach(key =>
+    userPropsToShare.forEach((key) =>
       uri.addSearch({ [key]: terria.userProperties.get(key) })
     );
   }
 
   uri.addSearch(hashParams);
 
-  return uri
-    .fragment(uri.query())
-    .query("")
-    .toString();
+  return uri.fragment(uri.query()).query("").toString();
 }
 
 /**
@@ -150,17 +147,17 @@ function addStratum(
   initSource.stratum = stratumId;
   initSource.models = {};
 
-  terria.modelValues.forEach(model => {
+  terria.modelValues.forEach((model) => {
     if (model.uniqueId === GlobeOrMap.featureHighlightID) return;
     const force = terria.workbench.contains(model);
     addModelStratum(terria, model, stratumId, force, initSource);
   });
 
   // Go through knownContainerUniqueIds and make sure they exist in models
-  Object.keys(initSource.models).forEach(modelId => {
+  Object.keys(initSource.models).forEach((modelId) => {
     const model = terria.getModelById(BaseModel, modelId);
     if (model)
-      model.completeKnownContainerUniqueIds.forEach(containerId => {
+      model.completeKnownContainerUniqueIds.forEach((containerId) => {
         if (!initSource.models?.[containerId]) {
           const containerModel = terria.getModelById(BaseModel, containerId);
           if (containerModel)
@@ -238,7 +235,7 @@ function addModelStratum(
 
   if (Array.isArray(members)) {
     models[id].members = uniq(
-      models[id].members?.filter(member =>
+      models[id].members?.filter((member) =>
         typeof member === "string" ? isShareable(terria)(member) : false
       )
     );
@@ -253,7 +250,7 @@ function addModelStratum(
  * @return {Function} The function which determines whether a modelId can be shared
  */
 export function isShareable(terria: Terria) {
-  return function(modelId: string) {
+  return function (modelId: string) {
     const model = terria.getModelById(BaseModel, modelId);
 
     // If this is a Reference, then use the model.target, otherwise use the model
@@ -371,8 +368,8 @@ function addFeaturePicking(terria: Terria, initSource: InitSourceData) {
 
     // Remember the ids of vector features only, the raster ones we can reconstruct from providerCoords.
     pickedFeatures.entities = terria.pickedFeatures.features
-      .filter(feature => !isDefined(feature.imageryLayer))
-      .map(entity => {
+      .filter((feature) => !isDefined(feature.imageryLayer))
+      .map((entity) => {
         return {
           name: entity.name,
           hash: hashEntity(entity, terria.timelineClock)

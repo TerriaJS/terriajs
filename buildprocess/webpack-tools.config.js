@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const { IgnorePlugin } = require("webpack");
 
-module.exports = function() {
+module.exports = function () {
   const config = {
     mode: "development",
     entry: {

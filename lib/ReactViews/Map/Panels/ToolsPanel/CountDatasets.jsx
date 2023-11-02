@@ -95,7 +95,7 @@ const CountDatasets = createReactClass({
     }
 
     function recurseAndUpdateTotals(item, stats, childStats, path) {
-      const promise = counter(item, childStats, path).then(function() {
+      const promise = counter(item, childStats, path).then(function () {
         stats.groups += childStats.groups + 1;
         stats.items += childStats.items;
         stats.messages.push.apply(stats.messages, childStats.messages);
@@ -117,7 +117,7 @@ const CountDatasets = createReactClass({
     const root = this.props.terria.catalog.group;
     const that = this;
 
-    counter(root, totals, []).then(function() {
+    counter(root, totals, []).then(function () {
       let info = t("countDatasets.totals", {
         items: totals.items,
         groups: totals.groups

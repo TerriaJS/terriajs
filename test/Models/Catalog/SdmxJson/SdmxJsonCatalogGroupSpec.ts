@@ -20,11 +20,11 @@ const dataflowRegion = JSON.stringify(
   require("../../../../wwwroot/test/SDMX-JSON/dataflow-region.json")
 );
 
-describe("SdmxCatalogGroup", function() {
+describe("SdmxCatalogGroup", function () {
   let terria: Terria;
   let sdmxGroup: SdmxCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest("http://www.example.com/agencyscheme/").andReturn({
       responseText: agencyScheme
@@ -45,22 +45,22 @@ describe("SdmxCatalogGroup", function() {
     sdmxGroup = new SdmxCatalogGroup("test", terria);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(sdmxGroup.type).toBe("sdmx-group");
   });
 
-  describe("after loading agency + category schemes", function() {
-    beforeEach(async function() {
+  describe("after loading agency + category schemes", function () {
+    beforeEach(async function () {
       runInAction(() => {
         sdmxGroup.setTrait("definition", "url", "http://www.example.com");
       });
     });
 
-    it("loadsNestedMembers", async function() {
+    it("loadsNestedMembers", async function () {
       await sdmxGroup.loadMembers();
       const agency = sdmxGroup.memberModels;
       expect(agency.length).toEqual(2);
@@ -78,7 +78,7 @@ describe("SdmxCatalogGroup", function() {
       expect(dataflowRegion.name).toBe("Inflation rates");
     });
 
-    it("loadsDataflow-timeseries", async function() {
+    it("loadsDataflow-timeseries", async function () {
       await sdmxGroup.loadMembers();
       const agency = sdmxGroup.memberModels;
       const categoryScheme = agency[0] as CatalogGroup;
@@ -91,13 +91,13 @@ describe("SdmxCatalogGroup", function() {
         "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
       );
       expect(
-        dataflowNoRegion.columns.filter(col => col.type === "region").length
+        dataflowNoRegion.columns.filter((col) => col.type === "region").length
       ).toBe(0);
       expect(
-        dataflowNoRegion.columns.filter(col => col.type === "time").length
+        dataflowNoRegion.columns.filter((col) => col.type === "time").length
       ).toBe(1);
       expect(
-        dataflowNoRegion.columns.filter(col => col.type === "time")[0]?.name
+        dataflowNoRegion.columns.filter((col) => col.type === "time")[0]?.name
       ).toBe("TIME_PERIOD");
       expect(dataflowNoRegion.activeStyle).toBe("OBS_VALUE");
 
@@ -111,7 +111,7 @@ describe("SdmxCatalogGroup", function() {
       expect(dataflowNoRegion.columns[0].name).toBe("OBS_VALUE");
     });
 
-    it("loadsDataflow-region", async function() {
+    it("loadsDataflow-region", async function () {
       await sdmxGroup.loadMembers();
       const agency = sdmxGroup.memberModels;
       const categoryScheme = agency[0] as CatalogGroup;
@@ -125,13 +125,13 @@ describe("SdmxCatalogGroup", function() {
       );
       // No concept override - so expect 0 region dimensions
       expect(
-        dataflowRegion.columns.filter(col => col.type === "region").length
+        dataflowRegion.columns.filter((col) => col.type === "region").length
       ).toBe(0);
       expect(
-        dataflowRegion.columns.filter(col => col.type === "time").length
+        dataflowRegion.columns.filter((col) => col.type === "time").length
       ).toBe(1);
       expect(
-        dataflowRegion.columns.filter(col => col.type === "time")[0]?.name
+        dataflowRegion.columns.filter((col) => col.type === "time")[0]?.name
       ).toBe("TIME_PERIOD");
       expect(dataflowRegion.activeStyle).toBe("OBS_VALUE");
 

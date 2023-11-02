@@ -11,20 +11,20 @@ import AugmentedVirtuality from "../../lib/Models/AugmentedVirtuality";
 
 var describeIfSupportsWebGL = supportsWebGL() ? describe : xdescribe;
 
-describe("AugmentedVirtuality", function() {
+describe("AugmentedVirtuality", function () {
   let terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.addMatchers(customMatchers);
   });
 
-  it("check default values", function() {
+  it("check default values", function () {
     var av = new AugmentedVirtuality(terria);
 
     expect(av.enabled).toEqual(false);
@@ -34,7 +34,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.hoverLevel).toEqual(2);
   });
 
-  it("check changing enabled", function() {
+  it("check changing enabled", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Verify inital state for test sanity.
@@ -48,7 +48,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.enabled).toEqual(false);
   });
 
-  it("check toggle enabled", function() {
+  it("check toggle enabled", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Verify inital state for test sanity.
@@ -62,7 +62,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.enabled).toEqual(false);
   });
 
-  it("check manual align", function() {
+  it("check manual align", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Set inital state for test sanity.
@@ -95,7 +95,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.manualAlignment).toEqual(false);
   });
 
-  it("check toggle manual align", function() {
+  it("check toggle manual align", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Set inital state for test sanity.
@@ -112,7 +112,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.manualAlignment).toEqual(false);
   });
 
-  it("check updaing fps", function() {
+  it("check updaing fps", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Set inital state for test sanity.
@@ -131,7 +131,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.maximumUpdatesPerSecond).toEqual(7.5);
   });
 
-  it("check toggle hover level state change", function() {
+  it("check toggle hover level state change", function () {
     var av = new AugmentedVirtuality(terria);
 
     // Set inital state for test sanity.
@@ -149,7 +149,7 @@ describe("AugmentedVirtuality", function() {
     expect(av.hoverLevel).toEqual(2);
   });
 
-  it("check similar radians", function() {
+  it("check similar radians", function () {
     expect(similarRadians(0, 0, 0.001)).toBeTruthy();
     expect(similarRadians(0, 0.000999, 0.001)).toBeTruthy();
     expect(similarRadians(0, 0.001, 0.001)).toBeTruthy();
@@ -177,7 +177,7 @@ describe("AugmentedVirtuality", function() {
     expect(similarRadians(0, 2 * Math.PI + -0.001001, 0.001)).toBeFalsy();
   });
 
-  it("check custom matcher", function() {
+  it("check custom matcher", function () {
     // Check when they are the same.
     expect(bod(0, 0, 0)).closeOrientation(bod(0, 0, 0));
     expect(bod(90, 0, 0)).closeOrientation(bod(90, 0, 0));
@@ -218,7 +218,7 @@ describe("AugmentedVirtuality", function() {
     }).not.closeOrientation({ orientation: { roll: 0, pitch: 0 } });
   });
 
-  it("check device to terria orientation", function() {
+  it("check device to terria orientation", function () {
     // The test cases were generated using a seemingly working implementation since the test matcher is based on
     // values rather then using the true orientation matching in the device frame of reference.
     var av = new AugmentedVirtuality(terria);
@@ -564,13 +564,13 @@ describe("AugmentedVirtuality", function() {
 
 describeIfSupportsWebGL(
   "AugmentedVirtuality tests that require WebGL",
-  function() {
+  function () {
     var container;
     var widget;
     var cesium;
     var terria;
 
-    beforeEach(function() {
+    beforeEach(function () {
       container = document.createElement("div");
       document.body.appendChild(container);
 
@@ -582,14 +582,14 @@ describeIfSupportsWebGL(
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       if (widget && !widget.isDestroyed()) {
         widget = widget.destroy();
       }
       document.body.removeChild(container);
     });
 
-    it("check manual align set", function() {
+    it("check manual align set", function () {
       cesium = new Cesium(terria, widget);
       terria.currentViewer = cesium;
       terria.cesium = cesium;
@@ -642,9 +642,9 @@ function bod(roll, pitch, heading) {
 //       the tests can remain the same (this may need to be aware of the frame of reference...which might make this
 //       option less practical).
 var customMatchers = {
-  closeOrientation: function(util, customEqualityTesters) {
+  closeOrientation: function (util, customEqualityTesters) {
     return {
-      compare: function(actual, expected) {
+      compare: function (actual, expected) {
         var result = {};
         result.pass = true;
         result.message = "";

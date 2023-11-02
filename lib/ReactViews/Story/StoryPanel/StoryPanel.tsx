@@ -67,7 +67,7 @@ export async function activateStory(scene: Story, terria: Terria) {
     }
   }
 
-  terria.workbench.items.forEach(item => {
+  terria.workbench.items.forEach((item) => {
     terria.analytics?.logEvent(
       Category.story,
       StoryAction.datasetView,
@@ -233,11 +233,11 @@ class StoryPanel extends React.Component<Props, State> {
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
               ${this.props.viewState.isMapFullScreen &&
-                `
+              `
                 transition-delay: 0.5s;
               `}
               ${!this.props.viewState.isMapFullScreen &&
-                `
+              `
                 padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
                 padding-right: 50px;
               `}

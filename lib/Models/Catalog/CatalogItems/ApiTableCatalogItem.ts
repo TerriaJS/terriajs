@@ -83,15 +83,17 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected loadDataFromApis() {
-    const apisWithUrl = this.apis.filter(api => api.url);
-    const apiUrls = apisWithUrl.map(api => proxyCatalogItemUrl(this, api.url!));
+    const apisWithUrl = this.apis.filter((api) => api.url);
+    const apiUrls = apisWithUrl.map((api) =>
+      proxyCatalogItemUrl(this, api.url!)
+    );
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
         let data = await loadJson(
           apiUrls[idx],
           undefined,
           api.requestData
-            ? saveModelToJson((api.requestData as unknown) as BaseModel)
+            ? saveModelToJson(api.requestData as unknown as BaseModel)
             : undefined,
           api.postRequestDataAsFormData
         );
@@ -107,7 +109,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       runInAction(() => {
         const columnMajorData: Map<string, any> = new Map();
         values
-          .filter(val => val.api.kind === "COLUMN_MAJOR") // column major rows only
+          .filter((val) => val.api.kind === "COLUMN_MAJOR") // column major rows only
           .map((val, i) => {
             // add the column name to each column
             (val.data as any)["TERRIA_columnName"] =
@@ -116,10 +118,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
           })
           .flat()
           // make row id/data pairs for columnMajorData map
-          .map(data => Object.entries(data))
+          .map((data) => Object.entries(data))
           .flat()
           // merge rows with the same id
-          .forEach(rowPart => {
+          .forEach((rowPart) => {
             const id = rowPart[0];
             const value: any = rowPart[1];
             const row: any = {};
@@ -141,19 +143,19 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
         // Make map of ids to values that are constant for that id
         const perIdData: Map<string, any> = new Map(
           values
-            .filter(val => val.api.kind === "PER_ID") // per id only
-            .map(val => val.data) // throw away api, keep data
+            .filter((val) => val.api.kind === "PER_ID") // per id only
+            .map((val) => val.data) // throw away api, keep data
             .reduce((curr, prev) => curr.concat(prev), []) // flatten
             // make id/data pair for perIdData map
-            .map(data => [data[this.idKey!], data])
+            .map((data) => [data[this.idKey!], data])
         );
 
         // Merge PER_ID data with *all* PER_ROW data (this may result in the same PER_ID data row being added to multiple PER_ROW data row)
         const perRowData = values
-          .filter(val => val.api.kind === "PER_ROW")
-          .map(val => val.data)
+          .filter((val) => val.api.kind === "PER_ROW")
+          .map((val) => val.data)
           .reduce((curr, prev) => curr.concat(prev), [])
-          .map(row =>
+          .map((row) =>
             Object.assign(
               row,
               isDefined(row[this.idKey!]) ? perIdData.get(row[this.idKey!]) : {}
@@ -166,7 +168,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected makeTableColumns(addHeaders: boolean) {
-    return this.columns.map(col => (addHeaders ? [col.name ?? ""] : []));
+    return this.columns.map((col) => (addHeaders ? [col.name ?? ""] : []));
   }
 
   protected apiResponseToTable() {
@@ -177,7 +179,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       return columnMajorTable;
     }
     // Fill in column values from the API response
-    this.apiResponses.forEach(response => {
+    this.apiResponses.forEach((response) => {
       this.columns.forEach((col, mappingIdx) => {
         if (!isDefined(col.name)) return;
         // Append the new value to the correct column
@@ -234,7 +236,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const commonQueryParameters = useUpdateParams
       ? this.updateQueryParameters
       : this.queryParameters;
-    commonQueryParameters.forEach(query => {
+    commonQueryParameters.forEach((query) => {
       uri.addQuery(query.name!, substituteDateTimesInQueryParam(query.value!));
     });
 
@@ -243,7 +245,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const specificQueryParameters = useUpdateParams
       ? api.updateQueryParameters
       : api.queryParameters;
-    specificQueryParameters.forEach(query => {
+    specificQueryParameters.forEach((query) => {
       uri.addQuery(query.name!, substituteDateTimesInQueryParam(query.value!));
     });
 

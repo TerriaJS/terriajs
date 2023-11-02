@@ -7,11 +7,11 @@ import MapIconButton from "../../lib/ReactViews/MapIconButton/MapIconButton";
 
 const TestComponent = () => <div>Test hello</div>;
 
-describe("ToolButton", function() {
+describe("ToolButton", function () {
   let viewState: ViewState;
   let rendered: TestRenderer.ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     const terria = new Terria();
     viewState = new ViewState({
       terria,

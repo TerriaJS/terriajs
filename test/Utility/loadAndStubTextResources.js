@@ -5,8 +5,8 @@ var loadText = require("../../lib/Core/loadText");
 function loadTextResources(resources) {
   var result = {};
   return Promise.all(
-    resources.map(function(resource) {
-      return loadText(resource).then(function(text) {
+    resources.map(function (resource) {
+      return loadText(resource).then(function (text) {
         result[resource] = text;
       });
     })
@@ -14,10 +14,10 @@ function loadTextResources(resources) {
 }
 
 function loadAndStubTextResources(done, resources) {
-  return loadTextResources(resources).then(function(loadedResources) {
+  return loadTextResources(resources).then(function (loadedResources) {
     jasmine.Ajax.install();
 
-    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function(stub, xhr) {
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function (stub, xhr) {
       done.fail("Unhandled request to URL: " + xhr.url);
     });
 

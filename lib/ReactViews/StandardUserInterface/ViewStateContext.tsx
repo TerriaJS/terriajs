@@ -20,17 +20,20 @@ export const useViewState = () => {
   return viewState;
 };
 
-export const withViewState = <P extends WithViewState>(
-  Component: React.ComponentType<P>
-): React.FC<Omit<P, "viewState">> => props => (
-  <ViewStateContext.Consumer>
-    {viewState => {
-      if (!viewState)
-        throw new TerriaError({ message: "ViewState is not defined!" });
-      return <Component {...(props as P)} viewState={viewState} />;
-    }}
-  </ViewStateContext.Consumer>
-);
+export const withViewState =
+  <P extends WithViewState>(
+    Component: React.ComponentType<P>
+  ): React.FC<Omit<P, "viewState">> =>
+  (props) =>
+    (
+      <ViewStateContext.Consumer>
+        {(viewState) => {
+          if (!viewState)
+            throw new TerriaError({ message: "ViewState is not defined!" });
+          return <Component {...(props as P)} viewState={viewState} />;
+        }}
+      </ViewStateContext.Consumer>
+    );
 
 export interface WithViewState {
   viewState: ViewState;

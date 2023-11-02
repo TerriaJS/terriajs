@@ -31,7 +31,7 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
         })
       );
     }
-    searchProviders?.forEach(searchProvider => {
+    searchProviders?.forEach((searchProvider) => {
       upsertSearchProviderFromJson(
         SearchProviderFactory,
         this.terria,
@@ -72,7 +72,7 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
   }
 
   get locationSearchProvidersArray() {
-    return [...this.locationSearchProviders.entries()].map(function(entry) {
+    return [...this.locationSearchProviders.entries()].map(function (entry) {
       return entry[1];
     });
   }

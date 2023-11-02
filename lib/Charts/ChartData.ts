@@ -169,12 +169,12 @@ export default class ChartData {
     }
     return {
       x: [
-        d3ArrayMin(points, point => point.x)!,
-        d3ArrayMax(points, point => point.x)!
+        d3ArrayMin(points, (point) => point.x)!,
+        d3ArrayMax(points, (point) => point.x)!
       ],
       y: [
-        d3ArrayMin(points, point => point.y)!,
-        d3ArrayMax(points, point => point.y)!
+        d3ArrayMin(points, (point) => point.y)!,
+        d3ArrayMax(points, (point) => point.y)!
       ]
     };
   }

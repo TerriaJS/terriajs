@@ -8,7 +8,8 @@ import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
  */
 export default class SelectAPolygonParameter
   extends FunctionParameter<JsonObject[]>
-  implements GeoJsonFunctionParameter {
+  implements GeoJsonFunctionParameter
+{
   readonly type = "polygon";
 
   static formatValueForUrl(value: Feature[]) {
@@ -16,7 +17,7 @@ export default class SelectAPolygonParameter
       return undefined;
     }
 
-    const featureList = value.map(function(featureData: Feature) {
+    const featureList = value.map(function (featureData: Feature) {
       return {
         type: "Feature",
         geometry: featureData.geometry
@@ -30,7 +31,7 @@ export default class SelectAPolygonParameter
   }
 
   static getGeoJsonFeature(value: any): Feature<Polygon>[] {
-    return value.map(function(featureData: Feature) {
+    return value.map(function (featureData: Feature) {
       return {
         type: "Feature",
         geometry: featureData.geometry,

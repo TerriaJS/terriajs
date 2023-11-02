@@ -8,16 +8,16 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import CatalogItem from "../../../lib/Models/CatalogItem";
 
-describe("WorkbenchItem", function() {
+describe("WorkbenchItem", function () {
   let terria, viewState, item;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({ baseUrl: "./" });
     viewState = new ViewState({ terria });
     item = new CatalogItem(terria);
   });
 
-  it("should be wrapped with the sortable HOC as the first HOC", function() {
+  it("should be wrapped with the sortable HOC as the first HOC", function () {
     expect(Object.keys(sortable(WorkbenchItemRaw).propTypes)).toEqual(
       Object.keys(WorkbenchItem.propTypes)
     );
@@ -31,7 +31,7 @@ describe("WorkbenchItem", function() {
     expect(result.props.t).toBeUndefined();
   });
 
-  it("should render WorkbenchItemRaw with a given classname", function() {
+  it("should render WorkbenchItemRaw with a given classname", function () {
     const workbench = (
       <WorkbenchItemRaw
         terria={terria}

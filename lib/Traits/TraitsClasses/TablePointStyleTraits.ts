@@ -64,7 +64,8 @@ export class BinPointSymbolTraits extends mixTraits(
 
 export default class TablePointStyleTraits
   extends mixTraits(TableStyleMapTraits)
-  implements TableStyleMapModel<PointSymbolTraits> {
+  implements TableStyleMapModel<PointSymbolTraits>
+{
   @objectArrayTrait({
     name: "Enum Colors",
     description:

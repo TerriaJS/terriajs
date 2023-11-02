@@ -16,10 +16,10 @@ const Numbers = styled(Text)`
   height: 22px;
   line-height: 22px;
   border-radius: 50%;
-  background-color: ${props => props.theme.textDarker};
+  background-color: ${(props) => props.theme.textDarker};
 `;
 
-const renderOrderedList = function(contents) {
+const renderOrderedList = function (contents) {
   return (
     <For each="content" index="i" of={contents}>
       <Box key={i} paddedVertically>
@@ -91,7 +91,7 @@ export class StyledHtmlRaw extends React.Component {
                 </When>
                 <When condition={item.type === "ol"}>
                   {renderOrderedList(
-                    item.props.children.map(point => point.props.children)
+                    item.props.children.map((point) => point.props.children)
                   )}
                   <Spacing bottom={4} />
                 </When>

@@ -12,7 +12,7 @@ function getUrlForImageryTile(
 
   let tileUrl;
   try {
-    ImageryProvider.loadImage = function(
+    ImageryProvider.loadImage = function (
       _imageryProvider: ImageryProvider,
       url: string | Resource
     ) {

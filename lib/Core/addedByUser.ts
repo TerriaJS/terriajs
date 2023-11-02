@@ -25,7 +25,7 @@ export default function addedByUser(
     catalogMember.sourceReference !== undefined
       ? catalogMember.sourceReference
       : catalogMember;
-  return sourceReference.knownContainerUniqueIds.some(containerId => {
+  return sourceReference.knownContainerUniqueIds.some((containerId) => {
     return (
       containerId === USER_ADDED_CATEGORY_ID ||
       addedByUser(catalogMember.terria.getModelById(BaseModel, containerId), {

@@ -12,8 +12,10 @@ export type CartographicPoint = {
   height: number;
 };
 
-export default class PointParameter extends FunctionParameter<CartographicPoint>
-  implements GeoJsonFunctionParameter {
+export default class PointParameter
+  extends FunctionParameter<CartographicPoint>
+  implements GeoJsonFunctionParameter
+{
   static readonly type = "point";
   readonly type = "point";
 

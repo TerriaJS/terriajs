@@ -4,13 +4,13 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
-describe("getPath", function() {
+describe("getPath", function () {
   let terria: Terria;
   let item: WebMapServiceCatalogItem;
   let group1: CatalogGroup;
   let group2: CatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
 
     item = new WebMapServiceCatalogItem("A", terria);
@@ -25,13 +25,13 @@ describe("getPath", function() {
     terria.catalog.group.add(CommonStrata.definition, group2);
   });
 
-  it("returns correct path with default / separator", function() {
+  it("returns correct path with default / separator", function () {
     expect(getPath(group2)).toBe("G2");
     expect(getPath(group1)).toBe("G2/G1");
     expect(getPath(item)).toBe("G2/G1/A");
   });
 
-  it("returns correct path with custom separator", function() {
+  it("returns correct path with custom separator", function () {
     expect(getPath(group2, " -> ")).toBe("G2");
     expect(getPath(group1, " -> ")).toBe("G2 -> G1");
     expect(getPath(item, " -> ")).toBe("G2 -> G1 -> A");

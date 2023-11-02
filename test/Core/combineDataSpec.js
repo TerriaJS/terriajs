@@ -2,8 +2,8 @@
 
 var combineData = require("../../lib/Core/combineData");
 
-describe("combineData", function() {
-  it("works with one array", function() {
+describe("combineData", function () {
+  it("works with one array", function () {
     var data1 = [
       [1, 5],
       [3, 7],
@@ -14,7 +14,7 @@ describe("combineData", function() {
     expect(combined).toEqual(data1);
   });
 
-  it("works with two sorted numerical arrays", function() {
+  it("works with two sorted numerical arrays", function () {
     var data1 = [
       [1, 5],
       [3, 7],
@@ -40,7 +40,7 @@ describe("combineData", function() {
     expect(combined).toEqual(target);
   });
 
-  it("works with two unsorted numerical arrays", function() {
+  it("works with two unsorted numerical arrays", function () {
     var data1 = [
       [1, 5],
       [6, 10],
@@ -66,7 +66,7 @@ describe("combineData", function() {
     expect(combined).toEqual(target);
   });
 
-  it("works with two date arrays", function() {
+  it("works with two date arrays", function () {
     var data1 = [
       [new Date("2015-03-01"), 5],
       [new Date("2015-03-02"), 7],
@@ -86,7 +86,7 @@ describe("combineData", function() {
     expect(combined).toEqual(target);
   });
 
-  it("works with three sorted numerical arrays", function() {
+  it("works with three sorted numerical arrays", function () {
     var data1 = [
       [1, 5],
       [3, 7],

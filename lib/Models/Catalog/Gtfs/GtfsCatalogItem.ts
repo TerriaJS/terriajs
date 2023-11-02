@@ -154,9 +154,8 @@ export default class GtfsCatalogItem extends MappableMixin(
     this._dataSource.entities.suspendEvents();
 
     // Convert the GTFS protobuf into a more useful shape
-    const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
-      this.gtfsFeedEntities
-    );
+    const vehicleData: VehicleData[] =
+      this.convertManyFeedEntitiesToBillboardData(this.gtfsFeedEntities);
     for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
@@ -174,11 +173,12 @@ export default class GtfsCatalogItem extends MappableMixin(
             this.model.colorModelsByProperty.property!
           );
           if (value !== undefined) {
-            const index = this.model.colorModelsByProperty.colorGroups.findIndex(
-              colorGroup =>
-                colorGroup.regExp !== undefined &&
-                new RegExp(colorGroup.regExp).test(value)
-            );
+            const index =
+              this.model.colorModelsByProperty.colorGroups.findIndex(
+                (colorGroup) =>
+                  colorGroup.regExp !== undefined &&
+                  new RegExp(colorGroup.regExp).test(value)
+              );
             if (index !== -1) {
               entity.model = this._coloredModels[index];
             }
@@ -255,11 +255,11 @@ export default class GtfsCatalogItem extends MappableMixin(
 
     // remove entities that no longer exist
     if (this._dataSource.entities.values.length > vehicleData.length) {
-      const idSet = new Set(vehicleData.map(val => val.sourceId));
+      const idSet = new Set(vehicleData.map((val) => val.sourceId));
 
       this._dataSource.entities.values
-        .filter(entity => !idSet.has(entity.id))
-        .forEach(entity => this._dataSource.entities.remove(entity));
+        .filter((entity) => !idSet.has(entity.id))
+        .forEach((entity) => this._dataSource.entities.remove(entity));
     }
 
     this._dataSource.entities.resumeEvents();
@@ -354,7 +354,7 @@ export default class GtfsCatalogItem extends MappableMixin(
 
   protected forceLoadMapItems(): Promise<void> {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
-      GtfsStratum.load(this).then(stratum => {
+      GtfsStratum.load(this).then((stratum) => {
         runInAction(() => {
           this.strata.set(GtfsStratum.stratumName, stratum);
         });

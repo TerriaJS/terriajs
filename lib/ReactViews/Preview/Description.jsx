@@ -32,8 +32,8 @@ const Description = observer(
       const catalogItem = this.props.item;
 
       // Make sure all data and metadata URLs have `url` set
-      const metadataUrls = catalogItem.metadataUrls?.filter(m => m.url);
-      const dataUrls = catalogItem.dataUrls?.filter(m => m.url);
+      const metadataUrls = catalogItem.metadataUrls?.filter((m) => m.url);
+      const dataUrls = catalogItem.dataUrls?.filter((m) => m.url);
 
       return (
         <div
@@ -41,7 +41,7 @@ const Description = observer(
           css={`
             a,
             a:visited {
-              color: ${p => p.theme.colorPrimary};
+              color: ${(p) => p.theme.colorPrimary};
             }
           `}
         >
@@ -82,7 +82,7 @@ const Description = observer(
                   rel="noopener noreferrer"
                   className={`${Styles.link} description-metadataUrls`}
                   css={`
-                    color: ${p => p.theme.colorPrimary};
+                    color: ${(p) => p.theme.colorPrimary};
                   `}
                 >
                   <If condition={metadataUrl.title}>
@@ -157,7 +157,7 @@ const Description = observer(
                     className={Styles.field}
                     type="text"
                     value={catalogItem.url}
-                    onClick={e => e.target.select()}
+                    onClick={(e) => e.target.select()}
                   />
                 </Otherwise>
               </Choose>
@@ -239,7 +239,7 @@ const Description = observer(
                     rel="noopener noreferrer"
                     className={`${Styles.link} description-dataUrls`}
                     css={`
-                      color: ${p => p.theme.colorPrimary};
+                      color: ${(p) => p.theme.colorPrimary};
                     `}
                   >
                     <If condition={dataUrl.title}>

@@ -212,7 +212,7 @@ export default class RegionProvider {
     this.aliases = defaultValue(properties.aliases, [this.regionType]);
     this.serverReplacements =
       properties.serverReplacements instanceof Array
-        ? properties.serverReplacements.map(function(r) {
+        ? properties.serverReplacements.map(function (r) {
             return [
               r[0],
               r[1].toLowerCase(),
@@ -223,7 +223,7 @@ export default class RegionProvider {
 
     this.dataReplacements =
       properties.dataReplacements instanceof Array
-        ? properties.dataReplacements.map(function(r) {
+        ? properties.dataReplacements.map(function (r) {
             return [
               r[0],
               r[1].toLowerCase(),
@@ -338,14 +338,12 @@ export default class RegionProvider {
       // If disambig IDS - only set this._regions properties - not this._index properties
       if (disambig) {
         this._regions[index].disambigProp = value;
-        this._regions[
-          index
-        ].disambigPropWithServerReplacement = valueAfterReplacement;
+        this._regions[index].disambigPropWithServerReplacement =
+          valueAfterReplacement;
       } else {
         this._regions[index].regionProp = value;
-        this._regions[
-          index
-        ].regionPropWithServerReplacement = valueAfterReplacement;
+        this._regions[index].regionPropWithServerReplacement =
+          valueAfterReplacement;
 
         // store a lookup by attribute, for performance.
         // This is only used for region prop (not disambig prop)
@@ -403,7 +401,7 @@ export default class RegionProvider {
       return this._appliedReplacements[replacementsProp][r];
     }
 
-    replacements.forEach(function(rep: any) {
+    replacements.forEach(function (rep: any) {
       r = r.replace(rep[2], rep[1]);
     });
     this._appliedReplacements[replacementsProp][s] = r;

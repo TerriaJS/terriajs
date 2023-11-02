@@ -138,7 +138,7 @@ function WebFeatureServiceSearchProviderMixin<
 
             let searchResults = features
               .map(this.featureToSearchResultFunction)
-              .map(result => {
+              .map((result) => {
                 result.clickAction = createZoomToFunction(
                   this,
                   result.location
@@ -158,7 +158,7 @@ function WebFeatureServiceSearchProviderMixin<
             }
 
             // Remove results that have the same name and are close to each other
-            searchResults = searchResults.filter(result => {
+            searchResults = searchResults.filter((result) => {
               const hash = `${result.name},${result.location?.latitude.toFixed(
                 1
               )},${result.location?.longitude.toFixed(1)}`;
@@ -173,7 +173,7 @@ function WebFeatureServiceSearchProviderMixin<
             results.results.push(...searchResults);
           });
         })
-        .catch(e => {
+        .catch((e) => {
           if (results.isCanceled) {
             // A new search has superseded this one, so ignore the result.
             return;
@@ -223,7 +223,7 @@ function createZoomToFunction(
     model.flightDurationSeconds ||
     model.terria.configParameters.searchBarModel!.flightDurationSeconds;
 
-  return function() {
+  return function () {
     model.terria.currentViewer.zoomTo(rectangle, flightDurationSeconds);
   };
 }

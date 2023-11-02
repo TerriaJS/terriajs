@@ -9,10 +9,10 @@ import Terria from "../../../../lib/Models/Terria";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
 import { getShallowRenderedOutput } from "../../MoreShallowTools";
 
-describe("Legend", function() {
+describe("Legend", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -20,9 +20,9 @@ describe("Legend", function() {
       "./data/regionMapping.json";
   });
 
-  describe(" - with image", function() {
+  describe(" - with image", function () {
     let wmsItem: WebMapServiceCatalogItem;
-    beforeEach(function() {
+    beforeEach(function () {
       wmsItem = new WebMapServiceCatalogItem("mywms", terria);
       wmsItem.setTrait(
         "definition",
@@ -31,7 +31,7 @@ describe("Legend", function() {
       );
     });
 
-    it("A legend image can be rendered", async function(done) {
+    it("A legend image can be rendered", async function (done) {
       wmsItem
         .loadMapItems()
         .then(() => {
@@ -44,7 +44,7 @@ describe("Legend", function() {
         .then(done);
     });
 
-    it("A legend image can be hidden", async function(done) {
+    it("A legend image can be hidden", async function (done) {
       wmsItem.setTrait("definition", "hideLegendInWorkbench", true);
       wmsItem
         .loadMapItems()
@@ -59,9 +59,9 @@ describe("Legend", function() {
     });
   });
 
-  xdescribe(" - from Table", function() {
+  xdescribe(" - from Table", function () {
     let csvItem: CsvCatalogItem;
-    beforeEach(async function() {
+    beforeEach(async function () {
       csvItem = new CsvCatalogItem("mycsv", terria, undefined);
       csvItem.defaultStyle.color.setTrait("definition", "numberOfBins", 2);
       csvItem.setTrait(
@@ -72,7 +72,7 @@ describe("Legend", function() {
       await csvItem.loadMapItems();
     });
 
-    it(" - can be generated", function() {
+    it(" - can be generated", function () {
       // @ts-ignore
       const legendSection = <Legend item={csvItem} />;
       const result = getShallowRenderedOutput(legendSection);
@@ -86,7 +86,7 @@ describe("Legend", function() {
       );
     });
 
-    it(" - can be formatted using toLocaleString", function() {
+    it(" - can be formatted using toLocaleString", function () {
       csvItem.defaultColumn.setTrait("definition", "format", {
         style: "currency",
         currency: "AUD",

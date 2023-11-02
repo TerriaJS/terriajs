@@ -263,7 +263,7 @@ export default abstract class GlobeOrMap {
           ? defaultColor
           : highlightColor;
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
             !feature._cesium3DTileFeature.tileset.isDestroyed()
@@ -294,7 +294,7 @@ export default abstract class GlobeOrMap {
           )
         );
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (cesiumPolygon.polygon) {
             cesiumPolygon.polygon.outline = polygonOutline;
             cesiumPolygon.polygon.outlineColor = polygonOutlineColor;
@@ -314,7 +314,7 @@ export default abstract class GlobeOrMap {
           Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (cesiumPolyline.polyline) {
             cesiumPolyline.polyline.material = polylineMaterial;
             cesiumPolyline.polyline.width = polylineWidth;
@@ -333,13 +333,15 @@ export default abstract class GlobeOrMap {
           const featureId =
             feature.data?.id ?? feature.properties?.id?.getValue?.();
           if (isDefined(featureId)) {
-            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-              featureId
-            );
-            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-              highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
-            );
+            const highlightImageryProvider =
+              feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+                featureId
+              );
+            this._removeHighlightCallback =
+              this.terria.currentViewer._addVectorTileHighlight(
+                highlightImageryProvider,
+                feature.imageryLayer.imageryProvider.rectangle
+              );
           }
           vectorTileHighlightCreated = true;
         }
@@ -349,14 +351,16 @@ export default abstract class GlobeOrMap {
           feature.imageryLayer.imageryProvider instanceof
             ProtomapsImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature
-          );
-          if (highlightImageryProvider)
-            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-              highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
+          const highlightImageryProvider =
+            feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              feature
             );
+          if (highlightImageryProvider)
+            this._removeHighlightCallback =
+              this.terria.currentViewer._addVectorTileHighlight(
+                highlightImageryProvider,
+                feature.imageryLayer.imageryProvider.rectangle
+              );
           vectorTileHighlightCreated = true;
         }
 
@@ -368,7 +372,7 @@ export default abstract class GlobeOrMap {
           // Don't show points; the targeting cursor is sufficient.
           if (geoJson) {
             geoJson.features = geoJson.features.filter(
-              f => f.geometry.type !== "Point"
+              (f) => f.geometry.type !== "Point"
             );
 
             let catalogItem = this.terria.getModelById(
@@ -432,7 +436,7 @@ export default abstract class GlobeOrMap {
                     catalogItem.setTrait(CommonStrata.user, "show", false);
                   }
                 })
-                .catch(function() {});
+                .catch(function () {});
             });
 
             (await catalogItem.loadMapItems()).logError(
@@ -448,7 +452,7 @@ export default abstract class GlobeOrMap {
 
             this._highlightPromise = this.terria.overlays
               .add(catalogItem)
-              .then(r => r.throwIfError());
+              .then((r) => r.throwIfError());
           }
         }
       }

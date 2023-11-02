@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var createKarmaBaseConfig = require('./createKarmaBaseConfig');
+var createKarmaBaseConfig = require("./createKarmaBaseConfig");
 
-module.exports = function(config) {
-    var options = Object.assign({}, createKarmaBaseConfig(config), {
-        browsers: ['Firefox'],
-    });
+module.exports = function (config) {
+  var options = Object.assign({}, createKarmaBaseConfig(config), {
+    browsers: ["Firefox"]
+  });
 
-    config.set(options);
+  config.set(options);
 };

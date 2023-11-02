@@ -14,9 +14,7 @@
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
       "bbox": [
-        96.81694140799998,
-        -43.74050960300003,
-        159.10921900799997,
+        96.81694140799998, -43.74050960300003, 159.10921900799997,
         -9.142175976999999
       ],
       "nameProp": "SOME_OTHER_REGION"
@@ -39,44 +37,20 @@
         "lga_name_2010"
       ],
       "serverReplacements": [
-        [
-          " \\([a-z]+\\)$",
-          ""
-        ],
-        [
-          "-",
-          " "
-        ]
+        [" \\([a-z]+\\)$", ""],
+        ["-", " "]
       ],
       "dataReplacements": [
-        [
-          "^The ",
-          ""
-        ],
-        [
-          "^.*Council of (the )?",
-          ""
-        ],
-        [
-          "^.* of (the )?",
-          ""
-        ],
-        [
-          " Council$",
-          ""
-        ],
+        ["^The ", ""],
+        ["^.*Council of (the )?", ""],
+        ["^.* of (the )?", ""],
+        [" Council$", ""],
         [
           " (Shire|City|Rural City|Borough|District|Aboriginal|Municipality|Municipal|Regional|Town|Government Community|Aboriginal Shire|Island|\\(Unincorporated\\)|\\(Uninc.\\))$",
           ""
         ],
-        [
-          "( \\([A-Z]+\\)$)",
-          ""
-        ],
-        [
-          "-",
-          " "
-        ]
+        ["( \\([A-Z]+\\)$)", ""],
+        ["-", " "]
       ],
       "disambigProp": "STE_NAME16",
       "disambigRegionId": "STE_NAME_2016",
@@ -88,9 +62,7 @@
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
       "bbox": [
-        112.92111395999996,
-        -43.74050957999999,
-        153.63872711999997,
+        112.92111395999996, -43.74050957999999, 153.63872711999997,
         -9.142175969999997
       ],
       "nameProp": "LGA_NAME11"

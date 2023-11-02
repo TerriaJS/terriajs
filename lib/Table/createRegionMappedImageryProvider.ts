@@ -51,7 +51,7 @@ export default function createRegionMappedImageryProvider(
   return new MapboxVectorTileImageryProvider({
     url: regionType.server,
     layerName: regionType.layerName,
-    styleFunc: function(feature: any) {
+    styleFunc: function (feature: any) {
       const regionId = feature.properties[regionType.uniqueIdProp];
 
       let rowNumber = getImageryLayerFilteredRow(
@@ -125,7 +125,7 @@ const getImageryLayerFilteredRow = action(
     ) {
       return rowNumbers;
     } else if (Array.isArray(rowNumbers)) {
-      const matchingTimeRows: number[] = rowNumbers.filter(row =>
+      const matchingTimeRows: number[] = rowNumbers.filter((row) =>
         currentTimeRows!.includes(row)
       );
       if (matchingTimeRows.length <= 1) {

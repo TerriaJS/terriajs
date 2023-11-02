@@ -14,7 +14,7 @@ export default function printWindow(windowToPrint: Window): Promise<void> {
   const deferred = new Promise<void>((resolve, reject) => {
     let printInProgressCount = 0;
 
-    const timeout = setTimeout(function() {
+    const timeout = setTimeout(function () {
       reject(
         new TerriaError({
           title: i18next.t("core.printWindow.errorTitle"),

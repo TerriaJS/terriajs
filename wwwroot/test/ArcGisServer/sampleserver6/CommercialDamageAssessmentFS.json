@@ -17,19 +17,19 @@
     "wkt": "PROJCS[\"NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201\",GEOGCS[\"GCS_North_American_1983_HARN\",DATUM[\"D_North_American_1983_HARN\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",984250.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-88.33333333333333],PARAMETER[\"Scale_Factor\",0.999975],PARAMETER[\"Latitude_Of_Origin\",36.66666666666666],UNIT[\"Foot_US\",0.3048006096012192]]"
   },
   "initialExtent": {
-    "xmin": -1.690898010527849E7,
-    "ymin": -1.1437644549823422E7,
-    "xmax": 1.592012017779385E7,
-    "ymax": 2.795727578986338E7,
+    "xmin": -1.690898010527849e7,
+    "ymin": -1.1437644549823422e7,
+    "xmax": 1.592012017779385e7,
+    "ymax": 2.795727578986338e7,
     "spatialReference": {
       "wkt": "PROJCS[\"NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201\",GEOGCS[\"GCS_North_American_1983_HARN\",DATUM[\"D_North_American_1983_HARN\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",984250.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-88.33333333333333],PARAMETER[\"Scale_Factor\",0.999975],PARAMETER[\"Latitude_Of_Origin\",36.66666666666666],UNIT[\"Foot_US\",0.3048006096012192]]"
     }
   },
   "fullExtent": {
-    "xmin": -1.1624389406534828E7,
-    "ymin": -1.8184589842326313E7,
-    "xmax": 1.635446026360669E7,
-    "ymax": 1.6907485524563707E7,
+    "xmin": -1.1624389406534828e7,
+    "ymin": -1.8184589842326313e7,
+    "xmax": 1.635446026360669e7,
+    "ymax": 1.6907485524563707e7,
     "spatialReference": {
       "wkt": "PROJCS[\"NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201\",GEOGCS[\"GCS_North_American_1983_HARN\",DATUM[\"D_North_American_1983_HARN\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",984250.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-88.33333333333333],PARAMETER[\"Scale_Factor\",0.999975],PARAMETER[\"Latitude_Of_Origin\",36.66666666666666],UNIT[\"Foot_US\",0.3048006096012192]]"
     }

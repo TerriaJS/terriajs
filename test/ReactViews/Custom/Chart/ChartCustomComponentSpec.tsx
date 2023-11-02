@@ -19,10 +19,10 @@ import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 
-describe("ChartCustomComponent", function() {
+describe("ChartCustomComponent", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -59,7 +59,7 @@ describe("ChartCustomComponent", function() {
     ).toBeTruthy();
   });
 
-  it("creates shareable chart items for the expand menu", function() {
+  it("creates shareable chart items for the expand menu", function () {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
       constructShareableCatalogItem = (
         id: string | undefined,
@@ -96,9 +96,7 @@ describe("ChartCustomComponent", function() {
   });
 });
 
-class TestChartCustomComponent extends ChartCustomComponent<
-  ChartableMixin.Instance
-> {
+class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Instance> {
   get name(): string {
     return "test";
   }

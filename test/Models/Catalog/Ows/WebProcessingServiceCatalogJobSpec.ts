@@ -16,10 +16,10 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("WebProcessingServiceCatalogFunctionJob", function() {
+describe("WebProcessingServiceCatalogFunctionJob", function () {
   let item: WebProcessingServiceCatalogFunctionJob;
 
-  beforeEach(function() {
+  beforeEach(function () {
     const terria = initTerria();
     item = new WebProcessingServiceCatalogFunctionJob("test", terria);
     runInAction(() => {
@@ -45,21 +45,21 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
     ).andReturn({ responseText: regionMapping });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type & typeName", function() {
+  it("has a type & typeName", function () {
     expect(WebProcessingServiceCatalogFunctionJob.type).toBe("wps-result");
     expect(item.typeName).toBe(
       i18next.t("models.webProcessingService.wpsResult")
     );
   });
 
-  describe("after loading metadata", function() {
-    it("correctly defines `Inputs` in info", async function() {
+  describe("after loading metadata", function () {
+    it("correctly defines `Inputs` in info", async function () {
       await item.loadMetadata();
-      const inputSection = item.info.find(info => info.name == "Inputs");
+      const inputSection = item.info.find((info) => info.name == "Inputs");
       expect(inputSection).toBeDefined();
       if (isDefined(inputSection)) {
         expect(inputSection.content).toMatch(/point/);
@@ -67,13 +67,13 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
       }
     });
 
-    it("sets the featureInfoTemplate", async function() {
+    it("sets the featureInfoTemplate", async function () {
       await item.loadMetadata();
       expect(item.featureInfoTemplate.template).toBeDefined();
     });
 
-    describe("shortReportSections", function() {
-      it("adds a shortReport for LiteralData output", async function() {
+    describe("shortReportSections", function () {
+      it("adds a shortReport for LiteralData output", async function () {
         item.setTrait(CommonStrata.user, "wpsResponse", {
           ProcessOutputs: {
             Output: { Title: "Sum", Data: { LiteralData: "4242" } }
@@ -81,7 +81,7 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
         });
         await item.loadMetadata();
         const shortReport = item.shortReportSections.find(
-          r => r.name === "Sum"
+          (r) => r.name === "Sum"
         );
         expect(shortReport).toBeDefined();
         if (isDefined(shortReport)) {

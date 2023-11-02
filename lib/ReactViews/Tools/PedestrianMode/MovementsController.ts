@@ -323,7 +323,7 @@ export default class MovementsController {
 
   animate() {
     if (this.activeMovements.size > 0) {
-      [...this.activeMovements].forEach(movement => this.move(movement));
+      [...this.activeMovements].forEach((movement) => this.move(movement));
       this.updateSurfaceHeightEstimate();
       this.onMove();
 
@@ -382,7 +382,8 @@ export default class MovementsController {
     const eventHandler = new ScreenSpaceEventHandler(this.scene.canvas);
 
     const startLook = (click: { position: Cartesian2 }) => {
-      this.currentMousePosition = this.startMousePosition = click.position.clone();
+      this.currentMousePosition = this.startMousePosition =
+        click.position.clone();
       this.activeMovements.add("look");
     };
 
@@ -425,9 +426,10 @@ export default class MovementsController {
    * Animate on each clock tick
    */
   startAnimating() {
-    const stopAnimating = this.cesium.cesiumWidget.clock.onTick.addEventListener(
-      this.animate.bind(this)
-    );
+    const stopAnimating =
+      this.cesium.cesiumWidget.clock.onTick.addEventListener(
+        this.animate.bind(this)
+      );
     return stopAnimating;
   }
 
@@ -458,8 +460,8 @@ export default class MovementsController {
       destroyMouseMap();
       stopAnimating();
 
-      const screenSpaceCameraController = this.scene
-        .screenSpaceCameraController;
+      const screenSpaceCameraController =
+        this.scene.screenSpaceCameraController;
       // screenSpaceCameraController will be undefined if the cesium map is already destroyed
       if (screenSpaceCameraController !== undefined) {
         screenSpaceCameraController.enableTranslate = true;
@@ -574,7 +576,7 @@ const inputNodeRe = /input|textarea|select/i;
 function excludeInputEvents(
   handler: (ev: KeyboardEvent) => void
 ): (ev: KeyboardEvent) => void {
-  return ev => {
+  return (ev) => {
     const target = ev.target;
     if (target !== null) {
       const nodeName = (target as any).nodeName;

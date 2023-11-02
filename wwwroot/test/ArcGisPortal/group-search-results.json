@@ -12,9 +12,7 @@
       "owner": "admin",
       "description": null,
       "snippet": "A group for sharing Basemaps to for the Basemap Gallery",
-      "tags": [
-        "basemaps"
-      ],
+      "tags": ["basemaps"],
       "phone": null,
       "sortField": "owner",
       "sortOrder": "desc",
@@ -39,11 +37,7 @@
       "owner": "ss-sds",
       "description": null,
       "snippet": "A group for sharing layers to the NSW Digital Twin",
-      "tags": [
-        "3D",
-        "data61",
-        "digital twin"
-      ],
+      "tags": ["3D", "data61", "digital twin"],
       "phone": null,
       "sortField": "title",
       "sortOrder": "asc",
@@ -68,9 +62,7 @@
       "owner": "daniel.mccullock@customerservice.nsw.gov.au",
       "description": null,
       "snippet": "A group to share content which will be shown in the Gallery",
-      "tags": [
-        "gallery"
-      ],
+      "tags": ["gallery"],
       "phone": null,
       "sortField": "modified",
       "sortOrder": "desc",
@@ -88,5 +80,5 @@
       "provider": null,
       "providerGroupName": null
     }
-]
+  ]
 }

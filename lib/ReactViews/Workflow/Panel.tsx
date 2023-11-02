@@ -24,7 +24,7 @@ export type PanelProps = {
 /**
  * A generic panel component for left, right, context items etc.
  */
-export const Panel: React.FC<PanelProps> = props => {
+export const Panel: React.FC<PanelProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     isDefined(props.isOpen) ? setIsOpen(props.isOpen) : null;
@@ -83,7 +83,7 @@ export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
 );
 
 const Wrapper = styled.div`
-  background-color: ${p => p.theme.darkWithOverlay};
+  background-color: ${(p) => p.theme.darkWithOverlay};
   margin: 10px 5px 0px 5px;
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -95,7 +95,7 @@ const TitleBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid ${p => p.theme.darkLighter};
+  border-bottom: 1px solid ${(p) => p.theme.darkLighter};
   padding-left: 0.4em;
 `;
 
@@ -108,7 +108,7 @@ const CollapsibleTitleBar = styled(RawButton)<
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  ${p => (p.isOpen ? `border-bottom: 1px solid ${p.theme.darkLighter}` : "")};
+  ${(p) => (p.isOpen ? `border-bottom: 1px solid ${p.theme.darkLighter}` : "")};
   padding-left: 0.4em;
   padding-right: 0.4em;
 `;
@@ -129,5 +129,5 @@ const Icon = styled(StyledIcon).attrs({
 
 const Content = styled.div`
   padding: 0.4em;
-  color: ${p => p.theme.textLight};
+  color: ${(p) => p.theme.textLight};
 `;

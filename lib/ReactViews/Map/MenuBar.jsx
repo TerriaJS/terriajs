@@ -18,14 +18,14 @@ import HelpButton from "./HelpButton/HelpButton";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
-  ${p =>
+  ${(p) =>
     p.trainerBarVisible &&
     `
     top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapButtonTop)}px;
   `}
 `;
 // The map navigation region
-const MenuBar = observer(props => {
+const MenuBar = observer((props) => {
   const menuItems = props.menuItems || [];
   const handleClick = () => {
     runInAction(() => {

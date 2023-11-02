@@ -10,7 +10,7 @@ export default function saveStratumToJson(
 
   const result: JsonObject = {};
 
-  Object.keys(traits).forEach(traitId => {
+  Object.keys(traits).forEach((traitId) => {
     const trait = traits[traitId];
     const value = stratumAny[traitId];
     const jsonValue = trait.toJson(value);

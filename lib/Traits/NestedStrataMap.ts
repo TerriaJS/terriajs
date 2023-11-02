@@ -8,7 +8,8 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
  * parent strata map.
  */
 export default class NestedStrataMap<T extends ModelTraits>
-  implements Map<string, T> {
+  implements Map<string, T>
+{
   constructor(
     readonly parentTraitsClass: TraitsConstructor<ModelTraits>,
     readonly parent: Map<string, StratumFromTraits<ModelTraits>>,

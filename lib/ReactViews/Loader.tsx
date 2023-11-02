@@ -14,14 +14,8 @@ interface PropsType extends WithTranslation {
   [spread: string]: any;
 }
 const Loader: React.FC<PropsType> = (props: PropsType) => {
-  const {
-    message,
-    t,
-    boxProps,
-    textProps,
-    hideMessage,
-    ...rest
-  }: PropsType = props;
+  const { message, t, boxProps, textProps, hideMessage, ...rest }: PropsType =
+    props;
   return (
     <Box fullWidth centered {...boxProps}>
       <AnimatedSpinnerIcon styledWidth={"15px"} css={"margin: 5px"} {...rest} />

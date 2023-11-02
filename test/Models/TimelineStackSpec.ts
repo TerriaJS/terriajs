@@ -2,11 +2,11 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Terria from "../../lib/Models/Terria";
 import { when } from "mobx";
 
-describe("TimelineStack", function() {
+describe("TimelineStack", function () {
   let terria: Terria;
   let wms: WebMapServiceCatalogItem;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -19,19 +19,19 @@ describe("TimelineStack", function() {
     terria.timelineStack.activate();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     terria.timelineStack.deactivate();
   });
 
-  it(" - is populated with items", async function() {
+  it(" - is populated with items", async function () {
     expect(terria.timelineStack.items.length).toBe(1);
   });
 
-  it(" - contains method works", async function() {
+  it(" - contains method works", async function () {
     expect(terria.timelineStack.contains(wms)).toBe(true);
   });
 
-  it(" - gets the right item from the top", async function() {
+  it(" - gets the right item from the top", async function () {
     expect(terria.timelineStack.top).toBe(wms);
 
     const wms2 = new WebMapServiceCatalogItem("test2", terria);
@@ -46,7 +46,7 @@ describe("TimelineStack", function() {
     expect(terria.timelineStack.top).toBe(wms);
   });
 
-  it("automatically syncs the clock with the top item", async function() {
+  it("automatically syncs the clock with the top item", async function () {
     const wms2 = new WebMapServiceCatalogItem("test2", terria);
     terria.addModel(wms2);
     wms2.setTrait("definition", "url", "test/WMS/comma_sep_datetimes.xml");

@@ -35,7 +35,7 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
   const [advancedOptions, setAdvancedOptions] = useState(false);
 
   const toogleAdvancedOptions = () => {
-    setAdvancedOptions(prevState => !prevState);
+    setAdvancedOptions((prevState) => !prevState);
   };
 
   return (
