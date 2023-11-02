@@ -4,6 +4,7 @@
 
 - [The next improvement]
 - Fix maximum call stack size exceeded on Math.min/max when creating Charts
+- Fix boolean flag in `MyDataTab` displaying number
 - Remove `jsx-control-statements` dependency
 
 #### 8.3.7 - 2023-10-26
