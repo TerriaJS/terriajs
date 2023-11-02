@@ -55,10 +55,10 @@ const CatalogGroupTitle = styled(Box).attrs({
 interface ICatalogGroupProps {
   text: string;
   isPrivate: boolean;
-  title: string;
   topLevel: boolean;
   open: boolean;
   loading: boolean;
+  title?: string;
   emptyMessage?: string;
 
   onClick: () => void;
@@ -192,7 +192,9 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
               <Loader />
             </Li>
           )}
-          {!loading && !children && emptyMessage ? (
+          {!loading &&
+          (!children || (children as unknown[]).length === 0) &&
+          emptyMessage ? (
             <li key="empty">
               <Text>{emptyMessage}</Text>
             </li>
