@@ -109,14 +109,10 @@ const DropdownPanel = createReactClass({
           }
           isOpen={this.isOpen()}
         >
-          <If condition={this.props.theme.icon}>
-            <Icon glyph={iconGlyph} />
-          </If>
-          <If condition={this.props.btnText}>
-            <span>{this.props.btnText}</span>
-          </If>
+          {this.props.theme.icon && <Icon glyph={iconGlyph} />}
+          {this.props.btnText && <span>{this.props.btnText}</span>}
         </DropdownButton>
-        <If condition={this.isOpen()}>
+        {this.isOpen() && (
           <InnerPanel
             showDropdownInCenter={this.props.showDropdownInCenter}
             showDropdownAsModal={this.props.showDropdownAsModal}
@@ -131,7 +127,7 @@ const DropdownPanel = createReactClass({
           >
             {this.props.children}
           </InnerPanel>
-        </If>
+        )}
       </div>
     );
   }

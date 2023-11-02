@@ -91,7 +91,7 @@ const CleanDropdownPanel = createReactClass({
           ${this.props.cleanDropdownPanelStyles}
         `}
       >
-        <If condition={this.isOpen()}>
+        {this.isOpen() && (
           <InnerPanel
             showDropdownInCenter={this.props.showDropdownInCenter}
             showDropdownAsModal={this.props.showDropdownAsModal}
@@ -105,7 +105,7 @@ const CleanDropdownPanel = createReactClass({
           >
             {this.props.children}
           </InnerPanel>
-        </If>
+        )}
       </Box>
     );
   }

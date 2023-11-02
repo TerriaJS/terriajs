@@ -21,7 +21,7 @@ const DataPreviewUrl = createReactClass({
     return (
       <div>
         <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
-        <If condition={this.props.metadataItem.type === "wms"}>
+        {this.props.metadataItem.type === "wms" && (
           <p>
             <Trans i18nKey="description.wms">
               This is a
@@ -36,8 +36,8 @@ const DataPreviewUrl = createReactClass({
               software with this URL:
             </Trans>
           </p>
-        </If>
-        <If condition={this.props.metadataItem.type === "wfs"}>
+        )}
+        {this.props.metadataItem.type === "wfs" && (
           <p>
             <Trans i18nKey="description.wfs">
               This is a
@@ -52,7 +52,7 @@ const DataPreviewUrl = createReactClass({
               GIS software with this URL:
             </Trans>
           </p>
-        </If>
+        )}
         <input
           readOnly
           className={Styles.field}
@@ -60,27 +60,23 @@ const DataPreviewUrl = createReactClass({
           value={this.props.metadataItem.url}
           onClick={this.selectUrl}
         />
-        <If
-          condition={
-            this.props.metadataItem.type === "wms" ||
-            (this.props.metadataItem.type === "esri-mapServer" &&
-              this.props.metadataItem.layers)
-          }
-        >
+        {(this.props.metadataItem.type === "wms" ||
+          (this.props.metadataItem.type === "esri-mapServer" &&
+            this.props.metadataItem.layers)) && (
           <p>
             Layer name
             {this.props.metadataItem.layers.split(",").length > 1
               ? "s"
               : ""}: {this.props.metadataItem.layers}
           </p>
-        </If>
-        <If condition={this.props.metadataItem.type === "wfs"}>
+        )}
+        {this.props.metadataItem.type === "wfs" && (
           <p>
             Type name
             {this.props.metadataItem.typeNames.split(",").length > 1 ? "s" : ""}
             : {this.props.metadataItem.typeNames}
           </p>
-        </If>
+        )}
       </div>
     );
   }

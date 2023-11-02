@@ -188,11 +188,7 @@ const RegionDataParameterEditor = createReactClass({
       return (
         <div className={Styles.data}>
           <ul className={Styles.tree}>
-            <For
-              each="catalogItem"
-              index="i"
-              of={this.catalogItemsWithMatchingRegion()}
-            >
+            {this.catalogItemsWithMatchingRegion().map((catalogItem, i) => (
               <CatalogGroup
                 key={catalogItem.uniqueId}
                 text={catalogItem.name}
@@ -203,7 +199,7 @@ const RegionDataParameterEditor = createReactClass({
               >
                 {this.renderItemChildren(catalogItem)}
               </CatalogGroup>
-            </For>
+            ))}
           </ul>
         </div>
       );
