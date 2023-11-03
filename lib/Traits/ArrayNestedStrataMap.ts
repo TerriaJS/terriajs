@@ -145,12 +145,13 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       });
 
       if (thisObject === undefined) {
-        // If merge strategy is TopStratum, we only return an object if it is in the top stratum - to we stop here
+        // If merge strategy is TopStratum, we only return an object if it is in the top stratum - so we stop here
         if (
           this.merge === MergeStrategy.TopStratum &&
           stratumId === topStratumId
-        )
+        ) {
           break;
+        }
         continue;
       }
 
