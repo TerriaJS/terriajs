@@ -201,7 +201,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           // At the moment we ignore duplicate layers
           this.catalogGroup.terria.addModel(
             model,
-            this.getLayerShareKeys(layer)
+            this.getLayerShareKeys(layer, layerId)
           );
         } catch (e) {
           TerriaError.from(e, "Failed to add CatalogGroup").log();
@@ -253,7 +253,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
       try {
         // Sometimes WMS Layers have duplicate names
         // At the moment we ignore duplicate layers
-        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+        this.catalogGroup.terria.addModel(
+          model,
+          this.getLayerShareKeys(layer, layerId)
+        );
       } catch (e) {
         TerriaError.from(e, "Failed to add WebMapServiceCatalogItem").log();
         return;
@@ -330,14 +333,20 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   /** For backward-compatibility.
-   * If layer.Name is defined, we will use it to create layer autoID (see `this.getLayerId`).
-   * Previously we used layer.Title, so we now add it as a shareKey
+   * Previously we have used the following IDs
+   * - `WMS Group Catalog ID/WMS Layer Name` - regardless of nesting
+   * - `WMS Group Catalog ID/WMS Layer Title`
    */
-  getLayerShareKeys(layer: CapabilitiesLayer) {
-    if (isDefined(layer.Name) && layer.Title !== layer.Name)
-      return [`${this.catalogGroup.uniqueId}/${layer.Title}`];
+  getLayerShareKeys(layer: CapabilitiesLayer, layerId: string) {
+    const shareKeys: string[] = [];
 
-    return [];
+    if (layerId !== `${this.catalogGroup.uniqueId}/${layer.Name}`)
+      shareKeys.push(`${this.catalogGroup.uniqueId}/${layer.Name}`);
+
+    if (isDefined(layer.Name) && layer.Title !== layer.Name)
+      shareKeys.push(`${this.catalogGroup.uniqueId}/${layer.Title}`);
+
+    return shareKeys;
   }
 }
 
