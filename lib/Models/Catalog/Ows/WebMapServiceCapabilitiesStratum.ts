@@ -861,7 +861,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     if (formatsArray.includes("application/vnd.geo+json"))
       return { format: "application/vnd.geo+json", type: "json" };
 
-    // Special case for Esri WMS, use XML before HTML
+    // Special case for Esri WMS, use XML before HTML/GML
     // as HTML includes <table> with rowbg that is hard to read
     if (this.isEsri && formatsArray.includes("text/xml")) {
       return { format: "text/xml", type: "xml" };
@@ -870,6 +870,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       return { format: "text/html", type: "html" };
     if (formatsArray.includes("application/vnd.ogc.gml"))
       return { format: "application/vnd.ogc.gml", type: "xml" };
+
+    // For non-Esri services, we use XML after HTML/GML
     if (formatsArray.includes("text/xml")) {
       return { format: "text/xml", type: "xml" };
     }
