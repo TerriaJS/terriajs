@@ -3,7 +3,8 @@ import {
   computed,
   observable,
   runInAction,
-  makeObservable
+  makeObservable,
+  override
 } from "mobx";
 import { fromPromise } from "mobx-utils";
 import {
@@ -137,7 +138,7 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
     return CatalogSearchProvider.type;
   }
 
-  @computed get resultsAreReferences() {
+  @override get resultsAreReferences() {
     return (
       isDefined(this.terria.catalogIndex?.loadPromise) &&
       fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
