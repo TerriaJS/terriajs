@@ -417,7 +417,7 @@ interface HomeCameraInit {
 
 export default class Terria {
   private readonly models = observable.map<string, BaseModel>();
-  private searchProviders: any[] = [];
+
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
