@@ -143,7 +143,7 @@ class Tabs extends React.Component {
             background-color: ${(p) => p.theme.colorPrimary};
           `}
         >
-          <For each="item" index="i" of={tabs}>
+          {tabs.map((item, i) => (
             <li
               key={i}
               id={"tablist--" + item.title}
@@ -167,7 +167,7 @@ class Tabs extends React.Component {
                 {item.name}
               </ButtonTab>
             </li>
-          </For>
+          ))}
         </ul>
 
         <section

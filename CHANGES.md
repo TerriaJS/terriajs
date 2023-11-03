@@ -1,7 +1,13 @@
 # Change Log
 
-#### next release (8.3.7)
+#### next release (8.3.8)
 
+- [The next improvement]
+- Remove `jsx-control-statements` dependency
+
+#### 8.3.7 - 2023-10-26
+
+- Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
 - Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
 - WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
@@ -9,6 +15,14 @@
   - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
   - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
 - [The next improvement]
+- Fix crash on empty GeoJSON features
+- Add `tableFeatureInfoContext` support to `GeoJsonMixin.createProtomapsImageryProvider`
+- Fix `GeoJsonMixin` timeline animation for lines/polygons
+- Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
+- Fix splitter for `GeoJsonMixin` (lines and polygon features only)
+- Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 
 #### 8.3.6 - 2023-10-03
 

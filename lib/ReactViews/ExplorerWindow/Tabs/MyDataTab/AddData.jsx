@@ -216,83 +216,87 @@ const AddData = createReactClass({
 
     return (
       <div className={Styles.tabPanels}>
-        <If condition={this.props.activeTab === "local"}>
-          <div className={Styles.tabHeading}>{t("addData.localAdd")}</div>
-          <section className={Styles.tabPanel}>
-            <label className={Styles.label}>
-              <Trans i18nKey="addData.localFileType">
-                <strong>Step 1:</strong> Select file type
-              </Trans>
-            </label>
-            <Dropdown
-              options={this.state.localDataTypes}
-              selected={this.state.localDataType}
-              selectOption={this.selectLocalOption}
-              matchWidth={true}
-              theme={dropdownTheme}
-            />
-            {this.state.localDataType?.description
-              ? parseCustomMarkdownToReactWithOptions(
-                  this.state.localDataType?.description
-                )
-              : null}
-            <label className={Styles.label}>
-              <Trans i18nKey="addData.localFile">
-                <strong>Step 2:</strong> Select file
-              </Trans>
-            </label>
-            <FileInput
-              accept={dataTypes.join(",")}
-              onChange={this.handleUploadFile}
-            />
-            {this.state.isLoading && <Loader />}
-          </section>
-        </If>
-        <If condition={this.props.activeTab === "web"}>
-          <div className={Styles.tabHeading}>{t("addData.webAdd")}</div>
-          <section className={Styles.tabPanel}>
-            <label className={Styles.label}>
-              <Trans i18nKey="addData.webFileType">
-                <strong>Step 1:</strong> Select file or web service type
-              </Trans>
-            </label>
-            <Dropdown
-              options={this.state.remoteDataTypes}
-              selected={this.state.remoteDataType}
-              selectOption={this.selectRemoteOption}
-              matchWidth={true}
-              theme={dropdownTheme}
-            />
-            {this.state.remoteDataType?.description
-              ? parseCustomMarkdownToReactWithOptions(
-                  this.state.remoteDataType?.description
-                )
-              : null}
-            <label className={Styles.label}>
-              <Trans i18nKey="addData.webFile">
-                <strong>Step 2:</strong> Enter the URL of the data file or web
-                service
-              </Trans>
-            </label>
-            <form className={Styles.urlInput}>
-              <input
-                value={this.state.remoteUrl}
-                onChange={this.onRemoteUrlChange}
-                className={Styles.urlInputTextBox}
-                type="text"
-                placeholder="e.g. http://data.gov.au/geoserver/wms"
+        {this.props.activeTab === "local" && (
+          <>
+            <div className={Styles.tabHeading}>{t("addData.localAdd")}</div>
+            <section className={Styles.tabPanel}>
+              <label className={Styles.label}>
+                <Trans i18nKey="addData.localFileType">
+                  <strong>Step 1:</strong> Select file type
+                </Trans>
+              </label>
+              <Dropdown
+                options={this.state.localDataTypes}
+                selected={this.state.localDataType}
+                selectOption={this.selectLocalOption}
+                matchWidth={true}
+                theme={dropdownTheme}
               />
-              <button
-                type="submit"
-                onClick={this.handleUrl}
-                className={Styles.urlInputBtn}
-              >
-                {t("addData.urlInputBtn")}
-              </button>
+              {this.state.localDataType?.description
+                ? parseCustomMarkdownToReactWithOptions(
+                    this.state.localDataType?.description
+                  )
+                : null}
+              <label className={Styles.label}>
+                <Trans i18nKey="addData.localFile">
+                  <strong>Step 2:</strong> Select file
+                </Trans>
+              </label>
+              <FileInput
+                accept={dataTypes.join(",")}
+                onChange={this.handleUploadFile}
+              />
               {this.state.isLoading && <Loader />}
-            </form>
-          </section>
-        </If>
+            </section>
+          </>
+        )}
+        {this.props.activeTab === "web" && (
+          <>
+            <div className={Styles.tabHeading}>{t("addData.webAdd")}</div>
+            <section className={Styles.tabPanel}>
+              <label className={Styles.label}>
+                <Trans i18nKey="addData.webFileType">
+                  <strong>Step 1:</strong> Select file or web service type
+                </Trans>
+              </label>
+              <Dropdown
+                options={this.state.remoteDataTypes}
+                selected={this.state.remoteDataType}
+                selectOption={this.selectRemoteOption}
+                matchWidth={true}
+                theme={dropdownTheme}
+              />
+              {this.state.remoteDataType?.description
+                ? parseCustomMarkdownToReactWithOptions(
+                    this.state.remoteDataType?.description
+                  )
+                : null}
+              <label className={Styles.label}>
+                <Trans i18nKey="addData.webFile">
+                  <strong>Step 2:</strong> Enter the URL of the data file or web
+                  service
+                </Trans>
+              </label>
+              <form className={Styles.urlInput}>
+                <input
+                  value={this.state.remoteUrl}
+                  onChange={this.onRemoteUrlChange}
+                  className={Styles.urlInputTextBox}
+                  type="text"
+                  placeholder="e.g. http://data.gov.au/geoserver/wms"
+                />
+                <button
+                  type="submit"
+                  onClick={this.handleUrl}
+                  className={Styles.urlInputBtn}
+                >
+                  {t("addData.urlInputBtn")}
+                </button>
+                {this.state.isLoading && <Loader />}
+              </form>
+            </section>
+          </>
+        )}
       </div>
     );
   },

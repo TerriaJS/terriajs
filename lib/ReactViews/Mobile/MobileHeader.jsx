@@ -126,6 +126,35 @@ class MobileHeader extends React.Component {
     });
   }
 
+  renderSearch() {
+    const { t } = this.props;
+
+    const searchState = this.props.viewState.searchState;
+    <div className={Styles.formSearchData}>
+      {searchState.showMobileLocationSearch && (
+        <SearchBox
+          searchText={searchState.locationSearchText}
+          onSearchTextChanged={this.changeLocationSearchText.bind(this)}
+          onDoSearch={this.searchLocations.bind(this)}
+          placeholder={t("search.placeholder")}
+          alwaysShowClear={true}
+          onClear={this.closeLocationSearch.bind(this)}
+          autoFocus={true}
+        />
+      )}
+      {searchState.showMobileCatalogSearch && (
+        <SearchBox
+          searchText={searchState.catalogSearchText}
+          onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
+          onDoSearch={this.searchCatalog.bind(this)}
+          placeholder={t("search.searchCatalogue")}
+          onClear={this.closeCatalogSearch.bind(this)}
+          autoFocus={true}
+        />
+      )}
+    </div>;
+  }
+
   render() {
     const searchState = this.props.viewState.searchState;
     const { t } = this.props;
@@ -143,13 +172,9 @@ class MobileHeader extends React.Component {
           paddedRatio={1}
           backgroundColor={this.props.theme.dark}
         >
-          <Choose>
-            <When
-              condition={
-                !searchState.showMobileLocationSearch &&
-                !searchState.showMobileCatalogSearch
-              }
-            >
+          {!searchState.showMobileLocationSearch &&
+          !searchState.showMobileCatalogSearch ? (
+            <>
               <Box
                 position="absolute"
                 css={`
@@ -194,7 +219,7 @@ class MobileHeader extends React.Component {
                     styledHeight="20px"
                   />
                 </button>
-                <If condition={nowViewingLength > 0}>
+                {nowViewingLength > 0 && (
                   <button
                     type="button"
                     className={Styles.btnNowViewing}
@@ -209,7 +234,7 @@ class MobileHeader extends React.Component {
                       {nowViewingLength}
                     </span>
                   </button>
-                </If>
+                )}
                 <button
                   className={Styles.btnSearch}
                   type="button"
@@ -222,39 +247,10 @@ class MobileHeader extends React.Component {
                   />
                 </button>
               </div>
-            </When>
-            <Otherwise>
-              <div className={Styles.formSearchData}>
-                <Choose>
-                  <When condition={searchState.showMobileLocationSearch}>
-                    <SearchBox
-                      searchText={searchState.locationSearchText}
-                      onSearchTextChanged={this.changeLocationSearchText.bind(
-                        this
-                      )}
-                      onDoSearch={this.searchLocations.bind(this)}
-                      placeholder={t("search.placeholder")}
-                      alwaysShowClear={true}
-                      onClear={this.closeLocationSearch.bind(this)}
-                      autoFocus={true}
-                    />
-                  </When>
-                  <When condition={searchState.showMobileCatalogSearch}>
-                    <SearchBox
-                      searchText={searchState.catalogSearchText}
-                      onSearchTextChanged={this.changeCatalogSearchText.bind(
-                        this
-                      )}
-                      onDoSearch={this.searchCatalog.bind(this)}
-                      placeholder={t("search.searchCatalogue")}
-                      onClear={this.closeCatalogSearch.bind(this)}
-                      autoFocus={true}
-                    />
-                  </When>
-                </Choose>
-              </div>
-            </Otherwise>
-          </Choose>
+            </>
+          ) : (
+            this.renderSearch()
+          )}
         </Box>
         <MobileMenu
           menuItems={this.props.menuItems}
