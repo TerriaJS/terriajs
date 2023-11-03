@@ -76,50 +76,52 @@ class HelpVideoPanel extends React.Component {
             `}
             scroll
           >
-            <If condition={helpItemType === "videoAndContent"}>
-              {this.props.videoUrl && this.props.placeholderImage && (
-                <div key={"image"}>
-                  <div
-                    className={Styles.videoLink}
-                    style={{
-                      backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
-                    }}
-                  >
-                    <button
-                      className={Styles.videoBtn}
-                      onClick={() =>
-                        this.props.viewState.setVideoGuideVisible(
-                          HELP_VIDEO_NAME
-                        )
-                      }
+            {helpItemType === "videoAndContent" && (
+              <>
+                {this.props.videoUrl && this.props.placeholderImage && (
+                  <div key={"image"}>
+                    <div
+                      className={Styles.videoLink}
+                      style={{
+                        backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
+                      }}
                     >
-                      <Icon glyph={Icon.GLYPHS.play} />
-                    </button>
+                      <button
+                        className={Styles.videoBtn}
+                        onClick={() =>
+                          this.props.viewState.setVideoGuideVisible(
+                            HELP_VIDEO_NAME
+                          )
+                        }
+                      >
+                        <Icon glyph={Icon.GLYPHS.play} />
+                      </button>
+                    </div>
+                    <Spacing bottom={5} />
                   </div>
-                  <Spacing bottom={5} />
-                </div>
-              )}
-              {this.props.markdownContent && (
-                <StyledHtml
-                  key={"markdownContent"}
-                  viewState={this.props.viewState}
-                  markdown={this.props.markdownContent}
-                />
-              )}
-            </If>
-            <If condition={helpItemType === "slider"}>
+                )}
+                {this.props.markdownContent && (
+                  <StyledHtml
+                    key={"markdownContent"}
+                    viewState={this.props.viewState}
+                    markdown={this.props.markdownContent}
+                  />
+                )}
+              </>
+            )}
+            {helpItemType === "slider" && (
               <SatelliteGuide
                 terria={this.props.terria}
                 viewState={this.props.viewState}
               />
-            </If>
-            <If condition={helpItemType === "trainer"}>
+            )}
+            {helpItemType === "trainer" && (
               <TrainerPane
                 content={this.props.content}
                 terria={this.props.terria}
                 viewState={this.props.viewState}
               />
-            </If>
+            )}
           </Box>
         </div>
       )

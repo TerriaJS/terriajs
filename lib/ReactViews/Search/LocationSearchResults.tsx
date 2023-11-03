@@ -5,7 +5,7 @@
   https://github.com/TerriaJS/nsw-digital-twin/issues/248#issuecomment-599919318
  */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
@@ -52,6 +52,11 @@ interface PropsType extends WithTranslation {
 @observer
 class LocationSearchResults extends React.Component<PropsType> {
   @observable isExpanded = false;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @action.bound
   toggleExpand() {
@@ -157,7 +162,7 @@ class LocationSearchResults extends React.Component<PropsType> {
                   left
                   justifySpaceBetween
                 >
-                  <RawButton onClick={this.toggleExpand}>
+                  <RawButton onClick={() => this.toggleExpand()}>
                     <TextSpan small isLink>
                       <SearchResultsFooter
                         isExpanded={this.isExpanded}

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -17,7 +17,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
@@ -39,6 +39,7 @@ export class MapServerStratum extends LoadableStratum(
     private readonly _mapServer: MapServer
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -46,6 +47,19 @@ export class MapServerStratum extends LoadableStratum(
       model as ArcGisMapServerCatalogGroup,
       this._mapServer
     ) as this;
+  }
+
+  /** returns an array of the parent layers id's */
+  findParentLayers(layerId: number): number[] {
+    const parentLayerIds: number[] = [];
+    const layer = this.layers.find((l) => l.id === layerId);
+    if (layer !== undefined) {
+      parentLayerIds.push(layer.id);
+      if (layer.parentLayerId !== -1) {
+        parentLayerIds.push(...this.findParentLayers(layer.parentLayerId));
+      }
+    }
+    return parentLayerIds;
   }
 
   @computed get name() {
@@ -188,12 +202,14 @@ export class MapServerStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    //if parent layer is not -1 then this is sublayer so we define its ID like that
-    const layerId =
-      id +
-      "/" +
-      (layer.parentLayerId !== -1 ? layer.parentLayerId + "/" : "") +
-      layer.id;
+    let layerId = id + "/" + layer.id;
+
+    const parentLayers = this.findParentLayers(layer.id);
+
+    if (parentLayers.length > 0) {
+      layerId = id + "/" + parentLayers.reverse().join("/");
+    }
+
     let model: ArcGisMapServerCatalogItem | ArcGisMapServerCatalogGroup;
 
     // Treat layer as a group if it has type "Group Layer" - or has subLayers
@@ -219,6 +235,7 @@ export class MapServerStratum extends LoadableStratum(
         ArcGisMapServerCatalogItem,
         layerId
       );
+
       if (existingModel === undefined) {
         model = new ArcGisMapServerCatalogItem(
           layerId,
@@ -251,6 +268,11 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
 ) {
   static readonly type = "esri-mapServer-group";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return ArcGisMapServerCatalogGroup.type;
   }
@@ -259,7 +281,8 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

@@ -1,8 +1,10 @@
+import { makeObservable } from "mobx";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import primitiveTrait from "../../Traits/Decorators/primitiveTrait";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import SearchProviderResults from "./SearchProviderResults";
+import { ModelConstructorParameters } from "../Definition/Model";
 
 export class StubSearchProviderTraits extends LocationSearchProviderTraits {
   @primitiveTrait({
@@ -18,6 +20,12 @@ export default class StubSearchProvider extends SearchProviderMixin(
   CreateModel(StubSearchProviderTraits)
 ) {
   static readonly type = "stub-search-provider";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type(): string {
     return StubSearchProvider.type;
   }

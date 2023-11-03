@@ -1,7 +1,7 @@
 "use strict";
 
 import classNames from "classnames";
-import { Lambda, observable, reaction } from "mobx";
+import { Lambda, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -10,7 +10,7 @@ import isDefined from "../../Core/isDefined";
 import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./map-interaction-window.scss";
 
 const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
@@ -39,6 +39,11 @@ class MapInteractionWindow extends React.Component<{
   private disposeMapInteractionObserver?: Lambda;
 
   @observable currentInteractionMode?: MapInteractionMode;
+
+  constructor(props: { viewState: ViewState }) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentWillUnmount() {
     // this.removeContextItem();

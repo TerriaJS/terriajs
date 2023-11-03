@@ -11,7 +11,7 @@ import Text from "../../Styled/Text";
 import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
@@ -19,7 +19,11 @@ const BoxHelpfulHints = styled(Box)``;
 
 const ResponsiveSpacing = styled(Box)`
   height: 110px;
+  height: 110px;
   // Hardcoded px value, TODO: make it not hardcoded
+  @media (max-height: 700px) {
+    height: 3vh;
+  }
   @media (max-height: 700px) {
     height: 3vh;
   }

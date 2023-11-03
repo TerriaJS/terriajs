@@ -12,7 +12,7 @@ import Button from "../Styled/Button";
 import Spacing from "../Styled/Spacing";
 import Text from "../Styled/Text";
 import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
-import { withViewState } from "./StandardUserInterface/ViewStateContext";
+import { withViewState } from "./Context";
 import FadeIn from "./Transitions/FadeIn/FadeIn";
 
 const TopElementBox = styled(Box)`
@@ -144,14 +144,11 @@ class Disclaimer extends React.Component {
                   {disclaimerDeny}
                 </DisclaimerButton>
               )}
-              <Choose>
-                <When condition={useSmallScreenInterface}>
-                  <Spacing bottom={3} />
-                </When>
-                <Otherwise>
-                  <Spacing right={3} />
-                </Otherwise>
-              </Choose>
+              {useSmallScreenInterface ? (
+                <Spacing bottom={3} />
+              ) : (
+                <Spacing right={3} />
+              )}
               <DisclaimerButton
                 onClick={() => this.confirm(disclaimer.confirmAction)}
                 fullWidth={useSmallScreenInterface || !renderDenyButton}

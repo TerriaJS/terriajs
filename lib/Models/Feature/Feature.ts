@@ -1,8 +1,11 @@
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { JsonObject } from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";
@@ -34,6 +37,7 @@ export default class TerriaFeature extends Entity {
 
   constructor(options: Entity.ConstructorOptions) {
     super(options);
+    makeObservable(this);
     addCustomFeatureProperties(this);
   }
 
@@ -69,6 +73,23 @@ export default class TerriaFeature extends Entity {
     }
     if (!feature || !(feature instanceof TerriaFeature)) {
       feature = TerriaFeature.fromEntity(entity);
+    }
+    return feature;
+  }
+
+  static fromImageryLayerFeatureInfo(imageryFeature: ImageryLayerFeatureInfo) {
+    const feature = new TerriaFeature({
+      id: imageryFeature.name,
+      name: imageryFeature.name,
+      description: imageryFeature.description,
+      properties: imageryFeature.properties
+    });
+    feature.data = imageryFeature.data;
+    feature.imageryLayer = imageryFeature.imageryLayer;
+    if (imageryFeature.position) {
+      feature.position = new ConstantPositionProperty(
+        Ellipsoid.WGS84.cartographicToCartesian(imageryFeature.position)
+      );
     }
     return feature;
   }

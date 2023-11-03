@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import URI from "urijs";
@@ -78,6 +78,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -637,17 +638,27 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       (unionRectangle, layer) => {
         // Convert to cesium Rectangle (so we can use Rectangle.union)
         const latLonRect = getRectangleFromLayer(layer);
-        const ceisumRect = Rectangle.fromDegrees(
+
+        if (
+          !isDefined(latLonRect?.west) ||
+          !isDefined(latLonRect?.south) ||
+          !isDefined(latLonRect?.east) ||
+          !isDefined(latLonRect?.north)
+        )
+          return;
+
+        const cesiumRectangle = Rectangle.fromDegrees(
           latLonRect?.west,
           latLonRect?.south,
           latLonRect?.east,
           latLonRect?.north
         );
+
         if (!unionRectangle) {
-          return ceisumRect;
+          return cesiumRectangle;
         }
 
-        return Rectangle.union(unionRectangle, ceisumRect);
+        return Rectangle.union(unionRectangle, cesiumRectangle);
       },
       undefined
     );

@@ -165,7 +165,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
             />
           </PresentationBox>
           {/* Results */}
-          <If condition={shouldShowResults}>
+          {shouldShowResults && (
             <Box
               position="absolute"
               fullWidth
@@ -218,7 +218,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
                 ))}
               </Box>
             </Box>
-          </If>
+          )}
         </Box>
       </Text>
     );

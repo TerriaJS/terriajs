@@ -3,7 +3,8 @@ import {
   computed,
   IReactionDisposer,
   observable,
-  reaction
+  reaction,
+  makeObservable
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
@@ -47,6 +48,7 @@ export default class SearchState {
   private _unifiedSearchDisposer: IReactionDisposer;
 
   constructor(options: SearchStateOptions) {
+    makeObservable(this);
     this.catalogSearchProvider =
       options.catalogSearchProvider ||
       new CatalogSearchProvider("catalog-search-provider", options.terria);

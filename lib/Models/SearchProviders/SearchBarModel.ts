@@ -1,4 +1,4 @@
-import { action, isObservableArray, observable } from "mobx";
+import { action, isObservableArray, makeObservable, observable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
@@ -15,6 +15,8 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
 
   constructor(readonly terria: Terria) {
     super("search-bar-model", terria);
+
+    makeObservable(this);
   }
 
   initializeSearchProviders() {

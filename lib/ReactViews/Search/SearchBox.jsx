@@ -50,6 +50,9 @@ export const SearchBox = createReactClass({
     theme: PropTypes.object
   },
 
+  /**
+   * @returns {any}
+   */
   getDefaultProps() {
     return {
       placeholder: "Search",

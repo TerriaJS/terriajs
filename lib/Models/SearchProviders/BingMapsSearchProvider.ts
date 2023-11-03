@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, makeObservable } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -30,6 +30,9 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
 
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
+
+    makeObservable(this);
+
     runInAction(() => {
       if (!this.key && this.terria.configParameters.bingMapsKey) {
         this.setTrait(

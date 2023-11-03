@@ -1,3 +1,4 @@
+import { makeObservable } from "mobx";
 import {
   Category,
   SearchAction
@@ -6,6 +7,7 @@ import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProvid
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import SearchResult from "./SearchResult";
+import { ModelConstructorParameters } from "../Definition/Model";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],
@@ -228,6 +230,11 @@ export default class AustralianGazetteerSearchProvider extends WebFeatureService
   CreateModel(WebFeatureServiceSearchProviderTraits)
 ) {
   static readonly type = "australian-gazetteer-search-provider";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return AustralianGazetteerSearchProvider.type;

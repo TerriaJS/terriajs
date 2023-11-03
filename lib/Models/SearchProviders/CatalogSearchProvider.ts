@@ -1,4 +1,10 @@
-import { autorun, computed, observable, runInAction } from "mobx";
+import {
+  autorun,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { fromPromise } from "mobx-utils";
 import {
   Category,
@@ -51,7 +57,7 @@ export function loadAndSearchCatalogRecursively(
           runInAction(() => {
             searchResults.results.push(
               new SearchResult({
-                name: name,
+                name: modelToSave.name,
                 catalogItem: modelToSave
               })
             );
@@ -117,6 +123,9 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
+
+    makeObservable(this);
+
     this.setTrait(
       CommonStrata.defaults,
       "minCharacters",

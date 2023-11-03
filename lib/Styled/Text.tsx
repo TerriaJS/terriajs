@@ -32,7 +32,7 @@ interface ITextWeight {
 export interface ITextPropsBase {
   displayBlock?: boolean;
   isLink?: boolean;
-  nunito?: boolean;
+  mono?: boolean;
   openSans?: boolean;
   breakWord?: boolean;
   uppercase?: boolean;
@@ -67,6 +67,8 @@ export const Text = styled.div<ITextProps>`
 
   // TODO: themeify family
   font-family: ${(props) => props.theme.fontBase};
+
+  ${(props) => props.mono && `font-family: ${props.theme.fontMono};`}
 
   ${(props) =>
     props.breakWord &&
@@ -183,11 +185,6 @@ export const Text = styled.div<ITextProps>`
     props.styledFontSize &&
     `
     font-size: ${props.styledFontSize};
-  `}
-  ${(props) =>
-    props.styledLineHeight &&
-    `
-    line-height: ${props.styledLineHeight};
   `}
 
   ${(props) =>

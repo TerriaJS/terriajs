@@ -1,19 +1,19 @@
 import { uniq } from "lodash-es";
-import { action, computed, runInAction } from "mobx";
-import clone from "terriajs-cesium/Source/Core/clone";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import clone from "terriajs-cesium/Source/Core/clone";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
+import { JsonObject, isJsonNumber, isJsonString } from "../Core/Json";
+import Result from "../Core/Result";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonString, JsonObject } from "../Core/Json";
-import Result from "../Core/Result";
 import CatalogMemberFactory from "../Models/Catalog/CatalogMemberFactory";
 import Group from "../Models/Catalog/Group";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import hasTraits, { HasTrait } from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import hasTraits, { HasTrait } from "../Models/Definition/hasTraits";
 import ModelReference from "../Traits/ModelReference";
 import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import { ItemPropertiesTraits } from "../Traits/TraitsClasses/ItemPropertiesTraits";
@@ -25,9 +25,16 @@ naturalSort.insensitive = true;
 
 const MERGED_GROUP_ID_PREPEND = "__merged__";
 
-function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
-  abstract class Klass extends Base implements Group {
+type BaseType = Model<GroupTraits>;
+
+function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class _GroupMixin extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get isGroup() {
       return true;
@@ -64,32 +71,34 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       if (members === undefined) {
         return [];
       }
+
+      const includeMemberRegex = this.includeMembersRegex
+        ? new RegExp(this.includeMembersRegex, "i")
+        : undefined;
+
       const models = filterOutUndefined(
         members.map((id) => {
           if (!ModelReference.isRemoved(id)) {
             const model = this.terria.getModelById(BaseModel, id);
-            if (this.mergedExcludeMembers.length == 0) {
-              return model;
-            }
 
-            // Get model name and apply excludeMembers
+            // Get model name, apply includeMemberRegex and excludeMembers
             const modelName = CatalogMemberMixin.isMixedInto(model)
-              ? model.name
+              ? model.name?.toLowerCase().trim()
               : undefined;
+
+            const modelId = model?.uniqueId?.toLowerCase().trim();
             if (
               model &&
+              // Does includeMemberRegex match model ID or model name
+              (!includeMemberRegex ||
+                (modelId && includeMemberRegex.test(modelId)) ||
+                (modelName && includeMemberRegex.test(modelName))) &&
               // Does excludeMembers not include model ID
               !this.mergedExcludeMembers.find(
                 (name) =>
-                  model.uniqueId?.toLowerCase().trim() ===
-                  name.toLowerCase().trim()
-              ) &&
-              // Does excludeMembers not include model name
-              (!modelName ||
-                !this.mergedExcludeMembers.find(
-                  (name) =>
-                    modelName.toLowerCase().trim() === name.toLowerCase().trim()
-                ))
+                  modelId === name.toLowerCase().trim() ||
+                  (modelName && modelName === name.toLowerCase().trim())
+              )
             )
               return model;
           }
@@ -165,7 +174,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {
@@ -412,7 +421,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
   }
 
-  return Klass;
+  return _GroupMixin;
 }
 
 namespace GroupMixin {

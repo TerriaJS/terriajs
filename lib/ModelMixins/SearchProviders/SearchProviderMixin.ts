@@ -1,18 +1,24 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { fromPromise } from "mobx-utils";
 import Constructor from "../../Core/Constructor";
 import isDefined from "../../Core/isDefined";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
+import AbstractConstructor from "../../Core/AbstractConstructor";
 
 type SearchProviderModel = Model<SearchProviderTraits>;
 
-function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
-  Base: T
-) {
+function SearchProviderMixin<
+  T extends AbstractConstructor<SearchProviderModel>
+>(Base: T) {
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     protected abstract logEvent(searchText: string): void;
 

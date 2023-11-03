@@ -273,9 +273,6 @@
     "success": "クリップボードにコピーしました"
   },
   "workbench": {
-    "dimensionsSelector": {
-      "undefinedLabel": "未指定"
-    },
     "addItemErrorMessage": "カタログのアイテム追加の際にエラーが発生しました。",
     "addItemErrorTitle": "カタログのアイテムをワークベンチに追加できませんでした。",
     "toggleVisibility": "データの表示/非表示",
@@ -435,7 +432,7 @@
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
     "qualityLabel": "質",
-    "mapQuality": "ラスターデータの質:",
+    "mapQuality": "地図の質:",
     "nativeResolutionHeader": "デバイスの解像度を適用",
     "imageOptimisation": "画像の最適化",
     "baseMap": "ベースマップ",
@@ -811,7 +808,9 @@
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
-      "stubCreationFailure": "カタログアイテム {{item}} を消すことができません"
+      "stubCreationFailure": "カタログアイテム {{item}} を消すことができません",
+      "addAll": "全てを追加",
+      "removeAll": "全てを削除"
     },
     "ckan": {
       "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
@@ -905,7 +904,7 @@
       "badlyFormatedMessage": "'{{name}}' データセットは、周期性の点で正しくフォーマットされていません '{{isoSegments}}'。データセットの情報ボタンをクリックするとデータセットとデータを管理する主体の情報が得られます。",
       "badlyFormatedTitle": "周期性が正しくフォーマットされていません",
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
-      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。",
+      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。",
       "noLayerFoundTitle": "レイヤが一つも見つかりません",
       "defaultStyleLabel": "デフォルトのスタイル",
       "getCapabilitiesUrl": "GetCapabilities URL",
@@ -920,9 +919,9 @@
       "reachedMaxFeatureLimit": "警告: このレイヤはWFSフィーチャの限度 ({{maxFeatures}}) に達しました",
       "missingUrlMessage": "Web Feature Service (WFS) の GetCapabilities ドキュメントを読めませんでした。語るぐアイテムに `url`がないためです。",
       "missingUrlTitle": "GetCapabilities を読めませんでした",
-      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。{{line}}{{line}}カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
+      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
       "missingDataTitle": "見つからないデータ",
-      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。",
+      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。",
       "noLayerFoundTitle": "レイヤがありません",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "serviceContact": "サービスに関する連絡先",
@@ -952,7 +951,8 @@
       "invalidServiceTitle": "無効なArcGISマップサービス",
       "name": "ArcGIS マップサーバーグループ",
       "groupNotAvailableMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。",
-      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。"
+      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。",
+      "singleFusedMapCacheLayerName": "全レイヤ"
     },
     "georss": {
       "copyrightText": "著作権",
@@ -1375,21 +1375,27 @@
       "notSupportedErrorTitle": "2Dではサポートされていません"
     },
     "tableData": {
-      "bulkGeocoderErrorMessage": "座標の取得時にエラーが発生したため、緯度経度を住所に対応づけることができませんでした。インターネット接続を確認するか時間をおいてやり直してください。",
-      "bulkGeocoderErrorTitle": "一括ジオコーダーエラー",
-      "bulkGeocoderInfo2Message": "{{nullAddresses}}個の住所がCSVにありませんでした。",
-      "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
-      "bulkGeocoderInfoTitle": "一括ジオコーダー",
-      "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
-      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています",
       "noData": "表示するデータがありません",
-      "legendNullLabel": "(値無し)",
-      "legendZFilterLabel": "異常な値",
-      "zFilterEnabled": "異常な値は表示していません (クリックして表示)",
-      "zFilterDisabled": "異常値が見つかりました (クリックして非表示)",
-      "timeDimensionEnabled": "時間を有効 (クリックで無効)",
-      "styleDisabledLabel": "スタイルを無効",
-      "timeDimensionDisabled": "時間を無効 (クリックで有効)"
+      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています",
+      "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
+      "bulkGeocoderInfoTitle": "一括ジオコーダー",
+      "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}}個の住所がCSVにありませんでした。",
+      "bulkGeocoderErrorTitle": "一括ジオコーダーエラー",
+      "bulkGeocoderErrorMessage": "座標の取得時にエラーが発生したため、緯度経度を住所に対応づけることができませんでした。インターネット接続を確認するか時間をおいてやり直してください。",
+      "legendZFilterLabel": "異常値",
+      "legendNullLabel": "(値なし)",
+      "activeStyle": "使用するスタイル",
+      "styleDisabledLabel": "スタイルなし",
+      "zFilterEnabled": "異常値が非表示 (クリックして表示)",
+      "zFilterDisabled": "異常値あり (クリックして非表示)",
+      "timeDimensionEnabled": "時系列表示が有効 (クリックで無効化)",
+      "timeDimensionDisabled": "時系列表示が無効 (クリックで有効化)",
+      "editStyle": "スタイルを編集",
+      "custom": "カスタム",
+      "regionMapping": "リージョンマッピング",
+      "regionColumn": "リージョン変数",
+      "manualRegionMapping": "手動のリージョンマッピング"
     },
     "terriaJSONcatalog": {
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction JSON を受け取るはずでしたが、{{xhr}} を受け取りました",
@@ -1467,7 +1473,7 @@
       "loadingInitSourceError2Message": "以下から初期化情報を読み込む際にエラー発生:  \n*`{{loadSource}}`*.",
       "loadingInitSourceErrorMessage": "`{{fragment}}` から初期化情報を読み込めませんでした。initFragmentPaths が定義されていません。",
       "loadingInitSourceErrorTitle": "初期化リソース読み込み時エラー",
-      "loadingInitSourcesErrorMessage": "{{appName}} 地図設定の読み込み時エラー &mdash; ただ指示表示されないかもしれません。地図を再読み込みしてください。もし問題が解決しない場合、 {{email}} にエラーを報告しするか、下のボタンを押してください。",
+      "loadingInitSourcesErrorMessage": "{{appName}} 地図設定の読み込み時エラー &mdash; 正しく表示されないかもしれません。地図を再読み込みしてください。もし問題が解決しない場合、 {{email}} にエラーを報告するか、下のボタンを押してください。",
       "loadingInitSourcesErrorTitle": "地図設定読み込み時のエラー",
       "loadingMagdaInitSourceErrorMessage": "Magda レコード `{{url}}` から初期化情報を読み込み時にエラー発生。",
       "loadingMagdaInitSourceErrorTitle": "Magdaの初期化ソース読み込み時のエラー",
@@ -1515,6 +1521,507 @@
       },
       "showClippingBox": "クリップボックスを表示",
       "groupName": "クリップボックス"
+    },
+    "tableStyling": {
+      "hideAdvancedOptions": "詳細オプションを非表示",
+      "showAdvancedOptions": "詳細オプションを表示",
+      "copyUserStratum": "ユーザー設定をクリップボードにコピー",
+      "name": "スタイル",
+      "reset": "デフォルトのスタイルを復元",
+      "data": {
+        "name": "データ",
+        "selectableDimensions": {
+          "dataset": {
+            "name": "データセット"
+          },
+          "tableStyle": {
+            "name": "スタイル"
+          },
+          "tableStyleType": {
+            "name": "シンボル設定",
+            "options": {
+              "fill": {
+                "name": "塗り色"
+              },
+              "pointSize": {
+                "name": "点の大きさ"
+              },
+              "point": {
+                "name": "点・マーカー"
+              },
+              "outline": {
+                "name": "線"
+              },
+              "label": {
+                "name": "ラベル"
+              },
+              "trail": {
+                "name": "軌跡"
+              }
+            }
+          }
+        }
+      },
+      "fill": {
+        "name": "塗り色",
+        "selectableDimensions": {
+          "tableColorColumn": {
+            "name": "変数"
+          },
+          "dataType": {
+            "name": "変数の型 (上級者向け)"
+          },
+          "type": {
+            "name": "カラースキームの種類",
+            "undefinedLabel": "選択してください",
+            "options": {
+              "noStyle": {
+                "name": "単色"
+              },
+              "sequentialContinuous": {
+                "name": "単方向 (連続)"
+              },
+              "sequentialDiscrete": {
+                "name": "単方向 (離散)"
+              },
+              "divergingContinuous": {
+                "name": "双方向 (連続)"
+              },
+              "divergingDiscrete": {
+                "name": "双方向 (離散)"
+              },
+              "qualitative": {
+                "name": "分類"
+              },
+              "customQualitative": {
+                "name": "カスタム (分類)"
+              },
+              "customDiscrete": {
+                "name": "カスタム (離散)"
+              }
+            }
+          },
+          "scheme": {
+            "name": "カラースキーム"
+          },
+          "numberOfBins": {
+            "name": "階級の数"
+          }
+        }
+      },
+      "min": {
+        "name": "最小"
+      },
+      "displayRange": {
+        "name": "表示範囲",
+        "selectableDimensions": {
+          "max": {
+            "name": "最大"
+          }
+        }
+      },
+      "bins": {
+        "name": "階級",
+        "selectableDimensions": {
+          "start": {
+            "name": "{{value1}} から {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "色"
+              },
+              "start": {
+                "name": "下限値"
+              },
+              "stop": {
+                "name": "上限値"
+              }
+            }
+          }
+        }
+      },
+      "colors": {
+        "name": "色の設定",
+        "selectableDimensions": {
+          "color": {
+            "name": "色"
+          },
+          "value": {
+            "name": "値"
+          },
+          "remove": {
+            "value": "削除"
+          },
+          "add": {
+            "value": "追加"
+          }
+        }
+      },
+      "nullColor": {
+        "name": "デフォルトの色"
+      },
+      "outlierColor": {
+        "name": "外れ値の色"
+      },
+      "additionalColors": {
+        "name": "その他の色",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "リージョンの色"
+          },
+          "nullColor": {
+            "name": "デフォルトの色"
+          },
+          "outlierColor": {
+            "name": "外れ値の色"
+          }
+        }
+      },
+      "pointSize": {
+        "name": "点の大きさ",
+        "selectableDimensions": {
+          "pointSizeColumn": {
+            "name": "変数"
+          },
+          "pointSizeNull": {
+            "name": "デフォルトの大きさ"
+          },
+          "pointSizesFactor": {
+            "name": "係数"
+          },
+          "pointSizeOffset": {
+            "name": "オフセット"
+          }
+        }
+      },
+      "regionMapping": {
+        "name": "リージョンマッピング"
+      },
+      "legend": {
+        "name": "凡例",
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "タイトル"
+          },
+          "legendTicks": {
+            "name": "目盛りの数"
+          },
+          "title": {
+            "name": "{{index}} 番目のタイトル"
+          }
+        }
+      },
+      "styleOptions": {
+        "name": "スタイルオプション",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "タイトル"
+          },
+          "longitudeColumn": {
+            "name": "経度の変数"
+          },
+          "latitudeColumn": {
+            "name": "緯度の変数"
+          }
+        }
+      },
+      "timeOptions": {
+        "name": "時系列オプション",
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "時刻の変数"
+          },
+          "tableEndTimeColumn": {
+            "name": "終了時刻の変数"
+          },
+          "tableTimeIdColumns": {
+            "name": "ID の変数"
+          },
+          "tableTimeIsSampled": {
+            "name": "サンプリングデータとして扱う",
+            "options": {
+              "true": {
+                "name": "はい"
+              },
+              "false": {
+                "name": "いいえ"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "表示時間"
+          },
+          "tableTimeSpreadStartTime": {
+            "name": "開始時点ですべてのフィーチャーを表示する",
+            "options": {
+              "true": {
+                "name": "はい"
+              },
+              "false": {
+                "name": "いいえ"
+              }
+            }
+          },
+          "tableTimeSpreadFinishTime": {
+            "name": "終了時点ですべてのフィーチャーを表示する",
+            "options": {
+              "true": {
+                "name": "はい"
+              },
+              "false": {
+                "name": "いいえ"
+              }
+            }
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "ワークベンチオプション",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "ワークベンチでスタイルを表示する",
+            "options": {
+              "true": {
+                "name": "表示"
+              },
+              "false": {
+                "name": "非表示"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "スタイルなしのオプションを表示"
+          },
+          "showDisableTimeOption": {
+            "name": "時系列表示をオンオフできるようにする"
+          },
+          "enableManualRegionMapping": {
+            "name": "手動のリージョンマッピングを有効にする"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "変数/列",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "タイトル"
+          },
+          "columnUnits": {
+            "name": "単位"
+          }
+        }
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "変数"
+          },
+          "styleType": {
+            "name": "スタイルのタイプ",
+            "undefinedLabel": "選択してください",
+            "constant": {
+              "name": "固定"
+            },
+            "bin": {
+              "name": "離散"
+            },
+            "enum": {
+              "name": "分類"
+            }
+          },
+          "enum": {
+            "name": "分類",
+            "selectableDimensions": {
+              "enum": {
+                "noValue": "値なし",
+                "selectableDimensions": {
+                  "value": {
+                    "name": "値"
+                  },
+                  "remove": {
+                    "value": "削除"
+                  }
+                },
+                "add": {
+                  "value": "追加"
+                }
+              }
+            }
+          },
+          "bin": {
+            "name": "階級",
+            "selectableDimensions": {
+              "add": {
+                "value": "追加"
+              },
+              "bin": {
+                "noValue": "値なし",
+                "range": "{{value1}} から {{value2}}",
+                "selectableDimensions": {
+                  "start": {
+                    "name": "下限値"
+                  },
+                  "stop": {
+                    "name": "上限値"
+                  },
+                  "remove": {
+                    "value": "削除"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "null": {
+          "name": "デフォルト"
+        }
+      },
+      "point": {
+        "name": "点・マーカー",
+        "selectableDimensions": {
+          "marker": {
+            "name": "マーカー",
+            "tooltip": "マーカーにはサポートされている画像形式 (PNG、SVG等) のURLとBase64が使用できます"
+          },
+          "rotation": {
+            "name": "回転"
+          },
+          "height": {
+            "name": "高さ"
+          },
+          "width": {
+            "name": "幅"
+          }
+        }
+      },
+      "outline": {
+        "name": "線",
+        "selectableDimensions": {
+          "color": {
+            "name": "色"
+          },
+          "width": {
+            "name": "太さ"
+          }
+        }
+      },
+      "label": {
+        "name": "ラベル",
+        "selectableDimensions": {
+          "column": {
+            "name": "変数"
+          },
+          "font": {
+            "name": "フォント"
+          },
+          "style": {
+            "name": "ラベルのスタイル",
+            "options": {
+              "fill": {
+                "name": "塗り"
+              },
+              "outline": {
+                "name": "輪郭"
+              },
+              "fillAndOutline": {
+                "name": "塗りと輪郭"
+              }
+            }
+          },
+          "scale": {
+            "name": "倍率"
+          },
+          "fillColor": {
+            "name": "塗り色"
+          },
+          "outlineColor": {
+            "name": "輪郭の色"
+          },
+          "outlineWidth": {
+            "name": "輪郭の太さ"
+          },
+          "horizontalOrigin": {
+            "name": "水平原点",
+            "options": {
+              "left": {
+                "name": "左"
+              },
+              "center": {
+                "name": "中央"
+              },
+              "right": {
+                "name": "右"
+              }
+            }
+          },
+          "verticalOrigin": {
+            "name": "垂直原点",
+            "options": {
+              "top": {
+                "name": "上"
+              },
+              "center": {
+                "name": "中央"
+              },
+              "baseline": {
+                "name": "ベースライン"
+              },
+              "bottom": {
+                "name": "下"
+              }
+            }
+          },
+          "offsetX": {
+            "name": "ピクセルオフセットX"
+          },
+          "offsetY": {
+            "name": "ピクセルオフセットY"
+          }
+        }
+      },
+      "trail": {
+        "selectableDimensions": {
+          "leadTime": {
+            "name": "前方の軌跡の表示時間 (秒)"
+          },
+          "trailTime": {
+            "name": "後方の軌跡の表示時間 (秒)"
+          },
+          "width": {
+            "name": "太さ"
+          },
+          "resolution": {
+            "name": "解像度"
+          },
+          "growColor": {
+            "name": "輝きの色"
+          },
+          "growPower": {
+            "name": "輝きの強さ"
+          },
+          "taperPower": {
+            "name": "減衰"
+          },
+          "solidColor": {
+            "name": "色"
+          },
+          "trailStyleOptions": {
+            "name": "軌跡のスタイルオプション",
+            "selectableDimensions": {
+              "material": {
+                "name": "マテリアルタイプ",
+                "options": {
+                  "solidColor": {
+                    "name": "単色"
+                  },
+                  "polylineGlow": {
+                    "name": "輝き"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "map": {
@@ -1703,5 +2210,13 @@
     "firefox": "Mozilla Firefox",
     "safari": "Apple Safari",
     "edge": "Microsoft Edge"
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "指定されていません",
+    "enabled": "有効",
+    "disabled": "無効",
+    "colorAdd": "追加",
+    "colorRemove": "削除",
+    "invalid": "無効"
   }
 }

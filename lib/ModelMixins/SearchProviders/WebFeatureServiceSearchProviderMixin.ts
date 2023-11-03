@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { makeObservable, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import Constructor from "../../Core/Constructor";
@@ -9,13 +9,19 @@ import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import LocationSearchProviderMixin from "./LocationSearchProviderMixin";
+import AbstractConstructor from "../../Core/AbstractConstructor";
 
 function WebFeatureServiceSearchProviderMixin<
-  T extends Constructor<Model<WebFeatureServiceSearchProviderTraits>>
+  T extends AbstractConstructor<Model<WebFeatureServiceSearchProviderTraits>>
 >(Base: T) {
   abstract class WebFeatureServiceSearchProviderMixin extends LocationSearchProviderMixin(
     Base
   ) {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     protected abstract featureToSearchResultFunction: (
       feature: any
     ) => SearchResult;

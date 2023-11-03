@@ -1,9 +1,10 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import GltfMixin from "../../../ModelMixins/GltfMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GltfCatalogItemTraits from "../../../Traits/TraitsClasses/GltfCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
 
 export default class GltfCatalogItem
@@ -11,6 +12,11 @@ export default class GltfCatalogItem
   implements HasLocalData
 {
   static readonly type = "gltf";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return GltfCatalogItem.type;

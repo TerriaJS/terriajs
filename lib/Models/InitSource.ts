@@ -55,7 +55,8 @@ export interface InitSourceData {
   viewerMode?: ViewModeJson;
   baseMaps?: BaseMapsJson;
   homeCamera?: JsonObject;
-  initialCamera?: JsonObject;
+  /* Either a `CameraView` instance or a flag for focusing the camera on the workbench items */
+  initialCamera?: JsonObject | { focusWorkbenchItems: boolean };
   showSplitter?: boolean;
   splitPosition?: number;
   workbench?: string[];

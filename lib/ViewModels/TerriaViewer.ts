@@ -8,7 +8,8 @@ import {
   observable,
   reaction,
   runInAction,
-  untracked
+  untracked,
+  makeObservable
 } from "mobx";
 import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -121,6 +122,7 @@ export default class TerriaViewer {
   readonly afterViewerChanged = new CesiumEvent();
 
   constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
+    makeObservable(this);
     this.terria = terria;
     this.items = items;
 
@@ -217,7 +219,6 @@ export default class TerriaViewer {
       newViewer = untracked(() => new NoViewer(this));
     }
 
-    console.log(`Creating a viewer: ${newViewer.type}`);
     this._lastViewer = newViewer;
     newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
 
@@ -246,7 +247,6 @@ export default class TerriaViewer {
     let currentView: CameraView | undefined;
     if (this._lastViewer !== undefined) {
       this.beforeViewerChanged.raiseEvent();
-      console.log(`Destroying viewer: ${this._lastViewer.type}`);
       currentView = this._lastViewer.getCurrentCameraView();
       this._lastViewer.destroy();
       this._lastViewer = undefined;

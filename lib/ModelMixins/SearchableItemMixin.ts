@@ -1,14 +1,14 @@
-import { action, computed } from "mobx";
-import Constructor from "../Core/Constructor";
+import { action, computed, makeObservable } from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
+import Model from "../Models/Definition/Model";
 import ItemSearchProvider, {
   ItemSearchResult
 } from "../Models/ItemSearchProviders/ItemSearchProvider";
 import { ItemSearchProviders } from "../Models/ItemSearchProviders/ItemSearchProviders";
-import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import SearchableItemTraits from "../Traits/TraitsClasses/SearchableItemTraits";
 
-type MixinModel = Model<SearchableItemTraits & MappableTraits>;
+type BaseType = Model<SearchableItemTraits & MappableTraits>;
 
 export type ItemSelectionDisposer = () => void;
 
@@ -16,8 +16,8 @@ export type ItemSelectionDisposer = () => void;
  * This mixin adds capability for searching a catalog item using an {@link
  * ItemSearchProvider}.
  */
-function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
-  abstract class Klass extends Base {
+function SearchableItemMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class SearchableItemMixin extends Base {
     readonly hasSearchableItemMixin = true;
 
     /**
@@ -44,6 +44,11 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
      */
     abstract zoomToItemSearchResult(result: ItemSearchResult): void;
 
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     /**
      * Returns true if this item is searchable and has a valid item search provider defined.
      */
@@ -66,7 +71,7 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
       return new klass(this.search.providerOptions, this.search.parameters);
     }
   }
-  return Klass;
+  return SearchableItemMixin;
 }
 
 namespace SearchableItemMixin {

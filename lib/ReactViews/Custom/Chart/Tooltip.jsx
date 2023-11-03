@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { Tooltip as VisxTooltip } from "@visx/tooltip";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
@@ -19,6 +19,11 @@ class Tooltip extends React.Component {
   };
 
   prevItems = [];
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get items() {
@@ -89,13 +94,13 @@ class Tooltip extends React.Component {
         >
           <div className={Styles.title}>{this.title}</div>
           <div>
-            <For each="group" of={this.groups}>
+            {this.groups.map((group) => (
               <TooltipGroup
                 key={`tooltip-group-${group.name}`}
                 name={this.groups.length > 1 ? group.name : undefined}
                 items={group.items}
               />
-            </For>
+            ))}
           </div>
         </VisxTooltip>
       </CSSTransition>
@@ -114,9 +119,9 @@ class TooltipGroup extends React.PureComponent {
     return (
       <div className={Styles.group}>
         {name && <div className={Styles.groupName}>{name}</div>}
-        <For each="item" of={items}>
+        {items.map((item) => (
           <TooltipItem key={`tooltipitem-${item.chartItem.key}`} item={item} />
-        </For>
+        ))}
       </div>
     );
   }

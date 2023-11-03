@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { uniq } from "lodash-es";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -18,6 +18,7 @@ import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import TableColumnType from "./TableColumnType";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -30,6 +31,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   static stratumName = "automaticTableStyles";
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -54,9 +56,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get disableSplitter() {
-    return !isDefined(this.catalogItem.activeTableStyle.regionColumn)
-      ? true
-      : undefined;
+    return !this.catalogItem.mapItems.find(ImageryParts.is) ? true : undefined;
   }
 
   /**

@@ -1,6 +1,6 @@
 import { BBox } from "@turf/helpers";
 import groupBy from "lodash-es/groupBy";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -45,7 +45,9 @@ export default class TableStyle {
   constructor(
     readonly tableModel: TableMixin.Instance,
     readonly styleNumber?: number | undefined
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   /** Is style ready to be used.
    * This will be false if any of dependent columns are not ready
@@ -603,9 +605,9 @@ export default class TableStyle {
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
+  /** Columns used in rowGroups - idColumns, latitude/longitude columns or region column
    */
-  @computed get rowGroups() {
+  @computed get groupByColumns() {
     let groupByCols = this.idColumns;
 
     if (!groupByCols) {
@@ -616,22 +618,18 @@ export default class TableStyle {
       } else if (this.regionColumn) groupByCols = [this.regionColumn];
     }
 
-    if (!groupByCols) groupByCols = [];
+    return groupByCols ?? [];
+  }
 
+  /** Get rows grouped by id.
+   */
+  @computed get rowGroups() {
     const tableRowIds = this.tableModel.rowIds;
 
     return (
       Object.entries(
         groupBy(tableRowIds, (rowId) =>
-          groupByCols!
-            .map((col) => {
-              // If using region column as ID - only use valid regions
-              if (col.type === TableColumnType.region) {
-                return col.valuesAsRegions.regionIds[rowId];
-              }
-              return col.values[rowId];
-            })
-            .join("-")
+          createRowGroupId(rowId, this.groupByColumns)
         )
       )
         // Filter out bad IDs
@@ -742,6 +740,19 @@ export default class TableStyle {
     }
     return this.tableModel.tableColumns.find((column) => column.name === name);
   }
+}
+
+/** Create row group ID by concatenating values for columns */
+export function createRowGroupId(rowId: number, columns: TableColumn[]) {
+  return columns
+    .map((col) => {
+      // If using region column as ID - only use valid regions
+      if (col.type === TableColumnType.region) {
+        return col.valuesAsRegions.regionIds[rowId];
+      }
+      return col.values[rowId];
+    })
+    .join("-");
 }
 
 /**
