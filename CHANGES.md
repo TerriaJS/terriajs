@@ -2,6 +2,7 @@
 
 #### next release (8.3.8)
 
+- Remove `jsx-control-statements` dependency
 - Fix WMS nested group IDs - nested groups with the same name were not being created
 - WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
 - Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
