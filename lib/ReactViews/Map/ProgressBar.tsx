@@ -1,9 +1,10 @@
-import React, { VFC, useCallback, useEffect, useMemo, useState } from "react";
+import { observer } from "mobx-react";
+import React, { VFC, useCallback, useEffect, useState } from "react";
 import styled, { css, keyframes, useTheme } from "styled-components";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import { useViewState } from "../Context";
 
-export const ProgressBar: VFC = () => {
+export const ProgressBar: VFC = observer(() => {
   const [loadPercentage, setLoadPercentage] = useState(0);
   const [indeterminateLoading, setIndeterminateLoading] = useState<any>();
 
@@ -32,13 +33,8 @@ export const ProgressBar: VFC = () => {
     };
   }, []);
 
-  const backgroundColor = useMemo(
-    () =>
-      terria.baseMapContrastColor === "#ffffff"
-        ? "#ffffff"
-        : theme.colorPrimary,
-    [terria.baseMapContrastColor]
-  );
+  const backgroundColor =
+    terria.baseMapContrastColor === "#ffffff" ? "#ffffff" : theme.colorPrimary;
 
   const allComplete = loadPercentage === 100 && !indeterminateLoading;
 
@@ -50,7 +46,7 @@ export const ProgressBar: VFC = () => {
       loadPercentage={`${loadPercentage}%`}
     />
   );
-};
+});
 
 interface IStyledProgressBarProps {
   loadPercentage: string;

@@ -281,15 +281,15 @@ class Chart extends React.Component {
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
               />
-              <For each="y" index="i" of={this.yAxes}>
+              {this.yAxes.map((y, i) => (
                 <YAxis
                   {...y}
                   key={`y-axis-${y.units}`}
                   color={this.yAxes.length > 1 ? y.color : defaultGridColor}
                   offset={i * 50}
                 />
-              </For>
-              <For each="y" index="i" of={this.yAxes}>
+              ))}
+              {this.yAxes.map((y, i) => (
                 <GridRows
                   key={`grid-${y.units}`}
                   width={this.plotWidth}
@@ -299,7 +299,7 @@ class Chart extends React.Component {
                   stroke={this.yAxes.length > 1 ? y.color : defaultGridColor}
                   lineStyle={{ opacity: 0.3 }}
                 />
-              </For>
+              ))}
               <svg
                 id="zoomSurface"
                 clipPath="url(#plotClip)"
