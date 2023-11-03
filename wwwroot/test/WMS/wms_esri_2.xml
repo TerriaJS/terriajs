@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<WMS_Capabilities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:esri_wms="http://www.esri.com/wms"
+  xmlns="http://www.opengis.net/wms" version="1.3.0" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.esri.com/wms https://services.ga.gov.au/gis/services/Topographic_Map_Indexes/MapServer/WMSServer?version=1.3.0%26service=WMS%26request=GetSchemaExtension">
+  <Service>
+    <Name>WMS</Name>
+    <Title>Topographic Map Indexes</Title>
+    <Abstract>Test Abstract
+    </Abstract>
+    <KeywordList>
+      <Keyword>Map Index</Keyword>
+      <Keyword>topographic</Keyword>
+      <Keyword>250k</Keyword>
+      <Keyword>100k</Keyword>
+      <Keyword>1 Million</Keyword>
+      <Keyword>web service</Keyword>
+      <Keyword>Australia</Keyword>
+    </KeywordList>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://www.ga.gov.au"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson/>
+        <ContactOrganization>Geoscience Australia</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition/>
+      <ContactAddress>
+        <AddressType>Postal</AddressType>
+        <Address>GPO Box 378</Address>
+        <City>Canberra</City>
+        <StateOrProvince>ACT</StateOrProvince>
+        <PostCode>2601</PostCode>
+        <Country>Australia</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone>+61 2 6249 9111</ContactVoiceTelephone>
+      <ContactFacsimileTelephone/>
+      <ContactElectronicMailAddress>clientservices@ga.gov.au</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>NONE</Fees>
+    <AccessConstraints>© Commonwealth of Australia (Geoscience Australia) 2023. This product is released under the Creative Commons Attribution 4.0 International Licence. http://creativecommons.org/licenses/by/4.0/legalcode</AccessConstraints>
+    <MaxWidth>4096</MaxWidth>
+    <MaxHeight>4096</MaxHeight>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://services.ga.gov.au/gis/services/Topographic_Map_Indexes/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/bmp</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/tiff</Format>
+        <Format>image/png</Format>
+        <Format>image/png8</Format>
+        <Format>image/png24</Format>
+        <Format>image/png32</Format>
+        <Format>image/gif</Format>
+        <Format>image/svg+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://services.ga.gov.au/gis/services/Topographic_Map_Indexes/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>application/vnd.esri.wms_raw_xml</Format>
+        <Format>application/vnd.esri.wms_featureinfo_xml</Format>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>text/xml</Format>
+        <Format>text/html</Format>
+        <Format>text/plain</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://services.ga.gov.au/gis/services/Topographic_Map_Indexes/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <esri_wms:GetStyles>
+        <Format>application/vnd.ogc.sld+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://services.ga.gov.au/gis/services/Topographic_Map_Indexes/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </esri_wms:GetStyles>
+    </Request>
+    <Exception>
+      <Format>application/vnd.ogc.se_xml</Format>
+      <Format>application/vnd.ogc.se_inimage</Format>
+      <Format>application/vnd.ogc.se_blank</Format>
+      <Format>text/xml</Format>
+      <Format>XML</Format>
+    </Exception>
+    <Layer>
+      <Title>Topographic Map Indexes</Title>
+      <CRS>EPSG:4283</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>CRS:84</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:28348</CRS>
+      <CRS>EPSG:28349</CRS>
+      <CRS>EPSG:28350</CRS>
+      <CRS>EPSG:28351</CRS>
+      <CRS>EPSG:28352</CRS>
+      <CRS>EPSG:28353</CRS>
+      <CRS>EPSG:28354</CRS>
+      <CRS>EPSG:28355</CRS>
+      <CRS>EPSG:28356</CRS>
+      <CRS>EPSG:28357</CRS>
+      <CRS>EPSG:28358</CRS>
+      <CRS>EPSG:32748</CRS>
+      <CRS>EPSG:32749</CRS>
+      <CRS>EPSG:32750</CRS>
+      <CRS>EPSG:32751</CRS>
+      <CRS>EPSG:32752</CRS>
+      <CRS>EPSG:32753</CRS>
+      <CRS>EPSG:32754</CRS>
+      <CRS>EPSG:32755</CRS>
+      <CRS>EPSG:32756</CRS>
+      <CRS>EPSG:32757</CRS>
+      <CRS>EPSG:32758</CRS>
+      <CRS>EPSG:3031</CRS>
+      <CRS>EPSG:3032</CRS>
+      <CRS>EPSG:102100</CRS>
+      <!-- alias 3857 -->
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>108.000001</westBoundLongitude>
+        <eastBoundLongitude>155.999999</eastBoundLongitude>
+        <southBoundLatitude>-43.999988</southBoundLatitude>
+        <northBoundLatitude>-7.999985</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="108.000001" miny="-43.999988" maxx="155.999999" maxy="-7.999985"/>
+      <BoundingBox CRS="EPSG:4326" minx="-43.999988" miny="108.000001" maxx="-7.999985" maxy="155.999999"/>
+      <BoundingBox CRS="EPSG:3857" minx="12022505.080295" miny="-5465440.272919" maxx="17365840.498893" maxy="-893462.066071"/>
+      <BoundingBox CRS="EPSG:102100" minx="12022505.080295" miny="-5465440.272919" maxx="17365840.498893" maxy="-893462.066071"/>
+      <Layer queryable="1">
+        <Name>Topographic_Maps_Index_100k</Name>
+        <Title>Topographic Maps Index 100k</Title>
+        <Abstract/>
+        <CRS>EPSG:4283</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:28348</CRS>
+        <CRS>EPSG:28349</CRS>
+        <CRS>EPSG:28350</CRS>
+        <CRS>EPSG:28351</CRS>
+        <CRS>EPSG:28352</CRS>
+        <CRS>EPSG:28353</CRS>
+        <CRS>EPSG:28354</CRS>
+        <CRS>EPSG:28355</CRS>
+        <CRS>EPSG:28356</CRS>
+        <CRS>EPSG:28357</CRS>
+        <CRS>EPSG:28358</CRS>
+        <CRS>EPSG:32748</CRS>
+        <CRS>EPSG:32749</CRS>
+        <CRS>EPSG:32750</CRS>
+        <CRS>EPSG:32751</CRS>
+        <CRS>EPSG:32752</CRS>
+        <CRS>EPSG:32753</CRS>
+        <CRS>EPSG:32754</CRS>
+        <CRS>EPSG:32755</CRS>
+        <CRS>EPSG:32756</CRS>
+        <CRS>EPSG:32757</CRS>
+        <CRS>EPSG:32758</CRS>
+        <CRS>EPSG:3031</CRS>
+        <CRS>EPSG:3032</CRS>
+        <CRS>EPSG:102100</CRS>
+        <!-- alias 3857 -->
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.500009</westBoundLongitude>
+          <eastBoundLongitude>154.000008</eastBoundLongitude>
+          <southBoundLatitude>-43.849986</southBoundLatitude>
+          <northBoundLatitude>-8.999986</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="112.500009" miny="-43.849986" maxx="154.000008" maxy="-8.999986"/>
+        <BoundingBox CRS="EPSG:4326" minx="-43.849986" miny="112.500009" maxx="-8.999986" maxy="154.000008"/>
+        <BoundingBox CRS="EPSG:3857" minx="12523443.751704" miny="-5442256.467785" maxx="17143202.479115" maxy="-1006019.501775"/>
+        <BoundingBox CRS="EPSG:102100" minx="12523443.751704" miny="-5442256.467785" maxx="17143202.479115" maxy="-1006019.501775"/>
+        <MetadataURL type="TC211">
+          <Format>text/html</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ga.gov.au/metadata-gateway/metadata/record/145830" xlink:type="simple"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>Topographic Maps Index 100k</Title>
+          <LegendURL width="729" height="122">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://getcaps.gis.ga.gov.au/Topographic_Map_Indexes/Topographic_Maps_Index_100k.PNG" xlink:type="simple"/>
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>14174107.142857</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>Topographic_Maps_Index_250k</Name>
+        <Title>Topographic Maps Index 250k</Title>
+        <Abstract/>
+        <CRS>EPSG:4283</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:28348</CRS>
+        <CRS>EPSG:28349</CRS>
+        <CRS>EPSG:28350</CRS>
+        <CRS>EPSG:28351</CRS>
+        <CRS>EPSG:28352</CRS>
+        <CRS>EPSG:28353</CRS>
+        <CRS>EPSG:28354</CRS>
+        <CRS>EPSG:28355</CRS>
+        <CRS>EPSG:28356</CRS>
+        <CRS>EPSG:28357</CRS>
+        <CRS>EPSG:28358</CRS>
+        <CRS>EPSG:32748</CRS>
+        <CRS>EPSG:32749</CRS>
+        <CRS>EPSG:32750</CRS>
+        <CRS>EPSG:32751</CRS>
+        <CRS>EPSG:32752</CRS>
+        <CRS>EPSG:32753</CRS>
+        <CRS>EPSG:32754</CRS>
+        <CRS>EPSG:32755</CRS>
+        <CRS>EPSG:32756</CRS>
+        <CRS>EPSG:32757</CRS>
+        <CRS>EPSG:32758</CRS>
+        <CRS>EPSG:3031</CRS>
+        <CRS>EPSG:3032</CRS>
+        <CRS>EPSG:102100</CRS>
+        <!-- alias 3857 -->
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.883339</westBoundLongitude>
+          <eastBoundLongitude>154.100008</eastBoundLongitude>
+          <southBoundLatitude>-43.999985</southBoundLatitude>
+          <northBoundLatitude>-8.933316</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="112.883339" miny="-43.999985" maxx="154.100008" maxy="-8.933316"/>
+        <BoundingBox CRS="EPSG:4326" minx="-43.999985" miny="112.883339" maxx="-8.933316" maxy="154.100008"/>
+        <BoundingBox CRS="EPSG:3857" minx="12566115.850210" miny="-5465439.887658" maxx="17154334.428685" maxy="-998506.010753"/>
+        <BoundingBox CRS="EPSG:102100" minx="12566115.850210" miny="-5465439.887658" maxx="17154334.428685" maxy="-998506.010753"/>
+        <MetadataURL type="TC211">
+          <Format>text/html</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ga.gov.au/metadata-gateway/metadata/record/145830" xlink:type="simple"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>Topographic Maps Index 250k</Title>
+          <LegendURL width="747" height="56">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://getcaps.gis.ga.gov.au/Topographic_Map_Indexes/Topographic_Maps_Index_250k.PNG" xlink:type="simple"/>
+          </LegendURL>
+        </Style>
+        <MinScaleDenominator>566964.285714</MinScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>AUSTopo_Australian_Digital_Map_Series_Index_250k</Name>
+        <Title>AUSTopo Australian Digital Map Series Index 250k</Title>
+        <Abstract>
+					Test Abstract
+        </Abstract>
+        <CRS>EPSG:4283</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>EPSG:28348</CRS>
+        <CRS>EPSG:28349</CRS>
+        <CRS>EPSG:28350</CRS>
+        <CRS>EPSG:28351</CRS>
+        <CRS>EPSG:28352</CRS>
+        <CRS>EPSG:28353</CRS>
+        <CRS>EPSG:28354</CRS>
+        <CRS>EPSG:28355</CRS>
+        <CRS>EPSG:28356</CRS>
+        <CRS>EPSG:28357</CRS>
+        <CRS>EPSG:28358</CRS>
+        <CRS>EPSG:32748</CRS>
+        <CRS>EPSG:32749</CRS>
+        <CRS>EPSG:32750</CRS>
+        <CRS>EPSG:32751</CRS>
+        <CRS>EPSG:32752</CRS>
+        <CRS>EPSG:32753</CRS>
+        <CRS>EPSG:32754</CRS>
+        <CRS>EPSG:32755</CRS>
+        <CRS>EPSG:32756</CRS>
+        <CRS>EPSG:32757</CRS>
+        <CRS>EPSG:32758</CRS>
+        <CRS>EPSG:3031</CRS>
+        <CRS>EPSG:3032</CRS>
+        <CRS>EPSG:102100</CRS>
+        <!-- alias 3857 -->
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.883339</westBoundLongitude>
+          <eastBoundLongitude>154.000008</eastBoundLongitude>
+          <southBoundLatitude>-43.999988</southBoundLatitude>
+          <northBoundLatitude>-8.999986</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="112.883339" miny="-43.999988" maxx="154.000008" maxy="-8.999986"/>
+        <BoundingBox CRS="EPSG:4326" minx="-43.999988" miny="112.883339" maxx="-8.999986" maxy="154.000008"/>
+        <BoundingBox CRS="EPSG:3857" minx="12566115.850742" miny="-5465440.272919" maxx="17143202.479115" maxy="-1006019.502245"/>
+        <BoundingBox CRS="EPSG:102100" minx="12566115.850742" miny="-5465440.272919" maxx="17143202.479115" maxy="-1006019.502245"/>
+        <MetadataURL type="TC211">
+          <Format>text/html</Format>
+          <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ga.gov.au/metadata-gateway/metadata/record/148692" xlink:type="simple"/>
+        </MetadataURL>
+        <Style>
+          <Name>default</Name>
+          <Title>AUSTopo Australian Digital Map Series Index 250k</Title>
+          <LegendURL width="741" height="57">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://getcaps.gis.ga.gov.au/Topographic_Map_Indexes/Topographic_Maps_Index_AUSTopo250k.PNG" xlink:type="simple"/>
+          </LegendURL>
+        </Style>
+        <MinScaleDenominator>566964.285714</MinScaleDenominator>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>
