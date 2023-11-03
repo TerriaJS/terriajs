@@ -15,7 +15,7 @@ import SelectableDimensions, {
 import Terria from "../../lib/Models/Terria";
 import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
 import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
@@ -170,7 +170,7 @@ describe("DimensionSelectorSection", function () {
     });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
     ).andReturn({
       responseText: JSON.stringify(
         require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")

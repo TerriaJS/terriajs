@@ -74,27 +74,22 @@ class GroupPreview extends React.Component {
             />
           </div>
         </div>
-        <If condition={this.props.previewed.loadMetadataResult?.error}>
+        {this.props.previewed.loadMetadataResult?.error && (
           <WarningBox
             error={this.props.previewed.loadMetadataResult?.error}
             viewState={this.props.viewState}
           />
-        </If>
-        <If condition={this.props.previewed.loadMembersResult?.error}>
+        )}
+        {this.props.previewed.loadMembersResult?.error && (
           <WarningBox
             error={this.props.previewed.loadMembersResult?.error}
             viewState={this.props.viewState}
           />
-        </If>
+        )}
         <div className={Styles.previewedInfo}>
           <div className={Styles.url}>
-            <Choose>
-              <When
-                condition={
-                  this.props.previewed.description &&
-                  this.props.previewed.description.length > 0
-                }
-              >
+            {this.props.previewed.description &&
+              this.props.previewed.description.length > 0 && (
                 <div>
                   <h4 className={Styles.h4}>{t("description.name")}</h4>
                   {parseCustomMarkdownToReact(
@@ -102,29 +97,23 @@ class GroupPreview extends React.Component {
                     { catalogItem: this.props.previewed }
                   )}
                 </div>
-              </When>
-            </Choose>
-
+              )}
             <DataPreviewSections metadataItem={metadataItem} />
 
-            <If condition={metadataItem.dataCustodian}>
+            {metadataItem.dataCustodian && (
               <div>
                 <h4 className={Styles.h4}>{t("preview.dataCustodian")}</h4>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}
               </div>
-            </If>
+            )}
 
-            <If
-              condition={
-                metadataItem.url &&
-                metadataItem.url.length &&
-                !metadataItem.hideSource
-              }
-            >
-              <DataPreviewUrl metadataItem={metadataItem} />
-            </If>
+            {metadataItem.url &&
+              metadataItem.url.length &&
+              !metadataItem.hideSource && (
+                <DataPreviewUrl metadataItem={metadataItem} />
+              )}
           </div>
         </div>
       </div>

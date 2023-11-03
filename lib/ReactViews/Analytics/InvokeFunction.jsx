@@ -128,12 +128,12 @@ class InvokeFunction extends React.Component {
       <div className={Styles.invokeFunction}>
         <div className={Styles.content}>
           <h3>{this.props.previewed.name}</h3>
-          <If condition={this.props.previewed.loadMetadataResult?.error}>
+          {this.props.previewed.loadMetadataResult?.error && (
             <WarningBox
               error={this.props.previewed.loadMetadataResult?.error}
               viewState={this.props.viewState}
             />
-          </If>
+          )}
           <div className={Styles.description}>
             {parseCustomMarkdownToReact(this.props.previewed.description, {
               catalogItem: this.props.previewed

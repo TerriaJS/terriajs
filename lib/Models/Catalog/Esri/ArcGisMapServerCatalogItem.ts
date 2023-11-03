@@ -36,6 +36,7 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
+import moment from "moment";
 
 const proj4 = require("proj4").default;
 
@@ -328,6 +329,13 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
+interface TimeParams {
+  currentTime: number | undefined;
+  timeWindowDuration: number | undefined;
+  timeWindowUnit: string | undefined;
+  isForwardTimeWindow: boolean;
+}
+
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
   DiscretelyTimeVaryingMixin(
     MinMaxLevelMixin(
@@ -393,14 +401,33 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  @computed
-  private get _currentImageryParts(): ImageryParts | undefined {
-    const dateAsUnix: string | undefined =
+  private getCurrentTime() {
+    const dateAsUnix: number | undefined =
       this.currentDiscreteTimeTag === undefined
         ? undefined
-        : new Date(this.currentDiscreteTimeTag).getTime().toString();
+        : new Date(this.currentDiscreteTimeTag).getTime();
+    return dateAsUnix;
+  }
 
-    const imageryProvider = this._createImageryProvider(dateAsUnix);
+  @computed
+  private get timeParams(): TimeParams {
+    const currentTime = this.getCurrentTime();
+    const timeWindowDuration = this.timeWindowDuration;
+    const timeWindowUnit = this.timeWindowUnit;
+    const isForwardTimeWindow = this.isForwardTimeWindow;
+    const timeParams = {
+      currentTime,
+      timeWindowDuration,
+      timeWindowUnit,
+      isForwardTimeWindow
+    } as TimeParams;
+    return timeParams;
+  }
+
+  @computed
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const timeParams = this.timeParams;
+    const imageryProvider = this._createImageryProvider(timeParams);
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -419,10 +446,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
-      const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProvider = this._createImageryProvider(
-        dateAsUnix.toString()
-      );
+      const timeParams = this.timeParams;
+      const imageryProvider = this._createImageryProvider(timeParams);
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -442,8 +467,46 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
+  private windowDurationInMs(
+    rawTimeWindowDuration: number | undefined,
+    timeWindowUnit: string | undefined
+  ): number | undefined {
+    if (
+      rawTimeWindowDuration === undefined ||
+      rawTimeWindowDuration === 0 ||
+      timeWindowUnit === undefined
+    ) {
+      return undefined;
+    }
+
+    const rawTimeWindowData: any = {};
+    rawTimeWindowData[timeWindowUnit] = rawTimeWindowDuration;
+    const duration = moment.duration(rawTimeWindowData).asMilliseconds();
+    if (duration === 0) {
+      return undefined;
+    } else {
+      return duration;
+    }
+  }
+
+  private getTimeWindowQueryString(
+    currentTime: number,
+    duration: number,
+    isForward: boolean = true
+  ) {
+    if (isForward) {
+      const toTime = Number(currentTime) + duration;
+      return currentTime + "," + toTime;
+    } else {
+      const fromTime = Number(currentTime) - duration;
+      return "" + fromTime + "," + currentTime;
+    }
+  }
+
   private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
+    (
+      timeParams: TimeParams | undefined
+    ): ArcGisMapServerImageryProvider | undefined => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
@@ -453,8 +516,22 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       }
 
       const params: any = Object.assign({}, this.parameters);
-      if (time !== undefined) {
-        params.time = time;
+      const currentTime = timeParams?.currentTime;
+      if (currentTime !== undefined) {
+        const windowDuration = this.windowDurationInMs(
+          timeParams?.timeWindowDuration,
+          timeParams?.timeWindowUnit
+        );
+
+        if (windowDuration !== undefined) {
+          params.time = this.getTimeWindowQueryString(
+            currentTime,
+            windowDuration,
+            timeParams?.isForwardTimeWindow
+          );
+        } else {
+          params.time = currentTime;
+        }
       }
 
       const maximumLevel = scaleDenominatorToLevel(

@@ -1,8 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { lab, rgb } from "d3-color";
 import * as d3Scale from "d3-scale-chromatic";
 import React from "react";
 import StandardCssColors from "../../Core/StandardCssColors";
 import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDimensions";
+
+const Invalid: React.VFC<{}> = () => {
+  const { t } = useTranslation();
+  return <span>{t("selectableDimensions.invalid")}</span>;
+};
 
 /* The ramp and swatches functions are adapted from https://observablehq.com/@d3/color-schemes?collection=@d3/d3-scale-chromatic
  *
@@ -28,7 +34,7 @@ function ramp(
   name: string | undefined,
   n: number | undefined
 ): React.ReactChild {
-  if (!name) return <span>Invalid</span>;
+  if (!name) return <Invalid />;
   let colors: string[];
 
   /** This could be used to draw text on top of swatches/ramps */
@@ -43,7 +49,7 @@ function ramp(
   } else {
     const interpolate = (d3Scale as any)[`interpolate${name}`];
     if (!interpolate) {
-      return <span>Invalid</span>;
+      return <Invalid />;
     }
     colors = [];
     dark = lab(interpolate(0)).l < 50;
@@ -73,7 +79,7 @@ function ramp(
     canvas.width = interpolateWidth;
     canvas.height = 1;
     const context = canvas.getContext("2d");
-    if (!context) return <span>Invalid</span>;
+    if (!context) return <Invalid />;
     canvas.style.width = `${interpolateWidth}px`;
     canvas.style.height = `${height}px`;
     for (let i = 0; i < interpolateWidth; ++i) {
@@ -97,13 +103,13 @@ function ramp(
 }
 
 function swatches(name: string | undefined) {
-  if (!name) return <span>Invalid</span>;
+  if (!name) return <Invalid />;
   let colors: string[] | undefined = (d3Scale as any)[`scheme${name}`];
   // Handle custom HighContrast style
   if (!colors && name === "HighContrast") {
     colors = StandardCssColors.highContrast;
   }
-  if (!colors) return <span>Invalid</span>;
+  if (!colors) return <Invalid />;
   const n = colors.length;
   const dark = lab(colors[0]).l < 50;
   return (

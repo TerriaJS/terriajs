@@ -1,16 +1,56 @@
 # Change Log
 
-#### next release (8.3.4)
+#### next release (8.3.8)
 
+- Remove `jsx-control-statements` dependency
+- Fix WMS nested group IDs - nested groups with the same name were not being created
+- WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
+- Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
+  - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
+  - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
+- Added many remaining ASGS 2021 region types to region mapping (STE_2021,ILOC_2021,IARE_2021,IREG_2021,RA_2021,SAL_2021,ADD_2021,DZN_2021,LGA_2022,LGA_2023,SED_2021,SED_2022,
+  CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
+  - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
+- Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
 - [The next improvement]
 
-#### next release (8.3.3)
+#### 8.3.7 - 2023-10-26
+
+- Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
+- Allow translation of TableStylingWorkflow.
+- Fix "Remove all" not removing selected/picked features
+- Fix crash on empty GeoJSON features
+- Add `tableFeatureInfoContext` support to `GeoJsonMixin.createProtomapsImageryProvider`
+- Fix `GeoJsonMixin` timeline animation for lines/polygons
+- Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
+- Fix splitter for `GeoJsonMixin` (lines and polygon features only)
+- Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+
+#### 8.3.6 - 2023-10-03
+
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
+- Fix regression in `excludeMembers`, `id` and `name` should be lower-case for comparing.
+
+#### 8.3.5 - 2023-09-26
+
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
+
+#### 8.3.4 - 2023-09-15
+
+- Add `timeWindowDuration`, `timeWindowUnit` and `isForwardTimeWindow` traits to esri-mapServer type to support time window query.
+- Move map credits to map column so it don't get hidden by chart panel
+- TSify `MapColumn` module and reorganize components directory structure.
+- Add null check to `WebMapServiceCatalogItem` `rectangle` calculation - and now we ascend tree of WMS `Layers` until we find a rectangle.
+- Fix multi level nesting in ArcGIS Mapserver.
+
+#### 8.3.3 - 2023-09-07
 
 - Fixed broken point dragging interaction for user drawing in 3D mode.
 - Fixed rectangle drawing in 2D mode.
 - Added EPSG:7855 to `Proj4Definitions`.
-- Fix multi level nesting in ArcGIS Mapserver.
-- [The next improvement]
 
 #### 8.3.2 - 2023-08-11
 

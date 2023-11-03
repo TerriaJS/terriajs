@@ -18,21 +18,21 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   onBecomeObserved,
   onBecomeUnobserved,
+  override,
   reaction,
   runInAction,
-  toJS,
-  makeObservable,
-  override
+  toJS
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
 } from "protomaps";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -58,12 +58,14 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
 import {
+  isJsonArray,
   isJsonNumber,
   isJsonObject,
   isJsonString,
@@ -73,8 +75,8 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
+  GeojsonSource,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import Reproject from "../Map/Vector/Reproject";
@@ -86,11 +88,12 @@ import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TerriaFeature from "../Models/Feature/Feature";
+import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
-import TableStyle from "../Table/TableStyle";
+import TableStyle, { createRowGroupId } from "../Table/TableStyle";
 import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
@@ -295,7 +298,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           () => [
             this.useTableStylingAndProtomaps,
             this.readyData,
-            this.currentTimeAsJulianDate,
+            this.currentDiscreteJulianDate,
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
@@ -502,11 +505,19 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const features = geoJsonWgs84.features;
         geoJsonWgs84.features = [];
 
+        let currentFeatureId = 0;
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
 
           // Ignore features without geometry or type
           if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
+            continue;
+
+          // Ignore features with invalid coordinates
+          if (
+            !isJsonArray(feature.geometry.coordinates, false) ||
+            feature.geometry.coordinates.length === 0
+          )
             continue;
 
           if (!feature.properties) {
@@ -528,7 +539,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           // Add feature index to FEATURE_ID_PROP ("_id_") feature property
           // This is used to refer to each feature in TableMixin (as row ID)
           const properties = feature.properties!;
-          properties[FEATURE_ID_PROP] = i;
+          properties[FEATURE_ID_PROP] = currentFeatureId;
 
           // Count features types
           if (feature.geometry.type === "Point") {
@@ -553,11 +564,17 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           }
 
           featureCounts.total++;
+          // Note it is important to increment currentFeatureId only if we are including the feature - as this needs to match the row ID in TableMixin (through dataColumnMajor)
+          currentFeatureId++;
         }
 
         runInAction(() => {
           this.featureCounts = featureCounts;
-          this._readyData = geoJsonWgs84;
+          if (featureCounts.total === 0) {
+            this._readyData = undefined;
+          } else {
+            this._readyData = geoJsonWgs84;
+          }
         });
 
         if (isDefined(czmlTemplate)) {
@@ -758,6 +775,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
+        id: this.uniqueId,
         paintRules: [
           // Polygon features
           {
@@ -800,7 +818,37 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           }
           // See `createPoints` for Point features - they are handled by Cesium
         ],
-        labelRules: []
+        labelRules: [],
+
+        // Process picked features to add terriaFeatureData (with rowIds)
+        // This is used by tableFeatureInfoContext to add time-series chart
+        processPickedFeatures: async (features) => {
+          if (!currentTimeRows) return features;
+          const processedFeatures: ImageryLayerFeatureInfo[] = [];
+          features.forEach((f) => {
+            const rowId = f.properties?.[FEATURE_ID_PROP];
+
+            if (isDefined(rowId) && currentTimeRows?.includes(rowId)) {
+              // To find rowIds for all features in a row group:
+              // re-create the rowGroupId and then look up in the activeTableStyle.rowGroups
+              const rowGroupId = createRowGroupId(
+                rowId,
+                this.activeTableStyle.groupByColumns
+              );
+              const terriaFeatureData: TerriaFeatureData = {
+                ...f.data,
+                type: "terriaFeatureData",
+                rowIds: this.activeTableStyle.rowGroups.find(
+                  (group) => group[0] === rowGroupId
+                )?.[1]
+              };
+              f.data = terriaFeatureData;
+
+              processedFeatures.push(f);
+            }
+          });
+          return processedFeatures;
+        }
       });
 
       provider = this.wrapImageryPickFeatures(provider);
