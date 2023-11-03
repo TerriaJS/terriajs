@@ -1,6 +1,8 @@
-import ModelTraits from "../../ModelTraits";
+import objectArrayTrait, {
+  MergeStrategy
+} from "../../Decorators/objectArrayTrait";
 import primitiveTrait from "../../Decorators/primitiveTrait";
-import objectArrayTrait from "../../Decorators/objectArrayTrait";
+import ModelTraits from "../../ModelTraits";
 
 export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -61,7 +63,7 @@ export default class TableChartStyleTraits extends ModelTraits {
       "Lines on the chart, each of which is formed by plotting a column as the Y-axis.",
     type: TableChartLineStyleTraits,
     idProperty: "yAxisColumn",
-    merge: false
+    merge: MergeStrategy.TopStratum
   })
   lines?: TableChartLineStyleTraits[];
 }

@@ -2,7 +2,9 @@ import { configure } from "mobx";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
+import objectArrayTrait, {
+  MergeStrategy
+} from "../../lib/Traits/Decorators/objectArrayTrait";
 import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 
@@ -69,7 +71,7 @@ class OuterTraitsNoMerge extends ModelTraits {
     name: "Inner",
     description: "Inner",
     idProperty: "foo",
-    merge: false
+    merge: MergeStrategy.None
   })
   inner?: InnerTraits[];
 

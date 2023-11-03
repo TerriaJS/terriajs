@@ -1,6 +1,7 @@
 import { computed, makeObservable } from "mobx";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import { MergeStrategy } from "./Decorators/objectArrayTrait";
 import ModelTraits from "./ModelTraits";
 import Stratified from "./Stratified";
 import TraitsConstructor from "./TraitsConstructor";
@@ -18,7 +19,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     readonly objectTraits: TraitsConstructorWithRemoval<T>,
     readonly objectIdProperty: string | number | symbol,
     readonly objectId: string,
-    readonly merge: boolean
+    readonly merge: MergeStrategy
   ) {
     makeObservable(this);
   }
@@ -127,6 +128,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       this.parentModel.strataTopToBottom;
 
     const result = new Map<string, StratumFromTraits<T>>();
+    const topStratumId = this.parentModel.strataTopToBottom.keys().next().value;
 
     // Find the strata that go into this object.
     for (let stratumId of strataTopToBottom.keys()) {
@@ -143,22 +145,28 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       });
 
       if (thisObject === undefined) {
+        // If merge strategy is TopStratum, we only return an object if it is in the top stratum - to we stop here
+        if (
+          this.merge === MergeStrategy.TopStratum &&
+          stratumId === topStratumId
+        )
+          break;
         continue;
       }
 
+      // This object is removed in this stratum, so stop here.
       if (
         this.objectTraits.isRemoval !== undefined &&
         this.objectTraits.isRemoval(thisObject)
       ) {
-        // This object is removed in this stratum, so stop here.
         break;
       }
 
       // This stratum applies to this object.
       result.set(stratumId, thisObject);
 
-      // If merge is false, only return the top-most strata's object
-      if (!this.merge) return result;
+      // If merge strategy is None, only return the top-most strata's object
+      if (this.merge === MergeStrategy.None) return result;
     }
 
     return result;

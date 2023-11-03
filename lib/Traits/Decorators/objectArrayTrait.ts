@@ -18,15 +18,26 @@ import ModelTraits from "../ModelTraits";
 import Trait, { TraitOptions } from "../Trait";
 import traitsClassToModelClass from "../traitsClassToModelClass";
 
+export enum MergeStrategy {
+  /**
+   * Merge array elements across strata (if merge is false, each element will only be the top-most strata's object). This is the default.
+   */
+  All = "all",
+  /** Similar to Merge.All, but elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed. */
+  TopStratum = "topStratum",
+  /** Don't merge array elements across strata. */
+  None = "none"
+}
+
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructorWithRemoval<T>;
   idProperty: keyof T | "index";
   modelClass?: ModelConstructor<Model<T>>;
   /**
-   * Merge array elements across strata (if merge is false, each element will only be the top-most strata's object). Default is `true`
+   * How to merge array elements across strata. By default all elements are merged.
    */
-  merge?: boolean;
+  merge?: MergeStrategy;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(
@@ -50,14 +61,14 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
-  readonly merge: boolean;
+  readonly merge: MergeStrategy;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>, parent: any) {
     super(id, options, parent);
     this.type = options.type;
     this.idProperty = options.idProperty;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
-    this.merge = options.merge ?? true;
+    this.merge = options.merge ?? MergeStrategy.All;
   }
 
   private readonly createObject: (

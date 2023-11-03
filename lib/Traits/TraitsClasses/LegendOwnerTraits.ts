@@ -1,4 +1,6 @@
-import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectArrayTrait, {
+  MergeStrategy
+} from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 import LegendTraits from "./LegendTraits";
@@ -9,7 +11,7 @@ export default class LegendOwnerTraits extends ModelTraits {
     description: "The legends to display on the workbench.",
     type: LegendTraits,
     idProperty: "index",
-    merge: false
+    merge: MergeStrategy.None
   })
   legends?: LegendTraits[];
 
