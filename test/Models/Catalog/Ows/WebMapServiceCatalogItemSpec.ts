@@ -915,6 +915,60 @@ describe("WebMapServiceCatalogItem", function () {
       .catch(done.fail);
   });
 
+  it("sets isEsri from URL", async function () {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait(
+        CommonStrata.definition,
+        "url",
+        "http://gaservices.ga.gov.au/site_1/services/Geomorphology_Landform_Type_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS"
+      );
+      wms.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/wms_esri.xml"
+      );
+      wms.setTrait(CommonStrata.definition, "layers", "0");
+    });
+
+    await wms.loadMetadata();
+
+    expect(wms.isEsri).toBe(true);
+    expect(wms.getFeatureInfoFormat.type).toBe("json");
+    expect(wms.getFeatureInfoFormat.format).toBe("application/geo+json");
+  });
+
+  it("sets isEsri from URL - and uses XML over HTML", async function () {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait(
+        CommonStrata.definition,
+        "url",
+        "http://gaservices.ga.gov.au/site_1/services/Geomorphology_Landform_Type_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS"
+      );
+      wms.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/wms_esri_2.xml"
+      );
+      wms.setTrait(
+        CommonStrata.definition,
+        "layers",
+        "Topographic_Maps_Index_100k"
+      );
+    });
+
+    await wms.loadMetadata();
+
+    expect(wms.isEsri).toBe(true);
+    expect(wms.getFeatureInfoFormat.type).toBe("xml");
+    expect(wms.getFeatureInfoFormat.format).toBe("text/xml");
+  });
+
   describe("imageryProvider", () => {
     let item: WebMapServiceCatalogItem;
     let imageryProvider: WebMapServiceImageryProvider;
