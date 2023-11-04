@@ -58,7 +58,7 @@ describe("ItemSearchTool", function () {
     const terria: Terria = new Terria();
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: null,
+      catalogSearchProvider: undefined,
       locationSearchProviders: []
     });
     item = new MockSearchableItem("test", terria);

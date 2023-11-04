@@ -12,19 +12,20 @@ import SearchProviderMixin from "../ModelMixins/SearchProviders/SearchProviderMi
 import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
 import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
 import Terria from "../Models/Terria";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: CatalogSearchProvider;
-  locationSearchProviders?: LocationSearchProviderMixin.LocationSearchProviderMixin[];
+  catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
+  locationSearchProviders?: LocationSearchProviderMixin.Instance[];
 }
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: SearchProviderMixin.SearchProviderMixin | undefined;
+  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
 
   @observable
-  locationSearchProviders: LocationSearchProviderMixin.LocationSearchProviderMixin[];
+  locationSearchProviders: LocationSearchProviderMixin.Instance[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
@@ -98,7 +99,7 @@ export default class SearchState {
   }
 
   @computed
-  get unifiedSearchProviders(): SearchProviderMixin.SearchProviderMixin[] {
+  get unifiedSearchProviders(): SearchProviderMixin.Instance[] {
     return filterOutUndefined([
       this.catalogSearchProvider,
       ...this.locationSearchProviders

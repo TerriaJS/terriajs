@@ -584,7 +584,7 @@ describe("Terria", function () {
         newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
+          catalogSearchProvider: undefined,
           locationSearchProviders: []
         });
 
@@ -801,7 +801,7 @@ describe("Terria", function () {
         newTerria = new Terria({ baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
+          catalogSearchProvider: undefined,
           locationSearchProviders: []
         });
 
@@ -913,7 +913,7 @@ describe("Terria", function () {
 
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
+          catalogSearchProvider: undefined,
           locationSearchProviders: []
         });
         newTerria = new Terria({ baseUrl: "./" });

@@ -16,9 +16,7 @@ export default class SearchProviderResults {
     Promise.resolve()
   );
 
-  constructor(
-    readonly searchProvider: SearchProviderMixin.SearchProviderMixin
-  ) {
+  constructor(readonly searchProvider: SearchProviderMixin.Instance) {
     makeObservable(this);
   }
 

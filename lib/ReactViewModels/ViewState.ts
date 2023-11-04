@@ -38,6 +38,8 @@ import {
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -48,8 +50,8 @@ export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
-  catalogSearchProvider: any;
-  locationSearchProviders: any[];
+  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
+  locationSearchProviders: LocationSearchProviderMixin.Instance[];
   errorHandlingProvider?: any;
 }
 

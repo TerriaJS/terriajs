@@ -23,6 +23,7 @@ import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import isDefined from "../../Core/isDefined";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
@@ -115,7 +116,7 @@ export function loadAndSearchCatalogRecursively(
   });
 }
 
-export default class CatalogSearchProvider extends SearchProviderMixin(
+export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
@@ -136,13 +137,6 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
 
   get type() {
     return CatalogSearchProvider.type;
-  }
-
-  @override get resultsAreReferences() {
-    return (
-      isDefined(this.terria.catalogIndex?.loadPromise) &&
-      fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
-    );
   }
 
   protected logEvent(searchText: string) {

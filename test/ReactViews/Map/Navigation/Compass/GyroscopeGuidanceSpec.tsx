@@ -18,7 +18,7 @@ describe("GyroscopeGuidance", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
+      catalogSearchProvider: undefined,
       locationSearchProviders: []
     });
   });

@@ -59,12 +59,10 @@ export function getMapCenter(terria: Terria): MapCenter {
 }
 
 namespace LocationSearchProviderMixin {
-  export interface LocationSearchProviderMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof LocationSearchProviderMixin>> {}
 
-  export function isMixedInto(
-    model: any
-  ): model is LocationSearchProviderMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasLocationSearchProviderMixin;
   }
 }

@@ -19,6 +19,7 @@ import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import Terria from "../../Models/Terria";
+import SearchResultModel from "../../Models/SearchProviders/SearchResult";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -44,7 +45,7 @@ interface PropsType extends WithTranslation {
   isWaitingForSearchToStart: boolean;
   terria: Terria;
   search: SearchProviderResults;
-  onLocationClick: () => void;
+  onLocationClick: (result: SearchResultModel) => void;
   theme: DefaultTheme;
   locationSearchText: string;
 }
@@ -98,8 +99,8 @@ class LocationSearchResults extends React.Component<PropsType> {
 
   render() {
     const { search } = this.props;
-    const searchProvider: LocationSearchProviderMixin.LocationSearchProviderMixin =
-      search.searchProvider as any;
+    const searchProvider: LocationSearchProviderMixin.Instance =
+      search.searchProvider as unknown as LocationSearchProviderMixin.Instance;
 
     const maxResults = searchProvider.recommendedListLength || 5;
     const validResults = this.validResults;
@@ -144,7 +145,7 @@ class LocationSearchResults extends React.Component<PropsType> {
                 isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
               />
               <Ul>
-                {results.map((result: any, i: number) => (
+                {results.map((result: SearchResultModel, i: number) => (
                   <SearchResult
                     key={i}
                     clickAction={this.props.onLocationClick.bind(null, result)}

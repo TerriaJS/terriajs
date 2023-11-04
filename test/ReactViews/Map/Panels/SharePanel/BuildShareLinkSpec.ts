@@ -36,7 +36,7 @@ beforeEach(function () {
 
   viewState = new ViewState({
     terria: terria,
-    catalogSearchProvider: null,
+    catalogSearchProvider: undefined,
     locationSearchProviders: []
   });
 });

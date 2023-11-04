@@ -64,20 +64,16 @@ function SearchProviderMixin<
     get hasSearchProviderMixin() {
       return true;
     }
-
-    @computed get resultsAreReferences() {
-      return isDefined(this.terria.catalogIndex);
-    }
   }
 
   return SearchProviderMixin;
 }
 
 namespace SearchProviderMixin {
-  export interface SearchProviderMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof SearchProviderMixin>> {}
 
-  export function isMixedInto(model: any): model is SearchProviderMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasSearchProviderMixin;
   }
 }

@@ -199,21 +199,19 @@ function WebFeatureServiceSearchProviderMixin<
 }
 
 namespace WebFeatureServiceSearchProviderMixin {
-  export interface WebFeatureServiceSearchProviderMixin
+  export interface Instance
     extends InstanceType<
       ReturnType<typeof WebFeatureServiceSearchProviderMixin>
     > {}
 
-  export function isMixedInto(
-    model: any
-  ): model is WebFeatureServiceSearchProviderMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.isWebFeatureServiceSearchProviderMixin;
   }
 }
 export default WebFeatureServiceSearchProviderMixin;
 
 function createZoomToFunction(
-  model: WebFeatureServiceSearchProviderMixin.WebFeatureServiceSearchProviderMixin,
+  model: WebFeatureServiceSearchProviderMixin.Instance,
   location: any
 ) {
   // Server does not return information of a bounding box, just a location.
