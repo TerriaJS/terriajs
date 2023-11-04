@@ -1,10 +1,10 @@
 import { computed, makeObservable } from "mobx";
+import { fromPromise } from "mobx-utils";
 import AbstractConstructor from "../../Core/AbstractConstructor";
+import isDefined from "../../Core/isDefined";
 import Model from "../../Models/Definition/Model";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
-import isDefined from "../../Core/isDefined";
-import { fromPromise } from "mobx-utils";
 
 type CatalogSearchProviderModel = Model<SearchProviderTraits>;
 

@@ -3,8 +3,8 @@ import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProvide
 import primitiveTrait from "../../Traits/Decorators/primitiveTrait";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
-import SearchProviderResults from "./SearchProviderResults";
 import { ModelConstructorParameters } from "../Definition/Model";
+import SearchProviderResults from "./SearchProviderResults";
 
 export class StubSearchProviderTraits extends LocationSearchProviderTraits {
   @primitiveTrait({

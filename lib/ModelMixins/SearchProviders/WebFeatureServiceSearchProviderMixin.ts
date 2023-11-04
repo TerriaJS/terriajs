@@ -1,7 +1,7 @@
 import { makeObservable, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
-import Constructor from "../../Core/Constructor";
+import AbstractConstructor from "../../Core/AbstractConstructor";
 import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
@@ -9,7 +9,6 @@ import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import LocationSearchProviderMixin from "./LocationSearchProviderMixin";
-import AbstractConstructor from "../../Core/AbstractConstructor";
 
 function WebFeatureServiceSearchProviderMixin<
   T extends AbstractConstructor<Model<WebFeatureServiceSearchProviderTraits>>

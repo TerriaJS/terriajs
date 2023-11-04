@@ -7,8 +7,8 @@ import { BaseModel } from "../Definition/Model";
 import ModelFactory from "../Definition/ModelFactory";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
-import createStubSearchProvider from "./createStubSearchProvider";
 import StubSearchProvider from "./StubSearchProvider";
+import createStubSearchProvider from "./createStubSearchProvider";
 
 export default function upsertSearchProviderFromJson(
   factory: ModelFactory,

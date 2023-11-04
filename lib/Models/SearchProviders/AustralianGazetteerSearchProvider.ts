@@ -6,8 +6,8 @@ import {
 import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProviders/WebFeatureServiceSearchProviderMixin";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
-import SearchResult from "./SearchResult";
 import { ModelConstructorParameters } from "../Definition/Model";
+import SearchResult from "./SearchResult";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],

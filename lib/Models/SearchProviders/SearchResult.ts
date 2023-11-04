@@ -1,4 +1,4 @@
-import { action, observable, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import GroupMixin from "../../ModelMixins/GroupMixin";

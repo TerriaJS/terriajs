@@ -1,5 +1,5 @@
-import BingMapsSearchProvider from "./BingMapsSearchProvider";
 import AustralianGazetteerSearchProvider from "./AustralianGazetteerSearchProvider";
+import BingMapsSearchProvider from "./BingMapsSearchProvider";
 import SearchProviderFactory from "./SearchProviderFactory";
 
 export default function registerSearchProviders() {

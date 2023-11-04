@@ -1,12 +1,4 @@
-import {
-  autorun,
-  computed,
-  observable,
-  runInAction,
-  makeObservable,
-  override
-} from "mobx";
-import { fromPromise } from "mobx-utils";
+import { autorun, makeObservable, observable, runInAction } from "mobx";
 import {
   Category,
   SearchAction
@@ -14,7 +6,7 @@ import {
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
@@ -22,8 +14,6 @@ import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import isDefined from "../../Core/isDefined";
-import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;

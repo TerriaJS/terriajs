@@ -1,5 +1,5 @@
-import { observable, makeObservable } from "mobx";
-import { fromPromise, IPromiseBasedObservable } from "mobx-utils";
+import { makeObservable, observable } from "mobx";
+import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import SearchResult from "./SearchResult";
 

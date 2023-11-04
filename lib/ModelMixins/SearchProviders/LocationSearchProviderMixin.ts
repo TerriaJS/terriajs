@@ -2,13 +2,12 @@ import { action, makeObservable } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Constructor from "../../Core/Constructor";
+import AbstractConstructor from "../../Core/AbstractConstructor";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import Model from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
-import AbstractConstructor from "../../Core/AbstractConstructor";
 
 type LocationSearchProviderModel = Model<LocationSearchProviderTraits>;
 

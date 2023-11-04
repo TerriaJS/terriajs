@@ -1,7 +1,8 @@
-import { runInAction, makeObservable } from "mobx";
-import defined from "terriajs-cesium/Source/Core/defined";
+import i18next from "i18next";
+import { makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import defined from "terriajs-cesium/Source/Core/defined";
 import {
   Category,
   SearchAction
@@ -17,7 +18,6 @@ import Terria from "../Terria";
 import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import i18next from "i18next";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   CreateModel(BingMapsSearchProviderTraits)
