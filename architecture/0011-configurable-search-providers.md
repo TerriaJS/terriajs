@@ -1,4 +1,4 @@
-# 7. Configuration of search providers
+# 11. Configuration of search providers
 
 Date: 2021-01-19
 
