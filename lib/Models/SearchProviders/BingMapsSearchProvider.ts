@@ -7,7 +7,7 @@ import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import loadJsonp from "../../Core/loadJsonp";
+import { loadJsonp } from "../../Core/loadJsonp";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
   getMapCenter
@@ -75,7 +75,8 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
       queryParameters: {
         culture: this.culture,
         query: searchText,
-        key: this.key
+        key: this.key,
+        maxResults: this.maxResults
       }
     });
 
@@ -103,7 +104,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        var resourceSet = result.resourceSets[0];
+        const resourceSet = result.resourceSets[0];
         if (resourceSet.resources.length === 0) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"

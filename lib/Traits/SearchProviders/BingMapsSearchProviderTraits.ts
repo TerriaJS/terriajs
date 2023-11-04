@@ -32,4 +32,11 @@ export default class BingMapsSearchProviderTraits extends mixTraits(
     For a list of supported cultures, see [Supported Culture Codes](https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes)`
   })
   culture: string = "en-au";
+
+  @primitiveTrait({
+    type: "number",
+    name: "Max results",
+    description: "The maximum number of results to return."
+  })
+  maxResults: number = 5;
 }

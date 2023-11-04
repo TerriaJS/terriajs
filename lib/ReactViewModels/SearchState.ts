@@ -4,7 +4,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  makeObservable
+  makeObservable,
+  runInAction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
@@ -48,9 +49,11 @@ export default class SearchState {
 
     this.terria = options.terria;
 
-    this.terria.configParameters.searchBarModel.catalogSearchProvider =
-      options.catalogSearchProvider ||
-      new CatalogSearchProvider("catalog-search-provider", options.terria);
+    runInAction(() => {
+      this.terria.configParameters.searchBarModel.catalogSearchProvider =
+        options.catalogSearchProvider ||
+        new CatalogSearchProvider("catalog-search-provider", options.terria);
+    });
 
     const self = this;
 

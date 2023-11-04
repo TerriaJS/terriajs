@@ -2,7 +2,7 @@ import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProvider
 import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 
-describe("LocationSearchProviderTraits", function () {
+describe("LocationSearchProvider", function () {
   let terria: Terria;
   let bingMapsSearchProvider: BingMapsSearchProvider;
   beforeEach(async function () {
