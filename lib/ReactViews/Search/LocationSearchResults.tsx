@@ -144,7 +144,7 @@ class LocationSearchResults extends React.Component<PropsType> {
                 searchResults={search}
                 isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
               />
-              <Ul>
+              <Ul column fullWidth>
                 {results.map((result: SearchResultModel, i: number) => (
                   <SearchResult
                     key={i}
