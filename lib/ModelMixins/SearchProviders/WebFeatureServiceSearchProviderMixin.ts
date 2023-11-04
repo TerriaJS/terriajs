@@ -106,7 +106,7 @@ function WebFeatureServiceSearchProviderMixin<
             features = json.featureMember;
           } else {
             results.message = {
-              content: "translate#translate#viewModels.searchNoPlaceNames"
+              content: "translate#viewModels.searchNoPlaceNames"
             };
             return;
           }
