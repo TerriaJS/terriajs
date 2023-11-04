@@ -9,6 +9,7 @@ import SearchBoxAndResults, {
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
@@ -26,7 +27,10 @@ describe("SearchBoxAndResults", function () {
     });
 
     runInAction(() => {
-      (viewState as any).searchState.catalogSearchProvider = true;
+      viewState.searchState.catalogSearchProvider = new CatalogSearchProvider(
+        "catalog",
+        terria
+      );
     });
   });
 
@@ -88,7 +92,7 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
-      (viewState as any).searchState.catalogSearchProvider = false;
+      (viewState as any).searchState.catalogSearchProvider = undefined;
     });
     act(() => {
       testRenderer = create(

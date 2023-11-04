@@ -99,10 +99,8 @@ export default class SearchState {
 
   @computed
   get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
-    return (
-      this.terria.configParameters.searchBarModel
-        .locationSearchProvidersArray ?? []
-    );
+    return this.terria.configParameters.searchBarModel
+      .locationSearchProvidersArray;
   }
 
   @computed
