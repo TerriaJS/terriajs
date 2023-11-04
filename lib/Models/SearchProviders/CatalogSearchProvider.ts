@@ -193,7 +193,7 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
 
       if (searchResults.results.length === 0) {
         searchResults.message = {
-          content: "translate#viewModels.searchErrorOccurred"
+          content: "translate#viewModels.searchNoCatalogueItem"
         };
       }
     } catch (e) {
