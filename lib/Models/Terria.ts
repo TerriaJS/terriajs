@@ -345,7 +345,7 @@ export interface ConfigParameters {
   /**
    * The search bar allows requesting information from various search services at once.
    */
-  searchBarModel?: SearchBarModel;
+  searchBarModel: SearchBarModel;
   searchProviders: any[];
 }
 
@@ -995,8 +995,7 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
-        if (isJsonObject(config) && Array.isArray(config.searchProviders)) {
-        }
+
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
@@ -1055,7 +1054,7 @@ export default class Terria {
       );
 
     this.configParameters.searchBarModel
-      ?.initializeSearchProviders()
+      .initializeSearchProviders()
       .catchError((error) =>
         this.raiseErrorToUser(
           TerriaError.from(error, "Failed to initialize searchProviders")
@@ -1302,7 +1301,7 @@ export default class Terria {
             this.configParameters.searchBarModel = new SearchBarModel(this);
           }
           updateModelFromJson(
-            this.configParameters.searchBarModel!,
+            this.configParameters.searchBarModel,
             CommonStrata.definition,
             value
           );

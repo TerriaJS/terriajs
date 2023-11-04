@@ -49,10 +49,7 @@ function SearchProviderMixin<
       if (
         searchText === undefined ||
         /^\s*$/.test(searchText) ||
-        (this.minCharacters && searchText.length < this.minCharacters) ||
-        (this.minCharacters === undefined &&
-          searchText.length <
-            this.terria.configParameters.searchBarModel!.minCharacters)
+        (this.minCharacters && searchText.length < this.minCharacters)
       ) {
         return false;
       }

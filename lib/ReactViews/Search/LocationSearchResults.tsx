@@ -68,7 +68,7 @@ class LocationSearchResults extends React.Component<PropsType> {
   get validResults() {
     const { search, terria } = this.props;
     const locationSearchBoundingBox =
-      terria.configParameters.searchBarModel?.boundingBoxLimit;
+      terria.configParameters.searchBarModel.boundingBoxLimit;
     let filterResults = false;
     let west: number | undefined,
       east: number | undefined,

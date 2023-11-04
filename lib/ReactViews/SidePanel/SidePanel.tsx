@@ -163,14 +163,10 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           <SearchBoxAndResults
             viewState={viewState}
             terria={terria}
-            placeholder={
-              terria.configParameters.searchBarModel
-                ? applyTranslationIfExists(
-                    terria.configParameters.searchBarModel.placeholder,
-                    i18n
-                  )
-                : t("search.placeholder")
-            }
+            placeholder={applyTranslationIfExists(
+              terria.configParameters.searchBarModel.placeholder,
+              i18n
+            )}
           />
           <Spacing bottom={2} />
           <Box justifySpaceBetween>
