@@ -22,7 +22,7 @@ export function applyTranslationIfExists(
   // keyOrString could be undefined in some cases even if we type it as string
   if (isJsonString(keyOrString as unknown)) {
     if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
-      const translationKey = keyOrString.substr(TRANSLATE_KEY_PREFIX.length);
+      const translationKey = keyOrString.substring(TRANSLATE_KEY_PREFIX.length);
       return i18n.exists(translationKey)
         ? i18n.t(translationKey, options)
         : translationKey;
