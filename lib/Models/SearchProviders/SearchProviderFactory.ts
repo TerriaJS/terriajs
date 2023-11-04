@@ -1,4 +1,4 @@
-import ModelFactory from "../Definition/ModelFactory";
+import { SearchModelFactory } from "./SearchModelFactory";
 
-const SearchProviderFactory = new ModelFactory();
+const SearchProviderFactory = new SearchModelFactory();
 export default SearchProviderFactory;

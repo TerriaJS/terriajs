@@ -20,9 +20,6 @@ interface SearchStateOptions {
 }
 
 export default class SearchState {
-  @observable
-  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
-
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
 
@@ -51,9 +48,10 @@ export default class SearchState {
 
     this.terria = options.terria;
 
-    this.catalogSearchProvider =
+    this.terria.configParameters.searchBarModel.catalogSearchProvider =
       options.catalogSearchProvider ||
       new CatalogSearchProvider("catalog-search-provider", options.terria);
+
     const self = this;
 
     this._catalogSearchDisposer = reaction(
@@ -98,9 +96,14 @@ export default class SearchState {
   }
 
   @computed
-  get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
+  private get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
     return this.terria.configParameters.searchBarModel
       .locationSearchProvidersArray;
+  }
+
+  @computed
+  get catalogSearchProvider(): CatalogSearchProviderMixin.Instance | undefined {
+    return this.terria.configParameters.searchBarModel.catalogSearchProvider;
   }
 
   @computed

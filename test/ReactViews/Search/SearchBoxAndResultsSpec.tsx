@@ -23,14 +23,7 @@ describe("SearchBoxAndResults", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: undefined
-    });
-
-    runInAction(() => {
-      viewState.searchState.catalogSearchProvider = new CatalogSearchProvider(
-        "catalog",
-        terria
-      );
+      catalogSearchProvider: new CatalogSearchProvider("catalog", terria)
     });
   });
 
@@ -92,7 +85,8 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
-      (viewState as any).searchState.catalogSearchProvider = undefined;
+      viewState.terria.configParameters.searchBarModel.catalogSearchProvider =
+        undefined;
     });
     act(() => {
       testRenderer = create(

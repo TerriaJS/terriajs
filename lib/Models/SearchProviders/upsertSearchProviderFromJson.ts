@@ -1,18 +1,19 @@
 import i18next from "i18next";
+import { runInAction } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
+import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
-import ModelFactory from "../Definition/ModelFactory";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
+import { SearchModelFactory } from "./SearchModelFactory";
 import StubSearchProvider from "./StubSearchProvider";
 import createStubSearchProvider from "./createStubSearchProvider";
-import { runInAction } from "mobx";
 
 export default function upsertSearchProviderFromJson(
-  factory: ModelFactory,
+  factory: SearchModelFactory,
   terria: Terria,
   stratumName: string,
   json: any
