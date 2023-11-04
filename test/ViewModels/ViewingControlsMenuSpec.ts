@@ -11,8 +11,7 @@ describe("ViewingControlsMenu", function () {
       const terria = new Terria();
       const viewState = new ViewState({
         terria,
-        catalogSearchProvider: undefined,
-        locationSearchProviders: []
+        catalogSearchProvider: undefined
       });
       expect(viewState.globalViewingControlOptions.length).toEqual(0);
       const generateFunction = (item: CatalogMemberMixin.Instance) => ({

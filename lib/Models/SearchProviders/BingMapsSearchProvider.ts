@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { makeObservable, runInAction } from "mobx";
+import { action, makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -111,9 +111,9 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        const locations = this.sortByPriority(resourceSet.resources);
-
         runInAction(() => {
+          const locations = this.sortByPriority(resourceSet.resources);
+
           searchResults.results.push(...locations.primaryCountry);
           searchResults.results.push(...locations.other);
         });

@@ -51,7 +51,6 @@ export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
-  locationSearchProviders: LocationSearchProviderMixin.Instance[];
   errorHandlingProvider?: any;
 }
 
@@ -378,9 +377,8 @@ export default class ViewState {
     makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
-      terria: terria,
-      catalogSearchProvider: options.catalogSearchProvider,
-      locationSearchProviders: options.locationSearchProviders
+      terria,
+      catalogSearchProvider: options.catalogSearchProvider
     });
 
     this.errorProvider = options.errorHandlingProvider

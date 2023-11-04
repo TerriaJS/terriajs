@@ -30,8 +30,7 @@ describe("Ideal Zoom", function () {
 
     const options = {
       terria: terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     };
     viewState = new ViewState(options);
   });

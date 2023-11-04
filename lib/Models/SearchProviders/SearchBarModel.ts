@@ -1,4 +1,10 @@
-import { action, isObservableArray, makeObservable, observable } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  makeObservable,
+  observable
+} from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
@@ -9,6 +15,7 @@ import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
+import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 
 export class SearchBarModel extends CreateModel(SearchBarTraits) {
   private locationSearchProviders = observable.map<string, BaseModel>();
@@ -73,9 +80,14 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
     this.locationSearchProviders.set(model.uniqueId, model);
   }
 
+  @computed
   get locationSearchProvidersArray() {
-    return [...this.locationSearchProviders.entries()].map(function (entry) {
-      return entry[1];
-    });
+    return [...this.locationSearchProviders.entries()]
+      .filter((entry) => {
+        return LocationSearchProviderMixin.isMixedInto(entry[1]);
+      })
+      .map(function (entry) {
+        return entry[1] as LocationSearchProviderMixin.Instance;
+      });
   }
 }

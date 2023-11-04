@@ -20,8 +20,7 @@ describe("LangPanel", function () {
 
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

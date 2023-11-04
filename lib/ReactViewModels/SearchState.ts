@@ -17,15 +17,11 @@ import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSe
 interface SearchStateOptions {
   terria: Terria;
   catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
-  locationSearchProviders?: LocationSearchProviderMixin.Instance[];
 }
 
 export default class SearchState {
   @observable
   catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
-
-  @observable
-  locationSearchProviders: LocationSearchProviderMixin.Instance[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
@@ -48,13 +44,16 @@ export default class SearchState {
   private _locationSearchDisposer: IReactionDisposer;
   private _unifiedSearchDisposer: IReactionDisposer;
 
+  private readonly terria: Terria;
+
   constructor(options: SearchStateOptions) {
     makeObservable(this);
+
+    this.terria = options.terria;
+
     this.catalogSearchProvider =
       options.catalogSearchProvider ||
       new CatalogSearchProvider("catalog-search-provider", options.terria);
-    this.locationSearchProviders = options.locationSearchProviders || [];
-
     const self = this;
 
     this._catalogSearchDisposer = reaction(
@@ -96,6 +95,14 @@ export default class SearchState {
     this._catalogSearchDisposer();
     this._locationSearchDisposer();
     this._unifiedSearchDisposer();
+  }
+
+  @computed
+  get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
+    return (
+      this.terria.configParameters.searchBarModel
+        .locationSearchProvidersArray ?? []
+    );
   }
 
   @computed

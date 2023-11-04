@@ -9,6 +9,7 @@ import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import StubSearchProvider from "./StubSearchProvider";
 import createStubSearchProvider from "./createStubSearchProvider";
+import { runInAction } from "mobx";
 
 export default function upsertSearchProviderFromJson(
   factory: ModelFactory,
@@ -82,21 +83,23 @@ export default function upsertSearchProviderFromJson(
 function setDefaultTraits(model: BaseModel) {
   const terria = model.terria;
 
-  model.setTrait(
-    CommonStrata.defaults,
-    "flightDurationSeconds",
-    terria.configParameters.searchBarModel.flightDurationSeconds
-  );
+  runInAction(() => {
+    model.setTrait(
+      CommonStrata.defaults,
+      "flightDurationSeconds",
+      terria.configParameters.searchBarModel.flightDurationSeconds
+    );
 
-  model.setTrait(
-    CommonStrata.defaults,
-    "minCharacters",
-    terria.configParameters.searchBarModel.minCharacters
-  );
+    model.setTrait(
+      CommonStrata.defaults,
+      "minCharacters",
+      terria.configParameters.searchBarModel.minCharacters
+    );
 
-  model.setTrait(
-    CommonStrata.defaults,
-    "recommendedListLength",
-    terria.configParameters.searchBarModel.recommendedListLength
-  );
+    model.setTrait(
+      CommonStrata.defaults,
+      "recommendedListLength",
+      terria.configParameters.searchBarModel?.recommendedListLength
+    );
+  });
 }
