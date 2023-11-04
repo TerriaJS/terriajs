@@ -163,18 +163,6 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
       }
     }
 
-    // Load catalogIndex if needed
-    if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
-      try {
-        await this.terria.catalogIndex.load();
-      } catch (e) {
-        this.terria.raiseErrorToUser(
-          e,
-          "Failed to load catalog index. Searching may be slow/inaccurate"
-        );
-      }
-    }
-
     const resultMap: ResultMap = new Map();
 
     try {
