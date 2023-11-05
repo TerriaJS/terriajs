@@ -271,20 +271,16 @@ class DataPreviewMap extends React.Component {
     };
     return (
       <div className={Styles.map} onClick={this.clickMap}>
-        <Choose>
-          <When condition={this.props.showMap}>
-            <div
-              className={classNames(Styles.terriaPreview)}
-              ref={this.containerRef}
-            />
-          </When>
-          <Otherwise>
-            <div
-              className={classNames(Styles.terriaPreview, Styles.placeholder)}
-            />
-          </Otherwise>
-        </Choose>
-
+        {this.props.showMap ? (
+          <div
+            className={classNames(Styles.terriaPreview)}
+            ref={this.containerRef}
+          />
+        ) : (
+          <div
+            className={classNames(Styles.terriaPreview, Styles.placeholder)}
+          />
+        )}
         <label className={Styles.badge}>
           {previewBadgeLabels[this.previewBadgeState]}
         </label>

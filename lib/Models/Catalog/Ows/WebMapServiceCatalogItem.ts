@@ -404,7 +404,9 @@ class WebMapServiceCatalogItem
       return undefined;
     }
 
-    imageryProvider.enablePickFeatures = true;
+    // Reset feature picking for the current imagery layer.
+    // We disable feature picking for the next imagery layer.
+    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
 
     return {
       imageryProvider,
@@ -428,6 +430,7 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
+      // Disable feature picking for the next imagery layer.
       imageryProvider.enablePickFeatures = false;
 
       return {
@@ -581,8 +584,8 @@ class WebMapServiceCatalogItem
         tilingScheme: this.tilingScheme,
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
-        credit: this.attribution,
-        enablePickFeatures: this.allowFeaturePicking
+        credit: this.attribution
+        // Note: we set enablePickFeatures in _currentImageryParts and _nextImageryParts
       };
 
       if (isDefined(this.getFeatureInfoFormat?.type)) {

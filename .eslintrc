@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jsx-control-statements/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "requireConfigFile": false,
@@ -19,7 +15,7 @@
     "commonjs": true,
     "es6": true
   },
-  "plugins": ["react", "jsx-control-statements"],
+  "plugins": ["react"],
   "globals": {
     "process": true
   },
@@ -29,7 +25,6 @@
     }
   },
   "rules": {
-    "jsx-control-statements/jsx-use-if-tag": 0,
     "react/jsx-no-undef": 0,
 
     /*Possible Errors */
