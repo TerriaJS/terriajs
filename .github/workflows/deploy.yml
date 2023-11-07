@@ -6,19 +6,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+      - uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
         with:
           node-version: "14.x"
-      - uses: google-github-actions/setup-gcloud@v0.2.1
+      - uses: google-github-actions/setup-gcloud@daadedc81d5f9d3c06d2c92f49202a3cc2b919ba # v0.2.1
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
-      - uses: google-github-actions/get-gke-credentials@v0.3.0
+      - uses: google-github-actions/get-gke-credentials@17bbf5dc3594a44a185c9e83b90abd91196ea18a # v0.3.0
         with:
           cluster_name: ${{ secrets.GKE_CLUSTER }}
           location: ${{ secrets.GKE_LOCATION }}
-      - uses: azure/setup-helm@v1.1
+      - uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
         with:
           version: "v3.3.1"
       - run: bash ./buildprocess/ci-deploy.sh
@@ -29,7 +29,7 @@ jobs:
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Upload new yarn.lock file (as it may change after `sync-dependencies`)
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: always()
         with:
           name: yarn.lock

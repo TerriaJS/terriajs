@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
         with:
           fetch-depth: 2
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
         with:
           registry-url: "https://registry.npmjs.org"
           node-version: "14.x"
