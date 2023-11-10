@@ -66,21 +66,17 @@ class MappablePreview extends React.Component {
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If
-          condition={
-            MappableMixin.isMixedInto(catalogItem) &&
-            !catalogItem.disablePreview
-          }
-        >
-          <DataPreviewMap
-            terria={this.props.terria}
-            previewed={catalogItem}
-            showMap={
-              !this.props.viewState.explorerPanelAnimating ||
-              this.props.viewState.useSmallScreenInterface
-            }
-          />
-        </If>
+        {MappableMixin.isMixedInto(catalogItem) &&
+          !catalogItem.disablePreview && (
+            <DataPreviewMap
+              terria={this.props.terria}
+              previewed={catalogItem}
+              showMap={
+                !this.props.viewState.explorerPanelAnimating ||
+                this.props.viewState.useSmallScreenInterface
+              }
+            />
+          )}
         <button
           type="button"
           onClick={this.toggleOnMap.bind(this)}
@@ -96,35 +92,31 @@ class MappablePreview extends React.Component {
             ref={(component) => (this.refToMeasure = component)}
           >
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
-            <If
-              condition={
-                !catalogItem.hasLocalData &&
-                !this.props.viewState.useSmallScreenInterface
-              }
-            >
-              <div className={Styles.shareLinkWrapper}>
-                <SharePanel
-                  catalogShare
-                  catalogShareWithoutText
-                  modalWidth={this.props.widthFromMeasureElementHOC}
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                />
-              </div>
-            </If>
+            {!catalogItem.hasLocalData &&
+              !this.props.viewState.useSmallScreenInterface && (
+                <div className={Styles.shareLinkWrapper}>
+                  <SharePanel
+                    catalogShare
+                    catalogShareWithoutText
+                    modalWidth={this.props.widthFromMeasureElementHOC}
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                  />
+                </div>
+              )}
           </div>
-          <If condition={catalogItem.loadMetadataResult?.error}>
+          {catalogItem.loadMetadataResult?.error && (
             <WarningBox
               error={catalogItem.loadMetadataResult?.error}
               viewState={this.props.viewState}
             />
-          </If>
-          <If condition={catalogItem.loadMapItemsResult?.error}>
+          )}
+          {catalogItem.loadMapItemsResult?.error && (
             <WarningBox
               error={catalogItem.loadMapItemsResult?.error}
               viewState={this.props.viewState}
             />
-          </If>
+          )}
           <Description item={catalogItem} />
         </div>
       </div>

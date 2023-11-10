@@ -44,21 +44,24 @@ describe("TableStyle", function () {
       "build/TerriaJS/data/regionMapping.json";
 
     jasmine.Ajax.install();
+    jasmine.Ajax.stubRequest(/.*/).andError({
+      statusText: "Unexpected request, not stubbed"
+    });
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SED_CODE18_SED_2018.json"
     ).andReturn({ responseText: SedCods });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
     ).andReturn({ responseText: Sa4Codes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
     ).andReturn({ responseText: Sa4Names });
   });
 

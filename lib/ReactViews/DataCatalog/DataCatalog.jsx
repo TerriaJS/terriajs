@@ -39,33 +39,36 @@ class DataCatalog extends React.Component {
     const { t } = this.props;
     return (
       <ul className={Styles.dataCatalog}>
-        <If condition={isSearching && catalogSearchProvider}>
-          <label className={Styles.label}>{t("search.resultsLabel")}</label>
-          <SearchHeader
-            searchResults={catalogSearchProvider}
-            isWaitingForSearchToStart={
-              searchState.isWaitingToStartCatalogSearch
-            }
-          />
-        </If>
-        <For each="item" of={items}>
-          {item !== this.props.terria.catalog.userAddedDataGroup && (
-            <DataCatalogMember
-              viewState={this.props.viewState}
-              member={item}
-              // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
-              // This must be false if resultsAreReferences - so group references open correctly in the search
-              manageIsOpenLocally={
-                isSearching && !catalogSearchProvider.resultsAreReferences
+        {isSearching && catalogSearchProvider && (
+          <>
+            <label className={Styles.label}>{t("search.resultsLabel")}</label>
+            <SearchHeader
+              searchResults={catalogSearchProvider}
+              isWaitingForSearchToStart={
+                searchState.isWaitingToStartCatalogSearch
               }
-              key={item.uniqueId}
-              onActionButtonClicked={this.props.onActionButtonClicked}
-              removable={this.props.removable}
-              terria={this.props.terria}
-              isTopLevel={true}
             />
-          )}
-        </For>
+          </>
+        )}
+        {items.map(
+          (item) =>
+            item !== this.props.terria.catalog.userAddedDataGroup && (
+              <DataCatalogMember
+                viewState={this.props.viewState}
+                member={item}
+                // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
+                // This must be false if resultsAreReferences - so group references open correctly in the search
+                manageIsOpenLocally={
+                  isSearching && !catalogSearchProvider.resultsAreReferences
+                }
+                key={item.uniqueId}
+                onActionButtonClicked={this.props.onActionButtonClicked}
+                removable={this.props.removable}
+                terria={this.props.terria}
+                isTopLevel={true}
+              />
+            )
+        )}
       </ul>
     );
   }

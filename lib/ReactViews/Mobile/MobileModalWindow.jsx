@@ -112,11 +112,7 @@ class MobileModalWindow extends React.Component {
       <div className={modalClass}>
         <Box column className={Styles.modalBg}>
           <div className={Styles.modalTop}>
-            <If
-              condition={
-                this.props.viewState.explorerPanelIsVisible && mobileView
-              }
-            >
+            {this.props.viewState.explorerPanelIsVisible && mobileView && (
               <button
                 type="button"
                 className={Styles.doneButton}
@@ -124,7 +120,7 @@ class MobileModalWindow extends React.Component {
               >
                 {t("mobile.doneBtnText")}
               </button>
-            </If>
+            )}
             <button
               type="button"
               disabled={

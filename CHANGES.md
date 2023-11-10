@@ -1,11 +1,33 @@
 # Change Log
 
-#### next release (8.3.7)
+#### next release (8.3.8)
 
-- Allow translation of TableStylingWorkflow.
-- Fix "Remove all" not removing selected/picked features
+- Remove `jsx-control-statements` dependency
+- Fix WMS nested group IDs - nested groups with the same name were not being created
+- WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
+- Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
+  - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
+  - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
+- Added many remaining ASGS 2021 region types to region mapping (STE_2021,ILOC_2021,IARE_2021,IREG_2021,RA_2021,SAL_2021,ADD_2021,DZN_2021,LGA_2022,LGA_2023,SED_2021,SED_2022,
+  CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
+  - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
+- Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
 - Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
 - [The next improvement]
+
+#### 8.3.7 - 2023-10-26
+
+- Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
+- Allow translation of TableStylingWorkflow.
+- Fix "Remove all" not removing selected/picked features
+- Fix crash on empty GeoJSON features
+- Add `tableFeatureInfoContext` support to `GeoJsonMixin.createProtomapsImageryProvider`
+- Fix `GeoJsonMixin` timeline animation for lines/polygons
+- Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
+- Fix splitter for `GeoJsonMixin` (lines and polygon features only)
+- Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 
 #### 8.3.6 - 2023-10-03
 

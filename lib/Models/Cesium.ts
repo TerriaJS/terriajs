@@ -94,6 +94,11 @@ import { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
+type CreditDisplayElement = {
+  credit: Credit;
+  count: number;
+};
+
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
 var enuToFixedScratch = new Matrix4();
@@ -129,7 +134,10 @@ export default class Cesium extends GlobeOrMap {
     | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
+  // Lightbox and on screen attributions from CreditDisplay
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
+  // Public because this is accessed from BottomLeftBar.tsx
+  cesiumScreenDataAttributions: IObservableArray<string> = observable([]);
 
   // When true, feature picking is paused. This is useful for temporarily
   // disabling feature picking when some other interaction mode wants to take
@@ -490,6 +498,7 @@ export default class Cesium extends GlobeOrMap {
     const creditDisplay: CreditDisplay & {
       _currentFrameCredits?: {
         lightboxCredits: AssociativeArray;
+        screenCredits: AssociativeArray;
       };
     } = this.scene.frameState.creditDisplay;
     const creditDisplayOldDestroy = creditDisplay.destroy;
@@ -505,48 +514,16 @@ export default class Cesium extends GlobeOrMap {
       creditDisplayOldEndFrame.bind(creditDisplay)();
 
       runInAction(() => {
-        const creditDisplayElements: {
-          credit: Credit;
-          count: number;
-        }[] = creditDisplay._currentFrameCredits!.lightboxCredits.values;
-
-        // sort credits by count (number of times they are added to map)
-        const credits = creditDisplayElements
-          .sort((credit1, credit2) => {
-            return credit2.count - credit1.count;
-          })
-          .map(({ credit }) => credit.html);
-
-        if (isEqual(credits, toJS(this.cesiumDataAttributions))) return;
-
-        // first remove ones that are not on the map anymore
-        // Iterate backwards because we're removing items.
-        for (let i = this.cesiumDataAttributions.length - 1; i >= 0; i--) {
-          const attribution = this.cesiumDataAttributions[i];
-          if (!credits.includes(attribution)) {
-            this.cesiumDataAttributions.remove(attribution);
-          }
-        }
-
-        // then go through all credits and add them or update their position
-        for (const [index, credit] of credits.entries()) {
-          const attributionIndex = this.cesiumDataAttributions.indexOf(credit);
-
-          if (attributionIndex === index) {
-            // it is already on correct position in the list
-            continue;
-          } else if (attributionIndex === -1) {
-            // it is not on the list yet so we add it to the list
-            this.cesiumDataAttributions.splice(index, 0, credit);
-          } else {
-            // it is on the list but not in the right place so we move it
-            this.cesiumDataAttributions.splice(
-              index,
-              0,
-              this.cesiumDataAttributions.splice(attributionIndex, 1)[0]
-            );
-          }
-        }
+        syncCesiumCreditsToAttributions(
+          creditDisplay._currentFrameCredits!.lightboxCredits
+            .values as CreditDisplayElement[],
+          this.cesiumDataAttributions
+        );
+        syncCesiumCreditsToAttributions(
+          creditDisplay._currentFrameCredits!.screenCredits
+            .values as CreditDisplayElement[],
+          this.cesiumScreenDataAttributions
+        );
       });
     };
   }
@@ -1033,11 +1010,11 @@ export default class Cesium extends GlobeOrMap {
       : undefined;
 
     if (!center) {
-      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray,
       but we need to return a useful CameraView that works in 3D mode and 2D mode.
-      In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up,
       but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
-      
+
       To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
       **/
 
@@ -1850,4 +1827,47 @@ function flyToBoundingSpherePromise(
       cancel
     });
   });
+}
+
+function syncCesiumCreditsToAttributions(
+  creditsElements: CreditDisplayElement[],
+  dataAttributionsObservable: IObservableArray<string>
+) {
+  // sort credits by count (number of times they are added to map)
+  const credits = creditsElements
+    .sort((credit1, credit2) => {
+      return credit2.count - credit1.count;
+    })
+    .map(({ credit }) => credit.html);
+
+  if (isEqual(credits, toJS(dataAttributionsObservable))) return;
+
+  // first remove ones that are not on the map anymore
+  // Iterate backwards because we're removing items.
+  for (let i = dataAttributionsObservable.length - 1; i >= 0; i--) {
+    const attribution = dataAttributionsObservable[i];
+    if (!credits.includes(attribution)) {
+      dataAttributionsObservable.remove(attribution);
+    }
+  }
+
+  // then go through all credits and add them or update their position
+  for (const [index, credit] of credits.entries()) {
+    const attributionIndex = dataAttributionsObservable.indexOf(credit);
+
+    if (attributionIndex === index) {
+      // it is already on correct position in the list
+      continue;
+    } else if (attributionIndex === -1) {
+      // it is not on the list yet so we add it to the list
+      dataAttributionsObservable.splice(index, 0, credit);
+    } else {
+      // it is on the list but not in the right place so we move it
+      dataAttributionsObservable.splice(
+        index,
+        0,
+        dataAttributionsObservable.splice(attributionIndex, 1)[0]
+      );
+    }
+  }
 }

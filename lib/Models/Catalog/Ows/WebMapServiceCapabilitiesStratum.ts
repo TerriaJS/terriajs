@@ -712,7 +712,9 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get isEsri(): boolean {
     if (this.catalogItem.url !== undefined)
-      return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
+      return (
+        this.catalogItem.url.toLowerCase().indexOf("mapserver/wmsserver") > -1
+      );
     return false;
   }
 
@@ -831,9 +833,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   /** Prioritize format of GetFeatureInfo:
-   * - JSON
+   * - JSON/GeoJSON
+   * - If ESRI, then we prioritise XML next
    * - HTML
    * - GML
+   * - XML
    * - Plain text
    *
    * If no matching format can be found in GetCapabilities, then Cesium will use defaults (see `WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats`)
@@ -852,10 +856,25 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     if (formatsArray.includes("application/json"))
       return { format: "application/json", type: "json" };
+    if (formatsArray.includes("application/geo+json"))
+      return { format: "application/geo+json", type: "json" };
+    if (formatsArray.includes("application/vnd.geo+json"))
+      return { format: "application/vnd.geo+json", type: "json" };
+
+    // Special case for Esri WMS, use XML before HTML/GML
+    // as HTML includes <table> with rowbg that is hard to read
+    if (this.isEsri && formatsArray.includes("text/xml")) {
+      return { format: "text/xml", type: "xml" };
+    }
     if (formatsArray.includes("text/html"))
       return { format: "text/html", type: "html" };
     if (formatsArray.includes("application/vnd.ogc.gml"))
       return { format: "application/vnd.ogc.gml", type: "xml" };
+
+    // For non-Esri services, we use XML after HTML/GML
+    if (formatsArray.includes("text/xml")) {
+      return { format: "text/xml", type: "xml" };
+    }
     if (formatsArray.includes("text/plain"))
       return { format: "text/plain", type: "text" };
   }
