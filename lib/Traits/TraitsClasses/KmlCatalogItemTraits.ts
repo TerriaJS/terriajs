@@ -24,7 +24,7 @@ export default class KmlCatalogItemTraits extends mixTraits(
     type: "boolean",
     name: "Clamp to Ground",
     description:
-      "Whether the polygon features in this KML should be clamped to the terrain surface."
+      "true if we want the geometry features (Polygons, LineStrings and LinearRings) clamped to the ground"
   })
-  clampPolygonsToGround: boolean = true;
+  clampToGround: boolean = true;
 }
