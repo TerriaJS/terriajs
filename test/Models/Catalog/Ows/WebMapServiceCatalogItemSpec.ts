@@ -391,6 +391,32 @@ describe("WebMapServiceCatalogItem", function () {
     }
   });
 
+  it("doesn't supportGettimeseries if only a single timeslice", async function () {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/colorscalerange.xml");
+      wms.setTrait("definition", "layers", "mylayer-singletime");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      console.log(wms);
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      expect(wms.supportsGetTimeseries).toBeFalsy();
+    } finally {
+      cleanup();
+    }
+  });
+
   it("constructs correct ImageryProvider when layers trait provided Title", async function () {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
