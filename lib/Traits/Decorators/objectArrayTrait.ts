@@ -127,7 +127,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // Strata order is important here for two reasons:
 
     // Determining array order:
-    // By default, we assume bottom strata order is "more" correct than top
+    // By default, we assume bottom strata order is "more" correct than top - with exception to default stratum - definition stratum is more correct
     // For example:
     // - In some LoadableStratum we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
     // - Then in the user stratum we set [{item:"two", value:"c"}]
