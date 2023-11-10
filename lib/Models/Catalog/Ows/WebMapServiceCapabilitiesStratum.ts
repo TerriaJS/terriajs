@@ -737,9 +737,12 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get supportsGetTimeseries() {
+    // Don't use GetTimeseries if there is only one timeslice
+    if ((this.catalogItem.discreteTimes?.length ?? 0) <= 1) return false;
+
     const capabilities = this.capabilities?.json?.Capability;
 
-    return (
+    return !!(
       isDefined(capabilities?.Request?.GetTimeseries) ||
       (Array.isArray(capabilities?.ExtendedCapabilities?.ExtendedRequest) &&
         capabilities.ExtendedCapabilities.ExtendedRequest.find(
