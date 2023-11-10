@@ -60,26 +60,20 @@ class KmlCatalogItem
     try {
       let kmlLoadInput: undefined | string | Resource | Document | Blob =
         undefined;
+
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
-        kmlLoadInput = (parser.parseFromString(this.kmlString, "text/xml"));
+        kmlLoadInput = parser.parseFromString(this.kmlString, "text/xml");
       } else if (isDefined(this._kmlFile)) {
         if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
-          kmlLoadInput = (this._kmlFile);
+          kmlLoadInput = this._kmlFile;
         } else {
-          kmlLoadInput = await (readXml(this._kmlFile));
+          kmlLoadInput = await readXml(this._kmlFile);
         }
-      } else if (isDefined(this.ionResource)) {
-        kmlLoadInput = (this.ionResource);
       } else if (isDefined(this.url)) {
-        kmlLoadInput = (proxyCatalogItemUrl(this, this.url));
-      } else {
-        throw networkRequestError({
-          sender: this,
-          title: i18next.t("models.kml.unableToLoadItemTitle"),
-          message: i18next.t("models.kml.unableToLoadItemMessage")
-        });
+        kmlLoadInput = proxyCatalogItemUrl(this, this.url);
       }
+
       if (!kmlLoadInput) {
         throw networkRequestError({
           sender: this,
@@ -88,7 +82,10 @@ class KmlCatalogItem
         });
       }
       this._dataSource = await KmlDataSource.load(kmlLoadInput, {
-        clampToGround: this.clampToGround
+        clampToGround: this.clampToGround,
+        sourceUri: this.dataSourceUri
+          ? proxyCatalogItemUrl(this, this.dataSourceUri, "1d")
+          : undefined
       } as any);
     } catch (e) {
       throw networkRequestError(

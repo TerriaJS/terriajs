@@ -15,6 +15,14 @@ export default class KmlCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
+    name: "KML data source URI.",
+    description:
+      "Overrides the url to use for resolving relative links and other KML network features."
+  })
+  dataSourceUri?: string;
+
+  @primitiveTrait({
+    type: "string",
     name: "kmlString",
     description: "A kml string"
   })

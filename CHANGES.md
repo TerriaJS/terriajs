@@ -212,6 +212,9 @@
 - Add CesiumIon geocoder
 - `CatalogGroup` will now not show members until loaded
 - Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
+- [The next improvement]
 
 #### 8.3.7 - 2023-10-26
 
@@ -229,6 +232,8 @@
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
 - [The next improvement]
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 
 #### 8.3.6 - 2023-10-03
 
