@@ -57,5 +57,5 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
       "Allow adding all members to the workbench with one click. Show Add All / Remove All button",
     type: "boolean"
   })
-  displayGroup?: boolean;
+  displayGroup = false;
 }

@@ -75,6 +75,7 @@ export default class ViewState {
   }
   @observable userDataPreviewedItem: BaseModel | undefined;
   @observable explorerPanelIsVisible: boolean = false;
+  @observable explorerPanelAnimating: boolean = false;
   @observable activeTabCategory: string = DATA_CATALOG_NAME;
   @observable activeTabIdInCategory: string | undefined = undefined;
   @observable isDraggingDroppingFile: boolean = false;
@@ -82,7 +83,6 @@ export default class ViewState {
   @observable isMapFullScreen: boolean = false;
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
-  @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
   // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();

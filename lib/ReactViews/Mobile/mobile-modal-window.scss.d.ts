@@ -6,8 +6,6 @@ interface CssExports {
   'backButton': string;
   'backButtonInactive': string;
   'button': string;
-  'data-catalog': string;
-  'dataCatalog': string;
   'done-button': string;
   'doneButton': string;
   'icon-back': string;

@@ -23,7 +23,7 @@ const ActionBarPortal: React.FC<PropsType> = ({ show }) => {
 const StyledPortal = styled(Portal)<{ show: boolean }>`
   display: flex;
   position: absolute;
-  height: 56px;
+  height: ${(p) => (p.show ? "56px" : "0")};
   visibility: ${(p) => (p.show ? "visible" : "hidden")};
   max-width: 60%;
   bottom: ${(p) => (p.show ? "80px" : "-56px")};

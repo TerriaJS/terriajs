@@ -1,27 +1,27 @@
 import i18next from "i18next";
 import { action, observable } from "mobx";
 
-interface DataType {
+export interface IDataType {
   value: string;
   name: string;
   description?: string;
 }
 
-export interface RemoteDataType extends DataType {}
+export interface IRemoteDataType extends IDataType {}
 
-export interface LocalDataType extends DataType {
+export interface ILocalDataType extends IDataType {
   extensions?: string[];
 }
 
-interface GetDataTypes {
-  remoteDataType: RemoteDataType[];
-  localDataType: LocalDataType[];
+interface IGetDataTypes {
+  remoteDataType: IRemoteDataType[];
+  localDataType: ILocalDataType[];
 }
 
 /**
  * List of builtin remote upload types
  */
-const builtinRemoteDataTypes: RemoteDataType[] = [
+const builtinRemoteDataTypes: IRemoteDataType[] = [
   {
     value: "auto",
     name: "core.dataType.auto"
@@ -131,7 +131,7 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
 /**
  * List of builtin local upload types
  */
-const builtinLocalDataTypes: LocalDataType[] = [
+const builtinLocalDataTypes: ILocalDataType[] = [
   {
     value: "auto",
     name: "core.dataType.auto"
@@ -187,31 +187,31 @@ const builtinLocalDataTypes: LocalDataType[] = [
 /**
  * Custom remote data types. Add to it by calling addRemoteDataType().
  */
-export const customRemoteDataTypes: Map<string, RemoteDataType> = observable(
+export const customRemoteDataTypes: Map<string, IRemoteDataType> = observable(
   new Map()
 );
 
 /**
  * Custom local data types. Add by calling addLocalDataType().
  */
-export const customLocalDataTypes: Map<string, LocalDataType> = observable(
+export const customLocalDataTypes: Map<string, ILocalDataType> = observable(
   new Map()
 );
 
-export default function getDataTypes(): GetDataTypes {
-  const uniqueRemoteDataTypes: Map<string, RemoteDataType> = new Map([
+export default function getDataTypes(): IGetDataTypes {
+  const uniqueRemoteDataTypes: Map<string, IRemoteDataType> = new Map([
     ...(builtinRemoteDataTypes.map((dtype) => [
       dtype.value,
       translateDataType(dtype)
-    ]) as [string, RemoteDataType][]),
+    ]) as [string, IRemoteDataType][]),
     ...customRemoteDataTypes.entries()
   ]);
 
-  const uniqueLocalDataTypes: Map<string, LocalDataType> = new Map([
+  const uniqueLocalDataTypes: Map<string, ILocalDataType> = new Map([
     ...(builtinLocalDataTypes.map((dtype) => [
       dtype.value,
       translateDataType(dtype)
-    ]) as [string, LocalDataType][]),
+    ]) as [string, ILocalDataType][]),
     ...customLocalDataTypes.entries()
   ]);
 
@@ -230,7 +230,7 @@ export default function getDataTypes(): GetDataTypes {
  * @param newRemoteDataType The new remote data type to be added.
  */
 export const addOrReplaceRemoteFileUploadType = action(
-  (key: string, newRemoteDataType: RemoteDataType) => {
+  (key: string, newRemoteDataType: IRemoteDataType) => {
     customRemoteDataTypes.set(key, newRemoteDataType);
   }
 );
@@ -244,12 +244,12 @@ export const addOrReplaceRemoteFileUploadType = action(
  * @param newLocalDataType The new local data type to be added.
  */
 export const addOrReplaceLocalFileUploadType = action(
-  (key: string, newLocalDataType: LocalDataType) => {
+  (key: string, newLocalDataType: ILocalDataType) => {
     customLocalDataTypes.set(key, newLocalDataType);
   }
 );
 
-function translateDataType<T extends DataType>(dataType: T): T {
+function translateDataType<T extends IDataType>(dataType: T): T {
   return {
     ...dataType,
     value: dataType.value,

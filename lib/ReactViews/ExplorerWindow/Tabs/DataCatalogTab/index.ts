@@ -1,0 +1,1 @@
+export { DataCatalogTab } from "./DataCatalogTab";

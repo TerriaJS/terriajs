@@ -4,6 +4,7 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import { ModelId } from "../../Traits/ModelReference";
 import toggleItemOnMapFromCatalog, {
   Op as ToggleOnMapOp
 } from "./toggleItemOnMapFromCatalog";
@@ -16,7 +17,7 @@ import toggleItemOnMapFromCatalog, {
  * A check to see if all members of a group are already loaded in the workbench. Only checks for mappable items.
  */
 export function allMappableMembersInWorkbench(
-  groupItemsArray: string[],
+  groupItemsArray: ModelId[],
   terria: Terria
 ) {
   const workbenchItemsArray = terria.workbench.itemIds;
