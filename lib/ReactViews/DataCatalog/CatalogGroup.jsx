@@ -138,7 +138,7 @@ function CatalogGroup(props) {
             </li>
           )}
 
-          {props.children}
+          {!props.loading ? props.children : null}
         </ul>
       )}
     </li>
