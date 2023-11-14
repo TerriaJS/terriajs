@@ -123,7 +123,7 @@ class MyDataTab extends React.Component {
   }
 
   render() {
-    const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
+    const showTwoColumn = !!(this.hasUserAddedData() && !this.state.activeTab);
     const { t, className } = this.props;
     return (
       <Box
