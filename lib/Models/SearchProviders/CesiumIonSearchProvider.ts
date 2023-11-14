@@ -1,5 +1,5 @@
 import SearchProvider from "./SearchProvider";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import i18next from "i18next";
@@ -73,36 +73,41 @@ export default class CesiumIonSearchProvider extends SearchProvider {
       SearchAction.cesium,
       searchText
     );
-    let response;
+
+    let response: CesiumIonGeocodeResult;
     try {
       response = await loadJson<CesiumIonGeocodeResult>(
         `${this.url}?text=${searchText}&access_token=${this.key}`
       );
     } catch (e) {
-      searchResults.message = i18next.t("viewModels.searchErrorOccurred");
+      runInAction(() => {
+        searchResults.message = i18next.t("viewModels.searchErrorOccurred");
+      });
       return;
     }
 
-    if (!response.features) {
-      searchResults.message = i18next.t("viewModels.searchNoLocations");
-      return;
-    }
+    runInAction(() => {
+      if (!response.features) {
+        searchResults.message = i18next.t("viewModels.searchNoLocations");
+        return;
+      }
 
-    if (response.features.length === 0) {
-      searchResults.message = i18next.t("viewModels.searchNoLocations");
-    }
+      if (response.features.length === 0) {
+        searchResults.message = i18next.t("viewModels.searchNoLocations");
+      }
 
-    searchResults.results = response.features.map<SearchResult>((feature) => {
-      const [w, s, e, n] = feature.bbox;
-      const rectangle = Rectangle.fromDegrees(w, s, e, n);
+      searchResults.results = response.features.map<SearchResult>((feature) => {
+        const [w, s, e, n] = feature.bbox;
+        const rectangle = Rectangle.fromDegrees(w, s, e, n);
 
-      return new SearchResult({
-        name: feature.properties.label,
-        clickAction: createZoomToFunction(this, rectangle),
-        location: {
-          latitude: (s + n) / 2,
-          longitude: (e + w) / 2
-        }
+        return new SearchResult({
+          name: feature.properties.label,
+          clickAction: createZoomToFunction(this, rectangle),
+          location: {
+            latitude: (s + n) / 2,
+            longitude: (e + w) / 2
+          }
+        });
       });
     });
   }
