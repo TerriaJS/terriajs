@@ -262,6 +262,39 @@ describe("ArcGisMapServerCatalogItem", function () {
           imageryProvider.requestImage(0, 0, 100);
           expect(item.scaleWorkbenchInfo).toBeDefined();
         });
+
+        it("usePreCachedTilesIfAvailable = false if requesting specific layers", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+            item.setTrait(CommonStrata.definition, "layers", "31,32");
+          });
+          await item.loadMapItems();
+
+          expect(item.layersArray.length).toBe(2);
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
+            false
+          );
+        });
+
+        it("usePreCachedTilesIfAvailable = true if not requesting specific layers", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+            item.setTrait(CommonStrata.definition, "layers", undefined);
+          });
+          await item.loadMapItems();
+          expect(item.layersArray.length).toBe(74);
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
+            true
+          );
+        });
       });
     });
 
