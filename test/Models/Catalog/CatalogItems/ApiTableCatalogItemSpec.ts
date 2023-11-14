@@ -278,6 +278,9 @@ describe("ApiTableCatalogItem", function () {
             },
             {
               name: "some other embedded value"
+            },
+            {
+              name: "some fake embedded value"
             }
           ],
 
@@ -289,6 +292,10 @@ describe("ApiTableCatalogItem", function () {
             {
               name: "some other embedded value",
               responseDataPath: "some.embedded.1"
+            },
+            {
+              name: "some fake embedded value",
+              responseDataPath: "some.embedded.path.that[].does.not.exist.1"
             }
           ]
         });
@@ -318,6 +325,16 @@ describe("ApiTableCatalogItem", function () {
         "second_element 1",
         "second_element 2",
         "second_element 3"
+      ]);
+
+      const fakeEmbeddedColumn = definedTable.find(
+        ([name]) => name === "some fake embedded value"
+      );
+      expect(fakeEmbeddedColumn).toEqual([
+        "some fake embedded value",
+        "",
+        "",
+        ""
       ]);
     });
   });
