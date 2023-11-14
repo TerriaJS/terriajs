@@ -1,9 +1,12 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import moment from "moment";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import arraysAreEqual from "../../../Core/arraysAreEqual";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -11,7 +14,6 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
@@ -27,16 +29,15 @@ import LegendTraits, {
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
-import moment from "moment";
 
 const proj4 = require("proj4").default;
 
@@ -540,6 +541,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         false
       );
 
+      arraysAreEqual;
+
       const imageryProvider = new ArcGisMapServerImageryProvider({
         url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
         layers: this.layersArray.map((l) => l.id).join(","),
@@ -553,7 +556,12 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
          * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
          */
         usePreCachedTilesIfAvailable:
-          this.layersArray.length === 0 || !this.layers,
+          this.layersArray.length === 0 ||
+          !this.layers ||
+          arraysAreEqual(
+            this.layersArray.map((l) => l.id),
+            stratum.allLayers.map((l) => l.id)
+          ),
         mapServerData: stratum.mapServer,
         token: stratum.token,
         credit: this.attribution

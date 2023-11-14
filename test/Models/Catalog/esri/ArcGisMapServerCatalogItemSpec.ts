@@ -295,6 +295,29 @@ describe("ArcGisMapServerCatalogItem", function () {
             true
           );
         });
+
+        it("usePreCachedTilesIfAvailable = true if requesting all layers", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+            item.setTrait(
+              CommonStrata.definition,
+              "layers",
+              new Array(74)
+                .fill(0)
+                .map((_, i) => i)
+                .join(",")
+            );
+          });
+          await item.loadMapItems();
+          expect(item.layersArray.length).toBe(74);
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
+            true
+          );
+        });
       });
     });
 
