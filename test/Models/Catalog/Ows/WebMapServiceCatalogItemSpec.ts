@@ -154,6 +154,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.request).toBe("GetMap");
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.styles).toBe("");
 
         const getFeatureInfoResource: Resource = (
           mapItems[0].imageryProvider as any
@@ -169,6 +170,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("");
 
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
@@ -215,6 +217,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
         expect(tileProviderResource.queryParameters.tiled).toBeTruthy();
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.styles).toBe("");
 
         const getFeatureInfoResource: Resource = (
           mapItems[0].imageryProvider as any
@@ -233,6 +236,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("");
 
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
@@ -249,6 +253,7 @@ describe("WebMapServiceCatalogItem", function () {
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
+      wms.setTrait("definition", "styles", "jet");
       wms.setTrait("definition", "parameters", {
         some: "thing",
         another: "value"
@@ -285,6 +290,10 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.request).toBe("GetMap");
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.layers).toBe(
+          "single_period"
+        );
+        expect(tileProviderResource.queryParameters.styles).toBe("jet");
         expect(tileProviderResource.queryParameters.some).toBe("thing");
         expect(tileProviderResource.queryParameters.another).toBe("value");
 
@@ -302,6 +311,10 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.layers).toBe(
+          "single_period"
+        );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("jet");
         expect(getFeatureInfoResource.queryParameters.some).toBe("thing else");
         expect(getFeatureInfoResource.queryParameters.another).toBe("value");
 
