@@ -1,17 +1,17 @@
 import { isEqual } from "lodash-es";
 import {
-  action,
-  computed,
   IComputedValue,
   IObservableValue,
   IReactionDisposer,
+  action,
+  computed,
+  makeObservable,
   observable,
   reaction,
   runInAction,
-  untracked,
-  makeObservable
+  untracked
 } from "mobx";
-import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
+import { FULFILLED, IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
