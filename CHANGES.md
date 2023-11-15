@@ -16,6 +16,8 @@
 - Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
 - Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
 - Add CesiumIon geocoder
+- `CatalogGroup` will now not show members until loaded
+- [The next improvement]
 
 #### 8.3.7 - 2023-10-26
 
