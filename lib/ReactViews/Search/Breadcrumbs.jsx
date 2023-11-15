@@ -1,19 +1,18 @@
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
-import Box from "../../Styled/Box";
+import styled, { withTheme } from "styled-components";
+import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { getParentGroups } from "../../Core/getPath";
-import Text, { TextSpan } from "../../Styled/Text";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import getAncestors from "../../Models/getAncestors";
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
-import { RawButton } from "../../Styled/Button";
-import styled from "styled-components";
-import getAncestors from "../../Models/getAncestors";
-import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
-import { runInAction } from "mobx";
-import CommonStrata from "../../Models/Definition/CommonStrata";
+import Text, { TextSpan } from "../../Styled/Text";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${(props) => `
@@ -105,7 +104,7 @@ class Breadcrumbs extends Component {
         <Box flexWrap>
           {parentGroups &&
             parentGroups.map((parent, i) => (
-              <React.Fragment key={i}>
+              <Fragment key={i}>
                 {this.renderCrumb(parent, i, parentGroups)}
                 {i !== parentGroups.length - 1 && (
                   <Box paddedHorizontally={1}>
@@ -114,7 +113,7 @@ class Breadcrumbs extends Component {
                     </Text>
                   </Box>
                 )}
-              </React.Fragment>
+              </Fragment>
             ))}
         </Box>
       </Box>

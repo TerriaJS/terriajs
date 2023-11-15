@@ -1,21 +1,21 @@
 import {
+  IReactionDisposer,
   action,
   computed,
-  IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
-import { Ref } from "react";
+import { ComponentType, MouseEvent, ReactNode, Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../Core/addedByUser";
 import {
   Category,
   HelpAction,
   StoryAction
 } from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
+import addedByUser from "../Core/addedByUser";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
@@ -24,20 +24,20 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
-import getAncestors from "../Models/getAncestors";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
+import getAncestors from "../Models/getAncestors";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import { FeatureInfoPanelButtonGenerator } from "../ViewModels/FeatureInfoPanel";
-import {
-  defaultTourPoints,
-  RelativePosition,
-  TourPoint
-} from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
+import {
+  RelativePosition,
+  TourPoint,
+  defaultTourPoints
+} from "./defaultTourPoints";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -359,7 +359,7 @@ export default class ViewState {
    */
   @observable currentTool?: Tool;
 
-  @observable panel: React.ReactNode;
+  @observable panel: ReactNode;
 
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
@@ -690,7 +690,7 @@ export default class ViewState {
 
   @action
   openHelpPanelItemFromSharePanel(
-    evt: React.MouseEvent<HTMLDivElement>,
+    evt: MouseEvent<HTMLDivElement>,
     itemName: string
   ) {
     evt.preventDefault();
@@ -861,9 +861,7 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () =>
-    | React.ComponentType<any>
-    | Promise<React.ComponentType<any>>;
+  getToolComponent: () => ComponentType<any> | Promise<ComponentType<any>>;
 
   showCloseButton: boolean;
   params?: any;

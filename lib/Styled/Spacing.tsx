@@ -25,18 +25,3 @@ export const SpacingSpan = styled(Spacing).attrs({
 })``;
 
 export default Spacing;
-
-// import React from "react";
-// import PropTypes from "prop-types";
-// // import classNames from "classnames";
-// // import Styles from "./text.scss";
-
-// // should it be a span or inline-block-div?
-// export const Spacing = props => (
-//   <div style={{ marginBottom: `${props.bottom * 5}px` }} />
-// );
-// Spacing.propTypes = {
-//   bottom: PropTypes.number.isRequired
-// };
-
-// export default Spacing;

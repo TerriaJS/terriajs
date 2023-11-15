@@ -25,11 +25,9 @@ This file creates the main user interface, using [React](https://facebook.github
 For example, here's a version that includes an extra menu that links to terria.io, and adds the measure tool to the navigation area:
 
 ```javascript
-import React from "react";
-
 import version from "../../version";
 
-import StandardUserInterface from "terriajs/lib/ReactViews/StandardUserInterface/StandardUserInterface.jsx";
+import StandardUserInterface from "terriajs/lib/ReactViews/StandardUserInterface/StandardUserInterface";
 import MenuItem from "terriajs/lib/ReactViews/StandardUserInterface/customizable/MenuItem";
 import RelatedMaps from "./RelatedMaps";
 import {

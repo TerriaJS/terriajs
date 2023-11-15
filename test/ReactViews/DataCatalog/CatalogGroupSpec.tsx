@@ -1,10 +1,9 @@
-import React from "react";
+import { act } from "react-dom/test-utils";
+import { create } from "react-test-renderer";
+import { ThemeProvider } from "styled-components";
 import CatalogGroup from "../../../lib/ReactViews/DataCatalog/CatalogGroup";
 import Loader from "../../../lib/ReactViews/Loader";
-import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
-import { create } from "react-test-renderer";
-import { act } from "react-dom/test-utils";
 
 describe("CatalogGroup", () => {
   let testRenderer: ReturnType<typeof create>;

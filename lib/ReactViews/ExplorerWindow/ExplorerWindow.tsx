@@ -1,13 +1,12 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import ViewState from "../../ReactViewModels/ViewState";
 import { useViewState } from "../Context";
 import ModalPopup from "./ModalPopup";
 import Tabs from "./Tabs";
 
 export const ExplorerWindowElementName = "AddData";
 
-export default observer<React.FC>(function ExplorerWindow() {
+function ExplorerWindow() {
   const viewState = useViewState();
 
   const onClose = action(() => {
@@ -40,4 +39,6 @@ export default observer<React.FC>(function ExplorerWindow() {
       <Tabs terria={viewState.terria} viewState={viewState} />
     </ModalPopup>
   );
-});
+}
+
+export default observer(ExplorerWindow);

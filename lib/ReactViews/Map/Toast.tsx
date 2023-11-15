@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import styled from "styled-components";
 
 export type ToastProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 /**
