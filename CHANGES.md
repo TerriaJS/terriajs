@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.3.8)
+#### next release (8.3.9)
+
+- [The next improvement]
+
+#### 8.3.8 - 2023-11-15
 
 - Fix maximum call stack size exceeded on Math.min/max when creating Charts
 - Fix boolean flag in `MyDataTab` displaying number
