@@ -1,9 +1,28 @@
 # Change Log
 
-#### next release (8.3.8)
+#### next release (8.3.9)
 
 - [The next improvement]
+
+#### 8.3.8 - 2023-11-15
+
+- Fix maximum call stack size exceeded on Math.min/max when creating Charts
+- Fix boolean flag in `MyDataTab` displaying number
 - Remove `jsx-control-statements` dependency
+- Fix WMS nested group IDs - nested groups with the same name were not being created
+- WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
+- Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
+  - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
+  - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
+- Added many remaining ASGS 2021 region types to region mapping (STE_2021,ILOC_2021,IARE_2021,IREG_2021,RA_2021,SAL_2021,ADD_2021,DZN_2021,LGA_2022,LGA_2023,SED_2021,SED_2022,
+  CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
+  - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
+- Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
+- Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
+- Add CesiumIon geocoder
+- `CatalogGroup` will now not show members until loaded
+- Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
+- [The next improvement]
 
 #### 8.3.7 - 2023-10-26
 

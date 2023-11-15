@@ -65,7 +65,7 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "・外側の輪：地図を回転 （Nが北）\n・内側の円：視点の自由な移動\n・ダブルクリック：ホームポジションに戻る\n回転の簡便操作：Ctrlキーと地図のドラッグ操作で視点の自由な移動が可能",
+    "description": "・外側の輪：地図を回転 （Nが北）\n・内側の円：視点の自由な移動\n・ダブルクリック：真上からの視点にリセット\n回転の簡便操作：Ctrlキーと地図のドラッグ操作で視点の自由な移動が可能",
     "guidance": {
       "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
       "dismissText": "閉じて今後は表示しない",
@@ -538,7 +538,7 @@
   },
   "zoomCotrol": {
     "zoomOut": "ズームアウト",
-    "zoomReset": "拡大・縮小をリセット",
+    "zoomReset": "初期表示位置に戻る",
     "zoomIn": "ズームイン"
   },
   "location": {
@@ -2092,7 +2092,7 @@
       "basemap": "背景地図",
       "disclaimer": "免責事項",
       "dataAttribution": "データの帰属",
-      "dataProvider": "データ提供先:"
+      "dataProvider": "データの出典"
     }
   },
   "toast": {

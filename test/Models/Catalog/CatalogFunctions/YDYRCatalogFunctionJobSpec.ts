@@ -60,11 +60,11 @@ describe("YDYRCatalogFunctionJob", function () {
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
     ).andReturn({ responseText: sa4regionCodes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
     ).andReturn({ responseText: lga2011RegionCodes });
 
     terria = new Terria();
