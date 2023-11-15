@@ -1,6 +1,7 @@
 import CesiumIonSearchProvider from "../../../lib/Models/SearchProviders/CesiumIonSearchProvider";
 import Terria from "../../../lib/Models//Terria";
 import * as loadJson from "../../../lib/Core/loadJson";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 
 const fixture = {
   features: [
@@ -17,15 +18,18 @@ const fixture = {
 };
 
 describe("CesiumIonSearchProvider", () => {
-  const searchProvider = new CesiumIonSearchProvider({
-    key: "testkey",
-    url: "api.test.com",
-    terria: {
-      currentViewer: {
-        zoomTo: () => {}
-      }
-    } as unknown as Terria
+  let terria: Terria;
+  let searchProvider: CesiumIonSearchProvider;
+
+  beforeEach(async function () {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    searchProvider = new CesiumIonSearchProvider("test-cesium-ion", terria);
+    searchProvider.setTrait(CommonStrata.definition, "key", "testkey");
+    searchProvider.setTrait(CommonStrata.definition, "url", "api.test.com");
   });
+
   it("Handles valid results", async () => {
     spyOn(loadJson, "default").and.returnValue(
       new Promise((resolve) => resolve(fixture))
@@ -47,13 +51,17 @@ describe("CesiumIonSearchProvider", () => {
     const result = await searchProvider.search("test");
     console.log(result);
     expect(result.results.length).toBe(0);
-    expect(result.message).toBe("viewModels.searchNoLocations");
+    expect(result.message?.content).toBe(
+      "translate#viewModels.searchNoLocations"
+    );
   });
 
   it("Handles error", async () => {
     spyOn(loadJson, "default").and.throwError("error");
     const result = await searchProvider.search("test");
     expect(result.results.length).toBe(0);
-    expect(result.message).toBe("viewModels.searchErrorOccurred");
+    expect(result.message?.content).toBe(
+      "translate#viewModels.searchErrorOccurred"
+    );
   });
 });
