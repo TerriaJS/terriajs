@@ -1,12 +1,18 @@
 import i18next, { WithT } from "i18next";
 import { computed, makeObservable } from "mobx";
-import { Suspense, useEffect, useState } from "react";
-import * as React from "react";
+import {
+  Component,
+  ComponentType,
+  Suspense,
+  lazy,
+  useEffect,
+  useState
+} from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
 import {
-  applyTranslationIfExists,
-  TRANSLATE_KEY_PREFIX
+  TRANSLATE_KEY_PREFIX,
+  applyTranslationIfExists
 } from "../../Language/languageHelpers";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
@@ -16,7 +22,7 @@ import { useViewState } from "../Context";
 
 interface ToolProps {
   toolName: string;
-  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+  getToolComponent: () => ComponentType | Promise<ComponentType>;
   params?: any;
 }
 
@@ -28,7 +34,7 @@ interface ToolProps {
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-const Tool: React.FC<ToolProps> = (props) => {
+function Tool(props: ToolProps): JSX.Element {
   const { getToolComponent, params, toolName } = props;
   const viewState = useViewState();
   const [t] = useTranslation();
@@ -38,7 +44,7 @@ const Tool: React.FC<ToolProps> = (props) => {
   const [toolAndProps, setToolAndProps] = useState<any>(undefined);
   useEffect(() => {
     setToolAndProps([
-      React.lazy(() =>
+      lazy(() =>
         Promise.resolve(getToolComponent()).then((c) => ({ default: c }))
       ),
       params
@@ -57,7 +63,7 @@ const Tool: React.FC<ToolProps> = (props) => {
       </Suspense>
     </ToolErrorBoundary>
   );
-};
+}
 
 interface ToolButtonProps extends ToolProps {
   icon: { id: string };
@@ -126,7 +132,7 @@ interface ToolErrorBoundaryProps extends WithT {
   children: any;
 }
 
-class ToolErrorBoundary extends React.Component<
+class ToolErrorBoundary extends Component<
   ToolErrorBoundaryProps,
   { hasError: boolean }
 > {

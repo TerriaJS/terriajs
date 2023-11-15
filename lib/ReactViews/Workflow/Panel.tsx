@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import isDefined from "../../Core/isDefined";
 import { IButtonProps, RawButton } from "../../Styled/Button";
@@ -10,8 +9,8 @@ import { CollapseIcon } from "../Custom/Collapsible/Collapsible";
 export type PanelProps = {
   title?: string;
   icon?: IconProps["glyph"];
-  menuComponent?: React.ReactNode;
-  children?: React.ReactNode;
+  menuComponent?: ReactNode;
+  children?: ReactNode;
   className?: string;
   /** Collapsible will replace menuComponent. Title must be defined */
   collapsible?: boolean;
@@ -25,7 +24,7 @@ export type PanelProps = {
 /**
  * A generic panel component for left, right, context items etc.
  */
-export const Panel: React.FC<PanelProps> = (props) => {
+export function Panel(props: PanelProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     isDefined(props.isOpen) ? setIsOpen(props.isOpen) : null;
@@ -64,24 +63,28 @@ export const Panel: React.FC<PanelProps> = (props) => {
       <Content>{props.children}</Content>
     </Wrapper>
   );
-};
+}
+
+interface PanelButtonProps {
+  onClick: () => void;
+  title: string;
+}
 
 /** Simple PanelButton - this mimics style of CollapsibleTitleBar */
-export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
-  onClick,
-  title
-}) => (
-  <Wrapper>
-    <CollapsibleTitleBar
-      onClick={onClick}
-      fullWidth
-      isOpen={false}
-      activeStyles
-    >
-      <Title css={{ textAlign: "center" }}>{title}</Title>
-    </CollapsibleTitleBar>
-  </Wrapper>
-);
+export function PanelButton({ onClick, title }: PanelButtonProps) {
+  return (
+    <Wrapper>
+      <CollapsibleTitleBar
+        onClick={onClick}
+        fullWidth
+        isOpen={false}
+        activeStyles
+      >
+        <Title css={{ textAlign: "center" }}>{title}</Title>
+      </CollapsibleTitleBar>
+    </Wrapper>
+  );
+}
 
 const Wrapper = styled.div`
   background-color: ${(p) => p.theme.darkWithOverlay};

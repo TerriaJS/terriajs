@@ -2,15 +2,14 @@ import { TFunction } from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
-import { ChangeEvent, ComponentProps, MouseEvent } from "react";
-import * as React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { ChangeEvent, Component, ComponentProps, MouseEvent, Ref } from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -41,13 +40,13 @@ const sides = {
 type PropTypes = WithTranslation & {
   terria: Terria;
   viewState: ViewState;
-  refFromHOC?: React.Ref<HTMLDivElement>;
+  refFromHOC?: Ref<HTMLDivElement>;
   theme: DefaultTheme;
   t: TFunction;
 };
 
 @observer
-class SettingPanel extends React.Component<PropTypes> {
+class SettingPanel extends Component<PropTypes> {
   /**
    * @param {Props} props
    */

@@ -1,7 +1,6 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import { useEffect } from "react";
-import * as React from "react";
+import { ReactNode, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ViewState from "../../ReactViewModels/ViewState";
 import { useViewState } from "../Context";
@@ -21,7 +20,7 @@ type PortalProps = {
 /**
  * Defines a portal with given id that can be attached by calling <PortalChild portalId={id} />
  */
-export const Portal: React.FC<PortalProps> = ({ id, className }) => {
+export const Portal = ({ id, className }: PortalProps) => {
   const viewState = useViewState();
   useEffect(
     action(() => {
@@ -38,15 +37,17 @@ export const Portal: React.FC<PortalProps> = ({ id, className }) => {
 export type PortalChildProps = {
   viewState: ViewState;
   portalId: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 /**
  * Attach children to the <Portal> identified by portalId
  */
-export const PortalChild: React.FC<PortalChildProps> = observer(
-  ({ viewState, portalId, children }) => {
-    const container = viewState.portals.get(portalId);
-    return container ? ReactDOM.createPortal(<>{children}</>, container) : null;
-  }
-);
+export const PortalChild = observer(function PortalChild({
+  viewState,
+  portalId,
+  children
+}: PortalChildProps) {
+  const container = viewState.portals.get(portalId);
+  return container ? ReactDOM.createPortal(<>{children}</>, container) : null;
+});

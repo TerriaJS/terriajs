@@ -1,19 +1,14 @@
-import * as React from "react";
 import { useTranslation } from "react-i18next";
-import Checkbox from "./../../../Styled/Checkbox/Checkbox";
-import { useTheme } from "styled-components";
 import Spacing from "../../../Styled/Spacing";
 import { TextSpan } from "../../../Styled/Text";
+import Checkbox from "./../../../Styled/Checkbox/Checkbox";
 
 interface IDisplayAsPercentSection {
   item: any;
 }
 
-const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
-  props: IDisplayAsPercentSection
-) => {
+function DisplayAsPercentSection(props: IDisplayAsPercentSection) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const togglePercentage = () => {
     props.item.displayPercent = !props.item.displayPercent;
   };
@@ -34,7 +29,7 @@ const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
       </Checkbox>
     </>
   );
-};
+}
 DisplayAsPercentSection.displayName = "DisplayAsPercentSection";
 
 export default DisplayAsPercentSection;

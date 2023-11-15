@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import * as React from "react";
+import { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
 import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
+import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
@@ -50,14 +50,14 @@ export default observer(function DataCatalogItem({
       .viewCatalogMember(item)
       .then((result) => result.raiseError(viewState.terria));
 
-  const toggleEnable = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleEnable = async (event: MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
     await toggleItemOnMapFromCatalog(viewState, item, keepCatalogOpen, {
       [ToggleOnMapOp.Add]: DataSourceAction.addFromCatalogue,
       [ToggleOnMapOp.Remove]: DataSourceAction.removeFromCatalogue
     });
   };
-  const onBtnClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const onBtnClicked = (event: MouseEvent<HTMLButtonElement>) => {
     runInAction(() => {
       if (onActionButtonClicked) {
         onActionButtonClicked(item);

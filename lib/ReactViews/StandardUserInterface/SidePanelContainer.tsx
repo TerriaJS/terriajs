@@ -1,11 +1,11 @@
 import { action } from "mobx";
-import type * as React from "react";
+import type { ReactNode } from "react";
 import styled from "styled-components";
 import { WithViewState, withViewState } from "../Context";
 
 interface PropsType extends WithViewState {
   show: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({

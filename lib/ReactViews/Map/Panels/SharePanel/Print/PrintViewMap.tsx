@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import * as React from "react";
+import { ReactNode } from "react";
 
 interface Props {
   screenshot: Promise<string>;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const PrintViewMap = (props: Props) => {
+function PrintViewMap(props: Props) {
   const [map, setMap] = useState<string | null>(null);
   const [isError, setError] = useState(false);
 
@@ -25,6 +25,6 @@ const PrintViewMap = (props: Props) => {
   ) : (
     <div>Loading</div>
   );
-};
+}
 
 export default PrintViewMap;

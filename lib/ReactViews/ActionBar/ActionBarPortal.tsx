@@ -1,4 +1,3 @@
-import * as React from "react";
 import styled from "styled-components";
 import { Portal } from "../StandardUserInterface/Portal";
 
@@ -16,9 +15,9 @@ interface PropsType {
 /**
  * A Portal to show ActionBar UI.
  */
-const ActionBarPortal: React.FC<PropsType> = ({ show }) => {
+function ActionBarPortal({ show }: PropsType) {
   return <StyledPortal id={ActionBarPortalId} show={show} />;
-};
+}
 
 const StyledPortal = styled(Portal)<{ show: boolean }>`
   display: flex;

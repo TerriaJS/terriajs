@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import * as React from "react";
 import { useTranslation } from "react-i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../../../Core/isDefined";
 import Cesium from "../../../Models/Cesium";
@@ -21,9 +19,7 @@ type DropPedestrianToGroundProps = {
   afterDrop: () => void;
 };
 
-const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
-  props
-) => {
+function DropPedestrianToGround(props: DropPedestrianToGroundProps) {
   const cesium = props.cesium;
   const scene = cesium.scene;
   const eventHandler = new ScreenSpaceEventHandler(scene.canvas);
@@ -91,7 +87,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
       )}
     </>
   );
-};
+}
 
 async function getPrecisePosition(
   scene: Scene,

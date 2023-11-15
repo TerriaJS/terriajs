@@ -4,8 +4,8 @@ import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import TerriaFeature from "../../Models/Feature/Feature";
 import ViewState from "../../ReactViewModels/ViewState";
-import Styles from "./feature-info-catalog-item.scss";
 import FeatureInfoSection from "./FeatureInfoSection";
+import Styles from "./feature-info-catalog-item.scss";
 
 interface Props {
   features: TerriaFeature[];
@@ -15,7 +15,7 @@ interface Props {
   printView?: boolean;
 }
 
-export default observer((props: Props) => {
+function FeatureInfoCatalogItem(props: Props) {
   const { t } = useTranslation();
   const features = props.features;
   const catalogItem = props.catalogItem;
@@ -76,4 +76,6 @@ export default observer((props: Props) => {
       </ul>
     </li>
   );
-});
+}
+
+export default observer(FeatureInfoCatalogItem);

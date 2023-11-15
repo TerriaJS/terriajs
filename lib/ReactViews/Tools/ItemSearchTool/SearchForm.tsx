@@ -1,12 +1,6 @@
-import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
-import { useEffect, useState } from "react";
-import * as React from "react";
-import {
-  useTranslation,
-  WithTranslation,
-  withTranslation
-} from "react-i18next";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ReactSelect, {
   ActionMeta,
   OptionTypeBase,
@@ -21,14 +15,14 @@ import ItemSearchProvider, {
   NumericItemSearchParameter,
   TextItemSearchParameter
 } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import Text from "../../../Styled/Text";
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
-import Text from "../../../Styled/Text";
-import Box from "../../../Styled/Box";
-import Button from "../../../Styled/Button";
 
-export interface SearchFormProps extends WithTranslation {
+export interface SearchFormProps {
   itemSearchProvider: ItemSearchProvider;
   parameters: ItemSearchParameter[];
   query: ItemSearchQuery;
@@ -43,9 +37,9 @@ type State =
   | { is: "error"; error: Error }
   | { is: "results"; results: ItemSearchResult[] };
 
-const SearchForm: React.FC<SearchFormProps> = (props) => {
+function SearchForm(props: SearchFormProps) {
   const { parameters, itemSearchProvider } = props;
-  const [t] = useTranslation();
+  const { t } = useTranslation();
   const [state, setState] = useState<State>({ is: "initial" });
   const [query, setQuery] = useState<ItemSearchQuery>(props.query);
 
@@ -85,7 +79,7 @@ const SearchForm: React.FC<SearchFormProps> = (props) => {
       });
   }
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     try {
       search();
     } finally {
@@ -115,7 +109,6 @@ const SearchForm: React.FC<SearchFormProps> = (props) => {
               onChange={setParameterValue(p.id, p.type)}
               value={query[p.id]?.value}
               disabled={disabled}
-              t={t}
             />
           </Field>
         ))}
@@ -128,16 +121,16 @@ const SearchForm: React.FC<SearchFormProps> = (props) => {
       </FieldSet>
     </Form>
   );
-};
+}
 
-interface ParameterProps extends WithT {
+interface ParameterProps {
   parameter: ItemSearchParameter;
   onChange: (value: any) => void;
   value?: any;
   disabled: boolean;
 }
 
-const Parameter: React.FC<ParameterProps> = (props) => {
+function Parameter(props: ParameterProps) {
   const { parameter } = props;
   switch (parameter.type) {
     case "numeric":
@@ -147,9 +140,9 @@ const Parameter: React.FC<ParameterProps> = (props) => {
     case "text":
       return <TextParameter {...props} parameter={parameter} />;
   }
-};
+}
 
-interface NumericParameterProps extends WithT {
+interface NumericParameterProps {
   parameter: NumericItemSearchParameter;
   onChange: (value: { start?: number; end?: number } | undefined) => void;
   value?: { start: number; end: number };
@@ -161,7 +154,7 @@ export const NumericParameter = (props: NumericParameterProps) => {
   const { min, max } = parameter.range;
 
   const onChange =
-    (tag: "start" | "end") => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (tag: "start" | "end") => (e: ChangeEvent<HTMLInputElement>) => {
       const parsed = parseFloat(e.target.value);
       const newValue: any = { ...props.value };
       if (isNaN(parsed)) delete newValue[tag];
@@ -227,7 +220,7 @@ type SelectOnChangeHandler<
   actionMeta: ActionMeta<OptionType>
 ) => void;
 
-const EnumParameter: React.FC<EnumParameterProps> = (props) => {
+function EnumParameter(props: EnumParameterProps) {
   const { parameter, disabled } = props;
   const options = parameter.values.map(({ id }) => ({
     value: id,
@@ -260,7 +253,7 @@ const EnumParameter: React.FC<EnumParameterProps> = (props) => {
       </Label>
     </Box>
   );
-};
+}
 
 interface TextParameterProps {
   parameter: TextItemSearchParameter;
@@ -268,7 +261,7 @@ interface TextParameterProps {
   onChange: (value: string | undefined) => void;
 }
 
-const TextParameter: React.FC<TextParameterProps> = (props) => {
+function TextParameter(props: TextParameterProps) {
   const { parameter, value, onChange } = props;
   return (
     <Box column>
@@ -285,7 +278,7 @@ const TextParameter: React.FC<TextParameterProps> = (props) => {
       </Label>
     </Box>
   );
-};
+}
 
 const Form = styled.form`
   width: 100%;
@@ -338,4 +331,4 @@ const Select = styled(ReactSelect).attrs({
   }
 `;
 
-export default withTranslation()(SearchForm);
+export default SearchForm;

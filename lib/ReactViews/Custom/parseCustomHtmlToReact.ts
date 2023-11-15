@@ -1,18 +1,16 @@
 "use strict";
+import * as React from "react";
 import {
   AnchorHTMLAttributes,
   createElement,
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
-
-import * as React from "react";
-import styled from "styled-components";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import { ExternalLinkWithWarning, ExternalLinkIcon } from "./ExternalLink";
+import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
 
 const DOMPurify = require("dompurify/dist/purify");
 const HtmlToReact = require("html-to-react");
@@ -97,7 +95,7 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
         context
       );
       if (appendExternalLink) {
-        const externalIcon = React.createElement(ExternalLinkIcon, {});
+        const externalIcon = createElement(ExternalLinkIcon, {});
         children.push(externalIcon);
       }
 

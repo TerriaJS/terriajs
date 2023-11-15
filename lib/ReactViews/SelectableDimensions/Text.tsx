@@ -1,13 +1,13 @@
 import { runInAction } from "mobx";
-import * as React from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionText as SelectableDimensionTextModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Input from "../../Styled/Input";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 
-export const SelectableDimensionText: React.FC<{
-  id: string;
-  dim: SelectableDimensionTextModel;
-}> = ({ id, dim }) => {
+export function SelectableDimensionText({
+  id,
+  dim
+}: Dimension<SelectableDimensionTextModel>) {
   return (
     <Input
       styledHeight={"34px"}
@@ -22,4 +22,4 @@ export const SelectableDimensionText: React.FC<{
       }}
     />
   );
-};
+}

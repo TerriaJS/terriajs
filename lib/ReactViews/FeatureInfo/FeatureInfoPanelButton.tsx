@@ -1,13 +1,10 @@
-import * as React from "react";
 import styled from "styled-components";
 import Button from "../../Styled/Button";
 import { StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
 
-const FeatureInfoPanelButton: React.FC<FeatureInfoPanelButtonModel> = (
-  props
-) => {
+function FeatureInfoPanelButton(props: FeatureInfoPanelButtonModel) {
   const { text, icon } = props;
   if (!text) {
     return null;
@@ -33,7 +30,7 @@ const FeatureInfoPanelButton: React.FC<FeatureInfoPanelButtonModel> = (
       {text && <Text textLight>{text}</Text>}
     </StyledButton>
   );
-};
+}
 
 const StyledButton = styled(Button).attrs({
   primary: true

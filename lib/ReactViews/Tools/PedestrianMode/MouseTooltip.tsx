@@ -1,5 +1,4 @@
 import { createRef, useEffect } from "react";
-import * as React from "react";
 import styled from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
@@ -10,7 +9,7 @@ type MouseTooltipProps = {
   text: string;
 };
 
-const MouseTooltip: React.FC<MouseTooltipProps> = (props) => {
+function MouseTooltip(props: MouseTooltipProps) {
   const { scene, text } = props;
   const tooltipText = createRef<typeof TooltipText>();
 
@@ -44,7 +43,7 @@ const MouseTooltip: React.FC<MouseTooltipProps> = (props) => {
   return (
     <TooltipText ref={tooltipText} dangerouslySetInnerHTML={{ __html: text }} />
   );
-};
+}
 
 const TooltipText = styled(Text).attrs({
   small: true,

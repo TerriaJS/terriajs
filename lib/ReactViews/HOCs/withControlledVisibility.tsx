@@ -1,6 +1,5 @@
-import * as React from "react";
 import PropTypes from "prop-types";
-
+import { ComponentType } from "react";
 import IElementConfig from "../../Models/IElementConfig";
 
 interface WithControlledVisibilityProps {
@@ -12,7 +11,7 @@ interface WithControlledVisibilityProps {
  * element is available inside either "hidden" or "shown" lists passed
  * as prop
  */
-export default <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+export default <P extends object>(WrappedComponent: ComponentType<P>) => {
   // eslint-disable-next-line require-jsdoc
   function WithControlledVisibility({
     elementConfig,

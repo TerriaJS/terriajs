@@ -1,15 +1,14 @@
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import * as React from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";
+import { MeasureTool } from "../../Map/MapNavigation/Items";
 import PositionRightOfWorkbench from "../../Workbench/PositionRightOfWorkbench";
 import DropPedestrianToGround from "./DropPedestrianToGround";
-import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
+import MiniMap, { MiniMapView, getViewFromScene } from "./MiniMap";
 import MovementControls from "./MovementControls";
-import { MeasureTool } from "../../Map/MapNavigation/Items";
 
 // The desired camera height measured from the surface in metres
 export const PEDESTRIAN_HEIGHT = 1.7;
@@ -22,7 +21,9 @@ type PedestrianModeProps = {
 };
 export const PEDESTRIAN_MODE_ID = "pedestrian-mode";
 
-const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
+const PedestrianMode = observer(function PedestrianMode(
+  props: PedestrianModeProps
+) {
   const { viewState } = props;
 
   const cesium = viewState.terria.currentViewer;

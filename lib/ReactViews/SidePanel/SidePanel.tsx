@@ -1,17 +1,21 @@
 import { observer } from "mobx-react";
-import * as React from "react";
-import { useTranslation, withTranslation } from "react-i18next";
-import styled, { DefaultTheme, withTheme } from "styled-components";
-import ViewState from "../../ReactViewModels/ViewState";
+import {
+  ComponentPropsWithoutRef,
+  MouseEventHandler,
+  Ref,
+  forwardRef
+} from "react";
+import { useTranslation } from "react-i18next";
+import styled, { DefaultTheme, useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+import { useViewState } from "../Context";
 import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
-import { withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
 
 const BoxHelpfulHints = styled(Box)``;
@@ -46,7 +50,7 @@ interface EmptyWorkbenchProps {
   theme: DefaultTheme;
 }
 
-const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = (props) => {
+function EmptyWorkbench(props: EmptyWorkbenchProps) {
   const { t } = useTranslation();
   return (
     <Text large textLight>
@@ -93,144 +97,137 @@ const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = (props) => {
       </Box>
     </Text>
   );
-};
+}
 
 type SidePanelButtonProps = {
   btnText?: string;
-} & React.ComponentPropsWithoutRef<typeof Button>;
+} & ComponentPropsWithoutRef<typeof Button>;
 
-const SidePanelButton = React.forwardRef<
-  HTMLButtonElement,
-  SidePanelButtonProps
->((props, ref) => {
-  const { btnText, ...rest } = props;
-  return (
-    <Button
-      primary
-      ref={ref}
-      renderIcon={props.children && (() => props.children)}
-      textProps={{
-        large: true
-      }}
-      {...rest}
-    >
-      {btnText ? btnText : ""}
-    </Button>
-  );
-});
+const SidePanelButton = forwardRef<HTMLButtonElement, SidePanelButtonProps>(
+  (props, ref) => {
+    const { btnText, ...rest } = props;
+    return (
+      <Button
+        primary
+        ref={ref}
+        renderIcon={props.children && (() => props.children)}
+        textProps={{
+          large: true
+        }}
+        {...rest}
+      >
+        {btnText ? btnText : ""}
+      </Button>
+    );
+  }
+);
 
 export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
 export const SIDE_PANEL_UPLOAD_BUTTON_NAME = "SidePanelUploadButton";
 
 interface SidePanelProps {
-  viewState: ViewState;
-  refForExploreMapData: React.Ref<HTMLButtonElement>;
-  refForUploadData: React.Ref<HTMLButtonElement>;
-  theme: DefaultTheme;
+  refForExploreMapData: Ref<HTMLButtonElement>;
+  refForUploadData: Ref<HTMLButtonElement>;
 }
 
-const SidePanel = observer<React.FC<SidePanelProps>>(
-  ({ viewState, theme, refForExploreMapData, refForUploadData }) => {
-    const terria = viewState.terria;
-    const { t } = useTranslation();
-    const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
-      e
-    ) => {
-      e.stopPropagation();
-      viewState.setTopElement(ExplorerWindowElementName);
-      viewState.openAddData();
-    };
+const SidePanel = observer(function SidePanel({
+  refForExploreMapData,
+  refForUploadData
+}: SidePanelProps) {
+  const viewState = useViewState();
+  const terria = viewState.terria;
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const onAddDataClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    viewState.setTopElement(ExplorerWindowElementName);
+    viewState.openAddData();
+  };
 
-    const onAddLocalDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
-      e
-    ) => {
-      e.stopPropagation();
-      viewState.setTopElement(ExplorerWindowElementName);
-      viewState.openUserData();
-    };
+  const onAddLocalDataClicked: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    viewState.setTopElement(ExplorerWindowElementName);
+    viewState.openUserData();
+  };
 
-    const addData = t("addData.addDataBtnText");
-    const uploadText = t("models.catalog.upload");
-    return (
-      <Box column styledMinHeight={"0"} flex={1}>
-        <div
-          css={`
-            padding: 0 5px;
-            background: ${theme.dark};
-          `}
-        >
-          <SearchBoxAndResults
-            viewState={viewState}
-            terria={terria}
-            placeholder={t("search.placeholder")}
-          />
-          <Spacing bottom={2} />
-          <Box justifySpaceBetween>
-            <SidePanelButton
-              ref={refForExploreMapData}
-              onClick={onAddDataClicked}
-              title={addData}
-              btnText={addData}
-              styledWidth={"200px"}
-            >
-              <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} />
-            </SidePanelButton>
-            <SidePanelButton
-              ref={refForUploadData}
-              onClick={onAddLocalDataClicked}
-              title={t("addData.load")}
-              btnText={uploadText}
-              styledWidth={"130px"}
-            >
-              <StyledIcon
-                glyph={Icon.GLYPHS.uploadThin}
-                light
-                styledWidth={"20px"}
-              />
-            </SidePanelButton>
-          </Box>
-          <Spacing bottom={1} />
-        </div>
-        <Box
-          styledMinHeight={"0"}
-          flex={1}
-          css={`
-            overflow: hidden;
-          `}
-        >
-          {terria.workbench.items && terria.workbench.items.length > 0 ? (
-            <Workbench viewState={viewState} terria={terria} />
-          ) : (
-            <EmptyWorkbench theme={theme} />
-          )}
+  const addData = t("addData.addDataBtnText");
+  const uploadText = t("models.catalog.upload");
+  return (
+    <Box column styledMinHeight={"0"} flex={1}>
+      <div
+        css={`
+          padding: 0 5px;
+          background: ${theme.dark};
+        `}
+      >
+        <SearchBoxAndResults
+          viewState={viewState}
+          terria={terria}
+          placeholder={t("search.placeholder")}
+        />
+        <Spacing bottom={2} />
+        <Box justifySpaceBetween>
+          <SidePanelButton
+            ref={refForExploreMapData}
+            onClick={onAddDataClicked}
+            title={addData}
+            btnText={addData}
+            styledWidth={"200px"}
+          >
+            <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} />
+          </SidePanelButton>
+          <SidePanelButton
+            ref={refForUploadData}
+            onClick={onAddLocalDataClicked}
+            title={t("addData.load")}
+            btnText={uploadText}
+            styledWidth={"130px"}
+          >
+            <StyledIcon
+              glyph={Icon.GLYPHS.uploadThin}
+              light
+              styledWidth={"20px"}
+            />
+          </SidePanelButton>
         </Box>
+        <Spacing bottom={1} />
+      </div>
+      <Box
+        styledMinHeight={"0"}
+        flex={1}
+        css={`
+          overflow: hidden;
+        `}
+      >
+        {terria.workbench.items && terria.workbench.items.length > 0 ? (
+          <Workbench viewState={viewState} terria={terria} />
+        ) : (
+          <EmptyWorkbench theme={theme} />
+        )}
       </Box>
-    );
-  }
-);
+    </Box>
+  );
+});
 
 // Used to create two refs for <SidePanel /> to consume, rather than
 // using the withTerriaRef() HOC twice, designed for a single ref
-const SidePanelWithRefs: React.FC<
-  Omit<SidePanelProps, "refForExploreMapData" | "refForUploadData">
-> = (props) => {
+export default function SidePanelWithRefs(
+  props: Omit<SidePanelProps, "refForExploreMapData" | "refForUploadData">
+) {
+  const viewState = useViewState();
   const refForExploreMapData = useRefForTerria(
     EXPLORE_MAP_DATA_NAME,
-    props.viewState
+    viewState
   );
   const refForUploadData = useRefForTerria(
     SIDE_PANEL_UPLOAD_BUTTON_NAME,
-    props.viewState
+    viewState
   );
   return (
     <SidePanel
       {...props}
-      refForExploreMapData={
-        refForExploreMapData as React.Ref<HTMLButtonElement>
-      }
-      refForUploadData={refForUploadData as React.Ref<HTMLButtonElement>}
+      refForExploreMapData={refForExploreMapData as Ref<HTMLButtonElement>}
+      refForUploadData={refForUploadData as Ref<HTMLButtonElement>}
     />
   );
-};
-
-export default withTranslation()(withViewState(withTheme(SidePanelWithRefs)));
+}

@@ -1,22 +1,22 @@
 import { observer } from "mobx-react";
-import * as React from "react";
+import { Fragment } from "react";
 import ChartView from "../../Charts/ChartView";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import hasTraits from "../../Models/Definition/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
-import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
 interface ChartDisclaimerProps {
   terria: Terria;
   viewState: ViewState;
 }
 
-const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
+function ChartDisclaimer({ terria }: ChartDisclaimerProps) {
   const chartView = new ChartView(terria);
 
   const uniqueChartDisclaimers: string[] = [
@@ -52,13 +52,13 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
     >
       <Spacing bottom={2} />
       {uniqueChartDisclaimers.map((chartDisclaimer) => (
-        <React.Fragment key={chartDisclaimer}>
+        <Fragment key={chartDisclaimer}>
           <Text textLight>{parseCustomHtmlToReact(chartDisclaimer!)}</Text>
           <Spacing bottom={2} />
-        </React.Fragment>
+        </Fragment>
       ))}
     </Box>
   );
-};
+}
 
 export default observer(ChartDisclaimer);

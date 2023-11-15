@@ -1,4 +1,3 @@
-import * as React from "react";
 import styled from "styled-components";
 import { GLYPHS, StyledIcon } from "../../Icon";
 import { CheckboxIconProps } from "../types";
@@ -19,9 +18,7 @@ const StyledCheckboxIcon = styled(StyledIcon).attrs({
   `}
 `;
 
-const CheckboxIcon: React.FC<CheckboxIconProps> = (
-  props: CheckboxIconProps
-) => {
+function CheckboxIcon(props: CheckboxIconProps) {
   if (props.isDisabled) {
     return (
       <StyledCheckboxIcon
@@ -42,6 +39,6 @@ const CheckboxIcon: React.FC<CheckboxIconProps> = (
       />
     );
   }
-};
+}
 
 export default CheckboxIcon;

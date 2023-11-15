@@ -1,6 +1,5 @@
 import { observer } from "mobx-react";
-import * as React from "react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
@@ -12,10 +11,10 @@ import { useViewState } from "../Context";
 
 export interface FrameProps {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const Frame = observer((props: FrameProps) => {
+export const Frame = observer(function Frame(props: FrameProps) {
   const theme = useTheme();
   const [showChildren, setShowChildren] = useState(true);
   const viewState = useViewState();

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import {
@@ -10,14 +9,17 @@ import {
 import Box from "../../Styled/Box";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import SelectableDimension from "./SelectableDimension";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 
 /**
  * Component to render a SelectableDimensionGroup or DimensionSelectorCheckboxGroup.
  */
-export const SelectableDimensionGroup: React.FC<{
-  id: string;
-  dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
-}> = ({ id, dim }) => {
+export function SelectableDimensionGroup({
+  id,
+  dim
+}: Dimension<
+  SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel
+>) {
   const { t } = useTranslation();
   const childDims = filterSelectableDimensions(dim.placement)(
     dim.selectableDimensions
@@ -65,4 +67,4 @@ export const SelectableDimensionGroup: React.FC<{
       </Box>
     </Collapsible>
   );
-};
+}

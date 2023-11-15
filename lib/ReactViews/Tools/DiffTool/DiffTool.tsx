@@ -9,8 +9,14 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
-import * as React from "react";
-import { useState } from "react";
+import {
+  ChangeEvent,
+  Component,
+  ReactNode,
+  RefObject,
+  createRef,
+  useState
+} from "react";
 import ReactDOM from "react-dom";
 import {
   WithTranslation,
@@ -69,7 +75,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class DiffTool extends React.Component<PropsType> {
+class DiffTool extends Component<PropsType> {
   static readonly toolName = "Image Difference";
 
   @observable private leftItem?: DiffableItem;
@@ -194,15 +200,13 @@ interface MainPropsType extends PropsType {
 }
 
 @observer
-class Main extends React.Component<MainPropsType> {
+class Main extends Component<MainPropsType> {
   @observable private location?: LatLonHeight;
   @observable private _locationPickError = false;
   @observable private _isPickingNewLocation = false;
 
-  private openLeftDatePickerButton: React.RefObject<HTMLButtonElement> =
-    React.createRef();
-  private openRightDatePickerButton: React.RefObject<HTMLButtonElement> =
-    React.createRef();
+  private openLeftDatePickerButton: RefObject<HTMLButtonElement> = createRef();
+  private openRightDatePickerButton: RefObject<HTMLButtonElement> = createRef();
 
   constructor(props: MainPropsType) {
     super(props);
@@ -332,7 +336,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  changeSourceItem(e: React.ChangeEvent<HTMLSelectElement>) {
+  changeSourceItem(e: ChangeEvent<HTMLSelectElement>) {
     const newSourceItem = this.diffableItemsInWorkbench.find(
       (item) => item.uniqueId === e.target.value
     );
@@ -340,7 +344,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
+  changePreviewStyle(e: ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
     this.props.leftItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
@@ -353,7 +357,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  changeDiffStyle(e: React.ChangeEvent<HTMLSelectElement>) {
+  changeDiffStyle(e: ChangeEvent<HTMLSelectElement>) {
     this.diffItem.setTrait(CommonStrata.user, "diffStyleId", e.target.value);
   }
 
@@ -756,7 +760,7 @@ const DiffAccordionToggle = styled(Box)`
   ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
 `;
 
-const DiffAccordion = ({ children }: { children: React.ReactNode }) => {
+function DiffAccordion(props: { children: ReactNode }) {
   const [showChildren, setShowChildren] = useState(true);
   const { t } = useTranslation();
   const viewState = useViewState();
@@ -805,10 +809,10 @@ const DiffAccordion = ({ children }: { children: React.ReactNode }) => {
           </RawButton>
         </Box>
       </DiffAccordionToggle>
-      {showChildren && children}
+      {showChildren && props.children}
     </DiffAccordionWrapper>
   );
-};
+}
 
 const DiffAccordionWrapper = styled(Box).attrs({
   column: true,

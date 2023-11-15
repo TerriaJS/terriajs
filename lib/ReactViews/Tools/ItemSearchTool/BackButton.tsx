@@ -1,14 +1,16 @@
-import * as React from "react";
+import { ReactNode } from "react";
 import { useTheme } from "styled-components";
 import { BoxSpan } from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
-import { TextSpan } from "../../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import { TextSpan } from "../../../Styled/Text";
 
-const BackButton: React.FC<{
+interface Props {
+  children: ReactNode;
   onClick: () => void;
-  children: React.ReactNode;
-}> = ({ children, onClick }) => {
+}
+
+function BackButton({ children, onClick }: Props) {
   const theme = useTheme();
   return (
     <Button
@@ -31,6 +33,6 @@ const BackButton: React.FC<{
       </BoxSpan>
     </Button>
   );
-};
+}
 
 export default BackButton;

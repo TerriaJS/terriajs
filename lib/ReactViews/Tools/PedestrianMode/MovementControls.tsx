@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import * as React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
-import Icon, { StyledIcon } from "../../../Styled/Icon";
 import MovementsController from "./MovementsController";
 
 const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");
@@ -21,7 +20,7 @@ type MovementControlsProps = {
   maxVerticalLookAngle: number;
 };
 
-const MovementControls: React.FC<MovementControlsProps> = (props) => {
+function MovementControls(props: MovementControlsProps) {
   const [isMaximized, setIsMaximized] = useState(true);
   const [t] = useTranslation();
 
@@ -59,7 +58,7 @@ const MovementControls: React.FC<MovementControlsProps> = (props) => {
       </Container>
     </>
   );
-};
+}
 
 const backgroundColor = "#ffffff";
 

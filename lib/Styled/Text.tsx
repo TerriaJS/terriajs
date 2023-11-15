@@ -1,5 +1,4 @@
-import { ComponentProps } from "react";
-import * as React from "react";
+import { ComponentProps, ElementType } from "react";
 import styled from "styled-components";
 import { OneKeyFrom } from "./Styled.types";
 
@@ -42,7 +41,7 @@ export interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: React.ElementType | keyof JSX.IntrinsicElements;
+  as?: ElementType | keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
@@ -218,8 +217,8 @@ export const Text = styled.div<ITextProps>`
 `;
 
 export const TextSpan = styled(Text).attrs<{
-  as?: React.ElementType | keyof JSX.IntrinsicElements;
-}>((props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+  as?: ElementType | keyof JSX.IntrinsicElements;
+}>((props: { as?: ElementType | keyof JSX.IntrinsicElements }) => ({
   as: props.as || "span"
 }))``;
 

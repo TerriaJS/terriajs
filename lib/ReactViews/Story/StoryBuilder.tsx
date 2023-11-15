@@ -1,12 +1,19 @@
-import { action, toJS, makeObservable } from "mobx";
+import { action, makeObservable, toJS } from "mobx";
 import { observer } from "mobx-react";
-import * as React from "react";
+import {
+  Component,
+  ComponentPropsWithoutRef,
+  ReactElement,
+  ReactNode,
+  RefObject,
+  createRef
+} from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
+  WithTranslation,
   useTranslation,
-  withTranslation,
-  WithTranslation
+  withTranslation
 } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -23,21 +30,21 @@ import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
+import { WithViewState, withViewState } from "../Context";
 import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
-import Styles from "./story-builder.scss";
 import StoryEditor from "./StoryEditor.jsx";
+import Styles from "./story-builder.scss";
 const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";
 
 type StoryData = ViewState["terria"]["stories"][number];
 
-interface IProps {
+interface IProps extends MeasureElementProps, WithTranslation, WithViewState {
   isVisible?: boolean;
   animationDuration?: number;
   theme: DefaultTheme;
@@ -57,19 +64,14 @@ interface IState {
 }
 
 @observer
-class StoryBuilder extends React.Component<
-  IProps & MeasureElementProps & WithTranslation & WithViewState,
-  IState
-> {
-  storiesWrapperRef = React.createRef<HTMLElement>();
+class StoryBuilder extends Component<IProps, IState> {
+  storiesWrapperRef = createRef<HTMLElement>();
 
   refToMeasure: any;
 
   clearRecaptureSuccessTimeout?: () => void;
 
-  constructor(
-    props: IProps & MeasureElementProps & WithTranslation & WithViewState
-  ) {
+  constructor(props: IProps) {
     super(props);
     makeObservable(this);
     this.state = {
@@ -396,7 +398,7 @@ class StoryBuilder extends React.Component<
               overflowY={"auto"}
               styledMaxHeight={"calc(100vh - 283px)"}
               position="static"
-              ref={this.storiesWrapperRef as React.RefObject<HTMLDivElement>}
+              ref={this.storiesWrapperRef as RefObject<HTMLDivElement>}
               css={`
                 margin-right: -10px;
               `}
@@ -515,7 +517,7 @@ class StoryBuilder extends React.Component<
   }
 }
 
-type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
+type PanelProps = ComponentPropsWithoutRef<typeof Box> & {
   isVisible?: boolean;
   isHidden?: boolean;
 };
@@ -542,7 +544,7 @@ interface CaptureSceneProps {
   disabled?: boolean;
 }
 
-const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
+function CaptureScene(props: CaptureSceneProps) {
   const { t } = useTranslation();
   return (
     <StoryButton
@@ -555,14 +557,14 @@ const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
       <StyledIcon glyph={Icon.GLYPHS.story} light styledWidth={"20px"} />
     </StoryButton>
   );
-};
+}
 
-type StoryButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
+type StoryButtonProps = ComponentPropsWithoutRef<typeof Button> & {
   btnText: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-export const StoryButton: React.FC<StoryButtonProps> = (props) => {
+export function StoryButton(props: StoryButtonProps) {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -576,16 +578,16 @@ export const StoryButton: React.FC<StoryButtonProps> = (props) => {
       {btnText ? btnText : ""}
     </Button>
   );
-};
+}
 
 interface RemoveDialogProps {
   theme: DefaultTheme;
-  text: React.ReactElement;
+  text: ReactElement;
   onConfirm: () => void;
   closeDialog: () => void;
 }
 
-const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
+function RemoveDialog(props: RemoveDialogProps) {
   const { t } = useTranslation();
   return (
     <Box
@@ -632,7 +634,7 @@ const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
       </Box>
     </Box>
   );
-};
+}
 
 export default withViewState(
   withTranslation()(withTheme(measureElement(StoryBuilder)))

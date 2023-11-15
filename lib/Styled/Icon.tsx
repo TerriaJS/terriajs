@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import * as React from "react";
 import styled from "styled-components";
 
 // Icon
@@ -151,7 +150,7 @@ export interface IconProps {
   className?: string;
   rotation?: number;
 }
-export const Icon: React.FC<IconProps> = (props: IconProps) => {
+export function Icon(props: IconProps) {
   return (
     <svg
       viewBox="0 0 100 100"
@@ -162,7 +161,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       <use xlinkHref={"#" + props.glyph?.id} />
     </svg>
   );
-};
+}
 
 export interface IStyledIconProps {
   displayInline?: boolean;

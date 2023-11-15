@@ -1,10 +1,10 @@
 /**
  * base tooltipwrapperraw repurposed from magda, with some a11y modifications
  */
-import * as React from "react";
+import { Component, ReactNode, createRef } from "react";
 import ReactDOM from "react-dom";
-import { withTheme, DefaultTheme } from "styled-components";
 import { useUID } from "react-uid";
+import { DefaultTheme, withTheme } from "styled-components";
 import { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
@@ -30,11 +30,11 @@ type Props = {
     state: State;
     launch: () => void;
     forceSetState: (bool?: boolean) => void;
-  }) => React.ReactNode;
+  }) => ReactNode;
   /** Styles to apply to the  actual tooltip */
   innerElementStyles?: Object;
   /** The tooltip content itself, as higher-order function that provides a function to dismiss the tooltip */
-  children: (applyAriaId: boolean, dismiss: () => void) => React.ReactNode;
+  children: (applyAriaId: boolean, dismiss: () => void) => ReactNode;
 };
 
 type State = {
@@ -45,9 +45,9 @@ type State = {
 /**
  * @description Return a information tooltip, on hover show calculation method.
  */
-class TooltipWrapperRaw extends React.Component<Props, State> {
-  rootRef = React.createRef<HTMLDivElement>();
-  tooltipTextElementRef = React.createRef<HTMLSpanElement>();
+class TooltipWrapperRaw extends Component<Props, State> {
+  rootRef = createRef<HTMLDivElement>();
+  tooltipTextElementRef = createRef<HTMLSpanElement>();
   state = {
     offset: 0,
     open: !!this.props.startOpen
@@ -229,8 +229,8 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
 export const TooltipWrapper = withTheme(TooltipWrapperRaw);
 
 type ButtonLauncherProps = {
-  launcherComponent: () => React.ReactNode;
-  children: (idForAria: string) => React.ReactNode;
+  launcherComponent: () => ReactNode;
+  children: (idForAria: string) => ReactNode;
   dismissOnLeave?: boolean;
   orientation?: "below" | "above";
   [spread: string]: any;

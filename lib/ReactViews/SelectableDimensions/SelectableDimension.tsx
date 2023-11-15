@@ -1,15 +1,14 @@
-import * as React from "react";
 import {
+  SelectableDimension as SelectableDimensionModel,
   isButton,
   isCheckbox,
   isCheckboxGroup,
   isColor,
   isEnum,
   isGroup,
+  isMultiEnum,
   isNumeric,
-  isText,
-  SelectableDimension as SelectableDimensionModel,
-  isMultiEnum
+  isText
 } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -24,12 +23,10 @@ import {
   SelectableDimensionEnum,
   SelectableDimensionEnumMulti as SelectableDimensionMultiEnum
 } from "./Select";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 import { SelectableDimensionText } from "./Text";
 
-const SelectableDimension: React.FC<{
-  id: string;
-  dim: SelectableDimensionModel;
-}> = ({ id, dim }) => {
+function SelectableDimension({ id, dim }: Dimension<SelectableDimensionModel>) {
   return (
     <Box displayInlineBlock fullWidth styledPadding="5px 0">
       {/* Render label for all SelectableDimensions except for groups */}
@@ -58,6 +55,6 @@ const SelectableDimension: React.FC<{
       {isColor(dim) && <SelectableDimensionColor id={id} dim={dim} />}
     </Box>
   );
-};
+}
 
 export default SelectableDimension;

@@ -1,5 +1,4 @@
-import { Ref } from "react";
-import * as React from "react";
+import { ElementType, ReactNode, Ref } from "react";
 import styled from "styled-components";
 import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
@@ -66,8 +65,8 @@ export interface IBoxPropsBase {
   scroll?: boolean;
   style?: any;
   gap?: number | boolean;
-  as?: React.ElementType | keyof JSX.IntrinsicElements;
-  children?: React.ReactNode;
+  as?: ElementType | keyof JSX.IntrinsicElements;
+  children?: ReactNode;
 }
 
 export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
@@ -245,7 +244,7 @@ export const Box = styled.div<IBoxProps>`
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+  (props: { as?: ElementType | keyof JSX.IntrinsicElements }) => ({
     as: "span"
   })
 )``;

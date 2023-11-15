@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import * as React from "react";
 import ReactSelect from "react-select";
 import ReactSelectCreatable from "react-select/creatable";
 import { useTheme } from "styled-components";
@@ -11,133 +10,138 @@ import {
   SelectableDimensionEnum as SelectableDimensionEnumModel,
   SelectableDimensionMultiEnum as SelectableDimensionEnumMultiModel
 } from "../../Models/SelectableDimensions/SelectableDimensions";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 
-export const SelectableDimensionEnum: React.FC<{
-  id: string;
-  dim: SelectableDimensionEnumModel;
-}> = observer(({ id, dim }) => {
-  const theme = useTheme();
+export const SelectableDimensionEnum = observer(
+  function SelectableDimensionEnum({
+    id,
+    dim
+  }: Dimension<SelectableDimensionEnumModel>) {
+    const theme = useTheme();
 
-  const undefinedOption = {
-    value: undefined,
-    label:
-      dim.undefinedLabel ?? i18next.t("selectableDimensions.undefinedLabel")
-  };
+    const undefinedOption = {
+      value: undefined,
+      label:
+        dim.undefinedLabel ?? i18next.t("selectableDimensions.undefinedLabel")
+    };
 
-  let options = dim.options?.map((option) => ({
-    value: option.id,
-    label: option.name ?? option.id
-  }));
+    let options = dim.options?.map((option) => ({
+      value: option.id,
+      label: option.name ?? option.id
+    }));
 
-  const selectedOption = dim.selectedId
-    ? options?.find((option) => option.value === dim.selectedId)
-    : undefinedOption;
+    const selectedOption = dim.selectedId
+      ? options?.find((option) => option.value === dim.selectedId)
+      : undefinedOption;
 
-  if (!options) return null;
+    if (!options) return null;
 
-  if (typeof dim.selectedId === "undefined" || dim.allowUndefined) {
-    options = [undefinedOption, ...options];
+    if (typeof dim.selectedId === "undefined" || dim.allowUndefined) {
+      options = [undefinedOption, ...options];
+    }
+
+    return dim.allowCustomInput ? (
+      <ReactSelectCreatable
+        css={`
+          color: ${theme.dark};
+        `}
+        options={options}
+        value={selectedOption}
+        onChange={(evt) => {
+          runInAction(() =>
+            dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
+          );
+        }}
+        isClearable={dim.allowUndefined}
+        formatOptionLabel={dim.optionRenderer}
+        theme={(selectTheme) => ({
+          ...selectTheme,
+          colors: {
+            ...selectTheme.colors,
+            primary25: theme.greyLighter,
+            primary50: theme.colorPrimary,
+            primary75: theme.colorPrimary,
+            primary: theme.colorPrimary
+          }
+        })}
+      />
+    ) : (
+      <ReactSelect
+        css={`
+          color: ${theme.dark};
+        `}
+        options={options}
+        value={selectedOption}
+        onChange={(evt) => {
+          runInAction(() =>
+            dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
+          );
+        }}
+        isClearable={dim.allowUndefined}
+        formatOptionLabel={dim.optionRenderer}
+        theme={(selectTheme) => ({
+          ...selectTheme,
+          colors: {
+            ...selectTheme.colors,
+            primary25: theme.greyLighter,
+            primary50: theme.colorPrimary,
+            primary75: theme.colorPrimary,
+            primary: theme.colorPrimary
+          }
+        })}
+      />
+    );
   }
-
-  return dim.allowCustomInput ? (
-    <ReactSelectCreatable
-      css={`
-        color: ${theme.dark};
-      `}
-      options={options}
-      value={selectedOption}
-      onChange={(evt) => {
-        runInAction(() =>
-          dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
-        );
-      }}
-      isClearable={dim.allowUndefined}
-      formatOptionLabel={dim.optionRenderer}
-      theme={(selectTheme) => ({
-        ...selectTheme,
-        colors: {
-          ...selectTheme.colors,
-          primary25: theme.greyLighter,
-          primary50: theme.colorPrimary,
-          primary75: theme.colorPrimary,
-          primary: theme.colorPrimary
-        }
-      })}
-    />
-  ) : (
-    <ReactSelect
-      css={`
-        color: ${theme.dark};
-      `}
-      options={options}
-      value={selectedOption}
-      onChange={(evt) => {
-        runInAction(() =>
-          dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
-        );
-      }}
-      isClearable={dim.allowUndefined}
-      formatOptionLabel={dim.optionRenderer}
-      theme={(selectTheme) => ({
-        ...selectTheme,
-        colors: {
-          ...selectTheme.colors,
-          primary25: theme.greyLighter,
-          primary50: theme.colorPrimary,
-          primary75: theme.colorPrimary,
-          primary: theme.colorPrimary
-        }
-      })}
-    />
-  );
-});
+);
 
 /** Similar to SelectableDimensionEnum, but allows multiple values to be selected */
-export const SelectableDimensionEnumMulti: React.FC<{
-  id: string;
-  dim: SelectableDimensionEnumMultiModel;
-}> = observer(({ id, dim }) => {
-  const theme = useTheme();
+export const SelectableDimensionEnumMulti = observer(
+  function SelectableDimensionEnumMulti({
+    id,
+    dim
+  }: Dimension<SelectableDimensionEnumMultiModel>) {
+    const theme = useTheme();
 
-  let options = dim.options?.map((option) => ({
-    value: option.id,
-    label: option.name ?? option.id
-  }));
+    let options = dim.options?.map((option) => ({
+      value: option.id,
+      label: option.name ?? option.id
+    }));
 
-  if (!options) return null;
+    if (!options) return null;
 
-  const selectedOptions = options.filter((option) =>
-    dim.selectedIds?.some((id) => option.value === id)
-  );
+    const selectedOptions = options.filter((option) =>
+      dim.selectedIds?.some((id) => option.value === id)
+    );
 
-  return (
-    <ReactSelect
-      css={`
-        color: ${theme.dark};
-      `}
-      options={options}
-      value={selectedOptions}
-      onChange={(evt) => {
-        runInAction(() =>
-          dim.setDimensionValue(
-            CommonStrata.user,
-            evt?.map((selected) => selected.value).filter(isDefined) ?? []
-          )
-        );
-      }}
-      isClearable={dim.allowUndefined}
-      formatOptionLabel={dim.optionRenderer}
-      theme={(selectTheme) => ({
-        ...selectTheme,
-        colors: {
-          ...selectTheme.colors,
-          primary25: theme.greyLighter,
-          primary50: theme.colorPrimary,
-          primary75: theme.colorPrimary,
-          primary: theme.colorPrimary
-        }
-      })}
-      isMulti={true}
-    />
-  );
-});
+    return (
+      <ReactSelect
+        css={`
+          color: ${theme.dark};
+        `}
+        options={options}
+        value={selectedOptions}
+        onChange={(evt) => {
+          runInAction(() =>
+            dim.setDimensionValue(
+              CommonStrata.user,
+              evt?.map((selected) => selected.value).filter(isDefined) ?? []
+            )
+          );
+        }}
+        isClearable={dim.allowUndefined}
+        formatOptionLabel={dim.optionRenderer}
+        theme={(selectTheme) => ({
+          ...selectTheme,
+          colors: {
+            ...selectTheme.colors,
+            primary25: theme.greyLighter,
+            primary50: theme.colorPrimary,
+            primary75: theme.colorPrimary,
+            primary: theme.colorPrimary
+          }
+        })}
+        isMulti={true}
+      />
+    );
+  }
+);

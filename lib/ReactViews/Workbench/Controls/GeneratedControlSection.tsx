@@ -1,4 +1,3 @@
-import * as React from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 import {
   filterSelectableDimensions,
@@ -14,11 +13,11 @@ export interface GeneratedControlSectionProps {
   placement: Placement;
 }
 
-const GeneratedControlSection: React.FC<GeneratedControlSectionProps> = ({
+function GeneratedControlSection({
   item,
   controls,
   placement
-}) => {
+}: GeneratedControlSectionProps) {
   const enabledDimensions = filterSelectableDimensions(placement)(controls);
   if (enabledDimensions.length === 0) {
     return null;
@@ -34,6 +33,6 @@ const GeneratedControlSection: React.FC<GeneratedControlSectionProps> = ({
       ))}
     </Box>
   );
-};
+}
 
 export default GeneratedControlSection;

@@ -1,8 +1,17 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { useEffect, useRef } from "react";
-import * as React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import {
+  ChangeEvent,
+  Children,
+  Component,
+  FormEvent,
+  ReactNode,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef
+} from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { useUID } from "react-uid";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import sendFeedback from "../../Models/sendFeedback";
@@ -14,10 +23,10 @@ import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Input, { StyledTextArea } from "../../Styled/Input";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+import { WithViewState, withViewState } from "../Context";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import { WithViewState, withViewState } from "../Context";
 import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
 interface IProps extends WithTranslation, WithViewState {
@@ -34,7 +43,7 @@ interface IState {
 }
 
 @observer
-class FeedbackForm extends React.Component<IProps, IState> {
+class FeedbackForm extends Component<IProps, IState> {
   static displayName = "FeedbackForm";
 
   state: IState = {
@@ -95,19 +104,19 @@ class FeedbackForm extends React.Component<IProps, IState> {
     this.resetState();
   }
 
-  updateName(e: React.ChangeEvent<HTMLInputElement>) {
+  updateName(e: ChangeEvent<HTMLInputElement>) {
     this.setState({
       name: e.target.value
     });
   }
 
-  updateEmail(e: React.ChangeEvent<HTMLInputElement>) {
+  updateEmail(e: ChangeEvent<HTMLInputElement>) {
     this.setState({
       email: e.target.value
     });
   }
 
-  updateComment(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  updateComment(e: ChangeEvent<HTMLTextAreaElement>) {
     this.setState({
       comment: e.target.value
     });
@@ -125,13 +134,13 @@ class FeedbackForm extends React.Component<IProps, IState> {
     }
   }
 
-  changeSendShareUrl(e: React.ChangeEvent<HTMLInputElement>) {
+  changeSendShareUrl(e: ChangeEvent<HTMLInputElement>) {
     this.setState((prevState: IState) => ({
       sendShareURL: !prevState.sendShareURL
     }));
   }
 
-  onSubmit(e: React.FormEvent<HTMLFormElement | HTMLDivElement>) {
+  onSubmit(e: FormEvent<HTMLFormElement | HTMLDivElement>) {
     e.preventDefault();
 
     if (
@@ -328,13 +337,13 @@ const WarningText = styled(Text)`
 interface TextAreaProps {
   value: string;
   valueIsValid: boolean;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   styledMinHeight: string;
   styledMaxHeight?: string;
   [spread: string]: any;
 }
 
-const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
+function TextArea(props: TextAreaProps) {
   const {
     value,
     onChange,
@@ -370,23 +379,23 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
       invalidValue={!valueIsValid}
     ></StyledTextArea>
   );
-};
+}
 
 interface StyledLabelProps {
   viewState: ViewState;
   label: string;
   textProps?: any;
-  children: React.ReactNode;
+  children: ReactNode;
   spacingBottom?: boolean;
 }
 
-const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
+function StyledLabel(props: StyledLabelProps) {
   const { viewState, label, textProps } = props;
   const id = useUID();
-  const childrenWithId = React.Children.map(props.children, (child) => {
+  const childrenWithId = Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id } as any);
+    if (isValidElement(child)) {
+      return cloneElement(child, { id: id } as any);
     }
     return child;
   });
@@ -405,7 +414,7 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
       {props.spacingBottom && <Spacing bottom={2} />}
     </Box>
   );
-};
+}
 
 const Form = styled(Box).attrs({
   overflowY: "auto",

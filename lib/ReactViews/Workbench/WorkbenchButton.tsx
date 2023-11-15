@@ -1,10 +1,9 @@
 "use strict";
-import * as React from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
-import { SpacingSpan } from "./../../Styled/Spacing";
-import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
+import { TextSpan } from "../../Styled/Text";
+import { SpacingSpan } from "./../../Styled/Spacing";
 
 // only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
@@ -88,7 +87,7 @@ interface IProps {
   onClick?: (e?: any) => void;
 }
 
-const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
+function WorkbenchButton(props: IProps) {
   const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (
@@ -124,5 +123,5 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
       </ButtonWrapper>
     </StyledWorkbenchButton>
   );
-};
+}
 export default WorkbenchButton;

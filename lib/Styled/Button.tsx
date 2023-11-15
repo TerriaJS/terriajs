@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ComponentPropsWithoutRef, ReactNode, Ref, forwardRef } from "react";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
@@ -163,17 +163,17 @@ export const RawButton = styled.button<IButtonProps>`
 `;
 
 export type ButtonProps = {
-  renderIcon?: () => React.ReactChild;
+  renderIcon?: () => ReactNode;
   iconProps?: any;
   rightIcon?: boolean;
   textProps?: any;
-  children?: React.ReactChildren;
-  buttonRef?: React.Ref<HTMLButtonElement>;
+  children?: ReactNode;
+  buttonRef?: Ref<HTMLButtonElement>;
   title?: string;
-} & React.ComponentPropsWithoutRef<typeof StyledButton>;
+} & ComponentPropsWithoutRef<typeof StyledButton>;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button: React.FC<ButtonProps> = (props) => {
+export function Button(props: ButtonProps) {
   const {
     primary,
     secondary,
@@ -229,8 +229,8 @@ export const Button: React.FC<ButtonProps> = (props) => {
       </BoxSpan>
     </StyledButton>
   );
-};
+}
 
-export default React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => <Button {...props} buttonRef={ref} />
-);
+export default forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+  <Button {...props} buttonRef={ref} />
+));

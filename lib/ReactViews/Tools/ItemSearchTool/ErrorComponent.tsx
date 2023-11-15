@@ -1,13 +1,12 @@
-import * as React from "react";
-
+import { ReactNode } from "react";
 import Text from "../../../Styled/Text";
 
-const ErrorComponent = ({ children }: { children: React.ReactNode }) => {
+function ErrorComponent({ children }: { children: ReactNode }) {
   return (
     <Text large textLight>
       {children}
     </Text>
   );
-};
+}
 
 export default ErrorComponent;

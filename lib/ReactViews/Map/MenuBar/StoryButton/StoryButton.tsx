@@ -1,21 +1,17 @@
+import { observer } from "mobx-react";
 import { Ref } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { DefaultTheme } from "styled-components";
-
+import { TFunction, Trans, useTranslation } from "react-i18next";
+import styled from "styled-components";
 import triggerResize from "../../../../Core/triggerResize";
-import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
+import { useViewState } from "../../../Context";
 import Prompt from "../../../Generic/Prompt";
 import { useRefForTerria } from "../../../Hooks/useRefForTerria";
-
 import Styles from "./story-button.scss";
 
 interface Props {
-  terria: Terria;
-  theme: DefaultTheme;
-  viewState: ViewState;
   animationDuration: number;
 }
 
@@ -25,26 +21,38 @@ interface ButtonProps extends Props {
 
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
 
-export const onStoryButtonClick = (props: Props) => () => {
-  props.viewState.toggleStoryBuilder();
-  props.terria.currentViewer.notifyRepaintRequired();
-  // Allow any animations to finish, then trigger a resize.
-  setTimeout(function () {
-    triggerResize();
-  }, props.animationDuration || 1);
-  props.viewState.toggleFeaturePrompt("story", false, true);
-};
+const MenuBarStoryButton = styled.button`
+  ${(p) =>
+    p["aria-expanded"] &&
+    `&:not(.foo) {
+      background: ${p.theme.colorPrimary};
+      svg {
+        fill: ${p.theme.textLight};
+      }
+    }`}
+`;
 
-const promptHtml = (hasStories: boolean) => (
+export const onStoryButtonClick =
+  (viewState: ViewState, animationDuration: number) => () => {
+    viewState.toggleStoryBuilder();
+    viewState.terria.currentViewer.notifyRepaintRequired();
+    // Allow any animations to finish, then trigger a resize.
+    setTimeout(function () {
+      triggerResize();
+    }, animationDuration || 1);
+    viewState.toggleFeaturePrompt("story", false, true);
+  };
+
+const promptHtml = (hasStories: boolean, t: TFunction) => (
   <Text textLight textAlignCenter>
     {hasStories ? (
-      <Trans i18nKey="story.promptHtml1">
+      <Trans i18nKey="story.promptHtml1" t={t}>
         <Text extraLarge>
           You can view and create stories at any time by clicking here.
         </Text>
       </Trans>
     ) : (
-      <Trans i18nKey="story.promptHtml2">
+      <Trans i18nKey="story.promptHtml2" t={t}>
         <div>
           <Text>INTRODUCING</Text>
           <Text bold extraExtraLarge styledLineHeight={"32px"}>
@@ -59,54 +67,47 @@ const promptHtml = (hasStories: boolean) => (
   </Text>
 );
 
-export default (props: Props) => {
+const StoryButton = observer(function StoryButton(props: Props) {
+  const viewState = useViewState();
   const storyButtonRef: Ref<HTMLButtonElement> = useRefForTerria(
     STORY_BUTTON_NAME,
-    props.viewState
+    viewState
   );
-  const storyEnabled = props.terria.configParameters.storyEnabled;
+  const storyEnabled = viewState.terria.configParameters.storyEnabled;
 
   const dismissAction = () => {
-    props.viewState.toggleFeaturePrompt("story", false, true);
+    viewState.toggleFeaturePrompt("story", false, true);
   };
 
   const delayTime =
-    storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
+    storyEnabled && viewState.terria.stories.length > 0 ? 1000 : 2000;
 
   const { t } = useTranslation();
 
   return (
     <div>
-      <button
+      <MenuBarStoryButton
         ref={storyButtonRef}
         className={Styles.storyBtn}
         type="button"
-        onClick={onStoryButtonClick(props)}
-        aria-expanded={props.viewState.storyBuilderShown}
-        css={`
-          ${(p: ButtonProps) =>
-            p["aria-expanded"] &&
-            `&:not(.foo) {
-                      background: ${p.theme.colorPrimary};
-                      svg {
-                        fill: ${p.theme.textLight};
-                      }
-                    }`}
-        `}
+        onClick={onStoryButtonClick(viewState, props.animationDuration)}
+        aria-expanded={viewState.storyBuilderShown}
       >
         <Icon glyph={Icon.GLYPHS.story} />
         <span>{t("story.story")}</span>
-      </button>
+      </MenuBarStoryButton>
       <Prompt
         centered
         isVisible={
-          storyEnabled && props.viewState.featurePrompts.indexOf("story") >= 0
+          storyEnabled && viewState.featurePrompts.indexOf("story") >= 0
         }
-        content={promptHtml(props.terria.stories.length > 0)}
+        content={promptHtml(viewState.terria.stories.length > 0, t)}
         displayDelay={delayTime}
         dismissText={t("story.dismissText")}
         dismissAction={dismissAction}
       />
     </div>
   );
-};
+});
+
+export default StoryButton;

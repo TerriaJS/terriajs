@@ -1,8 +1,14 @@
-import * as React from "react";
 import debounce from "lodash-es/debounce";
+import {
+  Component,
+  ComponentClass,
+  ComponentPropsWithoutRef,
+  RefObject,
+  createRef
+} from "react";
 
-const getDisplayName = <P extends React.ComponentProps<any>>(
-  WrappedComponent: React.ComponentClass<P>
+const getDisplayName = <P extends ComponentPropsWithoutRef<any>>(
+  WrappedComponent: ComponentClass<P>
 ) => {
   return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
@@ -13,8 +19,8 @@ export interface MeasureElementProps {
 }
 
 interface MeasureElementComponent<P>
-  extends React.Component<P & MeasureElementProps> {
-  refToMeasure: React.RefObject<HTMLElement> | HTMLElement | null;
+  extends Component<P & MeasureElementProps> {
+  refToMeasure: RefObject<HTMLElement> | HTMLElement | null;
 }
 
 interface MeasureElementClass<P> {
@@ -48,15 +54,18 @@ interface IState {
     ref={this.refToMeasure}>
     ```
 */
-const measureElement = <P extends React.ComponentProps<any>>(
+const measureElement = <
+  P extends ComponentPropsWithoutRef<any>,
+  PReturn = Omit<P, keyof MeasureElementProps>
+>(
   WrappedComponent: MeasureElementClass<P>,
   verbose = true
 ) => {
-  class MeasureElement extends React.Component<P, IState> {
-    wrappedComponent = React.createRef<InstanceType<typeof WrappedComponent>>();
+  class MeasureElement extends Component<PReturn, IState> {
+    wrappedComponent = createRef<InstanceType<typeof WrappedComponent>>();
     checkAndUpdateSizingWithDebounce: () => void;
     static displayName = `MeasureElement(${getDisplayName(WrappedComponent)})`;
-    constructor(props: P) {
+    constructor(props: PReturn) {
       super(props);
       this.state = {
         width: null,
@@ -126,7 +135,7 @@ const measureElement = <P extends React.ComponentProps<any>>(
     render() {
       return (
         <WrappedComponent
-          {...this.props}
+          {...(this.props as P)}
           ref={this.wrappedComponent}
           widthFromMeasureElementHOC={this.state.width}
           heightFromMeasureElementHOC={this.state.height}

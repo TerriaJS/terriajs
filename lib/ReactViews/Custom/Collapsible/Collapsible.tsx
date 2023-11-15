@@ -1,7 +1,6 @@
 "use strict";
 import { observer } from "mobx-react";
-import { useEffect, useState } from "react";
-import * as React from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
@@ -33,10 +32,10 @@ interface CollapsibleProps extends CollapsibleIconProps {
   titleTextProps?: any;
   bodyBoxProps?: IBoxProps;
   bodyTextProps?: any;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {
+export function CollapseIcon(props: CollapsibleIconProps) {
   let glyph = GLYPHS.opened;
   let glyphWidth = 8;
   let glyphRotation = 0;
@@ -63,9 +62,9 @@ export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {
       rotation={glyphRotation}
     />
   );
-};
+}
 
-const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
+function Collapsible(props: CollapsibleProps) {
   const [isOpen, setIsOpen] = useState<boolean | undefined>();
 
   useEffect(() => setIsOpen(props.isOpen), [props.isOpen]);
@@ -77,7 +76,7 @@ const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <RawButton
         fullWidth
         onClick={toggleOpen}
@@ -117,8 +116,8 @@ const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
           </Text>
         </Box>
       ) : null}
-    </React.Fragment>
+    </Fragment>
   );
-});
+}
 
-export default Collapsible;
+export default observer(Collapsible);

@@ -1,9 +1,13 @@
-import { Suspense } from "react";
-import * as React from "react";
 import PropTypes from "prop-types";
+import {
+  ComponentClass,
+  ComponentProps,
+  FunctionComponent,
+  Suspense
+} from "react";
 
-import ViewState from "../../ReactViewModels/ViewState";
 import Terria from "../../Models/Terria";
+import ViewState from "../../ReactViewModels/ViewState";
 
 interface WithFallbackProps {
   terria: Terria;
@@ -19,8 +23,8 @@ interface WithFallbackProps {
  * HOC for a basic fallback UI incase any dependencies end up using suspense
  * features
  */
-export const withFallback = <P extends React.ComponentProps<any>>(
-  WrappedComponent: React.ComponentClass<P> | React.FunctionComponent<P>
+export const withFallback = <P extends ComponentProps<any>>(
+  WrappedComponent: ComponentClass<P> | FunctionComponent<P>
 ) => {
   const WithFallback = (props: P & WithFallbackProps) => {
     return (

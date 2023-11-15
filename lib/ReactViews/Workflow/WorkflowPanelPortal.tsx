@@ -1,14 +1,13 @@
-import * as React from "react";
 import styled from "styled-components";
-import { Portal } from "../StandardUserInterface/Portal";
 import { useViewState } from "../Context";
+import { Portal } from "../StandardUserInterface/Portal";
 import { WorkflowPanelPortalId } from "./WorkflowPanel";
 
 type PropsType = {
   show: boolean;
 };
 
-const WorkflowPanelPortal: React.FC<PropsType> = ({ show }) => {
+function WorkflowPanelPortal({ show }: PropsType) {
   const viewState = useViewState();
   return (
     <Container
@@ -18,7 +17,7 @@ const WorkflowPanelPortal: React.FC<PropsType> = ({ show }) => {
       <Portal id={WorkflowPanelPortalId} />
     </Container>
   );
-};
+}
 
 const Container = styled.div<{ show: boolean }>`
   height: 100vh;

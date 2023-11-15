@@ -1,7 +1,5 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
-import { MouseEventHandler, useEffect, useRef } from "react";
-import * as React from "react";
+import { MouseEventHandler, RefObject, useEffect, useRef } from "react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
@@ -144,7 +142,7 @@ const recaptureStory =
   };
 
 const calculateOffset =
-  (props: Props) => (storyRef: React.RefObject<HTMLElement>) => {
+  (props: Props) => (storyRef: RefObject<HTMLElement>) => {
     const offsetTop = storyRef.current?.offsetTop || 0;
     const scrollTop = props.parentRef.current.scrollTop || 0;
     const heightParent =

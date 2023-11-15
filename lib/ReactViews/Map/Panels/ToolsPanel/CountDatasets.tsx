@@ -1,18 +1,16 @@
 "use strict";
 import { observer } from "mobx-react";
 import { useState } from "react";
-import * as React from "react";
-import { useTranslation, withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { useTranslation } from "react-i18next";
 import {
-  applyTranslationIfExists,
-  TRANSLATE_KEY_PREFIX
+  TRANSLATE_KEY_PREFIX,
+  applyTranslationIfExists
 } from "../../../../Language/languageHelpers";
 import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
-import Loader from "../../../Loader";
 import { useViewState } from "../../../Context";
+import Loader from "../../../Loader";
 import Styles from "./tools-panel.scss";
 
 // let countValue = 1;
@@ -31,7 +29,7 @@ interface CountDatasetsProps {
   updateResults: (resultsHtml: string) => void;
 }
 
-const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
+function CountDatasets(props: CountDatasetsProps) {
   const [btnStringOrComponent, setBtnStringOrComponent] = useState<
     string | JSX.Element
   >(`${TRANSLATE_KEY_PREFIX}countDatasets.btnText`);
@@ -180,6 +178,6 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
       </button>
     </form>
   );
-});
+}
 
-export default CountDatasets;
+export default observer(CountDatasets);

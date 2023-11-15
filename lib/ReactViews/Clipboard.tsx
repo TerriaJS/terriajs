@@ -1,13 +1,12 @@
 import clipboard from "clipboard";
-import { useEffect, useState } from "react";
-import * as React from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../Styled/Box";
 import Button from "../Styled/Button";
-import { verticalAlign } from "../Styled/mixins";
-import Spacing from "../Styled/Spacing";
 import Icon, { StyledIcon } from "../Styled/Icon";
+import Spacing from "../Styled/Spacing";
+import { verticalAlign } from "../Styled/mixins";
 
 enum CopyStatus {
   Success,
@@ -17,14 +16,14 @@ enum CopyStatus {
 
 interface ClipboardProps {
   id: string;
-  source: React.ReactElement;
+  source: ReactElement;
   theme: "dark" | "light";
   rounded?: boolean;
   text?: string;
   onCopy?: (contents: string) => void;
 }
 
-const Clipboard: React.FC<ClipboardProps> = (props) => {
+function Clipboard(props: ClipboardProps) {
   const { id, source, theme, rounded } = props;
   const { t } = useTranslation();
   const [status, setStatus] = useState<CopyStatus>(
@@ -113,7 +112,7 @@ const Clipboard: React.FC<ClipboardProps> = (props) => {
       )}
     </ClipboardDiv>
   );
-};
+}
 
 export default Clipboard;
 

@@ -1,16 +1,16 @@
 import { runInAction } from "mobx";
-import * as React from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionButton as SelectableDimensionButtonModel } from "../../Models/SelectableDimensions/SelectableDimensions";
+import Button from "../../Styled/Button";
 import { StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMarkdownToReact";
-import Button from "../../Styled/Button";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 
-export const SelectableDimensionButton: React.FC<{
-  id: string;
-  dim: SelectableDimensionButtonModel;
-}> = ({ id, dim }) => {
+export function SelectableDimensionButton({
+  id,
+  dim
+}: Dimension<SelectableDimensionButtonModel>) {
   const icon = dim.icon;
   return (
     <Button
@@ -41,4 +41,4 @@ export const SelectableDimensionButton: React.FC<{
       </div>
     </Button>
   );
-};
+}

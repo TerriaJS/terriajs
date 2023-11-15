@@ -1,12 +1,12 @@
 import { observer } from "mobx-react";
-import * as React from "react";
-import styled, { CSSObject } from "styled-components";
+import { ReactNode } from "react";
+import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 
 type PositionRightOfWorkbenchProps = {
   viewState: ViewState;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 /**
@@ -22,18 +22,18 @@ type PositionRightOfWorkbenchProps = {
  *    `;
  *
  */
-const PositionRightOfWorkbench = observer(
-  (props: PositionRightOfWorkbenchProps) => {
-    return (
-      <Container
-        className={props.className}
-        isMapFullScreen={props.viewState.isMapFullScreen}
-      >
-        {props.children}
-      </Container>
-    );
-  }
-);
+const PositionRightOfWorkbench = observer(function PositionRightOfWorkbench(
+  props: PositionRightOfWorkbenchProps
+) {
+  return (
+    <Container
+      className={props.className}
+      isMapFullScreen={props.viewState.isMapFullScreen}
+    >
+      {props.children}
+    </Container>
+  );
+});
 
 const Container = styled.div<{ isMapFullScreen: boolean }>`
   position: absolute;

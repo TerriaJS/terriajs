@@ -1,10 +1,9 @@
 import { observer } from "mobx-react";
-import * as React from "react";
 import TerriaError from "../../../Core/TerriaError";
 import { Complete } from "../../../Core/TypeModifiers";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import {
   DEFAULT_PLACEMENT,
   SelectableDimension
@@ -81,78 +80,76 @@ export const hideAllControls: Complete<WorkbenchControls> = {
   legend: false
 };
 
-const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
-  ({ item, viewState, controls: controlsWithoutDefaults }) => {
-    // Apply controls from props on top of defaultControls
-    const controls = { ...defaultControls, ...controlsWithoutDefaults };
-    const { generatedControls, error } = generateControls(viewState, item);
+const WorkbenchItemControls = observer(function WorkbenchItemControls({
+  item,
+  viewState,
+  controls: controlsWithoutDefaults
+}: WorkbenchItemControlsProps) {
+  // Apply controls from props on top of defaultControls
+  const controls = { ...defaultControls, ...controlsWithoutDefaults };
+  const { generatedControls, error } = generateControls(viewState, item);
 
-    if (error) {
-      error.log();
-    }
-
-    return (
-      <>
-        {controls?.viewingControls ? (
-          <ViewingControls item={item} viewState={viewState} />
-        ) : null}
-        {controls?.opacity ? <OpacitySection item={item} /> : null}
-        {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
-        {controls?.timer ? <TimerSection item={item} /> : null}
-        {controls?.splitter ? <LeftRightSection item={item as any} /> : null}
-        {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
-        {controls?.filter ? <FilterSection item={item} /> : null}
-        {controls?.dateTime && DiscretelyTimeVaryingMixin.isMixedInto(item) ? (
-          <DateTimeSelectorSection item={item} />
-        ) : null}
-        {controls?.timeFilter ? (
-          <SatelliteImageryTimeFilterSection item={item} />
-        ) : null}
-        {controls?.selectableDimensions ? (
-          <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
-        ) : null}
-        {
-          <GeneratedControlSection
-            item={item}
-            placement={DEFAULT_PLACEMENT}
-            controls={generatedControls}
-          />
-        }
-        {/* TODO: remove min max props and move the checks to
-      ColorScaleRangeSection to keep this component simple. */}
-        {controls?.colorScaleRange &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMinimum"
-          ) &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMaximum"
-          ) && (
-            <ColorScaleRangeSection
-              item={item}
-              minValue={item.colorScaleMinimum}
-              maxValue={item.colorScaleMaximum}
-            />
-          )}
-        {controls?.shortReport ? <ShortReport item={item} /> : null}
-        {controls?.legend ? <Legend item={item} /> : null}
-        {controls?.selectableDimensions ? (
-          <DimensionSelectorSection item={item} placement={"belowLegend"} />
-        ) : null}
-        {
-          <GeneratedControlSection
-            item={item}
-            placement="belowLegend"
-            controls={generatedControls}
-          />
-        }
-      </>
-    );
+  if (error) {
+    error.log();
   }
-);
+
+  return (
+    <>
+      {controls?.viewingControls ? (
+        <ViewingControls item={item} viewState={viewState} />
+      ) : null}
+      {controls?.opacity ? <OpacitySection item={item} /> : null}
+      {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
+      {controls?.timer ? <TimerSection item={item} /> : null}
+      {controls?.splitter ? <LeftRightSection item={item as any} /> : null}
+      {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
+      {controls?.filter ? <FilterSection item={item} /> : null}
+      {controls?.dateTime && DiscretelyTimeVaryingMixin.isMixedInto(item) ? (
+        <DateTimeSelectorSection item={item} />
+      ) : null}
+      {controls?.timeFilter ? (
+        <SatelliteImageryTimeFilterSection item={item} />
+      ) : null}
+      {controls?.selectableDimensions ? (
+        <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
+      ) : null}
+      {
+        <GeneratedControlSection
+          item={item}
+          placement={DEFAULT_PLACEMENT}
+          controls={generatedControls}
+        />
+      }
+      {/* TODO: remove min max props and move the checks to
+      ColorScaleRangeSection to keep this component simple. */}
+      {controls?.colorScaleRange &&
+        hasTraits(item, WebMapServiceCatalogItemTraits, "colorScaleMinimum") &&
+        hasTraits(
+          item,
+          WebMapServiceCatalogItemTraits,
+          "colorScaleMaximum"
+        ) && (
+          <ColorScaleRangeSection
+            item={item}
+            minValue={item.colorScaleMinimum}
+            maxValue={item.colorScaleMaximum}
+          />
+        )}
+      {controls?.shortReport ? <ShortReport item={item} /> : null}
+      {controls?.legend ? <Legend item={item} /> : null}
+      {controls?.selectableDimensions ? (
+        <DimensionSelectorSection item={item} placement={"belowLegend"} />
+      ) : null}
+      {
+        <GeneratedControlSection
+          item={item}
+          placement="belowLegend"
+          controls={generatedControls}
+        />
+      }
+    </>
+  );
+});
 
 function generateControls(viewState: ViewState, item: BaseModel) {
   const generatedControls: SelectableDimension[] = [];

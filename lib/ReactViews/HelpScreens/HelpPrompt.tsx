@@ -2,22 +2,17 @@
  * Prompt.tsx - don't use without guarding on useSmallScreenInterface - it won't look pretty!
  */
 import { useState } from "react";
-
-import * as React from "react";
 import { useTheme } from "styled-components";
-
-import FadeIn from "../Transitions/FadeIn/FadeIn";
-import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-const TourExplanationBox: any = require("../Tour/TourExplanationBox").default;
-const TourPrefaceBox: any = require("../Tour/TourPrefaceBox").default;
-
-import CloseButton from "../Generic/CloseButton";
 import ViewState from "../../ReactViewModels/ViewState";
-import Text from "../../Styled/Text";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import CloseButton from "../Generic/CloseButton";
+import FadeIn from "../Transitions/FadeIn/FadeIn";
+import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
+const TourExplanationBox: any = require("../Tour/TourExplanationBox").default;
+const TourPrefaceBox: any = require("../Tour/TourPrefaceBox").default;
 
 interface PromptProps {
   viewState: ViewState;
@@ -30,7 +25,7 @@ interface PromptProps {
   isVisible: boolean;
 }
 
-export const HelpPrompt: React.FC<PromptProps> = ({
+export function HelpPrompt({
   title,
   content,
   dismissLabel,
@@ -38,7 +33,7 @@ export const HelpPrompt: React.FC<PromptProps> = ({
   onDismiss,
   onAccept,
   isVisible
-}) => {
+}: PromptProps) {
   const theme = useTheme();
   // This is required so we can do nested animations
   const [childrenVisible, setChildrenVisible] = useState(isVisible);
@@ -122,6 +117,6 @@ export const HelpPrompt: React.FC<PromptProps> = ({
       </Box>
     </FadeIn>
   );
-};
+}
 
 export default HelpPrompt;

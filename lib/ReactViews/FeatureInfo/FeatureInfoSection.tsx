@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { isEmpty, merge } from "lodash-es";
 import {
   action,
@@ -12,16 +11,16 @@ import {
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
-import * as React from "react";
+import { Component, ReactNode } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import TerriaError from "../../Core/TerriaError";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
-import TerriaError from "../../Core/TerriaError";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
@@ -30,17 +29,17 @@ import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
+import { WithViewState, withViewState } from "../Context";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import { withViewState, WithViewState } from "../Context";
-import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import FeatureInfoPanelButton from "./FeatureInfoPanelButton";
+import Styles from "./feature-info-section.scss";
 import { generateCesiumInfoHTMLFromProperties } from "./generateCesiumInfoHTMLFromProperties";
 import getFeatureProperties from "./getFeatureProperties";
 import {
+  MustacheFunction,
   mustacheFormatDateTime,
   mustacheFormatNumberFunction,
-  MustacheFunction,
   mustacheRenderPartialByName,
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
@@ -61,7 +60,7 @@ interface FeatureInfoProps extends WithViewState, WithTranslation {
 }
 
 @observer
-export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
+export class FeatureInfoSection extends Component<FeatureInfoProps> {
   private templateReactionDisposer: IDisposer | undefined;
   private removeFeatureChangedSubscription: (() => void) | undefined;
 
@@ -71,9 +70,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * - A CsvChartCustomComponent will create a new CsvCatalogItem and set traits
    * See `rawDataReactNode` for rendered raw data
    */
-  @observable.ref private templatedFeatureInfoReactNode:
-    | React.ReactNode
-    | undefined = undefined;
+  @observable.ref private templatedFeatureInfoReactNode: ReactNode | undefined =
+    undefined;
 
   @observable
   private showRawData: boolean = false;
@@ -312,7 +310,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * See `templatedFeatureInfoReactNode` for rendered feature info template
    */
   @computed
-  get rawFeatureInfoReactNode(): React.ReactNode | undefined {
+  get rawFeatureInfoReactNode(): ReactNode | undefined {
     if (this.rawDataMarkdown)
       return parseCustomMarkdownToReact(
         this.rawDataMarkdown,

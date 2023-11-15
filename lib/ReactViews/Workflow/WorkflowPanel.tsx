@@ -1,13 +1,12 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { useEffect } from "react";
-import * as React from "react";
+import { Component, ReactNode, useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Button from "../../Styled/Button";
 import { IconProps, StyledIcon } from "../../Styled/Icon";
-import { addTerriaScrollbarStyles } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
+import { addTerriaScrollbarStyles } from "../../Styled/mixins";
 import { PortalChild } from "../StandardUserInterface/Portal";
 import { PanelButton } from "./Panel";
 
@@ -23,11 +22,11 @@ type PropsType = {
     onClick: () => void;
     buttonText: string;
   };
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
-const WorkflowPanel = observer((props: PropsType) => {
+const WorkflowPanel = observer(function WorkflowPanel(props: PropsType) {
   const viewState = props.viewState;
 
   useEffect(function hideTerriaSidePanelOnMount() {
@@ -74,10 +73,10 @@ const WorkflowPanel = observer((props: PropsType) => {
 
 type ErrorBoundaryProps = {
   viewState: ViewState;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundary extends Component<ErrorBoundaryProps> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {
@@ -119,10 +118,6 @@ const TitleBar = styled.div`
   align-items: center;
   padding: 0.7em;
   border-bottom: 1px solid ${(p) => p.theme.darkLighter};
-`;
-
-const FooterBar = styled(TitleBar)`
-  border: none;
 `;
 
 const Title = styled(Text).attrs({

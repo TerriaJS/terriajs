@@ -1,15 +1,15 @@
 import { runInAction } from "mobx";
-import * as React from "react";
 import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionCheckbox as SelectableDimensionCheckboxModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Checkbox from "../../Styled/Checkbox";
 import Text from "../../Styled/Text";
+import { SelectableDimensionsProps as Dimension } from "./SelectableDimensionsProps";
 
-export const SelectableDimensionCheckbox: React.FC<{
-  id: string;
-  dim: SelectableDimensionCheckboxModel;
-}> = ({ id, dim }) => {
+export function SelectableDimensionCheckbox({
+  id,
+  dim
+}: Dimension<SelectableDimensionCheckboxModel>) {
   const { t } = useTranslation();
   return (
     <Checkbox
@@ -32,4 +32,4 @@ export const SelectableDimensionCheckbox: React.FC<{
       </Text>
     </Checkbox>
   );
-};
+}

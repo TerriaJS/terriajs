@@ -1,4 +1,3 @@
-import * as React from "react";
 import styled from "styled-components";
 
 export type ToastProps = {
@@ -8,9 +7,9 @@ export type ToastProps = {
 /**
  * A toast component that positions its children bottom center of the map
  */
-const Toast: React.FC<ToastProps> = ({ children }) => {
+function Toast({ children }: ToastProps) {
   return <Container>{children}</Container>;
-};
+}
 
 const Container = styled.div`
   position: fixed;

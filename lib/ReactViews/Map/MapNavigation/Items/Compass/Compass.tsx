@@ -10,29 +10,29 @@
  */
 //
 import { TFunction } from "i18next";
-import { computed, runInAction, when } from "mobx";
 import debounce from "lodash-es/debounce";
-import * as React from "react";
+import { computed, runInAction, when } from "mobx";
+import { PureComponent, Ref } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../../../../../Core/isDefined";
 import Terria from "../../../../../Models/Terria";
 import ViewState from "../../../../../ReactViewModels/ViewState";
 import Box from "../../../../../Styled/Box";
 import Icon, { StyledIcon } from "../../../../../Styled/Icon";
-import { GyroscopeGuidance } from "./GyroscopeGuidance";
 import { withTerriaRef } from "../../../../HOCs/withTerriaRef";
 import FadeIn from "../../../../Transitions/FadeIn/FadeIn";
+import { GyroscopeGuidance } from "./GyroscopeGuidance";
 
 const CameraFlightPath =
   require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
@@ -138,7 +138,7 @@ const StyledCompassRotationMarker = styled.div`
 type PropTypes = WithTranslation & {
   terria: Terria;
   viewState: ViewState;
-  refFromHOC?: React.Ref<HTMLDivElement>;
+  refFromHOC?: Ref<HTMLDivElement>;
   theme: DefaultTheme;
   t: TFunction;
 };
@@ -152,7 +152,7 @@ type IStateTypes = {
 };
 
 // the compass on map
-class Compass extends React.PureComponent<PropTypes, IStateTypes> {
+class Compass extends PureComponent<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;

@@ -1,6 +1,5 @@
 import i18next from "i18next";
-import * as React from "react";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -10,12 +9,12 @@ import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { Frame, Main } from "../ToolModal";
 import { PropsType } from "./ItemSearchTool";
 
-const ItemSearchTool = React.lazy(() => import("./ItemSearchTool"));
+const ItemSearchTool = lazy(() => import("./ItemSearchTool"));
 
 /**
  * Lazily loads the item search tool while showing a the search window and an animated spinner.
  */
-const LazyItemSearchTool: React.FC<PropsType> = (props) => {
+function LazyItemSearchTool(props: PropsType) {
   const { item } = props;
   const viewState = useViewState();
   const itemName = CatalogMemberMixin.isMixedInto(item) ? item.name : "Item";
@@ -41,7 +40,7 @@ const LazyItemSearchTool: React.FC<PropsType> = (props) => {
       </RaiseToUserErrorBoundary>
     </Suspense>
   );
-};
+}
 
 const Wrapper = styled(Main)`
   align-items: center;

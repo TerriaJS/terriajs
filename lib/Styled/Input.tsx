@@ -1,4 +1,4 @@
-import * as React from "react";
+import { InputHTMLAttributes } from "react";
 import styled, { css, DefaultTheme, useTheme } from "styled-components";
 import Box, { IBoxProps } from "./Box";
 
@@ -19,8 +19,8 @@ export interface CommonProps {
   styledMaxHeight?: string;
 }
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & CommonProps;
-type TextAreaProps = React.InputHTMLAttributes<HTMLTextAreaElement> &
+type InputProps = InputHTMLAttributes<HTMLInputElement> & CommonProps;
+type TextAreaProps = InputHTMLAttributes<HTMLTextAreaElement> &
   CommonProps & {
     lineHeight?: string;
   };
@@ -124,7 +124,7 @@ export const StyledInput = styled.input<InputProps>`
   ${commonStyles}
 `;
 
-const Input: React.FC<InputProps> = (props: InputProps) => {
+function Input(props: InputProps) {
   const { boxProps, ...rest }: InputProps = props;
   const theme: DefaultTheme = useTheme();
   return (
@@ -132,6 +132,6 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
       <StyledInput {...rest}></StyledInput>
     </Box>
   );
-};
+}
 
 export default Input;

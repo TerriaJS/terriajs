@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ViewState from "../../ReactViewModels/ViewState";
 import Styles from "./explorer-window.scss";
@@ -13,11 +12,11 @@ interface IProps {
   viewState: ViewState;
   onStartAnimatingIn?: () => void;
   onDoneAnimatingIn?: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   isTopElement?: boolean;
 }
 
-const ModalPopup: React.FC<IProps> = (props) => {
+const ModalPopup = (props: IProps) => {
   const { t } = useTranslation();
   const [inTransition, setInTransition] = useState(false);
   const animationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
