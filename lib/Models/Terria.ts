@@ -124,6 +124,9 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
+import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
+import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -345,8 +348,8 @@ export interface ConfigParameters {
   /**
    * The search bar allows requesting information from various search services at once.
    */
-  searchBarModel: SearchBarModel;
-  searchProviders: any[];
+  searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
+  searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 }
 
 interface StartOptions {
@@ -442,6 +445,7 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
+  readonly searchBarModel = new SearchBarModel(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
@@ -560,7 +564,7 @@ export default class Terria {
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
-    searchBarModel: new SearchBarModel(this),
+    searchBarConfig: undefined,
     searchProviders: []
   };
 
@@ -1053,8 +1057,9 @@ export default class Terria {
         )
       );
 
-    this.configParameters.searchBarModel
-      .initializeSearchProviders()
+    this.searchBarModel
+      .updateModelConfig(this.configParameters.searchBarConfig)
+      .initializeSearchProviders(this.configParameters.searchProviders)
       .catchError((error) =>
         this.raiseErrorToUser(
           TerriaError.from(error, "Failed to initialize searchProviders")
@@ -1296,18 +1301,7 @@ export default class Terria {
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        if (key === "searchBarModel") {
-          if (!isDefined(this.configParameters.searchBarModel)) {
-            this.configParameters.searchBarModel = new SearchBarModel(this);
-          }
-          updateModelFromJson(
-            this.configParameters.searchBarModel,
-            CommonStrata.definition,
-            value
-          );
-        } else {
-          (this.configParameters as any)[key] = value;
-        }
+        (this.configParameters as any)[key] = value;
       }
     });
 

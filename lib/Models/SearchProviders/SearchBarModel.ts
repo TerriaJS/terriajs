@@ -5,19 +5,23 @@ import {
   makeObservable,
   observable
 } from "mobx";
+import { JsonObject } from "protomaps";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
+import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
+import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
-import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
-import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 
 export class SearchBarModel extends CreateModel(SearchBarTraits) {
   private locationSearchProviders = observable.map<string, BaseModel>();
@@ -31,10 +35,21 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
     makeObservable(this);
   }
 
-  initializeSearchProviders() {
-    const errors: TerriaError[] = [];
+  updateModelConfig(config?: ModelPropertiesFromTraits<SearchBarTraits>) {
+    if (config) {
+      updateModelFromJson(
+        this,
+        CommonStrata.definition,
+        config as never as JsonObject
+      );
+    }
+    return this;
+  }
 
-    const searchProviders = this.terria.configParameters.searchProviders;
+  initializeSearchProviders(
+    searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[]
+  ) {
+    const errors: TerriaError[] = [];
 
     if (!isObservableArray(searchProviders)) {
       errors.push(

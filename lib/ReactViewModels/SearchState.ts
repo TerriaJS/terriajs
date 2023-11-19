@@ -50,7 +50,7 @@ export default class SearchState {
     this.terria = options.terria;
 
     runInAction(() => {
-      this.terria.configParameters.searchBarModel.catalogSearchProvider =
+      this.terria.searchBarModel.catalogSearchProvider =
         options.catalogSearchProvider ||
         new CatalogSearchProvider("catalog-search-provider", options.terria);
     });
@@ -100,13 +100,12 @@ export default class SearchState {
 
   @computed
   private get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
-    return this.terria.configParameters.searchBarModel
-      .locationSearchProvidersArray;
+    return this.terria.searchBarModel.locationSearchProvidersArray;
   }
 
   @computed
   get catalogSearchProvider(): CatalogSearchProviderMixin.Instance | undefined {
-    return this.terria.configParameters.searchBarModel.catalogSearchProvider;
+    return this.terria.searchBarModel.catalogSearchProvider;
   }
 
   @computed

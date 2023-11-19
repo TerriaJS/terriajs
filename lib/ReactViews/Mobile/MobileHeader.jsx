@@ -138,7 +138,7 @@ class MobileHeader extends React.Component {
           onSearchTextChanged={this.changeLocationSearchText.bind(this)}
           onDoSearch={this.searchLocations.bind(this)}
           placeholder={applyTranslationIfExists(
-            viewState.terria.configParameters.searchBarModel.placeholder,
+            viewState.terria.searchBarModel.placeholder,
             this.props.i18n
           )}
           alwaysShowClear={true}

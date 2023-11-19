@@ -121,7 +121,7 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     this.setTrait(
       CommonStrata.defaults,
       "minCharacters",
-      terria.configParameters.searchBarModel.minCharacters
+      terria.searchBarModel.minCharacters
     );
   }
 

@@ -164,7 +164,7 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
             viewState={viewState}
             terria={terria}
             placeholder={applyTranslationIfExists(
-              terria.configParameters.searchBarModel.placeholder,
+              terria.searchBarModel.placeholder,
               i18n
             )}
           />

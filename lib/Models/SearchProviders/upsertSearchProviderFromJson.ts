@@ -55,7 +55,7 @@ export default function upsertSearchProviderFromJson(
 
     if (model.type !== StubSearchProvider.type) {
       try {
-        model.terria.configParameters.searchBarModel.addSearchProvider(model);
+        model.terria.searchBarModel.addSearchProvider(model);
       } catch (error) {
         errors.push(TerriaError.from(error));
       }
@@ -88,19 +88,19 @@ function setDefaultTraits(model: BaseModel) {
     model.setTrait(
       CommonStrata.defaults,
       "flightDurationSeconds",
-      terria.configParameters.searchBarModel.flightDurationSeconds
+      terria.searchBarModel.flightDurationSeconds
     );
 
     model.setTrait(
       CommonStrata.defaults,
       "minCharacters",
-      terria.configParameters.searchBarModel.minCharacters
+      terria.searchBarModel.minCharacters
     );
 
     model.setTrait(
       CommonStrata.defaults,
       "recommendedListLength",
-      terria.configParameters.searchBarModel?.recommendedListLength
+      terria.searchBarModel.recommendedListLength
     );
   });
 }

@@ -39,7 +39,6 @@ import {
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
-import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
