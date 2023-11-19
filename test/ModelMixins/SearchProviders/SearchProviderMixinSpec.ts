@@ -1,7 +1,6 @@
-import { CommonStrata } from "terriajs-plugin-api";
 import SearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/SearchProviderMixin";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../../lib/Models/Definition/CreateModel";
-import SearchProviderResults from "../../../lib/Models/SearchProviders/SearchProviderResults";
 import Terria from "../../../lib/Models/Terria";
 import BingMapsSearchProviderTraits from "../../../lib/Traits/SearchProviders/BingMapsSearchProviderTraits";
 

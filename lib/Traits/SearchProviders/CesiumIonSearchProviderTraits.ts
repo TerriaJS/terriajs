@@ -1,4 +1,5 @@
-import { mixTraits, primitiveTrait } from "terriajs-plugin-api";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import LocationSearchProviderTraits, {
   SearchProviderMapCenterTraits
 } from "./LocationSearchProviderTraits";

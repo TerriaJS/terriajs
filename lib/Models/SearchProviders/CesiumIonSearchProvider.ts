@@ -1,8 +1,7 @@
 import i18next from "i18next";
-import { makeObservable, observable, runInAction } from "mobx";
+import { makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import { CommonStrata } from "terriajs-plugin-api";
+
 import {
   Category,
   SearchAction
@@ -15,6 +14,7 @@ import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
+import CommonStrata from "../Definition/CommonStrata";
 
 interface CesiumIonSearchProviderOptions {
   terria: Terria;

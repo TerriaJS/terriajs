@@ -1,11 +1,11 @@
+import { runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
-import { exp } from "protomaps";
-import { runInAction } from "mobx";
-import { CommonStrata } from "terriajs-plugin-api";
+
 import * as loadJsonp from "../../../lib/Core/loadJsonp";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 
 describe("BingMapsSearchProvider", function () {
   let terria: Terria;
