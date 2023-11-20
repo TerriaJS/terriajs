@@ -61,12 +61,16 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
       );
     }
     searchProviders?.forEach((searchProvider) => {
-      upsertSearchProviderFromJson(
+      const loadedModel = upsertSearchProviderFromJson(
         SearchProviderFactory,
         this.terria,
         CommonStrata.definition,
         searchProvider
       ).pushErrorTo(errors);
+
+      if (LocationSearchProviderMixin.isMixedInto(loadedModel)) {
+        loadedModel.showWarning();
+      }
     });
 
     return new Result(

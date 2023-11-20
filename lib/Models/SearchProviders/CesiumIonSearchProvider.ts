@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { makeObservable, runInAction } from "mobx";
+import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 import {
@@ -15,13 +15,6 @@ import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import CommonStrata from "../Definition/CommonStrata";
-
-interface CesiumIonSearchProviderOptions {
-  terria: Terria;
-  url?: string;
-  key: string;
-  flightDurationSeconds?: number;
-}
 
 interface CesiumIonGeocodeResultFeature {
   bbox: [number, number, number, number];
@@ -47,18 +40,18 @@ export default class CesiumIonSearchProvider extends LocationSearchProviderMixin
     makeObservable(this);
 
     runInAction(() => {
-      if (!this.key && this.terria.configParameters.cesiumIonAccessToken) {
+      if (!!this.terria.configParameters.cesiumIonAccessToken) {
         this.setTrait(
           CommonStrata.defaults,
           "key",
           this.terria.configParameters.cesiumIonAccessToken
         );
       }
-      this.showWarning();
     });
   }
 
-  showWarning() {
+  @override
+  override showWarning() {
     if (!this.key || this.key === "") {
       console.warn(
         `The ${applyTranslationIfExists(this.name, i18next)}(${

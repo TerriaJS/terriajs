@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, makeObservable, runInAction } from "mobx";
+import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -34,18 +34,18 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     makeObservable(this);
 
     runInAction(() => {
-      if (!this.key && this.terria.configParameters.bingMapsKey) {
+      if (!!this.terria.configParameters.bingMapsKey) {
         this.setTrait(
           CommonStrata.defaults,
           "key",
           this.terria.configParameters.bingMapsKey
         );
       }
-      this.showWarning();
     });
   }
 
-  showWarning() {
+  @override
+  override showWarning() {
     if (!this.key || this.key === "") {
       console.warn(
         `The ${applyTranslationIfExists(this.name, i18next)}(${

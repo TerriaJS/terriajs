@@ -28,6 +28,9 @@ function LocationSearchProviderMixin<
     toggleOpen(stratumId: CommonStrata = CommonStrata.user) {
       this.setTrait(stratumId, "isOpen", !this.isOpen);
     }
+
+    @action
+    showWarning() {}
   }
 
   return LocationSearchProviderMixin;
