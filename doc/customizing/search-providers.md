@@ -53,6 +53,7 @@ For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/gener
 Location search providers are used to search for locations on the map. TerriaJS currently supports two implementations of search providers:
 
 -   [`BingMapsSearchProvider`](#bingmapssearchprovider) - implementation which in background uses Bing Map search API
+-   [`CesiumIonSearchProvider`](#cesiumionsearchprovider) - implementation which in background use CesiumIon geocoding API
 -   [`AustralianGazetteerSearchProvider`](#australiangazetteersearchprovider) - uses `WebFeatureServiceSearchProvider`
 
 Each `LocationSearchProvider support following confing options
@@ -87,6 +88,32 @@ It provides a default value for `url: https://dev.virtualearth.net/`
   "type": "bing-maps-search-provider",
   "name": "translate#viewModels.searchLocations",
   "url": "https://dev.virtualearth.net/",
+  "flightDurationSeconds": 1.5,
+  "minCharacters": 5,
+  "isOpen": true
+},
+```
+
+### CesiumIonSearchProvider
+
+`type: cesium-ion-search-provider`
+
+CesiumIon search provider is based on CesiumIon geocoding API provided by Cesium. To enable it it is necessary to add appropriate cesium API key as config parameter.
+
+| Name  | Required | Type       | Default                                 | Description        |
+| ----- | -------- | ---------- | --------------------------------------- | ------------------ |
+| `key` | no       | **string** | `configParameters.cesiumIonAccessToken` | The CesiumIon key. |
+
+It provides a default value for `url: https://api.cesium.com/v1/geocode/search/`
+
+**Example**
+
+```json
+{
+  "id": "search-provider/cesium-ion",
+  "type": "cesium-ion-search-provider",
+  "name": "translate#viewModels.searchLocations",
+  "url": "https://api.cesium.com/v1/geocode/search/",
   "flightDurationSeconds": 1.5,
   "minCharacters": 5,
   "isOpen": true
