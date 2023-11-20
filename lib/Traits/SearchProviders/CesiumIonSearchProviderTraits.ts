@@ -4,7 +4,7 @@ import LocationSearchProviderTraits, {
   SearchProviderMapCenterTraits
 } from "./LocationSearchProviderTraits";
 
-export default class BingMapsSearchProviderTraits extends mixTraits(
+export default class CesiumIonSearchProviderTraits extends mixTraits(
   LocationSearchProviderTraits,
   SearchProviderMapCenterTraits
 ) {
