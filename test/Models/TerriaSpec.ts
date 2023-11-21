@@ -1466,10 +1466,10 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      // @ts-ignore
+
       const location: Location = {
         href: "http://test.com/#map=2d"
-      };
+      } as Location;
       await terria.start({ configUrl: "", applicationUrl: location });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
