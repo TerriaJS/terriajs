@@ -98,7 +98,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -117,7 +117,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -156,7 +156,7 @@ describe("FeatureInfoSection", function () {
         isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -183,7 +183,7 @@ describe("FeatureInfoSection", function () {
         isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result2 = createWithContexts(viewState, section2);
@@ -202,7 +202,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -225,7 +225,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -248,7 +248,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -267,7 +267,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -292,7 +292,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -313,7 +313,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -343,7 +343,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -369,7 +369,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -396,7 +396,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -417,7 +417,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -440,7 +440,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -464,7 +464,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -495,7 +495,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -526,7 +526,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -560,7 +560,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -587,7 +587,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -614,7 +614,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -636,7 +636,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -671,7 +671,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -717,7 +717,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -752,7 +752,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -774,7 +774,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -796,7 +796,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -818,7 +818,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -838,7 +838,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -860,7 +860,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -883,7 +883,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -909,7 +909,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -933,7 +933,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen={false}
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -960,7 +960,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           viewState={viewState}
           position={position}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -991,7 +991,7 @@ describe("FeatureInfoSection", function () {
           feature={feature} // feature.properties.name === "Kay";
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       let result = createWithContexts(viewState, section);
@@ -1005,7 +1005,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1035,7 +1035,7 @@ describe("FeatureInfoSection", function () {
           feature={feature} // feature.properties.name === "Kay";
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1065,7 +1065,7 @@ describe("FeatureInfoSection", function () {
           feature={feature} // feature.properties.name === "Kay";
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1117,7 +1117,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           viewState={viewState}
           catalogItem={catalogItem}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1183,7 +1183,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1240,8 +1240,6 @@ describe("FeatureInfoSection", function () {
   });
 
   describe("CZML templating", function () {
-    beforeEach(function () {});
-
     it("uses and completes a string-form featureInfoTemplate", async function () {
       // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
       //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
@@ -1266,7 +1264,7 @@ describe("FeatureInfoSection", function () {
           feature={czmlFeature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1306,7 +1304,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       let result = createWithContexts(viewState, section);
@@ -1319,7 +1317,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1333,7 +1331,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1356,7 +1354,7 @@ describe("FeatureInfoSection", function () {
           ? {
               text: `More info on ${materialUsed}`,
               title: "Show more info on material used",
-              onClick() {}
+              onClick: () => undefined
             }
           : undefined;
       });
@@ -1367,7 +1365,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={() => undefined}
         />
       );
       expect(findWithText(result, "More info on steel").length).toEqual(1);

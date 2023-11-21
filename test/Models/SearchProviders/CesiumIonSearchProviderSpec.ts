@@ -22,7 +22,7 @@ describe("CesiumIonSearchProvider", () => {
     url: "api.test.com",
     terria: {
       currentViewer: {
-        zoomTo: () => {}
+        zoomTo: () => undefined
       }
     } as unknown as Terria
   });

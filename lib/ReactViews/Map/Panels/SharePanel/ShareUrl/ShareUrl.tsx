@@ -137,7 +137,7 @@ export const ShareUrl = forwardRef<
         <ShareUrlWarning
           terria={terria}
           viewState={viewState}
-          callback={callback || (() => {})}
+          callback={callback || (() => undefined)}
         />
       </>
     );

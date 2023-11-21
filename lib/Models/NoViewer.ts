@@ -59,7 +59,7 @@ class NoViewer extends GlobeOrMap {
     imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ) {
-    return () => {};
+    return () => undefined;
   }
 }
 

@@ -35,7 +35,7 @@ describe("DataCatalog", function () {
         terria={terria}
         viewState={viewState}
         items={terria.catalog.group.items}
-        t={() => {}}
+        t={() => undefined}
       />
     );
     const result = getShallowRenderedOutput(tab);

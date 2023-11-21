@@ -133,7 +133,8 @@ describe("TableMixin", function () {
       expect(item.showInChartPanel).toBeTruthy();
     });
 
-    it("doesn't show regions - even if empty region column is detected", () => {});
+    it("doesn't show regions - even if empty region column is detected", () =>
+      undefined);
 
     it("calculates rectangle", async function () {
       expect(item.rectangle.north).toEqual(-20);

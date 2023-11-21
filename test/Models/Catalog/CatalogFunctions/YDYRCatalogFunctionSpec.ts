@@ -148,7 +148,7 @@ describe("YDYRCatalogFunction", function () {
       job = (await ydyr.submitJob()) as YDYRCatalogFunctionJob;
       dispose = reaction(
         () => job.mapItems,
-        () => {}
+        () => undefined
       );
     });
     afterEach(() => {

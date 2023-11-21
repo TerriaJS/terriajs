@@ -19,10 +19,6 @@ describe("MapboxStyleCatalogItem", function () {
     );
   });
 
-  it("can be created", function () {
-    new MapboxStyleCatalogItem("test", terria);
-  });
-
   describe("mapItems ImageryPart", function () {
     it("has a MapboxStyleImageryProvider", function () {
       const item = new MapboxStyleCatalogItem("test", terria);

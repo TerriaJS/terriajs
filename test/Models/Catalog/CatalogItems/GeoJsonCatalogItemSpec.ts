@@ -1008,7 +1008,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const observeMapItems = reaction(
         () => [geojson.mapItems],
-        () => {}
+        () => undefined
       );
 
       (await geojson.loadMapItems()).throwIfError();

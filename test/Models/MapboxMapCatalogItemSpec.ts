@@ -18,10 +18,6 @@ describe("MapboxMapCatalogItem", function () {
     expect(new MapboxMapCatalogItem("test", terria).type).toEqual("mapbox-map");
   });
 
-  it("can be created", function () {
-    new MapboxMapCatalogItem("test", terria);
-  });
-
   describe("mapItems", function () {
     it(
       "returns a MapboxImageryProvider",

@@ -9,6 +9,7 @@ import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPa
 
 describe("LangPanel", function () {
   let terria: Terria;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let viewState: ViewState;
 
   let testRenderer: any;
@@ -18,7 +19,6 @@ describe("LangPanel", function () {
       baseUrl: "./"
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     viewState = new ViewState({
       terria: terria,
       catalogSearchProvider: null,

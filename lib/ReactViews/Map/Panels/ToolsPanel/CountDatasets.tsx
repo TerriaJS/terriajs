@@ -104,7 +104,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
           ++stats.members;
         }
       });
-      return Promise.all(promises).then(() => {});
+      return Promise.all(promises).then(() => undefined);
     }
 
     function recurseAndUpdateTotals(

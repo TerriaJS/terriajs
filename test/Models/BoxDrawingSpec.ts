@@ -55,7 +55,7 @@ describe("BoxDrawing", function () {
 
   describe("the dataSource", function () {
     it("has 6 sides", function () {
-      // const box = new BoxDrawing(cesium, Matrix4.IDENTITY, () => {});
+      // const box = new BoxDrawing(cesium, Matrix4.IDENTITY, () => undefined);
       // const sides = box.dataSource.entities.values.filter(isSideEntity);
       // expect(sides.length).toEqual(6);
     });

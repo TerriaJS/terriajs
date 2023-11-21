@@ -164,7 +164,7 @@ describeIfSupported("Cesium Model", function () {
           )
           .reverse();
 
-      await runLater(() => {});
+      await runLater(() => undefined);
 
       // Test that we have added the correct items
       expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
@@ -172,7 +172,7 @@ describeIfSupported("Cesium Model", function () {
       expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
 
       runInAction(() => items.splice(0, 2));
-      await runLater(() => {});
+      await runLater(() => undefined);
 
       // Test that we have removed the correct items
       expect(dataSourceNames()).toEqual(["ds3"]);
@@ -337,9 +337,9 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      await cesium2.terrainProvider.readyPromise.catch(() => undefined);
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await runLater(() => {}, 5);
+      await runLater(() => undefined, 5);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -361,9 +361,9 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      await cesium2.terrainProvider.readyPromise.catch(() => undefined);
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await runLater(() => {}, 5);
+      await runLater(() => undefined, 5);
 
       expect(terriaViewer2.viewerOptions.useTerrain).toBe(false);
       expect(
@@ -381,9 +381,9 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token and valid asset id
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      await cesium2.terrainProvider.readyPromise.catch(() => undefined);
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await runLater(() => {}, 5);
+      await runLater(() => undefined, 5);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -404,9 +404,9 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid terrain url
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      await cesium2.terrainProvider.readyPromise.catch(() => undefined);
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await runLater(() => {}, 5);
+      await runLater(() => undefined, 5);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =

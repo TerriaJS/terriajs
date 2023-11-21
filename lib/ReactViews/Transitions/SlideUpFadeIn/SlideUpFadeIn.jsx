@@ -8,8 +8,8 @@ import Styles from "./slide-up-fade-in.scss";
 export function SlideUpFadeIn({
   isVisible,
   children,
-  onEnter = () => {},
-  onExited = () => {},
+  onEnter = () => undefined,
+  onExited = () => undefined,
   transitionProps
 }) {
   return (

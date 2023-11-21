@@ -92,7 +92,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
     beforeEach(async function () {
       dispose = reaction(
         () => wps.parameters,
-        () => {}
+        () => undefined
       );
       await wps.loadMetadata();
       runInAction(() => {
@@ -110,7 +110,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
 
       disposeMapItems = reaction(
         () => job.mapItems,
-        () => {}
+        () => undefined
       );
     });
 
@@ -203,7 +203,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
 
       const dispose1 = reaction(
         () => job.mapItems,
-        () => {}
+        () => undefined
       );
 
       expect(job.jobStatus).toBe("running");
@@ -249,7 +249,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
     beforeEach(async function () {
       dispose = reaction(
         () => wps.parameters,
-        () => {}
+        () => undefined
       );
       await wps.loadMetadata();
       runInAction(() => {
@@ -283,7 +283,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
 
       const dispose1 = reaction(
         () => job.mapItems,
-        () => {}
+        () => undefined
       );
 
       let dispose2: any;

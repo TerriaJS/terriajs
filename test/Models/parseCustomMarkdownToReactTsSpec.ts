@@ -8,7 +8,7 @@ const isComponentOfType: any =
 const findAll: any = require("react-shallow-testutils").findAll;
 
 describe("parseCustomMarkdownToReactTs", function () {
-  let terria: Terria;
+  let terria: Terria; // @eslint
 
   beforeEach(function () {
     terria = new Terria({

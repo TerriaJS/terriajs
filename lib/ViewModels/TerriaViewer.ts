@@ -151,7 +151,7 @@ export default class TerriaViewer {
   @computed
   get viewerLoadPromise(): Promise<void> {
     return Promise.resolve(this._currentViewerConstructorPromise).then(
-      () => {}
+      () => undefined
     );
   }
 

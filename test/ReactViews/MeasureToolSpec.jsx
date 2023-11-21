@@ -27,7 +27,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("prettifies distance when distance is in metres", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
     let squared = false;
     const prettyDistance = instance.prettifyNumber(480, squared);
@@ -41,7 +41,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("prettifies distance when distance is in kilometres", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(1280.23, false);
 
@@ -49,7 +49,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("prettifies distance when distance is very large", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(123123280.23, false);
 
@@ -57,7 +57,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("measures geodesic distance in 3D mode", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     // Roughly Auckland
@@ -82,7 +82,7 @@ describe("MeasureTool-jsx", function () {
 
   it("measures geodesic distance in 2D mode", function () {
     terria.viewerMode = "2d";
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     // Roughly Auckland
@@ -106,7 +106,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("measures distance accurately", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
@@ -143,7 +143,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("measures distance accurately with geoscience australia test", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();
@@ -182,7 +182,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("measures distance accurately with more points", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
@@ -260,7 +260,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("updates distance when a point is removed", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();
@@ -330,7 +330,7 @@ describe("MeasureTool-jsx", function () {
   });
 
   it("measures area correctly compared to hand-calculated area", function () {
-    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
+    const measureTool = <MeasureTool terria={terria} t={() => undefined} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();

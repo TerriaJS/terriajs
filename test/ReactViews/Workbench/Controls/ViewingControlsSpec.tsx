@@ -27,11 +27,11 @@ describe("ViewingControls", function () {
       // Open the ViewingControls menu for this item
       viewState.workbenchItemWithOpenControls = simpleItem.uniqueId;
     });
-    ViewingControlsMenu.addMenuItem(viewState, (item) => ({
+    ViewingControlsMenu.addMenuItem(viewState, () => ({
       name: "View details",
       icon: Icon.GLYPHS.eye,
       iconTitle: "View more details",
-      onClick: () => {}
+      onClick: () => undefined
     }));
     const render = create(
       <ViewingControls viewState={viewState} item={simpleItem} />

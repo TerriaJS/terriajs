@@ -1,4 +1,3 @@
-const create: any = require("react-test-renderer").create;
 import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";

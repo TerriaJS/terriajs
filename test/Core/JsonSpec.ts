@@ -27,17 +27,17 @@ describe("Json", function () {
       isJsonObject({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(isJsonObject(() => {})).toBeFalsy();
+    expect(isJsonObject(() => undefined)).toBeFalsy();
     expect(isJsonObject(new Terria())).toBeFalsy();
 
-    expect(isJsonObject({ prop: () => {} })).toBeFalsy();
+    expect(isJsonObject({ prop: () => undefined })).toBeFalsy();
     expect(
-      isJsonObject({ not: "an Object", with: ["JsonValues", () => {}] })
+      isJsonObject({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toBeFalsy();
     expect(
       isJsonObject({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toBeFalsy();
 
@@ -47,7 +47,7 @@ describe("Json", function () {
       isJsonObject(
         {
           not: "an Object",
-          with: ["JsonValues", { function: () => {} }]
+          with: ["JsonValues", { function: () => undefined }]
         },
         false
       )
@@ -64,7 +64,7 @@ describe("Json", function () {
       isJsonBoolean({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonBoolean(() => {})).toBeFalsy();
+    expect(isJsonBoolean(() => undefined)).toBeFalsy();
     expect(isJsonBoolean(new Terria())).toBeFalsy();
   });
 
@@ -78,7 +78,7 @@ describe("Json", function () {
       isJsonNumber({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonNumber(() => {})).toBeFalsy();
+    expect(isJsonNumber(() => undefined)).toBeFalsy();
     expect(isJsonNumber(new Terria())).toBeFalsy();
   });
 
@@ -92,7 +92,7 @@ describe("Json", function () {
       isJsonString({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonString(() => {})).toBeFalsy();
+    expect(isJsonString(() => undefined)).toBeFalsy();
     expect(isJsonString(new Terria())).toBeFalsy();
   });
 
@@ -106,16 +106,16 @@ describe("Json", function () {
       isJsonValue({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(isJsonValue(() => {})).toBeFalsy();
+    expect(isJsonValue(() => undefined)).toBeFalsy();
     expect(isJsonValue(new Terria())).toBeFalsy();
 
     expect(
-      isJsonValue({ not: "an Object", with: ["JsonValues", () => {}] })
+      isJsonValue({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toBeFalsy();
     expect(
       isJsonValue({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toBeFalsy();
 
@@ -125,7 +125,7 @@ describe("Json", function () {
       isJsonValue(
         {
           not: "an Object",
-          with: ["JsonValues", { function: () => {} }]
+          with: ["JsonValues", { function: () => undefined }]
         },
         false
       )
@@ -140,14 +140,14 @@ describe("Json", function () {
     expect(isJsonArray(false)).toBeFalsy();
     expect(isJsonArray(["JsonValues", null])).toBeTruthy();
 
-    expect(isJsonArray(() => {})).toBeFalsy();
+    expect(isJsonArray(() => undefined)).toBeFalsy();
     expect(isJsonArray(new Terria())).toBeFalsy();
 
     expect(
       isJsonArray([
         "JsonValues",
         null,
-        { not: "an Object", with: ["JsonValues", () => {}] }
+        { not: "an Object", with: ["JsonValues", () => undefined] }
       ])
     ).toBeFalsy();
 
@@ -158,7 +158,7 @@ describe("Json", function () {
         [
           "JsonValues",
           null,
-          { not: "an Object", with: ["JsonValues", () => {}] }
+          { not: "an Object", with: ["JsonValues", () => undefined] }
         ],
         false
       )
@@ -173,7 +173,7 @@ describe("Json", function () {
     expect(isJsonStringArray(false)).toBeFalsy();
     expect(isJsonStringArray(["JsonValues", 8])).toBeFalsy();
 
-    expect(isJsonStringArray(() => {})).toBeFalsy();
+    expect(isJsonStringArray(() => undefined)).toBeFalsy();
     expect(isJsonStringArray(new Terria())).toBeFalsy();
 
     expect(
@@ -189,7 +189,7 @@ describe("Json", function () {
     expect(isJsonNumberArray([3, 234])).toBeTruthy();
     expect(isJsonNumberArray(["JsonValues", 8])).toBeFalsy();
 
-    expect(isJsonNumberArray(() => {})).toBeFalsy();
+    expect(isJsonNumberArray(() => undefined)).toBeFalsy();
     expect(isJsonNumberArray(new Terria())).toBeFalsy();
 
     expect(isJsonNumberArray([3, 1, [3, 4]])).toBeFalsy();
@@ -210,7 +210,7 @@ describe("Json", function () {
       ])
     ).toBeTruthy();
 
-    expect(isJsonObjectArray(() => {})).toBeFalsy();
+    expect(isJsonObjectArray(() => undefined)).toBeFalsy();
     expect(isJsonObjectArray(new Terria())).toBeFalsy();
 
     expect(isJsonObjectArray([3, 1, [3, 4]])).toBeFalsy();
@@ -225,17 +225,17 @@ describe("Json", function () {
       assertObject({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(() => assertObject(() => {})).toThrow();
+    expect(() => assertObject(() => undefined)).toThrow();
     expect(() => assertObject(new Terria())).toThrow();
 
-    expect(() => assertObject({ prop: () => {} })).toThrow();
+    expect(() => assertObject({ prop: () => undefined })).toThrow();
     expect(() =>
-      assertObject({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertObject({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toThrow();
     expect(() =>
       assertObject({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toThrow();
   });
@@ -248,17 +248,17 @@ describe("Json", function () {
       assertString({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertString(() => {})).toThrow();
+    expect(() => assertString(() => undefined)).toThrow();
     expect(() => assertString(new Terria())).toThrow();
 
-    expect(() => assertString({ prop: () => {} })).toThrow();
+    expect(() => assertString({ prop: () => undefined })).toThrow();
     expect(() =>
-      assertString({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertString({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toThrow();
     expect(() =>
       assertString({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toThrow();
   });
@@ -271,17 +271,17 @@ describe("Json", function () {
       assertNumber({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertNumber(() => {})).toThrow();
+    expect(() => assertNumber(() => undefined)).toThrow();
     expect(() => assertNumber(new Terria())).toThrow();
 
-    expect(() => assertNumber({ prop: () => {} })).toThrow();
+    expect(() => assertNumber({ prop: () => undefined })).toThrow();
     expect(() =>
-      assertNumber({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertNumber({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toThrow();
     expect(() =>
       assertNumber({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toThrow();
   });
@@ -294,17 +294,17 @@ describe("Json", function () {
       assertArray({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertArray(() => {})).toThrow();
+    expect(() => assertArray(() => undefined)).toThrow();
     expect(() => assertArray(new Terria())).toThrow();
 
-    expect(() => assertArray({ prop: () => {} })).toThrow();
+    expect(() => assertArray({ prop: () => undefined })).toThrow();
     expect(() =>
-      assertArray({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertArray({ not: "an Object", with: ["JsonValues", () => undefined] })
     ).toThrow();
     expect(() =>
       assertArray({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: () => undefined }]
       })
     ).toThrow();
   });
