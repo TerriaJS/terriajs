@@ -53,8 +53,8 @@ describe("UserDrawing", function () {
   });
 
   it("will use default options if options are not specified", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
@@ -66,13 +66,13 @@ describe("UserDrawing", function () {
   });
 
   it("getDialogMessage contains callback message if callback is specified", function () {
-    var options = {
+    const options = {
       terria: terria,
       onMakeDialogMessage: function () {
         return "HELLO";
       }
     };
-    var userDrawing = new UserDrawing(options);
+    const userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
@@ -84,23 +84,23 @@ describe("UserDrawing", function () {
   });
 
   it("listens for user picks on map after entering drawing mode", function () {
-    var userDrawing = new UserDrawing({ terria });
+    const userDrawing = new UserDrawing({ terria });
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(0);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(1);
   });
 
   it("disables feature info requests when in drawing mode", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
   });
 
   it("re-enables feature info requests on cleanup", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
     userDrawing.cleanUp();
@@ -170,7 +170,7 @@ describe("UserDrawing", function () {
     expect(currentPoint.position).toBeDefined();
 
     if (currentPoint.position !== undefined) {
-      let currentPointPos = currentPoint.position.getValue(
+      const currentPointPos = currentPoint.position.getValue(
         terria.timelineClock.currentTime
       );
       expect(currentPointPos.x).toEqual(x);
@@ -185,7 +185,7 @@ describe("UserDrawing", function () {
     if (lineEntity.polyline !== undefined) {
       expect(lineEntity.polyline.positions).toBeDefined();
       if (lineEntity.polyline.positions !== undefined) {
-        let currentPointPos = lineEntity.polyline.positions.getValue(
+        const currentPointPos = lineEntity.polyline.positions.getValue(
           terria.timelineClock.currentTime
         )[0];
         expect(currentPointPos.x).toEqual(x);
@@ -210,7 +210,7 @@ describe("UserDrawing", function () {
     expect(newPoint.position).toBeDefined();
 
     if (newPoint.position !== undefined) {
-      let newPointPos = newPoint.position.getValue(
+      const newPointPos = newPoint.position.getValue(
         terria.timelineClock.currentTime
       );
       expect(newPointPos.x).toEqual(newX);
@@ -225,7 +225,7 @@ describe("UserDrawing", function () {
     if (lineEntity.polyline !== undefined) {
       expect(lineEntity.polyline.positions).toBeDefined();
       if (lineEntity.polyline.positions !== undefined) {
-        let newPointPos = lineEntity.polyline.positions.getValue(
+        const newPointPos = lineEntity.polyline.positions.getValue(
           terria.timelineClock.currentTime
         )[1];
         expect(newPointPos.x).toEqual(newX);
@@ -259,7 +259,7 @@ describe("UserDrawing", function () {
     expect(userDrawing.otherEntities.entities.values.length).toEqual(0);
     userDrawing.enterDrawMode();
 
-    let pickedFeatures = new PickedFeatures();
+    const pickedFeatures = new PickedFeatures();
     // Auckland, in case you're wondering
     pickedFeatures.pickPosition = new Cartesian3(
       -5088454.576893678,

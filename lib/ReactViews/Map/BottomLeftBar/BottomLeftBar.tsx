@@ -89,7 +89,7 @@ const BottomLeftBar: FC = observer(() => {
           height="18px"
           style={{ paddingLeft: "8px" }}
           src="build/TerriaJS/images/google_on_non_white_hdpi.png"
-        ></img>
+        />
       )}
       {/* On screen data attributions. At the moment, this supports only Cesium viewer.
           Needed for Google Photorealistic 3D Tiles

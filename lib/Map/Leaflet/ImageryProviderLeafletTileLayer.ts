@@ -54,7 +54,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _leafletUpdateInterval: number;
 
   @observable splitDirection = SplitDirection.NONE;
-  @observable splitPosition: number = 0.5;
+  @observable splitPosition = 0.5;
 
   constructor(
     private leaflet: Leaflet,

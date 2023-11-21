@@ -43,7 +43,7 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
       "Show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.",
     isNullable: false
   })
-  showFeatureInfoDownloadWithTemplate: boolean = false;
+  showFeatureInfoDownloadWithTemplate = false;
 
   @anyTrait({
     name: "Partials",
@@ -80,5 +80,5 @@ export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
     description:
       "Max number of feature info requests to send to API url. Keep this number small to avoid sending to many requests to server (default 10)."
   })
-  maxRequests: number = 10;
+  maxRequests = 10;
 }

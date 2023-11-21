@@ -94,19 +94,11 @@ export const ChartPanelDownloadButton = observer(
       FeatureDetection.supportsTypedArrays() &&
       FeatureDetection.supportsWebWorkers();
 
-<<<<<<< HEAD
-      const isExportDisabled = props.chartableItems.some(
-        (item) =>
-          hasTraits(item, ExportableTraits, "disableExport") &&
-          item.disableExport === true
-      );
-=======
     const isExportDisabled = props.chartableItems.some(
-      item =>
+      (item) =>
         hasTraits(item, ExportableTraits, "disableExport") &&
         item.disableExport === true
     );
->>>>>>> 4408e4aa1 (fix some list issues)
 
     if (!isDownloadSupported || isExportDisabled || tableItems.length === 0)
       return null;

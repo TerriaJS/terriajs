@@ -332,7 +332,7 @@ export default class Legend extends React.Component<{
                   css={{ position: "absolute", top: 10, right: 0 }}
                   renderIcon={() => (
                     <StyledIcon
-                      light={true}
+                      light
                       glyph={Icon.GLYPHS.menuDotted}
                       styledWidth="12px"
                     />

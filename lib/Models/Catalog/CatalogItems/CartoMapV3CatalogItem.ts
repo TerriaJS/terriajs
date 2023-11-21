@@ -153,7 +153,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     //   mvtTileJsonUrls = response.tilejson.url;
     // }
 
-    if (geoJsonUrls.length === 0 /*&& mvtTileJsonUrls.length === 0*/) {
+    if (geoJsonUrls.length === 0 /* && mvtTileJsonUrls.length === 0*/) {
       throw TerriaError.from("No GeoJSON found.");
     }
 

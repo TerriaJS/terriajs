@@ -114,7 +114,7 @@ export class TrailSymbolTraits extends mixTraits(
       "The maximum number of seconds to step when sampling the position.",
     type: "number"
   })
-  resolution: number = 60;
+  resolution = 60;
 }
 
 export class EnumTrailSymbolTraits extends mixTraits(

@@ -96,7 +96,7 @@ describe("WebMapServiceCatalogItem", function () {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
     });
-    let description: String | undefined;
+    let description: string | undefined;
     const cleanup = autorun(() => {
       if (wms.info !== undefined) {
         const descSection = wms.info.find(

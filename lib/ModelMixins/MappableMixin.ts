@@ -64,7 +64,7 @@ type BaseType = Model<MappableTraits>;
 
 function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MappableMixin extends Base {
-    initialMessageShown: boolean = false;
+    initialMessageShown = false;
 
     constructor(...args: any[]) {
       super(...args);
@@ -206,8 +206,7 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace MappableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof MappableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof MappableMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

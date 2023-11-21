@@ -7,7 +7,7 @@ interface DataType {
   description?: string;
 }
 
-export interface RemoteDataType extends DataType {}
+export type RemoteDataType = DataType;
 
 export interface LocalDataType extends DataType {
   extensions?: string[];

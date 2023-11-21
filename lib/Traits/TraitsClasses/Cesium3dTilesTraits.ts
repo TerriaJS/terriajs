@@ -107,7 +107,7 @@ export class OptionsTraits extends ModelTraits {
     name: "Show credits on screen",
     description: "Whether to display the credits of this tileset on screen."
   })
-  showCreditsOnScreen: boolean = false;
+  showCreditsOnScreen = false;
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(

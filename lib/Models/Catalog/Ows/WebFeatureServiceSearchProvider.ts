@@ -191,11 +191,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
           results.results.push(...searchResults);
         });
       })
-<<<<<<< HEAD
-      .catch((e) => {
-=======
       .catch(() => {
->>>>>>> 4408e4aa1 (fix some list issues)
         if (results.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;

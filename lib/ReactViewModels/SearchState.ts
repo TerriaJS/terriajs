@@ -25,18 +25,18 @@ export default class SearchState {
 
   @observable locationSearchProviders: SearchProvider[];
 
-  @observable catalogSearchText: string = "";
-  @observable isWaitingToStartCatalogSearch: boolean = false;
+  @observable catalogSearchText = "";
+  @observable isWaitingToStartCatalogSearch = false;
 
-  @observable locationSearchText: string = "";
-  @observable isWaitingToStartLocationSearch: boolean = false;
+  @observable locationSearchText = "";
+  @observable isWaitingToStartLocationSearch = false;
 
-  @observable unifiedSearchText: string = "";
-  @observable isWaitingToStartUnifiedSearch: boolean = false;
+  @observable unifiedSearchText = "";
+  @observable isWaitingToStartUnifiedSearch = false;
 
-  @observable showLocationSearchResults: boolean = false;
-  @observable showMobileLocationSearch: boolean = false;
-  @observable showMobileCatalogSearch: boolean = false;
+  @observable showLocationSearchResults = false;
+  @observable showMobileLocationSearch = false;
+  @observable showMobileCatalogSearch = false;
 
   @observable locationSearchResults: SearchProviderResults[] = [];
   @observable catalogSearchResults: SearchProviderResults | undefined;

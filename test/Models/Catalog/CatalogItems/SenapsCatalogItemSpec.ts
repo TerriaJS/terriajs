@@ -67,7 +67,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
     const realLoadWithXhr = loadWithXhr.load;
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
+      const url = args[0];
       // if we have a ?id= then we've passed in a filter
       if (url.match(/locations\?id/g))
         args[0] = "test/Senaps/locations_filtered.json";
@@ -104,7 +104,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
     it("- fail to construct locations url", async function () {
       async function foundError() {
-        let errorMessage: string = "";
+        let errorMessage = "";
         try {
           item._constructLocationsUrl();
         } catch (e: any) {
@@ -118,7 +118,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
     it("- fail to construct streams url", async function () {
       async function foundError() {
-        let errorMessage: string = "";
+        let errorMessage = "";
         try {
           item._constructStreamsUrl("123");
         } catch (e: any) {

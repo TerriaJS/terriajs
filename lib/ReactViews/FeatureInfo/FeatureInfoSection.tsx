@@ -78,7 +78,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     | undefined = undefined;
 
   @observable
-  private showRawData: boolean = false;
+  private showRawData = false;
 
   /** See `setFeatureChangedCounter` */
   @observable featureChangedCounter = 0;
@@ -293,7 +293,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     const feature = this.props.feature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
-    let description: string | undefined =
+    const description: string | undefined =
       feature.description?.getValue(currentTime);
 
     if (isDefined(description)) return description;

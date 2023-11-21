@@ -137,9 +137,9 @@ class MobileHeader extends React.Component {
           onSearchTextChanged={this.changeLocationSearchText.bind(this)}
           onDoSearch={this.searchLocations.bind(this)}
           placeholder={t("search.placeholder")}
-          alwaysShowClear={true}
+          alwaysShowClear
           onClear={this.closeLocationSearch.bind(this)}
-          autoFocus={true}
+          autoFocus
         />
       )}
       {searchState.showMobileCatalogSearch && (
@@ -149,7 +149,7 @@ class MobileHeader extends React.Component {
           onDoSearch={this.searchCatalog.bind(this)}
           placeholder={t("search.searchCatalogue")}
           onClear={this.closeCatalogSearch.bind(this)}
-          autoFocus={true}
+          autoFocus
         />
       )}
     </div>;

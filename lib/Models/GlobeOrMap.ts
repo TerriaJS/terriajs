@@ -45,7 +45,7 @@ export default abstract class GlobeOrMap {
 
   private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<unknown> | undefined;
-  private _tilesLoadingCountMax: number = 0;
+  private _tilesLoadingCountMax = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
   // True if zoomTo() was called and the map is currently zooming to dataset
@@ -81,7 +81,7 @@ export default abstract class GlobeOrMap {
   @action
   zoomTo(
     target: CameraView | Rectangle | MappableMixin.Instance,
-    flightDurationSeconds: number = 3.0
+    flightDurationSeconds = 3.0
   ): Promise<void> {
     this.isMapZooming = true;
     const zoomId = createGuid();

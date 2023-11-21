@@ -56,7 +56,7 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "The maximum number of discrete times that can be created by a single " +
       "date range when layer in time-enabled."
   })
-  maxRefreshIntervals: number = 1000;
+  maxRefreshIntervals = 1000;
 
   @primitiveTrait({
     name: "Time Window Duration",
@@ -80,5 +80,5 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "If true, the time window is forward from the current time. Otherwise backward. Default to forward window.",
     type: "boolean"
   })
-  isForwardTimeWindow: boolean = true;
+  isForwardTimeWindow = true;
 }

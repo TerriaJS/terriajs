@@ -256,7 +256,7 @@ function CatalogFunctionJobMixin<
     abstract downloadResults(): Promise<CatalogMemberMixin.Instance[] | void>;
 
     @action
-    protected setOnError(error: unknown, raiseToUser: boolean = true) {
+    protected setOnError(error: unknown, raiseToUser = true) {
       const terriaError = TerriaError.from(error, {
         title: "Job failed",
         message: `An error has occurred while executing \`${this.name}\` job`,
@@ -313,8 +313,9 @@ function CatalogFunctionJobMixin<
 
 namespace CatalogFunctionJobMixin {
   StratumOrder.addLoadStratum(FunctionJobStratum.name);
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
+  export type Instance = InstanceType<
+    ReturnType<typeof CatalogFunctionJobMixin>
+  >;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionJobMixin;
   }

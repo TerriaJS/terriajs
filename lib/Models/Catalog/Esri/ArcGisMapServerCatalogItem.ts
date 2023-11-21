@@ -492,7 +492,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   private getTimeWindowQueryString(
     currentTime: number,
     duration: number,
-    isForward: boolean = true
+    isForward = true
   ) {
     if (isForward) {
       const toTime = Number(currentTime) + duration;
@@ -614,10 +614,10 @@ async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
 function findLayers(layers: Layer[], names: string | undefined) {
   function findLayer(layers: Layer[], id: string) {
-    var idLowerCase = id.toLowerCase();
-    var foundByName;
-    for (var i = 0; i < layers.length; ++i) {
-      var layer = layers[i];
+    const idLowerCase = id.toLowerCase();
+    let foundByName;
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i];
       if (layer.id.toString() === id) {
         return layer;
       } else if (
@@ -696,7 +696,7 @@ function cleanAndProxyUrl(
 
 function cleanUrl(url: string) {
   // Strip off the search portion of the URL
-  var uri = new URI(url);
+  const uri = new URI(url);
   uri.search("");
   return uri.toString();
 }

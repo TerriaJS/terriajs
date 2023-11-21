@@ -39,8 +39,7 @@ function ExportableMixin<
 }
 
 namespace ExportableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ExportableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof ExportableMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && "exportData" in model && "canExportData" in model;
   }

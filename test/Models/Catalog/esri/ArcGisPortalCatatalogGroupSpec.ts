@@ -80,8 +80,8 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("properly creates members when no grouping", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(4);
-      let member0 = <CatalogGroup>portalCatalogGroup.memberModels[0];
-      let member1 = <CatalogGroup>portalCatalogGroup.memberModels[1];
+      const member0 = <CatalogGroup>portalCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>portalCatalogGroup.memberModels[1];
       expect(member0.name).toBe("NSW Transport Theme - Road Segment");
       expect(member1.name).toBe("TopoShp");
     });
@@ -107,17 +107,17 @@ describe("ArcGisPortalCatalogGroup", function () {
     });
 
     it("Ungrouped group created", function () {
-      let member3 = <CatalogGroup>portalCatalogGroup.memberModels[2];
+      const member3 = <CatalogGroup>portalCatalogGroup.memberModels[2];
       expect(member3.name).toBe("Ungrouped");
     });
 
     it("Creates members from portal groups", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(3);
-      let member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
       expect(member1.name).toBe("NSW Digital Twin");
 
-      let member2 = <CatalogGroup>portalCatalogGroup.memberModels[1];
+      const member2 = <CatalogGroup>portalCatalogGroup.memberModels[1];
       expect(member2.name).toBe("Spatial Services Basemaps");
     });
 
@@ -131,12 +131,12 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          let group0 = <CatalogGroup>portalServerStratum.groups[0];
+          const group0 = <CatalogGroup>portalServerStratum.groups[0];
           expect(group0.name).toBe("NSW Digital Twin");
           // Data read from group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json
           expect(group0.members.length).toBe(2);
 
-          let group1 = <CatalogGroup>portalServerStratum.groups[1];
+          const group1 = <CatalogGroup>portalServerStratum.groups[1];
           expect(group1.name).toBe("Spatial Services Basemaps");
           // Data read from group-2dfa6cfea7774d9585700059e1fc8219-items-search.json
           expect(group1.members.length).toBe(3);
@@ -147,8 +147,8 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("a single item can be placed in two groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          let group0 = <CatalogGroup>portalServerStratum.groups[0];
-          let group1 = <CatalogGroup>portalServerStratum.groups[1];
+          const group0 = <CatalogGroup>portalServerStratum.groups[0];
+          const group1 = <CatalogGroup>portalServerStratum.groups[1];
           expect(group0.members[0]).toBe(group1.members[0]);
         }
       }
@@ -177,25 +177,25 @@ describe("ArcGisPortalCatalogGroup", function () {
     });
 
     it("ungroupedTitle trait works", function () {
-      let member2 = <CatalogGroup>portalCatalogGroup.memberModels[1];
+      const member2 = <CatalogGroup>portalCatalogGroup.memberModels[1];
       expect(member2.name).toBe("Ungrouped Content");
     });
 
     it("properly creates groups from categories", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(2);
-      let member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
       expect(member1.name).toBe("Transport");
     });
 
     it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          let group0 = <CatalogGroup>portalServerStratum.groups[0];
+          const group0 = <CatalogGroup>portalServerStratum.groups[0];
           expect(group0.name).toBe("Transport");
           expect(group0.members.length).toBe(1);
 
-          let group1 = <CatalogGroup>portalServerStratum.groups[1];
+          const group1 = <CatalogGroup>portalServerStratum.groups[1];
           expect(group1.members.length).toBe(3);
         }
       }

@@ -368,8 +368,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 }
 
 namespace TileErrorHandlerMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof TileErrorHandlerMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof TileErrorHandlerMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model?.hasTileErrorHandlerMixin;

@@ -34,7 +34,7 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
     description: "Merge member groups by name.",
     type: "boolean"
   })
-  mergeGroupsByName: boolean = false;
+  mergeGroupsByName = false;
 
   @primitiveTrait({
     name: "Sort members by",

@@ -83,7 +83,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
-  private _stopRequestAnimationFrame: boolean = false;
+  private _stopRequestAnimationFrame = false;
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
@@ -256,7 +256,7 @@ export default class Leaflet extends GlobeOrMap {
    */
   private _initProgressEvent() {
     const onTileLoadChange = () => {
-      var tilesLoadingCount = 0;
+      let tilesLoadingCount = 0;
 
       this.map.eachLayer(function (layerOrGridlayer) {
         // _tiles is protected but our knockout-loading-logic accesses it here anyway
@@ -477,7 +477,7 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     // 2. Add new data sources
-    for (let ds of availableDataSources) {
+    for (const ds of availableDataSources) {
       if (!dataSources.contains(ds) && ds.show) {
         await dataSources.add(ds);
       }
@@ -499,7 +499,7 @@ export default class Leaflet extends GlobeOrMap {
 
   doZoomTo(
     target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
-    flightDurationSeconds: number = 3.0
+    flightDurationSeconds = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
@@ -651,7 +651,7 @@ export default class Leaflet extends GlobeOrMap {
     latlng: L.LatLng,
     tileCoordinates?: Record<string, ProviderCoords>,
     existingFeatures?: TerriaFeature[],
-    ignoreSplitter: boolean = false
+    ignoreSplitter = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -948,10 +948,10 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getClipsForSplitter(): any {
-    let clipLeft: string = "";
-    let clipRight: string = "";
-    let clipPositionWithinMap: number = 0;
-    let clipX: number = 0;
+    let clipLeft = "";
+    let clipRight = "";
+    let clipPositionWithinMap = 0;
+    let clipX = 0;
     if (this.terria.showSplitter) {
       const map = this.map;
       const size = map.getSize();

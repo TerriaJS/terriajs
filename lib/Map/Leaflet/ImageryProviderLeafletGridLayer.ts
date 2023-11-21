@@ -37,7 +37,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
   readonly _previousCredits: unknown[] = [];
 
   @observable splitDirection = SplitDirection.NONE;
-  @observable splitPosition: number = 0.5;
+  @observable splitPosition = 0.5;
 
   constructor(
     private leaflet: Leaflet,

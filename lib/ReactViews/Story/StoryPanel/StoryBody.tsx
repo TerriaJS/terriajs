@@ -51,7 +51,7 @@ function shouldAddIframeTag(story: Story) {
   const iframes = parsedDocument.getElementsByTagName("iframe");
   if (iframes.length < 1) return false;
   let result = true;
-  for (let iframe of iframes) {
+  for (const iframe of iframes) {
     if (
       !(
         iframe.src?.startsWith("https://www.youtube.com/embed/") ||

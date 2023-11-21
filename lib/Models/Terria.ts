@@ -458,8 +458,8 @@ export default class Terria {
     )
   );
 
-  appName: string = "TerriaJS App";
-  supportEmail: string = "info@terria.io";
+  appName = "TerriaJS App";
+  supportEmail = "info@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -562,7 +562,7 @@ export default class Terria {
   selectedFeature: TerriaFeature | undefined;
 
   @observable
-  allowFeatureInfoRequests: boolean = true;
+  allowFeatureInfoRequests = true;
 
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
@@ -585,7 +585,7 @@ export default class Terria {
    *    {"initialCamera": {"focusWorkbenchItems": true}}
    * ```
    */
-  private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
+  private focusWorkbenchItemsAfterLoadingInitSources = false;
 
   @computed
   get baseMapContrastColor() {
@@ -619,7 +619,7 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
-  @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
+  @observable storyPromptShown = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -654,7 +654,7 @@ export default class Terria {
    * Whether we think all references in the catalog have been loaded
    * @type {boolean}
    */
-  @observable catalogReferencesLoaded: boolean = false;
+  @observable catalogReferencesLoaded = false;
 
   augmentedVirtuality?: any;
 
@@ -833,7 +833,7 @@ export default class Terria {
     type: Class<T>,
     id: string
   ): T | undefined {
-    let model = this.getModelById(type, id);
+    const model = this.getModelById(type, id);
     if (model) {
       return model;
     } else {
@@ -1183,7 +1183,7 @@ export default class Terria {
   async updateFromStartData(
     startData: unknown,
     /** Name for startData initSources - this is only used for debugging purposes */
-    name: string = "Application start data",
+    name = "Application start data",
     /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
     errorSeverity?: TerriaErrorSeverity
   ) {
@@ -1975,7 +1975,7 @@ export default class Terria {
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
     let vectorFeatures: TerriaFeature[] = [];
-    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
+    const featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -2076,7 +2076,7 @@ export default class Terria {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    var v = window.localStorage.getItem(this.appName + "." + key);
+    const v = window.localStorage.getItem(this.appName + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {

@@ -103,8 +103,8 @@
     }],
     "no-array-constructor": "error",
     "no-new-object": 1,
-    "no-unneeded-ternary": 1,    
-    
+    "no-unneeded-ternary": 1,
+
     "prefer-const": "error",
     "spaced-comment": "error"
   },
@@ -115,12 +115,8 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:react-hooks/recommended",
-<<<<<<< HEAD
         "plugin:jsx-control-statements/recommended",
-=======
-        "plugin:jsx-control-statements/recommended", 
         "plugin:@typescript-eslint/eslint-recommended",
->>>>>>> 651ac47d5 (add eslint-config-prettier)
         "plugin:@typescript-eslint/recommended"
       ],
       "parser": "@typescript-eslint/parser",

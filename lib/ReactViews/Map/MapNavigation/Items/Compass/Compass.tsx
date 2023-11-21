@@ -541,11 +541,7 @@ function rotate(
     // viewModel.props.terria.cesium.notifyRepaintRequired();
   };
 
-<<<<<<< HEAD:lib/ReactViews/Map/MapNavigation/Items/Compass/Compass.tsx
   viewModel.rotateMouseUpFunction = function (e) {
-=======
-  viewModel.rotateMouseUpFunction = function() {
->>>>>>> 4408e4aa1 (fix some list issues):lib/ReactViews/Map/Navigation/Items/Compass.tsx
     viewModel.isRotating = false;
     if (viewModel.rotateMouseMoveFunction) {
       document.removeEventListener(
@@ -633,11 +629,7 @@ function orbit(
     viewModel.orbitIsLook = false;
   }
 
-<<<<<<< HEAD:lib/ReactViews/Map/MapNavigation/Items/Compass/Compass.tsx
-  viewModel.orbitAnimationFrameFunction = function (e: any) {
-=======
-  viewModel.orbitAnimationFrameFunction = function() {
->>>>>>> 4408e4aa1 (fix some list issues):lib/ReactViews/Map/Navigation/Items/Compass.tsx
+  viewModel.orbitAnimationFrameFunction = function () {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
     const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
@@ -700,11 +692,7 @@ function orbit(
     updateAngleAndOpacity(vector, compassRectangle.width);
   };
 
-<<<<<<< HEAD:lib/ReactViews/Map/MapNavigation/Items/Compass/Compass.tsx
-  viewModel.orbitMouseUpFunction = function (e: any) {
-=======
-  viewModel.orbitMouseUpFunction = function() {
->>>>>>> 4408e4aa1 (fix some list issues):lib/ReactViews/Map/Navigation/Items/Compass.tsx
+  viewModel.orbitMouseUpFunction = function () {
     // TODO: if mouse didn't move, reset view to looking down, north is up?
 
     viewModel.isOrbiting = false;

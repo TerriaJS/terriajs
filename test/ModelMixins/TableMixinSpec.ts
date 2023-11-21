@@ -1427,7 +1427,7 @@ describe("TableMixin", function () {
         },
         {
           value: "boots",
-          text: "boots", //labelColumn: "enum",
+          text: "boots", // labelColumn: "enum",
           font: "20px Arial",
           style: LabelStyle.FILL_AND_OUTLINE,
           scale: 2,

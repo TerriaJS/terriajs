@@ -67,8 +67,9 @@ StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
-interface Cesium3DTilesCatalogItemIface
-  extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+type Cesium3DTilesCatalogItemIface = InstanceType<
+  ReturnType<typeof Cesium3dTilesMixin>
+>;
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
@@ -118,7 +119,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     // An observable tracker for tileset.ready
     @observable
-    isTilesetReady: boolean = false;
+    isTilesetReady = false;
 
     clippingPlanesOriginMatrix(): Matrix4 {
       if (this.tileset && this.isTilesetReady) {
@@ -214,7 +215,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-      let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+      const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
         Matrix4.getMatrix3(modelMatrix, new Matrix3())
       );
@@ -348,7 +349,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      let resource: IonResource | undefined = await IonResource.fromAssetId(
+      const resource: IonResource | undefined = await IonResource.fromAssetId(
         ionAssetId,
         {
           accessToken:
@@ -633,8 +634,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace Cesium3dTilesMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof Cesium3dTilesMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCesium3dTilesMixin;
   }

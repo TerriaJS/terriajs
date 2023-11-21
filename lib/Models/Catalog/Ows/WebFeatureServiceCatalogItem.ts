@@ -292,7 +292,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 
     // If no srsName provided, then find what the server supports and use the best one for Terria
     const layerSrsArray = this.capabilities.srsNames?.find(
-      (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] //If multiple layers in this WFS request, only use the first layer to find best srsName
+      (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] // If multiple layers in this WFS request, only use the first layer to find best srsName
     );
 
     return (
@@ -454,7 +454,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    let geojsonData =
+    const geojsonData =
       this.outputFormat === "JSON"
         ? JSON.parse(getFeatureResponse)
         : gmlToGeoJson(getFeatureResponse);

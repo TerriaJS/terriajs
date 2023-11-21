@@ -146,7 +146,7 @@ export type ParseCustomHtmlToReactContext = ProcessNodeContext & {
 function parseCustomHtmlToReact(
   html: string,
   context?: ParseCustomHtmlToReactContext,
-  allowUnsafeHtml: boolean = false,
+  allowUnsafeHtml = false,
   domPurifyOptions: Object = {}
 ) {
   if (!defined(html) || html.length === 0) {

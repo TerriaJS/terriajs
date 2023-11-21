@@ -298,7 +298,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       'Gets or sets whether this WMS server supports GetTimeseries requests. If true, then GetTimeseries will be used instead of GetFeatureInfo. This will also set default value of `getFeatureInfoFormat` to `{ format: "text/csv", type: "text" }`'
   })
-  supportsGetTimeseries: boolean = false;
+  supportsGetTimeseries = false;
 
   @primitiveTrait({
     type: "number",

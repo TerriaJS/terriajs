@@ -184,7 +184,7 @@ class MyDataTab extends React.Component {
                   items={
                     this.props.terria.catalog.userAddedDataGroup.memberModels
                   }
-                  removable={true}
+                  removable
                   viewState={this.props.viewState}
                   terria={this.props.terria}
                 />

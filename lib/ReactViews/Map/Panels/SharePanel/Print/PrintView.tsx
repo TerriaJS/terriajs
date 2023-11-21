@@ -113,10 +113,7 @@ const mkStyle = (unsafeCSS: string) => {
   return style;
 };
 
-export const downloadImg = (
-  dataString: string,
-  fileName: string = "map.png"
-): void => {
+export const downloadImg = (dataString: string, fileName = "map.png"): void => {
   const a = document.createElement("a");
   a.href = dataString;
   a.download = fileName;
@@ -186,7 +183,7 @@ const PrintView = (props: Props) => {
                   scale={getScale(
                     viewState.terria.currentViewer.getContainer()
                   )}
-                  isPrintMode={true}
+                  isPrintMode
                 />
               </PrintViewMap>
             ) : (

@@ -121,9 +121,9 @@ describe("Leaflet Model", function () {
     });
 
     function changeTileLoadingCount(count: number) {
-      var tiles: any = {};
+      const tiles: any = {};
       // Add loading tiles
-      for (var i = 0; i < count; i++) {
+      for (let i = 0; i < count; i++) {
         tiles["tile " + i] = { loaded: undefined };
       }
       layers[0]._tiles = tiles;

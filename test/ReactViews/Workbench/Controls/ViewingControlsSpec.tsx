@@ -34,10 +34,7 @@ describe("ViewingControls", function () {
       onClick: () => {}
     }));
     const render = create(
-      <ViewingControls
-        viewState={viewState}
-        item={simpleItem}
-      ></ViewingControls>
+      <ViewingControls viewState={viewState} item={simpleItem} />
     );
     const viewMoreDetailsMenuItem = render.root.findByProps({
       title: "View more details"
