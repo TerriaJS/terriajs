@@ -25,7 +25,7 @@ export default function PrivateIndicator(props) {
           width: 15px;
           height: 15px;
           fill: ${(p) =>
-            p.inWorkbench ? p.theme.textLight : p.theme.colorPrimary};
+            p.inWorkbench ? p.theme.textLight : p.theme.charcoalGrey};
         }
       `}
     >
