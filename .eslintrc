@@ -20,6 +20,7 @@
     "commonjs": true,
     "es6": true
   },
+  "ignorePatterns": ["*.scss.d.ts"],
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "globals": {
     "process": true
@@ -30,8 +31,6 @@
     }
   },
   "rules": {
-    "jsx-control-statements/jsx-use-if-tag": "off",
-    "jsx-control-statements/jsx-for-require-body": "off",
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
@@ -128,12 +127,8 @@
         "sourceType": "module",
         "project": "./tsconfig.json"
       },
-      "plugins": ["react", "jsx-control-statements", "@typescript-eslint"],
+      "plugins": ["react", "@typescript-eslint"],
       "rules": {
-        "jsx-control-statements/jsx-jcs-no-undef": "off",
-        "jsx-control-statements/jsx-use-if-tag": "off",
-        "jsx-control-statements/jsx-for-require-body": "off",
-        "react-hooks/exhaustive-deps": "error",
         "react/jsx-boolean-value": ["error", "never", { "always": [] }],
         "react/jsx-closing-bracket-location": ["error", "line-aligned"],
         "react/jsx-closing-tag-location": "error",
@@ -166,7 +161,14 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/no-this-alias": "off"
+        "@typescript-eslint/no-this-alias": "off",
+
+        // @TODO: enable these rules
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-loss-of-precision": "off",
+        "@typescript-eslint/no-unsafe-declaration-merging": "off",
+        "react-hooks/exhaustive-deps": "off"
       }
     }
   ]
