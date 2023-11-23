@@ -1,26 +1,21 @@
-import React from "react";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { reaction, runInAction } from "mobx";
-import { Trans } from "react-i18next";
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-// import { ThemeContext } from "styled-components";
-
-import SearchBox from "../Search/SearchBox";
-// import SidebarSearch from "../Search/SidebarSearch";
-import LocationSearchResults from "../Search/LocationSearchResults";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-
+import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
-import Text from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
-
-import { addMarker } from "../../Models/LocationMarkerUtils";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import LocationSearchResults from "../Search/LocationSearchResults";
+import SearchBox from "../Search/SearchBox";
 
 export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
+  const { t } = useTranslation();
   return (
     <RawButton
       fullWidth
@@ -38,18 +33,16 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         <StyledIcon styledWidth={"14px"} glyph={Icon.GLYPHS["dataCatalog"]} />
         <Spacing right={2} />
         <Text textAlignLeft textLight large fullWidth>
-          <Trans
-            i18nKey="search.searchInDataCatalog"
-            values={{ locationSearchText }}
-          >
-            Search <strong>{locationSearchText}</strong> in the Data Catalogue
-          </Trans>
+          {t("search.searchInDataCatalog", {
+            locationSearchText: locationSearchText
+          })}
         </Text>
         <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
       </Box>
     </RawButton>
   );
 }
+
 SearchInDataCatalog.propTypes = {
   handleClick: PropTypes.func.isRequired,
   viewState: PropTypes.object.isRequired
@@ -71,11 +64,13 @@ const PresentationBox = styled(Box).attrs({
 `;
 
 export const LOCATION_SEARCH_INPUT_NAME = "LocationSearchInput";
+
 export class SearchBoxAndResultsRaw extends React.Component {
   constructor(props) {
     super(props);
     this.locationSearchRef = React.createRef();
   }
+
   componentDidMount() {
     this.props.viewState.updateAppRef(
       LOCATION_SEARCH_INPUT_NAME,
@@ -111,6 +106,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
       this._nowViewingChangeSubscription = undefined;
     }
   }
+
   changeSearchText(newText) {
     runInAction(() => {
       this.props.viewState.searchState.locationSearchText = newText;
@@ -131,17 +127,21 @@ export class SearchBoxAndResultsRaw extends React.Component {
       });
     }
   }
+
   search() {
     this.props.viewState.searchState.searchLocations();
   }
+
   toggleShowLocationSearchResults(bool) {
     runInAction(() => {
       this.props.viewState.searchState.showLocationSearchResults = bool;
     });
   }
+
   startLocationSearch() {
     this.toggleShowLocationSearchResults(true);
   }
+
   render() {
     const { viewState, placeholder } = this.props;
     const searchState = viewState.searchState;
@@ -197,27 +197,25 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   overflow-y: auto;
                 `}
               >
-                {this.props.viewState.searchState.locationSearchResults.map(
-                  (search) => (
-                    <LocationSearchResults
-                      key={search.searchProvider.name}
-                      terria={this.props.terria}
-                      viewState={this.props.viewState}
-                      search={search}
-                      locationSearchText={locationSearchText}
-                      onLocationClick={(result) => {
-                        addMarker(this.props.terria, result);
-                        result.clickAction();
-                        runInAction(() => {
-                          searchState.showLocationSearchResults = false;
-                        });
-                      }}
-                      isWaitingForSearchToStart={
-                        searchState.isWaitingToStartLocationSearch
-                      }
-                    />
-                  )
-                )}
+                {searchState.locationSearchResults.map((search) => (
+                  <LocationSearchResults
+                    key={search.searchProvider.uniqueId}
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    search={search}
+                    locationSearchText={locationSearchText}
+                    onLocationClick={(result) => {
+                      addMarker(this.props.terria, result);
+                      result.clickAction();
+                      runInAction(() => {
+                        searchState.showLocationSearchResults = false;
+                      });
+                    }}
+                    isWaitingForSearchToStart={
+                      searchState.isWaitingToStartLocationSearch
+                    }
+                  />
+                ))}
               </Box>
             </Box>
           )}

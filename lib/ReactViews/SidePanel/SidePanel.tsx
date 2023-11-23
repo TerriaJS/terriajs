@@ -13,6 +13,7 @@ import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import { withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -132,7 +133,7 @@ interface SidePanelProps {
 const SidePanel = observer<React.FC<SidePanelProps>>(
   ({ viewState, theme, refForExploreMapData, refForUploadData }) => {
     const terria = viewState.terria;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
       e
     ) => {
@@ -162,7 +163,10 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           <SearchBoxAndResults
             viewState={viewState}
             terria={terria}
-            placeholder={t("search.placeholder")}
+            placeholder={applyTranslationIfExists(
+              terria.searchBarModel.placeholder,
+              i18n
+            )}
           />
           <Spacing bottom={2} />
           <Box justifySpaceBetween>

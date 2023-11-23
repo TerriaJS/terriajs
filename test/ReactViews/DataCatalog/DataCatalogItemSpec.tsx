@@ -26,8 +26,7 @@ describe("DataCatalogItem", () => {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
     wmsItem = new WebMapServiceCatalogItem("test", terria);
 

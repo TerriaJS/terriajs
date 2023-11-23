@@ -38,6 +38,7 @@ import {
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -48,8 +49,7 @@ export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
-  catalogSearchProvider: any;
-  locationSearchProviders: any[];
+  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
   errorHandlingProvider?: any;
 }
 
@@ -376,9 +376,8 @@ export default class ViewState {
     makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
-      terria: terria,
-      catalogSearchProvider: options.catalogSearchProvider,
-      locationSearchProviders: options.locationSearchProviders
+      terria,
+      catalogSearchProvider: options.catalogSearchProvider
     });
 
     this.errorProvider = options.errorHandlingProvider

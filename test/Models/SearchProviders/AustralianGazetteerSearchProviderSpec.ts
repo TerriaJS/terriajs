@@ -1,9 +1,8 @@
 import { configure } from "mobx";
-import createAustralianGazetteerSearchProvider from "../../lib/Models/SearchProviders/AustralianGazetteerSearchProvider";
-import Terria from "../../lib/Models/Terria";
-import WebFeatureServiceSearchProvider from "../../lib/Models/Catalog/Ows/WebFeatureServiceSearchProvider";
+import AustralianGazetteerSearchProvider from "../../../lib/Models/SearchProviders/AustralianGazetteerSearchProvider";
+import Terria from "../../../lib/Models/Terria";
 
-const wfsResponseXml = require("raw-loader!../../wwwroot/test/WFS/getWithFilter.xml");
+const wfsResponseXml = require("raw-loader!../../../wwwroot/test/WFS/getWithFilter.xml");
 
 configure({
   enforceActions: "observed",
@@ -11,10 +10,18 @@ configure({
 });
 
 describe("GazetteerSearchProvider", function () {
-  let searchProvider: WebFeatureServiceSearchProvider;
+  let searchProvider: AustralianGazetteerSearchProvider;
   beforeEach(function () {
-    searchProvider = createAustralianGazetteerSearchProvider(new Terria());
+    searchProvider = new AustralianGazetteerSearchProvider(
+      "test",
+      new Terria()
+    );
   });
+
+  it(" type", function () {
+    expect(searchProvider.type).toEqual(AustralianGazetteerSearchProvider.type);
+  });
+
   it("queries the web feature service and returns search results", async function () {
     spyOn(searchProvider, "getXml").and.returnValue(
       Promise.resolve(wfsResponseXml)

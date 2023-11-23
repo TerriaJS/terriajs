@@ -1,23 +1,20 @@
-import SearchProvider from "./SearchProvider";
-import { observable, makeObservable, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import i18next from "i18next";
-import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
-import SearchResult from "./SearchResult";
-import loadJson from "../../Core/loadJson";
+import { makeObservable, override, runInAction } from "mobx";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-
-interface CesiumIonSearchProviderOptions {
-  terria: Terria;
-  url?: string;
-  key: string;
-  flightDurationSeconds?: number;
-}
+import loadJson from "../../Core/loadJson";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
+import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import CesiumIonSearchProviderTraits from "../../Traits/SearchProviders/CesiumIonSearchProviderTraits";
+import CreateModel from "../Definition/CreateModel";
+import Terria from "../Terria";
+import SearchProviderResults from "./SearchProviderResults";
+import SearchResult from "./SearchResult";
+import CommonStrata from "../Definition/CommonStrata";
 
 interface CesiumIonGeocodeResultFeature {
   bbox: [number, number, number, number];
@@ -28,51 +25,56 @@ interface CesiumIonGeocodeResult {
   features: CesiumIonGeocodeResultFeature[];
 }
 
-export default class CesiumIonSearchProvider extends SearchProvider {
-  readonly terria: Terria;
-  @observable key: string | undefined;
-  @observable flightDurationSeconds: number;
-  @observable url: string;
+export default class CesiumIonSearchProvider extends LocationSearchProviderMixin(
+  CreateModel(CesiumIonSearchProviderTraits)
+) {
+  static readonly type = "cesium-ion-search-provider";
 
-  constructor(options: CesiumIonSearchProviderOptions) {
-    super();
+  get type() {
+    return CesiumIonSearchProvider.type;
+  }
+
+  constructor(uniqueId: string | undefined, terria: Terria) {
+    super(uniqueId, terria);
 
     makeObservable(this);
 
-    this.terria = options.terria;
-    this.name = i18next.t("viewModels.searchLocations");
-    this.url = defaultValue(
-      options.url,
-      "https://api.cesium.com/v1/geocode/search"
-    );
-    this.key = options.key;
-    this.flightDurationSeconds = defaultValue(
-      options.flightDurationSeconds,
-      1.5
-    );
+    runInAction(() => {
+      if (!!this.terria.configParameters.cesiumIonAccessToken) {
+        this.setTrait(
+          CommonStrata.defaults,
+          "key",
+          this.terria.configParameters.cesiumIonAccessToken
+        );
+      }
+    });
+  }
 
-    if (!this.key) {
+  @override
+  override showWarning() {
+    if (!this.key || this.key === "") {
       console.warn(
-        "The " +
-          this.name +
-          " geocoder will always return no results because a CesiumIon key has not been provided. Please get a CesiumIon key from ion.cesium.com, ensure it has geocoding permission and add it to parameters.cesiumIonAccessToken in config.json."
+        `The ${applyTranslationIfExists(this.name, i18next)}(${
+          this.type
+        }) geocoder will always return no results because a CesiumIon key has not been provided. Please get a CesiumIon key from ion.cesium.com, ensure it has geocoding permission and add it to searchProvider.key or parameters.cesiumIonAccessToken in config.json.`
       );
     }
+  }
+
+  protected logEvent(searchText: string): void {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.cesium,
+      searchText
+    );
   }
 
   protected async doSearch(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    if (searchText === undefined || /^\s*$/.test(searchText)) {
-      return Promise.resolve();
-    }
-
-    this.terria.analytics?.logEvent(
-      Category.search,
-      SearchAction.cesium,
-      searchText
-    );
+    searchResults.results.length = 0;
+    searchResults.message = undefined;
 
     let response: CesiumIonGeocodeResult;
     try {
@@ -80,20 +82,18 @@ export default class CesiumIonSearchProvider extends SearchProvider {
         `${this.url}?text=${searchText}&access_token=${this.key}`
       );
     } catch (e) {
-      runInAction(() => {
-        searchResults.message = i18next.t("viewModels.searchErrorOccurred");
-      });
+      searchResults.message = {
+        content: "translate#viewModels.searchErrorOccurred"
+      };
       return;
     }
 
     runInAction(() => {
-      if (!response.features) {
-        searchResults.message = i18next.t("viewModels.searchNoLocations");
+      if (!response.features || response.features.length === 0) {
+        searchResults.message = {
+          content: "translate#viewModels.searchNoLocations"
+        };
         return;
-      }
-
-      if (response.features.length === 0) {
-        searchResults.message = i18next.t("viewModels.searchNoLocations");
       }
 
       searchResults.results = response.features.map<SearchResult>((feature) => {
