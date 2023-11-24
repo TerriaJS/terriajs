@@ -1,9 +1,16 @@
 # Change Log
 
-#### next release (8.3.9)
+#### next release (8.3.10)
+
+- [The next improvement]
+
+#### 8.3.9 - 2023-11-24
 
 - Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Improve lock icon position in workbench.
-- [The next improvement]
+- **Breaking change** - new Search Provider model
+  - added SearchProviderMixin to connect searchProviders with a model system
+  - Create a simple base Mixin (`SearchProviderMixin`) to attach SearchProviders to the Model system and enable easier creation of new search providers.
+  - Make SearchProviders configurable from `config.json`.
 
 #### 8.3.8 - 2023-11-15
 
@@ -23,7 +30,6 @@
 - Add CesiumIon geocoder
 - `CatalogGroup` will now not show members until loaded
 - Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
-- [The next improvement]
 
 #### 8.3.7 - 2023-10-26
 
