@@ -19,14 +19,6 @@ export default function PrivateIndicator(props) {
       inWorkbench={props.inWorkbench}
       css={`
         margin-top: -1px;
-        ${(p) =>
-          p.inWorkbench &&
-          `
-          position: absolute;
-          margin-right: 2px;
-          right: 20px;
-        `}
-
         svg {
           width: 15px;
           height: 15px;
