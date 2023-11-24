@@ -11,6 +11,7 @@
   - added SearchProviderMixin to connect searchProviders with a model system
   - Create a simple base Mixin (`SearchProviderMixin`) to attach SearchProviders to the Model system and enable easier creation of new search providers.
   - Make SearchProviders configurable from `config.json`.
+  - See [0011-configurable-search-providers ADR](./architecture/0011-configurable-search-providers.md) and [Search providers customization](./doc/customizing/search-providers.md) for more details
 
 #### 8.3.8 - 2023-11-15
 
