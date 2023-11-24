@@ -60,7 +60,7 @@ function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
 
       // Default
-      return "public--";
+      return "public";
     }
 
     @action
