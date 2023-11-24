@@ -6,12 +6,12 @@
 
 #### 8.3.9 - 2023-11-24
 
-- Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Improve lock icon position in workbench.
-- **Breaking change** - new Search Provider model
-  - added SearchProviderMixin to connect searchProviders with a model system
-  - Create a simple base Mixin (`SearchProviderMixin`) to attach SearchProviders to the Model system and enable easier creation of new search providers.
-  - Make SearchProviders configurable from `config.json`.
+- **Breaking change:** new Search Provider model
+  - Added SearchProviderMixin to connect searchProviders with a model system
+  - Created a simple base Mixin (`SearchProviderMixin`) to attach SearchProviders to the Model system and enable easier creation of new search providers.
+  - Made SearchProviders configurable from `config.json`.
   - See [0011-configurable-search-providers ADR](./architecture/0011-configurable-search-providers.md) and [Search providers customization](./doc/customizing/search-providers.md) for more details
+- Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Improve lock icon position in workbench.
 
 #### 8.3.8 - 2023-11-15
 
