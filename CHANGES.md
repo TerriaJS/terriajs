@@ -2,7 +2,7 @@
 
 #### next release (8.3.9)
 
-- Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Also adjust lock icon position in workbench.
+- Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Improve lock icon position in workbench.
 - [The next improvement]
 
 #### 8.3.8 - 2023-11-15
