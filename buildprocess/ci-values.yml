@@ -46,7 +46,6 @@ terriamap:
     initializationUrls:
       - simple
     parameters:
-      bingMapsKey: "ApZeR4iLSH_Pl2w5OSXrIqjvc_KzgPn_UXjn6jTtQDiueg72InBThCeIO4OSs6Fq"
       cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
       useCesiumIonBingImagery: true
       googleAnalyticsKey:
@@ -67,6 +66,12 @@ terriamap:
       mobileDefaultViewerMode: "2d"
       experimentalFeatures: true
       feedbackUrl: "feedback"
+      searchProviders:
+        - id: search-provider/cesium-ion
+          type: cesium-ion-search-provider
+          name: "translate#viewModels.searchLocations"
+          flightDurationSeconds: 1.5
+          minCharacters: 3
       languageConfiguration:
         enabled: true
         languages:
