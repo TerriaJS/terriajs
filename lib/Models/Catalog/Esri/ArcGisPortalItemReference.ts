@@ -384,7 +384,7 @@ interface PreparedSupportedFormat {
 }
 
 async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
-  var uri = new URI(portalItem._portalRootUrl)
+  const uri = new URI(portalItem._portalRootUrl)
     .segment(`/sharing/rest/content/items/${portalItem.itemId}`)
     .addQuery({ f: "json" });
 
@@ -400,7 +400,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
 async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   if (portalItem._arcgisItem === undefined) return undefined;
   const baseUrl = portalItem._portalRootUrl;
-  var uri = new URI(baseUrl)
+  const uri = new URI(baseUrl)
     .segment(`/sharing/rest/content/items/${portalItem._arcgisItem.id}/data`)
     .addQuery({ f: "json" });
 

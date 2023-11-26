@@ -67,7 +67,7 @@ export default class LeafletSelectionIndicator {
       this._selectionIndicatorTween = undefined;
     }
 
-    var style = this._selectionIndicatorDomElement.style;
+    const style = this._selectionIndicatorDomElement.style;
 
     this._selectionIndicatorIsAppearing = true;
 
@@ -111,7 +111,7 @@ export default class LeafletSelectionIndicator {
       this._selectionIndicatorTween = undefined;
     }
 
-    var style = this._selectionIndicatorDomElement.style;
+    const style = this._selectionIndicatorDomElement.style;
 
     this._selectionIndicatorIsAppearing = false;
 
@@ -147,9 +147,9 @@ export default class LeafletSelectionIndicator {
       return;
     }
 
-    var feature = this._leaflet.terria.selectedFeature;
+    const feature = this._leaflet.terria.selectedFeature;
     if (isDefined(feature) && isDefined(feature.position)) {
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
         feature.position.getValue(
           this._leaflet.terria.timelineClock.currentTime
         ),

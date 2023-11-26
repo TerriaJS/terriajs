@@ -101,7 +101,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
   @action
   async createMembers() {
     if (!isDefined(this._catalogGroup.url)) return;
-    let proxy = proxyCatalogItemBaseUrl(
+    const proxy = proxyCatalogItemBaseUrl(
       this._catalogGroup,
       this._catalogGroup.url
     );

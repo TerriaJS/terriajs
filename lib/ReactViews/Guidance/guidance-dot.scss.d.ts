@@ -10,5 +10,5 @@ interface CssExports {
   'innerClone': string;
   'oval': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

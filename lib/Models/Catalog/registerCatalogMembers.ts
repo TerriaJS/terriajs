@@ -397,7 +397,7 @@ function matchesUrl(regex: RegExp) {
 }
 
 export function matchesExtension(extension: string) {
-  var regex = new RegExp("\\." + extension + "$", "i");
+  const regex = new RegExp("\\." + extension + "$", "i");
   return function (url: string) {
     return Boolean(url.match(regex));
   };

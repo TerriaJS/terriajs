@@ -62,7 +62,7 @@ export default {
       sourceCode in Proj4Definitions
         ? new proj4.Proj(Proj4Definitions[sourceCode])
         : undefined;
-    var dest =
+    const dest =
       destCode in Proj4Definitions
         ? new proj4.Proj(Proj4Definitions[destCode])
         : undefined;
@@ -86,7 +86,7 @@ export default {
       return true;
     }
 
-    var url = new urijs(proj4ServiceBaseUrl).segment(code).toString();
+    const url = new urijs(proj4ServiceBaseUrl).segment(code).toString();
     return loadText(url)
       .then(function (proj4Text: string) {
         Proj4Definitions[code] = proj4Text;

@@ -219,7 +219,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.name}
               onChange={this.updateName}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -240,7 +240,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.email}
               onChange={this.updateEmail}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -367,7 +367,7 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
         }
       }}
       invalidValue={!valueIsValid}
-    ></StyledTextArea>
+    />
   );
 };
 

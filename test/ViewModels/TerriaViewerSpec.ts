@@ -1,5 +1,3 @@
-import { computed } from "mobx";
-import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode, { setViewerMode } from "../../lib/Models/ViewerMode";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";

@@ -7,5 +7,5 @@ interface CssExports {
   'link': string;
   'section': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

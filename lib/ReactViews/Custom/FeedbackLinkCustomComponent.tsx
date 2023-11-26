@@ -80,7 +80,7 @@ export default class FeedbackLinkCustomComponent extends CustomComponent {
         viewState={context.viewState}
         emailMessage={node.attribs?.["email-message"]}
         feedbackMessage={node.attribs?.["feedback-message"]}
-      ></FeedbackLink>
+      />
     );
   }
 }

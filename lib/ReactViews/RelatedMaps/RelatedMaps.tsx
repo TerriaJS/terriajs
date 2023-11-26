@@ -51,7 +51,7 @@ class RelatedMaps extends React.Component<PropTypes> {
         {this.props.relatedMaps.map((map, i) => (
           <Box flex key={i}>
             <Box>
-              <a target="_blank" href={map.url}>
+              <a target="_blank" href={map.url} rel="noreferrer">
                 <img
                   style={{
                     marginRight: "10px",
@@ -70,6 +70,7 @@ class RelatedMaps extends React.Component<PropTypes> {
                 target="_blank"
                 style={{ color: this.props.theme.colorPrimary }}
                 href={map.url}
+                rel="noreferrer"
               >
                 {map.title}
                 <ExternalLinkIcon />

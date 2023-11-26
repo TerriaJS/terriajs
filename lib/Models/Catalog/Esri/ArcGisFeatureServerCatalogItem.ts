@@ -514,7 +514,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     // until we run out of features or hit the limit
     const featuresPerRequest = this.featuresPerRequest;
     const maxFeatures = this.maxFeatures;
-    let combinedEsriLayerJson = await getEsriLayerJson(0);
+    const combinedEsriLayerJson = await getEsriLayerJson(0);
 
     const mapObjectIds = (features: any) =>
       features.map(

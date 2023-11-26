@@ -214,7 +214,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-      let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+      const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
         Matrix4.getMatrix3(modelMatrix, new Matrix3())
       );
@@ -348,7 +348,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      let resource: IonResource | undefined = await IonResource.fromAssetId(
+      const resource: IonResource | undefined = await IonResource.fromAssetId(
         ionAssetId,
         {
           accessToken:

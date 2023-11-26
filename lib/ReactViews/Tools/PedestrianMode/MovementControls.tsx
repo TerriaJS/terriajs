@@ -38,25 +38,23 @@ const MovementControls: React.FC<MovementControlsProps> = (props) => {
   }, [props.cesium]);
 
   return (
-    <>
-      <Container>
-        <Title>
-          <Text medium>{t("pedestrianMode.controls.title")}</Text>
-          <MinimizeMaximizeButton
-            onClick={toggleMaximized}
-            maximized={isMaximized}
-          />
-        </Title>
-        {isMaximized && (
-          <Body>
-            <img alt="Mouse controls" src={mouseControlsImage} />
-            <img alt="Direction controls" src={wasdControlsImage} />
-            <Spacing bottom={1} />
-            <img alt="Height controls" src={heightControlsImage} />
-          </Body>
-        )}
-      </Container>
-    </>
+    <Container>
+      <Title>
+        <Text medium>{t("pedestrianMode.controls.title")}</Text>
+        <MinimizeMaximizeButton
+          onClick={toggleMaximized}
+          maximized={isMaximized}
+        />
+      </Title>
+      {isMaximized && (
+        <Body>
+          <img alt="Mouse controls" src={mouseControlsImage} />
+          <img alt="Direction controls" src={wasdControlsImage} />
+          <Spacing bottom={1} />
+          <img alt="Height controls" src={heightControlsImage} />
+        </Body>
+      )}
+    </Container>
   );
 };
 

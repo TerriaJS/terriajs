@@ -15,7 +15,7 @@ type Props = {
   smallScreen: boolean;
 };
 
-export default (props: Props) => {
+const LangPanel = (props: Props) => {
   const { t, i18n } = useTranslation();
 
   if (!props.terria.configParameters.languageConfiguration?.languages) {
@@ -61,3 +61,4 @@ export default (props: Props) => {
     </MenuPanel>
   );
 };
+export default LangPanel;
