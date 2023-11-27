@@ -1617,7 +1617,7 @@ function filterValue(
   func: (obj: any, prop: string) => void
 ) {
   for (const p in obj) {
-    if (obj.hasOwnProperty(p) === false) {
+    if (Object.hasOwnProperty.call(obj, p) === false) {
       continue;
     } else if (p === prop) {
       if (func && typeof func === "function") {
@@ -1679,7 +1679,7 @@ function describeWithoutUnderscores(
 ): string {
   let html = "";
   for (let key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty.call(properties, key)) {
       if (key === nameProperty || simpleStyleIdentifiers.indexOf(key) !== -1) {
         continue;
       }

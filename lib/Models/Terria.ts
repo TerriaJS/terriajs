@@ -1225,6 +1225,16 @@ export default class Terria {
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
 
+    function checkSegments(urlSegments: string[], customRoute: string) {
+      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+      return (
+        ((urlSegments.length === 3 && urlSegments[2] === "") ||
+          urlSegments.length === 2) &&
+        urlSegments[0] === customRoute &&
+        urlSegments[1].length > 0
+      );
+    }
+
     try {
       await interpretHash(
         this,
@@ -1241,15 +1251,6 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
-        function checkSegments(urlSegments: string[], customRoute: string) {
-          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-          return (
-            ((urlSegments.length === 3 && urlSegments[2] === "") ||
-              urlSegments.length === 2) &&
-            urlSegments[0] === customRoute &&
-            urlSegments[1].length > 0
-          );
-        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -1300,7 +1301,7 @@ export default class Terria {
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
-      if (this.configParameters.hasOwnProperty(key)) {
+      if (Object.hasOwnProperty.call(this.configParameters, key)) {
         (this.configParameters as any)[key] = value;
       }
     });
@@ -1823,7 +1824,7 @@ export default class Terria {
     const newItems: BaseModel[] = [];
 
     // Maintain the model order in the workbench.
-    while (true) {
+    for (;;) {
       const model = newItemsRaw.shift();
       if (model) {
         await this.pushAndLoadMapItems(model, newItems, errors);

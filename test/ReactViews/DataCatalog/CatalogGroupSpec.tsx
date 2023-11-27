@@ -59,7 +59,9 @@ describe("CatalogGroup", () => {
             open
             emptyMessage="nothing here"
             loading={false}
-          />
+          >
+            {[]}
+          </CatalogGroup>
         );
       });
 

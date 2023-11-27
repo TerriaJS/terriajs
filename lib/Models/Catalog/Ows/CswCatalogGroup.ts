@@ -304,12 +304,12 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       // Get next start position - or stop pageing
       const nextRecord =
         typeof json?.SearchResults?.nextRecord === "string"
-          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0", 10)
           : json?.SearchResults?.nextRecord;
 
       const numberOfRecordsMatched =
         typeof json?.SearchResults?.numberOfRecordsMatched === "string"
-          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0")
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0", 10)
           : json?.SearchResults?.numberOfRecordsMatched;
       if (
         !isDefined(nextRecord) ||

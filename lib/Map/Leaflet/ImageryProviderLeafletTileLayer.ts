@@ -225,7 +225,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     return tilePoint.z - this._zSubtract;
   }
 
-  _update() {
+  _update(...args: unknown[]) {
     if (!this.imageryProvider.ready) {
       if (!this._delayedUpdate) {
         this._delayedUpdate = <any>setTimeout(() => {
@@ -299,7 +299,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     }
 
     if (this._usable) {
-      (<any>L.TileLayer).prototype._update.apply(this, arguments);
+      (<any>L.TileLayer).prototype._update.apply(this, args);
 
       this._updateAttribution();
     }

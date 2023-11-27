@@ -137,7 +137,9 @@ class FeedbackForm extends React.Component<IProps, IState> {
       this.state.comment.length >=
       this.props.viewState.terria.configParameters.feedbackMinLength!
     ) {
-      this.state.isSending = true;
+      this.setState({
+        isSending: true
+      });
       sendFeedback({
         terria: this.props.viewState.terria,
         name: this.state.name,

@@ -35,7 +35,7 @@ export interface MarkdownOptions {
 function markdownToHtml(
   markdownString: string,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: Object = {},
+  domPurifyOptions: object = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {

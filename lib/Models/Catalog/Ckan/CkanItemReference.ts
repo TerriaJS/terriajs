@@ -147,10 +147,10 @@ export class CkanDatasetStratum extends LoadableStratum(
       const parts = bboxString.split(",");
       if (parts.length === 4) {
         return createStratumInstance(RectangleTraits, {
-          west: parseInt(parts[0]),
-          south: parseInt(parts[1]),
-          east: parseInt(parts[2]),
-          north: parseInt(parts[3])
+          west: parseInt(parts[0], 10),
+          south: parseInt(parts[1], 10),
+          east: parseInt(parts[2], 10),
+          north: parseInt(parts[3], 10)
         });
       }
     }

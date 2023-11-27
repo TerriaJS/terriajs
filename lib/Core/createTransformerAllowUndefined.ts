@@ -3,7 +3,7 @@ import { createTransformer, ITransformer } from "mobx-utils";
 const undefinedObjectSymbol = Symbol("isUndefinedObject");
 
 class UndefinedObject {
-  readonly [undefinedObjectSymbol]: true = true;
+  readonly [undefinedObjectSymbol]: true = true as const;
 }
 
 function isUndefinedObject(x: any): x is UndefinedObject {

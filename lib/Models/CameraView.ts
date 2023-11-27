@@ -78,15 +78,15 @@ export default class CameraView {
       north: CesiumMath.toDegrees(this.rectangle.north)
     };
 
-    if (this.position && this.direction && this.up) {
-      function vectorToJson(vector: Readonly<Cartesian3>) {
-        return {
-          x: vector.x,
-          y: vector.y,
-          z: vector.z
-        };
-      }
+    function vectorToJson(vector: Readonly<Cartesian3>) {
+      return {
+        x: vector.x,
+        y: vector.y,
+        z: vector.z
+      };
+    }
 
+    if (this.position && this.direction && this.up) {
       result.position = vectorToJson(this.position);
       result.direction = vectorToJson(this.direction);
       result.up = vectorToJson(this.up);

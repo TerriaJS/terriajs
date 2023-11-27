@@ -505,7 +505,9 @@ export default class Cesium extends GlobeOrMap {
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
-      } catch (err) {}
+      } catch (err) {
+        /* TODO: handle Error */
+      }
     };
 
     const creditDisplayOldEndFrame = creditDisplay.endFrame;
@@ -768,7 +770,9 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach((fn) => fn()); // Run the remover functions
-            } catch (error) {}
+            } catch (error) {
+              /* TODO: handle error */
+            }
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
             this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
@@ -1340,14 +1344,13 @@ export default class Cesium extends GlobeOrMap {
     providerCoords: ProviderCoordsMap
   ) {
     const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+    function hasUrl(o: any): o is { url: string } {
+      return typeof o?.url === "string";
+    }
 
     for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
       const imageryLayer = this.scene.imageryLayers.get(i);
       const imageryProvider = imageryLayer.imageryProvider;
-
-      function hasUrl(o: any): o is { url: string } {
-        return typeof o?.url === "string";
-      }
 
       if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
         const coords = providerCoords[imageryProvider.url];
@@ -1756,7 +1759,9 @@ function zoomToDataSource(
             false,
             boundingSphereScratch
           );
-        } catch (e) {}
+        } catch (e) {
+          /* TODO: handle error */
+        }
 
         if (state === BoundingSphereState.PENDING) {
           return false;

@@ -72,8 +72,8 @@ interface ObservationPoint {
 }
 
 interface MeasurementTimeValuePair {
-  time: Object | string;
-  value: Object | string;
+  time: object | string;
+  value: object | string;
 }
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
@@ -728,10 +728,11 @@ function addDurationToIso8601(
         scratchJulianDate
       );
       break;
-    case "y":
+    case "y": {
       const days = Math.round(duration * 365);
       julianDate = JulianDate.addDays(julianDate, days, scratchJulianDate);
       break;
+    }
     default:
       throw new DeveloperError(
         'Unknown duration type "' + durationString + '" (use s, h, d or y)'

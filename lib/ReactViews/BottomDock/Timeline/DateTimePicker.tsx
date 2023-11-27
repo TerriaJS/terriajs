@@ -178,7 +178,7 @@ class DateTimePicker extends React.Component<PropsType> {
     makeObservable(this);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
     let defaultYear: number | undefined;
