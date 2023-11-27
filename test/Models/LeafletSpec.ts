@@ -50,7 +50,7 @@ describe("Leaflet Model", function () {
     try {
       leaflet.destroy();
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     document.body.removeChild(container);
   });

@@ -145,7 +145,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
         try {
           await item.loadMapItems();
         } catch {
-          return;
+          /* eslint-disable-line no-empty */
         }
         expect(IonResource.fromAssetId).toHaveBeenCalledWith(4242, {
           accessToken: "fakeToken",
@@ -165,7 +165,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       try {
         await item.loadMapItems();
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       const tileset = item.mapItems[0] as Cesium3DTileset;
       expect(tileset.maximumScreenSpaceError).toBe(3);
@@ -178,7 +178,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       try {
         await item.loadMapItems();
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       // observe mapItems
       dispose = reaction(

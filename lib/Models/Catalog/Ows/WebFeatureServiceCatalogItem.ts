@@ -432,7 +432,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       try {
         errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
       } catch {
-        /* ignore error */
+        /* eslint-disable-line no-empty */
       }
 
       const originalError = isDefined(errorMessage)

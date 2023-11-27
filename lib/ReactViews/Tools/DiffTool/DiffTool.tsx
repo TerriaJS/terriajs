@@ -101,7 +101,7 @@ class DiffTool extends React.Component<PropsType> {
         this.rightItem = rightItem;
       });
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
   }
 

@@ -108,7 +108,7 @@ describe("TileErrorHandlerMixin", function () {
     try {
       await onTileLoadError(item, newError(400));
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     expect(item.tileFailures).toBe(0);
   });
@@ -123,7 +123,7 @@ describe("TileErrorHandlerMixin", function () {
         );
         await onTileLoadError(item, newError(403));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(0);
     });
@@ -137,7 +137,7 @@ describe("TileErrorHandlerMixin", function () {
         );
         await onTileLoadError(item, newError(404));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(0);
     });
@@ -160,7 +160,7 @@ describe("TileErrorHandlerMixin", function () {
           onTileLoadError(item, newError(randomIntBetween(400, 499), 2))
         ]);
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(3);
     });
@@ -175,7 +175,7 @@ describe("TileErrorHandlerMixin", function () {
         );
         await onTileLoadError(item, error);
       } catch (e) {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(Resource.fetchImage).toHaveBeenCalled();
     });
@@ -202,7 +202,7 @@ describe("TileErrorHandlerMixin", function () {
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(0);
       expect(raiseEvent.calls.count()).toBe(0);
@@ -215,7 +215,7 @@ describe("TileErrorHandlerMixin", function () {
         tileProviderError.error = { ...tileProviderError.error, target: {} };
         await onTileLoadError(item, tileProviderError);
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
@@ -228,7 +228,7 @@ describe("TileErrorHandlerMixin", function () {
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
@@ -247,7 +247,7 @@ describe("TileErrorHandlerMixin", function () {
         );
         await onTileLoadError(item, error);
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
         !Array.isArray(item.tileRetryOptions)
@@ -273,7 +273,7 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 4));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 5));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toEqual(1);
     });
@@ -288,7 +288,7 @@ describe("TileErrorHandlerMixin", function () {
         item.setTrait(CommonStrata.user, "show", false);
         await result;
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toEqual(0);
     });
@@ -308,12 +308,12 @@ describe("TileErrorHandlerMixin", function () {
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       try {
         await onTileLoadError(item, newError(undefined, 1));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.tileFailures).toBe(2);
       expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
@@ -324,12 +324,12 @@ describe("TileErrorHandlerMixin", function () {
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       try {
         await onTileLoadError(item, newError(undefined, 1));
       } catch {
-        return;
+        /* eslint-disable-line no-empty */
       }
       expect(item.show).toBe(false);
     });
@@ -342,7 +342,7 @@ describe("TileErrorHandlerMixin", function () {
     try {
       await onTileLoadError(item, error);
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     expect(item.tileFailures).toBe(1);
 
@@ -350,7 +350,7 @@ describe("TileErrorHandlerMixin", function () {
       error.timesRetried = 1;
       await onTileLoadError(item, error);
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     expect(item.tileFailures).toBe(2);
 
@@ -358,7 +358,7 @@ describe("TileErrorHandlerMixin", function () {
       error.timesRetried = 0;
       await onTileLoadError(item, error);
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     expect(item.tileFailures).toBe(1);
   });
@@ -369,7 +369,7 @@ describe("TileErrorHandlerMixin", function () {
     try {
       await onTileLoadError(item, newError(400));
     } catch {
-      return;
+      /* eslint-disable-line no-empty */
     }
     expect(item.handleTileError).toHaveBeenCalledTimes(1);
   });

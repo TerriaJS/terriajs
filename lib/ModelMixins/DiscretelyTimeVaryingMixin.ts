@@ -116,7 +116,7 @@ function DiscretelyTimeVaryingMixin<
             });
           }
         } catch {
-          return;
+          /* eslint-disable-line no-empty */
         }
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
