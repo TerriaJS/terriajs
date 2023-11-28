@@ -2197,5 +2197,12 @@
     "undefinedLabel": "Sense definir",
     "invalid": "Invàlid",
     "enabled": "Activat"
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "Falta una propietat",
+      "idForMatchingErrorMessage": "Els objectes del model han de tenir una propietat `id`, `localId` o `name`.",
+      "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut."
+    }
   }
 }
