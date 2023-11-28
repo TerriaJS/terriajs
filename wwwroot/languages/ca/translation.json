@@ -433,7 +433,7 @@
   "search": {
     "resultsLabel": "Resultats de la cerca",
     "done": "Fet",
-    "searchInDataCatalog": "Cerqueu '{{locationSearchText}} al Catàleg de Dades",
+    "searchInDataCatalog": "Cerqueu <1>'{{locationSearchText}}'</1> al Catàleg de Dades",
     "search": "Cerqueu \"{{searchText}}\" al Catàleg de Dades",
     "viewLess": "Veure menys {{name}} resultats",
     "placeholder": "Cerca ubicacions",
