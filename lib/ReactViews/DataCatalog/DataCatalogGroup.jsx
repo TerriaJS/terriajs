@@ -134,19 +134,19 @@ class DataCatalogGroup extends React.Component {
           this.props.terria
         )}
       >
-        <If condition={this.isOpen()}>
-          <For each="item" of={group.memberModels}>
-            <DataCatalogMember
-              key={item.uniqueId}
-              member={item}
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              userData={this.props.userData}
-              overrideOpen={this.props.manageIsOpenLocally}
-              onActionButtonClicked={this.props.onActionButtonClicked}
-            />
-          </For>
-        </If>
+        {this.isOpen()
+          ? group.memberModels.map((item) => (
+              <DataCatalogMember
+                key={item.uniqueId}
+                member={item}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                userData={this.props.userData}
+                overrideOpen={this.props.manageIsOpenLocally}
+                onActionButtonClicked={this.props.onActionButtonClicked}
+              />
+            ))
+          : null}
       </CatalogGroup>
     );
   }

@@ -37,8 +37,7 @@ describe("FeatureInfoPanel", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

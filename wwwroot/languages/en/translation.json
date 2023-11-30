@@ -448,7 +448,7 @@
     "resultsLabel": "Search Results",
     "done": "Done",
     "data": "Data",
-    "searchInDataCatalog": "Search <1>'{{locationSearchText}}'</1> in the Data Catalogue",
+    "searchInDataCatalog": "Search '{{locationSearchText}}' in the Data Catalogue",
     "search": "Search '{{searchText}}' in the Data Catalogue",
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
@@ -638,6 +638,8 @@
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
+    "searchMinCharacters": "You need to enter minimum {{count}} character",
+    "searchMinCharacters_plural": "You need to enter minimum {{count}} characters",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
     "searchNoPlaceNames": "Sorry, no official place names match your search query.",
@@ -2023,6 +2025,15 @@
           }
         }
       }
+    }
+  },
+  "searchProvider": {
+    "noSearchProviders": "There is no configured search providers",
+    "models": {
+      "unsupportedTypeTitle": "Unknown type",
+      "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
+      "idForMatchingErrorTitle": "Missing property",
+      "idForMatchingErrorMessage": "Model objects must have an `id`, `localId`, or `name` property."
     }
   },
   "deltaTool": {

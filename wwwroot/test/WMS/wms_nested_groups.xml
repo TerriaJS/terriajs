@@ -601,5 +601,52 @@ NOTE this layer has no EX_GeographicBoundingBox
         </Layer>
       </Layer>
     </Layer>
+    <Layer>
+      <Title>Some other catalog</Title>
+      <Abstract>
+            Some other catalog
+      </Abstract>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:3577</CRS>
+      <CRS>EPSG:3111</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>100</westBoundLongitude>
+        <eastBoundLongitude>160</eastBoundLongitude>
+        <southBoundLatitude>-50</southBoundLatitude>
+        <northBoundLatitude>-10</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <Layer>
+        <Title>Surface Reflectance</Title>
+        <Abstract>This is another layer called Surface Reflectance</Abstract>
+        <Layer queryable="1">
+          <Name>some_layer</Name>
+          <Title>Some layer</Title>
+          <Abstract>Some layer
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1623290.9363679164" maxx="3983581.4498637905" miny="1042109.9920098714" maxy="5725855.407866031" />
+          <BoundingBox CRS="EPSG:3577" minx="-2407984.8524649167" maxx="2834259.110253389" miny="-5195512.771063175" maxy="-936228.5063655999" />
+          <BoundingBox CRS="EPSG:3857" minx="12324052.57369671" maxx="17488921.644948885" miny="-5742240.963567747" maxy="-1001009.9542990683" />
+          <BoundingBox CRS="EPSG:4326" minx="-45.76168492731699" maxx="-8.955535935066568" miny="110.70884789244278" maxy="157.10565616426302" />
+          <Dimension name="time" units="ISO8601">
+            2013-01-01,2014-01-01,2015-01-01,2016-01-01,2017-01-01,2018-01-01
+          </Dimension>
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+        </Layer>
+      </Layer>
+    </Layer>
   </Capability>
 </WMS_Capabilities>

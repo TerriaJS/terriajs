@@ -19,9 +19,9 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import TerriaError from "../../Core/TerriaError";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
-import TerriaError from "../../Core/TerriaError";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
@@ -29,18 +29,19 @@ import TimeVarying from "../../ModelMixins/TimeVarying";
 import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
+import { TimeSeriesContext } from "../../Table/tableFeatureInfoContext";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
+import { WithViewState, withViewState } from "../Context";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import { withViewState, WithViewState } from "../Context";
-import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import FeatureInfoPanelButton from "./FeatureInfoPanelButton";
+import Styles from "./feature-info-section.scss";
 import { generateCesiumInfoHTMLFromProperties } from "./generateCesiumInfoHTMLFromProperties";
 import getFeatureProperties from "./getFeatureProperties";
 import {
+  MustacheFunction,
   mustacheFormatDateTime,
   mustacheFormatNumberFunction,
-  MustacheFunction,
   mustacheRenderPartialByName,
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
@@ -211,7 +212,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         longitude: number;
       };
       currentTime?: Date;
-      timeSeries?: unknown;
+      timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
     } = {
       partialByName: mustacheRenderPartialByName(

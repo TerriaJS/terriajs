@@ -20,6 +20,7 @@ nav:
       - Cloning and Building: customizing/cloning-and-building.md
       - Skinning: customizing/skinning.md
       - Translation guide: customizing/translation-guide.md
+      - Search Providers: customizing/search-providers.md
   - Connecting to Data:
       - Overview: connecting-to-data/README.md
       - Cross-Origin Resource Sharing: connecting-to-data/cross-origin-resource-sharing.md

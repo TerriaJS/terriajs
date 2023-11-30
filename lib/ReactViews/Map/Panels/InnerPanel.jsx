@@ -161,11 +161,7 @@ const InnerPanel = createReactClass({
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
-        <If
-          condition={
-            defined(this.props.caretOffset) && !this.props.showDropdownAsModal
-          }
-        >
+        {defined(this.props.caretOffset) && !this.props.showDropdownAsModal && (
           <span
             className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
             style={{ left: this.props.caretOffset }}
@@ -173,7 +169,7 @@ const InnerPanel = createReactClass({
               background: ${(p) => p.theme.dark};
             `}
           />
-        </If>
+        )}
         <div className={Styles.content}>{this.props.children}</div>
       </div>
     );

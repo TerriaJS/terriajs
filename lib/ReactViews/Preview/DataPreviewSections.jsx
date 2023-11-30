@@ -8,7 +8,6 @@ import { withTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import Box from "../../Styled/Box";
-import { item } from "../Custom/Chart/tooltip.scss";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
@@ -89,7 +88,7 @@ class DataPreviewSections extends React.Component {
 
     return (
       <div>
-        <For each="item" index="i" of={this.sortInfoSections(items)}>
+        {this.sortInfoSections(items).map((item, i) => (
           <Box paddedVertically displayInlineBlock fullWidth key={i}>
             <Collapsible
               key={i}
@@ -101,19 +100,16 @@ class DataPreviewSections extends React.Component {
               }
               bodyTextProps={{ medium: true }}
             >
-              <Choose>
-                <When condition={item.content?.length > 0}>
-                  {renderSection(item)}
-                </When>
-                <When condition={item.contentAsObject !== undefined}>
-                  <Box paddedVertically={3} fullWidth>
-                    <MetadataTable metadataItem={item.contentAsObject} />
-                  </Box>
-                </When>
-              </Choose>
+              {item.content?.length > 0
+                ? renderSection(item)
+                : item.contentAsObject !== undefined && (
+                    <Box paddedVertically={3} fullWidth>
+                      <MetadataTable metadataItem={item.contentAsObject} />
+                    </Box>
+                  )}
             </Collapsible>
           </Box>
-        </For>
+        ))}
       </div>
     );
   }

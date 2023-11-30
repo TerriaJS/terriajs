@@ -133,26 +133,53 @@ describe("WebMapServiceCatalogGroup", function () {
     });
 
     it("loads", async function () {
-      expect(wms.members.length).toEqual(3);
-      expect(wms.memberModels.length).toEqual(3);
+      expect(wms.members.length).toEqual(2);
+      expect(wms.memberModels.length).toEqual(2);
 
-      const firstGroup = wms.memberModels[0];
+      const firstGroup = wms.memberModels[0] as WebMapServiceCatalogGroup;
+      expect(firstGroup.uniqueId).toEqual(
+        "test/Digital Earth Australia - OGC Web Services"
+      );
       expect(
         GroupMixin.isMixedInto(firstGroup) && firstGroup.members.length
       ).toEqual(3);
 
-      const firstGroupFirstModel =
-        GroupMixin.isMixedInto(firstGroup) && firstGroup.memberModels[0];
-      expect(
-        firstGroupFirstModel &&
-          CatalogMemberMixin.isMixedInto(firstGroupFirstModel) &&
-          firstGroupFirstModel.name
-      ).toEqual("Surface Reflectance 25m Annual Geomedian (Landsat 8)");
+      const firstSubGroup = firstGroup
+        .memberModels[0] as WebMapServiceCatalogGroup;
+      expect(firstSubGroup.uniqueId).toEqual(
+        "test/Digital Earth Australia - OGC Web Services/Surface Reflectance"
+      );
+      expect(firstSubGroup.name).toEqual("Surface Reflectance");
+      expect(firstSubGroup.members.length).toEqual(3);
 
-      const thirdGroup = wms.memberModels[2];
-      expect(
-        GroupMixin.isMixedInto(thirdGroup) && thirdGroup.members.length
-      ).toEqual(1);
+      const firstSubGroupModel = firstSubGroup
+        .memberModels[0] as WebMapServiceCatalogItem;
+      expect(firstSubGroupModel.uniqueId).toEqual(
+        "test/Digital Earth Australia - OGC Web Services/Surface Reflectance/ls8_nbart_geomedian_annual"
+      );
+      expect(firstSubGroupModel.name).toEqual(
+        "Surface Reflectance 25m Annual Geomedian (Landsat 8)"
+      );
+
+      const secondGroup = wms.memberModels[1] as WebMapServiceCatalogGroup;
+      expect(secondGroup.uniqueId).toEqual("test/Some other catalog");
+      expect(secondGroup.name).toEqual("Some other catalog");
+      expect(secondGroup.memberModels.length).toEqual(1);
+
+      const secondSubGroup = secondGroup
+        .memberModels[0] as WebMapServiceCatalogGroup;
+      expect(secondSubGroup.uniqueId).toEqual(
+        "test/Some other catalog/Surface Reflectance"
+      );
+      expect(secondSubGroup.name).toEqual("Surface Reflectance");
+      expect(secondSubGroup.members.length).toEqual(1);
+
+      const secondSubGroupModel = secondSubGroup
+        .memberModels[0] as WebMapServiceCatalogItem;
+      expect(secondSubGroupModel.uniqueId).toEqual(
+        "test/Some other catalog/Surface Reflectance/some_layer"
+      );
+      expect(secondSubGroupModel.name).toEqual("Some layer");
     });
   });
 
@@ -176,8 +203,10 @@ describe("WebMapServiceCatalogGroup", function () {
     });
 
     it("sets traits correctly", async function () {
-      const wmsItem = (wms.memberModels[0] as WebMapServiceCatalogGroup)
-        .memberModels[0] as WebMapServiceCatalogItem;
+      const wmsItem = (
+        (wms.memberModels[0] as WebMapServiceCatalogGroup)
+          .memberModels[0] as WebMapServiceCatalogGroup
+      ).memberModels[0] as WebMapServiceCatalogItem;
 
       expect(wmsItem.linkedWcsUrl).toEqual("some-url");
       expect(wmsItem.linkedWcsCoverage).toEqual("ls8_nbart_geomedian_annual");

@@ -141,9 +141,9 @@ export class GetFeatureInfoFormat extends ModelTraits {
     type: "string",
     name: "Type",
     description:
-      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', or 'text'."
+      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', 'text' or 'csv'. If type is 'csv', then featureInfoContext will contain timeSeries object (see \"Customizing the Feature Info Template\" in documentation)"
   })
-  type?: "json" | "xml" | "html" | "text" | undefined;
+  type?: "json" | "xml" | "html" | "text" | "csv" | undefined;
 
   @primitiveTrait({
     type: "string",
@@ -291,6 +291,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Gets or sets whether this WMS server supports GetLegendGraphic requests."
   })
   supportsGetLegendGraphic: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports GetTimeseries requests",
+    description:
+      'Gets or sets whether this WMS server supports GetTimeseries requests. If true, then GetTimeseries will be used instead of GetFeatureInfo. This will also set default value of `getFeatureInfoFormat` to `{ format: "text/csv", type: "text" }`'
+  })
+  supportsGetTimeseries: boolean = false;
 
   @primitiveTrait({
     type: "number",

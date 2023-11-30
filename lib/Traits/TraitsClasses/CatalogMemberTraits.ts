@@ -117,6 +117,14 @@ class CatalogMemberTraits extends ModelTraits {
   description?: string;
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Hide default description",
+    description:
+      "If true, then no generic default description will be displayed if `description` is undefined."
+  })
+  hideDefaultDescription: boolean = false;
+
+  @primitiveTrait({
     type: "string",
     name: "Name in catalog",
     description:
