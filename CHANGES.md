@@ -2,6 +2,7 @@
 
 #### next release (8.3.10)
 
+- Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
 - [The next improvement]
 
 #### 8.3.9 - 2023-11-24
