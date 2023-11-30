@@ -17,12 +17,18 @@ const CatalogGroupButton = styled.button`
     &:focus {
       color: ${props.theme.textLight};
       background-color: ${props.theme.modalHighlight};
+      svg {
+        fill: white;
+      }
     }
     ${
       props.active &&
       `
         color: ${props.theme.textLight};
         background-color: ${props.theme.modalHighlight};
+        svg {
+          fill: white;
+        }
       `
     }
     `}
@@ -138,7 +144,7 @@ function CatalogGroup(props) {
             </li>
           )}
 
-          {props.children}
+          {!props.loading ? props.children : null}
         </ul>
       )}
     </li>

@@ -1275,7 +1275,13 @@
       "zFilterEnabled": "Valors extrems amagats (feu clic per mostrar-los)",
       "zFilterDisabled": "Valors extrems detectats (feu clic per amagar-los)",
       "timeDimensionEnabled": "Temps activat (feu clic per desactivar)",
-      "timeDimensionDisabled": "Temps desactivat (feu clic per activar)"
+      "timeDimensionDisabled": "Temps desactivat (feu clic per activar)",
+      "custom": "Personalitzat",
+      "regionMapping": "Cartografiar regió",
+      "editStyle": "Edita l'estil",
+      "regionColumn": "Columna regió",
+      "manualRegionMapping": "Cartografiar regió manualment",
+      "activeStyle": "Mostra la variable"
     },
     "terria": {
       "initErrorMessage": "S'ha produït un problema amb el servidor Terria. Això pot fer que algunes capes o el servei de conversió no estiguin disponibles.",
@@ -1564,6 +1570,507 @@
       "clipModel": "Model de clip",
       "showClippingBox": "Mostra el quadre de retall",
       "keepBoxAboveGround": "Només sobre terra"
+    },
+    "tableStyling": {
+      "colors": {
+        "selectableDimensions": {
+          "value": {
+            "name": "Valor"
+          },
+          "remove": {
+            "value": "Eliminar"
+          },
+          "add": {
+            "value": "Afegir color"
+          },
+          "color": {
+            "name": "Color"
+          }
+        },
+        "name": "Colors"
+      },
+      "workbenchOptions": {
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "options": {
+              "false": {
+                "name": "Estil ocult"
+              },
+              "true": {
+                "name": "Mostrant estil"
+              }
+            },
+            "name": "Mostra l'estil al banc de treball"
+          },
+          "showDisableStyleOption": {
+            "name": "Mostra l'opció per desactivar estil"
+          },
+          "enableManualRegionMapping": {
+            "name": "Activa la cartografia manual de regions"
+          },
+          "showDisableTimeOption": {
+            "name": "Mostra l'opció per desactivar el temps"
+          }
+        },
+        "name": "Opcions del banc de treball"
+      },
+      "pointSize": {
+        "selectableDimensions": {
+          "pointSizeOffset": {
+            "name": "Desplaçament de mida"
+          },
+          "pointSizeColumn": {
+            "name": "Variable"
+          },
+          "pointSizeNull": {
+            "name": "Mida predeterminada"
+          },
+          "pointSizesFactor": {
+            "name": "Factor de mida"
+          }
+        },
+        "name": "Mida del punt"
+      },
+      "styleOptions": {
+        "name": "Opcions d'estil",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Títol"
+          },
+          "longitudeColumn": {
+            "name": "Columna de longitud"
+          },
+          "latitudeColumn": {
+            "name": "Columna de latitud"
+          }
+        }
+      },
+      "outline": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Amplada"
+          }
+        },
+        "name": "Estil de contorn"
+      },
+      "label": {
+        "selectableDimensions": {
+          "verticalOrigin": {
+            "options": {
+              "bottom": {
+                "name": "Inferior"
+              },
+              "top": {
+                "name": "Superior"
+              },
+              "center": {
+                "name": "Centre"
+              },
+              "baseline": {
+                "name": "Línia de base"
+              }
+            },
+            "name": "Origen vertical"
+          },
+          "horizontalOrigin": {
+            "options": {
+              "right": {
+                "name": "Dreta"
+              },
+              "center": {
+                "name": "Centre"
+              },
+              "left": {
+                "name": "Esquerra"
+              }
+            },
+            "name": "Origen horitzontal"
+          },
+          "outlineWidth": {
+            "name": "Amplada de contorn"
+          },
+          "font": {
+            "name": "Tipus de lletra"
+          },
+          "style": {
+            "options": {
+              "fillAndOutline": {
+                "name": "Emplenat i contorn"
+              },
+              "fill": {
+                "name": "Només emplenat"
+              },
+              "outline": {
+                "name": "Només contorn"
+              }
+            },
+            "name": "Estil d'etiqueta"
+          },
+          "offsetX": {
+            "name": "Desplaçament de píxel en X"
+          },
+          "outlineColor": {
+            "name": "Color de contorn"
+          },
+          "column": {
+            "name": "Columna d'etiquetes"
+          },
+          "fillColor": {
+            "name": "Color d'emplenat"
+          },
+          "offsetY": {
+            "name": "Desplaçament de píxel en Y"
+          },
+          "scale": {
+            "name": "Escala"
+          }
+        },
+        "name": "Estil d'etiqueta"
+      },
+      "style": {
+        "selectableDimensions": {
+          "enum": {
+            "selectableDimensions": {
+              "enum": {
+                "selectableDimensions": {
+                  "remove": {
+                    "value": "Elimina"
+                  },
+                  "value": {
+                    "name": "Valor"
+                  }
+                },
+                "add": {
+                  "value": "Afegeix estil per al valor"
+                },
+                "noValue": "Cap valor"
+              }
+            },
+            "name": "Enumera estils"
+          },
+          "bin": {
+            "selectableDimensions": {
+              "bin": {
+                "noValue": "Cap valor",
+                "selectableDimensions": {
+                  "stop": {
+                    "name": "Final"
+                  },
+                  "remove": {
+                    "value": "Ellimina"
+                  },
+                  "start": {
+                    "name": "Inici"
+                  }
+                },
+                "range": "{{value1}} a {{value2}}"
+              },
+              "add": {
+                "value": "Afegeix paperera d'estil"
+              }
+            },
+            "name": "Papereres d'estil"
+          },
+          "styleType": {
+            "constant": {
+              "name": "Cap estil"
+            },
+            "bin": {
+              "name": "Discret"
+            },
+            "name": "Tipus",
+            "undefinedLabel": "Si us plau concreteu",
+            "enum": {
+              "name": "Qualitatiu"
+            }
+          },
+          "column": {
+            "name": "Variable"
+          }
+        },
+        "null": {
+          "name": "Predeterminat"
+        }
+      },
+      "bins": {
+        "selectableDimensions": {
+          "start": {
+            "selectableDimensions": {
+              "stop": {
+                "name": "Aturada"
+              },
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Inici"
+              }
+            },
+            "name": "{{value1}} a {{value2}}"
+          }
+        },
+        "name": "Paperera"
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Si"
+              }
+            },
+            "name": "Distribució de l'hora d'acabament"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "true": {
+                "name": "Si"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Hora d'inici de propagació"
+          },
+          "tableEndTimeColumn": {
+            "name": "Columna de l'hora de finalització"
+          },
+          "tableTimeColumn": {
+            "name": "Columna de temps"
+          },
+          "tableTimeIsSampled": {
+            "options": {
+              "true": {
+                "name": "Si"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Mostrejat"
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Durada de la visualització"
+          },
+          "tableTimeIdColumns": {
+            "name": "Columnes ID"
+          }
+        },
+        "name": "Opcions de temps"
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "sequentialContinuous": {
+                "name": "Seqüencial (continu)"
+              },
+              "divergingContinuous": {
+                "name": "Divergent (continu)"
+              },
+              "customDiscrete": {
+                "name": "Personalitzat (discret)"
+              },
+              "customQualitative": {
+                "name": "Personalitzat (qualitatiu)"
+              },
+              "sequentialDiscrete": {
+                "name": "Seqüencial (discret)"
+              },
+              "noStyle": {
+                "name": "Sense estil"
+              },
+              "divergingDiscrete": {
+                "name": "Divergent (discret)"
+              },
+              "qualitative": {
+                "name": "Qualitatiu"
+              }
+            },
+            "undefinedLabel": "Si us plau concreteu",
+            "name": "Tipus"
+          },
+          "scheme": {
+            "name": "Esquema"
+          },
+          "dataType": {
+            "name": "Tipus de columna (avançat)"
+          },
+          "numberOfBins": {
+            "name": "Nombre de papereres"
+          },
+          "tableColorColumn": {
+            "name": "Variable"
+          }
+        },
+        "name": "Color d'ompliment"
+      },
+      "data": {
+        "selectableDimensions": {
+          "tableStyleType": {
+            "options": {
+              "fill": {
+                "name": "Color d'ompliment"
+              },
+              "point": {
+                "name": "Estil punt/marcador"
+              },
+              "outline": {
+                "name": "Color de contorn"
+              },
+              "trail": {
+                "name": "Estil de traça"
+              },
+              "pointSize": {
+                "name": "Mida del punt"
+              },
+              "label": {
+                "name": "Estil d'etiqueta"
+              }
+            },
+            "name": "Simbologia"
+          },
+          "tableStyle": {
+            "name": "Estil"
+          },
+          "dataset": {
+            "name": "Conjunt de dades"
+          }
+        },
+        "name": "Dades"
+      },
+      "trail": {
+        "selectableDimensions": {
+          "resolution": {
+            "name": "Resolució"
+          },
+          "trailStyleOptions": {
+            "name": "Opcions d'estil de sender",
+            "selectableDimensions": {
+              "material": {
+                "name": "Tipus de material",
+                "options": {
+                  "polylineGlow": {
+                    "name": "Resplendor de polilínia"
+                  },
+                  "solidColor": {
+                    "name": "Color sòlid"
+                  }
+                }
+              }
+            }
+          },
+          "leadTime": {
+            "name": "Temps per davant (segons)"
+          },
+          "growColor": {
+            "name": "Color brillant"
+          },
+          "trailTime": {
+            "name": "Temps per darrera (segons)"
+          },
+          "width": {
+            "name": "Amplada"
+          },
+          "growPower": {
+            "name": "Potència de resplendor"
+          },
+          "solidColor": {
+            "name": "Color sòlid"
+          },
+          "taperPower": {
+            "name": "Potència cónica"
+          }
+        }
+      },
+      "additionalColors": {
+        "name": "Colors addicionals",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "Color de la regió"
+          },
+          "outlierColor": {
+            "name": "Color atípic"
+          },
+          "nullColor": {
+            "name": "Color predeterminat"
+          }
+        }
+      },
+      "point": {
+        "selectableDimensions": {
+          "width": {
+            "name": "Amplada"
+          },
+          "marker": {
+            "name": "Marcador",
+            "tooltip": "El marcador admet URL i base64 de qualsevol format d'imatge compatible (p. ex. PNG, SVG)"
+          },
+          "rotation": {
+            "name": "Rotació"
+          },
+          "height": {
+            "name": "Altura"
+          }
+        },
+        "name": "Estil de marcador"
+      },
+      "legend": {
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "Títol"
+          },
+          "title": {
+            "name": "Element {{index}} Títol"
+          },
+          "legendTicks": {
+            "name": "Marques"
+          }
+        },
+        "name": "Llegenda"
+      },
+      "copyUserStratum": "Copia l'estrat d'usuari al porta-retalls",
+      "outlierColor": {
+        "name": "Color atípic"
+      },
+      "variableAndColumn": {
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Títol"
+          },
+          "columnUnits": {
+            "name": "Unitats"
+          }
+        },
+        "name": "Variable/columna"
+      },
+      "nullColor": {
+        "name": "Color predeterminat"
+      },
+      "regionMapping": {
+        "name": "Cartografia de regions"
+      },
+      "displayRange": {
+        "selectableDimensions": {
+          "max": {
+            "name": "Màx"
+          }
+        },
+        "name": "Interval de visualització"
+      },
+      "hideAdvancedOptions": "Amaga les opcions avançades",
+      "reset": "Restableix l'estil predeterminat",
+      "showAdvancedOptions": "Mostra les opcions avançades",
+      "min": {
+        "name": "Mín"
+      },
+      "name": "Estil"
     }
   },
   "deltaTool": {
@@ -1682,5 +2189,13 @@
   },
   "includeStory": {
     "message": "Inclou la història a Share"
+  },
+  "selectableDimensions": {
+    "colorRemove": "Eliminar",
+    "disabled": "Desactivat",
+    "colorAdd": "Afegir",
+    "undefinedLabel": "Sense definir",
+    "invalid": "Invàlid",
+    "enabled": "Activat"
   }
 }

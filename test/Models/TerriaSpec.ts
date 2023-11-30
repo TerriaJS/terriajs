@@ -584,8 +584,7 @@ describe("Terria", function () {
         newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
-          locationSearchProviders: []
+          catalogSearchProvider: undefined
         });
 
         UrlToCatalogMemberMapping.register(
@@ -801,8 +800,7 @@ describe("Terria", function () {
         newTerria = new Terria({ baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
-          locationSearchProviders: []
+          catalogSearchProvider: undefined
         });
 
         await Promise.all(
@@ -913,8 +911,7 @@ describe("Terria", function () {
 
         viewState = new ViewState({
           terria: terria,
-          catalogSearchProvider: null,
-          locationSearchProviders: []
+          catalogSearchProvider: undefined
         });
         newTerria = new Terria({ baseUrl: "./" });
 

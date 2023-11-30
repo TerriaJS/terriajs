@@ -27,6 +27,32 @@ describe("CatalogGroup", () => {
         0
       );
     });
+    it("Doesn't show children when loading", () => {
+      const TestChild = () => <span>some child</span>;
+      act(() => {
+        testRenderer = create(
+          <ThemeProvider theme={terriaTheme}>
+            <CatalogGroup open={true} t={() => {}} loading={true}>
+              <TestChild />
+            </CatalogGroup>
+          </ThemeProvider>
+        );
+      });
+      expect(testRenderer.root.findAllByType(TestChild).length).toEqual(0);
+    });
+    it("Shows children when not loading", () => {
+      const TestChild = () => <span>some child</span>;
+      act(() => {
+        testRenderer = create(
+          <ThemeProvider theme={terriaTheme}>
+            <CatalogGroup open={true} t={() => {}} loading={false}>
+              <TestChild />
+            </CatalogGroup>
+          </ThemeProvider>
+        );
+      });
+      expect(testRenderer.root.findAllByType(TestChild).length).toEqual(1);
+    });
   });
   describe("Empty", () => {
     it("Shows empty message", () => {
