@@ -101,6 +101,13 @@ export class OptionsTraits extends ModelTraits {
     description: "Point cloud shading parameters"
   })
   pointCloudShading?: PointCloudShadingTraits;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show credits on screen",
+    description: "Whether to display the credits of this tileset on screen."
+  })
+  showCreditsOnScreen: boolean = false;
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(

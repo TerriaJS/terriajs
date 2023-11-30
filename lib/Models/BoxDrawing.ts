@@ -64,7 +64,7 @@ type Interactable = {
   onMouseOver: (mouseMove: MouseMove) => void;
   onMouseOut: (mouseMove: MouseMove) => void;
   onPick: (click: MouseClick) => void;
-  onRelease: (click: MouseClick) => void;
+  onRelease: () => void;
   onDrag: (mouseMove: MouseMove) => void;
 };
 
@@ -629,7 +629,7 @@ export default class BoxDrawing {
       }
 
       if (state.is === "picked") {
-        handleRelease(click);
+        handleRelease();
       }
 
       if (state.is === "hovering") {
@@ -651,13 +651,13 @@ export default class BoxDrawing {
       entity.onPick(click);
     };
 
-    const handleRelease = (click: MouseClick) => {
+    const handleRelease = () => {
       if (state.is === "picked") {
         this.cesium.isFeaturePickingPaused =
           state.beforePickState.isFeaturePickingPaused;
         scene.screenSpaceCameraController.enableInputs =
           state.beforePickState.enableInputs;
-        state.entity.onRelease(click);
+        state.entity.onRelease();
         state = { is: "none" };
       }
     };
@@ -735,6 +735,9 @@ export default class BoxDrawing {
     const handler = {
       destroy: () => {
         eventHandler.destroy();
+        // When destroying the eventHandler make sure we also release any
+        // picked entities and not leave them hanging
+        handleRelease();
         scene.canvas.removeEventListener("mouseout", onMouseOutCanvas);
       }
     };

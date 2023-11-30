@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionCheckbox as SelectableDimensionCheckboxModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Checkbox from "../../Styled/Checkbox";
@@ -9,6 +10,7 @@ export const SelectableDimensionCheckbox: React.FC<{
   id: string;
   dim: SelectableDimensionCheckboxModel;
 }> = ({ id, dim }) => {
+  const { t } = useTranslation();
   return (
     <Checkbox
       name={id}
@@ -24,7 +26,9 @@ export const SelectableDimensionCheckbox: React.FC<{
     >
       <Text>
         {dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
-          (dim.selectedId === "true" ? "Enabled" : "Disabled")}
+          (dim.selectedId === "true"
+            ? t("selectableDimensions.enabled")
+            : t("selectableDimensions.disabled"))}
       </Text>
     </Checkbox>
   );

@@ -110,7 +110,7 @@ class TimerSection extends React.Component {
     const { t } = this.props;
     return (
       <>
-        <If condition={this.isEnabled()}>
+        {this.isEnabled() && (
           <div className={Styles.section}>
             <div className={Styles.timerContainer}>
               <Timer
@@ -128,7 +128,7 @@ class TimerSection extends React.Component {
               })}
             </span>
           </div>
-        </If>
+        )}
       </>
     );
   }

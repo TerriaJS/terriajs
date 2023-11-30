@@ -56,24 +56,27 @@ class MobileSearch extends React.Component {
   renderSearchInCatalogLink(theme) {
     const { t } = this.props;
     const searchState = this.props.viewState.searchState;
+
+    if (searchState.locationSearchText.length === 0) {
+      return null;
+    }
+
     return (
-      <If condition={searchState.locationSearchText.length > 0}>
-        <div className={Styles.providerResult}>
-          <ul className={Styles.btnList}>
-            {searchState.catalogSearchProvider && (
-              <SearchResult
-                clickAction={() => this.searchInDataCatalog()}
-                icon={null}
-                locationSearchText={searchState.locationSearchText}
-                name={t("search.search", {
-                  searchText: searchState.locationSearchText
-                })}
-                searchResultTheme={theme}
-              />
-            )}
-          </ul>
-        </div>
-      </If>
+      <div className={Styles.providerResult}>
+        <ul className={Styles.btnList}>
+          {searchState.catalogSearchProvider && (
+            <SearchResult
+              clickAction={() => this.searchInDataCatalog()}
+              icon={null}
+              locationSearchText={searchState.locationSearchText}
+              name={t("search.search", {
+                searchText: searchState.locationSearchText
+              })}
+              searchResultTheme={theme}
+            />
+          )}
+        </ul>
+      </div>
     );
   }
 

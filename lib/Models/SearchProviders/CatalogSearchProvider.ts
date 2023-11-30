@@ -1,30 +1,23 @@
-import {
-  autorun,
-  computed,
-  observable,
-  runInAction,
-  makeObservable
-} from "mobx";
-import { fromPromise } from "mobx-utils";
+import { autorun, makeObservable, observable, runInAction } from "mobx";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import isDefined from "../../Core/isDefined";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
+import CommonStrata from "../Definition/CommonStrata";
+import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
-import SearchProvider from "./SearchProvider";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-interface CatalogSearchProviderOptions {
-  terria: Terria;
-}
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
+
 export function loadAndSearchCatalogRecursively(
   models: BaseModel[],
   searchTextLowercase: string,
@@ -79,7 +72,7 @@ export function loadAndSearchCatalogRecursively(
   if (referencesAndGroupsToLoad.length === 0) {
     return Promise.resolve();
   }
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     autorun((reaction) => {
       Promise.all(
         referencesAndGroupsToLoad.map(async (model) => {
@@ -92,41 +85,55 @@ export function loadAndSearchCatalogRecursively(
           //   return model.loadMembers();
           // }
         })
-      ).then(() => {
-        // Then call this function again to see if new child references were loaded in
-        resolve(
-          loadAndSearchCatalogRecursively(
-            models,
-            searchTextLowercase,
-            searchResults,
-            resultMap,
-            iteration + 1
-          )
-        );
-      });
+      )
+        .then(() => {
+          // Then call this function again to see if new child references were loaded in
+          resolve(
+            loadAndSearchCatalogRecursively(
+              models,
+              searchTextLowercase,
+              searchResults,
+              resultMap,
+              iteration + 1
+            )
+          );
+        })
+        .catch((error) => {
+          reject(error);
+        });
       reaction.dispose();
     });
   });
 }
 
-export default class CatalogSearchProvider extends SearchProvider {
-  readonly terria: Terria;
+export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
+  CreateModel(CatalogSearchProviderTraits)
+) {
+  static readonly type = "catalog-search-provider";
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
 
-  constructor(options: CatalogSearchProviderOptions) {
-    super();
+  constructor(id: string | undefined, terria: Terria) {
+    super(id, terria);
 
     makeObservable(this);
 
-    this.terria = options.terria;
-    this.name = "Catalog Items";
+    this.setTrait(
+      CommonStrata.defaults,
+      "minCharacters",
+      terria.searchBarModel.minCharacters
+    );
   }
 
-  @computed get resultsAreReferences() {
-    return (
-      isDefined(this.terria.catalogIndex?.loadPromise) &&
-      fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
+  get type() {
+    return CatalogSearchProvider.type;
+  }
+
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.catalog,
+      searchText
     );
   }
 
@@ -156,11 +163,6 @@ export default class CatalogSearchProvider extends SearchProvider {
       }
     }
 
-    this.terria.analytics?.logEvent(
-      Category.search,
-      SearchAction.catalog,
-      searchText
-    );
     const resultMap: ResultMap = new Map();
 
     try {
@@ -190,7 +192,9 @@ export default class CatalogSearchProvider extends SearchProvider {
       });
 
       if (searchResults.results.length === 0) {
-        searchResults.message = "Sorry, no locations match your search query.";
+        searchResults.message = {
+          content: "translate#viewModels.searchNoCatalogueItem"
+        };
       }
     } catch (e) {
       this.terria.raiseErrorToUser(e, {
@@ -202,8 +206,9 @@ export default class CatalogSearchProvider extends SearchProvider {
         return;
       }
 
-      searchResults.message =
-        "An error occurred while searching.  Please check your internet connection or try again later.";
+      searchResults.message = {
+        content: "translate#viewModels.searchErrorOccurred"
+      };
     }
   }
 }
