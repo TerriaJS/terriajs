@@ -9,7 +9,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "requireConfigFile": false,
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2019,
     "ecmaFeatures": {
       "jsx": true,
       "modules": true,
@@ -124,7 +124,7 @@
           "modules": true,
           "legacyDecorators": true
         },
-        "ecmaVersion": 2018,
+        "ecmaVersion": 2019,
         "sourceType": "module",
         "project": "./tsconfig.json"
       },
