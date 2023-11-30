@@ -2,6 +2,7 @@
 
 #### next release (8.3.10)
 
+- Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
 - [The next improvement]
 
 #### 8.3.9 - 2023-11-24
@@ -28,8 +29,6 @@
   - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
 - Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
 - Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
-- Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
-- [The next improvement]
 - Add CesiumIon geocoder
 - `CatalogGroup` will now not show members until loaded
 - Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
