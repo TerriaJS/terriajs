@@ -2,7 +2,7 @@ THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY B
 
 -----
 
-The following software may be included in this product: @babel/code-frame, @babel/compat-data, @babel/core, @babel/eslint-parser, @babel/generator, @babel/helper-annotate-as-pure, @babel/helper-builder-binary-assignment-operator-visitor, @babel/helper-compilation-targets, @babel/helper-create-class-features-plugin, @babel/helper-create-regexp-features-plugin, @babel/helper-environment-visitor, @babel/helper-explode-assignable-expression, @babel/helper-function-name, @babel/helper-get-function-arity, @babel/helper-hoist-variables, @babel/helper-member-expression-to-functions, @babel/helper-module-imports, @babel/helper-module-transforms, @babel/helper-optimise-call-expression, @babel/helper-plugin-utils, @babel/helper-remap-async-to-generator, @babel/helper-replace-supers, @babel/helper-simple-access, @babel/helper-skip-transparent-expression-wrappers, @babel/helper-split-export-declaration, @babel/helper-validator-identifier, @babel/helper-validator-option, @babel/helper-wrap-function, @babel/helpers, @babel/highlight, @babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression, @babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining, @babel/plugin-proposal-async-generator-functions, @babel/plugin-proposal-class-properties, @babel/plugin-proposal-class-static-block, @babel/plugin-proposal-decorators, @babel/plugin-proposal-dynamic-import, @babel/plugin-proposal-export-namespace-from, @babel/plugin-proposal-json-strings, @babel/plugin-proposal-logical-assignment-operators, @babel/plugin-proposal-nullish-coalescing-operator, @babel/plugin-proposal-numeric-separator, @babel/plugin-proposal-object-rest-spread, @babel/plugin-proposal-optional-catch-binding, @babel/plugin-proposal-optional-chaining, @babel/plugin-proposal-private-methods, @babel/plugin-proposal-private-property-in-object, @babel/plugin-proposal-unicode-property-regex, @babel/plugin-syntax-async-generators, @babel/plugin-syntax-class-properties, @babel/plugin-syntax-class-static-block, @babel/plugin-syntax-decorators, @babel/plugin-syntax-dynamic-import, @babel/plugin-syntax-export-namespace-from, @babel/plugin-syntax-json-strings, @babel/plugin-syntax-jsx, @babel/plugin-syntax-logical-assignment-operators, @babel/plugin-syntax-nullish-coalescing-operator, @babel/plugin-syntax-numeric-separator, @babel/plugin-syntax-object-rest-spread, @babel/plugin-syntax-optional-catch-binding, @babel/plugin-syntax-optional-chaining, @babel/plugin-syntax-private-property-in-object, @babel/plugin-syntax-top-level-await, @babel/plugin-syntax-typescript, @babel/plugin-transform-arrow-functions, @babel/plugin-transform-async-to-generator, @babel/plugin-transform-block-scoped-functions, @babel/plugin-transform-block-scoping, @babel/plugin-transform-classes, @babel/plugin-transform-computed-properties, @babel/plugin-transform-destructuring, @babel/plugin-transform-dotall-regex, @babel/plugin-transform-duplicate-keys, @babel/plugin-transform-exponentiation-operator, @babel/plugin-transform-for-of, @babel/plugin-transform-function-name, @babel/plugin-transform-literals, @babel/plugin-transform-member-expression-literals, @babel/plugin-transform-modules-amd, @babel/plugin-transform-modules-commonjs, @babel/plugin-transform-modules-systemjs, @babel/plugin-transform-modules-umd, @babel/plugin-transform-named-capturing-groups-regex, @babel/plugin-transform-new-target, @babel/plugin-transform-object-super, @babel/plugin-transform-parameters, @babel/plugin-transform-property-literals, @babel/plugin-transform-react-display-name, @babel/plugin-transform-react-jsx, @babel/plugin-transform-react-jsx-development, @babel/plugin-transform-react-pure-annotations, @babel/plugin-transform-regenerator, @babel/plugin-transform-reserved-words, @babel/plugin-transform-shorthand-properties, @babel/plugin-transform-spread, @babel/plugin-transform-sticky-regex, @babel/plugin-transform-template-literals, @babel/plugin-transform-typeof-symbol, @babel/plugin-transform-typescript, @babel/plugin-transform-unicode-escapes, @babel/plugin-transform-unicode-regex, @babel/preset-env, @babel/preset-react, @babel/preset-typescript, @babel/runtime, @babel/template, @babel/traverse, @babel/types. A copy of the source code may be downloaded from https://github.com/babel/babel.git (@babel/code-frame), https://github.com/babel/babel.git (@babel/compat-data), https://github.com/babel/babel.git (@babel/core), https://github.com/babel/babel.git (@babel/eslint-parser), https://github.com/babel/babel.git (@babel/generator), https://github.com/babel/babel.git (@babel/helper-annotate-as-pure), https://github.com/babel/babel.git (@babel/helper-builder-binary-assignment-operator-visitor), https://github.com/babel/babel.git (@babel/helper-compilation-targets), https://github.com/babel/babel.git (@babel/helper-create-class-features-plugin), https://github.com/babel/babel.git (@babel/helper-create-regexp-features-plugin), https://github.com/babel/babel.git (@babel/helper-environment-visitor), https://github.com/babel/babel.git (@babel/helper-explode-assignable-expression), https://github.com/babel/babel.git (@babel/helper-function-name), https://github.com/babel/babel.git (@babel/helper-get-function-arity), https://github.com/babel/babel.git (@babel/helper-hoist-variables), https://github.com/babel/babel.git (@babel/helper-member-expression-to-functions), https://github.com/babel/babel.git (@babel/helper-module-imports), https://github.com/babel/babel.git (@babel/helper-module-transforms), https://github.com/babel/babel.git (@babel/helper-optimise-call-expression), https://github.com/babel/babel.git (@babel/helper-plugin-utils), https://github.com/babel/babel.git (@babel/helper-remap-async-to-generator), https://github.com/babel/babel.git (@babel/helper-replace-supers), https://github.com/babel/babel.git (@babel/helper-simple-access), https://github.com/babel/babel.git (@babel/helper-skip-transparent-expression-wrappers), https://github.com/babel/babel.git (@babel/helper-split-export-declaration), https://github.com/babel/babel.git (@babel/helper-validator-identifier), https://github.com/babel/babel.git (@babel/helper-validator-option), https://github.com/babel/babel.git (@babel/helper-wrap-function), https://github.com/babel/babel.git (@babel/helpers), https://github.com/babel/babel.git (@babel/highlight), https://github.com/babel/babel.git (@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression), https://github.com/babel/babel.git (@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-proposal-async-generator-functions), https://github.com/babel/babel.git (@babel/plugin-proposal-class-properties), https://github.com/babel/babel.git (@babel/plugin-proposal-class-static-block), https://github.com/babel/babel.git (@babel/plugin-proposal-decorators), https://github.com/babel/babel.git (@babel/plugin-proposal-dynamic-import), https://github.com/babel/babel.git (@babel/plugin-proposal-export-namespace-from), https://github.com/babel/babel.git (@babel/plugin-proposal-json-strings), https://github.com/babel/babel.git (@babel/plugin-proposal-logical-assignment-operators), https://github.com/babel/babel.git (@babel/plugin-proposal-nullish-coalescing-operator), https://github.com/babel/babel.git (@babel/plugin-proposal-numeric-separator), https://github.com/babel/babel.git (@babel/plugin-proposal-object-rest-spread), https://github.com/babel/babel.git (@babel/plugin-proposal-optional-catch-binding), https://github.com/babel/babel.git (@babel/plugin-proposal-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-proposal-private-methods), https://github.com/babel/babel.git (@babel/plugin-proposal-private-property-in-object), https://github.com/babel/babel.git (@babel/plugin-proposal-unicode-property-regex), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-async-generators (@babel/plugin-syntax-async-generators), https://github.com/babel/babel.git (@babel/plugin-syntax-class-properties), https://github.com/babel/babel.git (@babel/plugin-syntax-class-static-block), https://github.com/babel/babel.git (@babel/plugin-syntax-decorators), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import (@babel/plugin-syntax-dynamic-import), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from (@babel/plugin-syntax-export-namespace-from), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-json-strings (@babel/plugin-syntax-json-strings), https://github.com/babel/babel.git (@babel/plugin-syntax-jsx), https://github.com/babel/babel.git (@babel/plugin-syntax-logical-assignment-operators), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-nullish-coalescing-operator (@babel/plugin-syntax-nullish-coalescing-operator), https://github.com/babel/babel.git (@babel/plugin-syntax-numeric-separator), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-object-rest-spread (@babel/plugin-syntax-object-rest-spread), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-catch-binding (@babel/plugin-syntax-optional-catch-binding), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-chaining (@babel/plugin-syntax-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-syntax-private-property-in-object), https://github.com/babel/babel.git (@babel/plugin-syntax-top-level-await), https://github.com/babel/babel.git (@babel/plugin-syntax-typescript), https://github.com/babel/babel.git (@babel/plugin-transform-arrow-functions), https://github.com/babel/babel.git (@babel/plugin-transform-async-to-generator), https://github.com/babel/babel.git (@babel/plugin-transform-block-scoped-functions), https://github.com/babel/babel.git (@babel/plugin-transform-block-scoping), https://github.com/babel/babel.git (@babel/plugin-transform-classes), https://github.com/babel/babel.git (@babel/plugin-transform-computed-properties), https://github.com/babel/babel.git (@babel/plugin-transform-destructuring), https://github.com/babel/babel.git (@babel/plugin-transform-dotall-regex), https://github.com/babel/babel.git (@babel/plugin-transform-duplicate-keys), https://github.com/babel/babel.git (@babel/plugin-transform-exponentiation-operator), https://github.com/babel/babel.git (@babel/plugin-transform-for-of), https://github.com/babel/babel.git (@babel/plugin-transform-function-name), https://github.com/babel/babel.git (@babel/plugin-transform-literals), https://github.com/babel/babel.git (@babel/plugin-transform-member-expression-literals), https://github.com/babel/babel.git (@babel/plugin-transform-modules-amd), https://github.com/babel/babel.git (@babel/plugin-transform-modules-commonjs), https://github.com/babel/babel.git (@babel/plugin-transform-modules-systemjs), https://github.com/babel/babel.git (@babel/plugin-transform-modules-umd), https://github.com/babel/babel.git (@babel/plugin-transform-named-capturing-groups-regex), https://github.com/babel/babel.git (@babel/plugin-transform-new-target), https://github.com/babel/babel.git (@babel/plugin-transform-object-super), https://github.com/babel/babel.git (@babel/plugin-transform-parameters), https://github.com/babel/babel.git (@babel/plugin-transform-property-literals), https://github.com/babel/babel.git (@babel/plugin-transform-react-display-name), https://github.com/babel/babel.git (@babel/plugin-transform-react-jsx), https://github.com/babel/babel.git (@babel/plugin-transform-react-jsx-development), https://github.com/babel/babel.git (@babel/plugin-transform-react-pure-annotations), https://github.com/babel/babel.git (@babel/plugin-transform-regenerator), https://github.com/babel/babel.git (@babel/plugin-transform-reserved-words), https://github.com/babel/babel.git (@babel/plugin-transform-shorthand-properties), https://github.com/babel/babel.git (@babel/plugin-transform-spread), https://github.com/babel/babel.git (@babel/plugin-transform-sticky-regex), https://github.com/babel/babel.git (@babel/plugin-transform-template-literals), https://github.com/babel/babel.git (@babel/plugin-transform-typeof-symbol), https://github.com/babel/babel.git (@babel/plugin-transform-typescript), https://github.com/babel/babel.git (@babel/plugin-transform-unicode-escapes), https://github.com/babel/babel.git (@babel/plugin-transform-unicode-regex), https://github.com/babel/babel.git (@babel/preset-env), https://github.com/babel/babel.git (@babel/preset-react), https://github.com/babel/babel.git (@babel/preset-typescript), https://github.com/babel/babel.git (@babel/runtime), https://github.com/babel/babel.git (@babel/template), https://github.com/babel/babel.git (@babel/traverse), https://github.com/babel/babel.git (@babel/types). This software contains the following license and notice below:
+The following software may be included in this product: @babel/code-frame, @babel/compat-data, @babel/core, @babel/eslint-parser, @babel/generator, @babel/helper-annotate-as-pure, @babel/helper-builder-binary-assignment-operator-visitor, @babel/helper-compilation-targets, @babel/helper-create-class-features-plugin, @babel/helper-create-regexp-features-plugin, @babel/helper-environment-visitor, @babel/helper-explode-assignable-expression, @babel/helper-function-name, @babel/helper-get-function-arity, @babel/helper-hoist-variables, @babel/helper-member-expression-to-functions, @babel/helper-module-imports, @babel/helper-module-transforms, @babel/helper-optimise-call-expression, @babel/helper-plugin-utils, @babel/helper-remap-async-to-generator, @babel/helper-replace-supers, @babel/helper-simple-access, @babel/helper-skip-transparent-expression-wrappers, @babel/helper-split-export-declaration, @babel/helper-string-parser, @babel/helper-validator-identifier, @babel/helper-validator-option, @babel/helper-wrap-function, @babel/helpers, @babel/highlight, @babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression, @babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining, @babel/plugin-proposal-async-generator-functions, @babel/plugin-proposal-class-properties, @babel/plugin-proposal-class-static-block, @babel/plugin-proposal-decorators, @babel/plugin-proposal-dynamic-import, @babel/plugin-proposal-export-namespace-from, @babel/plugin-proposal-json-strings, @babel/plugin-proposal-logical-assignment-operators, @babel/plugin-proposal-nullish-coalescing-operator, @babel/plugin-proposal-numeric-separator, @babel/plugin-proposal-object-rest-spread, @babel/plugin-proposal-optional-catch-binding, @babel/plugin-proposal-optional-chaining, @babel/plugin-proposal-private-methods, @babel/plugin-proposal-private-property-in-object, @babel/plugin-proposal-unicode-property-regex, @babel/plugin-syntax-async-generators, @babel/plugin-syntax-class-properties, @babel/plugin-syntax-class-static-block, @babel/plugin-syntax-decorators, @babel/plugin-syntax-dynamic-import, @babel/plugin-syntax-export-namespace-from, @babel/plugin-syntax-json-strings, @babel/plugin-syntax-jsx, @babel/plugin-syntax-logical-assignment-operators, @babel/plugin-syntax-nullish-coalescing-operator, @babel/plugin-syntax-numeric-separator, @babel/plugin-syntax-object-rest-spread, @babel/plugin-syntax-optional-catch-binding, @babel/plugin-syntax-optional-chaining, @babel/plugin-syntax-private-property-in-object, @babel/plugin-syntax-top-level-await, @babel/plugin-syntax-typescript, @babel/plugin-transform-arrow-functions, @babel/plugin-transform-async-to-generator, @babel/plugin-transform-block-scoped-functions, @babel/plugin-transform-block-scoping, @babel/plugin-transform-classes, @babel/plugin-transform-computed-properties, @babel/plugin-transform-destructuring, @babel/plugin-transform-dotall-regex, @babel/plugin-transform-duplicate-keys, @babel/plugin-transform-exponentiation-operator, @babel/plugin-transform-for-of, @babel/plugin-transform-function-name, @babel/plugin-transform-literals, @babel/plugin-transform-member-expression-literals, @babel/plugin-transform-modules-amd, @babel/plugin-transform-modules-commonjs, @babel/plugin-transform-modules-systemjs, @babel/plugin-transform-modules-umd, @babel/plugin-transform-named-capturing-groups-regex, @babel/plugin-transform-new-target, @babel/plugin-transform-object-super, @babel/plugin-transform-parameters, @babel/plugin-transform-property-literals, @babel/plugin-transform-react-display-name, @babel/plugin-transform-react-jsx, @babel/plugin-transform-react-jsx-development, @babel/plugin-transform-react-pure-annotations, @babel/plugin-transform-regenerator, @babel/plugin-transform-reserved-words, @babel/plugin-transform-shorthand-properties, @babel/plugin-transform-spread, @babel/plugin-transform-sticky-regex, @babel/plugin-transform-template-literals, @babel/plugin-transform-typeof-symbol, @babel/plugin-transform-typescript, @babel/plugin-transform-unicode-escapes, @babel/plugin-transform-unicode-regex, @babel/preset-env, @babel/preset-react, @babel/preset-typescript, @babel/runtime, @babel/template, @babel/traverse, @babel/types. A copy of the source code may be downloaded from https://github.com/babel/babel.git (@babel/code-frame), https://github.com/babel/babel.git (@babel/compat-data), https://github.com/babel/babel.git (@babel/core), https://github.com/babel/babel.git (@babel/eslint-parser), https://github.com/babel/babel.git (@babel/generator), https://github.com/babel/babel.git (@babel/helper-annotate-as-pure), https://github.com/babel/babel.git (@babel/helper-builder-binary-assignment-operator-visitor), https://github.com/babel/babel.git (@babel/helper-compilation-targets), https://github.com/babel/babel.git (@babel/helper-create-class-features-plugin), https://github.com/babel/babel.git (@babel/helper-create-regexp-features-plugin), https://github.com/babel/babel.git (@babel/helper-environment-visitor), https://github.com/babel/babel.git (@babel/helper-explode-assignable-expression), https://github.com/babel/babel.git (@babel/helper-function-name), https://github.com/babel/babel.git (@babel/helper-get-function-arity), https://github.com/babel/babel.git (@babel/helper-hoist-variables), https://github.com/babel/babel.git (@babel/helper-member-expression-to-functions), https://github.com/babel/babel.git (@babel/helper-module-imports), https://github.com/babel/babel.git (@babel/helper-module-transforms), https://github.com/babel/babel.git (@babel/helper-optimise-call-expression), https://github.com/babel/babel.git (@babel/helper-plugin-utils), https://github.com/babel/babel.git (@babel/helper-remap-async-to-generator), https://github.com/babel/babel.git (@babel/helper-replace-supers), https://github.com/babel/babel.git (@babel/helper-simple-access), https://github.com/babel/babel.git (@babel/helper-skip-transparent-expression-wrappers), https://github.com/babel/babel.git (@babel/helper-split-export-declaration), https://github.com/babel/babel.git (@babel/helper-string-parser), https://github.com/babel/babel.git (@babel/helper-validator-identifier), https://github.com/babel/babel.git (@babel/helper-validator-option), https://github.com/babel/babel.git (@babel/helper-wrap-function), https://github.com/babel/babel.git (@babel/helpers), https://github.com/babel/babel.git (@babel/highlight), https://github.com/babel/babel.git (@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression), https://github.com/babel/babel.git (@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-proposal-async-generator-functions), https://github.com/babel/babel.git (@babel/plugin-proposal-class-properties), https://github.com/babel/babel.git (@babel/plugin-proposal-class-static-block), https://github.com/babel/babel.git (@babel/plugin-proposal-decorators), https://github.com/babel/babel.git (@babel/plugin-proposal-dynamic-import), https://github.com/babel/babel.git (@babel/plugin-proposal-export-namespace-from), https://github.com/babel/babel.git (@babel/plugin-proposal-json-strings), https://github.com/babel/babel.git (@babel/plugin-proposal-logical-assignment-operators), https://github.com/babel/babel.git (@babel/plugin-proposal-nullish-coalescing-operator), https://github.com/babel/babel.git (@babel/plugin-proposal-numeric-separator), https://github.com/babel/babel.git (@babel/plugin-proposal-object-rest-spread), https://github.com/babel/babel.git (@babel/plugin-proposal-optional-catch-binding), https://github.com/babel/babel.git (@babel/plugin-proposal-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-proposal-private-methods), https://github.com/babel/babel.git (@babel/plugin-proposal-private-property-in-object), https://github.com/babel/babel.git (@babel/plugin-proposal-unicode-property-regex), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-async-generators (@babel/plugin-syntax-async-generators), https://github.com/babel/babel.git (@babel/plugin-syntax-class-properties), https://github.com/babel/babel.git (@babel/plugin-syntax-class-static-block), https://github.com/babel/babel.git (@babel/plugin-syntax-decorators), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import (@babel/plugin-syntax-dynamic-import), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from (@babel/plugin-syntax-export-namespace-from), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-json-strings (@babel/plugin-syntax-json-strings), https://github.com/babel/babel.git (@babel/plugin-syntax-jsx), https://github.com/babel/babel.git (@babel/plugin-syntax-logical-assignment-operators), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-nullish-coalescing-operator (@babel/plugin-syntax-nullish-coalescing-operator), https://github.com/babel/babel.git (@babel/plugin-syntax-numeric-separator), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-object-rest-spread (@babel/plugin-syntax-object-rest-spread), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-catch-binding (@babel/plugin-syntax-optional-catch-binding), https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-chaining (@babel/plugin-syntax-optional-chaining), https://github.com/babel/babel.git (@babel/plugin-syntax-private-property-in-object), https://github.com/babel/babel.git (@babel/plugin-syntax-top-level-await), https://github.com/babel/babel.git (@babel/plugin-syntax-typescript), https://github.com/babel/babel.git (@babel/plugin-transform-arrow-functions), https://github.com/babel/babel.git (@babel/plugin-transform-async-to-generator), https://github.com/babel/babel.git (@babel/plugin-transform-block-scoped-functions), https://github.com/babel/babel.git (@babel/plugin-transform-block-scoping), https://github.com/babel/babel.git (@babel/plugin-transform-classes), https://github.com/babel/babel.git (@babel/plugin-transform-computed-properties), https://github.com/babel/babel.git (@babel/plugin-transform-destructuring), https://github.com/babel/babel.git (@babel/plugin-transform-dotall-regex), https://github.com/babel/babel.git (@babel/plugin-transform-duplicate-keys), https://github.com/babel/babel.git (@babel/plugin-transform-exponentiation-operator), https://github.com/babel/babel.git (@babel/plugin-transform-for-of), https://github.com/babel/babel.git (@babel/plugin-transform-function-name), https://github.com/babel/babel.git (@babel/plugin-transform-literals), https://github.com/babel/babel.git (@babel/plugin-transform-member-expression-literals), https://github.com/babel/babel.git (@babel/plugin-transform-modules-amd), https://github.com/babel/babel.git (@babel/plugin-transform-modules-commonjs), https://github.com/babel/babel.git (@babel/plugin-transform-modules-systemjs), https://github.com/babel/babel.git (@babel/plugin-transform-modules-umd), https://github.com/babel/babel.git (@babel/plugin-transform-named-capturing-groups-regex), https://github.com/babel/babel.git (@babel/plugin-transform-new-target), https://github.com/babel/babel.git (@babel/plugin-transform-object-super), https://github.com/babel/babel.git (@babel/plugin-transform-parameters), https://github.com/babel/babel.git (@babel/plugin-transform-property-literals), https://github.com/babel/babel.git (@babel/plugin-transform-react-display-name), https://github.com/babel/babel.git (@babel/plugin-transform-react-jsx), https://github.com/babel/babel.git (@babel/plugin-transform-react-jsx-development), https://github.com/babel/babel.git (@babel/plugin-transform-react-pure-annotations), https://github.com/babel/babel.git (@babel/plugin-transform-regenerator), https://github.com/babel/babel.git (@babel/plugin-transform-reserved-words), https://github.com/babel/babel.git (@babel/plugin-transform-shorthand-properties), https://github.com/babel/babel.git (@babel/plugin-transform-spread), https://github.com/babel/babel.git (@babel/plugin-transform-sticky-regex), https://github.com/babel/babel.git (@babel/plugin-transform-template-literals), https://github.com/babel/babel.git (@babel/plugin-transform-typeof-symbol), https://github.com/babel/babel.git (@babel/plugin-transform-typescript), https://github.com/babel/babel.git (@babel/plugin-transform-unicode-escapes), https://github.com/babel/babel.git (@babel/plugin-transform-unicode-regex), https://github.com/babel/babel.git (@babel/preset-env), https://github.com/babel/babel.git (@babel/preset-react), https://github.com/babel/babel.git (@babel/preset-typescript), https://github.com/babel/babel.git (@babel/runtime), https://github.com/babel/babel.git (@babel/template), https://github.com/babel/babel.git (@babel/traverse), https://github.com/babel/babel.git (@babel/types). This software contains the following license and notice below:
 
 MIT License
 
@@ -106,7 +106,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: @emotion/cache, @emotion/core, @emotion/css, @emotion/hash, @emotion/is-prop-valid, @emotion/memoize, @emotion/serialize, @emotion/sheet, @emotion/stylis, @emotion/unitless, @emotion/utils, @emotion/weak-memoize, babel-plugin-emotion. A copy of the source code may be downloaded from https://github.com/emotion-js/emotion/tree/master/packages/cache (@emotion/cache), https://github.com/emotion-js/emotion/tree/master/packages/core (@emotion/core), https://github.com/emotion-js/emotion/tree/master/packages/css (@emotion/css), https://github.com/emotion-js/emotion/tree/master/packages/hash (@emotion/hash), https://github.com/emotion-js/emotion/tree/master/packages/is-prop-valid (@emotion/is-prop-valid), https://github.com/emotion-js/emotion/tree/master/packages/memoize (@emotion/memoize), https://github.com/emotion-js/emotion/tree/master/packages/serialize (@emotion/serialize), https://github.com/emotion-js/emotion/tree/master/packages/sheet (@emotion/sheet), https://github.com/emotion-js/emotion/tree/master/packages/stylis (@emotion/stylis), https://github.com/emotion-js/emotion/tree/master/packages/unitless (@emotion/unitless), https://github.com/emotion-js/emotion/tree/master/packages/serialize (@emotion/utils), https://github.com/emotion-js/emotion/tree/master/packages/weak-memoize (@emotion/weak-memoize), https://github.com/emotion-js/emotion/tree/master/packages/babel-plugin-emotion (babel-plugin-emotion). This software contains the following license and notice below:
+The following software may be included in this product: @emotion/cache, @emotion/core, @emotion/css, @emotion/hash, @emotion/is-prop-valid, @emotion/memoize, @emotion/serialize, @emotion/sheet, @emotion/stylis, @emotion/unitless, @emotion/utils, @emotion/weak-memoize, babel-plugin-emotion. A copy of the source code may be downloaded from https://github.com/emotion-js/emotion/tree/master/packages/cache (@emotion/cache), https://github.com/emotion-js/emotion/tree/master/packages/core (@emotion/core), https://github.com/emotion-js/emotion/tree/master/packages/css (@emotion/css), https://github.com/emotion-js/emotion/tree/master/packages/hash (@emotion/hash), https://github.com/emotion-js/emotion/tree/main/packages/is-prop-valid (@emotion/is-prop-valid), https://github.com/emotion-js/emotion/tree/main/packages/memoize (@emotion/memoize), https://github.com/emotion-js/emotion/tree/master/packages/serialize (@emotion/serialize), https://github.com/emotion-js/emotion/tree/master/packages/sheet (@emotion/sheet), https://github.com/emotion-js/emotion/tree/master/packages/stylis (@emotion/stylis), https://github.com/emotion-js/emotion/tree/master/packages/unitless (@emotion/unitless), https://github.com/emotion-js/emotion/tree/master/packages/serialize (@emotion/utils), https://github.com/emotion-js/emotion/tree/master/packages/weak-memoize (@emotion/weak-memoize), https://github.com/emotion-js/emotion/tree/master/packages/babel-plugin-emotion (babel-plugin-emotion). This software contains the following license and notice below:
 
 MIT License
 
@@ -438,6 +438,212 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: @juggle/resize-observer. A copy of the source code may be downloaded from git+ssh://git@github.com/juggle/resize-observer.git. This software contains the following license and notice below:
+
+Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright 2019 JUGGLE LTD
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-----
+
 The following software may be included in this product: @mapbox/geojson-merge. A copy of the source code may be downloaded from git@github.com:mapbox/geojson-merge.git. This software contains the following license and notice below:
 
 ISC License
@@ -601,7 +807,7 @@ DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: @sindresorhus/is, decompress-response, escape-string-regexp, find-cache-dir, get-stream, globals, import-fresh, is-docker, map-obj, matcher, meow, mimic-response, p-limit, p-map, parse-json, serialize-error, strip-json-comments, wrap-ansi, yocto-queue. A copy of the source code may be downloaded from https://github.com/sindresorhus/is.git (@sindresorhus/is), https://github.com/sindresorhus/decompress-response.git (decompress-response), https://github.com/sindresorhus/escape-string-regexp.git (escape-string-regexp), https://github.com/avajs/find-cache-dir.git (find-cache-dir), https://github.com/sindresorhus/get-stream.git (get-stream), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/import-fresh.git (import-fresh), https://github.com/sindresorhus/is-docker.git (is-docker), https://github.com/sindresorhus/map-obj.git (map-obj), https://github.com/sindresorhus/matcher.git (matcher), https://github.com/sindresorhus/meow.git (meow), https://github.com/sindresorhus/mimic-response.git (mimic-response), https://github.com/sindresorhus/p-limit.git (p-limit), https://github.com/sindresorhus/p-map.git (p-map), https://github.com/sindresorhus/parse-json.git (parse-json), https://github.com/sindresorhus/serialize-error.git (serialize-error), https://github.com/sindresorhus/strip-json-comments.git (strip-json-comments), https://github.com/chalk/wrap-ansi.git (wrap-ansi), https://github.com/sindresorhus/yocto-queue.git (yocto-queue). This software contains the following license and notice below:
+The following software may be included in this product: @sindresorhus/is, escape-string-regexp, find-cache-dir, globals, import-fresh, is-docker, map-obj, meow, p-limit, p-map, parse-json, strip-json-comments, yocto-queue. A copy of the source code may be downloaded from https://github.com/sindresorhus/is.git (@sindresorhus/is), https://github.com/sindresorhus/escape-string-regexp.git (escape-string-regexp), https://github.com/avajs/find-cache-dir.git (find-cache-dir), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/import-fresh.git (import-fresh), https://github.com/sindresorhus/is-docker.git (is-docker), https://github.com/sindresorhus/map-obj.git (map-obj), https://github.com/sindresorhus/meow.git (meow), https://github.com/sindresorhus/p-limit.git (p-limit), https://github.com/sindresorhus/p-map.git (p-map), https://github.com/sindresorhus/parse-json.git (parse-json), https://github.com/sindresorhus/strip-json-comments.git (strip-json-comments), https://github.com/sindresorhus/yocto-queue.git (yocto-queue). This software contains the following license and notice below:
 
 MIT License
 
@@ -612,46 +818,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: @sindresorhus/is, aggregate-error, ansi-regex, ansi-styles, array-union, bin-version, bin-version-check, binary-extensions, callsites, camelcase, camelcase-keys, chalk, clean-stack, del, env-paths, execa, file-type, filenamify, find-up, find-versions, get-port, get-stream, globals, globby, got, hard-rejection, has-flag, import-lazy, import-local, indent-string, internal-ip, is-absolute-url, is-finite, is-fullwidth-code-point, is-path-cwd, is-path-in-cwd, is-path-inside, is-wsl, locate-path, lowercase-keys, make-dir, mimic-response, multimatch, normalize-url, opn, p-cancelable, p-event, p-limit, p-locate, p-map, p-retry, p-timeout, p-try, parent-module, path-exists, path-key, path-type, pify, pkg-dir, prepend-http, query-string, quick-lru, read-pkg, read-pkg-up, redent, resolve-from, semver-regex, shebang-regex, slash, sort-keys, string-width, strip-ansi, strip-indent, supports-color, trim-newlines, type-fest, url-parse-lax, wrap-ansi. A copy of the source code may be downloaded from https://github.com/sindresorhus/is.git (@sindresorhus/is), https://github.com/sindresorhus/aggregate-error.git (aggregate-error), https://github.com/chalk/ansi-regex.git (ansi-regex), https://github.com/chalk/ansi-styles.git (ansi-styles), https://github.com/sindresorhus/array-union.git (array-union), https://github.com/sindresorhus/bin-version.git (bin-version), https://github.com/sindresorhus/bin-version-check.git (bin-version-check), https://github.com/sindresorhus/binary-extensions.git (binary-extensions), https://github.com/sindresorhus/callsites.git (callsites), https://github.com/sindresorhus/camelcase.git (camelcase), https://github.com/sindresorhus/camelcase-keys.git (camelcase-keys), https://github.com/chalk/chalk.git (chalk), https://github.com/sindresorhus/clean-stack.git (clean-stack), https://github.com/sindresorhus/del.git (del), https://github.com/sindresorhus/env-paths.git (env-paths), https://github.com/sindresorhus/execa.git (execa), https://github.com/sindresorhus/file-type.git (file-type), https://github.com/sindresorhus/filenamify.git (filenamify), https://github.com/sindresorhus/find-up.git (find-up), https://github.com/sindresorhus/find-versions.git (find-versions), https://github.com/sindresorhus/get-port.git (get-port), https://github.com/sindresorhus/get-stream.git (get-stream), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/globby.git (globby), https://github.com/sindresorhus/got.git (got), https://github.com/sindresorhus/hard-rejection.git (hard-rejection), https://github.com/sindresorhus/has-flag.git (has-flag), https://github.com/sindresorhus/import-lazy.git (import-lazy), https://github.com/sindresorhus/import-local.git (import-local), https://github.com/sindresorhus/indent-string.git (indent-string), https://github.com/sindresorhus/internal-ip.git (internal-ip), https://github.com/sindresorhus/is-absolute-url.git (is-absolute-url), https://github.com/sindresorhus/is-finite.git (is-finite), https://github.com/sindresorhus/is-fullwidth-code-point.git (is-fullwidth-code-point), https://github.com/sindresorhus/is-path-cwd.git (is-path-cwd), https://github.com/sindresorhus/is-path-in-cwd.git (is-path-in-cwd), https://github.com/sindresorhus/is-path-inside.git (is-path-inside), https://github.com/sindresorhus/is-wsl.git (is-wsl), https://github.com/sindresorhus/locate-path.git (locate-path), https://github.com/sindresorhus/lowercase-keys.git (lowercase-keys), https://github.com/sindresorhus/make-dir.git (make-dir), https://github.com/sindresorhus/mimic-response.git (mimic-response), https://github.com/sindresorhus/multimatch.git (multimatch), https://github.com/sindresorhus/normalize-url.git (normalize-url), https://github.com/sindresorhus/opn.git (opn), https://github.com/sindresorhus/p-cancelable.git (p-cancelable), https://github.com/sindresorhus/p-event.git (p-event), https://github.com/sindresorhus/p-limit.git (p-limit), https://github.com/sindresorhus/p-locate.git (p-locate), https://github.com/sindresorhus/p-map.git (p-map), https://github.com/sindresorhus/p-retry.git (p-retry), https://github.com/sindresorhus/p-timeout.git (p-timeout), https://github.com/sindresorhus/p-try.git (p-try), https://github.com/sindresorhus/parent-module.git (parent-module), https://github.com/sindresorhus/path-exists.git (path-exists), https://github.com/sindresorhus/path-key.git (path-key), https://github.com/sindresorhus/path-type.git (path-type), https://github.com/sindresorhus/pify.git (pify), https://github.com/sindresorhus/pkg-dir.git (pkg-dir), https://github.com/sindresorhus/prepend-http.git (prepend-http), https://github.com/sindresorhus/query-string.git (query-string), https://github.com/sindresorhus/quick-lru.git (quick-lru), https://github.com/sindresorhus/read-pkg.git (read-pkg), https://github.com/sindresorhus/read-pkg-up.git (read-pkg-up), https://github.com/sindresorhus/redent.git (redent), https://github.com/sindresorhus/resolve-from.git (resolve-from), https://github.com/sindresorhus/semver-regex.git (semver-regex), https://github.com/sindresorhus/shebang-regex.git (shebang-regex), https://github.com/sindresorhus/slash.git (slash), https://github.com/sindresorhus/sort-keys.git (sort-keys), https://github.com/sindresorhus/string-width.git (string-width), https://github.com/chalk/strip-ansi.git (strip-ansi), https://github.com/sindresorhus/strip-indent.git (strip-indent), https://github.com/chalk/supports-color.git (supports-color), https://github.com/sindresorhus/trim-newlines.git (trim-newlines), https://github.com/sindresorhus/type-fest.git (type-fest), https://github.com/sindresorhus/url-parse-lax.git (url-parse-lax), https://github.com/chalk/wrap-ansi.git (wrap-ansi). This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: @szmarczak/http-timer, defer-to-connect, http2-wrapper. A copy of the source code may be downloaded from git+https://github.com/szmarczak/http-timer.git (@szmarczak/http-timer), git+https://github.com/szmarczak/defer-to-connect.git (defer-to-connect), git+https://github.com/szmarczak/http2-wrapper.git (http2-wrapper). This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2018 Szymon Marczak
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -706,7 +872,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: @types/arcgis-rest-api, @types/cacheable-request, @types/css-font-loading-module, @types/d3-array, @types/d3-axis, @types/d3-color, @types/d3-interpolate, @types/d3-path, @types/d3-scale, @types/d3-scale-chromatic, @types/d3-selection, @types/d3-shape, @types/d3-time, @types/d3-transition, @types/dompurify, @types/flexsearch, @types/geojson, @types/glob, @types/http-cache-semantics, @types/jasmine, @types/jasmine-ajax, @types/json-schema, @types/keyv, @types/leaflet, @types/lodash, @types/lodash-es, @types/math-expression-evaluator, @types/minimatch, @types/minimist, @types/node, @types/node-fetch, @types/normalize-package-data, @types/prop-types, @types/puppeteer, @types/puppeteer-core, @types/rc-slider, @types/rc-tooltip, @types/react, @types/react-color, @types/react-dom, @types/react-select, @types/react-test-renderer, @types/react-transition-group, @types/reactcss, @types/retry, @types/scheduler, @types/shpjs, @types/styled-components, @types/trusted-types, @types/yauzl. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/arcgis-rest-api), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/cacheable-request), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/css-font-loading-module), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-interpolate), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-path), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale-chromatic), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-shape), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-time), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dompurify), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/flexsearch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/http-cache-semantics), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine-ajax), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json-schema), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/keyv), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/math-expression-evaluator), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimist), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node-fetch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer-core), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rc-slider), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rc-tooltip), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-select), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-test-renderer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-transition-group), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/reactcss), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/retry), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/scheduler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/shpjs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/styled-components), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/trusted-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/yauzl). This software contains the following license and notice below:
+The following software may be included in this product: @types/arcgis-rest-api, @types/css-font-loading-module, @types/d3-array, @types/d3-axis, @types/d3-color, @types/d3-interpolate, @types/d3-path, @types/d3-scale, @types/d3-scale-chromatic, @types/d3-selection, @types/d3-shape, @types/d3-time, @types/d3-transition, @types/dompurify, @types/flexsearch, @types/geojson, @types/glob, @types/jasmine, @types/jasmine-ajax, @types/json-schema, @types/leaflet, @types/lodash, @types/lodash-es, @types/math-expression-evaluator, @types/minimatch, @types/minimist, @types/node, @types/node-fetch, @types/normalize-package-data, @types/prop-types, @types/rc-slider, @types/rc-tooltip, @types/react, @types/react-color, @types/react-dom, @types/react-select, @types/react-test-renderer, @types/react-transition-group, @types/reactcss, @types/retry, @types/scheduler, @types/shpjs, @types/styled-components, @types/tapable, @types/trusted-types, @types/uglify-js, @types/webpack, @types/webpack-sources. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/arcgis-rest-api), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/css-font-loading-module), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-interpolate), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-path), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale-chromatic), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-shape), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-time), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dompurify), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/flexsearch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine-ajax), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json-schema), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/math-expression-evaluator), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimist), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node-fetch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rc-slider), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rc-tooltip), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-select), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-test-renderer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-transition-group), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/reactcss), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/retry), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/scheduler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/shpjs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/styled-components), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/tapable), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/trusted-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/uglify-js), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/webpack), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/webpack-sources). This software contains the following license and notice below:
 
 MIT License
 
@@ -732,7 +898,7 @@ MIT License
 
 -----
 
-The following software may be included in this product: @types/create-react-class, @types/dateformat, @types/file-saver, @types/fs-extra, @types/hoist-non-react-statics, @types/json5, @types/ms, @types/mustache, @types/papaparse, @types/parse-json, @types/pbf, @types/rbush, @types/responselike, @types/urijs, @types/which. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/create-react-class), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dateformat), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/file-saver), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/fs-extra), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/hoist-non-react-statics), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json5), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/ms), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/mustache), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/papaparse), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/parse-json), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/pbf), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rbush), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/responselike), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/urijs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/which). This software contains the following license and notice below:
+The following software may be included in this product: @types/create-react-class, @types/dateformat, @types/file-saver, @types/fs-extra, @types/hoist-non-react-statics, @types/json5, @types/ms, @types/mustache, @types/papaparse, @types/parse-json, @types/pbf, @types/rbush, @types/source-list-map, @types/urijs. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/create-react-class), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dateformat), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/file-saver), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/fs-extra), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/hoist-non-react-statics), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json5), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/ms), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/mustache), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/papaparse), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/parse-json), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/pbf), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/rbush), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/source-list-map), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/urijs). This software contains the following license and notice below:
 
 MIT License
 
@@ -758,7 +924,7 @@ MIT License
 
 -----
 
-The following software may be included in this product: @visx/axis, @visx/bounds, @visx/clip-path, @visx/curve, @visx/event, @visx/glyph, @visx/grid, @visx/group, @visx/legend, @visx/point, @visx/scale, @visx/shape, @visx/text, @visx/tooltip, @vx/responsive. A copy of the source code may be downloaded from git+https://github.com/airbnb/visx.git (@visx/axis), git+https://github.com/airbnb/visx.git (@visx/bounds), git+https://github.com/airbnb/visx.git (@visx/clip-path), https://github.com/airbnb/visx (@visx/curve), git+https://github.com/airbnb/visx.git (@visx/event), git+https://github.com/airbnb/visx.git (@visx/glyph), git+https://github.com/airbnb/visx.git (@visx/grid), git+https://github.com/airbnb/visx.git (@visx/group), git+https://github.com/airbnb/visx.git (@visx/legend), https://github.com/airbnb/visx (@visx/point), git+https://github.com/airbnb/visx.git (@visx/scale), https://github.com/airbnb/visx (@visx/shape), git+https://github.com/airbnb/visx.git (@visx/text), git+https://github.com/airbnb/visx.git (@visx/tooltip), git+https://github.com/hshoff/vx.git (@vx/responsive). This software contains the following license and notice below:
+The following software may be included in this product: @visx/axis, @visx/bounds, @visx/clip-path, @visx/curve, @visx/event, @visx/glyph, @visx/grid, @visx/group, @visx/legend, @visx/point, @visx/responsive, @visx/scale, @visx/shape, @visx/text, @visx/tooltip. A copy of the source code may be downloaded from git+https://github.com/airbnb/visx.git (@visx/axis), git+https://github.com/airbnb/visx.git (@visx/bounds), git+https://github.com/airbnb/visx.git (@visx/clip-path), https://github.com/airbnb/visx (@visx/curve), git+https://github.com/airbnb/visx.git (@visx/event), git+https://github.com/airbnb/visx.git (@visx/glyph), git+https://github.com/airbnb/visx.git (@visx/grid), git+https://github.com/airbnb/visx.git (@visx/group), git+https://github.com/airbnb/visx.git (@visx/legend), https://github.com/airbnb/visx (@visx/point), git+https://github.com/airbnb/visx.git (@visx/responsive), git+https://github.com/airbnb/visx.git (@visx/scale), https://github.com/airbnb/visx (@visx/shape), git+https://github.com/airbnb/visx.git (@visx/text), git+https://github.com/airbnb/visx.git (@visx/tooltip). This software contains the following license and notice below:
 
 MIT License
 
@@ -1521,6 +1687,20 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: aggregate-error, ansi-regex, ansi-styles, array-union, binary-extensions, callsites, camelcase, camelcase-keys, chalk, clean-stack, del, env-paths, execa, find-up, get-stream, globals, globby, hard-rejection, has-flag, import-local, indent-string, internal-ip, is-absolute-url, is-finite, is-fullwidth-code-point, is-path-cwd, is-path-in-cwd, is-path-inside, is-wsl, locate-path, make-dir, multimatch, opn, p-limit, p-locate, p-map, p-retry, p-try, parent-module, path-exists, path-key, path-type, pify, pkg-dir, quick-lru, read-pkg, read-pkg-up, redent, resolve-from, shebang-regex, slash, string-width, strip-ansi, strip-indent, supports-color, trim-newlines, type-fest, wrap-ansi. A copy of the source code may be downloaded from https://github.com/sindresorhus/aggregate-error.git (aggregate-error), https://github.com/chalk/ansi-regex.git (ansi-regex), https://github.com/chalk/ansi-styles.git (ansi-styles), https://github.com/sindresorhus/array-union.git (array-union), https://github.com/sindresorhus/binary-extensions.git (binary-extensions), https://github.com/sindresorhus/callsites.git (callsites), https://github.com/sindresorhus/camelcase.git (camelcase), https://github.com/sindresorhus/camelcase-keys.git (camelcase-keys), https://github.com/chalk/chalk.git (chalk), https://github.com/sindresorhus/clean-stack.git (clean-stack), https://github.com/sindresorhus/del.git (del), https://github.com/sindresorhus/env-paths.git (env-paths), https://github.com/sindresorhus/execa.git (execa), https://github.com/sindresorhus/find-up.git (find-up), https://github.com/sindresorhus/get-stream.git (get-stream), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/globby.git (globby), https://github.com/sindresorhus/hard-rejection.git (hard-rejection), https://github.com/sindresorhus/has-flag.git (has-flag), https://github.com/sindresorhus/import-local.git (import-local), https://github.com/sindresorhus/indent-string.git (indent-string), https://github.com/sindresorhus/internal-ip.git (internal-ip), https://github.com/sindresorhus/is-absolute-url.git (is-absolute-url), https://github.com/sindresorhus/is-finite.git (is-finite), https://github.com/sindresorhus/is-fullwidth-code-point.git (is-fullwidth-code-point), https://github.com/sindresorhus/is-path-cwd.git (is-path-cwd), https://github.com/sindresorhus/is-path-in-cwd.git (is-path-in-cwd), https://github.com/sindresorhus/is-path-inside.git (is-path-inside), https://github.com/sindresorhus/is-wsl.git (is-wsl), https://github.com/sindresorhus/locate-path.git (locate-path), https://github.com/sindresorhus/make-dir.git (make-dir), https://github.com/sindresorhus/multimatch.git (multimatch), https://github.com/sindresorhus/opn.git (opn), https://github.com/sindresorhus/p-limit.git (p-limit), https://github.com/sindresorhus/p-locate.git (p-locate), https://github.com/sindresorhus/p-map.git (p-map), https://github.com/sindresorhus/p-retry.git (p-retry), https://github.com/sindresorhus/p-try.git (p-try), https://github.com/sindresorhus/parent-module.git (parent-module), https://github.com/sindresorhus/path-exists.git (path-exists), https://github.com/sindresorhus/path-key.git (path-key), https://github.com/sindresorhus/path-type.git (path-type), https://github.com/sindresorhus/pify.git (pify), https://github.com/sindresorhus/pkg-dir.git (pkg-dir), https://github.com/sindresorhus/quick-lru.git (quick-lru), https://github.com/sindresorhus/read-pkg.git (read-pkg), https://github.com/sindresorhus/read-pkg-up.git (read-pkg-up), https://github.com/sindresorhus/redent.git (redent), https://github.com/sindresorhus/resolve-from.git (resolve-from), https://github.com/sindresorhus/shebang-regex.git (shebang-regex), https://github.com/sindresorhus/slash.git (slash), https://github.com/sindresorhus/string-width.git (string-width), https://github.com/chalk/strip-ansi.git (strip-ansi), https://github.com/sindresorhus/strip-indent.git (strip-indent), https://github.com/chalk/supports-color.git (supports-color), https://github.com/sindresorhus/trim-newlines.git (trim-newlines), https://github.com/sindresorhus/type-fest.git (type-fest), https://github.com/chalk/wrap-ansi.git (wrap-ansi). This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: ajv. A copy of the source code may be downloaded from https://github.com/ajv-validator/ajv.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -1998,7 +2178,7 @@ Apache License
 
 -----
 
-The following software may be included in this product: ansi-regex, ansi-styles, array-differ, array-union, array-uniq, arrify, camelcase, chalk, code-point-at, decamelize, detect-indent, escape-string-regexp, file-type, filename-reserved-regex, find-up, fs-access, get-stream, globals, globby, has-ansi, has-flag, into-stream, ip-regex, is-binary-path, is-fullwidth-code-point, is-plain-obj, is-stream, is-wsl, lcid, load-json-file, locate-path, lowercase-keys, map-obj, npm-run-path, null-check, number-is-nan, object-assign, os-locale, os-tmpdir, p-finally, p-is-promise, p-locate, p-try, parse-json, path-exists, path-is-absolute, path-key, path-type, pify, query-string, read-pkg, read-pkg-up, repeating, resolve-cwd, resolve-from, semver-truncate, shebang-regex, sort-keys, string-width, strip-ansi, strip-bom, strip-eof, strip-outer, supports-color, trim-repeated, trim-right, wrap-ansi, yn. A copy of the source code may be downloaded from https://github.com/chalk/ansi-regex.git (ansi-regex), https://github.com/chalk/ansi-styles.git (ansi-styles), https://github.com/sindresorhus/array-differ.git (array-differ), https://github.com/sindresorhus/array-union.git (array-union), https://github.com/sindresorhus/array-uniq.git (array-uniq), https://github.com/sindresorhus/arrify.git (arrify), https://github.com/sindresorhus/camelcase.git (camelcase), https://github.com/chalk/chalk.git (chalk), https://github.com/sindresorhus/code-point-at.git (code-point-at), https://github.com/sindresorhus/decamelize.git (decamelize), https://github.com/sindresorhus/detect-indent.git (detect-indent), https://github.com/sindresorhus/escape-string-regexp.git (escape-string-regexp), https://github.com/sindresorhus/file-type.git (file-type), https://github.com/sindresorhus/filename-reserved-regex.git (filename-reserved-regex), https://github.com/sindresorhus/find-up.git (find-up), https://github.com/sindresorhus/fs-access.git (fs-access), https://github.com/sindresorhus/get-stream.git (get-stream), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/globby.git (globby), https://github.com/sindresorhus/has-ansi.git (has-ansi), https://github.com/sindresorhus/has-flag.git (has-flag), https://github.com/sindresorhus/into-stream.git (into-stream), https://github.com/sindresorhus/ip-regex.git (ip-regex), https://github.com/sindresorhus/is-binary-path.git (is-binary-path), https://github.com/sindresorhus/is-fullwidth-code-point.git (is-fullwidth-code-point), https://github.com/sindresorhus/is-plain-obj.git (is-plain-obj), https://github.com/sindresorhus/is-stream.git (is-stream), https://github.com/sindresorhus/is-wsl.git (is-wsl), https://github.com/sindresorhus/lcid.git (lcid), https://github.com/sindresorhus/load-json-file.git (load-json-file), https://github.com/sindresorhus/locate-path.git (locate-path), https://github.com/sindresorhus/lowercase-keys.git (lowercase-keys), https://github.com/sindresorhus/map-obj.git (map-obj), https://github.com/sindresorhus/npm-run-path.git (npm-run-path), https://github.com/sindresorhus/null-check.git (null-check), https://github.com/sindresorhus/number-is-nan.git (number-is-nan), https://github.com/sindresorhus/object-assign.git (object-assign), https://github.com/sindresorhus/os-locale.git (os-locale), https://github.com/sindresorhus/os-tmpdir.git (os-tmpdir), https://github.com/sindresorhus/p-finally.git (p-finally), https://github.com/sindresorhus/p-is-promise.git (p-is-promise), https://github.com/sindresorhus/p-locate.git (p-locate), https://github.com/sindresorhus/p-try.git (p-try), https://github.com/sindresorhus/parse-json.git (parse-json), https://github.com/sindresorhus/path-exists.git (path-exists), https://github.com/sindresorhus/path-is-absolute.git (path-is-absolute), https://github.com/sindresorhus/path-key.git (path-key), https://github.com/sindresorhus/path-type.git (path-type), https://github.com/sindresorhus/pify.git (pify), https://github.com/sindresorhus/query-string.git (query-string), https://github.com/sindresorhus/read-pkg.git (read-pkg), https://github.com/sindresorhus/read-pkg-up.git (read-pkg-up), https://github.com/sindresorhus/repeating.git (repeating), https://github.com/sindresorhus/resolve-cwd.git (resolve-cwd), https://github.com/sindresorhus/resolve-from.git (resolve-from), https://github.com/sindresorhus/semver-truncate.git (semver-truncate), https://github.com/sindresorhus/shebang-regex.git (shebang-regex), https://github.com/sindresorhus/sort-keys.git (sort-keys), https://github.com/sindresorhus/string-width.git (string-width), https://github.com/chalk/strip-ansi.git (strip-ansi), https://github.com/sindresorhus/strip-bom.git (strip-bom), https://github.com/sindresorhus/strip-eof.git (strip-eof), https://github.com/sindresorhus/strip-outer.git (strip-outer), https://github.com/chalk/supports-color.git (supports-color), https://github.com/sindresorhus/trim-repeated.git (trim-repeated), https://github.com/sindresorhus/trim-right.git (trim-right), https://github.com/chalk/wrap-ansi.git (wrap-ansi), https://github.com/sindresorhus/yn.git (yn). This software contains the following license and notice below:
+The following software may be included in this product: ansi-regex, ansi-styles, array-differ, array-union, array-uniq, arrify, camelcase, chalk, code-point-at, decamelize, detect-indent, escape-string-regexp, find-up, fs-access, get-stream, globals, globby, has-ansi, has-flag, ip-regex, is-binary-path, is-fullwidth-code-point, is-plain-obj, is-stream, is-wsl, lcid, load-json-file, locate-path, map-obj, npm-run-path, null-check, number-is-nan, object-assign, os-locale, os-tmpdir, p-finally, p-locate, p-try, parse-json, path-exists, path-is-absolute, path-key, path-type, pify, query-string, read-pkg, read-pkg-up, repeating, resolve-cwd, resolve-from, shebang-regex, string-width, strip-ansi, strip-bom, strip-eof, supports-color, trim-right, wrap-ansi, yn. A copy of the source code may be downloaded from https://github.com/chalk/ansi-regex.git (ansi-regex), https://github.com/chalk/ansi-styles.git (ansi-styles), https://github.com/sindresorhus/array-differ.git (array-differ), https://github.com/sindresorhus/array-union.git (array-union), https://github.com/sindresorhus/array-uniq.git (array-uniq), https://github.com/sindresorhus/arrify.git (arrify), https://github.com/sindresorhus/camelcase.git (camelcase), https://github.com/chalk/chalk.git (chalk), https://github.com/sindresorhus/code-point-at.git (code-point-at), https://github.com/sindresorhus/decamelize.git (decamelize), https://github.com/sindresorhus/detect-indent.git (detect-indent), https://github.com/sindresorhus/escape-string-regexp.git (escape-string-regexp), https://github.com/sindresorhus/find-up.git (find-up), https://github.com/sindresorhus/fs-access.git (fs-access), https://github.com/sindresorhus/get-stream.git (get-stream), https://github.com/sindresorhus/globals.git (globals), https://github.com/sindresorhus/globby.git (globby), https://github.com/sindresorhus/has-ansi.git (has-ansi), https://github.com/sindresorhus/has-flag.git (has-flag), https://github.com/sindresorhus/ip-regex.git (ip-regex), https://github.com/sindresorhus/is-binary-path.git (is-binary-path), https://github.com/sindresorhus/is-fullwidth-code-point.git (is-fullwidth-code-point), https://github.com/sindresorhus/is-plain-obj.git (is-plain-obj), https://github.com/sindresorhus/is-stream.git (is-stream), https://github.com/sindresorhus/is-wsl.git (is-wsl), https://github.com/sindresorhus/lcid.git (lcid), https://github.com/sindresorhus/load-json-file.git (load-json-file), https://github.com/sindresorhus/locate-path.git (locate-path), https://github.com/sindresorhus/map-obj.git (map-obj), https://github.com/sindresorhus/npm-run-path.git (npm-run-path), https://github.com/sindresorhus/null-check.git (null-check), https://github.com/sindresorhus/number-is-nan.git (number-is-nan), https://github.com/sindresorhus/object-assign.git (object-assign), https://github.com/sindresorhus/os-locale.git (os-locale), https://github.com/sindresorhus/os-tmpdir.git (os-tmpdir), https://github.com/sindresorhus/p-finally.git (p-finally), https://github.com/sindresorhus/p-locate.git (p-locate), https://github.com/sindresorhus/p-try.git (p-try), https://github.com/sindresorhus/parse-json.git (parse-json), https://github.com/sindresorhus/path-exists.git (path-exists), https://github.com/sindresorhus/path-is-absolute.git (path-is-absolute), https://github.com/sindresorhus/path-key.git (path-key), https://github.com/sindresorhus/path-type.git (path-type), https://github.com/sindresorhus/pify.git (pify), https://github.com/sindresorhus/query-string.git (query-string), https://github.com/sindresorhus/read-pkg.git (read-pkg), https://github.com/sindresorhus/read-pkg-up.git (read-pkg-up), https://github.com/sindresorhus/repeating.git (repeating), https://github.com/sindresorhus/resolve-cwd.git (resolve-cwd), https://github.com/sindresorhus/resolve-from.git (resolve-from), https://github.com/sindresorhus/shebang-regex.git (shebang-regex), https://github.com/sindresorhus/string-width.git (string-width), https://github.com/chalk/strip-ansi.git (strip-ansi), https://github.com/sindresorhus/strip-bom.git (strip-bom), https://github.com/sindresorhus/strip-eof.git (strip-eof), https://github.com/chalk/supports-color.git (supports-color), https://github.com/sindresorhus/trim-right.git (trim-right), https://github.com/chalk/wrap-ansi.git (wrap-ansi), https://github.com/sindresorhus/yn.git (yn). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -2160,112 +2340,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----
 
-The following software may be included in this product: arch, queue-microtask, run-parallel. A copy of the source code may be downloaded from git://github.com/feross/arch.git (arch), git://github.com/feross/queue-microtask.git (queue-microtask), git://github.com/feross/run-parallel.git (run-parallel). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) Feross Aboukhadijeh
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: archive-type, decompress-unzip, executable, ext-list, ext-name. A copy of the source code may be downloaded from https://github.com/kevva/archive-type.git (archive-type), https://github.com/kevva/decompress-unzip.git (decompress-unzip), https://github.com/kevva/executable.git (executable), https://github.com/kevva/ext-list.git (ext-list), https://github.com/kevva/ext-name.git (ext-name). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
-The following software may be included in this product: archiver. A copy of the source code may be downloaded from https://github.com/archiverjs/node-archiver.git. This software contains the following license and notice below:
-
-Copyright (c) 2012-2014 Chris Talkington, contributors.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: archiver-utils. A copy of the source code may be downloaded from https://github.com/archiverjs/archiver-utils.git. This software contains the following license and notice below:
-
-Copyright (c) 2015 Chris Talkington.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: archy, buffer-equal, camelize, concat-map, defined, ent, is-typedarray, json-stable-stringify-without-jsonify, minimist, path-browserify, resumer, safe-regex, semver-compare, text-table, tty-browserify, wordwrap. A copy of the source code may be downloaded from http://github.com/substack/node-archy.git (archy), git://github.com/substack/node-buffer-equal.git (buffer-equal), git://github.com/substack/camelize.git (camelize), git://github.com/substack/node-concat-map.git (concat-map), git://github.com/substack/defined.git (defined), https://github.com/substack/node-ent.git (ent), git://github.com/hughsk/is-typedarray.git (is-typedarray), git://github.com/samn/json-stable-stringify.git (json-stable-stringify-without-jsonify), git://github.com/substack/minimist.git (minimist), git://github.com/substack/path-browserify.git (path-browserify), git://github.com/substack/resumer.git (resumer), git://github.com/substack/safe-regex.git (safe-regex), git://github.com/substack/semver-compare.git (semver-compare), git://github.com/substack/text-table.git (text-table), git://github.com/substack/tty-browserify.git (tty-browserify), git://github.com/substack/node-wordwrap.git (wordwrap). This software contains the following license and notice below:
+The following software may be included in this product: archy, buffer-equal, camelize, concat-map, defined, ent, is-typedarray, json-stable-stringify-without-jsonify, minimist, path-browserify, resumer, safe-regex, text-table, tty-browserify, wordwrap. A copy of the source code may be downloaded from http://github.com/substack/node-archy.git (archy), git://github.com/substack/node-buffer-equal.git (buffer-equal), git://github.com/substack/camelize.git (camelize), git://github.com/substack/node-concat-map.git (concat-map), git://github.com/substack/defined.git (defined), https://github.com/substack/node-ent.git (ent), git://github.com/hughsk/is-typedarray.git (is-typedarray), git://github.com/samn/json-stable-stringify.git (json-stable-stringify-without-jsonify), git://github.com/minimistjs/minimist.git (minimist), git://github.com/substack/path-browserify.git (path-browserify), git://github.com/substack/resumer.git (resumer), git://github.com/substack/safe-regex.git (safe-regex), git://github.com/substack/text-table.git (text-table), git://github.com/substack/tty-browserify.git (tty-browserify), git://github.com/substack/node-wordwrap.git (wordwrap). This software contains the following license and notice below:
 
 This software is released under the MIT license:
 
@@ -2480,7 +2555,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: array-flatten, camel-case, capital-case, change-case, constant-case, dot-case, header-case, lower-case, no-case, param-case, pascal-case, path-case, path-to-regexp, sentence-case, snake-case, ts-node, upper-case, upper-case-first. A copy of the source code may be downloaded from git://github.com/blakeembrey/array-flatten.git (array-flatten), git://github.com/blakeembrey/change-case.git (camel-case), git://github.com/blakeembrey/change-case.git (capital-case), git://github.com/blakeembrey/change-case.git (change-case), git://github.com/blakeembrey/change-case.git (constant-case), git://github.com/blakeembrey/change-case.git (dot-case), git://github.com/blakeembrey/change-case.git (header-case), git://github.com/blakeembrey/change-case.git (lower-case), git://github.com/blakeembrey/change-case.git (no-case), git://github.com/blakeembrey/change-case.git (param-case), git://github.com/blakeembrey/change-case.git (pascal-case), git://github.com/blakeembrey/change-case.git (path-case), https://github.com/component/path-to-regexp.git (path-to-regexp), git://github.com/blakeembrey/change-case.git (sentence-case), git://github.com/blakeembrey/change-case.git (snake-case), git://github.com/TypeStrong/ts-node.git (ts-node), git://github.com/blakeembrey/upper-case.git (upper-case), git://github.com/blakeembrey/change-case.git (upper-case-first). This software contains the following license and notice below:
+The following software may be included in this product: array-flatten, camel-case, lower-case, no-case, param-case, path-to-regexp, ts-node, upper-case. A copy of the source code may be downloaded from git://github.com/blakeembrey/array-flatten.git (array-flatten), git://github.com/blakeembrey/camel-case.git (camel-case), git://github.com/blakeembrey/lower-case.git (lower-case), git://github.com/blakeembrey/no-case.git (no-case), git://github.com/blakeembrey/param-case.git (param-case), https://github.com/pillarjs/path-to-regexp.git (path-to-regexp), git://github.com/TypeStrong/ts-node.git (ts-node), git://github.com/blakeembrey/upper-case.git (upper-case). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -2709,7 +2784,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: astral-regex, caw, decompress, decompress-tar, decompress-tarbz2, decompress-targz, dir-glob, download, get-proxy, npm-conf, os-filter-obj, shebang-command. A copy of the source code may be downloaded from https://github.com/kevva/astral-regex.git (astral-regex), https://github.com/kevva/caw.git (caw), https://github.com/kevva/decompress.git (decompress), https://github.com/kevva/decompress-tar.git (decompress-tar), https://github.com/kevva/decompress-tarbz2.git (decompress-tarbz2), https://github.com/kevva/decompress-targz.git (decompress-targz), https://github.com/kevva/dir-glob.git (dir-glob), https://github.com/kevva/download.git (download), https://github.com/kevva/get-proxy.git (get-proxy), https://github.com/kevva/npm-conf.git (npm-conf), https://github.com/kevva/os-filter-obj.git (os-filter-obj), https://github.com/kevva/shebang-command.git (shebang-command). This software contains the following license and notice below:
+The following software may be included in this product: astral-regex, dir-glob, shebang-command. A copy of the source code may be downloaded from https://github.com/kevva/astral-regex.git (astral-regex), https://github.com/kevva/dir-glob.git (dir-glob), https://github.com/kevva/shebang-command.git (shebang-command). This software contains the following license and notice below:
 
 MIT License
 
@@ -3895,46 +3970,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----
 
-The following software may be included in this product: bin-check, strict-uri-encode. A copy of the source code may be downloaded from https://github.com/kevva/bin-check.git (bin-check), https://github.com/kevva/strict-uri-encode.git (strict-uri-encode). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com> (github.com/kevva)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
-The following software may be included in this product: bin-wrapper. A copy of the source code may be downloaded from https://github.com/kevva/bin-wrapper.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: binary-extensions, is-binary-path. A copy of the source code may be downloaded from https://github.com/sindresorhus/binary-extensions.git (binary-extensions), https://github.com/sindresorhus/is-binary-path.git (is-binary-path). This software contains the following license and notice below:
 
 MIT License
@@ -3973,42 +4008,6 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: bl. A copy of the source code may be downloaded from https://github.com/rvagg/bl.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-=====================
-
-Copyright (c) 2013-2019 bl contributors
-----------------------------------
-
-*bl contributors listed at <https://github.com/rvagg/bl#contributors>*
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: bl. A copy of the source code may be downloaded from https://github.com/rvagg/bl.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-=====================
-
-Copyright (c) 2013-2016 bl contributors
-----------------------------------
-
-*bl contributors listed at <https://github.com/rvagg/bl#contributors>*
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -4139,19 +4138,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
------
-
-The following software may be included in this product: boolean. A copy of the source code may be downloaded from git://github.com/thenativeweb/boolean.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-Copyright (c) 2014-2021 the native web.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -4494,30 +4480,6 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: buffer-crc32. A copy of the source code may be downloaded from git://github.com/brianloveswords/buffer-crc32.git. This software contains the following license and notice below:
-
-The MIT License
-
-Copyright (c) 2013 Brian J. Brennan
-
-Permission is hereby granted, free of charge, to any person obtaining a copy 
-of this software and associated documentation files (the "Software"), to deal in 
-the Software without restriction, including without limitation the rights to use, 
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all 
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: buffer-from. A copy of the source code may be downloaded from https://github.com/LinusU/buffer-from.git. This software contains the following license and notice below:
 
 MIT License
@@ -4693,58 +4655,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: cacheable-lookup. A copy of the source code may be downloaded from git+https://github.com/szmarczak/cacheable-lookup.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2019 Szymon Marczak
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
-The following software may be included in this product: cacheable-request, clone-response, keyv. A copy of the source code may be downloaded from git+https://github.com/lukechilds/cacheable-request.git (cacheable-request), git+https://github.com/lukechilds/clone-response.git (clone-response), git+https://github.com/lukechilds/keyv.git (keyv). This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2017 Luke Childs
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -5233,7 +5143,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: chownr, color-support, fs-minipass, fs-write-stream-atomic, ini, isexe, json-stringify-safe, lru-cache, minimatch, minipass-collect, minipass-flush, minipass-pipeline, nopt, npmlog, once, proto-list, pseudomap, rimraf, semver, tar, which, wrappy, yallist. A copy of the source code may be downloaded from git://github.com/isaacs/chownr.git (chownr), git+https://github.com/isaacs/color-support.git (color-support), git+https://github.com/npm/fs-minipass.git (fs-minipass), https://github.com/npm/fs-write-stream-atomic (fs-write-stream-atomic), git://github.com/isaacs/ini.git (ini), git+https://github.com/isaacs/isexe.git (isexe), git://github.com/isaacs/json-stringify-safe (json-stringify-safe), git://github.com/isaacs/node-lru-cache.git (lru-cache), git://github.com/isaacs/minimatch.git (minimatch), git+https://github.com/isaacs/minipass-flush.git (minipass-flush), https://github.com/npm/nopt.git (nopt), https://github.com/npm/npmlog.git (npmlog), git://github.com/isaacs/once (once), https://github.com/isaacs/proto-list (proto-list), git+https://github.com/isaacs/pseudomap.git (pseudomap), git://github.com/isaacs/rimraf.git (rimraf), https://github.com/npm/node-semver (semver), https://github.com/npm/node-tar.git (tar), git://github.com/isaacs/node-which.git (which), https://github.com/npm/wrappy (wrappy), git+https://github.com/isaacs/yallist.git (yallist). This software contains the following license and notice below:
+The following software may be included in this product: chownr, color-support, fs-minipass, fs-write-stream-atomic, ini, isexe, json-stringify-safe, lru-cache, minimatch, minipass-collect, minipass-flush, minipass-pipeline, nopt, npmlog, once, pseudomap, rimraf, semver, tar, which, wrappy, yallist. A copy of the source code may be downloaded from git://github.com/isaacs/chownr.git (chownr), git+https://github.com/isaacs/color-support.git (color-support), git+https://github.com/npm/fs-minipass.git (fs-minipass), https://github.com/npm/fs-write-stream-atomic (fs-write-stream-atomic), git://github.com/isaacs/ini.git (ini), git+https://github.com/isaacs/isexe.git (isexe), git://github.com/isaacs/json-stringify-safe (json-stringify-safe), git://github.com/isaacs/node-lru-cache.git (lru-cache), git://github.com/isaacs/minimatch.git (minimatch), git+https://github.com/isaacs/minipass-flush.git (minipass-flush), https://github.com/npm/nopt.git (nopt), https://github.com/npm/npmlog.git (npmlog), git://github.com/isaacs/once (once), git+https://github.com/isaacs/pseudomap.git (pseudomap), git://github.com/isaacs/rimraf.git (rimraf), https://github.com/npm/node-semver (semver), https://github.com/npm/node-tar.git (tar), git://github.com/isaacs/node-which.git (which), https://github.com/npm/wrappy (wrappy), git+https://github.com/isaacs/yallist.git (yallist). This software contains the following license and notice below:
 
 The ISC License
 
@@ -5250,212 +5160,6 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
------
-
-The following software may be included in this product: chrome-launcher, lighthouse-logger. A copy of the source code may be downloaded from https://github.com/GoogleChrome/chrome-launcher/ (chrome-launcher). This software contains the following license and notice below:
-
-Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright 2014 Google Inc.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 
 -----
 
@@ -6002,33 +5706,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----
 
-The following software may be included in this product: compress-commons, crc32-stream, zip-stream. A copy of the source code may be downloaded from https://github.com/archiverjs/node-compress-commons.git (compress-commons), https://github.com/archiverjs/node-crc32-stream.git (crc32-stream), https://github.com/archiverjs/node-zip-stream.git (zip-stream). This software contains the following license and notice below:
-
-Copyright (c) 2014 Chris Talkington, contributors.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: compressible. A copy of the source code may be downloaded from https://github.com/jshttp/compressible.git. This software contains the following license and notice below:
 
 (The MIT License)
@@ -6491,24 +6168,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: crc-32. A copy of the source code may be downloaded from git://github.com/SheetJS/js-crc32.git. This software contains the following license and notice below:
-
-Copyright (C) 2014-present  SheetJS
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
------
-
 The following software may be included in this product: create-ecdh. A copy of the source code may be downloaded from https://github.com/crypto-browserify/createECDH.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -6798,31 +6457,6 @@ Redistributions in binary form must reproduce the above copyright notice, this l
 
 THIS IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
-The following software may be included in this product: css-shorthand-properties. A copy of the source code may be downloaded from git://github.com/gilmoreorless/css-shorthand-properties.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright 2014-2018 Gilmore Davidson <gilmoreorless@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -7597,32 +7231,6 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: decompress-response. A copy of the source code may be downloaded from https://github.com/sindresorhus/decompress-response.git. This software contains the following license and notice below:
-
-`The MIT License (MIT)
-
-Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
 The following software may be included in this product: deep-equal. A copy of the source code may be downloaded from http://github.com/substack/node-deep-equal.git. This software contains the following license and notice below:
 
 MIT License
@@ -7937,38 +7545,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: devtools-protocol. A copy of the source code may be downloaded from https://github.com/ChromeDevTools/devtools-protocol. This software contains the following license and notice below:
-
-// Copyright 2014 The Chromium Authors. All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//    * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//    * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//    * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
 The following software may be included in this product: di. A copy of the source code may be downloaded from git://github.com/vojtajina/node-di.git. This software contains the following license and notice below:
 
 The MIT License
@@ -8080,7 +7656,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: dns-packet, stream-shift, to-buffer. A copy of the source code may be downloaded from https://github.com/mafintosh/dns-packet (dns-packet), https://github.com/mafintosh/stream-shift.git (stream-shift), https://github.com/mafintosh/to-buffer.git (to-buffer). This software contains the following license and notice below:
+The following software may be included in this product: dns-packet, stream-shift. A copy of the source code may be downloaded from https://github.com/mafintosh/dns-packet (dns-packet), https://github.com/mafintosh/stream-shift.git (stream-shift). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -8856,38 +8432,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: duplexer3. A copy of the source code may be downloaded from https://github.com/floatdrop/duplexer3.git. This software contains the following license and notice below:
-
-Copyright (c) 2013, Deoxxa Development
-======================================
-All rights reserved.
---------------------
-  
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:  
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.  
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.  
-3. Neither the name of Deoxxa Development nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.  
-  
-THIS SOFTWARE IS PROVIDED BY DEOXXA DEVELOPMENT ''AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL DEOXXA DEVELOPMENT BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
-The following software may be included in this product: duplexify, end-of-stream, protocol-buffers-schema, pump, pumpify, tar-fs, tar-stream. A copy of the source code may be downloaded from git://github.com/mafintosh/duplexify (duplexify), git://github.com/mafintosh/end-of-stream.git (end-of-stream), https://github.com/mafintosh/protocol-buffers-schema (protocol-buffers-schema), git://github.com/mafintosh/pump.git (pump), git://github.com/mafintosh/pumpify (pumpify), https://github.com/mafintosh/tar-fs.git (tar-fs), git+https://github.com/mafintosh/tar-stream.git (tar-stream). This software contains the following license and notice below:
+The following software may be included in this product: duplexify, end-of-stream, protocol-buffers-schema, pump, pumpify. A copy of the source code may be downloaded from git://github.com/mafintosh/duplexify (duplexify), git://github.com/mafintosh/end-of-stream.git (end-of-stream), https://github.com/mafintosh/protocol-buffers-schema (protocol-buffers-schema), git://github.com/mafintosh/pump.git (pump), git://github.com/mafintosh/pumpify (pumpify). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -8944,32 +8489,6 @@ The following software may be included in this product: ecc-jsbn. A copy of the 
 The MIT License (MIT)
 
 Copyright (c) 2014 Jeremie Miller
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
-The following software may be included in this product: edge-paths. A copy of the source code may be downloaded from http://github.com/shirshak55/edge-paths. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2020 Shirshak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9238,32 +8757,6 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-
------
-
-The following software may be included in this product: es6-error. A copy of the source code may be downloaded from https://github.com/bjyoungblood/es6-error.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2015 Ben Youngblood
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -9931,24 +9424,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: exit-on-epipe. A copy of the source code may be downloaded from git://github.com/SheetJS/node-exit-on-epipe.git. This software contains the following license and notice below:
-
-Copyright (C) 2015-present SheetJS
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
------
-
 The following software may be included in this product: expand-tilde, map-cache, snapdragon, to-object-path. A copy of the source code may be downloaded from https://github.com/jonschlinkert/expand-tilde.git (expand-tilde), https://github.com/jonschlinkert/map-cache.git (map-cache), https://github.com/jonschlinkert/snapdragon.git (snapdragon), https://github.com/jonschlinkert/to-object-path.git (to-object-path). This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -10105,34 +9580,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: extract-zip. A copy of the source code may be downloaded from https://github.com/maxogden/extract-zip.git. This software contains the following license and notice below:
-
-Copyright (c) 2014 Max Ogden and other contributors
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
@@ -10299,32 +9746,6 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
-
------
-
-The following software may be included in this product: fd-slicer. A copy of the source code may be downloaded from git://github.com/andrewrk/node-fd-slicer.git. This software contains the following license and notice below:
-
-Copyright (c) 2014 Andrew Kelley
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation files
-(the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,
-publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -10890,32 +10311,6 @@ limitations under the License.
 
 -----
 
-The following software may be included in this product: fs-constants, thunky. A copy of the source code may be downloaded from https://github.com/mafintosh/fs-constants.git (fs-constants), git://github.com/mafintosh/thunky.git (thunky). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2018 Mathias Buus
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
 The following software may be included in this product: fs-extra. A copy of the source code may be downloaded from https://github.com/jprichardson/node-fs-extra. This software contains the following license and notice below:
 
 (The MIT License)
@@ -11378,35 +10773,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: global-agent, roarr. A copy of the source code may be downloaded from https://github.com/gajus/global-agent (global-agent), git@github.com:gajus/roarr.git (roarr). This software contains the following license and notice below:
-
-Copyright (c) 2019, Gajus Kuizinas (http://gajus.com/)
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Gajus Kuizinas (http://gajus.com/) nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL ANUARY BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
 The following software may be included in this product: global-modules, global-prefix, repeat-element, to-regex-range, use. A copy of the source code may be downloaded from https://github.com/jonschlinkert/global-modules.git (global-modules), https://github.com/jonschlinkert/global-prefix.git (global-prefix), https://github.com/jonschlinkert/repeat-element.git (repeat-element), https://github.com/micromatch/to-regex-range.git (to-regex-range), https://github.com/jonschlinkert/use.git (use). This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -11430,32 +10796,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: globalthis. A copy of the source code may be downloaded from git://github.com/ljharb/System.global.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2016 Jordan Harband
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -11529,32 +10869,6 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
------
-
-The following software may be included in this product: grapheme-splitter. A copy of the source code may be downloaded from https://github.com/orling/grapheme-splitter.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2015 Orlin Georgiev
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -11719,32 +11033,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: has-symbol-support-x. A copy of the source code may be downloaded from https://github.com/Xotic750/has-symbol-support-x.git. This software contains the following license and notice below:
-
-https://opensource.org/licenses/MIT
-
-Copyright (c) 2015-present Graham Fairweather.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
 The following software may be included in this product: has-symbols. A copy of the source code may be downloaded from git://github.com/inspect-js/has-symbols.git. This software contains the following license and notice below:
 
 MIT License
@@ -11768,32 +11056,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
------
-
-The following software may be included in this product: has-to-string-tag-x. A copy of the source code may be downloaded from https://github.com/Xotic750/has-to-string-tag-x.git. This software contains the following license and notice below:
-
-https://opensource.org/licenses/MIT
-
-Copyright (c) 2015-2017 Graham Fairweather.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 
 -----
 
@@ -12053,20 +11315,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: http-cache-semantics. A copy of the source code may be downloaded from https://github.com/kornelski/http-cache-semantics.git. This software contains the following license and notice below:
-
-Copyright 2016-2018 Kornel Lesiński
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
@@ -12717,7 +11965,7 @@ SOFTWARE.
 
 The following software may be included in this product: ipaddr.js. A copy of the source code may be downloaded from git://github.com/whitequark/ipaddr.js. This software contains the following license and notice below:
 
-Copyright (C) 2011 Peter Zotov <whitequark@whitequark.org>
+Copyright (C) 2011-2017 whitequark <whitequark@whitequark.org>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -12741,7 +11989,7 @@ THE SOFTWARE.
 
 The following software may be included in this product: ipaddr.js. A copy of the source code may be downloaded from git://github.com/whitequark/ipaddr.js. This software contains the following license and notice below:
 
-Copyright (C) 2011-2017 whitequark <whitequark@whitequark.org>
+Copyright (C) 2011 Peter Zotov <whitequark@whitequark.org>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -12918,31 +12166,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: is-natural-number, strip-dirs. A copy of the source code may be downloaded from https://github.com/shinnn/is-natural-number.js.git (is-natural-number), https://github.com/shinnn/node-strip-dirs.git (strip-dirs). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2014 - 2016 Shinnosuke Watanabe
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: is-negated-glob. A copy of the source code may be downloaded from https://github.com/jonschlinkert/is-negated-glob.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -12966,56 +12189,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
------
-
-The following software may be included in this product: is-object. A copy of the source code may be downloaded from git://github.com/inspect-js/is-object.git. This software contains the following license and notice below:
-
-Copyright (c) 2013 Colingo.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
-The following software may be included in this product: is-retry-allowed, pinkie, pinkie-promise, require-from-string. A copy of the source code may be downloaded from https://github.com/floatdrop/is-retry-allowed.git (is-retry-allowed), https://github.com/floatdrop/pinkie.git (pinkie), https://github.com/floatdrop/pinkie-promise.git (pinkie-promise), https://github.com/floatdrop/require-from-string.git (require-from-string). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com> (github.com/floatdrop)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 
 -----
 
@@ -13169,32 +12342,6 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
-The following software may be included in this product: isurl, url-to-options. A copy of the source code may be downloaded from https://github.com/stevenvachon/isurl.git (isurl), https://github.com/stevenvachon/url-to-options.git (url-to-options). This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2017 Steven Vachon
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -13395,33 +12542,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: json-buffer. A copy of the source code may be downloaded from git://github.com/dominictarr/json-buffer.git. This software contains the following license and notice below:
-
-Copyright (c) 2013 Dominic Tarr
-
-Permission is hereby granted, free of charge, 
-to any person obtaining a copy of this software and 
-associated documentation files (the "Software"), to 
-deal in the Software without restriction, including 
-without limitation the rights to use, copy, modify, 
-merge, publish, distribute, sublicense, and/or sell 
-copies of the Software, and to permit persons to whom 
-the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice 
-shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -14594,7 +13714,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: karma-safari-launcher, karma-sauce-launcher. A copy of the source code may be downloaded from git://github.com/karma-runner/karma-safari-launcher.git (karma-safari-launcher), git://github.com/karma-runner/karma-sauce-launcher.git (karma-sauce-launcher). This software contains the following license and notice below:
+The following software may be included in this product: karma-safari-launcher. A copy of the source code may be downloaded from git://github.com/karma-runner/karma-safari-launcher.git. This software contains the following license and notice below:
 
 The MIT License
 
@@ -15000,7 +14120,7 @@ terms above.
 
 -----
 
-The following software may be included in this product: lodash.camelcase, lodash.clonedeep, lodash.debounce, lodash.defaults, lodash.difference, lodash.flatten, lodash.isplainobject, lodash.sortby, lodash.truncate, lodash.union, lodash.zip. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.clonedeep), https://github.com/lodash/lodash.git (lodash.debounce), https://github.com/lodash/lodash.git (lodash.defaults), https://github.com/lodash/lodash.git (lodash.difference), https://github.com/lodash/lodash.git (lodash.flatten), https://github.com/lodash/lodash.git (lodash.isplainobject), https://github.com/lodash/lodash.git (lodash.sortby), https://github.com/lodash/lodash.git (lodash.truncate), https://github.com/lodash/lodash.git (lodash.union), https://github.com/lodash/lodash.git (lodash.zip). This software contains the following license and notice below:
+The following software may be included in this product: lodash.camelcase, lodash.debounce, lodash.sortby, lodash.truncate. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git (lodash.camelcase), https://github.com/lodash/lodash.git (lodash.debounce), https://github.com/lodash/lodash.git (lodash.sortby), https://github.com/lodash/lodash.git (lodash.truncate). This software contains the following license and notice below:
 
 Copyright jQuery Foundation and other contributors <https://jquery.org/>
 
@@ -15104,33 +14224,6 @@ terms above.
 
 -----
 
-The following software may be included in this product: lodash.isobject. A copy of the source code may be downloaded from https://github.com/lodash/lodash.git. This software contains the following license and notice below:
-
-Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
-Based on Underscore.js, copyright 2009-2015 Jeremy Ashkenas,
-DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: log4js. A copy of the source code may be downloaded from https://github.com/log4js-node/log4js-node.git. This software contains the following license and notice below:
 
 Copyright 2015 Gareth Jones (with contributions from many other people)
@@ -15146,32 +14239,6 @@ Copyright 2015 Gareth Jones (with contributions from many other people)
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-
------
-
-The following software may be included in this product: loglevel-plugin-prefix. A copy of the source code may be downloaded from git@github.com:kutuluk/loglevel-plugin-prefix.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2017 Evgeniy Pavlov
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -15263,219 +14330,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: marky. A copy of the source code may be downloaded from git+https://github.com/nolanlawson/marky.git. This software contains the following license and notice below:
-
-Apache License
-Version 2.0, January 2004
-http://www.apache.org/licenses/
-
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-1. Definitions.
-
-    "License" shall mean the terms and conditions for use, reproduction, and
-    distribution as defined by Sections 1 through 9 of this document.
-
-    "Licensor" shall mean the copyright owner or entity authorized by the
-    copyright owner that is granting the License.
-
-    "Legal Entity" shall mean the union of the acting entity and all other
-    entities that control, are controlled by, or are under common control with
-    that entity. For the purposes of this definition, "control" means (i) the
-    power, direct or indirect, to cause the direction or management of such
-    entity, whether by contract or otherwise, or (ii) ownership of
-    fifty percent (50%) or more of the outstanding shares, or (iii) beneficial
-    ownership of such entity.
-
-    "You" (or "Your") shall mean an individual or Legal Entity exercising
-    permissions granted by this License.
-
-    "Source" form shall mean the preferred form for making modifications,
-    including but not limited to software source code, documentation source,
-    and configuration files.
-
-    "Object" form shall mean any form resulting from mechanical transformation
-    or translation of a Source form, including but not limited to compiled
-    object code, generated documentation, and conversions to
-    other media types.
-
-    "Work" shall mean the work of authorship, whether in Source or Object
-    form, made available under the License, as indicated by a copyright notice
-    that is included in or attached to the work (an example is provided in the
-    Appendix below).
-
-    "Derivative Works" shall mean any work, whether in Source or Object form,
-    that is based on (or derived from) the Work and for which the editorial
-    revisions, annotations, elaborations, or other modifications represent,
-    as a whole, an original work of authorship. For the purposes of this
-    License, Derivative Works shall not include works that remain separable
-    from, or merely link (or bind by name) to the interfaces of, the Work and
-    Derivative Works thereof.
-
-    "Contribution" shall mean any work of authorship, including the original
-    version of the Work and any modifications or additions to that Work or
-    Derivative Works thereof, that is intentionally submitted to Licensor for
-    inclusion in the Work by the copyright owner or by an individual or
-    Legal Entity authorized to submit on behalf of the copyright owner.
-    For the purposes of this definition, "submitted" means any form of
-    electronic, verbal, or written communication sent to the Licensor or its
-    representatives, including but not limited to communication on electronic
-    mailing lists, source code control systems, and issue tracking systems
-    that are managed by, or on behalf of, the Licensor for the purpose of
-    discussing and improving the Work, but excluding communication that is
-    conspicuously marked or otherwise designated in writing by the copyright
-    owner as "Not a Contribution."
-
-    "Contributor" shall mean Licensor and any individual or Legal Entity on
-    behalf of whom a Contribution has been received by Licensor and
-    subsequently incorporated within the Work.
-
-2. Grant of Copyright License.
-
-    Subject to the terms and conditions of this License, each Contributor
-    hereby grants to You a perpetual, worldwide, non-exclusive, no-charge,
-    royalty-free, irrevocable copyright license to reproduce, prepare
-    Derivative Works of, publicly display, publicly perform, sublicense,
-    and distribute the Work and such Derivative Works in
-    Source or Object form.
-
-3. Grant of Patent License.
-
-    Subject to the terms and conditions of this License, each Contributor
-    hereby grants to You a perpetual, worldwide, non-exclusive, no-charge,
-    royalty-free, irrevocable (except as stated in this section) patent
-    license to make, have made, use, offer to sell, sell, import, and
-    otherwise transfer the Work, where such license applies only to those
-    patent claims licensable by such Contributor that are necessarily
-    infringed by their Contribution(s) alone or by combination of their
-    Contribution(s) with the Work to which such Contribution(s) was submitted.
-    If You institute patent litigation against any entity (including a
-    cross-claim or counterclaim in a lawsuit) alleging that the Work or a
-    Contribution incorporated within the Work constitutes direct or
-    contributory patent infringement, then any patent licenses granted to
-    You under this License for that Work shall terminate as of the date such
-    litigation is filed.
-
-4. Redistribution.
-
-    You may reproduce and distribute copies of the Work or Derivative Works
-    thereof in any medium, with or without modifications, and in Source or
-    Object form, provided that You meet the following conditions:
-
-    1. You must give any other recipients of the Work or Derivative Works a
-    copy of this License; and
-
-    2. You must cause any modified files to carry prominent notices stating
-    that You changed the files; and
-
-    3. You must retain, in the Source form of any Derivative Works that You
-    distribute, all copyright, patent, trademark, and attribution notices from
-    the Source form of the Work, excluding those notices that do not pertain
-    to any part of the Derivative Works; and
-
-    4. If the Work includes a "NOTICE" text file as part of its distribution,
-    then any Derivative Works that You distribute must include a readable copy
-    of the attribution notices contained within such NOTICE file, excluding
-    those notices that do not pertain to any part of the Derivative Works,
-    in at least one of the following places: within a NOTICE text file
-    distributed as part of the Derivative Works; within the Source form or
-    documentation, if provided along with the Derivative Works; or, within a
-    display generated by the Derivative Works, if and wherever such
-    third-party notices normally appear. The contents of the NOTICE file are
-    for informational purposes only and do not modify the License.
-    You may add Your own attribution notices within Derivative Works that You
-    distribute, alongside or as an addendum to the NOTICE text from the Work,
-    provided that such additional attribution notices cannot be construed
-    as modifying the License.
-
-    You may add Your own copyright statement to Your modifications and may
-    provide additional or different license terms and conditions for use,
-    reproduction, or distribution of Your modifications, or for any such
-    Derivative Works as a whole, provided Your use, reproduction, and
-    distribution of the Work otherwise complies with the conditions
-    stated in this License.
-
-5. Submission of Contributions.
-
-    Unless You explicitly state otherwise, any Contribution intentionally
-    submitted for inclusion in the Work by You to the Licensor shall be under
-    the terms and conditions of this License, without any additional
-    terms or conditions. Notwithstanding the above, nothing herein shall
-    supersede or modify the terms of any separate license agreement you may
-    have executed with Licensor regarding such Contributions.
-
-6. Trademarks.
-
-    This License does not grant permission to use the trade names, trademarks,
-    service marks, or product names of the Licensor, except as required for
-    reasonable and customary use in describing the origin of the Work and
-    reproducing the content of the NOTICE file.
-
-7. Disclaimer of Warranty.
-
-    Unless required by applicable law or agreed to in writing, Licensor
-    provides the Work (and each Contributor provides its Contributions)
-    on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-    either express or implied, including, without limitation, any warranties
-    or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS
-    FOR A PARTICULAR PURPOSE. You are solely responsible for determining the
-    appropriateness of using or redistributing the Work and assume any risks
-    associated with Your exercise of permissions under this License.
-
-8. Limitation of Liability.
-
-    In no event and under no legal theory, whether in tort
-    (including negligence), contract, or otherwise, unless required by
-    applicable law (such as deliberate and grossly negligent acts) or agreed
-    to in writing, shall any Contributor be liable to You for damages,
-    including any direct, indirect, special, incidental, or consequential
-    damages of any character arising as a result of this License or out of
-    the use or inability to use the Work (including but not limited to damages
-    for loss of goodwill, work stoppage, computer failure or malfunction,
-    or any and all other commercial damages or losses), even if such
-    Contributor has been advised of the possibility of such damages.
-
-9. Accepting Warranty or Additional Liability.
-
-    While redistributing the Work or Derivative Works thereof, You may choose
-    to offer, and charge a fee for, acceptance of support, warranty,
-    indemnity, or other liability obligations and/or rights consistent with
-    this License. However, in accepting such obligations, You may act only
-    on Your own behalf and on Your sole responsibility, not on behalf of any
-    other Contributor, and only if You agree to indemnify, defend, and hold
-    each Contributor harmless for any liability incurred by, or claims
-    asserted against, such Contributor by reason of your accepting any such
-    warranty or additional liability.
-
-END OF TERMS AND CONDITIONS
-
-APPENDIX: How to apply the Apache License to your work
-
-    To apply the Apache License to your work, attach the following boilerplate
-    notice, with the fields enclosed by brackets "[]" replaced with your own
-    identifying information. (Don't include the brackets!) The text should be
-    enclosed in the appropriate comment syntax for the file format. We also
-    recommend that a file or class name and description of purpose be included
-    on the same "printed page" as the copyright notice for easier
-    identification within third-party archives.
-
-        Copyright 2016 Nolan Lawson
-
-
-        Licensed under the Apache License, Version 2.0 (the "License");
-        you may not use this file except in compliance with the License.
-        You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-        Unless required by applicable law or agreed to in writing, software
-        distributed under the License is distributed on an "AS IS" BASIS,
-        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-        or implied. See the License for the specific language governing
-        permissions and limitations under the License.
 
 -----
 
@@ -16027,33 +14881,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: mkdirp-classic. A copy of the source code may be downloaded from https://github.com/mafintosh/mkdirp-classic.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2020 James Halliday (mail@substack.net) and Mathias Buus
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
-The following software may be included in this product: mobx, mobx-react, mobx-react-lite. A copy of the source code may be downloaded from https://github.com/mobxjs/mobx.git (mobx), https://github.com/mobxjs/mobx-react.git (mobx-react), https://github.com/mobxjs/mobx-react-lite.git (mobx-react-lite). This software contains the following license and notice below:
+The following software may be included in this product: mobx, mobx-react, mobx-react-lite. A copy of the source code may be downloaded from https://github.com/mobxjs/mobx.git (mobx), https://github.com/mobxjs/mobx.git (mobx-react), https://github.com/mobxjs/mobx.git (mobx-react-lite). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -17942,34 +16770,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: pend. A copy of the source code may be downloaded from git://github.com/andrewrk/node-pend.git. This software contains the following license and notice below:
-
-The MIT License (Expat)
-
-Copyright (c) 2014 Andrew Kelley
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation files
-(the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,
-publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
 The following software may be included in this product: performance-now. A copy of the source code may be downloaded from git://github.com/braveg1rl/performance-now.git. This software contains the following license and notice below:
 
 Copyright (c) 2013 Braveg1rl
@@ -18007,6 +16807,32 @@ The following software may be included in this product: picomatch. A copy of the
 The MIT License (MIT)
 
 Copyright (c) 2017-present, Jon Schlinkert.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: pinkie, pinkie-promise, require-from-string. A copy of the source code may be downloaded from https://github.com/floatdrop/pinkie.git (pinkie), https://github.com/floatdrop/pinkie-promise.git (pinkie-promise), https://github.com/floatdrop/require-from-string.git (require-from-string). This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com> (github.com/floatdrop)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24417,24 +23243,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: printj. A copy of the source code may be downloaded from git://github.com/SheetJS/printj.git. This software contains the following license and notice below:
-
-Copyright (C) 2016-present  SheetJS
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
------
-
 The following software may be included in this product: process. A copy of the source code may be downloaded from git://github.com/shtylman/node-process.git. This software contains the following license and notice below:
 
 (The MIT License)
@@ -24563,31 +23371,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -----
 
-The following software may be included in this product: proxy-from-env. A copy of the source code may be downloaded from https://github.com/Rob--W/proxy-from-env.git. This software contains the following license and notice below:
-
-The MIT License
-
-Copyright (C) 2016-2018 Rob Wu <rob@robwu.nl>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
 The following software may be included in this product: prr. A copy of the source code may be downloaded from https://github.com/rvagg/prr.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -24641,212 +23424,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: puppeteer-core. A copy of the source code may be downloaded from https://github.com/puppeteer/puppeteer.git. This software contains the following license and notice below:
-
-Apache License
-                           Version 2.0, January 2004
-                        https://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright 2017 Google Inc.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       https://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 
 -----
 
@@ -24972,6 +23549,31 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: queue-microtask, run-parallel. A copy of the source code may be downloaded from git://github.com/feross/queue-microtask.git (queue-microtask), git://github.com/feross/run-parallel.git (run-parallel). This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) Feross Aboukhadijeh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -25596,212 +24198,6 @@ IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: readdir-glob. A copy of the source code may be downloaded from git://github.com/Yqnn/node-readdir-glob.git. This software contains the following license and notice below:
-
-Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright 2020 Yann Armelin
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
------
-
 The following software may be included in this product: readdirp. A copy of the source code may be downloaded from git://github.com/paulmillr/readdirp.git. This software contains the following license and notice below:
 
 This software is released under the MIT license:
@@ -26237,7 +24633,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: require-main-filename, set-blocking, yargs-parser. A copy of the source code may be downloaded from git+ssh://git@github.com/yargs/require-main-filename.git (require-main-filename), git+https://github.com/yargs/set-blocking.git (set-blocking), git@github.com:yargs/yargs-parser.git (yargs-parser). This software contains the following license and notice below:
+The following software may be included in this product: require-main-filename, set-blocking, yargs-parser. A copy of the source code may be downloaded from git+ssh://git@github.com/yargs/require-main-filename.git (require-main-filename), git+https://github.com/yargs/set-blocking.git (set-blocking), https://github.com/yargs/yargs-parser.git (yargs-parser). This software contains the following license and notice below:
 
 Copyright (c) 2016, Contributors
 
@@ -26333,32 +24729,6 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: resolve-alpn. A copy of the source code may be downloaded from git+https://github.com/szmarczak/resolve-alpn.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2018 Szymon Marczak
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
 The following software may be included in this product: resolve-protobuf-schema. A copy of the source code may be downloaded from https://github.com/mafintosh/resolve-protobuf-schema.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -26408,56 +24778,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: responselike. A copy of the source code may be downloaded from https://github.com/lukechilds/responselike.git. This software contains the following license and notice below:
-
-Copyright (c) 2017 Luke Childs
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
-The following software may be included in this product: resq. A copy of the source code may be downloaded from https://github.com/baruchvlz/resq. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2019 Baruch Velez
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -26554,32 +24874,6 @@ TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONIN
 THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
 IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: rgb2hex. A copy of the source code may be downloaded from git://github.com/christian-bromann/rgb2hex.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2014 Christian Bromann
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -26687,212 +24981,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: saucelabs. A copy of the source code may be downloaded from git://github.com/saucelabs/node-saucelabs.git. This software contains the following license and notice below:
-
-Apache License
-Version 2.0, January 2004
-http://www.apache.org/licenses/
-
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-1. Definitions.
-
-"License" shall mean the terms and conditions for use, reproduction,
-and distribution as defined by Sections 1 through 9 of this document.
-
-"Licensor" shall mean the copyright owner or entity authorized by
-the copyright owner that is granting the License.
-
-"Legal Entity" shall mean the union of the acting entity and all
-other entities that control, are controlled by, or are under common
-control with that entity. For the purposes of this definition,
-"control" means (i) the power, direct or indirect, to cause the
-direction or management of such entity, whether by contract or
-otherwise, or (ii) ownership of fifty percent (50%) or more of the
-outstanding shares, or (iii) beneficial ownership of such entity.
-
-"You" (or "Your") shall mean an individual or Legal Entity
-exercising permissions granted by this License.
-
-"Source" form shall mean the preferred form for making modifications,
-including but not limited to software source code, documentation
-source, and configuration files.
-
-"Object" form shall mean any form resulting from mechanical
-transformation or translation of a Source form, including but
-not limited to compiled object code, generated documentation,
-and conversions to other media types.
-
-"Work" shall mean the work of authorship, whether in Source or
-Object form, made available under the License, as indicated by a
-copyright notice that is included in or attached to the work
-(an example is provided in the Appendix below).
-
-"Derivative Works" shall mean any work, whether in Source or Object
-form, that is based on (or derived from) the Work and for which the
-editorial revisions, annotations, elaborations, or other modifications
-represent, as a whole, an original work of authorship. For the purposes
-of this License, Derivative Works shall not include works that remain
-separable from, or merely link (or bind by name) to the interfaces of,
-the Work and Derivative Works thereof.
-
-"Contribution" shall mean any work of authorship, including
-the original version of the Work and any modifications or additions
-to that Work or Derivative Works thereof, that is intentionally
-submitted to Licensor for inclusion in the Work by the copyright owner
-or by an individual or Legal Entity authorized to submit on behalf of
-the copyright owner. For the purposes of this definition, "submitted"
-means any form of electronic, verbal, or written communication sent
-to the Licensor or its representatives, including but not limited to
-communication on electronic mailing lists, source code control systems,
-and issue tracking systems that are managed by, or on behalf of, the
-Licensor for the purpose of discussing and improving the Work, but
-excluding communication that is conspicuously marked or otherwise
-designated in writing by the copyright owner as "Not a Contribution."
-
-"Contributor" shall mean Licensor and any individual or Legal Entity
-on behalf of whom a Contribution has been received by Licensor and
-subsequently incorporated within the Work.
-
-2. Grant of Copyright License. Subject to the terms and conditions of
-this License, each Contributor hereby grants to You a perpetual,
-worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-copyright license to reproduce, prepare Derivative Works of,
-publicly display, publicly perform, sublicense, and distribute the
-Work and such Derivative Works in Source or Object form.
-
-3. Grant of Patent License. Subject to the terms and conditions of
-this License, each Contributor hereby grants to You a perpetual,
-worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-(except as stated in this section) patent license to make, have made,
-use, offer to sell, sell, import, and otherwise transfer the Work,
-where such license applies only to those patent claims licensable
-by such Contributor that are necessarily infringed by their
-Contribution(s) alone or by combination of their Contribution(s)
-with the Work to which such Contribution(s) was submitted. If You
-institute patent litigation against any entity (including a
-cross-claim or counterclaim in a lawsuit) alleging that the Work
-or a Contribution incorporated within the Work constitutes direct
-or contributory patent infringement, then any patent licenses
-granted to You under this License for that Work shall terminate
-as of the date such litigation is filed.
-
-4. Redistribution. You may reproduce and distribute copies of the
-Work or Derivative Works thereof in any medium, with or without
-modifications, and in Source or Object form, provided that You
-meet the following conditions:
-
-(a) You must give any other recipients of the Work or
-Derivative Works a copy of this License; and
-
-(b) You must cause any modified files to carry prominent notices
-stating that You changed the files; and
-
-(c) You must retain, in the Source form of any Derivative Works
-that You distribute, all copyright, patent, trademark, and
-attribution notices from the Source form of the Work,
-excluding those notices that do not pertain to any part of
-the Derivative Works; and
-
-(d) If the Work includes a "NOTICE" text file as part of its
-distribution, then any Derivative Works that You distribute must
-include a readable copy of the attribution notices contained
-within such NOTICE file, excluding those notices that do not
-pertain to any part of the Derivative Works, in at least one
-of the following places: within a NOTICE text file distributed
-as part of the Derivative Works; within the Source form or
-documentation, if provided along with the Derivative Works; or,
-within a display generated by the Derivative Works, if and
-wherever such third-party notices normally appear. The contents
-of the NOTICE file are for informational purposes only and
-do not modify the License. You may add Your own attribution
-notices within Derivative Works that You distribute, alongside
-or as an addendum to the NOTICE text from the Work, provided
-that such additional attribution notices cannot be construed
-as modifying the License.
-
-You may add Your own copyright statement to Your modifications and
-may provide additional or different license terms and conditions
-for use, reproduction, or distribution of Your modifications, or
-for any such Derivative Works as a whole, provided Your use,
-reproduction, and distribution of the Work otherwise complies with
-the conditions stated in this License.
-
-5. Submission of Contributions. Unless You explicitly state otherwise,
-any Contribution intentionally submitted for inclusion in the Work
-by You to the Licensor shall be under the terms and conditions of
-this License, without any additional terms or conditions.
-Notwithstanding the above, nothing herein shall supersede or modify
-the terms of any separate license agreement you may have executed
-with Licensor regarding such Contributions.
-
-6. Trademarks. This License does not grant permission to use the trade
-names, trademarks, service marks, or product names of the Licensor,
-except as required for reasonable and customary use in describing the
-origin of the Work and reproducing the content of the NOTICE file.
-
-7. Disclaimer of Warranty. Unless required by applicable law or
-agreed to in writing, Licensor provides the Work (and each
-Contributor provides its Contributions) on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied, including, without limitation, any warranties or conditions
-of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-PARTICULAR PURPOSE. You are solely responsible for determining the
-appropriateness of using or redistributing the Work and assume any
-risks associated with Your exercise of permissions under this License.
-
-8. Limitation of Liability. In no event and under no legal theory,
-whether in tort (including negligence), contract, or otherwise,
-unless required by applicable law (such as deliberate and grossly
-negligent acts) or agreed to in writing, shall any Contributor be
-liable to You for damages, including any direct, indirect, special,
-incidental, or consequential damages of any character arising as a
-result of this License or out of the use or inability to use the
-Work (including but not limited to damages for loss of goodwill,
-work stoppage, computer failure or malfunction, or any and all
-other commercial damages or losses), even if such Contributor
-has been advised of the possibility of such damages.
-
-9. Accepting Warranty or Additional Liability. While redistributing
-the Work or Derivative Works thereof, You may choose to offer,
-and charge a fee for, acceptance of support, warranty, indemnity,
-or other liability obligations and/or rights consistent with this
-License. However, in accepting such obligations, You may act only
-on Your own behalf and on Your sole responsibility, not on behalf
-of any other Contributor, and only if You agree to indemnify,
-defend, and hold each Contributor harmless for any liability
-incurred by, or claims asserted against, such Contributor by reason
-of your accepting any such warranty or additional liability.
-
-END OF TERMS AND CONDITIONS
-
-APPENDIX: How to apply the Apache License to your work.
-
-To apply the Apache License to your work, attach the following
-boilerplate notice, with the fields enclosed by brackets "[]"
-replaced with your own identifying information. (Don't include
-the brackets!)  The text should be enclosed in the appropriate
-comment syntax for the file format. We also recommend that a
-file or class name and description of purpose be included on the
-same "printed page" as the copyright notice for easier
-identification within third-party archives.
-
-Copyright 2020 Sauce Labs
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
------
-
 The following software may be included in this product: sax. A copy of the source code may be downloaded from git://github.com/isaacs/sax-js.git. This software contains the following license and notice below:
 
 The ISC License
@@ -26962,37 +25050,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
------
-
-The following software may be included in this product: seek-bzip. A copy of the source code may be downloaded from https://github.com/cscott/seek-bzip.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright &copy; 2013-2015 C. Scott Ananian
-
-Copyright &copy; 2012-2015 Eli Skeggs
-
-Copyright &copy; 2011 Kevin Kwok
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -27521,30 +25578,6 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: sort-keys-length. A copy of the source code may be downloaded from https://github.com/kevva/sort-keys-length.git. This software contains the following license and notice below:
-
-Copyright (c) Kevin Mårtensson
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
 The following software may be included in this product: source-list-map. A copy of the source code may be downloaded from https://github.com/webpack/source-list-map.git. This software contains the following license and notice below:
 
 Copyright 2017 JS Foundation
@@ -27750,35 +25783,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
-The following software may be included in this product: sprintf-js. A copy of the source code may be downloaded from https://github.com/alexei/sprintf.js.git. This software contains the following license and notice below:
-
-Copyright (c) 2007-present, Alexandru Mărășteanu <hello@alexei.ro>
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-* Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-* Neither the name of this software nor the names of its contributors may be
-  used to endorse or promote products derived from this software without
-  specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
------
-
 The following software may be included in this product: stack-trace. A copy of the source code may be downloaded from git://github.com/felixge/node-stack-trace.git. This software contains the following license and notice below:
 
 Copyright (c) 2011 Felix Geisendörfer (felix@debuggable.com)
@@ -27929,6 +25933,32 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: strict-uri-encode. A copy of the source code may be downloaded from https://github.com/kevva/strict-uri-encode.git. This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com> (github.com/kevva)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 -----
 
@@ -29608,11 +27638,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----
 
-The following software may be included in this product: timed-out. A copy of the source code may be downloaded from https://github.com/floatdrop/timed-out.git. This software contains the following license and notice below:
+The following software may be included in this product: thunky. A copy of the source code may be downloaded from git://github.com/mafintosh/thunky.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
 
-Copyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com>
+Copyright (c) 2018 Mathias Buus
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30509,32 +28539,6 @@ PERFORMANCE OF THIS SOFTWARE.
 
 -----
 
-The following software may be included in this product: tunnel. A copy of the source code may be downloaded from https://github.com/koichik/node-tunnel.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2012 Koichi Kobayashi
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
 The following software may be included in this product: tweetnacl. A copy of the source code may be downloaded from https://github.com/dchest/tweetnacl-js.git. This software contains the following license and notice below:
 
 This is free and unencumbered software released into the public domain.
@@ -30718,32 +28722,6 @@ END OF TERMS AND CONDITIONS
 
 -----
 
-The following software may be included in this product: ua-parser-js. A copy of the source code may be downloaded from https://github.com/faisalman/ua-parser-js.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2012-2021 Faisal Salman <<f@faisalman.com>>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
 The following software may be included in this product: uc.micro. A copy of the source code may be downloaded from https://github.com/markdown-it/uc.micro.git. This software contains the following license and notice below:
 
 Copyright Mathias Bynens <https://mathiasbynens.be/>
@@ -30766,35 +28744,6 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
------
-
-The following software may be included in this product: unbzip2-stream. A copy of the source code may be downloaded from https://github.com/regular/unbzip2-stream.git. This software contains the following license and notice below:
-
-Copyright (c) 2017 by Jan Boelsche (jan@lagomorph.de)
-
-based on bzip2.js - a small bzip2 decompression implementation
-Copyright 2011 by antimatter15 (antimatter15@gmail.com)
-
-Based on micro-bunzip by Rob Landley (rob@landley.net).
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -30989,6 +28938,31 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: update-browserslist-db. A copy of the source code may be downloaded from https://github.com/browserslist/update-db.git. This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright 2022 Andrey Sitnik <andrey@sitnik.ru> and other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -31706,6 +29680,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The following software may be included in this product: ws. A copy of the source code may be downloaded from https://github.com/websockets/ws.git. This software contains the following license and notice below:
 
+The MIT License (MIT)
+
 Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31729,8 +29705,6 @@ SOFTWARE.
 -----
 
 The following software may be included in this product: ws. A copy of the source code may be downloaded from https://github.com/websockets/ws.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
 
 Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>
 
@@ -32082,7 +30056,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: y18n. A copy of the source code may be downloaded from https://github.com/yargs/y18n.git. This software contains the following license and notice below:
+The following software may be included in this product: y18n. A copy of the source code may be downloaded from git@github.com:yargs/y18n.git. This software contains the following license and notice below:
 
 Copyright (c) 2015, Contributors
 
@@ -32168,30 +30142,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
------
-
-The following software may be included in this product: yauzl. A copy of the source code may be downloaded from https://github.com/thejoshwolfe/yauzl.git. This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2014 Josh Wolfe
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 

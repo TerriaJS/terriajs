@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import Icon from "../Styled/Icon";
 import Styles from "./drag-drop-notification.scss";
-import { withViewState } from "./StandardUserInterface/ViewStateContext";
+import { withViewState } from "./Context";
 
 @observer
 class DragDropNotification extends React.Component {

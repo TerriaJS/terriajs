@@ -1,10 +1,10 @@
 {
   "name": "terriajs",
-  "version": "8.3.1",
+  "version": "8.3.9",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">= 14.0.0"
+    "node": ">= 16.0.0"
   },
   "repository": {
     "type": "git",
@@ -15,14 +15,14 @@
     "@types/node": "^18.15.11"
   },
   "dependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/parser": "^7.12.14",
+    "@babel/core": "^7.22.9",
+    "@babel/parser": "^7.22.7",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.22.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.10.4",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@mapbox/geojson-merge": "^1.1.1",
     "@mapbox/point-geometry": "^0.1.0",
     "@mapbox/togeojson": "^0.16.0",
@@ -83,7 +83,6 @@
     "@visx/tooltip": "^2.1.0",
     "assimpjs": "^0.0.7",
     "babel-loader": "^8.2.3",
-    "babel-plugin-jsx-control-statements": "^4.0.0",
     "babel-plugin-lodash": "^3.3.4",
     "bottleneck": "^2.19.5",
     "catalog-converter": "^0.0.9",
@@ -200,7 +199,6 @@
     "@types/webpack": "4.41.33",
     "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^7.20.0",
-    "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.19.0",
     "fork-ts-checker-notifier-webpack-plugin": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.0",

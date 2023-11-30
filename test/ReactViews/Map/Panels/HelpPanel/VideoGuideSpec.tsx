@@ -2,7 +2,7 @@ const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 const VideoGuide: any =
@@ -23,8 +23,7 @@ describe("VideoGuide", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

@@ -20,8 +20,7 @@ describe("MapNavigationModel", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
     item1 = {
       id: "item1",

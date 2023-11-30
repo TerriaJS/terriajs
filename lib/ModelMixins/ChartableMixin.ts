@@ -1,6 +1,7 @@
 import { maxBy, minBy } from "lodash-es";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import LatLonHeight from "../Core/LatLonHeight";
+import { getMax, getMin } from "../Core/math";
 import Model from "../Models/Definition/Model";
 import { GlyphStyle } from "../ReactViews/Custom/Chart/Glyphs";
 import ModelTraits from "../Traits/ModelTraits";
@@ -22,8 +23,8 @@ export function calculateDomain(points: ChartPoint[]): ChartDomain {
   const ys = points.map((p) => p.y);
   const asNum = (x: Date | number) => (x instanceof Date ? x.getTime() : x);
   return {
-    x: [minBy(xs, asNum) || 0, maxBy(xs, asNum) || 0],
-    y: [Math.min(...ys), Math.max(...ys)]
+    x: [minBy(xs, asNum) ?? 0, maxBy(xs, asNum) ?? 0],
+    y: [getMin(ys) ?? 0, getMax(ys) ?? 0]
   };
 }
 

@@ -8,7 +8,7 @@ import {
 import { ThemeProvider } from "styled-components";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import Text from "../../lib/Styled/Text";
 

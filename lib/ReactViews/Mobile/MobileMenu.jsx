@@ -108,22 +108,22 @@ class MobileMenu extends React.Component {
     // return this.props.viewState.mobileMenuVisible ? (
     return (
       <div>
-        <If condition={this.props.viewState.mobileMenuVisible}>
+        {this.props.viewState.mobileMenuVisible && (
           <div className={Styles.overlay} onClick={() => this.toggleMenu()} />
-        </If>
+        )}
         <div
           className={classNames(Styles.mobileNav, {
             [Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible
           })}
         >
-          <For each="menuItem" of={this.props.menuLeftItems}>
+          {this.props.menuLeftItems.map((menuItem) => (
             <div
               onClick={() => this.hideMenu()}
               key={menuItem ? menuItem.key : undefined}
             >
               {menuItem}
             </div>
-          </For>
+          ))}
           <div onClick={() => this.hideMenu()}>
             <SettingPanel
               terria={this.props.terria}
@@ -136,41 +136,38 @@ class MobileMenu extends React.Component {
               viewState={this.props.viewState}
             />
           </div>
-          <For each="menuItem" of={this.props.menuItems}>
+          {this.props.menuItems.map((menuItem) => (
             <div
               onClick={() => this.hideMenu()}
               key={menuItem ? menuItem.key : undefined}
             >
               {menuItem}
             </div>
-          </For>
+          ))}
           {mapUserGuide && <MobileMenuItem {...mapUserGuide} />}
-          <If condition={this.props.showFeedback}>
+          {this.props.showFeedback && (
             <MobileMenuItem
               onClick={() => this.onFeedbackFormClick()}
               caption={t("feedback.feedbackBtnText")}
             />
-          </If>
-          <If condition={hasStories}>
+          )}
+          {hasStories && (
             <MobileMenuItem
               onClick={() => this.runStories()}
               caption={t("story.mobileViewStory", {
                 storiesLength: this.props.terria.stories.length
               })}
             />
-          </If>
-          <If
-            condition={
-              this.props.terria.configParameters.languageConfiguration?.enabled
-            }
-          >
+          )}
+          {this.props.terria.configParameters.languageConfiguration
+            ?.enabled && (
             <div onClick={() => this.hideMenu()}>
               <LangPanel
                 terria={this.props.terria}
                 smallScreen={this.props.viewState.useSmallScreenInterface}
               />
             </div>
-          </If>
+          )}
         </div>
       </div>
     );

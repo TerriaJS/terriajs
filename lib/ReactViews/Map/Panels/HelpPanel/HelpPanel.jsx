@@ -14,7 +14,7 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
-import { withViewState } from "../../../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../../../Context";
 import HelpPanelItem from "./HelpPanelItem";
 
 export const HELP_PANEL_ID = "help";
@@ -139,16 +139,15 @@ class HelpPanel extends React.Component {
         </Box>
         <Spacing bottom={10} />
         <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
-          {helpItems && (
-            <For each="item" index="i" of={helpItems}>
+          {helpItems &&
+            helpItems.map((item, i) => (
               <HelpPanelItem
                 key={i}
                 terria={this.props.viewState.terria}
                 viewState={this.props.viewState}
                 content={item}
               />
-            </For>
-          )}
+            ))}
         </Box>
       </Box>
     );

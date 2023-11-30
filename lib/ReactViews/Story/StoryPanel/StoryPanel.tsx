@@ -15,11 +15,8 @@ import TerriaError from "../../../Core/TerriaError";
 import Terria from "../../../Models/Terria";
 import Box from "../../../Styled/Box";
 import Hr from "../../../Styled/Hr";
-import { onStoryButtonClick } from "../../Map/StoryButton/StoryButton";
-import {
-  WithViewState,
-  withViewState
-} from "../../StandardUserInterface/ViewStateContext";
+import { onStoryButtonClick } from "../../Map/MenuBar/StoryButton/StoryButton";
+import { WithViewState, withViewState } from "../../Context";
 import { Story } from "../Story";
 import Styles from "../story-panel.scss";
 import StoryBody from "./StoryBody";

@@ -34,7 +34,13 @@ export default class Workbench {
     return this._items.map(dereferenceModel);
   }
   set items(items: readonly BaseModel[]) {
-    this._items.spliceWithArray(0, this._items.length, items.slice());
+    // Run items through a set to remove duplicates.
+    const setItems = new Set(items);
+    this._items.spliceWithArray(
+      0,
+      this._items.length,
+      Array.from(setItems).slice()
+    );
   }
 
   /**

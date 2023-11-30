@@ -1,11 +1,11 @@
 import L from "leaflet";
-import { computed } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import { action, computed, when } from "mobx";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import ViewerMode from "../../lib/Models/ViewerMode";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
@@ -152,6 +152,33 @@ describe("Leaflet Model", function () {
           targetItem
         );
       });
+    });
+  });
+
+  describe("mouseCoords", function () {
+    beforeEach(
+      action(async function () {
+        const container = document.createElement("div");
+        document.body.appendChild(container);
+        terria.mainViewer.attach(container);
+        terria.mainViewer.viewerMode = ViewerMode.Leaflet;
+        await when(() => terria.leaflet !== undefined);
+      })
+    );
+
+    it("correctly updates mouse coordinates on mouse move", function () {
+      const leaflet = terria.leaflet!;
+      expect(leaflet.mouseCoords.cartographic).toBeUndefined();
+      // A minimal stub event to get the test working
+      const stubMouseMoveEvent = {
+        originalEvent: new MouseEvent("mousemove", { clientX: 10, clientY: 10 })
+      };
+      leaflet.map.fireEvent("mousemove", stubMouseMoveEvent);
+      expect(leaflet.mouseCoords.cartographic).toBeDefined();
+      const { longitude, latitude, height } = leaflet.mouseCoords.cartographic!;
+      expect(longitude).not.toBeNaN();
+      expect(latitude).not.toBeNaN();
+      expect(height).toBe(0);
     });
   });
 });

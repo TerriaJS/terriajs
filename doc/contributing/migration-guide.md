@@ -6,13 +6,13 @@ A guide to upgrade a 7.x.x TerriaJS map to TerriaJS 8.0.0 and beyond. Please pos
 
 There are a few features in v7 that we have removed. Some of these include:
 
-- Internet Explorer 11 support (navigating to a map built with TerriaJS 8.0.0+ in IE11 will result in a completely blank page)
-- GDAL conversion service - Shapefiles (.zip) are now supported in the frontend
-- ABS ITT
-- WMS region mapping
-- Australian GNAF geocoding (and CSV batch geocoding) - we will be terminating our GNAF service as it is outdated
-- Some specific `tableStyle` options
-- Modifying styles for HTML elements within Terria's UI using custom CSS with `.tjs-xxxx` class selectors
+-   Internet Explorer 11 support (navigating to a map built with TerriaJS 8.0.0+ in IE11 will result in a completely blank page)
+-   GDAL conversion service - Shapefiles (.zip) are now supported in the frontend
+-   ABS ITT
+-   WMS region mapping
+-   Australian GNAF geocoding (and CSV batch geocoding) - we will be terminating our GNAF service as it is outdated
+-   Some specific `tableStyle` options
+-   Modifying styles for HTML elements within Terria's UI using custom CSS with `.tjs-xxxx` class selectors
 
 Reach out to us if you are using these, we only know about the things we have seen.
 
@@ -20,10 +20,10 @@ Reach out to us if you are using these, we only know about the things we have se
 
 To migrate to TerriaJS version 8 you'll need to update each of these:
 
-- Your initialization files
-- Custom basemaps or basemap thumbnails
-- The TerriaMap code
-- Other modifications you've done
+-   Your initialization files
+-   Custom basemaps or basemap thumbnails
+-   The TerriaMap code
+-   Other modifications you've done
 
 ### Upgrading initialization files using the catalog converter
 

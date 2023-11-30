@@ -7,7 +7,7 @@ import { withTranslation } from "react-i18next";
 import { Category, ViewAction } from "../../Core/AnalyticEvents/analyticEvents";
 import Icon from "../../Styled/Icon";
 import withControlledVisibility from "../HOCs/withControlledVisibility";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./full_screen_button.scss";
 
 // The button to make the map full screen and hide the workbench.
