@@ -6,7 +6,6 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import arraysAreEqual from "../../../Core/arraysAreEqual";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -14,6 +13,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import { setsAreEqual } from "../../../Core/setsAreEqual";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
@@ -541,8 +541,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         false
       );
 
-      arraysAreEqual;
-
       const imageryProvider = new ArcGisMapServerImageryProvider({
         url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
         layers: this.layersArray.map((l) => l.id).join(","),
@@ -558,7 +556,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         usePreCachedTilesIfAvailable:
           this.layersArray.length === 0 ||
           !this.layers ||
-          arraysAreEqual(
+          setsAreEqual(
             this.layersArray.map((l) => l.id),
             stratum.allLayers.map((l) => l.id)
           ),
