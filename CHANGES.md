@@ -1,8 +1,9 @@
 # Change Log
 
 #### next release (8.4.0)
-#### next release (8.3.10)
 
+- **Breaking change:** Replaced `node-sass` with (dart) `sass`
+  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
 - [The next improvement]
 
 #### 8.3.9 - 2023-11-24
@@ -35,8 +36,6 @@
 
 #### 8.3.7 - 2023-10-26
 
-- **Breaking change:** Replaced `node-sass` with (dart) `sass`
-  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
 - Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
 - Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
