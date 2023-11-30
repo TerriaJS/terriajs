@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, observable, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { isJsonObject, isJsonString, isJsonStringArray } from "../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../Core/loadBlob";
 import loadJson from "../../Core/loadJson";

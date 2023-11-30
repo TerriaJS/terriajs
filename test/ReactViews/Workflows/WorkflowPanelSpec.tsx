@@ -17,8 +17,7 @@ describe("WorkflowPanel", function () {
       "./data/regionMapping.json";
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

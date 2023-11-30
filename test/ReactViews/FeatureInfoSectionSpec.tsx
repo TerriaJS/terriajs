@@ -66,8 +66,7 @@ describe("FeatureInfoSection", function () {
 
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
     const properties = {
       name: "Kay",
