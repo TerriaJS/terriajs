@@ -2,6 +2,7 @@
   "root": true,
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended"
   ],
@@ -163,12 +164,12 @@
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-this-alias": "off",
 
-        // @TODO: enable these rules
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-loss-of-precision": "off",
-        "@typescript-eslint/no-unsafe-declaration-merging": "off",
-        "react-hooks/exhaustive-deps": "off"
+        // @TODO: revise these rules
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-loss-of-precision": "warn",
+        "@typescript-eslint/no-unsafe-declaration-merging": "warn",
+        "react-hooks/exhaustive-deps": "warn"
       }
     }
   ]

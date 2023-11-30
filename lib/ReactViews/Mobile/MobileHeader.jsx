@@ -141,7 +141,7 @@ class MobileHeader extends React.Component {
             viewState.terria.searchBarModel.placeholder,
             this.props.i18n
           )}
-          alwaysShowClear={true}
+          alwaysShowClear
           onClear={this.closeLocationSearch.bind(this)}
           autoFocus
         />
