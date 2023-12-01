@@ -79,3 +79,15 @@ Then run the following to install NodeJS v16 and use it:
 nvm install 16
 nvm use 16
 ```
+
+### Problem
+
+When building TerriaMap/TerriaJS I see the following error
+
+```
+Error: error:0308010C:digital envelope routines::unsupported
+```
+
+### Solution
+
+For NodeJS versions 18 and above you will need to set `NODE_OPTIONS=--openssl-legacy-provider` in your environment.
