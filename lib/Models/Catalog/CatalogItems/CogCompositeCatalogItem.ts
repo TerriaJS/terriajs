@@ -17,15 +17,17 @@ import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
 import * as colourMappings from "../../../Core/colourMappings";
 import CogCompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CogCompositeCatalogItemTraits";
 import { CogImageryProvider } from "./CogCatalogItem";
+import SelectableDimensions from "../../SelectableDimensions/SelectableDimensions";
 
 /** TODO: This Catalog Item only works correctly in 2D mode.
  * We have not yet developed the funcitonality to combine different source COGs for different band in TIFFImageryProvider for display in Cesium */
-export default class CogCompositeCatalogItem extends MappableMixin(
-  CatalogMemberMixin(CreateModel(CogCompositeCatalogItemTraits))
-) {
+export default class CogCompositeCatalogItem
+  extends MappableMixin(
+    CatalogMemberMixin(CreateModel(CogCompositeCatalogItemTraits))
+  )
+  implements SelectableDimensions
+{
   static readonly type = "cog-composite";
-
-  selectedStyleIndex: number = 0; // Set the default style index from the style array which is provided as traits
 
   get type() {
     return CogCompositeCatalogItem.type;
@@ -56,13 +58,27 @@ export default class CogCompositeCatalogItem extends MappableMixin(
     ];
   }
 
+  @computed get styleName(): string {
+    return this.defaultStyle || "trueColor";
+  }
+
   @computed get georasterLayer(): IPromiseBasedObservable<
     GeorasterTerriaLayer | undefined
   > {
-    const pixelMappingFnName = this.style[this.selectedStyleIndex].functionName;
+    const selectedStyle = this.style?.find(
+      (item) => item.functionName === this.styleName
+    );
+    const pixelMappingFnName = selectedStyle?.functionName || "trueColor";
+    // const pixelMappingFnName = this.style[this.selectedStyleName].functionName;
     console.log(`Displaying COG with style: ${pixelMappingFnName}`);
-    const fnBandInputs = this.style[this.selectedStyleIndex].functionInputs;
-    const fnBandInputsAsIndexes = Array.from(Array(fnBandInputs.length).keys());
+    const fnBandInputs = selectedStyle?.functionInputs || [
+      "red",
+      "green",
+      "blue"
+    ];
+    const fnBandInputsAsIndexes = Array.from(
+      Array(fnBandInputs?.length).keys()
+    );
     colourMappings; // To make sure these are imported, as we are constructing the function call with `eval()`
 
     /** TODO: do we want to recalculate these everytime we change style / combinations of bands?
@@ -92,10 +108,10 @@ export default class CogCompositeCatalogItem extends MappableMixin(
                       .map((bandIndex) => `georasters[${bandIndex}]`)
                       .join(",")})`;
 
-                    // TODO: are there security concerns with using eval() statements?
+                    // TODO: SECURITY concern here. Eval could be used for XSS attach or other security concerns
                     return eval(codeToExecute);
-                  },
-                  resolution: 256
+                  }
+                  // resolution: 128 // Default is 32. Play with this for resolution vs performance.
                 },
                 this.imageryProvider
               );

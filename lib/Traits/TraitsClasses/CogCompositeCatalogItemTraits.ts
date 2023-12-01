@@ -8,6 +8,7 @@ import UrlTraits from "./UrlTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import CogBandTraits from "./CogBandTraits";
 import CogStyleTraits from "./CogStyleTraits";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class CogCompositeCatalogItemTraits extends mixTraits(
   ImageryProviderTraits,
@@ -36,4 +37,11 @@ export default class CogCompositeCatalogItemTraits extends mixTraits(
     idProperty: "functionName"
   })
   style?: CogStyleTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "DefaultStyle",
+    description: "The default style to use for this item"
+  })
+  defaultStyle?: string;
 }
