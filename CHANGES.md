@@ -1,10 +1,15 @@
 # Change Log
 
-#### next release (8.3.10)
+#### next release (8.4.1)
 
+- [The next improvement]
+
+#### 8.4.0 - 2023-12-01
+
+- **Breaking change:** Replaced `node-sass` with (dart) `sass`
+  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
 - Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
 - `ArcGisMapServerCatalogItem` will now use "pre-cached tiles" if available if no (or all) `layers` are specified.
-- [The next improvement]
 
 #### 8.3.9 - 2023-11-24
 
