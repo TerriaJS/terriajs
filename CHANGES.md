@@ -2,6 +2,7 @@
 
 #### next release (8.4.1)
 
+- Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
 - [The next improvement]
 
 #### 8.4.0 - 2023-12-01
