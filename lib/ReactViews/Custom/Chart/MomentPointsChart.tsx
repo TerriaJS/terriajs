@@ -3,27 +3,23 @@ import { scaleLinear } from "@visx/scale";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 import { observer } from "mobx-react";
 import { Ref, forwardRef, useImperativeHandle, useMemo } from "react";
-import { ChartPoint } from "../../../Charts/ChartData";
-import { ChartItem } from "../../../ModelMixins/ChartableMixin";
+import type { ChartPoint } from "../../../Charts/ChartData";
+import type { ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Glyphs from "./Glyphs";
+import type { ChartZoomHandle, Scales } from "./types";
 
 interface Props {
   id: string;
   chartItem: ChartItem;
   basisItem?: ChartItem;
-  basisItemScales?: { x: any; y: any };
-  scales: { x: any; y: any };
+  basisItemScales?: Scales;
+  scales: Scales;
   glyph?: string;
 }
 
-export type ChartZoomFunction = (scales: {
-  x: (arg0: number | Date) => number;
-  y: (arg0: number) => number;
-}) => void;
-
 const _MomentPointsChart = function MomentPointsChart(
   props: Props,
-  ref: Ref<{ doZoom: ChartZoomFunction }>
+  ref: Ref<ChartZoomHandle>
 ) {
   const {
     id,
@@ -120,7 +116,7 @@ const _MomentPointsChart = function MomentPointsChart(
  */
 function interpolate(
   p: ChartPoint,
-  sortedBasisPoints: ChartPoint[],
+  sortedBasisPoints: readonly ChartPoint[],
   basisToSourceScale: ReturnType<typeof scaleLinear>
 ) {
   // MomentPointsChart always has Dates for x coordinates
@@ -150,7 +146,7 @@ function interpolate(
   return interpolated;
 }
 
-function closestPointIndex(x: Date, sortedPoints: ChartPoint[]) {
+function closestPointIndex(x: Date, sortedPoints: readonly ChartPoint[]) {
   for (let i = 0; i < sortedPoints.length; i++) {
     if ((sortedPoints[i].x as Date).getTime() >= x.getTime()) {
       if (i === 0) return 0;

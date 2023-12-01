@@ -54,13 +54,14 @@ export interface ChartItem {
   showInChartPanel: boolean;
   isSelectedInWorkbench: boolean;
   xAxis: ChartAxis;
-  points: ChartPoint[];
+  points: readonly ChartPoint[];
   domain: ChartDomain;
-  getColor: () => string; // Gets the color representing the chart item
+  getColor: () => string; // Gets the color representing the chart item. Uses mobx observables
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
   onClick?: any;
   pointOnMap?: LatLonHeight;
   glyphStyle?: GlyphStyle;
+  units?: string;
 }
 
 type BaseType = Model<ModelTraits>;

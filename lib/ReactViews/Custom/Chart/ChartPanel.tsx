@@ -1,3 +1,4 @@
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -38,11 +39,11 @@ function ChartPanel(props: Props) {
     viewState.terria.currentViewer.notifyRepaintRequired();
   });
 
-  function closePanel() {
+  const closePanel = action(() => {
     chartView.chartItems.forEach((chartItem) => {
       chartItem.updateIsSelectedInWorkbench(false);
     });
-  }
+  });
 
   const chartableCatalogItems = chartView.chartableItems;
   const chartItems = chartView.chartItems.filter((c) => c.showInChartPanel);
@@ -75,9 +76,8 @@ function ChartPanel(props: Props) {
 
     chart = (
       <Chart
-        terria={viewState.terria}
         chartItems={chartItems}
-        xAxis={chartView.xAxis}
+        xAxis={chartView.xAxis!}
         height={height - 34}
       />
     );
