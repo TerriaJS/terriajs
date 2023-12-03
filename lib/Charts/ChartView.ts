@@ -30,7 +30,7 @@ export default class ChartView {
     for (let i = 0; i < this.chartableItems.length; i++) {
       for (let j = 0; j < this.chartableItems[i].chartItems.length; j++) {
         const chartItem = this.chartableItems[i].chartItems[j];
-        if (chartItem.isSelectedInWorkbench && chartItem.showInChartPanel) {
+        if (chartItem.showInChartPanel) {
           return chartItem.xAxis;
         }
       }

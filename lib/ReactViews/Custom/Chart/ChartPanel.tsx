@@ -52,6 +52,8 @@ function ChartPanel(props: Props) {
     return null;
   }
 
+  const xAxis = chartView.xAxis!; // Guaranteed by non-empty chartItems with showInChartPanel=true
+
   const isLoading = false;
   // const isLoading =
   //   chartableItems.length > 0 &&
@@ -75,11 +77,7 @@ function ChartPanel(props: Props) {
     );
 
     chart = (
-      <Chart
-        chartItems={chartItems}
-        xAxis={chartView.xAxis!}
-        height={height - 34}
-      />
+      <Chart chartItems={chartItems} xAxis={xAxis} height={height - 34} />
     );
   }
 
