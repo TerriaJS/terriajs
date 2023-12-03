@@ -17,7 +17,7 @@ const StyledUl = styled(Ul)`
   }
 `;
 
-const WorkbenchList = observer(() => {
+const WorkbenchList = observer(function WorkbenchList() {
   const viewState = useViewState();
   function onSort(
     sortedArray: any,
