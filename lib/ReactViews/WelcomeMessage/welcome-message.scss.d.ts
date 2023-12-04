@@ -19,5 +19,5 @@ interface CssExports {
   'welcomeModalCloseLink': string;
   'welcomeModalWrapper': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

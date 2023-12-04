@@ -17,5 +17,5 @@ interface CssExports {
   'results-content': string;
   'resultsContent': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

@@ -11,5 +11,5 @@ interface CssExports {
   'provider-result': string;
   'providerResult': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

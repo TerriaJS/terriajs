@@ -4,5 +4,5 @@ interface CssExports {
   'leftDatePickerPopup': string;
   'rightDatePickerPopup': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

@@ -15,5 +15,5 @@ interface CssExports {
   'btnTrash': string;
   'root': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

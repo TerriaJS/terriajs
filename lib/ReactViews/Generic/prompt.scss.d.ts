@@ -5,5 +5,5 @@ interface CssExports {
   'isVisible': string;
   'prompt': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;

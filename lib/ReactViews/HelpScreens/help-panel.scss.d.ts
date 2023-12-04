@@ -30,5 +30,5 @@ interface CssExports {
   'viewer-selector': string;
   'viewerSelector': string;
 }
-declare let cssExports: CssExports;
+declare var cssExports: CssExports;
 export = cssExports;
