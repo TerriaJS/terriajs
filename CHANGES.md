@@ -3,6 +3,8 @@
 #### next release (8.4.1)
 
 - Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
 - [The next improvement]
 
 #### 8.4.0 - 2023-12-01
@@ -51,6 +53,7 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 
