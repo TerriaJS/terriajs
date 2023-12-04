@@ -306,7 +306,7 @@ describe("ApiTableCatalogItem", function () {
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
       expect(table).toBeDefined();
-      let definedTable: string[][] = table!;
+      const definedTable: string[][] = table!;
       const embeddedColumn = definedTable.find(
         ([name]) => name === "some embedded value"
       );
