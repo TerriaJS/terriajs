@@ -90,4 +90,4 @@ Error: error:0308010C:digital envelope routines::unsupported
 
 ### Solution
 
-For NodeJS versions 18 and above you will need to set `NODE_OPTIONS=--openssl-legacy-provider` in your environment.
+Update to TerriaJS 8.4.1.
