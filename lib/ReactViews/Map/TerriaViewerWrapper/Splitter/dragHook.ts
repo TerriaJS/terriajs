@@ -24,7 +24,7 @@ try {
   window.addEventListener("test", callback, options);
   window.removeEventListener("test", callback, options);
 } catch (err) {
-  /* ignore error */
+  /* eslint-disable-line no-empty */
 }
 
 const notPassive = passiveSupported ? { passive: false } : false;
