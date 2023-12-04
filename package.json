@@ -178,7 +178,7 @@
     "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
-    "typescript": "^5.3.2",
+    "typescript": "~5.2.0",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
     "webpack": "~4.46.0",
