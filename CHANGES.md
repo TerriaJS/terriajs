@@ -4,6 +4,9 @@
 
 - Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
 - Update `webpack` to `4.47.0` to support Node >= 18 without extra command line parameters.
+- Add support for multiple `urls` for `GeoJsonCatalogItem`.
+- Automatically explode GeoJSON `MultiPoint` features to `Point` features. 
+- Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
 - [The next improvement]
 
 #### 8.4.0 - 2023-12-01
