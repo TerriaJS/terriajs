@@ -1120,6 +1120,61 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
+  describe("When given multiple URLs", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(async function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
+    });
+
+    it("fetches and merges the responses as a single geojson feature collection", async function () {
+      updateModelFromJson(geojson, CommonStrata.user, {
+        urls: [
+          { url: "test/GeoJSON/api.geojson", responseDataPath: "nested.data" },
+          {
+            url: "test/GeoJSON/points.geojson"
+          }
+        ]
+      });
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const mapItem = geojson.mapItems[0] as CustomDataSource;
+
+      expect(isDataSource(mapItem)).toBeTruthy();
+      expect(mapItem.entities.values.length).toBe(7);
+    });
+  });
+
+  describe("handling MultiPoint features", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/multipoint.geojson"
+      );
+    });
+
+    it("explodes multipoints as points", async function () {
+      await geojson.loadMapItems();
+      const points = geojson.mapItems[0] as CustomDataSource;
+      expect(points).toBeDefined();
+      expect(isDataSource(points)).toBeTruthy();
+      expect(points.entities.values.length).toEqual(5);
+    });
+  });
+
   describe("geojson can be split", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
