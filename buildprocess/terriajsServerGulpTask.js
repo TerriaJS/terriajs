@@ -50,21 +50,23 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
     // SIGINT: ctrl+c
     // SIGTERM: kill <pid>
     // SIGHUP: terminal closed
-    process.once("SIGINT", () => {
+    function stopServer() {
       child.kill("SIGTERM");
+      console.log("terriajs-server stopped");
+    }
+    process.once("SIGINT", () => {
+      stopServer();
       process.kill(process.pid, "SIGINT");
     });
     process.once("SIGTERM", () => {
-      child.kill("SIGTERM");
+      stopServer();
       process.kill(process.pid, "SIGTERM");
     });
     process.once("SIGHUP", () => {
-      child.kill("SIGTERM");
+      stopServer();
       process.kill(process.pid, "SIGHUP");
     });
-    process.on("exit", () => {
-      child.kill("SIGTERM");
-    });
+    process.on("exit", stopServer);
   };
 };
 
