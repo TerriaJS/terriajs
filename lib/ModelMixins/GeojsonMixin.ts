@@ -29,13 +29,14 @@ import {
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
+  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer,
-  Feature as ProtomapsFeature
+  PolygonSymbolizer
 } from "protomaps";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -75,8 +76,8 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GEOJSON_SOURCE_LAYER_NAME,
   GeojsonSource,
+  GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import Reproject from "../Map/Vector/Reproject";
@@ -396,6 +397,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       points = points?.entities.values.length === 0 ? undefined : points;
 
       points ? (points.show = this.show) : null;
+
       return filterOutUndefined([
         points,
         this._dataSource,
@@ -531,6 +533,17 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               ([key, value]) => feature.properties![key] === value
             )
           ) {
+            continue;
+          }
+
+          if (
+            this.explodeMultiPoints &&
+            feature.geometry.type === "MultiPoint"
+          ) {
+            // Replace the MultiPoint with equivalent Point features and repeat
+            // the iteration to pick up the expanded features.
+            features.splice(i, 1, ...explodeMultiPoint(feature));
+            i--;
             continue;
           }
 
@@ -902,6 +915,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             czml.properties ?? {},
             stringifyFeatureProperties(feature.properties ?? {})
           );
+
           rootCzml.push(czml);
         } else if (
           feature.geometry?.type === "Polygon" ||
@@ -1382,6 +1396,22 @@ export function isGeometries(json: any): json is Geometries {
   );
 }
 
+/**
+ * Returns the points in a MultiPoint as separate Point features.
+ */
+function explodeMultiPoint(feature: Feature): Feature[] {
+  return feature.geometry?.type === "MultiPoint"
+    ? feature.geometry.coordinates.map((coordinates) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates
+        } as Point,
+        properties: feature.properties
+      }))
+    : [];
+}
+
 export function toFeatureCollection(
   json: any
 ): FeatureCollectionWithCrs | undefined {
@@ -1448,7 +1478,7 @@ function createPolylineFromPolygon(
   createEntitiesFromHoles(entities, hierarchy.holes, entity);
 }
 
-async function reprojectToGeographic(
+export async function reprojectToGeographic(
   geoJson: FeatureCollectionWithCrs,
   proj4ServiceBaseUrl?: string
 ): Promise<FeatureCollectionWithCrs> {
