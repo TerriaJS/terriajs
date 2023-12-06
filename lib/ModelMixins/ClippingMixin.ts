@@ -76,11 +76,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed
     private get simpleClippingPlaneCollection() {
-      if (!this.clippingPlanes) {
-        return;
-      }
-
-      if (this.clippingPlanes.planes.length == 0) {
+      if (!this.clippingPlanes || this.clippingPlanes.planes.length == 0) {
         return;
       }
 
@@ -95,33 +91,27 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       const planesMapped = planes.map((plane: any) => {
         return new ClippingPlane(
-          Cartesian3.fromArray(plane.normal || []),
-          plane.distance
+          Cartesian3.fromArray(plane.normal.value || []),
+          plane.distance.value
         );
       });
 
-      let options = {
+      const options = {
         planes: planesMapped,
         enabled,
-        unionClippingRegions
+        unionClippingRegions,
+        ...(edgeColor &&
+          edgeColor.length > 0 && {
+            edgeColor: Color.fromCssColorString(edgeColor) || Color.WHITE
+          }),
+        ...(edgeWidth && edgeWidth > 0 && { edgeWidth }),
+        ...(modelMatrix &&
+          modelMatrix.length > 0 && {
+            modelMatrix:
+              Matrix4.fromArray(clone(toJS(modelMatrix))) || Matrix4.IDENTITY
+          })
       };
 
-      if (edgeColor && edgeColor.length > 0) {
-        options = Object.assign(options, {
-          edgeColor: Color.fromCssColorString(edgeColor) || Color.WHITE
-        });
-      }
-
-      if (edgeWidth && edgeWidth > 0) {
-        options = Object.assign(options, { edgeWidth: edgeWidth });
-      }
-
-      if (modelMatrix && modelMatrix.length > 0) {
-        const array = clone(toJS(modelMatrix));
-        options = Object.assign(options, {
-          modelMatrix: Matrix4.fromArray(array) || Matrix4.IDENTITY
-        });
-      }
       return new ClippingPlaneCollection(options);
     }
 
