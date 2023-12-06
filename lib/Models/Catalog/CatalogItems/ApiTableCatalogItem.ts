@@ -185,21 +185,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     this.apiResponses.forEach((response) => {
       this.columns.forEach((col, mappingIdx) => {
         if (!isDefined(col.name)) return;
-
-        // If ApiColumnTraits has a responseDataPath, use that to get the value
-        const dataPath = this.apiColumns.find(
-          (c) => c.name === col.name
-        )?.responseDataPath;
-
-        if (dataPath) {
-          columnMajorTable[mappingIdx].push(
-            `${getResponseDataPath(response, dataPath) ?? ""}`
-          );
-        }
-        // Otherwise, use column name as the path
-        else {
-          columnMajorTable[mappingIdx].push(`${response[col.name] ?? ""}`);
-        }
+        // Append the new value to the correct column
+        columnMajorTable[mappingIdx].push(`${response[col.name] ?? ""}`);
       });
     });
 
