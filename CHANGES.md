@@ -1,7 +1,11 @@
 # Change Log
 
-#### next release (8.4.1)
+#### next release (8.5.0)
 
+- **Breaking changes:**
+  - Upgrade TypeScript to 5.2
+  - Switch Babel configuration to new JSX transform
+- Improve tsconfig files
 - Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
 - Update `webpack` to `4.47.0` to support Node >= 18 without extra command line parameters.
 - [The next improvement]
