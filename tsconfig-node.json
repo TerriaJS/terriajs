@@ -1,5 +1,5 @@
 // This tsconfig is used to build the model layer only for use in a node.js app.
-// Build with ./node_modules/.bin/tsc -p tsconfig-models.json
+// Build with ./node_modules/.bin/tsc -p tsconfig-node.json
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
