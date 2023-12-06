@@ -74,7 +74,6 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return Matrix4.inverse(this.clippingPlanesOriginMatrix(), new Matrix4());
     }
 
-    @computed
     private get simpleClippingPlaneCollection() {
       if (!this.clippingPlanes) {
         return;

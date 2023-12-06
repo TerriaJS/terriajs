@@ -63,7 +63,7 @@ export default class ApiRequestTraits extends mixTraits(UrlTraits) {
     name: "Response data path",
     type: "string",
     description:
-      "Path to relevent data in JSON response. eg: `some.user.name`, `some.users[0].name` or `some.users[].name`"
+      "Path to relevant data in JSON response. eg: `some.user.name`, `some.users[0].name` or `some.users[].name`"
   })
   responseDataPath?: string;
 }
