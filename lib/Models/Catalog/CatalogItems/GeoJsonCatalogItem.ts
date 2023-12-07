@@ -131,7 +131,12 @@ class GeoJsonCatalogItem
       const featureCollections = filterOutUndefined(
         await Promise.all(promises)
       );
-      jsonData = mergeFeatureCollections(featureCollections);
+
+      // Forced type casting required as TS not happy with assigning
+      // FeatureCollection to JsonValue
+      jsonData = mergeFeatureCollections(
+        featureCollections
+      ) as any as JsonValue;
     }
     // GeojsonTraits.url
     else if (this.url) {
@@ -188,12 +193,16 @@ class GeoJsonCatalogItem
   }
 }
 
+/**
+ * Reduce an array of FeatureCollection into a single FeatureCollection.
+ *
+ * Note that this only accumulates the features and ignores any properties set
+ * on the individual FeatureCollection.
+ */
 function mergeFeatureCollections(
   featureCollections: Array<FeatureCollection>
-): JsonValue {
-  return featureCollection(
-    featureCollections.map((fc) => fc.features).flat()
-  ) as any as JsonValue;
+): FeatureCollection {
+  return featureCollection(featureCollections.map((fc) => fc.features).flat());
 }
 
 export function fileApiNotSupportedError(terria: Terria) {
