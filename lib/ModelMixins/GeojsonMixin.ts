@@ -7,6 +7,8 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  LineString,
+  MultiLineString,
   MultiPoint,
   MultiPolygon,
   Point,
@@ -962,6 +964,38 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             czml.polygon.positions = { cartographicDegrees: positions };
             czml.polygon.holes = { cartographicDegrees: holes };
 
+            czml.properties = Object.assign(
+              czml.properties ?? {},
+              stringifyFeatureProperties(feature.properties ?? {})
+            );
+            rootCzml.push(czml);
+          }
+        } else if (
+          feature?.geometry?.type === "LineString" ||
+          (feature.geometry?.type === "MultiLineString" &&
+            czmlTemplate?.polyline)
+        ) {
+          const czml = clone(czmlTemplate ?? {}, true);
+
+          // To handle both Polygon and MultiPolygon - transform Polygon coords into MultiPolygon coords
+          const multiLineString =
+            feature.geometry?.type === "LineString"
+              ? [(feature.geometry as LineString).coordinates]
+              : (feature.geometry as MultiLineString).coordinates;
+
+          // Loop through Polygons in MultiPolygon
+          for (let j = 0; j < multiLineString.length; j++) {
+            const geom = multiLineString[j];
+            const positions: number[] = [];
+
+            geom.forEach((coords) => {
+              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+              }
+              positions.push(coords[0], coords[1], coords[2]);
+            });
+
+            czml.polyline.positions = { cartographicDegrees: positions };
             czml.properties = Object.assign(
               czml.properties ?? {},
               stringifyFeatureProperties(feature.properties ?? {})
