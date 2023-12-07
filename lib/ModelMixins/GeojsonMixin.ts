@@ -38,7 +38,6 @@ import {
 } from "protomaps";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -482,6 +481,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     protected async forceLoadMapItems(): Promise<void> {
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
+      const explodeMultiPoints = this.explodeMultiPoints;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
 
@@ -538,12 +538,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             continue;
           }
 
-          if (
-            this.explodeMultiPoints &&
-            feature.geometry.type === "MultiPoint"
-          ) {
+          if (explodeMultiPoints && feature.geometry.type === "MultiPoint") {
             // Replace the MultiPoint with equivalent Point features and repeat
-            // the iteration to pick up the expanded features.
+            // the iteration to pick up the exploded features.
             features.splice(i, 1, ...explodeMultiPoint(feature));
             i--;
             continue;
@@ -920,8 +917,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
           rootCzml.push(czml);
         } else if (
-          feature.geometry?.type === "Polygon" ||
-          (feature.geometry?.type === "MultiPolygon" && czmlTemplate?.polygon)
+          (feature.geometry?.type === "Polygon" ||
+            feature.geometry?.type === "MultiPolygon") &&
+          czmlTemplate?.polygon
         ) {
           const czml = clone(czmlTemplate ?? {}, true);
 
@@ -971,9 +969,12 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             rootCzml.push(czml);
           }
         } else if (
-          feature?.geometry?.type === "LineString" ||
-          (feature.geometry?.type === "MultiLineString" &&
-            czmlTemplate?.polyline)
+          (feature?.geometry?.type === "LineString" ||
+            feature.geometry?.type === "MultiLineString") &&
+          (czmlTemplate?.polyline ||
+            czmlTemplate?.polylineVolume ||
+            czmlTemplate?.wall ||
+            czmlTemplate?.corridor)
         ) {
           const czml = clone(czmlTemplate ?? {}, true);
 
@@ -995,7 +996,25 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               positions.push(coords[0], coords[1], coords[2]);
             });
 
-            czml.polyline.positions = { cartographicDegrees: positions };
+            // Add positions to all CZML line like features
+            if (czml.polyline) {
+              czml.polyline.positions = { cartographicDegrees: positions };
+            }
+
+            if (czml.polylineVolume) {
+              czml.polylineVolume.positions = {
+                cartographicDegrees: positions
+              };
+            }
+
+            if (czml.wall) {
+              czml.wall.positions = { cartographicDegrees: positions };
+            }
+
+            if (czml.corridor) {
+              czml.corridor.positions = { cartographicDegrees: positions };
+            }
+
             czml.properties = Object.assign(
               czml.properties ?? {},
               stringifyFeatureProperties(feature.properties ?? {})
