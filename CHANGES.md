@@ -7,6 +7,7 @@
 - Add support for multiple `urls` for `GeoJsonCatalogItem`.
 - Automatically explode GeoJSON `MultiPoint` features to `Point` features.
 - Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
+- Add support for `LineString` and `MultiLineString` when using `GeoJsonCatalogItem` in `CZML` mode.
 - [The next improvement]
 
 #### 8.4.0 - 2023-12-01
