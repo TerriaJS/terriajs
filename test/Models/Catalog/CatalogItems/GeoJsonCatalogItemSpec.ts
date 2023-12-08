@@ -3,6 +3,7 @@ import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -10,6 +11,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import { JsonObject } from "../../../../lib/Core/Json";
+import StandardCssColors from "../../../../lib/Core/StandardCssColors";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
@@ -883,9 +885,18 @@ describe("GeoJsonCatalogItemSpec", () => {
 
         expect(geojson.legends.length).toBe(1);
         expect(geojson.legends[0].items.length).toBe(1);
-        expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
-          "rgb(102,194,165)"
-        ]);
+
+        expect(
+          geojson.legends[0].items.map(
+            (i) =>
+              // Look through default colors for disabled styles
+              // This can change, as `createColorForIdTransformer` will use the least used color (to avoid clashes)
+              !!StandardCssColors.modifiedBrewer8ClassSet2.find(
+                (c) =>
+                  Color.fromCssColorString(c).toCssColorString() === i.color
+              )
+          )
+        ).toEqual([true]);
 
         updateModelFromJson(geojson, CommonStrata.definition, {
           legends: [
