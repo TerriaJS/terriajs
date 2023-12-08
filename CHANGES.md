@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.4.1)
+#### next release (8.4.2)
+
+- [The next improvement]
+
+#### 8.4.1 - 2023-12-08
 
 - Temporary UX fixes for clipping box:
   - An option to zoom to clipping box
@@ -14,7 +18,6 @@
 - Automatically explode GeoJSON `MultiPoint` features to `Point` features.
 - Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
 - Add support for `LineString` and `MultiLineString` when using `GeoJsonCatalogItem` in `CZML` mode.
-- [The next improvement]
 
 #### 8.4.0 - 2023-12-01
 
