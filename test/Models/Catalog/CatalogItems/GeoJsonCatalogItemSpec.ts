@@ -3,6 +3,7 @@ import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -10,6 +11,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import { JsonObject } from "../../../../lib/Core/Json";
+import StandardCssColors from "../../../../lib/Core/StandardCssColors";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
@@ -883,9 +885,18 @@ describe("GeoJsonCatalogItemSpec", () => {
 
         expect(geojson.legends.length).toBe(1);
         expect(geojson.legends[0].items.length).toBe(1);
-        expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
-          "rgb(102,194,165)"
-        ]);
+
+        expect(
+          geojson.legends[0].items.map(
+            (i) =>
+              // Look through default colors for disabled styles
+              // This can change, as `createColorForIdTransformer` will use the least used color (to avoid clashes)
+              !!StandardCssColors.modifiedBrewer8ClassSet2.find(
+                (c) =>
+                  Color.fromCssColorString(c).toCssColorString() === i.color
+              )
+          )
+        ).toEqual([true]);
 
         updateModelFromJson(geojson, CommonStrata.definition, {
           legends: [
@@ -1117,6 +1128,61 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson.setTrait(CommonStrata.user, "responseGeoJsonPath", "nested.data");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
+    });
+  });
+
+  describe("When given multiple URLs", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(async function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
+    });
+
+    it("fetches and merges the responses as a single geojson feature collection", async function () {
+      updateModelFromJson(geojson, CommonStrata.user, {
+        urls: [
+          { url: "test/GeoJSON/api.geojson", responseDataPath: "nested.data" },
+          {
+            url: "test/GeoJSON/points.geojson"
+          }
+        ]
+      });
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const mapItem = geojson.mapItems[0] as CustomDataSource;
+
+      expect(isDataSource(mapItem)).toBeTruthy();
+      expect(mapItem.entities.values.length).toBe(7);
+    });
+  });
+
+  describe("handling MultiPoint features", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/multipoint.geojson"
+      );
+    });
+
+    it("explodes multipoints as points", async function () {
+      await geojson.loadMapItems();
+      const points = geojson.mapItems[0] as CustomDataSource;
+      expect(points).toBeDefined();
+      expect(isDataSource(points)).toBeTruthy();
+      expect(points.entities.values.length).toEqual(5);
     });
   });
 
