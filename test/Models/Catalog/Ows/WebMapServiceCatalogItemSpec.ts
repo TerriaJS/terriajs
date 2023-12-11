@@ -7,6 +7,7 @@ import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 
 describe("WebMapServiceCatalogItem", function () {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function () {
@@ -153,6 +154,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.request).toBe("GetMap");
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.styles).toBe("");
 
         const getFeatureInfoResource: Resource = (
           mapItems[0].imageryProvider as any
@@ -168,6 +170,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("");
 
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
@@ -214,6 +217,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
         expect(tileProviderResource.queryParameters.tiled).toBeTruthy();
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.styles).toBe("");
 
         const getFeatureInfoResource: Resource = (
           mapItems[0].imageryProvider as any
@@ -232,6 +236,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("");
 
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
@@ -248,6 +253,7 @@ describe("WebMapServiceCatalogItem", function () {
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
+      wms.setTrait("definition", "styles", "jet");
       wms.setTrait("definition", "parameters", {
         some: "thing",
         another: "value"
@@ -284,6 +290,10 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.request).toBe("GetMap");
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.layers).toBe(
+          "single_period"
+        );
+        expect(tileProviderResource.queryParameters.styles).toBe("jet");
         expect(tileProviderResource.queryParameters.some).toBe("thing");
         expect(tileProviderResource.queryParameters.another).toBe("value");
 
@@ -301,12 +311,120 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
+        expect(getFeatureInfoResource.queryParameters.layers).toBe(
+          "single_period"
+        );
+        expect(getFeatureInfoResource.queryParameters.styles).toBe("jet");
         expect(getFeatureInfoResource.queryParameters.some).toBe("thing else");
         expect(getFeatureInfoResource.queryParameters.another).toBe("value");
 
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
       }
+    } finally {
+      cleanup();
+    }
+  });
+
+  it("correctly sets supportsGetTimeseries and featureInfoContext", async function () {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/colorscalerange.xml");
+      wms.setTrait("definition", "layers", "mylayer");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      console.log(wms);
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      expect(wms.supportsGetTimeseries).toBeTruthy();
+      expect(wms.getFeatureInfoFormat.format).toBe("text/csv");
+      expect(wms.getFeatureInfoFormat.type).toBe("text");
+      expect(wms.featureInfoTemplate.template).toBe(
+        "{{terria.timeSeries.chart}}"
+      );
+
+      expect(wms.featureInfoContext).toBeDefined();
+      const feature = new TerriaFeature({});
+      feature.data = "#some comment\nsome,csv\n1,2";
+      expect(wms.featureInfoContext(feature).terria?.timeSeries?.data).toBe(
+        "some,csv\n1,2"
+      );
+      expect(wms.featureInfoContext(feature).terria?.timeSeries?.title).toBe(
+        wms.name
+      );
+
+      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+        expect(mapItems[0].imageryProvider.url).toBe(
+          "test/WMS/colorscalerange.xml"
+        );
+
+        const tileProviderResource: Resource = (
+          mapItems[0].imageryProvider as any
+        )._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
+        expect(tileProviderResource.queryParameters.crs).toBe("EPSG:4326");
+        expect(tileProviderResource.queryParameters.exceptions).toBe("XML");
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+
+        const getFeatureInfoResource: Resource = (
+          mapItems[0].imageryProvider as any
+        )._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
+        expect(getFeatureInfoResource.queryParameters.time).toBe("");
+        expect(getFeatureInfoResource.queryParameters.crs).toBe("EPSG:4326");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe("XML");
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetTimeseries"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+      }
+    } finally {
+      cleanup();
+    }
+  });
+
+  it("doesn't supportGettimeseries if only a single timeslice", async function () {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/colorscalerange.xml");
+      wms.setTrait("definition", "layers", "mylayer-singletime");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      console.log(wms);
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      expect(wms.supportsGetTimeseries).toBeFalsy();
     } finally {
       cleanup();
     }

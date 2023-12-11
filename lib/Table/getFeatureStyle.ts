@@ -1,6 +1,7 @@
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Color from "terriajs-cesium/Source/Core/Color";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import LabelGraphics from "terriajs-cesium/Source/DataSources/LabelGraphics";
 import PathGraphics from "terriajs-cesium/Source/DataSources/PathGraphics";
@@ -10,6 +11,7 @@ import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import { getMakiIcon, isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
+import ScaleByDistanceTraits from "../Traits/TraitsClasses/ScaleByDistanceTraits";
 import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
 
@@ -35,12 +37,24 @@ type ExcludeCesiumProperty<T> = {
 
 export type SupportedPointGraphics = Pick<
   ExcludeCesiumProperty<PointGraphics.ConstructorOptions>,
-  "color" | "outlineColor" | "pixelSize" | "outlineWidth"
+  | "color"
+  | "outlineColor"
+  | "pixelSize"
+  | "outlineWidth"
+  | "scaleByDistance"
+  | "disableDepthTestDistance"
 >;
 
 export type SupportedBillboardGraphics = Pick<
   ExcludeCesiumProperty<BillboardGraphics.ConstructorOptions>,
-  "image" | "color" | "width" | "height" | "rotation" | "pixelOffset"
+  | "image"
+  | "color"
+  | "width"
+  | "height"
+  | "rotation"
+  | "pixelOffset"
+  | "scaleByDistance"
+  | "disableDepthTestDistance"
 >;
 
 export type SupportedPathGraphics = Pick<
@@ -69,6 +83,8 @@ export type SupportedLabelGraphics = Pick<
   | "pixelOffset"
   | "horizontalOrigin"
   | "verticalOrigin"
+  | "scaleByDistance"
+  | "disableDepthTestDistance"
 >;
 
 /** For given TableStyle and rowId, return feature styling in a "cesium-friendly" format.
@@ -119,7 +135,9 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     | undefined = pointStyle
     ? {
         color: color,
-        pixelSize: pointSize ?? pointStyle?.height ?? pointStyle?.width
+        pixelSize: pointSize ?? pointStyle?.height ?? pointStyle?.width,
+        scaleByDistance: scaleByDistanceFromTraits(pointStyle?.scaleByDistance),
+        disableDepthTestDistance: pointStyle?.disableDepthTestDistance
       }
     : undefined;
 
@@ -153,7 +171,11 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
           pixelOffset: new Cartesian2(
             pointStyle.pixelOffset?.[0],
             pointStyle.pixelOffset?.[1]
-          )
+          ),
+          scaleByDistance: scaleByDistanceFromTraits(
+            pointStyle?.scaleByDistance
+          ),
+          disableDepthTestDistance: pointStyle?.disableDepthTestDistance
         }
       : undefined;
 
@@ -223,7 +245,9 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
             ? HorizontalOrigin.CENTER
             : labelStyle.horizontalOrigin === "RIGHT"
             ? HorizontalOrigin.RIGHT
-            : HorizontalOrigin.LEFT
+            : HorizontalOrigin.LEFT,
+        scaleByDistance: scaleByDistanceFromTraits(labelStyle?.scaleByDistance),
+        disableDepthTestDistance: labelStyle?.disableDepthTestDistance
       }
     : undefined;
 
@@ -239,4 +263,25 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
       !isMakiIcon(pointStyle?.marker) &&
       !pointStyle?.marker?.startsWith("data:image")
   };
+}
+
+/**
+ * Constructs a `NearFarScalar` instance from the ScaleByDistance traits or
+ * `undefined` if the settings is not meaningful.
+ */
+function scaleByDistanceFromTraits(
+  scaleByDistance: ScaleByDistanceTraits | undefined
+): NearFarScalar | undefined {
+  if (!scaleByDistance) {
+    return;
+  }
+
+  const { near, nearValue, far, farValue } = scaleByDistance;
+  if (nearValue === 1 && farValue === 1) {
+    // Return undefined as this value will have no effect when both near and
+    // far value is equal to 1.
+    return;
+  }
+
+  return new NearFarScalar(near, nearValue, far, farValue);
 }

@@ -30,11 +30,11 @@ The template will replace all occurrences of `{{property}}` with the value of th
 
 The result is:
 
-<img src="./img/template.png">
+<img src="../img/template.png">
 
 instead of:
 
-<img src="./img/no_template.png">
+<img src="../img/no_template.png">
 
 You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
 
@@ -150,7 +150,7 @@ If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the 
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
 
-<img src="./img/feature_info_with_time_series.png">
+<img src="../img/feature_info_with_time_series.png">
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`. Alternatively, you can access the following component information:
 

@@ -6,12 +6,14 @@ import { StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMarkdownToReact";
 import Button from "../../Styled/Button";
+import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 
 export const SelectableDimensionButton: React.FC<{
   id: string;
   dim: SelectableDimensionButtonModel;
 }> = ({ id, dim }) => {
-  const icon = dim.icon;
+  const iconGlyph = dim.icon;
+  const iconProps = { light: true, styledWidth: "16px", styledHeight: "16px" };
   return (
     <Button
       onClick={() =>
@@ -19,16 +21,12 @@ export const SelectableDimensionButton: React.FC<{
       }
       activeStyles
       shortMinHeight
-      renderIcon={
-        icon &&
-        (() => (
-          <StyledIcon
-            glyph={icon}
-            light
-            styledWidth="16px"
-            styledHeight="16px"
-          />
-        ))
+      renderIcon={() =>
+        iconGlyph === "spinner" ? (
+          <AnimatedSpinnerIcon {...iconProps} />
+        ) : iconGlyph ? (
+          <StyledIcon glyph={iconGlyph} {...iconProps} />
+        ) : undefined
       }
       style={{ backgroundColor: "transparent" }}
     >

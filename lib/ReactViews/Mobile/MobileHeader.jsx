@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -127,16 +128,19 @@ class MobileHeader extends React.Component {
   }
 
   renderSearch() {
-    const { t } = this.props;
+    const { t, viewState } = this.props;
 
-    const searchState = this.props.viewState.searchState;
+    const searchState = viewState.searchState;
     <div className={Styles.formSearchData}>
       {searchState.showMobileLocationSearch && (
         <SearchBox
           searchText={searchState.locationSearchText}
           onSearchTextChanged={this.changeLocationSearchText.bind(this)}
           onDoSearch={this.searchLocations.bind(this)}
-          placeholder={t("search.placeholder")}
+          placeholder={applyTranslationIfExists(
+            viewState.terria.searchBarModel.placeholder,
+            this.props.i18n
+          )}
           alwaysShowClear={true}
           onClear={this.closeLocationSearch.bind(this)}
           autoFocus={true}
@@ -299,7 +303,8 @@ MobileHeader.propTypes = {
   menuLeftItems: PropTypes.array,
   menuItems: PropTypes.array,
   theme: PropTypes.object,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  i18n: PropTypes.object
 };
 
 export default withTranslation()(withTheme(withViewState(MobileHeader)));

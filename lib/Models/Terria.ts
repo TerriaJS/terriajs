@@ -117,12 +117,16 @@ import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
+import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
+import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
+import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -340,6 +344,12 @@ export interface ConfigParameters {
   plugins?: Record<string, any>;
 
   aboutButtonHrefUrl?: string | null;
+
+  /**
+   * The search bar allows requesting information from various search services at once.
+   */
+  searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
+  searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 }
 
 interface StartOptions {
@@ -435,6 +445,7 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
+  readonly searchBarModel = new SearchBarModel(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
@@ -552,7 +563,9 @@ export default class Terria {
     googleAnalyticsOptions: undefined,
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
-    plugins: undefined
+    plugins: undefined,
+    searchBarConfig: undefined,
+    searchProviders: []
   };
 
   @observable
@@ -986,6 +999,7 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
+
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
@@ -1043,6 +1057,15 @@ export default class Terria {
         )
       );
 
+    this.searchBarModel
+      .updateModelConfig(this.configParameters.searchBarConfig)
+      .initializeSearchProviders(this.configParameters.searchProviders)
+      .catchError((error) =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to initialize searchProviders")
+        )
+      );
+
     if (typeof options.beforeRestoreAppState === "function") {
       try {
         await options.beforeRestoreAppState();
@@ -1060,6 +1083,7 @@ export default class Terria {
         this
       );
     }
+
     this.loadPersistedMapSettings();
   }
 
