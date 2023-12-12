@@ -731,7 +731,8 @@
     "unverifiedExternalLink": {
       "title": "Alerta: link não verificado",
       "denyText": "Cancelar",
-      "confirmText": "Abrir em uma nova aba"
+      "confirmText": "Abrir em uma nova aba",
+      "message": "Você está prestes a abrir: \n\n`{{url}}`  \n\nEsse endereço não foi verificado e pode ser inseguro."
     }
   },
   "analytics": {
@@ -818,7 +819,8 @@
       "failedToObtain": "Falha ao obter o bloco de imagem X: {{x}} Y: {{y}} Nível: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque não suporta a projeção Web Mercator (EPSG: 3857).",
       "unusalTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque ele usa um esquema de tiling incomum que não é compatível.",
-      "terrainServerErrorTitle": "Servidor Terrain não está respondendo"
+      "terrainServerErrorTitle": "Servidor Terrain não está respondendo",
+      "stoppedRenderingTitle": "Falha ao mostrar o mapa 3D"
     },
     "computeRingWindingOrder": {
       "devError": "Pontos esperados do tipo {x: número, y: número}"
