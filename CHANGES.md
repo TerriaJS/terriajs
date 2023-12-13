@@ -6,7 +6,7 @@
   - Upgrade TypeScript to 5.2
   - Switch Babel configuration to new JSX transform
 - Improve tsconfig files
-- Remove deprecated default `relatedMaps` 
+- Remove deprecated default `relatedMaps`
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
