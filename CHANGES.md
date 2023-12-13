@@ -2,6 +2,7 @@
 
 #### next release (8.4.2)
 
+- Update `thredds-catalog-crawler` to `0.0.6`
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
