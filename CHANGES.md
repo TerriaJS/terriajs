@@ -2,11 +2,11 @@
 
 #### next release (8.5.0)
 
-- Update `thredds-catalog-crawler` to `0.0.6`
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
   - Switch Babel configuration to new JSX transform
 - Improve tsconfig files
+- Update `thredds-catalog-crawler` to `0.0.6`
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
