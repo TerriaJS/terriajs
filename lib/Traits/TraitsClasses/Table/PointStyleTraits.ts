@@ -4,6 +4,7 @@ import objectTrait from "../../Decorators/objectTrait";
 import primitiveArrayTrait from "../../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../../Decorators/primitiveTrait";
 import mixTraits from "../../mixTraits";
+import ScaleByDistanceTraits from "../ScaleByDistanceTraits";
 import {
   BinStyleTraits,
   EnumStyleTraits,
@@ -47,6 +48,23 @@ export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
     type: "number"
   })
   width?: number = 16;
+
+  @objectTrait({
+    name: "Scale by distance",
+    description:
+      "Scales a point, billboard or label feature by its distance from the camera.",
+    type: ScaleByDistanceTraits,
+    isNullable: true
+  })
+  scaleByDistance?: ScaleByDistanceTraits;
+
+  @primitiveTrait({
+    name: "Disable depth test distance",
+    description:
+      "The distance from camera at which to disable depth testing, for example to prevent clipping of features againts terrain. Set to a very large value like 99999999 to disable depth testing altogether. When not defined or set to 0, depth testing is always applied.",
+    type: "number"
+  })
+  disableDepthTestDistance?: number;
 }
 
 export class EnumPointSymbolTraits extends mixTraits(

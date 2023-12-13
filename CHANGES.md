@@ -6,9 +6,22 @@
   - Upgrade TypeScript to 5.2
   - Switch Babel configuration to new JSX transform
 - Improve tsconfig files
+- [The next improvement]
+
+#### 8.4.1 - 2023-12-08
+
+- Temporary UX fixes for clipping box:
+  - An option to zoom to clipping box
+  - An option to re-position the clipping box
+  - Trigger repositioning of clipping box when the user enables clipping box for the first time
+  - Cursor and scale point handle changes (makes it much easier to grasp)
+  - More robust interaction with the box
 - Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
 - Update `webpack` to `4.47.0` to support Node >= 18 without extra command line parameters.
-- [The next improvement]
+- Add support for multiple `urls` for `GeoJsonCatalogItem`.
+- Automatically explode GeoJSON `MultiPoint` features to `Point` features.
+- Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
+- Add support for `LineString` and `MultiLineString` when using `GeoJsonCatalogItem` in `CZML` mode.
 
 #### 8.4.0 - 2023-12-01
 
