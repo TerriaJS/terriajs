@@ -1,5 +1,6 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
+@import "../../Sass/common/_buttons.scss";
 
 .invoke-function {
   padding: $padding-small;
@@ -32,7 +33,6 @@
 }
 
 @include empty-module("description");
-
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";

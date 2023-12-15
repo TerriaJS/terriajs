@@ -53,7 +53,9 @@ export interface ColorDimension extends Dimension {
 
 export interface ButtonDimension extends Dimension {
   readonly value?: string;
-  readonly icon?: IconGlyph;
+  readonly icon?:
+    | IconGlyph // Any Icon glyph
+    | "spinner"; // Animated spinner icon
 }
 
 export type SelectableDimensionType =
@@ -116,6 +118,11 @@ export interface SelectableDimensionCheckboxGroup
     Omit<SelectableDimensionGroup, "type">,
     EnumDimension<"true" | "false"> {
   type: "checkbox-group";
+
+  /**
+   * Text to show if the group is empty
+   */
+  emptyText?: string;
 
   // We don't allow nested groups for now to keep the UI simple
   readonly selectableDimensions: Exclude<

@@ -79,3 +79,15 @@ Then run the following to install NodeJS v16 and use it:
 nvm install 16
 nvm use 16
 ```
+
+### Problem
+
+When building TerriaMap/TerriaJS I see the following error
+
+```
+Error: error:0308010C:digital envelope routines::unsupported
+```
+
+### Solution
+
+Update to TerriaJS 8.4.1.
