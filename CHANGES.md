@@ -2,13 +2,12 @@
 
 #### next release (8.5.0)
 
-- Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
-- `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","version","format","srs","crs","format"`)
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
   - Switch Babel configuration to new JSX transform
 - Improve tsconfig files
 - Update `thredds-catalog-crawler` to `0.0.6`
+- `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","version","format","srs","crs","format"`)
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
