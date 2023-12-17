@@ -1,8 +1,36 @@
 # Change Log
 
-#### next release (8.3.10)
+#### next release (8.5.0)
 
+- **Breaking changes:**
+  - Upgrade TypeScript to 5.2
+  - Switch Babel configuration to new JSX transform
+- Improve tsconfig files
+- Update `thredds-catalog-crawler` to `0.0.6`
+- `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","srs","crs","format"`)
 - [The next improvement]
+
+#### 8.4.1 - 2023-12-08
+
+- Temporary UX fixes for clipping box:
+  - An option to zoom to clipping box
+  - An option to re-position the clipping box
+  - Trigger repositioning of clipping box when the user enables clipping box for the first time
+  - Cursor and scale point handle changes (makes it much easier to grasp)
+  - More robust interaction with the box
+- Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
+- Update `webpack` to `4.47.0` to support Node >= 18 without extra command line parameters.
+- Add support for multiple `urls` for `GeoJsonCatalogItem`.
+- Automatically explode GeoJSON `MultiPoint` features to `Point` features.
+- Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
+- Add support for `LineString` and `MultiLineString` when using `GeoJsonCatalogItem` in `CZML` mode.
+
+#### 8.4.0 - 2023-12-01
+
+- **Breaking change:** Replaced `node-sass` with (dart) `sass`
+  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
+- Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
+- `ArcGisMapServerCatalogItem` will now use "pre-cached tiles" if available if no (or all) `layers` are specified.
 
 #### 8.3.9 - 2023-11-24
 

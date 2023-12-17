@@ -10,32 +10,50 @@ import Terria from "../../../../lib/Models/Terria";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 
 describe("WebMapServiceCatalogItem", function () {
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function () {
-    const terria = new Terria();
-    const wms = new WebMapServiceCatalogItem("test", terria);
-    wms.setTrait("definition", "url", "foo.bar.baz");
-    expect(wms.getCapabilitiesUrl).toBeDefined();
-    expect(wms.url).toBeDefined();
-    expect(
-      wms.getCapabilitiesUrl &&
-        wms.getCapabilitiesUrl.indexOf(wms.url || "undefined") === 0
-    ).toBe(true);
+  describe("derives getCapabilitiesUrl from url", () => {
+    it("if getCapabilitiesUrl is not specified", function () {
+      const terria = new Terria();
+      const wms = new WebMapServiceCatalogItem("test", terria);
+      wms.setTrait("definition", "url", "foo.bar.baz");
+      expect(wms.getCapabilitiesUrl).toBeDefined();
+      expect(wms.url).toBeDefined();
+      expect(
+        wms.getCapabilitiesUrl &&
+          wms.getCapabilitiesUrl.indexOf(wms.url || "undefined") === 0
+      ).toBe(true);
 
-    expect(wms.useWmsVersion130).toBeTruthy();
-  });
+      expect(wms.useWmsVersion130).toBeTruthy();
+    });
 
-  it("derives getCapabilitiesUrl from url - for WMS 1.1.1", function () {
-    const terria = new Terria();
-    const wms = new WebMapServiceCatalogItem("test", terria);
-    wms.setTrait(
-      "definition",
-      "url",
-      "http://www.bom.gov.au/cgi-bin/ws/gis/ncc/cdio/wxs?service=WMS&version=1.1.1&request=GetCapabilities"
-    );
-    expect(wms.getCapabilitiesUrl).toBeDefined();
-    expect(wms.url).toBeDefined();
+    it("for WMS 1.1.1", function () {
+      const terria = new Terria();
+      const wms = new WebMapServiceCatalogItem("test", terria);
+      wms.setTrait(
+        "definition",
+        "url",
+        "http://www.bom.gov.au/cgi-bin/ws/gis/ncc/cdio/wxs?service=WMS&version=1.1.1&request=GetCapabilities"
+      );
+      expect(wms.getCapabilitiesUrl).toBeDefined();
+      expect(wms.url).toBeDefined();
 
-    expect(wms.useWmsVersion130).toBeFalsy();
+      expect(wms.useWmsVersion130).toBeFalsy();
+    });
+
+    it("drops query bad parameters", function () {
+      const terria = new Terria();
+      const wms = new WebMapServiceCatalogItem("test", terria);
+      wms.setTrait(
+        "definition",
+        "url",
+        "http://www.bom.gov.au/cgi-bin/ws/gis/ncc/cdio/wxs?service=WMS&version=1.1.1&request=GetMap&format=something&allowed=yes"
+      );
+      expect(wms.getCapabilitiesUrl).toBeDefined();
+      expect(wms.url).toBeDefined();
+
+      const queryParameters = new URL(wms.getCapabilitiesUrl!).searchParams;
+      expect(queryParameters.get("format")).toBeNull();
+      expect(queryParameters.get("allowed")).toBe("yes");
+    });
   });
 
   it("loads", function () {

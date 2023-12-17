@@ -1,5 +1,6 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ApiRequestTraits from "./ApiRequestTraits";
@@ -9,6 +10,15 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
   ApiRequestTraits
 ) {
+  @objectArrayTrait({
+    type: ApiRequestTraits,
+    name: "URLs",
+    idProperty: "url",
+    description:
+      "Array of GeoJSON URLs to fetch. The GeoJSON features from the URL responses will be merged into one single FeatureCollection. When this trait is specified, the `url` trait is ignored."
+  })
+  urls?: ApiRequestTraits[];
+
   @anyTrait({
     name: "geoJsonData",
     description: "A geojson data object"

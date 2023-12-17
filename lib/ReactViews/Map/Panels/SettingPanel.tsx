@@ -318,7 +318,7 @@ class SettingPanel extends React.Component<PropTypes> {
                     }
                     onClick={(event) => this.selectBaseMap(baseMap.item, event)}
                     onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
-                    onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
+                    onMouseLeave={this.mouseLeaveBaseMap.bind(this)}
                     onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                   >
                     {baseMap.item === this.props.terria.mainViewer.baseMap ? (
