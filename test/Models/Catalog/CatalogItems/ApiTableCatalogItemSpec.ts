@@ -248,4 +248,94 @@ describe("ApiTableCatalogItem", function () {
       expect(valueColumn).toEqual(["value", "8", "9", "7"]);
     });
   });
+
+  describe("supports apiColumns", function () {
+    beforeEach(function () {
+      jasmine.Ajax.stubRequest(
+        "build/TerriaJS/data/regionMapping.json"
+      ).andReturn({ responseText: regionMapping });
+
+      jasmine.Ajax.stubRequest(
+        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/position.json")
+      ).andReturn({
+        responseText: positionApiResponse
+      });
+
+      runInAction(() => {
+        updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
+          idKey: "id",
+          apis: [
+            {
+              url: "https://terria.io/position.json"
+            }
+          ],
+          columns: [
+            {
+              name: "id"
+            },
+            {
+              name: "some embedded value"
+            },
+            {
+              name: "some other embedded value"
+            },
+            {
+              name: "some fake embedded value"
+            }
+          ],
+
+          apiColumns: [
+            {
+              name: "some embedded value",
+              responseDataPath: "some.embedded.0"
+            },
+            {
+              name: "some other embedded value",
+              responseDataPath: "some.embedded.1"
+            },
+            {
+              name: "some fake embedded value",
+              responseDataPath: "some.embedded.path.that[].does.not.exist.1"
+            }
+          ]
+        });
+      });
+    });
+
+    it("uses responseDataPath", async function () {
+      await apiCatalogItem.loadMapItems();
+      const table = apiCatalogItem.dataColumnMajor;
+      expect(table).toBeDefined();
+      let definedTable: string[][] = table!;
+      const embeddedColumn = definedTable.find(
+        ([name]) => name === "some embedded value"
+      );
+      expect(embeddedColumn).toEqual([
+        "some embedded value",
+        "first_element 1",
+        "first_element 2",
+        "first_element 3"
+      ]);
+
+      const otherEmbeddedColumn = definedTable.find(
+        ([name]) => name === "some other embedded value"
+      );
+      expect(otherEmbeddedColumn).toEqual([
+        "some other embedded value",
+        "second_element 1",
+        "second_element 2",
+        "second_element 3"
+      ]);
+
+      const fakeEmbeddedColumn = definedTable.find(
+        ([name]) => name === "some fake embedded value"
+      );
+      expect(fakeEmbeddedColumn).toEqual([
+        "some fake embedded value",
+        "",
+        "",
+        ""
+      ]);
+    });
+  });
 });

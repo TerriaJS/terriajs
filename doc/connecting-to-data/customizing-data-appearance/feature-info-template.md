@@ -30,11 +30,11 @@ The template will replace all occurrences of `{{property}}` with the value of th
 
 The result is:
 
-<img src="./img/template.png">
+<img src="../img/template.png">
 
 instead of:
 
-<img src="./img/no_template.png">
+<img src="../img/no_template.png">
 
 You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
 
@@ -88,10 +88,10 @@ The preferred way to format numbers is using the `formats` option, eg:
 
 The supported format options are:
 
-- `"maximumFractionDigits": X`: To reduce the number of decimal places to a maximum of X digits.
-- `"minimumFractionDigits": X`: To increase the number of decimal places to a minimum of X digits.
-- `"useGrouping": true`: To show thousands separators.
-- `"style": "percent"`: To show 0.15 as 15%.
+-   `"maximumFractionDigits": X`: To reduce the number of decimal places to a maximum of X digits.
+-   `"minimumFractionDigits": X`: To increase the number of decimal places to a minimum of X digits.
+-   `"useGrouping": true`: To show thousands separators.
+-   `"style": "percent"`: To show 0.15 as 15%.
 
 A second method is to use `terria.formatNumber` directly in the template. This accepts an initial JSON string describing the same options as above. To simplify the notation, the quotes around the keys are optional here.
 
@@ -128,9 +128,9 @@ As with number you can also use `terria.dateTimeformat` directly in the template
 
 You can replace text by directly using `terria.partialByName` in the template and providing partials for matching and replacement. For example, with the following template and partials,
 
-- If the value of `feature.data.layerId` matches a property name in the `partials`, it will be replaced by corresponding value.
-- If there is no matching in the `partials`, the original value will be used.
-- Any unsafe values in the `partials` will be stripped off when being rendered.
+-   If the value of `feature.data.layerId` matches a property name in the `partials`, it will be replaced by corresponding value.
+-   If there is no matching in the `partials`, the original value will be used.
+-   Any unsafe values in the `partials` will be stripped off when being rendered.
 
 ```json
 "featureInfoTemplate": {
@@ -150,21 +150,21 @@ If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the 
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
 
-<img src="./img/feature_info_with_time_series.png">
+<img src="../img/feature_info_with_time_series.png">
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`. Alternatively, you can access the following component information:
 
-- `{{terria.timeSeries.xName}}` - the x-column name
-- `{{terria.timeSeries.yName}}` - the y-column name
-- `{{terria.timeSeries.title}}`
-- `{{terria.timeSeries.id}}`
-- `{{terria.timeSeries.units}}` - the column units as a comma-separated string.
-- `{{terria.timeSeries.data}}` - the data as a comma-separated string.
+-   `{{terria.timeSeries.xName}}` - the x-column name
+-   `{{terria.timeSeries.yName}}` - the y-column name
+-   `{{terria.timeSeries.title}}`
+-   `{{terria.timeSeries.id}}`
+-   `{{terria.timeSeries.units}}` - the column units as a comma-separated string.
+-   `{{terria.timeSeries.data}}` - the data as a comma-separated string.
 
 Please note:
 
-- If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further.
-- If any of the component information above is used as part of tag attributes, it must be surrounded by double-quotes. e.g. `<chart y-column="{{terria.timeSeries.yName}}"></chart>`
+-   If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further.
+-   If any of the component information above is used as part of tag attributes, it must be surrounded by double-quotes. e.g. `<chart y-column="{{terria.timeSeries.yName}}"></chart>`
 
 So you could reconstruct the chart manually as:
 

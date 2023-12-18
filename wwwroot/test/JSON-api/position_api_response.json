@@ -2,16 +2,19 @@
   {
     "id": 1,
     "latitude": -37.25,
-    "longitude": 145.25
+    "longitude": 145.25,
+    "some": { "embedded": ["first_element 1", "second_element 1"] }
   },
   {
     "id": 2,
     "latitude": -37,
-    "longitude": 145.5
+    "longitude": 145.5,
+    "some": { "embedded": ["first_element 2", "second_element 2"] }
   },
   {
     "id": 3,
     "latitude": -37.1,
-    "longitude": 145.7
+    "longitude": 145.7,
+    "some": { "embedded": ["first_element 3", "second_element 3"] }
   }
 ]

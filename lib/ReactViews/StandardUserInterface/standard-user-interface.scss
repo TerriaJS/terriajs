@@ -80,8 +80,12 @@
   // On small screens (mobile), it make be up to 90% of the screen.
   // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
   // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
-  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
-  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+  $feature-info-medium-max-size: calc(
+    $sm * 0.9 - $feature-info-right-margin * 0.5
+  );
+  $feature-info-forty-percent-size: calc(
+    $feature-info-medium-max-size * 100 / 40
+  );
 
   z-index: $front-component-z-index - 20;
   position: absolute;

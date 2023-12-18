@@ -219,7 +219,6 @@ export default class TerriaViewer {
       newViewer = untracked(() => new NoViewer(this));
     }
 
-    console.log(`Creating a viewer: ${newViewer.type}`);
     this._lastViewer = newViewer;
     newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
 
@@ -248,7 +247,6 @@ export default class TerriaViewer {
     let currentView: CameraView | undefined;
     if (this._lastViewer !== undefined) {
       this.beforeViewerChanged.raiseEvent();
-      console.log(`Destroying viewer: ${this._lastViewer.type}`);
       currentView = this._lastViewer.getCurrentCameraView();
       this._lastViewer.destroy();
       this._lastViewer = undefined;

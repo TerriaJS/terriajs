@@ -76,7 +76,7 @@ const StorySharePanel = createReactClass({
         >
           {this.props.btnText ? this.props.btnText : ""}
         </Button>
-        <If condition={this.isOpen()}>
+        {this.isOpen() && (
           <div
             css={`
               margin-top: 35px;
@@ -96,7 +96,7 @@ const StorySharePanel = createReactClass({
               {this.props.children}
             </InnerPanel>
           </div>
-        </If>
+        )}
       </>
     );
   }

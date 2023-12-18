@@ -1,8 +1,108 @@
 # Change Log
 
-#### next release (8.3.2)
+#### next release (8.5.0)
 
+- **Breaking changes:**
+  - Upgrade TypeScript to 5.2
+  - Switch Babel configuration to new JSX transform
+- Improve tsconfig files
+- Update `thredds-catalog-crawler` to `0.0.6`
+- `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","srs","crs","format"`)
 - [The next improvement]
+
+#### 8.4.1 - 2023-12-08
+
+- Temporary UX fixes for clipping box:
+  - An option to zoom to clipping box
+  - An option to re-position the clipping box
+  - Trigger repositioning of clipping box when the user enables clipping box for the first time
+  - Cursor and scale point handle changes (makes it much easier to grasp)
+  - More robust interaction with the box
+- Fix a bug where `DragPoints` was interfering with pedstrian mode mouse movements.
+- Update `webpack` to `4.47.0` to support Node >= 18 without extra command line parameters.
+- Add support for multiple `urls` for `GeoJsonCatalogItem`.
+- Automatically explode GeoJSON `MultiPoint` features to `Point` features.
+- Add new table styling traits - `scaleByDistance` and `disableDepthTestDistance`.
+- Add support for `LineString` and `MultiLineString` when using `GeoJsonCatalogItem` in `CZML` mode.
+
+#### 8.4.0 - 2023-12-01
+
+- **Breaking change:** Replaced `node-sass` with (dart) `sass`
+  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
+- Added `apiColumns` to `ApiTableCatalogItem` - this can now be used to specify `responseDataPath` per table column.
+- `ArcGisMapServerCatalogItem` will now use "pre-cached tiles" if available if no (or all) `layers` are specified.
+
+#### 8.3.9 - 2023-11-24
+
+- **Breaking change:** new Search Provider model
+  - Added SearchProviderMixin to connect searchProviders with a model system
+  - Created a simple base Mixin (`SearchProviderMixin`) to attach SearchProviders to the Model system and enable easier creation of new search providers.
+  - Made SearchProviders configurable from `config.json`.
+  - See [0011-configurable-search-providers ADR](./architecture/0011-configurable-search-providers.md) and [Search providers customization](./doc/customizing/search-providers.md) for more details
+- Make all icons in `CatalogGroup` black by default and white when a catalog group is focused, selected or hovered over. Improve lock icon position in workbench.
+
+#### 8.3.8 - 2023-11-15
+
+- Fix maximum call stack size exceeded on Math.min/max when creating Charts
+- Fix boolean flag in `MyDataTab` displaying number
+- Remove `jsx-control-statements` dependency
+- Fix WMS nested group IDs - nested groups with the same name were not being created
+- WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
+- Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
+  - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
+  - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
+- Added many remaining ASGS 2021 region types to region mapping (STE_2021,ILOC_2021,IARE_2021,IREG_2021,RA_2021,SAL_2021,ADD_2021,DZN_2021,LGA_2022,LGA_2023,SED_2021,SED_2022,
+  CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
+  - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
+- Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
+- Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
+- Add CesiumIon geocoder
+- `CatalogGroup` will now not show members until loaded
+- Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
+
+#### 8.3.7 - 2023-10-26
+
+- Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
+- Allow translation of TableStylingWorkflow.
+- Fix "Remove all" not removing selected/picked features
+- Fix crash on empty GeoJSON features
+- Add `tableFeatureInfoContext` support to `GeoJsonMixin.createProtomapsImageryProvider`
+- Fix `GeoJsonMixin` timeline animation for lines/polygons
+- Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
+- Fix splitter for `GeoJsonMixin` (lines and polygon features only)
+- Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+
+#### 8.3.6 - 2023-10-03
+
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
+- Fix regression in `excludeMembers`, `id` and `name` should be lower-case for comparing.
+
+#### 8.3.5 - 2023-09-26
+
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
+
+#### 8.3.4 - 2023-09-15
+
+- Add `timeWindowDuration`, `timeWindowUnit` and `isForwardTimeWindow` traits to esri-mapServer type to support time window query.
+- Move map credits to map column so it don't get hidden by chart panel
+- TSify `MapColumn` module and reorganize components directory structure.
+- Add null check to `WebMapServiceCatalogItem` `rectangle` calculation - and now we ascend tree of WMS `Layers` until we find a rectangle.
+- Fix multi level nesting in ArcGIS Mapserver.
+
+#### 8.3.3 - 2023-09-07
+
+- Fixed broken point dragging interaction for user drawing in 3D mode.
+- Fixed rectangle drawing in 2D mode.
+- Added EPSG:7855 to `Proj4Definitions`.
+
+#### 8.3.2 - 2023-08-11
+
+- Fixed a bug when restoring timefilter from a share link having more than one imagery item with the same base URL (but different layer names).
+- Fix WPS duplicate display of analysis results when loaded through a share URL
+- Upgraded babel packages.
 
 #### 8.3.1 - 2023-06-29
 
@@ -427,7 +527,7 @@
   - Multiple changes to `GtfsCatalogItem`:
     - Removed `apiKey` in favour of more general `headers`
     - Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
-    - `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
+    - `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Prepend "build/TerriaJS/" (the value of `terria.baseUrl`) to any existing relative `image` urls.
 - Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
 - Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
 - Changed rounding of the numbers of the countdown timer in the workbench UI for items that use polling. The timer wil now show 00:00 for at most 500ms (instead of a full second). This means that for timers that are a multiple of 1000ms the timer will now show 00:01 for the last second before polling, instead of 00:00.

@@ -14,8 +14,7 @@ describe("Tool", function () {
     const terria = new Terria();
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

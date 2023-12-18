@@ -1,8 +1,8 @@
-import { BaseModel } from "../Definition/Model";
-import { observable, action, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import GroupMixin from "../../ModelMixins/GroupMixin";
+import { BaseModel } from "../Definition/Model";
 
 export interface SearchResultOptions {
   name?: string;

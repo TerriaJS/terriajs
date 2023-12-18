@@ -182,7 +182,7 @@ $splitter-thumb-width: 40px;
 // Generated legends
 $legend-item-width: 30px;
 $legend-item-height: 16px;
-$legend-padding: $legend-item-height / 2;
-$legend-spacer-height: $legend-padding / 2;
+$legend-padding: calc($legend-item-height / 2);
+$legend-spacer-height: calc($legend-padding / 2);
 
 $tool-primary-color: $color-primary;

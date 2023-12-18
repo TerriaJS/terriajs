@@ -5,7 +5,7 @@ import React from "react";
 import Terria from "../../lib/Models/Terria";
 import { getMountedInstance } from "./MoreShallowTools";
 
-import { MeasureTool } from "../../lib/ReactViews/Map/Navigation/MeasureTool";
+import { MeasureTool } from "../../lib/ReactViews/Map/MapNavigation/MeasureTool";
 const Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
 const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
 const ConstantPositionProperty =

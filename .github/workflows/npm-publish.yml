@@ -33,10 +33,10 @@ jobs:
 
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           registry-url: "https://registry.npmjs.org"
-          node-version: "14.x"
+          node-version-file: ".nvmrc"
 
       - name: Install yarn
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
