@@ -39,6 +39,8 @@ import {
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
+import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -368,6 +370,7 @@ export default class ViewState {
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
   private _previewedItemIdSubscription: IReactionDisposer;
+  private _locationMarkerSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
@@ -475,6 +478,17 @@ export default class ViewState {
       }
     );
 
+    this._locationMarkerSubscription = reaction(
+      () => getMarkerCatalogItem(this.terria),
+      (item: CzmlCatalogItem | undefined) => {
+        if (item) {
+          terria.overlays.add(item);
+          /* dispose subscription after init */
+          this._locationMarkerSubscription();
+        }
+      }
+    );
+
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
       async (previewedItemId: string | undefined) => {
@@ -525,6 +539,7 @@ export default class ViewState {
     this._storyPromptSubscription();
     this._previewedItemIdSubscription();
     this._workbenchHasTimeWMSSubscription();
+    this._locationMarkerSubscription();
     this._disclaimerHandler.dispose();
     this.searchState.dispose();
   }
