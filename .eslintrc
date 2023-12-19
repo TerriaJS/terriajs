@@ -59,6 +59,7 @@
     "no-inner-declarations": [1, "functions"],
 
     /* Best Practices */
+    "eqeqeq": ["error"],
     "no-alert": ["error"],
     "no-caller": ["error"],
     "no-div-regex": ["error"],

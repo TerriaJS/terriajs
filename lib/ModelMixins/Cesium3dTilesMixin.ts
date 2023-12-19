@@ -436,7 +436,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
           "${opacity}" +
           "))";
-      } else if (typeof style.color == "string") {
+      } else if (typeof style.color === "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
         if (isDefined(cssColor)) {

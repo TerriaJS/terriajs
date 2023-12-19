@@ -116,13 +116,13 @@ class StoryPanel extends React.Component<Props, State> {
         (e as KeyboardEvent).key === "ArrowRight" ||
         (e as KeyboardEvent).key === "ArrowDown"
       ) {
-        this.props.viewState.currentStoryId + 1 != stories.length &&
+        this.props.viewState.currentStoryId + 1 !== stories.length &&
           this.goToNextStory();
       } else if (
         (e as KeyboardEvent).key === "ArrowLeft" ||
         (e as KeyboardEvent).key === "ArrowUp"
       ) {
-        this.props.viewState.currentStoryId != 0 && this.goToPrevStory();
+        this.props.viewState.currentStoryId !== 0 && this.goToPrevStory();
       }
     };
 

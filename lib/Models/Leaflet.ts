@@ -608,7 +608,7 @@ export default class Leaflet extends GlobeOrMap {
       const owner = entity.entityCollection.owner;
       if (
         owner instanceof DataSource &&
-        owner.name == GlobeOrMap._featureHighlightName
+        owner.name === GlobeOrMap._featureHighlightName
       ) {
         return;
       }

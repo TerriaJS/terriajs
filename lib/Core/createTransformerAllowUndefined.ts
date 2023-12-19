@@ -28,7 +28,7 @@ export default function createTransformerAllowUndefined<A, B>(
     value: (transformer.name || "anonymous") + "-allowUndefined"
   });
   const unwrapOnCleanup =
-    onCleanup == undefined
+    onCleanup === undefined
       ? undefined
       : function (
           resultObject: B | undefined,

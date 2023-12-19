@@ -171,7 +171,7 @@ export default class AssImpCatalogItem
     const result = ajs.ConvertFileList(fileList, "gltf2");
     const fileCount = result.FileCount();
 
-    if (!result.IsSuccess() || fileCount == 0) {
+    if (!result.IsSuccess() || fileCount === 0) {
       throw TerriaError.from(result.GetErrorCode(), {
         title: "Failed to convert files to GlTf"
       });

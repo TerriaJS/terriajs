@@ -59,7 +59,7 @@ describe("WebProcessingServiceCatalogFunctionJob", function () {
   describe("after loading metadata", function () {
     it("correctly defines `Inputs` in info", async function () {
       await item.loadMetadata();
-      const inputSection = item.info.find((info) => info.name == "Inputs");
+      const inputSection = item.info.find((info) => info.name === "Inputs");
       expect(inputSection).toBeDefined();
       if (isDefined(inputSection)) {
         expect(inputSection.content).toMatch(/point/);

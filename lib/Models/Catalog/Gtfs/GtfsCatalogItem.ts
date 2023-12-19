@@ -414,7 +414,7 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   protected convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
-    if (entity.id == undefined) {
+    if (entity.id === undefined) {
       return {};
     }
     let position = undefined;

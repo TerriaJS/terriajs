@@ -79,7 +79,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      if (this.clippingPlanes.planes.length == 0) {
+      if (this.clippingPlanes.planes.length === 0) {
         return;
       }
 

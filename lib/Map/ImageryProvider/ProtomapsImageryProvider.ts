@@ -359,7 +359,7 @@ export default class ProtomapsImageryProvider
     this.ready = true;
 
     this.credit =
-      typeof options.credit == "string"
+      typeof options.credit === "string"
         ? new Credit(options.credit)
         : (options.credit as Credit);
 
