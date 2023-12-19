@@ -4,7 +4,8 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -34,9 +35,6 @@
   "rules": {
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
-    "react/jsx-closing-bracket-location": ["error", "line-aligned"],
-    "react/jsx-closing-tag-location": "error",
-    "react/jsx-curly-spacing": ["error", "never", { "allowMultiline": true }],
     "react/no-arrow-function-lifecycle": "error",
     "react/no-invalid-html-attribute": "error",
     "react/jsx-no-useless-fragment": "error",
@@ -66,8 +64,7 @@
     "no-div-regex": ["error"],
     "no-eval": ["error"],
     "no-extend-native": ["error"],
-    "no-fallthrough": 0, //
-    "no-floating-decimal": ["error"],
+    "no-fallthrough": 0,
     "no-implied-eval": ["error"],
     "no-iterator": ["error"],
     "no-labels": ["error"],
@@ -82,7 +79,6 @@
     "no-script-url": ["error"],
     "no-sequences": ["error"],
     "radix": "error",
-    "wrap-iife": [1, "inside"],
 
     /* Strict Mode */
     "strict": [0, "global"],
@@ -115,7 +111,8 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:react-hooks/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
       ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
