@@ -4,7 +4,6 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { TIFFImageryProviderOptionsWithUrl } from "../../../ThirdParty/tiff-imagery-provider";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
 import { ImageryProvider } from "terriajs-cesium";
@@ -17,6 +16,7 @@ import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
 import * as colourMappings from "../../../Core/colourMappings";
 import CogCompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CogCompositeCatalogItemTraits";
 import { CogImageryProvider } from "./CogCatalogItem";
+import { TIFFImageryProviderOptions } from "../../../ThirdParty/tiff-imagery-provider/TIFFImageryProvider";
 
 /** TODO: This Catalog Item only works correctly in 2D mode.
  * We have not yet developed the funcitonality to combine different source COGs for different band in TIFFImageryProvider for display in Cesium */
@@ -126,50 +126,50 @@ export default class CogCompositeCatalogItem extends MappableMixin(
       : undefined;
   };
 
-  /**
-   * Handle all different possible projections of COGs
-   * @param code Should be a number representing an EPSG code
-   * @returns a Promise that resolves to a proj reprojection function
-   */
+  // /**
+  //  * Handle all different possible projections of COGs
+  //  * @param code Should be a number representing an EPSG code
+  //  * @returns a Promise that resolves to a proj reprojection function
+  //  */
 
-  // TODO: This needs to return an object with a project and an unproject function
-  projFunc = (code: number) => {
-    const sourceEpsgCode = `EPSG:${code}`;
-    // Add the projection to our proj4 defs if we dont already have it:
-    const project = Reproject.checkProjection(
-      this.terria.configParameters.proj4ServiceBaseUrl,
-      sourceEpsgCode
-    )
-      .then(() => {
-        const sourceDef =
-          sourceEpsgCode in Proj4Definitions
-            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
-            : undefined;
+  // // TODO: This needs to return an object with a project and an unproject function
+  // projFunc = (code: number) => {
+  //   const sourceEpsgCode = `EPSG:${code}`;
+  //   // Add the projection to our proj4 defs if we dont already have it:
+  //   const project = Reproject.checkProjection(
+  //     this.terria.configParameters.proj4ServiceBaseUrl,
+  //     sourceEpsgCode
+  //   )
+  //     .then(() => {
+  //       const sourceDef =
+  //         sourceEpsgCode in Proj4Definitions
+  //           ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
+  //           : undefined;
 
-        return proj4(sourceDef, "EPSG:4326").forward;
-      })
-      .catch((error: Error) => {
-        this.terria.raiseErrorToUser(error);
-      });
+  //       return proj4(sourceDef, "EPSG:4326").forward;
+  //     })
+  //     .catch((error: Error) => {
+  //       this.terria.raiseErrorToUser(error);
+  //     });
 
-    const unproject = Reproject.checkProjection(
-      this.terria.configParameters.proj4ServiceBaseUrl,
-      sourceEpsgCode
-    )
-      .then(() => {
-        const sourceDef =
-          sourceEpsgCode in Proj4Definitions
-            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
-            : undefined;
+  //   const unproject = Reproject.checkProjection(
+  //     this.terria.configParameters.proj4ServiceBaseUrl,
+  //     sourceEpsgCode
+  //   )
+  //     .then(() => {
+  //       const sourceDef =
+  //         sourceEpsgCode in Proj4Definitions
+  //           ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
+  //           : undefined;
 
-        return proj4("EPSG:4326", sourceDef).forward;
-      })
-      .catch((error: Error) => {
-        this.terria.raiseErrorToUser(error);
-      });
+  //       return proj4("EPSG:4326", sourceDef).forward;
+  //     })
+  //     .catch((error: Error) => {
+  //       this.terria.raiseErrorToUser(error);
+  //     });
 
-    return { project, unproject };
-  };
+  //   return { project, unproject };
+  // };
 
   @computed get imageryProvider() {
     //TODO: We need to create the imageryProvider for all three seaprate bands too!
@@ -181,13 +181,14 @@ export default class CogCompositeCatalogItem extends MappableMixin(
 
     // TODO: Where should we declare these?
     // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
-    const cogOptions: TIFFImageryProviderOptionsWithUrl = {
+    const cogOptions: TIFFImageryProviderOptions = {
+      terria: this.terria,
       url: proxyCatalogItemUrl(this, exampleBandUrl),
-      projFunc: this.projFunc,
-      renderOptions: {
-        /** nodata value, default read from tiff meta */
-        nodata: -999
-      },
+      // projFunc: this.projFunc,
+      // renderOptions: {
+      //   /** nodata value, default read from tiff meta */
+      //   nodata: -999
+      // },
       enablePickFeatures: this.allowFeaturePicking
     };
 
