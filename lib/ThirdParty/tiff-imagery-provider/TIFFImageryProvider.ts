@@ -165,29 +165,14 @@ export class TIFFImageryProvider
   }
 
   private async _build(options: TIFFImageryProviderOptions) {
-    // Initialise a Leaflet object if we dont already have one
-    if (options.terria.leaflet) {
-      this._map = options.terria.leaflet.map;
-    } else {
-      let container = document.createElement("div");
-      container.id = "dummy-leaflet";
-      document.body.appendChild(container);
-
-      // Create a new Leaflet map and assign it to this._leafletMap
-      this._map = L.map("dummy-leaflet").setView([-25.2744, 133.7751], 4);
-    }
-
     // Initialise the GeoRasterLayer and the GeoTIFF objects
     try {
       const georaster: GeoRaster = await parseGeoRaster(this.options.url);
-      this._geoRasterLayer = new GeoRasterLayer(
-        {
-          georaster: georaster,
-          opacity: 1,
-          resolution: 256
-        },
-        this._map
-      );
+      this._geoRasterLayer = new GeoRasterLayer({
+        georaster: georaster,
+        opacity: 1,
+        resolution: 256
+      });
     } catch (error) {
       console.log(`Error building Georaster: {error}`);
     }
@@ -277,10 +262,7 @@ if (!L)
 const zip = (a: any[], b: any[]) => a.map((it, i) => [it, b[i]]);
 
 // ! SS: Modify this to take a Leaflet.Map aswell as options.
-const GeoRasterLayer: (new (
-  options: GeoRasterLayerOptions,
-  _map: L.Map
-) => any) &
+const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   typeof L.Class = L.GridLayer.extend({
   options: {
     updateWhenIdle: true,
