@@ -1,9 +1,5 @@
 //// @ts-nocheck
 
-/** This file has been taken from https://github.com/hongfaqiu/TIFFImageryProvider and modified by the Terria team.
- * We diverge from that repo as of commit d7cc3cbd889cf78ed544e2e8df11667861497d59
- */
-
 import Event from "terriajs-cesium/Source/Core/Event";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import Credit from "terriajs-cesium/Source/Core/Credit";
@@ -132,6 +128,7 @@ export class TIFFImageryProvider
   private _destroyed = false;
   private _source: GeoTIFF | undefined;
   private _geoRasterLayer: GeorasterTerriaLayer | undefined;
+  private _map: L.Map | undefined;
 
   constructor(private readonly options: TIFFImageryProviderOptions) {
     makeObservable(this);
@@ -168,14 +165,29 @@ export class TIFFImageryProvider
   }
 
   private async _build(options: TIFFImageryProviderOptions) {
+    // Initialise a Leaflet object if we dont already have one
+    if (options.terria.leaflet) {
+      this._map = options.terria.leaflet.map;
+    } else {
+      let container = document.createElement("div");
+      container.id = "dummy-leaflet";
+      document.body.appendChild(container);
+
+      // Create a new Leaflet map and assign it to this._leafletMap
+      this._map = L.map("dummy-leaflet").setView([-25.2744, 133.7751], 4);
+    }
+
     // Initialise the GeoRasterLayer and the GeoTIFF objects
     try {
       const georaster: GeoRaster = await parseGeoRaster(this.options.url);
-      this._geoRasterLayer = new GeoRasterLayer({
-        georaster: georaster,
-        opacity: 1,
-        resolution: 256
-      });
+      this._geoRasterLayer = new GeoRasterLayer(
+        {
+          georaster: georaster,
+          opacity: 1,
+          resolution: 256
+        },
+        this._map
+      );
     } catch (error) {
       console.log(`Error building Georaster: {error}`);
     }
@@ -264,7 +276,11 @@ if (!L)
 
 const zip = (a: any[], b: any[]) => a.map((it, i) => [it, b[i]]);
 
-const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
+// ! SS: Modify this to take a Leaflet.Map aswell as options.
+const GeoRasterLayer: (new (
+  options: GeoRasterLayerOptions,
+  _map: L.Map
+) => any) &
   typeof L.Class = L.GridLayer.extend({
   options: {
     updateWhenIdle: true,
@@ -386,6 +402,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
       // could probably replace some day with a simple
       // (for let k in options) { this.options[k] = options[k]; }
       // but need to find a way around TypeScript any issues
+      // ! Check if this is problematic with no Leaflet instance
       L.Util.setOptions(this, options);
 
       /*
@@ -468,13 +485,13 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   },
 
   onAdd: function (map: any) {
-    if (!this.options.maxZoom) {
-      // maxZoom is needed to display the tiles in the correct order over the zIndex between the zoom levels
-      // https://github.com/Leaflet/Leaflet/blob/2592967aa6bd392db0db9e58dab840054e2aa291/src/layer/tile/GridLayer.js#L375C21-L375C21
-      this.options.maxZoom = map.getMaxZoom();
-    }
-
-    L.GridLayer.prototype.onAdd.call(this, map);
+    // if (!this.options.maxZoom) {
+    //   // maxZoom is needed to display the tiles in the correct order over the zIndex between the zoom levels
+    //   // https://github.com/Leaflet/Leaflet/blob/2592967aa6bd392db0db9e58dab840054e2aa291/src/layer/tile/GridLayer.js#L375C21-L375C21
+    //   // ! map used here
+    //   this.options.maxZoom = map.getMaxZoom();
+    // }
+    // L.GridLayer.prototype.onAdd.call(this, map);
   },
 
   getRasters: function (options: GetRasterOptions) {
@@ -581,6 +598,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
 
   createTile: function (coords: Coords, done: DoneCallback) {
     /* This tile is the square piece of the Leaflet map that we draw on */
+    // ! Can we create our own canvas that has nothing to do with Leaflet instead? Probably dont need a classname
     const tile = L.DomUtil.create(
       "canvas",
       "leaflet-tile"
@@ -1023,6 +1041,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
             const yCenterInMapPixels =
               yTopOfInnerTile + (h + 0.5) * heightOfSampleInScreenPixels;
             const latWestPoint = L.point(xLeftOfInnerTile, yCenterInMapPixels);
+            // ! Using Leaflet map here, use proj or Cesium reprojection instead?
             const { lat } = map.unproject(latWestPoint, zoom);
             if (lat > yMinOfLayer && lat < yMaxOfLayer) {
               const yInTilePixels =
@@ -1039,6 +1058,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
                   xLeftOfInnerTile + (w + 0.5) * widthOfSampleInScreenPixels,
                   yCenterInMapPixels
                 );
+                // ! Using Leaflet map here, use proj or Cesium reprojection instead?
                 const { lng: xOfLayer } = map.unproject(latLngPoint, zoom);
                 if (xOfLayer > xMinOfLayer && xOfLayer < xMaxOfLayer) {
                   let xInRasterPixels = 0;
@@ -1159,6 +1179,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   // copied from Leaflet with slight modifications,
   // including removing the lines that set the tile size
   _initTile: function (tile: HTMLCanvasElement) {
+    // ! Might not even be called. These are hacks that might need to be implemented in `ImageryProviderLeafletGridLayer`
     L.DomUtil.addClass(tile, "leaflet-tile");
 
     tile.onselectstart = L.Util.falseFn;
@@ -1184,7 +1205,6 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   },
 
   getMap: function () {
-    debugger;
     return this._map || this._mapToAdd;
   },
 
@@ -1193,13 +1213,17 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   },
 
   // add in to ensure backwards compatability with Leaflet 1.0.3
+  // ! Maybe can remove this
   _tileCoordsToNwSe: function (coords: Coords) {
     const map = this.getMap();
     const tileSize = this.getTileSize();
-    // debugger;
+    debugger;
     const nwPoint = coords.scaleBy(tileSize);
     const sePoint = nwPoint.add(tileSize);
+
+    // ! Using Leaflet map here, use proj or Cesium reprojection instead?
     const nw = map.unproject(nwPoint, coords.z);
+    // ! Using Leaflet map here, use proj or Cesium reprojection instead?
     const se = map.unproject(sePoint, coords.z);
     return [nw, se];
   },
