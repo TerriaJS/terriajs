@@ -100,16 +100,16 @@ type CreditDisplayElement = {
 };
 
 // Intermediary
-var cartesian3Scratch = new Cartesian3();
-var enuToFixedScratch = new Matrix4();
-var southwestScratch = new Cartesian3();
-var southeastScratch = new Cartesian3();
-var northeastScratch = new Cartesian3();
-var northwestScratch = new Cartesian3();
-var southwestCartographicScratch = new Cartographic();
-var southeastCartographicScratch = new Cartographic();
-var northeastCartographicScratch = new Cartographic();
-var northwestCartographicScratch = new Cartographic();
+const cartesian3Scratch = new Cartesian3();
+const enuToFixedScratch = new Matrix4();
+const southwestScratch = new Cartesian3();
+const southeastScratch = new Cartesian3();
+const northeastScratch = new Cartesian3();
+const northwestScratch = new Cartesian3();
+const southwestCartographicScratch = new Cartographic();
+const southeastCartographicScratch = new Cartographic();
+const northeastCartographicScratch = new Cartographic();
+const northwestCartographicScratch = new Cartographic();
 
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
@@ -505,7 +505,9 @@ export default class Cesium extends GlobeOrMap {
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
-      } catch (err) {}
+      } catch (err) {
+        /* TODO: handle Error */
+      }
     };
 
     const creditDisplayOldEndFrame = creditDisplay.endFrame;
@@ -668,7 +670,7 @@ export default class Cesium extends GlobeOrMap {
     }
 
     // 2. Add new data sources
-    for (let ds of availableDataSources) {
+    for (const ds of availableDataSources) {
       if (!dataSources.contains(ds)) {
         await dataSources.add(ds);
       }
@@ -768,7 +770,9 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach((fn) => fn()); // Run the remover functions
-            } catch (error) {}
+            } catch (error) {
+              /* TODO: handle error */
+            }
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
             this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
@@ -986,7 +990,7 @@ export default class Cesium extends GlobeOrMap {
    * @returns Camera
    */
   private cloneCamera(camera: Camera): Camera {
-    let result = new Camera(this.scene);
+    const result = new Camera(this.scene);
     Cartesian3.clone(camera.position, result.position);
     Cartesian3.clone(camera.direction, result.direction);
     Cartesian3.clone(camera.up, result.up);
@@ -1340,17 +1344,16 @@ export default class Cesium extends GlobeOrMap {
     providerCoords: ProviderCoordsMap
   ) {
     const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+    function hasUrl(o: any): o is { url: string } {
+      return typeof o?.url === "string";
+    }
 
     for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
       const imageryLayer = this.scene.imageryLayers.get(i);
       const imageryProvider = imageryLayer.imageryProvider;
 
-      function hasUrl(o: any): o is { url: string } {
-        return typeof o?.url === "string";
-      }
-
       if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
-        var coords = providerCoords[imageryProvider.url];
+        const coords = providerCoords[imageryProvider.url];
         promises.push(
           imageryProvider
             .pickFeatures(
@@ -1729,7 +1732,7 @@ export default class Cesium extends GlobeOrMap {
   }
 }
 
-var boundingSphereScratch = new BoundingSphere();
+const boundingSphereScratch = new BoundingSphere();
 
 function zoomToDataSource(
   cesium: Cesium,
@@ -1744,11 +1747,11 @@ function zoomToDataSource(
         return false;
       }
 
-      var entities = target.entities.values;
+      const entities = target.entities.values;
 
-      var boundingSpheres = [];
-      for (var i = 0, len = entities.length; i < len; i++) {
-        var state = BoundingSphereState.PENDING;
+      const boundingSpheres = [];
+      for (let i = 0, len = entities.length; i < len; i++) {
+        let state = BoundingSphereState.PENDING;
         try {
           // TODO: missing Cesium type info
           state = (<any>dataSourceDisplay).getBoundingSphere(
@@ -1756,7 +1759,9 @@ function zoomToDataSource(
             false,
             boundingSphereScratch
           );
-        } catch (e) {}
+        } catch (e) {
+          /* TODO: handle error */
+        }
 
         if (state === BoundingSphereState.PENDING) {
           return false;
@@ -1769,7 +1774,7 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere =
+        const boundingSphere =
           BoundingSphere.fromBoundingSpheres(boundingSpheres);
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,

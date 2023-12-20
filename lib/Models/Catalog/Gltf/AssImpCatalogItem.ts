@@ -159,7 +159,7 @@ export default class AssImpCatalogItem
     const ajs = await assimpjs();
 
     // Create assimpjs FileList object, and add the files
-    let fileList = new ajs.FileList();
+    const fileList = new ajs.FileList();
     for (let i = 0; i < fileArrayBuffers.length; i++) {
       fileList.AddFile(
         fileArrayBuffers[i].name,
@@ -168,10 +168,10 @@ export default class AssImpCatalogItem
     }
 
     // Convert files to GlTf 2
-    let result = ajs.ConvertFileList(fileList, "gltf2");
+    const result = ajs.ConvertFileList(fileList, "gltf2");
     const fileCount = result.FileCount();
 
-    if (!result.IsSuccess() || fileCount == 0) {
+    if (!result.IsSuccess() || fileCount === 0) {
       throw TerriaError.from(result.GetErrorCode(), {
         title: "Failed to convert files to GlTf"
       });

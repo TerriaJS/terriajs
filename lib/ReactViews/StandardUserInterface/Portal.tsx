@@ -45,6 +45,6 @@ export type PortalChildProps = {
 export const PortalChild: React.FC<PortalChildProps> = observer(
   ({ viewState, portalId, children }) => {
     const container = viewState.portals.get(portalId);
-    return container ? ReactDOM.createPortal(<>{children}</>, container) : null;
+    return container ? ReactDOM.createPortal(children, container) : null;
   }
 );

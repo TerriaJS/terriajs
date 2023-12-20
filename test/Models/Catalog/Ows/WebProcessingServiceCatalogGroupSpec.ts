@@ -67,7 +67,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
 
     it("throws a TerriaError if no URL is defined", async function () {
       wpsGroup.setTrait(CommonStrata.user, "url", undefined);
-      let error = (await wpsGroup.loadMembers()).error;
+      const error = (await wpsGroup.loadMembers()).error;
 
       expect(error).toBeDefined();
     });

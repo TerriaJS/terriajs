@@ -47,7 +47,7 @@ export const SelectableDimensionColor: React.FC<{
               borderRadius: "2px",
               background: dim.value ?? "#aaa"
             }}
-          ></div>
+          />
         </div>
       ) : null}
       {/* Show "Add" button if value is undefined */}

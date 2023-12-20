@@ -163,7 +163,7 @@ export class GeojsonSource implements TileSource {
 
     // request a particular tile
     const tile = (await this.tileIndex).getTile(c.z, c.x, c.y) as GeojsonVtTile;
-    let result = new Map<string, ProtomapsFeature[]>();
+    const result = new Map<string, ProtomapsFeature[]>();
     const scale = tileSize / geojsonvtExtent;
 
     if (tile && tile.features && tile.features.length > 0) {
@@ -176,7 +176,7 @@ export class GeojsonSource implements TileSource {
           let numVertices = 0;
 
           // Calculate bbox
-          let bbox: Bbox = {
+          const bbox: Bbox = {
             minX: Infinity,
             minY: Infinity,
             maxX: -Infinity,
@@ -359,7 +359,7 @@ export default class ProtomapsImageryProvider
     this.ready = true;
 
     this.credit =
-      typeof options.credit == "string"
+      typeof options.credit === "string"
         ? new Credit(options.credit)
         : (options.credit as Credit);
 
@@ -373,7 +373,7 @@ export default class ProtomapsImageryProvider
     if (typeof this.data === "string") {
       if (this.data.endsWith(".pmtiles")) {
         this.source = new PmtilesSource(this.data, false);
-        let cache = new TileCache(this.source, 1024);
+        const cache = new TileCache(this.source, 1024);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       } else if (
         this.data.endsWith(".json") ||
@@ -382,7 +382,7 @@ export default class ProtomapsImageryProvider
         this.source = new GeojsonSource(this.data);
       } else {
         this.source = new ZxySource(this.data, false);
-        let cache = new TileCache(this.source, 1024);
+        const cache = new TileCache(this.source, 1024);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       }
     }
@@ -469,7 +469,7 @@ export default class ProtomapsImageryProvider
 
     this.labelers.add(coords.z, tileMap);
 
-    let labelData = this.labelers.getIndex(tile.z);
+    const labelData = this.labelers.getIndex(tile.z);
 
     const bbox = {
       minX: 256 * coords.x - BUF,
@@ -573,7 +573,7 @@ export default class ProtomapsImageryProvider
       const bufferBbox = bbox(buffer);
 
       // Get array of all features
-      let geojsonFeatures: Feature[] = this.source.geojsonObject.features;
+      const geojsonFeatures: Feature[] = this.source.geojsonObject.features;
 
       const pickedFeatures: Feature[] = [];
 

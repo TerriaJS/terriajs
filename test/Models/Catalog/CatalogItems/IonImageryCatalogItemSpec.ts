@@ -5,7 +5,7 @@ import IonImageryCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/I
 import Terria from "../../../../lib/Models/Terria";
 
 describe("IonImageryCatalogItem", function () {
-  let item = new IonImageryCatalogItem("test", new Terria());
+  const item = new IonImageryCatalogItem("test", new Terria());
 
   it("has a type", function () {
     expect(IonImageryCatalogItem.type).toBe("ion-imagery");
@@ -43,7 +43,7 @@ describe("IonImageryCatalogItem", function () {
     it("should be a UrlTemplateImageryProvider", function () {
       if (!ImageryParts.is(item.mapItems[0]))
         throw new Error("Expected MapItem to be an ImageryParts");
-      let imageryProvider = item.mapItems[0].imageryProvider;
+      const imageryProvider = item.mapItems[0].imageryProvider;
       expect(imageryProvider instanceof IonImageryProvider).toBeTruthy();
     });
   });

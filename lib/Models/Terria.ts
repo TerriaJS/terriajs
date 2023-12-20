@@ -846,7 +846,7 @@ export default class Terria {
     type: Class<T>,
     id: string
   ): T | undefined {
-    let model = this.getModelById(type, id);
+    const model = this.getModelById(type, id);
     if (model) {
       return model;
     } else {
@@ -1225,6 +1225,16 @@ export default class Terria {
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
 
+    function checkSegments(urlSegments: string[], customRoute: string) {
+      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+      return (
+        ((urlSegments.length === 3 && urlSegments[2] === "") ||
+          urlSegments.length === 2) &&
+        urlSegments[0] === customRoute &&
+        urlSegments[1].length > 0
+      );
+    }
+
     try {
       await interpretHash(
         this,
@@ -1241,15 +1251,6 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
-        function checkSegments(urlSegments: string[], customRoute: string) {
-          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-          return (
-            ((urlSegments.length === 3 && urlSegments[2] === "") ||
-              urlSegments.length === 2) &&
-            urlSegments[0] === customRoute &&
-            urlSegments[1].length > 0
-          );
-        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -1300,7 +1301,7 @@ export default class Terria {
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
-      if (this.configParameters.hasOwnProperty(key)) {
+      if (Object.hasOwnProperty.call(this.configParameters, key)) {
         (this.configParameters as any)[key] = value;
       }
     });
@@ -1823,7 +1824,7 @@ export default class Terria {
     const newItems: BaseModel[] = [];
 
     // Maintain the model order in the workbench.
-    while (true) {
+    for (;;) {
       const model = newItemsRaw.shift();
       if (model) {
         await this.pushAndLoadMapItems(model, newItems, errors);
@@ -2008,7 +2009,7 @@ export default class Terria {
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
     let vectorFeatures: TerriaFeature[] = [];
-    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
+    const featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -2109,7 +2110,7 @@ export default class Terria {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    var v = window.localStorage.getItem(this.appName + "." + key);
+    const v = window.localStorage.getItem(this.appName + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {

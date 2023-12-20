@@ -60,7 +60,7 @@ export interface BriefRecord {
   type?: string;
 }
 
-export type CswURI = String & {
+export type CswURI = string & {
   scheme?: string;
   protocol?: string;
   description?: string;
@@ -304,12 +304,12 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       // Get next start position - or stop pageing
       const nextRecord =
         typeof json?.SearchResults?.nextRecord === "string"
-          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0", 10)
           : json?.SearchResults?.nextRecord;
 
       const numberOfRecordsMatched =
         typeof json?.SearchResults?.numberOfRecordsMatched === "string"
-          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0")
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0", 10)
           : json?.SearchResults?.numberOfRecordsMatched;
       if (
         !isDefined(nextRecord) ||
@@ -656,7 +656,7 @@ function findGroup(
   metadataGroups: MetadataGroup[],
   record: Record
 ): MetadataGroup | undefined {
-  for (var i = 0; i < metadataGroups.length; i++) {
+  for (let i = 0; i < metadataGroups.length; i++) {
     const group = metadataGroups[i];
     if (group.field) {
       const fields = filterOutUndefined(toArray(record[group.field]) ?? []);
@@ -678,7 +678,7 @@ function findGroup(
 function matchValue(value: string, recordValue: string, regex?: boolean) {
   if (isDefined(regex) && regex) {
     // regular expression so parse it and check string against it
-    var regExp = new RegExp(value);
+    const regExp = new RegExp(value);
     return regExp.test(recordValue);
   } else {
     return value === recordValue;

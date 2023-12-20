@@ -40,7 +40,7 @@ export class ModelReferenceTrait extends Trait {
   getValue(model: BaseModel): BaseModel | undefined {
     const strataTopToBottom = model.strataTopToBottom;
 
-    for (let stratum of <IterableIterator<any>>strataTopToBottom.values()) {
+    for (const stratum of <IterableIterator<any>>strataTopToBottom.values()) {
       const value = stratum[this.id];
       if (value !== undefined) {
         return value;

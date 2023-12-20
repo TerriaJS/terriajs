@@ -99,7 +99,7 @@ export const SelectableDimensionEnumMulti: React.FC<{
 }> = observer(({ id, dim }) => {
   const theme = useTheme();
 
-  let options = dim.options?.map((option) => ({
+  const options = dim.options?.map((option) => ({
     value: option.id,
     label: option.name ?? option.id
   }));
@@ -137,7 +137,7 @@ export const SelectableDimensionEnumMulti: React.FC<{
           primary: theme.colorPrimary
         }
       })}
-      isMulti={true}
+      isMulti
     />
   );
 });

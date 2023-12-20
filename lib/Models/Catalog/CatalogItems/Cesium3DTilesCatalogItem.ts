@@ -120,7 +120,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
-    if (tileset === undefined || results.length == 0) {
+    if (tileset === undefined || results.length === 0) {
       return () => {}; // empty disposer
     }
 

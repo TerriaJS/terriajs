@@ -5,7 +5,7 @@ export function scaleDenominatorToLevel(
   min: boolean = true,
   ows: boolean = true
 ): number | undefined {
-  if (scaleDenominator == undefined || scaleDenominator <= 0.0) {
+  if (scaleDenominator === undefined || scaleDenominator <= 0.0) {
     return undefined;
   }
 

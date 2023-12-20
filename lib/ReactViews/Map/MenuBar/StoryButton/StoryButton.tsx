@@ -59,7 +59,7 @@ const promptHtml = (hasStories: boolean) => (
   </Text>
 );
 
-export default (props: Props) => {
+const StoryButton = (props: Props) => {
   const storyButtonRef: Ref<HTMLButtonElement> = useRefForTerria(
     STORY_BUTTON_NAME,
     props.viewState
@@ -110,3 +110,4 @@ export default (props: Props) => {
     </div>
   );
 };
+export default StoryButton;

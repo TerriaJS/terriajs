@@ -272,7 +272,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   protected async createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
-    let dataInputs = filterOutUndefined(
+    const dataInputs = filterOutUndefined(
       await Promise.all(
         this.functionParameters
           .filter((p) => isDefined(p.value) && p.value !== null)
@@ -332,7 +332,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   }
 
   async convertParameterToInput(parameter: FunctionParameter) {
-    let converter = parameterTypeToConverter(parameter);
+    const converter = parameterTypeToConverter(parameter);
 
     const result = converter?.parameterToInput(parameter);
     if (!isDefined(result)) {
@@ -514,8 +514,8 @@ const RectangleConverter = {
     ) {
       return undefined;
     }
-    var code = Reproject.crsStringToCode(input.BoundingBoxData.Default.CRS);
-    var usedCrs = input.BoundingBoxData.Default.CRS;
+    let code = Reproject.crsStringToCode(input.BoundingBoxData.Default.CRS);
+    let usedCrs = input.BoundingBoxData.Default.CRS;
     // Find out if Terria's CRS is supported.
     if (
       code !== Reproject.TERRIA_CRS &&
@@ -656,7 +656,7 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
         return undefined;
       }
 
-      var schema = input.ComplexData.Default.Format.Schema;
+      const schema = input.ComplexData.Default.Format.Schema;
       if (schema.indexOf("http://geojson.org/geojson-spec.html#") !== 0) {
         return undefined;
       }

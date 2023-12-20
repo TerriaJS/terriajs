@@ -242,30 +242,28 @@ export default class TableStylingWorkflow
         }
       }
     } else if (colorMap instanceof DiscreteColorMap) {
-      {
-        if (
-          this.tableStyle.colorTraits.binColors &&
-          this.tableStyle.colorTraits.binColors.length > 0
-        ) {
-          this.colorSchemeType = "custom-discrete";
-        } else if (SEQUENTIAL_SCALES.includes(colorPaletteWithDefault)) {
-          this.colorSchemeType = "sequential-discrete";
-          if (!colorPalette) {
-            this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-              CommonStrata.user,
-              "colorPalette",
-              DEFAULT_SEQUENTIAL
-            );
-          }
-        } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
-          this.colorSchemeType = "diverging-discrete";
-          if (!colorPalette) {
-            this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-              CommonStrata.user,
-              "colorPalette",
-              DEFAULT_DIVERGING
-            );
-          }
+      if (
+        this.tableStyle.colorTraits.binColors &&
+        this.tableStyle.colorTraits.binColors.length > 0
+      ) {
+        this.colorSchemeType = "custom-discrete";
+      } else if (SEQUENTIAL_SCALES.includes(colorPaletteWithDefault)) {
+        this.colorSchemeType = "sequential-discrete";
+        if (!colorPalette) {
+          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+            CommonStrata.user,
+            "colorPalette",
+            DEFAULT_SEQUENTIAL
+          );
+        }
+      } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
+        this.colorSchemeType = "diverging-discrete";
+        if (!colorPalette) {
+          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+            CommonStrata.user,
+            "colorPalette",
+            DEFAULT_DIVERGING
+          );
         }
       }
     } else if (

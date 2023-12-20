@@ -20,12 +20,11 @@ export const useViewState = () => {
   return viewState;
 };
 
-export const withViewState =
-  <P extends WithViewState>(
-    Component: React.ComponentType<P>
-  ): React.FC<Omit<P, "viewState">> =>
-  (props) =>
-    (
+export const withViewState = <P extends WithViewState>(
+  Component: React.ComponentType<P>
+): React.FC<Omit<P, "viewState">> =>
+  function withViewState(props) {
+    return (
       <ViewStateContext.Consumer>
         {(viewState) => {
           if (!viewState)
@@ -34,6 +33,7 @@ export const withViewState =
         }}
       </ViewStateContext.Consumer>
     );
+  };
 
 export interface WithViewState {
   viewState: ViewState;

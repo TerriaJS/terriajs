@@ -95,7 +95,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -114,7 +114,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -152,7 +152,7 @@ describe("FeatureInfoSection", function () {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
         t={() => {}}
@@ -179,7 +179,7 @@ describe("FeatureInfoSection", function () {
     const section2 = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
         t={() => {}}
@@ -199,7 +199,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -222,7 +222,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -245,7 +245,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -264,7 +264,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -289,7 +289,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -310,7 +310,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -340,7 +340,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -366,7 +366,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -393,7 +393,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -414,7 +414,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -437,7 +437,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -461,7 +461,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -492,7 +492,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -523,7 +523,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -557,7 +557,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -584,7 +584,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -611,7 +611,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -633,7 +633,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -668,7 +668,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -714,7 +714,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -749,7 +749,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -771,7 +771,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -793,7 +793,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -815,7 +815,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -835,7 +835,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -857,7 +857,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -880,7 +880,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -906,7 +906,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -956,7 +956,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           position={position}
           t={() => {}}
@@ -988,7 +988,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1002,7 +1002,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1032,7 +1032,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1062,7 +1062,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1113,7 +1113,7 @@ describe("FeatureInfoSection", function () {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           catalogItem={catalogItem}
           t={() => {}}
@@ -1180,7 +1180,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1201,7 +1201,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={i18next.t}
         />
@@ -1225,7 +1225,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={i18next.getFixedT("cimode")}
         />
@@ -1263,7 +1263,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1302,7 +1302,7 @@ describe("FeatureInfoSection", function () {
       let section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1315,7 +1315,7 @@ describe("FeatureInfoSection", function () {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1329,7 +1329,7 @@ describe("FeatureInfoSection", function () {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1364,7 +1364,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />

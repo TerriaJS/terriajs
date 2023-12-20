@@ -107,7 +107,7 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
         {props.iconElement && props.iconElement()}
         {children && (
           <>
-            <SpacingSpan right={1}></SpacingSpan>
+            <SpacingSpan right={1} />
             <TextSpan
               noWrap
               small

@@ -40,7 +40,7 @@ export default class CesiumIonSearchProvider extends LocationSearchProviderMixin
     makeObservable(this);
 
     runInAction(() => {
-      if (!!this.terria.configParameters.cesiumIonAccessToken) {
+      if (this.terria.configParameters.cesiumIonAccessToken) {
         this.setTrait(
           CommonStrata.defaults,
           "key",

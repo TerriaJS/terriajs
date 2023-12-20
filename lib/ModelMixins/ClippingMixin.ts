@@ -79,7 +79,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      if (this.clippingPlanes.planes.length == 0) {
+      if (this.clippingPlanes.planes.length === 0) {
         return;
       }
 
@@ -551,14 +551,13 @@ function zoomToDataSourceWithTimeout(
     // Create a promise that waits for the dataSource to be added to map or
     // timeout to complete whichever happens first
     return new Promise<void>((resolve, reject) => {
-      let removeListener = renderedDataSources.dataSourceAdded.addEventListener(
-        (_, added) => {
+      const removeListener =
+        renderedDataSources.dataSourceAdded.addEventListener((_, added) => {
           if (added === dataSource) {
             removeListener();
             resolve(cesium.doZoomTo(dataSource));
           }
-        }
-      );
+        });
       runLater(removeListener, timeoutMilliseconds).then(reject);
     });
   }

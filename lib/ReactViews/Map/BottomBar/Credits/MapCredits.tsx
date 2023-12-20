@@ -52,7 +52,7 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
       <CreditsContainer>
         {!hideTerriaLogo ? <TerriaLogo /> : null}
         <MapCreditLogo currentViewer={currentViewer} />
-        <Credits credits={credits}></Credits>
+        <Credits credits={credits} />
         <Spacer />
         {currentViewer.attributions && currentViewer.attributions.length > 0 ? (
           <a onClick={showDataAttribution}>

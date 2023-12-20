@@ -45,7 +45,7 @@ export default class CesiumRenderLoopPauser {
     );
 
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
-    var canvas = this.cesiumWidget.canvas;
+    const canvas = this.cesiumWidget.canvas;
     canvas.addEventListener(
       "mousemove",
       this._boundNotifyRepaintRequired,
@@ -156,7 +156,7 @@ export default class CesiumRenderLoopPauser {
       parameters,
       transferableObjects
     ) {
-      var result = that._originalScheduleTask.call(
+      const result = that._originalScheduleTask.call(
         this,
         parameters,
         transferableObjects
@@ -165,7 +165,7 @@ export default class CesiumRenderLoopPauser {
       if (!defined(this._originalWorkerMessageSinkRepaint)) {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
-        var taskProcessor = this;
+        const taskProcessor = this;
         this._worker.onmessage = function (event: any) {
           taskProcessor._originalWorkerMessageSinkRepaint(event);
 

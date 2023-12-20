@@ -229,7 +229,7 @@ const AddData = createReactClass({
                 options={this.state.localDataTypes}
                 selected={this.state.localDataType}
                 selectOption={this.selectLocalOption}
-                matchWidth={true}
+                matchWidth
                 theme={dropdownTheme}
               />
               {this.state.localDataType?.description
@@ -263,7 +263,7 @@ const AddData = createReactClass({
                 options={this.state.remoteDataTypes}
                 selected={this.state.remoteDataType}
                 selectOption={this.selectRemoteOption}
-                matchWidth={true}
+                matchWidth
                 theme={dropdownTheme}
               />
               {this.state.remoteDataType?.description

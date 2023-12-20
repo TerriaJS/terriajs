@@ -36,7 +36,7 @@ describe("DateTimePicker", function () {
           dates={wmsItem.objectifiedDates}
           onChange={() => {}}
           openDirection="down"
-          isOpen={true}
+          isOpen
           onOpen={() => {}}
           onClose={() => {}}
         />

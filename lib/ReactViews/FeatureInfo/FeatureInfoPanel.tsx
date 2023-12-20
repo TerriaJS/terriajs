@@ -229,7 +229,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     const cartographic =
       Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
-      return <></>;
+      return null;
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);

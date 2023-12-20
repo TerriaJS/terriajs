@@ -48,7 +48,7 @@ const WarningBox: React.FC<{
             )}
 
             {props.viewState && !includesFeedbackLink ? (
-              <FeedbackLink viewState={props.viewState}></FeedbackLink>
+              <FeedbackLink viewState={props.viewState} />
             ) : null}
 
             {/* Add "show details" button if there are nested errors */}

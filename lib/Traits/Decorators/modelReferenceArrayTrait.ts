@@ -51,7 +51,7 @@ export class ModelReferenceArrayTrait extends Trait {
     const removedIds: IdToBool = {};
 
     // Create a single array with all the unique model IDs.
-    for (let stratum of <IterableIterator<any>>strataTopToBottom.values()) {
+    for (const stratum of <IterableIterator<any>>strataTopToBottom.values()) {
       const modelIdArray: ModelReference[] = stratum[this.id];
 
       if (modelIdArray) {
