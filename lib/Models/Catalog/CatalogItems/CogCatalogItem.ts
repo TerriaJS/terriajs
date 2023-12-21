@@ -72,8 +72,8 @@ export default class CogCatalogItem extends MappableMixin(
                 // pixelValuesToColorFn: (values) => {
                 //   return mapElevationToRgbaSmoothed(values, 0);
                 // },
-                resolution: 256
-                // debugLevel: 0
+                resolution: 256,
+                debugLevel: 3
               },
               this.imageryProvider
             );
@@ -98,7 +98,7 @@ export default class CogCatalogItem extends MappableMixin(
   //  * @param code Should be a number representing an EPSG code
   //  * @returns a Promise that resolves to a proj reprojection function
   //  */
-  // // TODO: This needs to return an object with a project and an unproject function
+  // TODO: This needs to return an object with a project and an unproject function
   // projFunc = (code: number) => {
   //   const sourceEpsgCode = `EPSG:${code}`;
   //   // Add the projection to our proj4 defs if we dont already have it:
