@@ -850,7 +850,78 @@
     "arcGisFeatureServerCatalogGroup": {
       "serviceDescription": "서비스 설명",
       "name": "ArcGIS 기능 서버 그룹",
-      "dataDescription": "데이터 설명"
+      "dataDescription": "데이터 설명",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "copyrightText": "저작권 텍스트",
+      "groupNotAvailableMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다.",
+      "invalidServiceTitle": "잘못된 ArcGIS 기능 서비스",
+      "invalidServiceMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 기능 서비스 문서가 아닌 것 같습니다."
+    },
+    "cesiumTerrain": {
+      "name": "세슘 지형",
+      "notSupportedErrorMessage": "\"{{name}}\"은(는) 2D 보기에 표시될 수 없습니다. 3D로 전환하고 다시 시도해 보세요.",
+      "notSupportedErrorTitle": "2D에서는 지원되지 않습니다.",
+      "errorRenderingTitle": "3D 렌더링 오류",
+      "errorRenderingMessage": "3D 렌더링 중 오류가 발생했습니다. 이는 아마도 {{appName}}의 버그나 시스템 또는 웹 브라우저와의 비호환성을 의미할 수 있습니다. 이제 작업을 계속할 수 있도록 2D로 전환하겠습니다.",
+      "name3D": "세슘 3D 타일"
+    },
+    "wcs": {
+      "asyncResultLoadingMetadata": "WCS 로딩:\n{{timestamp}}에 {{name}} 서비스가 제공됩니다.\n\n*메타데이터 로드 중(`DescribeCoverage`)*",
+      "exportFailedMessageII": "{{error}}Web Coverage Service가 실패했습니다: {{error}}",
+      "exportFailedMessage": "웹 커버리지 서비스가 실패했습니다",
+      "asyncResultDescription": "이는 아래 입력 매개변수를 사용하여 {{timestamp}}에 {{name}} 서비스에서 데이터를 내보낸 결과입니다.",
+      "exportFailedTitle": "데이터 내보내기 실패",
+      "asyncPendingDescription": "WCS 로딩:\n{{timestamp}}에 {{name}} 서비스가 제공됩니다.\n\n*취재 다운로드*"
+    },
+    "cartoMap": {
+      "noUrlMessage": "카르토 지도 레이어에 사용 가능한 URL을 찾을 수 없습니다.",
+      "noUrlTitle": "URL 없음",
+      "name": "카르토 맵"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "dataDescription": "데이터 설명",
+      "invalidServiceMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 기능 서비스 레이어가 아닌 것 같습니다.",
+      "missingUrlTitle": "FeatureServer를 로드할 수 없습니다",
+      "invalidServiceTitle": "잘못된 ArcGIS Feature Service 레이어",
+      "serviceDescription": "서비스 설명",
+      "reachedMaxFeatureLimit": "경고: 이 레이어는 FeatureService 기능 제한({{maxFeatures}})에 도달했습니다.",
+      "copyrightText": "저작권 텍스트",
+      "name": "Esri ArcGIS FeatureServer",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 ArcGis FeatureServer 엔드포인트를 로드할 수 없습니다."
+    },
+    "arcGisMapServerCatalogItem": {
+      "dataDescription": "데이터 설명",
+      "name": "Esri ArcGIS MapServer",
+      "noLayersFoundMessage": "Esri ArcGIS MapServer '{{name}}'에는 표시할 레이어가 없습니다.",
+      "serviceDescription": "서비스 설명",
+      "invalidUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 ArcGis MapServer 엔드포인트를 로드할 수 없습니다.",
+      "invalidUrlTitle": "MapServer를 로드할 수 없습니다",
+      "copyrightText": "저작권 텍스트",
+      "noLayersFoundTitle": "ArcGIS MapServer를 로드할 수 없습니다."
+    },
+    "arcGisMapServerCatalogGroup": {
+      "dataDescription": "데이터 설명",
+      "name": "ArcGIS 맵 서버 그룹",
+      "invalidServiceMessage": "ArcGIS Map Service를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 지도 서비스 문서가 아닌 것 같습니다.",
+      "serviceDescription": "서비스 설명",
+      "singleFusedMapCacheLayerName": "모든 레이어",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "groupNotAvailableMessage": "ArcGIS Map Service를 호출하는 동안 오류가 발생했습니다.",
+      "copyrightText": "저작권 텍스트",
+      "invalidServiceTitle": "잘못된 ArcGIS 지도 서비스"
+    },
+    "bing": {
+      "name": "Bing 지도"
+    },
+    "ckan": {
+      "errorLoadingTitle": "CKAN 카탈로그를 로드하는 중 오류가 발생했습니다",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "name": "CKAN 리소스",
+      "datasetDescription": "데이터 세트 설명",
+      "nameServer": "CKAN 서버",
+      "corsErrorMessage": "이 CKAN 서버에서 패키지를 검색할 수 없습니다.",
+      "errorLoadingMessage": "이 CKAN 카탈로그에 대한 정의에 유효한 필터 쿼리가 없습니다.",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다."
     }
   }
 }
