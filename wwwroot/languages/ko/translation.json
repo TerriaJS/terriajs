@@ -138,7 +138,26 @@
       "esri-group": "Esri ArcGIS 서버",
       "esri-mapServer": "Esri ArcGIS MapServer(단일 레이어)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (단일 레이어)",
-      "3d-tiles": "3D 타일"
+      "3d-tiles": "3D 타일",
+      "czml": "CZML",
+      "shp": "Shapefile",
+      "socrata-group": "Socrata 서버",
+      "json": "Terria 카탈로그",
+      "carto-v3": "Carto V3",
+      "csv": "CSV",
+      "assimp-remote": "3D 파일 변환기(실험 중)",
+      "open-street-map": "오픈 스트리트 지도 서버",
+      "geojson": "GeoJSON",
+      "ifc": "IFC",
+      "gpx": "GPX",
+      "geoRss": "GeoRSS",
+      "assimp-remote-description": "**경고:** 3D 파일 변환기는 실험 중입니다.  \n[지원되는 형식](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md) 목록을 참조하세요.  \nZip 파일도 지원됩니다",
+      "carto": "Carto V1",
+      "opendatasoft-group": "Opendatasoft 포털",
+      "assimp-local-description": "**경고:** 3D 파일 변환기는 실험 중입니다.  \n[지원되는 형식] (https://github.com/assimp/assimp/blob/master/doc/Fileformats.md) 목록을 참조하세요.\n파일은 반드시 압축해야 합니다.",
+      "sdmx-group": "SDMX-JSON",
+      "kml": "KML 또는 KMZ",
+      "gltf": "glTF"
     },
     "chartData": "차트 데이터",
     "dataUri": {
@@ -148,6 +167,47 @@
     "userAddedData": "사용자가 추가한 데이터",
     "errors": {
       "tooDeepAddedByUser": "addedByUser와 ID: \"{{memberId}}\" 를 확인 시 카탈로그 항목이 100개에 도달했나요? 카탈로그 그룹에 재귀가 발생하지 않았는지 확인하세요."
+    },
+    "unverifiedExternalLink": {
+      "denyText": "취소",
+      "message": "곧 열립니다: \n\n`{{url}}`  \n\n이 링크는 확인되지 않았으며 안전하지 않을 수 있습니다.",
+      "confirmText": "새 탭에서 열기",
+      "title": "경고: 확인되지 않은 링크"
+    },
+    "terriaError": {
+      "defaultTitle": "오류가 발생했습니다",
+      "defaultCombineTitle": "여러 오류 발생",
+      "networkRequestTitle": "네트워크 요청 오류가 발생했습니다",
+      "defaultMessage": "알 수 없는 오류",
+      "defaultCombineMessage": "오류에 대한 자세한 내용은 아래와 같습니다",
+      "networkRequestMessageDetailed": "다음 중 하나를 나타낼 수 있습니다:\n\n* 서버 호스트 이름을 확인할 수 없습니다.\n* 서버가 요청에 응답하지 않았거나 일시적으로 사용할 수 없습니다.\n* 서버가 이 URL에 대한 [출처 간 리소스 공유(CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) 액세스를 거부했습니다.\n* 인터넷 연결에 문제가 있습니다.\n\n링크를 수동으로 입력한 경우 링크가 올바른지 확인하세요.",
+      "networkRequestMessage": "데이터 관리자의 서비스 중단으로 인해 데이터를 사용할 수 없거나 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드하거나 나중에 데이터에 액세스하거나 다른 데이터 세트를 선택해 보세요. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>"
+    },
+    "readText": {
+      "fileRequired": "파일이 필요합니다"
+    },
+    "googleAnalytics": {
+      "logEnabledOnDevelopment": "Google Analytics는 '개발' 환경에서 초기화되었습니다",
+      "log": "terria.configParameters.googleAnalyticsKey가 지정되지 않아 Google Analytics 추적이 비활성화되었습니다"
+    },
+    "printWindow": {
+      "onbeforeprint": "인쇄 전",
+      "onafterprint": "인쇄 후",
+      "errorTitle": "인쇄 오류",
+      "errorMessage": "10초 이내에 인쇄가 시작되지 않았습니다. 이 웹 브라우저가 인쇄를 지원하지 않나요?",
+      "printMediaStart": "인쇄 시작",
+      "printMediaEnd": "인쇄 끝"
+    },
+    "consoleAnalytics": {
+      "started": "ConsoleAnalytics가 시작되었습니다.",
+      "startedNoenableConsoleAnalytics": "ConsoleAnalytics이 시작되었지만 `configParameters.enableConsoleAnalytics`가 정의되지 않았거나 false로 설정되어 있습니다.",
+      "logStartedWithGAParameters": "ConsoleAnalytics이 시작되었지만 `configParameters`에서 `googleAnalyticsKey` 또는 `googleAnalyticsOptions` 키가 관찰되었습니다"
+    },
+    "serverConfig": {
+      "failedToGet": "{{serverConfigUrl}}에서 서버 구성을 가져오지 못했습니다. 즉, 프록시, 변환 및 URL 단축과 같은 서비스가 작동하지 않을 수 있습니다."
+    },
+    "readXml": {
+      "xmlError": "파일에 유효한 XML이 포함되어 있지 않습니다."
     }
   },
   "sui": {
@@ -693,5 +753,47 @@
   },
   "loader": {
     "loadingMessage": "로딩중"
+  },
+  "map": {
+    "gnafAddressGeocoder": {
+      "suburb": "교외",
+      "noAddresses": "이 테이블 구조에는 주소가 없습니다!",
+      "noAddresses2": "테이블 구조에 주소 열이 있다고 보고하지만 주소가 없습니다"
+    },
+    "cesium": {
+      "stoppedRenderingMessage": "작업대에 방금 추가된 데이터세트로 인해 발생한 문제일 수 있으므로 해당 데이터세트를 제거해 보세요. 그래도 문제가 해결되지 않으면 {{appName}}을 다시 로드해야 할 수 있습니다.",
+      "terrainServerErrorMessage": " 현재 지형 서버가 응답하지 않습니다. {{appName}}의 모든 기능을 계속 사용할 수 있지만 3D 모드에서는 지형 디테일이 제공되지 않습니다.  불편을 드려 죄송합니다.  잠시 후 다시 시도해 주시면 지형 서버가 정상적으로 응답할 것입니다.  문제가 지속되면 {{supportEmail}}로 이메일을 보내주세요.",
+      "unusalTilingScheme": "이 데이터 세트은 지원되지 않는 비정상적인 타일링 체계를 사용하기 때문에 2D 지도에 표시할 수 없습니다.",
+      "stoppedRenderingTitle": "3D 지도 렌더링에 실패했습니다",
+      "devError": "cesium이 필요합니다.",
+      "notWebMercatorTilingScheme": "이 데이터 세트는 웹 메르카토르(EPSG:3857) 투영법을 지원하지 않으므로 2D 지도에 표시할 수 없습니다.",
+      "terrainServerErrorTitle": "Terrain 서버가 응답하지 않음",
+      "failedToObtain": "이미지 타일을 얻지 못했습니다 X: {{x}} Y: {{y}} 레벨: {{level}}."
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses는 파생 클래스에서 구현해야 합니다."
+    },
+    "drawExtentHelper": {
+      "extent": "범위",
+      "drawExtent": "그리기 범위"
+    },
+    "gmlToGeoJson": {
+      "missingPosList": "GML 폴리곤의 외부 링에 posList가 누락되었습니다.",
+      "containsUnsupportedFeatureType": "GML에 지원되지 않는 기능 유형이 포함되어 있습니다: {{type}}",
+      "missingPos": "GML 포인트 요소에 POS 요소가 누락되었습니다.",
+      "missingExteriorRing": "GML 다각형에 외부 링이 없습니다."
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS에 지원되지 않는 기능 유형이 포함되어 있습니다: {{type}}"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "변수 표시"
+    },
+    "computeRingWindingOrder": {
+      "devError": "{x:number, y:number} 타입의 예상 지점"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "W3C 지오메트리를 사용하는 GeoRSS에는 지원되지 않는 피처 유형이 포함되어 있습니다: {{type}}"
+    }
   }
 }
