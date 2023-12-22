@@ -129,8 +129,16 @@
   },
   "core": {
     "dataType": {
-      "assimp-local": "3D 파일 변환기 (zip) (실험용)"
-    }
+      "assimp-local": "3D 파일 변환기 (zip) (실험용)",
+      "auto": "파일 타입",
+      "wms-group": "웹 지도 서비스 서버"
+    },
+    "chartData": "차트 데이터",
+    "dataUri": {
+      "errorTitle": "브라우저가 데이터 다운로드를 지원하지 않음",
+      "errorMessage": "불행히도 Microsoft 브라우저(Internet Explorer 및 Edge의 모든 버전 포함)는 데이터를 파일로 다운로드하는 데 필요한 data uri 기능을 지원하지 않습니다. 다운로드하려면 다음 url를 $t(browsers.chrome), $t(browsers.firefox)또는 $t(browsers.safari) : {{href}}와 같은 다른 브라우저에 복사하십시오"
+    },
+    "userAddedData": "사용자가 추가한 데이터"
   },
   "sui": {
     "notifications": {
