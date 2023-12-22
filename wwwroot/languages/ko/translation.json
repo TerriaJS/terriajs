@@ -312,7 +312,8 @@
       "left": "왼쪽",
       "both": "둘다",
       "hideUndergroundFeatures": "지면 아래에 있는 형상을 숨기려면 누르세요",
-      "right": "오른쪽"
+      "right": "오른쪽",
+      "hideUnderground": "지형이 지하지형을 숨깁니다"
     },
     "nativeResolutionLabel": "눌러서 {{resolution1}} 해상도 사용을 중지하고 {{resolution2}} 해상도 사용을 시작합니다",
     "baseMap": "기본 지도",
@@ -388,7 +389,8 @@
     "resetAlignmentMessage": "나침반 정렬로 재설정. 정렬 상태가 실제와 일치하지 않으면 그림 8 동작으로 장치를 흔들어 장치를 다시 보정합니다. 언제든지 수행할 수 있습니다. <br /> <br /> 자기장 또는 금속 물체가 있는 위치는 장치 나침반의 방향을 방해할 수 있으므로 피해야 합니다.",
     "manualAlignmentTitle": "수동 정렬",
     "btnRealign": "수동 정렬 전환",
-    "btnResetRealign": "나침반 정렬 재설정"
+    "btnResetRealign": "나침반 정렬 재설정",
+    "confirmText": "완료"
   },
   "feedback": {
     "feedbackBtnText": "피드백 제공",
@@ -446,6 +448,232 @@
     "btnTitle": "고급 도구 상자"
   },
   "search": {
-    "resultsLabel": "검색 결과"
+    "resultsLabel": "검색 결과",
+    "viewMore": "더 많은 {{name}} 보기",
+    "data": "데이터",
+    "searchCatalogue": "카탈로그 검색",
+    "placeholder": "위치 검색",
+    "search": "Data Catalog에서 '{{searchText}}' 검색",
+    "searchInDataCatalog": "Data Catalog에서 '{{locationSearchText}}' 검색",
+    "done": "끝내기",
+    "viewLess": "더 적은 {{name}}결과 보기"
+  },
+  "workbench": {
+    "showMoreActionsTitle": "더 많은 작업 표시",
+    "diffImageTitle": "두 날짜 사이의 이미지 차이보기",
+    "rangeMax": "최댓값:",
+    "addItemErrorTitle": "카탈로그 항목을 워크벤치에 추가할 수 없습니다.",
+    "colorScaleRangeMin": "최소값은 숫자여야 합니다.",
+    "removeFromMap": "제거",
+    "rangeMin": "최소값:",
+    "colorScaleRange": "색상 스케일 범위",
+    "colorScaleRangeMinSmallerThanMax": "색상 스케일 범위의 최소값은 최대값보다 작아야 합니다.",
+    "removeAll": "모두 제거",
+    "exportData": "내보내기",
+    "splitItemTitle": "복제 후 분할 표시",
+    "openFeature": "확대",
+    "searchItemTitle": "검색",
+    "diffImage": "차이점",
+    "displayPercent": "지역별 총합의 퍼센트로 표시",
+    "removeFromMapTitle": "이 데이터 제거",
+    "previewItem": "데이터 정보",
+    "splitItem": "분할비교",
+    "expandAll": "모두 확장",
+    "zoomToTitle": "범위 확대",
+    "previewItemTitle": "이 데이터에 대해",
+    "collapseAll": "모두 축소",
+    "colorScaleRangeTitle": "잘못된 색상 스케일 범위",
+    "exportDataTitle": "지도 데이터 내보내기",
+    "openFeatureTitle": "데이터 확대",
+    "colorScaleUpdateRange": "업데이트 범위",
+    "zoomTo": "맞춤 확대",
+    "colorScaleRangeMax": "최댓값은 숫자여야 합니다.",
+    "label": "데이터세트",
+    "addItemErrorMessage": "카탈로그 항목을 로드하는 동안 오류가 발생했습니다.",
+    "toggleVisibility": "데이터 표시/숨기기",
+    "searchItem": "검색",
+    "splitScreenMode": "화면 분할 모드",
+    "opacity": "불투명도: {{opacity}}%"
+  },
+  "analytics": {
+    "selectExistingPolygon": "기존 다각형 선택",
+    "clickToDrawRectangle": "클릭하여 직사각형 그리기",
+    "enterValidCoords": "유효한 좌표(예: 131.0361, -25.3450)를 입력하세요.",
+    "selectLocation": "위치 선택",
+    "shiftToDrawRectangle": "Shift 키를 누른 상태에서 마우스 왼쪽 버튼을 길게 눌러 직사각형을 그립니다",
+    "selectedPolygon": "선택된 다각형",
+    "clickToDrawPolygon": "클릭하여 다각형 그리기",
+    "runAnalysis": "분석 실행",
+    "nothingSelected": "선택된 항목이 없으므로 위의 버튼을 사용하여 선택해 주세요.",
+    "polygon": "다각형",
+    "regionName": "지역 이름",
+    "existingPolygon": "기존 다각형",
+    "point": "지점(위도/경도)",
+    "selectPoint": "지도를 클릭하여 지점을 선택합니다.",
+    "clickToDrawLine": "클릭하여 선 그리기"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "취소",
+      "newText": "새로운 조건"
+    },
+    "summary": {
+      "addFirstText": "새로운 조건 추가",
+      "addMoreText": "조건 추가"
+    },
+    "active": {
+      "remove": "조건 제거",
+      "edit": "조건 수정"
+    }
+  },
+  "terriaViewer": {
+    "webGLNotSupportedOrSlowTitle": "WebGL이 지원되지 않거나 너무 느림",
+    "slowWebGLAvailableMessageII": "{{appName}}은 최신 버전의 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), $t(browsers.safari)를 포함하여 {{webGL}}을 지원하는 웹 브라우저에서 가장 잘 작동합니다. 사용 중인 웹 브라우저가 WebGL을 지원하지 않는 것 같으므로 제한된 2D 전용 환경이 표시됩니다.",
+    "slowWebGLAvailableMessage": "웹 브라우저에서 {{appName}}을 3D로 표시하는 데 성능 문제가 있다고 보고하여 제한된 2D 전용 환경이 표시됩니다. 전체 3D 환경을 보려면 다른 웹 브라우저를 사용하거나 비디오 드라이버를 업그레이드하거나 운영 체제를 업그레이드해 보세요.",
+    "webGLNotSupportedTitle": "WebGL이 지원되지 않음",
+    "webGLNotSupportedOrSlowMessage": "웹 브라우저가 WebGL을 지원하지 않거나 웹 브라우저에서 WebGL이 매우 느리다고 보고했기 때문에 지도를 3D로 표시할 수 없습니다. 최신 버전의 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) 또는 $t(browsers.safari)와 같은 다른 웹 브라우저를 사용해 보세요. 경우에 따라 컴퓨터의 비디오 드라이버 또는 운영 체제를 업그레이드해야 {{appName}}에서 3D 뷰를 볼 수 있을 수도 있습니다.",
+    "slowWebGLAvailableTitle": "WebGL 성능 저하"
+  },
+  "catalogItem": {
+    "loading": "로딩중...",
+    "trash": "카탈로그에서 제거",
+    "privateIndicatorTitle": "비공개 데이터 세트",
+    "remove": "제거",
+    "removeFromMap": "지도에서 제거",
+    "preview": "미리보기",
+    "add": "추가"
+  },
+  "description": {
+    "dataNotLocal": "사용 권한 및 제약 조건에 대한 정보 등 자세한 내용은 해당 데이터 제공업체에 문의하세요.",
+    "dataSourceDetails": "데이터 소스 세부 정보",
+    "downloadData": "데이터 다운로드",
+    "typeName": "타입 이름",
+    "useLinkBelow": "아래 링크를 사용하여 데이터를 다운로드하세요. URL query parameters 사용자 지정에 대한 자세한 내용은 {{link}}를 참조하세요.",
+    "dataCustodian": "데이터 관리자",
+    "dataServiceDetails": "데이터 서비스 세부 정보",
+    "layerName": "레이어 이름",
+    "name": "설명",
+    "wms": "요청 시 지도 이미지를 생성하는 <1>WMS 서비스</1>입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:",
+    "dataUrl": "데이터 링크",
+    "downloadInFormat": "현재 선택된 데이터를 {{format}} 형식으로 다운로드",
+    "metadataUrls": "메타데이터 링크",
+    "downloadNotSupported": "불행히도 브라우저는 파일을 다운로드하기 위해 필요한 기능을 지원하지 않습니다. 이 데이터를 다운로드하려면 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) 또는 $t(browsers.safari)를 사용하십시오.",
+    "useTheLinkToDownload": "아래 링크를 사용하여 데이터를 직접 다운로드하십시오.",
+    "dataLocal": "이 파일은 브라우저에만 존재합니다. 이 파일을 공유하려면 공용 웹 서버에 올려야 합니다.",
+    "wfs": "요청 시 미가공 공간 데이터를 전송하는 <1>WFS 서비스</1>입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:"
+  },
+  "preview": {
+    "selectToPreview": "<0>미리보기로 볼 데이터셋 선택 </0><1>- 또는 -</1><2>지도로 이동</2>",
+    "author": "작성자",
+    "loading": "미리보기 로딩중...",
+    "licence": "라이센스",
+    "dataPreviewError": "데이터 미리 보기 오류",
+    "preview": "{{appName}} 미리보기",
+    "removeFromMap": "지도에서 제거",
+    "resourceDescription": "리소스 설명",
+    "serviceDescription": "서비스 설명",
+    "fees": "수수료",
+    "previewItemErrorTitle": "카탈로그 항목을 미리 볼 수 없습니다.",
+    "contact": "연락처",
+    "dataPreview": "데이터 미리보기",
+    "dataDescription": "데이터 설명",
+    "dataPreviewLoading": "데이터 미리보기 로딩중...",
+    "datasetDescription": "데이터셋 설명",
+    "created": "생성일",
+    "noPreviewAvailable": "미리 보기 없음",
+    "addToMap": "지도에 추가",
+    "disclaimer": "면책 조항",
+    "modified": "수정일",
+    "updateFrequency": "업데이트 빈도",
+    "mayBeExperiencingIssues": "이 데이터셋에 현재 문제가 있을 수 있습니다",
+    "dataCustodian": "데이터 관리자",
+    "accessConstraints": "접근 제한",
+    "doesNotContainGeospatialData": "이 파일에는 지리 공간 데이터가 포함되어 있지 않습니다.",
+    "previewItemErrorMessage": "카탈로그 항목을 불러오는 동안 오류가 발생했습니다."
+  },
+  "satellite": {
+    "removeFilter": "필터 제거",
+    "infoGroup": "사용 가능한 캡처 시간만 표시합니다:",
+    "querying": "위치 조회 중...",
+    "pickPoint": "지도를 클릭하여 지점을 선택합니다.",
+    "filterByLocation": "위치별 필터링",
+    "newLocation": "새 위치",
+    "zoomTo": "확대"
+  },
+  "viewModels": {
+    "searchCatalogueItem": "카탈로그 항목",
+    "searchPlaceNames": "공식 지명",
+    "searchNoCatalogueItem": "검색어와 일치하는 카탈로그 항목이 없습니다.",
+    "searchMinCharacters_0": "최소 {{count}}자를 입력해야 합니다",
+    "searchNoPlaceNames": "검색어와 일치하는 공식 지명이 없습니다.",
+    "inMultipleLocations": "다음을 포함한 여러 위치에서: ",
+    "searchAddresses": "주소",
+    "searchNoLocations": "검색어와 일치하는 위치가 없습니다.",
+    "searchErrorOccurred": "검색하는 동안 오류가 발생했습니다.  인터넷 연결을 확인하거나 나중에 다시 시도하세요.",
+    "searchLocations": "위치",
+    "inDataCatalogue": "데이터 카탈로그에서"
+  },
+  "dateTime": {
+    "outOfRange": "현재 범위를 벗어났습니다.",
+    "selectTime": "시간 선택",
+    "timeline": {
+      "togglePlay": "재생",
+      "playFaster": "재생 속도 향상",
+      "gotoStart": "처음으로 돌아가기",
+      "playSlower": "재생 속도 감소",
+      "textCell": "시간 범위가 표시되는 데이터 세트의 이름"
+    },
+    "next": "다음 시간",
+    "previous": "이전 시간",
+    "availableTimeChart": "차트에 사용 가능한 시간 표시",
+    "selectorLabel": "시간:",
+    "back": "뒤로 가기",
+    "useTimeline": "타임라인 사용"
+  },
+  "chart": {
+    "closePanel": "패널 닫기",
+    "sectionLabel": "차트",
+    "expand": "확장",
+    "download": "다운로드",
+    "noData": "차트화할 수 있는 데이터를 찾을 수 없습니다.",
+    "loading": "차트 데이터 로딩중...",
+    "showItemInChart": "차트에 {{value}} 표시"
+  },
+  "emptyWorkbench": {
+    "helpfulHintsTwo": "맵에 데이터를 추가하면 활성 데이터 세트가 작업대에 나열됩니다. 작업대에서 데이터와 상호 작용할 수 있습니다.",
+    "helpfulHintsOne": "'지도 데이터 탐색'을 선택하여 사용 가능한 데이터를 찾아보거나 '업로드'를 클릭하여 직접 만든 데이터를 지도에 추가할 수 있습니다.",
+    "helpfulHints": "유용한 힌트",
+    "emptyArea": "작업대가 비어 있습니다",
+    "helpfulHintsThree": "데이터에서 이 기능을 지원하는 경우 작업대에서 데이터 세트를 켜고 끄고, 불투명도를 변경하고, 분할 화면 비교를 활성화하고, 스타일을 변경하고, 날짜 및 시간을 탐색할 수 있습니다."
+  },
+  "timer": {
+    "nextScheduledUpdateCountdown": "다음 데이터 업데이트까지 남은 시간 {{timeCountdown}}",
+    "nextScheduledUpdateTime": "다음 데이터 업데이트는 {{scheduledUpdateTime}}입니다"
+  },
+  "includeStory": {
+    "message": "공유에 스토리 포함"
+  },
+  "clipboard": {
+    "success": "클립보드에 복사",
+    "unsuccessful": "복사 실패...",
+    "copy": "복사",
+    "shareURL": "URL 공유",
+    "shareExplanation": "이 URL을 가진 사람은 누구나 이 지도에 접근할 수 있습니다."
+  },
+  "dragDrop": {
+    "text": "<0>끌어서 놓기</0><1>데이터를 지도에 표시하기<1>",
+    "not": "<0>bbbb</0>"
+  },
+  "mobile": {
+    "addDataBtnText": "데이터",
+    "doneBtnText": "끝내기",
+    "toggleNavigation": "네비게이션 변경"
+  },
+  "dataCatalog": {
+    "groupEmpty": "이 그룹은 비어 있습니다",
+    "groupRemove": "이 그룹 제거"
+  },
+  "loader": {
+    "loadingMessage": "로딩중"
   }
 }
