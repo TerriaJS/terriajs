@@ -846,6 +846,11 @@
       "groupNotAvailableMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다.",
       "nameGroup": "ArcGIS 기능 서버 그룹",
       "name": "ArcGIS 기능 서버"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "serviceDescription": "서비스 설명",
+      "name": "ArcGIS 기능 서버 그룹",
+      "dataDescription": "데이터 설명"
     }
   }
 }
