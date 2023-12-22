@@ -138,7 +138,10 @@
       "errorTitle": "브라우저가 데이터 다운로드를 지원하지 않음",
       "errorMessage": "불행히도 Microsoft 브라우저(Internet Explorer 및 Edge의 모든 버전 포함)는 데이터를 파일로 다운로드하는 데 필요한 data uri 기능을 지원하지 않습니다. 다운로드하려면 다음 url를 $t(browsers.chrome), $t(browsers.firefox)또는 $t(browsers.safari) : {{href}}와 같은 다른 브라우저에 복사하십시오"
     },
-    "userAddedData": "사용자가 추가한 데이터"
+    "userAddedData": "사용자가 추가한 데이터",
+    "errors": {
+      "tooDeepAddedByUser": "addedByUser와 ID: \"{{memberId}}\" 를 확인 시 카탈로그 항목이 100개에 도달했나요? 카탈로그 그룹에 재귀가 발생하지 않았는지 확인하세요."
+    }
   },
   "sui": {
     "notifications": {
