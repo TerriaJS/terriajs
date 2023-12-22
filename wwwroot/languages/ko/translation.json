@@ -804,10 +804,24 @@
       "containsUnsupportedFeatureType": "W3C 지오메트리를 사용하는 GeoRSS에는 지원되지 않는 피처 유형이 포함되어 있습니다: {{type}}"
     },
     "mapboxVectorTileImageryProvider": {
-      "requireLayerName": "MapboxVectorTileImageryProvider에는 options.layerName으로 전달된 레이어 이름이 필요합니다."
+      "requireLayerName": "MapboxVectorTileImageryProvider에는 options.layerName으로 전달된 레이어 이름이 필요합니다",
+      "moreThanFourTiles": "이미지 제공자의 직사각형과 최소 레벨은 최소 레벨에 {{tileCount}}개의 타일이 있음을 나타냅니다. 최소 수준에서 타일이 4개를 초과하는 이미지 제공자는 지원되지 않습니다.",
+      "maxLevelError": "데이터 세트의 최대 수준이 너무 높습니다",
+      "requireStyles": "MapboxVectorTileImageryProvider에는 options.styleFunc로 전달된 스타일 기능이 필요합니다"
     },
     "imageryProviderHooks": {
       "devError": "이미지를 다시 칠하기 위한 컨텍스트가 없습니다."
+    },
+    "extraCreditLinks": {
+      "disclaimer": "부인 성명",
+      "dataAttribution": "데이터 속성",
+      "basemap": "베이스맵"
+    },
+    "regionProvider": {
+      "csvRegionMappingMessageZeroFound": "지역 유형 {{regionType}}에 대해 지역 이름이 없습니다",
+      "csvRegionMappingMessageZeroBoundariesFound": "{{regionName}} 지역에서 지역 경계가 0개 발견되었습니다",
+      "csvRegionMappingMessageLoadError": "{{regionName}} {{exception}}지역의 지역 경계를 로드할 수 없습니다",
+      "csvRegionMappingTitle": "CSV 지역 매핑"
     }
   }
 }
