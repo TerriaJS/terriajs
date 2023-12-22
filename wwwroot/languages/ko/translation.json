@@ -135,7 +135,10 @@
       "wfs-group": "웹 기능 서비스 (WFS) 서버",
       "wmts-group": "웹 지도 타일 서비스 (WMTS) 서버",
       "wps-getCapabilities": "웹 공간 데이터 처리 서비스 (WPS) 서버",
-      "esri-group": "Esri ArcGIS 서버"
+      "esri-group": "Esri ArcGIS 서버",
+      "esri-mapServer": "Esri ArcGIS MapServer(단일 레이어)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (단일 레이어)",
+      "3d-tiles": "3D 타일"
     },
     "chartData": "차트 데이터",
     "dataUri": {
