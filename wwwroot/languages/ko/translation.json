@@ -758,7 +758,15 @@
     "gnafAddressGeocoder": {
       "suburb": "교외",
       "noAddresses": "이 테이블 구조에는 주소가 없습니다!",
-      "noAddresses2": "테이블 구조에 주소 열이 있다고 보고하지만 주소가 없습니다"
+      "noAddresses2": "테이블 구조에 주소 열이 있다고 보고하지만 주소가 없습니다",
+      "state": "상태",
+      "matchedAddresses": "일치하는 주소",
+      "score": "점수",
+      "postOfficeBox": "우체국 상자",
+      "lon": "경도",
+      "poBox": "우편 사서함",
+      "lat": "위도",
+      "postcode": "우편번호"
     },
     "cesium": {
       "stoppedRenderingMessage": "작업대에 방금 추가된 데이터세트로 인해 발생한 문제일 수 있으므로 해당 데이터세트를 제거해 보세요. 그래도 문제가 해결되지 않으면 {{appName}}을 다시 로드해야 할 수 있습니다.",
@@ -794,6 +802,12 @@
     },
     "w3cToGeoJson": {
       "containsUnsupportedFeatureType": "W3C 지오메트리를 사용하는 GeoRSS에는 지원되지 않는 피처 유형이 포함되어 있습니다: {{type}}"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "MapboxVectorTileImageryProvider에는 options.layerName으로 전달된 레이어 이름이 필요합니다."
+    },
+    "imageryProviderHooks": {
+      "devError": "이미지를 다시 칠하기 위한 컨텍스트가 없습니다."
     }
   }
 }
