@@ -921,7 +921,1225 @@
       "nameServer": "CKAN 서버",
       "corsErrorMessage": "이 CKAN 서버에서 패키지를 검색할 수 없습니다.",
       "errorLoadingMessage": "이 CKAN 카탈로그에 대한 정의에 유효한 필터 쿼리가 없습니다.",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "resourceDescription": "자원 설명",
+      "invalidCkanMessage": "CKAN 서버에서 반환된 리소스에 package_id가 없는 것 같습니다.",
+      "contact_point": "연락",
+      "idsNotSpecifiedTitle": "리소스 ID 또는 데이터 세트 ID를 지정해야 합니다",
+      "update_freq": "업데이트 빈도",
+      "notCompatibleMessageII": "CKAN 데이터 세트에는 지원되는 형식의 리소스가 없습니다.",
+      "metadata_modified": "수정 일시",
+      "datasetCustodian": "데이터세트 관리자",
+      "errorRetrievingUrlTitle": "CKAN URL을 검색하는 중 오류가 발생했습니다",
+      "errorRetrievingUrlMessage": "URL을 JSON으로 검색할 수 없습니다: {{url}}.",
+      "author": "저자",
+      "notCompatibleTitle": "호환되는 리소스를 찾을 수 없습니다",
+      "idsNotSpecifiedMessage": "CkanCatalogItem에서는 리소스 ID 또는 데이터 세트 ID를 지정해야 합니다.",
+      "notCompatibleMessageI": "CKAN 데이터세트에 ID가 {{resourceId}}인 리소스가 없거나 지원되는 형식이 없습니다.",
+      "licence": "라이선스",
+      "invalidCkanTitle": "잘못된 CKAN 리소스 JSON",
+      "dataDescription": "데이터 설명",
+      "metadata_created": "생성일"
+    },
+    "catalog": {
+      "mustHaveType": "각 항목에는 유형이 있어야 합니다.",
+      "idForMatchingErrorMessage": "모델 객체에는 'id', 'localId' 또는 'name' 속성이 있어야 합니다.",
+      "catalogMemberMustHaveName": "새로 작성된 카탈로그 구성원에는 이름이 있어야 합니다.",
+      "group": "그룹",
+      "compositesError": "복합에는 복합 품목이 포함될 수 없습니다.",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "convertErrorMessage": "이 카탈로그 파일은 이 웹맵을 지원하는 소프트웨어인 TerriaJS의 이전 버전을 기반으로 합니다. {{url}}에 대한 카탈로그 데이터를 업그레이드하는 동안 오류가 발생했습니다.",
+      "unsupportedTypeMessage": "알 수 없는 모델 유형 {{type}}을(를) 생성할 수 없습니다.",
+      "idForMatchingErrorTitle": "누락된 속성",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "userAddedDataGroup": "데이터 추가 패널을 통해 사용자가 추가한 데이터 그룹입니다.",
+      "unsupportedFileTypeTitle": "지원되지 않는 파일 형식",
+      "addAll": "모두 추가",
+      "catalogMemberMustHaveType": "카탈로그 구성원에는 유형이 있어야 합니다.",
+      "unsupportedTypeTitle": "알 수 없는 유형",
+      "stubCreationFailure": "카탈로그 항목 {{item}}을(를) 스텁아웃할 수 없습니다",
+      "unsupportedFileTypeMessage": "이 파일 형식은 {{appName}}에서 지원되지 않습니다. 지원되는 파일 형식은 다음과 같습니다: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv({{link}}에서)</li><li>Shapefile (.zip)</li></ul>",
+      "upload": "업로드",
+      "chartDataGroup": "차트 데이터를 위한 그룹입니다.",
+      "convertErrorTitle": "카탈로그를 V8로 업그레이드할 수 없습니다",
+      "name": "이름이 없는 항목",
+      "removeAll": "모두 제거"
+    },
+    "tableStyling": {
+      "colors": {
+        "selectableDimensions": {
+          "value": {
+            "name": "값"
+          },
+          "remove": {
+            "value": "제거"
+          },
+          "add": {
+            "value": "색상 추가"
+          },
+          "color": {
+            "name": "색상"
+          }
+        },
+        "name": "색상들"
+      },
+      "workbenchOptions": {
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "options": {
+              "false": {
+                "name": "스타일 숨기기"
+              },
+              "true": {
+                "name": "스타일 보여주기"
+              }
+            },
+            "name": "워크벤치에 스타일 표시"
+          },
+          "showDisableStyleOption": {
+            "name": "스타일 비활성화 옵션 표시"
+          },
+          "enableManualRegionMapping": {
+            "name": "수동 지역 매핑 활성화"
+          },
+          "showDisableTimeOption": {
+            "name": "비활성화 시간 옵션 표시"
+          }
+        },
+        "name": "워크벤치 옵션"
+      },
+      "pointSize": {
+        "selectableDimensions": {
+          "pointSizeOffset": {
+            "name": "크기 오프셋"
+          },
+          "pointSizeColumn": {
+            "name": "변하기 쉬운"
+          },
+          "pointSizeNull": {
+            "name": "기본 크기"
+          },
+          "pointSizesFactor": {
+            "name": "크기 계수"
+          }
+        },
+        "name": "포인트 크기"
+      },
+      "styleOptions": {
+        "name": "스타일 옵션",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "제목"
+          },
+          "longitudeColumn": {
+            "name": "경도 열"
+          },
+          "latitudeColumn": {
+            "name": "위도 열"
+          }
+        }
+      },
+      "outline": {
+        "selectableDimensions": {
+          "color": {
+            "name": "색상"
+          },
+          "width": {
+            "name": "넓이"
+          }
+        },
+        "name": "개요 스타일"
+      },
+      "label": {
+        "selectableDimensions": {
+          "verticalOrigin": {
+            "options": {
+              "bottom": {
+                "name": "맨 아래"
+              },
+              "top": {
+                "name": "맨 위"
+              },
+              "center": {
+                "name": "센터"
+              },
+              "baseline": {
+                "name": "기준선"
+              }
+            },
+            "name": "수직 원점"
+          },
+          "outlineWidth": {
+            "name": "외곽선 너비"
+          },
+          "font": {
+            "name": "폰트"
+          },
+          "style": {
+            "options": {
+              "fillAndOutline": {
+                "name": "채우기 및 개요"
+              },
+              "fill": {
+                "name": "채우기만"
+              },
+              "outline": {
+                "name": "개요만"
+              }
+            },
+            "name": "라벨 스타일"
+          },
+          "horizontalOrigin": {
+            "name": "수평 원점",
+            "options": {
+              "center": {
+                "name": "중앙"
+              }
+            }
+          },
+          "offsetX": {
+            "name": "픽셀 오프셋 X"
+          },
+          "outlineColor": {
+            "name": "외곽선 색상"
+          },
+          "column": {
+            "name": "라벨 열"
+          },
+          "fillColor": {
+            "name": "채우기 색상"
+          },
+          "offsetY": {
+            "name": "픽셀 오프셋 Y"
+          },
+          "scale": {
+            "name": "스케일"
+          }
+        },
+        "name": "라벨 스타일"
+      },
+      "style": {
+        "selectableDimensions": {
+          "enum": {
+            "selectableDimensions": {
+              "enum": {
+                "selectableDimensions": {
+                  "remove": {
+                    "value": "제거"
+                  },
+                  "value": {
+                    "name": "값"
+                  }
+                },
+                "add": {
+                  "value": "가치를 위한 스타일 추가"
+                },
+                "noValue": "값 없음"
+              }
+            },
+            "name": "열거형 스타일"
+          },
+          "bin": {
+            "selectableDimensions": {
+              "bin": {
+                "noValue": "값 없음",
+                "selectableDimensions": {
+                  "stop": {
+                    "name": "정지"
+                  },
+                  "remove": {
+                    "value": "제거"
+                  },
+                  "start": {
+                    "name": "시작"
+                  }
+                },
+                "range": "{{value1}}에서 {{value2}}까지"
+              },
+              "add": {
+                "value": "스타일 상자 추가"
+              }
+            },
+            "name": "빈 스타일"
+          },
+          "styleType": {
+            "constant": {
+              "name": "스타일 없음"
+            },
+            "bin": {
+              "name": "이산형"
+            },
+            "name": "유형",
+            "undefinedLabel": "명시 해주세요",
+            "enum": {
+              "name": "질적"
+            }
+          },
+          "column": {
+            "name": "변하기 쉬운"
+          }
+        },
+        "null": {
+          "name": "기본"
+        }
+      },
+      "bins": {
+        "selectableDimensions": {
+          "start": {
+            "selectableDimensions": {
+              "stop": {
+                "name": "정지"
+              },
+              "color": {
+                "name": "색상"
+              },
+              "start": {
+                "name": "시작"
+              }
+            },
+            "name": "{{value1}}에서 {{value2}}까지"
+          }
+        },
+        "name": "쓰레기통"
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "false": {
+                "name": "아니오"
+              },
+              "true": {
+                "name": "네"
+              }
+            },
+            "name": "스프레드 종료 시간"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "true": {
+                "name": "네"
+              },
+              "false": {
+                "name": "아니오"
+              }
+            },
+            "name": "스프레드 시작 시간"
+          },
+          "tableEndTimeColumn": {
+            "name": "종료 시간 열"
+          },
+          "tableTimeColumn": {
+            "name": "시간 열"
+          },
+          "tableTimeIsSampled": {
+            "options": {
+              "true": {
+                "name": "네"
+              },
+              "false": {
+                "name": "아니오"
+              }
+            },
+            "name": "샘플링됨"
+          },
+          "tableTimeDisplayDuration": {
+            "name": "표시 기간"
+          },
+          "tableTimeIdColumns": {
+            "name": "ID 열"
+          }
+        },
+        "name": "시간 옵션"
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "sequentialContinuous": {
+                "name": "순차(연속)"
+              },
+              "divergingContinuous": {
+                "name": "발산(연속)"
+              },
+              "customDiscrete": {
+                "name": "맞춤형(이산형)"
+              },
+              "customQualitative": {
+                "name": "맞춤형(정성적)"
+              },
+              "sequentialDiscrete": {
+                "name": "순차(이산)"
+              },
+              "noStyle": {
+                "name": "스타일 없음"
+              },
+              "divergingDiscrete": {
+                "name": "발산(연속)"
+              },
+              "qualitative": {
+                "name": "질적"
+              }
+            },
+            "undefinedLabel": "명시 해주세요",
+            "name": "유형"
+          },
+          "scheme": {
+            "name": "계획"
+          },
+          "dataType": {
+            "name": "열 유형(고급)"
+          },
+          "numberOfBins": {
+            "name": "빈 수"
+          },
+          "tableColorColumn": {
+            "name": "변하기 쉬운"
+          }
+        },
+        "name": "채우기 색상"
+      },
+      "data": {
+        "selectableDimensions": {
+          "tableStyleType": {
+            "options": {
+              "fill": {
+                "name": "채우기 색상"
+              },
+              "point": {
+                "name": "포인트/마커 스타일"
+              },
+              "outline": {
+                "name": "외곽선 색상"
+              },
+              "trail": {
+                "name": "트레일 스타일"
+              },
+              "pointSize": {
+                "name": "포인트 크기"
+              },
+              "label": {
+                "name": "라벨 스타일"
+              }
+            },
+            "name": "상징"
+          },
+          "tableStyle": {
+            "name": "스타일"
+          },
+          "dataset": {
+            "name": "데이터세트"
+          }
+        },
+        "name": "데이터"
+      },
+      "trail": {
+        "selectableDimensions": {
+          "resolution": {
+            "name": "해결"
+          },
+          "trailStyleOptions": {
+            "name": "트레일 스타일 옵션",
+            "selectableDimensions": {
+              "material": {
+                "name": "재료 유형",
+                "options": {
+                  "polylineGlow": {
+                    "name": "폴리라인 글로우"
+                  },
+                  "solidColor": {
+                    "name": "단색"
+                  }
+                }
+              }
+            }
+          },
+          "leadTime": {
+            "name": "리드타임(초)"
+          },
+          "growColor": {
+            "name": "글로우 컬러"
+          },
+          "trailTime": {
+            "name": "추적 시간(초)"
+          },
+          "width": {
+            "name": "너비"
+          },
+          "growPower": {
+            "name": "글로우 파워"
+          },
+          "solidColor": {
+            "name": "단색"
+          },
+          "taperPower": {
+            "name": "테이퍼 파워"
+          }
+        }
+      },
+      "additionalColors": {
+        "name": "추가 색상",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "지역 색상"
+          },
+          "outlierColor": {
+            "name": "특이치 색상"
+          },
+          "nullColor": {
+            "name": "기본 색상"
+          }
+        }
+      },
+      "point": {
+        "selectableDimensions": {
+          "width": {
+            "name": "넓이"
+          },
+          "marker": {
+            "name": "마커",
+            "tooltip": "마커는 지원되는 모든 이미지 형식(예: PNG, SVG)의 URL 및 base64를 지원합니다"
+          },
+          "rotation": {
+            "name": "회전"
+          },
+          "height": {
+            "name": "높이"
+          }
+        },
+        "name": "마커 스타일"
+      },
+      "legend": {
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "제목"
+          },
+          "title": {
+            "name": "항목 {{index}} 제목"
+          },
+          "legendTicks": {
+            "name": "지점"
+          }
+        },
+        "name": "범례"
+      },
+      "copyUserStratum": "사용자 계층을 클립보드에 복사",
+      "outlierColor": {
+        "name": "특이치 색상"
+      },
+      "variableAndColumn": {
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "제목"
+          },
+          "columnUnits": {
+            "name": "단위"
+          }
+        },
+        "name": "변수/열"
+      },
+      "nullColor": {
+        "name": "기본 색상"
+      },
+      "regionMapping": {
+        "name": "지역 매핑"
+      },
+      "displayRange": {
+        "selectableDimensions": {
+          "max": {
+            "name": "최대"
+          }
+        },
+        "name": "표시 범위"
+      },
+      "hideAdvancedOptions": "고급 옵션 숨기기",
+      "reset": "기본 스타일로 재설정",
+      "showAdvancedOptions": "고급 옵션 표시",
+      "min": {
+        "name": "최소"
+      },
+      "name": "스타일"
+    },
+    "csw": {
+      "checkCORSRecords": "이 CSW 서버에서 GetRecords를 실행할 수 없습니다.",
+      "missingUrlTitle": "카탈로그 서비스(CSW)를 로드할 수 없습니다",
+      "unknownError": "CSW 서버에서 알 수 없는 오류를 보고했습니다.",
+      "checkCORS": "이 CSW 서버에서 GetRecords를 실행할 수 없습니다.",
+      "exceptionMessage": "CSW 서버에서 오류를 보고했습니다.\n\n{{exceptionText}}",
+      "notUseableTitle": "카탈로그 서비스를 이용할 수 없습니다.\n\n{{message}}",
+      "errorLoadingTitle": "CSW를 로드할 수 없습니다",
+      "notUseableMessage": "CSW 서버에서 GetDomain을 호출할 때 잘못된 응답을 받았습니다.",
+      "dataResponsibility": "데이터 책임",
+      "metadataURL": "메타데이터 레코드 URL",
+      "name": "카탈로그 서비스(CSW)",
+      "checkCORSDomain": "이 CSW 서버에서 GetDomain을 실행할 수 없습니다.",
+      "cors": "CORS",
+      "errorLoadingRecordsMessage": "CSW에서 GetRecords를 호출할 때 잘못된 응답을 받았습니다",
+      "errorLoadingRecordsTitle": "CSW 레코드를 로드하지 못했습니다.",
+      "missingUrlMessage": "카탈로그 그룹에 `url`이 없기 때문에 카탈로그 서비스(CSW)를 로드할 수 없습니다.",
+      "links": "연결"
+    },
+    "spatialDetailing": {
+      "aggregationTrueName": "평균 집계",
+      "regionTypeToPredictDescription": "특성을 예측할 지역의 유형입니다.",
+      "name": "공간 디테일링",
+      "spatialDetailingOf": "{{at}}에 있는 {{of}}의 공간 세부정보",
+      "coarseDataRegionTypeDescription": "대략적인 입력 특성이 연관된 영역 유형입니다.",
+      "coarseDataRegionTypeName": "대략적인 데이터 영역 유형",
+      "aggregationFalseName": "합계 집계",
+      "wrongNumberOfElements": "값 목록과 지역 코드 목록에 포함된 요소 수가 동일하지 않습니다",
+      "aggregationDescription": "대략적인 지역 값이 집계되는 방법을 지정합니다. 값이 지역 전체 값의 평균인 경우 True이고, 값이 지역 전체 값의 합계인 경우 False입니다.",
+      "aggregationTrueDescription": "거친 영역 값은 해당 영역에 있는 샘플의 평균입니다. 예를 들어, 평균 가계 소득입니다.",
+      "regionTypeToPredictName": "예측할 지역 유형",
+      "characteristicToPredictDescription": "각 지역에 대해 예측할 특성입니다.",
+      "aggregationFalseDescription": "거친 영역 값은 해당 영역의 샘플 합계입니다. 예를 들어 총 인구입니다.",
+      "characteristicToPredictName": "예측할 수 있는 특성",
+      "aggregationName": "집합",
+      "description": "인구조사 특성과 대략적인 데이터의 상관관계를 학습하고 활용하여 세분화된 지역의 특성을 예측합니다."
+    },
+    "regionMapping": {
+      "moreThanOneValueText": "하나 이상의 값",
+      "csvSpecification": "CSV-geo-au 사양",
+      "notRecognisedText": "인식되지 않음",
+      "invalidServerTypeTitle": "RegionMapping.json의 잘못된 serverType {{serverType}}",
+      "moreThanOneValue": "이 지역에는 {{moreThanOneValueText}}가 있었습니다",
+      "notRecognised": "이 지역 이름은 {{notRecognisedText}}였습니다 ",
+      "invalidServerTypeMessage": "serverType이 \"WMS\" 또는 \"벡터\"여야 하는데 \"{{serverType}}\"이(가) 있습니다",
+      "msg": "파일 형식을 지정하는 방법을 보려면 {{link}}를 참조하세요.",
+      "outdatedBrowserTitle": "오래된 웹 브라우저",
+      "noDataForDate": "선택한 날짜에 대한 데이터가 없습니다.",
+      "outdatedBrowserMessage": "귀하는 이와 같은 \"지역 매핑\" 데이터 세트를 표시할 수 없는 매우 오래된 웹 브라우저를 사용하고 있습니다. 가능한 한 빨리 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) 또는 $t(browsers.safari)의 최신 버전으로 업그레이드하세요.",
+      "noDataForRegion": "선택한 지역에 대한 데이터가 없습니다.",
+      "issuesLoadingTitle": "{{name}} 로드 중 문제 발생"
+    },
+    "thredds": {
+      "nameGroup": "THREDDS 카탈로그 그룹"
+    },
+    "sensorObservationService": {
+      "exceptionMessage": "서버에서 오류를 보고했습니다.\n\n{{exceptionText}}",
+      "sos": "센서관찰서비스",
+      "noFeatures": "귀하의 검색어와 일치하는 기능이 없습니다.",
+      "procedure": "절차",
+      "unknownError": "서버에서 알 수 없는 오류를 보고했습니다.",
+      "property": "재산",
+      "alreadyLoadingTitle": "데이터가 이미 로드 중입니다",
+      "alreadyLoadingMessage": "데이터가 아직 로드 중입니다. 로드된 후에는 디스플레이를 변경할 수 있습니다",
+      "missingBody": "서버가 본문이 누락된 것으로 응답했습니다.",
+      "noMatchingFeatures": "센서 관찰 서비스가 귀하의 쿼리와 일치하는 기능을 반환하지 않았습니다.",
+      "unknownFormat": "서버가 알 수 없는 기능 형식으로 응답했습니다."
+    },
+    "gltf": {
+      "unableToRetrieve": "다음에서 기능 세부정보를 검색할 수 없습니다.\n\n{{url}}",
+      "error": "오류",
+      "name": "GL 전송 형식(glTF)",
+      "notSupportedErrorTitle": "2D에서는 지원되지 않습니다",
+      "notSupportedErrorMessage": "\"{{name}}\"은(는) 2D 보기에 표시될 수 없습니다. 3D로 전환하고 다시 시도해 보세요.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
       "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다."
+    },
+    "kml": {
+      "name": "KML 또는 KMZ",
+      "errorLoadingTitle": "KML 또는 KMZ를 로드하는 중에 오류가 발생했습니다",
+      "unexpectedTypeTitle": "예상치 못한 유형의 KML 데이터",
+      "unableToLoadItemMessage": "KML/KMZ 카탈로그 항목이 `url`, `kmlData` 또는 `kmlString` 속성으로 구성되지 않았기 때문에 로드할 수 없습니다.",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "unableToLoadItemTitle": "사용 가능한 KML이 없습니다",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "errorLoadingMessage": "KML 또는 KMZ 파일을 로드하는 동안 오류가 발생했습니다. 이는 파일이 잘못되었거나 {{appName}}에서 지원되지 않음을 나타낼 수 있습니다.",
+      "unexpectedTypeMessage": "KmlCatalogItem.data는 XML 문서, Blob 또는 파일이어야 하지만 이들 중 어느 것도 아닙니다. 이는 {{appName}}의 버그 또는 {{appName}} API의 잘못된 사용을 나타낼 수 있습니다."
+    },
+    "webMapServiceCatalogItem": {
+      "noLayerFoundMessage": "WMS 데이터세트 '{{name}}'에는 '{{layers}}'과(와) 일치하는 레이어가 없습니다. 카탈로그 파일이 잘못 설정되었거나 WMS 서버가 변경되었습니다.",
+      "metadataUrls": "메타데이터 링크",
+      "missingDataMessage": "WMS 데이터세트 '{{name}}'이(가) 데이터를 반환하지 않았습니다.{{line}}{{line}}카탈로그 파일이 잘못 설정되었거나 서버 주소가 변경되었습니다.",
+      "badlyFormatedMessage": "'{{name}}' 데이터세트에 잘못된 형식의 주기성 '{{isoSegments}}'이(가) 있습니다. 데이터세트와 데이터 관리자에 대한 자세한 내용을 보려면 데이터세트의 정보 버튼을 클릭하세요.",
+      "dataDescription": "데이터 설명",
+      "wms": "웹 맵 서비스(WMS)",
+      "noLayerFoundTitle": "레이어를 찾을 수 없습니다",
+      "badlyFormatedTitle": "형식이 잘못된 주기성",
+      "serviceDescription": "서비스 설명",
+      "getCapabilitiesUrl": "GetCapability URL",
+      "missingDataTitle": "누락된 데이터",
+      "serviceContact": "서비스 연락처",
+      "defaultStyleLabel": "기본 스타일",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 웹 맵 서비스(WMS) GetCapabilities 문서를 로드할 수 없습니다.",
+      "missingUrlTitle": "GetCapability를 로드할 수 없습니다",
+      "accessConstraints": "접근 제약"
+    },
+    "shadow": {
+      "options": {
+        "cast": "캐스트 전용",
+        "none": "없음",
+        "both": "전송 및 수신",
+        "receive": "수신만 가능"
+      },
+      "name": "그림자"
+    },
+    "webMapServiceCatalogGroup": {
+      "accessConstraints": "웹맵 서비스 접근 제약",
+      "invalidWMSServerMessage": "WMS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 GetCapability 문서가 아닌 것 같습니다.",
+      "abstract": "웹맵 서비스 설명",
+      "missingUrlTitle": "GetCapability를 로드할 수 없습니다",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 웹 맵 서비스(WMS) GetCapabilities 문서를 로드할 수 없습니다.",
+      "wmsServer": "웹 맵 서비스(WMS) 서버",
+      "invalidWMSServerTitle": "잘못된 WMS 서버",
+      "fees": "웹 지도 서비스 수수료",
+      "groupNotAvailableMessage": "WMS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다.",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다"
+    },
+    "time": {
+      "invalidInitialTimeSource": "구성 파일에 잘못된initialTimeSource가 지정되었습니다: {{initialTimeSource}}",
+      "invalidDate": "잘못된 날짜"
+    },
+    "terria": {
+      "loadConfigErrorTitle": "Terria 지도 구성을 로드하지 못했습니다",
+      "initErrorMessage": "Terria 서버에 문제가 발생했습니다. 이로 인해 일부 레이어나 변환 서비스를 사용하지 못할 수 있습니다.",
+      "loadingInitSourcesErrorTitle": "지도 구성을 로드하는 중에 오류가 발생했습니다",
+      "loadingMagdaInitSourceErrorMessage": "Magda 레코드 `{{url}}`에서 초기화 정보를 로드하는 동안 오류가 발생했습니다.",
+      "loadModelErrorMessage": "`{{model}}` 모델을 로드하는 중에 오류가 발생했습니다.",
+      "loadingInitSourceErrorTitle": "초기화 소스를 로드하는 중 오류가 발생했습니다",
+      "loadingInitSourceError2Message": "다음에서 초기화 정보를 로드하는 동안 오류가 발생했습니다.\n*`{{loadSource}}`*.",
+      "loadingWorkbenchItemErrorTitle": "워크벤치에서 항목을 로드하는 중 오류 발생: `{{name}}`",
+      "loadingInitJsonMessage": "JSON 파일 {{url}}을(를) 로드하는 동안 오류가 발생했습니다.",
+      "loadingBaseMapsErrorTitle": "베이스맵을 로드하는 중에 오류가 발생했습니다",
+      "loadingInitSourcesErrorMessage": "{{appName}} 지도 구성을 로드하는 중 오류가 발생했습니다 &mdash; 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드해 보시고 문제가 지속되면 {{email}}로 이메일을 보내 신고해 주시거나 아래 버튼을 누르실 수 있습니다.",
+      "loadingBaseMapErrorTitle": "베이스맵 로드 중 오류 발생: `{{name}}`",
+      "urlLoadErrorTitle": "URL 로드 중 문제 발생",
+      "parsingStartDataErrorMessage": "시작 데이터 JSON을 구문 분석하는 중에 오류가 발생했습니다.",
+      "disclaimer": "부인 성명",
+      "urlLoadErrorMessage": "URL 매개변수로 Terria를 초기화하는 동안 문제가 발생했습니다.",
+      "loadingInitSourceErrorMessage": "initFragmentPaths가 정의되지 않았기 때문에 `{{fragment}}`에서 초기화 정보를 로드할 수 없습니다.",
+      "loadingMagdaInitSourceErrorTitle": "Magda 초기화 소스를 로드하는 중 오류가 발생했습니다",
+      "loadingShareDataErrorTitle": "공유 데이터를 로드하는 중에 오류가 발생했습니다",
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl`은 v8에서 더 이상 지원되지 않습니다",
+      "buttonTitleConfirm": "동의합니다",
+      "initErrorTitle": "서비스를 초기화하지 못했습니다"
+    },
+    "arcgisPortal": {
+      "errorRetrievingUrlMessage": "URL을 JSON으로 검색할 수 없습니다: {{url}}.",
+      "errorRetrievingUrlTitle": "ArcGIS Portal URL을 검색하는 중에 오류가 발생했습니다",
+      "datasetDescription": "데이터 세트 설명",
+      "idsNotSpecifiedMessage": "ArcGIS Portal 항목에는 itemId를 지정해야 합니다.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "nameGroup": "ArcGIS 포털 그룹",
+      "corsErrorMessage": "이 ArcGIS Portal 서버에서 패키지를 검색할 수 없습니다. ",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "idsNotSpecifiedTitle": "리소스 ID 또는 데이터 세트 ID를 지정해야 합니다",
+      "name": "ArcGIS Portal 아이템",
+      "licence": "라이선스",
+      "openInPortal": "ArcGIS Portal에서 열기",
+      "errorLoadingMessage": "이 ArcGIS Portal 카탈로그에 대한 정의에 유효한 필터 쿼리가 없습니다.",
+      "errorLoadingTitle": "ArcGIS Portal 카탈로그를 로드하는 중에 오류가 발생했습니다."
+    },
+    "webFeatureServiceCatalogItem": {
+      "missingUrlTitle": "GetCapability를 로드할 수 없습니다",
+      "getCapabilitiesUrl": "GetCapability URL",
+      "metadataUrls": "메타데이터 링크",
+      "accessConstraints": "접근 제약",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 WFS(웹 기능 서비스) GetCapabilities 문서를 로드할 수 없습니다.",
+      "missingDataMessage": "WFS 데이터 세트 '{{name}}'이(가) 데이터를 반환하지 않았습니다. 카탈로그 파일이 잘못 설정되었거나 서버 주소가 변경되었습니다.",
+      "noLayerFoundMessage": "WFS 데이터세트 '{{name}}'에는 '{{typeNames}}'과(와) 일치하는 레이어가 없습니다. 카탈로그 파일이 잘못 설정되었거나 WFS 서버가 변경되었습니다.",
+      "abstract": "웹 기능 서비스 설명",
+      "serviceDescription": "서비스 설명",
+      "serviceContact": "서비스 연락처",
+      "missingDataTitle": "누락된 데이터",
+      "wfs": "웹 기능 서비스(WFS)",
+      "noLayerFoundTitle": "레이어를 찾을 수 없습니다",
+      "dataDescription": "데이터 설명",
+      "reachedMaxFeatureLimit": "경고: 이 레이어는 WFS 기능 제한({{maxFeatures}})에 도달했습니다"
+    },
+    "socrataServer": {
+      "licence": "라이선스",
+      "tags": "태그",
+      "attributes": "속성",
+      "description": "설명",
+      "retrieveErrorMessage": "이 Socrata 서버에서 패키지를 검색할 수 없습니다.",
+      "name": "소크라타 서버"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "invalidCapabilitiesTitle": "잘못된 GetCapability",
+      "typeName": "웹 처리 서비스(WPS) 서버",
+      "providerSite": "웹 처리 서비스 제공업체 사이트",
+      "accessConstraints": "웹 처리 서비스 액세스 제약",
+      "fees": "웹 처리 서비스 수수료",
+      "invalidServerMessage": "WPS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 GetCapability 문서가 아닌 것 같습니다.",
+      "abstract": "웹 처리 서비스 설명",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 WPS(웹 처리 서비스) GetCapabilities 문서를 로드할 수 없습니다.",
+      "invalidServerTitle": "잘못된 WPS 서버",
+      "missingUrlTitle": "GetCapability를 로드할 수 없습니다",
+      "providerName": "웹 처리 서비스 제공업체 이름",
+      "invalidCapabilitiesMessage": "URL {{url}}을(를) 성공적으로 검색했지만 유효한 WPS(웹 처리 서비스) GetCapabilities 문서가 아닌 것 같습니다.\n\n카탈로그 파일이 잘못 설정되었거나 서버 주소가 변경되었습니다."
+    },
+    "geoJson": {
+      "errorLoadingTitle": "GeoJSON을 로드하는 중 오류가 발생했습니다",
+      "unsupportedBrowserMessage": "죄송합니다. 귀하의 웹 브라우저는 {{appName}}이 이 데이터 세트를 로드하는 데 필요한 File API를 지원하지 않습니다. 웹 브라우저를 업그레이드하세요. 최상의 경험을 위해 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) 또는 $t(browsers.safari)의 최신 버전을 권장합니다.",
+      "couldNotLoadMessage": "제공된 링크에서 JSON 데이터를 검색하는 동안 CORS 오류가 발생했습니다",
+      "unableToLoadItemTitle": "GeoJSON을 사용할 수 없습니다",
+      "unableToLoadItemMessage": "GeoJSON 카탈로그 항목이 'url', 'geoJsonData' 또는 'geoJsonString' 속성으로 구성되지 않았기 때문에 로드할 수 없습니다.",
+      "couldNotLoadTitle": "JSON을 로드할 수 없습니다",
+      "unsupportedBrowserTitle": "지원되지 않는 웹 브라우저",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "errorLoadingMessage": "GeoJSON 파일을 로드하는 중에 오류가 발생했습니다. 이는 파일이 유효하지 않거나 지원되지 않음을 나타낼 수 있습니다.",
+      "name": "GeoJSON",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "errorParsingMessage": "제공된 데이터를 JSON으로 구문 분석하는 중에 오류가 발생했습니다. 이는 파일이 유효하지 않거나 지원되지 않음을 나타낼 수 있습니다."
+    },
+    "shareData": {
+      "expandErrorTitle": "URL을 확장할 수 없습니다",
+      "generateErrorTitle": "단축 URL을 생성할 수 없습니다.",
+      "expandErrorMessage": "{{appName}}을(를) 실행하는 데 사용된 공유 데이터 서비스를 찾을 수 없습니다. 이는 링크에 오류가 있거나 현재 서비스를 사용할 수 없음을 나타낼 수 있습니다.",
+      "generateErrorMessage": "공유 데이터 서비스를 사용하여 단축 URL을 생성하는 중에 문제가 발생했습니다."
+    },
+    "placesLikeMe": {
+      "regionName": "지역",
+      "placesLike": "{{regionName}}과 같은 장소",
+      "regionTypeName": "지역 유형",
+      "regionDescription": "분석할 지역입니다. 분석을 통해 어느 지역이 이 지역과 가장 유사한지 결정할 것입니다.",
+      "regioNotSelectedName": "지역이 선택되지 않았습니다",
+      "likenessesError": "유사성 목록과 지역 코드 목록에는 동일한 수의 요소가 포함되어 있지 않습니다.",
+      "regionTypeDescription": "분석할 지역의 유형입니다.",
+      "name": "나와 같은 장소",
+      "characteristics": "형질",
+      "regioNotSelectedDescription": "지역을 선택해야 합니다.",
+      "regionsLikeThisDescription": "주어진 특성 세트에 따라 주어진 지역과 _가장 유사한_ 지역을 식별합니다.",
+      "characteristicsDescription": "분석에 포함할 지역 특성입니다.",
+      "regionsLikeThisName": "이와 같은 지역"
+    },
+    "csv": {
+      "name": "쉼표로 구분된 값(CSV)",
+      "unableToLoadMessage": "지원되는 CSV 형식은 <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> 사양을 참조하세요.\n\n{{message}}",
+      "unableToLoadItemTitle": "사용 가능한 CSV가 없습니다",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "unableToLoadTitle": "CSV 파일을 로드할 수 없습니다",
+      "unexpectedTypeMessage": "CsvCatalogItem 데이터는 Blob, 파일 또는 문자열일 것으로 예상되지만 이러한 유형은 아닙니다.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "unexpectedTypeTitle": "예기치 않은 유형의 CSV 데이터",
+      "unableToLoadItemMessage": "'url' 또는 'csvString' 속성으로 구성되지 않았기 때문에 CSV 카탈로그 항목을 로드할 수 없습니다."
+    },
+    "wfsFeatures": {
+      "featuresGroup": "WFS(Web Feature Service) 서버의 기능 그룹",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "queryErrorMessage": "WFS 서버에서 GetFeature를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 GeoJSON 문서가 아닌 것 같습니다.",
+      "queryErrorTitle": "WFS 서버를 쿼리하는 중 오류가 발생했습니다",
+      "groupNotAvailableMessage": "WFS 서버에서 GetFeature를 호출하는 동안 오류가 발생했습니다."
+    },
+    "webProcessingService": {
+      "processDescriptionErrorTitle": "프로세스에 설명이 없습니다",
+      "processDescriptionErrorMessage": "이 프로세스에 대한 WPS 설명 프로세스에는 프로세스 설명이 포함되어 있지 않습니다.",
+      "regionParameterName": "지역 매개변수",
+      "processInputErrorTitle": "프로세스에 입력이 없습니다",
+      "resultPendingDescription": "이는 아래 입력 매개변수를 사용하여 {{timestamp}}에서 {{name}} 프로세스 또는 서비스를 호출한 결과입니다.",
+      "failureReasonUnknowError": "실패 이유는 알려져 있지 않습니다.",
+      "invalidResponseErrorTitle": "잘못된 WPS 서버 응답",
+      "processInputErrorMessage": "이 WPS 프로세스는 입력을 지정하지 않습니다.",
+      "unsupportedParameterErrorTitle": "지원되지 않는 매개변수 유형",
+      "wps": "웹 처리 서비스(WPS)",
+      "regionTypeDescription": "분석할 지역의 유형입니다.",
+      "unsupportedParameterErrorMessage": "{{identifier}} 매개변수는 지원되는 매개변수 유형이 아닙니다.",
+      "invalidWPSServerTitle": "잘못된 WPS 서버",
+      "invalidResponseErrorMessage": "프로세스 이름 {{name}}에 대한 WPS 서버의 상태 위치에 액세스하는 동안 오류가 발생했습니다.",
+      "invalidWPSServerMessage": "프로세스 이름 {{name}}에 대해 WPS 서버에서 {{endpoint}}을(를) 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 {{endpoint}} 문서가 아닌 것 같습니다.",
+      "invalidResponseError2Message": "WPS 서버의 응답에는 상태 요소가 포함되지 않습니다.",
+      "errorDetails": "오류 정보",
+      "invalidResponseError2Title": "WPS 서버의 잘못된 응답",
+      "asyncShortReportFailed": "웹 처리 서비스 호출에 실패했습니다. 자세한 내용은 정보 패널에서 확인할 수 있습니다.",
+      "wpsResult": "웹 처리 서비스 결과",
+      "regionTypeName": "지역 유형",
+      "wpsServer": "웹 처리 서비스(WPS) 서버"
+    },
+    "terriaJSONcatalog": {
+      "requestFailedTitle": "요청 실패",
+      "misconfiguredError2Message": "HTTP 202 구성 {{url}}이(가) 응답 {{xhr}}에 존재하지 않습니다",
+      "disclaimer": "부인 성명",
+      "loadingInitSourceErrorMessage": "initFragmentPaths가 정의되지 않았기 때문에 초기화 소스 {{fragment}}을(를) 로드하는 중에 오류가 발생했습니다.",
+      "serviceResponseErrorMessage": "TerriaJsonCatalogFunction은 JSON 문자열을 수신해야 했지만 {{xhr}}을(를) 수신했습니다",
+      "buttonTitleConfirm": "동의합니다",
+      "requestFailedMessage": "상태 코드 {{status}}로 인해 요청이 실패했습니다.",
+      "loadingInitSourceErrorTitle": "초기화 소스를 로드하는 중 오류가 발생했습니다",
+      "misconfiguredErrorTitle": "잘못 구성된 초기화 파일",
+      "misconfiguredErrorMessage": "TerriaJsonCatalogFunction HTTP 202에 대해 서비스가 구성되지 않았습니다.",
+      "asyncResultDescription": "이는 아래 입력 매개변수를 사용하여 {{timestamp}}에서 {{name}} 프로세스 또는 서비스를 호출한 결과입니다.",
+      "name": "Terria JSON 카탈로그 기능",
+      "serviceResponseErrorTitle": "JSON 문자열이 아닌 서비스 응답",
+      "loadingInitSourceError2Message": "다음에서 초기화 정보를 로드하는 동안 오류가 발생했습니다.\n*`{{loadSource}}`*."
+    },
+    "webFeatureServiceCatalogGroup": {
+      "groupNotAvailableMessage": "WFS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다.",
+      "invalidWFSServerTitle": "잘못된 WFS 서버",
+      "accessConstraints": "웹 기능 서비스 액세스 제약",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "invalidWFSServerMessage": "WFS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 GetCapability 문서가 아닌 것 같습니다.",
+      "abstract": "웹 기능 서비스 설명",
+      "wfsServer": "WFS(웹 기능 서비스) 서버",
+      "fees": "웹 기능 서비스 수수료"
+    },
+    "userDrawing": {
+      "otherEntities": "선과 다각형",
+      "devError": "Terria 인스턴스가 필요합니다.",
+      "clickToAddFirstPoint": "지점을 추가하려면 클릭하세요",
+      "btnDone": "끝내기",
+      "clickToAddAnotherPoint": "다른 포인트를 추가하려면 클릭하세요",
+      "messageHeader": "지도에 그리기",
+      "clickToRedrawRectangle": "직사각형을 다시 그리려면 다른 점을 클릭하세요",
+      "line": "선",
+      "btnCancel": "취소",
+      "firstPoint": "첫번째 지점",
+      "anotherPoint": "또 다른 포인트",
+      "userPolygon": "사용자 다각형",
+      "pointEntities": "지점들"
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedMessage": "{{invocationName}}을(를) 계산하는 동안 서버에서 오류가 발생했습니다.",
+      "invocationFailedTitle": "서비스 호출 실패"
+    },
+    "georss": {
+      "unableToLoadItemMessage": "GeoRSS 카탈로그 항목이 'url' 또는 'geoRss' 속성으로 구성되지 않았기 때문에 로드할 수 없습니다.",
+      "errorLoadingMessage": "GeoRSS 파일을 로드하는 동안 오류가 발생했습니다.",
+      "copyrightText": "저작권 텍스트",
+      "description": "설명",
+      "name": "GeoRSS",
+      "author": "저자",
+      "link": "링크",
+      "category": "카테고리",
+      "unableToLoadItemTitle": "GeoRSS를 사용할 수 없습니다",
+      "updated": "업데이트 일시",
+      "errorLoadingTitle": "GeoRSS를 로드할 수 없습니다",
+      "subtitle": "부제"
+    },
+    "tableData": {
+      "custom": "커스텀",
+      "unsupportedCharactersTitle": "위도 및 경도 열에 잘못된 문자가 있습니다",
+      "regionMapping": "지역 매핑",
+      "timeDimensionEnabled": "활성화된 시간(비활성화하려면 클릭)",
+      "legendZFilterLabel": "극단값",
+      "zFilterEnabled": "숨겨진 극단값(표시하려면 클릭)",
+      "bulkGeocoderErrorMessage": "주소 좌표를 검색하는 동안 오류가 발생하여 주소를 위도 경도 좌표에 매핑할 수 없습니다. 인터넷 연결을 확인하거나 나중에 다시 시도해 주세요.",
+      "editStyle": "스타일 편집",
+      "zFilterDisabled": "극한값이 감지되었습니다(숨기려면 클릭하세요).",
+      "regionColumn": "지역 열",
+      "timeDimensionDisabled": "시간 비활성화됨(활성화하려면 클릭)",
+      "manualRegionMapping": "수동 지역 매핑",
+      "unsupportedCharactersMessage": "위도 및 경도 쌍 {{longitude}}, {{latitude}}를 해석할 수 없습니다",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}} 주소가 CSV에서 누락되었습니다.",
+      "bulkGeocoderInfoMessage": "CSV에 주소가 포함되어 있지만 지도에서 {{number}}을(를) 찾을 수 없습니다. ",
+      "noData": "표시할 데이터가 없습니다",
+      "bulkGeocoderErrorTitle": "대량 지오코더 오류",
+      "styleDisabledLabel": "스타일 비활성화",
+      "activeStyle": "표시 변수",
+      "bulkGeocoderInfoTitle": "대량 지오코더 정보",
+      "legendNullLabel": "(값 없음)"
+    },
+    "magda": {
+      "retrieveErrorTitle": "MAGDA 레코드를 검색하는 중에 오류가 발생했습니다.",
+      "notCompatibleMessageI": "MAGDA 데이터세트에 ID가 {{distributionId}}인 분포가 없거나 지원되는 형식이 없습니다.",
+      "notCompatibleMessageII": "MAGDA 데이터 세트에는 지원되는 형식의 배포판이 없습니다.",
+      "name": "MAGDA 배포",
+      "idsNotSpecifiedMessage": "MagdaReference에서는 RecordId를 지정해야 합니다.",
+      "distributionDesc": "분포 설명",
+      "retrieveErrorMessage": "배포 또는 데이터 세트 ID가 제공되지 않았습니다.",
+      "notCompatibleTitle": "배포 또는 데이터 세트 ID가 제공되지 않았습니다",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "idsNotSpecifiedTitle": "레코드 ID를 지정해야 합니다"
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "region": "지역",
+        "title": "보기 기준",
+        "time": "시계열"
+      },
+      "noResultsWithDimensions": "검색된 결과가 없습니다. 워크벤치에서 다음과 다른 차원 값을 선택하십시오.\n\n{{dimensions}}",
+      "loadDataErrorTitle": "{{name}}의 SDMX 데이터를 로드하지 못했습니다",
+      "loadDataErrorMessage": "{{csvUrl}}의 잘못된 응답"
+    },
+    "webMapTileServiceCatalogItem": {
+      "serviceContact": "서비스 연락처",
+      "accessConstraints": "접근 제약",
+      "missingUrlMessage": "카탈로그 항목에 `url`이 없기 때문에 WMTS(웹 맵 타일 서비스) GetCapabilities 문서를 로드할 수 없습니다.",
+      "serviceDescription": "서비스 설명",
+      "dataDescription": "데이터 설명",
+      "missingUrlTitle": "GetCapability를 로드할 수 없습니다",
+      "getCapabilitiesUrl": "GetCapability URL",
+      "noUsableTileMatrixMessage": "이 WMTS 레이어에는 Web Mercator 타일 매트릭스 세트가 없습니다. 올바르게 표시되지 않을 수 있습니다",
+      "fees": "웹맵 타일 서비스 요금",
+      "wmts": "웹 맵 타일 서비스(WMTS)",
+      "noUsableTileMatrixTitle": "경고"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorMessage": {
+        "noDatastructure": "데이터 흐름 {{catalogItem.dataflowId}}에 대한 데이터 구조를 찾을 수 없습니다",
+        "noDataflow": "Dataflow {{catalogItem.dataflowId}}가 잘못되었습니다",
+        "invalidResponse": "잘못된 JSON 객체"
+      },
+      "defaultUnitMeasure": "단위",
+      "loadDataErrorTitle": "SDMX 데이터 흐름을 로드할 수 없습니다"
+    },
+    "czml": {
+      "errorLoadingMessage": "CZML 파일을 로드하는 동안 오류가 발생했습니다.",
+      "errorLoadingTitle": "CZML을 로드할 수 없습니다",
+      "name": "세슘 언어(CZML)",
+      "unableToLoadItemMessage": "CZML 카탈로그 항목이 `url`, `czmlData` 또는 `czmlString` 속성으로 구성되지 않았기 때문에 로드할 수 없습니다.",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다.",
+      "unableToLoadItemTitle": "CZML을 사용할 수 없습니다"
+    },
+    "imageryLayer": {
+      "accessingCatalogItemErrorTitle": "카탈로그 항목에 액세스하는 중 오류가 발생했습니다",
+      "intervalSupportErrorTitle": "지원되지 않는 간격",
+      "accessingBaseMapErrorTitle": "기본 지도에 액세스하는 중 오류가 발생했습니다",
+      "tileErrorMessage": "URL이 포함된 타일:\n{{url}}\n XMLHttpRequest로 로드할 때는 성공했지만 Cesium이나 Leaflet으로 직접 로드할 때는 여러 번 실패했습니다.\n 이는 서버가 제공된 요청 헤더에 매우 민감하거나 단순히 신뢰할 수 없음을 나타낼 수 있습니다.",
+      "tileErrorTitle": "타일 오류",
+      "resolvingAvailability": "특정 위치의 가용성 확인 중...",
+      "unknownTileErrorMessage": "URL에 액세스하는 동안:\n{{url}}\n이는 아마도 다음 중 하나를 나타냅니다.\n* 서버 호스트 이름을 확인할 수 없습니다.\n* 서버가 요청에 응답하지 않았거나\n* 서버가 이 URL에 대한 CORS(Cross-Origin Resource Sharing) 액세스를 거부했습니다(https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/ 참조).",
+      "unableToShowLocMessage": "사용 가능한 캡처 시간을 알 수 없기 때문에 {{name}}을(를) 이 위치에 표시할 수 없습니다. {{featureTimesProperty}} 속성을 찾을 수 없습니다.",
+      "unableToShowLocTitle": "이 위치에서는 표시할 수 없습니다",
+      "unknownTileErrorTitle": "알 수 없는 타일 오류",
+      "unableToDisplayTitle": "데이터세트를 표시할 수 없습니다",
+      "tileErrorMessageII": "URL에서 200(OK) 응답을 받았습니다:\n{{url}}\n하지만 이미지로 로드할 수 없습니다.",
+      "accessingBaseMapErrorMessage": "기본 지도용 타일을 다운로드하는 동안 오류가 발생했습니다:<p><center>{{name}} </center></p> 오른쪽 상단에 있는 지도 버튼을 사용하여 다른 기본 지도를 선택하세요.",
+      "intervalSupportErrorMessage": "죄송합니다. 현재는 \"간격\" 속성을 지정하여 {{typeName}}({{type}}) 카탈로그 항목을 시변으로 만들 수 없습니다.",
+      "unableToDisplayMessage": "{{name}}은(는) 표준 Web Mercator(EPSG:3857) 투영을 지원하지 않으므로 2D로 표시할 수 없습니다. 시스템에서 지원되는 경우 3D로 전환하거나, 투영을 지원하도록 데이터세트를 업데이트하거나, 다른 데이터세트를 사용하세요.",
+      "accessingCatalogItemErrorMessage": "카탈로그 항목에 대한 타일을 다운로드하는 동안 오류가 발생했습니다:<p><center>{{name}}</center></p> 카탈로그 항목이 지도에서 숨겨졌습니다. 지금 보기 패널에 다시 표시하여 다시 시도할 수 있습니다."
+    },
+    "feedback": {
+      "unableToSendTitle": "의견을 보낼 수 없습니다",
+      "unableToSendMessage": "정말 당황스럽습니다. 피드백을 보내는 중에 오류가 발생했습니다. 대신 {{email}}로 이메일을 보내주세요.",
+      "thanksTitle": "의견을 보내 주셔서 감사합니다!",
+      "thanksMessage": "귀하의 의견은 {{appName}}을(를) 개선하는 데 도움이 됩니다"
+    },
+    "openStreetMap": {
+      "name": "오픈 스트리트 맵"
+    },
+    "raiseError": {
+      "notificationFeedbackEmail": "질문이나 의견이 있으면 {{email}}에 문의하세요",
+      "errorTitle": "에러 발생됨",
+      "developerDetails": "개발자 세부정보",
+      "notificationFeedback": "질문이나 의견이 있으면 여기를 클릭하세요."
+    },
+    "shapefile": {
+      "name": "셰이프파일"
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "SDMX 구조 요청이 실패했습니다",
+      "loadDataErrorTitle": "SDMX 그룹을 로드하지 못했습니다",
+      "loadDataErrorMessage": "서버에 데이터 흐름이 없습니다"
+    },
+    "gpx": {
+      "errorLoadingTitle": "GPX를 로드하는 중 오류가 발생했습니다",
+      "errorLoadingMessage": "GPX 파일을 로드하는 동안 오류가 발생했습니다. 이는 파일이 잘못되었거나 {{appName}}에서 지원되지 않음을 나타낼 수 있습니다.",
+      "name": "GPX",
+      "dataSourceErrorMessage": "이 데이터 소스에는 사용 가능한 세부정보가 없습니다.",
+      "serviceErrorMessage": "이 서비스에는 사용 가능한 세부정보가 없습니다."
+    },
+    "clippingBox": {
+      "showClippingBox": "클리핑 상자 표시",
+      "clipDirection": {
+        "name": "클립 방향",
+        "options": {
+          "outside": "상자 외부 클립",
+          "inside": "상자 안쪽에 클립"
+        }
+      },
+      "groupName": "클리핑 상자",
+      "clipModel": "클립 모델",
+      "keepBoxAboveGround": "지상에서만"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "데이터세트 페이지 보기"
+    },
+    "senaps": {
+      "missingKeyErrorMessage": "Senaps API 키는appendParamToQueryString 옵션을 사용하여 terriajs-server 구성에 추가되어야 합니다",
+      "locationHeadingFeatureInfo": "위치",
+      "missingSenapsBaseUrl": "Senaps 기본 URL이 제공되지 않았습니다. 로그인하셨나요?",
+      "generalErrorMessage": "Senaps 데이터를 처리하는 중 오류가 발생했습니다",
+      "availableStreamsHeadingFeatureInfo": "사용 가능한 스트림",
+      "retrieveErrorTitle": "겨자 카탈로그 항목을 처리하는 중 오류가 발생했습니다",
+      "noStreamsMessageFeatureInfo": "이 위치에는 스트림이 없습니다.",
+      "name": "겨자 위치"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox 스타일"
+    },
+    "function": {
+      "unknownFormaterTitle": "알 수 없는 포맷터",
+      "unknownFormaterMessage": "함수 매개변수 포맷터 {{formatter}}을(를) 알 수 없습니다.\n\n유효한 포맷터는 다음과 같습니다.\n\n"
+    },
+    "getToken": {
+      "invalidToken": "<p>토큰 서버가 잘못된 토큰으로 응답했습니다.</p><p>이메일을 {{email}}(으)로 보내 신고해 주세요.</p>",
+      "unableToRequest": "<p>토큰 서버에서 토큰을 요청할 수 없습니다.</p><p>{{email}}(으)로 이메일을 보내 신고해 주세요.</p>",
+      "errorTitle": "토큰 오류"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "invalidWMTSServerTitle": "잘못된 WMTS 서버",
+      "groupNotAvailableMessage": "WMTS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다.",
+      "accessConstraints": "웹맵 서비스 접근 제약",
+      "invalidWMTSServerMessage": "WMTS 서버에서 GetCapability를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 GetCapability 문서가 아닌 것 같습니다.",
+      "wmtsServer": "WMTS(웹 맵 타일 서비스) 서버",
+      "invalidCapabilitiesMessage": "URL {{url}}을(를) 성공적으로 검색했지만 유효한 WMTS(웹 맵 타일 서비스) GetCapabilities 문서가 아닌 것 같습니다.\n\n카탈로그 파일이 잘못 설정되었거나 서버 주소가 변경되었습니다.",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "invalidCapabilitiesTitle": "잘못된 GetCapability",
+      "abstract": "웹맵 서비스 설명",
+      "fees": "웹 지도 서비스 수수료"
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "이 규모에서는 데이터세트를 사용할 수 없습니다. 확대하여 확인하세요",
+      "scaleZoomOut": "이 규모에서는 데이터세트를 사용할 수 없습니다. 축소하여 확인하세요"
+    },
+    "mapboxMap": {
+      "name": "맵박스 지도"
+    },
+    "mapboxVectorTile": {
+      "name": "Mapbox 벡터 타일"
+    },
+    "resultPending": {
+      "name": "결과 보류 중"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "2D에서는 지원되지 않습니다",
+      "notSupportedErrorMessage": "{{name}}은(는) 2D 보기에 표시될 수 없습니다. 3D로 전환하고 다시 시도해 보세요"
+    },
+    "threddsItem": {
+      "name": "THREDDS 항목 참조"
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "외부 카탈로그에서 구성원을 로드하지 못했습니다"
+    },
+    "ionImagery": {
+      "name": "세슘 이온 이미지"
+    },
+    "createParameter": {
+      "unsupportedErrorMessage": "알 수 없는 함수 매개변수 유형: {{type}}.",
+      "unsupportedErrorTitle": "지원되지 않는 함수 매개변수 유형"
+    },
+    "urlTemplateMapServer": {
+      "name": "URL 템플릿 맵 서버"
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "**참고:** 이 데이터세트는 2D 뷰어에 표시할 수 없습니다. 3D 지도 모드 중 하나로 전환합니다."
     }
+  },
+  "compare": {
+    "dimensionSelector": {
+      "undefinedLabel": "명시되지 않은"
+    },
+    "entireMap": {
+      "title": "전체 지도",
+      "emptyText": "위의 점선 메뉴를 통해 전체 지도에 표시할 새 데이터를 추가하세요."
+    },
+    "dateButton": {
+      "left": "왼쪽",
+      "right": "오른쪽",
+      "select": "날짜를 선택하세요"
+    },
+    "title": "분할 비교",
+    "dateLocationFilter": {
+      "filter": "위치별로 날짜 필터링",
+      "loading": "필터 로드 중...",
+      "mouseTooltipTitle": "위치 선택",
+      "cancel": "취소",
+      "location": "이제 {{latitude}}, {{longitude}}에 대해 사용 가능한 이미지가 표시됩니다",
+      "mouseTooltipMessage": "취소하려면 마우스 오른쪽 버튼을 클릭하세요"
+    },
+    "entireMapMenu": {
+      "sendAllToFront": "모두 앞으로 보내기",
+      "hideAll": "모두 숨기기",
+      "browse": "지도 데이터 찾아보기",
+      "sendAllToBack": "모두 뒤로 보내기"
+    },
+    "dataset": {
+      "selectOne": "하나를 고르세요",
+      "label": "데이터세트"
+    },
+    "done": "완료",
+    "rightPanel": "오른쪽 패널",
+    "info": "워크벤치의 공간 데이터세트를 지도에서 나란히 비교해 보세요.",
+    "leftPanel": "왼쪽 패널"
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "누락된 속성",
+      "idForMatchingErrorMessage": "모델 객체에는 'id', 'localId' 또는 'name' 속성이 있어야 합니다.",
+      "unsupportedTypeMessage": "알 수 없는 모델 유형 {{type}}을(를) 생성할 수 없습니다.",
+      "unsupportedTypeTitle": "알 수 없는 유형"
+    },
+    "noSearchProviders": "구성된 검색 공급자가 없습니다"
+  },
+  "itemSearchTool": {
+    "searchError": "검색에 실패했습니다. 자세한 오류는 콘솔을 확인하세요.",
+    "numericParameter": {
+      "minimum": "최소한",
+      "maximum": "최대한"
+    },
+    "actions": {
+      "showMatchingOnly": "일치하는 항목만 표시",
+      "highlightAll": "모두 강조 표시"
+    },
+    "title": "{{itemName}} 검색",
+    "noParameters": "검색 가능한 매개변수가 없습니다",
+    "searching": "검색중",
+    "backBtnText": "다시 검색",
+    "searchBtnText": "검색",
+    "resetBtnText": "입력 지우기",
+    "resultsCount_0": "{{count}}개의 일치 항목을 찾았습니다",
+    "toolLoadError": "검색 도구를 로드하는 중에 오류가 발생했습니다.",
+    "loading": "검색 매개변수 로드 중",
+    "loadError": "검색 매개변수를 로드하는 중에 오류가 발생했습니다. 자세한 오류는 콘솔을 확인하세요."
+  },
+  "deltaTool": {
+    "cancelBtn": "취소",
+    "loadingError": {
+      "message": "서버로 부터 해당 도구를 불러오는중 오류 발생. 다시 시도해 보세요.",
+      "title": "델타 도구를 로드하는 중 오류가 발생했습니다"
+    },
+    "pickerMessage": {
+      "pickError": "위치의 이미지를 해석하는 중 오류가 발생했습니다! 지도를 클릭하여 해당 지점을 다시 선택하세요.",
+      "pickFirst": "지도를 클릭하여 지점을 선택하세요",
+      "pickAnother": "선택을 변경하려면 다른 점을 클릭하세요"
+    },
+    "primaryImage": "기본 이미지",
+    "catalogItem": {
+      "description": "이 레이어는 서로 다른 두 시점에서 캡처된 이미지 간의 차이를 시각화합니다"
+    },
+    "selectedLocation": "선택한 위치",
+    "pickLocation": "사용 가능한 이미지를 보려면 반대편 지도에서 관심 위치를 선택하세요.",
+    "secondaryImage": "보조 이미지",
+    "titlePrefix": "변화 감지",
+    "generateDeltaBtn": "차이 맵 생성",
+    "description": "이 도구는 서로 다른 두 시점에서 캡처된 이미지 간의 차이를 시각화합니다."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "보행자 모드",
+    "controls": {
+      "title": "컨트롤"
+    },
+    "dropPedestrianTooltipMessage": "드롭 위치를 선택하려면 <b>왼쪽 클릭</b><br />취소하려면 <b>오른쪽 클릭/Esc</b>"
+  },
+  "term": {
+    "missingContent": "누락된 콘텐츠"
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "항목의 검색 구성에 'indexRootUrl' 옵션이 없습니다.",
+    "errorParsingIndexRoot": "indexRoot 파일 구문 분석 중 오류 발생: {{indexRootUrl}}."
+  },
+  "selectableDimensions": {
+    "colorRemove": "제거",
+    "disabled": "비활성",
+    "colorAdd": "추가",
+    "undefinedLabel": "명시되지 않았습니다",
+    "invalid": "무효",
+    "enabled": "활성화됨"
+  },
+  "printView": {
+    "loading": "인쇄 보기 생성 중..."
+  },
+  "mapNavigation": {
+    "additionalToolsTitle": "추가 도구 열기",
+    "additionalTools": "추가 도구"
+  },
+  "notification": {
+    "title": "메시지"
+  },
+  "toast": {
+    "mapIsZooming": "이상적인 확대/축소 로드 중..."
   }
 }
