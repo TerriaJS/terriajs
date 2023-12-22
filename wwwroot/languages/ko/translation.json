@@ -759,7 +759,7 @@
       "suburb": "교외",
       "noAddresses": "이 테이블 구조에는 주소가 없습니다!",
       "noAddresses2": "테이블 구조에 주소 열이 있다고 보고하지만 주소가 없습니다",
-      "state": "상태",
+      "state": "주",
       "matchedAddresses": "일치하는 주소",
       "score": "점수",
       "postOfficeBox": "우체국 상자",
@@ -815,13 +815,22 @@
     "extraCreditLinks": {
       "disclaimer": "부인 성명",
       "dataAttribution": "데이터 속성",
-      "basemap": "베이스맵"
+      "basemap": "베이스맵",
+      "dataProvider": "데이터 제공 출처:"
     },
     "regionProvider": {
       "csvRegionMappingMessageZeroFound": "지역 유형 {{regionType}}에 대해 지역 이름이 없습니다",
       "csvRegionMappingMessageZeroBoundariesFound": "{{regionName}} 지역에서 지역 경계가 0개 발견되었습니다",
       "csvRegionMappingMessageLoadError": "{{regionName}} {{exception}}지역의 지역 경계를 로드할 수 없습니다",
       "csvRegionMappingTitle": "CSV 지역 매핑"
+    }
+  },
+  "models": {
+    "userData": {
+      "addingDataErrorMessage": "지정한 데이터가 유효하지 않거나 예상 형식이 아니므로 추가할 수 없습니다.",
+      "fileApiNotSupportedTitle": "파일 API가 지원되지 않음",
+      "fileApiNotSupportedMessage": "웹 브라우저가 시스템의 파일에서 데이터를 추가하는 데 필요한 {{appName}}의 파일 API를 지원하지 않습니다.  웹 브라우저를 업그레이드하세요.  최상의 환경을 위해 최신 버전의 {{chrome}}, {{firefox}} 또는 {{edge}}를 권장합니다.",
+      "addingDataErrorTitle": "데이터를 추가할 수 없습니다"
     }
   }
 }
