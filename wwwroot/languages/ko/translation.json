@@ -831,6 +831,11 @@
       "fileApiNotSupportedTitle": "파일 API가 지원되지 않음",
       "fileApiNotSupportedMessage": "웹 브라우저가 시스템의 파일에서 데이터를 추가하는 데 필요한 {{appName}}의 파일 API를 지원하지 않습니다.  웹 브라우저를 업그레이드하세요.  최상의 환경을 위해 최신 버전의 {{chrome}}, {{firefox}} 또는 {{edge}}를 권장합니다.",
       "addingDataErrorTitle": "데이터를 추가할 수 없습니다"
+    },
+    "arcGisService": {
+      "name": "ArcGIS 서비스 그룹",
+      "invalidServerTitle": "잘못된 ArcGIS 서버",
+      "invalidServerMessage": "ArcGIS REST 서비스를 호출하는 동안 오류가 발생했습니다.  서버의 응답이 유효한 ArcGIS REST 문서가 아닌 것 같습니다."
     }
   }
 }
