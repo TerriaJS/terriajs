@@ -131,7 +131,9 @@
     "dataType": {
       "assimp-local": "3D 파일 변환기 (zip) (실험용)",
       "auto": "파일 타입",
-      "wms-group": "웹 지도 서비스 서버"
+      "wms-group": "웹 지도 서비스 서버",
+      "wfs-group": "웹 기능 서비스 (WFS) 서버",
+      "wmts-group": "웹 지도 타일 서비스 (WMTS) 서버"
     },
     "chartData": "차트 데이터",
     "dataUri": {
