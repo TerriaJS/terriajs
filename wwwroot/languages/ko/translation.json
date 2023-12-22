@@ -836,6 +836,12 @@
       "name": "ArcGIS 서비스 그룹",
       "invalidServerTitle": "잘못된 ArcGIS 서버",
       "invalidServerMessage": "ArcGIS REST 서비스를 호출하는 동안 오류가 발생했습니다.  서버의 응답이 유효한 ArcGIS REST 문서가 아닌 것 같습니다."
+    },
+    "arcGisFeatureServer": {
+      "invalidServiceTitle": "잘못된 ArcGIS 기능 서비스",
+      "groupNotAvailableTitle": "그룹을 사용할 수 없습니다",
+      "invalidServiceMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다. 서버의 응답이 유효한 기능 서비스 문서가 아닌 것 같습니다.",
+      "groupNotAvailableMessage": "ArcGIS Feature Service를 호출하는 동안 오류가 발생했습니다"
     }
   }
 }
