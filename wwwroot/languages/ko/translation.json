@@ -1094,6 +1094,12 @@
             "options": {
               "center": {
                 "name": "중앙"
+              },
+              "right": {
+                "name": "오른쪽"
+              },
+              "left": {
+                "name": "왼쪽"
               }
             }
           },
