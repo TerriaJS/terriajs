@@ -298,7 +298,7 @@ export default class TableColumn {
 
     const ddmmyyyy: StringToDateFunction = (value) => {
       // Try dd/mm/yyyy and watch out for failures that would also cross out mm/dd/yyyy
-      for (let separator of separators) {
+      for (const separator of separators) {
         const sep1 = value.indexOf(separator);
         if (sep1 === -1) continue; // Try next separator
         const sep2 = value.indexOf(separator, sep1 + 1);
@@ -308,9 +308,9 @@ export default class TableColumn {
           skipMmddyyyy = true;
           return null;
         }
-        let dayString = value.slice(0, sep1);
-        let monthString = value.slice(sep1 + 1, sep2);
-        let yearString = value.slice(sep2 + 1);
+        const dayString = value.slice(0, sep1);
+        const monthString = value.slice(sep1 + 1, sep2);
+        const yearString = value.slice(sep2 + 1);
         const d = +dayString;
         const m = +monthString;
         const y = +yearString;
@@ -340,7 +340,7 @@ export default class TableColumn {
       return null;
     };
 
-    let mmddyyyy: StringToDateFunction = (value) => {
+    const mmddyyyy: StringToDateFunction = (value) => {
       // This function only exists to allow mm-dd-yyyy dates
       // mm/dd/yyyy dates could be picked up by `new Date`
       const separator = "-";
@@ -354,9 +354,9 @@ export default class TableColumn {
         parsingFailed = true;
         return null;
       }
-      let monthString = value.slice(0, sep1);
-      let dayString = value.slice(sep1 + 1, sep2);
-      let yearString = value.slice(sep2 + 1);
+      const monthString = value.slice(0, sep1);
+      const dayString = value.slice(sep1 + 1, sep2);
+      const yearString = value.slice(sep2 + 1);
       const d = +dayString;
       const m = +monthString;
       const y = +yearString;
@@ -372,7 +372,7 @@ export default class TableColumn {
       }
     };
 
-    let yyyyQQ: StringToDateFunction = (value) => {
+    const yyyyQQ: StringToDateFunction = (value) => {
       // Is it quarterly data in the format yyyy-Qx ? (Ignoring null values, and failing on any purely numeric values)
       if (value[4] === "-" && value[5] === "Q") {
         const year = +value.slice(0, 4);
@@ -400,7 +400,7 @@ export default class TableColumn {
       return null;
     };
 
-    let dateConstructor: StringToDateFunction = (value) => {
+    const dateConstructor: StringToDateFunction = (value) => {
       const ms = Date.parse(value);
       if (!Number.isNaN(ms)) {
         return new Date(ms);

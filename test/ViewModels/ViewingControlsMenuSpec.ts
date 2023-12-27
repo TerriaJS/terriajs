@@ -1,4 +1,3 @@
-import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Icon from "../../lib/Styled/Icon";
@@ -11,11 +10,10 @@ describe("ViewingControlsMenu", function () {
       const terria = new Terria();
       const viewState = new ViewState({
         terria,
-        catalogSearchProvider: undefined,
-        locationSearchProviders: []
+        catalogSearchProvider: undefined
       });
       expect(viewState.globalViewingControlOptions.length).toEqual(0);
-      const generateFunction = (item: CatalogMemberMixin.Instance) => ({
+      const generateFunction = () => ({
         name: "View more details",
         icon: Icon.GLYPHS.eye,
         onClick: () => {}

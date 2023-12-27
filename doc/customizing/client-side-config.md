@@ -67,7 +67,7 @@ Specifies various options for configuring TerriaJS:
 | `defaultMaximumShownFeatureInfos` | no       | **number**                                                                                               | `100`                                                              | The maximum number of "feature info" boxes that can be displayed when clicking a point.                                                                                                                                                                                                                |
 | `regionMappingDefinitionsUrl`     | no       | **string**                                                                                               |                                                                    | **Deprecated** please use `regionMappingDefinitionsUrls` array instead. If this is defined, it will override `regionMappingDefinitionsUrls`                                                                                                                                                            |
 | `regionMappingDefinitionsUrls`    | no       | **string[]**                                                                                             | `["build/TerriaJS/data/regionMapping.json"]`                       | URLs of JSON files that define region mapping for Tabular data (eg CSV). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance. It multiple URLs are provided then the first matching region will be used (in order of URLs)     |
-| `catalogIndexUrl`                 | no       | **string**                                                                                               |                                                                    | URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)                                                                                                                                                                                                                 |
+| `catalogIndexUrl`                 | no       | **string**                                                                                               |                                                                    | URL of the JSON file that contains index of catalog. See [CatalogIndex](search-providers.md#catalogindex)                                                                                                                                                                                              |
 | `proj4ServiceBaseUrl`             | no       | **string**                                                                                               | `"proj4def/"`                                                      | URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.                                                                                                         |
 | `corsProxyBaseUrl`                | no       | **string**                                                                                               | `"proxy/"`                                                         | URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.                                                                                                                      |
 | `proxyableDomainsUrl`             | no       | **string**                                                                                               | `"proxyabledomains/"`                                              | Deprecated, will be determined from serverconfig.                                                                                                                                                                                                                                                      |
@@ -115,6 +115,8 @@ Specifies various options for configuring TerriaJS:
 | `storyVideo.videoUrl`             | no       | **string**                                                                                               | https://www.youtube-nocookie.com/embed/fbiQawV8IYY                 | Video to show in Story Editor panel under Getting Started.                                                                                                                                                                                                                                             |
 | `relatedMaps`                     | no       | **[RelatedMap](#relatedmap)[]**                                                                          | See [`lib/Models/RelatedMaps.ts`](../../lib/Models/RelatedMaps.ts) | Maps to show in "Related Maps" menu panel                                                                                                                                                                                                                                                              |
 | `aboutButtonHrefUrl`              | no       | **string**                                                                                               | `"about.html"`                                                     | About button URL. If set to `null`, then the About button will not be shown                                                                                                                                                                                                                            |
+| `searchBar`                       | no       | **[SearchBar](#searchbar)**                                                                              | `new SearchBar()`                                                  | Search bar configuration                                                                                                                                                                                                                                                                               |
+| `searchProviders`                 | no       | \*\*[SearchProviders](search-providers.md)                                                               | `[]`                                                               | Search providers that will be used for search                                                                                                                                                                                                                                                          |
 
 ### MagdaReferenceHeaders
 
@@ -249,30 +251,15 @@ Credits/Attribution shown at the bottom of the map. Supports internationalizatio
 
 ---
 
-### CatalogIndex
+### SearchBar
 
-If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded - for example CKAN, WMS-group...) it may be worth generating a static catalog index JSON file. This file will contain ID, name and description fields of all catalog items, which can be used to search through the catalog very quickly without needing to load dynamic references/groups (for example `MagdaReference` -> `WebMapServiceCatalogGroup` -> `WebMapServiceCatalogItem`).
+Configuration for the search bar. Some of the values will be used as default for
+search provider values.
 
-The https://github.com/nextapps-de/flexsearch library is used to index and search the catalog index file.
-
-To generate the catalog index:
-
--   `yarn build-tools`
--   `node .\build\generateCatalogIndex.js config-url base-url` where
-
-    -   `config-url` is URL to client-side-config file
-    -   `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
-    -   For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
-
--   This will output three files
-    -   `catalog-index.json`
-    -   `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-    -   `catalog-index-errors-stack.json` with errors stack
--   Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
-
-This file will have to be re-generated manually every time the catalog structure changes - for example:
-
--   if items are renamed, or moved
--   dynamic groups are updated (for example, WMS server publishes new layers)
-
-For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
+| Name                  | Required | Type          | Default                        | Description                                                                                       |
+| --------------------- | -------- | ------------- | ------------------------------ | ------------------------------------------------------------------------------------------------- |
+| placeholder           | no       | **string**    | `translate#search.placeholder` | Input text field placeholder shown when no input has been given yet. The string is translateable. |
+| recommendedListLength | no       | **number**    | `5`                            | Maximum amount of entries in the suggestion list.                                                 |
+| flightDurationSeconds | no       | **number**    | `1.5`                          | The duration of the camera flight to an entered location, in seconds.                             |
+| minCharacters         | no       | **number**    | 3                              | Minimum number of characters required for search to start                                         |
+| boundingBoxLimit      | no       | **Rectangle** | `Cesium.Rectangle.MAX_VALUE`   | Bounding box limits for the search results {west, south, east, north}                             |

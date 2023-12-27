@@ -76,7 +76,7 @@ const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <RawButton
         fullWidth
         onClick={toggleOpen}
@@ -116,7 +116,7 @@ const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
           </Text>
         </Box>
       ) : null}
-    </React.Fragment>
+    </>
   );
 });
 

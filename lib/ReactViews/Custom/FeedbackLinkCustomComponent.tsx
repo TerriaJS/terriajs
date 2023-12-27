@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import ViewState from "../../ReactViewModels/ViewState";
 import { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
@@ -72,15 +72,15 @@ export default class FeedbackLinkCustomComponent extends CustomComponent {
     context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[]
-  ): ReactElement {
-    if (!context.viewState) return <></>;
+  ) {
+    if (!context.viewState) return undefined;
 
     return (
       <FeedbackLink
         viewState={context.viewState}
         emailMessage={node.attribs?.["email-message"]}
         feedbackMessage={node.attribs?.["feedback-message"]}
-      ></FeedbackLink>
+      />
     );
   }
 }

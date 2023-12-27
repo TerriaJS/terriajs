@@ -8,11 +8,11 @@ export interface HiddenCheckboxProps extends React.HTMLProps<HTMLInputElement> {
   name?: string;
   isIndeterminate?: boolean;
 }
-export default React.forwardRef(
-  (
-    { isIndeterminate, ...props }: HiddenCheckboxProps,
-    ref: React.Ref<HTMLInputElement>
-  ) => (
+export default React.forwardRef(function HiddenCheckbox(
+  { isIndeterminate, ...props }: HiddenCheckboxProps,
+  ref: React.Ref<HTMLInputElement>
+) {
+  return (
     <input
       type="checkbox"
       ref={ref}
@@ -29,5 +29,5 @@ export default React.forwardRef(
       }}
       {...props}
     />
-  )
-);
+  );
+});

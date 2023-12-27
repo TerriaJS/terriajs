@@ -67,7 +67,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
     const realLoadWithXhr = loadWithXhr.load;
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
+      const url = args[0];
       // if we have a ?id= then we've passed in a filter
       if (url.match(/locations\?id/g))
         args[0] = "test/Senaps/locations_filtered.json";

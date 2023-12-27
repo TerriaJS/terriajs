@@ -116,7 +116,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
             i < binStyles.length - 1 &&
             value > (binStyles[i].maxValue ?? Infinity);
             ++i
-          ) {}
+          ) {
+            continue;
+          }
 
           return {
             ...this.traitValues.null,

@@ -105,10 +105,10 @@ describe("ArcGisMapServerCatalogGroup", function () {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(4);
 
-      let member0 = <ArcGisMapServerCatalogItem>group.memberModels[0];
-      let member1 = <ArcGisMapServerCatalogItem>group.memberModels[1];
-      let member2 = <ArcGisMapServerCatalogItem>group.memberModels[2];
-      let member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
+      const member0 = <ArcGisMapServerCatalogItem>group.memberModels[0];
+      const member1 = <ArcGisMapServerCatalogItem>group.memberModels[1];
+      const member2 = <ArcGisMapServerCatalogItem>group.memberModels[2];
+      const member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
 
       expect(member0.name).toBe("Ambulances");
       expect(member0.url).toBe(mapServerUrl + "/0");
@@ -130,8 +130,8 @@ describe("ArcGisMapServerCatalogGroup", function () {
       expect(member3.members.length).toBe(2);
       expect(member3.memberModels.length).toBe(2);
 
-      let member4 = <ArcGisMapServerCatalogGroup>member3.memberModels[0];
-      let member5 = <ArcGisMapServerCatalogGroup>member3.memberModels[1];
+      const member4 = <ArcGisMapServerCatalogGroup>member3.memberModels[0];
+      const member5 = <ArcGisMapServerCatalogGroup>member3.memberModels[1];
       expect(member4.name).toBe("Output Features");
       expect(member4.url).toBe(mapServerUrl + "/23");
 

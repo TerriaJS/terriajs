@@ -47,7 +47,7 @@
   svg {
     position: absolute;
     top: $padding;
-    left: $padding/2;
+    left: calc($padding / 2);
     fill: #ffffff;
   }
 }

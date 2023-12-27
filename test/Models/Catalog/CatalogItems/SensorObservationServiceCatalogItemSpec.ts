@@ -94,7 +94,7 @@ describe("SensorObservationServiceCatalogItem", function () {
     beforeEach(function () {
       jasmine.Ajax.stubRequest(
         "https://sos.example.com/",
-        /\<sos:GetFeatureOfInterest/
+        /<sos:GetFeatureOfInterest/
       ).andReturn({ responseText: GetFeatureOfInterestResponse });
     });
 
@@ -132,9 +132,9 @@ describe("SensorObservationServiceCatalogItem", function () {
       it("throws an error if features is empty", async function () {
         jasmine.Ajax.stubRequest(
           "https://sos.example.com/",
-          /\<sos:GetFeatureOfInterest/
+          /<sos:GetFeatureOfInterest/
         ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
-        let ex = (await item.loadMapItems()).error;
+        const ex = (await item.loadMapItems()).error;
         expect(ex).toBeDefined();
       });
     });
@@ -235,11 +235,11 @@ describe("SensorObservationServiceCatalogItem", function () {
     beforeEach(function () {
       jasmine.Ajax.stubRequest(
         "https://sos.example.com/",
-        /\<sos:GetObservation[\s\S]*Yearly/
+        /<sos:GetObservation[\s\S]*Yearly/
       ).andReturn({ responseText: GetObservationResponseYearly });
       jasmine.Ajax.stubRequest(
         "https://sos.example.com/",
-        /\<sos:GetObservation[\s\S]*Daily/
+        /<sos:GetObservation[\s\S]*Daily/
       ).andReturn({ responseText: GetObservationResponseDaily });
       item.setTrait(CommonStrata.user, "showAsChart", true);
       item.setTrait(

@@ -214,7 +214,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-      let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+      const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
         Matrix4.getMatrix3(modelMatrix, new Matrix3())
       );
@@ -348,7 +348,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      let resource: IonResource | undefined = await IonResource.fromAssetId(
+      const resource: IonResource | undefined = await IonResource.fromAssetId(
         ionAssetId,
         {
           accessToken:
@@ -436,7 +436,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
           "${opacity}" +
           "))";
-      } else if (typeof style.color == "string") {
+      } else if (typeof style.color === "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
         if (isDefined(cssColor)) {

@@ -60,7 +60,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisPortalCatalogGroup
   ): Promise<ArcGisPortalStratum | undefined> {
-    var terria = catalogGroup.terria;
+    const terria = catalogGroup.terria;
 
     let portalGroupsServerResponse:
       | ArcGisPortalGroupSearchResponse
@@ -244,7 +244,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
 
-    let groups: CatalogGroup[] = [
+    const groups: CatalogGroup[] = [
       ...createUngroupedGroup(this),
       ...createGroupsByPortalGroups(this)
     ];
@@ -287,7 +287,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     dataset: ArcGisItem,
     groupId: string
   ) {
-    let group: CatalogGroup | undefined =
+    const group: CatalogGroup | undefined =
       this._catalogGroup.terria.getModelById(CatalogGroup, groupId);
     if (group !== undefined) {
       group.add(CommonStrata.definition, catalogItem);

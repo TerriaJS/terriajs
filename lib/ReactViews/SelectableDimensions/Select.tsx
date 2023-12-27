@@ -21,8 +21,7 @@ export const SelectableDimensionEnum: React.FC<{
   const undefinedOption = {
     value: undefined,
     label:
-      dim.undefinedLabel ??
-      i18next.t("workbench.dimensionsSelector.undefinedLabel")
+      dim.undefinedLabel ?? i18next.t("selectableDimensions.undefinedLabel")
   };
 
   let options = dim.options?.map((option) => ({
@@ -100,7 +99,7 @@ export const SelectableDimensionEnumMulti: React.FC<{
 }> = observer(({ id, dim }) => {
   const theme = useTheme();
 
-  let options = dim.options?.map((option) => ({
+  const options = dim.options?.map((option) => ({
     value: option.id,
     label: option.name ?? option.id
   }));
@@ -138,7 +137,7 @@ export const SelectableDimensionEnumMulti: React.FC<{
           primary: theme.colorPrimary
         }
       })}
-      isMulti={true}
+      isMulti
     />
   );
 });

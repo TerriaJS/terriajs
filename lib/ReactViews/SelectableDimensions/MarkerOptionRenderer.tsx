@@ -9,7 +9,7 @@ export const MarkerOptionRenderer: OptionRenderer = (option) => (
       height="20px"
       style={{ marginBottom: -5 }}
       src={getMakiIcon(option.value, "#000", 1, "#fff", 24, 24) ?? option.value}
-    ></img>{" "}
+    />{" "}
     {option.value}
   </div>
 );

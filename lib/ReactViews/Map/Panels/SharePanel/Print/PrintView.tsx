@@ -186,7 +186,7 @@ const PrintView = (props: Props) => {
                   scale={getScale(
                     viewState.terria.currentViewer.getContainer()
                   )}
-                  isPrintMode={true}
+                  isPrintMode
                 />
               </PrintViewMap>
             ) : (

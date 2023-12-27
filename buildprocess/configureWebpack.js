@@ -126,11 +126,10 @@ function configureWebpack(
                 useBuiltIns: "usage"
               }
             ],
-            "@babel/preset-react",
+            ["@babel/preset-react", { runtime: "automatic" }],
             ["@babel/typescript", { allowNamespaces: true }]
           ],
           plugins: [
-            "babel-plugin-jsx-control-statements",
             "@babel/plugin-transform-modules-commonjs",
             ["@babel/plugin-proposal-decorators", { legacy: true }],
             "@babel/plugin-proposal-class-properties",

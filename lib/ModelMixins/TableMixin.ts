@@ -185,7 +185,9 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (activeStyle === undefined) {
         return this.defaultTableStyle;
       }
-      let ret = this.tableStyles.find((style) => style.id === this.activeStyle);
+      const ret = this.tableStyles.find(
+        (style) => style.id === this.activeStyle
+      );
       if (ret === undefined) {
         return this.defaultTableStyle;
       }
@@ -214,7 +216,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     protected async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
-        let csvString = this.dataColumnMajor[0]
+        const csvString = this.dataColumnMajor[0]
           .map((row, rowIndex) =>
             this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
           )
@@ -453,7 +455,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         ...super.viewingControls,
         {
           id: TableStylingWorkflow.type,
-          name: "Edit Style",
+          name: i18next.t("models.tableData.editStyle"),
           onClick: action((viewState) =>
             SelectableDimensionWorkflow.runWorkflow(
               viewState,
@@ -493,7 +495,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return {
         type: "select",
         id: "activeStyle",
-        name: "Display Variable",
+        name: i18next.t("models.tableData.activeStyle"),
         options: this.tableStyles
           .filter((style) => !style.hidden || this.activeStyle === style.id)
           .map((style) => {
@@ -531,7 +533,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionMapping",
-        name: "Region Mapping",
+        name: i18next.t("models.tableData.regionMapping"),
         options: allRegionProviders.map((regionProvider) => {
           return {
             name: regionProvider.description,
@@ -577,7 +579,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionColumn",
-        name: "Region Column",
+        name: i18next.t("models.tableData.regionColumn"),
         options: this.tableColumns.map((col) => {
           return {
             name: col.name,
@@ -596,7 +598,8 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed get regionMappingDimensions(): SelectableDimensionGroup {
       return {
-        id: "Manual Region Mapping",
+        id: "manual-region-mapping",
+        name: i18next.t("models.tableData.manualRegionMapping"),
         type: "group",
         selectableDimensions: filterOutUndefined([
           this.regionColumnDimensions,
@@ -718,7 +721,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed get legendButton() {
       return this.activeTableStyle.isCustom
         ? {
-            title: "Custom",
+            title: i18next.t("models.tableData.custom"),
             onClick: action(() => {
               SelectableDimensionWorkflow.runWorkflow(
                 this.terria,

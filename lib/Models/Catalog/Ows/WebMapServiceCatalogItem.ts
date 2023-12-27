@@ -8,18 +8,18 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, runInAction, makeObservable, override } from "mobx";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
+import TerriaError from "../../../Core/TerriaError";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -32,6 +32,10 @@ import MappableMixin, {
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import {
+  TimeSeriesFeatureInfoContext,
+  csvFeatureInfoContext
+} from "../../../Table/tableFeatureInfoContext";
 import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326
@@ -41,6 +45,8 @@ import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import TerriaFeature from "../../Feature/Feature";
+import FeatureInfoContext from "../../Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimensionEnum
 } from "../../SelectableDimensions/SelectableDimensions";
@@ -49,6 +55,23 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+
+// Remove problematic query parameters from URLs (GetCapabilities, GetMap, ...) - these are handled separately
+const QUERY_PARAMETERS_TO_REMOVE = [
+  "request",
+  "service",
+  "x",
+  "y",
+  "width",
+  "height",
+  "bbox",
+  "layers",
+  "styles",
+  "version",
+  "format",
+  "srs",
+  "crs"
+];
 
 /** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
 export class WebMapServiceUrlStratum extends LoadableStratum(
@@ -94,7 +117,7 @@ class WebMapServiceCatalogItem
       )
     )
   )
-  implements SelectableDimensions
+  implements SelectableDimensions, FeatureInfoContext
 {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
@@ -282,8 +305,16 @@ class WebMapServiceCatalogItem
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
-      return this.uri
-        .clone()
+      const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
+        (url, parameter) =>
+          url
+            .removeQuery(parameter)
+            .removeQuery(parameter.toUpperCase())
+            .removeQuery(parameter.toLowerCase()),
+        this.uri.clone()
+      );
+
+      return baseUrl
         .setSearch({
           service: "WMS",
           version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
@@ -398,7 +429,9 @@ class WebMapServiceCatalogItem
       return undefined;
     }
 
-    imageryProvider.enablePickFeatures = true;
+    // Reset feature picking for the current imagery layer.
+    // We disable feature picking for the next imagery layer.
+    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
 
     return {
       imageryProvider,
@@ -422,6 +455,7 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
+      // Disable feature picking for the next imagery layer.
       imageryProvider.enablePickFeatures = false;
 
       return {
@@ -511,8 +545,9 @@ class WebMapServiceCatalogItem
           (this.maximumShownFeatureInfos ??
             this.terria.configParameters.defaultMaximumShownFeatureInfos),
         ...this.parameters,
-        ...this.getFeatureInfoParameters,
-        ...dimensionParameters
+        // Note order is important here, as getFeatureInfoParameters may override `time` dimension value
+        ...dimensionParameters,
+        ...this.getFeatureInfoParameters
       };
 
       const diffModeParameters = this.isShowingDiff
@@ -523,31 +558,15 @@ class WebMapServiceCatalogItem
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
 
-      if (isDefined(this.styles)) {
-        parameters.styles = this.styles;
-        getFeatureInfoParameters.styles = this.styles;
-      }
+      // Styles parameter is mandatory (for GetMap and GetFeatureInfo requests), but can be empty string to use default style
+      parameters.styles = this.styles ?? "";
+      getFeatureInfoParameters.styles = this.styles ?? "";
 
       Object.assign(parameters, diffModeParameters);
 
       // Remove problematic query parameters from URL - these are handled by the parameters objects
-      const queryParametersToRemove = [
-        "request",
-        "service",
-        "x",
-        "y",
-        "width",
-        "height",
-        "bbox",
-        "layers",
-        "styles",
-        "version",
-        "format",
-        "srs",
-        "crs"
-      ];
 
-      const baseUrl = queryParametersToRemove.reduce(
+      const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
         (url, parameter) =>
           url
             .removeQuery(parameter)
@@ -574,8 +593,8 @@ class WebMapServiceCatalogItem
         tilingScheme: this.tilingScheme,
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
-        credit: this.attribution,
-        enablePickFeatures: this.allowFeaturePicking
+        credit: this.attribution
+        // Note: we set enablePickFeatures in _currentImageryParts and _nextImageryParts
       };
 
       if (isDefined(this.getFeatureInfoFormat?.type)) {
@@ -634,7 +653,7 @@ class WebMapServiceCatalogItem
 
       // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
       // The `styles` parameter is CSV, a style for each layer
-      let selectedId = this.styles?.split(",")?.[layerIndex];
+      const selectedId = this.styles?.split(",")?.[layerIndex];
 
       return {
         name,
@@ -741,6 +760,15 @@ class WebMapServiceCatalogItem
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions
     ]);
+  }
+
+  /** If GetFeatureInfo/GetTimeseries request is returning CSV, we need to parse it into TimeSeriesFeatureInfoContext.
+   */
+  @computed get featureInfoContext(): (
+    feature: TerriaFeature
+  ) => TimeSeriesFeatureInfoContext {
+    if (this.getFeatureInfoFormat.format !== "text/csv") return () => ({});
+    return csvFeatureInfoContext(this);
   }
 }
 

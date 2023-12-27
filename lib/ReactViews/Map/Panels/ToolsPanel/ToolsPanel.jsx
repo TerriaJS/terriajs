@@ -30,14 +30,15 @@ const ToolsPanel = observer(() => {
       isOpen={isOpen}
       smallScreen={viewState.useSmallScreenInterface}
     >
-      <If condition={isOpen}>
+      {isOpen && (
         <div className={DropdownStyles.section}>
           <div className={Styles.this}>
             <CountDatasets updateResults={setResultsMessage} />
           </div>
         </div>
-      </If>
+      )}
       <div className={Styles.results}>
+        {/* eslint-disable-next-line react/no-danger */}
         <div dangerouslySetInnerHTML={{ __html: resultsMessage }} />
       </div>
     </MenuPanel>

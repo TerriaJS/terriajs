@@ -3,9 +3,11 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import { create, ReactTestRenderer } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
-import Terria from "../../../lib/Models/Terria";
-import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
+import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../../lib/Models/Terria";
 import Description from "../../../lib/ReactViews/Preview/Description";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
@@ -141,5 +143,54 @@ describe("DescriptionSpec", function () {
     const child: any = dataUrls[0].children[0];
 
     expect(child.props.children).toBe("some link");
+  });
+
+  it("respects hideDefaultDescription", function () {
+    const geoJsonItem = new GeoJsonCatalogItem("test-geojson", terria);
+    runInAction(() => {
+      geoJsonItem.setTrait(CommonStrata.definition, "description", "test");
+    });
+
+    act(() => {
+      testRenderer = create(
+        <ThemeProvider theme={terriaTheme}>
+          <Description item={geoJsonItem} />
+        </ThemeProvider>
+      );
+    });
+
+    const showDescription = testRenderer.root.findAll(
+      (node) => node.type === "p"
+    );
+
+    expect(showDescription.length).toEqual(1);
+    expect(showDescription[0].children[0]).toBe("test");
+
+    runInAction(() => {
+      geoJsonItem.setTrait(CommonStrata.definition, "description", "");
+    });
+
+    const showDefaultDescription = testRenderer.root.findAll(
+      (node) => node.type === "p"
+    );
+
+    expect(showDefaultDescription.length).toEqual(1);
+    expect(showDefaultDescription[0].children[0]).toBe(
+      "description.dataNotLocal"
+    );
+
+    runInAction(() => {
+      geoJsonItem.setTrait(
+        CommonStrata.definition,
+        "hideDefaultDescription",
+        true
+      );
+    });
+
+    const showNoDescription = testRenderer.root.findAll(
+      (node) => node.type === "p"
+    );
+
+    expect(showNoDescription.length).toEqual(0);
   });
 });

@@ -79,29 +79,25 @@ export default observer(function DataCatalogReference({
     btnState = ButtonState.Add;
   }
 
-  return (
-    <>
-      {reference.isGroup ? (
-        <CatalogGroup
-          text={reference.name || "..."}
-          isPrivate={reference.isPrivate}
-          title={path}
-          onClick={setPreviewedItem}
-          topLevel={isTopLevel}
-          loading={reference.isLoadingReference}
-          open={reference.isLoadingReference}
-        />
-      ) : (
-        <CatalogItem
-          onTextClick={setPreviewedItem}
-          selected={isSelected}
-          text={reference.name || "..."}
-          isPrivate={reference.isPrivate}
-          title={path}
-          btnState={btnState}
-          onBtnClick={reference.isFunction ? setPreviewedItem : add}
-        />
-      )}
-    </>
+  return reference.isGroup ? (
+    <CatalogGroup
+      text={reference.name || "..."}
+      isPrivate={reference.isPrivate}
+      title={path}
+      onClick={setPreviewedItem}
+      topLevel={isTopLevel}
+      loading={reference.isLoadingReference}
+      open={reference.isLoadingReference}
+    />
+  ) : (
+    <CatalogItem
+      onTextClick={setPreviewedItem}
+      selected={isSelected}
+      text={reference.name || "..."}
+      isPrivate={reference.isPrivate}
+      title={path}
+      btnState={btnState}
+      onBtnClick={reference.isFunction ? setPreviewedItem : add}
+    />
   );
 });

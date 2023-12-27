@@ -121,16 +121,8 @@ class GeoJsonParameterEditor extends React.Component {
             this.props.parameter
           )}
         />
-        <If
-          condition={
-            getDisplayValue(
-              this.props.parameter.value,
-              this.props.parameter
-            ) === ""
-          }
-        >
-          <div>{t("analytics.nothingSelected")}</div>
-        </If>
+        {getDisplayValue(this.props.parameter.value, this.props.parameter) ===
+          "" && <div>{t("analytics.nothingSelected")}</div>}
       </div>
     );
   }

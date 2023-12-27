@@ -134,72 +134,70 @@ export function GyroscopeGuidance(props) {
   const controlsMapIcon = useRef();
   const { t } = useTranslation();
   return (
-    <>
+    <div
+      css={`
+        position: relative;
+      `}
+    >
+      <MapIconButton
+        roundLeft
+        buttonRef={controlsMapIcon}
+        neverCollapse
+        iconElement={() => <Icon glyph={Icon.GLYPHS.questionMark} />}
+        onClick={() => setControlPanelOpen(!controlPanelOpen)}
+        inverted
+        css={`
+          svg {
+            margin: 0px;
+            width: 25px;
+            height: 25px;
+          }
+        `}
+      />
       <div
+        onClick={(e) => e.preventDefault()}
         css={`
           position: relative;
         `}
       >
-        <MapIconButton
-          roundLeft
-          buttonRef={controlsMapIcon}
-          neverCollapse
-          iconElement={() => <Icon glyph={Icon.GLYPHS.questionMark} />}
-          onClick={() => setControlPanelOpen(!controlPanelOpen)}
-          inverted
-          css={`
-            svg {
-              margin: 0px;
-              width: 25px;
-              height: 25px;
+        <CleanDropdownPanel
+          // theme={dropdownTheme}
+
+          // While opacity at this level is not ideal, it's the only way
+          // to get the background to be transparent - another step up
+          // is setting the opacity layer underneath, and a
+          // pseudo-panel on top of it to keep the opacity on top.
+          // but that's a lot to do right now
+          //   - for a component that is still using sass
+          //   - for 0.85 where the contrast is still great.
+          cleanDropdownPanelStyles={css`
+            opacity: 0.85;
+            .tjs-sc-InnerPanel,
+            .tjs-sc-InnerPanel__caret {
+              background: ${(p) => p.theme.textBlack};
             }
           `}
-        />
-        <div
-          onClick={(e) => e.preventDefault()}
-          css={`
-            position: relative;
-          `}
+          refForCaret={controlsMapIcon}
+          isOpen={controlPanelOpen}
+          onOpenChanged={() => controlPanelOpen}
+          // onDismissed={() => setControlPanelOpen(false)}
+          btnTitle={t("compass.guidanceBtnTitle")}
+          btnText={t("compass.guidanceBtnText")}
+          viewState={props.viewState}
+          smallScreen={props.viewState.useSmallScreenInterface}
         >
-          <CleanDropdownPanel
-            // theme={dropdownTheme}
-
-            // While opacity at this level is not ideal, it's the only way
-            // to get the background to be transparent - another step up
-            // is setting the opacity layer underneath, and a
-            // pseudo-panel on top of it to keep the opacity on top.
-            // but that's a lot to do right now
-            //   - for a component that is still using sass
-            //   - for 0.85 where the contrast is still great.
-            cleanDropdownPanelStyles={css`
-              opacity: 0.85;
-              .tjs-sc-InnerPanel,
-              .tjs-sc-InnerPanel__caret {
-                background: ${(p) => p.theme.textBlack};
-              }
-            `}
-            refForCaret={controlsMapIcon}
-            isOpen={controlPanelOpen}
-            onOpenChanged={() => controlPanelOpen}
-            // onDismissed={() => setControlPanelOpen(false)}
-            btnTitle={t("compass.guidanceBtnTitle")}
-            btnText={t("compass.guidanceBtnText")}
-            viewState={props.viewState}
-            smallScreen={props.viewState.useSmallScreenInterface}
-          >
-            <GyroscopeGuidancePanel
-              onClose={() => {
-                setControlPanelOpen(false);
-                props.onClose();
-                props.viewState.terria.setLocalProperty(
-                  COMPASS_LOCAL_PROPERTY_KEY,
-                  true
-                );
-              }}
-            />
-          </CleanDropdownPanel>
-        </div>
+          <GyroscopeGuidancePanel
+            onClose={() => {
+              setControlPanelOpen(false);
+              props.onClose();
+              props.viewState.terria.setLocalProperty(
+                COMPASS_LOCAL_PROPERTY_KEY,
+                true
+              );
+            }}
+          />
+        </CleanDropdownPanel>
       </div>
-    </>
+    </div>
   );
 }

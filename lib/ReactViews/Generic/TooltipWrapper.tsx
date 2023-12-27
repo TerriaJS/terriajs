@@ -32,7 +32,7 @@ type Props = {
     forceSetState: (bool?: boolean) => void;
   }) => React.ReactNode;
   /** Styles to apply to the  actual tooltip */
-  innerElementStyles?: Object;
+  innerElementStyles?: object;
   /** The tooltip content itself, as higher-order function that provides a function to dismiss the tooltip */
   children: (applyAriaId: boolean, dismiss: () => void) => React.ReactNode;
 };
@@ -86,7 +86,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     const rootElement = this.rootRef.current;
 
     // Why .firstChild? Because we can't attach a ref to a render prop unless whatever's passed in passes the ref through to its first dom element
-    const launcherElement = rootElement!?.firstChild!;
+    const launcherElement = rootElement?.firstChild;
     if (!launcherElement || !tooltipTextElement) {
       return;
     }

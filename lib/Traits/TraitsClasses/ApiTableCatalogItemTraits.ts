@@ -1,12 +1,13 @@
 import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 import mixTraits from "../mixTraits";
-import ApiRequestTraits from "./ApiRequestTraits";
+import ApiRequestTraits, { QueryParamTraits } from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./Table/TableTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
 export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
   @primitiveTrait({
@@ -29,12 +30,28 @@ export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
   columnMajorColumnNames?: string[] = ["value"];
 }
 
+export class ApiTableColumnTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Name",
+    type: "string",
+    description: "Column name. This must match name in `columns`."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    name: "Response data path",
+    type: "string",
+    description:
+      "Path to relevant data in JSON response. eg: `some.user.name`, `some.users[0].name` or `some.users[].name`. For data to be parsed correctly, it must return a primitive value (string, number, boolean)."
+  })
+  responseDataPath?: string;
+}
+
 export default class ApiTableCatalogItemTraits extends mixTraits(
   TableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  AutoRefreshingTraits,
-  ApiRequestTraits
+  AutoRefreshingTraits
 ) {
   @objectArrayTrait({
     name: "APIs",
@@ -44,6 +61,15 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
     idProperty: "url"
   })
   apis: ApiTableRequestTraits[] = [];
+
+  @objectArrayTrait({
+    name: "API Columns",
+    type: ApiTableColumnTraits,
+    description:
+      'ApiTableCatalogItem specific column configuration. Note: you **must** define which columns to use from API response in the `columns` `TableColumnTraits` - for example `[{name:"some-key-in-api-response", ...}]`. This object only adds additional properties',
+    idProperty: "name"
+  })
+  apiColumns: ApiTableColumnTraits[] = [];
 
   @primitiveTrait({
     name: "Id key",
@@ -59,4 +85,22 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
       "When true, new data received through APIs will be appended to existing data. If false, new data will replace existing data."
   })
   shouldAppendNewData?: boolean = true;
+
+  @objectArrayTrait({
+    name: "Common query parameters",
+    type: QueryParamTraits,
+    description:
+      "Common query parameters to supply to all APIs. These are merged into the query parameters for each API.",
+    idProperty: "name"
+  })
+  queryParameters: QueryParamTraits[] = [];
+
+  @objectArrayTrait({
+    name: "Common query parameters for updates",
+    type: QueryParamTraits,
+    description:
+      "Common query parameters to supply to all APIs on subsequent calls after the first call. These are merged into the update query parameters for each API.",
+    idProperty: "name"
+  })
+  updateQueryParameters: QueryParamTraits[] = [];
 }

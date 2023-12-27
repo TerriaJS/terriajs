@@ -132,7 +132,7 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
     const result = new Map<string, StratumFromTraits<ModelTraits>>();
 
     // Add the strata fro the top
-    for (let key of this.top.strata.keys()) {
+    for (const key of this.top.strata.keys()) {
       const topStratum = this.top.strata.get(key);
       const bottomStratum = this.bottom.strata.get(key);
 
@@ -159,7 +159,7 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
     }
 
     // Add any strata that are only in the bottom
-    for (let key of this.bottom.strata.keys()) {
+    for (const key of this.bottom.strata.keys()) {
       if (this.top.strata.has(key)) {
         continue;
       }

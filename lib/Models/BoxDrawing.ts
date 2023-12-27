@@ -1,11 +1,12 @@
 import throttle from "lodash-es/throttle";
 import {
+  makeObservable,
   observable,
   onBecomeObserved,
-  onBecomeUnobserved,
-  makeObservable
+  onBecomeUnobserved
 } from "mobx";
 import ArcType from "terriajs-cesium/Source/Core/ArcType";
+import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -16,6 +17,7 @@ import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
@@ -30,15 +32,13 @@ import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackPropert
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PlaneGraphics from "terriajs-cesium/Source/DataSources/PlaneGraphics";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import PositionProperty from "terriajs-cesium/Source/DataSources/PositionProperty";
 import Axis from "terriajs-cesium/Source/Scene/Axis";
-import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
+import { CustomCursorType, getCustomCssCursor } from "./BoxDrawing/cursors";
 import Cesium from "./Cesium";
 
 export type ChangeEvent = {
@@ -64,7 +64,7 @@ type Interactable = {
   onMouseOver: (mouseMove: MouseMove) => void;
   onMouseOut: (mouseMove: MouseMove) => void;
   onPick: (click: MouseClick) => void;
-  onRelease: (click: MouseClick) => void;
+  onRelease: () => void;
   onDrag: (mouseMove: MouseMove) => void;
 };
 
@@ -112,7 +112,6 @@ type ScalePoint = Entity &
   Interactable &
   CameraAware & {
     position: PositionProperty;
-    model: ModelGraphics;
     oppositeScalePoint: ScalePoint;
     axisLine: Entity;
   };
@@ -244,7 +243,7 @@ export default class BoxDrawing {
   @observable
   public dataSource: CustomDataSource;
 
-  public keepBoxAboveGround: boolean;
+  private _keepBoxAboveGround = false;
 
   private drawNonUniformScaleGrips: boolean;
 
@@ -274,8 +273,16 @@ export default class BoxDrawing {
   // Scale points on the box defined as cesium entities with additional properties
   private readonly scalePoints: ScalePoint[] = [];
 
+  private readonly edges: Edge[] = [];
+
   private isHeightUpdateInProgress: boolean = false;
   private terrainHeightEstimate: number = 0;
+
+  // Flag to turn scaling interaction on or off
+  private _enableScaling = true;
+
+  // Flag to turn rotation interaction on or off
+  private _enableRotation = true;
 
   /**
    * A private constructor. Use {@link BoxDrawing.fromTransform} or {@link BoxDrawing.fromTranslationRotationScale} to create instances.
@@ -369,6 +376,43 @@ export default class BoxDrawing {
     this.updateBox();
   }
 
+  get keepBoxAboveGround() {
+    return this._keepBoxAboveGround;
+  }
+
+  set keepBoxAboveGround(value: boolean) {
+    if (this._keepBoxAboveGround === value) {
+      return;
+    }
+
+    this._keepBoxAboveGround = value;
+    this.setBoxAboveGround().then(() => {
+      this.onChange?.({
+        modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs,
+        isFinished: true
+      });
+    });
+  }
+
+  get enableScaling() {
+    return this._enableScaling;
+  }
+
+  set enableScaling(enable: boolean) {
+    this._enableScaling = enable;
+    this.scalePoints.forEach((scalePoint) => (scalePoint.show = enable));
+  }
+
+  get enableRotation() {
+    return this._enableRotation;
+  }
+
+  set enableRotation(enable: boolean) {
+    this._enableRotation = enable;
+    this.edges.forEach((edge) => (edge.show = enable));
+  }
+
   /**
    * Moves the box by the provided moveStep with optional clamping applied so that the
    * box does not go underground.
@@ -404,6 +448,19 @@ export default class BoxDrawing {
   })();
 
   /**
+   * Set the box position
+   */
+  setPosition(position: Cartesian3) {
+    const moveStep = Cartesian3.subtract(
+      position,
+      this.trs.translation,
+      new Cartesian3()
+    );
+    this.moveBoxWithClamping(moveStep);
+    this.updateBox();
+  }
+
+  /**
    * Update the terrain height estimate at the current box position.
    *
    * If the terrainProvider is the `EllipsoidTerrainProvider` this simply sets
@@ -431,12 +488,21 @@ export default class BoxDrawing {
         return;
       }
 
+      const boxCenter =
+        this.trs.translation &&
+        Cartographic.fromCartesian(
+          this.trs.translation,
+          undefined,
+          scratchBoxCenter
+        );
+
+      if (!boxCenter) {
+        this.terrainHeightEstimate = 0;
+        return;
+      }
+
       this.isHeightUpdateInProgress = true;
-      const boxCenter = Cartographic.fromCartesian(
-        this.trs.translation,
-        undefined,
-        scratchBoxCenter
-      );
+
       try {
         const [floor] = await sampleTerrainMostDetailed(terrainProvider, [
           Cartographic.clone(boxCenter, scratchFloor)
@@ -450,13 +516,13 @@ export default class BoxDrawing {
     };
   })();
 
-  setBoxAboveGround() {
+  async setBoxAboveGround(): Promise<void> {
     if (!this.keepBoxAboveGround) {
       return;
     }
 
     // Get the latest terrain height estimate and update the box position
-    this.updateTerrainHeightEstimate(true).then(() => {
+    return this.updateTerrainHeightEstimate(true).then(() => {
       this.moveBoxWithClamping(Cartesian3.ZERO);
       this.updateBox();
     });
@@ -562,6 +628,10 @@ export default class BoxDrawing {
         return;
       }
 
+      if (state.is === "picked") {
+        handleRelease();
+      }
+
       if (state.is === "hovering") {
         state.entity.onMouseOut({
           startPosition: click.position,
@@ -581,13 +651,13 @@ export default class BoxDrawing {
       entity.onPick(click);
     };
 
-    const handleRelease = (click: MouseClick) => {
+    const handleRelease = () => {
       if (state.is === "picked") {
         this.cesium.isFeaturePickingPaused =
           state.beforePickState.isFeaturePickingPaused;
         scene.screenSpaceCameraController.enableInputs =
           state.beforePickState.enableInputs;
-        state.entity.onRelease(click);
+        state.entity.onRelease();
         state = { is: "none" };
       }
     };
@@ -665,6 +735,9 @@ export default class BoxDrawing {
     const handler = {
       destroy: () => {
         eventHandler.destroy();
+        // When destroying the eventHandler make sure we also release any
+        // picked entities and not leave them hanging
+        handleRelease();
         scene.canvas.removeEventListener("mouseout", onMouseOutCanvas);
       }
     };
@@ -711,7 +784,7 @@ export default class BoxDrawing {
     localEdges.forEach((localEdge) => {
       const edge = this.createEdge(localEdge);
       this.dataSource.entities.add(edge);
-      //this.edges.push(edge);
+      this.edges.push(edge);
     });
   }
 
@@ -731,8 +804,20 @@ export default class BoxDrawing {
         -1,
         new Cartesian3()
       );
-      const scalePoint1 = this.createScalePoint(pointLocal1);
-      const scalePoint2 = this.createScalePoint(pointLocal2);
+      const scalePoint1 = this.createScalePoint(
+        pointLocal1,
+        Cartesian3.normalize(
+          Cartesian3.subtract(pointLocal1, pointLocal2, new Cartesian3()),
+          new Cartesian3()
+        )
+      );
+      const scalePoint2 = this.createScalePoint(
+        pointLocal2,
+        Cartesian3.normalize(
+          Cartesian3.subtract(pointLocal2, pointLocal1, new Cartesian3()),
+          new Cartesian3()
+        )
+      );
       scalePoint1.oppositeScalePoint = scalePoint2;
       scalePoint2.oppositeScalePoint = scalePoint1;
       const axisLine = this.createScaleAxisLine(scalePoint1, scalePoint2);
@@ -764,7 +849,7 @@ export default class BoxDrawing {
     const style: Readonly<SideStyle> = {
       fillColor: Color.WHITE.withAlpha(0.1),
       outlineColor: Color.WHITE,
-      highlightFillColor: Color.WHITE.withAlpha(0.1),
+      highlightFillColor: Color.WHITE.withAlpha(0.2),
       highlightOutlineColor: Color.CYAN
     };
     let isHighlighted = false;
@@ -825,6 +910,7 @@ export default class BoxDrawing {
     const scratchMoveStep = new Cartesian3();
     const scratchPickPosition = new Cartesian3();
 
+    const isTopOrBottomSide = axis === Axis.Z;
     const moveStartPos = new Cartesian2();
     const pickedPointOffset = new Cartesian3();
     let dragStart = false;
@@ -1025,7 +1111,9 @@ export default class BoxDrawing {
 
     const onMouseOver = () => {
       highlightAllSides();
-      setCanvasCursor(scene, "grab");
+      isTopOrBottomSide
+        ? setCanvasCursor(scene, "n-resize")
+        : setCustomCanvasCursor(scene, "grab", "ew-resize");
     };
 
     const onMouseOut = () => {
@@ -1037,7 +1125,9 @@ export default class BoxDrawing {
       Cartesian2.clone(click.position, moveStartPos);
       dragStart = true;
       highlightAllSides();
-      setCanvasCursor(scene, "grabbing");
+      isTopOrBottomSide
+        ? setCanvasCursor(scene, "n-resize")
+        : setCustomCanvasCursor(scene, "grabbing", "ew-resize");
     };
 
     const onPickDisabled = () => {
@@ -1070,8 +1160,6 @@ export default class BoxDrawing {
       side.isFacingCamera =
         Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
     };
-
-    const isTopOrBottomSide = axis === Axis.Z;
 
     // Call enabledFn only if movement is is allowed for this side, otherwise call disabledFn
     const ifActionEnabled = (
@@ -1140,7 +1228,7 @@ export default class BoxDrawing {
     const onMouseOver = () => {
       if (isDraggableEdge) {
         isHighlighted = true;
-        setCanvasCursor(scene, "pointer");
+        setCustomCanvasCursor(scene, "rotate", "pointer");
       }
     };
 
@@ -1154,7 +1242,7 @@ export default class BoxDrawing {
     const onPick = () => {
       if (isDraggableEdge) {
         isHighlighted = true;
-        setCanvasCursor(scene, "pointer");
+        setCustomCanvasCursor(scene, "rotate", "pointer");
       }
     };
 
@@ -1216,12 +1304,16 @@ export default class BoxDrawing {
    * @param pointLocal The scale point in local coordinates.
    * @returns ScalePoint A cesium entity representing the scale point.
    */
-  private createScalePoint(pointLocal: Cartesian3): ScalePoint {
+  private createScalePoint(
+    pointLocal: Cartesian3,
+    direction: Cartesian3
+  ): ScalePoint {
     const scene = this.scene;
     const position = new Cartesian3();
+    const offsetPosition = new Cartesian3();
     const style: Readonly<ScalePointStyle> = {
-      cornerPointColor: Color.RED,
-      facePointColor: Color.BLUE,
+      cornerPointColor: Color.RED.brighten(0.5, new Color()),
+      facePointColor: Color.BLUE.brighten(0.5, new Color()),
       dimPointColor: Color.GREY.withAlpha(0.2)
     };
     let isFacingCamera = false;
@@ -1234,29 +1326,85 @@ export default class BoxDrawing {
         : style.dimPointColor;
     };
 
-    const update = () => {
-      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
+    const scalePointRadii = new Cartesian3();
+    const scratchBoundingSphere = new BoundingSphere();
+    const updateScalePointRadii = (
+      position: Cartesian3,
+      boxScale: Cartesian3
+    ) => {
+      // Get size of a pixel in metres at the position of the bounding shpere
+      position.clone(scratchBoundingSphere.center);
+      scratchBoundingSphere.radius = 1;
+      const pixelSize = scene.camera.getPixelSize(
+        scratchBoundingSphere,
+        scene.drawingBufferWidth,
+        scene.drawingBufferHeight
+      );
+
+      const maxBoxScale = Cartesian3.maximumComponent(boxScale);
+
+      // Compute radius equivalent to 10 pixels or 0.1 times the box scale whichever is smaller
+      const radius = Math.min(pixelSize * 10, maxBoxScale * 0.1);
+      scalePointRadii.x = radius;
+      scalePointRadii.y = radius;
+      scalePointRadii.z = radius;
+      return scalePointRadii;
     };
 
+    const scratchOffset = new Cartesian3();
+    const scratchMatrix = new Matrix4();
+    const update = () => {
+      // Update grip position
+      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
+
+      // Update the size of scale points
+      updateScalePointRadii(position, this.trs.scale);
+
+      // Compute an offset for grips that lie on a face. Without the offset,
+      // half of the grip will be inside the box thus reducing the clickable
+      // surface area and creating a bad user experience. So, we want to push
+      // most of the grip outside the box. Here we compute an offset 0.9 times
+      // the radius of the point and in an outward direction from the center of
+      // the box.
+      const offset = isCornerPoint
+        ? Cartesian3.ZERO // skip for corner points
+        : Cartesian3.multiplyByScalar(
+            // Transform the direction into world co-ordinates, but ignore the scaling
+            Matrix4.multiplyByPointAsVector(
+              Matrix4.setScale(this.modelMatrix, Cartesian3.ONE, scratchMatrix),
+              direction,
+              scratchOffset
+            ),
+            // assuming the grip point has uniform radii
+            scalePointRadii.x * 0.9,
+            scratchOffset
+          );
+
+      Cartesian3.add(position, offset, offsetPosition);
+    };
+
+    let isHighlighted = false;
+    const scratchColor = new Color();
     const scalePoint: ScalePoint = new Entity({
-      position: new CallbackProperty(() => position, false) as any,
+      position: new CallbackProperty(() => offsetPosition, false) as any,
       orientation: new CallbackProperty(
         () => Quaternion.IDENTITY,
         false
       ) as any,
-      model: {
-        uri: require("file-loader!../../wwwroot/models/Box.glb"),
-        minimumPixelSize: 12,
-        maximumScale: new CallbackProperty(
-          // Clamp the maximum size of the scale grip to the 0.15 times the
-          // size of the minimum side
-          () => 0.15 * Cartesian3.minimumComponent(this.trs.scale),
+
+      // Sphere for the scale point
+      ellipsoid: {
+        radii: new CallbackProperty(
+          // update scale point radii to reflect camera distance changes
+          () => updateScalePointRadii(position, this.trs.scale),
           false
         ),
-        shadows: ShadowMode.DISABLED,
-        color: new CallbackProperty(() => getColor(), false),
-        // Forces the above color ignoring the color specified in gltf material
-        colorBlendMode: ColorBlendMode.REPLACE
+        material: new ColorMaterialProperty(
+          new CallbackProperty(
+            () => getColor().brighten(isHighlighted ? -0.5 : 0.0, scratchColor),
+            false
+          )
+        )
       }
     }) as ScalePoint;
 
@@ -1265,26 +1413,40 @@ export default class BoxDrawing {
     const xDot = Math.abs(Cartesian3.dot(new Cartesian3(1, 0, 0), axisLocal));
     const yDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 1, 0), axisLocal));
     const zDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 0, 1), axisLocal));
-    const cursorDirection =
-      xDot === 1 || yDot === 1
-        ? "ew-resize"
-        : zDot === 1
-        ? "ns-resize"
-        : "nesw-resize";
-
     const isCornerPoint = xDot && yDot && zDot;
     const isProportionalScaling = isCornerPoint;
 
-    const onMouseOver = () => {
-      scalePoint.axisLine.show = true;
-      highlightScalePoint();
-      setCanvasCursor(scene, cursorDirection);
+    // Return the angle in clockwise direction to rotate the mouse
+    // cursor so that it points towards the center of the box.
+    const getCursorRotation = (mousePos: Cartesian2) => {
+      const boxCenter = scene.cartesianToCanvasCoordinates(
+        this.trs.translation
+      );
+      // mouse coords relative to the box center
+      const x = mousePos.x - boxCenter.x;
+      const y = mousePos.y - boxCenter.y;
+
+      // Math.atan2 gives the angle the (x, y) point makes with the positive
+      // x-axes in the clockwise direction
+      const angle = CesiumMath.toDegrees(Math.atan2(y, x));
+      return angle;
     };
 
-    const onPick = () => {
+    const onMouseOver = (mouseMove: MouseMove) => {
       scalePoint.axisLine.show = true;
       highlightScalePoint();
-      setCanvasCursor(scene, cursorDirection);
+      //cursor(mouseMove.endPosition);
+      //setCanvasCursor(scene, cursorDirection);
+      const cursorRotation = getCursorRotation(mouseMove.endPosition);
+      setCustomCanvasCursor(scene, "resize", "ew-resize", cursorRotation);
+    };
+
+    const onPick = (mouseClick: MouseClick) => {
+      scalePoint.axisLine.show = true;
+      highlightScalePoint();
+
+      const cursorRotation = getCursorRotation(mouseClick.position);
+      setCustomCanvasCursor(scene, "resize", "ew-resize", cursorRotation);
     };
 
     const onRelease = () => {
@@ -1433,15 +1595,11 @@ export default class BoxDrawing {
     };
 
     const highlightScalePoint = () => {
-      const model = scalePoint.model;
-      model.silhouetteColor = Color.YELLOW as any;
-      model.silhouetteSize = 1 as any;
+      isHighlighted = true;
     };
 
     const unHighlightScalePoint = () => {
-      const model = scalePoint.model;
-      model.silhouetteColor = undefined;
-      model.silhouetteSize = 0 as any;
+      isHighlighted = false;
     };
 
     scalePoint.onPick = onPick;
@@ -1462,8 +1620,8 @@ export default class BoxDrawing {
     scalePoint1: ScalePoint,
     scalePoint2: ScalePoint
   ): Entity {
-    const position1 = scalePoint1.position?.getValue(JulianDate.now())!;
-    const position2 = scalePoint2.position?.getValue(JulianDate.now())!;
+    const position1 = scalePoint1.position?.getValue(JulianDate.now());
+    const position2 = scalePoint2.position?.getValue(JulianDate.now());
     const scaleAxis = new Entity({
       show: false,
       polyline: {
@@ -1708,6 +1866,22 @@ function computeViewRectangle(scene: Scene) {
 
 function setCanvasCursor(scene: Scene, cursorType: string) {
   scene.canvas.style.cursor = cursorType;
+}
+
+/**
+ * Set canvas cursor to the custom cursor also applying the rotation on the cursor
+ *
+ * @param type Custom cursor type
+ * @param fallback The standard cusrsor to use as fallback (See https://developer.mozilla.org/en-US/docs/Web/CSS/cursor)
+ * @param rotation Then angle in clockwise direction to rotate the custom cursor
+ */
+function setCustomCanvasCursor(
+  scene: Scene,
+  type: CustomCursorType,
+  fallback: string,
+  rotation = 0
+) {
+  setCanvasCursor(scene, getCustomCssCursor({ type, fallback, rotation }));
 }
 
 /**

@@ -111,14 +111,14 @@ describe("ArcGisCatalogGroup", function () {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(8);
 
-      let member0 = <ArcGisCatalogGroup>group.memberModels[0];
-      let member1 = <ArcGisCatalogGroup>group.memberModels[1];
-      let member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
-      let member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
-      let member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
-      let member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
-      let member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
-      let member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
+      const member0 = <ArcGisCatalogGroup>group.memberModels[0];
+      const member1 = <ArcGisCatalogGroup>group.memberModels[1];
+      const member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
+      const member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
+      const member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
+      const member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
+      const member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
+      const member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
 
       expect(member0 instanceof ArcGisCatalogGroup).toBeTruthy();
       expect(member0.name).toBe("AGP");
