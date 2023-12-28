@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
 import BingMapsStyle from "terriajs-cesium/Source/Scene/BingMapsStyle";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
@@ -10,6 +11,33 @@ describe("BingMapsCatalogItem", () => {
   let item: BingMapsCatalogItem;
 
   beforeEach(() => {
+    spyOn(Resource.prototype, "fetchJsonp").and.returnValue(
+      Promise.resolve({
+        // A clipped version of an actual request to
+        // http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type:
+                  "ImageryMetadata:http://schemas.microsoft.com/search/local/ws/rest/v1",
+                imageHeight: 256,
+                imageUrl:
+                  "https://ecn.{subdomain}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg",
+                imageUrlSubdomains: ["t0", "t1", "t2", "t3"],
+                imageWidth: 256,
+                imageryProviders: [],
+                vintageEnd: null,
+                vintageStart: null,
+                zoomMax: 21,
+                zoomMin: 1
+              }
+            ]
+          }
+        ]
+      })
+    );
     item = new BingMapsCatalogItem("test", new Terria());
     runInAction(() => item.setTrait("definition", "key", "XXXXX"));
   });
