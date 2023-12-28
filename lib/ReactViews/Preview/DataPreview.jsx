@@ -14,6 +14,7 @@ import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
 import WarningBox from "./WarningBox";
+import { Icon } from "../../Styled/Icon";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -105,16 +106,32 @@ class DataPreview extends React.Component {
     } else {
       return (
         <div className={Styles.placeholder}>
-          <Trans i18nKey="preview.selectToPreview">
-            <p>Select a dataset to see a preview</p>
-            <p>- OR -</p>
-            <button
-              className={Styles.btnBackToMap}
-              onClick={() => this.backToMap()}
-            >
-              Go to the map
-            </button>
-          </Trans>
+          <p>{t("preview.selectToPreview")}</p>
+          <p>
+            <Trans i18nKey="preview.selectMultipleDatasets">
+              <span>
+                Press <strong>Shift</strong> and click
+              </span>
+              <Icon
+                glyph={Icon.GLYPHS.add}
+                css={{
+                  height: "20px",
+                  width: "20px",
+                  margin: "0px 5px",
+                  verticalAlign: "middle",
+                  fill: `${(p) => p.theme.charcoalGrey}`
+                }}
+              />
+              <span>to add multiple datasets.</span>
+            </Trans>
+          </p>
+          <p>- {t("preview.selectToPreviewSeparator")} -</p>
+          <button
+            className={Styles.btnBackToMap}
+            onClick={() => this.backToMap()}
+          >
+            {t("preview.goToTheMap")}
+          </button>
         </div>
       );
     }
