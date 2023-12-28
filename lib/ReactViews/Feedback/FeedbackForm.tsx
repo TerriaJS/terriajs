@@ -16,10 +16,7 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import {
-  WithViewState,
-  withViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "../Context";
 import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
 interface IProps extends WithTranslation, WithViewState {
@@ -140,7 +137,9 @@ class FeedbackForm extends React.Component<IProps, IState> {
       this.state.comment.length >=
       this.props.viewState.terria.configParameters.feedbackMinLength!
     ) {
-      this.state.isSending = true;
+      this.setState({
+        isSending: true
+      });
       sendFeedback({
         terria: this.props.viewState.terria,
         name: this.state.name,
@@ -222,7 +221,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.name}
               onChange={this.updateName}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -243,7 +242,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.email}
               onChange={this.updateEmail}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -370,7 +369,7 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
         }
       }}
       invalidValue={!valueIsValid}
-    ></StyledTextArea>
+    />
   );
 };
 
@@ -388,7 +387,7 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
   const childrenWithId = React.Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id });
+      return React.cloneElement(child, { id: id } as any);
     }
     return child;
   });

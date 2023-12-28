@@ -3,7 +3,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment";
@@ -172,7 +173,12 @@ class DateTimePicker extends React.Component<PropsType> {
 
   private currentDateAutorunDisposer: IReactionDisposer | undefined;
 
-  componentWillMount() {
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
+
+  UNSAFE_componentWillMount() {
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
     let defaultYear: number | undefined;

@@ -16,7 +16,8 @@ export enum SearchAction {
   bing = "Bing",
   catalog = "Catalog",
   gazetteer = "Gazetteer",
-  nominatim = "nominatim"
+  nominatim = "nominatim",
+  cesium = "Cesium"
 }
 
 export enum LaunchAction {
@@ -51,7 +52,12 @@ export enum DataSourceAction {
   removeFromPreviewButton = "Remove from preview button",
   removeFromWorkbench = "Remove from workbench",
   removeAllFromWorkbench = "Remove all from workbench",
-  addFromDragAndDrop = "Add from Drag and Drop"
+  addFromDragAndDrop = "Add from Drag and Drop",
+  addFromShareOrInit = "Add from share or init source",
+  addDisplayGroupFromCatalogue = "Add display group from catalogue",
+  removeDisplayGroupFromCatalogue = "Remove display group from catalogue",
+  addDisplayGroupFromAddAllButton = "Add display group via Add All button",
+  removeDisplayGroupFromRemoveAllButton = "Remove display group via Remove All button"
 }
 
 export enum DatatabAction {

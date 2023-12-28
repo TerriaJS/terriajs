@@ -42,40 +42,40 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
 
 Key points:
 
-- `catalog` is an array.
-- Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
-- The three major categories of catalog member types are:
-  - [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
-  - [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
-  - [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
+-   `catalog` is an array.
+-   Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
+-   The three major categories of catalog member types are:
+    -   [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
+    -   [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
+    -   [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
 
 Most of the other properties of each layer depend on the specific type. See the links above for details of each type.
 
-### Using a catalog file
+### Using an init file
 
-There are four ways to load a catalog file into a TerriaJS application:
+There are four ways to load an init file into a TerriaJS application:
 
 1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage. This is how `wwwroot/init/terria.json` is loaded in the default TerriaMap setup.
-2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the catalog file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
+2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the init file name (without `.json`) to the URL after `#`. For instance, `terria.example.com/#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
 3. Store it anywhere on the web (on a [CORS-enabled](../connecting-to-data/cross-origin-resource-sharing.md) server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `http://nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a TerriaJS instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
 4. Store it locally, then drag and drop it into the Terria Map window.
 
-All catalog files, however loaded, are merged together in TerriaJS. Any two items with the same name and place in the tree are combined. This means that if two catalog files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
+All init files, however loaded, are merged together in TerriaJS. Any two items with the same name and place in the tree are combined. This means that if two init files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
 
-### Editing catalog files
+### Editing init files
 
-Catalog files can be edited two ways:
+Init files can be edited two ways:
 
 1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use [http://jsonlint.com/](http://jsonlint.com/).
 2. Using a JSON-specific editor, such as [http://www.jsoneditoronline.org/](http://www.jsoneditoronline.org/). This has the advantage that your file will be valid JSON.
 
-## Catalog file properties
+## Init file properties
 
 | Name              | Required | Type                                                                                                                                                                                                  | Default | Description                                                                                                                                                                                                                                                                              |
 | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `corsDomains`     | no       | **string[]**                                                                                                                                                                                          |         | By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them. |
 | `catalog`         | no       | [**`CatalogItem[]`**](../connecting-to-data/catalog-items.md), [**`CatalogGroup[]`**](../connecting-to-data/catalog-groups.md), [**`CatalogFunction[]`**](../connecting-to-data/catalog-functions.md) |         | An array of catalog items, groups and functions. Check example above.                                                                                                                                                                                                                    |
-| `initialCamera`   | no       | [**`CameraPosition`**](#CameraPosition)                                                                                                                                                               |         | The location when the map first displays.                                                                                                                                                                                                                                                |
+| `initialCamera`   | no       | [**`InitialCamera`**](#InitialCamera)                                                                                                                                                                 |         | The location when the map first displays.                                                                                                                                                                                                                                                |
 | `stories`         | no       | [**`Story[]`**](#story)                                                                                                                                                                               |         | An array of stories to be loaded.                                                                                                                                                                                                                                                        |
 | `viewerMode`      | no       | **`"3d"`** or **`"3dSmooth"`** or **`"2D"`**                                                                                                                                                          | `"3d"`  | The id of the viewer mode to be shown initialy.                                                                                                                                                                                                                                          |
 | `homeCamera`      | yes      | [**`CameraPosition`**](#CameraPosition)                                                                                                                                                               |         | Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.                                                                                                                                                                                         |
@@ -85,6 +85,10 @@ Catalog files can be edited two ways:
 | `workbench`       | no       | **`string[]`**                                                                                                                                                                                        |         | List of items ids to initially add to workbench.                                                                                                                                                                                                                                         |
 | `previewedItemId` | no       | **`string`**                                                                                                                                                                                          |         | ID of the catalog member that is currently being previewed.                                                                                                                                                                                                                              |
 | `settings`        | no       | [**`settings`**](#advanced-settings)                                                                                                                                                                  |         | Additional (more advanced) settings.                                                                                                                                                                                                                                                     |
+
+### InitialCamera
+
+Either [CameraPosition](#CameraPosition) or an object **`{"focusWorkbenchItems": true}`**. When `focusWorkbenchItems` is `true`, we make a best effort to focus the camera so that the workbench items are visible.
 
 ### CameraPosition
 
@@ -232,20 +236,20 @@ Definition of the story. This can be pretty complex to define for the standard u
 
 #### ShareData
 
-| Name          | Required | Type                                                    | Default   | Description                |
-| ------------- | -------- | ------------------------------------------------------- | --------- | -------------------------- |
-| `version`     | yes      | **`string`**                                            | `"8.0.0"` | The version of share data. |
-| `initSources` | yes      | [**`CatalogFileProperties`**](#catalog-file-properties) |
+| Name          | Required | Type                         | Default   | Description                                                       |
+| ------------- | -------- | ---------------------------- | --------- | ----------------------------------------------------------------- |
+| `version`     | yes      | **`string`**                 | `"8.0.0"` | The version of share data.                                        |
+| `initSources` | yes      | **`(string \| InitFile)[]`** |           | Array of Init URLs and/or [**`InitFile`**](#init-file-properties) |
 
 ### <a id="base-maps"></a>`baseMaps`
 
 Definition of the base map model.
 
 | Name                                          | Required | Type                               | Default                                                                                                           | Description                                                                                                                                                                                                                                                |
-| --------------------------------------------- | -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| --------------------------------------------- | -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <a id="basemaps-items"></a>`items`            | no       | [**`basemapItem`**](#basemap-item) | [default list of basemaps](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/BaseMaps/defaultBaseMaps.ts) | The array of the base maps to be shown to the user. It will be combined with default list. To override the default basemap definition specify the id of the default basemap and parameter that need to be overriden.                                       |
 | `defaultBaseMapId`                            | no       | **`string`**                       |                                                                                                                   | The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [**`enabledBaseMaps`**](#enabledbasemaps) array.                                                                                            |
-| `previewBaseMapId`                            | no       | **`string`**                       |                                                                                                                   | The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [**`enabledBaseMaps`**](#enabledbasemaps) array.                                                                                    |     |
+| `previewBaseMapId`                            | no       | **`string`**                       |                                                                                                                   | The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [**`enabledBaseMaps`**](#enabledbasemaps) array.                                                                                    |
 | <a id="enabledbasemaps"></a>`enabledBaseMaps` | no       | **`string[]`**                     | _all_                                                                                                             | Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps. The values must be an ids of the catalog item from the [**`baseMaps items`**](#basemaps-items) array. |
 
 **Example**

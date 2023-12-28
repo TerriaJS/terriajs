@@ -9,11 +9,11 @@ import Terria from "../../lib/Models/Terria";
 import LegendTraits, {
   LegendItemTraits
 } from "../../lib/Traits/TraitsClasses/LegendTraits";
-import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableColumnTraits, {
   ColumnTransformationTraits
-} from "../../lib/Traits/TraitsClasses/TableColumnTraits";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -44,21 +44,24 @@ describe("TableStyle", function () {
       "build/TerriaJS/data/regionMapping.json";
 
     jasmine.Ajax.install();
+    jasmine.Ajax.stubRequest(/.*/).andError({
+      statusText: "Unexpected request, not stubbed"
+    });
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SED_CODE18_SED_2018.json"
     ).andReturn({ responseText: SedCods });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
     ).andReturn({ responseText: Sa4Codes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
     ).andReturn({ responseText: Sa4Names });
   });
 

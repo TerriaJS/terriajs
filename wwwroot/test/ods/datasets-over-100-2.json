@@ -1,0 +1,1422 @@
+{
+  "total_count": 101,
+  "links": [
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets?include_app_metas=False&order_by=title+asc&limit=100&refine=features%3Ageo&offset=0&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
+      "rel": "self"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets?include_app_metas=False&order_by=title+asc&limit=100&refine=features%3Ageo&offset=0&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
+      "rel": "first"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets?include_app_metas=False&order_by=title+asc&limit=100&refine=features%3Ageo&offset=0&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
+      "rel": "last"
+    }
+  ],
+  "datasets": [
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown-heat-aggregated-measures",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown-heat-aggregated-measures/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown-heat-aggregated-measures/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown-heat-aggregated-measures/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown-heat-aggregated-measures/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "campbelltown-heat-aggregated-measures",
+        "dataset_uid": "da_52qfqj",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Logger#",
+            "type": "text",
+            "name": "logger",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Serial #",
+            "type": "text",
+            "name": "serial",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Description 1",
+            "type": "text",
+            "name": "description_1",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Description 2",
+            "type": "text",
+            "name": "description_2",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Suburb",
+            "type": "text",
+            "name": "suburb",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Tree Species (if applicable)",
+            "type": "text",
+            "name": "tree_species_if_applicable",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Mean",
+            "type": "double",
+            "name": "mean",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Max",
+            "type": "double",
+            "name": "max",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Min",
+            "type": "double",
+            "name": "min",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "location",
+            "type": "geo_point_2d",
+            "name": "location",
+            "annotations": {}
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 102,
+            "modified": "2020-09-16T10:42:08+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": ["heat", "urban heat", "temperature", "climate"],
+            "source_domain_title": null,
+            "geographic_reference": ["au_40_1"],
+            "timezone": null,
+            "title": "Benchmarking Heat across Campbelltown - aggregated measures",
+            "parent_domain": "westernparklands",
+            "theme": ["Environmental Protection"],
+            "modified_updates_on_data_change": false,
+            "metadata_processed": "2021-02-03T01:35:32.280000+00:00",
+            "data_processed": "2020-09-16T10:47:19+00:00",
+            "territory": ["New South Wales"],
+            "description": "<p><span style=\"color: rgb(86, 86, 86); font-family: Barlow; font-size: 16px;\">Contains location and aggregated heat measures captured via a network of more than 100 heat loggers installed in the council area.\u00a0</span><br/></p>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": "Campbelltown City Council",
+            "language": "en",
+            "license": null,
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": null
+          }
+        },
+        "features": ["analyze", "geo", "custom_view"]
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "weather-stations",
+        "dataset_uid": "da_7rkvfm",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Device name",
+            "type": "text",
+            "name": "device_name",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "dev_id",
+            "type": "text",
+            "name": "dev_id",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "time",
+            "type": "datetime",
+            "name": "metadata_time",
+            "annotations": {
+              "facet": [],
+              "facetsort": ["-alphanum"],
+              "timeserie_precision": ["hour"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Heat Stress Index",
+            "type": "double",
+            "name": "heat_stress_index",
+            "annotations": {
+              "decimals": [1],
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "UVIndex",
+            "type": "double",
+            "name": "payload_fields_uvindex",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "wshumidity",
+            "type": "double",
+            "name": "payload_fields_wshumidity",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "wstemperature",
+            "type": "double",
+            "name": "payload_fields_wstemperature",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "airpressure",
+            "type": "double",
+            "name": "payload_fields_airpressure",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "brightness",
+            "type": "double",
+            "name": "payload_fields_brightness",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "gustdirection",
+            "type": "double",
+            "name": "payload_fields_gustdirection",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "gustspeed",
+            "type": "double",
+            "name": "payload_fields_gustspeed",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "precip",
+            "type": "double",
+            "name": "payload_fields_precip",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "precipint",
+            "type": "double",
+            "name": "payload_fields_precipint",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "radiation",
+            "type": "double",
+            "name": "payload_fields_radiation",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "winddirection",
+            "type": "double",
+            "name": "payload_fields_winddirection",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "windspeed",
+            "type": "double",
+            "name": "payload_fields_windspeed",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "averagespl",
+            "type": "double",
+            "name": "payload_fields_averagespl",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "carbonmonoxide",
+            "type": "double",
+            "name": "payload_fields_carbonmonoxide",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "humidity",
+            "type": "double",
+            "name": "payload_fields_humidity",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "ibatt",
+            "type": "double",
+            "name": "payload_fields_ibatt",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "nitrogendioxide",
+            "type": "double",
+            "name": "payload_fields_nitrogendioxide",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "ozone",
+            "type": "double",
+            "name": "payload_fields_ozone",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "particulateserr",
+            "type": "double",
+            "name": "payload_fields_particulateserr",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "particulatesvsn",
+            "type": "double",
+            "name": "payload_fields_particulatesvsn",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "peakspl",
+            "type": "double",
+            "name": "payload_fields_peakspl",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "pm1",
+            "type": "double",
+            "name": "payload_fields_pm1",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "pm10",
+            "type": "double",
+            "name": "payload_fields_pm10",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "pm25",
+            "type": "double",
+            "name": "payload_fields_pm25",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "temperature",
+            "type": "double",
+            "name": "payload_fields_temperature",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "vbatt",
+            "type": "double",
+            "name": "payload_fields_vbatt",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "vpanel",
+            "type": "double",
+            "name": "payload_fields_vpanel",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "fixstatus",
+            "type": "double",
+            "name": "payload_fields_fixstatus",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "hdop",
+            "type": "double",
+            "name": "payload_fields_hdop",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "nsat",
+            "type": "double",
+            "name": "payload_fields_nsat",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Geolocation",
+            "type": "geo_point_2d",
+            "name": "geolocation",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "organisation",
+            "type": "text",
+            "name": "organisation",
+            "annotations": {}
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 29306,
+            "modified": "2020-12-07T05:27:41+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": ["weather"],
+            "source_domain_title": null,
+            "geographic_reference": ["au_80_11978", "au_80_10780"],
+            "timezone": null,
+            "title": "Environmental sensors",
+            "parent_domain": "westernparklands",
+            "theme": ["Environmental Protection"],
+            "modified_updates_on_data_change": false,
+            "metadata_processed": "2021-06-18T06:00:13.031000+00:00",
+            "data_processed": "2021-06-18T05:50:48+00:00",
+            "territory": ["Ingleburn", "Campbelltown (NSW)"],
+            "description": "<p>Two environmental monitoring stations (EMS) were installed in December 2020. The EMS measures: particulate matter (PM 1.0, PM 2.5, PM 10), Nitrogen Dioxide, Carbon Monoxide, Ozone, temperature, relative humidity, and ambient noise.\u00a0<br/></p>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": "Campbelltown City Council",
+            "language": "en",
+            "license": "CC BY",
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        "features": ["geo", "analyze", "timeserie"]
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campelltown-business-directory",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campelltown-business-directory/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campelltown-business-directory/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campelltown-business-directory/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campelltown-business-directory/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "campelltown-business-directory",
+        "dataset_uid": "da_bper3a",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Business name",
+            "type": "text",
+            "name": "business_name",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Street address",
+            "type": "text",
+            "name": "street_address",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Suburb",
+            "type": "text",
+            "name": "suburb",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "State",
+            "type": "text",
+            "name": "state",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Postcode",
+            "type": "text",
+            "name": "postcode",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Phone number",
+            "type": "text",
+            "name": "phone_number",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "lat_long",
+            "type": "geo_point_2d",
+            "name": "lat_long",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Business email",
+            "type": "text",
+            "name": "business_email",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Website",
+            "type": "text",
+            "name": "website",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Instagram",
+            "type": "text",
+            "name": "instagram",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Facebook",
+            "type": "text",
+            "name": "facebook",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Type of business",
+            "type": "text",
+            "name": "type_of_business",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Cuisine type",
+            "type": "text",
+            "name": "cuisine_type",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Describe your business, product or service.",
+            "type": "text",
+            "name": "describe_your_business_product_or_service",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Operating days",
+            "type": "text",
+            "name": "operating_days",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Delivery",
+            "type": "text",
+            "name": "delivery",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Take out",
+            "type": "text",
+            "name": "take_out",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Online sales",
+            "type": "text",
+            "name": "online_sales",
+            "annotations": {
+              "facet": []
+            }
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 172,
+            "modified": "2021-03-19T02:18:51+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": [
+              "Buy Local",
+              "Campbelltown City Council",
+              "Local Businesses"
+            ],
+            "source_domain_title": null,
+            "geographic_reference": ["au_60_11500"],
+            "timezone": "Australia/Sydney",
+            "title": "Local Business Directory - Campbelltown",
+            "parent_domain": "westernparklands",
+            "theme": ["Investment, Tourism and Growth"],
+            "modified_updates_on_data_change": true,
+            "metadata_processed": "2021-03-19T02:18:52.513000+00:00",
+            "data_processed": "2021-03-19T02:18:51+00:00",
+            "territory": ["Campbelltown"],
+            "description": "<p><font face=\"Arial\"><span style=\"font-size: 14px;\">Our local businesses are the heartbeat of our community. To support our local businesses, we encourage our community to use the local business directory to spend local, to keep jobs local.\u00a0\u00a0</span></font></p><p><span style=\"color: rgb(32, 32, 32); font-family: Arial; font-size: 14px;\">If you are a business in the Campbelltown City Council local government area add yourself to our business directory.</span><br/></p>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": "Campbelltown City Council",
+            "language": "en",
+            "license": "CC BY",
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        "features": ["analyze", "geo", "custom_view"]
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/ccc-combined-facilities-list-excluding-family-day-care-centres",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/ccc-combined-facilities-list-excluding-family-day-care-centres/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/ccc-combined-facilities-list-excluding-family-day-care-centres/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/ccc-combined-facilities-list-excluding-family-day-care-centres/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/ccc-combined-facilities-list-excluding-family-day-care-centres/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "ccc-combined-facilities-list-excluding-family-day-care-centres",
+        "dataset_uid": "da_tin2td",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Name",
+            "type": "text",
+            "name": "site_name",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Short description",
+            "type": "text",
+            "name": "short_description",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Service, Facility & POI",
+            "type": "text",
+            "name": "service_or_facility_type",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Opening hours",
+            "type": "text",
+            "name": "opening_hours",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Things to do",
+            "type": "text",
+            "name": "things_to_do",
+            "annotations": {
+              "facet": [],
+              "disjunctive": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Key Features",
+            "type": "text",
+            "name": "key_features",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Contact",
+            "type": "text",
+            "name": "contact",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Phone",
+            "type": "text",
+            "name": "phone",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Email",
+            "type": "text",
+            "name": "email",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Website URL",
+            "type": "text",
+            "name": "website_url",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Street address",
+            "type": "text",
+            "name": "street_address",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Suburb",
+            "type": "text",
+            "name": "suburb",
+            "annotations": {
+              "facet": []
+            }
+          },
+          {
+            "description": null,
+            "label": "Postcode",
+            "type": "double",
+            "name": "postcode",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Additional location information",
+            "type": "text",
+            "name": "additional_location_information",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Latitude",
+            "type": "double",
+            "name": "latitude",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Longitude",
+            "type": "double",
+            "name": "longitude",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Location",
+            "type": "geo_point_2d",
+            "name": "site_location",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 485,
+            "modified": "2020-08-04T06:21:57+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": [
+              "Libraries",
+              "Parks",
+              "Sports Grounds",
+              "Recreation",
+              "Child Care",
+              "Art Centre",
+              "Culture",
+              "Leisure Centres",
+              "Acquatics",
+              "Fitness",
+              "Indoor Sports",
+              "Facilities for Hire",
+              "Animal Care Facility",
+              "Sports Stadium",
+              "Athletics Centre",
+              "Campbelltown City Council"
+            ],
+            "source_domain_title": null,
+            "geographic_reference": ["au_60_11500", "au_60_18400"],
+            "timezone": null,
+            "title": "Services, Facilities & POI - Campbelltown",
+            "parent_domain": "westernparklands",
+            "theme": [
+              "Arts and Culture",
+              "Community, Events and Education",
+              "Parks and Recreation",
+              "City Planning and Amenities",
+              "Governance and Administration"
+            ],
+            "modified_updates_on_data_change": false,
+            "metadata_processed": "2021-02-19T02:05:18.161000+00:00",
+            "data_processed": "2021-02-19T02:05:17+00:00",
+            "territory": ["Campbelltown", "Wollondilly"],
+            "description": "<p><span style=\"font-size: 12.495px;\">We provide a wide range of services and facilities including Libraries; Parks, Sport &amp; Recreation; Child Care; Arts &amp; Culture; Aquatics, Fitness &amp; Indoor Sports; Facilities for Hire; Animal Care Facility; Sports Stadium &amp; Athletics Centre.</span><br/></p>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": "Campbelltown City Council",
+            "language": "en",
+            "license": "CC BY",
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        "features": ["analyze", "geo", "custom_view"]
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/vulnerability",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/vulnerability/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/vulnerability/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/vulnerability/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/vulnerability/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "vulnerability",
+        "dataset_uid": "da_uy1qtz",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Geo Point",
+            "type": "geo_point_2d",
+            "name": "geo_point_2d",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Geo Shape",
+            "type": "geo_shape",
+            "name": "geo_shape",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "primaryindex",
+            "type": "text",
+            "name": "primaryindex",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "sa1_7digitcode_2016",
+            "type": "text",
+            "name": "sa1_7digitcode_2016",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "SA1",
+            "type": "text",
+            "name": "sa1",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "_0_to_4_years__Number_of_PEOPLE",
+            "type": "int",
+            "name": "_0_to_4_years_number_of_people",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "_0_to_4_years_Percent",
+            "type": "double",
+            "name": "_0_to_4_years_percent",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Total_population",
+            "type": "double",
+            "name": "total_population",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "_65_years_and_over_Number_of_PE",
+            "type": "int",
+            "name": "_65_years_and_over_number_of_pe",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "_65_years_and_over__Percent",
+            "type": "double",
+            "name": "_65_years_and_over_percent",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Total_population_of_SA1",
+            "type": "double",
+            "name": "total_population_of_sa1",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Not_fluent_in_English_Number_o",
+            "type": "int",
+            "name": "not_fluent_in_english_number_o",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Not_fluent_in_English_Percent_",
+            "type": "double",
+            "name": "not_fluent_in_english_percent",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Total_pop",
+            "type": "double",
+            "name": "total_pop",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Low_income__650_w__Number_of_H",
+            "type": "int",
+            "name": "low_income_650_w_number_of_h",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Low_income__650_w__Percent_of_",
+            "type": "double",
+            "name": "low_income_650_w_percent_of",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Households",
+            "type": "int",
+            "name": "households",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Housing_stress_Number_of_HOUSE",
+            "type": "int",
+            "name": "housing_stress_number_of_house",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Housing_stress_Percent_of_HOUS",
+            "type": "double",
+            "name": "housing_stress_percent_of_hous",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Housing_stress_Households",
+            "type": "int",
+            "name": "housing_stress_households",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Mortgage_stress_Number_of_HOUS",
+            "type": "int",
+            "name": "mortgage_stress_number_of_hous",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Mortgage_stress_Percent_of_HOU",
+            "type": "int",
+            "name": "mortgage_stress_percent_of_hou",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Households1",
+            "type": "int",
+            "name": "households1",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Rental_stress_Number_of_HOUSEH",
+            "type": "int",
+            "name": "rental_stress_number_of_househ",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Rental_stress_Percent_of_HOUSE",
+            "type": "double",
+            "name": "rental_stress_percent_of_house",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          },
+          {
+            "description": null,
+            "label": "Households2",
+            "type": "int",
+            "name": "households2",
+            "annotations": {
+              "facetsort": ["-count"]
+            }
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 386,
+            "modified": "2020-09-17T23:44:13+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": null,
+            "source_domain_title": null,
+            "geographic_reference": ["au_60_11500"],
+            "timezone": null,
+            "title": "Vulnerability",
+            "parent_domain": "westernparklands",
+            "theme": ["Community, Events and Education"],
+            "modified_updates_on_data_change": false,
+            "metadata_processed": "2021-04-05T22:51:07.462000+00:00",
+            "data_processed": "2021-04-05T22:51:06+00:00",
+            "territory": ["Campbelltown"],
+            "description": "<p><b><span style='font-size:10.0pt;line-height:107%;\nfont-family:\"Verdana\",sans-serif;mso-fareast-font-family:\"Times New Roman\";\nmso-bidi-font-family:\"Times New Roman\";color:#3F5469;mso-ansi-language:EN-AU;\nmso-fareast-language:EN-AU;mso-bidi-language:AR-SA'>Vulnerability </span></b><span style='font-size:10.0pt;line-height:107%;font-family:\"Verdana\",sans-serif;\nmso-fareast-font-family:\"Times New Roman\";mso-bidi-font-family:\"Times New Roman\";\ncolor:#3F5469;mso-ansi-language:EN-AU;mso-fareast-language:EN-AU;mso-bidi-language:\nAR-SA'>dataset provides statistics on the multiple stressors and shocks within\nthe community including population, social, and economic factors. Data\ncomponents include Population (Susceptible groups); Social (Language); Economic\nstress (Income, Household, Mortgage, Rental).</span><br/></p>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": null,
+            "language": "en",
+            "license": null,
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": null
+          }
+        },
+        "features": ["analyze", "geo", "custom_view"]
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown_garbage_runs",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown_garbage_runs/records",
+          "rel": "records"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown_garbage_runs/exports",
+          "rel": "exports"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown_garbage_runs/aggregates",
+          "rel": "aggregate"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/campbelltown_garbage_runs/facets",
+          "rel": "facets"
+        }
+      ],
+      "dataset": {
+        "dataset_id": "campbelltown_garbage_runs",
+        "dataset_uid": "da_tduomw",
+        "attachments": [],
+        "has_records": true,
+        "data_visible": true,
+        "fields": [
+          {
+            "description": null,
+            "label": "Geo Point",
+            "type": "geo_point_2d",
+            "name": "geo_point_2d",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "Geo Shape",
+            "type": "geo_shape",
+            "name": "geo_shape",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "genamap_ta",
+            "type": "text",
+            "name": "genamap_ta",
+            "annotations": {
+              "facet": [],
+              "disjunctive": []
+            }
+          },
+          {
+            "description": null,
+            "label": "day",
+            "type": "text",
+            "name": "day",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "council",
+            "type": "text",
+            "name": "council",
+            "annotations": {}
+          },
+          {
+            "description": null,
+            "label": "free_text",
+            "type": "text",
+            "name": "free_text",
+            "annotations": {}
+          }
+        ],
+        "metas": {
+          "default": {
+            "records_count": 10,
+            "modified": "2020-08-13T01:56:34+00:00",
+            "source_domain_address": null,
+            "references": null,
+            "keyword": [
+              "waste",
+              "collection zones",
+              "bins",
+              "garbage",
+              "garden",
+              "organics",
+              "recycling",
+              "recycle",
+              "Campbelltown City Council",
+              "Waste Service",
+              "Waste Collection",
+              "Bin Collection",
+              "Western Parkland city Waste Collection"
+            ],
+            "source_domain_title": null,
+            "geographic_reference": ["au_60_11500"],
+            "timezone": "Australia/Sydney",
+            "title": "Waste Bin Collection Zones - Campbelltown",
+            "parent_domain": "westernparklands",
+            "theme": ["Waste and Recycling"],
+            "modified_updates_on_data_change": false,
+            "metadata_processed": "2021-03-10T00:22:08.651000+00:00",
+            "data_processed": "2021-02-11T09:55:21+00:00",
+            "territory": ["Campbelltown"],
+            "description": "<p><span style=\"font-size: 11pt; font-family: Arial, sans-serif;\">Waste bin collection is just one of the key services Council do for our community.\u00a0 Waste bin collection zones provide the collection day information.</span></p><p><font face=\"Arial, sans-serif\"><span style=\"font-size: 14.6667px;\"><b>Data Currency<br/></b></span></font><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">Council will endeavour to refresh the dataset every six months until such time we can integrate our systems.\u00a0\u00a0</span></p><p><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">This dataset is due to be refreshed in September 2021.<br/><br/></span></p><p><font face=\"Arial, sans-serif\"><span style=\"font-size: 14.6667px;\"><b>Data Accuracy\u00a0<br/></b></span></font><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\">The spatial accuracy of this information is reliant upon the NSW Spatial Services cadastre datasets. Dataset information is sourced from the Campbelltown City Council GIS dataset.\u00a0 All information is provided and updated by the various stakeholders and custodians within the Council.</span></p><p><span style=\"font-size: 14.6667px; font-family: Arial, sans-serif;\"><br/></span></p><span style=\"font-size: medium;\"></span>",
+            "modified_updates_on_metadata_change": false,
+            "shared_catalog": null,
+            "source_domain": null,
+            "attributions": null,
+            "geographic_area_mode": null,
+            "geographic_reference_auto": true,
+            "geographic_area": null,
+            "publisher": "Campbelltown City Council",
+            "language": "en",
+            "license": "CC BY",
+            "source_dataset": null,
+            "metadata_languages": ["en"],
+            "oauth_scope": null,
+            "federated": false,
+            "license_url": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        "features": ["analyze", "geo", "custom_view"]
+      }
+    }
+  ]
+}

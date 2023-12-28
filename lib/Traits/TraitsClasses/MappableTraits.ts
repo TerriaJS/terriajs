@@ -199,7 +199,7 @@ export class InitialMessageTraits extends ModelTraits {
   height?: number;
 }
 
-export default class MappableTraits extends mixTraits(AttributionTraits) {
+class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",
@@ -270,4 +270,20 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
   })
   showStringIfPropertyValueIsNull?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum shown feature infos",
+    description:
+      'The maximum number of "feature infos" that can be displayed in feature info panel.'
+  })
+  maximumShownFeatureInfos?: number;
 }
+
+interface MappableTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  disableZoomTo: MappableTraits["disableZoomTo"];
+}
+
+export default MappableTraits;

@@ -1,4 +1,4 @@
-import { computed, decorate } from "mobx";
+import { computed } from "mobx";
 import ModelTraits from "../../Traits/ModelTraits";
 import Stratified from "../../Traits/Stratified";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
@@ -19,6 +19,8 @@ export default function addModelStrataView<
 ): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
+  /* TODO: Fix this overload type */
+  /* eslint-disable-next-line @typescript-eslint/ban-types */
 >(model: Function, Traits: T): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
@@ -48,4 +50,22 @@ export default function addModelStrataView<
   decorate(model, decorators);
 
   return model;
+}
+
+/**
+ * Decorate the target class.
+ *
+ * Note that we assume that the class constructor calls `makeObservable(this)`
+ * to correctly setup the mobx properties.
+ *
+ * @param target Target class to decorate
+ * @param decorators Properties of the class that must be decorated
+ */
+function decorate(
+  target: any,
+  decorators: { [id: string]: PropertyDecorator }
+) {
+  Object.entries(decorators).forEach(([prop, decorator]) => {
+    decorator(target.prototype, prop);
+  });
 }

@@ -1,5 +1,5 @@
 import * as d3Scale from "d3-scale-chromatic";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -16,7 +16,7 @@ import Model from "../Models/Definition/Model";
 import ModelPropertiesFromTraits from "../Models/Definition/ModelPropertiesFromTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../Traits/TraitsClasses/TableColorStyleTraits";
+} from "../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import { StyleMapType } from "./TableStyleMap";
@@ -103,7 +103,9 @@ export default class TableColorMap {
     readonly title: string | undefined,
     readonly colorColumn: TableColumn | undefined,
     readonly colorTraits: Model<TableColorStyleTraits>
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   @computed get type(): StyleMapType {
     return this.colorMap instanceof DiscreteColorMap
@@ -167,7 +169,7 @@ export default class TableColorMap {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
-        let colorScale = this.colorScaleContinuous();
+        const colorScale = this.colorScaleContinuous();
 
         return new ContinuousColorMap({
           colorScale,
@@ -269,7 +271,7 @@ export default class TableColorMap {
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
 
-    let colorScale = this.colorScaleCategorical(this.binMaximums.length);
+    const colorScale = this.colorScaleCategorical(this.binMaximums.length);
 
     const result: string[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
@@ -349,7 +351,7 @@ export default class TableColorMap {
     // No enumColors traits provided - so create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
 
-    let colorScale = this.colorScaleCategorical(uniqueValues.length);
+    const colorScale = this.colorScaleCategorical(uniqueValues.length);
 
     return colorScale
       .map((color, i) => {

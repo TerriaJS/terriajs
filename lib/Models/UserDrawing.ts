@@ -1,8 +1,9 @@
 import i18next from "i18next";
 import {
   computed,
-  IReactionDisposer,
+  makeObservable,
   observable,
+  override,
   reaction,
   runInAction
 } from "mobx";
@@ -63,7 +64,9 @@ export default class UserDrawing extends MappableMixin(
   ) => void;
   private readonly onCleanUp?: () => void;
   private readonly invisible?: boolean;
-  private readonly dragHelper: DragPoints;
+
+  // helper for dragging points around
+  private dragHelper?: DragPoints;
 
   pointEntities: CustomDataSource;
   otherEntities: CustomDataSource;
@@ -76,10 +79,11 @@ export default class UserDrawing extends MappableMixin(
   private drawRectangle: boolean;
 
   private mousePointEntity?: Entity;
-  private mouseMoveDispose?: IReactionDisposer;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
+
+    makeObservable(this);
 
     /**
      * Text that appears at the top of the dialog when drawmode is active.
@@ -148,14 +152,6 @@ export default class UserDrawing extends MappableMixin(
     this.drawRectangle = defaultValue(options.drawRectangle, false);
 
     this.invisible = options.invisible;
-
-    // helper for dragging points around
-    this.dragHelper = new DragPoints(options.terria, (customDataSource) => {
-      if (typeof this.onPointMoved === "function") {
-        this.onPointMoved(customDataSource);
-      }
-      this.prepareToAddNewPoint();
-    });
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -174,23 +170,31 @@ export default class UserDrawing extends MappableMixin(
      * SVG element for point drawn when user clicks.
      * http://stackoverflow.com/questions/24869733/how-to-draw-custom-dynamic-billboards-in-cesium-js
      */
-    var svgDataDeclare = "data:image/svg+xml,";
-    var svgPrefix =
+    const svgDataDeclare = "data:image/svg+xml,";
+    const svgPrefix =
       '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" xml:space="preserve">';
-    var svgCircle =
+    const svgCircle =
       '<circle cx="10" cy="10" r="5" stroke="rgb(0,170,215)" stroke-width="4" fill="white" /> ';
-    var svgSuffix = "</svg>";
-    var svgString = svgPrefix + svgCircle + svgSuffix;
+    const svgSuffix = "</svg>";
+    const svgString = svgPrefix + svgCircle + svgSuffix;
 
     // create the cesium entity
     return svgDataDeclare + svgString;
   }
 
-  @computed get cesiumRectangle(): Rectangle | undefined {
+  @override
+  get cesiumRectangle(): Rectangle | undefined {
     return this.getRectangleForShape();
   }
 
   enterDrawMode() {
+    // Create and setup a new dragHelper
+    this.dragHelper = new DragPoints(this.terria, (customDataSource) => {
+      if (typeof this.onPointMoved === "function") {
+        this.onPointMoved(customDataSource);
+      }
+      this.prepareToAddNewPoint();
+    });
     this.dragHelper.setUp();
 
     // If we have finished a polygon, don't allow more points to be drawn. In future, perhaps support multiple polygons.
@@ -300,7 +304,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;
@@ -320,7 +324,7 @@ export default class UserDrawing extends MappableMixin(
    * Add new point to list of pointEntities
    */
   private addPointToPointEntities(name: string, position: Cartesian3) {
-    var pointEntity = new Entity({
+    const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
       billboard: <any>{
@@ -335,13 +339,14 @@ export default class UserDrawing extends MappableMixin(
       this.pointEntities.entities.removeAll();
     }
     this.pointEntities.entities.add(pointEntity);
-    this.dragHelper.updateDraggableObjects(this.pointEntities);
+    this.dragHelper?.updateDraggableObjects(this.pointEntities);
     if (isDefined(this.onPointClicked)) {
       this.onPointClicked(this.pointEntities);
     }
   }
 
   endDrawing() {
+    this.dragHelper?.destroy();
     if (this.disposePickedFeatureSubscription) {
       this.disposePickedFeatureSubscription();
     }
@@ -378,21 +383,20 @@ export default class UserDrawing extends MappableMixin(
       onEnable: (viewState: ViewState) => {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
 
-        if (this.drawRectangle) {
-          this.mouseMoveDispose = reaction(
-            () => this.terria.currentViewer.mouseCoords.cartographic,
-            (mouseCoordsCartographic) => {
-              if (!isDefined(mouseCoordsCartographic)) return;
-
-              if (isDefined(this.mousePointEntity)) {
-                this.mousePointEntity.position = new ConstantPositionProperty(
-                  Ellipsoid.WGS84.cartographicToCartesian(
-                    mouseCoordsCartographic
-                  )
-                );
-              }
+        if (this.drawRectangle && this.mousePointEntity) {
+          const scratchPosition = new Cartesian3();
+          this.mousePointEntity.position = new CallbackProperty(() => {
+            const cartographicMouseCoords =
+              this.terria.currentViewer.mouseCoords.cartographic;
+            let mousePosition = undefined;
+            if (cartographicMouseCoords) {
+              mousePosition = Ellipsoid.WGS84.cartographicToCartesian(
+                cartographicMouseCoords,
+                scratchPosition
+              );
             }
-          );
+            return mousePosition;
+          }, false) as any;
         }
       },
       invisible: this.invisible
@@ -414,7 +418,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;
@@ -425,13 +429,14 @@ export default class UserDrawing extends MappableMixin(
             // getDragCount helps us determine if the point was actually dragged rather than clicked. If it was
             // dragged, we shouldn't treat it as a clicked-existing-point scenario.
             if (
+              this.dragHelper &&
               this.dragHelper.getDragCount() < 10 &&
               !this.clickedExistingPoint(pickedFeatures.features)
             ) {
               // No existing point was picked, so add a new point
               this.addPointToPointEntities("Another Point", pickedPoint);
             } else {
-              this.dragHelper.resetDragCount();
+              this.dragHelper?.resetDragCount();
             }
             reaction.dispose();
 
@@ -536,10 +541,6 @@ export default class UserDrawing extends MappableMixin(
       }
     }
 
-    if (isDefined(this.mouseMoveDispose)) {
-      this.mouseMoveDispose();
-    }
-
     // Allow client to clean up too
     if (typeof this.onCleanUp === "function") {
       this.onCleanUp();
@@ -561,7 +562,7 @@ export default class UserDrawing extends MappableMixin(
         ? this.messageHeader()
         : this.messageHeader) +
       "</strong></br>";
-    let innerMessage = isDefined(this.onMakeDialogMessage)
+    const innerMessage = isDefined(this.onMakeDialogMessage)
       ? this.onMakeDialogMessage()
       : "";
 
@@ -601,7 +602,7 @@ export default class UserDrawing extends MappableMixin(
   getPointsForShape() {
     if (isDefined(this.pointEntities.entities)) {
       const pos = [];
-      for (var i = 0; i < this.pointEntities.entities.values.length; i++) {
+      for (let i = 0; i < this.pointEntities.entities.values.length; i++) {
         const obj = this.pointEntities.entities.values[i];
         if (isDefined(obj.position)) {
           const position = obj.position.getValue(

@@ -112,7 +112,7 @@
 .catalog-group {
   composes: list-reset from "../../Sass/common/_base.scss";
   padding-left: $padding;
-  padding-top: $padding / 2;
+  padding-top: calc($padding / 2);
   &--lower-level {
     margin-left: 20px;
     border-left: 1px solid $grey-lighter;
@@ -126,4 +126,23 @@
 
 .label--no-results {
   composes: label;
+}
+
+.add-remove-button {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 9;
+  right: 30px;
+  top: 5px;
+  color: $color-primary;
+  margin-right: 3px;
+  @media (max-width: $sm) {
+    top: 10px;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
 }

@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -122,6 +122,7 @@ export class SocrataMapViewStratum extends LoadableStratum(
     private readonly view: View
   ) {
     super();
+    makeObservable(this);
   }
 }
 
@@ -132,7 +133,7 @@ StratumOrder.addLoadStratum(SocrataMapViewStratum.stratumName);
  * This mimics how Socrata portal map visualisation works - it isn't an official API
  */
 export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
-  CatalogMemberMixin(CreateModel(SocrataMapViewCatalogItemTraits))
+  CreateModel(SocrataMapViewCatalogItemTraits)
 ) {
   static readonly type = "socrata-map-item";
 

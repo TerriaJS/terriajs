@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
@@ -22,6 +22,10 @@ const supportsReordering = (model: BaseModel) =>
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
 
+  constructor() {
+    makeObservable(this);
+  }
+
   /**
    * Gets or sets the list of items on the workbench.
    */
@@ -30,7 +34,13 @@ export default class Workbench {
     return this._items.map(dereferenceModel);
   }
   set items(items: readonly BaseModel[]) {
-    this._items.spliceWithArray(0, this._items.length, items.slice());
+    // Run items through a set to remove duplicates.
+    const setItems = new Set(items);
+    this._items.spliceWithArray(
+      0,
+      this._items.length,
+      Array.from(setItems).slice()
+    );
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * sample usage:
- * 
+ *
 
 <Select>
   <option>one</option>
@@ -27,7 +27,7 @@ or with overrides on icon
 
 import React from "react";
 import styled, { useTheme } from "styled-components";
-const Box: any = require("./Box").default;
+import Box from "./Box";
 import { GLYPHS, StyledIcon } from "./Icon";
 
 const StyledSelect = styled.select<SelectProps>`
@@ -74,7 +74,7 @@ const LeftIconPositioning = styled.div`
   pointer-events: none;
 `;
 
-interface SelectProps {
+export interface SelectProps {
   boxProps?: any;
   dropdownIconProps?: any;
   light?: boolean;

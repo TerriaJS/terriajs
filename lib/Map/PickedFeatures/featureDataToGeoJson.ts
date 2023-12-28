@@ -19,7 +19,7 @@ import {
 import defined from "terriajs-cesium/Source/Core/defined";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import JsonValue, { isJsonObject } from "../../Core/Json";
+import JsonValue, { isJsonObject, isJsonValue } from "../../Core/Json";
 import {
   FeatureCollectionWithCrs,
   GeoJsonCrs,
@@ -38,9 +38,9 @@ const pointInPolygon = require("point-in-polygon");
  * @return {FeatureCollectionWithCrs | undefined} The GeoJSON representation of this feature data, or undefined if it cannot be converted to GeoJSON.
  */
 export default function featureDataToGeoJson(
-  featureData: JsonValue
+  featureData: unknown
 ): FeatureCollectionWithCrs | undefined {
-  if (!defined(featureData)) {
+  if (!isJsonValue(featureData)) {
     return undefined;
   }
 
@@ -185,7 +185,7 @@ function getEsriFeature(
 
   if (geojsonGeom) {
     return {
-      type: "Feature" as "Feature",
+      type: "Feature" as const,
       properties: isJsonObject(featureData.attributes)
         ? featureData.attributes
         : {},

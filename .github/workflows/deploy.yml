@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: "14.x"
+          node-version-file: ".nvmrc"
       - uses: google-github-actions/setup-gcloud@v0.2.1
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}

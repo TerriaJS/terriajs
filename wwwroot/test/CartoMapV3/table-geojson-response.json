@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [29.474258423, 0.50274682]
+      },
+      "properties": {
+        "cartodb_id": 16048,
+        "gps_code": null,
+        "name": "Beni"
+      }
+    }
+  ]
+}

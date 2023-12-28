@@ -12,7 +12,7 @@ import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/G
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../../lib/Models/Definition/Model";
-import Feature from "../../../../../lib/Models/Feature";
+import TerriaFeature from "../../../../../lib/Models/Feature/Feature";
 import { InitSourceData } from "../../../../../lib/Models/InitSource";
 import Terria from "../../../../../lib/Models/Terria";
 import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
@@ -36,8 +36,7 @@ beforeEach(function () {
 
   viewState = new ViewState({
     terria: terria,
-    catalogSearchProvider: null,
-    locationSearchProviders: []
+    catalogSearchProvider: undefined
   });
 });
 
@@ -68,7 +67,7 @@ describe("BuildShareLink", function () {
   describe("user added model containing local data", function () {
     it("should not be serialized", function (done) {
       const modelId = "Test";
-      let model = new GeoJsonCatalogItem(modelId, terria);
+      const model = new GeoJsonCatalogItem(modelId, terria);
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
@@ -94,7 +93,7 @@ describe("BuildShareLink", function () {
 
     it("should not be added to workbench in generated url", function (done) {
       const modelId = "Test";
-      let model = new GeoJsonCatalogItem(modelId, terria);
+      const model = new GeoJsonCatalogItem(modelId, terria);
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
@@ -204,7 +203,7 @@ describe("BuildShareLink", function () {
       // });
 
       it("viewing a previewed item", async function () {
-        let model = terria.catalog.userAddedDataGroup.memberModels[0];
+        const model = terria.catalog.userAddedDataGroup.memberModels[0];
 
         // preview the user added item & the share link should reflect that
         await viewState.viewCatalogMember(model);
@@ -232,7 +231,7 @@ describe("BuildShareLink", function () {
           83234.52,
           952313.73
         );
-        terria.pickedFeatures.features.push(new Feature({}));
+        terria.pickedFeatures.features.push(new TerriaFeature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -256,7 +255,7 @@ describe("BuildShareLink", function () {
           "https://foo": { x: 123, y: 456, level: 7 },
           "https://bar": { x: 42, y: 42, level: 4 }
         };
-        terria.pickedFeatures.features.push(new Feature({}));
+        terria.pickedFeatures.features.push(new TerriaFeature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -277,7 +276,7 @@ describe("BuildShareLink", function () {
           83234.52,
           952313.73
         );
-        const feature = new Entity({ name: "testFeature" }) as Feature;
+        const feature = new Entity({ name: "testFeature" }) as TerriaFeature;
         terria.pickedFeatures.features.push(feature);
         terria.selectedFeature = feature;
         const shareLink = buildShareLink(terria, viewState);
@@ -299,10 +298,10 @@ describe("BuildShareLink", function () {
           952313.73
         );
         terria.pickedFeatures.features.push(
-          new Feature({ name: "testFeature1" })
+          new TerriaFeature({ name: "testFeature1" })
         );
         terria.pickedFeatures.features.push(
-          new Feature({ name: "testFeature2" })
+          new TerriaFeature({ name: "testFeature2" })
         );
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);

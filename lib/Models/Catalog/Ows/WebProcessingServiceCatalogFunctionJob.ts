@@ -5,7 +5,9 @@ import {
   isObservableArray,
   observable,
   runInAction,
-  toJS
+  toJS,
+  makeObservable,
+  override
 } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
@@ -30,6 +32,7 @@ import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -43,6 +46,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
   constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -144,6 +148,11 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   )
 ) {
   static readonly type = "wps-result";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return WebProcessingServiceCatalogFunctionJob.type;
@@ -348,7 +357,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     // Create geojson catalog item for input features
     const geojsonFeatures = runInAction(() => this.geojsonFeatures);
-    if (isJsonObject(geojsonFeatures, false)) {
+    if (Array.isArray(geojsonFeatures) || isObservableArray(geojsonFeatures)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
@@ -360,7 +369,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
             features: geojsonFeatures,
             totalFeatures: this.geojsonFeatures!.length
           }
-        });
+        }).logError(
+          "Error ocurred while updating Input Features GeoJSON model JSON"
+        );
       });
       (await this.geoJsonItem!.loadMapItems()).throwIfError;
     }
@@ -372,7 +383,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return results;
   }
 
-  @computed get mapItems() {
+  @override
+  get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
@@ -418,19 +430,19 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
   private async createCatalogItemFromJson(json: any) {
     let itemJson = json;
-    try {
-      if (
-        this.forceConvertResultsToV8 ||
-        // If startData.version has version 0.x.x - user catalog-converter to convert result
-        ("version" in itemJson &&
-          typeof itemJson.version === "string" &&
-          itemJson.version.startsWith("0"))
-      ) {
-        itemJson = await convertResultV7toV8(json);
-      }
-    } catch (e) {
-      throw e;
+
+    if (
+      this.forceConvertResultsToV8 ||
+      // If startData.version has version 0.x.x - user catalog-converter to convert result
+      ("version" in itemJson &&
+        typeof itemJson.version === "string" &&
+        itemJson.version.startsWith("0"))
+    ) {
+      itemJson = await convertResultV7toV8(json).catch((e) => {
+        throw e;
+      });
     }
+
     const catalogItem = upsertModelFromJson(
       CatalogMemberFactory,
       this.terria,
@@ -461,7 +473,7 @@ function formatOutputValue(title: string, value: string | undefined) {
   const values = value.split(",");
 
   return values.reduce(function (previousValue, currentValue) {
-    if (value.match(/[.\/](png|jpg|jpeg|gif|svg)/i)) {
+    if (value.match(/[./](png|jpg|jpeg|gif|svg)/i)) {
       return (
         previousValue +
         '<a href="' +

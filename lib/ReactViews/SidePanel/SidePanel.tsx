@@ -11,14 +11,19 @@ import Text from "../../Styled/Text";
 import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 const BoxHelpfulHints = styled(Box)``;
 
 const ResponsiveSpacing = styled(Box)`
   height: 110px;
+  height: 110px;
   // Hardcoded px value, TODO: make it not hardcoded
+  @media (max-height: 700px) {
+    height: 3vh;
+  }
   @media (max-height: 700px) {
     height: 3vh;
   }
@@ -98,7 +103,7 @@ type SidePanelButtonProps = {
 const SidePanelButton = React.forwardRef<
   HTMLButtonElement,
   SidePanelButtonProps
->((props, ref) => {
+>(function SidePanelButton(props, ref) {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -128,7 +133,7 @@ interface SidePanelProps {
 const SidePanel = observer<React.FC<SidePanelProps>>(
   ({ viewState, theme, refForExploreMapData, refForUploadData }) => {
     const terria = viewState.terria;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
       e
     ) => {
@@ -158,7 +163,10 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           <SearchBoxAndResults
             viewState={viewState}
             terria={terria}
-            placeholder={t("search.placeholder")}
+            placeholder={applyTranslationIfExists(
+              terria.searchBarModel.placeholder,
+              i18n
+            )}
           />
           <Spacing bottom={2} />
           <Box justifySpaceBetween>

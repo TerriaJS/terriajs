@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CorsProxy from "../../Core/CorsProxy";
@@ -193,6 +193,7 @@ export default class RegionProvider {
     properties: RegionProvierOptions,
     corsProxy: CorsProxy
   ) {
+    makeObservable(this);
     this.regionType = regionType;
     this.corsProxy = corsProxy;
 
@@ -392,7 +393,7 @@ export default class RegionProvider {
     } else {
       r = s.toLowerCase().trim();
     }
-    let replacements = this[replacementsProp];
+    const replacements = this[replacementsProp];
     if (replacements === undefined || replacements.length === 0) {
       return r;
     }
@@ -428,8 +429,8 @@ export default class RegionProvider {
       "dataReplacements"
     );
 
-    let id = this._idIndex[code];
-    let idAfterReplacement = this._idIndex[codeAfterReplacement];
+    const id = this._idIndex[code];
+    const idAfterReplacement = this._idIndex[codeAfterReplacement];
 
     if (!isDefined(id) && !isDefined(idAfterReplacement)) {
       return -1;

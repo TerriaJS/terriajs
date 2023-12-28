@@ -30,7 +30,7 @@ describe("WebMapTileServiceCatalogItem", function () {
       wmts.setTrait("definition", "layer", "Some_Layer1");
     });
 
-    let description: String | undefined;
+    let description: string | undefined;
     const cleanup = autorun(() => {
       if (wmts.info !== undefined) {
         const descSection = wmts.info.find(

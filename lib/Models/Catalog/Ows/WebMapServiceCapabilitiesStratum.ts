@@ -1,15 +1,15 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import URI from "urijs";
+import { JsonObject, isJsonArray, isJsonString } from "../../../Core/Json";
+import TerriaError from "../../../Core/TerriaError";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
-import { isJsonArray, isJsonString, JsonObject } from "../../../Core/Json";
-import TerriaError from "../../../Core/TerriaError";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
   InfoSectionTraits,
@@ -19,6 +19,7 @@ import {
   KeyValueTraits,
   WebCoverageServiceParameterTraits
 } from "../../../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
+import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
@@ -29,18 +30,18 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  getRectangleFromLayer,
-  MetadataURL
+  MetadataURL,
+  getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
@@ -78,6 +79,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -374,11 +376,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       result.push({
         layerName: layerName,
         styles: styles.map((style) => {
-          var wmsLegendUrl = isReadOnlyArray(style.LegendURL)
+          const wmsLegendUrl = isReadOnlyArray(style.LegendURL)
             ? style.LegendURL[0]
             : style.LegendURL;
 
-          var legendUri, legendMimeType;
+          let legendUri, legendMimeType;
           if (
             wmsLegendUrl &&
             wmsLegendUrl.OnlineResource &&
@@ -637,17 +639,27 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       (unionRectangle, layer) => {
         // Convert to cesium Rectangle (so we can use Rectangle.union)
         const latLonRect = getRectangleFromLayer(layer);
-        const ceisumRect = Rectangle.fromDegrees(
+
+        if (
+          !isDefined(latLonRect?.west) ||
+          !isDefined(latLonRect?.south) ||
+          !isDefined(latLonRect?.east) ||
+          !isDefined(latLonRect?.north)
+        )
+          return;
+
+        const cesiumRectangle = Rectangle.fromDegrees(
           latLonRect?.west,
           latLonRect?.south,
           latLonRect?.east,
           latLonRect?.north
         );
+
         if (!unionRectangle) {
-          return ceisumRect;
+          return cesiumRectangle;
         }
 
-        return Rectangle.union(unionRectangle, ceisumRect);
+        return Rectangle.union(unionRectangle, cesiumRectangle);
       },
       undefined
     );
@@ -701,19 +713,41 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get isEsri(): boolean {
     if (this.catalogItem.url !== undefined)
-      return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
+      return (
+        this.catalogItem.url.toLowerCase().indexOf("mapserver/wmsserver") > -1
+      );
     return false;
   }
 
   @computed
   get supportsGetLegendGraphic(): boolean {
+    const capabilities = this.capabilities?.json?.Capability;
+
     return (
       isDefined(this.capabilities?.json?.["xmlns:sld"]) ||
-      isDefined(
-        this.capabilities?.json?.Capability?.Request?.GetLegendGraphic
-      ) ||
+      isDefined(capabilities?.Request?.GetLegendGraphic) ||
+      (Array.isArray(capabilities?.ExtendedCapabilities?.ExtendedRequest) &&
+        capabilities.ExtendedCapabilities.ExtendedRequest.find(
+          (r: JsonObject) => r?.Request === "GetLegendGraphic"
+        )) ||
       (this.catalogItem.isGeoServer ?? false) ||
       (this.catalogItem.isNcWMS ?? false)
+    );
+  }
+
+  @computed
+  get supportsGetTimeseries() {
+    // Don't use GetTimeseries if there is only one timeslice
+    if ((this.catalogItem.discreteTimes?.length ?? 0) <= 1) return false;
+
+    const capabilities = this.capabilities?.json?.Capability;
+
+    return !!(
+      isDefined(capabilities?.Request?.GetTimeseries) ||
+      (Array.isArray(capabilities?.ExtendedCapabilities?.ExtendedRequest) &&
+        capabilities.ExtendedCapabilities.ExtendedRequest.find(
+          (r: JsonObject) => r?.Request === "GetTimeseries"
+        ))
     );
   }
 
@@ -726,7 +760,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
-    for (let layer of this.capabilitiesLayers.values()) {
+    for (const layer of this.capabilitiesLayers.values()) {
       if (!layer) {
         continue;
       }
@@ -820,12 +854,16 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   /** Prioritize format of GetFeatureInfo:
-   * - JSON
+   * - JSON/GeoJSON
+   * - If ESRI, then we prioritise XML next
    * - HTML
    * - GML
+   * - XML
    * - Plain text
    *
    * If no matching format can be found in GetCapabilities, then Cesium will use defaults (see `WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats`)
+   *
+   * If supportsGetTimeseries, use CSV
    */
   @computed get getFeatureInfoFormat():
     | StratumFromTraits<GetFeatureInfoFormat>
@@ -839,14 +877,53 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       ? [formats]
       : [];
 
+    if (this.catalogItem.supportsGetTimeseries) {
+      return { format: "text/csv", type: "text" };
+    }
+
     if (formatsArray.includes("application/json"))
       return { format: "application/json", type: "json" };
+    if (formatsArray.includes("application/geo+json"))
+      return { format: "application/geo+json", type: "json" };
+    if (formatsArray.includes("application/vnd.geo+json"))
+      return { format: "application/vnd.geo+json", type: "json" };
+
+    // Special case for Esri WMS, use XML before HTML/GML
+    // as HTML includes <table> with rowbg that is hard to read
+    if (this.isEsri && formatsArray.includes("text/xml")) {
+      return { format: "text/xml", type: "xml" };
+    }
     if (formatsArray.includes("text/html"))
       return { format: "text/html", type: "html" };
     if (formatsArray.includes("application/vnd.ogc.gml"))
       return { format: "application/vnd.ogc.gml", type: "xml" };
+
+    // For non-Esri services, we use XML after HTML/GML
+    if (formatsArray.includes("text/xml")) {
+      return { format: "text/xml", type: "xml" };
+    }
     if (formatsArray.includes("text/plain"))
       return { format: "text/plain", type: "text" };
+  }
+
+  /** If supportsGetTimeseries, override the "request" parameter in GetFeatureInfo to be "GetTimeseries".
+   * We also set time to empty, so we get values for all times (as opposed to just the current time)
+   */
+  @computed get getFeatureInfoParameters() {
+    if (this.catalogItem.supportsGetTimeseries) {
+      return { request: "GetTimeseries", time: "" };
+    }
+    return undefined;
+  }
+
+  /** If getFeatureInfoFormat is text/csv, set featureInfoTemplate to show chart. */
+  @computed
+  get featureInfoTemplate() {
+    if (this.catalogItem.getFeatureInfoFormat.format === "text/csv")
+      return createStratumInstance(FeatureInfoTemplateTraits, {
+        template: `{{terria.timeSeries.chart}}`,
+        showFeatureInfoDownloadWithTemplate: true
+      });
   }
 
   @computed get linkedWcsParameters() {
@@ -866,7 +943,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     // This is used to flag subsets (dimensions) which have multiple values
     // Each element in this array represents the **actual** value used for a subset which has multiple values
-    let duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
+    const duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
 
     // Get dimensionSubsets
     const dimensionSubsets: { key: string; value: string }[] = [];

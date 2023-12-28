@@ -1,15 +1,21 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import BingMapsCatalogItemTraits from "../../../Traits/TraitsClasses/BingMapsCatalogItemTraits";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import CreateModel from "../../Definition/CreateModel";
 
 export default class BingMapsCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
 ) {
   static readonly type = "bing-maps";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return BingMapsCatalogItem.type;

@@ -51,32 +51,38 @@ function makeSafeName(name) {
   return name
     .toLowerCase()
     .replace(/[^-a-z0-9]/g, "-")
-    .substring(0, 40);
+    .substring(0, 32)
+    .replace(/-*$/, "");
 }
 
 function createIngress(branches) {
   return {
-    apiVersion: "networking.k8s.io/v1beta1",
+    apiVersion: "networking.k8s.io/v1",
     kind: "Ingress",
     metadata: {
-      name: "terriajs-ci",
+      name: "ci-terria-io",
       annotations: {
-        "kubernetes.io/ingress.class": "nginx",
         "ingress.kubernetes.io/ssl-redirect": "false",
         "ingress.kubernetes.io/force-ssl-redirect": "false",
-        "ingress.kubernetes.io/rewrite-target": "/"
+        "nginx.ingress.kubernetes.io/use-regex": "true",
+        "nginx.ingress.kubernetes.io/rewrite-target": "/$2"
       }
     },
     spec: {
       rules: [
         {
+          host: "ci.terria.io",
           http: {
             paths: branches.map((branch) => ({
-              path: "/" + branch.name + "/",
+              path: "/" + makeSafeName(branch.name) + "(/|$)(.*)",
+              pathType: "ImplementationSpecific",
               backend: {
-                serviceName:
-                  "terriajs-" + makeSafeName(branch.name) + "-terriamap",
-                servicePort: "http"
+                service: {
+                  name: "terriajs-" + makeSafeName(branch.name) + "-terriamap",
+                  port: {
+                    name: "http"
+                  }
+                }
               }
             }))
           }

@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -9,7 +9,7 @@ import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
-import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/TableStyleMapTraits";
+import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/Table/StyleMapTraits";
 import TableStyleMap from "./TableStyleMap";
 
 export class StyleMapLegend<
@@ -25,6 +25,7 @@ export class StyleMapLegend<
     readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {

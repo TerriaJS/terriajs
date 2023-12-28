@@ -162,7 +162,7 @@ function getParseOptionsColumnMajor(
 }
 
 function cleanColumnNames(columnNames: string[]) {
-  for (var i = 0; i < columnNames.length; ++i) {
+  for (let i = 0; i < columnNames.length; ++i) {
     if (typeof columnNames[i] === "string") {
       columnNames[i] = columnNames[i].trim();
     }

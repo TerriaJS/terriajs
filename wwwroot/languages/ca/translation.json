@@ -58,7 +58,7 @@
     "browserCannotProvide": "El vostre navegador no pot proporcionar la vostra ubicació.",
     "myLocation": "La meva posició",
     "location": "Posició",
-    "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir https. És possible que pugueu utilitzar {{secureUrl}}.",
+    "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir HTTPS. És possible que pugueu utilitzar {{secureUrl}}.",
     "centreMap": "Centreu el mapa a la vostra ubicació actual"
   },
   "splitterTool": {
@@ -203,7 +203,7 @@
     "printButton": "Imprimir",
     "printViewButton": "Mostra la vista d'impressió",
     "btnAdvanced": "Opcions avançades",
-    "embedTitle": "Per embed, copieu aquest codi per inserir aquest mapa en una pàgina HTML:",
+    "embedTitle": "Inserir mapa",
     "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
     "btnStoryShareText": "Compartir",
     "btnMapShareText": "Compartir / Imprimir",
@@ -223,7 +223,8 @@
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
     "downloadMap": "Descarregar mapa (png)",
-    "getShareSaveHelpMessage": "Com desar enllaços compartits"
+    "getShareSaveHelpMessage": "Com desar enllaços compartits",
+    "embedDescription": "Per inserir, copieu aquest codi per inserir aquest mapa en una pàgina HTML:"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -234,8 +235,9 @@
     "title": "Comptar conjunts de dades",
     "btnCount": "Comptar conjunts de dades",
     "noMapDataEnabled": "No hi ha dades del mapa activades",
-    "mapDataState": "{{count}} conjunt de dades actiu al mapa",
-    "mapDataState_plural": "{{count}} conjunts de dades actius al mapa",
+    "mapDataState_0": "{{count}} conjunt de dades actiu al mapa",
+    "mapDataState_1": "{{count}} conjunts de dades actius al mapa",
+    "mapDataState_2": "{{count}} conjunts de dades actius al mapa",
     "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>"
   },
   "toolsPanel": {
@@ -261,7 +263,7 @@
     "baseMap": "Mapa Base",
     "imageOptimisation": "Optimització de la imatge",
     "nativeResolutionHeader": "Utilitzeu la resolució original del dispositiu",
-    "mapQuality": "Qualitat del mapa ràster:",
+    "mapQuality": "Qualitat del mapa:",
     "timeline": {
       "title": "Cronologia",
       "alwaysShow": "Mostra sempre",
@@ -373,8 +375,9 @@
     "storyEditor": "Editor d'històries",
     "delete": "Esborrar",
     "message": "<2>Aquest és el vostre editor d'històries</2><1>Creeu i compartiu històries interactives directament des del vostre mapa<1><0><0></0>Com començar </0></1></1 >",
-    "removeAllStoriesDialog": "Esteu segur que voleu suprimir {{ count }} escena?",
-    "removeAllStoriesDialog_plural": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "removeAllStoriesDialog_0": "Esteu segur que voleu suprimir {{ count }} escena?",
+    "removeAllStoriesDialog_1": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "removeAllStoriesDialog_2": "Esteu segur que voleu suprimir {{ count }} escenes?",
     "captureScene": "Captura l'escena",
     "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
     "loadSceneErrorTitle": "Error carregant Story Scene",
@@ -413,9 +416,9 @@
     "searchPlaceholder": "Cerca el catàleg",
     "localAdd": "Afegeix un arxiu local",
     "localFile": "<0>Pas 2:</0> Seleccioneu l'arxiu",
-    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu(opcional)",
+    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu",
     "webAdd": "Afegiu dades web",
-    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu (opcional)",
+    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu o servei web",
     "urlInputBtn": "Afegir",
     "browse": "Navegar...",
     "localTitle": "Afegir dades locals",
@@ -629,7 +632,10 @@
     "searchNoCatalogueItem": "Ho sentim, no hi ha cap article del catàleg que coincideixi amb la teva cerca.",
     "inMultipleLocations": "En diverses ubicacions, com ara: ",
     "inDataCatalogue": "Al Catàleg de Dades",
-    "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard."
+    "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard.",
+    "searchMinCharacters_0": "Heu d'introduir un mínim de {{count}} caracter",
+    "searchMinCharacters_1": "Heu d'introduir un mínim de {{count}} caràcters",
+    "searchMinCharacters_2": "Heu d'introduir un mínim de {{count}} caràcters"
   },
   "terriaViewer": {
     "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), i $t(browsers.safari). Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
@@ -671,7 +677,7 @@
       "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara $t(browsers.chrome), $t(browsers.firefox), o $t(browsers.safari): {{href}}"
     },
     "dataType": {
-      "auto": "Detecció automàtica (recomanat)",
+      "auto": "Tipus d'arxiu",
       "wms-group": "Servidor del servei de mapes web (WMS)",
       "wmts-group": "Servidor del servei de mapes tessel·lats (WMTS)",
       "wfs-group": "Servidor del servei web de funcions (WFS)",
@@ -689,17 +695,18 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
-      "json": "JSON",
-      "carto": "Carto",
+      "json": "Catàleg Terria",
+      "carto": "Carto V1",
       "gltf": "gLTF",
-      "shp": "Shapefile (zip)",
+      "shp": "Shapefile",
       "other": "Altres (utilitza el servei de conversió)",
       "socrata-group": "Servidor Socrata",
       "ifc": "IFC",
       "assimp-local": "Convertidor de fitxers 3D (zip) (experimental)",
       "assimp-local-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nEls fitxers s'han de comprimir.",
       "assimp-remote": "Convertidor de fitxers 3D (experimental)",
-      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip"
+      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
@@ -735,6 +742,12 @@
     },
     "serverConfig": {
       "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
+    },
+    "unverifiedExternalLink": {
+      "title": "Avís: enllaç no verificat",
+      "message": "Estàs a punt d'obrir:\n\n`{{url}}`\n\nAquest enllaç no està verificat i pot ser insegur.",
+      "denyText": "Cancel·lar",
+      "confirmText": "Obre en una pestanya nova"
     }
   },
   "map": {
@@ -745,7 +758,11 @@
       "devError": "es requereix Cesium.",
       "failedToObtain": "No s'ha pogut obtenir la tessel·la X: {{x}} Y: {{y}} Nivell: {{level}}.",
       "notWebMercatorTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè no admet la projecció Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible."
+      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible.",
+      "stoppedRenderingTitle": "El mapa 3D no s'ha pogut renderitzar",
+      "stoppedRenderingMessage": "Això pot haver estat causat per un conjunt de dades que s'acaba d'afegir a l'espai de treball, proveu d'eliminar-lo. Si això no resol el vostre problema, és possible que ho hàgiu de tornar a carregar {{appName}}.",
+      "terrainServerErrorMessage": " El servidor de terrenys no respon en aquest moment. Encara podeu utilitzar totes les funcions de {{appName}}, però no hi haurà cap detall del terreny en mode 3D. Lamentem les molèsties. Torneu-ho a provar més tard i el servidor de terrenys hauria de respondre com s'espera. Si el problema continua, poseu-vos en contacte amb nosaltres per correu electrònic a {{supportEmail}}.",
+      "terrainServerErrorTitle": "El servidor de terrenys no contesta"
     },
     "computeRingWindingOrder": {
       "devError": "Punts esperats del tipus {x:nombre, y:nombre}"
@@ -871,7 +888,8 @@
       "copyrightText": "Text dels drets d'autor",
       "invalidServiceTitle": "Servei de mapes d'ArcGIS no vàlid",
       "invalidServiceMessage": "Error en invocar el servei de mapes d'ArcGIS. La resposta del servidor no sembla ser un document vàlid del servei de mapes.",
-      "groupNotAvailableMessage": "Error en invocar el servei de mapes d'ArcGIS."
+      "groupNotAvailableMessage": "Error en invocar el servei de mapes d'ArcGIS.",
+      "singleFusedMapCacheLayerName": "Totes les capes"
     },
     "arcGisMapServerCatalogItem": {
       "invalidUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis MapServer perquè l'element del catàleg no té una \"url\".",
@@ -960,7 +978,9 @@
       "mustHaveType": "Cada element ha de tenir un tipus.",
       "compositesError": "Els compostos no poden incloure elements compostos.",
       "convertErrorTitle": "No s'ha pogut actualitzar el catàleg a V8",
-      "convertErrorMessage": "Aquest arxiu de catàleg es basa en una versió anterior de TerriaJS, el programari que mou aquest mapa web. S'ha produït un error en intentar actualitzar les dades del catàleg per a {{url}}."
+      "convertErrorMessage": "Aquest arxiu de catàleg es basa en una versió anterior de TerriaJS, el programari que mou aquest mapa web. S'ha produït un error en intentar actualitzar les dades del catàleg per a {{url}}.",
+      "removeAll": "Elimina-ho tot",
+      "addAll": "Afegeix-ho tot"
     },
     "userData": {
       "addingDataErrorTitle": "No s'ha pogut afegir les dades",
@@ -1260,7 +1280,13 @@
       "zFilterEnabled": "Valors extrems amagats (feu clic per mostrar-los)",
       "zFilterDisabled": "Valors extrems detectats (feu clic per amagar-los)",
       "timeDimensionEnabled": "Temps activat (feu clic per desactivar)",
-      "timeDimensionDisabled": "Temps desactivat (feu clic per activar)"
+      "timeDimensionDisabled": "Temps desactivat (feu clic per activar)",
+      "custom": "Personalitzat",
+      "regionMapping": "Cartografiar regió",
+      "editStyle": "Edita l'estil",
+      "regionColumn": "Columna regió",
+      "manualRegionMapping": "Cartografiar regió manualment",
+      "activeStyle": "Mostra la variable"
     },
     "terria": {
       "initErrorMessage": "S'ha produït un problema amb el servidor Terria. Això pot fer que algunes capes o el servei de conversió no estiguin disponibles.",
@@ -1413,9 +1439,9 @@
       "accessConstraints": "Restriccions d'accés",
       "serviceContact": "Contacte del servei",
       "getCapabilitiesUrl": "URL del GetCapabilities",
-      "noLayerFoundMessage": "El conjunt de dades WFS \"{{name}}\" no té capes que coincideixin amb \"{{typeNames}}\". {{suggested}} {{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o el servidor WFS ha canviat.",
+      "noLayerFoundMessage": "El conjunt de dades WFS '{{name}}' no té capes que coincideixin amb '{{typeNames}}'. O bé el fitxer de catàleg s'ha configurat incorrectament o bé el servidor WFS ha canviat.",
       "missingDataTitle": "Falten dades",
-      "missingDataMessage": "El conjunt de dades WFS '{{name}}' no ha retornat cap dada.{{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat.",
+      "missingDataMessage": "El conjunt de dades WFS '{{name}}' no ha retornat cap dada. O bé el fitxer de catàleg s'ha configurat incorrectament o bé l'adreça del servidor ha canviat.",
       "missingUrlTitle": "No es pot carregar GetCapabilities",
       "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del Web Feature Service (WFS) perquè l'element del catàleg no té una \"url\".",
       "noLayerFoundTitle": "No s'ha trobat cap capa",
@@ -1441,7 +1467,7 @@
       "getCapabilitiesUrl": "URL GetCapabilities",
       "defaultStyleLabel": "Estil per defecte",
       "noLayerFoundTitle": "No s'ha trobat cap capa",
-      "noLayerFoundMessage": "El conjunt de dades WMS \"{{name}}\" no té capes que coincideixin amb \"{{layers}}\". {{suggested}} {{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o el servidor WMS ha canviat.",
+      "noLayerFoundMessage": "El conjunt de dades WMS '{{name}}' no té capes que coincideixin amb '{{layers}}'. O bé el fitxer de catàleg s'ha configurat incorrectament o bé el servidor WMS ha canviat.",
       "badlyFormatedTitle": "Periodicitat mal formatada",
       "missingDataTitle": "Falten dades",
       "missingDataMessage": "El conjunt de dades WMS \"{{name}}\" no ha retornat cap dada.{{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat.",
@@ -1549,6 +1575,507 @@
       "clipModel": "Model de clip",
       "showClippingBox": "Mostra el quadre de retall",
       "keepBoxAboveGround": "Només sobre terra"
+    },
+    "tableStyling": {
+      "colors": {
+        "selectableDimensions": {
+          "value": {
+            "name": "Valor"
+          },
+          "remove": {
+            "value": "Eliminar"
+          },
+          "add": {
+            "value": "Afegir color"
+          },
+          "color": {
+            "name": "Color"
+          }
+        },
+        "name": "Colors"
+      },
+      "workbenchOptions": {
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "options": {
+              "false": {
+                "name": "Estil ocult"
+              },
+              "true": {
+                "name": "Mostrant estil"
+              }
+            },
+            "name": "Mostra l'estil al banc de treball"
+          },
+          "showDisableStyleOption": {
+            "name": "Mostra l'opció per desactivar estil"
+          },
+          "enableManualRegionMapping": {
+            "name": "Activa la cartografia manual de regions"
+          },
+          "showDisableTimeOption": {
+            "name": "Mostra l'opció per desactivar el temps"
+          }
+        },
+        "name": "Opcions del banc de treball"
+      },
+      "pointSize": {
+        "selectableDimensions": {
+          "pointSizeOffset": {
+            "name": "Desplaçament de mida"
+          },
+          "pointSizeColumn": {
+            "name": "Variable"
+          },
+          "pointSizeNull": {
+            "name": "Mida predeterminada"
+          },
+          "pointSizesFactor": {
+            "name": "Factor de mida"
+          }
+        },
+        "name": "Mida del punt"
+      },
+      "styleOptions": {
+        "name": "Opcions d'estil",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Títol"
+          },
+          "longitudeColumn": {
+            "name": "Columna de longitud"
+          },
+          "latitudeColumn": {
+            "name": "Columna de latitud"
+          }
+        }
+      },
+      "outline": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Amplada"
+          }
+        },
+        "name": "Estil de contorn"
+      },
+      "label": {
+        "selectableDimensions": {
+          "verticalOrigin": {
+            "options": {
+              "bottom": {
+                "name": "Inferior"
+              },
+              "top": {
+                "name": "Superior"
+              },
+              "center": {
+                "name": "Centre"
+              },
+              "baseline": {
+                "name": "Línia de base"
+              }
+            },
+            "name": "Origen vertical"
+          },
+          "horizontalOrigin": {
+            "options": {
+              "right": {
+                "name": "Dreta"
+              },
+              "center": {
+                "name": "Centre"
+              },
+              "left": {
+                "name": "Esquerra"
+              }
+            },
+            "name": "Origen horitzontal"
+          },
+          "outlineWidth": {
+            "name": "Amplada de contorn"
+          },
+          "font": {
+            "name": "Tipus de lletra"
+          },
+          "style": {
+            "options": {
+              "fillAndOutline": {
+                "name": "Emplenat i contorn"
+              },
+              "fill": {
+                "name": "Només emplenat"
+              },
+              "outline": {
+                "name": "Només contorn"
+              }
+            },
+            "name": "Estil d'etiqueta"
+          },
+          "offsetX": {
+            "name": "Desplaçament de píxel en X"
+          },
+          "outlineColor": {
+            "name": "Color de contorn"
+          },
+          "column": {
+            "name": "Columna d'etiquetes"
+          },
+          "fillColor": {
+            "name": "Color d'emplenat"
+          },
+          "offsetY": {
+            "name": "Desplaçament de píxel en Y"
+          },
+          "scale": {
+            "name": "Escala"
+          }
+        },
+        "name": "Estil d'etiqueta"
+      },
+      "style": {
+        "selectableDimensions": {
+          "enum": {
+            "selectableDimensions": {
+              "enum": {
+                "selectableDimensions": {
+                  "remove": {
+                    "value": "Elimina"
+                  },
+                  "value": {
+                    "name": "Valor"
+                  }
+                },
+                "add": {
+                  "value": "Afegeix estil per al valor"
+                },
+                "noValue": "Cap valor"
+              }
+            },
+            "name": "Enumera estils"
+          },
+          "bin": {
+            "selectableDimensions": {
+              "bin": {
+                "noValue": "Cap valor",
+                "selectableDimensions": {
+                  "stop": {
+                    "name": "Final"
+                  },
+                  "remove": {
+                    "value": "Ellimina"
+                  },
+                  "start": {
+                    "name": "Inici"
+                  }
+                },
+                "range": "{{value1}} a {{value2}}"
+              },
+              "add": {
+                "value": "Afegeix paperera d'estil"
+              }
+            },
+            "name": "Papereres d'estil"
+          },
+          "styleType": {
+            "constant": {
+              "name": "Cap estil"
+            },
+            "bin": {
+              "name": "Discret"
+            },
+            "name": "Tipus",
+            "undefinedLabel": "Si us plau concreteu",
+            "enum": {
+              "name": "Qualitatiu"
+            }
+          },
+          "column": {
+            "name": "Variable"
+          }
+        },
+        "null": {
+          "name": "Predeterminat"
+        }
+      },
+      "bins": {
+        "selectableDimensions": {
+          "start": {
+            "selectableDimensions": {
+              "stop": {
+                "name": "Aturada"
+              },
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Inici"
+              }
+            },
+            "name": "{{value1}} a {{value2}}"
+          }
+        },
+        "name": "Paperera"
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Si"
+              }
+            },
+            "name": "Distribució de l'hora d'acabament"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "true": {
+                "name": "Si"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Hora d'inici de propagació"
+          },
+          "tableEndTimeColumn": {
+            "name": "Columna de l'hora de finalització"
+          },
+          "tableTimeColumn": {
+            "name": "Columna de temps"
+          },
+          "tableTimeIsSampled": {
+            "options": {
+              "true": {
+                "name": "Si"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Mostrejat"
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Durada de la visualització"
+          },
+          "tableTimeIdColumns": {
+            "name": "Columnes ID"
+          }
+        },
+        "name": "Opcions de temps"
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "sequentialContinuous": {
+                "name": "Seqüencial (continu)"
+              },
+              "divergingContinuous": {
+                "name": "Divergent (continu)"
+              },
+              "customDiscrete": {
+                "name": "Personalitzat (discret)"
+              },
+              "customQualitative": {
+                "name": "Personalitzat (qualitatiu)"
+              },
+              "sequentialDiscrete": {
+                "name": "Seqüencial (discret)"
+              },
+              "noStyle": {
+                "name": "Sense estil"
+              },
+              "divergingDiscrete": {
+                "name": "Divergent (discret)"
+              },
+              "qualitative": {
+                "name": "Qualitatiu"
+              }
+            },
+            "undefinedLabel": "Si us plau concreteu",
+            "name": "Tipus"
+          },
+          "scheme": {
+            "name": "Esquema"
+          },
+          "dataType": {
+            "name": "Tipus de columna (avançat)"
+          },
+          "numberOfBins": {
+            "name": "Nombre de papereres"
+          },
+          "tableColorColumn": {
+            "name": "Variable"
+          }
+        },
+        "name": "Color d'ompliment"
+      },
+      "data": {
+        "selectableDimensions": {
+          "tableStyleType": {
+            "options": {
+              "fill": {
+                "name": "Color d'ompliment"
+              },
+              "point": {
+                "name": "Estil punt/marcador"
+              },
+              "outline": {
+                "name": "Color de contorn"
+              },
+              "trail": {
+                "name": "Estil de traça"
+              },
+              "pointSize": {
+                "name": "Mida del punt"
+              },
+              "label": {
+                "name": "Estil d'etiqueta"
+              }
+            },
+            "name": "Simbologia"
+          },
+          "tableStyle": {
+            "name": "Estil"
+          },
+          "dataset": {
+            "name": "Conjunt de dades"
+          }
+        },
+        "name": "Dades"
+      },
+      "trail": {
+        "selectableDimensions": {
+          "resolution": {
+            "name": "Resolució"
+          },
+          "trailStyleOptions": {
+            "name": "Opcions d'estil de sender",
+            "selectableDimensions": {
+              "material": {
+                "name": "Tipus de material",
+                "options": {
+                  "polylineGlow": {
+                    "name": "Resplendor de polilínia"
+                  },
+                  "solidColor": {
+                    "name": "Color sòlid"
+                  }
+                }
+              }
+            }
+          },
+          "leadTime": {
+            "name": "Temps per davant (segons)"
+          },
+          "growColor": {
+            "name": "Color brillant"
+          },
+          "trailTime": {
+            "name": "Temps per darrera (segons)"
+          },
+          "width": {
+            "name": "Amplada"
+          },
+          "growPower": {
+            "name": "Potència de resplendor"
+          },
+          "solidColor": {
+            "name": "Color sòlid"
+          },
+          "taperPower": {
+            "name": "Potència cónica"
+          }
+        }
+      },
+      "additionalColors": {
+        "name": "Colors addicionals",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "Color de la regió"
+          },
+          "outlierColor": {
+            "name": "Color atípic"
+          },
+          "nullColor": {
+            "name": "Color predeterminat"
+          }
+        }
+      },
+      "point": {
+        "selectableDimensions": {
+          "width": {
+            "name": "Amplada"
+          },
+          "marker": {
+            "name": "Marcador",
+            "tooltip": "El marcador admet URL i base64 de qualsevol format d'imatge compatible (p. ex. PNG, SVG)"
+          },
+          "rotation": {
+            "name": "Rotació"
+          },
+          "height": {
+            "name": "Altura"
+          }
+        },
+        "name": "Estil de marcador"
+      },
+      "legend": {
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "Títol"
+          },
+          "title": {
+            "name": "Element {{index}} Títol"
+          },
+          "legendTicks": {
+            "name": "Marques"
+          }
+        },
+        "name": "Llegenda"
+      },
+      "copyUserStratum": "Copia l'estrat d'usuari al porta-retalls",
+      "outlierColor": {
+        "name": "Color atípic"
+      },
+      "variableAndColumn": {
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Títol"
+          },
+          "columnUnits": {
+            "name": "Unitats"
+          }
+        },
+        "name": "Variable/columna"
+      },
+      "nullColor": {
+        "name": "Color predeterminat"
+      },
+      "regionMapping": {
+        "name": "Cartografia de regions"
+      },
+      "displayRange": {
+        "selectableDimensions": {
+          "max": {
+            "name": "Màx"
+          }
+        },
+        "name": "Interval de visualització"
+      },
+      "hideAdvancedOptions": "Amaga les opcions avançades",
+      "reset": "Restableix l'estil predeterminat",
+      "showAdvancedOptions": "Mostra les opcions avançades",
+      "min": {
+        "name": "Mín"
+      },
+      "name": "Estil"
     }
   },
   "deltaTool": {
@@ -1596,8 +2123,9 @@
     "loadError": "Error en carregar els paràmetres de cerca. Comproveu la consola per trobar errors detallats.",
     "noParameters": "No s'han trobat paràmetres cercables",
     "searching": "Cercant",
-    "resultsCount": "S'ha trobat {{count}} coincidència",
-    "resultsCount_plural": "S'ha trobat {{count}} coincidències",
+    "resultsCount_0": "S'ha trobat {{count}} coincidència",
+    "resultsCount_1": "S'ha trobat {{count}} coincidències",
+    "resultsCount_2": "S'ha trobat {{count}} coincidències",
     "searchError": "La cerca ha fallat. Comproveu la consola per trobar errors detallats.",
     "resetBtnText": "Esborra l'entrada",
     "searchBtnText": "Cerca"
@@ -1667,5 +2195,22 @@
   },
   "includeStory": {
     "message": "Inclou la història a Share"
+  },
+  "selectableDimensions": {
+    "colorRemove": "Eliminar",
+    "disabled": "Desactivat",
+    "colorAdd": "Afegir",
+    "undefinedLabel": "Sense definir",
+    "invalid": "Invàlid",
+    "enabled": "Activat"
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "Falta una propietat",
+      "idForMatchingErrorMessage": "Els objectes del model han de tenir una propietat `id`, `localId` o `name`.",
+      "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
+      "unsupportedTypeTitle": "Tipus desconegut"
+    },
+    "noSearchProviders": "No hi ha proveïdors de cerca configurats"
   }
 }

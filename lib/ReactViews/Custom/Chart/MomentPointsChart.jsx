@@ -1,6 +1,6 @@
 import { scaleLinear } from "@visx/scale";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -21,6 +21,11 @@ class MomentPointsChart extends React.Component {
   static defaultProps = {
     glyph: "circle"
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get points() {
@@ -80,7 +85,7 @@ class MomentPointsChart extends React.Component {
     const Glyph = Glyphs[glyph] ?? GlyphCircle;
     return (
       <g id={id}>
-        <For each="p" index="i" of={this.points}>
+        {this.points.map((p, i) => (
           <Glyph
             key={`${baseKey}-${i}`}
             left={scales.x(p.x)}
@@ -90,7 +95,7 @@ class MomentPointsChart extends React.Component {
             fillOpacity={p.isSelected ? 1.0 : 0.3}
             {...clickProps(p)}
           />
-        </For>
+        ))}
       </g>
     );
   }

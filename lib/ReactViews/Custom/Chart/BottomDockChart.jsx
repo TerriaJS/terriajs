@@ -1,11 +1,11 @@
 import { observer } from "mobx-react";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
 import { GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
-import { withParentSize } from "@vx/responsive";
+import { withParentSize } from "@visx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { Line } from "@visx/shape";
 import PropTypes from "prop-types";
@@ -72,8 +72,13 @@ class Chart extends React.Component {
     margin: { left: 20, right: 30, top: 10, bottom: 50 }
   };
 
-  @observable zoomedXScale;
+  @observable.ref zoomedXScale;
   @observable mouseCoords;
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartItems() {
@@ -276,15 +281,15 @@ class Chart extends React.Component {
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
               />
-              <For each="y" index="i" of={this.yAxes}>
+              {this.yAxes.map((y, i) => (
                 <YAxis
                   {...y}
                   key={`y-axis-${y.units}`}
                   color={this.yAxes.length > 1 ? y.color : defaultGridColor}
                   offset={i * 50}
                 />
-              </For>
-              <For each="y" index="i" of={this.yAxes}>
+              ))}
+              {this.yAxes.map((y, i) => (
                 <GridRows
                   key={`grid-${y.units}`}
                   width={this.plotWidth}
@@ -294,7 +299,7 @@ class Chart extends React.Component {
                   stroke={this.yAxes.length > 1 ? y.color : defaultGridColor}
                   lineStyle={{ opacity: 0.3 }}
                 />
-              </For>
+              ))}
               <svg
                 id="zoomSurface"
                 clipPath="url(#plotClip)"
@@ -331,6 +336,11 @@ class Plot extends React.Component {
     initialScales: PropTypes.array.isRequired,
     zoomedScales: PropTypes.array.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartRefs() {

@@ -101,7 +101,7 @@ export default class CorsProxy {
     }
 
     host = host.toLowerCase();
-    for (var i = 0; i < domains.length; i++) {
+    for (let i = 0; i < domains.length; i++) {
       if (host.match("(^|\\.)" + domains[i] + "$")) {
         return true;
       }
@@ -123,7 +123,7 @@ export default class CorsProxy {
   }
 
   getProxyBaseURL(proxyFlag: string | undefined) {
-    var flag = proxyFlag === undefined ? "" : "_" + proxyFlag + "/";
+    const flag = proxyFlag === undefined ? "" : "_" + proxyFlag + "/";
     return this.baseProxyUrl + flag;
   }
 
@@ -161,8 +161,8 @@ export default class CorsProxy {
       return false;
     }
 
-    var uri = new URI(url);
-    var host = uri.host();
+    const uri = new URI(url);
+    const host = uri.host();
 
     if (host === "") {
       // do not proxy local files

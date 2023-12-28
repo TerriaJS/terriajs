@@ -141,9 +141,9 @@ export class GetFeatureInfoFormat extends ModelTraits {
     type: "string",
     name: "Type",
     description:
-      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', or 'text'."
+      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', 'text' or 'csv'. If type is 'csv', then featureInfoContext will contain timeSeries object (see \"Customizing the Feature Info Template\" in documentation)"
   })
-  type?: "json" | "xml" | "html" | "text" | undefined;
+  type?: "json" | "xml" | "html" | "text" | "csv" | undefined;
 
   @primitiveTrait({
     type: "string",
@@ -293,6 +293,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   supportsGetLegendGraphic: boolean = false;
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Supports GetTimeseries requests",
+    description:
+      'Gets or sets whether this WMS server supports GetTimeseries requests. If true, then GetTimeseries will be used instead of GetFeatureInfo. This will also set default value of `getFeatureInfoFormat` to `{ format: "text/csv", type: "text" }`'
+  })
+  supportsGetTimeseries: boolean = false;
+
+  @primitiveTrait({
     type: "number",
     name: "Color scale minimum",
     description:
@@ -307,14 +315,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
   })
   colorScaleMaximum: number = 50;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Maximum shown feature infos",
-    description:
-      'The maximum number of "feature infos" that can be displayed in feature info panel.'
-  })
-  maximumShownFeatureInfos?: number;
 
   @primitiveTrait({
     type: "boolean",

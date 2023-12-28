@@ -7,6 +7,7 @@ import CkanSharedTraits from "./CkanSharedTraits";
 import GroupTraits from "./GroupTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
 export default class CkanCatalogGroupTraits extends mixTraits(
   GroupTraits,
@@ -57,7 +58,31 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   @primitiveTrait({
     type: "boolean",
     name: "Allow entire WMS Servers",
-    description: `True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false.`
+    description:
+      "True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false."
   })
   allowEntireWmsServers: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Exclude inactive datasets",
+    description: `True to remove inactive datasets. Where \`state = "deleted"\` (CKAN official), \`state === "draft"\` (CKAN official) or \`data_state === "inactive"\` (Data.gov.au CKAN).`
+  })
+  excludeInactiveDatasets: boolean = true;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Resource ID template string.",
+    description:
+      "A Mustache formatted template string for generating a custom resource id from resource description. By default we use `resource.id` as the ID of the CKAN item but some CKAN services change their resource IDs frequently which can break terria features link share links or catalog search indexing. You can use `customResourceIdTemplate` to instruct terria to construct a different ID instead of the default `resource.id`. The template string will receive the entire `resource` as a template variable. Example usage: '{{resource.name}}-{{resource.format}}'."
+  })
+  resourceIdTemplate?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Restrict resource id template to organization with names",
+    description:
+      "Names of organisations for which `customResourceIdTemplate` should be used."
+  })
+  restrictResourceIdTemplateToOrgsWithNames?: string[];
 }

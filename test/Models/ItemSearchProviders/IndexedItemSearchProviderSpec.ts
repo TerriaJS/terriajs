@@ -52,7 +52,10 @@ describe("IndexedItemSearchProvider", function () {
 
   describe("construction", function () {
     it("can be constructed", function () {
-      new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" }, []);
+      return new IndexedItemSearchProvider(
+        { indexRootUrl: "indexRoot.json" },
+        []
+      );
     });
   });
 
@@ -85,7 +88,7 @@ describe("IndexedItemSearchProvider", function () {
       let error;
       try {
         await provider.initialize();
-      } catch (e) {
+      } catch (e: any) {
         error = e;
       }
       expect(error?.message).toContain(

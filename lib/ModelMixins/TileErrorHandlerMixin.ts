@@ -6,15 +6,16 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
-import CommonStrata from "../Models/Definition/CommonStrata";
+import { ProviderCoords } from "../Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
@@ -27,8 +28,10 @@ type ModelType = Model<
  * A mixin for handling tile errors in raster layers
  *
  */
-function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
-  abstract class Klass extends Base {
+function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
+  Base: T
+) {
+  abstract class TileErrorHandlerMixin extends Base {
     tileFailures = 0;
     private readonly tileRetriesByMap: Map<string, number> = new Map();
 
@@ -50,7 +53,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
      */
     handleTileError?: (
       request: Promise<void>,
-      tile: { x: number; y: number; level: number }
+      tile: ProviderCoords
     ) => Promise<void>;
 
     get hasTileErrorHandlerMixin() {
@@ -179,7 +182,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
         result.resolve();
       };
 
-      const getTileKey = (tile: { x: number; y: number; level: number }) => {
+      const getTileKey = (tile: ProviderCoords) => {
         const time = DiscretelyTimeVaryingMixin.isMixedInto(this)
           ? this.currentTime
           : "";
@@ -263,7 +266,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               // - the ImageryCatalogItem looked at the error and said we should try again.
               tellMapToRetry();
             }
-          } catch (error) {
+          } catch (error: any) {
             // This attempt failed. We'll either retry (for 500s) or give up
             // depending on the status code.
             const e: Error & { statusCode?: number } = error || {};
@@ -324,7 +327,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
    * Trying fetching image using an XHR request
    */
   function fetchTileImage(
-    tile: { x: number; y: number; level: number },
+    tile: ProviderCoords,
     imageryProvider: ImageryProvider
   ) {
     const tileUrl = getUrlForImageryTile(
@@ -343,7 +346,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
   }
 
   function isTileOutsideExtent(
-    tile: { x: number; y: number; level: number },
+    tile: ProviderCoords,
     rectangle: Rectangle | undefined,
     imageryProvider: ImageryProvider
   ): boolean {
@@ -361,7 +364,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
     return intersection === undefined;
   }
 
-  return Klass;
+  return TileErrorHandlerMixin;
 }
 
 namespace TileErrorHandlerMixin {

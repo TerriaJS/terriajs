@@ -1,7 +1,13 @@
 "use strict";
-
 import classNames from "classnames";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -19,6 +25,11 @@ import Styles from "./data-preview-map.scss";
 
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
+
+  constructor(...args) {
+    super(...args);
+    makeObservable(this);
+  }
 
   async forceLoadMapItems() {}
 
@@ -90,6 +101,8 @@ class DataPreviewMap extends React.Component {
 
   constructor(props) {
     super(props);
+
+    makeObservable(this);
 
     /**
      * @param {HTMLElement | null} container
@@ -258,20 +271,16 @@ class DataPreviewMap extends React.Component {
     };
     return (
       <div className={Styles.map} onClick={this.clickMap}>
-        <Choose>
-          <When condition={this.props.showMap}>
-            <div
-              className={classNames(Styles.terriaPreview)}
-              ref={this.containerRef}
-            />
-          </When>
-          <Otherwise>
-            <div
-              className={classNames(Styles.terriaPreview, Styles.placeholder)}
-            />
-          </Otherwise>
-        </Choose>
-
+        {this.props.showMap ? (
+          <div
+            className={classNames(Styles.terriaPreview)}
+            ref={this.containerRef}
+          />
+        ) : (
+          <div
+            className={classNames(Styles.terriaPreview, Styles.placeholder)}
+          />
+        )}
         <label className={Styles.badge}>
           {previewBadgeLabels[this.previewBadgeState]}
         </label>

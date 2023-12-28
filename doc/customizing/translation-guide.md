@@ -11,8 +11,8 @@ If you are an advanced user or expert, we recommend reading the short and concis
 
 The following i18next plugins are used:
 
-- [i18next-browser-languagedetector](https://github.com/i18next/i18next-browser-languageDetector) to detect the browser language, use the localStorage and react to URL query
-- [i18next-http-backend](https://github.com/i18next/i18next-http-backend) to enable loading translations from editable language files
+-   [i18next-browser-languagedetector](https://github.com/i18next/i18next-browser-languageDetector) to detect the browser language, use the localStorage and react to URL query
+-   [i18next-http-backend](https://github.com/i18next/i18next-http-backend) to enable loading translations from editable language files
 
 ### Languages
 
@@ -43,6 +43,8 @@ The translation language file contains all translations used throughout the Terr
 
 The languageOverrides language file is used to override the translation language file's translations without rebuilding the application and specifying the additional translations needed. This file is located in `/wwwroot/languages/{abbreviation}/languageOverrides.json` inside the root folder of TerriaMap (where the abbreviation is a short name of the language specified in the config). A namespace for this translation file is `languageOverrides`.
 
+Note the base URL to overrides language files can be changed by setting `LanguageConfiguration.overridesBaseUrl`. See [config.json documentation](../customizing/client-side-config.md#LanguageConfiguration)
+
 ## Best practice
 
 This section describes how to use i18next to provide a translation of TerriaJS.
@@ -56,14 +58,14 @@ The translation key must be prefixed with `"translate#"`, so the structure of th
 
 ```json
 {
-  "help": {
-    "gettingstarted": {
-      "title": "Getting started with the map",
-      "content": "",
-      "video": "https://...",
-      "image": "https://..."
+    "help": {
+        "gettingstarted": {
+            "title": "Getting started with the map",
+            "content": "",
+            "video": "https://...",
+            "image": "https://..."
+        }
     }
-  }
 }
 ```
 

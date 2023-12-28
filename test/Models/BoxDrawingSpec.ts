@@ -10,21 +10,28 @@ import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 
 describe("BoxDrawing", function () {
   let terria: Terria;
+  let terriaViewer: TerriaViewer;
   let cesium: Cesium;
+  let container: HTMLElement;
 
   beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    const terriaViewer = new TerriaViewer(
+    terriaViewer = new TerriaViewer(
       terria,
       computed(() => [])
     );
-    const container = document.createElement("div");
+    container = document.createElement("div");
     container.id = "container";
     document.body.appendChild(container);
 
     cesium = new Cesium(terriaViewer, container);
+  });
+
+  afterEach(function () {
+    terriaViewer.destroy();
+    document.body.removeChild(container);
   });
 
   describe("BoxDrawing creation", function () {

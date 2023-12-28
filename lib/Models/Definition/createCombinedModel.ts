@@ -4,7 +4,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import traitsClassToModelClass from "../../Traits/traitsClassToModelClass";
 import StratumFromTraits from "./StratumFromTraits";
 import createStratumInstance from "./createStratumInstance";
-import { computed, decorate } from "mobx";
+import { computed, makeObservable } from "mobx";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 
 /**
@@ -74,7 +74,9 @@ export function extractBottomModel(model: BaseModel): BaseModel | undefined {
 }
 
 class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
-  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {}
+  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {
+    makeObservable(this);
+  }
 
   clear(): void {
     this.top.strata.clear();
@@ -130,7 +132,7 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
     const result = new Map<string, StratumFromTraits<ModelTraits>>();
 
     // Add the strata fro the top
-    for (let key of this.top.strata.keys()) {
+    for (const key of this.top.strata.keys()) {
       const topStratum = this.top.strata.get(key);
       const bottomStratum = this.bottom.strata.get(key);
 
@@ -157,7 +159,7 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
     }
 
     // Add any strata that are only in the bottom
-    for (let key of this.bottom.strata.keys()) {
+    for (const key of this.bottom.strata.keys()) {
       if (this.top.strata.has(key)) {
         continue;
       }
@@ -230,8 +232,18 @@ function createCombinedStratum<T extends ModelTraits>(
   });
 
   decorate(result, decorators);
+  makeObservable(result);
 
   return <StratumFromTraits<T>>(<unknown>result);
+}
+
+function decorate(
+  target: any,
+  decorators: { [id: string]: PropertyDecorator }
+) {
+  Object.entries(decorators).forEach(([prop, decorator]) => {
+    decorator(target, prop);
+  });
 }
 
 function unwrapCombinedStratumFromModel(value: BaseModel) {

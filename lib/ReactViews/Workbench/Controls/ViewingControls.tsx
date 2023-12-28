@@ -1,5 +1,5 @@
 import { sortBy, uniqBy } from "lodash";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -104,6 +104,8 @@ class ViewingControls extends React.Component<
   constructor(props: any) {
     // Required step: always call the parent class' constructor
     super(props);
+
+    makeObservable(this);
 
     // Set the state directly. Use props if necessary.
     this.state = {
@@ -307,7 +309,7 @@ class ViewingControls extends React.Component<
   }
 
   async previewItem() {
-    let item = this.props.item;
+    const item = this.props.item;
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
     getAncestors(this.props.item)
       .map((item) => getDereferencedIfExists(item))
@@ -316,7 +318,9 @@ class ViewingControls extends React.Component<
           group.setTrait(CommonStrata.user, "isOpen", true);
         });
       });
-    this.props.viewState.viewCatalogMember(item);
+    this.props.viewState
+      .viewCatalogMember(item)
+      .then((result) => result.raiseError(this.props.viewState.terria));
   }
 
   exportDataClicked() {

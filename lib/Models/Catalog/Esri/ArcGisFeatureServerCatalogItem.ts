@@ -1,6 +1,6 @@
 import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -19,25 +19,26 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../../../Traits/TraitsClasses/TableColorStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits,
   OutlineSymbolTraits
-} from "../../../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/Table/PointSizeStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
   EnumPointSymbolTraits,
   PointSymbolTraits
-} from "../../../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const proj4 = require("proj4").default;
@@ -83,7 +84,7 @@ export type SupportedLineStyle =
   | "esriSLSNull";
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
-interface Symbol {
+interface ISymbol {
   contentType: string;
   color?: number[];
   outline?: Outline;
@@ -118,7 +119,7 @@ interface ClassBreakInfo extends SimpleRenderer {
 interface ClassBreaksRenderer extends Renderer {
   field: string;
   classBreakInfos: ClassBreakInfo[];
-  defaultSymbol: Symbol | null;
+  defaultSymbol: ISymbol | null;
 }
 
 interface UniqueValueInfo extends SimpleRenderer {
@@ -134,12 +135,12 @@ interface UniqueValueRenderer extends Renderer {
   field3?: string;
   fieldDelimiter?: string;
   uniqueValueInfos: UniqueValueInfo[];
-  defaultSymbol: Symbol | null;
+  defaultSymbol: ISymbol | null;
 }
 
 interface SimpleRenderer extends Renderer {
   label?: string;
-  symbol: Symbol | null;
+  symbol: ISymbol | null;
 }
 
 interface DrawingInfo {
@@ -183,6 +184,7 @@ class FeatureServerStratum extends LoadableStratum(
     private _esriJson?: any
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -201,6 +203,8 @@ class FeatureServerStratum extends LoadableStratum(
     item: ArcGisFeatureServerCatalogItem
   ): Promise<FeatureServerStratum> {
     if (item.url === undefined) {
+      /* TODO: Should this be returned? */
+      /* eslint-disable-next-line no-new */
       new FeatureServerStratum(item, undefined, undefined);
     }
     const metaUrl = buildMetadataUrl(item);
@@ -464,11 +468,14 @@ class FeatureServerStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
 export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
-  UrlMixin(
-    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
-  )
+  CreateModel(ArcGisFeatureServerCatalogItemTraits)
 ) {
   static readonly type = "esri-featureServer";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type(): string {
     return ArcGisFeatureServerCatalogItem.type;
@@ -509,7 +516,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     // until we run out of features or hit the limit
     const featuresPerRequest = this.featuresPerRequest;
     const maxFeatures = this.maxFeatures;
-    let combinedEsriLayerJson = await getEsriLayerJson(0);
+    const combinedEsriLayerJson = await getEsriLayerJson(0);
 
     const mapObjectIds = (features: any) =>
       features.map(
@@ -658,7 +665,7 @@ function cleanUrl(url: string): string {
 }
 
 function esriSymbolToTableStyle(
-  symbol?: Symbol | null,
+  symbol?: ISymbol | null,
   label?: string | undefined
 ) {
   if (!symbol) return {};

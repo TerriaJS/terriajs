@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -55,6 +55,7 @@ export class FeatureServerStratum extends LoadableStratum(
     private readonly _featureServer: FeatureServer
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -119,8 +120,8 @@ export class FeatureServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const terria = catalogGroup.terria;
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
@@ -207,7 +208,7 @@ export class FeatureServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }

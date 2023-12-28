@@ -1,6 +1,6 @@
 import dateFormat from "dateformat";
-import { get as _get } from "lodash";
-import { computed, observable, runInAction } from "mobx";
+import { get as _get, map as _map } from "lodash";
+import { computed, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -12,8 +12,8 @@ import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import ApiTableCatalogItemTraits, {
   ApiTableRequestTraits
 } from "../../../Traits/TraitsClasses/ApiTableCatalogItemTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -22,6 +22,7 @@ import saveModelToJson from "../../Definition/saveModelToJson";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import JsonValue from "../../../Core/Json";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -34,6 +35,7 @@ export class ApiTableStratum extends LoadableStratum(
 
   constructor(private readonly catalogItem: ApiTableCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   // Set time id columns to `idKey`
@@ -57,7 +59,7 @@ StratumOrder.addLoadStratum(ApiTableStratum.stratumName);
  * single API to get positions from.
  */
 export class ApiTableCatalogItem extends AutoRefreshingMixin(
-  TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
+  TableMixin(CreateModel(ApiTableCatalogItemTraits))
 ) {
   static readonly type = "api-table";
 
@@ -70,6 +72,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
@@ -98,7 +101,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
           api.postRequestDataAsFormData
         );
         if (api.responseDataPath !== undefined) {
-          data = _get(data, api.responseDataPath);
+          data = getResponseDataPath(data, api.responseDataPath);
         }
         return Promise.resolve({
           data,
@@ -128,7 +131,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             row["value"] = value; // add the id to the row's data
             row[this.idKey!] = id;
             if (columnMajorData.has(id)) {
-              let currentRow = columnMajorData.get(id);
+              const currentRow = columnMajorData.get(id);
               columnMajorData.set(id, { currentRow, ...value });
             } else {
               columnMajorData.set(id, row);
@@ -182,8 +185,21 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     this.apiResponses.forEach((response) => {
       this.columns.forEach((col, mappingIdx) => {
         if (!isDefined(col.name)) return;
-        // Append the new value to the correct column
-        columnMajorTable[mappingIdx].push(`${response[col.name] ?? ""}`);
+
+        // If ApiColumnTraits has a responseDataPath, use that to get the value
+        const dataPath = this.apiColumns.find(
+          (c) => c.name === col.name
+        )?.responseDataPath;
+
+        if (dataPath) {
+          columnMajorTable[mappingIdx].push(
+            `${getResponseDataPath(response, dataPath) ?? ""}`
+          );
+        }
+        // Otherwise, use column name as the path
+        else {
+          columnMajorTable[mappingIdx].push(`${response[col.name] ?? ""}`);
+        }
       });
     });
 
@@ -251,6 +267,30 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
     return uri.toString();
   }
+}
+
+/**
+ * Return the value at json path of the data object.
+ *
+ * This works exactly like the lodash.get() function but adds support for
+ * traversing array objects.  For eg, the lodash.get() does not support a path
+ * like: `a.users[].name`, but this function will correctly return a `{name}[]`
+ * array if they exist. The particular syntax for array traversal
+ * is borrowed from `jq` CLI tool.
+ */
+function getResponseDataPath(data: JsonValue, jsonPath: string) {
+  // Split the path at `[].` or `[]`
+  const pathSegments = jsonPath.split(/\[\]\.?/);
+  const getPath = (data: JsonValue, path: string) =>
+    path === ""
+      ? data
+      : Array.isArray(data)
+      ? _map(data, path)
+      : _get(data, path);
+  return pathSegments.reduce(
+    (nextData, segment) => getPath(nextData, segment),
+    data
+  );
 }
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);

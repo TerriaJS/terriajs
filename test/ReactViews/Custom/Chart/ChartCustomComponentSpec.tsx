@@ -4,7 +4,7 @@ import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import { BaseModel } from "../../../../lib/Models/Definition/Model";
-import Feature from "../../../../lib/Models/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -33,7 +33,7 @@ describe("ChartCustomComponent", function () {
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem(undefined, terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,
@@ -62,16 +62,16 @@ describe("ChartCustomComponent", function () {
   it("creates shareable chart items for the expand menu", function () {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
       constructShareableCatalogItem = (
-        id: string | undefined,
+        _id: string | undefined,
         context: ProcessNodeContext,
-        sourceReference: BaseModel | undefined
+        _sourceReference: BaseModel | undefined
       ) => this.createItemReference(context.catalogItem as any);
     };
     const component = new TestComponentWithShareableChartItem();
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem("parent", terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,
@@ -103,7 +103,7 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
   protected constructCatalogItem(
     id: string | undefined,
     context: ProcessNodeContext,
-    sourceReference:
+    _sourceReference:
       | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
   ) {
@@ -112,9 +112,9 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
       : undefined;
   }
   protected setTraitsFromAttrs(
-    item: TestCatalogItem,
-    attrs: ChartCustomComponentAttributes,
-    sourceIndex: number
+    _item: TestCatalogItem,
+    _attrs: ChartCustomComponentAttributes,
+    _sourceIndex: number
   ): void {
     return;
   }

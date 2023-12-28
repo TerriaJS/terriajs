@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { isJsonObject, isJsonString, isJsonStringArray } from "../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../Core/loadBlob";
 import loadJson from "../../Core/loadJson";
@@ -31,7 +31,9 @@ export default class CatalogIndex {
   @observable
   private _loadPromise: Promise<void> | undefined;
 
-  constructor(private readonly terria: Terria, private readonly url: string) {}
+  constructor(private readonly terria: Terria, private readonly url: string) {
+    makeObservable(this);
+  }
 
   get models() {
     return this._models;
@@ -117,7 +119,9 @@ export default class CatalogIndex {
         if (!isJsonObject(model, false)) return;
         const reference = new CatalogIndexReference(id, this.terria);
 
-        updateModelFromJson(reference, CommonStrata.definition, model);
+        updateModelFromJson(reference, CommonStrata.definition, model).logError(
+          "Error ocurred adding adding catalog model reference"
+        );
 
         if (isJsonStringArray(model.shareKeys)) {
           model.shareKeys.map((s) => this.shareKeysMap.set(s, id));

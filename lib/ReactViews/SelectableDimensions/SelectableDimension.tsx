@@ -8,7 +8,8 @@ import {
   isGroup,
   isNumeric,
   isText,
-  SelectableDimension as SelectableDimensionModel
+  SelectableDimension as SelectableDimensionModel,
+  isMultiEnum
 } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -19,7 +20,10 @@ import { SelectableDimensionCheckbox } from "./Checkbox";
 import { SelectableDimensionColor } from "./Color";
 import { SelectableDimensionGroup } from "./Group";
 import { SelectableDimensionNumeric } from "./Numeric";
-import { SelectableDimensionEnum } from "./Select";
+import {
+  SelectableDimensionEnum,
+  SelectableDimensionEnumMulti as SelectableDimensionMultiEnum
+} from "./Select";
 import { SelectableDimensionText } from "./Text";
 
 const SelectableDimension: React.FC<{
@@ -44,6 +48,7 @@ const SelectableDimension: React.FC<{
       ) : null}
       {isCheckbox(dim) && <SelectableDimensionCheckbox id={id} dim={dim} />}
       {isEnum(dim) && <SelectableDimensionEnum id={id} dim={dim} />}
+      {isMultiEnum(dim) && <SelectableDimensionMultiEnum id={id} dim={dim} />}
       {(isGroup(dim) || isCheckboxGroup(dim)) && (
         <SelectableDimensionGroup id={id} dim={dim} />
       )}

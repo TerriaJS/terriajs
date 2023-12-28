@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -27,6 +27,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -64,7 +65,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       this.tableStyle.colorMap instanceof DiscreteColorMap ||
       this.tableStyle.colorMap instanceof EnumColorMap
     )
-      return this.tableStyle.title;
+      return this.tableStyle.colorColumn?.title ?? this.tableStyle.title;
   }
 
   @computed

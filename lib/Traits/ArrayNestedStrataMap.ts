@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
@@ -19,7 +19,9 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     readonly objectIdProperty: string | number | symbol,
     readonly objectId: string,
     readonly merge: boolean
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   clear(): void {
     this.parentModel.strata.forEach((value: any, key: string) => {
@@ -33,7 +35,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       return false;
     }
 
-    let array: any[] = parentValue[this.parentProperty];
+    const array: any[] = parentValue[this.parentProperty];
     if (array === undefined) {
       return false;
     }
@@ -127,7 +129,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     const result = new Map<string, StratumFromTraits<T>>();
 
     // Find the strata that go into this object.
-    for (let stratumId of strataTopToBottom.keys()) {
+    for (const stratumId of strataTopToBottom.keys()) {
       const stratum = strataTopToBottom.get(stratumId);
       const objectArray = stratum[this.parentProperty];
 

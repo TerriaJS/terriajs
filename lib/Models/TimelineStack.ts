@@ -1,4 +1,11 @@
-import { action, autorun, computed, IReactionDisposer, observable } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -33,7 +40,9 @@ export default class TimelineStack {
   private _disposeClockAutorun: IReactionDisposer | undefined;
   private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
-  constructor(readonly terria: Terria, readonly clock: Clock) {}
+  constructor(readonly terria: Terria, readonly clock: Clock) {
+    makeObservable(this);
+  }
 
   activate() {
     // Keep the Cesium clock in sync with the top layer's clock.
@@ -133,7 +142,7 @@ export default class TimelineStack {
    */
   @action
   addToTop(item: TimeVarying) {
-    var currentIndex = this.items.indexOf(item);
+    const currentIndex = this.items.indexOf(item);
     this.items.unshift(item);
     if (currentIndex > -1) {
       this.items.splice(currentIndex, 1);
@@ -148,7 +157,7 @@ export default class TimelineStack {
    */
   @action
   remove(item: TimeVarying) {
-    var index = this.items.indexOf(item);
+    const index = this.items.indexOf(item);
     this.items.splice(index, 1);
   }
 
@@ -168,7 +177,7 @@ export default class TimelineStack {
    */
   @action
   promoteToTop(item: TimeVarying) {
-    var currentIndex = this.items.indexOf(item);
+    const currentIndex = this.items.indexOf(item);
     if (currentIndex > -1) {
       this.addToTop(item);
     }

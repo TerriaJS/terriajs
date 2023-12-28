@@ -1,17 +1,20 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import bbox from "@turf/bbox";
 import i18next from "i18next";
-import { clone } from "lodash-es";
-import { action, computed, observable, runInAction } from "mobx";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import {
+  computed,
+  observable,
+  runInAction,
+  makeObservable,
+  override
+} from "mobx";
+import {
+  GeomType,
   json_style,
   LabelRule,
   LineSymbolizer,
   PolygonSymbolizer,
   Rule as PaintRule
 } from "protomaps";
-import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
@@ -31,6 +34,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
@@ -43,6 +47,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     readonly styleJson: JsonObject | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -83,6 +88,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
           createStratumInstance(LegendItemTraits, {
             color: this.item.fillColor,
             outlineColor: this.item.lineColor,
+            outlineWidth: this.item.lineColor ? 1 : undefined,
             title: this.item.name
           })
         ]
@@ -112,10 +118,12 @@ StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
-  @observable
-  public readonly forceProxy = true;
-
   static readonly type = "mvt";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return MapboxVectorTileCatalogItem.type;
@@ -123,6 +131,11 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
+  }
+
+  @override
+  get forceProxy() {
+    return true;
   }
 
   async forceLoadMetadata() {
@@ -145,7 +158,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
    * - `parsedJsonStyle`
    */
   get paintRules(): PaintRule[] {
-    let rules: PaintRule[] = [];
+    const rules: PaintRule[] = [];
 
     if (this.layer) {
       if (this.fillColor) {
@@ -153,7 +166,9 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           dataLayer: this.layer,
           symbolizer: new PolygonSymbolizer({ fill: this.fillColor }),
           minzoom: this.minimumZoom,
-          maxzoom: this.maximumZoom
+          maxzoom: this.maximumZoom,
+          // Only apply polygon/fill symbolizer to polygon features (otherwise it will also apply to line features)
+          filter: (z, f) => f.geomType === GeomType.Polygon
         });
       }
       if (this.lineColor) {
@@ -191,14 +206,15 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return new ProtomapsImageryProvider({
       terria: this.terria,
+      id: this.uniqueId,
       data: this.url,
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
       credit: this.attribution,
       paintRules: this.paintRules,
-      labelRules: this.labelRules
-      // featureInfoFunc: this.featureInfoFromFeature,
+      labelRules: this.labelRules,
+      idProperty: this.idProperty
     });
   }
 
@@ -222,19 +238,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           : undefined
       }
     ];
-  }
-
-  @action.bound
-  featureInfoFromFeature(feature: VectorTileFeature) {
-    const featureInfo = new ImageryLayerFeatureInfo();
-    if (isDefined(this.nameProperty)) {
-      featureInfo.name = feature.properties[this.nameProperty];
-    }
-    (featureInfo as any).properties = clone(feature.properties);
-    featureInfo.data = {
-      id: feature.properties[this.idProperty]
-    }; // For highlight
-    return featureInfo;
   }
 }
 

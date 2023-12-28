@@ -42,7 +42,8 @@ export interface StoryData {
 }
 export interface ShareInitSourceData {
   version: string;
-  initSources: InitSourceData[];
+  /** Share data initSources can be a mix of initUrls (string) and initData (InitDataSource/JsonObject) */
+  initSources: (InitSourceData | string)[];
 }
 
 export interface InitSourceData {
@@ -54,7 +55,8 @@ export interface InitSourceData {
   viewerMode?: ViewModeJson;
   baseMaps?: BaseMapsJson;
   homeCamera?: JsonObject;
-  initialCamera?: JsonObject;
+  /* Either a `CameraView` instance or a flag for focusing the camera on the workbench items */
+  initialCamera?: JsonObject | { focusWorkbenchItems: boolean };
   showSplitter?: boolean;
   splitPosition?: number;
   workbench?: string[];

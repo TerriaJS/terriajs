@@ -1,4 +1,4 @@
-import { action, observable, reaction } from "mobx";
+import { action, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -27,12 +27,17 @@ export default class LocationPicker extends React.Component<PropsType> {
   @observable private currentPick?: PickedFeatures;
   @observable private pickDisposer?: () => void;
 
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action
   setupPicker() {
     const { terria, location, onPicking, onPicked } = this.props;
     this.pickMode = new MapInteractionMode({
       message: "",
-      messageAsNode: <div></div>,
+      messageAsNode: <div />,
       uiMode: UIMode.Difference
     });
     addInteractionModeToMap(terria, this.pickMode);

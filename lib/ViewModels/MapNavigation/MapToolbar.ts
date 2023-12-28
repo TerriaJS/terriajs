@@ -1,280 +1,252 @@
-import ViewState from "../../ReactViewModels/ViewState";
-import { NavigationItemLocation } from "./MapNavigationModel";
-import MapNavigationItemController from "./MapNavigationItemController";
-import Terria from "../../Models/Terria";
-import { IconGlyph } from "../../Styled/Icon";
-import ViewerMode from "../../Models/ViewerMode";
-import TerriaError from "../../Core/TerriaError";
+import { action, computed, makeObservable } from "mobx";
+import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import TerriaError from "../../Core/TerriaError";
+import ViewerMode from "../../Models/ViewerMode";
+import ViewState from "../../ReactViewModels/ViewState";
+import { IconGlyph } from "../../Styled/Icon";
+import MapNavigationItemController from "./MapNavigationItemController";
+import { NavigationItemLocation } from "./MapNavigationModel";
 
-interface SimpleButton {
+export interface ToolConfig {
   /**
-   * Removes the button from the toolbar
+   * Optional `id` for the tool. If no `id` is passed we generate a random
+   * one and return it as the result of the `addTool()` call.
+   *
+   * `id` is required for other operations on the tool like opening, closing or
+   * removing it from the toolbar.
    */
-  removeButton: () => void;
+  id?: string;
+
+  /**
+   * A human readable name for the tool.
+   */
+  name: string;
+
+  /**
+   * A loader function returning the react component module to mount when user activates the tool.
+   *
+   * example: ```
+   *  {
+   *    toolComponentLoader: () => import("./MyToolModule.tsx"),
+   *  }
+   * ```
+   */
+  toolComponentLoader: () => Promise<{ default: React.ComponentType<any> }>;
+
+  /**
+   * The tool button configuration
+   */
+  toolButton: ToolButton;
+
+  /**
+   * Shows the tool button only for the specified map viewer mode. Defaults to
+   * showing the tool button in both Cesium (3D) and Leaflet (2D) modes.
+   *
+   * eg: Setting this to `ViewerMode.Cesium` will result in the tool button
+   * being shown only when the map is in Cesium 3D mode.
+   */
+  viewerMode?: ViewerMode;
 }
 
-interface SimpleButtonOptions extends BaseButtonOptions {
+export interface ToolButton {
   /**
-   * Called when user clicks the button
-   */
-  onClick: () => void;
-}
-
-interface ModeButton {
-  /**
-   * Removes the button from the toolbar
-   */
-  removeButton: () => void;
-
-  /**
-   * Closes the mode if it is open
-   */
-  closeMode: () => void;
-}
-
-interface ModeButtonOptions extends BaseButtonOptions {
-  /**
-   * Called when user enters the mode
-   */
-  onUserEnterMode: () => void;
-
-  /**
-   * Called when user leaves the mode by toggling the mode button
-   */
-  onUserCloseMode: () => void;
-}
-
-interface BaseButtonOptions {
-  /**
-   * Button text
+   * Tool button text
    */
   text: string;
 
   /**
-   * Button icon
+   * Tool button icon
    */
   icon: IconGlyph;
 
   /**
-   * Button tooltip
+   * Tooltip to show when hovering over the tool button
    */
   tooltip?: string;
 
   /**
-   * The toolbar has 2 groups, TOP and BOTTOM (BOTTOM is where you will find the feedback button)
-   * `position` indicates where to place the button.
+   * The toolBarSection to place the tool button. Defaults to `TOP`.
+   *
+   * The toolbar has 2 sections - TOP and BOTTOM
+   *   TOP - contains the compass and other buttons
+   *   BOTTOM - contains the feedback button
    */
-  position?: NavigationItemLocation;
+  section?: ToolbarSection;
 
   /**
-   * A numeric order of the button
+   * A number used to determine the order of the button in the toolbar
    */
   order?: number;
-
-  /**
-   * Whether the button should be visible in 2d, 3d or otherwise any map mode.
-   */
-  mapMode?: ButtonMapMode;
 }
 
-/**
- * The map modes in which a nav buttons will be visible
- */
-export type ButtonMapMode = "2d" | "3d" | "any";
+export type ToolbarSection = NavigationItemLocation;
+
+export { default as ViewerMode } from "../../Models/ViewerMode";
 
 /**
- * Add a simple clickable button to the map toolbar. This button is useful for performing some action when the user clicks on it.
+ * Adds a new tool to the map toolbar
  *
- * @param viewState - The {@link ViewState} instance
- * @param options - Options for the simple clickable button
- * @returns A simple button instance with a method to remove the button from the toolbar.
+ * @param viewState The {@link ViewState} instance
+ * @param config The tool configuration
+ * @returns `id` of the tool. This will be the same as `config.id` if it was set. Otherwise, a random `id` is generated and returned.
  *
- * @example
- * ```ts
- *   const locationButton = MapToolbar.addButton(viewState, {
- *     text: "My location",
- *     tooltip: "Mark your current location on the map",
- *     icon: Icon.GLYPH.location,
- *     onClick: () => {
- *       // code to show marker
- *     }
- *   })
- *   // and later
- *   locationButton.removeButton();
- * ```
+ * Example:
+ * const toolId = addTool(viewState, {
+ *   name: "X Tool",
+ *   toolComponentLoader: () => import("./XTool.tsx"),
+ *   toolButton: {
+ *        text: "Open X tool",
+ *        tooltip: "X Tool",
+ *        icon: X_ICON
+ *   }
+ * })
  */
-export function addButton(
-  viewState: ViewState,
-  options: SimpleButtonOptions
-): SimpleButton {
+export function addTool(viewState: ViewState, config: ToolConfig): string {
+  const id = config.id ?? createGuid();
+  const controller = new ToolController(viewState, id, config);
   const terria = viewState.terria;
-  const id = createGuid();
-  const { icon, mapMode, onClick } = options;
-  const controller = new SimpleButtonController(terria, {
-    icon,
-    mapMode,
-    onClick
-  });
-
   terria.mapNavigationModel.addItem({
     id,
-    name: options.text,
-    title: options.tooltip,
-    location: options.position ?? "TOP",
-    order: options.order ?? terria.mapNavigationModel.items.length,
+    name: config.toolButton.text,
+    title: config.toolButton.tooltip,
+    location: config.toolButton.section ?? "TOP",
+    order: config.toolButton.order,
     controller
   });
-
-  return {
-    removeButton: () => terria.mapNavigationModel.remove(id)
-  };
+  return id;
 }
 
 /**
- * Add a mode button to the map toolbar. This button is useful for launching tools that have an open and close mode.
+ * Function to programatically open the tool with given ID.
  *
- * @param viewState - The {@link ViewState} instance
- * @param options - Options for the simple mode button
- * @returns A mode button instance with a method to remove the button from the toolbar.
+ * Note that in normal operation, a tool will be opened when user clicks the
+ * tool button in the map toolbar. This function is useful in situations where
+ * the tool needs to be opened through other means - like clicking a workbench
+ * viewing-controls button.
  *
- * @example
- * ```ts
- *   const pedestrianButton = MapToolbar.addModeButton(viewState, {
- *     text: "Pedestrian mode",
- *     tooltip: "Use keyboard navigation to walk and fly around the map",
- *     icon: Icon.GLYPH.pedestrian,
- *     onUserEnterMode: () => {
- *       // code to put the map in pedestrian mode
- *     },
- *     onUserCloseMode: () => {
- *       // code to run when user closes the mode by toggling the button
- *     }
- *   })
- *   // and later, to close the mode from some other part of the UI
- *   pedestrianButton.closeMode();
- * ```
+ * If no tool exists with the given `toolId` then this function does nothing
+ * and returns `false`.  The caller can also check if the call was successful
+ * by checking the result of {@link isToolOpen()}.
+ *
+ * @param viewState The `ViewState` instance.
+ * @param toolId ID of the tool to open. See {@link addTool}.
+ * @param props Optional props to pass to the Tool component when activating it.
+ * @returns `true` if the tool was successfully opened.
  */
-export function addModeButton(
+export function openTool(viewState: ViewState, toolId: string, props?: any) {
+  const controller = findToolController(viewState, toolId);
+  controller?.openTool(props);
+  return controller?.isToolOpen === true;
+}
+
+/**
+ * Closes the tool with given id.
+ *
+ * @param viewState The `ViewState` instance.
+ * @param toolId ID of the tool to close.
+ */
+export function closeTool(viewState: ViewState, toolId: string) {
+  findToolController(viewState, toolId)?.closeTool();
+}
+
+/**
+ * Check if tool with given `id` is currently open.
+ *
+ * @param viewState The `ViewState` instance.
+ * @param toolId ID of the tool to check.
+ * @returns `true` if the tool is currently open, otherwise returns `false`.
+ */
+export function isToolOpen(viewState: ViewState, toolId: string): boolean {
+  return findToolController(viewState, toolId)?.active === true;
+}
+
+/**
+ * Removes the tool with the given id from the toolbar.
+ *
+ * @param viewState The `ViewState` instance.
+ * @param toolId ID of the tool to close.
+ */
+export function removeTool(viewState: ViewState, toolId: string) {
+  viewState.terria.mapNavigationModel.remove(toolId);
+}
+
+/**
+ * Find `ToolController` by id.
+ */
+function findToolController(
   viewState: ViewState,
-  options: ModeButtonOptions
-): ModeButton {
-  const terria = viewState.terria;
-  const id = createGuid();
-  const { icon, mapMode, onUserEnterMode, onUserCloseMode } = options;
-  const controller = new ModalButtonController(terria, {
-    icon,
-    mapMode,
-    onUserEnterMode,
-    onUserCloseMode
-  });
-
-  terria.mapNavigationModel.addItem({
-    id,
-    name: options.text,
-    title: options.tooltip,
-    location: options.position ?? "TOP",
-    order: options.order,
-    controller
-  });
-
-  return {
-    removeButton: () => terria.mapNavigationModel.remove(id),
-    closeMode: () => controller.closeMode()
-  };
+  toolId: string
+): ToolController | undefined {
+  const navItem = viewState.terria.mapNavigationModel.items.find(
+    (it) => it.id === toolId
+  );
+  return navItem?.controller instanceof ToolController
+    ? navItem.controller
+    : undefined;
 }
 
-interface SimpleButtonControllerOptions {
-  icon: IconGlyph;
-  mapMode?: ButtonMapMode;
-  onClick: () => void;
-}
-
-/**
- * A simple button controller
- */
-class SimpleButtonController extends MapNavigationItemController {
+export class ToolController extends MapNavigationItemController {
   constructor(
-    readonly terria: Terria,
-    readonly options: SimpleButtonControllerOptions
+    readonly viewState: ViewState,
+    readonly toolId: string,
+    readonly toolConfig: ToolConfig
   ) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {
-    return this.options.icon;
+    return this.toolConfig.toolButton.icon;
   }
 
   get viewerMode(): ViewerMode | undefined {
-    const mapMode = this.options.mapMode;
-    return mapMode === "2d"
-      ? ViewerMode.Leaflet
-      : mapMode === "3d"
-      ? ViewerMode.Cesium
-      : undefined;
+    return this.toolConfig.viewerMode;
   }
 
-  handleClick() {
+  @computed
+  get isToolOpen() {
+    return this.viewState.currentTool?.toolName === this.toolConfig.name;
+  }
+
+  @computed
+  get active(): boolean {
+    return super.active && this.isToolOpen;
+  }
+
+  openTool(props: any = {}) {
+    const toolConfig = this.toolConfig;
+    const toolId = this.toolId;
     try {
-      this.options.onClick();
+      this.viewState.openTool({
+        toolName: toolConfig.name,
+        getToolComponent: () =>
+          toolConfig.toolComponentLoader().then((m) => m.default),
+        params: {
+          ...props,
+          // Pass toolId as an extra prop to the component.
+          // TODO: Maybe we should use react contexts to do this instead of a magic prop?
+          toolId
+        },
+        showCloseButton: true
+      });
     } catch (err) {
-      this.terria.raiseErrorToUser(TerriaError.from(err));
-    }
-    super.handleClick();
-  }
-}
-
-interface ModalButtonControllerOptions {
-  icon: IconGlyph;
-  mapMode?: ButtonMapMode;
-  onUserEnterMode: () => void;
-  onUserCloseMode: () => void;
-}
-
-/**
- * A modal button controller
- */
-class ModalButtonController extends MapNavigationItemController {
-  constructor(
-    readonly terria: Terria,
-    readonly options: ModalButtonControllerOptions
-  ) {
-    super();
-  }
-
-  get glyph(): { id: string } {
-    return this.options.icon;
-  }
-
-  get viewerMode(): ViewerMode | undefined {
-    const mapMode = this.options.mapMode;
-    return mapMode === "2d"
-      ? ViewerMode.Leaflet
-      : mapMode === "3d"
-      ? ViewerMode.Cesium
-      : undefined;
-  }
-
-  activate() {
-    try {
-      this.options.onUserEnterMode();
-    } catch (err) {
-      this.terria.raiseErrorToUser(TerriaError.from(err));
-      return;
+      this.viewState.terria.raiseErrorToUser(TerriaError.from(err));
     }
     super.activate();
   }
 
-  deactivate() {
-    try {
-      this.options.onUserCloseMode();
-    } catch (err) {
-      this.terria.raiseErrorToUser(TerriaError.from(err));
-    }
-    super.deactivate();
+  activate() {
+    this.openTool();
   }
 
-  closeMode() {
+  deactivate() {
+    this.closeTool();
+  }
+
+  @action
+  closeTool() {
+    if (this.isToolOpen) this.viewState.closeTool();
     super.deactivate();
   }
 }

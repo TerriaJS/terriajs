@@ -1,6 +1,6 @@
 import { BBox } from "@turf/helpers";
 import groupBy from "lodash-es/groupBy";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -17,13 +17,15 @@ import TableMixin from "../ModelMixins/TableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
-import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableChartStyleTraits from "../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
+import { LabelSymbolTraits } from "../Traits/TraitsClasses/Table/LabelStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/Table/TrailStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -43,7 +45,9 @@ export default class TableStyle {
   constructor(
     readonly tableModel: TableMixin.Instance,
     readonly styleNumber?: number | undefined
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   /** Is style ready to be used.
    * This will be false if any of dependent columns are not ready
@@ -123,19 +127,25 @@ export default class TableStyle {
   /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
    */
   @computed get isCustom() {
-    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
-    if (!userStrata) return false;
+    const colorTraits = this.colorTraits.strata.get(CommonStrata.user);
+    const pointSizeTraits = this.pointSizeTraits.strata.get(CommonStrata.user);
+    const styleTraits = this.styleTraits.strata.get(CommonStrata.user);
 
     return (
-      (userStrata.binColors ?? [])?.length > 0 ||
-      (userStrata.binMaximums ?? [])?.length > 0 ||
-      (userStrata.enumColors ?? [])?.length > 0 ||
-      isDefined(userStrata.numberOfBins) ||
-      isDefined(userStrata.minimumValue) ||
-      isDefined(userStrata.maximumValue) ||
-      isDefined(userStrata.regionColor) ||
-      isDefined(userStrata.nullColor) ||
-      isDefined(userStrata.outlierColor)
+      (colorTraits?.binColors ?? [])?.length > 0 ||
+      (colorTraits?.binMaximums ?? [])?.length > 0 ||
+      (colorTraits?.enumColors ?? [])?.length > 0 ||
+      isDefined(colorTraits?.numberOfBins) ||
+      isDefined(colorTraits?.minimumValue) ||
+      isDefined(colorTraits?.maximumValue) ||
+      isDefined(colorTraits?.regionColor) ||
+      isDefined(colorTraits?.nullColor) ||
+      isDefined(colorTraits?.outlierColor) ||
+      pointSizeTraits ||
+      styleTraits?.point ||
+      styleTraits?.outline ||
+      styleTraits?.label ||
+      styleTraits?.trail
     );
   }
 
@@ -393,6 +403,22 @@ export default class TableStyle {
     );
   }
 
+  @computed get trailStyleMap() {
+    return new TableStyleMap<TrailSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "trail"
+    );
+  }
+
+  @computed get labelStyleMap() {
+    return new TableStyleMap<LabelSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "label"
+    );
+  }
+
   @computed
   get pointSizeMap(): PointSizeMap {
     const pointSizeColumn = this.pointSizeColumn;
@@ -579,9 +605,9 @@ export default class TableStyle {
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
+  /** Columns used in rowGroups - idColumns, latitude/longitude columns or region column
    */
-  @computed get rowGroups() {
+  @computed get groupByColumns() {
     let groupByCols = this.idColumns;
 
     if (!groupByCols) {
@@ -592,22 +618,18 @@ export default class TableStyle {
       } else if (this.regionColumn) groupByCols = [this.regionColumn];
     }
 
-    if (!groupByCols) groupByCols = [];
+    return groupByCols ?? [];
+  }
 
+  /** Get rows grouped by id.
+   */
+  @computed get rowGroups() {
     const tableRowIds = this.tableModel.rowIds;
 
     return (
       Object.entries(
         groupBy(tableRowIds, (rowId) =>
-          groupByCols!
-            .map((col) => {
-              // If using region column as ID - only use valid regions
-              if (col.type === TableColumnType.region) {
-                return col.valuesAsRegions.regionIds[rowId];
-              }
-              return col.values[rowId];
-            })
-            .join("-")
+          createRowGroupId(rowId, this.groupByColumns)
         )
       )
         // Filter out bad IDs
@@ -620,9 +642,9 @@ export default class TableStyle {
     if (colorColumn?.traits?.format)
       return colorColumn?.traits?.format as Intl.NumberFormatOptions;
 
-    let min =
+    const min =
       this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
-    let max =
+    const max =
       this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
 
     if (
@@ -647,7 +669,7 @@ export default class TableStyle {
       // So when x >= 20 - we will not show any fraction digits
 
       // Clamp values between 0 and 5
-      let fractionDigits = Math.max(
+      const fractionDigits = Math.max(
         0,
         Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
       );
@@ -718,6 +740,19 @@ export default class TableStyle {
     }
     return this.tableModel.tableColumns.find((column) => column.name === name);
   }
+}
+
+/** Create row group ID by concatenating values for columns */
+export function createRowGroupId(rowId: number, columns: TableColumn[]) {
+  return columns
+    .map((col) => {
+      // If using region column as ID - only use valid regions
+      if (col.type === TableColumnType.region) {
+        return col.valuesAsRegions.regionIds[rowId];
+      }
+      return col.values[rowId];
+    })
+    .join("-");
 }
 
 /**

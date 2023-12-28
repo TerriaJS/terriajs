@@ -1,5 +1,5 @@
 import { uniq } from "lodash-es";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import { isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
@@ -14,8 +14,8 @@ import LegendOwnerTraits from "../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
-import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
 import { ColorStyleLegend } from "./ColorStyleLegend";
 import { MergedStyleMapLegend } from "./MergedStyleMapLegend";
 import { StyleMapLegend } from "./StyleMapLegend";
@@ -26,6 +26,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
   static stratumName = "table-legend";
   constructor(private readonly _item: TableMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {

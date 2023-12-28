@@ -1,25 +1,32 @@
-import { action } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
-import Feature from "../Models/Feature";
-import { describeFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
+import TerriaFeature from "../Models/Feature/Feature";
+import { generateCesiumInfoHTMLFromProperties } from "../ReactViews/FeatureInfo/generateCesiumInfoHTMLFromProperties";
 import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
-type Target = Model<FeatureInfoUrlTemplateTraits>;
+type BaseType = Model<FeatureInfoUrlTemplateTraits>;
 
-function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
+function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
+  Base: T
+) {
   abstract class FeatureInfoUrlTemplateMixin extends Base {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasFeatureInfoUrlTemplateMixin() {
       return true;
     }
@@ -29,7 +36,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
     abstract buildFeatureFromPickResult(
       screenPosition: Cartesian2 | undefined,
       pickResult: any
-    ): Feature | undefined;
+    ): TerriaFeature | undefined;
 
     /**
      * Returns a {@link Feature} for the pick result. If `featureInfoUrlTemplate` is set,
@@ -40,13 +47,15 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
       screenPosition: Cartesian2 | undefined,
       pickResult: any,
       loadExternal = true
-    ): Feature | undefined {
+    ): TerriaFeature | undefined {
       const feature = this.buildFeatureFromPickResult(
         screenPosition,
         pickResult
       );
       if (isDefined(feature)) {
         feature._catalogItem = this;
+
+        feature.loadingFeatureInfoUrl = true;
 
         (async () => {
           if (loadExternal && isDefined(this.featureInfoUrlTemplate)) {
@@ -67,14 +76,14 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
               // Update description of the feature after it is resolved from
               // feature info template url
               feature.description = new ConstantProperty(
-                describeFromProperties(
+                generateCesiumInfoHTMLFromProperties(
                   feature.properties,
                   (TimeVarying.is(this)
                     ? this.currentTimeAsJulianDate
                     : undefined) ?? JulianDate.now(),
                   MappableMixin.isMixedInto(this)
                     ? this.showStringIfPropertyValueIsNull
-                    : false
+                    : undefined
                 )
               );
             } catch (e) {
@@ -87,6 +96,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
               );
             }
           }
+          runInAction(() => (feature.loadingFeatureInfoUrl = false));
         })();
       }
       return feature;
@@ -144,14 +154,14 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
               });
               // Update description of the feature after it is resolved from
               // feature info template url
-              feature.description = describeFromProperties(
+              feature.description = generateCesiumInfoHTMLFromProperties(
                 feature.properties,
                 (TimeVarying.is(catalogItem)
                   ? catalogItem.currentTimeAsJulianDate
                   : undefined) ?? JulianDate.now(),
                 MappableMixin.isMixedInto(catalogItem)
                   ? catalogItem.showStringIfPropertyValueIsNull
-                  : false
+                  : undefined
               );
             } catch (e) {
               if (!feature.properties) {

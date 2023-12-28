@@ -32,7 +32,7 @@ const DISPLAYABLE_MIME_TYPES = [
   acc[mimeType] = true;
   return acc;
 }, {});
-const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
+const IMAGE_URL_REGEX = /[./](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
   return (
@@ -173,24 +173,28 @@ export default class Legend extends React.Component<{
       imageUrl =
         getMakiIcon(
           legendItem.marker,
-          legendItem.color ?? "#fff",
-          legendItem.outlineWidth ?? 1,
-          legendItem.outlineColor ?? "#000",
+          legendItem.color ?? "#fff", // We have to have a fallback color here for `getMakiIcon`
+          legendItem.outlineWidth,
+          legendItem.outlineColor,
           legendItem.imageHeight,
           legendItem.imageWidth
-        ) ?? legendItem.marker;
+        ) ??
+        // If getMakiIcons returns nothing, we assume legendItem.marker is a URL
+        legendItem.marker;
     }
 
+    // Set boxStyle border to solid black if we aren't showing an image AND this legend item has space above it
     let boxStyle: any = {
       border:
         !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
 
-    if (!imageUrl && legendItem.outlineColor) {
+    // Override the boxStyle border if we have outlineColor and outlineWidth defined for this legend item
+    if (!imageUrl && legendItem.outlineColor && legendItem.outlineWidth) {
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
-    let boxContents = <></>;
+    let boxContents;
 
     // Browsers don't print background colors by default, so we render things a little differently.
     // Chrome and Firefox let you override this, but not IE and Edge. So...
@@ -226,9 +230,9 @@ export default class Legend extends React.Component<{
         };
       } else {
         boxStyle = {
-          border: `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`,
           backgroundColor: legendItem.color,
-          minWidth: "20px"
+          minWidth: "20px",
+          ...boxStyle
         };
       }
     }
@@ -328,7 +332,7 @@ export default class Legend extends React.Component<{
                   css={{ position: "absolute", top: 10, right: 0 }}
                   renderIcon={() => (
                     <StyledIcon
-                      light={true}
+                      light
                       glyph={Icon.GLYPHS.menuDotted}
                       styledWidth="12px"
                     />

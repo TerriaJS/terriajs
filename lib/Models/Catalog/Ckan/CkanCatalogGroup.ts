@@ -1,12 +1,21 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  makeObservable,
+  observable,
+  override,
+  runInAction
+} from "mobx";
+import Mustache from "mustache";
 import URI from "urijs";
+import { JsonObject } from "../../../Core/Json";
+import { networkRequestError } from "../../../Core/TerriaError";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -31,9 +40,9 @@ import {
 } from "./CkanDefinitions";
 import CkanItemReference, {
   CkanResourceWithFormat,
+  PreparedSupportedFormat,
   getCkanItemName,
   getSupportedFormats,
-  PreparedSupportedFormat,
   prepareSupportedFormat
 } from "./CkanItemReference";
 
@@ -72,6 +81,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
+    makeObservable(this);
     this.datasets = this.getDatasets();
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();
@@ -107,14 +117,14 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static async load(
     catalogGroup: CkanCatalogGroup
   ): Promise<CkanServerStratum | undefined> {
-    var terria = catalogGroup.terria;
+    const terria = catalogGroup.terria;
 
     let ckanServerResponse: CkanServerResponse | undefined = undefined;
 
     // Each item in the array causes an independent request to the CKAN, and the results are concatenated
-    for (var i = 0; i < catalogGroup.filterQuery.length; ++i) {
+    for (let i = 0; i < catalogGroup.filterQuery.length; ++i) {
       const filterQuery = catalogGroup.filterQuery[i];
-      var uri = new URI(catalogGroup.url)
+      const uri = new URI(catalogGroup.url)
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
@@ -232,7 +242,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     dataset: CkanDataset,
     groupId: string
   ) {
-    let group: CatalogGroup | undefined =
+    const group: CatalogGroup | undefined =
       this._catalogGroup.terria.getModelById(CatalogGroup, groupId);
     if (group !== undefined) {
       group.add(CommonStrata.definition, catalogItem);
@@ -261,6 +271,20 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
+    /** If excludeInactiveDatasets is true - then filter out datasets with one of the following
+     * - state === "deleted" (CKAN official)
+     * - state === "draft" (CKAN official)
+     * - data_state === "inactive" (Data.gov.au CKAN)
+     */
+    if (
+      this._catalogGroup.excludeInactiveDatasets &&
+      (ckanDataset.state === "deleted" ||
+        ckanDataset.state === "draft" ||
+        ckanDataset.data_state === "inactive")
+    ) {
+      return;
+    }
+
     // Get list of resources to turn into CkanItemReferences
     const supportedResources = getSupportedFormats(
       ckanDataset,
@@ -269,7 +293,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     let filteredResources: CkanResourceWithFormat[] = [];
     // Track format IDS which multiple resources
     // As if they do, we will need to make sure that CkanItemReference uses resource name (instead of dataset name)
-    let formatsWithMultipleResources = new Set<string>();
+    const formatsWithMultipleResources = new Set<string>();
 
     if (this._catalogGroup.useSingleResource) {
       filteredResources = supportedResources[0] ? [supportedResources[0]] : [];
@@ -328,11 +352,10 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       this._catalogGroup
     );
 
-    for (var i = 0; i < filteredResources.length; ++i) {
+    for (let i = 0; i < filteredResources.length; ++i) {
       const { resource, format } = filteredResources[i];
 
       const itemId = this.getItemId(ckanDataset, resource);
-
       let item = this._catalogGroup.terria.getModelById(
         CkanItemReference,
         itemId
@@ -395,7 +418,50 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   @action
   getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
-    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resource.id}`;
+    const resourceId = this.buildResourceId(ckanDataset, resource);
+    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resourceId}`;
+  }
+
+  /**
+   * Build an ID for the given resource using the `resourceIdTemplate` if available.
+   */
+  private buildResourceId(ckanDataset: CkanDataset, resource: CkanResource) {
+    const resourceIdTemplate = this.resourceIdTemplateForOrg(
+      ckanDataset.organization?.name
+    );
+    const resourceId = resourceIdTemplate
+      ? // Use mustache to construct the resource id from template. Also delete any `/`
+        // character in the resulting ID to avoid conflict with the path separator.
+        Mustache.render(resourceIdTemplate, { resource }).replace("/", "")
+      : resource.id;
+    return resourceId;
+  }
+
+  /**
+   * Returns a template for constructing alternate resourceId for the given
+   * organisation or `undefined` when no template is defined.
+   */
+  private resourceIdTemplateForOrg(
+    orgName: string | undefined
+  ): string | undefined {
+    const template = this._catalogGroup.resourceIdTemplate;
+    // No template defined
+    if (!template) {
+      return undefined;
+    }
+
+    const restrictedOrgNames =
+      this._catalogGroup.restrictResourceIdTemplateToOrgsWithNames;
+    if (
+      Array.isArray(restrictedOrgNames) ||
+      isObservableArray(restrictedOrgNames)
+    ) {
+      // Use of template restricted by org names - return template only if this org is in the list
+      return restrictedOrgNames.includes(orgName) ? template : undefined;
+    }
+
+    // Template usage has no restrictions - return template for any org
+    return template;
   }
 }
 
@@ -413,6 +479,8 @@ export default class CkanCatalogGroup extends UrlMixin(
   ) {
     super(uniqueId, terria, sourceReference);
 
+    makeObservable(this);
+
     this.strata.set(
       CkanDefaultFormatsStratum.stratumName,
       new CkanDefaultFormatsStratum()
@@ -427,7 +495,8 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

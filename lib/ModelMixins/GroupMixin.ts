@@ -1,16 +1,19 @@
-import { action, computed, runInAction } from "mobx";
-import clone from "terriajs-cesium/Source/Core/clone";
+import { uniq } from "lodash-es";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import clone from "terriajs-cesium/Source/Core/clone";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonString, JsonObject } from "../Core/Json";
+import { JsonObject, isJsonNumber, isJsonString } from "../Core/Json";
 import Result from "../Core/Result";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
+import isDefined from "../Core/isDefined";
+import CatalogMemberFactory from "../Models/Catalog/CatalogMemberFactory";
 import Group from "../Models/Catalog/Group";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import hasTraits, { HasTrait } from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import hasTraits, { HasTrait } from "../Models/Definition/hasTraits";
 import ModelReference from "../Traits/ModelReference";
 import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import { ItemPropertiesTraits } from "../Traits/TraitsClasses/ItemPropertiesTraits";
@@ -20,9 +23,18 @@ import ReferenceMixin from "./ReferenceMixin";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
-function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
-  abstract class Klass extends Base implements Group {
+const MERGED_GROUP_ID_PREPEND = "__merged__";
+
+type BaseType = Model<GroupTraits>;
+
+function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class _GroupMixin extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get isGroup() {
       return true;
@@ -59,32 +71,34 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       if (members === undefined) {
         return [];
       }
+
+      const includeMemberRegex = this.includeMembersRegex
+        ? new RegExp(this.includeMembersRegex, "i")
+        : undefined;
+
       const models = filterOutUndefined(
         members.map((id) => {
           if (!ModelReference.isRemoved(id)) {
             const model = this.terria.getModelById(BaseModel, id);
-            if (this.mergedExcludeMembers.length == 0) {
-              return model;
-            }
 
-            // Get model name and apply excludeMembers
+            // Get model name, apply includeMemberRegex and excludeMembers
             const modelName = CatalogMemberMixin.isMixedInto(model)
-              ? model.name
+              ? model.name?.toLowerCase().trim()
               : undefined;
+
+            const modelId = model?.uniqueId?.toLowerCase().trim();
             if (
               model &&
+              // Does includeMemberRegex match model ID or model name
+              (!includeMemberRegex ||
+                (modelId && includeMemberRegex.test(modelId)) ||
+                (modelName && includeMemberRegex.test(modelName))) &&
               // Does excludeMembers not include model ID
               !this.mergedExcludeMembers.find(
                 (name) =>
-                  model.uniqueId?.toLowerCase().trim() ===
-                  name.toLowerCase().trim()
-              ) &&
-              // Does excludeMembers not include model name
-              (!modelName ||
-                !this.mergedExcludeMembers.find(
-                  (name) =>
-                    modelName.toLowerCase().trim() === name.toLowerCase().trim()
-                ))
+                  modelId === name.toLowerCase().trim() ||
+                  (modelName && modelName === name.toLowerCase().trim())
+              )
             )
               return model;
           }
@@ -131,6 +145,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         // Call Group AsyncLoader if no errors occurred while loading metadata
         (await this._memberLoader.load()).throwIfError();
 
+        // Order here is important, as mergeGroupMembersByName will create models and the following functions will be applied on memberModels
+        this.mergeGroupMembersByName();
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
         this.addItemPropertiesToMembers();
@@ -158,11 +174,82 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {
       this.setTrait(stratumId, "isOpen", !this.isOpen);
+    }
+
+    /** "Merges" group members with the same name if `mergeGroupsByName` Trait is set to `true`
+     * It does this by:
+     * - Creating a new CatalogGroup with all members of each merged group
+     * - Appending merged group ids to `excludeMembers`
+     * This is only applied to the first level of group members (it is not recursive)
+     * `mergeGroupsByName` is not applied to nested groups automatically.
+     */
+    @action
+    mergeGroupMembersByName() {
+      if (!this.mergeGroupsByName) return;
+      // Create map of group names to group models
+      const membersByName = new Map<string, GroupMixin.Instance[]>();
+      this.memberModels.forEach((member) => {
+        if (
+          GroupMixin.isMixedInto(member) &&
+          CatalogMemberMixin.isMixedInto(member) &&
+          member.name
+        ) {
+          // Push member to map
+          membersByName.get(member.name)?.push(member) ??
+            membersByName.set(member.name, [member]);
+        }
+      });
+
+      membersByName.forEach((groups, name) => {
+        if (groups.length > 1) {
+          const groupIdsToMerge = groups
+            .map((g) => g.uniqueId)
+            .filter(isJsonString);
+
+          const mergedGroupId = `${this.uniqueId}/${MERGED_GROUP_ID_PREPEND}${name}`;
+
+          let mergedGroup = this.terria.getModelById(BaseModel, mergedGroupId);
+
+          // Create mergedGroup if it doesn't exist - and then add it to group.members
+          if (!mergedGroup) {
+            mergedGroup = CatalogMemberFactory.create(
+              "group",
+              mergedGroupId,
+              this.terria
+            );
+
+            if (mergedGroup) {
+              // We add groupIdsToMerge as shareKeys here for backward compatibility
+              this.terria.addModel(mergedGroup, groupIdsToMerge);
+              this.add(CommonStrata.override, mergedGroup);
+            }
+          }
+
+          // Set merged group traits - name and members
+          // Also set excludeMembers to exclude all groups that are merged.
+          if (
+            GroupMixin.isMixedInto(mergedGroup) &&
+            CatalogMemberMixin.isMixedInto(mergedGroup)
+          ) {
+            mergedGroup.setTrait(CommonStrata.definition, "name", name);
+            mergedGroup.setTrait(
+              CommonStrata.definition,
+              "members",
+              flatten(groups.map((g) => [...g.members]))
+            );
+            this.setTrait(
+              CommonStrata.override,
+              "excludeMembers",
+              uniq([...(this.excludeMembers ?? []), ...groupIdsToMerge])
+            );
+          }
+        }
+      });
     }
 
     @action
@@ -334,7 +421,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
   }
 
-  return Klass;
+  return _GroupMixin;
 }
 
 namespace GroupMixin {

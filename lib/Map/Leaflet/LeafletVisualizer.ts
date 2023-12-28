@@ -1022,7 +1022,7 @@ class LeafletGeomVisualizer {
         polyline.setLatLngs(latlngs);
       }
 
-      for (let prop in polylineOptions) {
+      for (const prop in polylineOptions) {
         if ((<any>polylineOptions)[prop] !== (<any>polyline.options)[prop]) {
           polyline.setStyle(polylineOptions);
           break;
@@ -1215,7 +1215,7 @@ function positionToLatLng(
   position: Cartesian3,
   bounds: LatLngBounds | undefined
 ) {
-  var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+  const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
   let lon = CesiumMath.toDegrees(cartographic.longitude);
   if (bounds !== undefined) {
     if (_isCloseToEasternAntiMeridian(bounds)) {
@@ -1232,7 +1232,7 @@ function positionToLatLng(
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  let holes: L.LatLng[][] = [];
+  const holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
   if (hierarchy.holes.length > 0) {
     hierarchy.holes.forEach((hole) => {
@@ -1320,10 +1320,10 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
 }
 
 function convertEntityPositionsToLatLons(positions: Cartesian3[]): L.LatLng[] {
-  var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  var latlngs: L.LatLng[] = [];
+  const carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
+  const latlngs: L.LatLng[] = [];
   let lastLongitude;
-  for (var p = 0; p < carts.length; p++) {
+  for (let p = 0; p < carts.length; p++) {
     let lon = CesiumMath.toDegrees(carts[p].longitude);
 
     if (lastLongitude !== undefined) {

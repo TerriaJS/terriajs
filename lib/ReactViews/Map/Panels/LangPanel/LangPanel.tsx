@@ -6,7 +6,7 @@ import { RawButton } from "../../../../Styled/Button";
 import Icon from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Styles from "../../menu-bar.scss";
+import Styles from "../../MenuBar/menu-bar.scss";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
@@ -15,7 +15,7 @@ type Props = {
   smallScreen: boolean;
 };
 
-export default (props: Props) => {
+const LangPanel = (props: Props) => {
   const { t, i18n } = useTranslation();
 
   if (!props.terria.configParameters.languageConfiguration?.languages) {
@@ -61,3 +61,4 @@ export default (props: Props) => {
     </MenuPanel>
   );
 };
+export default LangPanel;

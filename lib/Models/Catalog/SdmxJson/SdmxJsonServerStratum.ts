@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -47,7 +47,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     catalogGroup: SdmxCatalogGroup
   ): Promise<SdmxServerStratum> {
     // Load agency schemes (may be undefined)
-    let agencySchemes = (
+    const agencySchemes = (
       await loadSdmxJsonStructure(
         proxyCatalogItemUrl(catalogGroup, `${catalogGroup.url}/agencyscheme/`),
         true
@@ -55,7 +55,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     )?.data?.agencySchemes;
 
     // Load category schemes (may be undefined)
-    let categorySchemeResponse = await loadSdmxJsonStructure(
+    const categorySchemeResponse = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogGroup,
         `${catalogGroup.url}/categoryscheme?references=parentsandsiblings`
@@ -104,6 +104,8 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     private readonly sdmxServer: SdmxServer
   ) {
     super();
+
+    makeObservable(this);
 
     // If categorisations exist => organise Dataflows into a tree!
     if (isDefined(this.sdmxServer.categorisations)) {
@@ -374,7 +376,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     id?: string
   ) {
     if (!isDefined(id)) return;
-    let resolvedCategoryScheme =
+    const resolvedCategoryScheme =
       typeof categoryScheme === "string"
         ? this.getCategoryScheme(categoryScheme)
         : categoryScheme;

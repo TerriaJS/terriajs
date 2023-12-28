@@ -71,11 +71,11 @@ const PointParameterEditor = createReactClass({
     const { t } = this.props;
     return (
       <div>
-        <If condition={showErrorMessage}>
+        {showErrorMessage && (
           <div className={Styles.warningText}>
             {t("analytics.enterValidCoords")}
           </div>
-        </If>
+        )}
         <input
           className={style}
           type="text"
@@ -119,7 +119,7 @@ PointParameterEditor.setValueFromText = function (e, parameter) {
   // common errors like trying to specify degrees/minutes/seconds or
   // specifying W or E rather than using positive or negative numbers
   // for longitude.
-  if (/[^\d\s\.,+-]/.test(text)) {
+  if (/[^\d\s.,+-]/.test(text)) {
     return false;
   }
 

@@ -8,7 +8,7 @@ import ModelTraits from "../ModelTraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import StyleTraits from "./StyleTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
@@ -49,7 +49,7 @@ export class GeoJsonTraits extends mixTraits(
       "If enabled, there will be controls to set region column and region type.",
     type: "boolean"
   })
-  enableManualRegionMapping: false = false;
+  enableManualRegionMapping: boolean = false;
 
   @primitiveTrait({
     name: "Use outline color for line features",
@@ -155,4 +155,12 @@ export class GeoJsonTraits extends mixTraits(
     - \`heightOffset: number\` to offset height values (in m)`
   })
   czmlTemplate?: JsonObject;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Explode MultiPoints",
+    description:
+      "Replaces `MultiPoint` features with its equivalent `Point` features when `true`. This is useful for example when using Table mode which does not support `MultiPoint` features currently."
+  })
+  explodeMultiPoints = true;
 }

@@ -1,17 +1,22 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
 import { scaleDenominatorToLevel } from "./../Core/scaleToDenominator";
 import CommonStrata from "./../Models/Definition/CommonStrata";
 import { MinMaxLevelTraits } from "./../Traits/TraitsClasses/MinMaxLevelTraits";
 
-function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
-  Base: T
-) {
+type BaseType = Model<MinMaxLevelTraits>;
+
+function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MinMaxLevelMixin extends Base {
     @observable notVisible: boolean = false;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get supportsMinMaxLevel() {
       return true;

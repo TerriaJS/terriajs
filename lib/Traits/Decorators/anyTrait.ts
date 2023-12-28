@@ -27,7 +27,7 @@ export class AnyTrait extends Trait {
   }
 
   getValue(model: BaseModel): any {
-    for (let stratum of model.strataTopToBottom.values()) {
+    for (const stratum of model.strataTopToBottom.values()) {
       const stratumAny: any = stratum;
       if (stratumAny !== undefined && stratumAny[this.id] !== undefined) {
         return stratumAny[this.id];

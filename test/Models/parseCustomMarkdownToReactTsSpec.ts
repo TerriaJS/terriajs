@@ -29,7 +29,7 @@ describe("parseCustomMarkdownToReactTs", function () {
       }
     );
 
-    var tooltip = findAll(result, (el: any) =>
+    const tooltip = findAll(result, (el: any) =>
       isComponentOfType(el, TooltipWithButtonLauncher)
     )[0];
     expect(tooltip).toBeDefined();
@@ -42,7 +42,7 @@ describe("parseCustomMarkdownToReactTs", function () {
       {}
     );
 
-    var tooltip = findAll(result, (el: any) =>
+    const tooltip = findAll(result, (el: any) =>
       isComponentOfType(el, TooltipWithButtonLauncher)
     );
     expect(tooltip.length).toEqual(0);

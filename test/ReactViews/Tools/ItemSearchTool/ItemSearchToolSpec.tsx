@@ -6,7 +6,6 @@ import {
   ReactTestInstance,
   ReactTestRenderer
 } from "react-test-renderer";
-import { assertObject } from "../../../../lib/Core/Json";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
@@ -58,8 +57,7 @@ describe("ItemSearchTool", function () {
     const terria: Terria = new Terria();
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
     item = new MockSearchableItem("test", terria);
     item.setTrait(CommonStrata.user, "search", {

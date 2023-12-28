@@ -2,7 +2,7 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -17,12 +17,11 @@ import FeedbackForm from "../Feedback/FeedbackForm";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import withFallback from "../HOCs/withFallback";
-import ExperimentalFeatures from "../Map/ExperimentalFeatures";
-import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
+import ExperimentalFeatures from "./ExperimentalFeatures";
+import { CollapsedNavigation } from "../Map/MapNavigation";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import PrintView from "../Map/Panels/SharePanel/Print/PrintView";
-import ProgressBar from "../Map/ProgressBar";
-import TrainerBar from "../Map/TrainerBar/TrainerBar";
+import TrainerBar from "./TrainerBar/TrainerBar";
 import MobileHeader from "../Mobile/MobileHeader";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import Notification from "../Notification/Notification";
@@ -31,32 +30,33 @@ import FullScreenButton from "../SidePanel/FullScreenButton";
 import SidePanel from "../SidePanel/SidePanel";
 import StoryBuilder from "../Story/StoryBuilder";
 import StoryPanel from "../Story/StoryPanel/StoryPanel";
+import ClippingBoxToolLauncher from "../Tools/ClippingBox/ClippingBoxToolLauncher";
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
-import ContextProviders from "./ContextProviders";
+import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
+import { ContextProviders } from "../Context";
 import { GlobalTerriaStyles } from "./GlobalTerriaStyles";
-import MapColumn from "./MapColumn";
+import MapColumn from "../Map/MapColumn";
 import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 export const animationDuration = 250;
 
 interface StandardUserInterfaceProps {
   terria: ViewState["terria"];
   viewState: ViewState;
-  allBaseMaps?: any[];
   themeOverrides?: Partial<DefaultTheme>;
   minimumLargeScreenWidth?: number;
   version: string;
+  children?: ReactNode;
 }
 
-const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
-  (props) => {
+const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
+  observer((props) => {
     const { t } = useTranslation();
 
     const acceptDragDropFile = action(() => {
@@ -134,7 +134,6 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
     );
 
     const terria = props.terria;
-    const allBaseMaps = props.allBaseMaps;
 
     const showStoryBuilder =
       props.viewState.storyBuilderShown &&
@@ -177,12 +176,11 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                         menuItems={customElements.menu}
                         menuLeftItems={customElements.menuLeft}
                         version={props.version}
-                        allBaseMaps={allBaseMaps}
                       />
                     </Small>
                     <Medium>
                       <>
-                        <WorkflowPanelContainer
+                        <WorkflowPanelPortal
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer
@@ -193,7 +191,7 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                           }
                         >
                           <FullScreenButton
-                            minified={true}
+                            minified
                             animationDuration={250}
                             btnText={t("addData.btnHide")}
                           />
@@ -227,14 +225,12 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                 </Medium>
 
                 <section className={Styles.map}>
-                  <ProgressBar />
                   <MapColumn
                     customFeedbacks={customElements.feedback}
                     customElements={customElements}
-                    allBaseMaps={allBaseMaps}
                     animationDuration={animationDuration}
                   />
-                  <div id="map-data-attribution"></div>
+                  <div id="map-data-attribution" />
                   <main>
                     <ExplorerWindow />
                     {props.terria.configParameters.experimentalFeatures &&
@@ -305,9 +301,10 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
             closeCallback={() => props.viewState.setPrintWindow(null)}
           />
         )}
+        <ClippingBoxToolLauncher viewState={props.viewState} />
       </ContextProviders>
     );
-  }
-);
+  });
 
-export default withFallback(StandardUserInterface);
+export const StandardUserInterface = withFallback(StandardUserInterfaceBase);
+export default withFallback(StandardUserInterfaceBase);

@@ -7,6 +7,8 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  LineString,
+  MultiLineString,
   MultiPoint,
   MultiPolygon,
   Point,
@@ -18,9 +20,11 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   onBecomeObserved,
   onBecomeUnobserved,
+  override,
   reaction,
   runInAction,
   toJS
@@ -56,12 +60,19 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Constructor from "../Core/Constructor";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonObject, JsonObject } from "../Core/Json";
+import {
+  isJsonArray,
+  isJsonNumber,
+  isJsonObject,
+  isJsonString,
+  JsonObject
+} from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
@@ -78,16 +89,17 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TerriaFeature from "../Models/Feature/Feature";
+import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
-import TableStyle from "../Table/TableStyle";
+import TableStyle, { createRowGroupId } from "../Table/TableStyle";
 import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import TerriaFeature from "./../Models/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
@@ -137,6 +149,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -212,9 +225,11 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
+type BaseType = Model<GeoJsonTraits>;
+
+function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
+    FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {
     @observable
     private _dataSource:
@@ -223,9 +238,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       | GeoJsonDataSource
       | undefined;
 
-    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    _imageryProvider: ProtomapsImageryProvider | undefined;
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
@@ -244,6 +258,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       // Add GeoJsonStratum
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         runInAction(() => {
@@ -285,12 +300,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           () => [
             this.useTableStylingAndProtomaps,
             this.readyData,
-            this.currentTimeAsJulianDate,
+            this.currentDiscreteJulianDate,
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
             this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues
+            this.activeTableStyle.outlineStyleMap.traitValues,
+            this.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
           ],
           () => {
             if (
@@ -322,14 +338,16 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
+    @override
+    get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }
       return super.name;
     }
 
-    @computed get cacheDuration(): string {
+    @override
+    get cacheDuration(): string {
       if (isDefined(super.cacheDuration)) {
         return super.cacheDuration;
       }
@@ -344,7 +362,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return this._readyData;
     }
 
-    @computed
+    @override
     get _canExportData() {
       return isDefined(this.readyData);
     }
@@ -367,7 +385,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       });
     }
 
-    @computed get mapItems() {
+    @override
+    get mapItems() {
       if (this.isLoadingMapItems) {
         return [];
       }
@@ -379,6 +398,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       points = points?.entities.values.length === 0 ? undefined : points;
 
       points ? (points.show = this.show) : null;
+
       return filterOutUndefined([
         points,
         this._dataSource,
@@ -428,7 +448,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     /** Remove chart items from TableMixin.chartItems */
-    @computed get chartItems() {
+    @override
+    get chartItems() {
       return [];
     }
 
@@ -449,7 +470,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     /** GeojsonMixin has 3 rendering modes:
      * - CZML:
      *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
-     * - Mapbox vector tiles (through geojson-vt and protomaps.js)
+     * - Table styling / Mapbox vector tiles (through geojson-vt and protomaps.js)
      *    - Will be used by default, if not using unsupported traits (see below)
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
@@ -460,6 +481,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     protected async forceLoadMapItems(): Promise<void> {
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
+      const explodeMultiPoints = this.explodeMultiPoints;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
 
@@ -487,11 +509,19 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         const features = geoJsonWgs84.features;
         geoJsonWgs84.features = [];
 
+        let currentFeatureId = 0;
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
 
           // Ignore features without geometry or type
           if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
+            continue;
+
+          // Ignore features with invalid coordinates
+          if (
+            !isJsonArray(feature.geometry.coordinates, false) ||
+            feature.geometry.coordinates.length === 0
+          )
             continue;
 
           if (!feature.properties) {
@@ -508,12 +538,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             continue;
           }
 
+          if (explodeMultiPoints && feature.geometry.type === "MultiPoint") {
+            // Replace the MultiPoint with equivalent Point features and repeat
+            // the iteration to pick up the exploded features.
+            features.splice(i, 1, ...explodeMultiPoint(feature));
+            i--;
+            continue;
+          }
+
           geoJsonWgs84.features.push(feature);
 
           // Add feature index to FEATURE_ID_PROP ("_id_") feature property
           // This is used to refer to each feature in TableMixin (as row ID)
           const properties = feature.properties!;
-          properties[FEATURE_ID_PROP] = i;
+          properties[FEATURE_ID_PROP] = currentFeatureId;
 
           // Count features types
           if (feature.geometry.type === "Point") {
@@ -538,11 +576,17 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           }
 
           featureCounts.total++;
+          // Note it is important to increment currentFeatureId only if we are including the feature - as this needs to match the row ID in TableMixin (through dataColumnMajor)
+          currentFeatureId++;
         }
 
         runInAction(() => {
           this.featureCounts = featureCounts;
-          this._readyData = geoJsonWgs84;
+          if (featureCounts.total === 0) {
+            this._readyData = undefined;
+          } else {
+            this._readyData = geoJsonWgs84;
+          }
         });
 
         if (isDefined(czmlTemplate)) {
@@ -605,8 +649,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         });
 
         if (matchedStyles !== undefined) {
-          for (let matched of matchedStyles) {
-            for (let trait of Object.keys(matched.style.traits)) {
+          for (const matched of matchedStyles) {
+            for (const trait of Object.keys(matched.style.traits)) {
               featureProperties[trait] =
                 // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
                 matched.style[trait] ?? featureProperties[trait];
@@ -640,7 +684,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[] = createLongitudeLatitudeFeaturePerRow(
+        const features: Entity[] = createLongitudeLatitudeFeaturePerRow(
           style,
           longitudes,
           latitudes
@@ -743,27 +787,14 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
+        id: this.uniqueId,
         paintRules: [
-          // Polygon fill
+          // Polygon features
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: getColorValue
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Polygon &&
-                showFeature(zoom, feature)
-              );
-            }
-          },
-          // Polygon outline
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: getOutlineColorValue,
+              fill: getColorValue,
+              stroke: getOutlineColorValue,
               width: getOutlineWidthValue
             }),
             minzoom: 0,
@@ -775,9 +806,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
+
           // Line features
           // Note - line color will use TableColorStyleTraits by default.
           // If useOutlineColorForLineFeatures is true, then line color will use TableOutlineStyle traits
+
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -795,8 +828,39 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           }
+          // See `createPoints` for Point features - they are handled by Cesium
         ],
-        labelRules: []
+        labelRules: [],
+
+        // Process picked features to add terriaFeatureData (with rowIds)
+        // This is used by tableFeatureInfoContext to add time-series chart
+        processPickedFeatures: async (features) => {
+          if (!currentTimeRows) return features;
+          const processedFeatures: ImageryLayerFeatureInfo[] = [];
+          features.forEach((f) => {
+            const rowId = f.properties?.[FEATURE_ID_PROP];
+
+            if (isDefined(rowId) && currentTimeRows?.includes(rowId)) {
+              // To find rowIds for all features in a row group:
+              // re-create the rowGroupId and then look up in the activeTableStyle.rowGroups
+              const rowGroupId = createRowGroupId(
+                rowId,
+                this.activeTableStyle.groupByColumns
+              );
+              const terriaFeatureData: TerriaFeatureData = {
+                ...f.data,
+                type: "terriaFeatureData",
+                rowIds: this.activeTableStyle.rowGroups.find(
+                  (group) => group[0] === rowGroupId
+                )?.[1]
+              };
+              f.data = terriaFeatureData;
+
+              processedFeatures.push(f);
+            }
+          });
+          return processedFeatures;
+        }
       });
 
       provider = this.wrapImageryPickFeatures(provider);
@@ -850,10 +914,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             czml.properties ?? {},
             stringifyFeatureProperties(feature.properties ?? {})
           );
+
           rootCzml.push(czml);
         } else if (
-          feature.geometry?.type === "Polygon" ||
-          (feature.geometry?.type === "MultiPolygon" && czmlTemplate?.polygon)
+          (feature.geometry?.type === "Polygon" ||
+            feature.geometry?.type === "MultiPolygon") &&
+          czmlTemplate?.polygon
         ) {
           const czml = clone(czmlTemplate ?? {}, true);
 
@@ -895,6 +961,59 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
             czml.polygon.positions = { cartographicDegrees: positions };
             czml.polygon.holes = { cartographicDegrees: holes };
+
+            czml.properties = Object.assign(
+              czml.properties ?? {},
+              stringifyFeatureProperties(feature.properties ?? {})
+            );
+            rootCzml.push(czml);
+          }
+        } else if (
+          (feature?.geometry?.type === "LineString" ||
+            feature.geometry?.type === "MultiLineString") &&
+          (czmlTemplate?.polyline ||
+            czmlTemplate?.polylineVolume ||
+            czmlTemplate?.wall ||
+            czmlTemplate?.corridor)
+        ) {
+          const czml = clone(czmlTemplate ?? {}, true);
+
+          // To handle both Polygon and MultiPolygon - transform Polygon coords into MultiPolygon coords
+          const multiLineString =
+            feature.geometry?.type === "LineString"
+              ? [(feature.geometry as LineString).coordinates]
+              : (feature.geometry as MultiLineString).coordinates;
+
+          // Loop through Polygons in MultiPolygon
+          for (let j = 0; j < multiLineString.length; j++) {
+            const geom = multiLineString[j];
+            const positions: number[] = [];
+
+            geom.forEach((coords) => {
+              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+              }
+              positions.push(coords[0], coords[1], coords[2]);
+            });
+
+            // Add positions to all CZML line like features
+            if (czml.polyline) {
+              czml.polyline.positions = { cartographicDegrees: positions };
+            }
+
+            if (czml.polylineVolume) {
+              czml.polylineVolume.positions = {
+                cartographicDegrees: positions
+              };
+            }
+
+            if (czml.wall) {
+              czml.wall.positions = { cartographicDegrees: positions };
+            }
+
+            if (czml.corridor) {
+              czml.corridor.positions = { cartographicDegrees: positions };
+            }
 
             czml.properties = Object.assign(
               czml.properties ?? {},
@@ -1163,7 +1282,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return dataSource;
     }
 
-    @computed
+    @override
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;
@@ -1202,7 +1321,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * This enables all TableMixin functionality - which is used for styling vector tiles.
      * If this returns an empty array, TableMixin will effectively be disabled
      */
-    @computed
+    @override
     get dataColumnMajor() {
       if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
 
@@ -1257,7 +1376,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @override
+    get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
         ? super.viewingControls.filter(
             (v) => v.id !== TableStylingWorkflow.type
@@ -1282,29 +1402,41 @@ export default GeoJsonMixin;
 export function isFeatureCollection(
   json: any
 ): json is FeatureCollectionWithCrs {
-  return json.type === "FeatureCollection" && Array.isArray(json.features);
+  return (
+    isJsonObject(json, false) &&
+    json.type === "FeatureCollection" &&
+    Array.isArray(json.features)
+  );
 }
 
 export function isFeature(json: any): json is Feature {
-  return json.type === "Feature" && json.geometry;
+  return (
+    isJsonObject(json, false) && json.type === "Feature" && !!json.geometry
+  );
 }
 
 export function isPoint(json: any): json is Feature<Point> {
   return (
-    json.type === "Feature" && json.geometry && json.geometry.type === "Point"
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "Point"
   );
 }
 
 export function isMultiPoint(json: any): json is Feature<MultiPoint> {
   return (
+    isJsonObject(json, false) &&
     json.type === "Feature" &&
-    json.geometry &&
+    isJsonObject(json.geometry, false) &&
     json.geometry.type === "MultiPoint"
   );
 }
 
 export function isGeometries(json: any): json is Geometries {
   return (
+    isJsonObject(json, false) &&
+    isJsonString(json.type) &&
     [
       "Point",
       "MultiPoint",
@@ -1312,8 +1444,25 @@ export function isGeometries(json: any): json is Geometries {
       "MultiLineString",
       "Polygon",
       "MultiPolygon"
-    ].includes(json.type) && Array.isArray(json.coordinates)
+    ].includes(json.type) &&
+    Array.isArray(json.coordinates)
   );
+}
+
+/**
+ * Returns the points in a MultiPoint as separate Point features.
+ */
+function explodeMultiPoint(feature: Feature): Feature[] {
+  return feature.geometry?.type === "MultiPoint"
+    ? feature.geometry.coordinates.map((coordinates) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates
+        } as Point,
+        properties: feature.properties
+      }))
+    : [];
 }
 
 export function toFeatureCollection(
@@ -1382,7 +1531,7 @@ function createPolylineFromPolygon(
   createEntitiesFromHoles(entities, hierarchy.holes, entity);
 }
 
-async function reprojectToGeographic(
+export async function reprojectToGeographic(
   geoJson: FeatureCollectionWithCrs,
   proj4ServiceBaseUrl?: string
 ): Promise<FeatureCollectionWithCrs> {
@@ -1448,13 +1597,15 @@ function reprojectPointList(
 ): Coordinates | Coordinates[] {
   if (!code) return [];
   if (!Array.isArray(pts[0])) {
-    return Reproject.reprojectPoint(pts, code, "EPSG:4326");
+    return Reproject.reprojectPoint(pts as any, code, "EPSG:4326") ?? [];
   }
   const pts_out = [];
   for (let i = 0; i < pts.length; i++) {
     const pt = pts[i];
     if (Array.isArray(pt))
-      pts_out.push(Reproject.reprojectPoint(pt, code, "EPSG:4326"));
+      pts_out.push(
+        Reproject.reprojectPoint(pt as any, code, "EPSG:4326") ?? []
+      );
   }
   return pts_out;
 }
@@ -1465,8 +1616,8 @@ function filterValue(
   prop: string,
   func: (obj: any, prop: string) => void
 ) {
-  for (let p in obj) {
-    if (obj.hasOwnProperty(p) === false) {
+  for (const p in obj) {
+    if (Object.hasOwnProperty.call(obj, p) === false) {
       continue;
     } else if (p === prop) {
       if (func && typeof func === "function") {
@@ -1528,7 +1679,7 @@ function describeWithoutUnderscores(
 ): string {
   let html = "";
   for (let key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty.call(properties, key)) {
       if (key === nameProperty || simpleStyleIdentifiers.indexOf(key) !== -1) {
         continue;
       }
@@ -1683,7 +1834,7 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
 }
 
-export function getColor(color: String | string | Color): Color {
+export function getColor(color: string | Color): Color {
   if (typeof color === "string" || color instanceof String) {
     return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
   } else {

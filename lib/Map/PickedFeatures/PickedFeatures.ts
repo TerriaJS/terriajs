@@ -1,8 +1,8 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
@@ -45,7 +45,7 @@ export default class PickedFeatures {
    * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
    * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
    */
-  @observable features: Feature[] = [];
+  @observable features: TerriaFeature[] = [];
 
   /**
    * Gets or sets a message describing an error that occurred while picking features.
@@ -55,10 +55,14 @@ export default class PickedFeatures {
   @observable error: string | undefined;
 
   providerCoords: ProviderCoordsMap | undefined;
+
+  constructor() {
+    makeObservable(this);
+  }
 }
 
 export function featureBelongsToCatalogItem(
-  feature: Feature,
+  feature: TerriaFeature,
   catalogItem: BaseModel
 ) {
   if (feature._catalogItem === catalogItem) return true;

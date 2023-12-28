@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -10,7 +10,8 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
@@ -22,18 +23,55 @@ import ShadowMixin from "./ShadowMixin";
 // we still maintain the type checking, without TS screaming with errors
 const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
-type GltfModel = Model<GltfTraits>;
+type BaseType = Model<GltfTraits>;
 
-function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
+export interface GltfTransformationJson {
+  origin: {
+    latitude?: number;
+    longitude?: number;
+    height?: number;
+  };
+  rotation: {
+    heading?: number;
+    pitch?: number;
+    roll?: number;
+  };
+  scale?: number;
+}
+
+function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
   ) {
+    // Create stable instances of DataSource and Entity instead
+    // of generating a new one each time the traits change and mobx recomputes.
+    // This vastly improves the performance.
+    //
+    // Note that these are private instances and must not be modified outside the Mixin
+    private readonly _dataSource = new CustomDataSource("glTF Model");
+    private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasGltfMixin() {
       return true;
     }
 
+    @override
+    get disableZoomTo() {
+      const { latitude, longitude, height } = this.origin;
+      return (
+        latitude === undefined ||
+        longitude === undefined ||
+        height === undefined
+      );
+    }
+
     @computed
-    private get cesiumUpAxis() {
+    get cesiumUpAxis() {
       if (this.upAxis === undefined) {
         return Axis.Y;
       }
@@ -41,7 +79,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumForwardAxis() {
+    get cesiumForwardAxis() {
       if (this.forwardAxis === undefined) {
         return Axis.Z;
       }
@@ -57,7 +95,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumPosition(): Cartesian3 {
+    get cesiumPosition(): Cartesian3 {
       if (
         this.origin !== undefined &&
         this.origin.longitude !== undefined &&
@@ -78,29 +116,42 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
      * Returns the orientation of the model in the ECEF frame
      */
     @computed
-    private get orientation(): Quaternion {
-      const { heading, pitch, roll } = this.rotation;
-      const hpr = HeadingPitchRoll.fromDegrees(
-        heading ?? 0,
-        pitch ?? 0,
-        roll ?? 0
-      );
-      const orientation = Transforms.headingPitchRollQuaternion(
+    get cesiumRotation(): Quaternion {
+      const { heading = 0, pitch = 0, roll = 0 } = this.rotation;
+      const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
+      const rotation = Transforms.headingPitchRollQuaternion(
         this.cesiumPosition,
         hpr
       );
-      return orientation;
+      return rotation;
+    }
+
+    @computed
+    get transformationJson(): GltfTransformationJson {
+      return {
+        origin: {
+          latitude: this.origin.latitude,
+          longitude: this.origin.longitude,
+          height: this.origin.height
+        },
+        rotation: {
+          heading: this.rotation.heading,
+          pitch: this.rotation.pitch,
+          roll: this.rotation.roll
+        },
+        scale: this.scale
+      };
     }
 
     protected abstract get gltfModelUrl(): string | undefined;
 
     @computed
-    private get model() {
+    private get modelGraphics() {
       if (this.gltfModelUrl === undefined) {
         return undefined;
       }
       const options = {
-        uri: new ConstantProperty(this.gltfModelUrl),
+        uri: new ConstantProperty(proxyCatalogItemUrl(this, this.gltfModelUrl)),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
@@ -118,7 +169,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return Promise.resolve();
     }
 
-    @computed
+    @override
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
@@ -127,22 +178,32 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
+    get modelEntity(): Entity {
+      const entity = this._modelEntity;
+      entity.position = new ConstantPositionProperty(this.cesiumPosition);
+      entity.orientation = new ConstantProperty(this.cesiumRotation);
+      entity.model = this.modelGraphics;
+      return entity;
+    }
+
+    @computed
     get mapItems() {
-      if (this.model === undefined) {
+      const modelEntity = this.modelEntity;
+      const modelGraphics = this.modelGraphics;
+      const dataSource = this._dataSource;
+      if (modelGraphics === undefined) {
         return [];
       }
 
-      this.model.show = new ConstantProperty(this.show);
-      const dataSource: CustomDataSource = new CustomDataSource(
-        this.name || "glTF model"
-      );
-      dataSource.entities.add(
-        new Entity({
-          position: new ConstantPositionProperty(this.cesiumPosition),
-          orientation: new ConstantProperty(this.orientation),
-          model: this.model
-        })
-      );
+      dataSource.show = this.show;
+      if (modelGraphics) modelGraphics.show = new ConstantProperty(this.show);
+      if (this.name) {
+        dataSource.name = this.name;
+        modelEntity.name = this.name;
+      }
+      if (!dataSource.entities.contains(modelEntity)) {
+        dataSource.entities.add(modelEntity);
+      }
       return [dataSource];
     }
   }

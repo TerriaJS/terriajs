@@ -1,17 +1,17 @@
 "use strict";
 
-var defined = require("terriajs-cesium/Source/Core/defined").default;
-var MarkdownIt = require("markdown-it");
-var DOMPurify = require("dompurify/dist/purify");
+const defined = require("terriajs-cesium/Source/Core/defined").default;
+const MarkdownIt = require("markdown-it");
+const DOMPurify = require("dompurify/dist/purify");
 import injectTerms from "./injectTerms";
 import { Term } from "../ReactViewModels/defaultTerms";
 
-var md = new MarkdownIt({
+const md = new MarkdownIt({
   html: true,
   linkify: true
 });
 
-var htmlRegex = /^\s*<[^>]+>/;
+const htmlRegex = /^\s*<[^>]+>/;
 
 export interface MarkdownOptions {
   // requires tooltipTerms as well
@@ -35,7 +35,7 @@ export interface MarkdownOptions {
 function markdownToHtml(
   markdownString: string,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: Object = {},
+  domPurifyOptions: object = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {
@@ -44,7 +44,7 @@ function markdownToHtml(
   // If the text looks like html, don't try to interpret it as Markdown because
   // we'll probably break it in the process.
   // It would wrap non-standard tags such as <collapsible>hi</collapsible> in a <p></p>, which is bad.
-  var unsafeHtml: string;
+  let unsafeHtml: string;
   if (htmlRegex.test(markdownString)) {
     unsafeHtml = markdownString;
   } else {

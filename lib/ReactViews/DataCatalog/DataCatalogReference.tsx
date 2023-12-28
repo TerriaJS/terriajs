@@ -33,7 +33,10 @@ export default observer(function DataCatalogReference({
   onActionButtonClicked,
   isTopLevel
 }: Props) {
-  const setPreviewedItem = () => viewState.viewCatalogMember(reference);
+  const setPreviewedItem = () =>
+    viewState
+      .viewCatalogMember(reference)
+      .then((result) => result.raiseError(viewState.terria));
 
   const add = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
@@ -76,29 +79,25 @@ export default observer(function DataCatalogReference({
     btnState = ButtonState.Add;
   }
 
-  return (
-    <>
-      {reference.isGroup ? (
-        <CatalogGroup
-          text={reference.name || "..."}
-          isPrivate={reference.isPrivate}
-          title={path}
-          onClick={setPreviewedItem}
-          topLevel={isTopLevel}
-          loading={reference.isLoadingReference}
-          open={reference.isLoadingReference}
-        />
-      ) : (
-        <CatalogItem
-          onTextClick={setPreviewedItem}
-          selected={isSelected}
-          text={reference.name || "..."}
-          isPrivate={reference.isPrivate}
-          title={path}
-          btnState={btnState}
-          onBtnClick={reference.isFunction ? setPreviewedItem : add}
-        />
-      )}
-    </>
+  return reference.isGroup ? (
+    <CatalogGroup
+      text={reference.name || "..."}
+      isPrivate={reference.isPrivate}
+      title={path}
+      onClick={setPreviewedItem}
+      topLevel={isTopLevel}
+      loading={reference.isLoadingReference}
+      open={reference.isLoadingReference}
+    />
+  ) : (
+    <CatalogItem
+      onTextClick={setPreviewedItem}
+      selected={isSelected}
+      text={reference.name || "..."}
+      isPrivate={reference.isPrivate}
+      title={path}
+      btnState={btnState}
+      onBtnClick={reference.isFunction ? setPreviewedItem : add}
+    />
   );
 });

@@ -1,7 +1,8 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-import HttpApi from "i18next-http-backend";
+import isDefined from "../Core/isDefined";
 
 export interface I18nBackendOptions {
   /**
@@ -12,12 +13,16 @@ export interface I18nBackendOptions {
    *  */
   crossDomain?: boolean;
   loadPath?: string;
-  parse?: (data: any, languages: string | [string], namespaces: string) => void;
+  parse?: (
+    data: any,
+    languages: string | [string],
+    namespaces: string
+  ) => { [key: string]: any };
   request?: (
     options: any,
     url: string,
     payload: any,
-    callback: () => void
+    callback: RequestCallback
   ) => void;
 }
 
@@ -30,9 +35,15 @@ export interface LanguageConfiguration {
   enabled: boolean;
   debug: boolean;
   react: ReactOptions;
-  languages: Object;
+  languages: object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
+
+  /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /
+   *
+   * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
+   **/
+  overridesBaseUrl?: string;
 }
 const defaultLanguageConfiguration = {
   enabled: false,
@@ -130,9 +141,18 @@ class Internationalization {
               [_lng]: string[],
               [namespace]: string[]
             ) {
-              return namespace === "translation"
-                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
-                : "languages/{{lng}}/{{ns}}.json";
+              if (namespace === "translation")
+                return `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`;
+
+              // Apply languageConfig.overridesBaseUrl to path for "languageOverrides" namespace if defined
+              if (
+                namespace === "languageOverrides" &&
+                isDefined(languageConfig.overridesBaseUrl)
+              ) {
+                return `${languageConfig.overridesBaseUrl}{{lng}}.json`;
+              }
+
+              return "languages/{{lng}}/{{ns}}.json";
             },
             crossDomain: false
           },

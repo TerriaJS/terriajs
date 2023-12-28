@@ -46,11 +46,11 @@ describe("SdmxJsonCatalogItem", function () {
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
     ).andReturn({ responseText: steCodes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
     ).andReturn({ responseText: isoCodes });
 
     jasmine.Ajax.stubRequest(

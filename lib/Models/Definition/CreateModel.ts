@@ -1,4 +1,11 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  toJS,
+  makeObservable
+} from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -75,6 +82,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       strata: Map<string, StratumTraits> | undefined
     ) {
       super(id, terria, sourceReference);
+      makeObservable(this);
       this.strata = strata || observable.map<string, StratumTraits>();
     }
 
@@ -187,11 +195,12 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
           )
         );
 
-        // We need to make sure that the array in this stratum is as long as in every
+        // Make array in this stratum the same length as largest array across all strata
         for (let i = array.length; i <= maxIndex; i++) {
           array[i] = createStratumInstance(nestedTraitsClass);
         }
 
+        // Add new object at the end of the array
         array[maxIndex + 1] = newStratum;
 
         // Return newly created model

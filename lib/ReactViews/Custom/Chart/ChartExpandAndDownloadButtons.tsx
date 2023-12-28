@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -28,6 +28,11 @@ interface PropsType extends WithTranslation {
 @observer
 class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
   @observable sourceItems: ChartableMixin.Instance[] = [];
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @action.bound
   private expandButton() {
@@ -68,7 +73,9 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
 
       try {
         terria.addModel(itemToExpand);
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
       (await workbench.add(itemToExpand)).raiseError(terria, undefined, true);
     });
   }
@@ -99,7 +106,7 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
     }
 
     // The downloads and download names default to the sources and source names if not defined.
-    let downloads: string[] = filterOutUndefined(
+    const downloads: string[] = filterOutUndefined(
       this.props.downloads ||
         this.sourceItems.map((item) =>
           hasTraits(item, UrlTraits, "url") ? item.url : undefined

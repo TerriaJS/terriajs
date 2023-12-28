@@ -1,19 +1,20 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
-import { computed, runInAction } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { computed, makeObservable, override, runInAction } from "mobx";
+import moment from "moment";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Vector/Proj4Definitions";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import { setsAreEqual } from "../../../Core/setsAreEqual";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, {
@@ -28,15 +29,15 @@ import LegendTraits, {
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
-import getToken from "../../getToken";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import getToken from "../../getToken";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
-import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
 
 const proj4 = require("proj4").default;
 
@@ -45,49 +46,6 @@ interface RectangleExtent {
   south: number;
   west: number;
   north: number;
-}
-
-interface DocumentInfo {
-  Author?: string;
-  Title?: string;
-}
-
-interface TimeInfo {
-  timeExtent: [number, number];
-}
-
-interface MapServer {
-  documentInfo?: DocumentInfo;
-  description?: string;
-  copyrightText?: string;
-  mapName?: string;
-  timeInfo?: TimeInfo;
-  layers: Layer[];
-  fullExtent: Extent;
-}
-
-interface SpatialReference {
-  wkid?: number;
-  latestWkid?: number;
-}
-
-interface Extent {
-  xmin: number;
-  ymin: number;
-  xmax: number;
-  ymax: number;
-  spatialReference?: SpatialReference;
-}
-
-interface Layer {
-  id: number;
-  name: string;
-  maxScale: number;
-
-  // The following is pulled from <mapservice-url>/layers or <mapservice-url>/<layerOrTableId>
-  description?: string;
-  copyrightText?: string;
-  extent?: Extent;
 }
 
 interface Legend {
@@ -109,26 +67,23 @@ class MapServerStratum extends LoadableStratum(
 
   constructor(
     private readonly _item: ArcGisMapServerCatalogItem,
-    private readonly _mapServer: MapServer,
-    private readonly _allLayers: Layer[],
+    readonly mapServer: MapServer,
+    readonly allLayers: Layer[],
     private readonly _legends: Legends | undefined,
     readonly token: string | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new MapServerStratum(
       newModel as ArcGisMapServerCatalogItem,
-      this._mapServer,
-      this._allLayers,
+      this.mapServer,
+      this.allLayers,
       this._legends,
       this.token
     ) as this;
-  }
-
-  get mapServerData() {
-    return this._mapServer;
   }
 
   static async load(item: ArcGisMapServerCatalogItem) {
@@ -164,7 +119,10 @@ class MapServerStratum extends LoadableStratum(
     }
 
     // TODO: if tokenUrl, fetch and pass token as parameter
-    const serviceMetadata = await getJson(item, serviceUri);
+    const serviceMetadata: MapServer | undefined = await getJson(
+      item,
+      serviceUri
+    );
 
     if (!isDefined(serviceMetadata)) {
       throw networkRequestError({
@@ -173,35 +131,43 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    let layersMetadataResponse = await getJson(item, layersUri);
-    const legendMetadata = await getJson(item, legendUri);
+    const legendMetadata: Legends | undefined = await getJson(item, legendUri);
+    let layers: Layer[] = [];
 
-    // TODO: some error handling on these requests would be nice
+    // If this MapServer is a single fused map cache - we can't request individual layers
+    // If it is not - we request layer metadata
 
-    let layers: Layer[] | undefined;
+    if (
+      !(
+        serviceMetadata.singleFusedMapCache &&
+        serviceMetadata.capabilities?.includes("TilesOnly")
+      )
+    ) {
+      const layersMetadataResponse = await getJson(item, layersUri);
 
-    // Use the slightly more basic layer metadata
-    if (isDefined(serviceMetadata.layers)) {
-      layers = serviceMetadata.layers;
-    }
+      // Use the slightly more basic layer metadata
+      if (isDefined(serviceMetadata.layers)) {
+        layers = serviceMetadata.layers;
+      }
 
-    if (isDefined(layersMetadataResponse?.layers)) {
-      layers = layersMetadataResponse.layers;
-      // If layersMetadata is only a single layer -> shove into an array
-    } else if (isDefined(layersMetadataResponse?.id)) {
-      layers = [layersMetadataResponse];
-    }
+      if (isDefined(layersMetadataResponse?.layers)) {
+        layers = layersMetadataResponse.layers;
+        // If layersMetadata is only a single layer -> shove into an array
+      } else if (isDefined(layersMetadataResponse?.id)) {
+        layers = [layersMetadataResponse];
+      }
 
-    if (!isDefined(layers) || layers.length === 0) {
-      throw networkRequestError({
-        title: i18next.t(
-          "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
-        ),
-        message: i18next.t(
-          "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
-          item
-        )
-      });
+      if (!isDefined(layers) || layers.length === 0) {
+        throw networkRequestError({
+          title: i18next.t(
+            "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
+          ),
+          message: i18next.t(
+            "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
+            item
+          )
+        });
+      }
     }
 
     const stratum = new MapServerStratum(
@@ -214,45 +180,59 @@ class MapServerStratum extends LoadableStratum(
     return stratum;
   }
 
-  @computed get allLayers() {
-    return filterOutUndefined(findLayers(this._allLayers, this._item.layers));
+  @computed get maximumScale() {
+    if (this._item.layersArray.length === 0) {
+      return this.mapServer.maxScale;
+    }
+
+    return Math.min(
+      ...filterOutUndefined(
+        this._item.layersArray.map(({ maxScale }) => maxScale)
+      )
+    );
   }
 
-  @computed get maximumScale() {
-    return Math.min(
-      ...filterOutUndefined(this.allLayers.map(({ maxScale }) => maxScale))
-    );
+  @computed get layers() {
+    /** Try to pull out MapServer layer from URL
+     * eg https://exmaple.com/arcgis/rest/services/MapServer/{layer}
+     */
+    if (isDefined(this._item.uri)) {
+      const lastSegment = this._item.uri.segment(-1);
+      if (isDefined(lastSegment) && lastSegment.match(/\d+/)) {
+        return lastSegment;
+      }
+    }
   }
 
   @computed get name() {
     // single layer
     if (
-      this.allLayers.length === 1 &&
-      this.allLayers[0].name &&
-      this.allLayers[0].name.length > 0
+      this._item.layersArray.length === 1 &&
+      this._item.layersArray[0].name &&
+      this._item.layersArray[0].name.length > 0
     ) {
-      return replaceUnderscores(this.allLayers[0].name);
+      return replaceUnderscores(this._item.layersArray[0].name);
     }
 
-    // group of layers
+    // group of layers (or single fused map cache)
     else if (
-      this._mapServer.documentInfo &&
-      this._mapServer.documentInfo.Title &&
-      this._mapServer.documentInfo.Title.length > 0
+      this.mapServer.documentInfo &&
+      this.mapServer.documentInfo.Title &&
+      this.mapServer.documentInfo.Title.length > 0
     ) {
-      return replaceUnderscores(this._mapServer.documentInfo.Title);
-    } else if (this._mapServer.mapName && this._mapServer.mapName.length > 0) {
-      return replaceUnderscores(this._mapServer.mapName);
+      return replaceUnderscores(this.mapServer.documentInfo.Title);
+    } else if (this.mapServer.mapName && this.mapServer.mapName.length > 0) {
+      return replaceUnderscores(this.mapServer.mapName);
     }
   }
 
   @computed get dataCustodian() {
     if (
-      this._mapServer.documentInfo &&
-      this._mapServer.documentInfo.Author &&
-      this._mapServer.documentInfo.Author.length > 0
+      this.mapServer.documentInfo &&
+      this.mapServer.documentInfo.Author &&
+      this.mapServer.documentInfo.Author.length > 0
     ) {
-      return this._mapServer.documentInfo.Author;
+      return this.mapServer.documentInfo.Author;
     }
   }
 
@@ -263,62 +243,51 @@ class MapServerStratum extends LoadableStratum(
       east: -Infinity,
       north: -Infinity
     };
+
     // If we only have the summary layer info
-    if (!("extent" in this._allLayers[0])) {
-      getRectangleFromLayer(this.mapServerData.fullExtent, rectangle);
+    if (
+      this._item.layersArray.length === 0 ||
+      !("extent" in this._item.layersArray[0])
+    ) {
+      getRectangleFromLayer(this.mapServer.fullExtent, rectangle);
     } else {
-      getRectangleFromLayers(rectangle, this._allLayers);
+      getRectangleFromLayers(rectangle, this._item.layersArray);
     }
-    if (rectangle.west === Infinity) return undefined;
+
+    if (rectangle.west === Infinity) return;
     return createStratumInstance(RectangleTraits, rectangle);
   }
 
-  @computed get discreteTimes() {
-    if (this._mapServer.timeInfo === undefined) return undefined;
-    // Add union type - as `time` is always defined
-    const result: (StratumFromTraits<DiscreteTimeTraits> & {
-      time: string;
-    })[] = [];
-
-    createDiscreteTimesFromIsoSegments(
-      result,
-      new Date(this._mapServer.timeInfo.timeExtent[0]).toISOString(),
-      new Date(this._mapServer.timeInfo.timeExtent[1]).toISOString(),
-      undefined,
-      this._item.maxRefreshIntervals
-    );
-    return result;
-  }
-
   @computed get info() {
-    const layer = this.allLayers[0];
-    if (!isDefined(layer)) {
-      return [];
-    }
+    // If we are requesting a single layer, use it to populate InfoSections
+    // If we are requesting multiple layers - we only show MapServer metadata (not metadata per layer)
+    const singleLayer =
+      this._item.layersArray.length === 1
+        ? this._item.layersArray[0]
+        : undefined;
 
-    return [
-      createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
-        content: layer.description
-      }),
+    return filterOutUndefined([
+      singleLayer
+        ? createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.arcGisMapServerCatalogItem.dataDescription"
+            ),
+            content: singleLayer.description
+          })
+        : undefined,
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
-        content: this._mapServer.description
+        content: this.mapServer.description
       }),
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
-        content:
-          isDefined(layer.copyrightText) && layer.copyrightText.length > 0
-            ? layer.copyrightText
-            : this._mapServer.copyrightText
+        content: singleLayer?.copyrightText ?? this.mapServer.copyrightText
       })
-    ];
+    ]);
   }
 
   @computed get legends() {
-    const layers = isDefined(this._item.layers)
-      ? this._item.layers.split(",")
-      : [];
+    const layers = this._item.layersArray;
     const noDataRegex = /^No[\s_-]?Data$/i;
     const labelsRegex = /_Labels$/;
 
@@ -330,8 +299,8 @@ class MapServerStratum extends LoadableStratum(
       }
       if (
         layers.length > 0 &&
-        layers.indexOf(l.layerId.toString()) < 0 &&
-        layers.indexOf(l.layerName) < 0
+        !layers.find((layer) => layer.id === l.layerId) &&
+        !layers.find((layer) => layer.name === l.layerName)
       ) {
         // layer not selected
         return;
@@ -361,14 +330,29 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
+interface TimeParams {
+  currentTime: number | undefined;
+  timeWindowDuration: number | undefined;
+  timeWindowUnit: string | undefined;
+  isForwardTimeWindow: boolean;
+}
+
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
   DiscretelyTimeVaryingMixin(
     MinMaxLevelMixin(
-      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      CatalogMemberMixin(
+        MappableMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      )
     )
   )
 ) {
   static readonly type = "esri-mapServer";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
@@ -385,10 +369,11 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+    return this.forceLoadMetadata();
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -399,18 +384,51 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   get discreteTimes() {
     const mapServerStratum: MapServerStratum | undefined = this.strata.get(
       MapServerStratum.stratumName
-    ) as MapServerStratum;
-    return mapServerStratum?.discreteTimes;
+    ) as MapServerStratum | undefined;
+
+    if (mapServerStratum?.mapServer.timeInfo === undefined) return undefined;
+    // Add union type - as `time` is always defined
+    const result: (StratumFromTraits<DiscreteTimeTraits> & {
+      time: string;
+    })[] = [];
+
+    createDiscreteTimesFromIsoSegments(
+      result,
+      new Date(mapServerStratum.mapServer.timeInfo.timeExtent[0]).toISOString(),
+      new Date(mapServerStratum.mapServer.timeInfo.timeExtent[1]).toISOString(),
+      undefined,
+      this.maxRefreshIntervals
+    );
+    return result;
+  }
+
+  private getCurrentTime() {
+    const dateAsUnix: number | undefined =
+      this.currentDiscreteTimeTag === undefined
+        ? undefined
+        : new Date(this.currentDiscreteTimeTag).getTime();
+    return dateAsUnix;
+  }
+
+  @computed
+  private get timeParams(): TimeParams {
+    const currentTime = this.getCurrentTime();
+    const timeWindowDuration = this.timeWindowDuration;
+    const timeWindowUnit = this.timeWindowUnit;
+    const isForwardTimeWindow = this.isForwardTimeWindow;
+    const timeParams = {
+      currentTime,
+      timeWindowDuration,
+      timeWindowUnit,
+      isForwardTimeWindow
+    } as TimeParams;
+    return timeParams;
   }
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const dateAsUnix: string | undefined =
-      this.currentDiscreteTimeTag === undefined
-        ? undefined
-        : new Date(this.currentDiscreteTimeTag).getTime().toString();
-
-    const imageryProvider = this._createImageryProvider(dateAsUnix);
+    const timeParams = this.timeParams;
+    const imageryProvider = this._createImageryProvider(timeParams);
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -424,11 +442,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    if (this.nextDiscreteTimeTag) {
-      const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProvider = this._createImageryProvider(
-        dateAsUnix.toString()
-      );
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
+      const timeParams = this.timeParams;
+      const imageryProvider = this._createImageryProvider(timeParams);
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -448,8 +468,46 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
+  private windowDurationInMs(
+    rawTimeWindowDuration: number | undefined,
+    timeWindowUnit: string | undefined
+  ): number | undefined {
+    if (
+      rawTimeWindowDuration === undefined ||
+      rawTimeWindowDuration === 0 ||
+      timeWindowUnit === undefined
+    ) {
+      return undefined;
+    }
+
+    const rawTimeWindowData: any = {};
+    rawTimeWindowData[timeWindowUnit] = rawTimeWindowDuration;
+    const duration = moment.duration(rawTimeWindowData).asMilliseconds();
+    if (duration === 0) {
+      return undefined;
+    } else {
+      return duration;
+    }
+  }
+
+  private getTimeWindowQueryString(
+    currentTime: number,
+    duration: number,
+    isForward: boolean = true
+  ) {
+    if (isForward) {
+      const toTime = Number(currentTime) + duration;
+      return currentTime + "," + toTime;
+    } else {
+      const fromTime = Number(currentTime) - duration;
+      return "" + fromTime + "," + currentTime;
+    }
+  }
+
   private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
+    (
+      timeParams: TimeParams | undefined
+    ): ArcGisMapServerImageryProvider | undefined => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
@@ -459,8 +517,22 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       }
 
       const params: any = Object.assign({}, this.parameters);
-      if (time !== undefined) {
-        params.time = time;
+      const currentTime = timeParams?.currentTime;
+      if (currentTime !== undefined) {
+        const windowDuration = this.windowDurationInMs(
+          timeParams?.timeWindowDuration,
+          timeParams?.timeWindowUnit
+        );
+
+        if (windowDuration !== undefined) {
+          params.time = this.getTimeWindowQueryString(
+            currentTime,
+            windowDuration,
+            timeParams?.isForwardTimeWindow
+          );
+        } else {
+          params.time = currentTime;
+        }
       }
 
       const maximumLevel = scaleDenominatorToLevel(
@@ -468,19 +540,27 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         true,
         false
       );
-      const dynamicRequired = this.layers && this.layers.length > 0;
-      const layers = this.layerIds || this.layers;
+
       const imageryProvider = new ArcGisMapServerImageryProvider({
         url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
-        layers: layers,
+        layers: this.layersArray.map((l) => l.id).join(","),
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
         tileHeight: this.tileHeight,
         tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
-        usePreCachedTilesIfAvailable: !dynamicRequired,
-        mapServerData: stratum.mapServerData,
+        /** Only used "pre-cached" tiles if we aren't requesting any specific layers
+         * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
+         */
+        usePreCachedTilesIfAvailable:
+          this.layersArray.length === 0 ||
+          !this.layers ||
+          setsAreEqual(
+            this.layersArray.map((l) => l.id),
+            stratum.allLayers.map((l) => l.id)
+          ),
+        mapServerData: stratum.mapServer,
         token: stratum.token,
         credit: this.attribution
       });
@@ -506,45 +586,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  @computed get layers() {
-    if (super.layers) {
-      return super.layers;
-    }
-
-    if (isDefined(this.uri)) {
-      const lastSegment = this.uri.segment(-1);
-      if (isDefined(lastSegment) && lastSegment.match(/\d+/)) {
-        return lastSegment;
-      }
-    }
-  }
-
-  @computed
-  get layerIds(): string | undefined {
-    const stratum = <MapServerStratum>(
+  /** Return array of MapServer layers from `layers` trait (which is CSV of layer IDs) - this will only return **valid** MapServer layers.*/
+  @computed get layersArray() {
+    const stratum = <MapServerStratum | undefined>(
       this.strata.get(MapServerStratum.stratumName)
     );
-    const ids = stratum ? stratum.allLayers.map((l) => l.id) : [];
-    return ids.length === 0 ? undefined : ids.join(",");
-  }
+    if (!stratum) return [];
 
-  @computed get allSelectedLayers() {
-    const stratum = <MapServerStratum>(
-      this.strata.get(MapServerStratum.stratumName)
-    );
-    if (!isDefined(stratum)) {
-      return [];
-    }
-
-    if (!isDefined(this.layers)) {
-      // if no layer is specified, return all layers
-      return stratum.allLayers;
-    }
-
-    const layerIds = this.layers.split(",");
-    return stratum.allLayers.filter(({ id }) =>
-      layerIds.find((x) => x == id.toString())
-    );
+    return filterOutUndefined(findLayers(stratum.allLayers, this.layers));
   }
 }
 
@@ -572,10 +621,10 @@ async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
 function findLayers(layers: Layer[], names: string | undefined) {
   function findLayer(layers: Layer[], id: string) {
-    var idLowerCase = id.toLowerCase();
-    var foundByName;
-    for (var i = 0; i < layers.length; ++i) {
-      var layer = layers[i];
+    const idLowerCase = id.toLowerCase();
+    let foundByName;
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i];
       if (layer.id.toString() === id) {
         return layer;
       } else if (
@@ -615,11 +664,11 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 
     const wkid = "EPSG:" + wkidCode;
 
-    if (!isDefined((proj4definitions as any)[wkid])) {
+    if (!isDefined(Proj4Definitions[wkid])) {
       return;
     }
 
-    const source = new proj4.Proj((proj4definitions as any)[wkid]);
+    const source = new proj4.Proj(Proj4Definitions[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
@@ -654,7 +703,7 @@ function cleanAndProxyUrl(
 
 function cleanUrl(url: string) {
   // Strip off the search portion of the URL
-  var uri = new URI(url);
+  const uri = new URI(url);
   uri.search("");
   return uri.toString();
 }

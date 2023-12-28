@@ -2,23 +2,24 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  isObservableArray,
   observable,
-  runInAction
+  runInAction,
+  makeObservable,
+  override
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -27,6 +28,8 @@ import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
+import TerriaFeature from "../Models/Feature/Feature";
+import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionEnum,
@@ -41,23 +44,25 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
+import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
-import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
-} from "./DiscretelyTimeVaryingMixin";
+import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import { ImageryParts } from "./MappableMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+type BaseType = Model<TableTraits>;
+
+function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
+      DiscretelyTimeVaryingMixin(MappableMixin(CatalogMemberMixin(Base)))
     )
-    implements SelectableDimensions, ViewingControls
+    implements SelectableDimensions, ViewingControls, FeatureInfoContext
   {
     /**
      * The default {@link TableStyle}, which is used for styling
@@ -68,8 +73,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
+      makeObservable(this);
+
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
+
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
       ) {
@@ -77,6 +85,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.strata.set(
             TableAutomaticLegendStratum.stratumName,
             TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
+
+      // Create TableFeatureInfoStratum
+      if (this.strata.get(TableFeatureInfoStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(
+            TableFeatureInfoStratum.stratumName,
+            TableFeatureInfoStratum.load(this)
           );
         });
       }
@@ -158,45 +176,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     * Gets the {@link TableStyleTraits#id} of the currently-active style.
-     * Note that this is a trait so there is no guarantee that a style
-     * with this ID actually exists. If no active style is explicitly
-     * specified, return first style with a scalar color column (if none is found then find first style with enum, text and then region)
-     *
-     */
-    @computed
-    get activeStyle(): string | undefined {
-      const value = super.activeStyle;
-      if (value !== undefined) {
-        return value;
-      } else if (this.styles && this.styles.length > 0) {
-        // Find default active style in this order:
-        // - First scalar style
-        // - First enum style
-        // - First text style
-        // - First region style
-
-        const types = [
-          TableColumnType.scalar,
-          TableColumnType.enum,
-          TableColumnType.text,
-          TableColumnType.region
-        ];
-
-        const firstStyleOfEachType = types.map(
-          (columnType) =>
-            this.styles.find(
-              (s) =>
-                this.findColumnByName(s.color.colorColumn)?.type === columnType
-            )?.id
-        );
-
-        return filterOutUndefined(firstStyleOfEachType)[0];
-      }
-      return undefined;
-    }
-
-    /**
      * Gets the active {@link TableStyle}, which is the item from {@link #tableStyles}
      * with an ID that matches {@link #activeStyle}, if any.
      */
@@ -206,7 +185,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (activeStyle === undefined) {
         return this.defaultTableStyle;
       }
-      let ret = this.tableStyles.find((style) => style.id === this.activeStyle);
+      const ret = this.tableStyles.find(
+        (style) => style.id === this.activeStyle
+      );
       if (ret === undefined) {
         return this.defaultTableStyle;
       }
@@ -235,7 +216,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     protected async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
-        let csvString = this.dataColumnMajor[0]
+        const csvString = this.dataColumnMajor[0]
           .map((row, rowIndex) =>
             this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
           )
@@ -259,7 +240,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    @computed
+    @override
+    get name() {
+      return super.name;
+    }
+
+    @override
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
@@ -449,7 +435,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       );
     }
 
-    @computed
+    @override
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
@@ -463,12 +449,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @override
+    get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
         {
           id: TableStylingWorkflow.type,
-          name: "Edit Style",
+          name: i18next.t("models.tableData.editStyle"),
           onClick: action((viewState) =>
             SelectableDimensionWorkflow.runWorkflow(
               viewState,
@@ -480,7 +467,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed
+    @computed get featureInfoContext(): (f: TerriaFeature) => JsonObject {
+      return tableFeatureInfoContext(this);
+    }
+
+    @override
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
@@ -504,7 +495,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         type: "select",
         id: "activeStyle",
-        name: "Display Variable",
+        name: i18next.t("models.tableData.activeStyle"),
         options: this.tableStyles
           .filter((style) => !style.hidden || this.activeStyle === style.id)
           .map((style) => {
@@ -542,7 +533,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       return {
         id: "regionMapping",
-        name: "Region Mapping",
+        name: i18next.t("models.tableData.regionMapping"),
         options: allRegionProviders.map((regionProvider) => {
           return {
             name: regionProvider.description,
@@ -588,7 +579,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       return {
         id: "regionColumn",
-        name: "Region Column",
+        name: i18next.t("models.tableData.regionColumn"),
         options: this.tableColumns.map((col) => {
           return {
             name: col.name,
@@ -607,7 +598,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed get regionMappingDimensions(): SelectableDimensionGroup {
       return {
-        id: "Manual Region Mapping",
+        id: "manual-region-mapping",
+        name: i18next.t("models.tableData.manualRegionMapping"),
         type: "group",
         selectableDimensions: filterOutUndefined([
           this.regionColumnDimensions,
@@ -643,7 +635,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             defaultStyle: {
               color: { zScoreFilterEnabled: value === "true" }
             }
-          });
+          }).logError("Failed to update zScoreFilterEnabled");
         },
         placement: "belowLegend",
         type: "checkbox"
@@ -707,32 +699,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (dates === undefined) {
         return;
       }
-      const times = filterOutUndefined(
-        dates.map((d) =>
-          d ? { time: d.toISOString(), tag: undefined } : undefined
-        )
-      ).reduce(
-        // is it correct for discrete times to remove duplicates?
-        // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
-        // duplicates will mess up the indexing problem as our `<DateTimePicker />`
-        // will eliminate duplicates on the UI front, so given the datepicker
-        // expects uniques, return uniques here
-        (acc: DiscreteTimeAsJS[], time) =>
-          !acc.some(
-            (accTime) => accTime.time === time.time && accTime.tag === time.tag
-          )
-            ? [...acc, time]
-            : acc,
-        []
-      );
-      return times;
+
+      // is it correct for discrete times to remove duplicates?
+      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
+      const times = new Set<string>();
+
+      for (let i = 0; i < dates.length; i++) {
+        const d = dates[i];
+        if (d) {
+          times.add(d.toISOString());
+        }
+      }
+
+      return Array.from(times).map((time) => ({ time, tag: undefined }));
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
     @computed get legendButton() {
       return this.activeTableStyle.isCustom
         ? {
-            title: "Custom",
+            title: i18next.t("models.tableData.custom"),
             onClick: action(() => {
               SelectableDimensionWorkflow.runWorkflow(
                 this.terria,
@@ -850,7 +839,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[];
+        let features: TerriaFeature[];
         if (style.isTimeVaryingPointsWithId()) {
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {
@@ -859,7 +848,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
         features.forEach((f) => {
-          (f as any)._catalogItem = this;
+          f._catalogItem = this;
           dataSource.entities.add(f);
         });
         dataSource.show = this.show;

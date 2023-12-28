@@ -1,5 +1,5 @@
 import i18next, { WithT } from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
@@ -11,7 +11,7 @@ import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../Context";
 
 interface ToolProps {
   toolName: string;
@@ -42,7 +42,7 @@ const Tool: React.FC<ToolProps> = (props) => {
       ),
       params
     ]);
-  }, [getToolComponent]);
+  }, [getToolComponent, params]);
 
   let ToolComponent;
   let toolProps;
@@ -66,6 +66,7 @@ interface ToolButtonProps extends ToolProps {
 export class ToolButtonController extends MapNavigationItemController {
   constructor(private props: ToolButtonProps) {
     super();
+    makeObservable(this);
   }
   get glyph() {
     return this.props.icon;

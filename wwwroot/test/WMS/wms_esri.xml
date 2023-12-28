@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0"
+  xmlns="http://www.opengis.net/wms"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:esri_wms="http://www.esri.com/wms" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.esri.com/wms https://example.gov.au/server/services/example/MapServer/WMSServer?version=1.3.0%26service=WMS%26request=GetSchemaExtension">
+  <Service>
+    <Name><![CDATA[WMS]]></Name>
+    <Title>WMS</Title>
+    <Abstract>WMS</Abstract>
+    <KeywordList>
+      <Keyword><![CDATA[]]></Keyword>
+    </KeywordList>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson><![CDATA[]]></ContactPerson>
+        <ContactOrganization><![CDATA[]]></ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition><![CDATA[]]></ContactPosition>
+      <ContactAddress>
+        <AddressType><![CDATA[]]></AddressType>
+        <Address><![CDATA[]]></Address>
+        <City><![CDATA[]]></City>
+        <StateOrProvince><![CDATA[]]></StateOrProvince>
+        <PostCode><![CDATA[]]></PostCode>
+        <Country><![CDATA[]]></Country>
+      </ContactAddress>
+      <ContactVoiceTelephone><![CDATA[]]></ContactVoiceTelephone>
+      <ContactFacsimileTelephone><![CDATA[]]></ContactFacsimileTelephone>
+      <ContactElectronicMailAddress><![CDATA[]]></ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees><![CDATA[]]></Fees>
+    <AccessConstraints><![CDATA[]]></AccessConstraints>
+    <MaxWidth>4096</MaxWidth>
+    <MaxHeight>4096</MaxHeight>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/bmp</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/tiff</Format>
+        <Format>image/png</Format>
+        <Format>image/png8</Format>
+        <Format>image/png24</Format>
+        <Format>image/png32</Format>
+        <Format>image/gif</Format>
+        <Format>image/svg+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>application/vnd.esri.wms_raw_xml</Format>
+        <Format>application/vnd.esri.wms_featureinfo_xml</Format>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>application/geo+json</Format>
+        <Format>text/xml</Format>
+        <Format>text/html</Format>
+        <Format>text/plain</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <esri_wms:GetStyles>
+        <Format>application/vnd.ogc.sld+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </esri_wms:GetStyles>
+    </Request>
+    <Exception>
+      <Format>application/vnd.ogc.se_xml</Format>
+      <Format>application/vnd.ogc.se_inimage</Format>
+      <Format>application/vnd.ogc.se_blank</Format>
+      <Format>text/xml</Format>
+      <Format>XML</Format>
+    </Exception>
+    <Layer>
+      <Title><![CDATA[National Broadband Network - Connections by technology type – July 2020]]></Title>
+      <CRS>CRS:84</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:3857</CRS>
+      <!-- alias 3857 -->
+      <CRS>EPSG:102100</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>96.807660</westBoundLongitude>
+        <eastBoundLongitude>168.005803</eastBoundLongitude>
+        <southBoundLatitude>-43.751975</southBoundLatitude>
+        <northBoundLatitude>-9.210950</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="96.807660" miny="-43.751975" maxx="168.005803" maxy="-9.210950"/>
+      <BoundingBox CRS="EPSG:4326" minx="-43.751975" miny="96.807660" maxx="-9.210950" maxy="168.005803"/>
+      <BoundingBox CRS="EPSG:3857" minx="10776579.416088" miny="-5427139.626751" maxx="18702320.440275" maxy="-1029803.614611"/>
+      <BoundingBox CRS="EPSG:102100" minx="10776579.416088" miny="-5427139.626751" maxx="18702320.440275" maxy="-1029803.614611"/>
+      <Layer queryable="1">
+        <Name>0</Name>
+        <Title><![CDATA[NBN - Satellite]]></Title>
+        <Abstract>Test Abstract</Abstract>
+        <CRS>CRS:84</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <!-- alias 3857 -->
+        <CRS>EPSG:102100</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>96.807660</westBoundLongitude>
+          <eastBoundLongitude>168.005803</eastBoundLongitude>
+          <southBoundLatitude>-43.751975</southBoundLatitude>
+          <northBoundLatitude>-9.210950</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="96.807660" miny="-43.751975" maxx="168.005803" maxy="-9.210950"/>
+        <BoundingBox CRS="EPSG:4326" minx="-43.751975" miny="96.807660" maxx="-9.210950" maxy="168.005803"/>
+        <BoundingBox CRS="EPSG:3857" minx="10776579.416088" miny="-5427139.626751" maxx="18702320.440275" maxy="-1029803.614611"/>
+        <BoundingBox CRS="EPSG:102100" minx="10776579.416088" miny="-5427139.626751" maxx="18702320.440275" maxy="-1029803.614611"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[NBN - Satellite]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="https://example.gov.au/server/services/example/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=0" xlink:type="simple"
+              xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>

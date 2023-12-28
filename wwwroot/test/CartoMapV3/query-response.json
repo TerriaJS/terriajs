@@ -1,0 +1,35 @@
+{
+  "ndjson": {
+    "url": ["https://example.com/query/ndjson.json"]
+  },
+  "geojson": {
+    "url": ["https://example.com/query/geojson.json"]
+  },
+  "json": {
+    "url": ["https://example.com/query/json.json"]
+  },
+  "binary": {
+    "url": ["https://example.com/query/binary"]
+  },
+  "tilejson": {
+    "url": ["https://example.com/query/tilejson.json"]
+  },
+  "schema": [
+    {
+      "name": "cartodb_id",
+      "type": "number"
+    },
+    {
+      "name": "gps_code",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "geom",
+      "type": "geometry"
+    }
+  ]
+}

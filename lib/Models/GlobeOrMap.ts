@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -9,10 +9,10 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
+import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
@@ -21,19 +21,19 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   OutlineSymbolTraits
-} from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+} from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
-require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
+require("./Feature/ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
@@ -58,7 +58,7 @@ export default abstract class GlobeOrMap {
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
   // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
-  @observable mouseCoords: MouseCoords = new MouseCoords();
+  mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
 
@@ -66,6 +66,10 @@ export default abstract class GlobeOrMap {
     target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void>;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   /**
    * Zoom map to a dataset or the given bounds.
@@ -113,7 +117,6 @@ export default abstract class GlobeOrMap {
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */
-  @computed
   get attributions(): string[] {
     return [];
   }
@@ -127,19 +130,8 @@ export default abstract class GlobeOrMap {
   abstract pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ): void;
-
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
-   * @param latLngHeight The position on the earth to pick
-   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  abstract getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
-  ): Promise<Entity[] | undefined> | void;
 
   /**
    * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.
@@ -149,7 +141,7 @@ export default abstract class GlobeOrMap {
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
   ) {
-    const feature = new Feature({
+    const feature = new TerriaFeature({
       id: imageryFeature.name
     });
     feature.name = imageryFeature.name;
@@ -221,7 +213,7 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
@@ -326,15 +318,15 @@ export default abstract class GlobeOrMap {
         let vectorTileHighlightCreated = false;
         // Feature from MapboxVectorTileImageryProvider
         if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            MapboxVectorTileImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          MapboxVectorTileImageryProvider
         ) {
           const featureId =
-            feature.data?.id ?? feature.properties?.id?.getValue?.();
+            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
+            feature.properties?.id?.getValue?.();
           if (isDefined(featureId)) {
             const highlightImageryProvider =
-              feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
                 featureId
               );
             this._removeHighlightCallback =
@@ -347,9 +339,8 @@ export default abstract class GlobeOrMap {
         }
         // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
         else if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            ProtomapsImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          ProtomapsImageryProvider
         ) {
           const highlightImageryProvider =
             feature.imageryLayer.imageryProvider.createHighlightImageryProvider(

@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -39,6 +39,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
       | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -233,6 +234,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ) {
     super(id, terria, sourceReference, strata);
+    makeObservable(this);
     this.setTrait(
       CommonStrata.defaults,
       "supportedFormats",
@@ -240,7 +242,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  @computed
+  @override
   get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
@@ -382,7 +384,7 @@ interface PreparedSupportedFormat {
 }
 
 async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
-  var uri = new URI(portalItem._portalRootUrl)
+  const uri = new URI(portalItem._portalRootUrl)
     .segment(`/sharing/rest/content/items/${portalItem.itemId}`)
     .addQuery({ f: "json" });
 
@@ -398,7 +400,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
 async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   if (portalItem._arcgisItem === undefined) return undefined;
   const baseUrl = portalItem._portalRootUrl;
-  var uri = new URI(baseUrl)
+  const uri = new URI(baseUrl)
     .segment(`/sharing/rest/content/items/${portalItem._arcgisItem.id}/data`)
     .addQuery({ f: "json" });
 

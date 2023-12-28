@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
@@ -25,6 +25,7 @@ import { BaseModel } from "../../Definition/Model";
 import { ServiceProvider } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
@@ -74,6 +75,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -260,7 +262,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get capabilitiesLayer(): Readonly<WmtsLayer | undefined> {
-    let result = this.catalogItem.layer
+    const result = this.catalogItem.layer
       ? this.capabilities.findLayer(this.catalogItem.layer)
       : undefined;
     return result;
@@ -285,11 +287,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     result.push({
       layerName: layer?.Identifier,
       styles: styles.map((style: CapabilitiesStyle) => {
-        let wmtsLegendUrl: WmtsCapabilitiesLegend | undefined = isReadOnlyArray(
-          style.LegendURL
-        )
-          ? style.LegendURL[0]
-          : style.LegendURL;
+        const wmtsLegendUrl: WmtsCapabilitiesLegend | undefined =
+          isReadOnlyArray(style.LegendURL)
+            ? style.LegendURL[0]
+            : style.LegendURL;
         let legendUri, legendMimeType;
         if (wmtsLegendUrl && wmtsLegendUrl["xlink:href"]) {
           legendUri = new URI(decodeURIComponent(wmtsLegendUrl["xlink:href"]));
@@ -350,9 +351,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         continue;
       }
 
-      var levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
-      var startX = parseFloat(levelZeroTopLeftCorner[0]);
-      var startY = parseFloat(levelZeroTopLeftCorner[1]);
+      const levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
+      const startX = parseFloat(levelZeroTopLeftCorner[0]);
+      const startY = parseFloat(levelZeroTopLeftCorner[1]);
       const rectangleInMeters = standardTilingScheme.rectangleToNativeRectangle(
         standardTilingScheme.rectangle
       );
@@ -436,6 +437,11 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   static readonly type = "wmts";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return WebMapTileServiceCatalogItem.type;
   }
@@ -461,7 +467,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

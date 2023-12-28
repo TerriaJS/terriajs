@@ -3,6 +3,8 @@ import { configure, runInAction } from "mobx";
 import URI from "urijs";
 import { JsonObject } from "../../../../lib/Core/Json";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import CkanCatalogGroup, {
   CkanServerStratum
@@ -96,8 +98,8 @@ describe("CkanCatalogGroup", function () {
     it("properly creates members", function () {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(2);
-      let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
-      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(member0.name).toBe("Department of the Environment and Energy");
       expect(member1.name).toBe("Murray-Darling Basin Authority");
     });
@@ -109,18 +111,18 @@ describe("CkanCatalogGroup", function () {
           expect(ckanServerStratum.groups.length).toBe(3);
 
           // 3 groups are sorted by name
-          let group0 = <CatalogGroup>ckanServerStratum.groups[0];
+          const group0 = <CatalogGroup>ckanServerStratum.groups[0];
           expect(group0.name).toBe("Department of the Environment and Energy");
           // There is only 1 resource on the 1 dataset
           expect(group0.members.length).toBe(1);
 
-          let group1 = <CatalogGroup>ckanServerStratum.groups[1];
+          const group1 = <CatalogGroup>ckanServerStratum.groups[1];
           expect(group1.name).toBe("Murray-Darling Basin Authority");
           // There are 2 resources on the 2 datasets
           expect(group1.members.length).toBe(9);
 
           // "Ungrouped" group should be last
-          let group2 = <CatalogGroup>ckanServerStratum.groups[2];
+          const group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
           expect(group2.name).toBe("No group");
           expect(group2.members.length).toBe(0);
@@ -155,14 +157,14 @@ describe("CkanCatalogGroup", function () {
     it("properly creates members", function () {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(3);
-      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
       expect(member1 instanceof CatalogGroup).toBeTruthy();
       expect(member1.name).toBe("Environment");
-      let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const member2 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(member2 instanceof CatalogGroup).toBeTruthy();
       expect(member2.name).toBe("Science");
       // "Ungrouped" group should be last
-      let member3 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      const member3 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
       expect(member3 instanceof CatalogGroup).toBeTruthy();
       expect(member3.name).toBe("Blah");
     });
@@ -208,7 +210,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(group1.memberModels.length).toBe(9);
 
       const items = group1.memberModels as CkanItemReference[];
@@ -237,7 +239,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(group1.memberModels.length).toBe(9);
 
       // These items include their Dataset name in their Resource name, so it's not the greatest demonstration
@@ -270,7 +272,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(9);
 
@@ -311,7 +313,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(7);
 
@@ -345,7 +347,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(7);
 
@@ -391,7 +393,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const group0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
 
       expect(group0.memberModels.length).toBe(2);
 
@@ -420,7 +422,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(8);
 
@@ -451,7 +453,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(9);
 
@@ -480,7 +482,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(2);
 
@@ -539,7 +541,7 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(2);
 
@@ -566,9 +568,144 @@ describe("CkanCatalogGroup", function () {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1).toBeUndefined();
+    });
+  });
+
+  describe("excludeInactiveDatasets", () => {
+    beforeEach(async function () {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("excludeInactiveDatasets = true (default)", async function () {
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(9);
+    });
+
+    it("excludeInactiveDatasets = false", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "excludeInactiveDatasets",
+        false
+      );
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(13);
+    });
+  });
+
+  describe("when `resourceIdTemplate` is given", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("uses it for generating a custom item id for the resource item", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "resourceIdTemplate",
+        "{{resource.name}}-{{resource.format}}"
+      );
+      await ckanCatalogGroup.loadMembers();
+      const group = ckanCatalogGroup.memberModels[0] as GroupMixin.Instance;
+      expect(group.memberModels[0].uniqueId).toBe(
+        "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMS"
+      );
+    });
+
+    it("ensures that the generated resource-id does not contain `/` character (to avoid clashing with id path character)", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "resourceIdTemplate",
+        "{{resource.name}}-{{resource.format}}/something"
+      );
+      await ckanCatalogGroup.loadMembers();
+      const group = ckanCatalogGroup.memberModels[0] as GroupMixin.Instance;
+      expect(group.memberModels[0].uniqueId).toBe(
+        "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMSsomething"
+      );
+    });
+
+    describe("when `restrictResourceIdTemplateToOrgsWithNames` is given", function () {
+      it("uses `resourceIdTemplate` for generating resource id for organizations in the list", async function () {
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "resourceIdTemplate",
+          "{{resource.name}}-{{resource.format}}"
+        );
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "restrictResourceIdTemplateToOrgsWithNames",
+          ["doee"] // apply template only for DOEE org
+        );
+        ckanCatalogGroup.setTrait("definition", "groupBy", "organization");
+        await ckanCatalogGroup.loadMembers();
+
+        const doeeGroup = ckanCatalogGroup
+          .memberModels[0] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(doeeGroup).toBeDefined();
+        expect(doeeGroup.name).toBe("Department of the Environment and Energy");
+        // Template used for generating ID for DOEE resource
+        expect(doeeGroup.memberModels[0].uniqueId).toBe(
+          "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMS"
+        );
+        const anotherGroup = ckanCatalogGroup
+          .memberModels[1] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(anotherGroup).toBeDefined();
+        // Template not used for generating ID for MDBA resource
+        expect(anotherGroup.name).toBe("Murray-Darling Basin Authority");
+        expect(anotherGroup.memberModels[0].uniqueId).toBe(
+          "test/7b0c274f-7f12-4062-9e54-5b8227ca20c4/49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+        );
+      });
+
+      it("does NOT uses `resourceIdTemplate` for generating resource id for organizations NOT in the list", async function () {
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "resourceIdTemplate",
+          "{{resource.name}}-{{resource.format}}"
+        );
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "restrictResourceIdTemplateToOrgsWithNames",
+          ["doee"] // apply template only for DOEE org
+        );
+        ckanCatalogGroup.setTrait("definition", "groupBy", "organization");
+        await ckanCatalogGroup.loadMembers();
+
+        const mdbaGroup = ckanCatalogGroup
+          .memberModels[1] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(mdbaGroup).toBeDefined();
+        // Template not used for generating ID for MDBA resource
+        expect(mdbaGroup.name).toBe("Murray-Darling Basin Authority");
+        expect(mdbaGroup.memberModels[0].uniqueId).toBe(
+          "test/7b0c274f-7f12-4062-9e54-5b8227ca20c4/49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+        );
+      });
     });
   });
 });

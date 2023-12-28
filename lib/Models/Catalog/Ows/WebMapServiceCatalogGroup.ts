@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -56,6 +56,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -167,8 +168,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @action
-  createMemberFromLayer(layer: CapabilitiesLayer) {
-    const layerId = this.getLayerId(layer);
+  createMemberFromLayer(layer: CapabilitiesLayer, parentLayerId?: string) {
+    const layerId = this.getLayerId(layer, parentLayerId);
 
     if (!layerId) {
       return;
@@ -184,7 +185,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         members = [layer.Layer as CapabilitiesLayer];
       }
 
-      members.forEach((member) => this.createMemberFromLayer(member));
+      members.forEach((member) => this.createMemberFromLayer(member, layerId));
 
       // Create group
       const existingModel = this.catalogGroup.terria.getModelById(
@@ -200,7 +201,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           // At the moment we ignore duplicate layers
           this.catalogGroup.terria.addModel(
             model,
-            this.getLayerShareKeys(layer)
+            this.getLayerShareKeys(layer, layerId)
           );
         } catch (e) {
           TerriaError.from(e, "Failed to add CatalogGroup").log();
@@ -214,7 +215,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       model.setTrait(
         CommonStrata.definition,
         "members",
-        filterOutUndefined(members.map((member) => this.getLayerId(member)))
+        filterOutUndefined(
+          members.map((member) => this.getLayerId(member, layerId))
+        )
       );
 
       // Set group `info` trait if applicable
@@ -250,7 +253,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
       try {
         // Sometimes WMS Layers have duplicate names
         // At the moment we ignore duplicate layers
-        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+        this.catalogGroup.terria.addModel(
+          model,
+          this.getLayerShareKeys(layer, layerId)
+        );
       } catch (e) {
         TerriaError.from(e, "Failed to add WebMapServiceCatalogItem").log();
         return;
@@ -317,22 +323,30 @@ class GetCapabilitiesStratum extends LoadableStratum(
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
-  getLayerId(layer: CapabilitiesLayer) {
-    if (!isDefined(this.catalogGroup.uniqueId)) {
+  getLayerId(layer: CapabilitiesLayer, parentLayerId?: string) {
+    if (!isDefined(this.catalogGroup.uniqueId) && !isDefined(parentLayerId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Name ?? layer.Title}`;
+    return `${parentLayerId ?? this.catalogGroup.uniqueId}/${
+      layer.Name ?? layer.Title
+    }`;
   }
 
   /** For backward-compatibility.
-   * If layer.Name is defined, we will use it to create layer autoID (see `this.getLayerId`).
-   * Previously we used layer.Title, so we now add it as a shareKey
+   * Previously we have used the following IDs
+   * - `WMS Group Catalog ID/WMS Layer Name` - regardless of nesting
+   * - `WMS Group Catalog ID/WMS Layer Title`
    */
-  getLayerShareKeys(layer: CapabilitiesLayer) {
-    if (isDefined(layer.Name) && layer.Title !== layer.Name)
-      return [`${this.catalogGroup.uniqueId}/${layer.Title}`];
+  getLayerShareKeys(layer: CapabilitiesLayer, layerId: string) {
+    const shareKeys: string[] = [];
 
-    return [];
+    if (layerId !== `${this.catalogGroup.uniqueId}/${layer.Name}`)
+      shareKeys.push(`${this.catalogGroup.uniqueId}/${layer.Name}`);
+
+    if (isDefined(layer.Name) && layer.Title !== layer.Name)
+      shareKeys.push(`${this.catalogGroup.uniqueId}/${layer.Title}`);
+
+    return shareKeys;
   }
 }
 
@@ -374,7 +388,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
     if (getCapabilitiesStratum !== undefined) {
