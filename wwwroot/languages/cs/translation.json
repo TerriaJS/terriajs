@@ -477,7 +477,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "Tento soubor neobsahuje geoprostorová data.",
-    "selectToPreview": "Výběr datové sady pro zobrazení náhledu",
+    "selectToPreviewDataset": "Výběr datové sady pro zobrazení náhledu",
     "selectToPreviewSeparator": "NEBO",
     "goToTheMap": "Přejít na mapu",
     "loading": "NAČÍTÁNÍ NÁHLEDU...",

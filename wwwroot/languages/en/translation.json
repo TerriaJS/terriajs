@@ -462,7 +462,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
-    "selectToPreview": "Select a dataset to see a preview",
+    "selectToPreviewDataset": "Select a dataset to see a preview",
     "selectMultipleDatasets": "<0>Press <strong>Shift</strong> and click</0><1 /><2>to add multiple datasets</2>",
     "selectToPreviewSeparator": "OR",
     "goToTheMap": "Go to the map",

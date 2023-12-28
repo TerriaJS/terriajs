@@ -465,7 +465,7 @@
     "doesNotContainGeospatialData": "Este arquivo não contém dados geoespaciais.",
     "noPreviewAvailable": "SEM PRÉ-VISUALIZAÇÃO DISPONÍVEL",
     "dataPreviewLoading": "CARREGAMENTO DE VISUALIZAÇÃO DE DADOS...",
-    "selectToPreview": " Selecione um conjunto de dados para ver uma visualização",
+    "selectToPreviewDataset": " Selecione um conjunto de dados para ver uma visualização",
     "selectToPreviewSeparator": "OU",
     "goToTheMap": "Vá para o mapa",
     "serviceDescription": "Descrição do Serviço",

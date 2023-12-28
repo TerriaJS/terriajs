@@ -338,7 +338,7 @@
     "noPreviewAvailable": "プレビューが利用できません",
     "preview": "{{appName}} プレビュー",
     "loading": "プレビュー読み込み中...",
-    "selectToPreview": "データセット名を選択してプレビューを表示",
+    "selectToPreviewDataset": "データセット名を選択してプレビューを表示",
     "selectMultipleDatasets": "<0><strong>Shift</strong> を押しながら</0><1 /><2>をクリックして複数のデータを読み込みます</2>",
     "selectToPreviewSeparator": "または",
     "goToTheMap": "マップを開く",

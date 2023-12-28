@@ -801,7 +801,7 @@
   "preview": {
     "contact": "联系",
     "doesNotContainGeospatialData": "该文件不包含地理空间数据。",
-    "selectToPreview": "选择数据集以查看预览",
+    "selectToPreviewDataset": "选择数据集以查看预览",
     "selectToPreviewSeparator": "或",
     "goToTheMap": "转到地图",
     "loading": "预览加载中...",

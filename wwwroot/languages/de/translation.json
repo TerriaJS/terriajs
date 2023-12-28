@@ -1341,7 +1341,7 @@
     "removeFromMap": "Von der Karte entfernen",
     "dataPreviewLoading": "LADEN DER DATENVORSCHAU...",
     "dataCustodian": "Herausgeber",
-    "selectToPreview": "Wählen Sie einen Datensatz aus, um eine Vorschau zu sehen",
+    "selectToPreviewDataset": "Wählen Sie einen Datensatz aus, um eine Vorschau zu sehen",
     "selectToPreviewSeparator": "ODER",
     "goToTheMap": "Gehen Sie zur Karte",
     "loading": "VORSCHAU LADEN...",

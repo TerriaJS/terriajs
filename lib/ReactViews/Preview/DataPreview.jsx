@@ -106,7 +106,7 @@ class DataPreview extends React.Component {
     } else {
       return (
         <div className={Styles.placeholder}>
-          <p>{t("preview.selectToPreview")}</p>
+          <p>{t("preview.selectToPreviewDataset")}</p>
           <p>
             <Trans i18nKey="preview.selectMultipleDatasets">
               <span>
@@ -122,7 +122,7 @@ class DataPreview extends React.Component {
                   fill: `${(p) => p.theme.charcoalGrey}`
                 }}
               />
-              <span>to add multiple datasets.</span>
+              <span>to add multiple datasets</span>
             </Trans>
           </p>
           <p>- {t("preview.selectToPreviewSeparator")} -</p>

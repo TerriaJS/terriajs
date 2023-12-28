@@ -281,7 +281,7 @@
     "dataPreview": "ការ Preview ទិន្នន័យ",
     "noPreviewAvailable": "គ្មានការបង្ហាញជាមុនទេ",
     "preview": "មើលជាមុន {{appName}}",
-    "selectToPreview": "ជ្រើសសំណុំទិន្នន័យដើម្បីមើលការមើលជាមុន",
+    "selectToPreviewDataset": "ជ្រើសសំណុំទិន្នន័យដើម្បីមើលការមើលជាមុន",
     "selectToPreviewSeparator": "OR",
     "goToTheMap": "ទៅកាន់ផែនទី",
     "doesNotContainGeospatialData": "ឯកសារនេះមិនមានទិន្នន័យភូមិសាស្ត្រទេ។",

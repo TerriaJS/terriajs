@@ -448,7 +448,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "Aquest arxiu no conté dades geoespacials.",
-    "selectToPreview": "Seleccioneu un conjunt de dades per veure'n una previsualització",
+    "selectToPreviewDataset": "Seleccioneu un conjunt de dades per veure'n una previsualització",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Anar al mapa",
     "preview": "{{appName}} previsualització",
