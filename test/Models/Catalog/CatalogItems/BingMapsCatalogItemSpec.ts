@@ -42,7 +42,7 @@ describe("BingMapsCatalogItem", () => {
       item.setTrait("definition", "rectangle", rectangleDegrees);
       if (!ImageryParts.is(item.mapItems[0]))
         throw new Error("Expected MapItem to be an ImageryParts");
-      if (item.mapItems[0].clippingRectangle == null) {
+      if (item.mapItems[0].clippingRectangle === undefined) {
         throw new Error("Expected clippingRectangle to be defined.");
       }
 
@@ -77,7 +77,7 @@ describe("BingMapsCatalogItem", () => {
 
       if (!ImageryParts.is(item.mapItems[0]))
         throw new Error("Expected MapItem to be an ImageryParts");
-      let imageryProvider = item.mapItems[0].imageryProvider;
+      const imageryProvider = item.mapItems[0].imageryProvider;
       if (!(imageryProvider instanceof BingMapsImageryProvider))
         throw new Error(
           "Expected imageryProvider to be a BingMapsImageryProvider"
