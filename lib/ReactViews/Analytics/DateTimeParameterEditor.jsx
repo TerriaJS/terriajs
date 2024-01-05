@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import PropTypes from "prop-types";
 
 const DateTimeParameterEditor = (props) => {
   const [dateValue, setDateValue] = useState(
@@ -52,6 +53,11 @@ const DateTimeParameterEditor = (props) => {
       </div>
     </div>
   );
+};
+
+DateTimeParameterEditor.propTypes = {
+  parameter: PropTypes.object,
+  previewed: PropTypes.object
 };
 
 export default DateTimeParameterEditor;
