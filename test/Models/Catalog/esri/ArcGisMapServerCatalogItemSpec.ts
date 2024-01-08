@@ -277,9 +277,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            false
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(false);
         });
 
         it("usePreCachedTilesIfAvailable = true if not requesting specific layers", async function () {
@@ -293,9 +291,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            true
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(true);
         });
 
         it("usePreCachedTilesIfAvailable = true if requesting all layers", async function () {
@@ -316,9 +312,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            true
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(true);
         });
       });
     });
