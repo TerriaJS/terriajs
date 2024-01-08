@@ -12,6 +12,7 @@
 - Fixed regression causing explorer window not to display instructions when first opened.
 - [The next improvement]
 - Enable eslint for typescript: plugin:@typescript-eslint/eslint-recommended
+- Fixed a bug where the search box was missing for small screen devices.
 
 #### 8.4.1 - 2023-12-08
 
