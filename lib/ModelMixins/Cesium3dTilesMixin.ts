@@ -116,12 +116,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-    // An observable tracker for tileset.ready
-    @observable
-    isTilesetReady: boolean = false;
-
     clippingPlanesOriginMatrix(): Matrix4 {
-      if (this.tileset && this.isTilesetReady) {
+      if (this.tileset) {
         // clippingPlanesOriginMatrix is private.
         // We need it to find the position where cesium centers the clipping plane for the tileset.
         // See if we can find another way to get it.
