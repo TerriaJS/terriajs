@@ -103,7 +103,10 @@
     "no-array-constructor": "error",
     "no-new-object": 1,
     "no-unneeded-ternary": 1 /* ECMAScript 6 */,
-    "prefer-const": "error"
+    "prefer-const": "error",
+    /* See https://stackoverflow.com/questions/64646248/eslintrc-js-for-react-17-and-jsx-without-import-react/64646593#64646593 */
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
   },
   "overrides": [
     {
