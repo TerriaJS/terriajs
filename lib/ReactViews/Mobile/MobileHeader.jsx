@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
-import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -138,9 +137,9 @@ class MobileHeader extends React.Component {
             onSearchTextChanged={this.changeLocationSearchText.bind(this)}
             onDoSearch={this.searchLocations.bind(this)}
             placeholder={t("search.placeholder")}
-            alwaysShowClear={true}
+            alwaysShowClear
             onClear={this.closeLocationSearch.bind(this)}
-            autoFocus={true}
+            autoFocus
           />
         )}
         {searchState.showMobileCatalogSearch && (
@@ -150,7 +149,7 @@ class MobileHeader extends React.Component {
             onDoSearch={this.searchCatalog.bind(this)}
             placeholder={t("search.searchCatalogue")}
             onClear={this.closeCatalogSearch.bind(this)}
-            autoFocus={true}
+            autoFocus
           />
         )}
       </div>
