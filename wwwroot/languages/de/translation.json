@@ -149,7 +149,7 @@
     "browserCannotProvide": "Ihr Browser kann Ihren Standort nicht zur Verfügung stellen.",
     "errorGettingLocation": "Fehler beim Abrufen des Standorts",
     "myLocation": "Mein Standort",
-    "originError": "Ihr Browser kann Ihren Standort nur übermitteln, wenn Sie https verwenden. Möglicherweise können Sie stattdessen {{secureUrl}} verwenden.",
+    "originError": "Ihr Browser kann Ihren Standort nur übermitteln, wenn Sie HTTPS verwenden. Möglicherweise können Sie stattdessen {{secureUrl}} verwenden.",
     "centreMap": "Karte an Ihrem aktuellen Standort zentrieren"
   },
   "measure": {
@@ -361,7 +361,12 @@
       "zFilterEnabled": "Extremwerte ausgeblendet (zum Anzeigen anklicken)",
       "timeDimensionEnabled": "Zeit aktiviert (zum Deaktivieren anklicken)",
       "bulkGeocoderErrorMessage": "Die Zuordnung von Adressen zu Längen-Breiten-Koordinaten ist nicht möglich, da beim Abrufen der Adresskoordinaten ein Fehler aufgetreten ist. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal.",
-      "legendZFilterLabel": "Extremwerte"
+      "legendZFilterLabel": "Extremwerte",
+      "custom": "Benutzerdefiniert",
+      "regionMapping": "Regionale Kartierung",
+      "editStyle": "Stil bearbeiten",
+      "regionColumn": "Spalte \"Region\"",
+      "activeStyle": "Anzeige Variable"
     },
     "terria": {
       "loadingInitSourcesErrorTitle": "Fehler beim Laden der Kartenkonfiguration",

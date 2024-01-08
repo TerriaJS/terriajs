@@ -6,7 +6,7 @@ import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeatur
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import { JsonObject } from "../../Core/Json";
+import JsonValue from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";
 
@@ -19,7 +19,7 @@ const customProperties = ["entityCollection", "properties", "data"];
 
 export default class TerriaFeature extends Entity {
   /** This object can be used to pass Terria-specific properties */
-  data?: TerriaFeatureData | JsonObject;
+  data?: TerriaFeatureData | JsonValue;
 
   cesiumEntity?: Entity;
   imageryLayer?: ImageryLayer | undefined;

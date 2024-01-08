@@ -488,6 +488,7 @@ function ExportWebCoverageServiceMixin<
                 xml.getElementsByTagName("ServiceException")?.[0]?.innerHTML ??
                 xml.getElementsByTagName("ows:ExceptionText")?.[0]?.innerHTML;
               if (isDefined(message)) {
+                /* eslint-disable-next-line no-ex-assign */
                 error = message;
               }
             }

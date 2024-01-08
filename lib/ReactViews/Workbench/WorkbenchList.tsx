@@ -61,7 +61,7 @@ class WorkbenchList extends React.Component<IProps> {
         <Sortable
           onSort={this.onSort}
           direction="vertical"
-          dynamic={true}
+          dynamic
           css={`
             width: 100%;
           `}

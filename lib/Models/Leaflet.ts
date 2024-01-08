@@ -256,7 +256,7 @@ export default class Leaflet extends GlobeOrMap {
    */
   private _initProgressEvent() {
     const onTileLoadChange = () => {
-      var tilesLoadingCount = 0;
+      let tilesLoadingCount = 0;
 
       this.map.eachLayer(function (layerOrGridlayer) {
         // _tiles is protected but our knockout-loading-logic accesses it here anyway
@@ -477,7 +477,7 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     // 2. Add new data sources
-    for (let ds of availableDataSources) {
+    for (const ds of availableDataSources) {
       if (!dataSources.contains(ds) && ds.show) {
         await dataSources.add(ds);
       }
@@ -608,7 +608,7 @@ export default class Leaflet extends GlobeOrMap {
       const owner = entity.entityCollection.owner;
       if (
         owner instanceof DataSource &&
-        owner.name == GlobeOrMap._featureHighlightName
+        owner.name === GlobeOrMap._featureHighlightName
       ) {
         return;
       }

@@ -10,7 +10,7 @@ type Props = {
   icon: { id: keyof typeof GLYPHS };
 };
 
-export default (props: Props) => (
+const MobileMenuItem = (props: Props) => (
   <div className={Styles.root}>
     {props.href ? (
       <a
@@ -31,3 +31,4 @@ export default (props: Props) => (
     )}
   </div>
 );
+export default MobileMenuItem;

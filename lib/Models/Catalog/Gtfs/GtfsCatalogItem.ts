@@ -137,14 +137,14 @@ export default class GtfsCatalogItem extends UrlMixin(
     // Although technically the timestamp property is optional, if none is
     // present we'll show the record.
     const vehicleMap = new Map();
-    for (var i = 0; i < feedEntities.length; ++i) {
+    for (let i = 0; i < feedEntities.length; ++i) {
       const entity: FeedEntity = feedEntities[i];
       const item: VehicleData = this.convertFeedEntityToBillboardData(entity);
 
       if (item && item.position && item.featureInfo) {
         const vehicleInfo = item.featureInfo.get("entity").vehicle.vehicle;
         if (vehicleMap.has(vehicleInfo.id) && vehicleInfo.timestamp) {
-          let existingRecord = vehicleMap.get(vehicleInfo.id);
+          const existingRecord = vehicleMap.get(vehicleInfo.id);
           if (existingRecord.timestamp < vehicleInfo.timestamp) {
             vehicleMap.set(vehicleInfo.id, item);
           }
@@ -163,7 +163,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     // Convert the GTFS protobuf into a more useful shape
     const vehicleData: VehicleData[] =
       this.convertManyFeedEntitiesToBillboardData(this.gtfsFeedEntities);
-    for (let data of vehicleData) {
+    for (const data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
       }
@@ -254,7 +254,7 @@ export default class GtfsCatalogItem extends UrlMixin(
       if (data.featureInfo !== undefined && data.featureInfo !== null) {
         entity.properties = new PropertyBag();
 
-        for (let key of data.featureInfo.keys()) {
+        for (const key of data.featureInfo.keys()) {
           entity.properties.addProperty(key, data.featureInfo.get(key));
         }
       }
@@ -414,12 +414,12 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   protected convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
-    if (entity.id == undefined) {
+    if (entity.id === undefined) {
       return {};
     }
     let position = undefined;
     let orientation = undefined;
-    let featureInfo: Map<string, any> = new Map();
+    const featureInfo: Map<string, any> = new Map();
     if (
       entity.vehicle !== null &&
       entity.vehicle !== undefined &&
@@ -452,7 +452,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     }
 
     // Add the values that the feature info template gets populated with
-    for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
+    for (const field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
     featureInfo.set("entity", entity);

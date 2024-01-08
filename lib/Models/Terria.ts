@@ -117,12 +117,16 @@ import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
+import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
+import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
+import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -340,6 +344,12 @@ export interface ConfigParameters {
   plugins?: Record<string, any>;
 
   aboutButtonHrefUrl?: string | null;
+
+  /**
+   * The search bar allows requesting information from various search services at once.
+   */
+  searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
+  searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 }
 
 interface StartOptions {
@@ -435,6 +445,7 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
+  readonly searchBarModel = new SearchBarModel(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
@@ -552,7 +563,9 @@ export default class Terria {
     googleAnalyticsOptions: undefined,
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
-    plugins: undefined
+    plugins: undefined,
+    searchBarConfig: undefined,
+    searchProviders: []
   };
 
   @observable
@@ -833,7 +846,7 @@ export default class Terria {
     type: Class<T>,
     id: string
   ): T | undefined {
-    let model = this.getModelById(type, id);
+    const model = this.getModelById(type, id);
     if (model) {
       return model;
     } else {
@@ -986,6 +999,7 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
+
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
@@ -1043,6 +1057,15 @@ export default class Terria {
         )
       );
 
+    this.searchBarModel
+      .updateModelConfig(this.configParameters.searchBarConfig)
+      .initializeSearchProviders(this.configParameters.searchProviders)
+      .catchError((error) =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to initialize searchProviders")
+        )
+      );
+
     if (typeof options.beforeRestoreAppState === "function") {
       try {
         await options.beforeRestoreAppState();
@@ -1060,6 +1083,7 @@ export default class Terria {
         this
       );
     }
+
     this.loadPersistedMapSettings();
   }
 
@@ -1201,6 +1225,16 @@ export default class Terria {
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
 
+    function checkSegments(urlSegments: string[], customRoute: string) {
+      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+      return (
+        ((urlSegments.length === 3 && urlSegments[2] === "") ||
+          urlSegments.length === 2) &&
+        urlSegments[0] === customRoute &&
+        urlSegments[1].length > 0
+      );
+    }
+
     try {
       await interpretHash(
         this,
@@ -1217,15 +1251,6 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
-        function checkSegments(urlSegments: string[], customRoute: string) {
-          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-          return (
-            ((urlSegments.length === 3 && urlSegments[2] === "") ||
-              urlSegments.length === 2) &&
-            urlSegments[0] === customRoute &&
-            urlSegments[1].length > 0
-          );
-        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -1276,7 +1301,7 @@ export default class Terria {
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
-      if (this.configParameters.hasOwnProperty(key)) {
+      if (Object.hasOwnProperty.call(this.configParameters, key)) {
         (this.configParameters as any)[key] = value;
       }
     });
@@ -1799,7 +1824,7 @@ export default class Terria {
     const newItems: BaseModel[] = [];
 
     // Maintain the model order in the workbench.
-    while (true) {
+    for (;;) {
       const model = newItemsRaw.shift();
       if (model) {
         await this.pushAndLoadMapItems(model, newItems, errors);
@@ -1984,7 +2009,7 @@ export default class Terria {
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
     let vectorFeatures: TerriaFeature[] = [];
-    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
+    const featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -2085,7 +2110,7 @@ export default class Terria {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    var v = window.localStorage.getItem(this.appName + "." + key);
+    const v = window.localStorage.getItem(this.appName + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {

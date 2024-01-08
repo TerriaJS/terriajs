@@ -35,7 +35,7 @@ interface IProps extends WithTranslation {
   className: any;
   style: any;
   t: TFunction;
-  setWrapperState({}: any): void;
+  setWrapperState(): void;
 }
 
 @observer
@@ -149,12 +149,12 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           </Box>
           {CatalogMemberMixin.isMixedInto(item) ? (
             <Box centered paddedHorizontally>
+              {item.isPrivate && (
+                <BoxSpan paddedHorizontally>
+                  <PrivateIndicator inWorkbench />
+                </BoxSpan>
+              )}
               <RawButton onClick={() => this.toggleDisplay()}>
-                {item.isPrivate && (
-                  <BoxSpan paddedHorizontally>
-                    <PrivateIndicator inWorkbench />
-                  </BoxSpan>
-                )}
                 <BoxSpan padded>
                   {this.isOpen ? (
                     <StyledIcon

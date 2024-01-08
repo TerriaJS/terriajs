@@ -62,7 +62,7 @@ export default function upsertModelFromJson(
       );
     }
 
-    let id = (parentId || "") + "/" + localId;
+    const id = (parentId || "") + "/" + localId;
     let idIncrement = 1;
     uniqueId = id;
     model = terria.getModelById(BaseModel, uniqueId);

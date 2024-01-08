@@ -88,6 +88,19 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
   static async load(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
     const locationsUrl = senapsLocationsCatalogItem._constructLocationsUrl();
+
+    function addStreamIds(f: SenapsFeature, index: number, streamData: any) {
+      const sd: SenapsStreamResponse = streamData[index];
+      if (sd.count === 0) {
+        f.properties.hasStreams = false;
+      } else if (sd._embedded !== undefined) {
+        f.properties.streamIds = sd._embedded.streams.map(
+          (s: SenapsStream) => s.id
+        );
+        f.properties.hasStreams = true;
+      }
+    }
+
     try {
       const locationsResponse: LocationsData = await loadJson(
         proxyCatalogItemUrl(senapsLocationsCatalogItem, locationsUrl, "0d")
@@ -95,7 +108,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       const locations = locationsResponse._embedded.locations;
 
       const streamPromises = [];
-      for (var i = 0; i < locations.length; i++) {
+      for (let i = 0; i < locations.length; i++) {
         const location = locations[i];
         const locationId = location.id;
         const streamUrl = proxyCatalogItemUrl(
@@ -106,18 +119,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
         streamPromises.push(loadJson(streamUrl));
       }
       const streamData = await Promise.all(streamPromises);
-
-      function addStreamIds(f: SenapsFeature, index: number) {
-        const sd: SenapsStreamResponse = streamData[index];
-        if (sd.count === 0) {
-          f.properties.hasStreams = false;
-        } else if (sd._embedded !== undefined) {
-          f.properties.streamIds = sd._embedded.streams.map(
-            (s: SenapsStream) => s.id
-          );
-          f.properties.hasStreams = true;
-        }
-      }
 
       const fc: SenapsFeatureCollection = {
         type: "FeatureCollection",
@@ -133,7 +134,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
             },
             geometry: site.geojson
           };
-          addStreamIds(f, i);
+          addStreamIds(f, i, streamData);
           return f;
         })
       };
@@ -286,7 +287,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
         message: i18next.t("models.senaps.missingSenapsBaseUrl")
       });
     }
-    var uri = new URI(`${this.url}/locations`);
+    const uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
     }
@@ -302,7 +303,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
         message: i18next.t("models.senaps.missingSenapsBaseUrl")
       });
     }
-    var uri = new URI(`${this.url}/streams`);
+    const uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
     }

@@ -167,15 +167,15 @@ class MapNavigationBase extends React.Component<PropTypes> {
     if (this.computeSizes.length !== this.model.visibleItems.length) {
       this.computeSizes();
     }
-    let itemsToShow = this.model.visibleItems.filter((item) =>
+    const itemsToShow = this.model.visibleItems.filter((item) =>
       filterViewerAndScreenSize(item, this.viewState)
     );
     // items we have to show in the navigation bar
-    let pinnedItems = this.model.pinnedItems.filter((item) =>
+    const pinnedItems = this.model.pinnedItems.filter((item) =>
       filterViewerAndScreenSize(item, this.viewState)
     );
     // items that are possible to be collapsed
-    let possibleToCollapse = itemsToShow
+    const possibleToCollapse = itemsToShow
       .filter(
         (item) => !pinnedItems.some((pinnedItem) => pinnedItem.id === item.id)
       )

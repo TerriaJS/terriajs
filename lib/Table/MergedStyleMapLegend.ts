@@ -28,7 +28,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
 
   @computed
   get items(): StratumFromTraits<LegendItemTraits>[] {
-    let items: StratumFromTraits<LegendItemTraits>[] = [];
+    const items: StratumFromTraits<LegendItemTraits>[] = [];
 
     // Merge all Legend items by title
     this.legends.forEach((legend) => {

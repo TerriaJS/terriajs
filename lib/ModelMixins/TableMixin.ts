@@ -185,7 +185,9 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (activeStyle === undefined) {
         return this.defaultTableStyle;
       }
-      let ret = this.tableStyles.find((style) => style.id === this.activeStyle);
+      const ret = this.tableStyles.find(
+        (style) => style.id === this.activeStyle
+      );
       if (ret === undefined) {
         return this.defaultTableStyle;
       }
@@ -214,7 +216,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     protected async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
-        let csvString = this.dataColumnMajor[0]
+        const csvString = this.dataColumnMajor[0]
           .map((row, rowIndex) =>
             this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
           )

@@ -108,29 +108,25 @@ class TimerSection extends React.Component {
 
   render() {
     const { t } = this.props;
-    return (
-      <>
-        <If condition={this.isEnabled()}>
-          <div className={Styles.section}>
-            <div className={Styles.timerContainer}>
-              <Timer
-                tooltipText={t("timer.nextScheduledUpdateTime", {
-                  scheduledUpdateTime: this.props.item.nextScheduledUpdateTime
-                })}
-                radius={10}
-                start={this.getTimerStartTime().getTime()}
-                stop={this.props.item.nextScheduledUpdateTime.getTime()}
-              />
-            </div>
-            <span>
-              {t("timer.nextScheduledUpdateCountdown", {
-                timeCountdown: this.getCountdownString()
-              })}
-            </span>
-          </div>
-        </If>
-      </>
-    );
+    return this.isEnabled() ? (
+      <div className={Styles.section}>
+        <div className={Styles.timerContainer}>
+          <Timer
+            tooltipText={t("timer.nextScheduledUpdateTime", {
+              scheduledUpdateTime: this.props.item.nextScheduledUpdateTime
+            })}
+            radius={10}
+            start={this.getTimerStartTime().getTime()}
+            stop={this.props.item.nextScheduledUpdateTime.getTime()}
+          />
+        </div>
+        <span>
+          {t("timer.nextScheduledUpdateCountdown", {
+            timeCountdown: this.getCountdownString()
+          })}
+        </span>
+      </div>
+    ) : null;
   }
 }
 

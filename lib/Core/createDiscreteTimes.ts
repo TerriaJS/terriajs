@@ -67,7 +67,7 @@ export default function createDiscreteTimesFromIsoSegments(
     }
   }
 
-  let current = start.clone();
+  const current = start.clone();
   let count = 0;
 
   // Add intervals starting at start until:

@@ -18,6 +18,7 @@ import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import TableColumnType from "./TableColumnType";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -55,9 +56,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get disableSplitter() {
-    return !isDefined(this.catalogItem.activeTableStyle.regionColumn)
-      ? true
-      : undefined;
+    return !this.catalogItem.mapItems.find(ImageryParts.is) ? true : undefined;
   }
 
   /**

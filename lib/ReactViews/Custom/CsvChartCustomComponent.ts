@@ -92,7 +92,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
       );
     }
 
-    if (!!attrs.chartDisclaimer) {
+    if (attrs.chartDisclaimer) {
       item.setTrait(
         CommonStrata.user,
         "chartDisclaimer",
@@ -202,6 +202,6 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
 }
 
 function parseIntOrUndefined(s: string | undefined): number | undefined {
-  const maybeInt = parseInt(s || "");
+  const maybeInt = parseInt(s || "", 10);
   return isNaN(maybeInt) ? undefined : maybeInt;
 }

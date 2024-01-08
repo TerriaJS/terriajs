@@ -49,7 +49,9 @@ describe("Leaflet Model", function () {
     // TODO: calling destroy on our mobx leaflet model results in a tile error
     try {
       leaflet.destroy();
-    } catch {}
+    } catch {
+      /* eslint-disable-line no-empty */
+    }
     document.body.removeChild(container);
   });
 
@@ -121,9 +123,9 @@ describe("Leaflet Model", function () {
     });
 
     function changeTileLoadingCount(count: number) {
-      var tiles: any = {};
+      const tiles: any = {};
       // Add loading tiles
-      for (var i = 0; i < count; i++) {
+      for (let i = 0; i < count; i++) {
         tiles["tile " + i] = { loaded: undefined };
       }
       layers[0]._tiles = tiles;

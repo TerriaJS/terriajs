@@ -3,6 +3,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Packable from "terriajs-cesium/Source/Core/Packable";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
@@ -191,7 +192,9 @@ function createFeature(
         color: createProperty(Color, interpolate),
         outlineColor: createProperty(Color, interpolate),
         pixelSize: createProperty(Number, interpolate),
-        outlineWidth: createProperty(Number, interpolate)
+        outlineWidth: createProperty(Number, interpolate),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -204,7 +207,9 @@ function createFeature(
         width: createProperty(Number, interpolate),
         color: createProperty(Color, interpolate),
         rotation: createProperty(Number, interpolate),
-        pixelOffset: createProperty(Cartesian2, interpolate)
+        pixelOffset: createProperty(Cartesian2, interpolate),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -254,7 +259,9 @@ function createFeature(
         outlineWidth: createProperty(Number, interpolate),
         pixelOffset: createProperty(Cartesian2, interpolate),
         verticalOrigin: new TimeIntervalCollectionProperty(),
-        horizontalOrigin: new TimeIntervalCollectionProperty()
+        horizontalOrigin: new TimeIntervalCollectionProperty(),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 

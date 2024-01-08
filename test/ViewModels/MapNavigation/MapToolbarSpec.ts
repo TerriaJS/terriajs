@@ -11,8 +11,7 @@ describe("MapToolbar", function () {
     terria = new Terria();
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 
@@ -47,7 +46,7 @@ describe("MapToolbar", function () {
   });
 
   describe("openTool", function () {
-    let toolId = "x-tool-id";
+    const toolId = "x-tool-id";
     beforeEach(function () {
       MapToolbar.addTool(viewState, {
         id: toolId,
@@ -93,7 +92,7 @@ describe("MapToolbar", function () {
   });
 
   describe("isToolOpen", function () {
-    let toolId = "x-tool-id";
+    const toolId = "x-tool-id";
     beforeEach(function () {
       MapToolbar.addTool(viewState, {
         id: toolId,

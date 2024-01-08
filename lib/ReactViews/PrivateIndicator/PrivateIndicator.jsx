@@ -19,13 +19,11 @@ export default function PrivateIndicator(props) {
       inWorkbench={props.inWorkbench}
       css={`
         margin-top: -1px;
-        ${(p) => p.inWorkbench && `margin-right: 2px;`}
-
         svg {
           width: 15px;
           height: 15px;
           fill: ${(p) =>
-            p.inWorkbench ? p.theme.textLight : p.theme.colorPrimary};
+            p.inWorkbench ? p.theme.textLight : p.theme.charcoalGrey};
         }
       `}
     >

@@ -393,7 +393,7 @@ export default class RegionProvider {
     } else {
       r = s.toLowerCase().trim();
     }
-    let replacements = this[replacementsProp];
+    const replacements = this[replacementsProp];
     if (replacements === undefined || replacements.length === 0) {
       return r;
     }
@@ -429,8 +429,8 @@ export default class RegionProvider {
       "dataReplacements"
     );
 
-    let id = this._idIndex[code];
-    let idAfterReplacement = this._idIndex[codeAfterReplacement];
+    const id = this._idIndex[code];
+    const idAfterReplacement = this._idIndex[codeAfterReplacement];
 
     if (!isDefined(id) && !isDefined(idAfterReplacement)) {
       return -1;

@@ -87,34 +87,32 @@ async function download(items: TableMixin.Instance[]) {
 
 export const ChartPanelDownloadButton = observer(
   (props: { chartableItems: ChartableMixin.Instance[] }) => {
-    {
-      // For the moment we only support TableMixin items
-      const tableItems = props.chartableItems.filter(TableMixin.isMixedInto);
+    // For the moment we only support TableMixin items
+    const tableItems = props.chartableItems.filter(TableMixin.isMixedInto);
 
-      const isDownloadSupported =
-        FeatureDetection.supportsTypedArrays() &&
-        FeatureDetection.supportsWebWorkers();
+    const isDownloadSupported =
+      FeatureDetection.supportsTypedArrays() &&
+      FeatureDetection.supportsWebWorkers();
 
-      const isExportDisabled = props.chartableItems.some(
-        (item) =>
-          hasTraits(item, ExportableTraits, "disableExport") &&
-          item.disableExport === true
-      );
+    const isExportDisabled = props.chartableItems.some(
+      (item) =>
+        hasTraits(item, ExportableTraits, "disableExport") &&
+        item.disableExport === true
+    );
 
-      if (!isDownloadSupported || isExportDisabled || tableItems.length === 0)
-        return null;
+    if (!isDownloadSupported || isExportDisabled || tableItems.length === 0)
+      return null;
 
-      return (
-        <button
-          className={Styles.btnDownload}
-          onClick={() =>
-            download(props.chartableItems.filter(TableMixin.isMixedInto))
-          }
-        >
-          <Icon glyph={Icon.GLYPHS.download} />
-          Download
-        </button>
-      );
-    }
+    return (
+      <button
+        className={Styles.btnDownload}
+        onClick={() =>
+          download(props.chartableItems.filter(TableMixin.isMixedInto))
+        }
+      >
+        <Icon glyph={Icon.GLYPHS.download} />
+        Download
+      </button>
+    );
   }
 );

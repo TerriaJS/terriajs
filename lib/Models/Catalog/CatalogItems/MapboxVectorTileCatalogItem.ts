@@ -158,7 +158,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
    * - `parsedJsonStyle`
    */
   get paintRules(): PaintRule[] {
-    let rules: PaintRule[] = [];
+    const rules: PaintRule[] = [];
 
     if (this.layer) {
       if (this.fillColor) {
@@ -206,6 +206,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return new ProtomapsImageryProvider({
       terria: this.terria,
+      id: this.uniqueId,
       data: this.url,
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,

@@ -110,3 +110,7 @@ export function getMarkerLocation(terria: Terria): LatLonHeight | undefined {
   }
   return undefined;
 }
+
+export function getMarkerCatalogItem(terria: Terria) {
+  return terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+}

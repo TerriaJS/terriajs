@@ -1,6 +1,8 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import { fromPromise, IPromiseBasedObservable } from "mobx-utils";
+import moment from "moment";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
@@ -11,6 +13,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import { setsAreEqual } from "../../../Core/setsAreEqual";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -36,8 +39,6 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
-import moment from "moment";
-import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 
 const proj4 = require("proj4").default;
 
@@ -584,7 +585,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           /** Only used "pre-cached" tiles if we aren't requesting any specific layers
            * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
            */
-          usePreCachedTilesIfAvailable: this.layersArray.length == 0,
+          usePreCachedTilesIfAvailable:
+            this.layersArray.length === 0 ||
+            !this.layers ||
+            setsAreEqual(
+              this.layersArray.map((l) => l.id),
+              stratum.allLayers.map((l) => l.id)
+            ),
           mapServerData: stratum.mapServer,
           token: stratum.token,
           credit: this.attribution
@@ -649,10 +656,10 @@ async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
 function findLayers(layers: Layer[], names: string | undefined) {
   function findLayer(layers: Layer[], id: string) {
-    var idLowerCase = id.toLowerCase();
-    var foundByName;
-    for (var i = 0; i < layers.length; ++i) {
-      var layer = layers[i];
+    const idLowerCase = id.toLowerCase();
+    let foundByName;
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i];
       if (layer.id.toString() === id) {
         return layer;
       } else if (
@@ -731,7 +738,7 @@ function cleanAndProxyUrl(
 
 function cleanUrl(url: string) {
   // Strip off the search portion of the URL
-  var uri = new URI(url);
+  const uri = new URI(url);
   uri.search("");
   return uri.toString();
 }

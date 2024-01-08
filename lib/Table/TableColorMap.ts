@@ -169,7 +169,7 @@ export default class TableColorMap {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
-        let colorScale = this.colorScaleContinuous();
+        const colorScale = this.colorScaleContinuous();
 
         return new ContinuousColorMap({
           colorScale,
@@ -271,7 +271,7 @@ export default class TableColorMap {
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
 
-    let colorScale = this.colorScaleCategorical(this.binMaximums.length);
+    const colorScale = this.colorScaleCategorical(this.binMaximums.length);
 
     const result: string[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
@@ -351,7 +351,7 @@ export default class TableColorMap {
     // No enumColors traits provided - so create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
 
-    let colorScale = this.colorScaleCategorical(uniqueValues.length);
+    const colorScale = this.colorScaleCategorical(uniqueValues.length);
 
     return colorScale
       .map((color, i) => {

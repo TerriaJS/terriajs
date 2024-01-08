@@ -5,36 +5,35 @@ import circle from "@turf/circle";
 import { Feature } from "@turf/helpers";
 import i18next from "i18next";
 import { cloneDeep, isEmpty } from "lodash-es";
-import { action, observable, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import {
   Bbox,
-  Feature as ProtomapsFeature,
   GeomType,
-  Labelers,
   LabelRule,
+  Labelers,
   LineSymbolizer,
-  painter,
+  Rule as PaintRule,
   PmtilesSource,
   PreparedTile,
-  Rule as PaintRule,
+  Feature as ProtomapsFeature,
   TileCache,
   TileSource,
   View,
   Zxy,
-  ZxySource
+  ZxySource,
+  painter
 } from "protomaps";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import filterOutUndefined from "../../Core/filterOutUndefined";
-import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
+import isDefined from "../../Core/isDefined";
 import {
   FeatureCollectionWithCrs,
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
@@ -85,6 +84,8 @@ export type ProtomapsData = string | FeatureCollectionWithCrs | Source;
 interface Options {
   terria: Terria;
 
+  /** This must be defined to support pickedFeatures in share links */
+  id?: string;
   data: ProtomapsData;
   minimumZoom?: number;
   maximumZoom?: number;
@@ -96,6 +97,10 @@ interface Options {
 
   /** The name of the property that is a unique ID for features */
   idProperty?: string;
+
+  processPickedFeatures?: (
+    features: ImageryLayerFeatureInfo[]
+  ) => Promise<ImageryLayerFeatureInfo[]>;
 }
 
 /** Buffer (in pixels) used when rendering (and generating - through geojson-vt) vector tiles */
@@ -158,7 +163,7 @@ export class GeojsonSource implements TileSource {
 
     // request a particular tile
     const tile = (await this.tileIndex).getTile(c.z, c.x, c.y) as GeojsonVtTile;
-    let result = new Map<string, ProtomapsFeature[]>();
+    const result = new Map<string, ProtomapsFeature[]>();
     const scale = tileSize / geojsonvtExtent;
 
     if (tile && tile.features && tile.features.length > 0) {
@@ -171,7 +176,7 @@ export class GeojsonSource implements TileSource {
           let numVertices = 0;
 
           // Calculate bbox
-          let bbox: Bbox = {
+          const bbox: Bbox = {
             minX: Infinity,
             minY: Infinity,
             maxX: -Infinity,
@@ -268,6 +273,10 @@ export default class ProtomapsImageryProvider
   readonly errorEvent = new CesiumEvent();
   readonly ready = true;
   readonly credit: Credit;
+  /** This is only used for Terria feature picking - as we track ImageryProvider feature picking by url (See PickedFeatures/Cesium._attachProviderCoordHooks). This URL is never called.
+   * This is set using the `id` property in the constructor options
+   */
+  readonly url?: string;
 
   // Set values to please poor cesium types
   readonly defaultNightAlpha = undefined;
@@ -288,11 +297,14 @@ export default class ProtomapsImageryProvider
   // Protomaps properties
   /** Data object from constructor options (this is transformed into `source`) */
   private readonly data: ProtomapsData;
-  readonly maximumNativeZoom: number;
   private readonly labelers: Labelers;
   private readonly view: View | undefined;
-  readonly idProperty: string;
+  private readonly processPickedFeatures?: (
+    features: ImageryLayerFeatureInfo[]
+  ) => Promise<ImageryLayerFeatureInfo[]>;
 
+  readonly maximumNativeZoom: number;
+  readonly idProperty: string;
   readonly source: Source;
   readonly paintRules: PaintRule[];
   readonly labelRules: LabelRule[];
@@ -342,11 +354,12 @@ export default class ProtomapsImageryProvider
     }
 
     this.errorEvent = new CesiumEvent();
+    this.url = options.id;
 
     this.ready = true;
 
     this.credit =
-      typeof options.credit == "string"
+      typeof options.credit === "string"
         ? new Credit(options.credit)
         : (options.credit as Credit);
 
@@ -360,7 +373,7 @@ export default class ProtomapsImageryProvider
     if (typeof this.data === "string") {
       if (this.data.endsWith(".pmtiles")) {
         this.source = new PmtilesSource(this.data, false);
-        let cache = new TileCache(this.source, 1024);
+        const cache = new TileCache(this.source, 1024);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       } else if (
         this.data.endsWith(".json") ||
@@ -369,7 +382,7 @@ export default class ProtomapsImageryProvider
         this.source = new GeojsonSource(this.data);
       } else {
         this.source = new ZxySource(this.data, false);
-        let cache = new TileCache(this.source, 1024);
+        const cache = new TileCache(this.source, 1024);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       }
     }
@@ -399,6 +412,8 @@ export default class ProtomapsImageryProvider
       16,
       () => undefined
     );
+
+    this.processPickedFeatures = options.processPickedFeatures;
   }
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
@@ -454,7 +469,7 @@ export default class ProtomapsImageryProvider
 
     this.labelers.add(coords.z, tileMap);
 
-    let labelData = this.labelers.getIndex(tile.z);
+    const labelData = this.labelers.getIndex(tile.z);
 
     const bbox = {
       minX: 256 * coords.x - BUF,
@@ -490,6 +505,7 @@ export default class ProtomapsImageryProvider
     longitude: number,
     latitude: number
   ): Promise<ImageryLayerFeatureInfo[]> {
+    const featureInfos: ImageryLayerFeatureInfo[] = [];
     // If view is set - this means we are using actual vector tiles (that is not GeoJson object)
     // So we use this.view.queryFeatures
     if (this.view) {
@@ -498,47 +514,48 @@ export default class ProtomapsImageryProvider
         (r) => r.dataLayer
       );
 
-      return filterOutUndefined(
-        this.view
-          .queryFeatures(
-            CesiumMath.toDegrees(longitude),
-            CesiumMath.toDegrees(latitude),
-            level
+      this.view
+        .queryFeatures(
+          CesiumMath.toDegrees(longitude),
+          CesiumMath.toDegrees(latitude),
+          level
+        )
+        .forEach((f) => {
+          // Only create FeatureInfo for visible features with properties
+          if (
+            !f.feature.props ||
+            isEmpty(f.feature.props) ||
+            !renderedLayers.includes(f.layerName)
           )
-          .map((f) => {
-            // Only create FeatureInfo for visible features with properties
-            if (
-              !f.feature.props ||
-              isEmpty(f.feature.props) ||
-              !renderedLayers.includes(f.layerName)
-            )
-              return;
+            return;
 
-            const featureInfo = new ImageryLayerFeatureInfo();
+          const featureInfo = new ImageryLayerFeatureInfo();
 
-            // Add Layer name property
-            featureInfo.properties = Object.assign(
-              { [LAYER_NAME_PROP]: f.layerName },
-              f.feature.props ?? {}
-            );
-            featureInfo.position = new Cartographic(longitude, latitude);
+          // Add Layer name property
+          featureInfo.properties = Object.assign(
+            { [LAYER_NAME_PROP]: f.layerName },
+            f.feature.props ?? {}
+          );
+          featureInfo.position = new Cartographic(longitude, latitude);
 
-            featureInfo.configureDescriptionFromProperties(f.feature.props);
-            featureInfo.configureNameFromProperties(f.feature.props);
+          featureInfo.configureDescriptionFromProperties(f.feature.props);
+          featureInfo.configureNameFromProperties(f.feature.props);
 
-            return featureInfo;
-          })
-      );
+          featureInfos.push(featureInfo);
+        });
+
       // No view is set and we have geoJSON object
       // So we pick features manually
     } else if (
       this.source instanceof GeojsonSource &&
       this.source.geojsonObject
     ) {
+      // Get rough meters per pixel (at equator) for given zoom level
+      const zoomMeters = 156543 / Math.pow(2, level);
       // Create circle with 10 pixel radius to pick features
       const buffer = circle(
         [CesiumMath.toDegrees(longitude), CesiumMath.toDegrees(latitude)],
-        10 * this.terria.mainViewer.scale,
+        10 * zoomMeters,
         {
           steps: 10,
           units: "meters"
@@ -556,12 +573,12 @@ export default class ProtomapsImageryProvider
       const bufferBbox = bbox(buffer);
 
       // Get array of all features
-      let features: Feature[] = this.source.geojsonObject.features;
+      const geojsonFeatures: Feature[] = this.source.geojsonObject.features;
 
       const pickedFeatures: Feature[] = [];
 
-      for (let index = 0; index < features.length; index++) {
-        const feature = features[index];
+      for (let index = 0; index < geojsonFeatures.length; index++) {
+        const feature = geojsonFeatures[index];
         if (!feature.bbox) {
           feature.bbox = bbox(feature);
         }
@@ -591,7 +608,7 @@ export default class ProtomapsImageryProvider
       }
 
       // Convert pickedFeatures to ImageryLayerFeatureInfos
-      return pickedFeatures.map((f) => {
+      pickedFeatures.forEach((f) => {
         const featureInfo = new ImageryLayerFeatureInfo();
 
         featureInfo.data = f;
@@ -611,10 +628,15 @@ export default class ProtomapsImageryProvider
         featureInfo.configureDescriptionFromProperties(f.properties);
         featureInfo.configureNameFromProperties(f.properties);
 
-        return featureInfo;
+        featureInfos.push(featureInfo);
       });
     }
-    return [];
+
+    if (this.processPickedFeatures) {
+      return await this.processPickedFeatures(featureInfos);
+    }
+
+    return featureInfos;
   }
 
   private clone(options?: Partial<Options>) {
@@ -648,6 +670,7 @@ export default class ProtomapsImageryProvider
 
     return new ProtomapsImageryProvider({
       terria: options?.terria ?? this.terria,
+      id: options?.id ?? this.url,
       data,
       minimumZoom: options?.minimumZoom ?? this.minimumLevel,
       maximumZoom: options?.maximumZoom ?? this.maximumLevel,
@@ -655,7 +678,9 @@ export default class ProtomapsImageryProvider
       rectangle: options?.rectangle ?? this.rectangle,
       credit: options?.credit ?? this.credit,
       paintRules: options?.paintRules ?? this.paintRules,
-      labelRules: options?.labelRules ?? this.labelRules
+      labelRules: options?.labelRules ?? this.labelRules,
+      processPickedFeatures:
+        options?.processPickedFeatures ?? this.processPickedFeatures
     });
   }
 
