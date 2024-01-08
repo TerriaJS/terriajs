@@ -310,7 +310,7 @@ export default class CesiumRenderLoopPauser {
 
     const surface = (<any>scene.globe)._surface;
     const terrainTilesWaiting =
-      !surface._tileProvider.ready ||
+      !surface._tileProvider ||
       surface._tileLoadQueueHigh.length > 0 ||
       surface._tileLoadQueueMedium.length > 0 ||
       surface._tileLoadQueueLow.length > 0 ||
