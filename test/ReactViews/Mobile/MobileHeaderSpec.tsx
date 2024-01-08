@@ -69,7 +69,6 @@ describe("MobileHeader", function () {
         <MobileHeader
           menuItems={customElements.menu}
           menuLeftItems={customElements.menuLeft}
-          version="unit test version"
         />
       );
     });
