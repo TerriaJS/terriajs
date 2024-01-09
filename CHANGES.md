@@ -12,6 +12,8 @@
 - Fixed regression causing explorer window not to display instructions when first opened.
 - [The next improvement]
 - Enable eslint for typescript: plugin:@typescript-eslint/eslint-recommended
+- Prevent user adding empty web url
+- Fix bug where search results shown in `My Data` tab
 
 #### 8.4.1 - 2023-12-08
 
