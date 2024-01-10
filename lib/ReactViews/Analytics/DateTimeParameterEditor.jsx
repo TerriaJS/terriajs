@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import PropTypes from "prop-types";
 
-const DateTimeParameterEditor = ({ parameter, previewed }) => {
+const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
   const [dateValue, setDateValue] = useState(
-    defined(parameter) && defined(parameter.value) ? parameter.value : ""
+    new Date().toISOString().slice(0, 10)
   );
   const [timeValue, setTimeValue] = useState("00:00");
 
@@ -14,37 +14,40 @@ const DateTimeParameterEditor = ({ parameter, previewed }) => {
     defined(parameter) && defined(parameter.value)
       ? Styles.field
       : Styles.fieldDatePlaceholder;
+
+  const currentTime = useRef();
+  currentTime.current = terria.timelineStack.clock.currentTime;
+
+  useEffect(() => {
+    const date = new Date(currentTime.current);
+    setDateValue(date.toISOString().slice(0, 10));
+    setTimeValue(date.toTimeString().slice(0, 5));
+  }, []);
+
+  const updateParameter = useCallback(() => {
+    parameter.setValue(CommonStrata.user, `${dateValue}T${timeValue}`);
+  }, [parameter, dateValue, timeValue]);
+
+  const handleChange = (setter) => (e) => {
+    setter(e.target.value);
+    updateParameter();
+  };
+
+  updateParameter();
+
   return (
     <div>
       <input
         className={style}
         type="date"
-        placeholder="YYYY-MM-DD"
         value={dateValue}
-        onChange={(e) => {
-          setDateValue(e.target.value);
-          if (defined(parameter)) {
-            parameter.setValue(
-              CommonStrata.user,
-              `${e.target.value}T${timeValue}`
-            );
-          }
-        }}
+        onChange={handleChange(setDateValue)}
       />
       <input
         className={style}
         type="time"
-        placeholder="HH:mm:ss.sss"
         value={timeValue}
-        onChange={(e) => {
-          setTimeValue(e.target.value);
-          if (defined(parameter)) {
-            parameter.setValue(
-              CommonStrata.user,
-              `${dateValue}T${e.target.value}`
-            );
-          }
-        }}
+        onChange={handleChange(setTimeValue)}
       />
     </div>
   );
@@ -52,7 +55,8 @@ const DateTimeParameterEditor = ({ parameter, previewed }) => {
 
 DateTimeParameterEditor.propTypes = {
   parameter: PropTypes.object,
-  previewed: PropTypes.object
+  previewed: PropTypes.object,
+  terria: PropTypes.object
 };
 
 export default DateTimeParameterEditor;
