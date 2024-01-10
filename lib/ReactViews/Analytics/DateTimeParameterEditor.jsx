@@ -5,9 +5,7 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 import PropTypes from "prop-types";
 
 const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
-  const [dateValue, setDateValue] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [dateValue, setDateValue] = useState("");
   const [timeValue, setTimeValue] = useState("00:00");
 
   const style =
