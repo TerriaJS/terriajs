@@ -90,7 +90,7 @@ gulp.task("copy-cesium-thirdparty", function () {
 
   var cesiumPackage = require.resolve("terriajs-cesium/package.json");
   var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumThirdPartyRoot = path.join(cesiumRoot, "Build", "ThirdParty");
+  var cesiumThirdPartyRoot = path.join(cesiumRoot, "Source", "ThirdParty");
 
   return gulp
     .src([path.join(cesiumThirdPartyRoot, "**")], {
