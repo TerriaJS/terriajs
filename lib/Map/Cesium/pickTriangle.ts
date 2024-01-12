@@ -178,28 +178,28 @@ function pickTriangleFromGlobeSurfaceTile(
   cullBackFaces: boolean,
   result: PickTriangleFromGlobeSurfaceTileResult
 ): PickTriangleFromGlobeSurfaceTileResult | undefined {
-  var mesh = globeSurfaceTile.renderedMesh;
+  const mesh = globeSurfaceTile.renderedMesh;
   if (!defined(mesh)) {
     return undefined;
   }
 
-  var vertices = mesh.vertices;
-  var indices = mesh.indices;
-  var encoding = mesh.encoding;
-  var indicesLength = indices.length;
+  const vertices = mesh.vertices;
+  const indices = mesh.indices;
+  const encoding = mesh.encoding;
+  const indicesLength = indices.length;
 
   let minT = Number.MAX_VALUE;
 
-  for (var i = 0; i < indicesLength; i += 3) {
-    var i0 = indices[i];
-    var i1 = indices[i + 1];
-    var i2 = indices[i + 2];
+  for (let i = 0; i < indicesLength; i += 3) {
+    const i0 = indices[i];
+    const i1 = indices[i + 1];
+    const i2 = indices[i + 2];
 
     const v0 = getPosition(encoding, mode, projection, vertices, i0, scratchV0);
     const v1 = getPosition(encoding, mode, projection, vertices, i1, scratchV1);
     const v2 = getPosition(encoding, mode, projection, vertices, i2, scratchV2);
 
-    var t = IntersectionTests.rayTriangleParametric(
+    const t = IntersectionTests.rayTriangleParametric(
       ray,
       v0,
       v1,

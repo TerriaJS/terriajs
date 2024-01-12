@@ -125,7 +125,7 @@ describe("OpenStreetMapCatalogItem", function () {
 
           if (!ImageryParts.is(item.mapItems[0]))
             throw new Error("MapItem is not an ImageryParts");
-          let imageryProvider = item.mapItems[0].imageryProvider;
+          const imageryProvider = item.mapItems[0].imageryProvider;
           expect(imageryProvider).not.toBeUndefined();
           if (imageryProvider) {
             expect({

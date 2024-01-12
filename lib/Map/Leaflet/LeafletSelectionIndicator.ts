@@ -152,7 +152,7 @@ export default class LeafletSelectionIndicator {
         this._leaflet.terria.timelineClock.currentTime
       );
       if (isDefined(positionValue)) {
-        var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
           positionValue,
           cartographicScratch
         );
