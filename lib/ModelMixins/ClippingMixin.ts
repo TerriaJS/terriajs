@@ -60,6 +60,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
+    // Use a stable clippign plane collection. Replacing the collection on
+    // change seems to crash Cesium, which could be related to:
+    // https://github.com/CesiumGS/cesium/issues/6599
+    private _clippingPlaneCollection = new ClippingPlaneCollection();
+
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
@@ -121,7 +126,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           modelMatrix: Matrix4.fromArray(array) || Matrix4.IDENTITY
         });
       }
-      return new ClippingPlaneCollection(options);
+
+      return updateClippingPlanesCollection(
+        this._clippingPlaneCollection,
+        options
+      );
     }
 
     @computed
@@ -130,15 +139,16 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
+      const clippingPlaneCollection = this._clippingPlaneCollection;
+      if (!this.clippingBox.clipModel) {
+        clippingPlaneCollection.enabled = false;
+        return clippingPlaneCollection;
+      }
+
       const clipDirection =
         this.clippingBox.clipDirection === "inside" ? -1 : 1;
       const planes = BoxDrawing.localSidePlanes.map((plane) => {
         return new ClippingPlane(plane.normal, plane.distance * clipDirection);
-      });
-      const clippingPlaneCollection = new ClippingPlaneCollection({
-        planes,
-        unionClippingRegions: this.clippingBox.clipDirection === "outside",
-        enabled: this.clippingBox.clipModel
       });
 
       untracked(() => {
@@ -148,7 +158,14 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           this.clippingPlaneModelMatrix
         );
       });
-      clippingPlaneCollection.modelMatrix = this.clippingPlaneModelMatrix;
+
+      updateClippingPlanesCollection(clippingPlaneCollection, {
+        modelMatrix: this.clippingPlaneModelMatrix,
+        planes,
+        unionClippingRegions: this.clippingBox.clipDirection === "outside",
+        enabled: this.clippingBox.clipModel
+      });
+
       return clippingPlaneCollection;
     }
 
@@ -531,6 +548,26 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   }
 
   return ClippingMixinBase;
+}
+
+type ClippingPlaneCollectionOptions = NonNullable<
+  ConstructorParameters<typeof ClippingPlaneCollection>[0]
+>;
+
+/**
+ * Update a clipping plane collection instance with the given options
+ */
+function updateClippingPlanesCollection(
+  clippingPlaneCollection: ClippingPlaneCollection,
+  options: ClippingPlaneCollectionOptions
+): ClippingPlaneCollection {
+  const { planes, ...otherOptions } = options;
+  Object.assign(clippingPlaneCollection, otherOptions);
+  if (planes) {
+    clippingPlaneCollection.removeAll();
+    planes.forEach((plane) => clippingPlaneCollection.add(plane));
+  }
+  return clippingPlaneCollection;
 }
 
 /**

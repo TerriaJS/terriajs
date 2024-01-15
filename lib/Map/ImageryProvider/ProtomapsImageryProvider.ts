@@ -416,7 +416,7 @@ export default class ProtomapsImageryProvider
     this.processPickedFeatures = options.processPickedFeatures;
   }
 
-  getTileCredits(x: number, y: number, level: number): Credit[] {
+  getTileCredits(_x: number, _y: number, _level: number): Credit[] {
     return [];
   }
 
