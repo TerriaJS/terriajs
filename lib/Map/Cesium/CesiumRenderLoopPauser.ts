@@ -5,7 +5,7 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
-import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
 import loadWithXhr from "../../Core/loadWithXhr";
 
 export default class CesiumRenderLoopPauser {
@@ -162,7 +162,10 @@ export default class CesiumRenderLoopPauser {
         transferableObjects
       );
 
-      if (!defined(this._originalWorkerMessageSinkRepaint)) {
+      if (
+        !defined(this._originalWorkerMessageSinkRepaint) &&
+        defined(this._worker.onmessage)
+      ) {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
         const taskProcessor = this;
@@ -307,7 +310,7 @@ export default class CesiumRenderLoopPauser {
 
     const surface = (<any>scene.globe)._surface;
     const terrainTilesWaiting =
-      !surface._tileProvider.ready ||
+      !surface._tileProvider ||
       surface._tileLoadQueueHigh.length > 0 ||
       surface._tileLoadQueueMedium.length > 0 ||
       surface._tileLoadQueueLow.length > 0 ||

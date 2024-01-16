@@ -1491,6 +1491,7 @@ export default class BoxDrawing {
         JulianDate.now(),
         scratchOppositePosition
       );
+      if (oppositePosition === undefined) return;
       const axisVector = Cartesian3.subtract(
         position,
         oppositePosition,

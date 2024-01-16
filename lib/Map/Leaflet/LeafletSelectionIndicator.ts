@@ -3,7 +3,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import L from "leaflet";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
@@ -149,16 +148,19 @@ export default class LeafletSelectionIndicator {
 
     const feature = this._leaflet.terria.selectedFeature;
     if (isDefined(feature) && isDefined(feature.position)) {
-      const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(
-          this._leaflet.terria.timelineClock.currentTime
-        ),
-        cartographicScratch
+      const positionValue = feature.position.getValue(
+        this._leaflet.terria.timelineClock.currentTime
       );
-      this._marker.setLatLng([
-        CesiumMath.toDegrees(cartographic.latitude),
-        CesiumMath.toDegrees(cartographic.longitude)
-      ]);
+      if (isDefined(positionValue)) {
+        const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+          positionValue,
+          cartographicScratch
+        );
+        this._marker.setLatLng([
+          CesiumMath.toDegrees(cartographic.latitude),
+          CesiumMath.toDegrees(cartographic.longitude)
+        ]);
+      }
     }
 
     if (this._tweens.length > 0) {
@@ -169,7 +171,7 @@ export default class LeafletSelectionIndicator {
       this._tweens.length !== 0 ||
       (isDefined(feature) && isDefined(feature.position))
     ) {
-      cesiumRequestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this._startTweens();
       });
     }
