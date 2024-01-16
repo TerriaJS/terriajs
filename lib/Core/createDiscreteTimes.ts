@@ -73,6 +73,8 @@ export default function createDiscreteTimesFromIsoSegments(
   // Add intervals starting at start until:
   //    we go past the stop date, or
   //    we go past the max limit
+  //
+  // The stop date will be included only if it is the same as the current.add(duration).
   while (
     current &&
     current.isSameOrBefore(stop) &&
@@ -90,11 +92,6 @@ export default function createDiscreteTimesFromIsoSegments(
     console.warn(
       "Interval has more than the allowed number of discrete times. Consider setting `maxRefreshIntervals`."
     );
-  } else if (!current.isSame(stop)) {
-    result.push({
-      time: formatMomentForWms(stop, duration),
-      tag: undefined
-    });
   }
 }
 
