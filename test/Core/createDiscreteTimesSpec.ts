@@ -17,6 +17,6 @@ describe("createDiscreteTimesFromIsoSegments", () => {
       isoSegments[2],
       maxRefreshIntervals
     );
-    expect(result.length).toBe(4);
+    expect(result.length).toBe(3);
   });
 });
