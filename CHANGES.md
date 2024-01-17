@@ -10,11 +10,12 @@
 - Update `thredds-catalog-crawler` to `0.0.6`
 - `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","srs","crs","format"`)
 - Fixed regression causing explorer window not to display instructions when first opened.
-- [The next improvement]
 - Enable eslint for typescript: plugin:@typescript-eslint/eslint-recommended
 - Fixed a bug where the search box was missing for small screen devices.
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
+- Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
+- [The next improvement]
 
 #### 8.4.1 - 2023-12-08
 
