@@ -64,6 +64,7 @@ export interface InitSourceData {
   models?: { [key: string]: ModelJson };
   previewedItemId?: string;
   pickedFeatures?: InitSourcePickedFeatures;
+  shortenShareUrls?: boolean;
   /** These settings will override localStorage persistent settings. They are used for shares/stories */
   settings?: {
     baseMaximumScreenSpaceError?: number;
