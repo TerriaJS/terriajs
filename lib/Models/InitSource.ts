@@ -64,6 +64,10 @@ export interface InitSourceData {
   models?: { [key: string]: ModelJson };
   previewedItemId?: string;
   pickedFeatures?: InitSourcePickedFeatures;
+  /** Check or uncheck "Share/Print -> Advanced options -> Shorten the share URL using a web service".
+   * See https://github.com/TerriaJS/terriajs/discussions/6848#discussioncomment-6798623 for a typical use case.
+   * To disable the shortening url service, set it to false.
+   */
   shortenShareUrls?: boolean;
   /** These settings will override localStorage persistent settings. They are used for shares/stories */
   settings?: {
