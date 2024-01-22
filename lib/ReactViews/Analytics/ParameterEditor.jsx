@@ -17,6 +17,7 @@ import DateParameterEditor from "./DateParameterEditor";
 import DateTimeParameterEditor from "./DateTimeParameterEditor";
 import EnumerationParameterEditor from "./EnumerationParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
+import NumberParameterEditor from "./NumberParameterEditor";
 import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
 
@@ -363,6 +364,23 @@ ParameterEditor.parameterTypeConverters = [
           <div>
             {parameterEditor.renderLabel()}
             <GenericParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "number",
+    parameterTypeToDiv: function NumberParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <NumberParameterEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}

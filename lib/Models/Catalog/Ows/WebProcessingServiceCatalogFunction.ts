@@ -43,10 +43,18 @@ import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
+
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import NumberParameter from "../../FunctionParameters/NumberParameter";
 
 type AllowedValues = {
   Value?: string | string[];
+  Range?: Range;
+};
+
+type Range = {
+  MaximumValue?: number;
+  MinimumValue?: number;
 };
 
 type LiteralDataType = {
@@ -364,6 +372,7 @@ const LiteralDataConverter = {
 
     const allowedValues =
       input.LiteralData.AllowedValues || input.LiteralData.AllowedValue;
+
     if (isDefined(allowedValues) && isDefined(allowedValues.Value)) {
       return new EnumerationParameter(catalogFunction, {
         ...options,
@@ -375,6 +384,15 @@ const LiteralDataConverter = {
           return { id };
         })
       });
+    } else if (isDefined(allowedValues) && isDefined(allowedValues.Range)) {
+      const np = new NumberParameter(catalogFunction, {
+        ...options
+      });
+
+      np.minimum = allowedValues.Range.MinimumValue;
+      np.maximum = allowedValues.Range.MaximumValue;
+
+      return np;
     } else if (isDefined(input.LiteralData.AnyValue)) {
       let dtype: string | null = null;
       if (isDefined(input.LiteralData["dataType"])) {
@@ -411,6 +429,7 @@ const LiteralDataConverter = {
         dt.variant = "literal";
         return dt;
       }
+
       // Assume its a string, if no literal datatype given
       return new StringParameter(catalogFunction, {
         ...options
@@ -418,6 +437,7 @@ const LiteralDataConverter = {
     }
   },
   parameterToInput: function (parameter: FunctionParameter) {
+    console.log("parameter", parameter);
     return {
       inputValue: <string | undefined>parameter.value,
       inputType: "LiteralData"

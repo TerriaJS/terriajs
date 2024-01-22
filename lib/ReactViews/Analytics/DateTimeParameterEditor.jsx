@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import PropTypes from "prop-types";
 
-const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
+const DateTimeParameterEditor = ({ parameter, terria }) => {
   const [dateValue, setDateValue] = useState("");
   const [timeValue, setTimeValue] = useState("00:00");
 
