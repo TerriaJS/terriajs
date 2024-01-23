@@ -43,10 +43,18 @@ import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
+
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import NumberParameter from "../../FunctionParameters/NumberParameter";
 
 type AllowedValues = {
   Value?: string | string[];
+  Range?: Range;
+};
+
+type Range = {
+  MaximumValue?: number;
+  MinimumValue?: number;
 };
 
 type LiteralDataType = {
@@ -57,6 +65,7 @@ type LiteralData = {
   AllowedValues?: AllowedValues;
   AllowedValue?: AllowedValues;
   AnyValue?: unknown;
+  DefaultValue?: unknown;
   DataType?: LiteralDataType | string;
   dataType?: string;
 };
@@ -364,6 +373,7 @@ const LiteralDataConverter = {
 
     const allowedValues =
       input.LiteralData.AllowedValues || input.LiteralData.AllowedValue;
+
     if (isDefined(allowedValues) && isDefined(allowedValues.Value)) {
       return new EnumerationParameter(catalogFunction, {
         ...options,
@@ -375,6 +385,20 @@ const LiteralDataConverter = {
           return { id };
         })
       });
+    } else if (isDefined(allowedValues) && isDefined(allowedValues.Range)) {
+      const np = new NumberParameter(catalogFunction, {
+        ...options
+      });
+
+      np.minimum = isDefined(allowedValues.Range.MinimumValue)
+        ? allowedValues.Range.MinimumValue
+        : np.minimum;
+      np.maximum = allowedValues.Range.MaximumValue;
+      np.defaultValue = isDefined(input.LiteralData.DefaultValue)
+        ? (input.LiteralData.DefaultValue as number)
+        : np.minimum;
+
+      return np;
     } else if (isDefined(input.LiteralData.AnyValue)) {
       let dtype: string | null = null;
       if (isDefined(input.LiteralData["dataType"])) {
@@ -411,6 +435,7 @@ const LiteralDataConverter = {
         dt.variant = "literal";
         return dt;
       }
+
       // Assume its a string, if no literal datatype given
       return new StringParameter(catalogFunction, {
         ...options
