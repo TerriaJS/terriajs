@@ -1,39 +1,35 @@
-import React from "react";
-
-import Styles from "./parameter-editors.scss";
-import { action, makeObservable } from "mobx";
+import React, { ChangeEvent, useState } from "react";
 import { observer } from "mobx-react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import NumberParameter from "../../Models/FunctionParameters/NumberParameter";
 
-@observer
-export default class NumberParameterEditor extends React.Component<{
-  parameter: NumberParameter;
-}> {
-  constructor(props: { parameter: NumberParameter }) {
-    super(props);
-    makeObservable(this);
-  }
+import Styles from "./parameter-editors.scss";
 
-  @action
-  onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.props.parameter.setValue(CommonStrata.user, e.target.value);
-  }
+const NumberParameterEditor: React.FC<{ parameter: NumberParameter }> = ({
+  parameter
+}) => {
+  const [value, setValue] = useState<number | undefined>(
+    parameter.defaultValue
+  );
 
-  render() {
-    const value = (this.props.parameter.value || "") as string;
-    const min = (this.props.parameter.minimum || "") as string;
-    const max = (this.props.parameter.maximum || "") as string;
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(parseFloat(e.target.value));
+    parameter.setValue(CommonStrata.user, e.target.value);
+  };
 
-    return (
-      <input
-        className={Styles.field}
-        type="number"
-        onChange={this.onChange.bind(this)}
-        value={value}
-        min={min}
-        max={max}
-      />
-    );
-  }
-}
+  const min = (parameter.minimum || "") as string;
+  const max = (parameter.maximum || "") as string;
+
+  return (
+    <input
+      className={Styles.field}
+      type="number"
+      onChange={onChange}
+      value={value}
+      min={min}
+      max={max}
+    />
+  );
+};
+
+export default observer(NumberParameterEditor);

@@ -65,6 +65,7 @@ type LiteralData = {
   AllowedValues?: AllowedValues;
   AllowedValue?: AllowedValues;
   AnyValue?: unknown;
+  DefaultValue?: unknown;
   DataType?: LiteralDataType | string;
   dataType?: string;
 };
@@ -389,8 +390,13 @@ const LiteralDataConverter = {
         ...options
       });
 
-      np.minimum = allowedValues.Range.MinimumValue;
+      np.minimum = isDefined(allowedValues.Range.MinimumValue)
+        ? allowedValues.Range.MinimumValue
+        : np.minimum;
       np.maximum = allowedValues.Range.MaximumValue;
+      np.defaultValue = isDefined(input.LiteralData.DefaultValue)
+        ? (input.LiteralData.DefaultValue as number)
+        : np.minimum;
 
       return np;
     } else if (isDefined(input.LiteralData.AnyValue)) {
@@ -437,7 +443,6 @@ const LiteralDataConverter = {
     }
   },
   parameterToInput: function (parameter: FunctionParameter) {
-    console.log("parameter", parameter);
     return {
       inputValue: <string | undefined>parameter.value,
       inputType: "LiteralData"

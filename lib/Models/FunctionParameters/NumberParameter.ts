@@ -15,4 +15,5 @@ export default class NumberParameter
   readonly type = "number";
   minimum?: number;
   maximum?: number;
+  defaultValue?: number;
 }
