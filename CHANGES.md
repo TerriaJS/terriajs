@@ -12,12 +12,11 @@
 - Fixed regression causing explorer window not to display instructions when first opened.
 - Enable eslint for typescript: plugin:@typescript-eslint/eslint-recommended
 - Fix WPS date parameter reset bug
-- [The next improvement]
 - Fixed a bug where the search box was missing for small screen devices.
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
 - Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
-- [The next improvement]
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.4.1 - 2023-12-08
 
