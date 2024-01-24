@@ -31,8 +31,6 @@ const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
     updateParameter();
   };
 
-  updateParameter();
-
   return (
     <div>
       <input
