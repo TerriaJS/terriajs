@@ -34,16 +34,16 @@ export class ImageryParts {
   alpha: number = 0.8;
   clippingRectangle: Rectangle | undefined = undefined;
   show: boolean = true;
+  overrideCreateLeafletLayer?: (
+    ip: ImageryProvider,
+    clippingRectangle: LatLngBounds | undefined
+  ) => TerriaLeafletLayer | undefined;
 
   static fromAsync(options: {
     imageryProviderPromise: Promise<ImageryProvider | undefined>;
     alpha?: number;
     clippingRectangle?: Rectangle;
     show?: boolean;
-    overrideCreateLeafletLayer?: (
-      ip: ImageryProvider,
-      clippingRectangle: LatLngBounds | undefined
-    ) => TerriaLeafletLayer | undefined;
   }): ImageryParts {
     const result = new ImageryParts({
       imageryProvider: undefined,
@@ -72,7 +72,6 @@ export class ImageryParts {
     this.clippingRectangle = options.clippingRectangle;
     this.show = options.show ?? true;
   }
-  
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource
