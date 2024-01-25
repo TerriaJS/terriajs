@@ -921,9 +921,9 @@ export default class Cesium extends GlobeOrMap {
           // If our first item is of ImageryParts type then we can use the rectangle on the imageryProvider to zoom to.
           // TODO: This could be implemented at the top level of `doZoomTo()` so that `return this.doZoomTo(target.mapItems[0], flightDurationSeconds);` will work in both cases.
           if (ImageryParts.is(target.mapItems[0])) {
-            await target.mapItems[0].imageryProvider.readyPromise;
+            await target.mapItems[0].imageryProvider?.readyPromise;
             return this.doZoomTo(
-              target.mapItems[0].imageryProvider.rectangle,
+              target.mapItems[0].imageryProvider?.rectangle,
               flightDurationSeconds
             );
           }
