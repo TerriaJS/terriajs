@@ -43,6 +43,28 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
+  // Force webpack to use the non-minified version of georaster-layer-for-leaflet
+  config.resolve.alias["georaster-layer-for-leaflet$"] = path.resolve(
+    process.cwd(),
+    "node_modules",
+    "georaster-layer-for-leaflet",
+    "dist",
+    "georaster-layer-for-leaflet.js"
+  );
+
+  // And use babel to transpile the js from ES6? to ES5
+  config.module.rules.push({
+    test: /\.js$/,
+    include: path.resolve(
+      process.cwd(),
+      "node_modules",
+      "georaster-layer-for-leaflet"
+    ),
+    use: {
+      loader: "babel-loader"
+    }
+  });
+
   config.module.rules.push({
     test: /\.js?$/,
     include: path.dirname(require.resolve("terriajs-cesium")),
