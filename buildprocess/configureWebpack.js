@@ -43,15 +43,6 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  // Force webpack to use the non-minified version of georaster-layer-for-leaflet
-  config.resolve.alias["georaster-layer-for-leaflet$"] = path.resolve(
-    process.cwd(),
-    "node_modules",
-    "georaster-layer-for-leaflet",
-    "dist",
-    "georaster-layer-for-leaflet.js"
-  );
-
   // And use babel to transpile the js from ES6? to ES5
   config.module.rules.push({
     test: /\.js$/,
@@ -132,7 +123,8 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "test"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateDocs.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
-      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts")
+      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts"),
+      path.resolve(process.cwd(), "node_modules", "georaster-layer-for-leaflet")
     ],
     use: [
       {
