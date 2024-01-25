@@ -119,7 +119,6 @@ describe("Cesium3dTilesMixin", function () {
         filter?.setTrait(CommonStrata.user, "maximumShown", 20);
         await cesium3dTiles.loadMapItems();
         const tileset = cesium3dTiles.mapItems[0] as Cesium3DTileset;
-        await tileset.readyPromise;
         const show = tileset.style?.show;
         const expr = (show as any)?.expression as string;
         expect(expr).toBeDefined();

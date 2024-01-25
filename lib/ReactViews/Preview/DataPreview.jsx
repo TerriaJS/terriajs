@@ -68,20 +68,22 @@ class DataPreview extends React.Component {
         </div>
       );
     } else if (chartData) {
-      <div className={Styles.previewInner}>
-        <h3 className={Styles.h3}>{previewed.name}</h3>
-        <p>{t("preview.doesNotContainGeospatialData")}</p>
-        <div className={Styles.previewChart}>
-          {/* TODO: Show a preview chart
+      return (
+        <div className={Styles.previewInner}>
+          <h3 className={Styles.h3}>{previewed.name}</h3>
+          <p>{t("preview.doesNotContainGeospatialData")}</p>
+          <div className={Styles.previewChart}>
+            {/* TODO: Show a preview chart
                 <Chart
                    data={chartData}
                    axisLabel={{ x: previewed.xAxis.units, y: undefined }}
                    height={250 - 34}
                    />
             */}
+          </div>
+          <Description item={previewed} />
         </div>
-        <Description item={previewed} />
-      </div>;
+      );
     } else if (previewed && CatalogFunctionMixin.isMixedInto(previewed)) {
       return (
         <InvokeFunction
@@ -101,18 +103,20 @@ class DataPreview extends React.Component {
         </div>
       );
     } else {
-      <div className={Styles.placeholder}>
-        <Trans i18nKey="preview.selectToPreview">
-          <p>Select a dataset to see a preview</p>
-          <p>- OR -</p>
-          <button
-            className={Styles.btnBackToMap}
-            onClick={() => this.backToMap()}
-          >
-            Go to the map
-          </button>
-        </Trans>
-      </div>;
+      return (
+        <div className={Styles.placeholder}>
+          <Trans i18nKey="preview.selectToPreview">
+            <p>Select a dataset to see a preview</p>
+            <p>- OR -</p>
+            <button
+              className={Styles.btnBackToMap}
+              onClick={() => this.backToMap()}
+            >
+              Go to the map
+            </button>
+          </Trans>
+        </div>
+      );
     }
   }
 

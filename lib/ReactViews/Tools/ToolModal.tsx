@@ -73,7 +73,9 @@ const Wrapper = styled(Box).attrs({
   min-height: 220px;
   // background: ${(p) => p.theme.dark};
   margin-left: ${(props) =>
-    props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
+    props.isMapFullScreen
+      ? 16
+      : parseInt(props.theme.workbenchWidth, 10) + 40}px;
   transition: margin-left 0.25s;
 `;
 

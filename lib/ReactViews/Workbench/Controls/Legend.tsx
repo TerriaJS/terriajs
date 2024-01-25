@@ -32,7 +32,7 @@ const DISPLAYABLE_MIME_TYPES = [
   acc[mimeType] = true;
   return acc;
 }, {});
-const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
+const IMAGE_URL_REGEX = /[./](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
   return (
@@ -194,7 +194,7 @@ export default class Legend extends React.Component<{
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
-    let boxContents = <></>;
+    let boxContents;
 
     // Browsers don't print background colors by default, so we render things a little differently.
     // Chrome and Firefox let you override this, but not IE and Edge. So...
@@ -332,7 +332,7 @@ export default class Legend extends React.Component<{
                   css={{ position: "absolute", top: 10, right: 0 }}
                   renderIcon={() => (
                     <StyledIcon
-                      light={true}
+                      light
                       glyph={Icon.GLYPHS.menuDotted}
                       styledWidth="12px"
                     />

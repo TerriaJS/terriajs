@@ -16,7 +16,7 @@ const Notification = observer(() => {
     notificationState === undefined ||
     notification === undefined
   ) {
-    return <></>;
+    return null;
   }
 
   const close = () => {

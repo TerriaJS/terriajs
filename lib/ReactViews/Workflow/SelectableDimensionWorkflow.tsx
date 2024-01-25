@@ -71,7 +71,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
               key={groupDim.name ?? groupDim.id}
               isOpen={groupDim.isOpen ?? true}
               onToggle={groupDim.onToggle}
-              collapsible={true}
+              collapsible
             >
               {childDims.map((childDim) => (
                 <SelectableDimension

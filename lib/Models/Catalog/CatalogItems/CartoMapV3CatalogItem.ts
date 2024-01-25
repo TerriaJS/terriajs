@@ -109,7 +109,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
           q: this.cartoQuery,
           geo_column: this.cartoGeoColumn
         })
-      ).throwIfError();
+      )?.throwIfError();
     }
     // If cartoTableName is defined - use Table API (https://api-docs.carto.com/#6a05d4d7-c6a1-4635-a8de-c91fa5e77fda)
     else if (this.cartoTableName) {
@@ -124,7 +124,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
 
       response = (
         await callCartoApi(url.toString(), this.accessToken)
-      ).throwIfError();
+      )?.throwIfError();
     } else {
       throw new TerriaError({
         title: "Invalid Carto V3 config",
@@ -176,7 +176,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     // Download all geoJson files
     const geojsonResponses = await Promise.all(
       this.geoJsonUrls.map(async (url) => {
-        jsonData = (await callCartoApi(url, this.accessToken)).throwIfError();
+        jsonData = (await callCartoApi(url, this.accessToken))?.throwIfError();
 
         if (jsonData === undefined) {
           throw new TerriaError({
@@ -289,7 +289,9 @@ async function callCartoApi(url: string, auth?: string, body?: JsonObject) {
             )
           );
         }
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
     }
     return Result.error(e);
   }

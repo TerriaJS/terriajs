@@ -129,7 +129,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   const theme: DefaultTheme = useTheme();
   return (
     <Box fullWidth {...boxProps}>
-      <StyledInput {...rest}></StyledInput>
+      <StyledInput {...rest} />
     </Box>
   );
 };

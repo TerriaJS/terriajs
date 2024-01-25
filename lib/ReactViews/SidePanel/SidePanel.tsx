@@ -103,7 +103,7 @@ type SidePanelButtonProps = {
 const SidePanelButton = React.forwardRef<
   HTMLButtonElement,
   SidePanelButtonProps
->((props, ref) => {
+>(function SidePanelButton(props, ref) {
   const { btnText, ...rest } = props;
   return (
     <Button

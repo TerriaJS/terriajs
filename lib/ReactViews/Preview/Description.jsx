@@ -117,7 +117,7 @@ class Description extends React.Component {
                   `}
                 >
                   {metadataUrl.title && (
-                    <Button primary={true}>{metadataUrl.title}</Button>
+                    <Button primary>{metadataUrl.title}</Button>
                   )}
                   {!metadataUrl.title ? metadataUrl.url : null}
                 </a>
@@ -230,7 +230,7 @@ class Description extends React.Component {
                             `}
                           >
                             {dataUrl.title && (
-                              <Button primary={true}>{dataUrl.title}</Button>
+                              <Button primary>{dataUrl.title}</Button>
                             )}
                             {!dataUrl.title ? dataUrl.url : null}
                           </a>
@@ -248,7 +248,7 @@ class Description extends React.Component {
                     <div className={Styles.metadata}>
                       <Collapsible
                         title={t("description.dataSourceDetails")}
-                        isInverse={true}
+                        isInverse
                       >
                         <MetadataTable
                           metadataItem={catalogItem.metadata.dataSourceMetadata}
@@ -261,7 +261,7 @@ class Description extends React.Component {
                     <div className={Styles.metadata}>
                       <Collapsible
                         title={t("description.dataServiceDetails")}
-                        isInverse={true}
+                        isInverse
                       >
                         <MetadataTable
                           metadataItem={catalogItem.metadata.serviceMetadata}
@@ -273,9 +273,7 @@ class Description extends React.Component {
             )}
           </>
         )}
-        {!this.props.printView ? (
-          <ExportData item={catalogItem}></ExportData>
-        ) : null}
+        {!this.props.printView ? <ExportData item={catalogItem} /> : null}
       </div>
     );
   }

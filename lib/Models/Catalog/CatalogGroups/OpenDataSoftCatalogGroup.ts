@@ -39,7 +39,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       domain: catalogGroup.url
     });
 
-    let datasets: ValidDataset[] = [];
+    const datasets: ValidDataset[] = [];
     let facets: ValidFacet[] | undefined;
 
     // If no facetFilters, try to get some facets

@@ -129,34 +129,35 @@ class MobileHeader extends React.Component {
 
   renderSearch() {
     const { t, viewState } = this.props;
-
     const searchState = viewState.searchState;
-    <div className={Styles.formSearchData}>
-      {searchState.showMobileLocationSearch && (
-        <SearchBox
-          searchText={searchState.locationSearchText}
-          onSearchTextChanged={this.changeLocationSearchText.bind(this)}
-          onDoSearch={this.searchLocations.bind(this)}
-          placeholder={applyTranslationIfExists(
-            viewState.terria.searchBarModel.placeholder,
-            this.props.i18n
-          )}
-          alwaysShowClear={true}
-          onClear={this.closeLocationSearch.bind(this)}
-          autoFocus={true}
-        />
-      )}
-      {searchState.showMobileCatalogSearch && (
-        <SearchBox
-          searchText={searchState.catalogSearchText}
-          onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
-          onDoSearch={this.searchCatalog.bind(this)}
-          placeholder={t("search.searchCatalogue")}
-          onClear={this.closeCatalogSearch.bind(this)}
-          autoFocus={true}
-        />
-      )}
-    </div>;
+    return (
+      <div className={Styles.formSearchData}>
+        {searchState.showMobileLocationSearch && (
+          <SearchBox
+            searchText={searchState.locationSearchText}
+            onSearchTextChanged={this.changeLocationSearchText.bind(this)}
+            onDoSearch={this.searchLocations.bind(this)}
+            placeholder={applyTranslationIfExists(
+              viewState.terria.searchBarModel.placeholder,
+              this.props.i18n
+            )}
+            alwaysShowClear
+            onClear={this.closeLocationSearch.bind(this)}
+            autoFocus
+          />
+        )}
+        {searchState.showMobileCatalogSearch && (
+          <SearchBox
+            searchText={searchState.catalogSearchText}
+            onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
+            onDoSearch={this.searchCatalog.bind(this)}
+            placeholder={t("search.searchCatalogue")}
+            onClear={this.closeCatalogSearch.bind(this)}
+            autoFocus
+          />
+        )}
+      </div>
+    );
   }
 
   render() {

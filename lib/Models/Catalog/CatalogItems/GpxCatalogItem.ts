@@ -43,7 +43,7 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
   }
 
   private loadGpxText(text: string) {
-    var dom = new DOMParser().parseFromString(text, "text/xml");
+    const dom = new DOMParser().parseFromString(text, "text/xml");
     return toGeoJSON.gpx(dom);
   }
 

@@ -67,7 +67,7 @@ describe("BuildShareLink", function () {
   describe("user added model containing local data", function () {
     it("should not be serialized", function (done) {
       const modelId = "Test";
-      let model = new GeoJsonCatalogItem(modelId, terria);
+      const model = new GeoJsonCatalogItem(modelId, terria);
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
@@ -93,7 +93,7 @@ describe("BuildShareLink", function () {
 
     it("should not be added to workbench in generated url", function (done) {
       const modelId = "Test";
-      let model = new GeoJsonCatalogItem(modelId, terria);
+      const model = new GeoJsonCatalogItem(modelId, terria);
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
@@ -203,7 +203,7 @@ describe("BuildShareLink", function () {
       // });
 
       it("viewing a previewed item", async function () {
-        let model = terria.catalog.userAddedDataGroup.memberModels[0];
+        const model = terria.catalog.userAddedDataGroup.memberModels[0];
 
         // preview the user added item & the share link should reflect that
         await viewState.viewCatalogMember(model);

@@ -8,7 +8,6 @@ import {
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
-import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -18,7 +17,6 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -141,6 +139,8 @@ export default class Leaflet extends GlobeOrMap {
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
+    if (parts.imageryProvider === undefined) return undefined;
+
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered
@@ -201,7 +201,7 @@ export default class Leaflet extends GlobeOrMap {
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
         this.terria.timelineClock.tick();
-        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+        this._cesiumReqAnimFrameId = requestAnimationFrame(ticker);
       }
     };
 
@@ -270,7 +270,7 @@ export default class Leaflet extends GlobeOrMap {
    */
   private _initProgressEvent() {
     const onTileLoadChange = () => {
-      var tilesLoadingCount = 0;
+      let tilesLoadingCount = 0;
 
       this.map.eachLayer(function (layerOrGridlayer) {
         // _tiles is protected but our knockout-loading-logic accesses it here anyway
@@ -354,7 +354,7 @@ export default class Leaflet extends GlobeOrMap {
     // synchronously as a result of timelineClock ticking due to ticker()
     this._stopRequestAnimationFrame = true;
     if (isDefined(this._cesiumReqAnimFrameId)) {
-      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+      cancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
     this.map.off("move");
@@ -460,16 +460,7 @@ export default class Leaflet extends GlobeOrMap {
       // Add layer and update its zIndex
       let zIndex = 100; // Start at an arbitrary value
       allImagery.reverse().forEach(({ parts, layer }) => {
-        if (!isDefined(layer)) {
-          // TODO: Should we filter out undefined layers before this point in the code?
-          console.log(
-            `Layer is undefined, and will fail when trying to set Opacity. Skipping layer ${parts}`
-          );
-          debugger;
-          return;
-        }
-
-        if (parts.show) {
+        if (layer && parts.show) {
           layer.setOpacity(parts.alpha);
           layer.setZIndex(zIndex);
           zIndex++;
@@ -479,7 +470,7 @@ export default class Leaflet extends GlobeOrMap {
             // @ts-ignore
             this.map.addLayer(layer);
           }
-        } else {
+        } else if (layer) {
           // @ts-ignore
           this.map.removeLayer(layer);
         }
@@ -511,7 +502,7 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     // 2. Add new data sources
-    for (let ds of availableDataSources) {
+    for (const ds of availableDataSources) {
       if (!dataSources.contains(ds) && ds.show) {
         await dataSources.add(ds);
       }
@@ -650,7 +641,7 @@ export default class Leaflet extends GlobeOrMap {
       const owner = entity.entityCollection.owner;
       if (
         owner instanceof DataSource &&
-        owner.name == GlobeOrMap._featureHighlightName
+        owner.name === GlobeOrMap._featureHighlightName
       ) {
         return;
       }
@@ -974,8 +965,15 @@ export default class Leaflet extends GlobeOrMap {
 
     if (isDefined(feature) && isDefined(feature.position)) {
       const cartographicScratch = new Cartographic();
+      const cartesianPosition = feature.position.getValue(
+        this.terria.timelineClock.currentTime
+      );
+      if (cartesianPosition === undefined) {
+        this._selectionIndicator.animateSelectionIndicatorDepart();
+        return;
+      }
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(this.terria.timelineClock.currentTime),
+        cartesianPosition,
         cartographicScratch
       );
       this._selectionIndicator.setLatLng(

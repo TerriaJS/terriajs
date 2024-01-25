@@ -80,16 +80,12 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
     };
   });
 
-  return (
-    <>
-      {showMouseTooltip && (
-        <MouseTooltip
-          scene={scene}
-          text={t("pedestrianMode.dropPedestrianTooltipMessage")}
-        />
-      )}
-    </>
-  );
+  return showMouseTooltip ? (
+    <MouseTooltip
+      scene={scene}
+      text={t("pedestrianMode.dropPedestrianTooltipMessage")}
+    />
+  ) : null;
 };
 
 async function getPrecisePosition(

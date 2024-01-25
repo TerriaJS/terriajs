@@ -15,13 +15,12 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../../Core/isDefined";
 import loadArrayBuffer from "../../Core/loadArrayBuffer";
-import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
+import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
 
 interface Coords {
   x: number;
@@ -236,7 +235,7 @@ export default class MapboxVectorTileImageryProvider
     return <any>undefined;
   }
 
-  getTileCredits(x: number, y: number, level: number): Credit[] {
+  getTileCredits(_x: number, _y: number, _level: number): Credit[] {
     return [];
   }
 

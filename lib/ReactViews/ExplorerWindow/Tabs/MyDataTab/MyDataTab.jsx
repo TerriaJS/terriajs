@@ -5,13 +5,12 @@ import classNames from "classnames";
 import Icon from "../../../../Styled/Icon";
 import Box from "../../../../Styled/Box";
 import PropTypes from "prop-types";
-
-import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import AddData from "./AddData.jsx";
 import { withTranslation, Trans } from "react-i18next";
 
 import Styles from "./my-data-tab.scss";
+import DataCatalogMember from "../../../DataCatalog/DataCatalogMember";
 
 // My data tab include Add data section and preview section
 @observer
@@ -180,14 +179,18 @@ class MyDataTab extends React.Component {
               <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
               <ul className={Styles.dataCatalog}>
-                <DataCatalog
-                  items={
-                    this.props.terria.catalog.userAddedDataGroup.memberModels
-                  }
-                  removable={true}
-                  viewState={this.props.viewState}
-                  terria={this.props.terria}
-                />
+                {this.props.terria.catalog.userAddedDataGroup.memberModels.map(
+                  (item) => (
+                    <DataCatalogMember
+                      viewState={this.props.viewState}
+                      member={item}
+                      key={item.uniqueId}
+                      removable
+                      terria={this.props.terria}
+                      isTopLevel
+                    />
+                  )
+                )}
               </ul>
             </Box>
           )}

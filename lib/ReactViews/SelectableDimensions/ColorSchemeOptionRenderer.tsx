@@ -5,7 +5,7 @@ import React from "react";
 import StandardCssColors from "../../Core/StandardCssColors";
 import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDimensions";
 
-const Invalid: React.VFC<{}> = () => {
+const Invalid: React.VFC<object> = () => {
   const { t } = useTranslation();
   return <span>{t("selectableDimensions.invalid")}</span>;
 };
