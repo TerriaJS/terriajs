@@ -51,6 +51,8 @@
     "react/no-danger": "warn",
     "react/no-did-update-set-state": "error",
     "react/no-will-update-set-state": "error",
+    /* Ignore css prop used by styled components */
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "react/self-closing-comp": "error",
     "react/jsx-no-undef": ["error", { "allowGlobals": true }],
 

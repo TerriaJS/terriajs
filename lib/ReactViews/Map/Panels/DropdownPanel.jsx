@@ -89,6 +89,7 @@ const DropdownPanel = createReactClass({
 
     return (
       <div className={classNames(Styles.panel, this.props.theme.outer)}>
+        <h1>Dropdown</h1>
         <button
           onClick={this.openWithUserClick}
           type="button"
