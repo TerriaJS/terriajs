@@ -14,7 +14,7 @@ const parseGeoRaster = require("georaster");
 import { GeoRaster } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
-import * as colourMappings from "../../../Core/colourMappings";
+import { colourMappings } from "../../../Core/colourMappings";
 import CogCompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CogCompositeCatalogItemTraits";
 import { CogImageryProvider } from "./CogCatalogItem";
 
@@ -88,12 +88,20 @@ export default class CogCompositeCatalogItem extends MappableMixin(
                   opacity: 1,
                   // Example pixel reclassification function:
                   pixelValuesToColorFn: (georasters) => {
-                    const codeToExecute = `colourMappings.${pixelMappingFnName}(${fnBandInputsAsIndexes
-                      .map((bandIndex) => `georasters[${bandIndex}]`)
-                      .join(",")})`;
-
-                    // TODO: are there security concerns with using eval() statements?
-                    return eval(codeToExecute);
+                    if (pixelMappingFnName === undefined) {
+                      throw new Error("pixelMappingFnName is undefined");
+                    }
+                    const fn = colourMappings[pixelMappingFnName];
+                    if (typeof fn === "function") {
+                      const args = fnBandInputsAsIndexes.map(
+                        (bandIndex) => georasters[bandIndex]
+                      );
+                      return fn(...args);
+                    } else {
+                      throw new Error(
+                        `Function ${pixelMappingFnName} not found in colourMappings`
+                      );
+                    }
                   },
                   resolution: 256
                 },
@@ -191,7 +199,7 @@ export default class CogCompositeCatalogItem extends MappableMixin(
       enablePickFeatures: this.allowFeaturePicking
     };
 
-    let cogImageryProvider: CogImageryProvider = new CogImageryProvider(
+    const cogImageryProvider: CogImageryProvider = new CogImageryProvider(
       cogOptions
     );
 
