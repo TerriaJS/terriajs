@@ -18,7 +18,7 @@ const parseGeoRaster = require("georaster");
 import { GeoRaster } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
-import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
+// import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
 
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
@@ -153,7 +153,7 @@ export default class CogCatalogItem extends MappableMixin(
       enablePickFeatures: this.allowFeaturePicking
     };
 
-    let cogImageryProvider: CogImageryProvider = new CogImageryProvider(
+    const cogImageryProvider: CogImageryProvider = new CogImageryProvider(
       cogOptions
     );
 
