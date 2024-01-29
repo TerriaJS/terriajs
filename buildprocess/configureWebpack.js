@@ -51,19 +51,6 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  // And use babel to transpile the js from ES6? to ES5
-  config.module.rules.push({
-    test: /\.js$/,
-    include: path.resolve(
-      process.cwd(),
-      "node_modules",
-      "georaster-layer-for-leaflet"
-    ),
-    use: {
-      loader: "babel-loader"
-    }
-  });
-
   config.module.rules.push({
     test: /\.js?$/,
     include: path.dirname(require.resolve("terriajs-cesium/README.md")),
@@ -74,19 +61,19 @@ function configureWebpack(
     ],
     loader: StringReplacePlugin.replace({
       replacements: [
-        // {
-        //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-        //   replacement: function (match, p1, offset, string) {
-        //     let p1_modified = p1.replace(/\\/g, "\\\\");
-        //     return (
-        //       "require(`" +
-        //       cesiumDir.replace(/\\/g, "\\\\") +
-        //       "/Source/" +
-        //       p1_modified +
-        //       "`)"
-        //     );
-        //   }
-        // },
+        {
+          pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
+          replacement: function (match, p1, offset, string) {
+            const p1_modified = p1.replace(/\\/g, "\\\\");
+            return (
+              "require(`" +
+              cesiumDir.replace(/\\/g, "\\\\") +
+              "/Source/" +
+              p1_modified +
+              "`)"
+            );
+          }
+        },
         {
           pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
           replacement: function () {
@@ -133,44 +120,6 @@ function configureWebpack(
   });
 
   config.module.rules.push({
-    test: /buildModuleUrl.js$/,
-    include: path.resolve(cesiumDir, "Source", "Core"),
-    loader: require.resolve("@open-wc/webpack-import-meta-loader")
-  });
-
-  const babelLoader = {
-    loader: "babel-loader",
-    options: {
-      cacheDirectory: true,
-      sourceMaps: !!devMode,
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            corejs: 3,
-            useBuiltIns: "usage"
-          }
-        ],
-        ["@babel/preset-react", { runtime: "automatic" }],
-        ["@babel/typescript", { allowNamespaces: true }]
-      ],
-      plugins: [
-        "@babel/plugin-transform-modules-commonjs",
-        ["@babel/plugin-proposal-decorators", { legacy: true }],
-        "@babel/plugin-proposal-class-properties",
-        "@babel/proposal-object-rest-spread",
-        "babel-plugin-styled-components",
-        require.resolve("@babel/plugin-syntax-dynamic-import"),
-        "babel-plugin-lodash"
-      ],
-      assumptions: {
-        setPublicClassFields: false
-      }
-    }
-  };
-
-  // Use Babel to compile our JavaScript files.
-  config.module.rules.push({
     test: /\.(ts|js)x?$/,
     include: [
       path.resolve(terriaJSBasePath, "lib"),
@@ -178,10 +127,43 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "buildprocess", "generateDocs.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts"),
-      path.resolve(process.cwd(), "node_modules", "georaster-layer-for-leaflet")
+      path.resolve(
+        path.dirname(
+          require.resolve("georaster-layer-for-leaflet/package.json")
+        )
+      )
     ],
     use: [
-      babelLoader
+      {
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+          sourceMaps: !!devMode,
+          presets: [
+            [
+              "@babel/preset-env",
+              {
+                corejs: 3,
+                useBuiltIns: "usage"
+              }
+            ],
+            ["@babel/preset-react", { runtime: "automatic" }],
+            ["@babel/typescript", { allowNamespaces: true }]
+          ],
+          plugins: [
+            "@babel/plugin-transform-modules-commonjs",
+            ["@babel/plugin-proposal-decorators", { legacy: true }],
+            "@babel/plugin-proposal-class-properties",
+            "@babel/proposal-object-rest-spread",
+            "babel-plugin-styled-components",
+            require.resolve("@babel/plugin-syntax-dynamic-import"),
+            "babel-plugin-lodash"
+          ],
+          assumptions: {
+            setPublicClassFields: false
+          }
+        }
+      }
       // Re-enable this if we need to observe any differences in the
       // transpilation via ts-loader, & babel's stripping of types,
       // or if TypeScript has newer features that babel hasn't
