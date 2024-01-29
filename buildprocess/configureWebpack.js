@@ -43,19 +43,6 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  // And use babel to transpile the js from ES6? to ES5
-  config.module.rules.push({
-    test: /\.js$/,
-    include: path.resolve(
-      process.cwd(),
-      "node_modules",
-      "georaster-layer-for-leaflet"
-    ),
-    use: {
-      loader: "babel-loader"
-    }
-  });
-
   config.module.rules.push({
     test: /\.js?$/,
     include: path.dirname(require.resolve("terriajs-cesium")),
@@ -69,7 +56,7 @@ function configureWebpack(
         {
           pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
           replacement: function (match, p1, offset, string) {
-            let p1_modified = p1.replace(/\\/g, "\\\\");
+            const p1_modified = p1.replace(/\\/g, "\\\\");
             return (
               "require(`" +
               cesiumDir.replace(/\\/g, "\\\\") +
@@ -124,7 +111,11 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "buildprocess", "generateDocs.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts"),
-      path.resolve(process.cwd(), "node_modules", "georaster-layer-for-leaflet")
+      path.resolve(
+        path.dirname(
+          require.resolve("georaster-layer-for-leaflet/package.json")
+        )
+      )
     ],
     use: [
       {
