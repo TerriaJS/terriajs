@@ -13,9 +13,10 @@ import UrlTraits from "./UrlTraits";
   description: `Creates a group with members from ArcGIS server portal.
 
   <strong>Note:</strong> 
-  <li>Requests members of specific types.</li>
-  <li>Sorts members according to their titles.</li>
-  <li>Members are organised in subgroups according to their categories.</li>`,
+  <br>The following example will</br>
+  <li>Request datasets of specific types only.</li>
+  <li>Organise members in subgroups according to their categories.</li>
+  <li>Sort members according to their titles.</li>`,
   example: {
     url: "https://portal.spatial.nsw.gov.au/portal",
     type: "arcgis-portal-group",
