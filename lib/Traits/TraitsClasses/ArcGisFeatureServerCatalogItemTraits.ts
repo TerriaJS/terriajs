@@ -10,7 +10,7 @@ import UrlTraits from "./UrlTraits";
 @traitClass({
   description: `Creates a single item in the catalog from one ESRI WFS layer.
 
-  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.".</i>`,
+  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>`,
   example: {
     url: "https://services5.arcgis.com/OvOcYIrJnM97ABBA/arcgis/rest/services/Australian_Public_Hospitals_WFL1/FeatureServer/0",
     type: "esri-featureServer",
