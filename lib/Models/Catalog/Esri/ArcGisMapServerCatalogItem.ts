@@ -153,10 +153,17 @@ class MapServerStratum extends LoadableStratum(
 
       if (isDefined(layersMetadataResponse?.layers)) {
         layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse?.id)) {
-        layers = [layersMetadataResponse];
       }
+      // The following conditional code is commented out becasue
+      // the test will be true when the requested url path ends with
+      // layer ID. Overwriting "layers" will make "stratum.allLayers"
+      // contain single layer instead of all layers that were set
+      // previously from the base URI, causing unexpected errors.
+      //
+      // If layersMetadata is only a single layer -> shove into an array
+      // else if (isDefined(layersMetadataResponse?.id)) {
+      // layers = [layersMetadataResponse];
+      // }
 
       if (!isDefined(layers) || layers.length === 0) {
         throw networkRequestError({
