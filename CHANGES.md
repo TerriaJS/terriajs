@@ -15,6 +15,7 @@
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
 - Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
+- Fix bug in ArcGisMapServerCatalogItem.
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
