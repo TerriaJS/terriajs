@@ -8,7 +8,59 @@ import GroupTraits from "./GroupTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import { traitClass } from "../Trait";
 
+@traitClass({
+  description: `Creates a group with members from Ckan server.
+
+  <strong>Note:</strong> 
+  <br>The following example will</br>
+  <li>Request datasets of specific types only.</li>
+  <li>Organise members in subgroups according to their organisations.</li>
+  <li>For any wms type item, use ESPG:3857 as crs.</li>`,
+  example: {
+    url: "https://discover.data.vic.gov.au/",
+    type: "ckan-group",
+    name: "DataVic Open Data Portal",
+    filterQuery: [
+      {
+        fq: '+(res_format:(wms OR WMS OR shapefile OR Shapefile OR "zip (shp)" OR shp OR SHP OR kmz OR GeoJSON OR geojson OR csv-geo-au OR aus-geo-csv))'
+      }
+    ],
+    groupBy: "organization",
+    supportedResourceFormats: [
+      {
+        id: "WMS",
+        urlRegex: "^((?!data.gov.au/geoserver).)*$"
+      },
+      {
+        id: "Kml",
+        onlyUseIfSoleResource: true
+      },
+      {
+        id: "Shapefile",
+        onlyUseIfSoleResource: true
+      }
+    ],
+    ungroupedTitle: "Organisation not declared",
+    itemPropertiesByType: [
+      {
+        type: "wms",
+        itemProperties: {
+          crs: "EPSG:3857"
+        }
+      }
+    ],
+    resourceIdTemplate: "{{resource.name}}-{{resource.format}}",
+    restrictResourceIdTemplateToOrgsWithNames: [
+      "department-of-energy-environment-climate-action",
+      "department-of-jobs-skills-industry-regions",
+      "department-of-transport-and-planning",
+      "victorian-electoral-commission"
+    ],
+    id: "some id"
+  }
+})
 export default class CkanCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,
@@ -19,15 +71,15 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   @anyTrait({
     name: "Filter Query",
     description: `Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups. Each item in the
-         * array causes an independent request to the CKAN, and the results are concatenated.  The
-         * search string is equivalent to what would be in the parameters segment of the url calling the CKAN search api.
-         * See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for information about filter queries.
-         * Each item is an object ({ fq: 'res_format:wms' }). For robustness sake, a query string is also allowed. E.g.
-         * "fq=(res_format:wms OR res_format:WMS)" and "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)" are allowed.
-         *   To get all the datasets with wms resources: [{ fq: 'res_format%3awms' }]
-         *   To get all wms/WMS datasets in the Surface Water group: [{q: 'groups=Surface Water', fq: 'res_format:WMS' }]
-         *   To get both wms and esri-mapService datasets: [{q: 'res_format:WMS'}, {q: 'res_format:"Esri REST"' }]
-         *   To get all datasets with no filter, you can use ['']
+         array causes an independent request to the CKAN, and the results are concatenated.  The
+         search string is equivalent to what would be in the parameters segment of the url calling the CKAN search api.
+         See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for information about filter queries.
+         Each item is an object ({ fq: 'res_format:wms' }). For robustness sake, a query string is also allowed. E.g.
+         "fq=(res_format:wms OR res_format:WMS)" and "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)" are allowed.
+         <li>To get all the datasets with wms resources: [{ fq: 'res_format%3awms' }]</li>
+         <li>To get all wms/WMS datasets in the Surface Water group: [{q: 'groups=Surface Water', fq: 'res_format:WMS' }]</li>
+         <li>To get both wms and esri-mapService datasets: [{q: 'res_format:WMS'}, {q: 'res_format:"Esri REST"' }]</li>
+         <li>To get all datasets with no filter, you can use ['']</li>
        `
   })
   filterQuery?: (JsonObject | string)[] = [
