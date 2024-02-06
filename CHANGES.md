@@ -16,6 +16,7 @@
 - Fix bug where search results shown in `My Data` tab
 - Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
 - Add option to enable/disable shortening share URLs via InitSourceData.
+- Add examples.
 - [The next improvement]
 
 #### 8.4.1 - 2023-12-08
