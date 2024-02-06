@@ -1486,7 +1486,9 @@ describe("Terria", function () {
       it("should set local property shortenShareUrls to true", async function () {
         await terria.applyInitData({
           initData: {
-            shortenShareUrls: true
+            settings: {
+              shortenShareUrls: true
+            }
           }
         });
         expect(terria.getLocalProperty("shortenShareUrls")).toBeTruthy();
@@ -1495,7 +1497,9 @@ describe("Terria", function () {
       it("should set local property shortenShareUrls to false", async function () {
         await terria.applyInitData({
           initData: {
-            shortenShareUrls: false
+            settings: {
+              shortenShareUrls: false
+            }
           }
         });
         expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
@@ -1503,7 +1507,9 @@ describe("Terria", function () {
         terria.setLocalProperty("shortenShareUrls", true);
         await terria.applyInitData({
           initData: {
-            shortenShareUrls: false
+            settings: {
+              shortenShareUrls: false
+            }
           }
         });
         expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();

@@ -1894,8 +1894,11 @@ export default class Terria {
       });
     }
 
-    if (isJsonBoolean(initData.shortenShareUrls)) {
-      this.setLocalProperty("shortenShareUrls", initData.shortenShareUrls);
+    if (initData.settings?.shortenShareUrls !== undefined) {
+      this.setLocalProperty(
+        "shortenShareUrls",
+        initData.settings.shortenShareUrls
+      );
     }
 
     if (errors.length > 0)
