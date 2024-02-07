@@ -15,6 +15,7 @@
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
 - Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
+- Add option to enable/disable shortening share URLs via InitSourceData.
 - Fix bug in ArcGisMapServerCatalogItem.
 - Add examples.
 - [The next improvement]

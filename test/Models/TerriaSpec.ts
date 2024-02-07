@@ -1458,6 +1458,63 @@ describe("Terria", function () {
         }
       });
     });
+
+    describe("Enable/disable shorten share URL via init data", async function () {
+      beforeEach(function () {
+        window.localStorage.clear();
+      });
+
+      it("should not change local property shortenShareUrls", async function () {
+        await terria.applyInitData({
+          initData: {}
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBe(null);
+
+        terria.setLocalProperty("shortenShareUrls", true);
+        await terria.applyInitData({
+          initData: {}
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBeTruthy();
+
+        terria.setLocalProperty("shortenShareUrls", false);
+        await terria.applyInitData({
+          initData: {}
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+      });
+
+      it("should set local property shortenShareUrls to true", async function () {
+        await terria.applyInitData({
+          initData: {
+            settings: {
+              shortenShareUrls: true
+            }
+          }
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBeTruthy();
+      });
+
+      it("should set local property shortenShareUrls to false", async function () {
+        await terria.applyInitData({
+          initData: {
+            settings: {
+              shortenShareUrls: false
+            }
+          }
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+
+        terria.setLocalProperty("shortenShareUrls", true);
+        await terria.applyInitData({
+          initData: {
+            settings: {
+              shortenShareUrls: false
+            }
+          }
+        });
+        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+      });
+    });
   });
 
   describe("mapSettings", function () {
