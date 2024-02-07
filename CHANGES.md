@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.5.0)
+#### next release (8.5.1)
+
+- [The next improvement]
+
+#### 8.5.0 - 2024-02-07
 
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
@@ -18,7 +22,6 @@
 - Add option to enable/disable shortening share URLs via InitSourceData.
 - Fix bug in ArcGisMapServerCatalogItem.
 - Add examples.
-- [The next improvement]
 
 #### 8.4.1 - 2023-12-08
 
