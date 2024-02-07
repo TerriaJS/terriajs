@@ -48,7 +48,7 @@ const MiniMap: React.FC<MiniMapProps> = (props) => {
         computed(() => [marker])
       );
 
-      viewer.viewerMode = ViewerMode.Leaflet;
+      viewer.viewerMode = ViewerMode.LeafletDeprecated;
       viewer.disableInteraction = true;
       if (container.current) viewer.attach(container.current);
 

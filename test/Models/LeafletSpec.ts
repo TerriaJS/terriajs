@@ -163,7 +163,7 @@ describe("Leaflet Model", function () {
         const container = document.createElement("div");
         document.body.appendChild(container);
         terria.mainViewer.attach(container);
-        terria.mainViewer.viewerMode = ViewerMode.Leaflet;
+        terria.mainViewer.viewerMode = ViewerMode.LeafletDeprecated;
         await when(() => terria.leaflet !== undefined);
       })
     );

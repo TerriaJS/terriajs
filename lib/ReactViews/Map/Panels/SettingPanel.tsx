@@ -247,15 +247,17 @@ class SettingPanel extends React.Component<PropTypes> {
             <Text as="label">{t("settingPanel.mapView")}</Text>
           </Box>
           <FlexGrid gap={1} elementsNo={3}>
-            {Object.entries(MapViewers).map(([key, viewerMode]) => (
-              <SettingsButton
-                key={key}
-                isActive={key === currentViewer}
-                onClick={(event: any) => this.selectViewer(key as any, event)}
-              >
-                <Text mini>{t(viewerMode.label)}</Text>
-              </SettingsButton>
-            ))}
+            {Object.entries(MapViewers)
+              .filter(([key, viewerMode]) => viewerMode.available)
+              .map(([key, viewerMode]) => (
+                <SettingsButton
+                  key={key}
+                  isActive={key === currentViewer}
+                  onClick={(event: any) => this.selectViewer(key as any, event)}
+                >
+                  <Text mini>{t(viewerMode.label)}</Text>
+                </SettingsButton>
+              ))}
           </FlexGrid>
           {!!supportsSide && (
             <>
@@ -361,50 +363,45 @@ class SettingPanel extends React.Component<PropTypes> {
               </Checkbox>
             </Box>
           </>
-          {this.props.terria.mainViewer.viewerMode !== ViewerMode.Leaflet && (
-            <>
-              <Spacing bottom={2} />
-              <Box column>
-                <Box paddedVertically={1}>
-                  <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
-                </Box>
-                <Checkbox
-                  textProps={{ small: true }}
-                  id="mapUseNativeResolution"
-                  isChecked={useNativeResolution}
-                  title={nativeResolutionLabel}
-                  onChange={() => this.toggleUseNativeResolution()}
-                >
-                  <TextSpan>
-                    {t("settingPanel.nativeResolutionHeader")}
-                  </TextSpan>
-                </Checkbox>
-                <Spacing bottom={2} />
-                <Box paddedVertically={1}>
-                  <Text as="label">{t("settingPanel.mapQuality")}</Text>
-                </Box>
-                <Box verticalCenter>
-                  <Text mini>{t("settingPanel.qualityLabel")}</Text>
-                  <Slider
-                    min={1}
-                    max={3}
-                    step={0.1}
-                    value={this.props.terria.baseMaximumScreenSpaceError}
-                    onChange={(val) =>
-                      this.onBaseMaximumScreenSpaceErrorChange(val)
-                    }
-                    marks={{ 2: "" }}
-                    aria-valuetext={qualityLabels}
-                    css={`
-                      margin: 0 10px;
-                      margin-top: 5px;
-                    `}
-                  />
-                  <Text mini>{t("settingPanel.performanceLabel")}</Text>
-                </Box>
-              </Box>
-            </>
-          )}
+
+          <Spacing bottom={2} />
+          <Box column>
+            <Box paddedVertically={1}>
+              <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
+            </Box>
+            <Checkbox
+              textProps={{ small: true }}
+              id="mapUseNativeResolution"
+              isChecked={useNativeResolution}
+              title={nativeResolutionLabel}
+              onChange={() => this.toggleUseNativeResolution()}
+            >
+              <TextSpan>{t("settingPanel.nativeResolutionHeader")}</TextSpan>
+            </Checkbox>
+            <Spacing bottom={2} />
+            <Box paddedVertically={1}>
+              <Text as="label">{t("settingPanel.mapQuality")}</Text>
+            </Box>
+            <Box verticalCenter>
+              <Text mini>{t("settingPanel.qualityLabel")}</Text>
+              <Slider
+                min={1}
+                max={3}
+                step={0.1}
+                value={this.props.terria.baseMaximumScreenSpaceError}
+                onChange={(val) =>
+                  this.onBaseMaximumScreenSpaceErrorChange(val)
+                }
+                marks={{ 2: "" }}
+                aria-valuetext={qualityLabels}
+                css={`
+                  margin: 0 10px;
+                  margin-top: 5px;
+                `}
+              />
+              <Text mini>{t("settingPanel.performanceLabel")}</Text>
+            </Box>
+          </Box>
         </Box>
       </MenuPanel>
     );

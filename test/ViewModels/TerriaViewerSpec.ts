@@ -53,7 +53,7 @@ describe("TerriaViewer", function () {
       setViewerMode("2d", terriaViewer);
       expect(mockBeforeViewerChanges).toHaveBeenCalledTimes(1);
       expect(mockAfterViewerChanges).toHaveBeenCalledTimes(1);
-      expect(terriaViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(terriaViewer.viewerMode).toBe(ViewerMode.Cesium2D);
     });
 
     it("should not trigger event, change to 3dsmooth from 3d", () => {

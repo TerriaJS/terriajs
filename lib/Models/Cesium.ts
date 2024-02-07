@@ -38,6 +38,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
@@ -46,6 +47,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import getElement from "terriajs-cesium/Source/DataSources/getElement";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
@@ -53,11 +55,11 @@ import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
-import getElement from "terriajs-cesium/Source/DataSources/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -90,8 +92,7 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import { setViewerMode } from "./ViewerMode";
-import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import ViewerMode, { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -191,7 +192,11 @@ export default class Cesium extends GlobeOrMap {
       ),
       scene3DOnly: true,
       shadows: true,
-      useBrowserRecommendedResolution: !this.terria.useNativeResolution
+      useBrowserRecommendedResolution: !this.terria.useNativeResolution,
+      sceneMode:
+        this.terriaViewer.viewerMode === ViewerMode.Cesium2D
+          ? SceneMode.SCENE3D
+          : SceneMode.SCENE2D
     };
 
     // Workaround for Firefox bug with WebGL and printing:

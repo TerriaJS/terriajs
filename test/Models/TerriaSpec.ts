@@ -473,7 +473,7 @@ describe("Terria", function () {
         beforeRestoreAppState
       });
 
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.LeafletDeprecated);
       expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
     });
   });
@@ -1526,7 +1526,7 @@ describe("Terria", function () {
       };
       await terria.start({ configUrl: "", applicationUrl: location });
       await terria.loadPersistedMapSettings();
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.LeafletDeprecated);
       expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
     });
 
@@ -1537,7 +1537,7 @@ describe("Terria", function () {
       ).and.returnValue("2d");
       await terria.start({ configUrl: "" });
       await terria.loadPersistedMapSettings();
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.LeafletDeprecated);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
 

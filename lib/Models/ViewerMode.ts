@@ -1,9 +1,11 @@
 import { runInAction } from "mobx";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import Cesium from "./Cesium";
 
 enum ViewerMode {
   Cesium = "cesium",
-  Leaflet = "leaflet"
+  Cesium2D = "cesium2D",
+  LeafletDeprecated = "leaflet"
 }
 
 export const MapViewers = Object.seal({
@@ -20,10 +22,16 @@ export const MapViewers = Object.seal({
     available: true
   },
   "2d": {
-    viewerMode: ViewerMode.Leaflet,
+    viewerMode: ViewerMode.Cesium2D,
     terrain: false,
     label: "settingPanel.viewerModeLabels.Leaflet",
     available: true
+  },
+  "2d-deprecated": {
+    viewerMode: ViewerMode.LeafletDeprecated,
+    terrain: false,
+    label: "settingPanel.viewerModeLabels.Leaflet",
+    available: false
   }
 });
 
@@ -38,8 +46,17 @@ export function setViewerMode(
     if (viewerMode === "3d" || viewerMode === "3dsmooth") {
       viewer.viewerMode = ViewerMode.Cesium;
       viewer.viewerOptions.useTerrain = viewerMode === "3d";
+      if (viewer.currentViewer instanceof Cesium) {
+        viewer.currentViewer.scene.morphTo3D(0);
+      }
     } else if (viewerMode === "2d") {
-      viewer.viewerMode = ViewerMode.Leaflet;
+      viewer.viewerMode = ViewerMode.Cesium2D;
+      viewer.viewerOptions.useTerrain = false;
+      if (viewer.currentViewer instanceof Cesium) {
+        viewer.currentViewer.scene.morphTo2D(0);
+      }
+    } else if (viewerMode === "2d-deprecated") {
+      viewer.viewerMode = ViewerMode.LeafletDeprecated;
     } else {
       console.error(
         `Trying to select ViewerMode ${viewerMode} that doesn't exist`
