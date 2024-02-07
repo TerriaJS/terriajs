@@ -102,15 +102,8 @@ class MapServerStratum extends LoadableStratum(
       token = await getToken(item.terria, item.tokenUrl, item.url);
     }
 
-    let layerId;
-    const lastSegment = item.uri.segment(-1);
-    if (lastSegment && lastSegment.match(/\d+/)) {
-      // URL is a single REST layer, like .../arcgis/rest/services/Society/Society_SCRC/MapServer/16
-      layerId = lastSegment;
-    }
-
     let serviceUri = getBaseURI(item);
-    let layersUri = getBaseURI(item).segment(layerId || "layers"); // either 'layers' or a number
+    let layersUri = getBaseURI(item).segment("layers");
     let legendUri = getBaseURI(item).segment("legend");
 
     if (isDefined(token)) {
@@ -153,9 +146,6 @@ class MapServerStratum extends LoadableStratum(
 
       if (isDefined(layersMetadataResponse?.layers)) {
         layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse?.id)) {
-        layers = [layersMetadataResponse];
       }
 
       if (!isDefined(layers) || layers.length === 0) {
