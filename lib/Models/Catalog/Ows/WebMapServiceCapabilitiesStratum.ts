@@ -28,6 +28,7 @@ import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
+  WebMapServiceAvailablePaletteTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -144,6 +145,27 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
   }
 
+  @computed
+  get availablePalettes(): StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] {
+    const result: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] = [];
+    const availableStyles = this.catalogItem.availableStyles || [];
+    const layerStyle = availableStyles[0];
+    if (this.catalogItem.isThredds) {
+      if (layerStyle?.styles[0].abstract) {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const urls = layerStyle?.styles[0].abstract.match(urlRegex);
+        let paletteUrl: uri.URI | undefined;
+        if (urls) {
+          paletteUrl = URI(proxyCatalogItemUrl(this.catalogItem, urls[0]));
+          result.push({
+            url: paletteUrl.toString()
+          });
+        }
+      }
+    }
+
+    return result;
+  }
   /**
  * **How we determine WMS legends (in order)**
   1. Defined manually in catalog JSON
@@ -154,6 +176,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
+    const availablePalettes = this.catalogItem.availablePalettes || [];
     const layers = this.catalogItem.layersArray;
     const styles = this.catalogItem.stylesArray;
 
@@ -172,12 +195,22 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       )?.styles;
 
       let layerStyle: Model<WebMapServiceAvailableStyleTraits> | undefined;
+      let paletteUrl: string | undefined;
 
       if (isDefined(style)) {
         // Attempt to find layer style based on AvailableStyleTraits
         layerStyle = layerAvailableStyles?.find(
           (candidate) => candidate.name === style
         );
+        if (this.catalogItem.isThredds) {
+          if (layerStyle?.abstract) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const urls = layerStyle.abstract.match(urlRegex);
+            if (urls) {
+              paletteUrl = proxyCatalogItemUrl(this.catalogItem, urls[0]);
+            }
+          }
+        }
       }
 
       // If no style is selected and this WMS doesn't support GetLegendGraphics - we must use the first style if none is explicitly specified.
@@ -250,6 +283,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           legendUri.setQuery("transparent", "true");
         }
 
+        i;
+
         // Add colour scale range params if supported
         if (
           this.catalogItem.supportsColorScaleRange &&
@@ -264,7 +299,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
             urlMimeType: legendUrlMimeType,
-            imageScaling: legendScaling
+            imageScaling: legendScaling,
+            paletteUrl: paletteUrl
           })
         );
       }

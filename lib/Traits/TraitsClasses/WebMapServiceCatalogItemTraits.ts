@@ -69,6 +69,16 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+export class WebMapServiceAvailablePaletteTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "URL",
+    description:
+      "The URL of the GetMetadata request for the palette. This is used to get the palettes available for a layer."
+  })
+  url?: string;
+}
+
 export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -215,6 +225,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "layerName"
   })
   availableStyles?: WebMapServiceAvailableLayerStylesTraits[];
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailablePaletteTraits,
+    name: "Available Palettes",
+    description: "The available palettes.",
+    idProperty: "index"
+  })
+  availablePalettes?: WebMapServiceAvailablePaletteTraits[];
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerDimensionsTraits,
