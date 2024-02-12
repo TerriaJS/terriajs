@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, makeObservable, runInAction } from "mobx";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -26,11 +26,45 @@ export type MapItem =
   | AbstractPrimitive
   | TerrainProvider;
 
-export interface ImageryParts {
-  alpha: number;
-  clippingRectangle: Rectangle | undefined;
-  imageryProvider: ImageryProvider;
-  show: boolean;
+export class ImageryParts {
+  @observable imageryProvider: ImageryProvider | undefined = undefined;
+  alpha: number = 0.8;
+  clippingRectangle: Rectangle | undefined = undefined;
+  show: boolean = true;
+
+  static fromAsync(options: {
+    imageryProviderPromise: Promise<ImageryProvider | undefined>;
+    alpha?: number;
+    clippingRectangle?: Rectangle;
+    show?: boolean;
+  }): ImageryParts {
+    const result = new ImageryParts({
+      imageryProvider: undefined,
+      alpha: options.alpha,
+      clippingRectangle: options.clippingRectangle,
+      show: options.show
+    });
+    options.imageryProviderPromise.then((imageryProvider) => {
+      if (imageryProvider) {
+        runInAction(() => {
+          result.imageryProvider = imageryProvider;
+        });
+      }
+    });
+    return result;
+  }
+
+  constructor(options: {
+    imageryProvider: ImageryProvider | undefined;
+    alpha?: number;
+    clippingRectangle?: Rectangle;
+    show?: boolean;
+  }) {
+    this.imageryProvider = options.imageryProvider;
+    this.alpha = options.alpha ?? 0.8;
+    this.clippingRectangle = options.clippingRectangle;
+    this.show = options.show ?? true;
+  }
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource

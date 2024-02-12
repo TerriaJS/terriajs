@@ -25,12 +25,6 @@ import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
-
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();
 const swTileCoordinatesScratch = new Cartesian2();
@@ -49,7 +43,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _usable = false;
   private _delayedUpdate?: number;
   private _zSubtract = 0;
-  private _requestImageError?: TileProviderError;
+  private _requestImageError: TileProviderError | undefined;
   private _previousCredits: Credit[] = [];
   private _leafletUpdateInterval: number;
 
@@ -188,16 +182,17 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         y: coords.y,
         level: level
       });
-      this._requestImageError = TileProviderError.handleError(
-        <any>this._requestImageError,
+      this._requestImageError = TileProviderError.reportError(
+        this._requestImageError!, // TODO: Cesium type definitions incorrectly forbid undefined
         this.imageryProvider,
-        <any>this.imageryProvider.errorEvent,
+        this.imageryProvider.errorEvent,
         message,
         coords.x,
         coords.y,
         level,
-        doRequest,
         <any>e
+        // TODO: bring terriajs-cesium retry logic to cesium
+        //doRequest
       );
     });
 
@@ -226,16 +221,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   }
 
   _update(...args: unknown[]) {
-    if (!this.imageryProvider.ready) {
-      if (!this._delayedUpdate) {
-        this._delayedUpdate = <any>setTimeout(() => {
-          this._delayedUpdate = undefined;
-          this._update();
-        }, this._leafletUpdateInterval);
-      }
-      return;
-    }
-
     if (!this.initialized) {
       this.initialized = true;
 
@@ -401,7 +386,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     this._previousCredits = nextCredits;
   }
 
-  getFeaturePickingCoords(
+  async getFeaturePickingCoords(
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
@@ -413,17 +398,13 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     );
     const level = Math.round(map.getZoom());
 
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
-      const tilingScheme = this.imageryProvider.tilingScheme;
-      const coords = tilingScheme.positionToTileXY(ll, level);
-      return {
-        x: coords.x,
-        y: coords.y,
-        level: level
-      };
-    });
+    const tilingScheme = this.imageryProvider.tilingScheme;
+    const coords = tilingScheme.positionToTileXY(ll, level);
+    return {
+      x: coords.x,
+      y: coords.y,
+      level: level
+    };
   }
 
   async pickFeatures(
@@ -433,7 +414,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ): Promise<ImageryLayerFeatureInfo[] | undefined> {
-    await pollToPromise(() => this.imageryProvider.ready);
     try {
       return await this.imageryProvider.pickFeatures(
         x,

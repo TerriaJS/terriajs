@@ -36,7 +36,15 @@ function configureWebpack(
     ".tsx"
   ];
   config.resolve.extensions.push(".jsx");
-  config.resolve.alias = config.resolve.alias || {};
+  config.resolve.alias = {
+    // @cesium/widgets will import from @cesium/engine. We need to make sure it ends up with
+    // the terriajs-cesium fork instead of upstream cesium.
+    "@cesium/engine": path.resolve(
+      require.resolve("terriajs-cesium/package.json"),
+      ".."
+    ),
+    ...config.resolve.alias
+  };
   config.resolve.modules = config.resolve.modules || [];
   config.resolve.modules.push(path.resolve(terriaJSBasePath, "wwwroot"));
 
@@ -45,27 +53,27 @@ function configureWebpack(
 
   config.module.rules.push({
     test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium")),
+    include: path.dirname(require.resolve("terriajs-cesium/README.md")),
     exclude: [
-      require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
+      // require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
+      // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
+      // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
     ],
     loader: StringReplacePlugin.replace({
       replacements: [
-        {
-          pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-          replacement: function (match, p1, offset, string) {
-            let p1_modified = p1.replace(/\\/g, "\\\\");
-            return (
-              "require(`" +
-              cesiumDir.replace(/\\/g, "\\\\") +
-              "/Source/" +
-              p1_modified +
-              "`)"
-            );
-          }
-        },
+        // {
+        //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
+        //   replacement: function (match, p1, offset, string) {
+        //     let p1_modified = p1.replace(/\\/g, "\\\\");
+        //     return (
+        //       "require(`" +
+        //       cesiumDir.replace(/\\/g, "\\\\") +
+        //       "/Source/" +
+        //       p1_modified +
+        //       "`)"
+        //     );
+        //   }
+        // },
         {
           pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
           replacement: function () {
@@ -102,6 +110,52 @@ function configureWebpack(
       ]
     })
   });
+
+  const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
+
+  config.module.rules.push({
+    test: /\.js$/,
+    include: zipJsDir,
+    loader: require.resolve("@open-wc/webpack-import-meta-loader")
+  });
+
+  config.module.rules.push({
+    test: /buildModuleUrl.js$/,
+    include: path.resolve(cesiumDir, "Source", "Core"),
+    loader: require.resolve("@open-wc/webpack-import-meta-loader")
+  });
+
+  const babelLoader = {
+    loader: "babel-loader",
+    options: {
+      cacheDirectory: true,
+      sourceMaps: !!devMode,
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            corejs: 3,
+            useBuiltIns: "usage"
+          }
+        ],
+        ["@babel/preset-react", { runtime: "automatic" }],
+        ["@babel/typescript", { allowNamespaces: true }]
+      ],
+      plugins: [
+        "@babel/plugin-transform-modules-commonjs",
+        ["@babel/plugin-proposal-decorators", { legacy: true }],
+        "@babel/plugin-proposal-class-properties",
+        "@babel/proposal-object-rest-spread",
+        "babel-plugin-styled-components",
+        require.resolve("@babel/plugin-syntax-dynamic-import"),
+        "babel-plugin-lodash"
+      ],
+      assumptions: {
+        setPublicClassFields: false
+      }
+    }
+  };
+
   // Use Babel to compile our JavaScript files.
   config.module.rules.push({
     test: /\.(ts|js)x?$/,
@@ -113,36 +167,7 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts")
     ],
     use: [
-      {
-        loader: "babel-loader",
-        options: {
-          cacheDirectory: true,
-          sourceMaps: !!devMode,
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                corejs: 3,
-                useBuiltIns: "usage"
-              }
-            ],
-            ["@babel/preset-react", { runtime: "automatic" }],
-            ["@babel/typescript", { allowNamespaces: true }]
-          ],
-          plugins: [
-            "@babel/plugin-transform-modules-commonjs",
-            ["@babel/plugin-proposal-decorators", { legacy: true }],
-            "@babel/plugin-proposal-class-properties",
-            "@babel/proposal-object-rest-spread",
-            "babel-plugin-styled-components",
-            require.resolve("@babel/plugin-syntax-dynamic-import"),
-            "babel-plugin-lodash"
-          ],
-          assumptions: {
-            setPublicClassFields: false
-          }
-        }
-      }
+      babelLoader
       // Re-enable this if we need to observe any differences in the
       // transpilation via ts-loader, & babel's stripping of types,
       // or if TypeScript has newer features that babel hasn't
@@ -200,7 +225,7 @@ function configureWebpack(
       path.dirname(require.resolve("terriajs-cesium/package.json")),
       "Source"
     ),
-    loader: require.resolve("./removeCesiumDebugPragmas")
+    use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.

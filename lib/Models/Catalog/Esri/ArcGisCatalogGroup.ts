@@ -11,7 +11,7 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
+import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";

@@ -1,4 +1,5 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
@@ -6,6 +7,17 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates a single item in the catalog from one ESRI WFS layer.
+
+  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>`,
+  example: {
+    url: "https://services5.arcgis.com/OvOcYIrJnM97ABBA/arcgis/rest/services/Australian_Public_Hospitals_WFL1/FeatureServer/0",
+    type: "esri-featureServer",
+    name: "Australian Public Hospitals",
+    id: "some id"
+  }
+})
 export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   UrlTraits,
   MappableTraits,

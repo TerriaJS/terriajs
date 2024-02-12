@@ -286,6 +286,7 @@ const AddData = createReactClass({
                   placeholder="e.g. http://data.gov.au/geoserver/wms"
                 />
                 <button
+                  disabled={this.state.remoteUrl.length === 0}
                   type="submit"
                   onClick={this.handleUrl}
                   className={Styles.urlInputBtn}

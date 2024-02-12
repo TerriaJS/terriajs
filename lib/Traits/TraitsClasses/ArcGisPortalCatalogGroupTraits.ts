@@ -1,6 +1,7 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -8,6 +9,26 @@ import GroupTraits from "./GroupTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates a group with members from ArcGIS server portal.
+
+  <strong>Note:</strong> 
+  <br>The following example will</br>
+  <li>Request datasets of specific types only.</li>
+  <li>Organise members in subgroups according to their categories.</li>
+  <li>Sort members according to their titles.</li>`,
+  example: {
+    url: "https://portal.spatial.nsw.gov.au/portal",
+    type: "arcgis-portal-group",
+    groupBy: "portalCategories",
+    name: "NSW Spatial Portal Categories",
+    searchParams: {
+      q: '(type:"Map Service" OR type:"WMS" OR type:"KML")',
+      sortField: "title"
+    },
+    id: "some id"
+  }
+})
 export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,

@@ -99,7 +99,11 @@ export default class TerriaFeature extends Entity {
 // if they're not already there. (In case they are added in a future version of Cesium.)
 function addCustomFeatureProperties(entity: Entity) {
   for (let i = 0; i < customProperties.length; i++) {
-    if (entity.propertyNames.indexOf(customProperties[i]) === -1) {
+    const propertyName = customProperties[i];
+    if (
+      entity.propertyNames.indexOf(propertyName) === -1 &&
+      !(propertyName in entity)
+    ) {
       entity.addProperty(customProperties[i]);
     }
   }
