@@ -601,7 +601,9 @@
     "noPreviewAvailable": "Ingen forhåndsvisning tilgjengelig",
     "dataCustodian": "Dataansvarlig",
     "preview": "{{appName}}-forhåndsvisning",
-    "selectToPreview": "<0>Velg et datasett for å se en forhåndsvisning</0><1>- eller -</1><2>Gå til kartet</2>",
+    "selectToPreviewDataset": "Velg et datasett for å se en forhåndsvisning",
+    "selectToPreviewSeparator": "eller",
+    "goToTheMap": "Gå til kartet",
     "removeFromMap": "Fjern fra kartet",
     "doesNotContainGeospatialData": "Denne filen inneholder ikke jordoverflatedata."
   },

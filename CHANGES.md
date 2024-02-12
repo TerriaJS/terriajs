@@ -3,6 +3,7 @@
 #### next release (8.5.1)
 
 - `BingMapsCatalogItem` now supports Bing's `culture` parameter.
+- Update a prompt text in DataPreview.
 - [The next improvement]
 
 #### 8.5.0 - 2024-02-07
