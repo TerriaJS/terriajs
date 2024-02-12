@@ -10,7 +10,7 @@ import Terria from "../../../../lib/Models/Terria";
 describe("BingMapsCatalogItem", () => {
   let item: BingMapsCatalogItem;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     spyOn(Resource.prototype, "fetchJsonp").and.returnValue(
       Promise.resolve({
         // A clipped version of an actual request to
@@ -40,6 +40,8 @@ describe("BingMapsCatalogItem", () => {
     );
     item = new BingMapsCatalogItem("test", new Terria());
     runInAction(() => item.setTrait("definition", "key", "XXXXX"));
+
+    await item.loadMapItems();
   });
 
   it("has a type", () => {
@@ -97,11 +99,13 @@ describe("BingMapsCatalogItem", () => {
   });
 
   describe("imageryProvider", () => {
-    it("has the correct properties", () => {
+    it("has the correct properties", async () => {
       runInAction(() => {
         item.setTrait("definition", "mapStyle", BingMapsStyle.AERIAL);
         item.setTrait("definition", "culture", "fr");
       });
+
+      await item.loadMapItems();
 
       if (!ImageryParts.is(item.mapItems[0]))
         throw new Error("Expected MapItem to be an ImageryParts");
