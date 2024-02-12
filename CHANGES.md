@@ -2,6 +2,7 @@
 
 #### next release (8.5.1)
 
+- Update a prompt text in DataPreview.
 - [The next improvement]
 
 #### 8.5.0 - 2024-02-07
@@ -292,8 +293,6 @@
 #### 8.2.14 - 2022-09-15
 
 - Moved map credits to map column so it don't get hidden by chart panel.
-- Update a prompt text in DataPreview.
-- [The next improvement]
 - TSified `FeatureInfo*.tsx`
   - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
   - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`

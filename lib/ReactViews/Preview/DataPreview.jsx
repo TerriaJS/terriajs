@@ -7,14 +7,14 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { Icon } from "../../Styled/Icon";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import Loader from "../Loader";
-import Styles from "./data-preview.scss";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
 import WarningBox from "./WarningBox";
-import { Icon } from "../../Styled/Icon";
+import Styles from "./data-preview.scss";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
