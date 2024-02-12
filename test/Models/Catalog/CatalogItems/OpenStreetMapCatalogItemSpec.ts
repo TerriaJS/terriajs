@@ -126,25 +126,28 @@ describe("OpenStreetMapCatalogItem", function () {
           if (!ImageryParts.is(item.mapItems[0]))
             throw new Error("MapItem is not an ImageryParts");
           const imageryProvider = item.mapItems[0].imageryProvider;
-          expect({
-            url: (imageryProvider as any).url,
-            attribution: imageryProvider.credit.html,
-            tilingScheme: imageryProvider.tilingScheme,
-            tileWidth: imageryProvider.tileWidth,
-            tileHeight: imageryProvider.tileHeight,
-            minimumLevel: imageryProvider.minimumLevel,
-            maximumLevel: imageryProvider.maximumLevel,
-            subdomains: (<any>imageryProvider)._subdomains
-          }).toEqual({
-            url: "https://{s}.example.com/ooo/{z}/{x}/{y}.png",
-            attribution: "foo bar baz",
-            tilingScheme: new WebMercatorTilingScheme(),
-            tileWidth: 256,
-            tileHeight: 256,
-            minimumLevel: 0,
-            maximumLevel: 25,
-            subdomains: ["a"]
-          });
+          expect(imageryProvider).not.toBeUndefined();
+          if (imageryProvider) {
+            expect({
+              url: (imageryProvider as any).url,
+              attribution: imageryProvider.credit.html,
+              tilingScheme: imageryProvider.tilingScheme,
+              tileWidth: imageryProvider.tileWidth,
+              tileHeight: imageryProvider.tileHeight,
+              minimumLevel: imageryProvider.minimumLevel,
+              maximumLevel: imageryProvider.maximumLevel,
+              subdomains: (<any>imageryProvider)._subdomains
+            }).toEqual({
+              url: "https://{s}.example.com/ooo/{z}/{x}/{y}.png",
+              attribution: "foo bar baz",
+              tilingScheme: new WebMercatorTilingScheme(),
+              tileWidth: 256,
+              tileHeight: 256,
+              minimumLevel: 0,
+              maximumLevel: 25,
+              subdomains: ["a"]
+            });
+          }
         });
       });
     });

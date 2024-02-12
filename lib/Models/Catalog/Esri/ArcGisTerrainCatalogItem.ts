@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -13,6 +13,10 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
 ) {
   static type = "arcgis-terrain";
 
+  @observable _private_terrainProvider:
+    | ArcGISTiledElevationTerrainProvider
+    | undefined = undefined;
+
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
@@ -24,15 +28,24 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
 
   @computed
   get mapItems() {
-    if (this.url === undefined) return [];
-    const item = new ArcGISTiledElevationTerrainProvider({
-      url: this.url
-    });
-    if (this.attribution) item.credit = new Credit(this.attribution);
-    return [];
+    const provider = this._private_terrainProvider;
+    if (provider) {
+      // ArcGISTiledElevationTerrainProvider has no official way to override the
+      // credit, so we write directly to the private field here.
+      if (this.attribution)
+        (<any>provider)._credit = new Credit(this.attribution);
+      return [provider];
+    } else {
+      return [];
+    }
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+    if (this.url === undefined) return Promise.resolve();
+    return ArcGISTiledElevationTerrainProvider.fromUrl(this.url).then(
+      (terrainProvider) => {
+        this._private_terrainProvider = terrainProvider;
+      }
+    );
   }
 }

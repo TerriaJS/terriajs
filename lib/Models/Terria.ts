@@ -1894,6 +1894,13 @@ export default class Terria {
       });
     }
 
+    if (initData.settings?.shortenShareUrls !== undefined) {
+      this.setLocalProperty(
+        "shortenShareUrls",
+        initData.settings.shortenShareUrls
+      );
+    }
+
     if (errors.length > 0)
       throw TerriaError.combine(errors, {
         message: {
@@ -1995,7 +2002,7 @@ export default class Terria {
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
-      const { catalog, ...rest } = initObj;
+      const { catalog } = initObj;
       this.initSources.push({
         name: `Magda map-config aspect terria-init from ${configUrl}`,
         errorSeverity: TerriaErrorSeverity.Error,

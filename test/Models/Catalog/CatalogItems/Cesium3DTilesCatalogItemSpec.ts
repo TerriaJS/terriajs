@@ -318,7 +318,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
     const picked = new Cesium3DTileFeature();
-    spyOn(picked, "getPropertyNames").and.returnValue([]);
+    spyOn(picked, "getPropertyIds").and.returnValue([]);
     const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
     expect(feature).toBeDefined();
     if (feature) {

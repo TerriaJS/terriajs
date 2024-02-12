@@ -133,12 +133,15 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
         if (promptRef.current) setCursor(promptRef.current, "grabbing");
 
         const inputHandler = new ScreenSpaceEventHandler(canvas);
-        inputHandler.setInputAction(({ endPosition }) => {
-          moveItem(item, endPosition, cesium);
-        }, ScreenSpaceEventType.MOUSE_MOVE);
+        inputHandler.setInputAction(
+          ({ endPosition }: ScreenSpaceEventHandler.MotionEvent) => {
+            moveItem(item, endPosition, cesium);
+          },
+          ScreenSpaceEventType.MOUSE_MOVE
+        );
 
         inputHandler.setInputAction(
-          ({ position }) =>
+          ({ position }: ScreenSpaceEventHandler.PositionedEvent) =>
             placeItem(item, position, cesium) && endRepositioning(item),
           ScreenSpaceEventType.LEFT_CLICK
         );

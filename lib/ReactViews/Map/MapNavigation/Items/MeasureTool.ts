@@ -1,6 +1,7 @@
 "use strict";
 import i18next from "i18next";
 import React from "react";
+import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
@@ -89,15 +90,19 @@ export class MeasureTool extends MapNavigationItemController {
       return;
     }
 
-    const prevPoint = pointEntities.entities.values[0];
-    let prevPointPos = prevPoint.position!.getValue(
-      this.terria.timelineClock.currentTime
-    );
-    for (let i = 1; i < pointEntities.entities.values.length; i++) {
+    let firstPointPos: Cartesian3 | undefined;
+    let prevPointPos: Cartesian3 | undefined;
+    for (let i = 0; i < pointEntities.entities.values.length; i++) {
       const currentPoint = pointEntities.entities.values[i];
       const currentPointPos = currentPoint.position!.getValue(
         this.terria.timelineClock.currentTime
       );
+      if (currentPointPos === undefined) continue;
+      if (prevPointPos === undefined) {
+        prevPointPos = currentPointPos;
+        firstPointPos = prevPointPos;
+        continue;
+      }
 
       this.totalDistanceMetres =
         this.totalDistanceMetres +
@@ -105,11 +110,7 @@ export class MeasureTool extends MapNavigationItemController {
 
       prevPointPos = currentPointPos;
     }
-    if (this.userDrawing.closeLoop) {
-      const firstPoint = pointEntities.entities.values[0];
-      const firstPointPos = firstPoint.position!.getValue(
-        this.terria.timelineClock.currentTime
-      );
+    if (prevPointPos && firstPointPos && this.userDrawing.closeLoop) {
       this.totalDistanceMetres =
         this.totalDistanceMetres +
         this.getGeodesicDistance(prevPointPos, firstPointPos);
@@ -133,7 +134,9 @@ export class MeasureTool extends MapNavigationItemController {
       const currentPointPos = currentPoint.position!.getValue(
         this.terria.timelineClock.currentTime
       );
-      positions.push(currentPointPos);
+      if (currentPointPos !== undefined) {
+        positions.push(currentPointPos);
+      }
     }
 
     // Request the triangles that make up the polygon from Cesium.
@@ -143,6 +146,7 @@ export class MeasureTool extends MapNavigationItemController {
     );
     const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(
       new PolygonHierarchy(positions),
+      false,
       tangentPlane.projectPointsOntoPlane.bind(tangentPlane),
       !perPositionHeight,
       Ellipsoid.WGS84
@@ -151,9 +155,11 @@ export class MeasureTool extends MapNavigationItemController {
     const geom = PolygonGeometryLibrary.createGeometryFromPositions(
       Ellipsoid.WGS84,
       polygons.polygons[0],
+      undefined,
       CesiumMath.RADIANS_PER_DEGREE,
       perPositionHeight,
-      VertexFormat.POSITION_ONLY
+      VertexFormat.POSITION_ONLY,
+      ArcType.GEODESIC
     );
     if (
       geom.indices.length % 3 !== 0 ||
