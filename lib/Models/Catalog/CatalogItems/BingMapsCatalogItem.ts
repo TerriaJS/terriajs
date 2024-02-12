@@ -28,7 +28,8 @@ export default class BingMapsCatalogItem extends MappableMixin(
       "//dev.virtualearth.net",
       {
         mapStyle: <any>this.mapStyle,
-        key: this.key!
+        key: this.key!,
+        culture: this.culture
       }
     );
     runInAction(() => {
