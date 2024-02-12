@@ -2,6 +2,7 @@
 
 #### next release (8.5.1)
 
+- Update a prompt text in DataPreview.
 - [The next improvement]
 
 #### 8.5.0 - 2024-02-07
