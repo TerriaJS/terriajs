@@ -261,7 +261,10 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     /** Use PointGraphics instead of BillboardGraphics, if not using maki icon AND not using image marker. */
     usePointGraphics:
       !isMakiIcon(pointStyle?.marker) &&
-      !pointStyle?.marker?.startsWith("data:image")
+      !(
+        pointStyle?.marker?.startsWith("data:image") ||
+        pointStyle?.marker?.startsWith("http")
+      )
   };
 }
 

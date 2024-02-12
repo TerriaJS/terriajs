@@ -16,7 +16,7 @@ export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
     name: "Marker (icon)",
     description:
-      'Marker used to symbolize points. Default is "point"/"circle". This can be data URI or one of the supported [Maki icons](https://labs.mapbox.com/maki-icons/) (eg "hospital")',
+      'Marker used to symbolize points. Default is "point"/"circle". This can be a URL, [data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs) or one of the supported [Maki icons](https://labs.mapbox.com/maki-icons/) (eg "hospital")',
     type: "string"
   })
   marker?: string = "point";
