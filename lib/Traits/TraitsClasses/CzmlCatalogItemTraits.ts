@@ -13,7 +13,7 @@ import UrlTraits from "./UrlTraits";
 @traitClass({
   description: `Creates one catalog item from url that points to a czml file.
   
-  <strong>Note:</strong> If the model is not visible, try to disable the terrain by uncheck the box "Terrain hides underground features".`,
+  <strong>Note:</strong> If the model is not visible, try to disable the terrain by unchecking the box "Terrain hides underground features".`,
   example: {
     type: "czml",
     url: "https://tiles.terria.io/terriajs-examples/czml/smooth.czml",
