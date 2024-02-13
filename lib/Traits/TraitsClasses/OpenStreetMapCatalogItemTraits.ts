@@ -7,7 +7,29 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
+import { traitClass } from "../Trait";
 
+@traitClass({
+  description: `Creates one base map item from url that points to an OpenStreetMap service.`,
+  example: {
+    item: {
+      type: "open-street-map",
+      name: "Voyager",
+      url: "https://global.ssl.fastly.net/rastertiles/voyager/",
+      attribution: "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0",
+      opacity: 1,
+      subdomains: [
+        "cartodb-basemaps-a",
+        "cartodb-basemaps-b",
+        "cartodb-basemaps-c",
+        "cartodb-basemaps-d"
+      ]
+    },
+    image:
+      "https://terria-catalogs-public.storage.googleapis.com/misc/basemaps/icons/voyager-aus.png",
+    id: "some unique id"
+  }
+})
 export default class OpenStreetMapCatalogItemTraits extends mixTraits(
   ImageryProviderTraits,
   LayerOrderingTraits,
