@@ -25,7 +25,7 @@ export class RefineTraits extends ModelTraits {
 }
 
 @traitClass({
-  description: `Creates one catalog group from url that points to a opendatasoft service.`,
+  description: `Creates one catalog group from url that points to an opendatasoft service.`,
   example: {
     name: "opendatasoft-group example",
     type: "opendatasoft-group",
