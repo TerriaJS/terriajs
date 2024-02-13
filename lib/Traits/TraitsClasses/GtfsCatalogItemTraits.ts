@@ -56,7 +56,8 @@ export class HeadersTraits extends ModelTraits {
       url: "https://tiles.terria.io/terriajs-examples/gtfs/lowpoly_bus/scene.gltf",
       scale: 0.3048,
       maximumDistance: 500.0
-    }
+    },
+    id: "some unique id"
   }
 })
 export default class GtfsCatalogItemTraits extends mixTraits(

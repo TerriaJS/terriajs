@@ -16,7 +16,8 @@ import UrlTraits from "./UrlTraits";
       latitude: -38.14688,
       height: -16
     },
-    heightReference: "CLAMP_TO_TERRAIN"
+    heightReference: "CLAMP_TO_TERRAIN",
+    id: "some unique id"
   }
 })
 export default class GltfCatalogItemTraits extends mixTraits(

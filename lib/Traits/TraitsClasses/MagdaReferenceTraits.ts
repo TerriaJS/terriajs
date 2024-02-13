@@ -18,7 +18,8 @@ import { traitClass } from "../Trait";
     type: "magda",
     url: "https://data.gov.au",
     name: "Magda example",
-    recordId: "dist-sa-97d6773f-6ce8-4b0b-a2a1-c2687448c672"
+    recordId: "dist-sa-97d6773f-6ce8-4b0b-a2a1-c2687448c672",
+    id: "some unique id"
   }
 })
 export default class MagdaReferenceTraits extends mixTraits(
