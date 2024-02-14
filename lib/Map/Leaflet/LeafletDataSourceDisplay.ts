@@ -133,7 +133,7 @@ export default class LeafletDataSourceDisplay {
     const dataSources = this._dataSourceCollection;
     const length = dataSources.length;
     for (let i = 0; i < length; i++) {
-      const dataSource = <LeafletDataSource>dataSources.get(i);
+      const dataSource = dataSources.get(i) as LeafletDataSource;
       if (isDefined(dataSource.update)) {
         result = dataSource.update(time) && result;
       }
