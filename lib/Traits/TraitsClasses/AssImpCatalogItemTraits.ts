@@ -8,7 +8,7 @@ import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
   description: `Creates one catalog item from url that points to a 3d model.`,
   example: {
     type: "assimp",
-    name: "cube",
+    name: "assimp example",
     urls: [
       "https://raw.githubusercontent.com/kovacsv/assimpjs/main/examples/testfiles/cube_with_materials.obj",
       "https://raw.githubusercontent.com/kovacsv/assimpjs/main/examples/testfiles/cube_with_materials.mtl"
@@ -25,7 +25,8 @@ import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
       south: -42.9,
       east: 147.33,
       north: -42.87
-    }
+    },
+    id: "some unique id"
   }
 })
 export default class AssImpCatalogItemTraits extends mixTraits(
