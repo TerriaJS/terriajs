@@ -27,7 +27,7 @@ export default class BingMapsCatalogItem extends MappableMixin(
     const provider = await BingMapsImageryProvider.fromUrl(
       "//dev.virtualearth.net",
       {
-        mapStyle: <any>this.mapStyle,
+        mapStyle: this.mapStyle as any,
         key: this.key!,
         culture: this.culture
       }
@@ -57,10 +57,10 @@ export default class BingMapsCatalogItem extends MappableMixin(
     if (result === undefined) return result;
 
     if (this.attribution) {
-      (<any>result)._credit = this.attribution;
+      (result as any)._credit = this.attribution;
     } else {
       // open in a new window
-      (<any>result)._credit = new Credit(
+      (result as any)._credit = new Credit(
         '<a href="http://www.bing.com" target="_blank">Bing</a>'
       );
     }

@@ -670,12 +670,14 @@ describe("Terria", function () {
       });
 
       it("initializes workbench with shared workbench items", async function () {
-        const model1 = <WebMapServiceCatalogItem>(
-          terria.getModelById(BaseModel, "itemABC")
-        );
-        const model2 = <WebMapServiceCatalogItem>(
-          terria.getModelById(BaseModel, "itemDEF")
-        );
+        const model1 = terria.getModelById(
+          BaseModel,
+          "itemABC"
+        ) as WebMapServiceCatalogItem;
+        const model2 = terria.getModelById(
+          BaseModel,
+          "itemDEF"
+        ) as WebMapServiceCatalogItem;
         terria.workbench.add(model1);
         terria.workbench.add(model2);
         expect(terria.workbench.itemIds).toContain("itemABC");
@@ -689,9 +691,10 @@ describe("Terria", function () {
       });
 
       it("initializes splitter correctly", async function () {
-        const model1 = <WebMapServiceCatalogItem>(
-          terria.getModelById(BaseModel, "itemABC")
-        );
+        const model1 = terria.getModelById(
+          BaseModel,
+          "itemABC"
+        ) as WebMapServiceCatalogItem;
         terria.workbench.add(model1);
 
         runInAction(() => {
@@ -711,26 +714,29 @@ describe("Terria", function () {
         expect(newTerria.splitPosition).toEqual(0.7);
         expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
 
-        const newModel1 = <WebMapServiceCatalogItem>(
-          newTerria.getModelById(BaseModel, "itemABC")
-        );
+        const newModel1 = newTerria.getModelById(
+          BaseModel,
+          "itemABC"
+        ) as WebMapServiceCatalogItem;
         expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(<any>SplitDirection.RIGHT);
+        expect(newModel1.splitDirection).toEqual(SplitDirection.RIGHT as any);
       });
 
       it("opens and loads members of shared open groups", async function () {
-        const group = <WebMapServiceCatalogGroup>(
-          terria.getModelById(BaseModel, "groupABC")
-        );
+        const group = terria.getModelById(
+          BaseModel,
+          "groupABC"
+        ) as WebMapServiceCatalogGroup;
         await viewState.viewCatalogMember(group);
         expect(group.isOpen).toBe(true);
         expect(group.members.length).toBeGreaterThan(0);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
         await newTerria.loadInitSources();
-        const newGroup = <WebMapServiceCatalogGroup>(
-          newTerria.getModelById(BaseModel, "groupABC")
-        );
+        const newGroup = newTerria.getModelById(
+          BaseModel,
+          "groupABC"
+        ) as WebMapServiceCatalogGroup;
         expect(newGroup.isOpen).toBe(true);
         expect(newGroup.members).toEqual(group.members);
       });
@@ -1243,7 +1249,7 @@ describe("Terria", function () {
         (): any;
         load: { (...args: any[]): any; calls: any };
       }
-      const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+      const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
       const mapServerSimpleGroupUrl =
         "http://some.service.gov.au/arcgis/rest/services/mapServerSimpleGroup/MapServer";
       const mapServerWithErrorUrl =
@@ -1447,7 +1453,7 @@ describe("Terria", function () {
             }
           });
         } catch (e) {
-          error = <TerriaError>e;
+          error = e as TerriaError;
           expect(error.message === "models.terria.loadingInitSourceErrorTitle");
         } finally {
           expect(error).not.toEqual(undefined);

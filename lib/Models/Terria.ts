@@ -704,7 +704,7 @@ export default class Terria {
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
-      if (typeof window !== "undefined" && defined((<any>window).ga)) {
+      if (typeof window !== "undefined" && defined((window as any).ga)) {
         this.analytics = new GoogleAnalytics();
       } else {
         this.analytics = new ConsoleAnalytics();
@@ -829,7 +829,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
+        if (featureBelongsToCatalogItem(feature as TerriaFeature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1128,7 +1128,7 @@ export default class Terria {
     if (hashViewerMode && isViewerMode(hashViewerMode)) {
       setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
-      const viewerMode = <string>this.getLocalProperty("viewermode");
+      const viewerMode = this.getLocalProperty("viewermode") as string;
       if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
         setViewerMode(viewerMode, this.mainViewer);
       }
@@ -1176,7 +1176,7 @@ export default class Terria {
         baseMapItems.find(
           (baseMapItem) =>
             CatalogMemberMixin.isMixedInto(baseMapItem) &&
-            (<any>baseMapItem.item).name ===
+            (baseMapItem.item as any).name ===
               this.baseMapsModel.defaultBaseMapName
         );
       if (
@@ -1186,7 +1186,7 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
+    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1663,7 +1663,7 @@ export default class Terria {
 
     // Extract the list of CORS-ready domains.
     if (Array.isArray(initData.corsDomains)) {
-      this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+      this.corsProxy.corsDomains.push(...(initData.corsDomains as string[]));
     }
 
     // Add catalog members
@@ -1878,7 +1878,7 @@ export default class Terria {
             );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map((item) => <TimeVarying>item))
+          .map((item) => item as TimeVarying))
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -1962,7 +1962,7 @@ export default class Terria {
     );
     if (reference.target instanceof CatalogGroup) {
       runInAction(() => {
-        this.catalog.group = <CatalogGroup>reference.target;
+        this.catalog.group = reference.target as CatalogGroup;
       });
     }
   }
