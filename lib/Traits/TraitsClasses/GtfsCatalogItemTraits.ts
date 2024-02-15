@@ -32,6 +32,7 @@ export class HeadersTraits extends ModelTraits {
 
 @traitClass({
   description: `Creates one catalog item from url that points to a gtfs service.
+  
   <strong>Note:</strong> 
   <li>You need to obtain a valid api key for the NSW transport api.</li>
   <li>When the camera is less than <code>maximumDistance</code> (500m) away, bus 3d models (scene.gltf) will be rendered.</li>`,
