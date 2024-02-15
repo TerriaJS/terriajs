@@ -51,8 +51,6 @@ gulp.task("lint", function (done) {
     "test",
     "--ext",
     ".jsx,.js,.ts,.tsx",
-    "--ignore-pattern",
-    "lib/ThirdParty",
     "--max-warnings",
     "0"
   ]);

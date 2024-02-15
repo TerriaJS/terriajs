@@ -25,7 +25,7 @@ module.exports = {
     commonjs: true,
     es6: true
   },
-  ignorePatterns: ["*.scss.d.ts"],
+  ignorePatterns: ["*.scss.d.ts", "/lib/ThirdParty"],
   plugins: ["react", "react-hooks", "@typescript-eslint"],
   globals: {
     process: true
