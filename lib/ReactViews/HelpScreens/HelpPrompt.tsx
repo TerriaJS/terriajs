@@ -1,7 +1,9 @@
 /**
  * Prompt.tsx - don't use without guarding on useSmallScreenInterface - it won't look pretty!
  */
-import React, { useState } from "react";
+import { useState } from "react";
+
+import * as React from "react";
 import { useTheme } from "styled-components";
 
 import FadeIn from "../Transitions/FadeIn/FadeIn";

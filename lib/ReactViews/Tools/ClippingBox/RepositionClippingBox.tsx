@@ -1,6 +1,7 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";

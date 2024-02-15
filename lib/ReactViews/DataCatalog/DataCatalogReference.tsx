@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";

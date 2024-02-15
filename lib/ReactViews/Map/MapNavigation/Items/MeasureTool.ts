@@ -1,6 +1,6 @@
 "use strict";
 import i18next from "i18next";
-import React from "react";
+import * as React from "react";
 import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
