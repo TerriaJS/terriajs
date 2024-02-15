@@ -365,7 +365,7 @@ class StoryBuilder extends React.Component<
                     <Trans i18nKey="story.removeStoryDialog" i18n={i18n}>
                       Are you sure you wish to delete
                       <TextSpan textLight large bold>
-                        {{ storyName }}
+                        {storyName}
                       </TextSpan>
                       ?
                     </Trans>

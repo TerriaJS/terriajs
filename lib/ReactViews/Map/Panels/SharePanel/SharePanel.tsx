@@ -26,7 +26,6 @@ interface PropTypes extends WithTranslation {
   viewState: ViewState;
   onUserClick: () => void;
   btnDisabled: boolean;
-  t: TFunction;
 }
 
 interface SharePanelState {

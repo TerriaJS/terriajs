@@ -91,10 +91,7 @@ const ItemSearchTool: React.FC<PropsType> = observer((props) => {
     itemSearchProvider.loadParameterHint?.bind(itemSearchProvider);
 
   return (
-    <Frame
-      viewState={viewState}
-      title={t("itemSearchTool.title", { itemName })}
-    >
+    <Frame title={t("itemSearchTool.title", { itemName })}>
       <Main textLight light>
         <Box
           centered

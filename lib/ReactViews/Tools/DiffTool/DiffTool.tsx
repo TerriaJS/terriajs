@@ -1,57 +1,61 @@
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction } from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {
+  WithTranslation,
+  useTranslation,
+  withTranslation
+} from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import LatLonHeight from "../../../Core/LatLonHeight";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import prettifyCoordinates from "../../../Map/Vector/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import TerriaFeature from "../../../Models/Feature/Feature";
 import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
+import TerriaFeature from "../../../Models/Feature/Feature";
 import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import { EnumDimensionOption } from "../../../Models/SelectableDimensions/SelectableDimensions";
-import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import ImageryProviderTraits from "../../../Traits/TraitsClasses/ImageryProviderTraits";
+import { useViewState } from "../../Context";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
+import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
-import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
 
 const dateFormat = require("dateformat");
 
@@ -498,7 +502,7 @@ class Main extends React.Component<MainPropsType> {
 
     return (
       <Text large>
-        <DiffAccordion viewState={viewState} t={t}>
+        <DiffAccordion>
           <MainPanel
             isMapFullScreen={viewState.isMapFullScreen}
             styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
@@ -732,7 +736,6 @@ class Main extends React.Component<MainPropsType> {
                 onDateSet={() => this.showItem(this.props.leftItem)}
               />
               <AreaFilterSelection
-                t={t}
                 location={this.location}
                 isPickingNewLocation={this._isPickingNewLocation}
               />
@@ -750,18 +753,14 @@ class Main extends React.Component<MainPropsType> {
   }
 }
 
-interface DiffAccordionProps {
-  viewState: ViewState;
-  t: TFunction;
-}
-
 const DiffAccordionToggle = styled(Box)`
   ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
 `;
 
-const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
+const DiffAccordion = ({ children }: { children: React.ReactNode }) => {
   const [showChildren, setShowChildren] = useState(true);
-  const { t, viewState } = props;
+  const { t } = useTranslation();
+  const viewState = useViewState();
   const theme = useTheme();
   return (
     <DiffAccordionWrapper isMapFullScreen={viewState.isMapFullScreen} column>
@@ -807,7 +806,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
           </RawButton>
         </Box>
       </DiffAccordionToggle>
-      {showChildren && props.children}
+      {showChildren && children}
     </DiffAccordionWrapper>
   );
 };
@@ -874,11 +873,11 @@ const Selector = (props: any) => (
 );
 
 const AreaFilterSelection = (props: {
-  t: TFunction;
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
 }) => {
-  const { t, location, isPickingNewLocation } = props;
+  const { location, isPickingNewLocation } = props;
+  const { t } = useTranslation();
   let locationText = "-";
   if (location) {
     const { longitude, latitude } = prettifyCoordinates(

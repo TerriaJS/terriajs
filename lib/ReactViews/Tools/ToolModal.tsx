@@ -1,25 +1,24 @@
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
-import { GLYPHS, StyledIcon } from "../../Styled/Icon";
+import { useViewState } from "../Context";
 
 export interface FrameProps {
   title: string;
-  viewState: ViewState;
+  children: React.ReactNode;
 }
 
-export const Frame: React.FC<FrameProps> = observer((props) => {
+export const Frame = observer((props: FrameProps) => {
   const theme = useTheme();
-  const [t] = useTranslation();
   const [showChildren, setShowChildren] = useState(true);
-  const { viewState } = props;
+  const viewState = useViewState();
   return (
     <Wrapper isMapFullScreen={viewState.isMapFullScreen}>
       <Toggle
@@ -33,7 +32,7 @@ export const Frame: React.FC<FrameProps> = observer((props) => {
         {/* margin-right 5px for the padded button offset - larger click area
           but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
-          <ToolCloseButton viewState={viewState} t={t} />
+          <ToolCloseButton />
           <Spacing right={4} />
           {/* collapse button */}
           <RawButton onClick={() => setShowChildren(!showChildren)}>
@@ -83,16 +82,13 @@ const Toggle = styled(Box)`
   ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
 `;
 
-interface ToolCloseButtonProps {
-  viewState: ViewState;
-  t: TFunction;
-}
-
-const ToolCloseButton: React.FC<ToolCloseButtonProps> = (props) => {
+const ToolCloseButton = () => {
+  const viewState = useViewState();
+  const { t } = useTranslation();
   return (
-    <RawButton onClick={() => props.viewState.closeTool()}>
+    <RawButton onClick={() => viewState.closeTool()}>
       <Text textLight small semiBold uppercase>
-        {props.t("tool.exitBtnTitle")}
+        {t("tool.exitBtnTitle")}
       </Text>
     </RawButton>
   );
@@ -103,7 +99,7 @@ interface TitleProps {
   icon?: { id: string };
 }
 
-const Title: React.FC<TitleProps> = (props) => {
+const Title = (props: TitleProps) => {
   return (
     <Box centered>
       <Box>

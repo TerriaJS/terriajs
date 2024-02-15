@@ -38,7 +38,7 @@ export type ICheckboxProps = {
    * style `font-size: inherit` and props `isDisabled` and `isChecked` will be
    * applied to all child elements.
    */
-  children?: React.ReactChild;
+  children?: React.ReactNode;
 
   textProps?: ITextProps;
 

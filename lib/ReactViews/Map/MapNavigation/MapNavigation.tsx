@@ -77,7 +77,6 @@ const ControlWrapper = styled(Box)`
 interface PropTypes extends WithTranslation {
   viewState: ViewState;
   theme: DefaultTheme;
-  t: TFunction;
   navItems: any[];
 }
 

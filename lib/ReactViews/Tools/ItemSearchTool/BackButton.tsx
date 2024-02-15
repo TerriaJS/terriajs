@@ -5,10 +5,10 @@ import Button from "../../../Styled/Button";
 import { TextSpan } from "../../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
-const BackButton: React.FC<{ onClick: () => void }> = ({
-  children,
-  onClick
-}) => {
+const BackButton: React.FC<{
+  onClick: () => void;
+  children: React.ReactNode;
+}> = ({ children, onClick }) => {
   const theme = useTheme();
   return (
     <Button

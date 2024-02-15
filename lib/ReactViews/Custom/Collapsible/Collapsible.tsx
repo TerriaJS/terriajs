@@ -33,6 +33,7 @@ interface CollapsibleProps extends CollapsibleIconProps {
   titleTextProps?: any;
   bodyBoxProps?: IBoxProps;
   bodyTextProps?: any;
+  children: React.ReactNode;
 }
 
 export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {

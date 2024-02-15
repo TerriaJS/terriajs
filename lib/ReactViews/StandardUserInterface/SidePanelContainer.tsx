@@ -1,12 +1,12 @@
 import { action } from "mobx";
+import type * as React from "react";
 import styled from "styled-components";
-import ViewState from "../../ReactViewModels/ViewState";
-import { withViewState } from "../Context";
+import { WithViewState, withViewState } from "../Context";
 
-type PropsType = {
-  viewState: ViewState;
+interface PropsType extends WithViewState {
   show: boolean;
-};
+  children: React.ReactNode;
+}
 
 const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
   className: viewState.topElement === "SidePanel" ? "top-element" : "",
@@ -35,4 +35,9 @@ const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
   margin-left: ${(p) => (p.show ? "0px" : `-${p.theme.workbenchWidth}px`)};
 `;
 
-export default withViewState(SidePanelContainer);
+// Styled components seems to make children prop not be visible through withViewState. Explicitly type the component to make it work.
+export default withViewState(
+  SidePanelContainer as React.ComponentType<
+    PropsType & React.HTMLAttributes<HTMLDivElement>
+  >
+);

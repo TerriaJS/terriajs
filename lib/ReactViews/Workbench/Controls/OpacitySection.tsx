@@ -1,6 +1,5 @@
 "use strict";
 
-import { TFunction } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
@@ -17,7 +16,6 @@ import OpacityTraits from "../../../Traits/TraitsClasses/OpacityTraits";
 
 interface OpacitySectionProps extends WithTranslation {
   item: BaseModel;
-  t: TFunction;
 }
 
 @observer
