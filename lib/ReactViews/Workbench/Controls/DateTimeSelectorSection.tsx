@@ -23,7 +23,6 @@ interface IState {
 
 interface IProps extends WithTranslation {
   item: DiscretelyTimeVaryingMixin.Instance;
-  t: TFunction;
 }
 
 @observer

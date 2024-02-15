@@ -21,10 +21,7 @@ const LazyItemSearchTool: React.FC<PropsType> = (props) => {
   return (
     <Suspense
       fallback={
-        <Frame
-          viewState={viewState}
-          title={t("itemSearchTool.title", { itemName })}
-        >
+        <Frame title={t("itemSearchTool.title", { itemName })}>
           <Wrapper>
             <AnimatedSpinnerIcon light styledWidth="25px" styledHeight="25px" />
           </Wrapper>

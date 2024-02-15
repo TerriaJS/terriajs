@@ -154,8 +154,9 @@ interface NumericParameterProps extends WithT {
   value?: { start: number; end: number };
 }
 
-export const NumericParameter: React.FC<NumericParameterProps> = (props) => {
-  const { parameter, value, t } = props;
+export const NumericParameter = (props: NumericParameterProps) => {
+  const { parameter, value } = props;
+  const { t } = useTranslation();
   const { min, max } = parameter.range;
 
   const onChange =
