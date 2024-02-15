@@ -1,6 +1,7 @@
 import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as React from "react";
 import {
   useTranslation,
   WithTranslation,

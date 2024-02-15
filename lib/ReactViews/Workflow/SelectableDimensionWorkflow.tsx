@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";

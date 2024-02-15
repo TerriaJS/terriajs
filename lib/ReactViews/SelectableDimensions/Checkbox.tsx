@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionCheckbox as SelectableDimensionCheckboxModel } from "../../Models/SelectableDimensions/SelectableDimensions";

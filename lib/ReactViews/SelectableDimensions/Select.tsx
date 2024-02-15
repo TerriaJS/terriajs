@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import ReactSelect from "react-select";
 import ReactSelectCreatable from "react-select/creatable";
 import { useTheme } from "styled-components";

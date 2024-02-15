@@ -25,7 +25,7 @@ or with overrides on icon
 </Select>
  */
 
-import React from "react";
+import * as React from "react";
 import styled, { useTheme } from "styled-components";
 import Box from "./Box";
 import { GLYPHS, StyledIcon } from "./Icon";

@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { useTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";

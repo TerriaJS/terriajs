@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import * as React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { useUID } from "react-uid";
 import styled, { DefaultTheme, withTheme } from "styled-components";

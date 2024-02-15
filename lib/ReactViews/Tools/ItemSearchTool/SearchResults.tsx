@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import Mustache from "mustache";
-import React, { useState } from "react";
+import { useState } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { useVirtual } from "react-virtual";
 import styled from "styled-components";

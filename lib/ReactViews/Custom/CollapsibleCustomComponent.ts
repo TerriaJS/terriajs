@@ -1,4 +1,4 @@
-import React, { ReactElement, createElement } from "react";
+import { ReactElement, createElement } from "react";
 import Collapsible from "./Collapsible/Collapsible";
 import CustomComponent, {
   DomElement,
