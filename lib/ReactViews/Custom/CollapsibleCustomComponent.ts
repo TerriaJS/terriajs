@@ -32,13 +32,16 @@ export default class CollapsibleCustomComponent extends CustomComponent {
     const btnRight = Boolean(node.attribs?.rightbtn);
     const btnStyle = node.attribs?.btnstyle;
 
-    return createElement(Collapsible, {
-      key: title,
-      title,
-      isOpen,
-      btnRight,
-      btnStyle: btnStyle === "plus" ? "plus" : undefined,
+    return createElement(
+      Collapsible,
+      {
+        key: title,
+        title,
+        isOpen,
+        btnRight,
+        btnStyle: btnStyle === "plus" ? "plus" : undefined
+      },
       children
-    });
+    );
   }
 }
