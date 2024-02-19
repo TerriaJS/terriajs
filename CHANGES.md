@@ -4,6 +4,7 @@
 
 - `BingMapsCatalogItem` now supports Bing's `culture` parameter.
 - Update a prompt text in DataPreview.
+- Fix `PointStyleTraits.marker` bug where URLs were not being used.
 - [The next improvement]
 
 #### 8.5.0 - 2024-02-07
