@@ -166,16 +166,16 @@ export class CogImageryProvider extends TIFFImageryProvider {
   defaultNightAlpha = undefined;
   defaultDayAlpha = undefined;
   hasAlphaChannel = true;
-  defaultAlpha = <any>undefined;
-  defaultBrightness = <any>undefined;
-  defaultContrast = <any>undefined;
-  defaultGamma = <any>undefined;
-  defaultHue = <any>undefined;
-  defaultSaturation = <any>undefined;
+  defaultAlpha = undefined as any;
+  defaultBrightness = undefined as any;
+  defaultContrast = undefined as any;
+  defaultGamma = undefined as any;
+  defaultHue = undefined as any;
+  defaultSaturation = undefined as any;
   defaultMagnificationFilter = undefined as any;
   defaultMinificationFilter = undefined as any;
-  proxy = <any>undefined;
-  tileDiscardPolicy = <any>undefined;
+  proxy = undefined as any;
+  tileDiscardPolicy = undefined as any;
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
     return [];
