@@ -11,11 +11,11 @@ import { traitClass } from "../Trait";
 
   <strong>Note:</strong> <i>Must specify property <b>typeNames</b>.</i>`,
   example: {
-    "type": "wfs",
-    "name": "wfs example",
-    "url": "https://warehouse.ausseabed.gov.au/geoserver/ows",
-    "typeNames": "ausseabed:AHO_Reference_Surface__Broome__2023_0_5m_L0_Coverage",
-    "id": "some unique id for wfs example"
+    type: "wfs",
+    name: "wfs example",
+    url: "https://warehouse.ausseabed.gov.au/geoserver/ows",
+    typeNames: "ausseabed:AHO_Reference_Surface__Broome__2023_0_5m_L0_Coverage",
+    id: "some unique id for wfs example"
   }
 })
 export default class WebFeatureServiceCatalogGroupTraits extends mixTraits(
