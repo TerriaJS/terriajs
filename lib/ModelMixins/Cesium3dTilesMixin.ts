@@ -333,7 +333,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       const options: any = {};
       if (isDefined(this.options)) {
         Object.keys(OptionsTraits.traits).forEach((name) => {
-          options[name] = (<any>this.options)[name];
+          options[name] = (this.options as any)[name];
         });
       }
       return options;

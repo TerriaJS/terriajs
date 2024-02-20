@@ -55,7 +55,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     readonly imageryProvider: ImageryProvider,
     options: L.TileLayerOptions = {}
   ) {
-    super(<any>undefined, {
+    super(undefined as any, {
       ...options,
       updateInterval: defined((imageryProvider as any)._leafletUpdateInterval)
         ? (imageryProvider as any)._leafletUpdateInterval
@@ -147,7 +147,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
 
   createTile(coords: L.Coords, done: L.DoneCallback) {
     // Create a tile (Image) as normal.
-    const tile = <HTMLImageElement>super.createTile(coords, done);
+    const tile = super.createTile(coords, done) as HTMLImageElement;
 
     // By default, Leaflet handles tile load errors by setting the Image to the error URL and raising
     // an error event.  We want to first raise an error event that optionally returns a promise and
@@ -162,7 +162,12 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
           .catch((e: unknown) => {
             // The tile has failed irrecoverably, so invoke Leaflet's standard
             // tile error handler.
-            (<any>L.TileLayer).prototype._tileOnError.call(this, done, tile, e);
+            (L.TileLayer as any).prototype._tileOnError.call(
+              this,
+              done,
+              tile,
+              e
+            );
           });
         return;
       }
@@ -176,7 +181,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     };
 
     L.DomEvent.on(tile, "error", (e) => {
-      const level = (<any>this)._getLevelFromZ(coords);
+      const level = (this as any)._getLevelFromZ(coords);
       const message = i18next.t("map.cesium.failedToObtain", {
         x: coords.x,
         y: coords.y,
@@ -190,7 +195,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         coords.x,
         coords.y,
         level,
-        <any>e
+        e as any
         // TODO: bring terriajs-cesium retry logic to cesium
         //doRequest
       );
@@ -230,7 +235,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         this._delayedUpdate = undefined;
       }
 
-      this._delayedUpdate = <any>setTimeout(() => {
+      this._delayedUpdate = setTimeout(() => {
         this._delayedUpdate = undefined;
 
         // If we're no longer attached to a map, do nothing.
@@ -272,7 +277,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         }
 
         if (isDefined(this.imageryProvider.credit)) {
-          (<any>this._map).attributionControl.addAttribution(
+          (this._map as any).attributionControl.addAttribution(
             getCreditHtml(this.imageryProvider.credit)
           );
         }
@@ -280,11 +285,11 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         this._usable = true;
 
         this._update();
-      }, this._leafletUpdateInterval);
+      }, this._leafletUpdateInterval) as any;
     }
 
     if (this._usable) {
-      (<any>L.TileLayer).prototype._update.apply(this, args);
+      (L.TileLayer as any).prototype._update.apply(this, args);
 
       this._updateAttribution();
     }
@@ -348,9 +353,11 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
 
     for (let j = ne.y; j < sw.y; ++j) {
       for (let i = sw.x; i < ne.x; ++i) {
-        const credits = <Credit[]>(
-          this.imageryProvider.getTileCredits(i, j, zoom)
-        );
+        const credits = this.imageryProvider.getTileCredits(
+          i,
+          j,
+          zoom
+        ) as Credit[];
         if (!defined(credits)) {
           continue;
         }
@@ -365,7 +372,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
           nextCredits.push(credit);
 
           if (!credit._shownInLeafletLastUpdate) {
-            (<any>this._map).attributionControl.addAttribution(
+            (this._map as any).attributionControl.addAttribution(
               getCreditHtml(credit)
             );
           }
@@ -376,7 +383,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     // Remove attributions that applied last update but not this one.
     for (let i = 0; i < this._previousCredits.length; ++i) {
       if (!this._previousCredits[i]._shownInLeaflet) {
-        (<any>this._map).attributionControl.removeAttribution(
+        (this._map as any).attributionControl.removeAttribution(
           getCreditHtml(this._previousCredits[i])
         );
         this._previousCredits[i]._shownInLeafletLastUpdate = false;
@@ -426,7 +433,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
       TerriaError.from(
         e,
         `An error ocurred while calling \`ImageryProvider#.pickFeatures\`. \`ImageryProvider.url = ${
-          (<any>this.imageryProvider).url
+          (this.imageryProvider as any).url
         }\``
       ).log();
     }
@@ -441,13 +448,13 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     for (let i = 0; i < this._previousCredits.length; ++i) {
       this._previousCredits[i]._shownInLeafletLastUpdate = false;
       this._previousCredits[i]._shownInLeaflet = false;
-      (<any>map).attributionControl.removeAttribution(
+      (map as any).attributionControl.removeAttribution(
         getCreditHtml(this._previousCredits[i])
       );
     }
 
     if (this._usable && defined(this.imageryProvider.credit)) {
-      (<any>map).attributionControl.removeAttribution(
+      (map as any).attributionControl.removeAttribution(
         getCreditHtml(this.imageryProvider.credit)
       );
     }

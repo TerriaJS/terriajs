@@ -260,9 +260,9 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   }
 
   @computed get geoJsonItem() {
-    const stratum = <SenapsLocationsStratum>(
-      this.strata.get(SenapsLocationsStratum.stratumName)
-    );
+    const stratum = this.strata.get(
+      SenapsLocationsStratum.stratumName
+    ) as SenapsLocationsStratum;
     return isDefined(stratum) ? stratum.dataSource : undefined;
   }
 

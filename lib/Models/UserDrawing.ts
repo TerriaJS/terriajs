@@ -276,12 +276,12 @@ export default class UserDrawing extends MappableMixin(
         }
       };
 
-      this.otherEntities.entities.add(<any>rectangle);
+      this.otherEntities.entities.add(rectangle as any);
     } else {
       // Line will show up once user has drawn some points. Vertices of line are user points.
-      this.otherEntities.entities.add(<any>{
+      this.otherEntities.entities.add({
         name: "Line",
-        polyline: <any>{
+        polyline: {
           positions: new CallbackProperty(function () {
             const pos = that.getPointsForShape();
             if (isDefined(pos) && that.closeLoop) {
@@ -290,13 +290,13 @@ export default class UserDrawing extends MappableMixin(
             return pos;
           }, false),
 
-          material: new PolylineGlowMaterialProperty(<any>{
+          material: new PolylineGlowMaterialProperty({
             color: new Color(0.0, 0.0, 0.0, 0.1),
             glowPower: 0.25
-          }),
+          } as any),
           width: 20
-        }
-      });
+        } as any
+      } as any);
     }
 
     this.terria.overlays.add(this);
@@ -328,10 +328,10 @@ export default class UserDrawing extends MappableMixin(
     const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
-      billboard: <any>{
+      billboard: {
         image: this.svgPoint,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
-      }
+      } as any
     });
     // Remove the existing points if we are in drawRectangle mode and the user
     // has picked a 3rd point. This lets the user draw new rectangle that
@@ -477,17 +477,17 @@ export default class UserDrawing extends MappableMixin(
         return;
       } else if (index === 0 && !this.closeLoop && this.allowPolygon) {
         // Index is zero if it's the first point, meaning we have a closed shape
-        this.polygon = <Entity>this.otherEntities.entities.add(<any>{
+        this.polygon = this.otherEntities.entities.add({
           name: "User polygon",
-          polygon: <any>{
+          polygon: {
             hierarchy: new CallbackProperty(function () {
               return new PolygonHierarchy(that.getPointsForShape());
             }, false),
             material: new Color(0.0, 0.666, 0.843, 0.25),
             outlineColor: new Color(1.0, 1.0, 1.0, 1.0),
-            perPositionHeight: <any>true
-          }
-        });
+            perPositionHeight: true as any
+          } as any
+        } as any) as Entity;
         this.closeLoop = true;
         // A point has not been added, but conceptually it has because the first point is now also the last point.
         if (typeof that.onPointClicked === "function") {

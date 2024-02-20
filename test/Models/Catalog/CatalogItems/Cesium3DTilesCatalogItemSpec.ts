@@ -244,7 +244,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
               })
             );
             const tileset = item.mapItems[0] as Cesium3DTileset;
-            expect(tileset.style).toBe((<any>item).cesiumTileStyle);
+            expect(tileset.style).toBe((item as any).cesiumTileStyle);
           });
 
           // TODO: fix later

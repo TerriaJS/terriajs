@@ -260,7 +260,7 @@ export default class ViewState {
         return a.priority - b.priority;
       })
       .filter(
-        (tourPoint) => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        (tourPoint) => (this.appRefs as any).get(tourPoint.appRefName)?.current
       );
   }
   @action

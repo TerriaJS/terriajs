@@ -149,9 +149,9 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
   }
 
   @computed get imageryProvider() {
-    const stratum = <CartoLoadableStratum>(
-      this.strata.get(CartoLoadableStratum.stratumName)
-    );
+    const stratum = this.strata.get(
+      CartoLoadableStratum.stratumName
+    ) as CartoLoadableStratum;
 
     if (!isDefined(stratum) || !isDefined(stratum.tileUrl)) {
       return;

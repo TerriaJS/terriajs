@@ -463,7 +463,7 @@ class LeafletGeomVisualizer {
       for (const prop in iconOptions) {
         if (
           isDefined(marker.options.icon) &&
-          iconOptions[prop] !== (<any>marker.options.icon.options)[prop]
+          iconOptions[prop] !== (marker.options.icon.options as any)[prop]
         ) {
           redrawIcon = true;
           break;
@@ -592,7 +592,7 @@ class LeafletGeomVisualizer {
       for (const prop in iconOptions) {
         if (
           isDefined(marker.options.icon) &&
-          iconOptions[prop] !== (<any>marker.options.icon.options)[prop]
+          iconOptions[prop] !== (marker.options.icon.options as any)[prop]
         ) {
           redrawLabel = true;
           break;
@@ -1025,7 +1025,9 @@ class LeafletGeomVisualizer {
       }
 
       for (const prop in polylineOptions) {
-        if ((<any>polylineOptions)[prop] !== (<any>polyline.options)[prop]) {
+        if (
+          (polylineOptions as any)[prop] !== (polyline.options as any)[prop]
+        ) {
           polyline.setStyle(polylineOptions);
           break;
         }

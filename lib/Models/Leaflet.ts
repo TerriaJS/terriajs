@@ -187,16 +187,14 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // TODO: fix type error
+      visualizersCallback: this._leafletVisualizer.visualizersCallback as any // TODO: fix type error
     });
 
     this._eventHelper = new EventHelper();
 
-    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
-      clock: Clock
-    ) => {
+    this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
       this.dataSourceDisplay.update(clock.currentTime);
-    }));
+    }) as any);
 
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
@@ -229,7 +227,7 @@ export default class Leaflet extends GlobeOrMap {
 
       // Update mouse coords on mouse move
       this.map.on("mousemove", (e: L.LeafletEvent) => {
-        const mouseEvent = <L.LeafletMouseEvent>e;
+        const mouseEvent = e as L.LeafletMouseEvent;
         this.mouseCoords.updateCoordinatesFromLeaflet(
           this.terria,
           mouseEvent.originalEvent
@@ -308,7 +306,7 @@ export default class Leaflet extends GlobeOrMap {
    * Pick feature from mouse click event.
    */
   private pickLocation(e: L.LeafletEvent) {
-    const mouseEvent = <L.LeafletMouseEvent>e;
+    const mouseEvent = e as L.LeafletMouseEvent;
 
     // Handle click events that cross the anti-meridian
     if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
@@ -676,7 +674,7 @@ export default class Leaflet extends GlobeOrMap {
       isDefined(feature) &&
       feature.position
     ) {
-      this._pickedFeatures.pickPosition = (<any>feature.position)._value;
+      this._pickedFeatures.pickPosition = (feature.position as any)._value;
     }
   }
 
@@ -759,7 +757,7 @@ export default class Leaflet extends GlobeOrMap {
       Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
 
     const imageryFeaturePromises = imageryLayers.map(async (imageryLayer) => {
-      const imageryLayerUrl = (<any>imageryLayer.imageryProvider)?.url;
+      const imageryLayerUrl = (imageryLayer.imageryProvider as any).url;
       const longRadians = CesiumMath.toRadians(latlng.lng);
       const latRadians = CesiumMath.toRadians(latlng.lat);
 
@@ -812,7 +810,7 @@ export default class Leaflet extends GlobeOrMap {
           ) {
             const imageryProvider = result.imageryLayer?.imageryProvider;
             if (imageryProvider)
-              coordsSoFar[(<any>imageryProvider).url] = result.coords;
+              coordsSoFar[(imageryProvider as any).url] = result.coords;
             return coordsSoFar;
           },
           {});

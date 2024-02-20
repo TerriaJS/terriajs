@@ -16,7 +16,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisFeatureServerCatalogGroup", function () {
   const featureServerUrl =
@@ -94,9 +94,9 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
       expect(group.members).toBeDefined();
       expect(group.members.length).toBe(3);
 
-      const member0 = <ArcGisFeatureServerCatalogItem>group.memberModels[0];
-      const member1 = <ArcGisFeatureServerCatalogItem>group.memberModels[1];
-      const member2 = <ArcGisFeatureServerCatalogItem>group.memberModels[2];
+      const member0 = group.memberModels[0] as ArcGisFeatureServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisFeatureServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisFeatureServerCatalogItem;
 
       expect(member0.name).toBe("Ambulances");
       expect(member0.url).toBe(featureServerUrl + "/0");

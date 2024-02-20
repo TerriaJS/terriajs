@@ -11,7 +11,7 @@ import { JsonObject } from "../../lib/Core/Json";
 
 type Stratum = StratumFromTraits<TraitsForTesting>;
 
-const stratum: Stratum = <any>{};
+const stratum: Stratum = {} as any;
 
 // Simple properties allow undefined, whether they have a default or not.
 expectTrue<Equals<typeof stratum.withDefault, number | undefined>>();

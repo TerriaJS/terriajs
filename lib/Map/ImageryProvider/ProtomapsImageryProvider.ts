@@ -282,17 +282,17 @@ export default class ProtomapsImageryProvider
   readonly defaultNightAlpha = undefined;
   readonly defaultDayAlpha = undefined;
   readonly hasAlphaChannel = true;
-  readonly defaultAlpha = <any>undefined;
-  readonly defaultBrightness = <any>undefined;
-  readonly defaultContrast = <any>undefined;
-  readonly defaultGamma = <any>undefined;
-  readonly defaultHue = <any>undefined;
-  readonly defaultSaturation = <any>undefined;
+  readonly defaultAlpha = undefined as any;
+  readonly defaultBrightness = undefined as any;
+  readonly defaultContrast = undefined as any;
+  readonly defaultGamma = undefined as any;
+  readonly defaultHue = undefined as any;
+  readonly defaultSaturation = undefined as any;
   readonly defaultMagnificationFilter = undefined as any;
   readonly defaultMinificationFilter = undefined as any;
-  readonly proxy = <any>undefined;
+  readonly proxy = undefined as any;
   readonly readyPromise = Promise.resolve(true);
-  readonly tileDiscardPolicy = <any>undefined;
+  readonly tileDiscardPolicy = undefined as any;
 
   // Protomaps properties
   /** Data object from constructor options (this is transformed into `source`) */
