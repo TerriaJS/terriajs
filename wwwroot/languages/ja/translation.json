@@ -601,7 +601,7 @@
     "changeLanguage": "言語を変更"
   },
   "mobile": {
-    "toggleNavigation": "네비게이션 변경",
+    "toggleNavigation": "メニューの表示・非表示",
     "addDataBtnText": "データ",
     "doneBtnText": "完了"
   },
