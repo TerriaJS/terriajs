@@ -32,7 +32,7 @@ module.exports = function () {
         ignoreOrder: true
       }),
       // This is needed for a jsdom issue
-      new IgnorePlugin(/canvas/, /jsdom$/)
+      new IgnorePlugin({ resourceRegExp: /canvas/, contextRegExp: /jsdom$/ })
     ]
   };
   return configureWebpackForTerriaJS(

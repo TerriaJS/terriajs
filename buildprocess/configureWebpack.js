@@ -392,8 +392,8 @@ function configureWebpack(
             importLoaders: 2
           }
         },
-        { loader: "resolve-url-loader?sourceMap" },
-        { loader: "sass-loader?sourceMap" }
+        { loader: "resolve-url-loader", options: { sourceMap: true } },
+        { loader: "sass-loader", options: { sourceMap: true } }
       ]
     });
   } else if (MiniCssExtractPlugin) {
@@ -417,8 +417,8 @@ function configureWebpack(
             importLoaders: 2
           }
         },
-        { loader: "resolve-url-loader?sourceMap" },
-        { loader: "sass-loader?sourceMap" }
+        { loader: "resolve-url-loader", options: { sourceMap: true } },
+        { loader: "sass-loader", options: { sourceMap: true } }
       ]
     });
 

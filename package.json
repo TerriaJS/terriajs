@@ -183,7 +183,7 @@
     "typescript": "~5.2.0",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
-    "webpack": "5",
+    "webpack": "^5.90.3",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14",
     "worker-loader": "^2.0.0"
@@ -191,6 +191,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@types/css-font-loading-module": "^0.0.13",
     "@types/dateformat": "^3.0.1",
     "@types/node": "^18.15.11",
     "@types/webpack": "4.41.33",
