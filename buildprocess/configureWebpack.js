@@ -23,10 +23,10 @@ function configureWebpack(
 
   config.node = config.node || {};
 
-  // Resolve node module use of fs
-  config.node.fs = "empty";
-
   config.resolve = config.resolve || {};
+  // Resolve node module use of fs
+  config.resolve.fallback = { fs: false };
+
   config.resolve.extensions = config.resolve.extensions || [
     "*",
     ".webpack.js",
@@ -59,35 +59,39 @@ function configureWebpack(
       // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
       // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
     ],
-    loader: StringReplacePlugin.replace({
-      replacements: [
-        // {
-        //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-        //   replacement: function (match, p1, offset, string) {
-        //     let p1_modified = p1.replace(/\\/g, "\\\\");
-        //     return (
-        //       "require(`" +
-        //       cesiumDir.replace(/\\/g, "\\\\") +
-        //       "/Source/" +
-        //       p1_modified +
-        //       "`)"
-        //     );
-        //   }
-        // },
-        {
-          pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
-          replacement: function () {
-            return 'Please set "cesiumIonAccessToken" in config.json';
-          }
-        },
-        {
-          pattern: / before making any Cesium API calls/g,
-          replacement: function () {
-            return "";
-          }
-        }
-      ]
-    })
+    use: [
+      {
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            // {
+            //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
+            //   replacement: function (match, p1, offset, string) {
+            //     let p1_modified = p1.replace(/\\/g, "\\\\");
+            //     return (
+            //       "require(`" +
+            //       cesiumDir.replace(/\\/g, "\\\\") +
+            //       "/Source/" +
+            //       p1_modified +
+            //       "`)"
+            //     );
+            //   }
+            // },
+            {
+              pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
+              replacement: function () {
+                return 'Please set "cesiumIonAccessToken" in config.json';
+              }
+            },
+            {
+              pattern: / before making any Cesium API calls/g,
+              replacement: function () {
+                return "";
+              }
+            }
+          ]
+        })
+      }
+    ]
   });
 
   // The sprintf module included by Cesium includes a license comment with a big
@@ -98,17 +102,21 @@ function configureWebpack(
   config.module.rules.push({
     test: /\.js?$/,
     include: path.resolve(cesiumDir, "Source", "ThirdParty"),
-    loader: StringReplacePlugin.replace({
-      replacements: [
-        {
-          pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
-          replacement: function (match) {
-            // replace http:// and https:// with a spelling-out of it.
-            return match.replace(/(https?):\/\//g, "$1-colon-slashslash ");
-          }
-        }
-      ]
-    })
+    use: [
+      {
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
+              replacement: function (match) {
+                // replace http:// and https:// with a spelling-out of it.
+                return match.replace(/(https?):\/\//g, "$1-colon-slashslash ");
+              }
+            }
+          ]
+        })
+      }
+    ]
   });
 
   const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
@@ -195,27 +203,27 @@ function configureWebpack(
   config.module.rules.push({
     test: /\.html$/,
     include: path.resolve(terriaJSBasePath, "lib", "Views"),
-    loader: require.resolve("raw-loader")
+    use: [{ loader: require.resolve("raw-loader") }]
   });
 
   // Allow XML in the models directory to be required-in as a raw text.
   config.module.rules.push({
     test: /\.xml$/,
     include: path.resolve(terriaJSBasePath, "lib", "Models"),
-    loader: require.resolve("raw-loader")
+    use: [{ loader: require.resolve("raw-loader") }]
   });
 
   config.module.rules.push({
     test: /\.json|\.xml$/,
     include: path.resolve(cesiumDir, "Source", "Assets"),
-    loader: require.resolve("file-loader"),
+    use: [{ loader: require.resolve("file-loader") }],
     type: "javascript/auto"
   });
 
   config.module.rules.push({
     test: /\.wasm$/,
     include: path.resolve(cesiumDir, "Source", "ThirdParty"),
-    loader: require.resolve("file-loader"),
+    use: [{ loader: require.resolve("file-loader") }],
     type: "javascript/auto"
   });
 
@@ -225,13 +233,16 @@ function configureWebpack(
       path.dirname(require.resolve("terriajs-cesium/package.json")),
       "Source"
     ),
-    use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
+    use: [
+      babelLoader,
+      { loader: require.resolve("./removeCesiumDebugPragmas") }
+    ]
   });
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
   config.module.rules.push({
     test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-    loader: "imports-loader?require=>false"
+    use: [{ loader: "imports-loader", options: { require: false } }]
   });
 
   // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
@@ -250,26 +261,34 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
       path.resolve(terriaJSBasePath, "wwwroot", "fonts")
     ],
-    loader: require.resolve("url-loader"),
-    options: {
-      limit: 8192
-    }
+    use: [
+      {
+        loader: require.resolve("url-loader"),
+        options: {
+          limit: 8192
+        }
+      }
+    ]
   });
 
   config.module.rules.push({
     test: /\.woff(2)?(\?.+)?$/,
     include: path.resolve(terriaJSBasePath, "wwwroot", "fonts"),
-    loader: require.resolve("url-loader"),
-    options: {
-      limit: 10000,
-      mimetype: "application/font-woff"
-    }
+    use: [
+      {
+        loader: require.resolve("url-loader"),
+        options: {
+          limit: 10000,
+          mimetype: "application/font-woff"
+        }
+      }
+    ]
   });
 
   config.module.rules.push({
     test: /\.(ttf|eot|svg)(\?.+)?$/,
     include: path.resolve(terriaJSBasePath, "wwwroot", "fonts"),
-    loader: require.resolve("file-loader")
+    use: [{ loader: require.resolve("file-loader") }]
   });
 
   // config.module.loaders.push({
@@ -281,10 +300,14 @@ function configureWebpack(
   config.module.rules.push({
     test: /\.svg$/,
     include: path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
-    loader: require.resolve("svg-sprite-loader"),
-    options: {
-      esModule: false
-    }
+    use: [
+      {
+        loader: require.resolve("svg-sprite-loader"),
+        options: {
+          esModule: false
+        }
+      }
+    ]
   });
 
   config.devServer = config.devServer || {
@@ -314,7 +337,10 @@ function configureWebpack(
 
   config.plugins = (config.plugins || []).concat([
     new StringReplacePlugin(),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/
+    })
   ]);
 
   // Fork type checking to a separate thread
@@ -355,7 +381,7 @@ function configureWebpack(
       include: path.resolve(terriaJSBasePath) + path.sep,
       test: /\.scss$/,
       use: [
-        require.resolve("style-loader"),
+        { loader: require.resolve("style-loader") },
         {
           loader: require.resolve("css-loader"),
           options: {
@@ -366,8 +392,8 @@ function configureWebpack(
             importLoaders: 2
           }
         },
-        "resolve-url-loader?sourceMap",
-        "sass-loader?sourceMap"
+        { loader: "resolve-url-loader?sourceMap" },
+        { loader: "sass-loader?sourceMap" }
       ]
     });
   } else if (MiniCssExtractPlugin) {
@@ -379,8 +405,8 @@ function configureWebpack(
       include: path.resolve(terriaJSBasePath, "lib"),
       test: /\.scss$/,
       use: [
-        MiniCssExtractPlugin.loader,
-        "css-modules-typescript-loader",
+        { loader: MiniCssExtractPlugin.loader },
+        { loader: "css-modules-typescript-loader" },
         {
           loader: require.resolve("css-loader"),
           options: {
@@ -391,8 +417,8 @@ function configureWebpack(
             importLoaders: 2
           }
         },
-        "resolve-url-loader?sourceMap",
-        "sass-loader?sourceMap"
+        { loader: "resolve-url-loader?sourceMap" },
+        { loader: "sass-loader?sourceMap" }
       ]
     });
 

@@ -183,7 +183,7 @@
     "typescript": "~5.2.0",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
-    "webpack": "~4.47.0",
+    "webpack": "5",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14",
     "worker-loader": "^2.0.0"

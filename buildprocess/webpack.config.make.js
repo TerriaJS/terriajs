@@ -31,7 +31,7 @@ module.exports = function (hot, dev) {
           // Don't let jasmine-ajax detect require and import jasmine-core, because we bring
           // in Jasmine via a script tag instead.
           test: require.resolve("jasmine-ajax"),
-          loader: "imports-loader?require=>false"
+          use: [{ loader: "imports-loader", options: { require: false } }]
         }
 
         // {
