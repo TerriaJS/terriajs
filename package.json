@@ -241,6 +241,8 @@
     "regenerator-runtime": "^0.13.2",
     "sass": "^1.66.1",
     "terriajs-server": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.90.3",
     "yaml": "^1.10.0"
   },
   "scripts": {
