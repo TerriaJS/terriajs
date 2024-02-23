@@ -318,7 +318,7 @@ export default class WebMapServiceCapabilities {
       if (Array.isArray(value)) {
         p.push(...value);
       } else if (value !== undefined) {
-        p.push(<TResultElement>value);
+        p.push(value as TResultElement);
       }
       return p;
     }, []);

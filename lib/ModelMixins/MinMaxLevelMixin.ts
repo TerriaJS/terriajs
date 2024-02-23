@@ -54,18 +54,18 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         ) =>
           | Promise<HTMLImageElement | HTMLCanvasElement | ImageBitmap>
           | undefined;
-        imageryProvider.requestImage = <ExpectedCesiumRequestImageType>((
+        imageryProvider.requestImage = ((
           x: number,
           y: number,
           level: number,
-          request: Request | undefined
+          _request: Request | undefined
         ) => {
           if (
             (maximumLevel && level > maximumLevel) ||
             (minimumLevel && level < minimumLevel)
           ) {
-            if (isDefined((<any>imageryProvider).enablePickFeatures)) {
-              (<any>imageryProvider).enablePickFeatures = false;
+            if (isDefined((imageryProvider as any).enablePickFeatures)) {
+              (imageryProvider as any).enablePickFeatures = false;
             }
             if (
               maximumLevel &&
@@ -95,11 +95,11 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             "scaleWorkbenchInfo",
             undefined
           );
-          if (isDefined((<any>imageryProvider).enablePickFeatures)) {
-            (<any>imageryProvider).enablePickFeatures = true;
+          if (isDefined((imageryProvider as any).enablePickFeatures)) {
+            (imageryProvider as any).enablePickFeatures = true;
           }
           return realRequestImage.call(imageryProvider, x, y, level);
-        });
+        }) as ExpectedCesiumRequestImageType;
       }
       return imageryProvider;
     }

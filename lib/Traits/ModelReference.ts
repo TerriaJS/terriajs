@@ -15,7 +15,7 @@ namespace ModelReference {
     reference: ModelReference
   ): reference is RemovedModelId {
     return reference
-      ? (<RemovedModelId>reference).removed !== undefined
+      ? (reference as RemovedModelId).removed !== undefined
       : false;
   }
 }

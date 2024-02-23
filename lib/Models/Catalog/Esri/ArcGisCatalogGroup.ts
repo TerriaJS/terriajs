@@ -11,7 +11,7 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
+import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -289,11 +289,14 @@ export default class ArcGisCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const arcgisServerStratum = <
-      ArcGisServerStratum | MapServerStratum | FeatureServerStratum | undefined
-    >(this.strata.get(ArcGisServerStratum.stratumName) ||
+    const arcgisServerStratum =
+      this.strata.get(ArcGisServerStratum.stratumName) ||
       this.strata.get(MapServerStratum.stratumName) ||
-      this.strata.get(FeatureServerStratum.stratumName));
+      (this.strata.get(FeatureServerStratum.stratumName) as
+        | ArcGisServerStratum
+        | MapServerStratum
+        | FeatureServerStratum
+        | undefined);
 
     await runLater(() => {
       if (arcgisServerStratum instanceof ArcGisServerStratum) {

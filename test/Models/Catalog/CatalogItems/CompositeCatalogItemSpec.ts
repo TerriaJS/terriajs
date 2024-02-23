@@ -76,8 +76,8 @@ describe("CompositeCatalogItem", function () {
     updateModelFromJson(composite, CommonStrata.definition, json);
 
     expect(composite.memberModels.length).toBe(2);
-    expect((<GeoJsonCatalogItem>composite.memberModels[0]).name).toBe("B");
-    expect((<WebMapServiceCatalogItem>composite.memberModels[1]).name).toBe(
+    expect((composite.memberModels[0] as GeoJsonCatalogItem).name).toBe("B");
+    expect((composite.memberModels[1] as WebMapServiceCatalogItem).name).toBe(
       "A"
     );
   });

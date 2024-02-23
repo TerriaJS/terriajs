@@ -71,7 +71,7 @@ describe("BuildShareLink", function () {
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
-          model.setFileInput(<File>blob);
+          model.setFileInput(blob as File);
           terria.addModel(model);
 
           expect(terria.getModelById(BaseModel, modelId)).toBe(model);
@@ -97,7 +97,7 @@ describe("BuildShareLink", function () {
 
       loadBlob("test/GeoJSON/bike_racks.geojson", {})
         .then((blob) => {
-          model.setFileInput(<File>blob);
+          model.setFileInput(blob as File);
           terria.addModel(model);
           return addUserCatalogMember(terria, model);
         })

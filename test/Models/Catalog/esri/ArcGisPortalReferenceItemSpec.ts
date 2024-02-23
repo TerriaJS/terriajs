@@ -21,7 +21,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisPortalItemReference", function () {
   let terria: Terria;
@@ -77,11 +77,9 @@ describe("ArcGisPortalItemReference", function () {
       });
       await arcGisPortalItemReference.loadReference();
 
-      arcGisPortalItemStratum = <ArcGisPortalItemStratum>(
-        arcGisPortalItemReference.strata.get(
-          ArcGisPortalItemStratum.stratumName
-        )
-      );
+      arcGisPortalItemStratum = arcGisPortalItemReference.strata.get(
+        ArcGisPortalItemStratum.stratumName
+      ) as ArcGisPortalItemStratum;
 
       portalItemTarget = arcGisPortalItemReference.target;
     });

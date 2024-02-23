@@ -1109,7 +1109,9 @@
     "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
     "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
-    "selectToPreview": "<0>Seleziona un set di dati per vedere un'anteprima </0><1>- O -</1><2>Vai alla mappa</2>",
+    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima",
+    "selectToPreviewSeparator": "O",
+    "goToTheMap": "Vai alla mappa",
     "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali."
   },
   "legend": {

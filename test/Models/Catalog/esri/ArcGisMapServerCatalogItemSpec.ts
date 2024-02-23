@@ -17,7 +17,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisMapServerCatalogItem", function () {
   const mapServerUrl =
@@ -274,6 +274,20 @@ describe("ArcGisMapServerCatalogItem", function () {
           await item.loadMapItems();
 
           expect(item.layersArray.length).toBe(2);
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect(imageryProvider.usingPrecachedTiles).toBe(false);
+        });
+
+        it("usePreCachedTilesIfAvailable = false if requesting layer ID in url path", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
+          });
+          await item.loadMapItems();
+
+          expect(item.layersArray.length).toBe(1);
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;

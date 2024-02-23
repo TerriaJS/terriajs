@@ -1,6 +1,16 @@
 # Change Log
 
-#### next release (8.5.0)
+#### next release (8.5.2)
+
+- [The next improvement]
+
+#### 8.5.1 - 2024-02-23
+
+- Added highly experimental CatalogProvider, intended to encapsulate functionality related to the entire catalog, or large subtrees of it, that doesn't fit into individual catalog member models.
+- `BingMapsCatalogItem` now supports Bing's `culture` parameter.
+- Update a prompt text in DataPreview.
+
+#### 8.5.0 - 2024-02-07
 
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
@@ -15,7 +25,9 @@
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
 - Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
-- [The next improvement]
+- Add option to enable/disable shortening share URLs via InitSourceData.
+- Fix bug in ArcGisMapServerCatalogItem.
+- Add examples.
 
 #### 8.4.1 - 2023-12-08
 

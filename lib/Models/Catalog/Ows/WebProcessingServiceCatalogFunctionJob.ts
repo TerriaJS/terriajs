@@ -413,7 +413,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
    * Returns all the process outputs skipping process contexts and empty outputs
    */
   @computed get outputs() {
-    const wpsResponse = <any>this.wpsResponse;
+    const wpsResponse = this.wpsResponse as any;
     if (
       !wpsResponse ||
       !wpsResponse.ProcessOutputs ||

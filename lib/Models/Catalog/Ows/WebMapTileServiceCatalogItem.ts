@@ -477,9 +477,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get imageryProvider() {
-    const stratum = <GetCapabilitiesStratum>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
 
     if (
       !isDefined(this.layer) ||
@@ -567,9 +567,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tileHeight: number;
       }
     | undefined {
-    const stratum = <GetCapabilitiesStratum>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
     if (!this.layer) {
       return;
     }

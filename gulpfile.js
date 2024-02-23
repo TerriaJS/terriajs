@@ -8,6 +8,7 @@
 // the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require("gulp");
+var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 
 gulp.task("build-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
@@ -253,64 +254,7 @@ gulp.task(
   )
 );
 
-gulp.task("terriajs-server", function (done) {
-  // E.g. gulp terriajs-server --terriajsServerArg port=4000 --terriajsServerArg verbose=true
-  //  or gulp dev --terriajsServerArg port=3000
-  const { spawn } = require("child_process");
-  const fs = require("fs");
-  const minimist = require("minimist");
-
-  const knownOptions = {
-    string: ["terriajsServerArg"],
-    default: {
-      terriajsServerArg: []
-    }
-  };
-  const options = minimist(process.argv.slice(2), knownOptions);
-
-  const logFile = fs.openSync("./terriajs-server.log", "a");
-  const serverArgs = Array.isArray(options.terriajsServerArg)
-    ? options.terriajsServerArg
-    : [options.terriajsServerArg];
-  // Spawn detached - attached does not make terriajs-server
-  //  quit when the gulp task is stopped
-  const child = spawn(
-    "node",
-    [
-      "./node_modules/.bin/terriajs-server",
-      "--port=3002",
-      ...serverArgs.map((arg) => `--${arg}`)
-    ],
-    { detached: true, stdio: ["ignore", logFile, logFile] }
-  );
-  child.on("exit", (exitCode, signal) => {
-    done(
-      new Error(
-        "terriajs-server quit" +
-          (exitCode !== null ? ` with exit code: ${exitCode}` : "") +
-          (signal ? ` from signal: ${signal}` : "") +
-          "\nCheck terriajs-server.log for more information."
-      )
-    );
-  });
-  // Intercept SIGINT, SIGTERM and SIGHUP, cleanup terriajs-server and re-send signal
-  // May fail to catch some relevant signals on Windows
-  // SIGINT: ctrl+c
-  // SIGTERM: kill <pid>
-  // SIGHUP: terminal closed
-  process.once("SIGINT", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGINT");
-  });
-  process.once("SIGTERM", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGTERM");
-  });
-  process.once("SIGHUP", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGHUP");
-  });
-});
+gulp.task("terriajs-server", terriajsServerGulpTask(3002));
 
 gulp.task(
   "copy-cesium-assets",
