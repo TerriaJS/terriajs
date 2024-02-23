@@ -25,7 +25,6 @@ import DimensionSelectorSection from "./SelectableDimensionSection";
 import ShortReport from "./ShortReport";
 import TimerSection from "./TimerSection";
 import ViewingControls from "./ViewingControls";
-import Palettes from "./Palettes";
 
 type WorkbenchControls = {
   viewingControls?: boolean;
@@ -41,7 +40,6 @@ type WorkbenchControls = {
   colorScaleRange?: boolean;
   shortReport?: boolean;
   legend?: boolean;
-  palettes?: boolean;
 };
 
 type WorkbenchItemControlsProps = {
@@ -64,8 +62,7 @@ export const defaultControls: Complete<WorkbenchControls> = {
   selectableDimensions: true,
   colorScaleRange: true,
   shortReport: true,
-  legend: true,
-  palettes: true
+  legend: true
 };
 
 export const hideAllControls: Complete<WorkbenchControls> = {
@@ -81,8 +78,7 @@ export const hideAllControls: Complete<WorkbenchControls> = {
   selectableDimensions: false,
   colorScaleRange: false,
   shortReport: false,
-  legend: false,
-  palettes: false
+  legend: false
 };
 
 const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
@@ -115,7 +111,6 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {controls?.selectableDimensions ? (
           <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
         ) : null}
-        {controls?.palettes ? <Palettes item={item} /> : null}
         {
           <GeneratedControlSection
             item={item}

@@ -28,7 +28,6 @@ import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
-  WebMapServiceAvailablePaletteTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -45,6 +44,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import { Complete } from "../../../Core/TypeModifiers";
 
 const dateFormat = require("dateformat");
 
@@ -88,6 +88,62 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       model as WebMapServiceCatalogItem,
       this.capabilities
     ) as this;
+  }
+
+  async fetchPalettes(
+    abstract: string,
+    legend:
+      | Complete<{
+          title?: string | undefined;
+          url?: string | undefined;
+          paletteUrl?: string | undefined;
+          imageScaling?: number | undefined;
+          urlMimeType?: string | undefined;
+          items?:
+            | Complete<{
+                title?: string | undefined;
+                multipleTitles?: string[] | undefined;
+                maxMultipleTitlesShowed: number | undefined;
+                titleAbove?: string | undefined;
+                titleBelow?: string | undefined;
+                color?: string | undefined;
+                outlineColor?: string | undefined;
+                outlineWidth?: number | undefined;
+                multipleColors?: string[] | undefined;
+                imageUrl?: string | undefined;
+                marker?: string | undefined;
+                rotation: number | undefined;
+                addSpacingAbove?: boolean | undefined;
+                imageHeight: number | undefined;
+                imageWidth: number | undefined;
+              }>[]
+            | undefined;
+          backgroundColor?: string | undefined;
+        }>
+      | undefined
+  ): Promise<StratumFromTraits<WebMapServiceAvailableStyleTraits>[]> {
+    const paletteResult: StratumFromTraits<WebMapServiceAvailableStyleTraits>[] =
+      [];
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = abstract?.match(urlRegex);
+
+    if (urls) {
+      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, urls[0]);
+      const response = await fetch(paletteUrl);
+      const data = await response.json();
+      const palettes = data.palettes;
+      palettes.forEach((palette: any) => {
+        paletteResult.push({
+          name: palette,
+          title: palette,
+          abstract: abstract,
+          legend: legend
+        });
+      });
+    }
+
+    return paletteResult;
   }
 
   @computed get metadataUrls() {
@@ -145,27 +201,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  @computed
-  get availablePalettes(): StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] {
-    const result: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] = [];
-    const availableStyles = this.catalogItem.availableStyles || [];
-    const layerStyle = availableStyles[0];
-    if (this.catalogItem.isThredds) {
-      if (layerStyle?.styles[0].abstract) {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const urls = layerStyle?.styles[0].abstract.match(urlRegex);
-        let paletteUrl: uri.URI | undefined;
-        if (urls) {
-          paletteUrl = URI(proxyCatalogItemUrl(this.catalogItem, urls[0]));
-          result.push({
-            url: paletteUrl.toString()
-          });
-        }
-      }
-    }
-
-    return result;
-  }
   /**
  * **How we determine WMS legends (in order)**
   1. Defined manually in catalog JSON
@@ -176,7 +211,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
-    const availablePalettes = this.catalogItem.availablePalettes || [];
     const layers = this.catalogItem.layersArray;
     const styles = this.catalogItem.stylesArray;
 
@@ -202,17 +236,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         layerStyle = layerAvailableStyles?.find(
           (candidate) => candidate.name === style
         );
-        if (this.catalogItem.isThredds) {
-          if (layerStyle?.abstract) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            const urls = layerStyle.abstract.match(urlRegex);
-            if (urls) {
-              paletteUrl = proxyCatalogItemUrl(this.catalogItem, urls[0]);
-            }
-          }
-        }
       }
-
       // If no style is selected and this WMS doesn't support GetLegendGraphics - we must use the first style if none is explicitly specified.
       // (If WMS supports GetLegendGraphics we can use it and omit style parameter to get the "default" style's legend)
       if (!isDefined(layerStyle) && !this.catalogItem.supportsGetLegendGraphic)
@@ -397,10 +421,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] =
       [];
 
-    if (!this.capabilities) {
-      return result;
-    }
-
     const capabilitiesLayers = this.capabilitiesLayers;
     for (const layerTuple of capabilitiesLayers) {
       const layerName = layerTuple[0];
@@ -444,6 +464,29 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           };
         })
       });
+    }
+
+    if (this.catalogItem.isThredds) {
+      //   const paletteResult: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] =
+      // [];
+
+      async () => {
+        const res = result[0];
+        const styles = res.styles ?? null;
+        if (styles && styles[0].abstract) {
+          const palettes = await this.fetchPalettes(
+            styles[0].abstract,
+            styles[0].legend
+          );
+          console.log(palettes);
+          result[0].styles = palettes;
+          return result;
+        } else {
+          return result;
+        }
+      };
+    } else {
+      return result;
     }
 
     return result;

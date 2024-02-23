@@ -38,7 +38,8 @@ import {
 } from "../../../Table/tableFeatureInfoContext";
 import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326
+  SUPPORTED_CRS_4326,
+  WebMapServiceAvailableLayerStylesTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
@@ -619,6 +620,72 @@ class WebMapServiceCatalogItem
     }
   );
 
+  fetchPalettes(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      if (!this.isThredds) {
+        reject("Not a THREDDS server");
+      }
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const selectedStyle = this.availableStyles[0].styles.filter(
+        (style) => style.name === this.styles
+      );
+      const abstract = selectedStyle[0]?.abstract;
+      const urls = abstract?.match(urlRegex);
+      const extractedUrl = urls?.[0];
+
+      if (!extractedUrl) {
+        reject("No URL found in abstract");
+      }
+      const proxiedUrl = proxyCatalogItemUrl(this, extractedUrl!);
+
+      fetch(proxiedUrl, { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setTrait(CommonStrata.user, "threddsPalettes", data.palettes);
+          resolve(data.palettes);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  @computed
+  get threddsPaletteDimensions(): SelectableDimensionEnum[] {
+    if (!this.isThredds) {
+      return [];
+    }
+
+    const options: { name: string; id: string }[] = [];
+
+    this.threddsPalettes.map((palette) => {
+      options.push({
+        name: palette,
+        id: palette
+      });
+    });
+
+    return [
+      {
+        name: "Palettes",
+        id: `${this.uniqueId}-palettes`,
+        options,
+        selectedId: this.threddsPalette,
+        setDimensionValue: (
+          stratumId: string,
+          newPalette: string | undefined
+        ) => {
+          runInAction(() => {
+            this.setTrait(stratumId, "threddsPalette", newPalette);
+            const currentStyle = this.stylesArray[0];
+            const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
+            this.setTrait(stratumId, "styles", newStyles);
+          });
+        }
+      }
+    ];
+  }
+
   @computed
   get styleSelectableDimensions(): SelectableDimensionEnum[] {
     return this.availableStyles.map((layer, layerIndex) => {
@@ -671,6 +738,7 @@ class WebMapServiceCatalogItem
             );
             styles[layerIndex] = newStyle;
             this.setTrait(stratumId, "styles", styles.join(","));
+            this.fetchPalettes();
           });
         },
         // There is no way of finding out default style if no style has been selected :(
@@ -758,7 +826,8 @@ class WebMapServiceCatalogItem
     return filterOutUndefined([
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
-      ...this.styleSelectableDimensions
+      ...this.styleSelectableDimensions,
+      ...this.threddsPaletteDimensions
     ]);
   }
 
