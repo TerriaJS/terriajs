@@ -2,6 +2,7 @@
 
 #### next release (8.5.1)
 
+- Added highly experimental CatalogProvider, intended to encapsulate functionality related to the entire catalog, or large subtrees of it, that doesn't fit into individual catalog member models.
 - `BingMapsCatalogItem` now supports Bing's `culture` parameter.
 - Update a prompt text in DataPreview.
 - [The next improvement]
