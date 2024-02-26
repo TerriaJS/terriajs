@@ -25,10 +25,18 @@ function configureWebpack(
 
   config.resolve = config.resolve || {};
   // Resolve node module use of fs
-  config.resolve.fallback = { fs: false };
+  config.resolve.fallback = {
+    fs: false,
+    crypto: false,
+    path: false,
+    stream: false,
+    zlib: false,
+    https: false,
+    http: false
+  };
 
   config.resolve.extensions = config.resolve.extensions || [
-    "*",
+    ".*",
     ".webpack.js",
     ".web.js",
     ".js",
@@ -302,7 +310,7 @@ function configureWebpack(
     include: path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
     use: [
       {
-        loader: require.resolve("svg-sprite-loader"),
+        loader: require.resolve("svg-inline-loader"),
         options: {
           esModule: false
         }
