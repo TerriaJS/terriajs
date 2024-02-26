@@ -588,9 +588,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           tileWidth: this.tileWidth,
           parameters: params,
           enablePickFeatures: this.allowFeaturePicking,
-          /** Only used "pre-cached" tiles if we aren't requesting any specific layers
-           * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
-           */
           usePreCachedTilesIfAvailable: this.usePreCachedTilesIfAvailable,
           mapServerData: stratum.mapServer,
           token: stratum.token,
