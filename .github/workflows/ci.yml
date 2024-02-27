@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: "18.19.1"
       - run: npm install -g yarn@^1.19.0 && yarn install
+      - run: node -v
 
       - name: Check formatting with prettier
         run: yarn prettier-check
