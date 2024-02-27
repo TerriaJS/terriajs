@@ -756,6 +756,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
 
       // ! This not working, null. Why? Probably NO OVERLAP. Can we export both as geojson to debug?
       // To stop this blocking development, chang to just the extent of the full tile...? Surely problematic
+      debugger;
       let extentOfInnerTileInMapCRS = extentOfTileInMapCRS;
       // let extentOfInnerTileInMapCRS = extentOfTileInMapCRS.crop(
       //   inSimpleCRS ? extentOfLayer : this.extent

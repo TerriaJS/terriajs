@@ -157,7 +157,7 @@ function configureWebpack(
   };
 
   config.module.rules.push({
-    test: /\.(ts|js)x?$/,
+    test: /\.(ts|js|mjs)x?$/,
     include: [
       path.resolve(terriaJSBasePath, "lib"),
       path.resolve(terriaJSBasePath, "test"),
@@ -168,7 +168,8 @@ function configureWebpack(
         path.dirname(
           require.resolve("georaster-layer-for-leaflet/package.json")
         )
-      )
+      ),
+      path.resolve(path.dirname(require.resolve("geo-extent/package.json")))
     ],
     use: [babelLoader]
   });
