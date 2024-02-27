@@ -8,7 +8,7 @@ import {
   Ray,
   Scene,
   SceneMode
-} from "terriajs-cesium/Source/Core/BoundingSphere";
+} from "terriajs-cesium";
 
 type Tile = any;
 type GlobeSurfaceTile = any;
