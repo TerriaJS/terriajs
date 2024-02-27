@@ -158,7 +158,7 @@ function configureWebpack(
         ["@babel/typescript", { allowNamespaces: true }]
       ],
       plugins: [
-        "@babel/plugin-transform-modules-commonjs",
+        // "@babel/plugin-transform-modules-commonjs",
         ["@babel/plugin-proposal-decorators", { legacy: true }],
         "@babel/plugin-proposal-class-properties",
         "@babel/proposal-object-rest-spread",
