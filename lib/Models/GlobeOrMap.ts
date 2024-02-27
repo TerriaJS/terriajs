@@ -158,7 +158,7 @@ export default abstract class GlobeOrMap {
       );
     }
 
-    (<any>feature).coords = (<any>imageryFeature).coords;
+    (feature as any).coords = (imageryFeature as any).coords;
 
     return feature;
   }
@@ -301,7 +301,7 @@ export default abstract class GlobeOrMap {
         const polylineMaterial = cesiumPolyline.polyline!.material;
         const polylineWidth = cesiumPolyline.polyline!.width;
 
-        (<any>cesiumPolyline).polyline.material =
+        (cesiumPolyline as any).polyline.material =
           Color.fromCssColorString(this.terria.baseMapContrastColor) ??
           Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
@@ -386,7 +386,7 @@ export default abstract class GlobeOrMap {
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
-              <any>geoJson
+              geoJson as any
             );
 
             catalogItem.setTrait(

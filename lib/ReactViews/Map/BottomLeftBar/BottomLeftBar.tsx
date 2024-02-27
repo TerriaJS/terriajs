@@ -73,7 +73,7 @@ const BottomLeftBar: FC = observer(() => {
         <Box paddedHorizontally={2}>
           <MapIconButton
             title={t("story.playStory")}
-            neverCollapse={true}
+            neverCollapse
             iconElement={() => <Icon glyph={Icon.GLYPHS.playStory} />}
             onClick={() => viewState.runStories()}
             primary={!isNotificationActive}
@@ -89,7 +89,7 @@ const BottomLeftBar: FC = observer(() => {
           height="18px"
           style={{ paddingLeft: "8px" }}
           src="build/TerriaJS/images/google_on_non_white_hdpi.png"
-        ></img>
+        />
       )}
       {/* On screen data attributions. At the moment, this supports only Cesium viewer.
           Needed for Google Photorealistic 3D Tiles

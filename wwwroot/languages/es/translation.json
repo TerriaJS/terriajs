@@ -542,7 +542,9 @@
     "author": "Autor",
     "contact": "Contacto",
     "created": "Creado",
-    "selectToPreview": "<0>Seleccione un conjunto de datos para ver una vista previa </0><1>- O -</1><2>Vaya al mapa</2>",
+    "selectToPreviewDataset": "Seleccione un conjunto de datos para ver una vista previa",
+    "selectToPreviewSeparator": "O",
+    "goToTheMap": "Vaya al mapa",
     "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE"
   },
   "description": {

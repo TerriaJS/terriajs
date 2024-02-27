@@ -15,5 +15,5 @@ export default function instanceOf<T>(
   type: Class<T>,
   instance: any
 ): instance is T {
-  return instance instanceof <any>type;
+  return instance instanceof (type as any);
 }

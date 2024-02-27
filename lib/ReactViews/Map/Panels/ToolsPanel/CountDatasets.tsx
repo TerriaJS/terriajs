@@ -82,7 +82,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
           path.push(member.name!);
 
           const loadPromise = member.loadMembers();
-          let countPromise = member.isLoading
+          const countPromise = member.isLoading
             ? loadPromise
                 .then((result) => result.throwIfError())
                 .then(
@@ -116,7 +116,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
       const promise = counter(member, childStats, path).then(function () {
         stats.groups += childStats.groups + 1;
         stats.members += childStats.members;
-        stats.messages.push.apply(stats.messages, childStats.messages);
+        stats.messages.push(...childStats.messages);
         stats.subTotals.push(childStats);
       });
       return promise;

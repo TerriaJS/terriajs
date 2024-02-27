@@ -549,7 +549,7 @@ export default abstract class ChartCustomComponent<
 
 function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
   for (const key in object) {
-    if (object.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty.call(object, key)) {
       if (allowedKeys.indexOf(key) === -1) {
         console.log("Unknown attribute " + key);
       }

@@ -17,7 +17,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisMapServerCatalogItem", function () {
   const mapServerUrl =
@@ -191,7 +191,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       describe("imageryProvider", function () {
         let imageryProvider: ArcGisMapServerImageryProvider;
 
-        beforeEach(function () {
+        beforeEach(async function () {
           runInAction(() => {
             item.setTrait(CommonStrata.definition, "layers", "31");
             item.setTrait(CommonStrata.definition, "parameters", {
@@ -205,6 +205,7 @@ describe("ArcGisMapServerCatalogItem", function () {
             );
           });
 
+          await item.loadMapItems();
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
         });
@@ -223,12 +224,13 @@ describe("ArcGisMapServerCatalogItem", function () {
           expect(imageryProvider.layers).toBe("31");
         });
 
-        it("converts layer names to layer ids when constructing imagery provider", function () {
+        it("converts layer names to layer ids when constructing imagery provider", async function () {
           item.setTrait(
             CommonStrata.definition,
             "layers",
             "Offshore_Rocks_And_Wrecks"
           );
+          await item.loadMapItems();
           const imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");
@@ -275,9 +277,21 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            false
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(false);
+        });
+
+        it("usePreCachedTilesIfAvailable = false if requesting layer ID in url path", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
+          });
+          await item.loadMapItems();
+
+          expect(item.layersArray.length).toBe(1);
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect(imageryProvider.usingPrecachedTiles).toBe(false);
         });
 
         it("usePreCachedTilesIfAvailable = true if not requesting specific layers", async function () {
@@ -291,9 +305,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            true
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(true);
         });
 
         it("usePreCachedTilesIfAvailable = true if requesting all layers", async function () {
@@ -314,9 +326,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
-          expect((imageryProvider as any)._usePreCachedTilesIfAvailable).toBe(
-            true
-          );
+          expect(imageryProvider.usingPrecachedTiles).toBe(true);
         });
       });
     });

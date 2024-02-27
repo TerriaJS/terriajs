@@ -56,7 +56,7 @@ export default class Workbench {
    */
   @computed
   get shouldExpandAll(): boolean {
-    return this._items.every((item) => !(<any>item).isOpenInWorkbench);
+    return this._items.every((item) => !(item as any).isOpenInWorkbench);
   }
 
   /**

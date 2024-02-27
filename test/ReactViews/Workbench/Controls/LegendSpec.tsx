@@ -1,4 +1,3 @@
-const findAllWithType = require("react-shallow-testutils").findAllWithType;
 const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
 
 import React from "react";

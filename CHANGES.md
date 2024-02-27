@@ -1,14 +1,29 @@
 # Change Log
 
-#### next release (8.5.0)
+#### next release (8.5.1)
+
+- `BingMapsCatalogItem` now supports Bing's `culture` parameter.
+- Update a prompt text in DataPreview.
+- [The next improvement]
+
+#### 8.5.0 - 2024-02-07
 
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
   - Switch Babel configuration to new JSX transform
 - Improve tsconfig files
+- Remove deprecated default `relatedMaps`
 - Update `thredds-catalog-crawler` to `0.0.6`
 - `WebMapServiceCatalogItem` will drop problematic query parameters from `url` when calling `GetCapabilities` (eg `"styles","srs","crs","format"`)
-- [The next improvement]
+- Fixed regression causing explorer window not to display instructions when first opened.
+- Enable eslint for typescript: plugin:@typescript-eslint/eslint-recommended
+- Fixed a bug where the search box was missing for small screen devices.
+- Prevent user adding empty web url
+- Fix bug where search results shown in `My Data` tab
+- Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
+- Add option to enable/disable shortening share URLs via InitSourceData.
+- Fix bug in ArcGisMapServerCatalogItem.
+- Add examples.
 
 #### 8.4.1 - 2023-12-08
 

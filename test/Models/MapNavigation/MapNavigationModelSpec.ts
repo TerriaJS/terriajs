@@ -106,11 +106,11 @@ describe("MapNavigationModel", function () {
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
-    let collapsedItems = mapNavigationModel.visibleItems.filter(
+    const collapsedItems = mapNavigationModel.visibleItems.filter(
       (item) => item.controller.collapsed
     );
     expect(collapsedItems.length).toEqual(2);
-    let itemsId = mapNavigationModel.items.map((item) => item.id);
+    const itemsId = mapNavigationModel.items.map((item) => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3", "item4", "item5"]);
   });
 
@@ -284,7 +284,7 @@ describe("MapNavigationModel", function () {
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(2);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
-    let collapsedItems = mapNavigationModel.visibleItems.filter(
+    const collapsedItems = mapNavigationModel.visibleItems.filter(
       (item) => item.controller.collapsed
     );
     expect(collapsedItems.length).toEqual(2);

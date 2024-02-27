@@ -160,7 +160,7 @@ const searchResultScoreFunction = function (
   feature = feature.Gazetteer_of_Australia;
 
   // Taken from original GazetteerSearchProviderViewModel in v7
-  var featureTypes = [
+  const featureTypes = [
     "CONT",
     "STAT",
     "URBN",

@@ -72,7 +72,7 @@ describe("createUrlReferenceFromUrl", function () {
     const fileUrl = "test/csv/lat_lon_val.csv";
 
     const blob = await loadBlob(fileUrl);
-    let file: File = Object.assign(blob, {
+    const file: File = Object.assign(blob, {
       lastModified: 0,
       name: "lat_lon_val.csv"
     }) as File;

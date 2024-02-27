@@ -16,7 +16,7 @@ const parseGeoRaster = require("georaster");
 import { GeoRaster } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
-import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
+// import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
 import TIFFImageryProvider, {
   TIFFImageryProviderOptions
 } from "../../../ThirdParty/tiff-imagery-provider/TIFFImageryProvider";
@@ -155,7 +155,7 @@ export default class CogCatalogItem extends MappableMixin(
       enablePickFeatures: this.allowFeaturePicking
     };
 
-    let cogImageryProvider: CogImageryProvider = new CogImageryProvider(
+    const cogImageryProvider: CogImageryProvider = new CogImageryProvider(
       cogOptions
     );
 
@@ -168,16 +168,16 @@ export class CogImageryProvider extends TIFFImageryProvider {
   defaultNightAlpha = undefined;
   defaultDayAlpha = undefined;
   hasAlphaChannel = true;
-  defaultAlpha = <any>undefined;
-  defaultBrightness = <any>undefined;
-  defaultContrast = <any>undefined;
-  defaultGamma = <any>undefined;
-  defaultHue = <any>undefined;
-  defaultSaturation = <any>undefined;
+  defaultAlpha = undefined as any;
+  defaultBrightness = undefined as any;
+  defaultContrast = undefined as any;
+  defaultGamma = undefined as any;
+  defaultHue = undefined as any;
+  defaultSaturation = undefined as any;
   defaultMagnificationFilter = undefined as any;
   defaultMinificationFilter = undefined as any;
-  proxy = <any>undefined;
-  tileDiscardPolicy = <any>undefined;
+  proxy = undefined as any;
+  tileDiscardPolicy = undefined as any;
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
     return [];

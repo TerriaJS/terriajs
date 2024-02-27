@@ -704,7 +704,7 @@ export default class Terria {
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
-      if (typeof window !== "undefined" && defined((<any>window).ga)) {
+      if (typeof window !== "undefined" && defined((window as any).ga)) {
         this.analytics = new GoogleAnalytics();
       } else {
         this.analytics = new ConsoleAnalytics();
@@ -829,7 +829,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
+        if (featureBelongsToCatalogItem(feature as TerriaFeature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -846,7 +846,7 @@ export default class Terria {
     type: Class<T>,
     id: string
   ): T | undefined {
-    let model = this.getModelById(type, id);
+    const model = this.getModelById(type, id);
     if (model) {
       return model;
     } else {
@@ -1128,7 +1128,7 @@ export default class Terria {
     if (hashViewerMode && isViewerMode(hashViewerMode)) {
       setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
-      const viewerMode = <string>this.getLocalProperty("viewermode");
+      const viewerMode = this.getLocalProperty("viewermode") as string;
       if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
         setViewerMode(viewerMode, this.mainViewer);
       }
@@ -1176,7 +1176,7 @@ export default class Terria {
         baseMapItems.find(
           (baseMapItem) =>
             CatalogMemberMixin.isMixedInto(baseMapItem) &&
-            (<any>baseMapItem.item).name ===
+            (baseMapItem.item as any).name ===
               this.baseMapsModel.defaultBaseMapName
         );
       if (
@@ -1186,7 +1186,7 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
+    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1225,6 +1225,16 @@ export default class Terria {
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
 
+    function checkSegments(urlSegments: string[], customRoute: string) {
+      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+      return (
+        ((urlSegments.length === 3 && urlSegments[2] === "") ||
+          urlSegments.length === 2) &&
+        urlSegments[0] === customRoute &&
+        urlSegments[1].length > 0
+      );
+    }
+
     try {
       await interpretHash(
         this,
@@ -1241,15 +1251,6 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
-        function checkSegments(urlSegments: string[], customRoute: string) {
-          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-          return (
-            ((urlSegments.length === 3 && urlSegments[2] === "") ||
-              urlSegments.length === 2) &&
-            urlSegments[0] === customRoute &&
-            urlSegments[1].length > 0
-          );
-        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -1300,7 +1301,7 @@ export default class Terria {
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
-      if (this.configParameters.hasOwnProperty(key)) {
+      if (Object.hasOwnProperty.call(this.configParameters, key)) {
         (this.configParameters as any)[key] = value;
       }
     });
@@ -1662,7 +1663,7 @@ export default class Terria {
 
     // Extract the list of CORS-ready domains.
     if (Array.isArray(initData.corsDomains)) {
-      this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+      this.corsProxy.corsDomains.push(...(initData.corsDomains as string[]));
     }
 
     // Add catalog members
@@ -1823,7 +1824,7 @@ export default class Terria {
     const newItems: BaseModel[] = [];
 
     // Maintain the model order in the workbench.
-    while (true) {
+    for (;;) {
       const model = newItemsRaw.shift();
       if (model) {
         await this.pushAndLoadMapItems(model, newItems, errors);
@@ -1877,7 +1878,7 @@ export default class Terria {
             );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map((item) => <TimeVarying>item))
+          .map((item) => item as TimeVarying))
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -1891,6 +1892,13 @@ export default class Terria {
         this.pickedFeatures = undefined;
         this.selectedFeature = undefined;
       });
+    }
+
+    if (initData.settings?.shortenShareUrls !== undefined) {
+      this.setLocalProperty(
+        "shortenShareUrls",
+        initData.settings.shortenShareUrls
+      );
     }
 
     if (errors.length > 0)
@@ -1954,7 +1962,7 @@ export default class Terria {
     );
     if (reference.target instanceof CatalogGroup) {
       runInAction(() => {
-        this.catalog.group = <CatalogGroup>reference.target;
+        this.catalog.group = reference.target as CatalogGroup;
       });
     }
   }
@@ -1994,7 +2002,7 @@ export default class Terria {
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
-      const { catalog, ...rest } = initObj;
+      const { catalog } = initObj;
       this.initSources.push({
         name: `Magda map-config aspect terria-init from ${configUrl}`,
         errorSeverity: TerriaErrorSeverity.Error,
@@ -2008,7 +2016,7 @@ export default class Terria {
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
     let vectorFeatures: TerriaFeature[] = [];
-    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
+    const featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -2109,7 +2117,7 @@ export default class Terria {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    var v = window.localStorage.getItem(this.appName + "." + key);
+    const v = window.localStorage.getItem(this.appName + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {

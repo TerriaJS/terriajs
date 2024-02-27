@@ -69,9 +69,9 @@ describe("ViewState", function () {
       runInAction(() => {
         viewState.setTourIndex(0);
         viewState.setShowTour(true);
-        (<any>viewState).updateAppRef("TestRef", { current: true });
-        (<any>viewState).updateAppRef("TestRef2", { current: true });
-        (<any>viewState).updateAppRef("TestRef3", { current: true });
+        (viewState as any).updateAppRef("TestRef", { current: true });
+        (viewState as any).updateAppRef("TestRef2", { current: true });
+        (viewState as any).updateAppRef("TestRef3", { current: true });
         viewState.tourPoints = [
           {
             appRefName: "TestRef2",

@@ -49,7 +49,7 @@ describe("FeatureInfoPanel", function () {
   });
 
   it("displays loader while asychronously loading feature information", function () {
-    var pickedFeatures = new PickedFeatures();
+    const pickedFeatures = new PickedFeatures();
     pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;

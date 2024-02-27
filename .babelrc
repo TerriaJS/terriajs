@@ -17,7 +17,8 @@
     "@babel/proposal-object-rest-spread",
     "babel-plugin-styled-components",
     "@babel/plugin-syntax-dynamic-import",
-    "babel-plugin-lodash"
+    "babel-plugin-lodash",
+    "@babel/plugin-transform-nullish-coalescing-operator"
   ],
   "assumptions": {
     "setPublicClassFields": false

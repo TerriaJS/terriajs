@@ -53,6 +53,7 @@
     "react/no-will-update-set-state": "error",
     "react/self-closing-comp": "error",
     "react/jsx-no-undef": ["error", { "allowGlobals": true }],
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }], // this is necessary after Node18
 
     /*Possible Errors */
     "no-console": "off",

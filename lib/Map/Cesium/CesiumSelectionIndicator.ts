@@ -25,8 +25,8 @@ declare module "terriajs-cesium/Source/Scene/Scene" {
   }
 }
 
-var screenSpacePos = new Cartesian2();
-var offScreen = "-1000px";
+const screenSpacePos = new Cartesian2();
+const offScreen = "-1000px";
 
 export default class CesiumSelectionIndicator {
   /**

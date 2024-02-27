@@ -22,6 +22,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints/DragPoints";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -170,13 +171,13 @@ export default class UserDrawing extends MappableMixin(
      * SVG element for point drawn when user clicks.
      * http://stackoverflow.com/questions/24869733/how-to-draw-custom-dynamic-billboards-in-cesium-js
      */
-    var svgDataDeclare = "data:image/svg+xml,";
-    var svgPrefix =
+    const svgDataDeclare = "data:image/svg+xml,";
+    const svgPrefix =
       '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" xml:space="preserve">';
-    var svgCircle =
+    const svgCircle =
       '<circle cx="10" cy="10" r="5" stroke="rgb(0,170,215)" stroke-width="4" fill="white" /> ';
-    var svgSuffix = "</svg>";
-    var svgString = svgPrefix + svgCircle + svgSuffix;
+    const svgSuffix = "</svg>";
+    const svgString = svgPrefix + svgCircle + svgSuffix;
 
     // create the cesium entity
     return svgDataDeclare + svgString;
@@ -275,12 +276,12 @@ export default class UserDrawing extends MappableMixin(
         }
       };
 
-      this.otherEntities.entities.add(<any>rectangle);
+      this.otherEntities.entities.add(rectangle as any);
     } else {
       // Line will show up once user has drawn some points. Vertices of line are user points.
-      this.otherEntities.entities.add(<any>{
+      this.otherEntities.entities.add({
         name: "Line",
-        polyline: <any>{
+        polyline: {
           positions: new CallbackProperty(function () {
             const pos = that.getPointsForShape();
             if (isDefined(pos) && that.closeLoop) {
@@ -289,13 +290,13 @@ export default class UserDrawing extends MappableMixin(
             return pos;
           }, false),
 
-          material: new PolylineGlowMaterialProperty(<any>{
+          material: new PolylineGlowMaterialProperty({
             color: new Color(0.0, 0.0, 0.0, 0.1),
             glowPower: 0.25
-          }),
+          } as any),
           width: 20
-        }
-      });
+        } as any
+      } as any);
     }
 
     this.terria.overlays.add(this);
@@ -324,13 +325,13 @@ export default class UserDrawing extends MappableMixin(
    * Add new point to list of pointEntities
    */
   private addPointToPointEntities(name: string, position: Cartesian3) {
-    var pointEntity = new Entity({
+    const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
-      billboard: <any>{
+      billboard: {
         image: this.svgPoint,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
-      }
+      } as any
     });
     // Remove the existing points if we are in drawRectangle mode and the user
     // has picked a 3rd point. This lets the user draw new rectangle that
@@ -372,7 +373,7 @@ export default class UserDrawing extends MappableMixin(
 
             if (isDrawingComplete && points) {
               this.onDrawingComplete({
-                points,
+                points: filterOutUndefined(points),
                 rectangle: this.getRectangleForShape()
               });
             }
@@ -476,17 +477,17 @@ export default class UserDrawing extends MappableMixin(
         return;
       } else if (index === 0 && !this.closeLoop && this.allowPolygon) {
         // Index is zero if it's the first point, meaning we have a closed shape
-        this.polygon = <Entity>this.otherEntities.entities.add(<any>{
+        this.polygon = this.otherEntities.entities.add({
           name: "User polygon",
-          polygon: <any>{
+          polygon: {
             hierarchy: new CallbackProperty(function () {
               return new PolygonHierarchy(that.getPointsForShape());
             }, false),
             material: new Color(0.0, 0.666, 0.843, 0.25),
             outlineColor: new Color(1.0, 1.0, 1.0, 1.0),
-            perPositionHeight: <any>true
-          }
-        });
+            perPositionHeight: true as any
+          } as any
+        } as any) as Entity;
         this.closeLoop = true;
         // A point has not been added, but conceptually it has because the first point is now also the last point.
         if (typeof that.onPointClicked === "function") {
@@ -562,7 +563,7 @@ export default class UserDrawing extends MappableMixin(
         ? this.messageHeader()
         : this.messageHeader) +
       "</strong></br>";
-    let innerMessage = isDefined(this.onMakeDialogMessage)
+    const innerMessage = isDefined(this.onMakeDialogMessage)
       ? this.onMakeDialogMessage()
       : "";
 
@@ -602,13 +603,15 @@ export default class UserDrawing extends MappableMixin(
   getPointsForShape() {
     if (isDefined(this.pointEntities.entities)) {
       const pos = [];
-      for (var i = 0; i < this.pointEntities.entities.values.length; i++) {
+      for (let i = 0; i < this.pointEntities.entities.values.length; i++) {
         const obj = this.pointEntities.entities.values[i];
         if (isDefined(obj.position)) {
           const position = obj.position.getValue(
             this.terria.timelineClock.currentTime
           );
-          pos.push(position);
+          if (position !== undefined) {
+            pos.push(position);
+          }
         }
       }
       return pos;

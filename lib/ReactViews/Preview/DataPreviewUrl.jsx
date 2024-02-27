@@ -5,6 +5,8 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./data-preview.scss";
+import { Trans } from "react-i18next";
+
 /**
  * URL section of the preview.
  */

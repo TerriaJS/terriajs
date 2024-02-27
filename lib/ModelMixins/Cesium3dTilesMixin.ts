@@ -116,12 +116,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-    // An observable tracker for tileset.ready
-    @observable
-    isTilesetReady: boolean = false;
-
     clippingPlanesOriginMatrix(): Matrix4 {
-      if (this.tileset && this.isTilesetReady) {
+      if (this.tileset) {
         // clippingPlanesOriginMatrix is private.
         // We need it to find the position where cesium centers the clipping plane for the tileset.
         // See if we can find another way to get it.
@@ -134,9 +130,9 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     protected async forceLoadMapItems() {
       try {
-        this.loadTileset();
+        await this.loadTileset();
         if (this.tileset) {
-          const tileset = await this.tileset.readyPromise;
+          const tileset = this.tileset;
           if (
             tileset.extras !== undefined &&
             tileset.extras.style !== undefined
@@ -178,34 +174,53 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const tileset = new ObservableCesium3DTileset({
-        ...this.optionsObj,
-        url: resource
-      });
-
-      tileset._catalogItem = this;
-      runLater(
-        action(() => {
-          this.isTilesetReady = tileset.ready;
-        })
-      );
-      if (!tileset.destroyed) {
-        this.tileset = tileset;
-      }
-
       // Save the original root tile transform and set its value to an identity
       // matrix This lets us control the whole model transformation using just
       // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
       // the root transform and transformation traits in mapItems.
-      tileset.readyPromise.then(
-        action(() => {
-          this.isTilesetReady = tileset.ready;
-          if (tileset.root !== undefined) {
-            this.originalRootTransform = tileset.root.transform.clone();
-            tileset.root.transform = Matrix4.IDENTITY.clone();
-          }
-        })
-      );
+      return Promise.resolve(resource).then((resource) => {
+        if (resource === undefined) return;
+
+        const tilesetPromise = Cesium3DTileset.fromUrl(resource, {
+          ...this.optionsObj
+        });
+        return tilesetPromise.then((tileset) => {
+          // Hackily turn the Cesium3DTileset into an ObservableCesium3DTileset
+          const anyTileset: any = tileset;
+          anyTileset._catalogItem = this;
+          anyTileset.destroyed = tileset.isDestroyed();
+          const superDestroy = anyTileset.destroy;
+          anyTileset.destroy = function () {
+            superDestroy.call(this);
+            // TODO: we are running later to prevent this
+            // modification from happening in some computed up the call chain.
+            // Figure out why that is happening and fix it.
+            runLater(() => {
+              runInAction(() => {
+                this.destroyed = true;
+              });
+            });
+          };
+
+          makeObservable(anyTileset, {
+            destroyed: observable
+          });
+
+          const observableTileset: ObservableCesium3DTileset = anyTileset;
+
+          runInAction(() => {
+            observableTileset._catalogItem = this;
+            if (!observableTileset.destroyed) {
+              this.tileset = observableTileset;
+              if (observableTileset.root !== undefined) {
+                this.originalRootTransform =
+                  observableTileset.root.transform.clone();
+                observableTileset.root.transform = Matrix4.IDENTITY.clone();
+              }
+            }
+          });
+        });
+      });
     }
 
     /**
@@ -214,7 +229,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-      let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+      const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
         Matrix4.getMatrix3(modelMatrix, new Matrix3())
       );
@@ -318,7 +333,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       const options: any = {};
       if (isDefined(this.options)) {
         Object.keys(OptionsTraits.traits).forEach((name) => {
-          options[name] = (<any>this.options)[name];
+          options[name] = (this.options as any)[name];
         });
       }
       return options;
@@ -348,7 +363,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      let resource: IonResource | undefined = await IonResource.fromAssetId(
+      const resource: IonResource | undefined = await IonResource.fromAssetId(
         ionAssetId,
         {
           accessToken:
@@ -436,7 +451,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
           "${opacity}" +
           "))";
-      } else if (typeof style.color == "string") {
+      } else if (typeof style.color === "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
         if (isDefined(cssColor)) {
@@ -466,7 +481,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           pickResult instanceof Cesium3DTilePointFeature)
       ) {
         const properties: { [name: string]: unknown } = {};
-        pickResult.getPropertyNames().forEach((name) => {
+        pickResult.getPropertyIds().forEach((name) => {
           properties[name] = pickResult.getProperty(name);
         });
 
@@ -490,7 +505,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // a property named `id` return it.
       if (this.featureIdProperties) return this.featureIdProperties.slice();
       const propretyNamedId = feature
-        .getPropertyNames()
+        .getPropertyIds()
         .find((name) => name.toLowerCase() === "id");
       return propretyNamedId ? [propretyNamedId] : [];
     }

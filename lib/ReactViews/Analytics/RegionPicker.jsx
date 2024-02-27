@@ -8,7 +8,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -17,6 +16,15 @@ import { withTranslation } from "react-i18next";
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+
+const knockout = {
+  defineProperty() {
+    throw new Error("This component needs to be fixed to not use Knockout.");
+  },
+  getObservable() {
+    throw new Error("This component needs to be fixed to not use Knockout.");
+  }
+};
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",

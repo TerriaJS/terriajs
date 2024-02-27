@@ -568,7 +568,7 @@ function computeTerriaOrientation(
   //  So P = ATan (-R12 / Sqrt(R22^2 + R02^2))
 
   const getColumn = (mat: CesiumMatrix3, col: number): number => {
-    return (<any>mat)[col];
+    return (mat as any)[col];
   };
 
   // Simplify notation for readability:

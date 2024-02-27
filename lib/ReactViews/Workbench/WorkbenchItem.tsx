@@ -35,7 +35,7 @@ interface IProps extends WithTranslation {
   className: any;
   style: any;
   t: TFunction;
-  setWrapperState({}: any): void;
+  setWrapperState(): void;
 }
 
 @observer

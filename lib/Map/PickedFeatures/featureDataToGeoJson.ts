@@ -185,7 +185,7 @@ function getEsriFeature(
 
   if (geojsonGeom) {
     return {
-      type: "Feature" as "Feature",
+      type: "Feature" as const,
       properties: isJsonObject(featureData.attributes)
         ? featureData.attributes
         : {},

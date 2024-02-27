@@ -304,7 +304,7 @@ export default class TerriaError {
 
   /** Has any error in the error tree been raised to the user? */
   get raisedToUser() {
-    return this.flatten().find((error) => error._raisedToUser) ? true : false;
+    return !!this.flatten().find((error) => error._raisedToUser);
   }
 
   /** Resolve error seveirty */

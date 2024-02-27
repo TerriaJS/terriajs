@@ -62,9 +62,9 @@ describe("ChartCustomComponent", function () {
   it("creates shareable chart items for the expand menu", function () {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
       constructShareableCatalogItem = (
-        id: string | undefined,
+        _id: string | undefined,
         context: ProcessNodeContext,
-        sourceReference: BaseModel | undefined
+        _sourceReference: BaseModel | undefined
       ) => this.createItemReference(context.catalogItem as any);
     };
     const component = new TestComponentWithShareableChartItem();
@@ -103,7 +103,7 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
   protected constructCatalogItem(
     id: string | undefined,
     context: ProcessNodeContext,
-    sourceReference:
+    _sourceReference:
       | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
   ) {
@@ -112,9 +112,9 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
       : undefined;
   }
   protected setTraitsFromAttrs(
-    item: TestCatalogItem,
-    attrs: ChartCustomComponentAttributes,
-    sourceIndex: number
+    _item: TestCatalogItem,
+    _attrs: ChartCustomComponentAttributes,
+    _sourceIndex: number
   ): void {
     return;
   }

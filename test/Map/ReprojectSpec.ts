@@ -26,7 +26,7 @@ describe("Reproject", function () {
   });
 
   it("function reprojectPoint reprojects a point from one CRS to another", function () {
-    var result = Reproject.reprojectPoint(
+    const result = Reproject.reprojectPoint(
       [319180, 6399862],
       "EPSG:3006",
       "EPSG:4326"

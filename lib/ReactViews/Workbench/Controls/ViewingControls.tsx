@@ -309,7 +309,7 @@ class ViewingControls extends React.Component<
   }
 
   async previewItem() {
-    let item = this.props.item;
+    const item = this.props.item;
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
     getAncestors(this.props.item)
       .map((item) => getDereferencedIfExists(item))

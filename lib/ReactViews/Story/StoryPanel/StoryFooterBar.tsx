@@ -50,7 +50,7 @@ const FooterBar = ({
     <>
       <Box flex={1}>
         {totalStories > 1 && (
-          <NavigationButton disabled={currentHumanIndex == 1} onClick={goPrev}>
+          <NavigationButton disabled={currentHumanIndex === 1} onClick={goPrev}>
             <StoryIcon
               displayInline
               styledWidth="15px"

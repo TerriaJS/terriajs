@@ -32,7 +32,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
     shouldShortenDefault(terria)
   );
 
-  const [_, update] = useState<{}>();
+  const [_, update] = useState<object>();
   const shareUrlRef = useCallbackRef<IShareUrlRef>(null, () => update({}));
 
   const includeStoryInShareOnChange = useCallback(() => {

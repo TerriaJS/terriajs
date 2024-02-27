@@ -77,7 +77,7 @@ function workbenchItemInputToSelectableDimension(
 ): SelectableDimension {
   let dim: SelectableDimension;
   switch (input.type) {
-    case "button":
+    case "button": {
       const button: SelectableDimensionButton = {
         type: "button",
         value: input.text,
@@ -86,6 +86,7 @@ function workbenchItemInputToSelectableDimension(
       };
       dim = button;
       break;
+    }
   }
   return dim;
 }
