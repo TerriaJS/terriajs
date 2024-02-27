@@ -23,7 +23,7 @@ jobs:
           version: "v3.3.1"
       - run: bash ./buildprocess/ci-deploy.sh
         env:
-          NODE_OPTIONS: --max_old_space_size=4096
+          NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
           SHARE_S3_ACCESS_KEY_ID: ${{ secrets.SHARE_S3_ACCESS_KEY_ID }}
           SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}

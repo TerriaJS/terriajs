@@ -2,7 +2,7 @@
 
 name: CI
 env:
-  NODE_OPTIONS: "--max_old_space_size=4096"
+  NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
 
 # Controls when the action will run.
 on: [push, pull_request]
@@ -30,7 +30,7 @@ jobs:
       - name: Build TerriaJS tests
         run: yarn gulp lint release -- --continue
         env:
-          NODE_OPTIONS: --max_old_space_size=4096
+          NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
 
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
