@@ -423,7 +423,7 @@ export default class MagdaReference extends AccessControlMixin(
           ) as JsonObject | undefined;
         }
 
-        const model = MagdaReference.createMemberFromRecord(
+        let model = MagdaReference.createMemberFromRecord(
           terria,
           undefined,
           distributionFormats,
@@ -442,25 +442,35 @@ export default class MagdaReference extends AccessControlMixin(
           shareKeys = member.aspects.terria.shareKeys.filter(isJsonString);
         }
 
+        model = terria.getModelById(BaseModel, member.id)
+
         if (!model) {
           // Can't create an item or group yet, so create a reference.
-          const ref = new MagdaReference(member.id, terria, undefined);
-
+          model = new MagdaReference(member.id, terria, undefined);
+          terria.addModel(model, shareKeys);
+        }
+        if (
+          model instanceof MagdaReference &&
+          !(isDefined(model.url) && isDefined(model.recordId)) &&
+          !isDefined(model.magdaRecord)
+        ) {
+          // MagdaReference has just been created, or comes from share data with
+          // not enough information to load itself
           if (magdaUri) {
-            ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
+            model.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
-          ref.setTrait(CommonStrata.definition, "recordId", memberId);
+          model.setTrait(CommonStrata.definition, "recordId", memberId);
 
           if (
             isJsonObject(member.aspects, false) &&
             isJsonObject(member.aspects.group, false)
           ) {
             // This is most likely a group.
-            ref.setTrait(CommonStrata.definition, "isGroup", true);
+            model.setTrait(CommonStrata.definition, "isGroup", true);
           } else {
             // This is most likely a mappable or chartable item.
-            ref.setTrait(CommonStrata.definition, "isMappable", true);
-            ref.setTrait(CommonStrata.definition, "isChartable", true);
+            model.setTrait(CommonStrata.definition, "isMappable", true);
+            model.setTrait(CommonStrata.definition, "isChartable", true);
           }
 
           // Use the name from the terria aspect if there is one.
@@ -470,37 +480,25 @@ export default class MagdaReference extends AccessControlMixin(
             isJsonObject(member.aspects.terria.definition, false) &&
             isJsonString(member.aspects.terria.definition.name)
           ) {
-            ref.setTrait(
+            model.setTrait(
               CommonStrata.definition,
               "name",
               member.aspects.terria.definition.name
             );
           } else if (isJsonString(member.name)) {
-            ref.setTrait(CommonStrata.definition, "name", member.name);
+            model.setTrait(CommonStrata.definition, "name", member.name);
           }
-
-          if (overriddenMember) {
-            ref.setTrait(CommonStrata.definition, "override", overriddenMember);
-          }
-
-          if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(ref, shareKeys);
-          }
-
-          if (AccessControlMixin.isMixedInto(ref)) {
-            ref.setAccessType(getAccessTypeFromMagdaRecord(member));
-          }
-
-          return ref.uniqueId;
-        } else {
-          if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(model, shareKeys);
-          }
-          if (AccessControlMixin.isMixedInto(model)) {
-            model.setAccessType(getAccessTypeFromMagdaRecord(member));
-          }
-          return model.uniqueId;
         }
+
+        if (overriddenMember) {
+          model.setTrait(CommonStrata.definition, "override", overriddenMember);
+        }
+
+        if (AccessControlMixin.isMixedInto(model)) {
+          model.setAccessType(getAccessTypeFromMagdaRecord(member));
+        }
+
+        return model.uniqueId;
       });
 
       if (isJsonString(record.name)) {
