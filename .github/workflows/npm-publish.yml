@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
+          node-version: "18.19.1"
 
       - name: Install yarn
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version

@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version: "18.19.1"
       - run: npm install -g yarn@^1.19.0 && yarn install
 
       - name: Check formatting with prettier
