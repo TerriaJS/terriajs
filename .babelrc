@@ -1,18 +1,19 @@
 {
-  "sourceType": "unambiguous",
   "presets": [
     [
       "@babel/preset-env",
       {
         "corejs": 3,
-        "useBuiltIns": "usage"
+        "useBuiltIns": "usage",
+        "modules": "auto",
+        "debug": true
       }
     ],
     ["@babel/preset-react", { "runtime": "automatic" }],
     ["@babel/typescript", { "allowNamespaces": true }]
   ],
   "plugins": [
-    // "@babel/plugin-transform-modules-commonjs",
+    "@babel/plugin-transform-modules-commonjs",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     "@babel/plugin-proposal-class-properties",
     "@babel/proposal-object-rest-spread",

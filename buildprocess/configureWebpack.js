@@ -151,14 +151,20 @@ function configureWebpack(
           "@babel/preset-env",
           {
             corejs: 3,
-            useBuiltIns: "usage"
+            useBuiltIns: "usage",
+            modules: "auto"
           }
         ],
         ["@babel/preset-react", { runtime: "automatic" }],
         ["@babel/typescript", { allowNamespaces: true }]
       ],
       plugins: [
-        "@babel/plugin-transform-modules-commonjs",
+        [
+          "@babel/plugin-transform-modules-commonjs",
+          {
+            importInterop: "babel"
+          }
+        ],
         ["@babel/plugin-proposal-decorators", { legacy: true }],
         "@babel/plugin-proposal-class-properties",
         "@babel/proposal-object-rest-spread",
@@ -234,6 +240,14 @@ function configureWebpack(
     use: [{ loader: require.resolve("file-loader") }],
     type: "javascript/auto"
   });
+
+  console.log(
+    "path: ",
+    path.resolve(
+      path.dirname(require.resolve("terriajs-cesium/package.json")),
+      "Source"
+    )
+  );
 
   config.module.rules.push({
     test: /\.js$/,
