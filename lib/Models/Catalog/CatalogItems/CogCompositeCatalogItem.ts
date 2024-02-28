@@ -49,9 +49,9 @@ export default class CogCompositeCatalogItem extends MappableMixin(
         show: this.show,
         alpha: this.opacity,
         imageryProvider,
-        clippingRectangle: imageryProvider.rectangle,
+        clippingRectangle: imageryProvider.rectangle
         // Define our method for generating a leaflet layer in a different way, here
-        overrideCreateLeafletLayer: this.createGeoRasterLayer
+        // overrideCreateLeafletLayer: this.createGeoRasterLayer
       }
     ];
   }

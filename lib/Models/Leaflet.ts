@@ -1,3 +1,4 @@
+import { GridLayer } from "leaflet";
 import {
   action,
   autorun,
@@ -111,29 +112,21 @@ export default class Leaflet extends GlobeOrMap {
 
   private _createImageryLayer: (
     ip: ImageryProvider,
-    clippingRectangle: Rectangle | undefined,
-    overrideCreateLeafletLayerFn: ImageryParts["overrideCreateLeafletLayer"]
-  ) => TerriaLeafletLayer | undefined = computedFn(
-    (ip, clippingRectangle, overrideCreateLeafletLayerFn) => {
-      const layerOptions = {
-        bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
-      };
-      // We have two different kinds of ImageryProviderLeaflet layers
-      // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
-      // - Tile layer will pass tile URLs to leaflet objects - which is a bit more "Leaflety" than Grid layer
-      // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
-      // Also, some kinds of Imagery Providers cannot create Leaflet layers appropriately, e.g. the COG Imagery Provider.
-      // In this case, the Catalog Item should specify an `overrideCreateLeafletLayer` property.
-      // If the Catalog Item defines `overrideCreateLeafletLayer` then use that, otherwise follow the logic below.
-      if (overrideCreateLeafletLayerFn) {
-        return overrideCreateLeafletLayerFn(ip, layerOptions.bounds);
-      } else if (supportsImageryProviderGridLayer(ip)) {
-        return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
-      } else {
-        return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
-      }
+    clippingRectangle: Rectangle | undefined
+  ) => GridLayer = computedFn((ip, clippingRectangle) => {
+    const layerOptions = {
+      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+    };
+    // We have two different kinds of ImageryProviderLeaflet layers
+    // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
+    // - Tile layer will pass tile URLs to leaflet objects - which is a bit more "Leaflety" than Grid layer
+    // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
+    if (supportsImageryProviderGridLayer(ip)) {
+      return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
+    } else {
+      return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
     }
-  );
+  });
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
@@ -155,8 +148,7 @@ export default class Leaflet extends GlobeOrMap {
     }
     return this._createImageryLayer(
       parts.imageryProvider,
-      parts.clippingRectangle,
-      parts.overrideCreateLeafletLayer
+      parts.clippingRectangle
     );
   }
 
@@ -911,16 +903,15 @@ export default class Leaflet extends GlobeOrMap {
 
   getImageryLayersForItem(
     item: MappableMixin.Instance
-  ): (
-    | ImageryProviderLeafletTileLayer
-    | ImageryProviderLeafletGridLayer
-    | GeorasterTerriaLayer
-  )[] {
+  ): (ImageryProviderLeafletTileLayer | ImageryProviderLeafletGridLayer)[] {
     return filterOutUndefined(
       item.mapItems.map((m) => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
-          return layer ?? undefined;
+          return layer instanceof ImageryProviderLeafletTileLayer ||
+            layer instanceof ImageryProviderLeafletGridLayer
+            ? layer
+            : undefined;
         }
       })
     );
