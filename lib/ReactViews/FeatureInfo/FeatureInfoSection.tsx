@@ -12,7 +12,7 @@ import {
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
-import React from "react";
+import React, { Ref } from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -76,6 +76,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   @observable.ref private templatedFeatureInfoReactNode:
     | React.ReactNode
     | undefined = undefined;
+
+  noInfoRef: HTMLDivElement | null = null;
 
   @observable
   private showRawData: boolean = false;
@@ -293,7 +295,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     const feature = this.props.feature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
-    let description: string | undefined =
+    const description: string | undefined =
       feature.description?.getValue(currentTime);
 
     if (isDefined(description)) return description;
@@ -453,7 +455,12 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
           {titleElement}
           {this.props.isOpen ? (
             <section className={Styles.content}>
-              <div ref="no-info" key="no-info">
+              <div
+                ref={(r) => {
+                  this.noInfoRef = r;
+                }}
+                key="no-info"
+              >
                 {t("featureInfo.noInfoAvailable")}
               </div>
             </section>
@@ -472,15 +479,18 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
               {this.props.feature.loadingFeatureInfoUrl ? (
                 "Loading"
               ) : this.showRawData || !this.templatedFeatureInfoReactNode ? (
-                <>
-                  {this.rawFeatureInfoReactNode ? (
-                    this.rawFeatureInfoReactNode
-                  ) : (
-                    <div ref="no-info" key="no-info">
-                      {t("featureInfo.noInfoAvailable")}
-                    </div>
-                  )}
-                </>
+                this.rawFeatureInfoReactNode ? (
+                  this.rawFeatureInfoReactNode
+                ) : (
+                  <div
+                    ref={(r) => {
+                      this.noInfoRef = r;
+                    }}
+                    key="no-info"
+                  >
+                    {t("featureInfo.noInfoAvailable")}
+                  </div>
+                )
               ) : (
                 // Show templated feature info
                 this.templatedFeatureInfoReactNode

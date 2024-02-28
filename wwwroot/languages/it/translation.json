@@ -57,7 +57,7 @@
     "delete": "Cancella",
     "skip": "Salta",
     "next": "Prossimo",
-    "prev": "Prec",
+    "prev": "Precedente",
     "open": "Apri",
     "close": "Chiudi",
     "confirm": "Conferma",
@@ -168,7 +168,9 @@
     "convertNotificationMessage": "Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Anche se sono stati fatti i migliori sforzi per preservare il link, potresti incontrare problemi con la visualizzazione dei dati.  \n\nSe sei l'utente che ha condiviso il link, clicca su OK per far scomparire il messaggio di avviso e continuare ad accedere ai dati.",
     "convertErrorTitle": "Impossibile aggiornare il link di condivisione alla versione 8",
     "convertNotificationFeedback": "Per domande o feedback, clicca qui.",
-    "convertNotificationHelp": "Se hai creato il link di condivisione, controlla il menu Aiuto per vedere i suggerimenti su come aggiornare il link di condivisione."
+    "convertNotificationHelp": "Se hai creato il link di condivisione, controlla il menu Aiuto per vedere i suggerimenti su come aggiornare il link di condivisione.",
+    "embedDescription": "Per incorporare, copia questo codice per incorporare questa mappa in una pagina HTML:",
+    "downloadMap": "Scarica mappa (png)"
   },
   "zoomCotrol": {
     "zoomReset": "Ripristina lo zoom",
@@ -445,7 +447,9 @@
       "userAddedDataGroup": "Il gruppo per i dati che sono stati aggiunti dall'utente tramite il pannello Aggiungi Dati.",
       "catalogMemberMustHaveType": "Un membro del catalogo deve avere un tipo.",
       "catalogMemberMustHaveName": "Un membro del catalogo appena creato deve avere un nome.",
-      "idForMatchingErrorMessage": "Gli oggetti modello devono avere una proprietà `id`, `localId` o `name`."
+      "idForMatchingErrorMessage": "Gli oggetti modello devono avere una proprietà `id`, `localId` o `name`.",
+      "addAll": "Aggiungi tutto",
+      "removeAll": "Rimuovi tutto"
     },
     "ckan": {
       "update_freq": "Frequenza di aggiornamento",
@@ -570,7 +574,10 @@
       "zFilterEnabled": "Valori estremi nascosti (clicca per mostrare)",
       "timeDimensionEnabled": "Tempo attivato (cliccare per disattivare)",
       "styleDisabledLabel": "Disattivare lo stile",
-      "timeDimensionDisabled": "Tempo disabilitato (clicca per abilitare)"
+      "timeDimensionDisabled": "Tempo disabilitato (clicca per abilitare)",
+      "activeStyle": "Visualizza Variabile",
+      "custom": "Personalizzato",
+      "editStyle": "Modifica Stile"
     },
     "sdmxCatalogItem": {
       "viewBy": {
@@ -652,7 +659,8 @@
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "invalidServiceTitle": "ArcGIS Map Service non valido",
       "name": "Gruppo ArcGIS Map Server",
-      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Map Service.  La risposta del server non sembra essere un documento Map Service valido."
+      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Map Service.  La risposta del server non sembra essere un documento Map Service valido.",
+      "singleFusedMapCacheLayerName": "Tutti i livelli"
     },
     "arcGisFeatureServerCatalogItem": {
       "serviceDescription": "Descrizione del Servizio",
@@ -908,6 +916,9 @@
     },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Nota:** Questo set di dati non può essere visualizzato nel visualizzatore 2D. Passa a una delle modalità di mappa 3D."
+    },
+    "tableStyling": {
+      "showAdvancedOptions": "Mostra opzioni avanzate"
     }
   },
   "map": {
@@ -946,7 +957,9 @@
       "devError": "cesium è richiesto.",
       "unusalTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché utilizza uno schema di tile insolito che non è supportato.",
       "notWebMercatorTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché non supporta la proiezione Web Mercator (EPSG:3857).",
-      "failedToObtain": "Impossibile ottenere la tile dell'immagine X: {{x}} Y: {{y}} Livello: {{level}}."
+      "failedToObtain": "Impossibile ottenere la tile dell'immagine X: {{x}} Y: {{y}} Livello: {{level}}.",
+      "stoppedRenderingTitle": "Rendering della mappa 3D fallito",
+      "terrainServerErrorTitle": "Server Terreno Non Risponde"
     },
     "imageryProviderHooks": {
       "devError": "Nessun contesto per la ricolorazione dell'immagine."
@@ -1000,7 +1013,8 @@
       "wps-getCapabilities": "Server Web Processing Service (WPS)",
       "wfs-group": "Server Web Feature Service (WFS)",
       "wms-group": "Server Web Map Service (WMS)",
-      "wmts-group": "Server Web Map Tile Service (WMTS)"
+      "wmts-group": "Server Web Map Tile Service (WMTS)",
+      "assimp-local": "Convertitore file 3D (zip) (sperimentale)"
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
@@ -1045,6 +1059,11 @@
     },
     "errors": {
       "tooDeepAddedByUser": "Raggiunti 100 elementi di catalogo quando si controlla addedByUser e si arrivasu ID: \"{{memberId}}\"? Controlla di non avere un gruppo di catalogo ricorsivo."
+    },
+    "unverifiedExternalLink": {
+      "title": "Attenzione: link non verificato",
+      "denyText": "Annulla",
+      "confirmText": "Apri in una nuova pagina"
     }
   },
   "analytics": {
@@ -1109,8 +1128,11 @@
     "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
     "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
-    "selectToPreview": "<0>Seleziona un set di dati per vedere un'anteprima </0><1>- O -</1><2>Vai alla mappa</2>",
-    "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali."
+    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima",
+    "selectToPreviewSeparator": "O",
+    "goToTheMap": "Vai alla mappa",
+    "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali.",
+    "selectMultipleDatasets": "<0>Premi<strong>Shift</strong> e clicca</0><1 /><2>per aggiungere multipli datasets</2>"
   },
   "legend": {
     "n": "N",
@@ -1133,7 +1155,9 @@
     "toggleSplitterToolTitle": "Confronta",
     "title": "Trascina a sinistra o a destra per regolare le viste",
     "toggleSplitterToolDisabled": "Si prega di disabilitare le altre funzionalità di confronto fianco a fianco per abilitare il confronto standard",
-    "toggleSplitterTool": "Abilita il confronto affiancato tra due diversi set di dati"
+    "toggleSplitterTool": "Abilita il confronto affiancato tra due diversi set di dati",
+    "errorTitle": "Impossibile comparare l'elemento del catalogo.",
+    "modelNotFoundErrorMessage": "Modello ID `\"{{id}}\"`non è stato trovato"
   },
   "deltaTool": {
     "cancelBtn": "Annulla",
@@ -1167,7 +1191,10 @@
     "searchNoPlaceNames": "Spiacenti, nessun nome di luogo ufficiale corrisponde alla tua richiesta di ricerca.",
     "searchNoCatalogueItem": "Spiacenti, nessun articolo del catalogo corrisponde alla tua richiesta di ricerca.",
     "searchErrorOccurred": "Si è verificato un errore durante la ricerca.  Per favore controlla la tua connessione internet o riprova più tardi.",
-    "searchNoLocations": "Spiacente, nessuna località corrisponde alla tua richiesta di ricerca."
+    "searchNoLocations": "Spiacente, nessuna località corrisponde alla tua richiesta di ricerca.",
+    "searchMinCharacters_0": "Devi inserire al minimo {{count}} carattere",
+    "searchMinCharacters_1": "Devi inserire al minimo {{count}} caratteri",
+    "searchMinCharacters_2": ""
   },
   "chart": {
     "download": "Scarica",
@@ -1273,7 +1300,8 @@
     "addItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "addItemErrorTitle": "L'articolo del catalogo non può essere aggiunto alla workbench.",
     "diffImageTitle": "Visualizza le differenze nelle immagini tra le due date",
-    "displayPercent": "Visualizzazione come percentuale del totale della regione"
+    "displayPercent": "Visualizzazione come percentuale del totale della regione",
+    "splitScreenMode": "MODALITA' SCHERMO DIVISO"
   },
   "mobile": {
     "toggleNavigation": "Attiva/disattiva la navigazione",
@@ -1381,7 +1409,13 @@
     "message": "<2>Questo è il tuo editor di storie</2><1>Crea e condividi storie interattive direttamente dalla tua mappa<1><0><0></0>Iniziare </0></1></1>",
     "panelBody": "Crea e condividi storie interattive direttamente dalla tua mappa",
     "loadSceneErrorMessage": "Si è verificato un errore durante il caricamento dei dati per la scena della storia: `{{title}}`.",
-    "promptHtml2": "<0><0>INTRODUZIONE</0><1>Storie dei dati</1><2>Crea e condividi storie interattive direttamente dalla tua mappa.</2></0>"
+    "promptHtml2": "<0><0>INTRODUZIONE</0><1>Storie dei dati</1><2>Crea e condividi storie interattive direttamente dalla tua mappa.</2></0>",
+    "restart": "Ricomincia",
+    "prev": "Precedente",
+    "next": "Successivo",
+    "playStory": "Storia",
+    "expand": "Espandi",
+    "collapse": "Collassa"
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
@@ -1531,7 +1565,7 @@
     "preface": {
       "start": "Inizia il tour",
       "close": "Forse più tardi",
-      "content": "Non sai da dove cominciare? Fai un rapido tour delle caratteristiche principali del nostro software, e impara alcune delle funzioni chiave per aiutarti ad andare avanti.",
+      "content": "Non sai da dove cominciare? Fai un rapido tour delle caratteristiche principali del nostro software e impara alcune delle funzioni chiave per aiutarti ad andare avanti.",
       "title": "Fai il tour"
     },
     "mapNavigationSplitterIcon": {
@@ -1607,5 +1641,11 @@
   "indexedItemSearchProvider": {
     "errorParsingIndexRoot": "Errore nell'analizzare il file indexRoot: {{indexRootUrl}}.",
     "missingOptionIndexRootUrl": "L'opzione `indexRootUrl` manca nella configurazione di ricerca dell'elemento."
+  },
+  "browsers": {
+    "chrome": "Google Chrome"
+  },
+  "includeStory": {
+    "message": "Includi Storia in Condividi"
   }
 }

@@ -272,7 +272,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   protected async createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
-    let dataInputs = filterOutUndefined(
+    const dataInputs = filterOutUndefined(
       await Promise.all(
         this.functionParameters
           .filter((p) => isDefined(p.value) && p.value !== null)
@@ -332,7 +332,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   }
 
   async convertParameterToInput(parameter: FunctionParameter) {
-    let converter = parameterTypeToConverter(parameter);
+    const converter = parameterTypeToConverter(parameter);
 
     const result = converter?.parameterToInput(parameter);
     if (!isDefined(result)) {
@@ -419,7 +419,7 @@ const LiteralDataConverter = {
   },
   parameterToInput: function (parameter: FunctionParameter) {
     return {
-      inputValue: <string | undefined>parameter.value,
+      inputValue: parameter.value as string | undefined,
       inputType: "LiteralData"
     };
   }
@@ -514,8 +514,8 @@ const RectangleConverter = {
     ) {
       return undefined;
     }
-    var code = Reproject.crsStringToCode(input.BoundingBoxData.Default.CRS);
-    var usedCrs = input.BoundingBoxData.Default.CRS;
+    let code = Reproject.crsStringToCode(input.BoundingBoxData.Default.CRS);
+    let usedCrs = input.BoundingBoxData.Default.CRS;
     // Find out if Terria's CRS is supported.
     if (
       code !== Reproject.TERRIA_CRS &&
@@ -545,7 +545,7 @@ const RectangleConverter = {
     });
   },
   parameterToInput: function (functionParameter: FunctionParameter) {
-    const parameter = <RectangleParameter>functionParameter;
+    const parameter = functionParameter as RectangleParameter;
     const value = parameter.value;
 
     if (!isDefined(value)) {
@@ -634,8 +634,8 @@ const GeoJsonGeometryConverter = {
     if (!isDefined(parameter.value) || parameter.value === null) {
       return;
     }
-    return (<GeoJsonParameter>parameter).getProcessedValue(
-      (<GeoJsonParameter>parameter).value!
+    return (parameter as GeoJsonParameter).getProcessedValue(
+      (parameter as GeoJsonParameter).value!
     );
   }
 };
@@ -656,7 +656,7 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
         return undefined;
       }
 
-      var schema = input.ComplexData.Default.Format.Schema;
+      const schema = input.ComplexData.Default.Format.Schema;
       if (schema.indexOf("http://geojson.org/geojson-spec.html#") !== 0) {
         return undefined;
       }

@@ -85,7 +85,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
     const viewState = useViewState();
     const theme = useTheme();
     const { t, i18n } = useTranslation();
-    let items = props.items;
+    const items = props.items;
     return (
       <CollapsedNavigationBox column>
         <CloseButton
@@ -158,8 +158,8 @@ export const CollapsedNavigation: React.FC = observer(() => {
         role="presentation"
         aria-hidden="true"
         pseudoBg
-      ></PrefaceBox>
-      <CollapsedNavigationPanel items={items}></CollapsedNavigationPanel>
+      />
+      <CollapsedNavigationPanel items={items} />
     </>
   );
 });

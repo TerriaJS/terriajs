@@ -213,10 +213,11 @@ const NameWithLoader: React.FC<NameWithLoaderProps> = observer(
     return (
       <BoxSpan styledHeight={"25px"}>
         <BoxSpan verticalCenter>
-          <TextSpan textDarker uppercase>{`${applyTranslationIfExists(
-            props.name,
-            i18n
-          )} (${props.length || 0})`}</TextSpan>
+          <TextSpan textDarker uppercase>
+            {`${applyTranslationIfExists(props.name, i18n)} (${
+              props.length || 0
+            })`}
+          </TextSpan>
         </BoxSpan>
         {!props.isOpen &&
           (props.search.isSearching || props.isWaitingForSearchToStart) && (

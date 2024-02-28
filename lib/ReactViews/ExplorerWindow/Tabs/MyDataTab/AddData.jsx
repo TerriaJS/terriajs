@@ -229,7 +229,7 @@ const AddData = createReactClass({
                 options={this.state.localDataTypes}
                 selected={this.state.localDataType}
                 selectOption={this.selectLocalOption}
-                matchWidth={true}
+                matchWidth
                 theme={dropdownTheme}
               />
               {this.state.localDataType?.description
@@ -263,7 +263,7 @@ const AddData = createReactClass({
                 options={this.state.remoteDataTypes}
                 selected={this.state.remoteDataType}
                 selectOption={this.selectRemoteOption}
-                matchWidth={true}
+                matchWidth
                 theme={dropdownTheme}
               />
               {this.state.remoteDataType?.description
@@ -286,6 +286,7 @@ const AddData = createReactClass({
                   placeholder="e.g. http://data.gov.au/geoserver/wms"
                 />
                 <button
+                  disabled={this.state.remoteUrl.length === 0}
                   type="submit"
                   onClick={this.handleUrl}
                   className={Styles.urlInputBtn}

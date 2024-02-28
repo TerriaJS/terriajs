@@ -120,8 +120,8 @@ export class FeatureServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const terria = catalogGroup.terria;
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
@@ -208,7 +208,7 @@ export class FeatureServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
@@ -239,9 +239,9 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const featureServerStratum = <FeatureServerStratum | undefined>(
-      this.strata.get(FeatureServerStratum.stratumName)
-    );
+    const featureServerStratum = this.strata.get(
+      FeatureServerStratum.stratumName
+    ) as FeatureServerStratum | undefined;
     if (featureServerStratum) {
       await runLater(() => featureServerStratum.createMembersFromLayers());
     }

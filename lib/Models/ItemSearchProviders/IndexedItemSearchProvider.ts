@@ -238,7 +238,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     // The record can have a bunch of arbitrary properties and a few known
     // properties. We use the latitude, longitude, height & radius for
     // constructing a zoom target for the search result.
-    let { latitude, longitude, height, ...properties } = record;
+    const { latitude, longitude, height, ...properties } = record;
     const _latitude = parseFloat(latitude);
     const _longitude = parseFloat(longitude);
     const _featureHeight = parseFloat(height);

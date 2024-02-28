@@ -81,7 +81,7 @@ export default abstract class FunctionParameter<
 
   formatValueAsString(value?: unknown) {
     value = isDefined(value) ? value : this.value;
-    return isDefined(value) ? (<any>value).toString() : "-";
+    return isDefined(value) ? (value as any).toString() : "-";
   }
 
   static isInstanceOf(obj: any): obj is FunctionParameter {

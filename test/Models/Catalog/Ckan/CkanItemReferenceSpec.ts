@@ -75,9 +75,9 @@ describe("CkanItemReference", function () {
         );
       });
       (await ckanItemReference.loadReference()).throwIfError();
-      ckanDatasetStratum = <CkanDatasetStratum>(
-        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      );
+      ckanDatasetStratum = ckanItemReference.strata.get(
+        CkanDatasetStratum.stratumName
+      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
 
@@ -161,9 +161,9 @@ describe("CkanItemReference", function () {
         "tax-stats-wms-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
-        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      );
+      ckanDatasetStratum = ckanItemReference.strata.get(
+        CkanDatasetStratum.stratumName
+      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -191,9 +191,9 @@ describe("CkanItemReference", function () {
         "wms-no-layers-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
-        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      );
+      ckanDatasetStratum = ckanItemReference.strata.get(
+        CkanDatasetStratum.stratumName
+      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -229,9 +229,9 @@ describe("CkanItemReference", function () {
         );
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
-        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      );
+      ckanDatasetStratum = ckanItemReference.strata.get(
+        CkanDatasetStratum.stratumName
+      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
     it("uses LAYERS from url query string for WMS item", function () {

@@ -339,8 +339,7 @@ ${DATASETS.map((d) => `\n- ${d.title}`)}`
         .map((col) => {
           return { id: col.name };
         }) || [];
-    if (possibleValues.length === 0) {
-    }
+
     return new EnumerationParameter(this, {
       id: "Data Column",
       description:

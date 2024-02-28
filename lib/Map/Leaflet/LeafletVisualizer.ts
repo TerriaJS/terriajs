@@ -463,7 +463,7 @@ class LeafletGeomVisualizer {
       for (const prop in iconOptions) {
         if (
           isDefined(marker.options.icon) &&
-          iconOptions[prop] !== (<any>marker.options.icon.options)[prop]
+          iconOptions[prop] !== (marker.options.icon.options as any)[prop]
         ) {
           redrawIcon = true;
           break;
@@ -542,11 +542,11 @@ class LeafletGeomVisualizer {
       CesiumMath.toDegrees(cart.latitude),
       CesiumMath.toDegrees(cart.longitude)
     );
-    const text = getValue(labelGraphics.text, time);
-    const font = getValue(labelGraphics.font as unknown as Property, time);
+    const text = getValue<string>(labelGraphics.text, time);
+    const font = getValue<string>(labelGraphics.font, time);
     const scale = getValueOrDefault(labelGraphics.scale, time, 1.0);
     const fillColor = getValueOrDefault(
-      labelGraphics.fillColor as unknown as Property,
+      labelGraphics.fillColor,
       time,
       defaultColor
     );
@@ -592,7 +592,7 @@ class LeafletGeomVisualizer {
       for (const prop in iconOptions) {
         if (
           isDefined(marker.options.icon) &&
-          iconOptions[prop] !== (<any>marker.options.icon.options)[prop]
+          iconOptions[prop] !== (marker.options.icon.options as any)[prop]
         ) {
           redrawLabel = true;
           break;
@@ -600,7 +600,7 @@ class LeafletGeomVisualizer {
       }
     }
 
-    if (redrawLabel) {
+    if (redrawLabel && isDefined(text)) {
       const drawBillboard = function (
         image: HTMLImageElement,
         dataurl: string
@@ -621,13 +621,15 @@ class LeafletGeomVisualizer {
         fillColor: fillColor,
         font: font
       });
-      const imageUrl = canvas.toDataURL();
+      if (isDefined(canvas)) {
+        const imageUrl = canvas.toDataURL();
 
-      const img = new Image();
-      img.onload = function () {
-        drawBillboard(img, imageUrl);
-      };
-      img.src = imageUrl;
+        const img = new Image();
+        img.onload = function () {
+          drawBillboard(img, imageUrl);
+        };
+        img.src = imageUrl;
+      }
     }
   }
 
@@ -1022,8 +1024,10 @@ class LeafletGeomVisualizer {
         polyline.setLatLngs(latlngs);
       }
 
-      for (let prop in polylineOptions) {
-        if ((<any>polylineOptions)[prop] !== (<any>polyline.options)[prop]) {
+      for (const prop in polylineOptions) {
+        if (
+          (polylineOptions as any)[prop] !== (polyline.options as any)[prop]
+        ) {
           polyline.setStyle(polylineOptions);
           break;
         }
@@ -1215,7 +1219,7 @@ function positionToLatLng(
   position: Cartesian3,
   bounds: LatLngBounds | undefined
 ) {
-  var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+  const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
   let lon = CesiumMath.toDegrees(cartographic.longitude);
   if (bounds !== undefined) {
     if (_isCloseToEasternAntiMeridian(bounds)) {
@@ -1232,7 +1236,7 @@ function positionToLatLng(
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  let holes: L.LatLng[][] = [];
+  const holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
   if (hierarchy.holes.length > 0) {
     hierarchy.holes.forEach((hole) => {
@@ -1320,10 +1324,10 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
 }
 
 function convertEntityPositionsToLatLons(positions: Cartesian3[]): L.LatLng[] {
-  var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  var latlngs: L.LatLng[] = [];
+  const carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
+  const latlngs: L.LatLng[] = [];
   let lastLongitude;
-  for (var p = 0; p < carts.length; p++) {
+  for (let p = 0; p < carts.length; p++) {
     let lon = CesiumMath.toDegrees(carts[p].longitude);
 
     if (lastLongitude !== undefined) {

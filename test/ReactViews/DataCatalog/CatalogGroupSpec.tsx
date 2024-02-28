@@ -14,11 +14,7 @@ describe("CatalogGroup", () => {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <CatalogGroup
-              open={true}
-              t={() => {}}
-              loading={true}
-            ></CatalogGroup>
+            <CatalogGroup open t={() => {}} loading />
           </ThemeProvider>
         );
       });
@@ -32,7 +28,7 @@ describe("CatalogGroup", () => {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <CatalogGroup open={true} t={() => {}} loading={true}>
+            <CatalogGroup open t={() => {}} loading>
               <TestChild />
             </CatalogGroup>
           </ThemeProvider>
@@ -45,7 +41,7 @@ describe("CatalogGroup", () => {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <CatalogGroup open={true} t={() => {}} loading={false}>
+            <CatalogGroup open t={() => {}} loading={false}>
               <TestChild />
             </CatalogGroup>
           </ThemeProvider>
@@ -60,11 +56,12 @@ describe("CatalogGroup", () => {
         testRenderer = create(
           <CatalogGroup
             t={() => {}}
-            open={true}
+            open
             emptyMessage="nothing here"
             loading={false}
-            children={[]}
-          ></CatalogGroup>
+          >
+            {[]}
+          </CatalogGroup>
         );
       });
 

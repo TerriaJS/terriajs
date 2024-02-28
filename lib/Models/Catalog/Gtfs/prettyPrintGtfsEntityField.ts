@@ -39,6 +39,7 @@ export default function prettyPrintGtfsEntityField(
             return "Not accepting passengers";
         }
       }
+      break;
     }
     case "speed#km": {
       return (_get(entity, "vehicle.position.speed", 0) * 3.6).toFixed(2);

@@ -35,7 +35,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       return false;
     }
 
-    let array: any[] = parentValue[this.parentProperty];
+    const array: any[] = parentValue[this.parentProperty];
     if (array === undefined) {
       return false;
     }
@@ -91,7 +91,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       array = parentValue[this.parentProperty];
     }
 
-    (<any>value)[this.objectIdProperty] = this.objectId;
+    (value as any)[this.objectIdProperty] = this.objectId;
     array.push(value);
 
     return this;
@@ -129,7 +129,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     const result = new Map<string, StratumFromTraits<T>>();
 
     // Find the strata that go into this object.
-    for (let stratumId of strataTopToBottom.keys()) {
+    for (const stratumId of strataTopToBottom.keys()) {
       const stratum = strataTopToBottom.get(stratumId);
       const objectArray = stratum[this.parentProperty];
 

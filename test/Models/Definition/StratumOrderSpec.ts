@@ -14,10 +14,10 @@ describe("StratumOrder", function () {
     so.addLoadStratum("loadTest");
 
     expect(so.priorities.get("loadTest")).toBeLessThan(
-      <number>so.priorities.get("definitionTest")
+      so.priorities.get("definitionTest") as number
     );
     expect(so.priorities.get("definitionTest")).toBeLessThan(
-      <number>so.priorities.get("userTest")
+      so.priorities.get("userTest") as number
     );
   });
 

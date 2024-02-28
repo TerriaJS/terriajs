@@ -11,5 +11,7 @@ document.querySelectorAll("a").forEach(function (a) {
       a.target = "_blank";
       a.rel = "noreferrer noopener";
     }
-  } catch {}
+  } catch {
+    /* eslint-disable-line no-empty */
+  }
 });

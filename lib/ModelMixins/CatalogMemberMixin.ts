@@ -123,9 +123,9 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed
     get nameSortKey() {
-      var parts = (this.nameInCatalog || "").split(/(\d+)/);
+      const parts = (this.nameInCatalog || "").split(/(\d+)/);
       return parts.map(function (part) {
-        var parsed = parseInt(part, 10);
+        const parsed = parseInt(part, 10);
         if (parsed === parsed) {
           return parsed;
         } else {

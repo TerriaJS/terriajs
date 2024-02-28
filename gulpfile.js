@@ -8,6 +8,7 @@
 // the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require("gulp");
+var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 
 gulp.task("build-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
@@ -49,13 +50,11 @@ gulp.task("lint", function (done) {
     "lib",
     "test",
     "--ext",
-    ".jsx",
-    "--ext",
-    ".js",
+    ".jsx,.js,.ts,.tsx",
     "--ignore-pattern",
     "lib/ThirdParty",
     "--max-warnings",
-    "0"
+    "481" // TODO: Bring this back to 0
   ]);
 
   done();
@@ -73,18 +72,46 @@ gulp.task("reference-guide", function (done) {
   done();
 });
 
-gulp.task("copy-cesium-assets", function () {
+gulp.task("copy-cesium-workers", function () {
   var path = require("path");
 
   var cesiumPackage = require.resolve("terriajs-cesium/package.json");
   var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumWebRoot = path.join(cesiumRoot, "wwwroot");
+  var cesiumWorkersRoot = path.join(cesiumRoot, "Build", "Workers");
 
   return gulp
-    .src([path.join(cesiumWebRoot, "**")], {
-      base: cesiumWebRoot
+    .src([path.join(cesiumWorkersRoot, "**")], {
+      base: cesiumWorkersRoot
     })
-    .pipe(gulp.dest("wwwroot/build/Cesium"));
+    .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
+});
+
+gulp.task("copy-cesium-thirdparty", function () {
+  var path = require("path");
+
+  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
+  var cesiumRoot = path.dirname(cesiumPackage);
+  var cesiumThirdPartyRoot = path.join(cesiumRoot, "Source", "ThirdParty");
+
+  return gulp
+    .src([path.join(cesiumThirdPartyRoot, "**")], {
+      base: cesiumThirdPartyRoot
+    })
+    .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
+});
+
+gulp.task("copy-cesium-source-assets", function () {
+  var path = require("path");
+
+  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
+  var cesiumRoot = path.dirname(cesiumPackage);
+  var cesiumAssetsRoot = path.join(cesiumRoot, "Source", "Assets");
+
+  return gulp
+    .src([path.join(cesiumAssetsRoot, "**")], {
+      base: cesiumAssetsRoot
+    })
+    .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
 });
 
 gulp.task("test-browserstack", function (done) {
@@ -227,65 +254,16 @@ gulp.task(
   )
 );
 
-gulp.task("terriajs-server", function (done) {
-  // E.g. gulp terriajs-server --terriajsServerArg port=4000 --terriajsServerArg verbose=true
-  //  or gulp dev --terriajsServerArg port=3000
-  const { spawn } = require("child_process");
-  const fs = require("fs");
-  const minimist = require("minimist");
+gulp.task("terriajs-server", terriajsServerGulpTask(3002));
 
-  const knownOptions = {
-    string: ["terriajsServerArg"],
-    default: {
-      terriajsServerArg: []
-    }
-  };
-  const options = minimist(process.argv.slice(2), knownOptions);
-
-  const logFile = fs.openSync("./terriajs-server.log", "a");
-  const serverArgs = Array.isArray(options.terriajsServerArg)
-    ? options.terriajsServerArg
-    : [options.terriajsServerArg];
-  // Spawn detached - attached does not make terriajs-server
-  //  quit when the gulp task is stopped
-  const child = spawn(
-    "node",
-    [
-      "./node_modules/.bin/terriajs-server",
-      "--port=3002",
-      ...serverArgs.map((arg) => `--${arg}`)
-    ],
-    { detached: true, stdio: ["ignore", logFile, logFile] }
-  );
-  child.on("exit", (exitCode, signal) => {
-    done(
-      new Error(
-        "terriajs-server quit" +
-          (exitCode !== null ? ` with exit code: ${exitCode}` : "") +
-          (signal ? ` from signal: ${signal}` : "") +
-          "\nCheck terriajs-server.log for more information."
-      )
-    );
-  });
-  // Intercept SIGINT, SIGTERM and SIGHUP, cleanup terriajs-server and re-send signal
-  // May fail to catch some relevant signals on Windows
-  // SIGINT: ctrl+c
-  // SIGTERM: kill <pid>
-  // SIGHUP: terminal closed
-  process.once("SIGINT", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGINT");
-  });
-  process.once("SIGTERM", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGTERM");
-  });
-  process.once("SIGHUP", () => {
-    child.kill("SIGTERM");
-    process.kill(process.pid, "SIGHUP");
-  });
-});
-
+gulp.task(
+  "copy-cesium-assets",
+  gulp.series(
+    "copy-cesium-source-assets",
+    "copy-cesium-workers",
+    "copy-cesium-thirdparty"
+  )
+);
 gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
 gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
 gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));

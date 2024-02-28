@@ -376,11 +376,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       result.push({
         layerName: layerName,
         styles: styles.map((style) => {
-          var wmsLegendUrl = isReadOnlyArray(style.LegendURL)
+          const wmsLegendUrl = isReadOnlyArray(style.LegendURL)
             ? style.LegendURL[0]
             : style.LegendURL;
 
-          var legendUri, legendMimeType;
+          let legendUri, legendMimeType;
           if (
             wmsLegendUrl &&
             wmsLegendUrl.OnlineResource &&
@@ -760,7 +760,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
-    for (let layer of this.capabilitiesLayers.values()) {
+    for (const layer of this.capabilitiesLayers.values()) {
       if (!layer) {
         continue;
       }
@@ -943,7 +943,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     // This is used to flag subsets (dimensions) which have multiple values
     // Each element in this array represents the **actual** value used for a subset which has multiple values
-    let duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
+    const duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
 
     // Get dimensionSubsets
     const dimensionSubsets: { key: string; value: string }[] = [];
