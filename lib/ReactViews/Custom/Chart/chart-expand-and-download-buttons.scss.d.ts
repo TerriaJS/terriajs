@@ -25,5 +25,5 @@ interface CssExports {
   'raise-to-title': string;
   'raiseToTitle': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

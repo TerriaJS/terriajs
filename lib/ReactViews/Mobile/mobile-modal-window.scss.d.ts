@@ -18,5 +18,5 @@ interface CssExports {
   'modalBg': string;
   'modalTop': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

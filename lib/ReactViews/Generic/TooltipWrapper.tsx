@@ -284,7 +284,7 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = (
         );
       }}
     >
-      {(applyAriaId) => (
+      {(applyAriaId: boolean) => (
         <TextSpan
           // provide some base text styles as a textspan,
           // as this will be rendered outside the tree

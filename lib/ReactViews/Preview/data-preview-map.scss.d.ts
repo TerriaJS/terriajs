@@ -7,5 +7,5 @@ interface CssExports {
   'terria-preview': string;
   'terriaPreview': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

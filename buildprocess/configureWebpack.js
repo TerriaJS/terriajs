@@ -1,6 +1,6 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const StringReplacePlugin = require("string-replace-webpack-plugin");
+// const StringReplacePlugin = require("string-replace-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const webpack = require("webpack");
@@ -59,48 +59,48 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  config.module.rules.push({
-    test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium/README.md")),
-    exclude: [
-      // require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
-    ],
-    use: [
-      {
-        loader: StringReplacePlugin.replace({
-          replacements: [
-            // {
-            //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-            //   replacement: function (match, p1, offset, string) {
-            //     let p1_modified = p1.replace(/\\/g, "\\\\");
-            //     return (
-            //       "require(`" +
-            //       cesiumDir.replace(/\\/g, "\\\\") +
-            //       "/Source/" +
-            //       p1_modified +
-            //       "`)"
-            //     );
-            //   }
-            // },
-            {
-              pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
-              replacement: function () {
-                return 'Please set "cesiumIonAccessToken" in config.json';
-              }
-            },
-            {
-              pattern: / before making any Cesium API calls/g,
-              replacement: function () {
-                return "";
-              }
-            }
-          ]
-        })
-      }
-    ]
-  });
+  // config.module.rules.push({
+  //   test: /\.js?$/,
+  //   include: path.dirname(require.resolve("terriajs-cesium/README.md")),
+  //   exclude: [
+  //     // require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
+  //     // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
+  //     // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
+  //   ],
+  //   use: [
+  //     {
+  //       // loader: StringReplacePlugin.replace({
+  //       //   replacements: [
+  //       //     // {
+  //       //     //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
+  //       //     //   replacement: function (match, p1, offset, string) {
+  //       //     //     let p1_modified = p1.replace(/\\/g, "\\\\");
+  //       //     //     return (
+  //       //     //       "require(`" +
+  //       //     //       cesiumDir.replace(/\\/g, "\\\\") +
+  //       //     //       "/Source/" +
+  //       //     //       p1_modified +
+  //       //     //       "`)"
+  //       //     //     );
+  //       //     //   }
+  //       //     // },
+  //       //     {
+  //       //       pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
+  //       //       replacement: function () {
+  //       //         return 'Please set "cesiumIonAccessToken" in config.json';
+  //       //       }
+  //       //     },
+  //       //     {
+  //       //       pattern: / before making any Cesium API calls/g,
+  //       //       replacement: function () {
+  //       //         return "";
+  //       //       }
+  //       //     }
+  //       //   ]
+  //       // })
+  //     }
+  //   ]
+  // });
 
   // The sprintf module included by Cesium includes a license comment with a big
   // pile of links, some of which are apparently dodgy and cause Websense to flag
@@ -355,7 +355,7 @@ function configureWebpack(
   };
 
   config.plugins = (config.plugins || []).concat([
-    new StringReplacePlugin(),
+    // new StringReplacePlugin(),
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/
@@ -406,7 +406,8 @@ function configureWebpack(
           options: {
             sourceMap: true,
             modules: {
-              localIdentName: "tjs-[name]__[local]"
+              localIdentName: "tjs-[name]__[local]",
+              exportLocalsConvention: "camelCase"
             },
             importLoaders: 2
           }
@@ -431,7 +432,8 @@ function configureWebpack(
           options: {
             sourceMap: true,
             modules: {
-              localIdentName: "tjs-[name]__[local]"
+              localIdentName: "tjs-[name]__[local]",
+              exportLocalsConvention: "camelCase"
             },
             importLoaders: 2
           }
