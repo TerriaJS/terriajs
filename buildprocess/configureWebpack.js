@@ -109,22 +109,22 @@ function configureWebpack(
   // might actually visit.
   config.module.rules.push({
     test: /\.js?$/,
-    include: path.resolve(cesiumDir, "Source", "ThirdParty"),
-    use: [
-      {
-        loader: StringReplacePlugin.replace({
-          replacements: [
-            {
-              pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
-              replacement: function (match) {
-                // replace http:// and https:// with a spelling-out of it.
-                return match.replace(/(https?):\/\//g, "$1-colon-slashslash ");
-              }
-            }
-          ]
-        })
-      }
-    ]
+    include: path.resolve(cesiumDir, "Source", "ThirdParty")
+    // use: [
+    //   {
+    //     loader: StringReplacePlugin.replace({
+    //       replacements: [
+    //         {
+    //           pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
+    //           replacement: function (match) {
+    //             // replace http:// and https:// with a spelling-out of it.
+    //             return match.replace(/(https?):\/\//g, "$1-colon-slashslash ");
+    //           }
+    //         }
+    //       ]
+    //     })
+    //   }
+    // ]
   });
 
   const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
@@ -151,25 +151,21 @@ function configureWebpack(
           "@babel/preset-env",
           {
             corejs: 3,
-            useBuiltIns: "usage",
-            modules: "auto"
+            useBuiltIns: "usage"
           }
         ],
         ["@babel/preset-react", { runtime: "automatic" }],
         ["@babel/typescript", { allowNamespaces: true }]
       ],
       plugins: [
-        [
-          "@babel/plugin-transform-modules-commonjs",
-          {
-            importInterop: "babel"
-          }
-        ],
+        // [
+        //   "@babel/plugin-transform-modules-commonjs",
+        // ],
         ["@babel/plugin-proposal-decorators", { legacy: true }],
         "@babel/plugin-proposal-class-properties",
         "@babel/proposal-object-rest-spread",
         "babel-plugin-styled-components",
-        require.resolve("@babel/plugin-syntax-dynamic-import"),
+        // require.resolve("@babel/plugin-syntax-dynamic-import"),
         "babel-plugin-lodash"
       ],
       assumptions: {
@@ -263,8 +259,9 @@ function configureWebpack(
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
   config.module.rules.push({
-    test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-    use: [{ loader: "imports-loader", options: { require: false } }]
+    test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl")
+    // use: [{ loader: "imports-loader", options: { require: false } }]
+    // use: [{ loader: "imports-loader" }]
   });
 
   // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
@@ -408,9 +405,9 @@ function configureWebpack(
           loader: require.resolve("css-loader"),
           options: {
             sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
+            modules: {
+              localIdentName: "tjs-[name]__[local]"
+            },
             importLoaders: 2
           }
         },
@@ -433,9 +430,9 @@ function configureWebpack(
           loader: require.resolve("css-loader"),
           options: {
             sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
+            modules: {
+              localIdentName: "tjs-[name]__[local]"
+            },
             importLoaders: 2
           }
         },
