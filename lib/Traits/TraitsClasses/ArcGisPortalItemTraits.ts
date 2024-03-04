@@ -7,7 +7,8 @@ import UrlTraits from "./UrlTraits";
 import { traitClass } from "../Trait";
 
 @traitClass({
-  description: `Creates an item or group that referehces an item in ArcGIS portal.
+  description: `Creates an item or group that references an item in ArcGIS portal.
+
   <strong>Note:</strong> 
   <li>The <code>itemId</code> in the example is the referenced item's ID in the portal.</li>
   <li>Not all referenced items can be added to the map. E.g., some types need conversions.</li>`,

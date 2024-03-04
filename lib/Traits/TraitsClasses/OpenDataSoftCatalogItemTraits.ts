@@ -1,5 +1,6 @@
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -9,6 +10,16 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates one catalog item from url that points to an opendatasoft service.`,
+  example: {
+    url: "https://data.bmcc.nsw.gov.au",
+    type: "opendatasoft-item",
+    datasetId: "bicycle-network-blue-mountains",
+    name: "opendatasoft-item example",
+    id: "some unique id"
+  }
+})
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
   TableTraits,
