@@ -68,15 +68,16 @@ export class WebMapTileServiceAvailableLayerStylesTraits extends ModelTraits {
   })
   styles?: WebMapTileServiceAvailableStyleTraits[];
 }
+
 @traitClass({
   description: `Creates a single item in the catalog from a url that points to wmts service.`,
   example: {
-    "type": "wmts",
-    "id": "a unique id for wmts example",
-    "name": "wmts example",
-    "url": "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
-    "layer": "Reference_World_Boundaries_and_Places",
-    "opacity": 1
+    type: "wmts",
+    id: "a unique id for wmts example",
+    name: "wmts example",
+    url: "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+    layer: "Reference_World_Boundaries_and_Places",
+    opacity: 1
   }
 })
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
