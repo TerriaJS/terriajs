@@ -270,14 +270,12 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
       path.resolve(terriaJSBasePath, "wwwroot", "fonts")
     ],
-    use: [
-      {
-        loader: require.resolve("url-loader"),
-        options: {
-          limit: 8192
-        }
+    type: "asset",
+    parser: {
+      dataUrlCondition: {
+        maxSize: 8192
       }
-    ]
+    }
   });
 
   config.module.rules.push({

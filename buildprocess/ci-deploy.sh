@@ -3,6 +3,7 @@
 set -e
 
 GITHUB_BRANCH=${GITHUB_REF##*/}
+TERRIAMAP_BRANCH="node-v18"
 
 # Don't run for greenkeeper branches; there are too many!
 if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
@@ -23,7 +24,7 @@ yarn add -W request@2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b main https://github.com/TerriaJS/TerriaMap.git
+git clone -b $TERRIAMAP_BRANCH https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
