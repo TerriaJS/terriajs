@@ -2,8 +2,10 @@
 
 #### next release (8.5.2)
 
+- **Breaking changes:**
+  - Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
+  - **Note** the only trait with `MergeStrategy` set to `topStratum` is `lines` in `TableChartStyleTraits`.
 - Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
-- Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
 - Fix `y-column` in `FeatureInfoPanelChart` (`<chart>`)
 - [The next improvement]
 
