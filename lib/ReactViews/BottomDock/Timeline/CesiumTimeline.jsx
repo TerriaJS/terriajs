@@ -8,9 +8,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import { WrappedTimeline } from "terriajs-cesium-widgets/Source/Timeline/Timeline";
+// import WrappedTimeline from "terriajs-cesium-widgets/Source/Timeline/Timeline";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { formatDate, formatDateTime, formatTime } from "./DateFormats";
+
+// console.log(WrappedTimeline);
 
 const CesiumTimeline = createReactClass({
   propTypes: {
@@ -18,10 +20,10 @@ const CesiumTimeline = createReactClass({
   },
 
   componentDidMount() {
-    this.cesiumTimeline = new WrappedTimeline(
-      this.timelineContainer,
-      this.props.terria.timelineClock
-    );
+    // this.cesiumTimeline = new WrappedTimeline(
+    //   this.timelineContainer,
+    //   this.props.terria.timelineClock
+    // );
 
     this.cesiumTimeline.makeLabel = (time) => {
       if (defined(this.props.terria.timelineStack.top)) {
