@@ -153,6 +153,19 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       StratumOrder.sortTopToBottom(model.strata)
     );
 
+    // If merge strategy is topStratum, then we only want to keep the ids that exist in the top stratum
+    if (this.merge === MergeStrategy.TopStratum) {
+      const topStratum = model.strataTopToBottom.values().next().value;
+
+      const topIds = this.getIdsAcrossStrata(new Map([["top", topStratum]]));
+      // Remove ids that don't exist in the top stratum
+      idsInCorrectOrder.forEach((id) => {
+        if (!topIds.has(id)) {
+          idsWithCorrectRemovals.delete(id);
+        }
+      });
+    }
+
     // Correct ids are:
     // - Ids ordered by strata bottom to top combined with
     // - Ids removed by strata top to bottom
@@ -165,6 +178,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // at least when we're in a reactive context.
 
     const result: Model<T>[] = [];
+
+    console.log("ids", ids);
 
     ids.forEach((value) => {
       result.push(this.createObject(model, value));

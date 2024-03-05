@@ -128,7 +128,6 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       this.parentModel.strataTopToBottom;
 
     const result = new Map<string, StratumFromTraits<T>>();
-    const topStratumId = this.parentModel.strataTopToBottom.keys().next().value;
 
     // Find the strata that go into this object.
     for (const stratumId of strataTopToBottom.keys()) {
@@ -145,21 +144,14 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
       });
 
       if (thisObject === undefined) {
-        // If merge strategy is TopStratum, we only return an object if it is in the top stratum - so we stop here
-        if (
-          this.merge === MergeStrategy.TopStratum &&
-          stratumId === topStratumId
-        ) {
-          break;
-        }
         continue;
       }
 
-      // This object is removed in this stratum, so stop here.
       if (
         this.objectTraits.isRemoval !== undefined &&
         this.objectTraits.isRemoval(thisObject)
       ) {
+        // This object is removed in this stratum, so stop here.
         break;
       }
 

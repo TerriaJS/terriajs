@@ -3,6 +3,8 @@
 #### next release (8.5.2)
 
 - Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
+- Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
+- Fix multiple `y-columns` in `FeatureInfoPanelChart` (`<chart>`)
 - [The next improvement]
 
 #### 8.5.1 - 2024-02-23
@@ -75,8 +77,6 @@
   CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
   - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
 - Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
--
-- [The next improvement]
 - Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
 - Add CesiumIon geocoder
 - `CatalogGroup` will now not show members until loaded
