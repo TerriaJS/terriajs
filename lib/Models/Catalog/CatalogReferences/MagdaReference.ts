@@ -504,11 +504,11 @@ export default class MagdaReference extends AccessControlMixin(
           return ref.uniqueId;
         } else {
           const prevModel = terria.getModelById(BaseModel, member.id);
-          if (prevModel === undefined || prevModel.type !== model.type) {
-            if (prevModel !== undefined) {
-              terria.removeModelReferences(prevModel);
-              prevModel.dispose();
-            }
+          if (prevModel === undefined) {
+            terria.addModel(model, shareKeys);
+          } else if (prevModel.type !== model.type) {
+            terria.removeModelReferences(prevModel);
+            prevModel.dispose();
             terria.addModel(model, shareKeys);
           }
           if (AccessControlMixin.isMixedInto(model)) {
@@ -625,7 +625,7 @@ export default class MagdaReference extends AccessControlMixin(
     if (terria.workbench.contains(result)) {
       // Reload after updating traits
       // Adding an item already in the workbench does all relevant loading, but doesn't change the workbench
-      terria.workbench.add(result).then(res => res.raiseError(terria));
+      terria.workbench.add(result).then((res) => res.raiseError(terria));
     }
 
     return result;
