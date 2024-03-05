@@ -179,8 +179,6 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     const result: Model<T>[] = [];
 
-    console.log("ids", ids);
-
     ids.forEach((value) => {
       result.push(this.createObject(model, value));
     });

@@ -422,8 +422,6 @@ describe("objectArrayTrait", function () {
       ]
     });
 
-    console.log(model.inner);
-
     expect(model.inner.length).toBe(2);
     expect(model.inner[0].foo).toBe("this-exists-in-definition-and-user");
     expect(model.inner[0].bar).toBe(1);
