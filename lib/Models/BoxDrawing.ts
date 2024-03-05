@@ -1491,6 +1491,7 @@ export default class BoxDrawing {
         JulianDate.now(),
         scratchOppositePosition
       );
+      if (oppositePosition === undefined) return;
       const axisVector = Cartesian3.subtract(
         position,
         oppositePosition,
@@ -1620,8 +1621,8 @@ export default class BoxDrawing {
     scalePoint1: ScalePoint,
     scalePoint2: ScalePoint
   ): Entity {
-    const position1 = scalePoint1.position?.getValue(JulianDate.now())!;
-    const position2 = scalePoint2.position?.getValue(JulianDate.now())!;
+    const position1 = scalePoint1.position?.getValue(JulianDate.now());
+    const position2 = scalePoint2.position?.getValue(JulianDate.now());
     const scaleAxis = new Entity({
       show: false,
       polyline: {

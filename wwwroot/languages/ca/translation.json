@@ -235,8 +235,9 @@
     "title": "Comptar conjunts de dades",
     "btnCount": "Comptar conjunts de dades",
     "noMapDataEnabled": "No hi ha dades del mapa activades",
-    "mapDataState": "{{count}} conjunt de dades actiu al mapa",
-    "mapDataState_plural": "{{count}} conjunts de dades actius al mapa",
+    "mapDataState_0": "{{count}} conjunt de dades actiu al mapa",
+    "mapDataState_1": "{{count}} conjunts de dades actius al mapa",
+    "mapDataState_2": "{{count}} conjunts de dades actius al mapa",
     "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>"
   },
   "toolsPanel": {
@@ -374,8 +375,9 @@
     "storyEditor": "Editor d'històries",
     "delete": "Esborrar",
     "message": "<2>Aquest és el vostre editor d'històries</2><1>Creeu i compartiu històries interactives directament des del vostre mapa<1><0><0></0>Com començar </0></1></1 >",
-    "removeAllStoriesDialog": "Esteu segur que voleu suprimir {{ count }} escena?",
-    "removeAllStoriesDialog_plural": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "removeAllStoriesDialog_0": "Esteu segur que voleu suprimir {{ count }} escena?",
+    "removeAllStoriesDialog_1": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "removeAllStoriesDialog_2": "Esteu segur que voleu suprimir {{ count }} escenes?",
     "captureScene": "Captura l'escena",
     "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
     "loadSceneErrorTitle": "Error carregant Story Scene",
@@ -446,7 +448,9 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "Aquest arxiu no conté dades geoespacials.",
-    "selectToPreview": "<0>Seleccioneu un conjunt de dades per veure'n una previsualització </0><1>- O -</1><2>Anar al mapa</2>",
+    "selectToPreviewDataset": "Seleccioneu un conjunt de dades per veure'n una previsualització",
+    "selectToPreviewSeparator": "O",
+    "goToTheMap": "Anar al mapa",
     "preview": "{{appName}} previsualització",
     "previewItemErrorTitle": "No s'ha pogut previsualitzar l'element del catàleg.",
     "previewItemErrorMessage": "Error en carregar l'element del catàleg.",
@@ -471,7 +475,8 @@
     "removeFromMap": "Eliminar del mapa",
     "datasetDescription": "Descripció del conjunt de dades",
     "fees": "Comissions",
-    "updateFrequency": "Freqüència d'actualització"
+    "updateFrequency": "Freqüència d'actualització",
+    "selectMultipleDatasets": "<0>Premeu <strong>Maj</strong> i feu clic a</0><1 /><2>per afegir diversos conjunts de dades</2>"
   },
   "description": {
     "dataLocal": "Aquest arxiu només existeix al vostre navegador. Per compartir-lo, l'has de carregar en un servidor web públic.",
@@ -630,7 +635,10 @@
     "searchNoCatalogueItem": "Ho sentim, no hi ha cap article del catàleg que coincideixi amb la teva cerca.",
     "inMultipleLocations": "En diverses ubicacions, com ara: ",
     "inDataCatalogue": "Al Catàleg de Dades",
-    "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard."
+    "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard.",
+    "searchMinCharacters_0": "Heu d'introduir un mínim de {{count}} caracter",
+    "searchMinCharacters_1": "Heu d'introduir un mínim de {{count}} caràcters",
+    "searchMinCharacters_2": "Heu d'introduir un mínim de {{count}} caràcters"
   },
   "terriaViewer": {
     "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), i $t(browsers.safari). Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
@@ -2118,8 +2126,9 @@
     "loadError": "Error en carregar els paràmetres de cerca. Comproveu la consola per trobar errors detallats.",
     "noParameters": "No s'han trobat paràmetres cercables",
     "searching": "Cercant",
-    "resultsCount": "S'ha trobat {{count}} coincidència",
-    "resultsCount_plural": "S'ha trobat {{count}} coincidències",
+    "resultsCount_0": "S'ha trobat {{count}} coincidència",
+    "resultsCount_1": "S'ha trobat {{count}} coincidències",
+    "resultsCount_2": "S'ha trobat {{count}} coincidències",
     "searchError": "La cerca ha fallat. Comproveu la consola per trobar errors detallats.",
     "resetBtnText": "Esborra l'entrada",
     "searchBtnText": "Cerca"
@@ -2197,5 +2206,14 @@
     "undefinedLabel": "Sense definir",
     "invalid": "Invàlid",
     "enabled": "Activat"
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "Falta una propietat",
+      "idForMatchingErrorMessage": "Els objectes del model han de tenir una propietat `id`, `localId` o `name`.",
+      "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
+      "unsupportedTypeTitle": "Tipus desconegut"
+    },
+    "noSearchProviders": "No hi ha proveïdors de cerca configurats"
   }
 }

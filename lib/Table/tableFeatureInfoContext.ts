@@ -67,7 +67,7 @@ export const tableFeatureInfoContext: (
 
     const title = style.colorColumn?.title;
 
-    const featureId = feature.id.replace(/\"/g, "");
+    const featureId = feature.id.replace(/"/g, "");
 
     const timeSeriesContext: TimeSeriesContext = {
       title: style.colorColumn?.title,
@@ -95,7 +95,7 @@ export const csvFeatureInfoContext: (
   (catalogItem) => (feature) => {
     // Check that feature data has return CSV as string
     if (typeof feature.data === "string") {
-      const featureId = feature.id.replace(/\"/g, "");
+      const featureId = feature.id.replace(/"/g, "");
       // Remove comment lines in CSV (start with # and don't have any commas)
       const csvData = feature.data
         .split("\n")

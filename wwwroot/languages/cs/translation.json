@@ -477,7 +477,9 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "Tento soubor neobsahuje geoprostorová data.",
-    "selectToPreview": "<0>Výběr datové sady pro zobrazení náhledu </0><1>- NEBO -</1><2>Přejít na mapu</2>",
+    "selectToPreviewDataset": "Výběr datové sady pro zobrazení náhledu",
+    "selectToPreviewSeparator": "NEBO",
+    "goToTheMap": "Přejít na mapu",
     "loading": "NAČÍTÁNÍ NÁHLEDU...",
     "preview": "náhled {{appName}}",
     "previewItemErrorMessage": "Při načítání položky katalogu došlo k chybě.",

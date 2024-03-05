@@ -5,7 +5,7 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
-import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
 import loadWithXhr from "../../Core/loadWithXhr";
 
 export default class CesiumRenderLoopPauser {
@@ -45,7 +45,7 @@ export default class CesiumRenderLoopPauser {
     );
 
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
-    var canvas = this.cesiumWidget.canvas;
+    const canvas = this.cesiumWidget.canvas;
     canvas.addEventListener(
       "mousemove",
       this._boundNotifyRepaintRequired,
@@ -156,16 +156,19 @@ export default class CesiumRenderLoopPauser {
       parameters,
       transferableObjects
     ) {
-      var result = that._originalScheduleTask.call(
+      const result = that._originalScheduleTask.call(
         this,
         parameters,
         transferableObjects
       );
 
-      if (!defined(this._originalWorkerMessageSinkRepaint)) {
+      if (
+        !defined(this._originalWorkerMessageSinkRepaint) &&
+        defined(this._worker.onmessage)
+      ) {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
-        var taskProcessor = this;
+        const taskProcessor = this;
         this._worker.onmessage = function (event: any) {
           taskProcessor._originalWorkerMessageSinkRepaint(event);
 
@@ -305,14 +308,14 @@ export default class CesiumRenderLoopPauser {
 
     const cameraMovedInLastSecond = now - this._lastCameraMoveTime < 1000;
 
-    const surface = (<any>scene.globe)._surface;
+    const surface = (scene.globe as any)._surface;
     const terrainTilesWaiting =
-      !surface._tileProvider.ready ||
+      !surface._tileProvider ||
       surface._tileLoadQueueHigh.length > 0 ||
       surface._tileLoadQueueMedium.length > 0 ||
       surface._tileLoadQueueLow.length > 0 ||
       surface._debug.tilesWaitingForChildren > 0;
-    const tweens = (<any>scene).tweens;
+    const tweens = (scene as any).tweens;
 
     if (
       !cameraMovedInLastSecond &&

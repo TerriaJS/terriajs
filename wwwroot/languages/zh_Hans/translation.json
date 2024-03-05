@@ -74,7 +74,8 @@
     },
     "toggleSplitterTool": "在两组不同的数据之间进行并排比较",
     "toggleSplitterToolDisabled": "请禁用其他并排比较功能以启用标准比较",
-    "title": "按下并拖动左键或者右键调整视角"
+    "title": "按下并拖动左键或者右键调整视角",
+    "errorTitle": "未能比较catalog项目."
   },
   "concept": {
     "inactive": {
@@ -801,7 +802,9 @@
   "preview": {
     "contact": "联系",
     "doesNotContainGeospatialData": "该文件不包含地理空间数据。",
-    "selectToPreview": "<0>选择数据集以查看预览</0><1>- 或 -</1><2>转到地图</2>",
+    "selectToPreviewDataset": "选择数据集以查看预览",
+    "selectToPreviewSeparator": "或",
+    "goToTheMap": "转到地图",
     "loading": "预览加载中...",
     "previewItemErrorTitle": "无法预览目录项。",
     "previewItemErrorMessage": "加载目录项时出错。",
@@ -900,5 +903,11 @@
     "helpfulHintsThree": "在工作台中，如果数据支持此功能，您可以打开和关闭数据集、更改其不透明度、激活分屏比较、更改样式以及浏览日期和时间。",
     "helpfulHintsTwo": "将数据添加到地图后，您的活动数据集将在工作台中列出。 工作台将帮助您与数据进行交互。"
   },
-  "emptyWorkbenchMessage": "<0><0>你的工作台是空的</0><1><strong>点击上面的'$t(addData.addDataBtnText)' </strong></1><2><0>浏览数据目录 </0><1>将您自己的数据加载到地图上</1></2><3><0></0><strong>提示</strong><2>您所有的活动数据集都会 在此处列出</2></3></0>"
+  "emptyWorkbenchMessage": "<0><0>你的工作台是空的</0><1><strong>点击上面的'$t(addData.addDataBtnText)' </strong></1><2><0>浏览数据目录 </0><1>将您自己的数据加载到地图上</1></2><3><0></0><strong>提示</strong><2>您所有的活动数据集都会 在此处列出</2></3></0>",
+  "browsers": {
+    "chrome": "谷歌Chrome浏览器",
+    "safari": "苹果Safari浏览器",
+    "firefox": "FireFox浏览器",
+    "edge": "微软Edge浏览器"
+  }
 }

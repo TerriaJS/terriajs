@@ -14,7 +14,7 @@ enum TableColumnType {
 export function stringToTableColumnType(
   s: string
 ): TableColumnType | undefined {
-  return TableColumnType[<keyof typeof TableColumnType>s];
+  return TableColumnType[s as keyof typeof TableColumnType];
 }
 
 export default TableColumnType;

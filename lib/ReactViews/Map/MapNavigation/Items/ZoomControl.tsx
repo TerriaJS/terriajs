@@ -18,8 +18,7 @@ import { RawButton } from "../../../../Styled/Button";
 import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "../../../../Models/Terria";
-
-const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
+import Tween from "@tweenjs/tween.js";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;

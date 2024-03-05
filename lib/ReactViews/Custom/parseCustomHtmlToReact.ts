@@ -113,6 +113,8 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
 
       // If external link and showExternalLinkWarning is true - replace with ExternalLinkWithWarning
       if (appendExternalLink && context.showExternalLinkWarning) {
+        /* TODO: Fix types */
+        /* eslint-disable-next-line react/no-children-prop */
         return createElement(ExternalLinkWithWarning, {
           attributes: aElement.props,
           children: aElement.props.children
@@ -147,7 +149,7 @@ function parseCustomHtmlToReact(
   html: string,
   context?: ParseCustomHtmlToReactContext,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: Object = {}
+  domPurifyOptions: object = {}
 ) {
   if (!defined(html) || html.length === 0) {
     return html;

@@ -431,7 +431,9 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       let errorMessage: string | undefined;
       try {
         errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
 
       const originalError = isDefined(errorMessage)
         ? new TerriaError({
@@ -454,7 +456,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    let geojsonData =
+    const geojsonData =
       this.outputFormat === "JSON"
         ? JSON.parse(getFeatureResponse)
         : gmlToGeoJson(getFeatureResponse);

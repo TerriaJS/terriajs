@@ -64,7 +64,7 @@ reports via email addressed to at least 2 of the following community leaders:
 
 - Ana Belgun: ana.belgun@data61.csiro.au
 - Stephen Davies: stephen.davies@data61.csiro.au
-- Mats Henrikson: mats.henrikson@data61.csiro.au
+- Nick Forbes-Smith: nick.forbes-smith@data61.csiro.au
 - Peter Hassall: peter.hassall@data61.csiro.au
 
 All complaints will be reviewed and investigated promptly and fairly.

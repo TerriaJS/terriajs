@@ -228,6 +228,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
 
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
+      if (position === undefined) return;
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
       const featureImageryUrl = this.imageryUrls.find(
         (url) => providerCoords[url]

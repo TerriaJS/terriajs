@@ -109,7 +109,7 @@ describe("TableMixin", function () {
     beforeEach(async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
       (await item.loadMapItems()).throwIfError();
-      dataSource = <CustomDataSource>item.mapItems[0];
+      dataSource = item.mapItems[0] as CustomDataSource;
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
@@ -197,7 +197,7 @@ describe("TableMixin", function () {
         LatLonEnumDateIdWithRegionCsv
       );
       (await item.loadMapItems()).throwIfError();
-      dataSource = <CustomDataSource>item.mapItems[0];
+      dataSource = item.mapItems[0] as CustomDataSource;
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
@@ -308,7 +308,7 @@ describe("TableMixin", function () {
 
         const duplicateValue = 7;
         let occurrences = 0;
-        for (let entity of mapItem.entities.values) {
+        for (const entity of mapItem.entities.values) {
           const val = entity.properties?.value.getValue();
           if (val === duplicateValue) {
             occurrences++;
@@ -350,7 +350,7 @@ describe("TableMixin", function () {
     beforeEach(async function () {
       item.setTrait(CommonStrata.user, "csvString", ParkingSensorDataCsv);
       (await item.loadMapItems()).throwIfError();
-      dataSource = <CustomDataSource>item.mapItems[0];
+      dataSource = item.mapItems[0] as CustomDataSource;
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 

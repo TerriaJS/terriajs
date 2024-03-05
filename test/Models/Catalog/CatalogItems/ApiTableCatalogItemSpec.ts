@@ -80,7 +80,7 @@ describe("ApiTableCatalogItem", function () {
     await apiCatalogItem.loadMapItems();
     const table = apiCatalogItem.dataColumnMajor;
     expect(table).toBeDefined();
-    let definedTable: string[][] = table!;
+    const definedTable: string[][] = table!;
     // count columns
     expect(definedTable.length).toBe(3); // value, latitude, longitude
     // count rows
@@ -163,7 +163,7 @@ describe("ApiTableCatalogItem", function () {
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
       expect(table).toBeDefined();
-      let definedTable: string[][] = table!;
+      const definedTable: string[][] = table!;
       const valueColumn = definedTable.find(([name]) => name === "value");
       expect(valueColumn).toEqual(["value", "8", "9", "7"]);
     });
@@ -202,7 +202,7 @@ describe("ApiTableCatalogItem", function () {
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
       expect(table).toBeDefined();
-      let definedTable: string[][] = table!;
+      const definedTable: string[][] = table!;
       const valueColumn = definedTable.find(([name]) => name === "value");
       expect(valueColumn).toEqual(["value", "8", "9"]);
     });
@@ -243,7 +243,7 @@ describe("ApiTableCatalogItem", function () {
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
       expect(table).toBeDefined();
-      let definedTable: string[][] = table!;
+      const definedTable: string[][] = table!;
       const valueColumn = definedTable.find(([name]) => name === "value");
       expect(valueColumn).toEqual(["value", "8", "9", "7"]);
     });
@@ -306,7 +306,7 @@ describe("ApiTableCatalogItem", function () {
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
       expect(table).toBeDefined();
-      let definedTable: string[][] = table!;
+      const definedTable: string[][] = table!;
       const embeddedColumn = definedTable.find(
         ([name]) => name === "some embedded value"
       );

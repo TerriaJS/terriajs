@@ -11,7 +11,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
   async describeParameters() {
     return [];
   }
-  async search(values: Record<string, any>) {
+  async search() {
     return [
       {
         id: "1",

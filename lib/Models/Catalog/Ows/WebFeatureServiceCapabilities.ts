@@ -24,7 +24,7 @@ export interface FeatureType {
 export function getRectangleFromLayer(
   layer: FeatureType
 ): StratumFromTraits<RectangleTraits> | undefined {
-  var bbox = layer.WGS84BoundingBox;
+  const bbox = layer.WGS84BoundingBox;
   if (bbox) {
     return {
       west: bbox.westBoundLongitude,
@@ -124,7 +124,7 @@ function getFeatureTypes(json: any): FeatureType[] {
 }
 
 function getOutputTypes(json: any): string[] | undefined {
-  let outputTypes = json.OperationsMetadata?.Operation?.find(
+  const outputTypes = json.OperationsMetadata?.Operation?.find(
     (op: any) => op.name === "GetFeature"
   )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value;
 
@@ -147,7 +147,7 @@ interface SrsNamesForLayer {
  * TODO: For catalog items that specify which layer we are interested in, why build the array describing the srsNames for all the other layers too?
  */
 function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
-  let layers = json.FeatureTypeList?.FeatureType;
+  const layers = json.FeatureTypeList?.FeatureType;
   let srsNamesByLayer: SrsNamesForLayer[] = [];
   if (Array.isArray(layers)) {
     srsNamesByLayer = layers.map(buildSrsNameObject);
@@ -162,7 +162,7 @@ function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
  * @param layer
  */
 function buildSrsNameObject(layer: any): SrsNamesForLayer {
-  let srsNames: string[] = [];
+  const srsNames: string[] = [];
 
   if (isJsonString(layer.DefaultSRS)) srsNames.push(layer.DefaultSRS);
   if (Array.isArray(layer.OtherSRS))

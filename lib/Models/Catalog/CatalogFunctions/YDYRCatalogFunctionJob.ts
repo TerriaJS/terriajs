@@ -245,7 +245,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       undefined
     );
 
-    let regionColumnSplit = DATASETS.find(
+    const regionColumnSplit = DATASETS.find(
       (d) => d.title === this.parameters?.["Output Geography"]
     )?.geographyName.split("_");
     let regionColumn = "";

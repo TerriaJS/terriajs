@@ -61,7 +61,7 @@ class DataCatalog extends React.Component {
                 onActionButtonClicked={this.props.onActionButtonClicked}
                 removable={this.props.removable}
                 terria={this.props.terria}
-                isTopLevel={true}
+                isTopLevel
               />
             )
         )}

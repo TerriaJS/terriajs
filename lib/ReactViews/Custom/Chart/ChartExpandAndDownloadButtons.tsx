@@ -73,7 +73,9 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
 
       try {
         terria.addModel(itemToExpand);
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
       (await workbench.add(itemToExpand)).raiseError(terria, undefined, true);
     });
   }
@@ -104,7 +106,7 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
     }
 
     // The downloads and download names default to the sources and source names if not defined.
-    let downloads: string[] = filterOutUndefined(
+    const downloads: string[] = filterOutUndefined(
       this.props.downloads ||
         this.sourceItems.map((item) =>
           hasTraits(item, UrlTraits, "url") ? item.url : undefined

@@ -45,6 +45,7 @@ import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import TerriaFeature from "../../Feature/Feature";
 import FeatureInfoContext from "../../Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimensionEnum
@@ -54,7 +55,23 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import TerriaFeature from "../../Feature/Feature";
+
+// Remove problematic query parameters from URLs (GetCapabilities, GetMap, ...) - these are handled separately
+const QUERY_PARAMETERS_TO_REMOVE = [
+  "request",
+  "service",
+  "x",
+  "y",
+  "width",
+  "height",
+  "bbox",
+  "layers",
+  "styles",
+  "version",
+  "format",
+  "srs",
+  "crs"
+];
 
 /** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
 export class WebMapServiceUrlStratum extends LoadableStratum(
@@ -288,8 +305,16 @@ class WebMapServiceCatalogItem
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
-      return this.uri
-        .clone()
+      const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
+        (url, parameter) =>
+          url
+            .removeQuery(parameter)
+            .removeQuery(parameter.toUpperCase())
+            .removeQuery(parameter.toLowerCase()),
+        this.uri.clone()
+      );
+
+      return baseUrl
         .setSearch({
           service: "WMS",
           version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
@@ -540,23 +565,8 @@ class WebMapServiceCatalogItem
       Object.assign(parameters, diffModeParameters);
 
       // Remove problematic query parameters from URL - these are handled by the parameters objects
-      const queryParametersToRemove = [
-        "request",
-        "service",
-        "x",
-        "y",
-        "width",
-        "height",
-        "bbox",
-        "layers",
-        "styles",
-        "version",
-        "format",
-        "srs",
-        "crs"
-      ];
 
-      const baseUrl = queryParametersToRemove.reduce(
+      const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
         (url, parameter) =>
           url
             .removeQuery(parameter)
@@ -643,7 +653,7 @@ class WebMapServiceCatalogItem
 
       // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
       // The `styles` parameter is CSV, a style for each layer
-      let selectedId = this.styles?.split(",")?.[layerIndex];
+      const selectedId = this.styles?.split(",")?.[layerIndex];
 
       return {
         name,

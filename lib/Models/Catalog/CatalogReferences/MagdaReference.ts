@@ -202,6 +202,15 @@ export default class MagdaReference extends AccessControlMixin(
         return target;
       }
 
+      if (
+        this.recordId === undefined &&
+        this.terria.catalogProvider?.isProviderFor(this)
+      ) {
+        // Occurs if record is no longer found inside containing group
+        // (i.e moved, deleted or user no longer has access, including if not logged in)
+        throw this.terria.catalogProvider.createLoadError(this);
+      }
+
       const record = await this.loadMagdaRecord({
         id: this.recordId,
         optionalAspects: [
@@ -237,7 +246,7 @@ export default class MagdaReference extends AccessControlMixin(
   ) {
     if (record && override && isJsonObject(override.aspects)) {
       if (isJsonObject(record.aspects)) {
-        for (let key in override.aspects)
+        for (const key in override.aspects)
           record.aspects[key] = override.aspects[key];
       } else {
         record.aspects = override.aspects;

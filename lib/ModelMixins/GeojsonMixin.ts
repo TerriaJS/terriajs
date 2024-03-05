@@ -649,8 +649,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         });
 
         if (matchedStyles !== undefined) {
-          for (let matched of matchedStyles) {
-            for (let trait of Object.keys(matched.style.traits)) {
+          for (const matched of matchedStyles) {
+            for (const trait of Object.keys(matched.style.traits)) {
               featureProperties[trait] =
                 // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
                 matched.style[trait] ?? featureProperties[trait];
@@ -684,7 +684,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[] = createLongitudeLatitudeFeaturePerRow(
+        const features: Entity[] = createLongitudeLatitudeFeaturePerRow(
           style,
           longitudes,
           latitudes
@@ -1616,8 +1616,8 @@ function filterValue(
   prop: string,
   func: (obj: any, prop: string) => void
 ) {
-  for (let p in obj) {
-    if (obj.hasOwnProperty(p) === false) {
+  for (const p in obj) {
+    if (Object.hasOwnProperty.call(obj, p) === false) {
       continue;
     } else if (p === prop) {
       if (func && typeof func === "function") {
@@ -1679,7 +1679,7 @@ function describeWithoutUnderscores(
 ): string {
   let html = "";
   for (let key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty.call(properties, key)) {
       if (key === nameProperty || simpleStyleIdentifiers.indexOf(key) !== -1) {
         continue;
       }
@@ -1834,7 +1834,7 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
 }
 
-export function getColor(color: String | string | Color): Color {
+export function getColor(color: string | Color): Color {
   if (typeof color === "string" || color instanceof String) {
     return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
   } else {

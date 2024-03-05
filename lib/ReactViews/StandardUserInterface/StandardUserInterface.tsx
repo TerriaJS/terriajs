@@ -191,7 +191,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                           }
                         >
                           <FullScreenButton
-                            minified={true}
+                            minified
                             animationDuration={250}
                             btnText={t("addData.btnHide")}
                           />
@@ -230,7 +230,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                     customElements={customElements}
                     animationDuration={animationDuration}
                   />
-                  <div id="map-data-attribution"></div>
+                  <div id="map-data-attribution" />
                   <main>
                     <ExplorerWindow />
                     {props.terria.configParameters.experimentalFeatures &&
