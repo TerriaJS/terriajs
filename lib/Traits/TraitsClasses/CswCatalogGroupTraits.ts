@@ -9,6 +9,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
+import { traitClass } from "../Trait";
 
 export type QueryPropertyName =
   | "identifier"
@@ -42,6 +43,21 @@ export class DomainSpecTraits extends ModelTraits {
   queryPropertyName?: QueryPropertyName;
 }
 
+@traitClass({
+  description: `Creates one catalog group from url that points to a csw service. 
+  The url in the example supports CORS therefore do not use proxy. Using a proxy might not work.`,
+  example: {
+    type: "csw-group",
+    url: "http://oa-gis.csiro.au/geonetwork/srv/eng/csw",
+    domainSpecification: {
+      domainPropertyName: "awavea",
+      hierarchySeparator: " | ",
+      queryPropertyName: "subject"
+    },
+    name: "Marine Energy Context Layers",
+    id: "some unique ID"
+  }
+})
 export default class CswCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,
