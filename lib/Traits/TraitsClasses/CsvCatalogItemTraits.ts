@@ -2,6 +2,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import { traitClass } from "../Trait";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
@@ -31,6 +32,15 @@ class PollingTraits extends ModelTraits {
   shouldReplaceData = true;
 }
 
+@traitClass({
+  description: `Creates one catalog item from url that points to a CSV file that contains geospatial data.`,
+  example: {
+    type: "csv",
+    url: "https://tiles.terria.io/static/auspost-locations.csv",
+    name: "Australia Post Locations",
+    id: "some unique ID"
+  }
+})
 export default class CsvCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
   UrlTraits,

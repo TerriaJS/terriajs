@@ -317,6 +317,22 @@ class MapServerStratum extends LoadableStratum(
 
     return [createStratumInstance(LegendTraits, { items })];
   }
+
+  /** Only used "pre-cached" tiles if we aren't requesting any specific layers
+   * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
+   */
+  @computed get usePreCachedTilesIfAvailable() {
+    if (this._item.parameters) return false;
+
+    return (
+      this._item.layersArray.length === 0 ||
+      !this._item.layers ||
+      setsAreEqual(
+        this._item.layersArray.map((l) => l.id),
+        this.allLayers.map((l) => l.id)
+      )
+    );
+  }
 }
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
@@ -572,16 +588,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           tileWidth: this.tileWidth,
           parameters: params,
           enablePickFeatures: this.allowFeaturePicking,
-          /** Only used "pre-cached" tiles if we aren't requesting any specific layers
-           * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
-           */
-          usePreCachedTilesIfAvailable:
-            this.layersArray.length === 0 ||
-            !this.layers ||
-            setsAreEqual(
-              this.layersArray.map((l) => l.id),
-              stratum.allLayers.map((l) => l.id)
-            ),
+          usePreCachedTilesIfAvailable: this.usePreCachedTilesIfAvailable,
           mapServerData: stratum.mapServer,
           token: stratum.token,
           credit: this.attribution

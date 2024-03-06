@@ -1,5 +1,6 @@
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 import LegendOwnerTraits from "./FeatureInfoTraits";
@@ -16,6 +17,18 @@ export class SdmxDimensionTraits extends mixTraits(EnumDimensionTraits) {
   })
   position?: number;
 }
+
+@traitClass({
+  description: `Creates one catalog item from url that points to an sdmx service.`,
+  example: {
+    type: "sdmx-json",
+    url: "https://api.data.abs.gov.au",
+    dataflowId: "ABS_REGIONAL_LGA2017",
+    name: "sdmx-json example",
+    agencyId: "ABS",
+    id: "some unique id"
+  }
+})
 export default class SdmxCatalogItemTraits extends mixTraits(
   SdmxCommonTraits,
   UrlTraits,

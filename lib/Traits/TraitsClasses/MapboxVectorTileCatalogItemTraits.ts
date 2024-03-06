@@ -1,6 +1,7 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
@@ -9,6 +10,22 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates one catalog item from url that points to a mvt service.`,
+  example: {
+    type: "mvt",
+    name: "mvt example",
+    description:
+      "Federal electoral boundaries which will apply at the 2019 federal election. Produced by combining boundary datasets provided by AEC for each state.",
+    url: "https://tiles.terria.io/ELB_2019/{z}/{x}/{y}.pbf",
+    opacity: 1,
+    lineColor: "hsl(180,80%,30%)",
+    layer: "ELB_2019",
+    maximumNativeZoom: 12,
+    minimumZoom: 0,
+    id: "some unique id"
+  }
+})
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
   UrlTraits,

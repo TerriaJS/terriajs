@@ -2,6 +2,7 @@
 
 #### next release (8.5.2)
 
+- Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
 - [The next improvement]
 
 #### 8.5.1 - 2024-02-23
