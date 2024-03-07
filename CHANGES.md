@@ -3,6 +3,8 @@
 #### next release (8.5.2)
 
 - Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
+- Improved `ChartableMixin.isMixedInto` to ensure there are no false positive matches when testing References.
+- Fixed a bug in `MagdaReference` where members of a group would not be updated/created correctly when a group is reloaded.
 - [The next improvement]
 
 #### 8.5.1 - 2024-02-23
