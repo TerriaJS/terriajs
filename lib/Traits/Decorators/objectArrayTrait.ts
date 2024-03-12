@@ -20,7 +20,7 @@ import traitsClassToModelClass from "../traitsClassToModelClass";
 
 export enum MergeStrategy {
   /**
-   * Merge array elements across strata (if merge is false, each element will only be the top-most strata's object). This is the default.
+   * Merge array elements across strata - this is the default.
    */
   All = "all",
   /** Similar to Merge.All, but elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed. */
