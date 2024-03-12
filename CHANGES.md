@@ -1,12 +1,15 @@
 # Change Log
 
-#### next release (8.5.3)
+#### next release (8.6.1)
+
+- [The next improvement]
+
+#### 8.6.0 - 2024-03-12
 
 - **Breaking changes:**
   - Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
   - **Note** the only trait with `MergeStrategy` set to `topStratum` is `lines` in `TableChartStyleTraits`.
 - Fix `y-column` in `FeatureInfoPanelChart` (`<chart>`)
-- [The next improvement]
 
 #### 8.5.2 - 2024-03-07
 
