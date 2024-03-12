@@ -2,10 +2,20 @@ import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import ApiRequestTraits from "./ApiRequestTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 
+@traitClass({
+  description: `Creates one catalog item from url that points to a geojson file.`,
+  example: {
+    type: "geojson",
+    url: "https://tiles.terria.io/terriajs-examples/geojson/bike_racks.geojson",
+    name: "geojson example",
+    id: "some unique ID"
+  }
+})
 export default class GeoJsonCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
   ApiRequestTraits

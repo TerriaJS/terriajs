@@ -278,6 +278,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.usingPrecachedTiles).toBe(false);
+          expect(item.usePreCachedTilesIfAvailable).toBe(false);
         });
 
         it("usePreCachedTilesIfAvailable = false if requesting layer ID in url path", async function () {
@@ -292,6 +293,26 @@ describe("ArcGisMapServerCatalogItem", function () {
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.usingPrecachedTiles).toBe(false);
+          expect(item.usePreCachedTilesIfAvailable).toBe(false);
+        });
+
+        it("usePreCachedTilesIfAvailable = false if parameters have been specified", async function () {
+          runInAction(() => {
+            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+            item.setTrait(CommonStrata.definition, "layers", undefined);
+            item.setTrait(CommonStrata.definition, "parameters", {
+              test: "something"
+            });
+          });
+          await item.loadMapItems();
+
+          expect(item.parameters).toEqual({ test: "something" });
+
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
+          expect(imageryProvider.usingPrecachedTiles).toBe(false);
+          expect(item.usePreCachedTilesIfAvailable).toBe(false);
         });
 
         it("usePreCachedTilesIfAvailable = true if not requesting specific layers", async function () {
@@ -306,6 +327,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.usingPrecachedTiles).toBe(true);
+          expect(item.usePreCachedTilesIfAvailable).toBe(true);
         });
 
         it("usePreCachedTilesIfAvailable = true if requesting all layers", async function () {
@@ -327,6 +349,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.usingPrecachedTiles).toBe(true);
+          expect(item.usePreCachedTilesIfAvailable).toBe(true);
         });
       });
     });
