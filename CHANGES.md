@@ -2,6 +2,8 @@
 
 #### next release (8.6.1)
 
+- Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
+
 - [The next improvement]
 
 #### 8.6.0 - 2024-03-12
