@@ -13,7 +13,7 @@
   "resolutions": {
     "colors": "1.4.0",
     "@types/node": "^18.15.11",
-    "@types/css-font-loading-module": "^0.0.9"
+    "@types/css-font-loading-module": "^0.0.13"
   },
   "dependencies": {
     "@babel/core": "^7.23.5",
