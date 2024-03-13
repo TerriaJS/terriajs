@@ -1,15 +1,13 @@
-//// @ts-nocheck
-
+/* global proj4 */
 import Event from "terriajs-cesium/Source/Core/Event";
-import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import GeoTIFF, { Pool } from "geotiff";
+import { Pool } from "geotiff";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 const parseGeoRaster = require("georaster");
-// import GeoRasterLayer, { GeoRaster } from "georaster-layer-for-leaflet";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import { ImageryProviderWithGridLayerSupport } from "../../Map/Leaflet/ImageryProviderLeafletGridLayer";
 import Terria from "../../Models/Terria";
@@ -17,8 +15,6 @@ import { makeObservable } from "mobx";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import GeorasterTerriaLayer from "../../Map/Leaflet/GeorasterTerriaLayer";
 
-// Georaster Layer for Leaflet Imports
-/* global proj4 */
 import "regenerator-runtime/runtime.js";
 import * as L from "leaflet";
 import chroma from "chroma-js";
@@ -38,6 +34,8 @@ import { GeoExtent } from "geo-extent";
 import snap from "snap-bbox";
 const proj4 = require("proj4").default;
 
+const tilebelt = require("@mapbox/tilebelt");
+
 import type {
   CustomCRS,
   CustomCSSStyleDeclaration,
@@ -52,27 +50,9 @@ import type {
   Tile
 } from "./types";
 
-const tileSize = 256;
-// interface Coords {
-//   z: number;
-//   x: number;
-//   y: number;
-// }
-
 export interface TIFFImageryProviderOptions {
   terria: Terria;
   url: string | File | Blob;
-  requestOptions?: {
-    /** defaults to false */
-    forceXHR?: boolean;
-    headers?: Record<string, any>;
-    credentials?: boolean;
-    /** defaults to 0 */
-    maxRanges?: number;
-    /** defaults to false */
-    allowFullFile?: boolean;
-    [key: string]: any;
-  };
   credit?: string;
   tileSize?: number;
   maximumLevel?: number;
@@ -80,25 +60,15 @@ export interface TIFFImageryProviderOptions {
   enablePickFeatures?: boolean;
   hasAlphaChannel?: boolean;
   cache?: number;
-  /** geotiff resample method, defaults to nearest */
-  resampleMethod?: "nearest" | "bilinear" | "linear";
-  projFunc?: (code: number) =>
-    | {
-        /** projection function, convert [lon, lat] position to EPSG:4326 */
-        project: Promise<(pos: number[]) => number[]>;
-        /** unprojection function */
-        unproject: Promise<(pos: number[]) => number[]>;
-      }
-    | undefined;
 }
 
-let workerPool: Pool;
-function getWorkerPool() {
-  if (!workerPool) {
-    workerPool = new Pool();
-  }
-  return workerPool;
-}
+// let workerPool: Pool;
+// function getWorkerPool() {
+//   if (!workerPool) {
+//     workerPool = new Pool();
+//   }
+//   return workerPool;
+// }
 
 export class TIFFImageryProvider
   implements ImageryProviderWithGridLayerSupport
@@ -107,6 +77,7 @@ export class TIFFImageryProvider
 
   // Imagery provider properties
   readonly tilingScheme: WebMercatorTilingScheme;
+  readonly tileSize: number;
   readonly tileWidth: number;
   readonly tileHeight: number;
   readonly minimumLevel: number;
@@ -135,14 +106,7 @@ export class TIFFImageryProvider
   readonly tileDiscardPolicy = <any>undefined;
 
   private _destroyed = false;
-  private _georaster: GeoRaster | undefined;
   private _geoRasterLayer: GeorasterTerriaLayer | undefined;
-  private _proj?: {
-    /** projection function, convert [lon, lat] position to EPSG:4326 */
-    project: (pos: number[]) => number[];
-    /** unprojection function */
-    unproject: (pos: number[]) => number[];
-  };
 
   constructor(private readonly options: TIFFImageryProviderOptions) {
     makeObservable(this);
@@ -150,8 +114,9 @@ export class TIFFImageryProvider
     this.tilingScheme = new WebMercatorTilingScheme();
     this.rectangle = this.tilingScheme.rectangle;
 
-    this.tileWidth = tileSize;
-    this.tileHeight = tileSize;
+    this.tileSize = options.tileSize ?? 256; // ! TODO: Should this be hardcoded? Georaster layer for leaflet deals with tileSize itself too
+    this.tileWidth = this.tileSize;
+    this.tileHeight = this.tileSize;
 
     this.hasAlphaChannel = options.hasAlphaChannel ?? true;
     this.maximumLevel = options.maximumLevel ?? 18;
@@ -159,10 +124,6 @@ export class TIFFImageryProvider
     this.credit = new Credit(options.credit || "", false);
     this.errorEvent = new Event();
 
-    // this._workerFarm = new WorkerFarm();
-    // this._cacheTime = options.cache ?? 60 * 1000;
-
-    // this.ready = false;
     if (defined(options.url)) {
       this.readyPromise = this._build(options).then(() => {
         return true;
@@ -186,7 +147,7 @@ export class TIFFImageryProvider
         georaster: georaster,
         opacity: 1,
         resolution: 256,
-        debugLevel: 5
+        debugLevel: 0
       });
     } catch (error) {
       console.log(`Error building Georaster: {error}`);
@@ -215,32 +176,20 @@ export class TIFFImageryProvider
     canvas: HTMLCanvasElement
   ) {
     console.log(`Calling requestImageForCanvas with x: ${x}, y: ${y}, z: ${z}`);
+    const tile = [x, y, z]; // x,y,z
+    const bbox = new GeoExtent(tilebelt.tileToBBOX(tile));
+    // openExtentInGeojsonIO(bbox);
+    // debugger;
+
     const coords = new Point(x, y) as Coords;
     coords.z = z;
 
-    await this._geoRasterLayer?.createTile(coords, canvas, () =>
-      console.log(`tile is done`)
-    );
-
-    // this.displayCanvasInNewTab(canvas);
-    return canvas;
-  }
-
-  // For debugging only
-  displayCanvasInNewTab(canvas: HTMLCanvasElement): void {
-    // Convert the canvas content to a Blob
-    canvas.toBlob((blob) => {
-      if (blob) {
-        // Create an object URL for the Blob
-        const url = URL.createObjectURL(blob);
-
-        // Open the object URL in a new tab
-        window.open(url, "_blank");
-
-        // Optionally, release the object URL after opening
-        setTimeout(() => URL.revokeObjectURL(url), 100);
-      }
+    await this._geoRasterLayer?.createTile(coords, canvas, () => {
+      console.log(`tile is done`);
+      // openCanvas(canvas);
     });
+
+    return canvas;
   }
 
   async pickFeatures(
@@ -290,10 +239,10 @@ const isSimpleCRS = (crs: CustomCRS) =>
     crs?.transformation?._c === -1 &&
     crs?.transformation?._d === 0);
 
-if (!L)
-  console.warn(
-    "[georaster-layer-for-leaflet] can't find Leaflet.  If you are loading via <script>, please add the GeoRasterLayer script after the LeafletJS script."
-  );
+// if (!L)
+//   console.warn(
+//     "[georaster-layer-for-leaflet] can't find Leaflet.  If you are loading via <script>, please add the GeoRasterLayer script after the LeafletJS script."
+//   );
 
 const zip = (a: any[], b: any[]) => a.map((it, i) => [it, b[i]]);
 
@@ -420,7 +369,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
       // could probably replace some day with a simple
       // (for let k in options) { this.options[k] = options[k]; }
       // but need to find a way around TypeScript any issues
-      // ! Check if this is problematic with no Leaflet instance
+      // ! Check if this is problematic with no Leaflet map instance
       L.Util.setOptions(this, options);
 
       /*
@@ -503,6 +452,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   },
 
   onAdd: function (map: any) {
+    // ! Do we need this functionality back? I dont think this is ever called...
     // if (!this.options.maxZoom) {
     //   // maxZoom is needed to display the tiles in the correct order over the zIndex between the zoom levels
     //   // https://github.com/Leaflet/Leaflet/blob/2592967aa6bd392db0db9e58dab840054e2aa291/src/layer/tile/GridLayer.js#L375C21-L375C21
@@ -546,9 +496,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
       const mapPoint = L.point(xInMapPixels, yInMapPixels);
       if (this.debugLevel >= 1) log({ mapPoint });
 
-      // ! This not working, lat, lng returning null
       const { lat, lng } = this.unproject(mapPoint, zoom);
-      debugger;
 
       if (this.projection === EPSG4326) {
         return {
@@ -616,23 +564,28 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
     }
   },
 
-  // ! Define an unproject function to replace L.map.unproject, to be independent of Leaflet
-  // This function should unproject from PIXEL COORDINATES to 4326 lat long.
+  // ! THIS IS THE PROBLEMATIC FUNCTION - was returning very small values, but seems to be of the right magnitude now.
+  // ! This was my attempt to replicate L.map.unproject, may or may not be working...
+  // ! unproject should "Calculate a coordinate for a given point on the map in Mercator Projection.Returns a coordinate."
+
   unproject: function (mapPoint: L.Point, zoom: number) {
-    // Earth's radius in meters in the Web Mercator projection
-    const R = 6378137;
-    const pi = Math.PI;
+    // Constants
+    const tile_size: number = 256; // TODO: make sure to dynamically fetch this, not hardcode
 
-    // Convert pixel coordinates to meters at the given zoom level
-    const meters = mapPoint.multiplyBy(
-      (256 * Math.pow(2, zoom)) / (2 * pi * R)
-    );
+    // Number of tiles at the given zoom level (2^zoom)
+    const numTiles: number = 1 << zoom;
 
-    // Convert meters to LatLng
-    const lat = ((2 * Math.atan(Math.exp(meters.y / R)) - pi / 2) * 180) / pi;
-    const lng = ((meters.x / R) * 180) / pi;
+    // Convert pixel coordinates to tile coordinates
+    const xTile: number = mapPoint.x / tile_size;
+    const yTile: number = mapPoint.y / tile_size;
 
-    return new L.LatLng(lat, lng);
+    // Convert tile coordinates to longitude and latitude
+    const lon: number = (xTile / numTiles) * 360.0 - 180.0;
+    const n: number = Math.PI - (2.0 * Math.PI * yTile) / numTiles;
+    const lat: number =
+      (180.0 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+
+    return new L.LatLng(lat, lon);
   },
 
   createTile: function (
@@ -646,7 +599,6 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
     //   "canvas",
     //   "leaflet-tile"
     // ) as HTMLCanvasElement;
-
     // we do this because sometimes css normalizers will set * to box-sizing: border-box
     tile.style.boxSizing = "content-box";
 
@@ -665,6 +617,16 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
     const doneCb = (error?: Error, tile?: HTMLElement): void => {
       done(error, tile);
 
+      if (error) {
+        console.log(error);
+        debugger;
+      }
+
+      if (!error && tile) {
+        // ! If we get a tile back, display it in a new tab
+        // DebugToolsService.openCanvas(tile as HTMLCanvasElement);
+      }
+
       // caching the rendered tile, to skip the calculation for the next time
       if (!error && this.options.caching) {
         this.cache[key] = tile;
@@ -673,6 +635,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
 
     if (this.options.caching && this.cache[key]) {
       done(undefined, this.cache[key]);
+
       return this.cache[key];
     } else {
       this.drawTile({ tile, coords, context, done: doneCb, resolution });
@@ -689,6 +652,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
     resolution
   }: DrawTileOptions) {
     try {
+      // debugger;
       const { debugLevel = 0 } = this;
 
       if (debugLevel >= 2)
@@ -713,11 +677,13 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
       const rasterHeight = this.height;
       const rasterWidth = this.width;
 
+      // ! This next line is correct ROUGHLY. Top right and bottom left are correct, others skewed.
       const extentOfLayer = new GeoExtent(this.getBounds(), {
         srs: inSimpleCRS ? "simple" : 4326
       });
       if (debugLevel >= 2) log({ extentOfLayer });
 
+      // ! THis just gets the resolution of the raster source. I.e. 10m pixels for the Uluru COG in EPSG:32752
       const pixelHeight = inSimpleCRS
         ? extentOfLayer.height / rasterHeight
         : this.pixelHeight;
@@ -728,11 +694,13 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
 
       // these values are used, so we don't try to sample outside of the raster
       const { xMinOfLayer, xMaxOfLayer, yMinOfLayer, yMaxOfLayer } = this;
+      // ! THIS NEXT LINE IS RETURNING WRONG VALUE, tiny values close to zero...
       const boundsOfTile = this._tileCoordsToBounds(coords);
       if (debugLevel >= 2) log({ boundsOfTile });
 
       const { code } = mapCRS;
       if (debugLevel >= 2) log({ code });
+
       const extentOfTile = new GeoExtent(boundsOfTile, {
         srs: inSimpleCRS ? "simple" : 4326
       });
@@ -749,25 +717,33 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
       //   }
       // }
 
+      // ! This is not correct - is being assigned polygon with tiny coordinate values, all near 0 like 0.00000017628536278935938
+
       const extentOfTileInMapCRS = inSimpleCRS
         ? extentOfTile
         : extentOfTile.reproj(code);
       if (debugLevel >= 2) log({ extentOfTileInMapCRS });
 
       // ! This not working, null. Why? Probably NO OVERLAP. Can we export both as geojson to debug?
-      // To stop this blocking development, chang to just the extent of the full tile...? Surely problematic
-      let extentOfInnerTileInMapCRS = extentOfTileInMapCRS;
-      // let extentOfInnerTileInMapCRS = extentOfTileInMapCRS.crop(
-      //   inSimpleCRS ? extentOfLayer : this.extent
-      // );
-      // if (debugLevel >= 2)
-      //   console.log(
-      //     "[georaster-layer-for-leaflet] extentOfInnerTileInMapCRS",
-      //     extentOfInnerTileInMapCRS.reproj(inSimpleCRS ? "simple" : 4326)
-      //   );
-      // if (debugLevel >= 2)
-      //   log({ coords, extentOfInnerTileInMapCRS, extent: this.extent });
 
+      let extentOfInnerTileInMapCRS = extentOfTileInMapCRS.crop(
+        inSimpleCRS ? extentOfLayer : this.extent
+      );
+
+      if (!extentOfInnerTileInMapCRS) {
+        // if there is no overlap return empty image
+        return tile;
+      }
+
+      if (debugLevel >= 2)
+        console.log(
+          "[georaster-layer-for-leaflet] extentOfInnerTileInMapCRS",
+          extentOfInnerTileInMapCRS.reproj(inSimpleCRS ? "simple" : 4326)
+        );
+      if (debugLevel >= 2)
+        log({ coords, extentOfInnerTileInMapCRS, extent: this.extent });
+
+      // ! removed becuae this.getMap() will not work without Leaflet
       // // create blue outline around tiles
       // if (debugLevel >= 4) {
       //   if (!this._cache.innerTile[cacheKey]) {
@@ -1090,6 +1066,8 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
             const latWestPoint = L.point(xLeftOfInnerTile, yCenterInMapPixels);
             // ! Using Leaflet map here, use proj or Cesium reprojection instead?
             const { lat } = this.unproject(latWestPoint, zoom);
+            // ! In GRLFL this line is
+            // const { lat } = map.unproject(latWestPoint, zoom);
             if (lat > yMinOfLayer && lat < yMaxOfLayer) {
               const yInTilePixels =
                 Math.round(h * heightOfSampleInScreenPixels) +
@@ -1107,6 +1085,8 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
                 );
                 // ! Using Leaflet map here, use proj or Cesium reprojection instead?
                 const { lng: xOfLayer } = this.unproject(latLngPoint, zoom);
+                // ! In GRLFL this line is
+                // const { lng: xOfLayer } = map.unproject(latLngPoint, zoom);
                 if (xOfLayer > xMinOfLayer && xOfLayer < xMaxOfLayer) {
                   let xInRasterPixels = 0;
                   if (inSimpleCRS || this.projection === EPSG4326) {
@@ -1255,46 +1235,26 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
   //   return this._map || this._mapToAdd;
   // },
 
-  // TODO: Need to find a way to check this for Cesium and Leaflet modes I think. We dont have access to getMap anymore.
+  // TODO: Need to find a way to check this for Cesium and Leaflet modes I think. We dont have access to getMap anymore. Assuming default CRS for Cesium is 4326
   getMapCRS: function () {
-    return L.CRS.EPSG3857;
+    return L.CRS.EPSG4326;
     // return this.getMap()?.options.crs || L.CRS.EPSG3857;
   },
 
-  // // add in to ensure backwards compatability with Leaflet 1.0.3
-  // // ! Maybe can remove this
-  // _tileCoordsToNwSe: function (coords: Coords) {
-  //   const tileSize = this.getTileSize();
-  //   const nwPoint = coords.scaleBy(tileSize);
-  //   const sePoint = nwPoint.add(tileSize);
-
-  //   // ! Using Leaflet map here, use proj or Cesium reprojection instead?
-  //   const nw = this.unproject(nwPoint, coords.z);
-
-  //   // ! Using Leaflet map here, use proj or Cesium reprojection instead?
-  //   const se = this.unproject(sePoint, coords.z);
-  //   return [nw, se];
-  // },
+  // add in to ensure backwards compatability with Leaflet 1.0.3
 
   _tileCoordsToNwSe: function (coords: Coords) {
-    // ! Added this myself, it seems to work better than above code.
-    // TODO: Also see where map.unproject has been used elsewhere, it is probably giving wrong results as my unproject function is not quite right now
+    const tileSize = this.getTileSize(); // ! TODO: forced tileSize to be a Point. It is defined above as a number too... Clear up the confusion.
+    const nwPoint = coords.scaleBy(tileSize);
+    const sePoint = nwPoint.add(tileSize);
 
-    const { x, y, z } = coords;
-    const n = Math.pow(2, z) * tileSize;
-
-    // NW corner calculations
-    const nwLonDeg = (x / n) * 360.0 - 180.0;
-    const nwLatRad = Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / n)));
-    const nwLatDeg = (nwLatRad * 180.0) / Math.PI;
-    const nw = { lat: nwLatDeg, lng: nwLonDeg };
-
-    // SE corner calculations (considering the next tile in both x and y directions)
-    const seLonDeg = ((x + 1) / n) * 360.0 - 180.0;
-    const seLatRad = Math.atan(Math.sinh(Math.PI * (1 - (2 * (y + 1)) / n)));
-    const seLatDeg = (seLatRad * 180.0) / Math.PI;
-    const se = { lat: seLatDeg, lng: seLonDeg };
-
+    // ! Using Leaflet map here, use proj or Cesium reprojection instead?
+    // ! THIS IS THE PROBLEMATIC FUNCTION - returning very small values
+    const nw = this.unproject(nwPoint, coords.z);
+    const se = this.unproject(sePoint, coords.z);
+    // ! In GRLFL these lines are:
+    // const nw = map.unproject(nwPoint, coords.z);
+    // const se = map.unproject(sePoint, coords.z);
     return [nw, se];
   },
 
@@ -1621,3 +1581,39 @@ export type {
   GeoRasterLayerOptions,
   PixelValuesToColorFn
 } from "./types";
+
+export class DebugToolsService {
+  static openCanvas(canvas: HTMLCanvasElement) {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        window.open(URL.createObjectURL(blob), "_blank");
+      }
+    });
+  }
+
+  static openExtentInGeojsonIO(extent: any) {
+    const geojson = {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [extent.xmin, extent.ymin],
+            [extent.xmax, extent.ymin],
+            [extent.xmax, extent.ymax],
+            [extent.xmin, extent.ymax],
+            [extent.xmin, extent.ymin]
+          ]
+        ]
+      },
+      properties: {
+        srs: extent.srs
+        // add other properties if needed
+      }
+    };
+    const geojsonStr = encodeURIComponent(JSON.stringify(geojson));
+    const url = `http://geojson.io/#data=data:application/json,${geojsonStr}`;
+
+    window.open(url, "_blank");
+  }
+}
