@@ -307,8 +307,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           legendUri.setQuery("transparent", "true");
         }
 
-        i;
-
         // Add colour scale range params if supported
         if (
           this.catalogItem.supportsColorScaleRange &&
