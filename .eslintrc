@@ -4,6 +4,7 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "prettier"
   ],
@@ -53,6 +54,9 @@
     "react/no-will-update-set-state": "error",
     "react/self-closing-comp": "error",
     "react/jsx-no-undef": ["error", { "allowGlobals": true }],
+
+    /* Ignore styled-components css property */
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
 
     /*Possible Errors */
     "no-console": "off",
