@@ -2,6 +2,7 @@
 
 #### next release (8.6.1)
 
+- Fix SDMX `featureInfoTemplate` `<chart>` bug not showing correct `yColumn`
 - [The next improvement]
 
 #### 8.6.0 - 2024-03-12
