@@ -4,13 +4,24 @@
 
 import createReactClass from "create-react-class";
 import classNames from "classnames";
+import styled from "styled-components";
+import defined from "terriajs-cesium/Source/Core/defined";
 import Icon from "../../../Styled/Icon";
 import InnerPanel from "./InnerPanel";
 import BaseOuterPanel from "./BaseOuterPanel";
 
 import Styles from "./panel.scss";
 
-import defined from "terriajs-cesium/Source/Core/defined";
+const DropdownButton = styled.button`
+  ${(p) =>
+    p.isOpen &&
+    `&:not(.foo) {
+      background: ${p.theme.colorPrimary};
+      svg {
+        fill: ${p.theme.textLight};
+      }
+    }`}
+`;
 
 const DropdownPanel = createReactClass({
   displayName: "DropdownPanel",
@@ -87,7 +98,7 @@ const DropdownPanel = createReactClass({
 
     return (
       <div className={classNames(Styles.panel, this.props.theme.outer)}>
-        <button
+        <DropdownButton
           onClick={this.openWithUserClick}
           type="button"
           className={classNames(Styles.button, this.props.theme.btn, {
@@ -99,20 +110,10 @@ const DropdownPanel = createReactClass({
           }
           /* eslint-disable-next-line react/no-unknown-property */
           isOpen={this.isOpen()}
-          css={`
-            ${(p) =>
-              p.isOpen &&
-              `&:not(.foo) {
-                background: ${p.theme.colorPrimary};
-                svg {
-                  fill: ${p.theme.textLight};
-                }
-              }`}
-          `}
         >
           {this.props.theme.icon && <Icon glyph={iconGlyph} />}
           {this.props.btnText && <span>{this.props.btnText}</span>}
-        </button>
+        </DropdownButton>
         {this.isOpen() && (
           <InnerPanel
             showDropdownInCenter={this.props.showDropdownInCenter}
