@@ -478,7 +478,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
             styles[0].abstract,
             styles[0].legend
           );
-          console.log(palettes);
           result[0].styles = palettes;
           return result;
         } else {
