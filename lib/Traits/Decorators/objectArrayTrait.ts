@@ -156,14 +156,16 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // If merge strategy is topStratum, then we only want to keep the ids that exist in the top stratum
     if (this.merge === MergeStrategy.TopStratum) {
       const topStratum = model.strataTopToBottom.values().next().value;
-
-      const topIds = this.getIdsAcrossStrata(new Map([["top", topStratum]]));
-      // Remove ids that don't exist in the top stratum
-      idsInCorrectOrder.forEach((id) => {
-        if (!topIds.has(id)) {
-          idsWithCorrectRemovals.delete(id);
-        }
-      });
+      // topStratum will be undefined if a model has 0 strata
+      if (topStratum !== undefined) {
+        const topIds = this.getIdsAcrossStrata(new Map([["top", topStratum]]));
+        // Remove ids that don't exist in the top stratum
+        idsInCorrectOrder.forEach((id) => {
+          if (!topIds.has(id)) {
+            idsWithCorrectRemovals.delete(id);
+          }
+        });
+      }
     }
 
     // Correct ids are:

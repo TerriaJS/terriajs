@@ -392,6 +392,12 @@ describe("objectArrayTrait", function () {
     expect(model.inner[0].baz).toBe(true);
   });
 
+  it("no error when a model has 0 strata and merge = top", function () {
+    const terria = new Terria();
+    const model = new TestModelMergeTop("test", terria);
+    expect(model.inner.length).toBe(0);
+  });
+
   it("updates to reflect new strata added after evaluation (with merge = top)", function () {
     const terria = new Terria();
     const model = new TestModelMergeTop("test", terria);

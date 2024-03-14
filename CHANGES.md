@@ -2,6 +2,7 @@
 
 #### next release (8.6.2)
 
+- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - [The next improvement]
 
 #### 8.6.1 - 2024-03-14
