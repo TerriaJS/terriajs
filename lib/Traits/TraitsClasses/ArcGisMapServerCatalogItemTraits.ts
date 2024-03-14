@@ -1,6 +1,7 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
@@ -10,6 +11,16 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates a single item in the catalog from one or many ESRI WMS layers.
+
+  <strong>Note:</strong> <i>The following example does not specify <b>layers</b> property therefore will present all layers in the given URL as single catalog item. To present specific layers only, add them in <b>layers</b> property, e.g. <code>"layers": "AUS_GA_2500k_MiscLines,AUS_GA_2500k_Faults"</code>.</i>`,
+  example: {
+    url: "https://services.ga.gov.au/gis/rest/services/GA_Surface_Geology/MapServer",
+    type: "esri-mapServer",
+    name: "Surface Geology"
+  }
+})
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   ImageryProviderTraits,
   LayerOrderingTraits,
@@ -81,4 +92,12 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "boolean"
   })
   isForwardTimeWindow: boolean = true;
+
+  @primitiveTrait({
+    name: "Is Forward Time Window",
+    description:
+      "If true, the server's pre-cached tiles are used if they are available. If false, then the MapServer export endpoint will be used. This will default to true if no specific layers are fetched (i.e. all layers are fetched). Otherwise, it will default to false. This will also default to false if parameters have been specified",
+    type: "boolean"
+  })
+  usePreCachedTilesIfAvailable?: boolean;
 }

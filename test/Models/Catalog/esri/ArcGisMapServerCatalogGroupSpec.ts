@@ -16,7 +16,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisMapServerCatalogGroup", function () {
   const mapServerUrl =
@@ -105,10 +105,10 @@ describe("ArcGisMapServerCatalogGroup", function () {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(4);
 
-      const member0 = <ArcGisMapServerCatalogItem>group.memberModels[0];
-      const member1 = <ArcGisMapServerCatalogItem>group.memberModels[1];
-      const member2 = <ArcGisMapServerCatalogItem>group.memberModels[2];
-      const member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
+      const member0 = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisMapServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogItem;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
 
       expect(member0.name).toBe("Ambulances");
       expect(member0.url).toBe(mapServerUrl + "/0");
@@ -130,8 +130,8 @@ describe("ArcGisMapServerCatalogGroup", function () {
       expect(member3.members.length).toBe(2);
       expect(member3.memberModels.length).toBe(2);
 
-      const member4 = <ArcGisMapServerCatalogGroup>member3.memberModels[0];
-      const member5 = <ArcGisMapServerCatalogGroup>member3.memberModels[1];
+      const member4 = member3.memberModels[0] as ArcGisMapServerCatalogGroup;
+      const member5 = member3.memberModels[1] as ArcGisMapServerCatalogGroup;
       expect(member4.name).toBe("Output Features");
       expect(member4.url).toBe(mapServerUrl + "/23");
 
@@ -239,7 +239,7 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
       await group.loadMembers();
 
       for (let i = 0; i < numberOfGroupMembers; i++) {
-        const member = <ArcGisMapServerCatalogItem>group.memberModels[i];
+        const member = group.memberModels[i] as ArcGisMapServerCatalogItem;
 
         expect(member.rectangle?.east).toEqual(rectangle.east);
         expect(member.rectangle?.north).toEqual(rectangle.north);

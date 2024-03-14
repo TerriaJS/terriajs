@@ -504,9 +504,9 @@ export default class CkanCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    const ckanServerStratum = <CkanServerStratum | undefined>(
-      this.strata.get(CkanServerStratum.stratumName)
-    );
+    const ckanServerStratum = this.strata.get(CkanServerStratum.stratumName) as
+      | CkanServerStratum
+      | undefined;
     if (!ckanServerStratum) {
       const stratum = await CkanServerStratum.load(this);
       if (stratum === undefined) return;
@@ -517,9 +517,9 @@ export default class CkanCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const ckanServerStratum = <CkanServerStratum | undefined>(
-      this.strata.get(CkanServerStratum.stratumName)
-    );
+    const ckanServerStratum = this.strata.get(CkanServerStratum.stratumName) as
+      | CkanServerStratum
+      | undefined;
     if (ckanServerStratum) {
       await runLater(() => ckanServerStratum.createMembersFromDatasets());
     }

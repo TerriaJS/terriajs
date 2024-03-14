@@ -239,9 +239,9 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   }
 
   async forceLoadMembers(): Promise<void> {
-    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const getCapabilitiesStratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum) {
       await runLater(() => getCapabilitiesStratum.createMembersForProcesses());
     }

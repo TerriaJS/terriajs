@@ -1,6 +1,29 @@
 # Change Log
 
-#### next release (8.5.0)
+#### next release (8.6.1)
+
+- [The next improvement]
+
+#### 8.6.0 - 2024-03-12
+
+- **Breaking changes:**
+  - Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
+  - **Note** the only trait with `MergeStrategy` set to `topStratum` is `lines` in `TableChartStyleTraits`.
+- Fix `y-column` in `FeatureInfoPanelChart` (`<chart>`)
+
+#### 8.5.2 - 2024-03-07
+
+- Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
+- Improved `ChartableMixin.isMixedInto` to ensure there are no false positive matches when testing References.
+- Fixed a bug in `MagdaReference` where members of a group would not be updated/created correctly when a group is reloaded.
+
+#### 8.5.1 - 2024-02-23
+
+- Added highly experimental CatalogProvider, intended to encapsulate functionality related to the entire catalog, or large subtrees of it, that doesn't fit into individual catalog member models.
+- `BingMapsCatalogItem` now supports Bing's `culture` parameter.
+- Update a prompt text in DataPreview.
+
+#### 8.5.0 - 2024-02-07
 
 - **Breaking changes:**
   - Upgrade TypeScript to 5.2
@@ -16,6 +39,10 @@
 - Fixed a bug where the search box was missing for small screen devices.
 - Prevent user adding empty web url
 - Fix bug where search results shown in `My Data` tab
+- Fix bug in function createDiscreteTimesFromIsoSegments where it might create duplicate timestamps.
+- Add option to enable/disable shortening share URLs via InitSourceData.
+- Fix bug in ArcGisMapServerCatalogItem.
+- Add examples.
 
 #### 8.4.1 - 2023-12-08
 

@@ -39,7 +39,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     static readonly TraitsClass = Traits;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
-    readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
+    readonly TraitsClass: TraitsConstructor<InstanceType<T>> = Traits as any;
     readonly strata: Map<string, StratumTraits>;
 
     /**
@@ -103,7 +103,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
       let newModel: this;
       try {
-        newModel = new (<any>this.constructor)(
+        newModel = new (this.constructor as any)(
           newId,
           this.terria,
           sourceReference
@@ -174,12 +174,12 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
       // If objectID is provided, set idProperty and then return new object
       if (isDefined(objectId)) {
-        (<any>newStratum)[trait.idProperty] = objectId;
+        (newStratum as any)[trait.idProperty] = objectId;
         array.push(newStratum);
 
-        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
-          any
-        >this)[traitId];
+        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (
+          this as any
+        )[traitId];
         return models.find(
           (o: any, i: number) =>
             getObjectId(trait.idProperty, o, i) === objectId
@@ -204,9 +204,9 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         array[maxIndex + 1] = newStratum;
 
         // Return newly created model
-        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
-          any
-        >this)[traitId];
+        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (
+          this as any
+        )[traitId];
         return models[models.length - 1];
       }
     }
@@ -235,5 +235,5 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   }
 
   addModelStrataView(Model, Traits);
-  return <any>Model;
+  return Model as any;
 }

@@ -38,7 +38,7 @@ export class PrimitiveArrayTrait<T> extends Trait {
 
   getValue(model: BaseModel): T | undefined {
     const strataTopToBottom = model.strataTopToBottom;
-    for (const stratum of <IterableIterator<any>>strataTopToBottom.values()) {
+    for (const stratum of strataTopToBottom.values() as IterableIterator<any>) {
       const value = stratum[this.id];
       if (value !== undefined) {
         return value;

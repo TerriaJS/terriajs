@@ -2,54 +2,45 @@ import i18next from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
   runInAction,
   toJS,
-  when,
-  makeObservable
+  when
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import defined from "terriajs-cesium/Source/Core/defined";
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import {
   Category,
-  LaunchAction,
-  DataSourceAction
+  DataSourceAction,
+  LaunchAction
 } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
-import ensureSuffix from "../Core/ensureSuffix";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import getDereferencedIfExists from "../Core/getDereferencedIfExists";
-import getPath from "../Core/getPath";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
-import hashEntity from "../Core/hashEntity";
-import instanceOf from "../Core/instanceOf";
-import isDefined from "../Core/isDefined";
 import {
+  JsonArray,
+  JsonObject,
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
-  isJsonString,
-  JsonArray,
-  JsonObject
+  isJsonString
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
-import loadJson from "../Core/loadJson";
-import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError, {
@@ -57,6 +48,15 @@ import TerriaError, {
   TerriaErrorSeverity
 } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
+import ensureSuffix from "../Core/ensureSuffix";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import getPath from "../Core/getPath";
+import hashEntity from "../Core/hashEntity";
+import instanceOf from "../Core/instanceOf";
+import isDefined from "../Core/isDefined";
+import loadJson from "../Core/loadJson";
+import loadJson5 from "../Core/loadJson5";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
@@ -67,12 +67,14 @@ import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
-import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
-import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
+import { Term, defaultTerms } from "../ReactViewModels/defaultTerms";
 import { ICredit } from "../ReactViews/Map/BottomBar/Credits";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
+import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
+import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -81,13 +83,15 @@ import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
+import CatalogProvider from "./Catalog/CatalogProvider";
 import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
-import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
+import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
+import hasTraits from "./Definition/hasTraits";
 import updateModelFromJson from "./Definition/updateModelFromJson";
 import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import {
@@ -102,12 +106,12 @@ import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
+  ShareInitSourceData,
+  StoryData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
-  isInitFromUrl,
-  ShareInitSourceData,
-  StoryData
+  isInitFromUrl
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -115,7 +119,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
+import { RelatedMap, defaultRelatedMaps } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -124,9 +128,6 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
-import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
-import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -682,6 +683,11 @@ export default class Terria {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
+  /**
+   * @experimental
+   */
+  catalogProvider?: CatalogProvider;
+
   constructor(options: TerriaOptions = {}) {
     makeObservable(this);
     if (options.appBaseHref) {
@@ -704,7 +710,7 @@ export default class Terria {
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
-      if (typeof window !== "undefined" && defined((<any>window).ga)) {
+      if (typeof window !== "undefined" && defined((window as any).ga)) {
         this.analytics = new GoogleAnalytics();
       } else {
         this.analytics = new ConsoleAnalytics();
@@ -829,7 +835,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
+        if (featureBelongsToCatalogItem(feature as TerriaFeature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1128,7 +1134,7 @@ export default class Terria {
     if (hashViewerMode && isViewerMode(hashViewerMode)) {
       setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
-      const viewerMode = <string>this.getLocalProperty("viewermode");
+      const viewerMode = this.getLocalProperty("viewermode") as string;
       if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
         setViewerMode(viewerMode, this.mainViewer);
       }
@@ -1176,7 +1182,7 @@ export default class Terria {
         baseMapItems.find(
           (baseMapItem) =>
             CatalogMemberMixin.isMixedInto(baseMapItem) &&
-            (<any>baseMapItem.item).name ===
+            (baseMapItem.item as any).name ===
               this.baseMapsModel.defaultBaseMapName
         );
       if (
@@ -1186,7 +1192,7 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
+    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1663,7 +1669,7 @@ export default class Terria {
 
     // Extract the list of CORS-ready domains.
     if (Array.isArray(initData.corsDomains)) {
-      this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+      this.corsProxy.corsDomains.push(...(initData.corsDomains as string[]));
     }
 
     // Add catalog members
@@ -1878,7 +1884,7 @@ export default class Terria {
             );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map((item) => <TimeVarying>item))
+          .map((item) => item as TimeVarying))
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -1892,6 +1898,13 @@ export default class Terria {
         this.pickedFeatures = undefined;
         this.selectedFeature = undefined;
       });
+    }
+
+    if (initData.settings?.shortenShareUrls !== undefined) {
+      this.setLocalProperty(
+        "shortenShareUrls",
+        initData.settings.shortenShareUrls
+      );
     }
 
     if (errors.length > 0)
@@ -1955,7 +1968,8 @@ export default class Terria {
     );
     if (reference.target instanceof CatalogGroup) {
       runInAction(() => {
-        this.catalog.group = <CatalogGroup>reference.target;
+        this.catalog.group.dispose();
+        this.catalog.group = reference.target as CatalogGroup;
       });
     }
   }
@@ -1995,7 +2009,7 @@ export default class Terria {
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
-      const { catalog, ...rest } = initObj;
+      const { catalog } = initObj;
       this.initSources.push({
         name: `Magda map-config aspect terria-init from ${configUrl}`,
         errorSeverity: TerriaErrorSeverity.Error,

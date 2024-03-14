@@ -477,9 +477,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get imageryProvider() {
-    const stratum = <GetCapabilitiesStratum>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
 
     if (
       !isDefined(this.layer) ||
@@ -549,8 +549,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      credit: this.attribution,
-      enablePickFeatures: this.allowFeaturePicking
+      credit: this.attribution
+      // TODO: implement picking for WebMapTileServiceImageryProvider
+      //enablePickFeatures: this.allowFeaturePicking
     });
     return imageryProvider;
   }
@@ -566,9 +567,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tileHeight: number;
       }
     | undefined {
-    const stratum = <GetCapabilitiesStratum>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
     if (!this.layer) {
       return;
     }
