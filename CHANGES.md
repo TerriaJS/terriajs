@@ -1,10 +1,14 @@
 # Change Log
 
-#### next release (8.6.1)
+#### next release (8.6.2)
 
 - Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
 
 - [The next improvement]
+
+#### 8.6.1 - 2024-03-14
+
+- Fix SDMX `featureInfoTemplate` `<chart>` bug not showing correct `yColumn`
 
 #### 8.6.0 - 2024-03-12
 
