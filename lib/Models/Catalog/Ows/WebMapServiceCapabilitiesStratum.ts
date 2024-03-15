@@ -465,7 +465,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
 
     if (this.catalogItem.isThredds) {
-
       async () => {
         const res = result[0];
         const styles = res.styles ?? null;
