@@ -1968,6 +1968,7 @@ export default class Terria {
     );
     if (reference.target instanceof CatalogGroup) {
       runInAction(() => {
+        this.catalog.group.dispose();
         this.catalog.group = reference.target as CatalogGroup;
       });
     }

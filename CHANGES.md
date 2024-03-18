@@ -1,9 +1,26 @@
 # Change Log
 
-#### next release (8.5.2)
+#### next release (8.6.2)
+
+- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
+- [The next improvement]
+
+#### 8.6.1 - 2024-03-14
+
+- Fix SDMX `featureInfoTemplate` `<chart>` bug not showing correct `yColumn`
+
+#### 8.6.0 - 2024-03-12
+
+- **Breaking changes:**
+  - Add `MergeStrategy` to `objectArrayTrait` - this includes a new `topStratum` strategy - similar to `Merge.All` (the default behaviour), but only elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed.
+  - **Note** the only trait with `MergeStrategy` set to `topStratum` is `lines` in `TableChartStyleTraits`.
+- Fix `y-column` in `FeatureInfoPanelChart` (`<chart>`)
+
+#### 8.5.2 - 2024-03-07
 
 - Add `usePreCachedTilesIfAvailable` to `ArcGisMapServerCatalogItemTraits`.
-- [The next improvement]
+- Improved `ChartableMixin.isMixedInto` to ensure there are no false positive matches when testing References.
+- Fixed a bug in `MagdaReference` where members of a group would not be updated/created correctly when a group is reloaded.
 
 #### 8.5.1 - 2024-02-23
 

@@ -28,7 +28,6 @@ export const SUPPORTED_CRS_3857 = [
 
 @traitClass({
   description: `Creates a single item in the catalog from url that points to a WFS service.
-
   <strong>Note:</strong> <i>Must specify property <b>typeNames</b>.</i>`,
   example: {
     type: "wfs",
