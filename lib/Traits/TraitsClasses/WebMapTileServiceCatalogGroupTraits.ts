@@ -8,13 +8,12 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import { traitClass } from "../Trait";
 
 @traitClass({
-  description: `Creates a single item in the catalog from a url that points to wmts service.`,
+  description: `Creates a wmts group in the catalog from a url that points to wmts-group service.`,
   example: {
-    type: "wmts",
-    id: "a unique id for wmts example",
-    name: "wmts example",
-    url: "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
-    layer: "Reference_World_Boundaries_and_Places",
+    type: "wmts-group",
+    id: "a unique id for wmts-group example",
+    name: "wmts-group example",
+    url: "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
     opacity: 1
   }
 })
