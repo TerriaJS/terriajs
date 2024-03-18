@@ -8,7 +8,7 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import { traitClass } from "../Trait";
 
 @traitClass({
-  description: `Creates a wmts group in the catalog from a url that points to wmts-group service.`,
+  description: `Creates a wmts group in the catalog from a url that points to a wmts-group service.`,
   example: {
     type: "wmts-group",
     id: "a unique id for wmts-group example",
