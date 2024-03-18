@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
@@ -17,18 +19,34 @@ const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
   currentTime.current = terria.timelineStack.clock.currentTime;
 
   useEffect(() => {
-    const date = new Date(currentTime.current);
-    setDateValue(date.toISOString().slice(0, 10));
-    setTimeValue(date.toTimeString().slice(0, 5));
-  }, []);
+    if (!defined(parameter.value)) {
+      const date = new Date(currentTime.current);
+      const formattedDate = `${date.toISOString().slice(0, 10)}T${date
+        .toTimeString()
+        .slice(0, 5)}`;
+      if (parameter.value !== formattedDate) {
+        setDateValue(date.toISOString().slice(0, 10));
+        setTimeValue(date.toTimeString().slice(0, 5));
+      }
+    } else {
+      const date = new Date(parameter.value);
+      setDateValue(date.toISOString().slice(0, 10));
+      setTimeValue(date.toTimeString().slice(0, 5));
+    }
+  }, [parameter]);
 
-  const updateParameter = useCallback(() => {
-    parameter.setValue(CommonStrata.user, `${dateValue}T${timeValue}`);
-  }, [parameter, dateValue, timeValue]);
+  const handleTimeChange = (e) => {
+    setTimeValue(e.target.value);
+    runInAction(() => {
+      parameter.setValue(CommonStrata.user, `${dateValue}T${e.target.value}`);
+    });
+  };
 
-  const handleChange = (setter) => (e) => {
-    setter(e.target.value);
-    updateParameter();
+  const handleDateChange = (e) => {
+    setDateValue(e.target.value);
+    runInAction(() => {
+      parameter.setValue(CommonStrata.user, `${e.target.value}T${timeValue}`);
+    });
   };
 
   return (
@@ -37,13 +55,13 @@ const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
         className={style}
         type="date"
         value={dateValue}
-        onChange={handleChange(setDateValue)}
+        onChange={handleDateChange}
       />
       <input
         className={style}
         type="time"
         value={timeValue}
-        onChange={handleChange(setTimeValue)}
+        onChange={handleTimeChange}
       />
     </div>
   );
@@ -55,4 +73,4 @@ DateTimeParameterEditor.propTypes = {
   terria: PropTypes.object
 };
 
-export default DateTimeParameterEditor;
+export default observer(DateTimeParameterEditor);
