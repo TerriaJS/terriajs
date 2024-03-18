@@ -70,7 +70,7 @@ export class WebMapTileServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 @traitClass({
-  description: `Creates a single item in the catalog from a url that points to wmts service.`,
+  description: `Creates a single item in the catalog from a url that points to a wmts service.`,
   example: {
     type: "wmts",
     id: "a unique id for wmts example",
