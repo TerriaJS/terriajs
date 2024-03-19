@@ -4,6 +4,7 @@
 
 - Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
 
+- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - [The next improvement]
 
 #### 8.6.1 - 2024-03-14
