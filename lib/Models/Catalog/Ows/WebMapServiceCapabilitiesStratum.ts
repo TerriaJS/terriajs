@@ -464,25 +464,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       });
     }
 
-    if (this.catalogItem.isThredds) {
-      async () => {
-        const res = result[0];
-        const styles = res.styles ?? null;
-        if (styles && styles[0].abstract) {
-          const palettes = await this.fetchPalettes(
-            styles[0].abstract,
-            styles[0].legend
-          );
-          result[0].styles = palettes;
-          return result;
-        } else {
-          return result;
-        }
-      };
-    } else {
-      return result;
-    }
-
     return result;
   }
 
