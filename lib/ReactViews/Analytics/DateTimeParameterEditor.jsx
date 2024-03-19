@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import * as moment from "moment";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
@@ -16,24 +17,24 @@ const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
       : Styles.fieldDatePlaceholder;
 
   const currentTime = useRef();
-  currentTime.current = terria.timelineStack.clock.currentTime;
+  currentTime.current = defined(parameter.value)
+    ? parameter.value
+    : terria.timelineStack.clock.currentTime;
+
+  const initiateDate = () => {
+    currentTime.current = defined(parameter.value)
+      ? parameter.value
+      : terria.timelineStack.clock.currentTime;
+    const ct = new Date(currentTime.current);
+    const dateValue = moment.utc(ct.toISOString()).local().format("YYYY-MM-DD");
+    const timeValue = moment.utc(ct.toISOString()).local().format("HH:mm");
+    setDateValue(dateValue);
+    setTimeValue(timeValue);
+  };
 
   useEffect(() => {
-    if (!defined(parameter.value)) {
-      const date = new Date(currentTime.current);
-      const formattedDate = `${date.toISOString().slice(0, 10)}T${date
-        .toTimeString()
-        .slice(0, 5)}`;
-      if (parameter.value !== formattedDate) {
-        setDateValue(date.toISOString().slice(0, 10));
-        setTimeValue(date.toTimeString().slice(0, 5));
-      }
-    } else {
-      const date = new Date(parameter.value);
-      setDateValue(date.toISOString().slice(0, 10));
-      setTimeValue(date.toTimeString().slice(0, 5));
-    }
-  }, [parameter]);
+    initiateDate();
+  }, []); // eslint-disable-line
 
   const handleTimeChange = (e) => {
     setTimeValue(e.target.value);
