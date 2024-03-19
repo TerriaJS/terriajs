@@ -4,6 +4,7 @@ import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
 import UrlTraits from "./UrlTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
+import { traitClass } from "../Trait";
 
 @traitClass({
   description: `Creates a group of all layers in the catalog from a url that points to a WFS service.`,
