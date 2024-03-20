@@ -3,6 +3,7 @@
 #### next release (8.6.2)
 
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
+- Fixed a bug with passing a relative baseUrl to Cesium 1.113.0.
 - [The next improvement]
 
 #### 8.6.1 - 2024-03-14
@@ -46,6 +47,7 @@
 - Add option to enable/disable shortening share URLs via InitSourceData.
 - Fix bug in ArcGisMapServerCatalogItem.
 - Add examples.
+- Upgraded Cesium to 1.113.0 (i.e. `terriajs-cesium@6.2.0` & `terriajs-cesium-widgets@4.4.0`).
 
 #### 8.4.1 - 2023-12-08
 
