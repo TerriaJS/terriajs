@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { ITextProps } from "../Text";
 
 export type ICheckboxProps = {
@@ -38,7 +38,7 @@ export type ICheckboxProps = {
    * style `font-size: inherit` and props `isDisabled` and `isChecked` will be
    * applied to all child elements.
    */
-  children?: React.ReactChild;
+  children?: React.ReactNode;
 
   textProps?: ITextProps;
 

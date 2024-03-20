@@ -1,6 +1,6 @@
 import { action, toJS, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
@@ -365,7 +365,7 @@ class StoryBuilder extends React.Component<
                     <Trans i18nKey="story.removeStoryDialog" i18n={i18n}>
                       Are you sure you wish to delete
                       <TextSpan textLight large bold>
-                        {{ storyName }}
+                        {storyName}
                       </TextSpan>
                       ?
                     </Trans>

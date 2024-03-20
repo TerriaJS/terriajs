@@ -1,30 +1,28 @@
-import { TFunction } from "i18next";
-import { action, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { Component } from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
-import Icon, { StyledIcon } from "../../Styled/Icon";
 import WorkbenchList from "./WorkbenchList";
-import {
-  Category,
-  DataSourceAction
-} from "../../Core/AnalyticEvents/analyticEvents";
 
 interface IProps extends WithTranslation {
   terria: Terria;
   viewState: ViewState;
-  t: TFunction;
 }
 
 @observer
-class Workbench extends React.Component<IProps> {
+class Workbench extends Component<IProps> {
   constructor(props: IProps) {
     super(props);
     makeObservable(this);
@@ -117,10 +115,7 @@ class Workbench extends React.Component<IProps> {
             </RawButton>
           )}
         </BadgeBar>
-        <WorkbenchList
-          viewState={this.props.viewState}
-          terria={this.props.terria}
-        />
+        <WorkbenchList />
       </Box>
     );
   }

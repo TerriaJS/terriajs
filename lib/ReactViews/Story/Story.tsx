@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import React, { MouseEventHandler, useEffect, useRef } from "react";
+import { MouseEventHandler, useEffect, useRef } from "react";
+import * as React from "react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
@@ -38,9 +39,7 @@ interface Props {
   onTouchStart(): void;
 }
 
-interface MenuProps extends Props {
-  t: TFunction;
-}
+interface MenuProps extends Props {}
 
 const findTextContent = (content: any): string => {
   if (typeof content === "string") {
@@ -158,9 +157,8 @@ const calculateOffset =
     return `top: ${offsetTopScroll}px;`;
   };
 
-const renderMenu = (props: MenuProps) => {
-  const { t } = props;
-
+const Menu = (props: MenuProps) => {
+  const { t } = useTranslation();
   return (
     <Ul column>
       <li>
@@ -300,7 +298,7 @@ const Story = (props: Props) => {
                 }
               `}
             >
-              {renderMenu({ ...props, t })}
+              <Menu {...props} />
             </Box>
           )}
         </Box>

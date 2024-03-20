@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";

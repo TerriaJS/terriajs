@@ -1,4 +1,5 @@
 import { Ref } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
@@ -66,6 +67,7 @@ export interface IBoxPropsBase {
   style?: any;
   gap?: number | boolean;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
+  children?: React.ReactNode;
 }
 
 export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;

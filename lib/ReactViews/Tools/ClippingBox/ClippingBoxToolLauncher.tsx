@@ -1,6 +1,7 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import ClippingMixin from "../../../ModelMixins/ClippingMixin";
 import BoxDrawing from "../../../Models/BoxDrawing";
 import Workbench from "../../../Models/Workbench";

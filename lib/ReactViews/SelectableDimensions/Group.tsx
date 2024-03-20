@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";

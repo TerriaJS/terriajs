@@ -1,5 +1,5 @@
 import { action, computed, makeObservable } from "mobx";
-import React from "react";
+import * as React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import TerriaError from "../../Core/TerriaError";
 import ViewerMode from "../../Models/ViewerMode";

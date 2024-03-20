@@ -49,6 +49,6 @@ describe("LangPanel", function () {
       testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
     });
 
-    expect(testRenderer.toJSON()).toBeDefined();
+    expect(testRenderer.toJSON()).not.toBeNull();
   });
 });

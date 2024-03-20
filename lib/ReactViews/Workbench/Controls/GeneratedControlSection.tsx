@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 import {
   filterSelectableDimensions,

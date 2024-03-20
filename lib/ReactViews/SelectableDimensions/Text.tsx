@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import * as React from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionText as SelectableDimensionTextModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Input from "../../Styled/Input";

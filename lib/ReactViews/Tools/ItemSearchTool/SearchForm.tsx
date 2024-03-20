@@ -1,6 +1,7 @@
 import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as React from "react";
 import {
   useTranslation,
   WithTranslation,
@@ -154,8 +155,9 @@ interface NumericParameterProps extends WithT {
   value?: { start: number; end: number };
 }
 
-export const NumericParameter: React.FC<NumericParameterProps> = (props) => {
-  const { parameter, value, t } = props;
+export const NumericParameter = (props: NumericParameterProps) => {
+  const { parameter, value } = props;
+  const { t } = useTranslation();
   const { min, max } = parameter.range;
 
   const onChange =

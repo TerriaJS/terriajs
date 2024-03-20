@@ -8,8 +8,7 @@ import { runInAction } from "mobx";
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
-import {
-  FeatureInfoPanel,
+import FeatureInfoPanel, {
   determineCatalogItem
 } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
 import Loader from "../../lib/ReactViews/Loader";
@@ -43,7 +42,7 @@ describe("FeatureInfoPanel", function () {
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function () {
     viewState.featureInfoPanelIsVisible = true;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
+    const panel = <FeatureInfoPanel />;
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).toContain("is-visible");
   });
@@ -54,14 +53,14 @@ describe("FeatureInfoPanel", function () {
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
+    const panel = <FeatureInfoPanel />;
     const result = getShallowRenderedOutput(panel);
     expect(findWithType(result, Loader)).toBeDefined();
   });
 
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
     viewState.featureInfoPanelIsVisible = false;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
+    const panel = <FeatureInfoPanel />;
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).not.toContain("is-visible");
   });
