@@ -19,7 +19,7 @@ function runWebpack(webpack, config, doneCallback) {
         var jsonStats = stats.toJson();
         // uncomment this line to write stats about the
         // build that can be visualized at http://webpack.github.io/analyse/
-        //require('fs').writeFileSync('./stats.json', JSON.stringify(jsonStats));
+        // require('fs').writeFileSync('./stats.json', JSON.stringify(jsonStats));
 
         if (jsonStats.errors && jsonStats.errors.length > 0) {
           err = new PluginError(

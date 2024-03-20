@@ -28,11 +28,10 @@ module.exports = function () {
     plugins: [
       new MiniCssExtractPlugin({
         filename: "TerriaJS.css",
-        disable: false,
         ignoreOrder: true
       }),
       // This is needed for a jsdom issue
-      new IgnorePlugin(/canvas/, /jsdom$/)
+      new IgnorePlugin({ resourceRegExp: /canvas/, contextRegExp: /jsdom$/ })
     ]
   };
   return configureWebpackForTerriaJS(

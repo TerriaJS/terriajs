@@ -9,7 +9,10 @@ export default function prettyPrintGtfsEntityField(
     // TODO: Get sone of this data (eg. route short name) from static GTFS csv files instead
     // This probably only works for NSW
     case "route_short_name": {
-      const route: string = _get(entity, "vehicle.trip.route_id");
+      const route: string = _get<FeedEntity, string>(
+        entity,
+        "vehicle.trip.route_id"
+      );
       if (route !== undefined && route.indexOf("_") + 1 > 0) {
         return route.substr(route.indexOf("_") + 1);
       } else {
@@ -17,7 +20,7 @@ export default function prettyPrintGtfsEntityField(
       }
     }
     case "occupancy_status#str": {
-      const occupancy: OccupancyStatus = _get(
+      const occupancy: OccupancyStatus = _get<FeedEntity, string>(
         entity,
         "vehicle.occupancy_status"
       );

@@ -56,5 +56,5 @@ interface CssExports {
   'workbenchWidth': string;
   'workflowPanelWidth': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

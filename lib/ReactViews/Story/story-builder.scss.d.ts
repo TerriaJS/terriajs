@@ -42,5 +42,5 @@ interface CssExports {
   'videoGuideWrapper': string;
   'videoGuideWrapperClosing': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

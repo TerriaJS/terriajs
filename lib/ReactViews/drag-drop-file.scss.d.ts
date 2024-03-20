@@ -9,5 +9,5 @@ interface CssExports {
   'is-active': string;
   'isActive': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

@@ -30,8 +30,8 @@ module.exports = function (hot, dev) {
         {
           // Don't let jasmine-ajax detect require and import jasmine-core, because we bring
           // in Jasmine via a script tag instead.
-          test: require.resolve("jasmine-ajax"),
-          loader: "imports-loader?require=>false"
+          // test: require.resolve("jasmine-ajax"),
+          // use: [{ loader: "imports-loader", options: { require: false } }]
         }
 
         // {
@@ -64,7 +64,6 @@ module.exports = function (hot, dev) {
   config.plugins = [
     new MiniCssExtractPlugin({
       filename: "nationalmap.css",
-      disable: false,
       ignoreOrder: true
     })
   ];

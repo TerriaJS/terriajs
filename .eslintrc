@@ -106,7 +106,8 @@
     "prefer-const": "error",
     /* See https://stackoverflow.com/questions/64646248/eslintrc-js-for-react-17-and-jsx-without-import-react/64646593#64646593 */
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
   },
   "overrides": [
     {

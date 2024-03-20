@@ -11,5 +11,5 @@ interface CssExports {
   'menuBarWorkbenchClosed': string;
   'menuItem': string;
 }
-declare var cssExports: CssExports;
-export = cssExports;
+export const cssExports: CssExports;
+export default cssExports;

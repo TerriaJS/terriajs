@@ -73,7 +73,7 @@ const NotificationWindow = createReactClass({
       <div className={classNames(Styles.wrapper, `${type}`)}>
         <div
           className={Styles.notification}
-          isStory={isStory}
+          isStory={isStory} /* eslint-disable-line react/no-unknown-property */
           css={`
             background: ${(p) =>
               p.isStory ? p.theme.colorPrimary : p.theme.dark};
