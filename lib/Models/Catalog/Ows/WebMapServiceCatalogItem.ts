@@ -634,7 +634,7 @@ class WebMapServiceCatalogItem
       const extractedUrl = urls?.[0];
 
       if (!extractedUrl) {
-        reject("No URL found in abstract");
+        resolve([]);
       }
       const proxiedUrl = proxyCatalogItemUrl(this, extractedUrl!);
 
