@@ -140,7 +140,7 @@ export default async function generateCatalogIndex(
   speedString: string | undefined,
   excludeIds: string[] | undefined,
   basicAuth: string | undefined,
-  timeoutMs: number | undefined
+  timeoutMs: number
 ) {
   let debug = false;
 
@@ -159,8 +159,6 @@ export default async function generateCatalogIndex(
     maxConcurrent: 10 * speed,
     minTime: 100 / speed
   });
-
-  timeoutMs = timeoutMs ?? 30000;
 
   let totalJobs = 0;
   let completedJobs = 0;
@@ -384,7 +382,7 @@ program
 This will "crawl" a terria JS catalog, load all groups and references and then create an "index" file which contains fully resolved tree of models.
 
 Example usage
-- node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/ --excludeIds zrPtHVJcPi
+- node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/
   `
   )
   .requiredOption("-c, --configUrl <configUrl>", "configUrl URL to map-config")
@@ -421,8 +419,6 @@ Example usage
 program.parse();
 
 const options = program.opts();
-
-console.log(options);
 
 generateCatalogIndex(
   options.configUrl,
