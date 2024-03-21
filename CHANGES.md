@@ -6,6 +6,7 @@
   - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - Fix `generateCatalogIndex` after `searchProvider` changes
+- Fix bug with relative URLs being ignored in `generateCatalogIndex`
 - [The next improvement]
 
 #### 8.6.1 - 2024-03-14

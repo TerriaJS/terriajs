@@ -150,7 +150,7 @@ export default async function generateCatalogIndex(
   // Make sure baseURL has trailing slash
   baseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 
-  patchNetworkRequests(baseUrl, basicAuth);
+  patchNetworkRequests(baseUrl, basicAuth, true);
 
   console.log(`Config URL: ${configUrl}`);
 
