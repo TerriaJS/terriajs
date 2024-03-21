@@ -696,7 +696,7 @@ export default class Terria {
       this.appBaseHref = ensureSuffix(
         new URL(
           options.appBaseHref,
-          typeof document !== "undefined" ? document.baseURI : "/"
+          typeof document !== "undefined" ? document.baseURI : undefined
         ).href,
         "/"
       );
