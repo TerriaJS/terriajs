@@ -7,6 +7,7 @@
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - Fix `generateCatalogIndex` after `searchProvider` changes
 - Fix bug with relative URLs being ignored in `generateCatalogIndex`
+- Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used
 - [The next improvement]
 
 #### 8.6.1 - 2024-03-14

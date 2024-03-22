@@ -47,6 +47,7 @@ export interface MapServer {
    */
   singleFusedMapCache?: boolean;
   //comma separated list of supported capabilities - e.g. "Map,Query,Data,TilesOnly,Tilemap"
+  tileInfo?: unknown;
   capabilities?: string;
   mapName?: string;
   timeInfo?: TimeInfo;
