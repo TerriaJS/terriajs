@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.6.2)
+#### next release (8.7.1)
+
+- [The next improvement]
+
+#### 8.7.0 - 2024-03-22
 
 - **Breaking changes:**
   - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
@@ -8,7 +12,6 @@
 - Fix `generateCatalogIndex` after `searchProvider` changes
 - Fix bug with relative URLs being ignored in `generateCatalogIndex`
 - Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used
-- [The next improvement]
 
 #### 8.6.1 - 2024-03-14
 
