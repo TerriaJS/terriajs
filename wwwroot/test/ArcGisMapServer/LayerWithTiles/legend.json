@@ -1,0 +1,52 @@
+{
+  "layers": [
+    {
+      "layerId": 0,
+      "layerName": "CED",
+      "layerType": "Feature Layer",
+      "minScale": 0,
+      "maxScale": 0,
+      "legend": [
+        {
+          "label": "",
+          "url": "13475f3a5a215091da89ba1f50364cdc",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAY0lEQVQ4je3UwQnAIBBE0UG2irDpxc4kndmL1mESsxLwPHvcf/H2EIWRdugNx2SdFxIqJQ1kAMXAhHr2ToFNdaILdEwCpBOe2AuQTxyMrQD57A0H8rdnTDaw/6eUOY709V7gAWeDEPvhQjLjAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "legendGroups": [
+        {
+          "id": "0",
+          "heading": ""
+        }
+      ]
+    },
+    {
+      "layerId": 1,
+      "layerName": "CED_GEN",
+      "layerType": "Feature Layer",
+      "minScale": 0,
+      "maxScale": 0,
+      "legend": [
+        {
+          "label": "",
+          "url": "13475f3a5a215091da89ba1f50364cdc",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAY0lEQVQ4je3UwQnAIBBE0UG2irDpxc4kndmL1mESsxLwPHvcf/H2EIWRdugNx2SdFxIqJQ1kAMXAhHr2ToFNdaILdEwCpBOe2AuQTxyMrQD57A0H8rdnTDaw/6eUOY709V7gAWeDEPvhQjLjAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "legendGroups": [
+        {
+          "id": "0",
+          "heading": ""
+        }
+      ]
+    }
+  ]
+}
