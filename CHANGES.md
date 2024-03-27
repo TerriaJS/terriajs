@@ -9,6 +9,7 @@
 - **Breaking changes:**
   - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
+- Fixed a bug with passing a relative baseUrl to Cesium 1.113.0.
 - Fix `generateCatalogIndex` after `searchProvider` changes
 - Fix bug with relative URLs being ignored in `generateCatalogIndex`
 - Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used
@@ -54,6 +55,7 @@
 - Add option to enable/disable shortening share URLs via InitSourceData.
 - Fix bug in ArcGisMapServerCatalogItem.
 - Add examples.
+- Upgraded Cesium to 1.113.0 (i.e. `terriajs-cesium@6.2.0` & `terriajs-cesium-widgets@4.4.0`).
 
 #### 8.4.1 - 2023-12-08
 
