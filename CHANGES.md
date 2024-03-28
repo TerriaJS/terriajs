@@ -2,6 +2,9 @@
 
 #### next release (8.7.1)
 
+- Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
+
+- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - Upgraded to TerriajS Cesium 1.115.0
 - [The next improvement]
 

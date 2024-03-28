@@ -44,6 +44,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import { Complete } from "../../../Core/TypeModifiers";
 
 const dateFormat = require("dateformat");
 
@@ -87,6 +88,62 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       model as WebMapServiceCatalogItem,
       this.capabilities
     ) as this;
+  }
+
+  async fetchPalettes(
+    abstract: string,
+    legend:
+      | Complete<{
+          title?: string | undefined;
+          url?: string | undefined;
+          paletteUrl?: string | undefined;
+          imageScaling?: number | undefined;
+          urlMimeType?: string | undefined;
+          items?:
+            | Complete<{
+                title?: string | undefined;
+                multipleTitles?: string[] | undefined;
+                maxMultipleTitlesShowed: number | undefined;
+                titleAbove?: string | undefined;
+                titleBelow?: string | undefined;
+                color?: string | undefined;
+                outlineColor?: string | undefined;
+                outlineWidth?: number | undefined;
+                multipleColors?: string[] | undefined;
+                imageUrl?: string | undefined;
+                marker?: string | undefined;
+                rotation: number | undefined;
+                addSpacingAbove?: boolean | undefined;
+                imageHeight: number | undefined;
+                imageWidth: number | undefined;
+              }>[]
+            | undefined;
+          backgroundColor?: string | undefined;
+        }>
+      | undefined
+  ): Promise<StratumFromTraits<WebMapServiceAvailableStyleTraits>[]> {
+    const paletteResult: StratumFromTraits<WebMapServiceAvailableStyleTraits>[] =
+      [];
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = abstract?.match(urlRegex);
+
+    if (urls) {
+      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, urls[0]);
+      const response = await fetch(paletteUrl);
+      const data = await response.json();
+      const palettes = data.palettes;
+      palettes.forEach((palette: any) => {
+        paletteResult.push({
+          name: palette,
+          title: palette,
+          abstract: abstract,
+          legend: legend
+        });
+      });
+    }
+
+    return paletteResult;
   }
 
   @computed get metadataUrls() {
@@ -172,6 +229,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       )?.styles;
 
       let layerStyle: Model<WebMapServiceAvailableStyleTraits> | undefined;
+      let paletteUrl: string | undefined;
 
       if (isDefined(style)) {
         // Attempt to find layer style based on AvailableStyleTraits
@@ -179,7 +237,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           (candidate) => candidate.name === style
         );
       }
-
       // If no style is selected and this WMS doesn't support GetLegendGraphics - we must use the first style if none is explicitly specified.
       // (If WMS supports GetLegendGraphics we can use it and omit style parameter to get the "default" style's legend)
       if (!isDefined(layerStyle) && !this.catalogItem.supportsGetLegendGraphic)
@@ -264,7 +321,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
             urlMimeType: legendUrlMimeType,
-            imageScaling: legendScaling
+            imageScaling: legendScaling,
+            paletteUrl: paletteUrl
           })
         );
       }
@@ -360,10 +418,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
     const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] =
       [];
-
-    if (!this.capabilities) {
-      return result;
-    }
 
     const capabilitiesLayers = this.capabilitiesLayers;
     for (const layerTuple of capabilitiesLayers) {

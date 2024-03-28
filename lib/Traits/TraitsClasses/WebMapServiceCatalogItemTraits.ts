@@ -69,6 +69,16 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+export class WebMapServiceAvailablePaletteTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "URL",
+    description:
+      "The URL of the GetMetadata request for the palette. This is used to get the palettes available for a layer."
+  })
+  url?: string;
+}
+
 export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -315,6 +325,22 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
   })
   colorScaleMaximum: number = 50;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Thredds palette",
+    description:
+      "palette is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is 'default'."
+  })
+  threddsPalette?: string = "default";
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Thredds palettes",
+    description:
+      "Used to store the palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
+  })
+  threddsPalettes: string[] = ["default"];
 
   @primitiveTrait({
     type: "boolean",
