@@ -1,91 +1,77 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
+import * as moment from "moment";
 import defined from "terriajs-cesium/Source/Core/defined";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-
 import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import PropTypes from "prop-types";
 
-const DateTimeParameterEditor = createReactClass({
-  displayName: "DateTimeParameterEditor",
+const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
+  const [dateValue, setDateValue] = useState("");
+  const [timeValue, setTimeValue] = useState("00:00");
 
-  propTypes: {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object
-  },
+  const style =
+    defined(parameter) && defined(parameter.value)
+      ? Styles.field
+      : Styles.fieldDatePlaceholder;
 
-  getInitialState() {
-    return this.getDateTime();
-  },
+  const currentTime = useRef();
+  currentTime.current = defined(parameter.value)
+    ? parameter.value
+    : terria.timelineStack.clock.currentTime;
 
-  getDateTime() {
-    const dateTimeBreakOut = {};
-    const timeDate = this.props.parameter.value;
-    if (timeDate !== undefined) {
-      const splits = timeDate.split("T");
-      dateTimeBreakOut.date = splits[0];
-      if (splits[1].length === 0) {
-        dateTimeBreakOut.time = "00:00";
-      } else {
-        dateTimeBreakOut.time = splits[1];
-      }
-    } else {
-      dateTimeBreakOut.date = "";
-      dateTimeBreakOut.time = "00:00";
-    }
+  const initiateDate = () => {
+    currentTime.current = defined(parameter.value)
+      ? parameter.value
+      : terria.timelineStack.clock.currentTime;
+    const ct = new Date(currentTime.current);
+    const dateValue = moment.utc(ct.toISOString()).local().format("YYYY-MM-DD");
+    const timeValue = moment.utc(ct.toISOString()).local().format("HH:mm");
+    setDateValue(dateValue);
+    setTimeValue(timeValue);
+  };
 
-    this.setDateTime(dateTimeBreakOut);
+  useEffect(() => {
+    initiateDate();
+  }, []); // eslint-disable-line
 
-    return dateTimeBreakOut;
-  },
+  const handleTimeChange = (e) => {
+    setTimeValue(e.target.value);
+    runInAction(() => {
+      parameter.setValue(CommonStrata.user, `${dateValue}T${e.target.value}`);
+    });
+  };
 
-  setDateTime(dateTime) {
-    let value;
-    if (dateTime.date && dateTime.time) {
-      value = dateTime.date + "T" + dateTime.time;
-    }
-    this.props.parameter.setValue(CommonStrata.user, value);
-  },
+  const handleDateChange = (e) => {
+    setDateValue(e.target.value);
+    runInAction(() => {
+      parameter.setValue(CommonStrata.user, `${e.target.value}T${timeValue}`);
+    });
+  };
 
-  onChangeDate(e) {
-    const dateTimeBreakOut = this.getDateTime();
-    dateTimeBreakOut.date = e.target.value;
-    this.setDateTime(dateTimeBreakOut);
-    this.setState(dateTimeBreakOut);
-  },
+  return (
+    <div>
+      <input
+        className={style}
+        type="date"
+        value={dateValue}
+        onChange={handleDateChange}
+      />
+      <input
+        className={style}
+        type="time"
+        value={timeValue}
+        onChange={handleTimeChange}
+      />
+    </div>
+  );
+};
 
-  onChangeTime(e) {
-    const dateTimeBreakOut = this.getDateTime();
-    dateTimeBreakOut.time = e.target.value;
-    this.setDateTime(dateTimeBreakOut);
-    this.setState(dateTimeBreakOut);
-  },
+DateTimeParameterEditor.propTypes = {
+  parameter: PropTypes.object,
+  previewed: PropTypes.object,
+  terria: PropTypes.object
+};
 
-  render() {
-    const style =
-      defined(this.props.parameter) && defined(this.props.parameter.value)
-        ? Styles.field
-        : Styles.fieldDatePlaceholder;
-
-    return (
-      <div>
-        <input
-          className={style}
-          type="date"
-          placeholder="YYYY-MM-DD"
-          onChange={this.onChangeDate}
-          value={this.state.date}
-        />
-        <input
-          className={style}
-          type="time"
-          placeholder="HH:mm:ss.sss"
-          onChange={this.onChangeTime}
-          value={this.state.time}
-        />
-      </div>
-    );
-  }
-});
-
-module.exports = DateTimeParameterEditor;
+export default observer(DateTimeParameterEditor);

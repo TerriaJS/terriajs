@@ -222,6 +222,7 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
+              terria={parameterEditor.props.viewState.terria}
             />
           </div>
         );
