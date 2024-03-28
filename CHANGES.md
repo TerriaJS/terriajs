@@ -1,11 +1,22 @@
 # Change Log
 
-#### next release (8.6.2)
+#### next release (8.7.1)
 
 - Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
 
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
+- Upgraded to TerriajS Cesium 1.115.0
 - [The next improvement]
+
+#### 8.7.0 - 2024-03-22
+
+- **Breaking changes:**
+  - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
+- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
+- Fixed a bug with passing a relative baseUrl to Cesium 1.113.0.
+- Fix `generateCatalogIndex` after `searchProvider` changes
+- Fix bug with relative URLs being ignored in `generateCatalogIndex`
+- Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used
 
 #### 8.6.1 - 2024-03-14
 
@@ -48,6 +59,7 @@
 - Add option to enable/disable shortening share URLs via InitSourceData.
 - Fix bug in ArcGisMapServerCatalogItem.
 - Add examples.
+- Upgraded Cesium to 1.113.0 (i.e. `terriajs-cesium@6.2.0` & `terriajs-cesium-widgets@4.4.0`).
 
 #### 8.4.1 - 2023-12-08
 
