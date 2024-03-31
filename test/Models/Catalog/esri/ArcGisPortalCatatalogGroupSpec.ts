@@ -4,11 +4,8 @@ import Terria from "../../../../lib/Models/Terria";
 import ArcGisPortalCatalogGroup, {
   ArcGisPortalStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisPortalCatalogGroup";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisPortalItemReference from "../../../../lib/Models/Catalog/Esri/ArcGisPortalItemReference";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
-import { BaseModel } from "../../../../lib/Models/Definition/Model";
 
 configure({
   enforceActions: "observed",
