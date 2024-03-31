@@ -18,7 +18,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { WithViewState, withViewState } from "../../Context";
-import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../Language/languageHelpers";
 
 const StyledHtml: any =
   require("../../Map/Panels/HelpPanel/StyledHtml").default;

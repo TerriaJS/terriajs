@@ -24,7 +24,7 @@ import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import { useWindowSize } from "../Hooks/useWindowSize";
 import { useViewState } from "../Context";
-import { applyTranslationIfExists } from "./../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import {
   calculateLeftPosition,
   calculateTopPosition,
