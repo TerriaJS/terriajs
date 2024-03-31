@@ -1,12 +1,6 @@
 import bbox from "@turf/bbox";
 import i18next from "i18next";
-import {
-  computed,
-  observable,
-  runInAction,
-  makeObservable,
-  override
-} from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import {
   GeomType,
   json_style,

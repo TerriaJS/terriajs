@@ -3,7 +3,6 @@ import { runInAction } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
-import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import updateModelFromJson from "../Definition/updateModelFromJson";

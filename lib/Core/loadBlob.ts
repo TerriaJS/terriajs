@@ -1,9 +1,7 @@
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
-import URI from "urijs";
 import {
-  configure as zipConfigure,
   ZipReader,
   BlobReader as ZipBlobReader,
   Data64URIWriter as ZipData64URIWriter,

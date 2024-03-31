@@ -13,7 +13,6 @@ import SelectableDimensions, {
   SelectableDimension as SelectableDimensionModel
 } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
-import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
 import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";

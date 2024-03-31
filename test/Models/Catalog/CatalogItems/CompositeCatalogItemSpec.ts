@@ -1,4 +1,3 @@
-import CatalogMemberFactory from "../../../../lib/Models/Catalog/CatalogMemberFactory";
 import CompositeCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
