@@ -641,7 +641,7 @@ class WebMapServiceCatalogItem
       fetch(proxiedUrl, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
-          this.setTrait(CommonStrata.user, "threddsPalettes", data.palettes);
+          this.setTrait(CommonStrata.user, "palettes", data.palettes);
           resolve(data.palettes);
         })
         .catch((error) => {
@@ -651,14 +651,14 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get threddsPaletteDimensions(): SelectableDimensionEnum[] {
+  get paletteDimensions(): SelectableDimensionEnum[] {
     if (!this.isThredds) {
       return [];
     }
 
     const options: { name: string; id: string }[] = [];
 
-    this.threddsPalettes.map((palette) => {
+    this.palettes.map((palette) => {
       options.push({
         name: palette,
         id: palette
@@ -670,13 +670,13 @@ class WebMapServiceCatalogItem
         name: "Palettes",
         id: `${this.uniqueId}-palettes`,
         options,
-        selectedId: this.threddsPalette,
+        selectedId: this.palette,
         setDimensionValue: (
           stratumId: string,
           newPalette: string | undefined
         ) => {
           runInAction(() => {
-            this.setTrait(stratumId, "threddsPalette", newPalette);
+            this.setTrait(stratumId, "palette", newPalette);
             const currentStyle = this.stylesArray[0];
             const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
             this.setTrait(stratumId, "styles", newStyles);
@@ -827,7 +827,7 @@ class WebMapServiceCatalogItem
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions,
-      ...this.threddsPaletteDimensions
+      ...this.paletteDimensions
     ]);
   }
 

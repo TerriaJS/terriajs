@@ -328,19 +328,19 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
-    name: "Thredds palette",
+    name: "Palette",
     description:
       "palette is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is 'default'."
   })
-  threddsPalette?: string = "default";
+  palette?: string = "default";
 
   @primitiveArrayTrait({
     type: "string",
-    name: "Thredds palettes",
+    name: "Palettes",
     description:
       "Used to store the palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
   })
-  threddsPalettes: string[] = ["default"];
+  palettes: string[] = ["default"];
 
   @primitiveTrait({
     type: "boolean",

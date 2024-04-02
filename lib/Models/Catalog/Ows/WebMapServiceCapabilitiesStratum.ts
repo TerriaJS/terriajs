@@ -125,11 +125,19 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     const paletteResult: StratumFromTraits<WebMapServiceAvailableStyleTraits>[] =
       [];
 
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const urls = abstract?.match(urlRegex);
+    const url = this.catalogItem
+      .uri!.clone()
+      .setSearch({
+        service: "WMS",
+        version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
+        request: "GetMetadata",
+        item: "layerDetails",
+        layerName: this.catalogItem.layersArray[0]
+      })
+      .toString();
 
-    if (urls) {
-      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, urls[0]);
+    if (url) {
+      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, url);
       const response = await fetch(paletteUrl);
       const data = await response.json();
       const palettes = data.palettes;
