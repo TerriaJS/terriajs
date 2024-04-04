@@ -196,7 +196,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-    const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
+    const firefoxBugOptions = (FeatureDetection as any).isFirefox()
       ? {
           contextOptions: {
             webgl: { preserveDrawingBuffer: true }
@@ -228,24 +228,23 @@ export default class Cesium extends GlobeOrMap {
 
     this._selectionIndicator = new CesiumSelectionIndicator(this);
 
-    this.supportsPolylinesOnTerrain = (<any>this.scene).context.depthTexture;
+    this.supportsPolylinesOnTerrain = (this.scene as any).context.depthTexture;
 
     this._eventHelper = new EventHelper();
 
-    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
-      clock: Clock
-    ) => {
+    this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
       this.dataSourceDisplay.update(clock.currentTime);
-    }));
+    }) as any);
 
     // Progress
-    this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
-      ((currentLoadQueueLength: number) =>
-        this._updateTilesLoadingCount(currentLoadQueueLength))
-    ));
+    this._eventHelper.add(
+      this.scene.globe.tileLoadProgressEvent,
+      (currentLoadQueueLength: number) =>
+        this._updateTilesLoadingCount(currentLoadQueueLength) as any
+    );
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
-    (<any>this.scene).highDynamicRange = false;
+    (this.scene as any).highDynamicRange = false;
 
     this.scene.imageryLayers.removeAll();
 
@@ -1488,7 +1487,7 @@ export default class Cesium extends GlobeOrMap {
       longitude: number,
       latitude: number
     ) {
-      const url = (<any>imageryProvider).url;
+      const url = (imageryProvider as any).url;
 
       try {
         const featuresPromise = oldPick.call(
@@ -1780,7 +1779,7 @@ function zoomToDataSource(
         let state = BoundingSphereState.PENDING;
         try {
           // TODO: missing Cesium type info
-          state = (<any>dataSourceDisplay).getBoundingSphere(
+          state = (dataSourceDisplay as any).getBoundingSphere(
             entities[i],
             false,
             boundingSphereScratch

@@ -1,4 +1,6 @@
-import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectArrayTrait, {
+  MergeStrategy
+} from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
@@ -57,7 +59,7 @@ export class WebCoverageServiceParameterTraits extends ModelTraits {
   @objectArrayTrait({
     type: KeyValueTraits,
     idProperty: "index",
-    merge: false,
+    merge: MergeStrategy.None,
     name: "Additional key-value parameters to add as URL query parameters",
     description:
       "Each key-value will be added to URL like so - `someurl.com?key=value`."

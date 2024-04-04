@@ -308,14 +308,14 @@ export default class CesiumRenderLoopPauser {
 
     const cameraMovedInLastSecond = now - this._lastCameraMoveTime < 1000;
 
-    const surface = (<any>scene.globe)._surface;
+    const surface = (scene.globe as any)._surface;
     const terrainTilesWaiting =
       !surface._tileProvider ||
       surface._tileLoadQueueHigh.length > 0 ||
       surface._tileLoadQueueMedium.length > 0 ||
       surface._tileLoadQueueLow.length > 0 ||
       surface._debug.tilesWaitingForChildren > 0;
-    const tweens = (<any>scene).tweens;
+    const tweens = (scene as any).tweens;
 
     if (
       !cameraMovedInLastSecond &&

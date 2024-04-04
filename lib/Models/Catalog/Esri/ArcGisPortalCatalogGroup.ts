@@ -373,9 +373,9 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    const portalStratum = <ArcGisPortalStratum | undefined>(
-      this.strata.get(ArcGisPortalStratum.stratumName)
-    );
+    const portalStratum = this.strata.get(ArcGisPortalStratum.stratumName) as
+      | ArcGisPortalStratum
+      | undefined;
     if (!portalStratum) {
       return ArcGisPortalStratum.load(this).then((stratum) => {
         if (stratum === undefined) return;
@@ -389,9 +389,9 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const portalStratum = <ArcGisPortalStratum | undefined>(
-      this.strata.get(ArcGisPortalStratum.stratumName)
-    );
+    const portalStratum = this.strata.get(ArcGisPortalStratum.stratumName) as
+      | ArcGisPortalStratum
+      | undefined;
     if (portalStratum) {
       await runLater(() => portalStratum.createMembersFromDatasets());
     }

@@ -68,6 +68,10 @@ type BaseType = Model<ModelTraits>;
 
 function ChartableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ChartableMixin extends Base {
+    get hasChartableMixin() {
+      return true;
+    }
+
     get isChartable() {
       return true;
     }
@@ -85,7 +89,7 @@ namespace ChartableMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof ChartableMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.isChartable;
+    return !!model?.hasChartableMixin;
   }
 }
 

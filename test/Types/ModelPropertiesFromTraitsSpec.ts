@@ -11,7 +11,7 @@ import { expectFalse, expectTrue } from "./TypeChecks";
 
 type ModelProperties = ModelPropertiesFromTraits<TraitsForTesting>;
 
-const modelProperties: ModelProperties = <any>{};
+const modelProperties: ModelProperties = {} as any;
 
 // Simple properties allow undefined only if they do not have a default.
 expectTrue<Equals<typeof modelProperties.withDefault, number>>();

@@ -99,9 +99,9 @@ describe("WebProcessingServiceCatalogFunction", function () {
       );
       await wps.loadMetadata();
       runInAction(() => {
-        const param = <GeoJsonParameter>(
-          wps.functionParameters.find((p) => p.type === "geojson")
-        );
+        const param = wps.functionParameters.find(
+          (p) => p.type === "geojson"
+        ) as GeoJsonParameter;
         param.subtype = GeoJsonParameter.PointType;
         param.setValue(CommonStrata.user, {
           longitude: 2.5302435855103993,
@@ -265,9 +265,9 @@ describe("WebProcessingServiceCatalogFunction", function () {
       );
       await wps.loadMetadata();
       runInAction(() => {
-        const param = <GeoJsonParameter>(
-          wps.functionParameters.find((p) => p.type === "geojson")
-        );
+        const param = wps.functionParameters.find(
+          (p) => p.type === "geojson"
+        ) as GeoJsonParameter;
         param.subtype = GeoJsonParameter.PointType;
         param.setValue(CommonStrata.user, {
           longitude: 2.5302435855103993,
@@ -373,7 +373,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       });
       expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
-        const enumParameter = <EnumerationParameter>parameter;
+        const enumParameter = parameter as EnumerationParameter;
         expect(enumParameter.options).toEqual([
           { id: "Point" },
           { id: "Polygon" }
@@ -388,7 +388,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       });
       expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
-        const enumParameter = <EnumerationParameter>parameter;
+        const enumParameter = parameter as EnumerationParameter;
         expect(enumParameter.options).toEqual([{ id: "Point" }]);
       }
     });

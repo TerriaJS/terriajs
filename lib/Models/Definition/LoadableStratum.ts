@@ -37,7 +37,7 @@ export default function LoadableStratum<
 
   // The cast is necessary because TypeScript can't see that we've
   // manually defined all the necessary properties.
-  return <any>LoadableStratum;
+  return LoadableStratum as any;
 }
 
 export function isLoadableStratum(x: any): x is LoadableStratumClass {

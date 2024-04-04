@@ -289,11 +289,14 @@ export default class ArcGisCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const arcgisServerStratum = <
-      ArcGisServerStratum | MapServerStratum | FeatureServerStratum | undefined
-    >(this.strata.get(ArcGisServerStratum.stratumName) ||
+    const arcgisServerStratum =
+      this.strata.get(ArcGisServerStratum.stratumName) ||
       this.strata.get(MapServerStratum.stratumName) ||
-      this.strata.get(FeatureServerStratum.stratumName));
+      (this.strata.get(FeatureServerStratum.stratumName) as
+        | ArcGisServerStratum
+        | MapServerStratum
+        | FeatureServerStratum
+        | undefined);
 
     await runLater(() => {
       if (arcgisServerStratum instanceof ArcGisServerStratum) {

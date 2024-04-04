@@ -113,6 +113,7 @@
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
         // @TODO: revise these rules
+        "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/no-unused-vars": [
           "warn",
           {

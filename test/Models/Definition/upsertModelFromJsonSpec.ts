@@ -28,7 +28,7 @@ describe("upsertModelFromJson", function () {
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
-    const wms = <WebMapServiceCatalogItem>model;
+    const wms = model as WebMapServiceCatalogItem;
     expect(wms.name).toBe("Test");
     expect(wms.url).toBe("foo.bar.baz");
     expect(wms.layers).toBe("mybroadband:MyBroadband_ADSL_Availability");
@@ -66,7 +66,7 @@ describe("upsertModelFromJson", function () {
       return model;
     });
 
-    const group = <WebMapServiceCatalogGroup>model;
+    const group = model as WebMapServiceCatalogGroup;
     const item = terria.getModelById(
       WebMapServiceCatalogItem,
       "/Test/mobile-black-spot-programme:funded-base-stations-round4-group"
@@ -164,7 +164,7 @@ describe("upsertModelFromJson", function () {
     ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");
 
-    const wms = <WebMapServiceCatalogItem>model;
+    const wms = model as WebMapServiceCatalogItem;
     expect(wms.opacity).toBe(0.5);
   });
 });
