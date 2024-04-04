@@ -3,6 +3,7 @@
 #### next release (8.7.1)
 
 - Upgraded to TerriajS Cesium 1.115.0
+- Fix `PointStyleTraits.marker` bug where URLs were not being used.
 - [The next improvement]
 
 #### 8.7.0 - 2024-03-22
