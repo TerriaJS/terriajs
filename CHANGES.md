@@ -4,6 +4,7 @@
 
 - Upgraded to TerriajS Cesium 1.115.0
 - Fix `PointStyleTraits.marker` bug where URLs were not being used.
+- Fixed a bug with passing a relative baseUrl to Cesium >= 1.113.0 when `document.baseURI` is different to its `location`.
 - [The next improvement]
 
 #### 8.7.0 - 2024-03-22
@@ -11,7 +12,6 @@
 - **Breaking changes:**
   - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
-- Fixed a bug with passing a relative baseUrl to Cesium 1.113.0.
 - Fix `generateCatalogIndex` after `searchProvider` changes
 - Fix bug with relative URLs being ignored in `generateCatalogIndex`
 - Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used
