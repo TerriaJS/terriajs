@@ -6,9 +6,9 @@ import { useViewState } from "terriajs-plugin-api";
 import URI from "urijs";
 import { string } from "prop-types";
 
-let codeChallenge;
-
 function CesiumIonConnector() {
+  const tokenLocalStorageName = "cesium-ion-login-token";
+
   const viewState = useViewState();
 
   const [codeChallenge, setCodeChallenge] = React.useState({
@@ -16,7 +16,9 @@ function CesiumIonConnector() {
     hash: ""
   });
 
-  const [accessToken, setAccessToken] = React.useState("");
+  const [accessToken, setAccessToken] = React.useState(
+    localStorage.getItem(tokenLocalStorageName) ?? ""
+  );
 
   const defaultProfile = {
     id: 0,
@@ -70,14 +72,14 @@ function CesiumIonConnector() {
   function renderConnected() {
     return (
       <div>
-        {userProfile.username.length > 0 ? (
-          <span>
+        <span>
+          {userProfile.username.length > 0 ? (
             <label>Connected to Cesium ion as {userProfile.username}</label>
-            <button onClick={disconnect}>Disconnect</button>
-          </span>
-        ) : (
-          <label>Loading user profile information...</label>
-        )}
+          ) : (
+            <label>Loading user profile information...</label>
+          )}
+          <button onClick={disconnect}>Disconnect</button>
+        </span>
       </div>
     );
   }
@@ -141,6 +143,7 @@ function CesiumIonConnector() {
           return response.json();
         })
         .then((response) => {
+          localStorage.setItem(tokenLocalStorageName, response.access_token);
           setAccessToken(response.access_token);
         });
     };
@@ -149,6 +152,7 @@ function CesiumIonConnector() {
   }
 
   function disconnect() {
+    localStorage.removeItem(tokenLocalStorageName);
     setAccessToken("");
     setUserProfile(defaultProfile);
   }
