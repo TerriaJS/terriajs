@@ -271,34 +271,50 @@ const AddData = createReactClass({
                     this.state.remoteDataType?.description
                   )
                 : null}
-              <label className={Styles.label}>
-                <Trans i18nKey="addData.webFile">
-                  <strong>Step 2:</strong> Enter the URL of the data file or web
-                  service
-                </Trans>
-              </label>
-              <form className={Styles.urlInput}>
-                <input
-                  value={this.state.remoteUrl}
-                  onChange={this.onRemoteUrlChange}
-                  className={Styles.urlInputTextBox}
-                  type="text"
-                  placeholder="e.g. http://data.gov.au/geoserver/wms"
-                />
-                <button
-                  disabled={this.state.remoteUrl.length === 0}
-                  type="submit"
-                  onClick={this.handleUrl}
-                  className={Styles.urlInputBtn}
-                >
-                  {t("addData.urlInputBtn")}
-                </button>
-                {this.state.isLoading && <Loader />}
-              </form>
+              {this.state.remoteDataType?.customComponent
+                ? this.renderCustomComponent(
+                    this.state.remoteDataType?.customComponent
+                  )
+                : this.renderDefaultForWebDataType(t)}
             </section>
           </>
         )}
       </div>
+    );
+  },
+
+  renderCustomComponent(CustomComponent) {
+    return <CustomComponent />;
+  },
+
+  renderDefaultForWebDataType(t) {
+    return (
+      <>
+        <label className={Styles.label}>
+          <Trans i18nKey="addData.webFile">
+            <strong>Step 2:</strong> Enter the URL of the data file or web
+            service
+          </Trans>
+        </label>
+        <form className={Styles.urlInput}>
+          <input
+            value={this.state.remoteUrl}
+            onChange={this.onRemoteUrlChange}
+            className={Styles.urlInputTextBox}
+            type="text"
+            placeholder="e.g. http://data.gov.au/geoserver/wms"
+          />
+          <button
+            disabled={this.state.remoteUrl.length === 0}
+            type="submit"
+            onClick={this.handleUrl}
+            className={Styles.urlInputBtn}
+          >
+            {t("addData.urlInputBtn")}
+          </button>
+          {this.state.isLoading && <Loader />}
+        </form>
+      </>
     );
   },
 

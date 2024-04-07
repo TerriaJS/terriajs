@@ -1,10 +1,12 @@
 import i18next from "i18next";
 import { action, observable } from "mobx";
+import { ReactComponentLike } from "prop-types";
 
 interface DataType {
   value: string;
   name: string;
   description?: string;
+  customComponent?: ReactComponentLike;
 }
 
 export interface RemoteDataType extends DataType {}
@@ -185,14 +187,14 @@ const builtinLocalDataTypes: LocalDataType[] = [
 ];
 
 /**
- * Custom remote data types. Add to it by calling addRemoteDataType().
+ * Custom remote data types. Add to it by calling addOrReplaceRemoteFileUploadType().
  */
 export const customRemoteDataTypes: Map<string, RemoteDataType> = observable(
   new Map()
 );
 
 /**
- * Custom local data types. Add by calling addLocalDataType().
+ * Custom local data types. Add by calling addOrReplaceLocalFileUploadType().
  */
 export const customLocalDataTypes: Map<string, LocalDataType> = observable(
   new Map()
