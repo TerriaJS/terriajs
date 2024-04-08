@@ -29,11 +29,11 @@ The [flexsearch](https://github.com/nextapps-de/flexsearch) library is used to i
 To generate the catalog index:
 
 -   `yarn build-tools`
--   `node .\build\generateCatalogIndex.js config-url base-url` where
+-   `node ./build/generateCatalogIndex.js -c config-url -b base-url` where
 
     -   `config-url` is URL to client-side-config file
     -   `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
-    -   For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
+    -   For example `node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/`
 
 -   This will output three files
     -   `catalog-index.json`
@@ -47,6 +47,8 @@ This file will have to be re-generated manually every time the catalog structure
 -   dynamic groups are updated (for example, WMS server publishes new layers)
 
 For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
+
+-   Run `node ./build/generateCatalogIndex.js --help` for argument documentation
 
 ## Location search providers
 

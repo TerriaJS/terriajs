@@ -2,6 +2,7 @@ import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
@@ -10,6 +11,15 @@ import GroupTraits from "./GroupTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
+@traitClass({
+  description: `Creates a group of all layers (or subgroups) in the catalog from a url that points to a wms service.`,
+  example: {
+    type: "wms-group",
+    name: "wms-group example",
+    url: "https://ows.services.dea.ga.gov.au",
+    id: "a unique id for wms-group example"
+  }
+})
 export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,

@@ -18,15 +18,26 @@ import ModelTraits from "../ModelTraits";
 import Trait, { TraitOptions } from "../Trait";
 import traitsClassToModelClass from "../traitsClassToModelClass";
 
+export enum MergeStrategy {
+  /**
+   * Merge array elements across strata - this is the default.
+   */
+  All = "all",
+  /** Similar to Merge.All, but elements that exist in the top-most strata will be merged with lower strata. Elements that only exist in lower strata will be removed. */
+  TopStratum = "topStratum",
+  /** Don't merge array elements across strata. */
+  None = "none"
+}
+
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructorWithRemoval<T>;
   idProperty: keyof T | "index";
   modelClass?: ModelConstructor<Model<T>>;
   /**
-   * Merge array elements across strata (if merge is false, each element will only be the top-most strata's object). Default is `true`
+   * How to merge array elements across strata. By default all elements are merged.
    */
-  merge?: boolean;
+  merge?: MergeStrategy;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(
@@ -50,14 +61,14 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
-  readonly merge: boolean;
+  readonly merge: MergeStrategy;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>, parent: any) {
     super(id, options, parent);
     this.type = options.type;
     this.idProperty = options.idProperty;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
-    this.merge = options.merge ?? true;
+    this.merge = options.merge ?? MergeStrategy.All;
   }
 
   private readonly createObject: (
@@ -116,7 +127,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // Strata order is important here for two reasons:
 
     // Determining array order:
-    // By default, we assume bottom strata order is "more" correct than top
+    // By default, we assume bottom strata order is "more" correct than top - with exception to default stratum - definition stratum is more correct
     // For example:
     // - In some LoadableStratum we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
     // - Then in the user stratum we set [{item:"two", value:"c"}]
@@ -141,6 +152,21 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     const idsWithCorrectRemovals = this.getIdsAcrossStrata(
       StratumOrder.sortTopToBottom(model.strata)
     );
+
+    // If merge strategy is topStratum, then we only want to keep the ids that exist in the top stratum
+    if (this.merge === MergeStrategy.TopStratum) {
+      const topStratum = model.strataTopToBottom.values().next().value;
+      // topStratum will be undefined if a model has 0 strata
+      if (topStratum !== undefined) {
+        const topIds = this.getIdsAcrossStrata(new Map([["top", topStratum]]));
+        // Remove ids that don't exist in the top stratum
+        idsInCorrectOrder.forEach((id) => {
+          if (!topIds.has(id)) {
+            idsWithCorrectRemovals.delete(id);
+          }
+        });
+      }
+    }
 
     // Correct ids are:
     // - Ids ordered by strata bottom to top combined with

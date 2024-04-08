@@ -169,7 +169,8 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
       );
 
       (attrs.yColumns || []).forEach((y) => {
-        chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
+        const line = chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
+        line.setTrait(CommonStrata.user, "isSelectedInWorkbench", true);
       });
 
       item.setTrait(CommonStrata.user, "activeStyle", "chart");
