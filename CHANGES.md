@@ -44,6 +44,7 @@
 - Fixed a bug with passing a relative baseUrl to Cesium >= 1.113.0 when `document.baseURI` is different to its `location`.
 - Fix node v18 compatibility by forcing `webpack-terser-plugin` version resolution and fixing new type errors
 - Reduce log noise in `MagdaReference`.
+- [The next improvement]
 
 #### 8.7.0 - 2024-03-22
 
