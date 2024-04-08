@@ -99,6 +99,7 @@ const DropdownPanel = createReactClass({
           ref={
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
+          /* eslint-disable-next-line react/no-unknown-property */
           isOpen={this.isOpen()}
           css={`
             ${(p) =>
