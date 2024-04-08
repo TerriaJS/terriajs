@@ -115,7 +115,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     catalogItems: MappableMixin.Instance[],
     featureMap: Map<string, TerriaFeature[]>
   ) {
-    return catalogItems.map((catalogItem, i) => {
+    return catalogItems.map((catalogItem, _i) => {
       // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
       const features =
         (catalogItem.uniqueId
