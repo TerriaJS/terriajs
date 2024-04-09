@@ -136,6 +136,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       })
       .toString();
 
+    console.log(url);
+
     if (url) {
       const paletteUrl = proxyCatalogItemUrl(this.catalogItem, url);
       const response = await fetch(paletteUrl);

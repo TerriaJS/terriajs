@@ -232,6 +232,7 @@ class WebMapServiceCatalogItem
     )
       return;
     const stratum = await WebMapServiceCapabilitiesStratum.load(this);
+
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
@@ -607,6 +608,10 @@ class WebMapServiceCatalogItem
         ];
       }
 
+      if (this.palettes.length === 0) {
+        this.fetchPalettes();
+      }
+
       if (
         imageryOptions.maximumLevel !== undefined &&
         this.hideLayerAfterMinScaleDenominator
@@ -625,13 +630,20 @@ class WebMapServiceCatalogItem
       if (!this.isThredds) {
         reject("Not a THREDDS server");
       }
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const selectedStyle = this.availableStyles[0].styles.filter(
-        (style) => style.name === this.styles
-      );
-      const abstract = selectedStyle[0]?.abstract;
-      const urls = abstract?.match(urlRegex);
-      const extractedUrl = urls?.[0];
+
+      if (this.palettes.length > 0) {
+        resolve([...this.palettes]);
+      }
+
+      const extractedUrl = this.uri!.clone()
+        .setSearch({
+          service: "WMS",
+          version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
+          request: "GetMetadata",
+          item: "layerDetails",
+          layerName: this.layersArray[0]
+        })
+        .toString();
 
       if (!extractedUrl) {
         resolve([]);
@@ -642,6 +654,27 @@ class WebMapServiceCatalogItem
         .then((response) => response.json())
         .then((data) => {
           this.setTrait(CommonStrata.user, "palettes", data.palettes);
+          this.setTrait(
+            CommonStrata.user,
+            "colorScaleMinimum",
+            data.scaleRange[0]
+          );
+          this.setTrait(
+            CommonStrata.user,
+            "colorScaleMaximum",
+            data.scaleRange[1]
+          );
+          this.setTrait(
+            CommonStrata.user,
+            "defaultPalette",
+            data.defaultPalette
+          );
+          this.setTrait(
+            CommonStrata.user,
+            "noPaletteStyles",
+            data.noPaletteStyles
+          );
+          this.setTrait(CommonStrata.user, "showPalettes", true);
           resolve(data.palettes);
         })
         .catch((error) => {
@@ -675,12 +708,14 @@ class WebMapServiceCatalogItem
           stratumId: string,
           newPalette: string | undefined
         ) => {
-          runInAction(() => {
-            this.setTrait(stratumId, "palette", newPalette);
-            const currentStyle = this.stylesArray[0];
-            const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
-            this.setTrait(stratumId, "styles", newStyles);
-          });
+          if (this.stylesArray[0]) {
+            runInAction(() => {
+              this.setTrait(stratumId, "palette", newPalette);
+              const currentStyle = this.stylesArray[0];
+              const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
+              this.setTrait(stratumId, "styles", newStyles);
+            });
+          }
         }
       }
     ];
@@ -738,7 +773,12 @@ class WebMapServiceCatalogItem
             );
             styles[layerIndex] = newStyle;
             this.setTrait(stratumId, "styles", styles.join(","));
-            this.fetchPalettes();
+
+            if (this.noPaletteStyles.includes(newStyle)) {
+              this.setTrait(stratumId, "showPalettes", false);
+            } else {
+              this.setTrait(stratumId, "showPalettes", true);
+            }
           });
         },
         // There is no way of finding out default style if no style has been selected :(
@@ -822,12 +862,13 @@ class WebMapServiceCatalogItem
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;
     }
+    const paletteDimensions = this.showPalettes ? this.paletteDimensions : [];
 
     return filterOutUndefined([
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions,
-      ...this.paletteDimensions
+      ...paletteDimensions
     ]);
   }
 

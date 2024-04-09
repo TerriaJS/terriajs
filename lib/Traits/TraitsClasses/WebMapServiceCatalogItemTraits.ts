@@ -326,6 +326,15 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   colorScaleMaximum: number = 50;
 
+  // boolean trait showPalettes
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show Palettes",
+    description:
+      "showPalettes is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is false."
+  })
+  showPalettes: boolean = false;
+
   @primitiveTrait({
     type: "string",
     name: "Palette",
@@ -340,7 +349,21 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "Used to store the palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
   })
-  palettes: string[] = ["default"];
+  palettes?: string[] = [];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Default Palette",
+    description: "The name of the defaultPalette"
+  })
+  defaultPalette?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "No Palettes styles",
+    description: "Styles that do not require palettes"
+  })
+  noPaletteStyles: string[] = [];
 
   @primitiveTrait({
     type: "boolean",
