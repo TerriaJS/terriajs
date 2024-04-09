@@ -82,7 +82,7 @@ export default class Legend extends React.Component<{
     return null;
   }
 
-  renderImageLegend(legend: Model<LegendTraits>, i: number) {
+  renderImageLegend(legend: Model<LegendTraits>, _i: number) {
     const isImage = checkMimeType(legend);
     // const insertDirectly = !!legend.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 

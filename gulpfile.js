@@ -142,10 +142,9 @@ gulp.task("test", function (done) {
 });
 
 function runKarma(configFile, done) {
-  var karma = require("karma").Server;
-  var path = require("path");
-
-  karma.start(
+  const { Server } = require("karma");
+  const path = require("path");
+  const server = new Server(
     {
       configFile: path.join(__dirname, configFile)
     },
@@ -153,6 +152,7 @@ function runKarma(configFile, done) {
       return done(e);
     }
   );
+  server.start();
 }
 
 gulp.task("code-attribution", function userAttribution(done) {
