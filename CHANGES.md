@@ -4,6 +4,7 @@
 
 - Upgraded to TerriajS Cesium 1.115.0
 - Fix `PointStyleTraits.marker` bug where URLs were not being used.
+- Fix node v18 compatibility by forcing `webpack-terser-plugin` version resolution and fixing new type errors
 - [The next improvement]
 
 #### 8.7.0 - 2024-03-22
