@@ -588,7 +588,7 @@ describe("Terria", function () {
         });
 
         UrlToCatalogMemberMapping.register(
-          (s) => true,
+          (_s) => true,
           WebMapServiceCatalogItem.type,
           true
         );

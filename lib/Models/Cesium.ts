@@ -1562,7 +1562,7 @@ export default class Cesium extends GlobeOrMap {
         runInAction(() => {
           result.isLoading = false;
           result.features = allFeatures.reduce(
-            (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+            (resultFeaturesSoFar, imageryLayerFeatures, _i) => {
               if (!isDefined(imageryLayerFeatures)) {
                 return resultFeaturesSoFar;
               }

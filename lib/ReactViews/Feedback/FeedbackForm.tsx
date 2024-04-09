@@ -124,7 +124,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     }
   }
 
-  changeSendShareUrl(e: React.ChangeEvent<HTMLInputElement>) {
+  changeSendShareUrl(_e: React.ChangeEvent<HTMLInputElement>) {
     this.setState((prevState: IState) => ({
       sendShareURL: !prevState.sendShareURL
     }));

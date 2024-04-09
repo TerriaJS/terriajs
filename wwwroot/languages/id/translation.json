@@ -206,6 +206,15 @@
     },
     "exploreMapDataButton": {
       "content": "##Jelaja peta\n\nJelajah katalog data yang tersedia dan tambahkan ke peta di sini. Anda dapat menambahkan beberapa kumpulan data sekaligus, dan Anda akan melihatnya tercantum di bawah di meja kerja."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Bandingkan\n\nFitur yang hebat dari Terria adalah kemampuan untuk membandingkan dataset menggunakan tampilan layar terpisah. Untuk dataset dengan komponen deret waktu, seperti citra satelit, Anda dapat membandingkan tanggal mundur dan maju dalam waktu dengan mengeklik pemilih tanggal."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Melihat kontrol\n\nDi sini Anda dapat mengubah tampilan peta. Anda dapat mengubah orientasi tampilan dengan menggunakan cincin luar, dan Anda dapat memiringkan sudut kamera dengan menggunakan cincin dalam. Klik dua kali untuk mengatur ulang tampilan."
+    },
+    "menuBarStoryButton": {
+      "content": "## Cerita\n\nCerita memungkinkan Anda menambahkan informasi kontekstual ke kumpulan data untuk menghidupkan narasi. Buat cerita data Anda sendiri menggunakan Editor Cerita, dan bagikan melalui panel 'Bagikan' setelah selesai."
     }
   },
   "trainer": {
@@ -305,14 +314,20 @@
       "goleft": "Kiri",
       "goleftTitle": "Tampilkan di sisi kiri"
     },
-    "toggleSplitterToolTitle": "Bandingkan"
+    "toggleSplitterToolTitle": "Bandingkan",
+    "errorTitle": "Gagal membandingkan item katalog.",
+    "duplicateModelErrorMessage": "Terjadi error saat memisahkan item katalog`\"{{name}}\"`. Item katalog ini mungkin tidak mendukung fungsionalitas \"bandingkan\"",
+    "modelNotFoundErrorMessage": "ID Model `\"{{id}}\"` tidak ditemukan",
+    "toggleSplitterTool": "Aktifkan perbandingan berdampingan antara dua set data yang berbeda",
+    "toggleSplitterToolDisabled": "Harap nonaktifkan fitur perbandingan berdampingan lainnya untuk mengaktifkan perbandingan standar"
   },
   "location": {
-    "originError": "Browser Anda hanya dapat menyediakan lokasi Anda ketika menggunakan https. Anda mungkin dapat menggunakan {{secureUrl}} saja.",
+    "originError": "Browser Anda hanya dapat memberikan lokasi Anda saat menggunakan HTTPS. Anda mungkin dapat menggunakan {{secureUrl}} sebagai gantinya.",
     "location": "Lokasi",
     "myLocation": "Lokasi Saya",
     "browserCannotProvide": "Browser Anda tidak dapat menyediakan lokasi Anda.",
-    "errorGettingLocation": "Terjadi kesalahan mendapatkan lokasi"
+    "errorGettingLocation": "Terjadi kesalahan mendapatkan lokasi",
+    "centreMap": "Pusatkan peta di lokasi Anda saat ini"
   },
   "itemSearchTool": {
     "backBtnText": "Cari lagi",
@@ -774,6 +789,6 @@
     "chrome": "Google Chrome",
     "firefox": "Mozilla Firefox",
     "edge": "Microsoft Edge",
-    "safari": ""
+    "safari": "Apple Safari"
   }
 }

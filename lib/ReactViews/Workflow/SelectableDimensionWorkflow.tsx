@@ -56,7 +56,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
       </Panel>
       {/* Render Panel for each top-level selectable dimension */}
       {terria.selectableDimensionWorkflow.selectableDimensions.map(
-        (groupDim, i) => {
+        (groupDim, _i) => {
           if (groupDim.disable) return null;
 
           const childDims = filterSelectableDimensions()(
