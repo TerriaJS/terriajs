@@ -226,6 +226,9 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
+    if (this.palettes.length === 0) {
+      this.fetchPalettes();
+    }
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -606,10 +609,6 @@ class WebMapServiceCatalogItem
             this.getFeatureInfoFormat.format
           )
         ];
-      }
-
-      if (this.palettes.length === 0) {
-        this.fetchPalettes();
       }
 
       if (
