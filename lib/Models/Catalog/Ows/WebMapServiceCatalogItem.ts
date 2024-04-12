@@ -629,7 +629,7 @@ class WebMapServiceCatalogItem
   fetchPalettes(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       if (!this.isThredds) {
-        reject("Not a THREDDS server");
+        resolve([]);
       }
 
       if (this.palettes.length > 0) {
@@ -777,17 +777,16 @@ class WebMapServiceCatalogItem
             );
             styles[layerIndex] = newStyle ? newStyle : "";
 
-            if (this.noPaletteStyles.includes(newStyle)) {
-              this.setTrait(stratumId, "showPalettes", false);
-            } else {
-              this.setTrait(stratumId, "showPalettes", true);
-            }
-
-            if (this.palette) {
+            if (this.isNcWMS && this.palette) {
               const currentStyle = newStyle.split("/")[0];
               const currentPalette = this.palette;
               const newStyles = currentStyle + "/" + currentPalette;
               this.setTrait(stratumId, "styles", newStyles);
+              if (this.noPaletteStyles.includes(newStyle)) {
+                this.setTrait(stratumId, "showPalettes", false);
+              } else {
+                this.setTrait(stratumId, "showPalettes", true);
+              }
             } else {
               this.setTrait(stratumId, "styles", styles.join(","));
             }
