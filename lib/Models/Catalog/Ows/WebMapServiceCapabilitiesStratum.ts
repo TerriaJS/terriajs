@@ -96,7 +96,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       | Complete<{
           title?: string | undefined;
           url?: string | undefined;
-          paletteUrl?: string | undefined;
           imageScaling?: number | undefined;
           urlMimeType?: string | undefined;
           items?:
@@ -135,8 +134,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         layerName: this.catalogItem.layersArray[0]
       })
       .toString();
-
-    console.log(url);
 
     if (url) {
       const paletteUrl = proxyCatalogItemUrl(this.catalogItem, url);
@@ -239,7 +236,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       )?.styles;
 
       let layerStyle: Model<WebMapServiceAvailableStyleTraits> | undefined;
-      let paletteUrl: string | undefined;
 
       if (isDefined(style)) {
         // Attempt to find layer style based on AvailableStyleTraits
@@ -286,8 +282,12 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
         // From OGC — about style property for GetLegendGraphic request:
         // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+        console.log("STYLE", style);
         if (style) {
           legendUri.setQuery("style", style);
+        }
+        if (this.isNcWMS && this.palette) {
+          legendUri.setQuery("palette", this.palette);
         }
         legendUrlMimeType = "image/png";
       }
@@ -331,8 +331,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
             urlMimeType: legendUrlMimeType,
-            imageScaling: legendScaling,
-            paletteUrl: paletteUrl
+            imageScaling: legendScaling
           })
         );
       }

@@ -136,14 +136,6 @@ export default class LegendTraits extends ModelTraits {
   url?: string;
 
   @primitiveTrait({
-    type: "string",
-    name: "Palettes URL",
-    description:
-      "The URL of the endpoint which returns the list of Thredds palette"
-  })
-  paletteUrl?: string;
-
-  @primitiveTrait({
     type: "number",
     name: "Scaling",
     description:

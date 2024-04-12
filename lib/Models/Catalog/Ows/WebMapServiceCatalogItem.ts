@@ -385,6 +385,7 @@ class WebMapServiceCatalogItem
     if (time) {
       uri.addQuery("time", time);
     }
+
     return uri.toString();
   }
 
@@ -564,6 +565,7 @@ class WebMapServiceCatalogItem
       }
 
       // Styles parameter is mandatory (for GetMap and GetFeatureInfo requests), but can be empty string to use default style
+      console.log("Styles: ", this.styles ?? "");
       parameters.styles = this.styles ?? "";
       getFeatureInfoParameters.styles = this.styles ?? "";
 
@@ -684,7 +686,7 @@ class WebMapServiceCatalogItem
 
   @computed
   get paletteDimensions(): SelectableDimensionEnum[] {
-    if (!this.isThredds) {
+    if (!this.isNcWMS || !this.showPalettes) {
       return [];
     }
 
@@ -710,6 +712,7 @@ class WebMapServiceCatalogItem
           if (this.stylesArray[0]) {
             runInAction(() => {
               this.setTrait(stratumId, "palette", newPalette);
+              console.log(newPalette);
               const currentStyle = this.stylesArray[0];
               const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
               this.setTrait(stratumId, "styles", newStyles);
@@ -755,6 +758,7 @@ class WebMapServiceCatalogItem
       // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
       // The `styles` parameter is CSV, a style for each layer
       const selectedId = this.styles?.split(",")?.[layerIndex];
+      console.log(selectedId);
 
       return {
         name,
@@ -766,17 +770,26 @@ class WebMapServiceCatalogItem
           newStyle: string | undefined
         ) => {
           if (!newStyle) return;
+
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
               (style) => style.selectedId || ""
             );
-            styles[layerIndex] = newStyle;
-            this.setTrait(stratumId, "styles", styles.join(","));
+            styles[layerIndex] = newStyle ? newStyle : "";
 
             if (this.noPaletteStyles.includes(newStyle)) {
               this.setTrait(stratumId, "showPalettes", false);
             } else {
               this.setTrait(stratumId, "showPalettes", true);
+            }
+
+            if (this.palette) {
+              const currentStyle = newStyle.split("/")[0];
+              const currentPalette = this.palette;
+              const newStyles = currentStyle + "/" + currentPalette;
+              this.setTrait(stratumId, "styles", newStyles);
+            } else {
+              this.setTrait(stratumId, "styles", styles.join(","));
             }
           });
         },
@@ -861,6 +874,7 @@ class WebMapServiceCatalogItem
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;
     }
+
     const paletteDimensions = this.showPalettes ? this.paletteDimensions : [];
 
     return filterOutUndefined([
