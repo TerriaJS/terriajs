@@ -707,12 +707,14 @@ class WebMapServiceCatalogItem
           newPalette: string | undefined
         ) => {
           //if (this.stylesArray[0]) {
-            runInAction(() => {
-              this.setTrait(stratumId, "palette", newPalette);
-              const currentStyle = this.stylesArray[0] ? this.stylesArray[0] : "default";
-              const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
-              this.setTrait(stratumId, "styles", newStyles);
-            });
+          runInAction(() => {
+            this.setTrait(stratumId, "palette", newPalette);
+            const currentStyle = this.stylesArray[0]
+              ? this.stylesArray[0]
+              : "default";
+            const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
+            this.setTrait(stratumId, "styles", newStyles);
+          });
           //}
         }
       }
