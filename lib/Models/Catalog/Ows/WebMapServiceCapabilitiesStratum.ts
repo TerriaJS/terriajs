@@ -282,7 +282,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
         // From OGC — about style property for GetLegendGraphic request:
         // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
-        console.log("STYLE", style);
         if (style) {
           legendUri.setQuery("style", style);
         }

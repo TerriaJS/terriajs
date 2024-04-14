@@ -524,8 +524,6 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
-      console.log(`Creating new ImageryProvider for time ${time}`);
-
       // Set dimensionParameters
       const dimensionParameters = formatDimensionsForOws(this.dimensions);
       if (time !== undefined) {
@@ -565,7 +563,6 @@ class WebMapServiceCatalogItem
       }
 
       // Styles parameter is mandatory (for GetMap and GetFeatureInfo requests), but can be empty string to use default style
-      console.log("Styles: ", this.styles ?? "");
       parameters.styles = this.styles ?? "";
       getFeatureInfoParameters.styles = this.styles ?? "";
 
@@ -709,15 +706,14 @@ class WebMapServiceCatalogItem
           stratumId: string,
           newPalette: string | undefined
         ) => {
-          if (this.stylesArray[0]) {
+          //if (this.stylesArray[0]) {
             runInAction(() => {
               this.setTrait(stratumId, "palette", newPalette);
-              console.log(newPalette);
-              const currentStyle = this.stylesArray[0];
+              const currentStyle = this.stylesArray[0] ? this.stylesArray[0] : "default";
               const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
               this.setTrait(stratumId, "styles", newStyles);
             });
-          }
+          //}
         }
       }
     ];
@@ -758,7 +754,6 @@ class WebMapServiceCatalogItem
       // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
       // The `styles` parameter is CSV, a style for each layer
       const selectedId = this.styles?.split(",")?.[layerIndex];
-      console.log(selectedId);
 
       return {
         name,
