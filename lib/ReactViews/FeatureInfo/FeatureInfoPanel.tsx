@@ -28,12 +28,11 @@ import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
+import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-
-const DragWrapper = require("../DragWrapper");
 
 interface Props extends WithTranslation {
   viewState: ViewState;
