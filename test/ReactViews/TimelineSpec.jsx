@@ -1,7 +1,5 @@
 "use strict";
-
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import React from "react";
 import { getMountedInstance } from "./MoreShallowTools";
 
 const Terria = require("../../lib/Models/Terria");
