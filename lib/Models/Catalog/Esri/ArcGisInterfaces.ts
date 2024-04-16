@@ -46,6 +46,7 @@ export interface MapServer {
    * So instead we create a single item in the group called "All layers" (models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName)
    */
   singleFusedMapCache?: boolean;
+  tileInfo?: unknown;
   //comma separated list of supported capabilities - e.g. "Map,Query,Data,TilesOnly,Tilemap"
   capabilities?: string;
   mapName?: string;

@@ -2,6 +2,7 @@ import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
@@ -25,6 +26,17 @@ export const SUPPORTED_CRS_3857 = [
   "urn:x-ogc:def:crs:EPSG:900913"
 ];
 
+@traitClass({
+  description: `Creates a single item in the catalog from url that points to a WFS service.
+  <strong>Note:</strong> <i>Must specify property <b>typeNames</b>.</i>`,
+  example: {
+    type: "wfs",
+    name: "wfs example",
+    url: "https://warehouse.ausseabed.gov.au/geoserver/ows",
+    typeNames: "ausseabed:AHO_Reference_Surface__Broome__2023_0_5m_L0_Coverage",
+    id: "some unique id for wfs example"
+  }
+})
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
   GetCapabilitiesTraits

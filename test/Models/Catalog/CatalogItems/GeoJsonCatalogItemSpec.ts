@@ -252,7 +252,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       it("works by blob", async function () {
         const blob = await loadJson("test/GeoJSON/cemeteries.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
+        geojson.setTrait(CommonStrata.user, "geoJsonData", blob as JsonObject);
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -308,7 +308,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       it("works by blob", async function () {
         const blob = await loadJson("test/GeoJSON/gme.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
+        geojson.setTrait(CommonStrata.user, "geoJsonData", blob as JsonObject);
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(

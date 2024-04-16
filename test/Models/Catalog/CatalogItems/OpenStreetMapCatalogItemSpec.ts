@@ -136,7 +136,7 @@ describe("OpenStreetMapCatalogItem", function () {
               tileHeight: imageryProvider.tileHeight,
               minimumLevel: imageryProvider.minimumLevel,
               maximumLevel: imageryProvider.maximumLevel,
-              subdomains: (<any>imageryProvider)._subdomains
+              subdomains: (imageryProvider as any)._subdomains
             }).toEqual({
               url: "https://{s}.example.com/ooo/{z}/{x}/{y}.png",
               attribution: "foo bar baz",

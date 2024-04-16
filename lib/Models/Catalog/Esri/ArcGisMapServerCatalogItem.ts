@@ -102,15 +102,8 @@ class MapServerStratum extends LoadableStratum(
       token = await getToken(item.terria, item.tokenUrl, item.url);
     }
 
-    let layerId;
-    const lastSegment = item.uri.segment(-1);
-    if (lastSegment && lastSegment.match(/\d+/)) {
-      // URL is a single REST layer, like .../arcgis/rest/services/Society/Society_SCRC/MapServer/16
-      layerId = lastSegment;
-    }
-
     let serviceUri = getBaseURI(item);
-    let layersUri = getBaseURI(item).segment(layerId || "layers"); // either 'layers' or a number
+    let layersUri = getBaseURI(item).segment("layers");
     let legendUri = getBaseURI(item).segment("legend");
 
     if (isDefined(token)) {
@@ -153,9 +146,6 @@ class MapServerStratum extends LoadableStratum(
 
       if (isDefined(layersMetadataResponse?.layers)) {
         layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse?.id)) {
-        layers = [layersMetadataResponse];
       }
 
       if (!isDefined(layers) || layers.length === 0) {
@@ -326,6 +316,25 @@ class MapServerStratum extends LoadableStratum(
     items = uniqWith(items, (a, b) => a.imageUrl === b.imageUrl);
 
     return [createStratumInstance(LegendTraits, { items })];
+  }
+
+  /** Only used "pre-cached" tiles if we aren't requesting any specific layers
+   * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
+   */
+  @computed get usePreCachedTilesIfAvailable() {
+    // Checking tileInfo in MapServer metadata should be handled by cesium - but currently there is a bug in ArcGisMapServerImageryProvider
+    if (!this.mapServer.tileInfo) return false;
+
+    if (this._item.parameters) return false;
+
+    return (
+      this._item.layersArray.length === 0 ||
+      !this._item.layers ||
+      setsAreEqual(
+        this._item.layersArray.map((l) => l.id),
+        this.allLayers.map((l) => l.id)
+      )
+    );
   }
 }
 
@@ -539,9 +548,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     (
       timeParams: TimeParams | undefined
     ): IPromiseBasedObservable<ArcGisMapServerImageryProvider | undefined> => {
-      const stratum = <MapServerStratum>(
-        this.strata.get(MapServerStratum.stratumName)
-      );
+      const stratum = this.strata.get(
+        MapServerStratum.stratumName
+      ) as MapServerStratum;
 
       if (!isDefined(this.url) || !isDefined(stratum)) {
         return fromPromise(Promise.resolve(undefined));
@@ -582,16 +591,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           tileWidth: this.tileWidth,
           parameters: params,
           enablePickFeatures: this.allowFeaturePicking,
-          /** Only used "pre-cached" tiles if we aren't requesting any specific layers
-           * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
-           */
-          usePreCachedTilesIfAvailable:
-            this.layersArray.length === 0 ||
-            !this.layers ||
-            setsAreEqual(
-              this.layersArray.map((l) => l.id),
-              stratum.allLayers.map((l) => l.id)
-            ),
+          usePreCachedTilesIfAvailable: this.usePreCachedTilesIfAvailable,
           mapServerData: stratum.mapServer,
           token: stratum.token,
           credit: this.attribution
@@ -623,9 +623,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   /** Return array of MapServer layers from `layers` trait (which is CSV of layer IDs) - this will only return **valid** MapServer layers.*/
   @computed get layersArray() {
-    const stratum = <MapServerStratum | undefined>(
-      this.strata.get(MapServerStratum.stratumName)
-    );
+    const stratum = this.strata.get(MapServerStratum.stratumName) as
+      | MapServerStratum
+      | undefined;
     if (!stratum) return [];
 
     return filterOutUndefined(findLayers(stratum.allLayers, this.layers));

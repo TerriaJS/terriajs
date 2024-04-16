@@ -320,7 +320,7 @@ class FeatureServerStratum extends LoadableStratum(
     const rendererType = renderer.type;
 
     if (rendererType === "simple") {
-      const simpleRenderer = <SimpleRenderer>renderer;
+      const simpleRenderer = renderer as SimpleRenderer;
       const symbol = simpleRenderer.symbol;
 
       if (!symbol) return [];
@@ -343,7 +343,7 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
     } else if (rendererType === "uniqueValue") {
-      const uniqueValueRenderer = <UniqueValueRenderer>renderer;
+      const uniqueValueRenderer = renderer as UniqueValueRenderer;
 
       const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map((v) => {
         return esriSymbolToTableStyle(v.symbol, v.label);
@@ -407,7 +407,7 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
     } else {
-      const classBreaksRenderer = <ClassBreaksRenderer>renderer;
+      const classBreaksRenderer = renderer as ClassBreaksRenderer;
 
       const symbolStyles = classBreaksRenderer.classBreakInfos.map((c) =>
         esriSymbolToTableStyle(c.symbol, c.label)
@@ -565,9 +565,9 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   }
 
   @computed get featureServerData(): FeatureServer | undefined {
-    const stratum = <FeatureServerStratum>(
-      this.strata.get(FeatureServerStratum.stratumName)
-    );
+    const stratum = this.strata.get(
+      FeatureServerStratum.stratumName
+    ) as FeatureServerStratum;
     return isDefined(stratum) ? stratum.featureServerData : undefined;
   }
 

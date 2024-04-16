@@ -36,7 +36,7 @@ export default class IonImageryCatalogItem extends MappableMixin(
     })
       .then((imageryProvider) => {
         if (attribution) {
-          (<any>imageryProvider)._credit = attribution;
+          (imageryProvider as any)._credit = attribution;
         }
         runInAction(() => {
           this._imageryProvider = imageryProvider;

@@ -444,7 +444,7 @@ const LiteralDataConverter = {
   },
   parameterToInput: function (parameter: FunctionParameter) {
     return {
-      inputValue: <string | undefined>parameter.value,
+      inputValue: parameter.value as string | undefined,
       inputType: "LiteralData"
     };
   }
@@ -570,7 +570,7 @@ const RectangleConverter = {
     });
   },
   parameterToInput: function (functionParameter: FunctionParameter) {
-    const parameter = <RectangleParameter>functionParameter;
+    const parameter = functionParameter as RectangleParameter;
     const value = parameter.value;
 
     if (!isDefined(value)) {
@@ -659,8 +659,8 @@ const GeoJsonGeometryConverter = {
     if (!isDefined(parameter.value) || parameter.value === null) {
       return;
     }
-    return (<GeoJsonParameter>parameter).getProcessedValue(
-      (<GeoJsonParameter>parameter).value!
+    return (parameter as GeoJsonParameter).getProcessedValue(
+      (parameter as GeoJsonParameter).value!
     );
   }
 };

@@ -51,7 +51,7 @@ export default class TerriaFeature extends Entity {
 
     for (let i = 0; i < customProperties.length; i++) {
       if (entity.propertyNames.indexOf(customProperties[i]) === -1) {
-        (<any>feature)[customProperties[i]] = (<any>entity)[
+        (feature as any)[customProperties[i]] = (entity as any)[
           customProperties[i]
         ]; // Assume no merging or cloning needed.
       }

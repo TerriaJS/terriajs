@@ -71,6 +71,6 @@ export default class Catalog {
     const group = this.group.memberModels.find(
       (m) => m.uniqueId === USER_ADDED_CATEGORY_ID
     );
-    return <CatalogGroup>group;
+    return group as CatalogGroup;
   }
 }

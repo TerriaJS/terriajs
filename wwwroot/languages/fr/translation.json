@@ -1448,7 +1448,9 @@
     "noPreviewAvailable": "AUCUN APERÇU DISPONIBLE",
     "preview": "{{appName}} aperçu",
     "loading": "APERÇU DU CHARGEMENT...",
-    "selectToPreview": "<0>Sélectionner un ensemble de données pour voir un aperçu </0><1>- OU -</1><2>Aller à la carte</2>",
+    "selectToPreviewDataset": "Sélectionner un ensemble de données pour voir un aperçu",
+    "selectToPreviewSeparator": "OU",
+    "goToTheMap": "Aller à la carte",
     "doesNotContainGeospatialData": "Ce fichier ne contient pas de données géospatiales."
   },
   "mobile": {

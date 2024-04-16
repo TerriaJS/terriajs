@@ -22,7 +22,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisCatalogGroup", function () {
   const arcgisServerUrl = "http://example.com/arcgis/rest/services/";
@@ -111,14 +111,14 @@ describe("ArcGisCatalogGroup", function () {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(8);
 
-      const member0 = <ArcGisCatalogGroup>group.memberModels[0];
-      const member1 = <ArcGisCatalogGroup>group.memberModels[1];
-      const member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
-      const member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
-      const member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
-      const member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
-      const member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
-      const member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
+      const member0 = group.memberModels[0] as ArcGisCatalogGroup;
+      const member1 = group.memberModels[1] as ArcGisCatalogGroup;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogGroup;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
+      const member4 = group.memberModels[4] as ArcGisFeatureServerCatalogGroup;
+      const member5 = group.memberModels[5] as ArcGisMapServerCatalogGroup;
+      const member6 = group.memberModels[6] as ArcGisFeatureServerCatalogGroup;
+      const member7 = group.memberModels[7] as ArcGisMapServerCatalogGroup;
 
       expect(member0 instanceof ArcGisCatalogGroup).toBeTruthy();
       expect(member0.name).toBe("AGP");
@@ -206,9 +206,9 @@ describe("ArcGisCatalogGroup", function () {
       await group.loadMetadata();
     });
     it("proper init", function () {
-      const arcgisServerStratum = <MapServerStratum | undefined>(
-        group.strata.get(MapServerStratum.stratumName)
-      );
+      const arcgisServerStratum = group.strata.get(
+        MapServerStratum.stratumName
+      ) as MapServerStratum | undefined;
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof MapServerStratum).toBeTruthy();
     });
@@ -222,9 +222,9 @@ describe("ArcGisCatalogGroup", function () {
       await group.loadMetadata();
     });
     it("proper init", function () {
-      const arcgisServerStratum = <FeatureServerStratum | undefined>(
-        group.strata.get(FeatureServerStratum.stratumName)
-      );
+      const arcgisServerStratum = group.strata.get(
+        FeatureServerStratum.stratumName
+      ) as FeatureServerStratum | undefined;
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof FeatureServerStratum).toBeTruthy();
     });
