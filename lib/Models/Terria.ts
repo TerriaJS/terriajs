@@ -428,8 +428,10 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string =
-    typeof document !== "undefined" ? document.baseURI : "/";
+  readonly appBaseHref: string = ensureSuffix(
+    typeof document !== "undefined" ? document.baseURI : "/",
+    "/"
+  );
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
@@ -691,18 +693,27 @@ export default class Terria {
   constructor(options: TerriaOptions = {}) {
     makeObservable(this);
     if (options.appBaseHref) {
-      this.appBaseHref = new URL(
-        options.appBaseHref,
-        typeof document !== "undefined" ? document.baseURI : "/"
-      ).toString();
+      this.appBaseHref = ensureSuffix(
+        typeof document !== "undefined"
+          ? new URI(options.appBaseHref).absoluteTo(document.baseURI).toString()
+          : options.appBaseHref,
+        "/"
+      );
     }
 
     if (options.baseUrl) {
       this.baseUrl = ensureSuffix(options.baseUrl, "/");
     }
 
+    // Try to construct an absolute URL to send to Cesium, as otherwise it resolves relative
+    // to document.location instead of the correct document.baseURI
+    // This URL can still be relative if Terria is running in an environment without `document`
+    // (e.g. Node.js) and no absolute URL is passed as an option for `appBaseHref`. In this case,
+    // send a relative URL to cesium
+    const cesiumBaseUrlRelative =
+      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`;
     this.cesiumBaseUrl = ensureSuffix(
-      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`,
+      new URI(cesiumBaseUrlRelative).absoluteTo(this.appBaseHref).toString(),
       "/"
     );
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
@@ -1248,12 +1259,6 @@ export default class Terria {
         this.userProperties,
         new URI(newUrl).filename("").query("").hash("")
       );
-
-      if (!this.appBaseHref.endsWith("/")) {
-        console.warn(
-          `Terria expected appBaseHref to end with a "/" but appBaseHref is "${this.appBaseHref}". Routes may not work as intended. To fix this, try setting the "--baseHref" parameter to a URL with a trailing slash while building your map, or constructing the Terria object with an appropriate appBaseHref (with trailing slash).`
-        );
-      }
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {

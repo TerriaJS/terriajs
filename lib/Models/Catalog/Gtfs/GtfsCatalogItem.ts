@@ -377,7 +377,7 @@ export default class GtfsCatalogItem extends UrlMixin(
           }
         });
       })
-      .catch((e: Error) => {
+      .catch((_e: Error) => {
         throw new TerriaError({
           title: `Could not load ${this.nameInCatalog}.`,
           sender: this,

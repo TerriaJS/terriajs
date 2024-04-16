@@ -178,7 +178,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         column.type !== TableColumnType.enum
     );
 
-    const columnStyles = this.catalogItem.tableColumns.map((column, i) =>
+    const columnStyles = this.catalogItem.tableColumns.map((column, _i) =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {

@@ -76,7 +76,8 @@ describe("Terria", function () {
         baseUrl: "./",
         cesiumBaseUrl: "some/path/to/cesium"
       });
-      expect(terria.cesiumBaseUrl).toBe("some/path/to/cesium/");
+      const path = new URL(terria.cesiumBaseUrl).pathname;
+      expect(path).toBe("/some/path/to/cesium/");
     });
 
     it("should default to a path relative to `baseUrl`", function () {
@@ -84,9 +85,8 @@ describe("Terria", function () {
         appBaseHref: "/",
         baseUrl: "some/path/to/terria"
       });
-      expect(terria.cesiumBaseUrl).toBe(
-        "some/path/to/terria/build/Cesium/build/"
-      );
+      const path = new URL(terria.cesiumBaseUrl).pathname;
+      expect(path).toBe("/some/path/to/terria/build/Cesium/build/");
     });
 
     it("should update the baseUrl setting in the cesium module", function () {
@@ -588,7 +588,7 @@ describe("Terria", function () {
         });
 
         UrlToCatalogMemberMapping.register(
-          (s) => true,
+          (_s) => true,
           WebMapServiceCatalogItem.type,
           true
         );

@@ -322,6 +322,9 @@ class MapServerStratum extends LoadableStratum(
    * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
    */
   @computed get usePreCachedTilesIfAvailable() {
+    // Checking tileInfo in MapServer metadata should be handled by cesium - but currently there is a bug in ArcGisMapServerImageryProvider
+    if (!this.mapServer.tileInfo) return false;
+
     if (this._item.parameters) return false;
 
     return (

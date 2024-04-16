@@ -366,7 +366,7 @@
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
-    "searchInDataCatalog": "データカタログで <1>「{{locationSearchText}}」</1> を検索",
+    "searchInDataCatalog": "データカタログで「{{locationSearchText}}」を検索",
     "data": "データ",
     "done": "終了",
     "resultsLabel": "検索結果"
@@ -628,7 +628,7 @@
       "auto": "ファイルタイプ",
       "shp": "Shapefile",
       "gltf": "glTF",
-      "carto": "Carto V1",
+      "carto": "CartoV1",
       "json": "Terriaカタログ",
       "gpx": "GPX",
       "czml": "CZML",
@@ -716,7 +716,8 @@
     "searchNoPlaceNames": "検索条件に合致する正式名称を持つ場所が見つかりませんでした。",
     "searchLocations": "場所",
     "searchAddresses": "住所",
-    "searchErrorOccurred": "検索中にエラーが発生しました。インターネット接続を確認するか後でやり直してください。"
+    "searchErrorOccurred": "検索中にエラーが発生しました。インターネット接続を確認するか後でやり直してください。",
+    "searchMinCharacters_0": "最低限 {{count}} 文字を入力してください"
   },
   "chart": {
     "download": "ダウンロード",
@@ -2221,5 +2222,14 @@
     "colorAdd": "追加",
     "colorRemove": "削除",
     "invalid": "無効"
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "欠損属性",
+      "idForMatchingErrorMessage": "モデルオブジェクトは `id`, `localId`, または `name` 属性を持つ必要があります。",
+      "unsupportedTypeTitle": "不明タイプ",
+      "unsupportedTypeMessage": "不明モデルタイプ {{type}}は作成できません。"
+    },
+    "noSearchProviders": "検索プロバイダが設定されていません"
   }
 }
