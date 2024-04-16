@@ -1,17 +1,14 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { ReactNode, useEffect, useRef } from "react";
 import interact from "interactjs";
 
-class DragWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.resizeListener = null;
-  }
+export default function DragWrapper({ children }: { children: ReactNode }) {
+  const ref = useRef(null);
+  const resizeListener = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    const node = ref.current;
+    if (node === null) return;
 
-  componentDidMount() {
-    const node = this.node;
-
-    const dragMoveListener = (event) => {
+    const dragMoveListener: interact.Listener = (event) => {
       const target = event.target;
       // keep the dragged position in the data-x/data-y attributes
       const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
@@ -39,28 +36,20 @@ class DragWrapper extends React.Component {
       }
     });
 
-    this.resizeListener = () => {
+    resizeListener.current = () => {
       const draggable = interact(node);
       const dragEvent = { name: "drag", axis: "xy" };
-      draggable.reflow(dragEvent);
+      (draggable as any).reflow(dragEvent);
     };
-    window.addEventListener("resize", this.resizeListener, false);
-  }
+    window.addEventListener("resize", resizeListener.current, false);
 
-  componentWillUnmount() {
-    if (interact.isSet(this.node)) {
-      interact(this.node).unset();
-    }
-    window.removeEventListener("resize", this.resizeListener, false);
-  }
-
-  render() {
-    return <div ref={(node) => (this.node = node)}>{this.props.children}</div>;
-  }
+    return () => {
+      if (ref.current && interact.isSet(ref.current)) {
+        interact(ref.current).unset();
+      }
+      resizeListener.current &&
+        window.removeEventListener("resize", resizeListener.current, false);
+    };
+  }, [ref.current]);
+  return <div ref={ref}>{children}</div>;
 }
-
-DragWrapper.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-module.exports = DragWrapper;

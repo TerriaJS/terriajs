@@ -1,6 +1,7 @@
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";

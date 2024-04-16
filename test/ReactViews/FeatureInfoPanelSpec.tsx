@@ -1,25 +1,20 @@
 "use strict";
 
-// import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import React from "react";
-import { findWithType } from "react-shallow-testutils";
-import { getShallowRenderedOutput } from "./MoreShallowTools";
 import { runInAction } from "mobx";
-
-// import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-
-import {
-  FeatureInfoPanel,
+import { act } from "react-dom/test-utils";
+import { ReactTestRenderer } from "react-test-renderer";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
+import Terria from "../../lib/Models/Terria";
+import ViewState from "../../lib/ReactViewModels/ViewState";
+import FeatureInfoPanel, {
   determineCatalogItem
 } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
 import Loader from "../../lib/ReactViews/Loader";
-import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
-import Terria from "../../lib/Models/Terria";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import TerriaFeature from "../../lib/Models/Feature/Feature";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { createWithContexts } from "./withContext";
 
 // var separator = ',';
 // if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
@@ -43,9 +38,32 @@ describe("FeatureInfoPanel", function () {
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function () {
     viewState.featureInfoPanelIsVisible = true;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(result.props.children.props.className).toContain("is-visible");
+    let testRenderer: ReactTestRenderer;
+    act(() => {
+      testRenderer = createWithContexts(viewState, <FeatureInfoPanel />);
+    });
+    expect(() => {
+      testRenderer!.root.find((node) =>
+        Boolean(
+          node.type === "div" && node.props.className?.includes("is-visible")
+        )
+      );
+    }).not.toThrowError();
+  });
+
+  it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
+    viewState.featureInfoPanelIsVisible = false;
+    let testRenderer: ReactTestRenderer;
+    act(() => {
+      testRenderer = createWithContexts(viewState, <FeatureInfoPanel />);
+    });
+    expect(() => {
+      testRenderer!.root.find((node) =>
+        Boolean(
+          node.type === "div" && node.props.className?.includes("is-visible")
+        )
+      );
+    }).toThrowError();
   });
 
   it("displays loader while asychronously loading feature information", function () {
@@ -54,40 +72,14 @@ describe("FeatureInfoPanel", function () {
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(findWithType(result, Loader)).toBeDefined();
+    let testRenderer: ReactTestRenderer;
+    act(() => {
+      testRenderer = createWithContexts(viewState, <FeatureInfoPanel />);
+    });
+    expect(() => {
+      testRenderer!.root.findByType(Loader);
+    }).not.toThrow();
   });
-
-  it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
-    viewState.featureInfoPanelIsVisible = false;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(result.props.children.props.className).not.toContain("is-visible");
-  });
-
-  // This test won't work for two reasons:
-  //   - the behaviour it tests occurs in ComponentDidMount
-  //   - FeatureInfoPanel doesn't have FeatureInfoSections - there is a FeatureInfoCatalogItem layer in between.
-  //
-  // it('shows an open section even if none have any info', function() {
-  //     const feature1 = new Entity({
-  //         name: 'Foo'
-  //     });
-  //     const feature2 = new Entity({
-  //         name: 'Bar'
-  //     });
-  //     var pickedFeatures = new PickedFeatures();
-  //     pickedFeatures.allFeaturesAvailablePromise = runLater(function() {
-  //         pickedFeatures.features = [feature1, feature2];
-  //     });
-  //     terria.pickedFeatures = pickedFeatures;
-  //     const panel = <FeatureInfoPanel viewState={viewState}/>;
-  //     const result = getShallowRenderedOutput(panel);
-  //     const sections = findAllWithType(result, FeatureInfoSection);
-  //     expect(sections.length).toEqual(2);
-  //     expect(sections[0].props.isOpen).toBe(true);
-  // });
 
   describe("determineCatalogItem", function () {
     let simple1: SimpleCatalogItem,

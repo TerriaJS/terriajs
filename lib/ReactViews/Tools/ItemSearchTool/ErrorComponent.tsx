@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 
 import Text from "../../../Styled/Text";
 
-const ErrorComponent: React.FC = ({ children }) => {
+const ErrorComponent = ({ children }: { children: React.ReactNode }) => {
   return (
     <Text large textLight>
       {children}

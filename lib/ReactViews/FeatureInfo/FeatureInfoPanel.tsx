@@ -2,8 +2,8 @@ import classNames from "classnames";
 import { TFunction } from "i18next";
 import { action, reaction, runInAction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import React from "react";
-import { withTranslation } from "react-i18next";
+import { Component } from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -28,21 +28,19 @@ import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
+import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 
-const DragWrapper = require("../DragWrapper");
-
-interface Props {
+interface Props extends WithTranslation {
   viewState: ViewState;
   printView?: boolean;
-  t: TFunction;
 }
 
 @observer
-class FeatureInfoPanel extends React.Component<Props> {
+class FeatureInfoPanel extends Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);

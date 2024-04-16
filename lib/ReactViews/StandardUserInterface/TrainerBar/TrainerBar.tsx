@@ -1,6 +1,6 @@
 import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { Translation, WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
@@ -74,7 +74,7 @@ const renderStep = (
   options: {
     renderDescription: boolean;
     comfortable: boolean;
-    footerComponent?: () => void;
+    footerComponent?: () => React.ReactNode;
   } = {
     renderDescription: true,
     comfortable: false,
@@ -128,9 +128,8 @@ const renderOrderedStepList = function (
   ));
 };
 
-interface StepAccordionProps {
+interface StepAccordionProps extends WithTranslation {
   selectedTrainerSteps: StepItem[];
-  t: TFunction;
   theme: DefaultTheme;
   selectedTrainer: TrainerItem;
   isShowingAllSteps: boolean;
@@ -300,7 +299,6 @@ const StepAccordion = withTranslation()(
 );
 
 interface TrainerBarProps extends WithTranslation, WithViewState {
-  t: TFunction;
   theme: DefaultTheme;
 }
 

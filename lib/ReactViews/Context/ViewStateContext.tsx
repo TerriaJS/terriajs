@@ -1,13 +1,19 @@
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
+import * as React from "react";
 import ViewState from "../../ReactViewModels/ViewState";
 import TerriaError from "../../Core/TerriaError";
 
 export const ViewStateContext = createContext<ViewState | undefined>(undefined);
 
-export const ViewStateProvider: React.FC<{ viewState: ViewState }> = ({
+interface ViewStateProviderProps {
+  viewState: ViewState;
+  children: React.ReactNode;
+}
+
+export const ViewStateProvider = ({
   viewState,
   children
-}) => (
+}: ViewStateProviderProps) => (
   <ViewStateContext.Provider value={viewState}>
     {children}
   </ViewStateContext.Provider>

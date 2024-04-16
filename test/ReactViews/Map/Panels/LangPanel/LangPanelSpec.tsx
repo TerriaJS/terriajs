@@ -1,5 +1,4 @@
 import { create } from "react-test-renderer";
-import React from "react";
 import { act } from "react-dom/test-utils";
 
 import Terria from "../../../../../lib/Models/Terria";
@@ -49,6 +48,6 @@ describe("LangPanel", function () {
       testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
     });
 
-    expect(testRenderer.toJSON()).toBeDefined();
+    expect(testRenderer.toJSON()).not.toBeNull();
   });
 });

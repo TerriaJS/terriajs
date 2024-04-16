@@ -1,4 +1,4 @@
-import React, { ErrorInfo } from "react";
+import { Component, ErrorInfo, ReactNode } from "react";
 import TerriaError, { TerriaErrorOverrides } from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -6,12 +6,13 @@ type PropsType = {
   viewState: ViewState;
   // Pass in options to customize the title and other presentation aspects of the error
   terriaErrorOptions?: TerriaErrorOverrides;
+  children: ReactNode;
 };
 
 /**
  * An error boundary that raises the error to the user.
  */
-export default class RaiseToUserErrorBoundary extends React.Component<PropsType> {
+export default class RaiseToUserErrorBoundary extends Component<PropsType> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: any) {

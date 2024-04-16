@@ -1,12 +1,20 @@
 "use strict";
-
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import React from "react";
+import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./notification-window.scss";
+
+const OuterDiv = styled.div`
+  background: ${(p) => (p.isStory ? p.theme.colorPrimary : p.theme.dark)};
+
+  a,
+  a:visited {
+    color: ${(p) => p.theme.primary};
+  }
+`;
 
 const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
@@ -71,19 +79,7 @@ const NotificationWindow = createReactClass({
 
     return (
       <div className={classNames(Styles.wrapper, `${type}`)}>
-        <div
-          className={Styles.notification}
-          /* eslint-disable-next-line react/no-unknown-property */
-          isStory={isStory}
-          css={`
-            background: ${(p) =>
-              p.isStory ? p.theme.colorPrimary : p.theme.dark};
-            a,
-            a:visited {
-              color: ${(p) => p.theme.primary};
-            }
-          `}
-        >
+        <OuterDiv className={Styles.notification} isStory={isStory}>
           <div className={Styles.inner} style={divStyle}>
             <h3 className="title">{title}</h3>
             {window.location.host === "localhost:3001" &&
@@ -104,10 +100,10 @@ const NotificationWindow = createReactClass({
               {confirmText}
             </button>
           </div>
-        </div>
+        </OuterDiv>
       </div>
     );
   }
 });
 
-module.exports.default = NotificationWindow;
+export default NotificationWindow;

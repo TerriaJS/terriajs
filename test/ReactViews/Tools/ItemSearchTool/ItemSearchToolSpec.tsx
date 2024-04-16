@@ -1,5 +1,4 @@
 import "../../../SpecMain";
-import React from "react";
 import {
   act,
   create,
@@ -21,7 +20,7 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import { withThemeContext } from "../../withContext";
+import { createWithContexts } from "../../withContext";
 import MockSearchableItem from "./MockSearchableItem";
 import i18next from "i18next";
 
@@ -169,7 +168,7 @@ describe("ItemSearchTool", function () {
 });
 
 function render(props: Omit<PropsType, "i18n" | "t" | "tReady">) {
-  return create(withThemeContext(<ItemSearchTool {...props} />));
+  return createWithContexts(props.viewState, <ItemSearchTool {...props} />);
 }
 
 function renderAndLoad(

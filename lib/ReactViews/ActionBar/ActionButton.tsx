@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { useTheme } from "styled-components";
 import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 import { ButtonProps } from "../../Styled/Button";

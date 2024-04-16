@@ -1,5 +1,6 @@
 import { action, autorun, computed } from "mobx";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";

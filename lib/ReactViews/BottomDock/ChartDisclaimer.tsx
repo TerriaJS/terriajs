@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import ChartView from "../../Charts/ChartView";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import hasTraits from "../../Models/Definition/hasTraits";

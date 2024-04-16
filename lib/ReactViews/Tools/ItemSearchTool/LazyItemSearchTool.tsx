@@ -1,5 +1,6 @@
 import i18next from "i18next";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -21,10 +22,7 @@ const LazyItemSearchTool: React.FC<PropsType> = (props) => {
   return (
     <Suspense
       fallback={
-        <Frame
-          viewState={viewState}
-          title={t("itemSearchTool.title", { itemName })}
-        >
+        <Frame title={t("itemSearchTool.title", { itemName })}>
           <Wrapper>
             <AnimatedSpinnerIcon light styledWidth="25px" styledHeight="25px" />
           </Wrapper>

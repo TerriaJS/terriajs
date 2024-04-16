@@ -2,7 +2,7 @@ import dateFormat from "dateformat";
 import { TFunction } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -23,11 +23,10 @@ interface IState {
 
 interface IProps extends WithTranslation {
   item: DiscretelyTimeVaryingMixin.Instance;
-  t: TFunction;
 }
 
 @observer
-class DateTimeSelectorSection extends React.Component<IProps, IState> {
+class DateTimeSelectorSection extends Component<IProps, IState> {
   state: IState = {
     isOpen: false
   };

@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import * as React from "react";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
@@ -21,10 +21,11 @@ const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
   viewState.terria.raiseErrorToUser(error, undefined, true);
 };
 
-const WarningBox: React.FC<{
+const WarningBox = (props: {
   error?: TerriaError;
   viewState?: ViewState;
-}> = (props) => {
+  children: React.ReactNode;
+}) => {
   // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
   const includesFeedbackLink =
     props.error?.highestImportanceError.message.includes(

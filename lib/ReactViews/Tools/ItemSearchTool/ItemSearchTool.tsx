@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
@@ -91,10 +92,7 @@ const ItemSearchTool: React.FC<PropsType> = observer((props) => {
     itemSearchProvider.loadParameterHint?.bind(itemSearchProvider);
 
   return (
-    <Frame
-      viewState={viewState}
-      title={t("itemSearchTool.title", { itemName })}
-    >
+    <Frame title={t("itemSearchTool.title", { itemName })}>
       <Main textLight light>
         <Box
           centered

@@ -1,4 +1,3 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import {
   create,
@@ -8,9 +7,9 @@ import {
 import { ThemeProvider } from "styled-components";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
-import Text from "../../lib/Styled/Text";
 
 describe("ShortReport", function () {
   let testRenderer: ReactTestRenderer | undefined;
@@ -61,19 +60,22 @@ describe("ShortReport", function () {
 
       // Test that collapsible components have been created with correct props
       expect(
-        testRenderer.root.findAllByProps({
-          title: "Report Name 1",
-          isOpen: true
-        }).length
+        testRenderer.root
+          .findAllByProps({
+            title: "Report Name 1",
+            isOpen: true
+          })
+          .filter((n) => n.type === (Collapsible as any).type).length
       ).toBe(1);
 
       expect(
-        testRenderer.root.findAllByProps({
-          title: "Report Name 2",
-          isOpen: false
-        }).length
+        testRenderer.root
+          .findAllByProps({
+            title: "Report Name 2",
+            isOpen: false
+          })
+          .filter((n) => n.type === (Collapsible as any).type).length
       ).toBe(1);
-
       // Expect no Collapsible component
       expect(
         testRenderer.root.findAllByProps({

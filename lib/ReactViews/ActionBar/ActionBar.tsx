@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
 import { PortalChild } from "../StandardUserInterface/Portal";
@@ -11,7 +12,7 @@ import { ActionBarPortalId } from "./ActionBarPortal";
  * {@link ActionButton} can be used as a themed button for the action bar
  * {@link ActionButtonGroup} can be used for grouping elements inside an action bar
  */
-export const ActionBar: React.FC<object> = (props) => {
+export const ActionBar: React.FC<{ children: React.ReactNode }> = (props) => {
   const viewState = useViewState();
 
   useEffect(function setVisibility() {

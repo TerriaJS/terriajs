@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import Styles from "./parameter-editors.scss";
 import FunctionParameter from "../../Models/FunctionParameters/FunctionParameter";

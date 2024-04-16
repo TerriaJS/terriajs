@@ -12,7 +12,7 @@
 import { TFunction } from "i18next";
 import { computed, runInAction, when } from "mobx";
 import debounce from "lodash-es/debounce";
-import React from "react";
+import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
