@@ -2,6 +2,8 @@
 
 #### next release (8.7.2)
 
+- Implement AllowedValue Range with DefaultValue Support for WPS Parameters
+
 - [The next improvement]
 
 #### 8.7.1 - 2024-04-16
