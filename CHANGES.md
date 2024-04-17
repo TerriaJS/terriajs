@@ -2,6 +2,9 @@
 
 #### next release (8.7.2)
 
+- Fix WPS date time widget reset bug
+- Set default date for WPS date time widget on load
+
 - [The next improvement]
 
 #### 8.7.1 - 2024-04-16
