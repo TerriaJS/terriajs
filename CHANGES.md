@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.7.1)
+#### next release (8.7.2)
+
+- [The next improvement]
+
+#### 8.7.1 - 2024-04-16
 
 - Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
 
@@ -9,7 +13,7 @@
 - Fix `PointStyleTraits.marker` bug where URLs were not being used.
 - Fixed a bug with passing a relative baseUrl to Cesium >= 1.113.0 when `document.baseURI` is different to its `location`.
 - Fix node v18 compatibility by forcing `webpack-terser-plugin` version resolution and fixing new type errors
-- [The next improvement]
+- Reduce log noise in `MagdaReference`.
 
 #### 8.7.0 - 2024-03-22
 
