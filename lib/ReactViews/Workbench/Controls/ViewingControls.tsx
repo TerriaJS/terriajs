@@ -190,6 +190,7 @@ class ViewingControls extends React.Component<
       const theDirection = vectorToJson(item?.idealZoom?.camera?.direction);
       const theUp = vectorToJson(item?.idealZoom?.camera?.up);
 
+      debugger;
       // No value checking here. Improper values can lead to unexpected results.
       const camera = {
         west: theWest,

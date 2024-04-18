@@ -17,14 +17,13 @@ import I3SCatalogItemTraits from "../../../Traits/TraitsClasses/I3SCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
+import I3SMixin from "../../../ModelMixins/I3SMixin";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
 export default class I3SCatalogItem extends SearchableItemMixin(
-  FeatureInfoUrlTemplateMixin(
-    Cesium3dTilesMixin(CreateModel(I3SCatalogItemTraits))
-  )
+  FeatureInfoUrlTemplateMixin(I3SMixin(CreateModel(I3SCatalogItemTraits)))
 ) {
   static readonly type = "I3S";
   readonly type = I3SCatalogItem.type;

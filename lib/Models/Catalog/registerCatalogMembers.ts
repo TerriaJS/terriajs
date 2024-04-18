@@ -141,6 +141,7 @@ export default function registerCatalogMembers() {
     CesiumTerrainCatalogItem.type,
     CesiumTerrainCatalogItem
   );
+  CatalogMemberFactory.register(I3SCatalogItem.type, I3SCatalogItem);
   CatalogMemberFactory.register(
     IonImageryCatalogItem.type,
     IonImageryCatalogItem

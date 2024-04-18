@@ -1,7 +1,7 @@
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import Cesium3DTilesTraits from "./Cesium3dTilesTraits";
+import I3STraits from "./I3STraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
@@ -27,5 +27,5 @@ export default class I3SCatalogItemTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   ShadowTraits,
-  Cesium3DTilesTraits
+  I3STraits
 ) {}
