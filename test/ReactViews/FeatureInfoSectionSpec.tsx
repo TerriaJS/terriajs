@@ -1,6 +1,5 @@
 import i18next from "i18next";
-import { observable, makeObservable } from "mobx";
-import React from "react";
+import { makeObservable, observable } from "mobx";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -26,10 +25,10 @@ import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
-import mixTraits from "../../lib/Traits/mixTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
 
@@ -43,7 +42,10 @@ if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
 
 function findWithText(test: ReactTestRenderer, text: string) {
   return test.root.findAll((node) =>
-    node.children.some((child) => child === text)
+    node.children.some((child) => {
+      console.log(child);
+      return child === text;
+    })
   );
 }
 
@@ -379,6 +381,31 @@ describe("FeatureInfoSection", function () {
     expect(findWithText(result, "eggs").length).toEqual(1);
     expect(findWithText(result, "dinner").length).toEqual(1);
     expect(findWithText(result, "ham").length).toEqual(1);
+  });
+
+  it("gracefully handles bad nested JSON", function () {
+    feature = new Entity({
+      name: "Meals",
+      properties: {
+        somethingBad: "{broken object",
+        somethingGood: JSON.stringify({ good: "this object is good" })
+      }
+    });
+    const section = (
+      <FeatureInfoSection
+        catalogItem={catalogItem}
+        feature={feature}
+        isOpen
+        viewState={viewState}
+        t={() => {}}
+      />
+    );
+    const result = createWithContexts(viewState, section);
+
+    expect(findWithText(result, "{broken object").length).toEqual(1);
+    expect(
+      findWithText(result, `{"good":"this object is good"}`).length
+    ).toEqual(1);
   });
 
   describe("templating", function () {
