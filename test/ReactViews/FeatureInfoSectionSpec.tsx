@@ -42,10 +42,7 @@ if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
 
 function findWithText(test: ReactTestRenderer, text: string) {
   return test.root.findAll((node) =>
-    node.children.some((child) => {
-      console.log(child);
-      return child === text;
-    })
+    node.children.some((child) => child === text)
   );
 }
 
