@@ -60,7 +60,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           createStratumLevelFilter(-2, 11, -1, 10)
         ])
       );
-      let show: any = item.showExpressionFromFilters;
+      const show: any = item.showExpressionFromFilters;
       expect(show).toBe(
         "Number(${feature['stratumlev']}) >= -1 && Number(${feature['stratumlev']}) <= 10"
       );
@@ -73,7 +73,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             createStratumLevelFilter(-2, 11, -2, 11)
           ])
         );
-        let show: any = item.showExpressionFromFilters;
+        const show: any = item.showExpressionFromFilters;
         expect(show).toBeUndefined();
       });
     });
@@ -144,7 +144,9 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
         spyOn(IonResource, "fromAssetId").and.callThrough();
         try {
           await item.loadMapItems();
-        } catch {}
+        } catch {
+          /* eslint-disable-line no-empty */
+        }
         expect(IonResource.fromAssetId).toHaveBeenCalledWith(4242, {
           accessToken: "fakeToken",
           server: "fakeServer"
@@ -162,7 +164,9 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       });
       try {
         await item.loadMapItems();
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
       const tileset = item.mapItems[0] as Cesium3DTileset;
       expect(tileset.maximumScreenSpaceError).toBe(3);
     });
@@ -173,7 +177,9 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
     beforeEach(async function () {
       try {
         await item.loadMapItems();
-      } catch {}
+      } catch {
+        /* eslint-disable-line no-empty */
+      }
       // observe mapItems
       dispose = reaction(
         () => item.mapItems,
@@ -238,7 +244,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
               })
             );
             const tileset = item.mapItems[0] as Cesium3DTileset;
-            expect(tileset.style).toBe((<any>item).cesiumTileStyle);
+            expect(tileset.style).toBe((item as any).cesiumTileStyle);
           });
 
           // TODO: fix later
@@ -312,7 +318,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
     const picked = new Cesium3DTileFeature();
-    spyOn(picked, "getPropertyNames").and.returnValue([]);
+    spyOn(picked, "getPropertyIds").and.returnValue([]);
     const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
     expect(feature).toBeDefined();
     if (feature) {
@@ -345,7 +351,7 @@ function createStratumLevelFilter(
   minimumValueShown: number,
   maximumValueShown: number
 ) {
-  let filter = createStratumInstance(FilterTraits, {
+  const filter = createStratumInstance(FilterTraits, {
     name: "Stratum Level",
     property: "stratumlev",
     minimumValue,

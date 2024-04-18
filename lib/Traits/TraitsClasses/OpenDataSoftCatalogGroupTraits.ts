@@ -6,6 +6,7 @@ import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
+import { traitClass } from "../Trait";
 
 export class RefineTraits extends ModelTraits {
   @primitiveTrait({
@@ -23,6 +24,21 @@ export class RefineTraits extends ModelTraits {
   value?: string;
 }
 
+@traitClass({
+  description: `Creates one catalog group from url that points to an opendatasoft service.`,
+  example: {
+    name: "opendatasoft-group example",
+    type: "opendatasoft-group",
+    url: "https://data.bmcc.nsw.gov.au",
+    facetFilters: [
+      {
+        name: "features",
+        value: "geo"
+      }
+    ],
+    id: "some unique id"
+  }
+})
 export default class OpenDataSoftCatalogGroupTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,

@@ -51,7 +51,7 @@ function shouldAddIframeTag(story: Story) {
   const iframes = parsedDocument.getElementsByTagName("iframe");
   if (iframes.length < 1) return false;
   let result = true;
-  for (let iframe of iframes) {
+  for (const iframe of iframes) {
     if (
       !(
         iframe.src?.startsWith("https://www.youtube.com/embed/") ||
@@ -92,23 +92,20 @@ const StoryBody = ({
 }: {
   isCollapsed: boolean;
   story: Story;
-}) => (
-  <>
-    {story.text && story.text !== "" ? (
-      <StoryContainer isCollapsed={isCollapsed} column>
-        <Text
-          css={`
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-          `}
-          medium
-        >
-          {sourceBasedParse(story)}
-        </Text>
-      </StoryContainer>
-    ) : null}
-  </>
-);
+}) =>
+  story.text && story.text !== "" ? (
+    <StoryContainer isCollapsed={isCollapsed} column>
+      <Text
+        css={`
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        `}
+        medium
+      >
+        {sourceBasedParse(story)}
+      </Text>
+    </StoryContainer>
+  ) : null;
 
 export default StoryBody;

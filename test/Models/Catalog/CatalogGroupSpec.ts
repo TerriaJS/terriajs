@@ -36,24 +36,22 @@ describe("CatalogGroup", function () {
         }
       ]
     };
-    catalogGroup = <CatalogGroup>(
-      upsertModelFromJson(
-        CatalogMemberFactory,
-        terria,
-        "",
-        "definition",
-        json,
-        {}
-      ).throwIfUndefined()
-    );
+    catalogGroup = upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    ).throwIfUndefined() as CatalogGroup;
   });
 
   it("re-orders members correctly", function () {
     expect(catalogGroup instanceof CatalogGroup).toBe(true);
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "mama");
-    const child1 = <CatalogGroup>terria.getModelById(CatalogGroup, "child1");
-    const child2 = <CatalogGroup>terria.getModelById(CatalogGroup, "child2");
+    const item = terria.getModelById(CatalogGroup, "mama") as CatalogGroup;
+    const child1 = terria.getModelById(CatalogGroup, "child1") as CatalogGroup;
+    const child2 = terria.getModelById(CatalogGroup, "child2") as CatalogGroup;
     expect(item).toBeDefined();
     expect(item.type).toBe("group");
     expect(item.members).toEqual(["child1", "child2", "child3"]);
@@ -74,9 +72,9 @@ describe("CatalogGroup", function () {
   it("throws when moving to non existent indices", function () {
     expect(catalogGroup instanceof CatalogGroup).toBe(true);
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "mama");
-    const child1 = <CatalogGroup>terria.getModelById(CatalogGroup, "child1");
-    const child2 = <CatalogGroup>terria.getModelById(CatalogGroup, "child2");
+    const item = terria.getModelById(CatalogGroup, "mama") as CatalogGroup;
+    const child1 = terria.getModelById(CatalogGroup, "child1") as CatalogGroup;
+    const child2 = terria.getModelById(CatalogGroup, "child2") as CatalogGroup;
     expect(item).toBeDefined();
     expect(item.type).toBe("group");
     expect(item.members).toEqual(["child1", "child2", "child3"]);
@@ -186,7 +184,7 @@ describe("CatalogGroup", function () {
       {}
     ).throwIfUndefined();
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+    const item = terria.getModelById(CatalogGroup, "grandmama") as CatalogGroup;
 
     item.addMembersFromJson(CommonStrata.definition, [
       {
@@ -238,7 +236,10 @@ describe("CatalogGroup", function () {
       "some name"
     ]);
 
-    const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
+    const parent1 = terria.getModelById(
+      CatalogGroup,
+      "parent1"
+    ) as CatalogGroup;
     expect(item).toBeDefined();
     expect(item.type).toBe("group");
     expect(item.memberModels.map((member) => member.uniqueId)).toEqual([
@@ -295,7 +296,7 @@ describe("CatalogGroup", function () {
       {}
     ).throwIfUndefined();
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "test");
+    const item = terria.getModelById(CatalogGroup, "test") as CatalogGroup;
 
     await item.loadMembers();
 
@@ -340,7 +341,7 @@ describe("CatalogGroup", function () {
       {}
     ).throwIfUndefined();
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "test");
+    const item = terria.getModelById(CatalogGroup, "test") as CatalogGroup;
 
     await item.loadMembers();
 
@@ -471,13 +472,17 @@ describe("CatalogGroup", function () {
     });
 
     it("correctly applies traits", async function () {
-      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+      const item = terria.getModelById(
+        CatalogGroup,
+        "grandmama"
+      ) as CatalogGroup;
 
       await item.loadMembers();
 
-      const parent1 = <CatalogGroup>(
-        terria.getModelById(CatalogGroup, "parent1")
-      );
+      const parent1 = terria.getModelById(
+        CatalogGroup,
+        "parent1"
+      ) as CatalogGroup;
 
       expect(parent1).toBeDefined();
       expect(parent1.itemProperties).toEqual({ name: "some other name" });
@@ -485,35 +490,42 @@ describe("CatalogGroup", function () {
 
       await parent1.loadMembers();
 
-      const geojsonItem = <GeoJsonCatalogItem>(
-        terria.getModelById(GeoJsonCatalogItem, "geojson-1")
-      );
+      const geojsonItem = terria.getModelById(
+        GeoJsonCatalogItem,
+        "geojson-1"
+      ) as GeoJsonCatalogItem;
 
       expect(geojsonItem.name).toBe("some other name");
       expect(geojsonItem.url).toBe("some geojson url (by ID)");
 
-      const wmsItem = <WebMapServiceCatalogItem>(
-        terria.getModelById(WebMapServiceCatalogItem, "wms-1")
-      );
+      const wmsItem = terria.getModelById(
+        WebMapServiceCatalogItem,
+        "wms-1"
+      ) as WebMapServiceCatalogItem;
 
       expect(wmsItem.name).toBe("some WMS name");
       expect(wmsItem.url).toBe("some WMS url");
     });
 
     it("supports splitting items with itemProperties", async function () {
-      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+      const item = terria.getModelById(
+        CatalogGroup,
+        "grandmama"
+      ) as CatalogGroup;
 
       await item.loadMembers();
 
-      const parent1 = <CatalogGroup>(
-        terria.getModelById(CatalogGroup, "parent1")
-      );
+      const parent1 = terria.getModelById(
+        CatalogGroup,
+        "parent1"
+      ) as CatalogGroup;
 
       await parent1.loadMembers();
 
-      const geojsonItem = <GeoJsonCatalogItem>(
-        terria.getModelById(GeoJsonCatalogItem, "geojson-1")
-      );
+      const geojsonItem = terria.getModelById(
+        GeoJsonCatalogItem,
+        "geojson-1"
+      ) as GeoJsonCatalogItem;
 
       const splitRef = new SplitItemReference(createGuid(), terria);
       terria.addModel(splitRef);
@@ -577,7 +589,7 @@ describe("CatalogGroup", function () {
     });
 
     it("set to false", async function () {
-      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "root");
+      const item = terria.getModelById(CatalogGroup, "root") as CatalogGroup;
       item.setTrait(CommonStrata.definition, "mergeGroupsByName", false);
       (await item.loadMembers()).throwIfError();
       expect(item.memberModels.length).toBe(2);
@@ -594,7 +606,7 @@ describe("CatalogGroup", function () {
     });
 
     it("set to true", async function () {
-      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "root");
+      const item = terria.getModelById(CatalogGroup, "root") as CatalogGroup;
       item.setTrait(CommonStrata.definition, "mergeGroupsByName", true);
       (await item.loadMembers()).throwIfError();
       expect(item.memberModels.length).toBe(1);

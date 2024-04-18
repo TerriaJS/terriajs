@@ -91,7 +91,7 @@ function WebFeatureServiceSearchProviderMixin<
 
       return this.getXml(_wfsServiceUrl.toString())
         .then((xml: any) => {
-          let json: any = xml2json(xml);
+          const json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {
             results.message = {
@@ -215,8 +215,8 @@ function createZoomToFunction(
 ) {
   // Server does not return information of a bounding box, just a location.
   // bboxSize is used to expand a point
-  var bboxSize = 0.2;
-  var rectangle = zoomRectangleFromPoint(
+  const bboxSize = 0.2;
+  const rectangle = zoomRectangleFromPoint(
     location.latitude,
     location.longitude,
     bboxSize

@@ -38,8 +38,7 @@ export class CartoLoadableStratum extends LoadableStratum(
   static load(
     catalogItem: CartoMapV1CatalogItem
   ): Promise<CartoLoadableStratum> {
-    let queryParameters: { auth_token?: string };
-    queryParameters = {};
+    const queryParameters: { auth_token?: string } = {};
     if (catalogItem.auth_token) {
       queryParameters.auth_token = catalogItem.auth_token;
     }
@@ -150,9 +149,9 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
   }
 
   @computed get imageryProvider() {
-    const stratum = <CartoLoadableStratum>(
-      this.strata.get(CartoLoadableStratum.stratumName)
-    );
+    const stratum = this.strata.get(
+      CartoLoadableStratum.stratumName
+    ) as CartoLoadableStratum;
 
     if (!isDefined(stratum) || !isDefined(stratum.tileUrl)) {
       return;

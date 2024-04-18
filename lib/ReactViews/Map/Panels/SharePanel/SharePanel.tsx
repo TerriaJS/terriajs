@@ -78,7 +78,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
           <ShareUrl
             terria={terria}
             viewState={viewState}
-            includeStories={true}
+            includeStories
             shouldShorten={shouldShorten(terria)}
             theme="light"
             inputTheme="light"
@@ -93,7 +93,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
           <ShareUrl
             terria={terria}
             viewState={viewState}
-            includeStories={true}
+            includeStories
             shouldShorten={shouldShorten(terria)}
             theme="dark"
             inputTheme="light"

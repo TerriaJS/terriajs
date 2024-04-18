@@ -2,9 +2,13 @@ import { configure } from "mobx";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
+import objectArrayTrait, {
+  MergeStrategy
+} from "../../lib/Traits/Decorators/objectArrayTrait";
 import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 configure({
   enforceActions: "always",
@@ -69,7 +73,25 @@ class OuterTraitsNoMerge extends ModelTraits {
     name: "Inner",
     description: "Inner",
     idProperty: "foo",
-    merge: false
+    merge: MergeStrategy.None
+  })
+  inner?: InnerTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Other",
+    description: "Other"
+  })
+  other?: string;
+}
+
+class OuterTraitsMergeTop extends ModelTraits {
+  @objectArrayTrait({
+    type: InnerTraits,
+    name: "Inner",
+    description: "Inner",
+    idProperty: "foo",
+    merge: MergeStrategy.TopStratum
   })
   inner?: InnerTraits[];
 
@@ -83,6 +105,7 @@ class OuterTraitsNoMerge extends ModelTraits {
 
 class TestModel extends CreateModel(OuterTraits) {}
 class TestModelNoMerge extends CreateModel(OuterTraitsNoMerge) {}
+class TestModelMergeTop extends CreateModel(OuterTraitsMergeTop) {}
 
 describe("objectArrayTrait", function () {
   it("returns an empty model if all strata are undefined", function () {
@@ -367,5 +390,50 @@ describe("objectArrayTrait", function () {
     expect(model.inner[0].foo).toBe("test");
     expect(model.inner[0].bar).toBe(4);
     expect(model.inner[0].baz).toBe(true);
+  });
+
+  it("no error when a model has 0 strata and merge = top", function () {
+    const terria = new Terria();
+    const model = new TestModelMergeTop("test", terria);
+    expect(model.inner.length).toBe(0);
+  });
+
+  it("updates to reflect new strata added after evaluation (with merge = top)", function () {
+    const terria = new Terria();
+    const model = new TestModelMergeTop("test", terria);
+
+    updateModelFromJson(model, CommonStrata.definition, {
+      inner: [
+        { foo: "this-exists-in-definition-and-user", bar: 1, baz: false },
+        { foo: "this-exists-in-definition", bar: 2, baz: true },
+        { foo: "this-also-exists-in-definition-and-user" }
+      ]
+    });
+
+    expect(model.inner.length).toBe(3);
+    expect(model.inner[0].foo).toBe("this-exists-in-definition-and-user");
+    expect(model.inner[0].bar).toBe(1);
+    expect(model.inner[0].baz).toBe(false);
+
+    expect(model.inner[1].foo).toBe("this-exists-in-definition");
+    expect(model.inner[1].bar).toBe(2);
+    expect(model.inner[1].baz).toBe(true);
+
+    expect(model.inner[2].foo).toBe("this-also-exists-in-definition-and-user");
+
+    updateModelFromJson(model, CommonStrata.user, {
+      inner: [
+        { foo: "this-exists-in-definition-and-user", baz: true },
+        { foo: "this-also-exists-in-definition-and-user", bar: 3, baz: true }
+      ]
+    });
+
+    expect(model.inner.length).toBe(2);
+    expect(model.inner[0].foo).toBe("this-exists-in-definition-and-user");
+    expect(model.inner[0].bar).toBe(1);
+    expect(model.inner[0].baz).toBe(true);
+    expect(model.inner[1].foo).toBe("this-also-exists-in-definition-and-user");
+    expect(model.inner[1].bar).toBe(3);
+    expect(model.inner[1].baz).toBe(true);
   });
 });

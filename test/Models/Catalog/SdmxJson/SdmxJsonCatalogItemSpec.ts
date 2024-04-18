@@ -264,6 +264,34 @@ describe("SdmxJsonCatalogItem", function () {
     );
   });
 
+  it("sets featureInfoTemplate with time-series chart", async function () {
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "ABS");
+      sdmxItem.setTrait("definition", "dataflowId", "RT");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id: "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)",
+          type: "region",
+          regionType: "STE_2016"
+        })
+      ]);
+    });
+
+    await sdmxItem.regionProviderLists?.[0]
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(1);
+
+    expect(sdmxItem.featureInfoTemplate).toBeDefined();
+    expect(sdmxItem.featureInfoTemplate?.template).toContain("<chart");
+    expect(sdmxItem.featureInfoTemplate?.template).toContain(
+      `y-column="Observation Value"`
+    );
+  });
+
   it("handles single region gracefully", async function () {
     jasmine.Ajax.stubRequest(
       "http://www.example.com/data/RT/M1.20.10..M"

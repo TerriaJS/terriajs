@@ -448,7 +448,9 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "Aquest arxiu no conté dades geoespacials.",
-    "selectToPreview": "<0>Seleccioneu un conjunt de dades per veure'n una previsualització </0><1>- O -</1><2>Anar al mapa</2>",
+    "selectToPreviewDataset": "Seleccioneu un conjunt de dades per veure'n una previsualització",
+    "selectToPreviewSeparator": "O",
+    "goToTheMap": "Anar al mapa",
     "preview": "{{appName}} previsualització",
     "previewItemErrorTitle": "No s'ha pogut previsualitzar l'element del catàleg.",
     "previewItemErrorMessage": "Error en carregar l'element del catàleg.",
@@ -473,7 +475,8 @@
     "removeFromMap": "Eliminar del mapa",
     "datasetDescription": "Descripció del conjunt de dades",
     "fees": "Comissions",
-    "updateFrequency": "Freqüència d'actualització"
+    "updateFrequency": "Freqüència d'actualització",
+    "selectMultipleDatasets": "<0>Premeu <strong>Maj</strong> i feu clic a</0><1 /><2>per afegir diversos conjunts de dades</2>"
   },
   "description": {
     "dataLocal": "Aquest arxiu només existeix al vostre navegador. Per compartir-lo, l'has de carregar en un servidor web públic.",

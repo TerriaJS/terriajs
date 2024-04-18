@@ -497,9 +497,9 @@ export default class SocrataCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const socrataServerStratum = <SocrataCatalogStratum | undefined>(
-      this.strata.get(SocrataCatalogStratum.stratumName)
-    );
+    const socrataServerStratum = this.strata.get(
+      SocrataCatalogStratum.stratumName
+    ) as SocrataCatalogStratum | undefined;
     if (socrataServerStratum) {
       await runLater(() => socrataServerStratum.createMembers());
     }

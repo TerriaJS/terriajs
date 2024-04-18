@@ -55,12 +55,12 @@ export default function createRegionMappedImageryProvider(
     styleFunc: function (feature: any) {
       const regionId = feature.properties[regionType.uniqueIdProp];
 
-      let rowNumber = getImageryLayerFilteredRow(
+      const rowNumber = getImageryLayerFilteredRow(
         style,
         currentTimeRows,
         valuesAsRegions.regionIdToRowNumbersMap.get(regionId)
       );
-      let value: string | number | null = isDefined(rowNumber)
+      const value: string | number | null = isDefined(rowNumber)
         ? valueFunction(rowNumber)
         : null;
 

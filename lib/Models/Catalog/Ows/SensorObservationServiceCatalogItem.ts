@@ -72,8 +72,8 @@ interface ObservationPoint {
 }
 
 interface MeasurementTimeValuePair {
-  time: Object | string;
-  value: Object | string;
+  time: object | string;
+  value: object | string;
 }
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
@@ -469,8 +469,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         if (!points) return;
         if (!Array.isArray(points)) points = [points];
 
-        var measurements = points.map((point) => point.MeasurementTVP); // TVP = Time value pairs, I think.
-        var featureIdentifier =
+        const measurements = points.map((point) => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        const featureIdentifier =
           observation.featureOfInterest["xlink:href"] || "";
         datesCol.push(
           ...measurements.map((measurement) =>
@@ -633,7 +633,7 @@ function createChartColumn(
   identifier: string,
   name: string | undefined
 ): string {
-  const nameAttr = name == undefined ? "" : `name="${name}"`;
+  const nameAttr = name === undefined ? "" : `name="${name}"`;
   // The API that provides the chart data is a SOAP API, and the download button is essentially just a link, so when you click it you get an error page.
   // can-download="false" will disable this broken download button.
   return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
@@ -660,9 +660,9 @@ async function loadSoapBody(
     return;
   }
 
-  var json = xml2json(responseXml);
+  const json = xml2json(responseXml);
   if (json.Exception) {
-    var errorMessage = i18next.t(
+    let errorMessage = i18next.t(
       "models.sensorObservationService.unknownError"
     );
     if (json.Exception.ExceptionText) {
@@ -728,10 +728,11 @@ function addDurationToIso8601(
         scratchJulianDate
       );
       break;
-    case "y":
+    case "y": {
       const days = Math.round(duration * 365);
       julianDate = JulianDate.addDays(julianDate, days, scratchJulianDate);
       break;
+    }
     default:
       throw new DeveloperError(
         'Unknown duration type "' + durationString + '" (use s, h, d or y)'
@@ -750,7 +751,7 @@ function addDurationToIso8601(
  */
 function convertObjectToNameValueArray(parameters: any): NameValue[] {
   return Object.keys(parameters).reduce((result, key) => {
-    var values = parameters[key];
+    let values = parameters[key];
     if (!Array.isArray(values)) {
       values = [values];
     }

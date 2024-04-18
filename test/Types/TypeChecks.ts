@@ -7,8 +7,8 @@ import {
 } from "../../lib/Core/TypeConditionals";
 
 // Based on the approach described here: https://stackoverflow.com/a/49579497
-export function expectTrue<T extends true>() {}
-export function expectFalse<T extends false>() {}
+export function expectTrue<_T extends true>() {}
+export function expectFalse<_T extends false>() {}
 
 expectTrue<Equals<number, number>>();
 expectTrue<Equals<number | undefined, number | undefined>>();

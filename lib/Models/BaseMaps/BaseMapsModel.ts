@@ -88,7 +88,10 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
       );
     }
 
-    const resolvedItem = this.terria.getModelById(BaseModel, <any>baseMap.item);
+    const resolvedItem = this.terria.getModelById(
+      BaseModel,
+      baseMap.item as any
+    );
     if (resolvedItem instanceof BingMapsCatalogItem) {
       addBingMapsKey(resolvedItem, this.terria);
     }

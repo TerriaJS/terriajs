@@ -16,7 +16,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
   }
 
   get attributes() {
-    let attributes = super.attributes;
+    const attributes = super.attributes;
     attributes.push("name");
     return attributes;
   }

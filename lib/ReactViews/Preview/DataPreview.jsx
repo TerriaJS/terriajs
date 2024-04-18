@@ -7,13 +7,14 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { Icon } from "../../Styled/Icon";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import Loader from "../Loader";
-import Styles from "./data-preview.scss";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
 import WarningBox from "./WarningBox";
+import Styles from "./data-preview.scss";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -68,20 +69,22 @@ class DataPreview extends React.Component {
         </div>
       );
     } else if (chartData) {
-      <div className={Styles.previewInner}>
-        <h3 className={Styles.h3}>{previewed.name}</h3>
-        <p>{t("preview.doesNotContainGeospatialData")}</p>
-        <div className={Styles.previewChart}>
-          {/* TODO: Show a preview chart
+      return (
+        <div className={Styles.previewInner}>
+          <h3 className={Styles.h3}>{previewed.name}</h3>
+          <p>{t("preview.doesNotContainGeospatialData")}</p>
+          <div className={Styles.previewChart}>
+            {/* TODO: Show a preview chart
                 <Chart
                    data={chartData}
                    axisLabel={{ x: previewed.xAxis.units, y: undefined }}
                    height={250 - 34}
                    />
             */}
+          </div>
+          <Description item={previewed} />
         </div>
-        <Description item={previewed} />
-      </div>;
+      );
     } else if (previewed && CatalogFunctionMixin.isMixedInto(previewed)) {
       return (
         <InvokeFunction
@@ -101,18 +104,36 @@ class DataPreview extends React.Component {
         </div>
       );
     } else {
-      <div className={Styles.placeholder}>
-        <Trans i18nKey="preview.selectToPreview">
-          <p>Select a dataset to see a preview</p>
-          <p>- OR -</p>
+      return (
+        <div className={Styles.placeholder}>
+          <p>{t("preview.selectToPreviewDataset")}</p>
+          <p>
+            <Trans i18nKey="preview.selectMultipleDatasets">
+              <span>
+                Press <strong>Shift</strong> and click
+              </span>
+              <Icon
+                glyph={Icon.GLYPHS.add}
+                css={{
+                  height: "20px",
+                  width: "20px",
+                  margin: "0px 5px",
+                  verticalAlign: "middle",
+                  fill: `${(p) => p.theme.charcoalGrey}`
+                }}
+              />
+              <span>to add multiple datasets</span>
+            </Trans>
+          </p>
+          <p>- {t("preview.selectToPreviewSeparator")} -</p>
           <button
             className={Styles.btnBackToMap}
             onClick={() => this.backToMap()}
           >
-            Go to the map
+            {t("preview.goToTheMap")}
           </button>
-        </Trans>
-      </div>;
+        </div>
+      );
     }
   }
 

@@ -33,7 +33,7 @@ describe("CartoMapV1CatalogItem", function () {
     });
 
     it("should create an imageryProvider with correct properties", function () {
-      const stratum = <CartoLoadableStratum>item.strata.get("cartoLoadable");
+      const stratum = item.strata.get("cartoLoadable") as CartoLoadableStratum;
 
       expect(
         item.imageryProvider instanceof UrlTemplateImageryProvider
@@ -46,11 +46,11 @@ describe("CartoMapV1CatalogItem", function () {
       const imageryProvider = item.imageryProvider;
       expect(imageryProvider).toBeDefined();
       if (imageryProvider !== undefined) {
-        expect(imageryProvider.url).toEqual(<string>stratum.tileUrl);
-        expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
+        expect(imageryProvider.url).toEqual(stratum.tileUrl as string);
+        expect(imageryProvider.credit.html).toEqual(item.attribution as string);
         expect(imageryProvider.minimumLevel).toEqual(0);
         expect(imageryProvider.maximumLevel).toEqual(25);
-        expect((<any>imageryProvider)._subdomains).toEqual(
+        expect((imageryProvider as any)._subdomains).toEqual(
           stratum.tileSubdomains
         );
       }

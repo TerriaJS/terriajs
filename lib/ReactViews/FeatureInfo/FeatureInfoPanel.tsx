@@ -115,7 +115,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     catalogItems: MappableMixin.Instance[],
     featureMap: Map<string, TerriaFeature[]>
   ) {
-    return catalogItems.map((catalogItem, i) => {
+    return catalogItems.map((catalogItem, _i) => {
       // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
       const features =
         (catalogItem.uniqueId
@@ -229,7 +229,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     const cartographic =
       Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
-      return <></>;
+      return null;
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);

@@ -9,7 +9,7 @@ export default function arraysAreEqual<T>(left: T[], right: T[]) {
     return false;
   }
 
-  for (var i = 0; i < left.length; ++i) {
+  for (let i = 0; i < left.length; ++i) {
     if (left[i] !== right[i]) {
       return false;
     }
