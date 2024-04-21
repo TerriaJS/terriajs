@@ -1,0 +1,9 @@
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
+
+.connect-button {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
+  width: 200px;
+}

@@ -5,6 +5,10 @@ import { t } from "i18next";
 import { useViewState } from "terriajs-plugin-api";
 import URI from "urijs";
 import { string } from "prop-types";
+import { Trans, withTranslation } from "react-i18next";
+import AddDataStyles from "./add-data.scss";
+import Styles from "./cesium-ion-connector.scss";
+import { OptionsTraits } from "../../../../Traits/TraitsClasses/Cesium3dTilesTraits";
 
 function CesiumIonConnector() {
   const tokenLocalStorageName = "cesium-ion-login-token";
@@ -15,6 +19,11 @@ function CesiumIonConnector() {
     value: "",
     hash: ""
   });
+
+  const [tokens, setTokens] = React.useState([]);
+  const [assets, setAssets] = React.useState([]);
+  const [selectedToken, setSelectedToken] = React.useState(undefined);
+  const [selectedAsset, setSelectedAsset] = React.useState(undefined);
 
   const [accessToken, setAccessToken] = React.useState(
     localStorage.getItem(tokenLocalStorageName) ?? ""
@@ -67,20 +76,104 @@ function CesiumIonConnector() {
       });
   }, [accessToken]);
 
-  return accessToken.length > 0 ? renderConnected() : renderDisconnected();
+  React.useEffect(() => {
+    if (accessToken.length === 0) return;
+
+    fetch("https://api.cesium.com/v1/assets", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((response) => response.json())
+      .then((assets) => {
+        setAssets(assets.items);
+      });
+  }, [accessToken]);
+
+  React.useEffect(() => {
+    if (accessToken.length === 0) return;
+
+    fetch("https://api.cesium.com/v2/tokens", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((response) => response.json())
+      .then((tokens) => {
+        setTokens(tokens.items);
+      });
+  }, [accessToken]);
+
+  return (
+    <>
+      <label className={AddDataStyles.label}>
+        <Trans i18nKey="addData.cesiumIon">
+          <strong>Step 2:</strong>
+        </Trans>
+      </label>
+      {accessToken.length > 0 ? renderConnected() : renderDisconnected()}
+    </>
+  );
 
   function renderConnected() {
     return (
       <div>
-        <span>
+        <div>
           {userProfile.username.length > 0 ? (
-            <label>Connected to Cesium ion as {userProfile.username}</label>
+            <label className={AddDataStyles.label}>
+              Connected to Cesium ion as {userProfile.username}
+            </label>
           ) : (
-            <label>Loading user profile information...</label>
+            <label className={AddDataStyles.label}>
+              Loading user profile information...
+            </label>
           )}
-          <button onClick={disconnect}>Disconnect</button>
-        </span>
+          <button className={Styles.connectButton} onClick={disconnect}>
+            Disconnect
+          </button>
+        </div>
+        <div>
+          <label className={AddDataStyles.label}>
+            <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
+          </label>
+          <select
+            value={selectedToken}
+            onChange={(e) => setSelectedToken(tokens[e.target.selectedIndex])}
+          >
+            {tokens.map((token) => renderTokenOption(token))}
+          </select>
+        </div>
+        <div>
+          <label className={AddDataStyles.label}>
+            <Trans i18nKey="addData.cesiumIonAsset">Cesium ion Asset:</Trans>
+          </label>
+          <select
+            value={selectedAsset}
+            onChange={(e) => setSelectedAsset(assets[e.target.selectedIndex])}
+          >
+            {assets.map((asset) => renderAssetOption(asset))}
+          </select>
+        </div>
+        <button className={Styles.connectButton} onClick={addToMap}>
+          Add to Map
+        </button>
       </div>
+    );
+  }
+
+  function renderTokenOption(token) {
+    return (
+      <option key={token.name} value={token.name}>
+        {token.name}
+      </option>
+    );
+  }
+
+  function renderAssetOption(asset) {
+    return (
+      <option key={asset.name} value={asset.name}>
+        {asset.name}
+      </option>
     );
   }
 
@@ -93,7 +186,11 @@ function CesiumIonConnector() {
           hosting and streaming to {viewState.terria.appName}.
         </label>
         <div>
-          <button onClick={connect} disabled={codeChallenge.hash == ""}>
+          <button
+            className={Styles.connectButton}
+            onClick={connect}
+            disabled={codeChallenge.hash == ""}
+          >
             Connect to Cesium ion
           </button>
         </div>
@@ -117,7 +214,7 @@ function CesiumIonConnector() {
     const uri = new URI("https://ion.cesium.com/oauth").addQuery({
       response_type: "code",
       client_id: clientID,
-      scope: "assets:read assets:list profile:read",
+      scope: "assets:read assets:list tokens:read profile:read",
       redirect_uri: redirectUri,
       state: state,
       code_challenge: codeChallengeHash,
@@ -156,10 +253,14 @@ function CesiumIonConnector() {
     setAccessToken("");
     setUserProfile(defaultProfile);
   }
+
+  function addToMap() {
+    console.log(`Token: ${selectedToken?.name} Asset: ${selectedAsset?.name}`)
+  }
 }
 
 const CesiumIonConnectorObserver = observer<React.FC>(CesiumIonConnector);
-export default CesiumIonConnectorObserver;
+export default withTranslation()(CesiumIonConnectorObserver);
 
 addOrReplaceRemoteFileUploadType("cesium-ion", {
   value: "cesium-ion",
