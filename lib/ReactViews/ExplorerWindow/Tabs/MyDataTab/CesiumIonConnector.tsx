@@ -9,6 +9,10 @@ import { Trans, withTranslation } from "react-i18next";
 import AddDataStyles from "./add-data.scss";
 import Styles from "./cesium-ion-connector.scss";
 import { OptionsTraits } from "../../../../Traits/TraitsClasses/Cesium3dTilesTraits";
+import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
+import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
+import CommonStrata from "../../../../Models/Definition/CommonStrata";
+import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
 
 function CesiumIonConnector() {
   const tokenLocalStorageName = "cesium-ion-login-token";
@@ -138,7 +142,7 @@ function CesiumIonConnector() {
           </label>
           <select
             value={selectedToken}
-            onChange={(e) => setSelectedToken(tokens[e.target.selectedIndex])}
+            onChange={(e) => setSelectedToken(e.target.value)}
           >
             {tokens.map((token) => renderTokenOption(token))}
           </select>
@@ -149,7 +153,7 @@ function CesiumIonConnector() {
           </label>
           <select
             value={selectedAsset}
-            onChange={(e) => setSelectedAsset(assets[e.target.selectedIndex])}
+            onChange={(e) => setSelectedAsset(e.target.value)}
           >
             {assets.map((asset) => renderAssetOption(asset))}
           </select>
@@ -163,7 +167,7 @@ function CesiumIonConnector() {
 
   function renderTokenOption(token) {
     return (
-      <option key={token.name} value={token.name}>
+      <option key={token.id} value={token.id}>
         {token.name}
       </option>
     );
@@ -171,7 +175,7 @@ function CesiumIonConnector() {
 
   function renderAssetOption(asset) {
     return (
-      <option key={asset.name} value={asset.name}>
+      <option key={asset.id} value={asset.id}>
         {asset.name}
       </option>
     );
@@ -255,7 +259,55 @@ function CesiumIonConnector() {
   }
 
   function addToMap() {
-    console.log(`Token: ${selectedToken?.name} Asset: ${selectedAsset?.name}`)
+    if (!selectedAsset || !selectedToken) return;
+
+    const asset = assets?.find((asset) => asset?.id?.toString() === selectedAsset);
+    const token = tokens?.find((token) => token?.id?.toString() === selectedToken);
+
+    if (!asset || !token) return;
+
+    const newItem = upsertModelFromJson(
+      CatalogMemberFactory,
+      viewState.terria,
+      "",
+      CommonStrata.defaults,
+      {
+        type: "3d-tiles",
+        name: asset.name,
+        ionAssetId: asset.id,
+        ionAccessToken: token.token
+      },
+      {}
+    ).throwIfUndefined({
+      message: `An error occurred trying to add asset: ${selectedAsset.name}`
+    });
+
+    addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then((addedItem) => {
+      if (addedItem) {
+        // this.props.onFileAddFinished([addedItem]);
+        // if (TimeVarying.is(addedItem)) {
+        //   this.props.terria.timelineStack.addToTop(addedItem);
+        // }
+      }
+
+      // FIXME: Setting state here might result in a react warning if the
+      // component unmounts before the promise finishes
+      // this.setState({
+      //   isLoading: false
+      // });
+      // this.props.resetTab();
+    });
+
+    //newItem.setTrait(CommonStrata.user, "url", url);
+    // promise = newItem.loadMetadata().then((result) => {
+    //   if (result.error) {
+    //     return Promise.reject(result.error);
+    //   }
+
+    //   return Promise.resolve(newItem);
+    // });
+
+    //console.log(`Token: ${selectedToken?.name} Asset: ${selectedAsset?.name}`);
   }
 }
 
