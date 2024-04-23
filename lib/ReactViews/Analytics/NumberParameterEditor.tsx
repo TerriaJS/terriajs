@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import NumberParameter from "../../Models/FunctionParameters/NumberParameter";
@@ -8,9 +8,13 @@ import Styles from "./parameter-editors.scss";
 const NumberParameterEditor: React.FC<{ parameter: NumberParameter }> = ({
   parameter
 }) => {
-  const [value, setValue] = useState<number | undefined>(
-    parameter.defaultValue
-  );
+  const [value, setValue] = useState<number | undefined>(0);
+
+  useEffect(() => {
+    if (parameter.defaultValue !== undefined) {
+      setValue(parameter.defaultValue);
+    }
+  }, [parameter.defaultValue]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(parseFloat(e.target.value));

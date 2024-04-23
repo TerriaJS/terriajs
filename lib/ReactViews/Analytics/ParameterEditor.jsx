@@ -50,11 +50,15 @@ const ParameterEditor = createReactClass({
           {this.props.parameter.isRequired && <span> (required)</span>}
         </label>
         {typeof this.props.parameter.description === "string" &&
-        this.props.parameter.description !== ""
-          ? parseCustomMarkdownToReact(this.props.parameter.description, {
-              parameter: this.props.parameter
-            })
-          : ""}
+          this.props.parameter.description !== "" &&
+          typeof this.props.parameter.rangeDescription === "string" &&
+          this.props.parameter.rangeDescription !== ""
+          ? parseCustomMarkdownToReact(`${this.props.parameter.description} ${this.props.parameter.rangeDescription}`, {
+            parameter: this.props.parameter
+          })
+          : parseCustomMarkdownToReact(this.props.parameter.description, {
+            parameter: this.props.parameter
+          })}
       </div>
     );
   },
