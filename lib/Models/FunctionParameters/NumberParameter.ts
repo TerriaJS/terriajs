@@ -35,6 +35,12 @@ export default class NumberParameter
 
   @override
   get isValid(): boolean {
+    return super.value === undefined
+      ? this.isValidRange
+      : this.isValidRange && super.isValid;
+  }
+
+  get isValidRange(): boolean {
     let value =
       this.value !== undefined
         ? parseFloat(this.value)
@@ -42,10 +48,6 @@ export default class NumberParameter
 
     if (typeof value === "string") {
       value = parseFloat(value);
-    }
-
-    if (value === undefined || isNaN(value)) {
-      return !this.isRequired;
     }
 
     if (this.minimum !== undefined && value < this.minimum) {
