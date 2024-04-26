@@ -3,7 +3,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 async function loadXML(
   urlOrResource: string | Resource
 ): Promise<XMLDocument | undefined> {
-  var resource = (Resource as any).createIfNeeded(urlOrResource) as Resource;
+  const resource = (Resource as any).createIfNeeded(urlOrResource) as Resource;
   const response = await resource.fetchXML();
 
   /**

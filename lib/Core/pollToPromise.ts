@@ -9,12 +9,12 @@ interface Options {
 const pollToPromise = function (f: () => boolean, options: Options) {
   options = defaultValue(options, (defaultValue as any).EMPTY_OBJECT);
 
-  var pollInterval = defaultValue(options.pollInterval, 1);
-  var timeout = defaultValue(options.timeout, 5000);
+  const pollInterval = defaultValue(options.pollInterval, 1);
+  const timeout = defaultValue(options.timeout, 5000);
 
   return new Promise<void>((resolve, reject) => {
-    var startTimestamp = getTimestamp();
-    var endTimestamp = startTimestamp + timeout;
+    const startTimestamp = getTimestamp();
+    const endTimestamp = startTimestamp + timeout;
 
     function poller() {
       if (f()) {

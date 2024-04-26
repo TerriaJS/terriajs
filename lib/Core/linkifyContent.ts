@@ -3,9 +3,9 @@ import linkifyIt from "linkify-it";
 const linkify = linkifyIt();
 
 function linkifyContent(content: string) {
-  let matches = linkify.match(content),
-    result = [],
-    last: number;
+  const matches = linkify.match(content),
+    result = [];
+  let last: number;
 
   if (matches) {
     last = 0;

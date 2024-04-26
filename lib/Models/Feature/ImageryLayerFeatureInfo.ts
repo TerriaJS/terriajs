@@ -10,10 +10,10 @@ import formatPropertyValue from "../../Core/formatPropertyValue";
 ImageryLayerFeatureInfo.prototype.configureDescriptionFromProperties =
   function (properties: any) {
     function describe(properties: any) {
-      var html = '<table class="cesium-infoBox-defaultTable">';
-      for (var key in properties) {
+      let html = '<table class="cesium-infoBox-defaultTable">';
+      for (const key in properties) {
         if (Object.prototype.hasOwnProperty.call(properties, key)) {
-          var value = properties[key];
+          const value = properties[key];
           if (defined(value)) {
             if (typeof value === "object") {
               html +=

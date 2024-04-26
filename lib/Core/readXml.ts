@@ -13,7 +13,7 @@ function readXml(file: Blob) {
     if (!result) {
       return undefined;
     }
-    var xml = parser.parseFromString(result, "application/xml");
+    const xml = parser.parseFromString(result, "application/xml");
     if (
       !xml ||
       !xml.documentElement ||
