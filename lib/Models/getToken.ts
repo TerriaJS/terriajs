@@ -1,12 +1,13 @@
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const loadWithXhr = require("../Core/loadWithXhr");
-const TerriaError = require("../Core/TerriaError").default;
-var i18next = require("i18next").default;
+import defined from "terriajs-cesium/Source/Core/defined";
+import loadWithXhr from "../Core/loadWithXhr";
+import TerriaError from "../Core/TerriaError";
+import i18next from "i18next";
+import Terria from "./Terria";
 
-function getToken(terria, tokenUrl, url) {
+function getToken(terria: Terria, tokenUrl: string, url: string) {
   const options = {
     url: tokenUrl,
-    method: "POST",
+    method: "POST" as const,
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify({
       url: url
@@ -48,4 +49,4 @@ function getToken(terria, tokenUrl, url) {
     });
 }
 
-module.exports = getToken;
+export default getToken;

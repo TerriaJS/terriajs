@@ -163,7 +163,7 @@ export default class WebMapServiceCapabilities {
     createTransformer((url: string) => {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
-        if (!defined(json.Capability)) {
+        if (!capabilitiesXml || !defined(json.Capability)) {
           throw networkRequestError({
             title: "Invalid GetCapabilities",
             message:

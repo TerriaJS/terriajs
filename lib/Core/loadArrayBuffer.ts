@@ -6,5 +6,3 @@ export default function loadArrayBuffer(
 ): Promise<ArrayBuffer> {
   return Resource.fetchArrayBuffer({ url: urlOrResource, headers: headers })!;
 }
-
-module.exports = loadArrayBuffer;

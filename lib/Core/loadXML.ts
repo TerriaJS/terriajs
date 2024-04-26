@@ -1,8 +1,10 @@
-const Resource = require("terriajs-cesium/Source/Core/Resource").default;
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
-async function loadXML(urlOrResource) {
-  var resource = Resource.createIfNeeded(urlOrResource);
-  const respone = await resource.fetchXML();
+async function loadXML(
+  urlOrResource: string | Resource
+): Promise<XMLDocument | undefined> {
+  var resource = (Resource as any).createIfNeeded(urlOrResource) as Resource;
+  const response = await resource.fetchXML();
 
   /**
    * Sometimes Cesium's Resource.fetchXML will return an Array Buffer (usually in Node.js env)
@@ -13,17 +15,17 @@ async function loadXML(urlOrResource) {
    * See full license here https://github.com/fengyuanchen/is-array-buffer/blob/main/LICENSE
    */
   if (
-    respone instanceof ArrayBuffer ||
-    toString.call(respone) === "[object ArrayBuffer]"
+    response instanceof ArrayBuffer ||
+    toString.call(response) === "[object ArrayBuffer]"
   ) {
     const enc = new TextDecoder("utf-8");
-    const xmlString = enc.decode(respone);
+    const xmlString = enc.decode(response as any);
 
     const parser = new DOMParser();
     return parser.parseFromString(xmlString, "text/xml");
   }
 
-  return respone;
+  return response;
 }
 
-module.exports = loadXML;
+export default loadXML;

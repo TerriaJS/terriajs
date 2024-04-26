@@ -88,7 +88,7 @@ class MapServerStratum extends LoadableStratum(
   }
 
   static async load(item: ArcGisMapServerCatalogItem) {
-    if (!isDefined(item.uri)) {
+    if (!isDefined(item.uri) || !isDefined(item.url)) {
       throw new TerriaError({
         title: i18next.t("models.arcGisMapServerCatalogItem.invalidUrlTitle"),
         message: i18next.t(

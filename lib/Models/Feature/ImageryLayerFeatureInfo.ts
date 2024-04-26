@@ -1,10 +1,6 @@
-"use strict";
-
-var ImageryLayerFeatureInfo =
-  require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo").default;
-var defined = require("terriajs-cesium/Source/Core/defined").default;
-
-var formatPropertyValue = require("../../Core/formatPropertyValue");
+import defined from "terriajs-cesium/Source/Core/defined";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import formatPropertyValue from "../../Core/formatPropertyValue";
 
 /**
  * Configures the description of this feature by creating an HTML table of properties and their values.
@@ -12,8 +8,8 @@ var formatPropertyValue = require("../../Core/formatPropertyValue");
  * @param {Object} properties An object literal containing the properties of the feature.
  */
 ImageryLayerFeatureInfo.prototype.configureDescriptionFromProperties =
-  function (properties) {
-    function describe(properties) {
+  function (properties: any) {
+    function describe(properties: any) {
       var html = '<table class="cesium-infoBox-defaultTable">';
       for (var key in properties) {
         if (Object.prototype.hasOwnProperty.call(properties, key)) {
