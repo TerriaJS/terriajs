@@ -30,12 +30,12 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
 import Styles from "./story-builder.scss";
-import StoryEditor from "./StoryEditor.jsx";
+import StoryEditor from "./StoryEditor";
 const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";
 
-type StoryData = ViewState["terria"]["stories"][number];
+export type StoryData = ViewState["terria"]["stories"][number];
 
 interface IProps {
   isVisible?: boolean;
@@ -85,7 +85,7 @@ class StoryBuilder extends React.Component<
       storyWithOpenMenuId: undefined
     };
   }
-  removeStory = (index: number, story: StoryData) => {
+  removeStory = (index: number, story?: StoryData) => {
     this.setState({
       isSharing: false,
       isRemoving: true,
