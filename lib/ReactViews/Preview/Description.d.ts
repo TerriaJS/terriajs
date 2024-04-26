@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseModel } from "terriajs-plugin-api";
+import { BaseModel } from "../../Models/Definition/Model";
 
 interface PropsType {
   item: BaseModel;

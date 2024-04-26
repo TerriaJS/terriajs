@@ -1,7 +1,7 @@
 import { TFunction } from "i18next";
 import React from "react";
-import { ViewState } from "terriajs-plugin-api";
 import Terria from "../../Models/Terria";
+import ViewState from "../../ReactViewModels/ViewState";
 
 interface SearchInDataCatalogPropsType {
   viewState: ViewState;

@@ -1,4 +1,4 @@
-import { ViewState } from "terriajs-plugin-api";
+import ViewState from "../../../../../ReactViewModels/ViewState";
 
 interface PropsType {
   viewState: ViewState;
