@@ -26,7 +26,8 @@
     "./lib/ReactViews/**/*",
     "./lib/ThirdParty/**/*",
     // These Sass and Styled modules are required for their typings
-    "./lib/Sass/exports/**/*",
-    "./lib/Styled/Icon*"
+    "./lib/Sass/exports/*",
+    "./lib/Styled/Icon.tsx",
+    "./lib/Styled/IconWrapper.tsx"
   ]
 }
