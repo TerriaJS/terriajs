@@ -12,7 +12,7 @@ const containsAny = function (s: string, possibleStrings: string[]) {
     return false;
   }
 
-  for (var i = 0; i < possibleStrings.length; ++i) {
+  for (let i = 0; i < possibleStrings.length; ++i) {
     if (s.indexOf(possibleStrings[i]) >= 0) {
       return true;
     }
