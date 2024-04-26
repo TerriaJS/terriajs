@@ -24,6 +24,9 @@
     "./lib/Traits/**/*",
     "./lib/Language/**/*",
     "./lib/ReactViews/**/*",
-    "./lib/ThirdParty/**/*"
+    "./lib/ThirdParty/**/*",
+    // These Sass and Styled modules are required for their typings
+    "./lib/Sass/exports/**/*",
+    "./lib/Styled/Icon*"
   ]
 }
