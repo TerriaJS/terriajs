@@ -1,8 +1,8 @@
 {
   "general": {
     "prev": "上一个",
-    "next": "下一个",
-    "skip": "跳过",
+    "next": "继续",
+    "skip": "略过",
     "back": "返回",
     "delete": "删除",
     "cancel": "取消",
@@ -123,7 +123,8 @@
     "download": "下载",
     "sectionLabel": "图表",
     "loading": "加载图表数据...",
-    "noData": "无数据可用于图表显示。"
+    "noData": "无数据可用于图表显示。",
+    "showItemInChart": "在图表中显示 {{value}}"
   },
   "viewModels": {
     "searchCatalogueItem": "目录项",
@@ -135,7 +136,8 @@
     "inMultipleLocations": "在多个地点，包括： ",
     "searchErrorOccurred": "搜索时出错。 请检查您的互联网连接或稍后重试。",
     "searchNoCatalogueItem": "抱歉，没有与您的搜索查询匹配的目录项。",
-    "inDataCatalogue": "在数据目录中"
+    "inDataCatalogue": "在数据目录中",
+    "searchMinCharacters_0": "您需要输入至少 {{count}} 个字符"
   },
   "zoomCotrol": {
     "zoomIn": "放大",
@@ -453,7 +455,12 @@
     "removeAllStories": "移除全部",
     "removeStoryDialog": "您确定要删除“<1>{{storyName}}</1>”吗？",
     "preview": "预览地图故事",
-    "play": "播放"
+    "play": "播放",
+    "expand": "展开",
+    "collapse": "折叠",
+    "prev": "上一步",
+    "next": "下一步",
+    "restart": "重置"
   },
   "sui": {
     "notifications": {
@@ -603,7 +610,11 @@
       "czml": "CZML格式",
       "gltf": "GLTF格式",
       "kml": "KML或者KMZ",
-      "csv": "CSV格式"
+      "csv": "CSV格式",
+      "assimp-remote": "3D文件转换器(实验性功能)",
+      "assimp-local": "3D文件转换器(zip格式)(实验性功能)",
+      "assimp-local-description": "**Warning:** 3D文件转换器功能目前处于实验阶段。  \n请参阅[支持的格式列表](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \n文件必须压缩为zip格式。",
+      "socrata-group": "Socrata服务器"
     },
     "printWindow": {
       "onafterprint": "打印之后",
@@ -623,6 +634,10 @@
     },
     "serverConfig": {
       "failedToGet": "无法从 {{serverConfigUrl}} 获取服务器配置。这意味着代理、转换和 URL 缩短等服务可能无法正常工作。"
+    },
+    "unverifiedExternalLink": {
+      "confirmText": "在新标签页中打开",
+      "denyText": "取消"
     }
   },
   "terriaViewer": {
@@ -642,7 +657,11 @@
       "failedToObtain": "未能获取图像块 X:{{x}} Y:{{y}} Level: {{level}}",
       "devError": "cesium组件是必需的。",
       "notWebMercatorTilingScheme": "此数据集无法在 2D 地图上显示，因为它不支持 Web Mercator (EPSG:3857) 投影。",
-      "unusalTilingScheme": "此数据集无法在 2D 地图上显示，因为它使用了不受支持的切片方案。"
+      "unusalTilingScheme": "此数据集无法在 2D 地图上显示，因为它使用了不受支持的切片方案。",
+      "stoppedRenderingMessage": "这可能是由于刚添加到工作台的数据集所引起的，请尝试移除它。如果这不能解决问题，您可能需要重新加载 {{appName}}。",
+      "stoppedRenderingTitle": "3D地图渲染失败",
+      "terrainServerErrorTitle": "地形服务器无响应",
+      "terrainServerErrorMessage": " 当前地形服务器没有响应。您仍可以正常使用 {{appName}} 的所有功能，但在3D模式下将不会显示地形细节。对此带来的不便我们深感歉意。请稍后再试，届时地形服务器应能恢复正常。如果问题依旧存在，请通过电子邮件{{supportEmail}}联系我们。"
     },
     "addressGeocoder": {
       "devError": "bulkConvertAddresses 必须在派生类中实现。"
@@ -681,7 +700,8 @@
     "extraCreditLinks": {
       "basemap": "底图",
       "disclaimer": "免责声明",
-      "dataAttribution": "数据归属"
+      "dataAttribution": "数据归属",
+      "dataProvider": "数据提供者:"
     },
     "computeRingWindingOrder": {
       "devError": "类型为 {x:number, y:number} 的预期点"
@@ -737,7 +757,14 @@
     },
     "arcGisMapServerCatalogGroup": {
       "dataDescription": "数据描述",
-      "name": "ArcGIS 地图服务器组"
+      "name": "ArcGIS 地图服务器组",
+      "copyrightText": "版权声明",
+      "invalidServiceTitle": "无效的ArcGIS地图服务",
+      "invalidServiceMessage": "调用ArcGIS地图服务时发生错误。服务器的响应似乎不是有效的地图服务文档。",
+      "serviceDescription": "服务描述",
+      "groupNotAvailableTitle": "图层组不可用",
+      "groupNotAvailableMessage": "调用ArcGIS地图服务时发生错误。",
+      "singleFusedMapCacheLayerName": "所有图层"
     },
     "arcGisService": {
       "name": "ArcGIS服务组",
@@ -753,6 +780,25 @@
       "invalidServiceTitle": "ArcGIS 要素服务无效",
       "invalidServiceMessage": "调用 ArcGIS 要素服务时出错。 服务器的响应似乎不是有效的要素服务文档。",
       "groupNotAvailableMessage": "调用 ArcGIS 要素服务时出错。"
+    },
+    "arcGisMapServerCatalogItem": {
+      "name": "Esri ArcGIS地图服务器",
+      "dataDescription": "数据描述",
+      "noLayersFoundMessage": "Esri ArcGIS MapServer '{{name}}' 没有图层可供显示。",
+      "serviceDescription": "服务描述",
+      "invalidUrlTitle": "无法加载MapServer",
+      "noLayersFoundTitle": "无法加载ArcGIS MapServer。",
+      "copyrightText": "版权声明",
+      "invalidUrlMessage": "无法加载ArcGIS MapServer端点，因为目录项没有提供`url`。"
+    },
+    "bing": {
+      "name": "必应地图"
+    },
+    "wcs": {
+      "asyncResultLoadingMetadata": "WCS 加载中:\n服务 {{name}} 在 {{timestamp}}.\n\n*正在加载元数据 (`DescribeCoverage`)*",
+      "asyncResultDescription": "这是根据以下输入参数从 {{name}} 服务导出数据的结果，操作时间为 {{timestamp}}。",
+      "asyncPendingDescription": "WCS 加载中:\n来自 {{name}} 服务的数据，时间戳为 {{timestamp}}.\n\n*正在下载覆盖图层*",
+      "exportFailedTitle": "数据导出失败"
     }
   },
   "addData": {
@@ -828,7 +874,8 @@
     "preview": "{{appName}} 预览",
     "datasetDescription": "数据集描述",
     "modified": "修改",
-    "author": "作者"
+    "author": "作者",
+    "selectMultipleDatasets": "按下<strong>Shift</strong>键并点击</0><1 /><2>以添加多个数据集</2>"
   },
   "workbench": {
     "splitItem": "比较",
@@ -867,7 +914,8 @@
     "removeFromMap": "移除",
     "diffImage": "不同之处",
     "addItemErrorTitle": "无法将目录子项添加到工作台。",
-    "searchItem": "搜索"
+    "searchItem": "搜索",
+    "splitScreenMode": "分屏模式"
   },
   "dataCatalog": {
     "groupRemove": "移除此群组",
@@ -909,5 +957,8 @@
     "safari": "苹果Safari浏览器",
     "firefox": "FireFox浏览器",
     "edge": "微软Edge浏览器"
+  },
+  "includeStory": {
+    "message": "分享时包含故事"
   }
 }
