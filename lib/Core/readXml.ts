@@ -1,18 +1,18 @@
-"use strict";
+import i18next from "i18next";
+import readText from "./readText";
+import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 
-const i18next = require("i18next").default;
-var readText = require("./readText");
+let parser: DOMParser;
 
-var RuntimeError = require("terriajs-cesium/Source/Core/RuntimeError").default;
-
-var parser;
-
-function readXml(file) {
+function readXml(file: Blob) {
   return readText(file).then(function (result) {
     if (!parser) {
       parser = new DOMParser();
     }
 
+    if (!result) {
+      return undefined;
+    }
     var xml = parser.parseFromString(result, "application/xml");
     if (
       !xml ||
@@ -25,4 +25,4 @@ function readXml(file) {
   });
 }
 
-module.exports = readXml;
+export default readXml;

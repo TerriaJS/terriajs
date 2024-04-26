@@ -1,28 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import Icon from "terriajs/lib/Styled/Icon";
+import IconWrapper from "terriajs/lib/Styled/IconWrapper";
 
-import Icon from "../../Styled/Icon";
-import IconWrapper from "../../Styled/IconWrapper";
+interface PropsType {
+  inWorkbench?: boolean;
+}
 
-PrivateIndicator.propTypes = {
-  inWorkbench: PropTypes.bool
-};
-
-export default function PrivateIndicator(props) {
+export default function PrivateIndicator(props: PropsType) {
   const { t } = useTranslation();
-
   return (
     <IconWrapper
       marginRight={!props.inWorkbench}
       title={t("catalogItem.privateIndicatorTitle")}
-      inWorkbench={props.inWorkbench}
       css={`
         margin-top: -1px;
         svg {
           width: 15px;
           height: 15px;
-          fill: ${(p) =>
+          fill: ${(p: any) =>
             p.inWorkbench ? p.theme.textLight : p.theme.charcoalGrey};
         }
       `}

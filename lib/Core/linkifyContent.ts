@@ -1,11 +1,11 @@
-"use strict";
+import linkifyIt from "linkify-it";
 
-var linkify = require("linkify-it")();
+const linkify = linkifyIt();
 
-function linkifyContent(content) {
-  var matches = linkify.match(content),
+function linkifyContent(content: string) {
+  let matches = linkify.match(content),
     result = [],
-    last;
+    last: number;
 
   if (matches) {
     last = 0;
@@ -29,4 +29,4 @@ function linkifyContent(content) {
   return content;
 }
 
-module.exports = linkifyContent;
+export default linkifyContent;

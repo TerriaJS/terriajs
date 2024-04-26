@@ -1,9 +1,7 @@
-"use strict";
-
 /**
  * Trigger a window resize event.
  */
-function triggerResize() {
+export default function triggerResize() {
   try {
     window.dispatchEvent(new Event("resize"));
   } catch (e) {
@@ -12,5 +10,3 @@ function triggerResize() {
     window.dispatchEvent(evt);
   }
 }
-
-module.exports = triggerResize;

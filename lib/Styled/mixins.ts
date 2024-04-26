@@ -1,5 +1,11 @@
 // Doesn't result in composed classes that reuse these, but to save some typing
 
+import cssExports from "terriajs/lib/Sass/exports/_variables-export.scss";
+
+interface MixinProps {
+  theme: typeof cssExports;
+}
+
 export const scrollBars = () => `
 -webkit-overflow-scrolling: touch;
 
@@ -41,16 +47,16 @@ export const removeListStyles = () => `
   margin: 0;
 `;
 
-export const borderRadiusTop = (radius) => `
+export const borderRadiusTop = (radius: number | string) => `
   border-radius: ${radius}px ${radius}px 0 0;
 `;
-export const borderRadiusRight = (radius) => `
+export const borderRadiusRight = (radius: number | string) => `
   border-radius: 0 ${radius}px ${radius}px 0;
 `;
-export const borderRadiusBottom = (radius) => `
+export const borderRadiusBottom = (radius: number | string) => `
 border-radius: 0 0 ${radius}px ${radius}px;
 `;
-export const borderRadiusLeft = (radius) => `
+export const borderRadiusLeft = (radius: number | string) => `
   border-radius: ${radius}px 0 0 ${radius}px;
 `;
 
@@ -65,7 +71,7 @@ export const addBasicHoverStyles = () => `
  * unfortunately this means more classnames outputted, but gives us consistency
  * in the meantime.
  *  */
-export const addTerriaPrimaryBtnStyles = (props) => `
+export const addTerriaPrimaryBtnStyles = (props: MixinProps) => `
   background: ${props.theme.colorPrimary};
   color: ${props.theme.textLight};
   svg {
@@ -79,7 +85,7 @@ export const addTerriaPrimaryBtnStyles = (props) => `
   }
 `;
 
-export const addTerriaSecondaryBtnStyles = (props) => `
+export const addTerriaSecondaryBtnStyles = (props: MixinProps) => `
   color: ${props.theme.colorPrimary};
   // Don't override border here on secondary, as it's set specifically on certain buttons e.g. story cancel button
 
@@ -91,7 +97,7 @@ export const addTerriaSecondaryBtnStyles = (props) => `
   ${addBasicHoverStyles()}
 `;
 
-export const addTerriaTertiaryBtnStyles = (props) => `
+export const addTerriaTertiaryBtnStyles = (props: MixinProps) => `
   color: ${props.theme.modalText};
   background: ${props.theme.modalBg};
   border: 2px solid ${props.theme.modalText};
@@ -103,7 +109,7 @@ export const addTerriaTertiaryBtnStyles = (props) => `
   }
 `;
 
-export const addTerriaMapBtnStyles = (props) => `
+export const addTerriaMapBtnStyles = (props: MixinProps) => `
   color: ${props.theme.textLight};
   background-color: ${props.theme.dark};
   &:hover,
@@ -123,7 +129,7 @@ export const addTerriaMapBtnStyles = (props) => `
   }
 `;
 
-export const addTerriaLightBtnStyles = (props) => `
+export const addTerriaLightBtnStyles = (props: MixinProps) => `
   color: ${props.theme.textLight};
   svg {
     fill: ${props.theme.textLight};
@@ -135,7 +141,7 @@ export const addTerriaLightBtnStyles = (props) => `
   }
 `;
 
-export const addTerriaScrollbarStyles = (props) => `
+export const addTerriaScrollbarStyles = () => `
     -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {

@@ -1,10 +1,7 @@
-"use strict";
-const i18next = require("i18next").default;
+import i18next from "i18next";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
-const DeveloperError =
-  require("terriajs-cesium/Source/Core/DeveloperError").default;
-
-function readText(file) {
+function readText(file: Blob): Promise<string | undefined> {
   return new Promise((resolve, reject) => {
     if (typeof file === "undefined") {
       throw new DeveloperError(i18next.t("core.readText.fileRequired"));
@@ -14,8 +11,8 @@ function readText(file) {
     reader.readAsText(file);
 
     reader.onload = function (event) {
-      const allText = event.target.result;
-      resolve(allText);
+      const allText = event.target?.result;
+      resolve((allText ?? undefined) as string | undefined);
     };
     reader.onerror = function (e) {
       reject(e);
@@ -23,4 +20,4 @@ function readText(file) {
   });
 }
 
-module.exports = readText;
+export default readText;

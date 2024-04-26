@@ -1,6 +1,4 @@
-"use strict";
-
-var linkifyContent = require("./linkifyContent");
+import linkifyContent from "./linkifyContent";
 
 /**
  * Format the value for the description, used by the Feature Info Panel.
@@ -9,7 +7,7 @@ var linkifyContent = require("./linkifyContent");
  * @param {} value The value to format.
  * @param {Object} [options] Number formatting options, passed to Number.toLocaleString().
  */
-function formatPropertyValue(value, options) {
+function formatPropertyValue(value: any, options?: Intl.NumberFormatOptions) {
   if (typeof value === "number") {
     // Note we default useGrouping to false (not true) and maximumFractionDigits to 20 (not 3).
     return value.toLocaleString(undefined, {
@@ -27,4 +25,4 @@ function formatPropertyValue(value, options) {
   return value;
 }
 
-module.exports = formatPropertyValue;
+export default formatPropertyValue;

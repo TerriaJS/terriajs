@@ -1,15 +1,18 @@
-"use strict";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 
-var defaultValue = require("terriajs-cesium/Source/Core/defaultValue").default;
-var getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp").default;
+interface Options {
+  pollInterval?: number;
+  timeout?: number;
+}
 
-var pollToPromise = function (f, options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+const pollToPromise = function (f: () => boolean, options: Options) {
+  options = defaultValue(options, (defaultValue as any).EMPTY_OBJECT);
 
   var pollInterval = defaultValue(options.pollInterval, 1);
   var timeout = defaultValue(options.timeout, 5000);
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     var startTimestamp = getTimestamp();
     var endTimestamp = startTimestamp + timeout;
 
@@ -29,4 +32,4 @@ var pollToPromise = function (f, options) {
   });
 };
 
-module.exports = pollToPromise;
+export default pollToPromise;
