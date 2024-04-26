@@ -1,6 +1,6 @@
 // Doesn't result in composed classes that reuse these, but to save some typing
 
-import cssExports from "terriajs/lib/Sass/exports/_variables-export.scss";
+import cssExports from "../Sass/exports/_variables-export.scss";
 
 interface MixinProps {
   theme: typeof cssExports;

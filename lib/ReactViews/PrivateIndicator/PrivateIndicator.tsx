@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Icon from "terriajs/lib/Styled/Icon";
-import IconWrapper from "terriajs/lib/Styled/IconWrapper";
+import Icon from "../../Styled/Icon";
+import IconWrapper from "../../Styled/IconWrapper";
 
 interface PropsType {
   inWorkbench?: boolean;

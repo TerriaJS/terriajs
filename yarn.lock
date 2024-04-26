@@ -1787,7 +1787,7 @@
   dependencies:
     "@types/geojson" "*"
 
-"@types/linkify-it@^3.0.5":
+"@types/linkify-it@*", "@types/linkify-it@^3.0.5":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.5.tgz#1e78a3ac2428e6d7e6c05c1665c242023a4601d8"
   integrity sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==
@@ -1804,10 +1804,23 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.178.tgz#341f6d2247db528d4a13ddbb374bcdc80406f4f8"
   integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
 
+"@types/markdown-it@^14.0.1":
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/@types/markdown-it/-/markdown-it-14.0.1.tgz#3d3fdf9dba83b69edececc070d39ec72b84270a7"
+  integrity sha512-6WfOG3jXR78DW8L5cTYCVVGAsIFZskRHCDo5tbqa+qtKVt4oDRVH7hyIWu1SpDQJlmIoEivNQZ5h+AGAOrgOtQ==
+  dependencies:
+    "@types/linkify-it" "*"
+    "@types/mdurl" "*"
+
 "@types/math-expression-evaluator@^1.2.0":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@types/math-expression-evaluator/-/math-expression-evaluator-1.2.2.tgz#05970d669d8c27c43f97d1557fa2a67e79698100"
   integrity sha512-eHy3f0C2mfFdHbK2zoKRXaM830dm2pSTUBWZ3aJCWxFsOxErWsXNPziFLliqBddGYreCM4Nyl1IZwFCt0jwRNg==
+
+"@types/mdurl@*":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mdurl/-/mdurl-1.0.5.tgz#3e0d2db570e9fb6ccb2dc8fde0be1d79ac810d39"
+  integrity sha512-6L6VymKTzYSrEf4Nev4Xa1LCHKrlTlYCBMTlQKFuddo1CvQcE52I0mwfOJayueUC7MJuXOeHTcIU683lzd0cUA==
 
 "@types/minimatch@*":
   version "3.0.5"
