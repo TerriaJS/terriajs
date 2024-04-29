@@ -23,12 +23,6 @@ export type WhiteSpace =
   | "initial"
   | "inherit";
 
-export type OneKeyFrom<T, K extends keyof T = keyof T> = K extends any
-  ? Pick<T, K> & Partial<Record<Exclude<keyof T, K>, never>> extends infer O
-    ? { [P in keyof O]: O[P] }
-    : never
-  : never;
-
 /**
  * Types that can be used after upgrade to ts4.
  */
