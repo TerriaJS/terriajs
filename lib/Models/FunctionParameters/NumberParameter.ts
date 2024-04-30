@@ -11,7 +11,7 @@ interface Options extends FunctionParameterOptions {
 }
 
 export default class NumberParameter
-  extends FunctionParameter<string>
+  extends FunctionParameter<number>
   implements Options
 {
   static readonly type = "number";
@@ -33,6 +33,10 @@ export default class NumberParameter
     }
   }
 
+  @override get value(): number | undefined {
+    return super.value ?? this.defaultValue;
+  }
+
   @override
   get isValid(): boolean {
     return super.value === undefined
@@ -42,9 +46,7 @@ export default class NumberParameter
 
   get isValidRange(): boolean {
     let value =
-      this.value !== undefined
-        ? parseFloat(this.value)
-        : (this.defaultValue as number);
+      this.value !== undefined ? this.value : (this.defaultValue as number);
 
     if (typeof value === "string") {
       value = parseFloat(value);
