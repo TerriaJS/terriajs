@@ -18,7 +18,7 @@ const NumberParameterEditor: React.FC<{ parameter: NumberParameter }> = ({
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(parseFloat(e.target.value));
-    parameter.setValue(CommonStrata.user, e.target.value);
+    parameter.setValue(CommonStrata.user, parseFloat(e.target.value));
   };
 
   const min = (parameter.minimum || "") as string;
