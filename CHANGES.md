@@ -1,10 +1,12 @@
 # Change Log
 
-#### next release (8.7.2)
-
-- Implement AllowedValue Range with DefaultValue Support for WPS Parameters
+#### next release (8.7.3)
 
 - [The next improvement]
+
+#### 8.7.2
+
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.7.1 - 2024-04-16
 
