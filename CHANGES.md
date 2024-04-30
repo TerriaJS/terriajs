@@ -3,6 +3,7 @@
 #### next release (8.7.2)
 
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
+- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 
 #### 8.7.1 - 2024-04-16
 
