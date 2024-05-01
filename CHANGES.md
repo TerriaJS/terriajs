@@ -2,6 +2,7 @@
 
 #### next release (8.7.2)
 
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 - Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
 - The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
 - [The next improvement]

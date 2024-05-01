@@ -6,8 +6,7 @@ import {
   ObservableMap,
   reaction,
   runInAction,
-  makeObservable,
-  override
+  makeObservable
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";

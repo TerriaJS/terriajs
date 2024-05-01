@@ -1,6 +1,5 @@
 import { ComponentProps } from "react";
 import styled from "styled-components";
-import { OneKeyFrom } from "./Styled.types";
 
 interface ITextSize {
   noFontSize?: boolean;
@@ -52,9 +51,9 @@ export interface ITextPropsBase {
 }
 
 export type ITextProps = ITextPropsBase &
-  OneKeyFrom<ITextSize> &
-  OneKeyFrom<ITextColor> &
-  OneKeyFrom<ITextWeight> &
+  ITextSize &
+  ITextColor &
+  ITextWeight &
   ComponentProps<"div">;
 
 // should it be a span or inline-block-div? - leaning to div

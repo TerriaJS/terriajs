@@ -4,9 +4,9 @@ import Request from "terriajs-cesium/Source/Core/Request";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
-import { scaleDenominatorToLevel } from "./../Core/scaleToDenominator";
+import { scaleDenominatorToLevel } from "../Core/scaleToDenominator";
 import CommonStrata from "./../Models/Definition/CommonStrata";
-import { MinMaxLevelTraits } from "./../Traits/TraitsClasses/MinMaxLevelTraits";
+import { MinMaxLevelTraits } from "../Traits/TraitsClasses/MinMaxLevelTraits";
 
 type BaseType = Model<MinMaxLevelTraits>;
 

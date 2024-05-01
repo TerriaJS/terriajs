@@ -3,7 +3,6 @@
 import classNames from "classnames";
 import { Lambda, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 import isDefined from "../../Core/isDefined";
