@@ -1,5 +1,3 @@
-import { JsonObject } from "../../Core/Json";
-import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";

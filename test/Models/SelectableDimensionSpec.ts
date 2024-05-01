@@ -1,4 +1,4 @@
-import SelectableDimensions, {
+import {
   DEFAULT_PLACEMENT,
   Placement,
   SelectableDimension,

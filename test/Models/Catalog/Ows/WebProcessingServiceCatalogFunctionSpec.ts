@@ -1,4 +1,4 @@
-import { action, configure, reaction, runInAction } from "mobx";
+import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../../../lib/Core/isDefined";

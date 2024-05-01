@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import { runInAction } from "mobx";
 import GetCapabilitiesMixin from "../../../../lib/ModelMixins/GetCapabilitiesMixin";
 import WebFeatureServiceCatalogItem, {
   GetCapabilitiesStratum

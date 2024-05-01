@@ -8,7 +8,6 @@ import ThreddsCatalogGroup, {
   ThreddsDataset
 } from "../CatalogGroups/ThreddsCatalogGroup";
 import CatalogMemberFactory from "../CatalogMemberFactory";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";

@@ -1,5 +1,3 @@
-import anyTrait from "../Decorators/anyTrait";
-import JsonObject from "../../Core/Json";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import ArcGisPortalItemFormatTraits from "./ArcGisPortalItemFormatTraits";
 import mixTraits from "../mixTraits";

@@ -19,7 +19,6 @@ import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFe
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
-import pollToPromise from "../../Core/pollToPromise";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
