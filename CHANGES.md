@@ -4,9 +4,8 @@
 
 - Fix WPS date time widget reset bug
 - Set default date for WPS date time widget on load
-
-- [The next improvement]
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
+- [The next improvement]
 
 #### 8.7.1 - 2024-04-16
 

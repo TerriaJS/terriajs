@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import * as moment from "moment";
@@ -16,25 +16,26 @@ const DateTimeParameterEditor = ({ parameter, previewed, terria }) => {
       ? Styles.field
       : Styles.fieldDatePlaceholder;
 
-  const currentTime = useRef();
-  currentTime.current = defined(parameter.value)
-    ? parameter.value
-    : terria.timelineStack.clock.currentTime;
-
-  const initiateDate = () => {
-    currentTime.current = defined(parameter.value)
-      ? parameter.value
-      : terria.timelineStack.clock.currentTime;
-    const ct = new Date(currentTime.current);
-    const dateValue = moment.utc(ct.toISOString()).local().format("YYYY-MM-DD");
-    const timeValue = moment.utc(ct.toISOString()).local().format("HH:mm");
-    setDateValue(dateValue);
-    setTimeValue(timeValue);
-  };
-
   useEffect(() => {
-    initiateDate();
-  }, []); // eslint-disable-line
+    let newDateValue, newTimeValue;
+    if (parameter.value === undefined) {
+      const currentTime = defined(parameter.value)
+        ? parameter.value
+        : terria.timelineStack.clock.currentTime;
+
+      const ct = new Date(currentTime);
+
+      newDateValue = moment.utc(ct.toISOString()).local().format("YYYY-MM-DD");
+      newTimeValue = moment.utc(ct.toISOString()).local().format("HH:mm");
+    } else {
+      const ct = new Date(parameter.value);
+      newDateValue = moment.utc(ct.toISOString()).local().format("YYYY-MM-DD");
+      newTimeValue = moment.utc(ct.toISOString()).local().format("HH:mm");
+    }
+    setDateValue(newDateValue);
+    setTimeValue(newTimeValue);
+    parameter.setValue(CommonStrata.user, `${newDateValue}T${newTimeValue}`);
+  }, [parameter, terria.timelineStack.clock.currentTime]);
 
   const handleTimeChange = (e) => {
     setTimeValue(e.target.value);
