@@ -7,7 +7,6 @@ import { withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -21,7 +20,6 @@ import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
-  LOCATION_MARKER_DATA_SOURCE_NAME,
   removeMarker
 } from "../../Models/LocationMarkerUtils";
 import Terria from "../../Models/Terria";

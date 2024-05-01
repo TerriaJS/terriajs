@@ -1,4 +1,4 @@
-import { scaleDenominatorToLevel } from "./../../lib/Core/scaleToDenominator";
+import { scaleDenominatorToLevel } from "../../lib/Core/scaleToDenominator";
 describe("scaleDenominatorToLevel", () => {
   it("returns undefined when scale negative", () => {
     const scale = -1;

@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

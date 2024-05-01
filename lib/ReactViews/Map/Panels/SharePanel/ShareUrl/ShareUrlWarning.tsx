@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { reaction } from "mobx";
 import { observer } from "mobx-react";
 
 import { getName } from "../../../../../ModelMixins/CatalogMemberMixin";

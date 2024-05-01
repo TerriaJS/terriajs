@@ -32,10 +32,7 @@ import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
 import getAncestors from "../../../Models/getAncestors";
-import {
-  default as ViewingControlsModel,
-  ViewingControl
-} from "../../../Models/ViewingControls";
+import { ViewingControl } from "../../../Models/ViewingControls";
 import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";

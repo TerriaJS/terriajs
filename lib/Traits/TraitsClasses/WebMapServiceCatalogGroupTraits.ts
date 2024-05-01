@@ -1,5 +1,3 @@
-import { JsonObject } from "../../Core/Json";
-import anyTrait from "../Decorators/anyTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
