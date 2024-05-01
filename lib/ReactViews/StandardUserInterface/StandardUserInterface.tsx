@@ -129,8 +129,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       props.children
     );
 
-    const terria = props.terria;
-
     const showStoryBuilder =
       props.viewState.storyBuilderShown &&
       !props.viewState.useSmallScreenInterface;

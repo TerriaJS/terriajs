@@ -126,7 +126,7 @@ export const StyledInput = styled.input<InputProps>`
 
 const Input: React.FC<InputProps> = (props: InputProps) => {
   const { boxProps, ...rest }: InputProps = props;
-  const theme: DefaultTheme = useTheme();
+  useTheme();
   return (
     <Box fullWidth {...boxProps}>
       <StyledInput {...rest} />
