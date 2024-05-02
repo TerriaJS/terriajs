@@ -6,7 +6,6 @@ import React, { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
-import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
@@ -68,10 +67,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
     });
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-      if (
-        !e.dataTransfer.types ||
-        !arrayContains(e.dataTransfer.types, "Files")
-      ) {
+      if (!e.dataTransfer.types || !e.dataTransfer.types.includes("Files")) {
         return;
       }
       e.preventDefault();
