@@ -150,7 +150,7 @@ function configureWebpack(
         "@babel/plugin-proposal-nullish-coalescing-operator",
         "babel-plugin-styled-components",
         require.resolve("@babel/plugin-syntax-dynamic-import"),
-        "babel-plugin-lodash"
+        "@sigmacomputing/babel-plugin-lodash"
       ],
       assumptions: {
         setPublicClassFields: false
