@@ -14,7 +14,8 @@
     "colors": "1.4.0",
     "@types/node": "^18.15.11",
     "@types/css-font-loading-module": "^0.0.9",
-    "terser-webpack-plugin": "^4.2.3"
+    "terser-webpack-plugin": "^4.2.3",
+    "underscore": "^1.12.1"
   },
   "dependencies": {
     "@babel/core": "^7.23.5",
