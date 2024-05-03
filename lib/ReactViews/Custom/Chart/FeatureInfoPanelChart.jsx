@@ -33,6 +33,9 @@ class FeatureInfoPanelChart extends React.Component {
     margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
 
+  /**
+   * Will be set to true if attempts to load the catalog item fails
+   */
   @observable
   loadingFailed = false;
 
@@ -53,17 +56,17 @@ class FeatureInfoPanelChart extends React.Component {
     );
   }
 
-  setError(result) {
-    this.loadingFailed = result.error !== undefined;
-    result.logError();
+  setLoadError(loadResult) {
+    this.loadingFailed = loadResult.error !== undefined;
+    loadResult.logError();
   }
 
   async componentDidUpdate() {
-    this.setError(await this.props.item.loadMapItems());
+    this.setLoadError(await this.props.item.loadMapItems());
   }
 
   async componentDidMount() {
-    this.setError(await this.props.item.loadMapItems());
+    this.setLoadError(await this.props.item.loadMapItems());
   }
 
   render() {
