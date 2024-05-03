@@ -20,9 +20,9 @@ class ZoomX extends React.Component {
     this.zoom = d3Zoom()
       .scaleExtent(props.scaleExtent)
       .translateExtent(props.translateExtent)
-      .on("zoom", () =>
-        props.onZoom(d3Event.transform.rescaleX(this.props.initialScale))
-      );
+      .on("zoom", (event) => {
+        props.onZoom(event.transform.rescaleX(this.props.initialScale))
+      });
   }
 
   componentDidMount() {
