@@ -2,6 +2,7 @@
 
 #### next release (8.7.2)
 
+- When feature info panel chart loading fails, show an inline error, instead of a popup.
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.7.1 - 2024-04-16
