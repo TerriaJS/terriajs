@@ -45,7 +45,7 @@ class FeatureInfoPanelChart extends React.Component {
   get chartItem() {
     const catalogItem = this.props.item;
     if (!ChartableMixin.isMixedInto(catalogItem)) {
-      return;
+      return undefined;
     }
     return catalogItem.chartItems.find(
       (chartItem) =>
