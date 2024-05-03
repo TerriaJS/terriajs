@@ -636,6 +636,7 @@
     "download": "Download",
     "showItemInChart": "Show {{value}} in chart",
     "loading": "Loading chart data...",
+    "loadingFailed": "Error loading chart.",
     "noData": "No chartable data found."
   },
   "viewModels": {

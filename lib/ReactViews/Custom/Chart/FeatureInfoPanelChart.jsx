@@ -2,15 +2,15 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { withParentSize } from "@visx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
-import { computed, makeObservable } from "mobx";
+import i18next from "i18next";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
-import Styles from "./chart-preview.scss";
-import LineChart from "./LineChart";
 import styled from "styled-components";
-import i18next from "i18next";
+import ChartableMixin from "../../../ModelMixins/ChartableMixin";
+import LineChart from "./LineChart";
+import Styles from "./chart-preview.scss";
 
 @withParentSize
 @observer
@@ -33,6 +33,9 @@ class FeatureInfoPanelChart extends React.Component {
     margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
 
+  @observable
+  loadingFailed = false;
+
   constructor(props) {
     super(props);
     makeObservable(this);
@@ -40,43 +43,54 @@ class FeatureInfoPanelChart extends React.Component {
 
   @computed
   get chartItem() {
-    return this.props.item.chartItems.find(
+    const catalogItem = this.props.item;
+    if (!ChartableMixin.isMixedInto(catalogItem)) {
+      return;
+    }
+    return catalogItem.chartItems.find(
       (chartItem) =>
         chartItem.type === "line" || chartItem.type === "lineAndPoint"
     );
   }
 
+  setError(result) {
+    this.loadingFailed = result.error !== undefined;
+    result.logError();
+  }
+
   async componentDidUpdate() {
-    (await this.props.item.loadMapItems()).raiseError(this.props.item.terria, {
-      message: `Failed to load chart for ${this.props.item.name}`,
-      importance: -1
-    });
+    this.setError(await this.props.item.loadMapItems());
   }
 
   async componentDidMount() {
-    (await this.props.item.loadMapItems()).raiseError(this.props.item.terria, {
-      message: `Failed to load chart for ${this.props.item.name}`,
-      importance: -1
-    });
+    this.setError(await this.props.item.loadMapItems());
   }
 
   render() {
-    const catalogItem = this.props.item;
+    const item = this.props.item;
     const height = this.props.height || this.props.parentHeight;
     const width = this.props.width || this.props.parentWidth;
-    if (!ChartableMixin.isMixedInto(catalogItem)) {
-      return (
-        <ChartStatusText width={width} height={height}>
-          {i18next.t("chart.noData")}
-        </ChartStatusText>
-      );
-    } else if (!this.chartItem && catalogItem.isLoadingMapItems) {
+
+    const isChartLoading =
+      ChartableMixin.isMixedInto(item) && item.isLoadingMapItems;
+    const loadingFailed = this.loadingFailed;
+    const hasNoChartData =
+      this.chartItem?.points === undefined ||
+      this.chartItem.points.length === 0;
+
+    if (isChartLoading) {
       return (
         <ChartStatusText width={width} height={height}>
           {i18next.t("chart.loading")}
         </ChartStatusText>
       );
-    } else if (!this.chartItem || this.chartItem.points.length === 0) {
+    } else if (loadingFailed) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.loadingFailed")}
+        </ChartStatusText>
+      );
+    } else if (hasNoChartData) {
       return (
         <ChartStatusText width={width} height={height}>
           {i18next.t("chart.noData")}
