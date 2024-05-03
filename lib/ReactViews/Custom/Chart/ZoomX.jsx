@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { zoom as d3Zoom } from "d3-zoom";
-import { select as d3Select, event as d3Event } from "d3-selection";
+import { select as d3Select } from "d3-selection";
 import PropTypes from "prop-types";
 import React from "react";
 
