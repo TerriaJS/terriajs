@@ -1526,7 +1526,7 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      //@ts-ignore
+      //@ts-expect-error
       const location: Location = {
         href: "http://test.com/#map=2d"
       };
@@ -1552,7 +1552,7 @@ describe("Terria", function () {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
-      //@ts-ignore
+      //@ts-expect-error
       const location: Location = {
         href: "http://test.com/#map=4d"
       };

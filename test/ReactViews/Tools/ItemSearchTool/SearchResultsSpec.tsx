@@ -30,7 +30,7 @@ async function render(
   await act(() => {
     rendered = create(<SearchResults {...props} />);
   });
-  // @ts-ignore
+  // @ts-expect-error
   return rendered;
 }
 
