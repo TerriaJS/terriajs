@@ -201,6 +201,7 @@
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "babel-plugin-styled-components": "^1.10.7",
+    "bufferutil": "^4.0.8",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.19.0",
@@ -236,6 +237,7 @@
     "regenerator-runtime": "^0.13.2",
     "sass": "^1.66.1",
     "terriajs-server": "^4.0.0",
+    "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
   },
   "scripts": {
