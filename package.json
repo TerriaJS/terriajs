@@ -34,7 +34,7 @@
     "@mapbox/vector-tile": "^1.3.0",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@opendatasoft/api-client": "^0.1.0",
-    "@tinymce/tinymce-react": "^4.3.0",
+    "@tinymce/tinymce-react": "^5.0.1",
     "@turf/bbox": "^6.5.0",
     "@turf/boolean-intersects": "^6.5.0",
     "@turf/circle": "^6.5.0",
