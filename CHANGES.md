@@ -6,6 +6,7 @@
 - Remove unused ts-loader dependency.
 - Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
+- Update to gulp 5.0 to fix security vulnerabilities.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
