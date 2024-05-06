@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { useUID } from "react-uid";
 import { TextSpan } from "../Text";
-import { SpacingSpan } from "./../Spacing";
+import { SpacingSpan } from "../Spacing";
 import CheckboxIcon from "./Elements/CheckboxIcon";
 import HiddenCheckbox from "./Elements/HiddenCheckbox";
 import { ICheckboxProps } from "./types";

@@ -30,7 +30,6 @@ import TimeFilterTraits, {
 } from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
-import TimeVarying from "./TimeVarying";
 
 type BaseType = Model<TimeFilterTraits> & MappableMixin.Instance;
 

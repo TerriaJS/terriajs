@@ -2,7 +2,7 @@ import i18next from "i18next";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { isJsonObject, isJsonString } from "../../../Core/Json";
 import loadXML from "../../../Core/loadXML";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import {
   OnlineResource,

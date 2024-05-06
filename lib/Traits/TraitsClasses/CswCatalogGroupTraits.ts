@@ -1,5 +1,3 @@
-import { JsonObject } from "../../Core/Json";
-import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
@@ -44,7 +42,7 @@ export class DomainSpecTraits extends ModelTraits {
 }
 
 @traitClass({
-  description: `Creates one catalog group from url that points to a csw service. 
+  description: `Creates one catalog group from url that points to a csw service.
   The url in the example supports CORS therefore do not use proxy. Using a proxy might not work.`,
   example: {
     type: "csw-group",

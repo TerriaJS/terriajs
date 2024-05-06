@@ -3,7 +3,6 @@ import { Dataset, Facet } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import runLater from "../../../Core/runLater";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";

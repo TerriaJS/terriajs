@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import { isJsonObject } from "../../../Core/Json";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
 import TerriaError from "../../../Core/TerriaError";
