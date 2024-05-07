@@ -1,12 +1,11 @@
 const create: any = require("react-test-renderer").create;
-import React from "react";
+import { runInAction } from "mobx";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import { runInAction } from "mobx";
-const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import Caret from "../../../lib/ReactViews/Generic/Caret";
+import { terriaTheme } from "../../../lib/ViewModels/StandardTheme";
+const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
 
 describe("HelpPrompt", function () {
   let terria: Terria;

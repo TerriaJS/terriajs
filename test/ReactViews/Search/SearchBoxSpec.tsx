@@ -1,10 +1,9 @@
 const create: any = require("react-test-renderer").create;
-import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { SearchBox } from "../../../lib/ReactViews/Search/SearchBox";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import { terriaTheme } from "../../../lib/ViewModels/StandardTheme";
 
 describe("SearchBox", function () {
   let terria: Terria;

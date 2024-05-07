@@ -1,8 +1,8 @@
 import DOMPurify from "dompurify";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../../StandardUserInterface";
+import { terriaTheme } from "../../../../../ViewModels/StandardTheme";
 import { useViewState } from "../../../../Context";
 import { DistanceLegend } from "../../../BottomBar/DistanceLegend";
 import {

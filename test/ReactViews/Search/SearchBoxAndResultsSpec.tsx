@@ -1,15 +1,14 @@
 const create: any = require("react-test-renderer").create;
-import React from "react";
-import { act } from "react-dom/test-utils";
 import { runInAction } from "mobx";
+import { act } from "react-dom/test-utils";
+import { ThemeProvider } from "styled-components";
+import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
-import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
-import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
+import { terriaTheme } from "../../../lib/ViewModels/StandardTheme";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;

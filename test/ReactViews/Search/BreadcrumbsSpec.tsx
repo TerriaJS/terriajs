@@ -1,16 +1,15 @@
 const create: any = require("react-test-renderer").create;
-import React from "react";
+import { runInAction } from "mobx";
 import { act } from "react-dom/test-utils";
-import Terria from "../../../lib/Models/Terria";
+import { ThemeProvider } from "styled-components";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
+import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
+import Icon from "../../../lib/Styled/Icon";
+import { terriaTheme } from "../../../lib/ViewModels/StandardTheme";
 const DataCatalogTab: any =
   require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
-import Icon from "../../../lib/Styled/Icon";
-import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
-import { runInAction } from "mobx";
 
 describe("Breadcrumbs", function () {
   let terria: Terria;

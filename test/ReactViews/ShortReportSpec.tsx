@@ -8,7 +8,7 @@ import {
 import { ThemeProvider } from "styled-components";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
+import { terriaTheme } from "../../lib/ViewModels/StandardTheme";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 
 describe("ShortReport", function () {

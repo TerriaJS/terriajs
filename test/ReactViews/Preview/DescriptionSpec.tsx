@@ -9,7 +9,7 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../lib/Models/Terria";
 import Description from "../../../lib/ReactViews/Preview/Description";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import { terriaTheme } from "../../../lib/ViewModels/StandardTheme";
 
 describe("DescriptionSpec", function () {
   let testRenderer: ReactTestRenderer;
