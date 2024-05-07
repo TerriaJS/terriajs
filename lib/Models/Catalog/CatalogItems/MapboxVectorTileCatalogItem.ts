@@ -3,12 +3,11 @@ import i18next from "i18next";
 import { computed, runInAction, makeObservable, override } from "mobx";
 import {
   GeomType,
-  json_style,
   LabelRule,
   LineSymbolizer,
   PolygonSymbolizer,
-  Rule as PaintRule
-} from "protomaps";
+  PaintRule
+} from "protomaps-leaflet";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
@@ -142,7 +141,8 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   @computed
   get parsedJsonStyle() {
     if (this.style) {
-      return json_style(this.style, new Map());
+      // return json_style(this.style, new Map());
+      return {} as any;
     }
   }
 

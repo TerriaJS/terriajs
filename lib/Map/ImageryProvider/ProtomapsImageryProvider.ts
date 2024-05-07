@@ -12,7 +12,7 @@ import {
   LabelRule,
   Labelers,
   LineSymbolizer,
-  Rule as PaintRule,
+  PaintRule,
   PmtilesSource,
   PreparedTile,
   Feature as ProtomapsFeature,
@@ -21,8 +21,8 @@ import {
   View,
   Zxy,
   ZxySource,
-  painter
-} from "protomaps";
+  paint
+} from "protomaps-leaflet";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -454,7 +454,7 @@ export default class ProtomapsImageryProvider
       tile = {
         data: data,
         z: coords.z,
-        data_tile: coords,
+        dataTile: coords,
         scale: 1,
         origin: new Point(coords.x * 256, coords.y * 256),
         dim: this.tileWidth
@@ -485,7 +485,7 @@ export default class ProtomapsImageryProvider
     ctx.clearRect(0, 0, 256, 256);
 
     if (labelData)
-      painter(
+      paint(
         ctx,
         coords.z,
         tileMap,
@@ -518,7 +518,8 @@ export default class ProtomapsImageryProvider
         .queryFeatures(
           CesiumMath.toDegrees(longitude),
           CesiumMath.toDegrees(latitude),
-          level
+          level,
+          1
         )
         .forEach((f) => {
           // Only create FeatureInfo for visible features with properties
