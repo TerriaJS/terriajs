@@ -17,7 +17,7 @@ import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
 import { WithViewState, withViewState } from "../Context";
-import { applyTranslationIfExists } from "./../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 interface IProps extends WithTranslation, WithViewState {
   theme: DefaultTheme;

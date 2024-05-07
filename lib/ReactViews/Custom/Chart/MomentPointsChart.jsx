@@ -138,7 +138,6 @@ function closestPointIndex(x, sortedPoints) {
       return i - 1;
     }
   }
-  return;
 }
 
 export default MomentPointsChart;

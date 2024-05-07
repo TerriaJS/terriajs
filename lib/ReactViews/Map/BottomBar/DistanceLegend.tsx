@@ -2,7 +2,7 @@
 import L from "leaflet";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { FC, useEffect, useState, memo } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";

@@ -12,7 +12,7 @@ import {
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
-import React, { Ref } from "react";
+import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
