@@ -1,5 +1,11 @@
 import { TFunction } from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
@@ -46,6 +52,7 @@ class SettingPanel extends React.Component<PropTypes> {
    */
   constructor(props: PropTypes) {
     super(props);
+    makeObservable(this);
   }
 
   @observable _hoverBaseMap = null;
@@ -311,7 +318,7 @@ class SettingPanel extends React.Component<PropTypes> {
                     }
                     onClick={(event) => this.selectBaseMap(baseMap.item, event)}
                     onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
-                    onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
+                    onMouseLeave={this.mouseLeaveBaseMap.bind(this)}
                     onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                   >
                     {baseMap.item === this.props.terria.mainViewer.baseMap ? (

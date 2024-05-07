@@ -34,7 +34,7 @@ describe("TerriaError", function () {
   });
 
   it("Can create TerriaError from Object", function () {
-    const error = new Object("some stringy object");
+    const error = Object("some stringy object");
     const test = TerriaError.from(error);
     expect(test.message).toBe("some stringy object");
     expect(test.title).toBe("core.terriaError.defaultTitle");

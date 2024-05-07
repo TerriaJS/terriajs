@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -20,6 +20,7 @@ import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogIt
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
+import { ModelConstructorParameters } from "../../lib/Models/Definition/Model";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
@@ -65,8 +66,7 @@ describe("FeatureInfoSection", function () {
 
     viewState = new ViewState({
       terria,
-      catalogSearchProvider: undefined,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
     const properties = {
       name: "Kay",
@@ -95,7 +95,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -114,7 +114,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -152,7 +152,7 @@ describe("FeatureInfoSection", function () {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
         t={() => {}}
@@ -179,7 +179,7 @@ describe("FeatureInfoSection", function () {
     const section2 = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
         t={() => {}}
@@ -199,7 +199,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -222,7 +222,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -245,7 +245,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -264,7 +264,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -289,7 +289,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -305,11 +305,12 @@ describe("FeatureInfoSection", function () {
     feature = new Entity({
       name: "Vapid"
     });
+
     const section = (
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -325,6 +326,27 @@ describe("FeatureInfoSection", function () {
       result.root.findAll((node) => (node as any)._fiber.key === "no-info")
         .length
     ).toEqual(1);
+  });
+
+  it("does not break when a template name needs to be rendered but no properties are set", function () {
+    catalogItem.featureInfoTemplate.setTrait(
+      CommonStrata.user,
+      "name",
+      "Title {{name}}"
+    );
+
+    feature = new Entity();
+    const section = (
+      <FeatureInfoSection
+        catalogItem={catalogItem}
+        feature={feature}
+        isOpen
+        viewState={viewState}
+        t={() => {}}
+      />
+    );
+    const result = createWithContexts(viewState, section);
+    expect(findWithText(result, "Title ").length).toEqual(1);
   });
 
   it("shows properties if no description", function () {
@@ -344,7 +366,7 @@ describe("FeatureInfoSection", function () {
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
         t={() => {}}
       />
@@ -371,7 +393,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -392,7 +414,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -415,7 +437,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -439,7 +461,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -470,7 +492,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -501,7 +523,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -535,7 +557,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -562,7 +584,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -589,7 +611,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -611,7 +633,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -646,7 +668,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -692,7 +714,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -727,7 +749,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -749,7 +771,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -771,7 +793,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -793,7 +815,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -813,7 +835,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -835,7 +857,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -858,7 +880,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -884,7 +906,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -934,7 +956,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           position={position}
           t={() => {}}
@@ -966,7 +988,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -980,7 +1002,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1010,7 +1032,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1040,7 +1062,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1091,7 +1113,7 @@ describe("FeatureInfoSection", function () {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           catalogItem={catalogItem}
           t={() => {}}
@@ -1158,7 +1180,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1179,7 +1201,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={i18next.t}
         />
@@ -1203,7 +1225,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={i18next.getFixedT("cimode")}
         />
@@ -1241,7 +1263,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1280,7 +1302,7 @@ describe("FeatureInfoSection", function () {
       let section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1293,7 +1315,7 @@ describe("FeatureInfoSection", function () {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1307,7 +1329,7 @@ describe("FeatureInfoSection", function () {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
@@ -1342,7 +1364,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={() => {}}
         />
@@ -1365,6 +1387,11 @@ class TestModelTraits extends mixTraits(
 class TestModel extends MappableMixin(
   DiscretelyTimeVaryingMixin(CatalogMemberMixin(CreateModel(TestModelTraits)))
 ) {
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }

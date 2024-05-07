@@ -6,39 +6,42 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import pollToPromise from "../../lib/Core/pollToPromise";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
-import TerriaFeature from "../../lib/Models/Feature/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
 describeIfSupported("UserDrawing that requires WebGL", function () {
-  it("changes cursor to crosshair when entering drawing mode", function (done) {
-    const terria = new Terria();
-    const container = document.createElement("div");
+  let terria: Terria;
+  let container: HTMLElement;
+
+  beforeEach(() => {
+    terria = new Terria();
+    container = document.createElement("div");
     document.body.appendChild(container);
     terria.mainViewer.attach(container);
+  });
 
+  afterEach(() => {
+    terria.mainViewer.destroy();
+    document.body.removeChild(container);
+  });
+
+  it("changes cursor to crosshair when entering drawing mode", async function () {
+    await terria.mainViewer.viewerLoadPromise;
     const userDrawing = new UserDrawing({ terria });
-    pollToPromise(() => {
-      return userDrawing.terria.cesium !== undefined;
-    })
-      .then(() => {
-        const cesium = userDrawing.terria.cesium;
-        expect(cesium).toBeDefined();
-        if (cesium) {
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("");
-          userDrawing.enterDrawMode();
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("crosshair");
-          (<any>userDrawing).cleanUp();
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("auto");
-        }
-      })
-      .then(done)
-      .catch(done.fail);
+    const cesium = terria.cesium;
+    expect(cesium).toBeDefined();
+    if (cesium) {
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("");
+      userDrawing.enterDrawMode();
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("crosshair");
+      (userDrawing as any).cleanUp();
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("auto");
+    }
   });
 });
 
@@ -50,8 +53,8 @@ describe("UserDrawing", function () {
   });
 
   it("will use default options if options are not specified", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
@@ -63,13 +66,13 @@ describe("UserDrawing", function () {
   });
 
   it("getDialogMessage contains callback message if callback is specified", function () {
-    var options = {
+    const options = {
       terria: terria,
       onMakeDialogMessage: function () {
         return "HELLO";
       }
     };
-    var userDrawing = new UserDrawing(options);
+    const userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
@@ -81,23 +84,23 @@ describe("UserDrawing", function () {
   });
 
   it("listens for user picks on map after entering drawing mode", function () {
-    var userDrawing = new UserDrawing({ terria });
+    const userDrawing = new UserDrawing({ terria });
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(0);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(1);
   });
 
   it("disables feature info requests when in drawing mode", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
   });
 
   it("re-enables feature info requests on cleanup", function () {
-    var options = { terria: terria };
-    var userDrawing = new UserDrawing(options);
+    const options = { terria: terria };
+    const userDrawing = new UserDrawing(options);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
     userDrawing.cleanUp();
@@ -167,12 +170,12 @@ describe("UserDrawing", function () {
     expect(currentPoint.position).toBeDefined();
 
     if (currentPoint.position !== undefined) {
-      let currentPointPos = currentPoint.position.getValue(
+      const currentPointPos = currentPoint.position.getValue(
         terria.timelineClock.currentTime
       );
-      expect(currentPointPos.x).toEqual(x);
-      expect(currentPointPos.y).toEqual(y);
-      expect(currentPointPos.z).toEqual(z);
+      expect(currentPointPos?.x).toEqual(x);
+      expect(currentPointPos?.y).toEqual(y);
+      expect(currentPointPos?.z).toEqual(z);
     }
 
     // Check line as well
@@ -182,7 +185,7 @@ describe("UserDrawing", function () {
     if (lineEntity.polyline !== undefined) {
       expect(lineEntity.polyline.positions).toBeDefined();
       if (lineEntity.polyline.positions !== undefined) {
-        let currentPointPos = lineEntity.polyline.positions.getValue(
+        const currentPointPos = lineEntity.polyline.positions.getValue(
           terria.timelineClock.currentTime
         )[0];
         expect(currentPointPos.x).toEqual(x);
@@ -207,12 +210,12 @@ describe("UserDrawing", function () {
     expect(newPoint.position).toBeDefined();
 
     if (newPoint.position !== undefined) {
-      let newPointPos = newPoint.position.getValue(
+      const newPointPos = newPoint.position.getValue(
         terria.timelineClock.currentTime
       );
-      expect(newPointPos.x).toEqual(newX);
-      expect(newPointPos.y).toEqual(newY);
-      expect(newPointPos.z).toEqual(newZ);
+      expect(newPointPos?.x).toEqual(newX);
+      expect(newPointPos?.y).toEqual(newY);
+      expect(newPointPos?.z).toEqual(newZ);
     }
 
     // Check line as well
@@ -222,7 +225,7 @@ describe("UserDrawing", function () {
     if (lineEntity.polyline !== undefined) {
       expect(lineEntity.polyline.positions).toBeDefined();
       if (lineEntity.polyline.positions !== undefined) {
-        let newPointPos = lineEntity.polyline.positions.getValue(
+        const newPointPos = lineEntity.polyline.positions.getValue(
           terria.timelineClock.currentTime
         )[1];
         expect(newPointPos.x).toEqual(newX);
@@ -256,7 +259,7 @@ describe("UserDrawing", function () {
     expect(userDrawing.otherEntities.entities.values.length).toEqual(0);
     userDrawing.enterDrawMode();
 
-    let pickedFeatures = new PickedFeatures();
+    const pickedFeatures = new PickedFeatures();
     // Auckland, in case you're wondering
     pickedFeatures.pickPosition = new Cartesian3(
       -5088454.576893678,
@@ -271,11 +274,11 @@ describe("UserDrawing", function () {
     expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
 
-    (<any>userDrawing).cleanUp();
+    (userDrawing as any).cleanUp();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(0);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(0);
-    expect((<any>userDrawing).inDrawMode).toBeFalsy();
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).inDrawMode).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
   });
 
   it("ensures onCleanUp callback is called when clean up occurs", function () {
@@ -283,7 +286,7 @@ describe("UserDrawing", function () {
     const userDrawing = new UserDrawing({ terria, onCleanUp });
     userDrawing.enterDrawMode();
     expect(onCleanUp).not.toHaveBeenCalled();
-    (<any>userDrawing).cleanUp();
+    (userDrawing as any).cleanUp();
     expect(onCleanUp).toHaveBeenCalled();
   });
 
@@ -334,7 +337,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the first point
     pickedFeatures.pickPosition = pt1CartesianPosition;
@@ -347,7 +350,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(3);
   });
 
@@ -399,7 +402,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the first point
     pickedFeatures.pickPosition = pt1CartesianPosition;
@@ -412,7 +415,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
   });
 
@@ -463,7 +466,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
 
     // Now pick the first point
@@ -476,7 +479,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
 
     // Another point. Polygon is still closed.
@@ -493,7 +496,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
   });
 
@@ -545,7 +548,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the second point
     pickedFeatures.pickPosition = pt2CartesianPosition;

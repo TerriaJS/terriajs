@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 //@ts-ignore
@@ -35,7 +35,7 @@ interface IProps extends WithTranslation {
   className: any;
   style: any;
   t: TFunction;
-  setWrapperState({}: any): void;
+  setWrapperState(): void;
 }
 
 @observer
@@ -43,6 +43,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
   static displayName = "WorkbenchItem";
   constructor(props: IProps) {
     super(props);
+    makeObservable(this);
   }
 
   @action.bound
@@ -148,12 +149,12 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           </Box>
           {CatalogMemberMixin.isMixedInto(item) ? (
             <Box centered paddedHorizontally>
+              {item.isPrivate && (
+                <BoxSpan paddedHorizontally>
+                  <PrivateIndicator inWorkbench />
+                </BoxSpan>
+              )}
               <RawButton onClick={() => this.toggleDisplay()}>
-                {item.isPrivate && (
-                  <BoxSpan paddedHorizontally>
-                    <PrivateIndicator inWorkbench />
-                  </BoxSpan>
-                )}
                 <BoxSpan padded>
                   {this.isOpen ? (
                     <StyledIcon

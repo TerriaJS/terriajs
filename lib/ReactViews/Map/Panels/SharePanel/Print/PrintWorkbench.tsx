@@ -45,7 +45,7 @@ const renderLegend = (catalogItem: BaseModel) => {
         <div className="layer-time">Time: {catalogItem.currentTime}</div>
       )}
       {CatalogMemberMixin.isMixedInto(catalogItem) && (
-        <Legend forPrint={true} item={catalogItem} />
+        <Legend forPrint item={catalogItem} />
       )}
     </div>
   );

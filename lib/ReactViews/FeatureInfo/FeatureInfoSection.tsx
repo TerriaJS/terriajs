@@ -1,7 +1,14 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { merge } from "lodash-es";
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import { isEmpty, merge } from "lodash-es";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
@@ -12,9 +19,9 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import TerriaError from "../../Core/TerriaError";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
-import TerriaError from "../../Core/TerriaError";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
@@ -22,21 +29,19 @@ import TimeVarying from "../../ModelMixins/TimeVarying";
 import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
+import { TimeSeriesContext } from "../../Table/tableFeatureInfoContext";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
+import { WithViewState, withViewState } from "../Context";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import {
-  withViewState,
-  WithViewState
-} from "../StandardUserInterface/ViewStateContext";
-import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import FeatureInfoPanelButton from "./FeatureInfoPanelButton";
+import Styles from "./feature-info-section.scss";
 import { generateCesiumInfoHTMLFromProperties } from "./generateCesiumInfoHTMLFromProperties";
 import getFeatureProperties from "./getFeatureProperties";
 import {
+  MustacheFunction,
   mustacheFormatDateTime,
   mustacheFormatNumberFunction,
-  MustacheFunction,
   mustacheRenderPartialByName,
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
@@ -68,15 +73,22 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * - A CsvChartCustomComponent will create a new CsvCatalogItem and set traits
    * See `rawDataReactNode` for rendered raw data
    */
-  @observable private templatedFeatureInfoReactNode:
+  @observable.ref private templatedFeatureInfoReactNode:
     | React.ReactNode
     | undefined = undefined;
+
+  noInfoRef: HTMLDivElement | null = null;
 
   @observable
   private showRawData: boolean = false;
 
   /** See `setFeatureChangedCounter` */
   @observable featureChangedCounter = 0;
+
+  constructor(props: FeatureInfoProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.templateReactionDisposer = reaction(
@@ -202,7 +214,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         longitude: number;
       };
       currentTime?: Date;
-      timeSeries?: unknown;
+      timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
     } = {
       partialByName: mustacheRenderPartialByName(
@@ -283,7 +295,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     const feature = this.props.feature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
-    let description: string | undefined =
+    const description: string | undefined =
       feature.description?.getValue(currentTime);
 
     if (isDefined(description)) return description;
@@ -343,7 +355,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     return {
       data:
-        this.featureProperties && this.featureProperties !== {}
+        this.featureProperties && !isEmpty(this.featureProperties)
           ? this.featureProperties
           : undefined,
       fileName
@@ -396,7 +408,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     if (this.props.catalogItem.featureInfoTemplate.name) {
       title = Mustache.render(
         this.props.catalogItem.featureInfoTemplate.name,
-        this.featureProperties
+        this.mustacheContextData,
+        this.props.catalogItem.featureInfoTemplate.partials
       );
     } else
       title =
@@ -442,7 +455,12 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
           {titleElement}
           {this.props.isOpen ? (
             <section className={Styles.content}>
-              <div ref="no-info" key="no-info">
+              <div
+                ref={(r) => {
+                  this.noInfoRef = r;
+                }}
+                key="no-info"
+              >
                 {t("featureInfo.noInfoAvailable")}
               </div>
             </section>
@@ -461,15 +479,18 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
               {this.props.feature.loadingFeatureInfoUrl ? (
                 "Loading"
               ) : this.showRawData || !this.templatedFeatureInfoReactNode ? (
-                <>
-                  {this.rawFeatureInfoReactNode ? (
-                    this.rawFeatureInfoReactNode
-                  ) : (
-                    <div ref="no-info" key="no-info">
-                      {t("featureInfo.noInfoAvailable")}
-                    </div>
-                  )}
-                </>
+                this.rawFeatureInfoReactNode ? (
+                  this.rawFeatureInfoReactNode
+                ) : (
+                  <div
+                    ref={(r) => {
+                      this.noInfoRef = r;
+                    }}
+                    key="no-info"
+                  >
+                    {t("featureInfo.noInfoAvailable")}
+                  </div>
+                )
               ) : (
                 // Show templated feature info
                 this.templatedFeatureInfoReactNode

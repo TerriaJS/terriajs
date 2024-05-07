@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, reaction, runInAction } from "mobx";
+import { action, reaction, runInAction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -21,7 +20,6 @@ import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
-  LOCATION_MARKER_DATA_SOURCE_NAME,
   removeMarker
 } from "../../Models/LocationMarkerUtils";
 import Terria from "../../Models/Terria";
@@ -29,7 +27,7 @@ import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 
@@ -43,6 +41,11 @@ interface Props {
 
 @observer
 class FeatureInfoPanel extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
@@ -110,7 +113,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     catalogItems: MappableMixin.Instance[],
     featureMap: Map<string, TerriaFeature[]>
   ) {
-    return catalogItems.map((catalogItem, i) => {
+    return catalogItems.map((catalogItem, _i) => {
       // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
       const features =
         (catalogItem.uniqueId
@@ -224,7 +227,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     const cartographic =
       Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
-      return <></>;
+      return null;
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);
@@ -290,7 +293,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             ? featureMap.get(catalogItem.uniqueId)
             : undefined) ?? [];
         return {
-          catalogItem: catalogItem as TimeFilterMixin.Instance,
+          catalogItem: catalogItem,
           feature: isDefined(features[0]) ? features[0] : undefined
         };
       })

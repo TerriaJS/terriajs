@@ -13,10 +13,10 @@ See `lib\Core\Result.ts` for more documentation.
 
 ```ts
 function someFn(someArg: boolean): Result<string | undefined> {
-  if (someArg) {
-    return new Result("success");
-  }
-  return new Result(undefined, TerriaError.from("SOME ERROR"));
+    if (someArg) {
+        return new Result("success");
+    }
+    return new Result(undefined, TerriaError.from("SOME ERROR"));
 }
 ```
 
@@ -36,7 +36,7 @@ const value = someFn(false).ignoreError();
 
 ```ts
 const value = someFn(someArg).catchError((error) =>
-  doSomethingWithError(error)
+    doSomethingWithError(error)
 );
 ```
 
@@ -66,18 +66,18 @@ This allows you to add more context to TerriaErrors.
 
 Valid `TerriaErrorOverrides` include:
 
-- String values - eg `"Some error message"`
-- JSON representation of `TerriaError` - eg `{"title": "Error title", "message": "Some error message"}`
+-   String values - eg `"Some error message"`
+-   JSON representation of `TerriaError` - eg `{"title": "Error title", "message": "Some error message"}`
 
 #### Simple usage
 
 ```ts
 function someFn(someArg): Result<string | undefined> {
-  if (someArg) {
-    return new Result("success");
-  }
-  // Here we create a TerriaError with message "Some Error inside result"
-  return new Result(undefined, TerriaError.from("Some error inside result"));
+    if (someArg) {
+        return new Result("success");
+    }
+    // Here we create a TerriaError with message "Some Error inside result"
+    return new Result(undefined, TerriaError.from("Some error inside result"));
 }
 
 // Here we add `TerriaErrorOverrides` in throwIfError.
@@ -125,10 +125,10 @@ See `lib\Core\TerriaError.ts` for more documentation.
 
 `TerriaErrorSeverity` enum values can be `Error` or `Warning`.
 
-- Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
-- By default, errors will use `Error`
-- `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
-- Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+-   Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+-   By default, errors will use `Error`
+-   `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+-   Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
 
 #### Example of severity propagation
 
@@ -136,8 +136,8 @@ Say we have this error with severity `Warning`:
 
 ```ts
 const error = {
-  message: "some message",
-  severity: TerriaErrorSeverity.Warning
+    message: "some message",
+    severity: TerriaErrorSeverity.Warning
 };
 ```
 

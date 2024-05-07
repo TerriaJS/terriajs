@@ -3,7 +3,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import L from "leaflet";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
@@ -50,7 +49,9 @@ export default class LeafletSelectionIndicator {
     });
 
     this._marker.addTo(this._leaflet.map);
-    this._selectionIndicatorDomElement = (<any>this._marker)._icon.children[0];
+    this._selectionIndicatorDomElement = (
+      this._marker as any
+    )._icon.children[0];
   }
 
   setLatLng(latlng: L.LatLng) {
@@ -67,7 +68,7 @@ export default class LeafletSelectionIndicator {
       this._selectionIndicatorTween = undefined;
     }
 
-    var style = this._selectionIndicatorDomElement.style;
+    const style = this._selectionIndicatorDomElement.style;
 
     this._selectionIndicatorIsAppearing = true;
 
@@ -111,7 +112,7 @@ export default class LeafletSelectionIndicator {
       this._selectionIndicatorTween = undefined;
     }
 
-    var style = this._selectionIndicatorDomElement.style;
+    const style = this._selectionIndicatorDomElement.style;
 
     this._selectionIndicatorIsAppearing = false;
 
@@ -147,18 +148,21 @@ export default class LeafletSelectionIndicator {
       return;
     }
 
-    var feature = this._leaflet.terria.selectedFeature;
+    const feature = this._leaflet.terria.selectedFeature;
     if (isDefined(feature) && isDefined(feature.position)) {
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(
-          this._leaflet.terria.timelineClock.currentTime
-        ),
-        cartographicScratch
+      const positionValue = feature.position.getValue(
+        this._leaflet.terria.timelineClock.currentTime
       );
-      this._marker.setLatLng([
-        CesiumMath.toDegrees(cartographic.latitude),
-        CesiumMath.toDegrees(cartographic.longitude)
-      ]);
+      if (isDefined(positionValue)) {
+        const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+          positionValue,
+          cartographicScratch
+        );
+        this._marker.setLatLng([
+          CesiumMath.toDegrees(cartographic.latitude),
+          CesiumMath.toDegrees(cartographic.longitude)
+        ]);
+      }
     }
 
     if (this._tweens.length > 0) {
@@ -169,7 +173,7 @@ export default class LeafletSelectionIndicator {
       this._tweens.length !== 0 ||
       (isDefined(feature) && isDefined(feature.position))
     ) {
-      cesiumRequestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this._startTweens();
       });
     }

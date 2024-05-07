@@ -15,7 +15,7 @@ import SelectableDimensions, {
 import Terria from "../../lib/Models/Terria";
 import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
 import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
@@ -29,7 +29,11 @@ export default class TestCatalogItem
     return "test";
   }
 
-  selectableDimensions: SelectableDimensionModel[] = [
+  get selectableDimensions() {
+    return this.selectableDimensionsValue;
+  }
+
+  selectableDimensionsValue: SelectableDimensionModel[] = [
     {
       id: "some-id",
       name: "Some name",
@@ -166,7 +170,7 @@ describe("DimensionSelectorSection", function () {
     });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
     ).andReturn({
       responseText: JSON.stringify(
         require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
@@ -220,7 +224,7 @@ describe("DimensionSelectorSection", function () {
 
     beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
-      mockItem.selectableDimensions = [
+      mockItem.selectableDimensionsValue = [
         {
           id: "checkbox-group1",
           type: "checkbox-group",
@@ -282,7 +286,7 @@ describe("DimensionSelectorSection", function () {
 
     beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
-      mockItem.selectableDimensions = [
+      mockItem.selectableDimensionsValue = [
         {
           id: "group",
           type: "group",
@@ -357,9 +361,9 @@ describe("DimensionSelectorSection", function () {
       const group = section.root.findByType(SelectableDimensionGroup);
       expect(group.props.dim.type).toEqual("group");
 
-      const collapsible = group.children[0];
-
-      if (typeof collapsible === "string") throw "Invalid collapsible";
+      const collapsible: TestRenderer.ReactTestInstance = (
+        group.children[0] as any
+      ).children[0].children[0];
 
       const button = collapsible.children[0];
 

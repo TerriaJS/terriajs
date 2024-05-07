@@ -1,6 +1,5 @@
 import { ComponentProps } from "react";
 import styled from "styled-components";
-import { OneKeyFrom } from "./Styled.types";
 
 interface ITextSize {
   noFontSize?: boolean;
@@ -32,7 +31,7 @@ interface ITextWeight {
 export interface ITextPropsBase {
   displayBlock?: boolean;
   isLink?: boolean;
-  nunito?: boolean;
+  mono?: boolean;
   openSans?: boolean;
   breakWord?: boolean;
   uppercase?: boolean;
@@ -52,9 +51,9 @@ export interface ITextPropsBase {
 }
 
 export type ITextProps = ITextPropsBase &
-  OneKeyFrom<ITextSize> &
-  OneKeyFrom<ITextColor> &
-  OneKeyFrom<ITextWeight> &
+  ITextSize &
+  ITextColor &
+  ITextWeight &
   ComponentProps<"div">;
 
 // should it be a span or inline-block-div? - leaning to div
@@ -67,6 +66,8 @@ export const Text = styled.div<ITextProps>`
 
   // TODO: themeify family
   font-family: ${(props) => props.theme.fontBase};
+
+  ${(props) => props.mono && `font-family: ${props.theme.fontMono};`}
 
   ${(props) =>
     props.breakWord &&
@@ -183,11 +184,6 @@ export const Text = styled.div<ITextProps>`
     props.styledFontSize &&
     `
     font-size: ${props.styledFontSize};
-  `}
-  ${(props) =>
-    props.styledLineHeight &&
-    `
-    line-height: ${props.styledLineHeight};
   `}
 
   ${(props) =>

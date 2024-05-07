@@ -1,4 +1,3 @@
-const create: any = require("react-test-renderer").create;
 import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -23,8 +22,7 @@ describe("TourPortal", function () {
     });
     viewState = new ViewState({
       terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
+      catalogSearchProvider: undefined
     });
   });
 

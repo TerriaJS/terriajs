@@ -100,7 +100,7 @@ export class ShortReportTraits extends ModelTraits {
   show = true;
 }
 
-export default class CatalogMemberTraits extends ModelTraits {
+class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Name",
@@ -115,6 +115,14 @@ export default class CatalogMemberTraits extends ModelTraits {
       "The description of the catalog item. Markdown and HTML may be used."
   })
   description?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Hide default description",
+    description:
+      "If true, then no generic default description will be displayed if `description` is undefined."
+  })
+  hideDefaultDescription: boolean = false;
 
   @primitiveTrait({
     type: "string",
@@ -229,5 +237,16 @@ export default class CatalogMemberTraits extends ModelTraits {
     name: "Disable about data",
     description: "Disables the 'About Data' button in the workbench."
   })
-  disableAboutData: boolean = false;
+  disableAboutData?: boolean;
 }
+
+interface CatalogMemberTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  name?: CatalogMemberTraits["name"];
+  shortReport?: CatalogMemberTraits["shortReport"];
+  description?: CatalogMemberTraits["description"];
+  disableAboutData?: CatalogMemberTraits["disableAboutData"];
+}
+
+export default CatalogMemberTraits;

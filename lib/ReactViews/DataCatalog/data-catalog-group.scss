@@ -112,7 +112,7 @@
 .catalog-group {
   composes: list-reset from "../../Sass/common/_base.scss";
   padding-left: $padding;
-  padding-top: $padding / 2;
+  padding-top: calc($padding / 2);
   &--lower-level {
     margin-left: 20px;
     border-left: 1px solid $grey-lighter;

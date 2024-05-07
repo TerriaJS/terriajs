@@ -78,7 +78,7 @@ export default function createRegionMappedImageryProvider(
   };
 
   const getOutlineColorValue = (zoom: number, f?: ProtomapsFeature) => {
-    let defaultOutlineColor = runInAction(() => terria.baseMapContrastColor);
+    const defaultOutlineColor = runInAction(() => terria.baseMapContrastColor);
     const rowNumber = getRowNumber(zoom, f);
     if (!isDefined(rowNumber)) return defaultOutlineColor;
 

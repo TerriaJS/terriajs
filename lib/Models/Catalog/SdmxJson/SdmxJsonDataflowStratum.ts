@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import { networkRequestError } from "../../../Core/TerriaError";
@@ -78,7 +78,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     catalogItem: SdmxJsonCatalogItem
   ): Promise<SdmxJsonDataflowStratum> {
     // Load dataflow (+ all related references)
-    let dataflowStructure: SdmxJsonStructureMessage =
+    const dataflowStructure: SdmxJsonStructureMessage =
       await loadSdmxJsonStructure(
         proxyCatalogItemUrl(
           catalogItem,
@@ -135,6 +135,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     private readonly sdmxJsonDataflow: SdmxJsonDataflow
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -152,7 +153,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.sdmxJsonDataflow?.dataflow.annotations
         ?.filter((a) => a.type === "EXT_RESOURCE" && a.text)
         .map((annotation) => {
-          let text = annotation.texts?.[i18next.language] ?? annotation.text!;
+          const text = annotation.texts?.[i18next.language] ?? annotation.text!;
           const title = text.includes("|") ? text.split("|")[0] : undefined;
           const url = text.includes("|") ? text.split("|")[1] : text;
           return createStratumInstance(MetadataUrlTraits, { title, url });
@@ -291,7 +292,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           let options: StratumFromTraits<DimensionOptionTraits>[] = [];
 
           // Get codes by merging allowedOptionIds with codelist
-          let filteredCodesList =
+          const filteredCodesList =
             (allowedOptionIds.size > 0
               ? codelist?.codes?.filter((code) =>
                   allowedOptionIds.has(code.id!)
@@ -398,7 +399,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         ?.filter((override) => override.type === "unit-measure" && override.id)
         .map((override) => {
           // Find dimension/attribute id with concept or codelist override
-          let dimOrAttr =
+          const dimOrAttr =
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
@@ -423,7 +424,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
 
     // Try to get option label if it exists
-    let frequency =
+    const frequency =
       frequencyDim?.options.find((o) => o.id === frequencyDim.selectedId)
         ?.name ?? frequencyDim?.id;
 
@@ -458,7 +459,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         )
         .map((override) => {
           // Find dimension/attribute id with concept or codelist
-          let dimOrAttr =
+          const dimOrAttr =
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
@@ -803,7 +804,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.catalogItem.discreteTimes.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${regionType.nameProp}}}`;
-      template += `</table>{{#terria.timeSeries.data}}<chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>{{/terria.timeSeries.data}}`;
+      template += `</table>{{#terria.timeSeries.data}}<chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.primaryMeasureColumn?.title}" >{{terria.timeSeries.data}}</chart>{{/terria.timeSeries.data}}`;
     }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });
@@ -822,7 +823,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     const conceptId = conceptUrn?.descendantIds?.[0];
 
     if (!isDefined(conceptId)) return;
-    let resolvedConceptScheme =
+    const resolvedConceptScheme =
       typeof conceptSchemeId === "string"
         ? this.getConceptScheme(conceptSchemeId)
         : conceptSchemeId;

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -209,6 +209,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
     private readonly results: Result[]
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -496,9 +497,9 @@ export default class SocrataCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const socrataServerStratum = <SocrataCatalogStratum | undefined>(
-      this.strata.get(SocrataCatalogStratum.stratumName)
-    );
+    const socrataServerStratum = this.strata.get(
+      SocrataCatalogStratum.stratumName
+    ) as SocrataCatalogStratum | undefined;
     if (socrataServerStratum) {
       await runLater(() => socrataServerStratum.createMembers());
     }

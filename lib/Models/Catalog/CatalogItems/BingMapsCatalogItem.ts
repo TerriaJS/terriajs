@@ -1,9 +1,10 @@
-import { computed } from "mobx";
+import { computed, observable, makeObservable, runInAction } from "mobx";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import BingMapsCatalogItemTraits from "../../../Traits/TraitsClasses/BingMapsCatalogItemTraits";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import CreateModel from "../../Definition/CreateModel";
 
 export default class BingMapsCatalogItem extends MappableMixin(
@@ -11,16 +12,34 @@ export default class BingMapsCatalogItem extends MappableMixin(
 ) {
   static readonly type = "bing-maps";
 
+  @observable _imageryProvider: BingMapsImageryProvider | undefined;
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return BingMapsCatalogItem.type;
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+  protected async forceLoadMapItems(): Promise<void> {
+    const provider = await BingMapsImageryProvider.fromUrl(
+      "//dev.virtualearth.net",
+      {
+        mapStyle: this.mapStyle as any,
+        key: this.key!,
+        culture: this.culture
+      }
+    );
+    runInAction(() => {
+      this._imageryProvider = provider;
+    });
   }
 
   @computed get mapItems(): MapItem[] {
     const imageryProvider = this._createImageryProvider();
+    if (imageryProvider === undefined) return [];
     return [
       {
         imageryProvider,
@@ -34,21 +53,17 @@ export default class BingMapsCatalogItem extends MappableMixin(
   }
 
   _createImageryProvider() {
-    const result = new BingMapsImageryProvider({
-      url: "//dev.virtualearth.net",
-      mapStyle: <any>this.mapStyle,
-      key: this.key!
-    });
+    const result = this._imageryProvider;
+    if (result === undefined) return result;
 
     if (this.attribution) {
-      (<any>result)._credit = this.attribution;
+      (result as any)._credit = this.attribution;
     } else {
       // open in a new window
-      (<any>result)._credit = new Credit(
+      (result as any)._credit = new Credit(
         '<a href="http://www.bing.com" target="_blank">Bing</a>'
       );
     }
-    result.defaultGamma = 1.0;
 
     return result;
   }

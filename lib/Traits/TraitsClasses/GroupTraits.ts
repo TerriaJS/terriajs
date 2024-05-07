@@ -10,9 +10,16 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
   @primitiveArrayTrait({
     name: "Exclude members",
     type: "string",
-    description: `An array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
+    description: `An array of strings of excluded group and item names (or ids). A group or item name (or id) that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
   })
   excludeMembers?: string[];
+
+  @primitiveTrait({
+    name: "Include members by regular expression",
+    type: "string",
+    description: `A regular expression that is matched against the member names and ids. Only members (groups and items) that match against the regular expression will be shown to the user. This is case-insensitive and will only apply to the first level of members (not in nested groups). This is applied before excludeMembers.`
+  })
+  includeMembersRegex?: string;
 
   @primitiveTrait({
     name: "Is Open",

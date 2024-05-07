@@ -5,7 +5,8 @@ import {
   observable,
   ObservableMap,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -53,6 +54,7 @@ import ViewingControls from "../ViewingControls";
 import SelectableDimensionWorkflow, {
   SelectableDimensionWorkflowGroup
 } from "../Workflows/SelectableDimensionWorkflow";
+import i18next from "i18next";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
  * It is basically the "mode" of the TableStylingWorkflow
@@ -111,6 +113,7 @@ export default class TableStylingWorkflow
   private activeStyleDisposer: IReactionDisposer;
 
   constructor(readonly item: TableMixin.Instance) {
+    makeObservable(this);
     // We need to reset colorSchemeType every time Table.activeStyle changes
     this.activeStyleDisposer = reaction(
       () => this.item.activeStyle,
@@ -140,16 +143,16 @@ export default class TableStylingWorkflow
     return {
       options: filterOutUndefined([
         {
-          text: `${
-            this.showAdvancedOptions ? "Hide" : "Show"
-          } advanced options`,
+          text: this.showAdvancedOptions
+            ? i18next.t("models.tableStyling.hideAdvancedOptions")
+            : i18next.t("models.tableStyling.showAdvancedOptions"),
           onSelect: action(() => {
             this.showAdvancedOptions = !this.showAdvancedOptions;
           })
         },
         this.showAdvancedOptions
           ? {
-              text: "Copy user stratum to clipboard",
+              text: i18next.t("models.tableStyling.copyUserStratum"),
               onSelect: () => {
                 const stratum = JSON.stringify(
                   this.item.strata.get(CommonStrata.user)
@@ -174,7 +177,7 @@ export default class TableStylingWorkflow
   }
 
   get name() {
-    return `Style`;
+    return i18next.t("models.tableStyling.name");
   }
 
   get icon() {
@@ -183,7 +186,7 @@ export default class TableStylingWorkflow
 
   get footer() {
     return {
-      buttonText: "Reset to default style",
+      buttonText: i18next.t("models.tableStyling.reset"),
       /** Delete all user strata values for TableColumnTraits and TableStyleTraits for the current activeStyle */
       onClick: action(() => {
         this.getTableColumnTraits(CommonStrata.user)?.strata.delete(
@@ -238,30 +241,28 @@ export default class TableStylingWorkflow
         }
       }
     } else if (colorMap instanceof DiscreteColorMap) {
-      {
-        if (
-          this.tableStyle.colorTraits.binColors &&
-          this.tableStyle.colorTraits.binColors.length > 0
-        ) {
-          this.colorSchemeType = "custom-discrete";
-        } else if (SEQUENTIAL_SCALES.includes(colorPaletteWithDefault)) {
-          this.colorSchemeType = "sequential-discrete";
-          if (!colorPalette) {
-            this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-              CommonStrata.user,
-              "colorPalette",
-              DEFAULT_SEQUENTIAL
-            );
-          }
-        } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
-          this.colorSchemeType = "diverging-discrete";
-          if (!colorPalette) {
-            this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-              CommonStrata.user,
-              "colorPalette",
-              DEFAULT_DIVERGING
-            );
-          }
+      if (
+        this.tableStyle.colorTraits.binColors &&
+        this.tableStyle.colorTraits.binColors.length > 0
+      ) {
+        this.colorSchemeType = "custom-discrete";
+      } else if (SEQUENTIAL_SCALES.includes(colorPaletteWithDefault)) {
+        this.colorSchemeType = "sequential-discrete";
+        if (!colorPalette) {
+          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+            CommonStrata.user,
+            "colorPalette",
+            DEFAULT_SEQUENTIAL
+          );
+        }
+      } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
+        this.colorSchemeType = "diverging-discrete";
+        if (!colorPalette) {
+          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+            CommonStrata.user,
+            "colorPalette",
+            DEFAULT_DIVERGING
+          );
         }
       }
     } else if (
@@ -469,12 +470,17 @@ export default class TableStylingWorkflow
 
     return {
       type: "group",
-      id: "Data",
+      id: "data",
+
+      name: i18next.t("models.tableStyling.data.name"),
       selectableDimensions: filterOutUndefined([
         {
           type: "select",
           id: "dataset",
-          name: "Dataset",
+
+          name: i18next.t(
+            "models.tableStyling.data.selectableDimensions.dataset.name"
+          ),
           selectedId: this.item.uniqueId,
 
           // Find all workbench items which have TableStylingWorkflow
@@ -510,7 +516,10 @@ export default class TableStylingWorkflow
         {
           type: "select",
           id: "table-style",
-          name: "Style",
+
+          name: i18next.t(
+            "models.tableStyling.data.selectableDimensions.tableStyle.name"
+          ),
           selectedId: this.tableStyle.id,
           options: this.item.tableStyles.map((style) => ({
             id: style.id,
@@ -529,19 +538,62 @@ export default class TableStylingWorkflow
         {
           type: "select",
           id: "table-style-type",
-          name: "Symbology",
+
+          name: i18next.t(
+            "models.tableStyling.data.selectableDimensions.tableStyleType.name"
+          ),
           selectedId: this.styleType,
           options: filterOutUndefined([
-            { id: "fill", name: "Fill color" },
+            {
+              id: "fill",
+
+              name: i18next.t(
+                "models.tableStyling.data.selectableDimensions.tableStyleType.options.fill.name"
+              )
+            },
             showPointSize
-              ? { id: "point-size", name: "Point size" }
+              ? {
+                  id: "point-size",
+
+                  name: i18next.t(
+                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.pointSize.name"
+                  )
+                }
               : undefined,
             showPointStyles
-              ? { id: "point", name: "Point/Marker style" }
+              ? {
+                  id: "point",
+
+                  name: i18next.t(
+                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.point.name"
+                  )
+                }
               : undefined,
-            { id: "outline", name: "Outline color" },
-            showLabelStyles ? { id: "label", name: "Label style" } : undefined,
-            showTrailStyles ? { id: "trail", name: "Trail style" } : undefined
+            {
+              id: "outline",
+
+              name: i18next.t(
+                "models.tableStyling.data.selectableDimensions.tableStyleType.options.outline.name"
+              )
+            },
+            showLabelStyles
+              ? {
+                  id: "label",
+
+                  name: i18next.t(
+                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.label.name"
+                  )
+                }
+              : undefined,
+            showTrailStyles
+              ? {
+                  id: "trail",
+
+                  name: i18next.t(
+                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.trail.name"
+                  )
+                }
+              : undefined
           ]),
           setDimensionValue: (stratumId, value) => {
             if (
@@ -582,7 +634,9 @@ export default class TableStylingWorkflow
   @computed get colorSchemeSelectableDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
-      id: "Fill Color",
+      id: "fill",
+
+      name: i18next.t("models.tableStyling.fill.name"),
       selectableDimensions: filterOutUndefined([
         // Show "Variable" selector to pick colorColumn if tableStyle ID is different from colorColumn ID
         // OR if we are in advanced mode
@@ -590,8 +644,11 @@ export default class TableStylingWorkflow
         this.showAdvancedOptions
           ? {
               type: "select",
-              id: "table-color-col",
-              name: "Variable",
+              id: "table-color-column",
+
+              name: i18next.t(
+                "models.tableStyling.fill.selectableDimensions.tableColorColumn.name"
+              ),
               selectedId: this.tableStyle.colorColumn?.name,
               options: this.item.tableColumns.map((col) => ({
                 id: col.name,
@@ -628,7 +685,10 @@ export default class TableStylingWorkflow
           ? {
               type: "select",
               id: "data-type",
-              name: "Column type (advanced)",
+
+              name: i18next.t(
+                "models.tableStyling.fill.selectableDimensions.dataType.name"
+              ),
               options: Object.keys(TableColumnType)
                 .filter((type) => type.length > 1)
                 .map((colType) => ({ id: colType })),
@@ -648,35 +708,80 @@ export default class TableStylingWorkflow
         this.tableStyle.colorColumn
           ? {
               type: "select",
-              id: "Type",
-              name: "Type",
-              undefinedLabel: "Please specify",
+              id: "type",
+
+              name: i18next.t(
+                "models.tableStyling.fill.selectableDimensions.type.name"
+              ),
+
+              undefinedLabel: i18next.t(
+                "models.tableStyling.fill.selectableDimensions.type.undefinedLabel"
+              ),
               options: filterOutUndefined([
-                { id: "no-style", name: "No style" },
+                {
+                  id: "no-style",
+
+                  name: i18next.t(
+                    "models.tableStyling.fill.selectableDimensions.type.options.noStyle.name"
+                  )
+                },
                 ...(this.tableStyle.colorColumn.type === TableColumnType.scalar
                   ? [
                       {
                         id: "sequential-continuous",
-                        name: "Sequential (continuous)"
+
+                        name: i18next.t(
+                          "models.tableStyling.fill.selectableDimensions.type.options.sequentialContinuous.name"
+                        )
                       },
                       {
                         id: "sequential-discrete",
-                        name: "Sequential (discrete)"
+
+                        name: i18next.t(
+                          "models.tableStyling.fill.selectableDimensions.type.options.sequentialDiscrete.name"
+                        )
                       },
                       {
                         id: "diverging-continuous",
-                        name: "Divergent (continuous)"
+
+                        name: i18next.t(
+                          "models.tableStyling.fill.selectableDimensions.type.options.divergingContinuous.name"
+                        )
                       },
-                      { id: "diverging-discrete", name: "Divergent (discrete)" }
+                      {
+                        id: "diverging-discrete",
+
+                        name: i18next.t(
+                          "models.tableStyling.fill.selectableDimensions.type.options.divergingDiscrete.name"
+                        )
+                      }
                     ]
                   : []),
-                { id: "qualitative", name: "Qualitative" },
+                {
+                  id: "qualitative",
+
+                  name: i18next.t(
+                    "models.tableStyling.fill.selectableDimensions.type.options.qualitative.name"
+                  )
+                },
                 // Add options for "custom" color palettes if we are in "custom-qualitative" or "custom-discrete" mode
                 this.colorSchemeType === "custom-qualitative"
-                  ? { id: "custom-qualitative", name: "Custom (qualitative)" }
+                  ? {
+                      id: "custom-qualitative",
+
+                      name: i18next.t(
+                        "models.tableStyling.fill.selectableDimensions.type.options.customQualitative.name"
+                      )
+                    }
                   : undefined,
                 this.colorSchemeType === "custom-discrete"
-                  ? { id: "custom-discrete", name: "Custom (discrete)" }
+                  ? {
+                      id: "custom-discrete",
+
+                      name: i18next.t(
+                        "models.tableStyling.fill.selectableDimensions.type.options.customDiscrete.name"
+                      )
+                    }
                   : undefined
               ]),
               selectedId: this.colorSchemeType,
@@ -688,8 +793,11 @@ export default class TableStylingWorkflow
 
         {
           type: "select",
-          id: "Scheme",
-          name: "Scheme",
+          id: "scheme",
+
+          name: i18next.t(
+            "models.tableStyling.fill.selectableDimensions.scheme.name"
+          ),
 
           selectedId:
             this.tableStyle.colorTraits.colorPalette ??
@@ -729,8 +837,11 @@ export default class TableStylingWorkflow
         this.colorSchemeType === "diverging-discrete"
           ? {
               type: "numeric",
-              id: "numberOfBins",
-              name: "Number of Bins",
+              id: "number-of-bins",
+
+              name: i18next.t(
+                "models.tableStyling.fill.selectableDimensions.numberOfBins.name"
+              ),
               allowUndefined: true,
               min:
                 // Sequential and diverging color scales must have at least 3 bins
@@ -769,7 +880,8 @@ export default class TableStylingWorkflow
     return {
       type: "numeric",
       id: "min",
-      name: "Min",
+
+      name: i18next.t("models.tableStyling.min.name"),
       max: this.tableStyle.tableColorMap.maximumValue,
       value: this.tableStyle.tableColorMap.minimumValue,
       setDimensionValue: (stratumId, value) => {
@@ -796,14 +908,19 @@ export default class TableStylingWorkflow
   @computed get displayRangeDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
-      id: "Display range",
+      id: "display-range",
+
+      name: i18next.t("models.tableStyling.displayRange.name"),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.minimumValueSelectableDim,
         {
           type: "numeric",
           id: "max",
-          name: "Max",
+
+          name: i18next.t(
+            "models.tableStyling.displayRange.selectableDimensions.max.name"
+          ),
           min: this.tableStyle.tableColorMap.minimumValue,
           value: this.tableStyle.tableColorMap.maximumValue,
           setDimensionValue: (stratumId, value) => {
@@ -824,7 +941,9 @@ export default class TableStylingWorkflow
   @computed get binColorDims(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
-      id: "Bins",
+      id: "bins",
+
+      name: i18next.t("models.tableStyling.bins.name"),
       isOpen: false,
       selectableDimensions: [
         ...this.tableStyle.tableColorMap.binMaximums
@@ -835,11 +954,16 @@ export default class TableStylingWorkflow
                 id: `bin-${idx}-start`,
                 name: getColorPreview(
                   this.tableStyle.tableColorMap.binColors[idx] ?? "#aaa",
-                  `${
-                    idx === 0
-                      ? this.minimumValueSelectableDim.value
-                      : this.tableStyle.tableColorMap.binMaximums[idx - 1]
-                  } to ${bin}`
+                  i18next.t(
+                    "models.tableStyling.bins.selectableDimensions.start.name",
+                    {
+                      value1:
+                        idx === 0
+                          ? this.minimumValueSelectableDim.value
+                          : this.tableStyle.tableColorMap.binMaximums[idx - 1],
+                      value2: bin
+                    }
+                  )
                 ),
                 isOpen: this.openBinIndex.get("fill") === idx,
                 onToggle: (open) => {
@@ -851,8 +975,11 @@ export default class TableStylingWorkflow
                 selectableDimensions: [
                   {
                     type: "color",
-                    id: `bin-${idx}-col`,
-                    name: `Color`,
+                    id: `bin-${idx}-color`,
+
+                    name: i18next.t(
+                      "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.color.name"
+                    ),
                     value: this.tableStyle.tableColorMap.binColors[idx],
                     setDimensionValue: (stratumId, value) => {
                       const binColors = [
@@ -872,7 +999,10 @@ export default class TableStylingWorkflow
                     : {
                         type: "numeric",
                         id: `bin-${idx}-start`,
-                        name: "Start",
+
+                        name: i18next.t(
+                          "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.start.name"
+                        ),
                         value:
                           this.tableStyle.tableColorMap.binMaximums[idx - 1],
                         setDimensionValue: (stratumId, value) => {
@@ -886,7 +1016,10 @@ export default class TableStylingWorkflow
                   {
                     type: "numeric",
                     id: `bin-${idx}-stop`,
-                    name: "Stop",
+
+                    name: i18next.t(
+                      "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.stop.name"
+                    ),
                     value: bin,
                     setDimensionValue: (stratumId, value) => {
                       const binMaximums = [
@@ -908,7 +1041,9 @@ export default class TableStylingWorkflow
   @computed get enumColorDims(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
-      id: "Colors",
+      id: "colors",
+
+      name: i18next.t("models.tableStyling.colors.name"),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         ...this.tableStyle.tableColorMap.enumColors.map((enumCol, idx) => {
@@ -927,8 +1062,11 @@ export default class TableStylingWorkflow
             selectableDimensions: [
               {
                 type: "color",
-                id: `enum-${idx}-col`,
-                name: `Color`,
+                id: `enum-${idx}-color`,
+
+                name: i18next.t(
+                  "models.tableStyling.colors.selectableDimensions.color.name"
+                ),
                 value: enumCol.color,
                 setDimensionValue: (stratumId, value) => {
                   this.colorSchemeType = "custom-qualitative";
@@ -938,7 +1076,10 @@ export default class TableStylingWorkflow
               {
                 type: "select",
                 id: `enum-${idx}-value`,
-                name: "Value",
+
+                name: i18next.t(
+                  "models.tableStyling.colors.selectableDimensions.value.name"
+                ),
                 selectedId: enumCol.value,
                 // Find unique column values which don't already have an enumCol
                 // We prepend the current enumCol.value
@@ -961,7 +1102,10 @@ export default class TableStylingWorkflow
               {
                 type: "button",
                 id: `enum-${idx}-remove`,
-                value: "Remove",
+
+                value: i18next.t(
+                  "models.tableStyling.colors.selectableDimensions.remove.value"
+                ),
                 setDimensionValue: (stratumId) => {
                   this.colorSchemeType = "custom-qualitative";
                   // Remove element by clearing `value`
@@ -981,7 +1125,10 @@ export default class TableStylingWorkflow
           ? {
               type: "button",
               id: `enum-add`,
-              value: "Add Color",
+
+              value: i18next.t(
+                "models.tableStyling.colors.selectableDimensions.add.value"
+              ),
               setDimensionValue: (stratumId) => {
                 this.colorSchemeType = "custom-qualitative";
                 const firstValue =
@@ -1026,8 +1173,9 @@ export default class TableStylingWorkflow
   @computed get nullColorDimension(): SelectableDimensionColor {
     return {
       type: "color",
-      id: `null-col`,
-      name: `Default color`,
+      id: `null-color`,
+
+      name: i18next.t("models.tableStyling.nullColor.name"),
       value: this.tableStyle.colorTraits.nullColor,
       allowUndefined: true,
       setDimensionValue: (stratumId, value) => {
@@ -1043,8 +1191,9 @@ export default class TableStylingWorkflow
   @computed get outlierColorDimension(): SelectableDimensionColor {
     return {
       type: "color",
-      id: `outlier-col`,
-      name: `Outlier color`,
+      id: `outlier-color`,
+
+      name: i18next.t("models.tableStyling.outlierColor.name"),
       allowUndefined: true,
       value:
         this.tableStyle.colorTraits.outlierColor ??
@@ -1067,15 +1216,20 @@ export default class TableStylingWorkflow
   @computed get additionalColorDimensions(): SelectableDimensionGroup {
     return {
       type: "group",
-      id: "Additional colors",
+      id: "additional-colors",
+
+      name: i18next.t("models.tableStyling.additionalColors.name"),
       // Open group by default is no activeStyle is selected
       isOpen: !this.item.activeStyle || this.colorSchemeType === "no-style",
       selectableDimensions: filterOutUndefined([
         this.tableStyle.colorColumn?.type === TableColumnType.region
           ? {
               type: "color",
-              id: `region-col`,
-              name: `Region color`,
+              id: `region-color`,
+
+              name: i18next.t(
+                "models.tableStyling.additionalColors.selectableDimensions.regionColor.name"
+              ),
               value: this.tableStyle.colorTraits.regionColor,
               allowUndefined: true,
               setDimensionValue: (stratumId, value) => {
@@ -1088,8 +1242,11 @@ export default class TableStylingWorkflow
             }
           : {
               type: "color",
-              id: `null-col`,
-              name: `Default color`,
+              id: `null-color`,
+
+              name: i18next.t(
+                "models.tableStyling.additionalColors.selectableDimensions.nullColor.name"
+              ),
               value: this.tableStyle.colorTraits.nullColor,
               allowUndefined: true,
               setDimensionValue: (stratumId, value) => {
@@ -1103,8 +1260,11 @@ export default class TableStylingWorkflow
         this.tableStyle.colorColumn?.type === TableColumnType.scalar
           ? {
               type: "color",
-              id: `outlier-col`,
-              name: `Outlier color`,
+              id: `outlier-color`,
+
+              name: i18next.t(
+                "models.tableStyling.additionalColors.selectableDimensions.outlierColor.name"
+              ),
               allowUndefined: true,
               value:
                 this.tableStyle.colorTraits.outlierColor ??
@@ -1125,13 +1285,18 @@ export default class TableStylingWorkflow
   @computed get pointSizeDimensions(): SelectableDimensionGroup {
     return {
       type: "group",
-      id: "Point size",
+      id: "point-size",
+
+      name: i18next.t("models.tableStyling.pointSize.name"),
       isOpen: true,
       selectableDimensions: [
         {
           type: "select",
           id: `point-size-column`,
-          name: `Variable`,
+
+          name: i18next.t(
+            "models.tableStyling.pointSize.selectableDimensions.pointSizeColumn.name"
+          ),
           selectedId: this.tableStyle.pointSizeTraits.pointSizeColumn,
           options: this.item.tableColumns
             .filter((col) => col.type === TableColumnType.scalar)
@@ -1153,7 +1318,10 @@ export default class TableStylingWorkflow
               {
                 type: "numeric",
                 id: "point-size-null",
-                name: "Default size",
+
+                name: i18next.t(
+                  "models.tableStyling.pointSize.selectableDimensions.pointSizeNull.name"
+                ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.nullSize,
                 setDimensionValue: (stratumId, value) => {
@@ -1167,7 +1335,10 @@ export default class TableStylingWorkflow
               {
                 type: "numeric",
                 id: "point-sizes-factor",
-                name: "Size factor",
+
+                name: i18next.t(
+                  "models.tableStyling.pointSize.selectableDimensions.pointSizesFactor.name"
+                ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.sizeFactor,
                 setDimensionValue: (stratumId, value) => {
@@ -1181,7 +1352,10 @@ export default class TableStylingWorkflow
               {
                 type: "numeric",
                 id: "point-size-offset",
-                name: "Size offset",
+
+                name: i18next.t(
+                  "models.tableStyling.pointSize.selectableDimensions.pointSizeOffset.name"
+                ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.sizeOffset,
                 setDimensionValue: (stratumId, value) => {
@@ -1204,7 +1378,9 @@ export default class TableStylingWorkflow
   get advancedRegionMappingDimensions(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
-      id: "Region mapping",
+      id: "region-mapping",
+
+      name: i18next.t("models.tableStyling.regionMapping.name"),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.item.regionColumnDimensions,
@@ -1225,13 +1401,18 @@ export default class TableStylingWorkflow
     return [
       {
         type: "group",
-        id: "Legend",
+        id: "legend",
+
+        name: i18next.t("models.tableStyling.legend.name"),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "text",
             id: "legend-title",
-            name: "Title",
+
+            name: i18next.t(
+              "models.tableStyling.legend.selectableDimensions.legendTitle.name"
+            ),
             value: this.tableStyle.colorTraits.legend.title,
             setDimensionValue: (stratumId, value) => {
               this.getTableStyleTraits(stratumId)?.color.legend.setTrait(
@@ -1246,7 +1427,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "numeric",
                 id: "legend-ticks",
-                name: "Ticks",
+
+                name: i18next.t(
+                  "models.tableStyling.legend.selectableDimensions.legendTicks.name"
+                ),
                 min: 2,
                 value: this.tableStyle.colorTraits.legendTicks,
                 setDimensionValue: (stratumId, value) => {
@@ -1264,7 +1448,10 @@ export default class TableStylingWorkflow
               ({
                 type: "text",
                 id: `legend-${idx}-title`,
-                name: `Item ${idx + 1} Title`,
+                name: i18next.t(
+                  "models.tableStyling.legend.selectableDimensions.title.name",
+                  { index: idx + 1 }
+                ),
                 value: legendItem.title,
                 setDimensionValue: (stratumId, value) => {
                   legendItem.setTrait(stratumId, "title", value);
@@ -1275,13 +1462,18 @@ export default class TableStylingWorkflow
       },
       {
         type: "group",
-        id: "Style options",
+        id: "style-options",
+
+        name: i18next.t("models.tableStyling.styleOptions.name"),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "text",
             id: "style-title",
-            name: "Title",
+
+            name: i18next.t(
+              "models.tableStyling.styleOptions.selectableDimensions.styleTitle.name"
+            ),
             value: this.tableStyle.title,
             setDimensionValue: (stratumId, value) => {
               this.getTableStyleTraits(stratumId)?.setTrait(
@@ -1293,8 +1485,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "select",
-            id: "table-style",
-            name: "Longitude column",
+            id: "longitude-column",
+
+            name: i18next.t(
+              "models.tableStyling.styleOptions.selectableDimensions.longitudeColumn.name"
+            ),
             selectedId: this.tableStyle.longitudeColumn?.name,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1311,8 +1506,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "select",
-            id: "table-style",
-            name: "Latitude column",
+            id: "latitude-column",
+
+            name: i18next.t(
+              "models.tableStyling.styleOptions.selectableDimensions.latitudeColumn.name"
+            ),
             selectedId: this.tableStyle.latitudeColumn?.name,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1331,13 +1529,18 @@ export default class TableStylingWorkflow
       },
       {
         type: "group",
-        id: "Time options",
+        id: "time-options",
+
+        name: i18next.t("models.tableStyling.timeOptions.name"),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "select",
-            id: "table-time-col",
-            name: "Time column",
+            id: "table-time-column",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeColumn.name"
+            ),
             selectedId: this.tableStyle.timeColumn?.name,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1354,8 +1557,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "select",
-            id: "table-end-time-col",
-            name: "End time column",
+            id: "table-end-time-column",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableEndTimeColumn.name"
+            ),
             selectedId: this.tableStyle.endTimeColumn?.name,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1373,8 +1579,11 @@ export default class TableStylingWorkflow
 
           {
             type: "select-multi",
-            id: "table-time-id-cols",
-            name: "ID columns",
+            id: "table-time-id-columns",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeIdColumns.name"
+            ),
             selectedIds: this.tableStyle.idColumns?.map((c) => c.name),
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1392,10 +1601,24 @@ export default class TableStylingWorkflow
           {
             type: "checkbox",
             id: "table-time-is-sampled",
-            name: "Is Sampled",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.name"
+            ),
             options: [
-              { id: "true", name: "Yes" },
-              { id: "false", name: "No" }
+              {
+                id: "true",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.options.true.name"
+                )
+              },
+
+              {
+                id: "false",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.options.false.name"
+                )
+              }
             ],
             selectedId: this.tableStyle.isSampled ? "true" : "false",
             setDimensionValue: (stratumId, value) => {
@@ -1409,7 +1632,10 @@ export default class TableStylingWorkflow
           {
             type: "numeric",
             id: `table-time-display-duration`,
-            name: "Display Duration",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeDisplayDuration.name"
+            ),
             value: this.tableStyle.timeTraits.displayDuration,
             setDimensionValue: (stratumId, value) => {
               this.getTableStyleTraits(stratumId)?.time.setTrait(
@@ -1422,10 +1648,24 @@ export default class TableStylingWorkflow
           {
             type: "checkbox",
             id: "table-time-spread-start-time",
-            name: "Spread start time",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.name"
+            ),
             options: [
-              { id: "true", name: "Yes" },
-              { id: "false", name: "No" }
+              {
+                id: "true",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.options.true.name"
+                )
+              },
+
+              {
+                id: "false",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.options.false.name"
+                )
+              }
             ],
             selectedId: this.tableStyle.timeTraits.spreadStartTime
               ? "true"
@@ -1441,10 +1681,24 @@ export default class TableStylingWorkflow
           {
             type: "checkbox",
             id: "table-time-spread-finish-time",
-            name: "Spread finish time",
+
+            name: i18next.t(
+              "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.name"
+            ),
             options: [
-              { id: "true", name: "Yes" },
-              { id: "false", name: "No" }
+              {
+                id: "true",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.options.true.name"
+                )
+              },
+
+              {
+                id: "false",
+                name: i18next.t(
+                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.options.false.name"
+                )
+              }
             ],
             selectedId: this.tableStyle.timeTraits.spreadFinishTime
               ? "true"
@@ -1461,16 +1715,32 @@ export default class TableStylingWorkflow
       },
       {
         type: "group",
-        id: "Workbench options",
+        id: "workbench-options",
+
+        name: i18next.t("models.tableStyling.workbenchOptions.name"),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "checkbox",
             id: "table-style-enabled",
-            name: "Show style in Workbench",
+
+            name: i18next.t(
+              "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.name"
+            ),
             options: [
-              { id: "true", name: "Style showing" },
-              { id: "false", name: "Style hidden" }
+              {
+                id: "true",
+                name: i18next.t(
+                  "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.options.true.name"
+                )
+              },
+
+              {
+                id: "false",
+                name: i18next.t(
+                  "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.options.false.name"
+                )
+              }
             ],
             selectedId: this.item.activeTableStyle.hidden ? "false" : "true",
             setDimensionValue: (stratumId, value) => {
@@ -1483,8 +1753,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "checkbox",
-            id: "showDisableStyleOption",
-            name: "Show disable style option",
+            id: "show-disable-style-option",
+
+            name: i18next.t(
+              "models.tableStyling.workbenchOptions.selectableDimensions.showDisableStyleOption.name"
+            ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.showDisableStyleOption ? "true" : "false",
             setDimensionValue: (stratumId, value) => {
@@ -1497,8 +1770,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "checkbox",
-            id: "showDisableTimeOption",
-            name: "Show disable time option",
+            id: "show-disable-time-option",
+
+            name: i18next.t(
+              "models.tableStyling.workbenchOptions.selectableDimensions.showDisableTimeOption.name"
+            ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.showDisableTimeOption ? "true" : "false",
             setDimensionValue: (stratumId, value) => {
@@ -1511,8 +1787,11 @@ export default class TableStylingWorkflow
           },
           {
             type: "checkbox",
-            id: "enableManualRegionMapping",
-            name: "Enable manual region mapping",
+            id: "enable-manual-region-mapping",
+
+            name: i18next.t(
+              "models.tableStyling.workbenchOptions.selectableDimensions.enableManualRegionMapping.name"
+            ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.enableManualRegionMapping ? "true" : "false",
             setDimensionValue: (stratumId, value) => {
@@ -1527,13 +1806,18 @@ export default class TableStylingWorkflow
       },
       {
         type: "group",
-        id: "Variable/column",
+        id: "variable-and-column",
+
+        name: i18next.t("models.tableStyling.variableAndColumn.name"),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "text",
             id: "column-title",
-            name: "Title",
+
+            name: i18next.t(
+              "models.tableStyling.variableAndColumn.selectableDimensions.columnTitle.name"
+            ),
             value: this.tableStyle.colorColumn?.title,
             setDimensionValue: (stratumId, value) => {
               this.getTableColumnTraits(stratumId)?.setTrait(
@@ -1546,7 +1830,10 @@ export default class TableStylingWorkflow
           {
             type: "text",
             id: "column-units",
-            name: "Units",
+
+            name: i18next.t(
+              "models.tableStyling.variableAndColumn.selectableDimensions.columnUnits.name"
+            ),
             value: this.tableStyle.colorColumn?.units,
             setDimensionValue: (stratumId, value) => {
               this.getTableColumnTraits(stratumId)?.setTrait(
@@ -1593,7 +1880,10 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${key}-column`,
-            name: "Variable",
+
+            name: i18next.t(
+              "models.tableStyling.style.selectableDimensions.column.name"
+            ),
             selectedId: tableStyleMap.column?.name,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1608,14 +1898,38 @@ export default class TableStylingWorkflow
             ? {
                 type: "select",
                 id: `${key}-style-type`,
-                name: "Type",
-                undefinedLabel: "Please specify",
+
+                name: i18next.t(
+                  "models.tableStyling.style.selectableDimensions.styleType.name"
+                ),
+
+                undefinedLabel: i18next.t(
+                  "models.tableStyling.style.selectableDimensions.styleType.undefinedLabel"
+                ),
                 options: filterOutUndefined([
-                  { id: "constant", name: "No style" },
+                  {
+                    id: "constant",
+
+                    name: i18next.t(
+                      "models.tableStyling.style.selectableDimensions.styleType.constant.name"
+                    )
+                  },
                   tableStyleMap.column.type === TableColumnType.scalar
-                    ? { id: "bin", name: "Discrete" }
+                    ? {
+                        id: "bin",
+
+                        name: i18next.t(
+                          "models.tableStyling.style.selectableDimensions.styleType.bin.name"
+                        )
+                      }
                     : undefined,
-                  { id: "enum", name: "Qualitative" }
+                  {
+                    id: "enum",
+
+                    name: i18next.t(
+                      "models.tableStyling.style.selectableDimensions.styleType.enum.name"
+                    )
+                  }
                 ]),
                 selectedId: traits.mapType ?? tableStyleMap.styleMap.type,
                 setDimensionValue: (stratumId, id) => {
@@ -1632,7 +1946,10 @@ export default class TableStylingWorkflow
         ? {
             type: "group",
             id: `${key}-enum`,
-            name: "Enum styles",
+
+            name: i18next.t(
+              "models.tableStyling.style.selectableDimensions.enum.name"
+            ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
               ...traits.enum?.map((enumPoint, idx) => {
@@ -1642,7 +1959,10 @@ export default class TableStylingWorkflow
                   name: getPreview(
                     tableStyleMap.traitValues.enum[idx],
                     tableStyleMap.traitValues.null,
-                    tableStyleMap.commonTraits.enum[idx].value ?? "No value"
+                    tableStyleMap.commonTraits.enum[idx].value ??
+                      i18next.t(
+                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.noValue"
+                      )
                   ),
                   isOpen: this.openBinIndex.get(key) === idx,
                   onToggle: (open) => {
@@ -1655,7 +1975,10 @@ export default class TableStylingWorkflow
                     {
                       type: "select",
                       id: `${key}-enum-${idx}-value`,
-                      name: "Value",
+
+                      name: i18next.t(
+                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.selectableDimensions.value.name"
+                      ),
                       selectedId: enumPoint.value ?? undefined,
                       // Find unique column values which don't already have an enumCol
                       // We prepend the current enumCol.value
@@ -1683,7 +2006,10 @@ export default class TableStylingWorkflow
                     {
                       type: "button",
                       id: `${key}-enum-${idx}-remove`,
-                      value: "Remove",
+
+                      value: i18next.t(
+                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.selectableDimensions.remove.value"
+                      ),
                       setDimensionValue: (stratumId) => {
                         enumPoint.setTrait(stratumId, "value", null);
                       }
@@ -1701,7 +2027,10 @@ export default class TableStylingWorkflow
                 ? ({
                     type: "button",
                     id: `${key}-enum-add`,
-                    value: "Add style for value",
+
+                    value: i18next.t(
+                      "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.add.value"
+                    ),
                     setDimensionValue: (stratumId) => {
                       const firstValue =
                         tableStyleMap.column?.uniqueValues.values.find(
@@ -1730,14 +2059,20 @@ export default class TableStylingWorkflow
       (traits.mapType ?? tableStyleMap.styleMap.type) === "bin"
         ? {
             type: "group",
-            name: "Bin styles",
             id: `${key}-bin`,
+
+            name: i18next.t(
+              "models.tableStyling.style.selectableDimensions.bin.name"
+            ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
               {
                 type: "button",
                 id: `${key}-bin-add`,
-                value: "Add style bin",
+
+                value: i18next.t(
+                  "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.add.value"
+                ),
                 setDimensionValue: (stratumId) => {
                   const newModel = traits.addObject(stratumId, "bin");
 
@@ -1760,13 +2095,19 @@ export default class TableStylingWorkflow
                       tableStyleMap.traitValues.bin[idx],
                       tableStyleMap.traitValues.null,
                       !isDefined(bin.maxValue ?? undefined)
-                        ? "No value"
-                        : `${
-                            idx > 0 &&
-                            isDefined(traits.bin[idx - 1].maxValue ?? undefined)
-                              ? `${traits.bin[idx - 1].maxValue} to `
-                              : ""
-                          }${bin.maxValue}`
+                        ? i18next.t(
+                            "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.noValue"
+                          )
+                        : idx > 0 &&
+                          isDefined(traits.bin[idx - 1].maxValue ?? undefined)
+                        ? i18next.t(
+                            "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.range",
+                            {
+                              value1: traits.bin[idx - 1].maxValue,
+                              value2: bin.maxValue
+                            }
+                          )
+                        : `${bin.maxValue}`
                     ),
 
                     isOpen: this.openBinIndex.get(key) === idx,
@@ -1781,7 +2122,10 @@ export default class TableStylingWorkflow
                         ? {
                             type: "numeric",
                             id: `${key}-bin-${idx}-start`,
-                            name: "Start",
+
+                            name: i18next.t(
+                              "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.start.name"
+                            ),
                             value: traits.bin[idx - 1].maxValue ?? undefined,
                             setDimensionValue: (stratumId, value) => {
                               traits.bin[idx - 1].setTrait(
@@ -1795,7 +2139,10 @@ export default class TableStylingWorkflow
                       {
                         type: "numeric",
                         id: `${key}-bin-${idx}-stop`,
-                        name: "Stop",
+
+                        name: i18next.t(
+                          "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.stop.name"
+                        ),
                         value: bin.maxValue ?? undefined,
                         setDimensionValue: (stratumId, value) => {
                           bin.setTrait(stratumId, "maxValue", value);
@@ -1809,7 +2156,10 @@ export default class TableStylingWorkflow
                       {
                         type: "button",
                         id: `${key}-bin-${idx}-remove`,
-                        value: "Remove",
+
+                        value: i18next.t(
+                          "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.remove.value"
+                        ),
                         setDimensionValue: (stratumId) => {
                           bin.setTrait(stratumId, "maxValue", null);
                         }
@@ -1825,7 +2175,8 @@ export default class TableStylingWorkflow
       {
         type: "group",
         id: `${key}-null`,
-        name: "Default",
+
+        name: i18next.t("models.tableStyling.style.null.name"),
         isOpen:
           !tableStyleMap.column ||
           !traits.mapType ||
@@ -1841,7 +2192,7 @@ export default class TableStylingWorkflow
 
   @computed get markerDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      "Marker style",
+      i18next.t("models.tableStyling.point.name"),
       "point",
       this.tableStyle.pointStyleMap,
       (id, pointTraits, nullValues) =>
@@ -1849,7 +2200,11 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-marker`,
-            name: '<terriatooltip title="Marker">Marker supports URL and base64 of any supported image format (eg PNG, SVG)</terriatooltip>',
+            name: `<terriatooltip title="${i18next.t(
+              "models.tableStyling.point.selectableDimensions.marker.name"
+            )}">${i18next.t(
+              "models.tableStyling.point.selectableDimensions.marker.tooltip"
+            )}</terriatooltip>`,
             selectedId: (pointTraits.marker ?? nullValues.marker) || "point",
             allowUndefined: true,
             allowCustomInput: true,
@@ -1864,7 +2219,10 @@ export default class TableStylingWorkflow
           {
             type: "numeric",
             id: `${id}-rotation`,
-            name: "Rotation",
+
+            name: i18next.t(
+              "models.tableStyling.point.selectableDimensions.rotation.name"
+            ),
             value: pointTraits.rotation ?? nullValues.rotation,
             setDimensionValue: (stratumId, value) => {
               pointTraits.setTrait(stratumId, "rotation", value);
@@ -1874,7 +2232,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "numeric",
                 id: `${id}-height`,
-                name: "Height",
+
+                name: i18next.t(
+                  "models.tableStyling.point.selectableDimensions.height.name"
+                ),
                 value: pointTraits.height ?? nullValues.height,
                 setDimensionValue: (stratumId, value) => {
                   pointTraits.setTrait(stratumId, "height", value);
@@ -1885,7 +2246,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "numeric",
                 id: `${id}-width`,
-                name: "Width",
+
+                name: i18next.t(
+                  "models.tableStyling.point.selectableDimensions.width.name"
+                ),
                 value: pointTraits.width ?? nullValues.width,
                 setDimensionValue: (stratumId, value) => {
                   pointTraits.setTrait(stratumId, "width", value);
@@ -1911,14 +2275,17 @@ export default class TableStylingWorkflow
 
   @computed get outlineDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      "Outline style",
+      i18next.t("models.tableStyling.outline.name"),
       "outline",
       this.tableStyle.outlineStyleMap,
       (id, outlineTraits, nullValues) => [
         {
           type: "color",
           id: `${id}-color`,
-          name: `Color`,
+
+          name: i18next.t(
+            "models.tableStyling.outline.selectableDimensions.color.name"
+          ),
           allowUndefined: true,
           value: outlineTraits.color ?? nullValues.color,
           setDimensionValue: (stratumId, value) => {
@@ -1928,7 +2295,10 @@ export default class TableStylingWorkflow
         {
           type: "numeric",
           id: `${id}-width`,
-          name: "Width",
+
+          name: i18next.t(
+            "models.tableStyling.outline.selectableDimensions.width.name"
+          ),
           value: outlineTraits.width ?? nullValues.width,
           setDimensionValue: (stratumId, value) => {
             outlineTraits.setTrait(stratumId, "width", value);
@@ -1942,7 +2312,7 @@ export default class TableStylingWorkflow
 
   @computed get labelDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      "Label style",
+      i18next.t("models.tableStyling.label.name"),
       "label",
       this.tableStyle.labelStyleMap,
       (id, labelTraits, nullValues) =>
@@ -1950,7 +2320,10 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-column`,
-            name: "Label column",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.column.name"
+            ),
             selectedId: labelTraits.labelColumn ?? nullValues.labelColumn,
             allowUndefined: true,
             options: this.item.tableColumns.map((col) => ({
@@ -1964,7 +2337,10 @@ export default class TableStylingWorkflow
           {
             type: "text",
             id: `${id}-font`,
-            name: "Font",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.font.name"
+            ),
             value: labelTraits.font ?? nullValues.font,
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "font", value);
@@ -1973,12 +2349,33 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-style`,
-            name: "Label style",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.style.name"
+            ),
             selectedId: labelTraits.style ?? nullValues.style,
             options: [
-              { id: "FILL", name: "Fill only" },
-              { id: "OUTLINE", name: "Outline only" },
-              { id: "FILL_AND_OUTLINE", name: "Fill and outline" }
+              {
+                id: "FILL",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.style.options.fill.name"
+                )
+              },
+              {
+                id: "OUTLINE",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.style.options.outline.name"
+                )
+              },
+              {
+                id: "FILL_AND_OUTLINE",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.style.options.fillAndOutline.name"
+                )
+              }
             ],
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "style", value);
@@ -1987,7 +2384,10 @@ export default class TableStylingWorkflow
           {
             type: "numeric",
             id: `${id}-scale`,
-            name: "Scale",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.scale.name"
+            ),
             value: labelTraits.scale ?? nullValues.scale,
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "scale", value);
@@ -2000,7 +2400,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "color",
                 id: `${id}-fill-color`,
-                name: `Fill color`,
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.fillColor.name"
+                ),
                 value: labelTraits.fillColor ?? nullValues.fillColor,
                 setDimensionValue: (stratumId, value) => {
                   labelTraits.setTrait(stratumId, "fillColor", value);
@@ -2012,7 +2415,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "color",
                 id: `${id}-outline-color`,
-                name: `Outline color`,
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.outlineColor.name"
+                ),
                 value: labelTraits.outlineColor ?? nullValues.outlineColor,
                 setDimensionValue: (stratumId, value) => {
                   labelTraits.setTrait(stratumId, "outlineColor", value);
@@ -2024,7 +2430,10 @@ export default class TableStylingWorkflow
             ? {
                 type: "numeric",
                 id: `${id}-outline-width`,
-                name: "Outline width",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.outlineWidth.name"
+                ),
                 value: labelTraits.outlineWidth ?? nullValues.outlineWidth,
                 setDimensionValue: (stratumId, value) => {
                   labelTraits.setTrait(stratumId, "outlineWidth", value);
@@ -2034,13 +2443,34 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-horizontal-origin`,
-            name: "Horizontal origin",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.horizontalOrigin.name"
+            ),
             selectedId:
               labelTraits.horizontalOrigin ?? nullValues.horizontalOrigin,
             options: [
-              { id: "LEFT", name: "Left" },
-              { id: "CENTER", name: "Center" },
-              { id: "RIGHT", name: "Right" }
+              {
+                id: "LEFT",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.left.name"
+                )
+              },
+              {
+                id: "CENTER",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.center.name"
+                )
+              },
+              {
+                id: "RIGHT",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.right.name"
+                )
+              }
             ],
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "horizontalOrigin", value);
@@ -2049,13 +2479,40 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-vertical-origin`,
-            name: "Vertical origin",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.verticalOrigin.name"
+            ),
             selectedId: labelTraits.verticalOrigin ?? nullValues.verticalOrigin,
             options: [
-              { id: "TOP", name: "Top" },
-              { id: "CENTER", name: "Center" },
-              { id: "BASELINE", name: "Baseline" },
-              { id: "BOTTOM", name: "Bottom" }
+              {
+                id: "TOP",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.top.name"
+                )
+              },
+              {
+                id: "CENTER",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.center.name"
+                )
+              },
+              {
+                id: "BASELINE",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.baseline.name"
+                )
+              },
+              {
+                id: "BOTTOM",
+
+                name: i18next.t(
+                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.bottom.name"
+                )
+              }
             ],
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "verticalOrigin", value);
@@ -2064,7 +2521,10 @@ export default class TableStylingWorkflow
           {
             type: "numeric",
             id: `${id}-pixel-offset-x`,
-            name: "Pixel offset X",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.offsetX.name"
+            ),
             value: labelTraits.pixelOffset[0] ?? nullValues.pixelOffset[0],
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "pixelOffset", [
@@ -2076,7 +2536,10 @@ export default class TableStylingWorkflow
           {
             type: "numeric",
             id: `${id}-pixel-offset-y`,
-            name: "Pixel offset Y",
+
+            name: i18next.t(
+              "models.tableStyling.label.selectableDimensions.offsetY.name"
+            ),
             value: labelTraits.pixelOffset[1] ?? nullValues.pixelOffset[1],
             setDimensionValue: (stratumId, value) => {
               labelTraits.setTrait(stratumId, "pixelOffset", [
@@ -2100,8 +2563,10 @@ export default class TableStylingWorkflow
           filterOutUndefined([
             {
               type: "numeric",
-              id: `${id}-lead-power`,
-              name: "Lead time (secs)",
+              id: `${id}-lead-time`,
+              name: i18next.t(
+                "models.tableStyling.trail.selectableDimensions.leadTime.name"
+              ),
               value: trailTraits.leadTime ?? nullValues.leadTime,
               setDimensionValue: (stratumId, value) => {
                 trailTraits.setTrait(stratumId, "leadTime", value);
@@ -2110,7 +2575,10 @@ export default class TableStylingWorkflow
             {
               type: "numeric",
               id: `${id}-trail-time`,
-              name: "Trail time (secs)",
+
+              name: i18next.t(
+                "models.tableStyling.trail.selectableDimensions.trailTime.name"
+              ),
               value: trailTraits.trailTime ?? nullValues.trailTime,
               setDimensionValue: (stratumId, value) => {
                 trailTraits.setTrait(stratumId, "trailTime", value);
@@ -2119,7 +2587,10 @@ export default class TableStylingWorkflow
             {
               type: "numeric",
               id: `${id}-width`,
-              name: "Width",
+
+              name: i18next.t(
+                "models.tableStyling.trail.selectableDimensions.width.name"
+              ),
               value: trailTraits.width ?? nullValues.width,
               setDimensionValue: (stratumId, value) => {
                 trailTraits.setTrait(stratumId, "width", value);
@@ -2128,7 +2599,10 @@ export default class TableStylingWorkflow
             {
               type: "numeric",
               id: `${id}-resolution`,
-              name: "Resolution",
+
+              name: i18next.t(
+                "models.tableStyling.trail.selectableDimensions.resolution.name"
+              ),
               value: trailTraits.resolution ?? nullValues.resolution,
               setDimensionValue: (stratumId, value) => {
                 trailTraits.setTrait(stratumId, "resolution", value);
@@ -2142,7 +2616,10 @@ export default class TableStylingWorkflow
                   {
                     type: "color",
                     id: `${id}-glow-color`,
-                    name: `Glow color`,
+
+                    name: i18next.t(
+                      "models.tableStyling.trail.selectableDimensions.growColor.name"
+                    ),
                     value:
                       trailTraits.polylineGlow.color ??
                       nullValues.polylineGlow?.color,
@@ -2157,7 +2634,10 @@ export default class TableStylingWorkflow
                   {
                     type: "numeric",
                     id: `${id}-glow-power`,
-                    name: "Glow power",
+
+                    name: i18next.t(
+                      "models.tableStyling.trail.selectableDimensions.growPower.name"
+                    ),
                     value:
                       trailTraits.polylineGlow.glowPower ??
                       nullValues.polylineGlow?.glowPower,
@@ -2172,7 +2652,10 @@ export default class TableStylingWorkflow
                   {
                     type: "numeric",
                     id: `${id}-taper-power`,
-                    name: "Taper power",
+
+                    name: i18next.t(
+                      "models.tableStyling.trail.selectableDimensions.taperPower.name"
+                    ),
                     value:
                       trailTraits.polylineGlow.taperPower ??
                       nullValues.polylineGlow?.taperPower,
@@ -2189,7 +2672,10 @@ export default class TableStylingWorkflow
                   {
                     type: "color",
                     id: `${id}-solid-color`,
-                    name: `Solid color`,
+
+                    name: i18next.t(
+                      "models.tableStyling.trail.selectableDimensions.solidColor.name"
+                    ),
                     value:
                       trailTraits.solidColor.color ??
                       nullValues.solidColor?.color,
@@ -2207,17 +2693,36 @@ export default class TableStylingWorkflow
       ),
       {
         type: "group",
-        id: "Trail style options",
+        id: "trail-style-options",
+
+        name: i18next.t(
+          "models.tableStyling.trail.selectableDimensions.trailStyleOptions.name"
+        ),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
             type: "select",
             id: "trail-style-options-material",
-            name: "Material type",
+
+            name: i18next.t(
+              "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.name"
+            ),
             selectedId: this.tableStyle.trailStyleMap.traits.materialType,
             options: [
-              { id: "solidColor", name: "Solid color" },
-              { id: "polylineGlow", name: "Polyline glow" }
+              {
+                id: "solidColor",
+
+                name: i18next.t(
+                  "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.options.solidColor.name"
+                )
+              },
+              {
+                id: "polylineGlow",
+
+                name: i18next.t(
+                  "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.options.polylineGlow.name"
+                )
+              }
             ],
             setDimensionValue: (stratumId, value) => {
               if (value === "solidColor" || value === "polylineGlow")
@@ -2262,7 +2767,8 @@ export default class TableStylingWorkflow
   }
 
   /** All of the dimensions! */
-  @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
+  @computed
+  get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
 

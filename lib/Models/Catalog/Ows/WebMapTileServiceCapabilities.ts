@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
 import loadXML from "../../../Core/loadXML";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import {
   BoundingBox,

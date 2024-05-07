@@ -15,11 +15,8 @@ import TerriaError from "../../../Core/TerriaError";
 import Terria from "../../../Models/Terria";
 import Box from "../../../Styled/Box";
 import Hr from "../../../Styled/Hr";
-import { onStoryButtonClick } from "../../Map/StoryButton/StoryButton";
-import {
-  WithViewState,
-  withViewState
-} from "../../StandardUserInterface/ViewStateContext";
+import { onStoryButtonClick } from "../../Map/MenuBar/StoryButton/StoryButton";
+import { WithViewState, withViewState } from "../../Context";
 import { Story } from "../Story";
 import Styles from "../story-panel.scss";
 import StoryBody from "./StoryBody";
@@ -119,13 +116,13 @@ class StoryPanel extends React.Component<Props, State> {
         (e as KeyboardEvent).key === "ArrowRight" ||
         (e as KeyboardEvent).key === "ArrowDown"
       ) {
-        this.props.viewState.currentStoryId + 1 != stories.length &&
+        this.props.viewState.currentStoryId + 1 !== stories.length &&
           this.goToNextStory();
       } else if (
         (e as KeyboardEvent).key === "ArrowLeft" ||
         (e as KeyboardEvent).key === "ArrowUp"
       ) {
-        this.props.viewState.currentStoryId != 0 && this.goToPrevStory();
+        this.props.viewState.currentStoryId !== 0 && this.goToPrevStory();
       }
     };
 
@@ -272,7 +269,7 @@ class StoryPanel extends React.Component<Props, State> {
               fullWidth
               size={1}
               borderBottomColor={this.props.theme.greyLighter}
-            ></Hr>
+            />
             <Box paddedHorizontally={3} fullWidth>
               <FooterBar
                 goPrev={() => this.goToPrevStory()}

@@ -1,5 +1,11 @@
-import L, { TileEvent } from "leaflet";
-import { autorun, computed, IReactionDisposer, observable } from "mobx";
+import L from "leaflet";
+import {
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -39,6 +45,8 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     options: L.GridLayerOptions
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
+
+    makeObservable(this);
 
     // Handle splitter rection (and disposing reaction)
     let disposeSplitterReaction: IReactionDisposer | undefined;
@@ -107,25 +115,24 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
   }
 
   createTile(tilePoint: L.Coords, done: L.DoneCallback) {
-    const canvas = <HTMLCanvasElement>(
-      L.DomUtil.create("canvas", "leaflet-tile")
-    );
+    const canvas = L.DomUtil.create(
+      "canvas",
+      "leaflet-tile"
+    ) as HTMLCanvasElement;
     const size = this.getTileSize();
     canvas.width = size.x;
     canvas.height = size.y;
 
-    this.imageryProvider.readyPromise
-      .then(() => {
-        const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
-          tilePoint.z
-        );
-        return this.imageryProvider.requestImageForCanvas(
-          CesiumMath.mod(tilePoint.x, n),
-          tilePoint.y,
-          tilePoint.z,
-          canvas
-        );
-      })
+    const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
+      tilePoint.z
+    );
+    this.imageryProvider
+      .requestImageForCanvas(
+        CesiumMath.mod(tilePoint.x, n),
+        tilePoint.y,
+        tilePoint.z,
+        canvas
+      )
       .then(function (canvas) {
         done(undefined, canvas);
       });
@@ -144,15 +151,13 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     );
     const level = Math.round(map.getZoom());
 
-    return this.imageryProvider.readyPromise.then(() => {
-      const tilingScheme = this.imageryProvider.tilingScheme;
-      const coords = tilingScheme.positionToTileXY(ll, level);
-      return {
-        x: coords.x,
-        y: coords.y,
-        level: level
-      };
-    });
+    const tilingScheme = this.imageryProvider.tilingScheme;
+    const coords = tilingScheme.positionToTileXY(ll, level);
+    return {
+      x: coords.x,
+      y: coords.y,
+      level: level
+    };
   }
 
   pickFeatures(
@@ -162,14 +167,12 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    return this.imageryProvider.readyPromise.then(() => {
-      return this.imageryProvider.pickFeatures(
-        x,
-        y,
-        level,
-        longitudeRadians,
-        latitudeRadians
-      );
-    });
+    return this.imageryProvider.pickFeatures(
+      x,
+      y,
+      level,
+      longitudeRadians,
+      latitudeRadians
+    );
   }
 }

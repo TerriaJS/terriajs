@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { observable, action } from "mobx";
+import { action, observable } from "mobx";
 
 interface DataType {
   value: string;
@@ -187,14 +187,16 @@ const builtinLocalDataTypes: LocalDataType[] = [
 /**
  * Custom remote data types. Add to it by calling addRemoteDataType().
  */
-const customRemoteDataTypes: Map<string, RemoteDataType> = observable(
+export const customRemoteDataTypes: Map<string, RemoteDataType> = observable(
   new Map()
 );
 
 /**
  * Custom local data types. Add by calling addLocalDataType().
  */
-const customLocalDataTypes: Map<string, LocalDataType> = observable(new Map());
+export const customLocalDataTypes: Map<string, LocalDataType> = observable(
+  new Map()
+);
 
 export default function getDataTypes(): GetDataTypes {
   const uniqueRemoteDataTypes: Map<string, RemoteDataType> = new Map([
@@ -224,11 +226,12 @@ export default function getDataTypes(): GetDataTypes {
  * uploading a file from the a remote server. If a data type with the same
  * `value` already exists, we replace it with the new one.
  *
+ * @param key A key to use for identifying this upload type. To override a built-in type, pass `type` of the entry as key.
  * @param newRemoteDataType The new remote data type to be added.
  */
-export const addRemoteUploadType = action(
-  (newRemoteDataType: RemoteDataType) => {
-    customRemoteDataTypes.set(newRemoteDataType.value, newRemoteDataType);
+export const addOrReplaceRemoteFileUploadType = action(
+  (key: string, newRemoteDataType: RemoteDataType) => {
+    customRemoteDataTypes.set(key, newRemoteDataType);
   }
 );
 
@@ -237,11 +240,14 @@ export const addRemoteUploadType = action(
  * uploading a file from the users local machine. If a data type with the same
  * `value` already exists, we replace it with the new one.
  *
+ * @param key A key to use for identifying this upload type. To override a built-in type, pass `type` of the entry as key.
  * @param newLocalDataType The new local data type to be added.
  */
-export const addLocalUploadType = action((newLocalDataType: LocalDataType) => {
-  customLocalDataTypes.set(newLocalDataType.value, newLocalDataType);
-});
+export const addOrReplaceLocalFileUploadType = action(
+  (key: string, newLocalDataType: LocalDataType) => {
+    customLocalDataTypes.set(key, newLocalDataType);
+  }
+);
 
 function translateDataType<T extends DataType>(dataType: T): T {
   return {

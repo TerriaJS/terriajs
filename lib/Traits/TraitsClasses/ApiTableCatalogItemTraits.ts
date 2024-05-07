@@ -1,12 +1,14 @@
 import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
+import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
-import ApiRequestTraits from "./ApiRequestTraits";
+import ApiRequestTraits, { QueryParamTraits } from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./Table/TableTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
 export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
   @primitiveTrait({
@@ -29,12 +31,78 @@ export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
   columnMajorColumnNames?: string[] = ["value"];
 }
 
+export class ApiTableColumnTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Name",
+    type: "string",
+    description: "Column name. This must match name in `columns`."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    name: "Response data path",
+    type: "string",
+    description:
+      "Path to relevant data in JSON response. eg: `some.user.name`, `some.users[0].name` or `some.users[].name`. For data to be parsed correctly, it must return a primitive value (string, number, boolean)."
+  })
+  responseDataPath?: string;
+}
+
+@traitClass({
+  description: `Creates an <b>api-table</b> type dataset in the catalog, typically used for live sensor data.`,
+  example: {
+    type: "api-table",
+    name: "City of Melbourne Pedestrian Counter",
+    description:
+      "The City of Melbourne Pedestrian Counting System data has been obtained from the City of Melbourne Open data platform: www.data.melbourne.vic.gov.au to demonstrate the directional movement of pedestrians across the city.\n\nThe counters generate a per minute reading on each of the pedestrian traffic sensors which are then displayed as near-live data.\n\nTo find out more about the City of Melbourne's Pedestrian Counting System or to seek access to their data, please click:\n\nhttp://www.pedestrian.melbourne.vic.gov.au/?_ga=2.244642053.1432520662.1632694466-1456630549.1631675392#date=27-09-2021&time=1",
+    defaultStyle: {
+      time: {
+        spreadFinishTime: true,
+        timeColumn: "sensing_datetime"
+      }
+    },
+    initialTimeSource: "stop",
+    columns: [
+      {
+        name: "total_of_directions"
+      },
+      {
+        name: "direction_2"
+      },
+      {
+        name: "direction_1"
+      },
+      {
+        name: "sensing_datetime"
+      },
+      {
+        name: "latitude"
+      },
+      {
+        name: "longitude"
+      }
+    ],
+    idKey: "location_id",
+    refreshInterval: 60,
+    removeDuplicateRows: true,
+    apis: [
+      {
+        url: "https://melbournetestbed.opendatasoft.com/api/explore/v2.1/catalog/datasets/pedestrian-counting-system-past-hour-counts-per-minute/records?select=location_id%2Csensing_datetime%2Cdirection_1%2Cdirection_2%2Ctotal_of_directions&order_by=sensing_datetime%20DESC&limit=100",
+        responseDataPath: "results",
+        kind: "PER_ROW"
+      },
+      {
+        url: "https://melbournetestbed.opendatasoft.com/api/explore/v2.1/catalog/datasets/pedestrian-counting-system-sensor-locations/exports/json?lang=en&timezone=Australia%2FSydney",
+        kind: "PER_ID"
+      }
+    ]
+  }
+})
 export default class ApiTableCatalogItemTraits extends mixTraits(
   TableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  AutoRefreshingTraits,
-  ApiRequestTraits
+  AutoRefreshingTraits
 ) {
   @objectArrayTrait({
     name: "APIs",
@@ -44,6 +112,15 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
     idProperty: "url"
   })
   apis: ApiTableRequestTraits[] = [];
+
+  @objectArrayTrait({
+    name: "API Columns",
+    type: ApiTableColumnTraits,
+    description:
+      'ApiTableCatalogItem specific column configuration. Note: you **must** define which columns to use from API response in the `columns` `TableColumnTraits` - for example `[{name:"some-key-in-api-response", ...}]`. This object only adds additional properties',
+    idProperty: "name"
+  })
+  apiColumns: ApiTableColumnTraits[] = [];
 
   @primitiveTrait({
     name: "Id key",
@@ -59,4 +136,22 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
       "When true, new data received through APIs will be appended to existing data. If false, new data will replace existing data."
   })
   shouldAppendNewData?: boolean = true;
+
+  @objectArrayTrait({
+    name: "Common query parameters",
+    type: QueryParamTraits,
+    description:
+      "Common query parameters to supply to all APIs. These are merged into the query parameters for each API.",
+    idProperty: "name"
+  })
+  queryParameters: QueryParamTraits[] = [];
+
+  @objectArrayTrait({
+    name: "Common query parameters for updates",
+    type: QueryParamTraits,
+    description:
+      "Common query parameters to supply to all APIs on subsequent calls after the first call. These are merged into the update query parameters for each API.",
+    idProperty: "name"
+  })
+  updateQueryParameters: QueryParamTraits[] = [];
 }

@@ -34,7 +34,7 @@ class SelectableDimensionSection extends React.Component<PropsType> {
 
     return (
       <Box displayInlineBlock fullWidth>
-        {selectableDimensions.map((dim, i) => (
+        {selectableDimensions.map((dim, _i) => (
           <SelectableDimension
             key={`${item.uniqueId}-${dim.id}-fragment`}
             id={`${item.uniqueId}-${dim.id}`}

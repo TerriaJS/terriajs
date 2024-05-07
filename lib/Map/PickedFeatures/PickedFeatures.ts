@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
@@ -55,6 +55,10 @@ export default class PickedFeatures {
   @observable error: string | undefined;
 
   providerCoords: ProviderCoordsMap | undefined;
+
+  constructor() {
+    makeObservable(this);
+  }
 }
 
 export function featureBelongsToCatalogItem(

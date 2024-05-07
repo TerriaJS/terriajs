@@ -8,17 +8,16 @@ import PropTypes from "prop-types";
 
 import PointParameterEditor from "./PointParameterEditor";
 import LineParameterEditor from "./LineParameterEditor";
-// import RectangleParameterEditor from "./RectangleParameterEditor";
 import PolygonParameterEditor from "./PolygonParameterEditor";
 import RegionParameterEditor from "./RegionParameterEditor";
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
-import RegionDataParameterEditor from "./RegionDataParameterEditor";
 import BooleanParameterEditor from "./BooleanParameterEditor";
 import BooleanParameterGroupEditor from "./BooleanParameterGroupEditor";
 import DateParameterEditor from "./DateParameterEditor";
 import DateTimeParameterEditor from "./DateTimeParameterEditor";
 import EnumerationParameterEditor from "./EnumerationParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
+import NumberParameterEditor from "./NumberParameterEditor";
 import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
 
@@ -51,11 +50,18 @@ const ParameterEditor = createReactClass({
           {this.props.parameter.isRequired && <span> (required)</span>}
         </label>
         {typeof this.props.parameter.description === "string" &&
-        this.props.parameter.description !== ""
-          ? parseCustomMarkdownToReact(this.props.parameter.description, {
+        this.props.parameter.description !== "" &&
+        typeof this.props.parameter.rangeDescription === "string" &&
+        this.props.parameter.rangeDescription !== ""
+          ? parseCustomMarkdownToReact(
+              `${this.props.parameter.description} ${this.props.parameter.rangeDescription}`,
+              {
+                parameter: this.props.parameter
+              }
+            )
+          : parseCustomMarkdownToReact(this.props.parameter.description, {
               parameter: this.props.parameter
-            })
-          : ""}
+            })}
       </div>
     );
   },
@@ -224,6 +230,7 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
+              terria={parameterEditor.props.viewState.terria}
             />
           </div>
         );
@@ -265,37 +272,20 @@ ParameterEditor.parameterTypeConverters = [
         )[0];
         return (
           <div>
-            <If condition={regionParam === undefined}>
-              {parameterEditor.renderLabel()}
-              <RegionTypeParameterEditor
-                previewed={parameterEditor.props.previewed}
-                parameter={parameterEditor.props.parameter}
-                parameterViewModel={parameterEditor.props.parameterViewModel}
-              />
-            </If>
-            <If condition={!parameterEditor.props.parameter.showInUi}>
+            {regionParam === undefined && (
+              <>
+                {parameterEditor.renderLabel()}
+                <RegionTypeParameterEditor
+                  previewed={parameterEditor.props.previewed}
+                  parameter={parameterEditor.props.parameter}
+                  parameterViewModel={parameterEditor.props.parameterViewModel}
+                />
+              </>
+            )}
+
+            {!parameterEditor.props.parameter.showInUi && (
               <div className="Placeholder for regionType" />
-            </If>
-          </div>
-        );
-      }
-    }
-  },
-  {
-    id: "regionData",
-    parameterTypeToDiv: function RegionDataParameterToDiv(
-      type,
-      parameterEditor
-    ) {
-      if (type === this.id) {
-        return (
-          <div>
-            {parameterEditor.renderLabel()}
-            <RegionDataParameterEditor
-              previewed={parameterEditor.props.previewed}
-              parameter={parameterEditor.props.parameter}
-              parameterViewModel={parameterEditor.props.parameterViewModel}
-            />
+            )}
           </div>
         );
       }
@@ -381,6 +371,23 @@ ParameterEditor.parameterTypeConverters = [
           <div>
             {parameterEditor.renderLabel()}
             <GenericParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "number",
+    parameterTypeToDiv: function NumberParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <NumberParameterEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}

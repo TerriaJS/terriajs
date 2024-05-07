@@ -1,7 +1,7 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
-export default class UrlTraits extends ModelTraits {
+class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "URL",
@@ -14,7 +14,7 @@ export default class UrlTraits extends ModelTraits {
     name: "Force proxy",
     description: "Force the default proxy to be used for all network requests."
   })
-  forceProxy = false;
+  forceProxy?: boolean;
 
   @primitiveTrait({
     type: "string",
@@ -24,3 +24,13 @@ export default class UrlTraits extends ModelTraits {
   })
   cacheDuration?: string;
 }
+
+interface UrlTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  url?: UrlTraits["url"];
+  cacheDuration?: UrlTraits["cacheDuration"];
+  forceProxy?: UrlTraits["forceProxy"];
+}
+
+export default UrlTraits;

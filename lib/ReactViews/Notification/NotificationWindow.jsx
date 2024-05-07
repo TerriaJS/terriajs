@@ -73,6 +73,7 @@ const NotificationWindow = createReactClass({
       <div className={classNames(Styles.wrapper, `${type}`)}>
         <div
           className={Styles.notification}
+          /* eslint-disable-next-line react/no-unknown-property */
           isStory={isStory}
           css={`
             background: ${(p) =>
@@ -94,11 +95,11 @@ const NotificationWindow = createReactClass({
             <div className={Styles.body}>{message}</div>
           </div>
           <div className={Styles.footer}>
-            <If condition={denyText}>
+            {denyText && (
               <button type="button" className={Styles.btn} onClick={this.deny}>
                 {denyText}
               </button>
-            </If>
+            )}
             <button type="button" className={Styles.btn} onClick={this.confirm}>
               {confirmText}
             </button>

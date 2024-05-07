@@ -1,14 +1,17 @@
 import i18next from "i18next";
 import { isEqual } from "lodash-es";
 import {
+  action,
   autorun,
   computed,
   IObservableArray,
+  makeObservable,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  toJS
 } from "mobx";
-import { computedFn } from "mobx-utils";
+import { computedFn, fromPromise, IPromiseBasedObservable } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -16,7 +19,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
+import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -53,8 +56,8 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
-import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
-import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
+import getElement from "terriajs-cesium/Source/DataSources/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -88,20 +91,26 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
+import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
+type CreditDisplayElement = {
+  credit: Credit;
+  count: number;
+};
+
 // Intermediary
-var cartesian3Scratch = new Cartesian3();
-var enuToFixedScratch = new Matrix4();
-var southwestScratch = new Cartesian3();
-var southeastScratch = new Cartesian3();
-var northeastScratch = new Cartesian3();
-var northwestScratch = new Cartesian3();
-var southwestCartographicScratch = new Cartographic();
-var southeastCartographicScratch = new Cartographic();
-var northeastCartographicScratch = new Cartographic();
-var northwestCartographicScratch = new Cartographic();
+const cartesian3Scratch = new Cartesian3();
+const enuToFixedScratch = new Matrix4();
+const southwestScratch = new Cartesian3();
+const southeastScratch = new Cartesian3();
+const northeastScratch = new Cartesian3();
+const northwestScratch = new Cartesian3();
+const southwestCartographicScratch = new Cartographic();
+const southeastCartographicScratch = new Cartographic();
+const northeastCartographicScratch = new Cartographic();
+const northwestCartographicScratch = new Cartographic();
 
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
@@ -126,7 +135,10 @@ export default class Cesium extends GlobeOrMap {
     | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
+  // Lightbox and on screen attributions from CreditDisplay
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
+  // Public because this is accessed from BottomLeftBar.tsx
+  cesiumScreenDataAttributions: IObservableArray<string> = observable([]);
 
   // When true, feature picking is paused. This is useful for temporarily
   // disabling feature picking when some other interaction mode wants to take
@@ -154,6 +166,8 @@ export default class Cesium extends GlobeOrMap {
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
 
+    makeObservable(this);
+
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
 
@@ -171,7 +185,10 @@ export default class Cesium extends GlobeOrMap {
     const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      imageryProvider: new SingleTileImageryProvider({ url: img }),
+      baseLayer: ImageryLayer.fromProviderAsync(
+        SingleTileImageryProvider.fromUrl(img),
+        {}
+      ),
       scene3DOnly: true,
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
@@ -179,7 +196,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-    const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
+    const firefoxBugOptions = (FeatureDetection as any).isFirefox()
       ? {
           contextOptions: {
             webgl: { preserveDrawingBuffer: true }
@@ -211,24 +228,23 @@ export default class Cesium extends GlobeOrMap {
 
     this._selectionIndicator = new CesiumSelectionIndicator(this);
 
-    this.supportsPolylinesOnTerrain = (<any>this.scene).context.depthTexture;
+    this.supportsPolylinesOnTerrain = (this.scene as any).context.depthTexture;
 
     this._eventHelper = new EventHelper();
 
-    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
-      clock: Clock
-    ) => {
+    this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
       this.dataSourceDisplay.update(clock.currentTime);
-    }));
+    }) as any);
 
     // Progress
-    this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
-      ((currentLoadQueueLength: number) =>
-        this._updateTilesLoadingCount(currentLoadQueueLength))
-    ));
+    this._eventHelper.add(
+      this.scene.globe.tileLoadProgressEvent,
+      (currentLoadQueueLength: number) =>
+        this._updateTilesLoadingCount(currentLoadQueueLength) as any
+    );
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
-    (<any>this.scene).highDynamicRange = false;
+    (this.scene as any).highDynamicRange = false;
 
     this.scene.imageryLayers.removeAll();
 
@@ -253,12 +269,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction((e) => {
+    inputHandler.setInputAction((e: ScreenSpaceEventHandler.MotionEvent) => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.MotionEvent) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -269,16 +285,19 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction((e) => {
-      if (!this.isFeaturePickingPaused)
-        this.pickFromScreenPosition(e.position, false);
-    }, ScreenSpaceEventType.LEFT_CLICK);
+    inputHandler.setInputAction(
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
+        if (!this.isFeaturePickingPaused)
+          this.pickFromScreenPosition(e.position, false);
+      },
+      ScreenSpaceEventType.LEFT_CLICK
+    );
 
     let zoomUserDrawing: UserDrawing | undefined;
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -342,7 +361,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -390,15 +409,16 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this.terrainProvider;
-      this.scene.globe.splitDirection = this.terria.showSplitter
-        ? this.terria.terrainSplitDirection
-        : SplitDirection.NONE;
+      // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
+      // this.scene.globe.splitDirection = this.terria.showSplitter
+      //   ? this.terria.terrainSplitDirection
+      //   : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.depthTestAgainstTerrainEnabled;
-      if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection =
-          this.scene.globe.splitDirection;
-      }
+      // if (this.scene.skyAtmosphere) {
+      //   this.scene.skyAtmosphere.splitDirection =
+      //     this.scene.globe.splitDirection;
+      // }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -413,20 +433,11 @@ export default class Cesium extends GlobeOrMap {
   /** Add an event listener to a TerrainProvider.
    * If we get an error when trying to load the terrain, then switch to smooth mode, and notify the user.
    * Finally, remove the listener, so failed tiles do not trigger the error as these can be common and are not a problem. */
-  private async catchTerrainProviderDown(terrainProvider: TerrainProvider) {
-    // Some network errors are not rejected through readyPromise, so we have to
-    // listen to them using the error event and dispose it later
-    let networkErrorListener: (err: any) => void;
-    const networkErrorPromise = new Promise((_resolve, reject) => {
-      networkErrorListener = reject;
-      terrainProvider.errorEvent.addEventListener(networkErrorListener);
-    });
-
-    const isReady = await Promise.race([
-      networkErrorPromise,
-      terrainProvider.readyPromise
-    ])
-      .then(() => {
+  private async catchTerrainProviderDown(
+    terrainProviderPromise: Promise<TerrainProvider>
+  ): Promise<TerrainProvider> {
+    return terrainProviderPromise
+      .then((terrainProvider: TerrainProvider) => {
         /** Need to throw an error if incorrect `cesiumTerrainUrl` has been specified.
         The terrainProvider.readyPromise will still be fulfulled, but the map will not load correctly
         So we check for terrainProvider.availability */
@@ -434,28 +445,27 @@ export default class Cesium extends GlobeOrMap {
         if (!terrainProvider.availability) {
           throw new Error();
         }
+
+        return terrainProvider;
       })
       .catch((err) => {
         console.log("Terrain provider error.  ", err.message);
-        if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
-          console.log("Switching to EllipsoidTerrainProvider.");
-          setViewerMode("3dsmooth", this.terriaViewer);
-          if (!this._terrainMessageViewed) {
-            this.terria.raiseErrorToUser(err, {
-              title: i18next.t("map.cesium.terrainServerErrorTitle"),
-              message: i18next.t("map.cesium.terrainServerErrorMessage", {
-                appName: this.terria.appName,
-                supportEmail: this.terria.supportEmail
-              })
-            });
+        console.log("Switching to EllipsoidTerrainProvider.");
+        setViewerMode("3dsmooth", this.terriaViewer);
+        if (!this._terrainMessageViewed) {
+          this.terria.raiseErrorToUser(err, {
+            title: i18next.t("map.cesium.terrainServerErrorTitle"),
+            message: i18next.t("map.cesium.terrainServerErrorMessage", {
+              appName: this.terria.appName,
+              supportEmail: this.terria.supportEmail
+            })
+          });
 
-            this._terrainMessageViewed = true;
-          }
+          this._terrainMessageViewed = true;
         }
-      })
-      .finally(() =>
-        terrainProvider.errorEvent.removeEventListener(networkErrorListener)
-      );
+
+        return new EllipsoidTerrainProvider();
+      });
   }
 
   private updateCredits(container: string | HTMLElement) {
@@ -485,13 +495,16 @@ export default class Cesium extends GlobeOrMap {
     const creditDisplay: CreditDisplay & {
       _currentFrameCredits?: {
         lightboxCredits: AssociativeArray;
+        screenCredits: AssociativeArray;
       };
     } = this.scene.frameState.creditDisplay;
     const creditDisplayOldDestroy = creditDisplay.destroy;
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
-      } catch (err) {}
+      } catch (err) {
+        /* TODO: handle Error */
+      }
     };
 
     const creditDisplayOldEndFrame = creditDisplay.endFrame;
@@ -500,44 +513,16 @@ export default class Cesium extends GlobeOrMap {
       creditDisplayOldEndFrame.bind(creditDisplay)();
 
       runInAction(() => {
-        const creditDisplayElements: {
-          credit: Credit;
-          count: number;
-        }[] = creditDisplay._currentFrameCredits!.lightboxCredits.values;
-
-        // sort credits by count (number of times they are added to map)
-        const credits = creditDisplayElements
-          .sort((credit1, credit2) => {
-            return credit2.count - credit1.count;
-          })
-          .map(({ credit }) => credit.html);
-
-        if (isEqual(credits, this.cesiumDataAttributions.toJS())) return;
-
-        // first remove ones that are not on the map anymore
-        // Iterate backwards because we're removing items.
-        for (let i = this.cesiumDataAttributions.length - 1; i >= 0; i--) {
-          const attribution = this.cesiumDataAttributions[i];
-          if (!credits.includes(attribution)) {
-            this.cesiumDataAttributions.remove(attribution);
-          }
-        }
-
-        // then go through all credits and add them or update their position
-        for (const [index, credit] of credits.entries()) {
-          const attributionIndex = this.cesiumDataAttributions.indexOf(credit);
-
-          if (attributionIndex === index) {
-            // it is already on correct position in the list
-            continue;
-          } else if (attributionIndex === -1) {
-            // it is not on the list yet so we add it to the list
-            this.cesiumDataAttributions.splice(index, 0, credit);
-          } else {
-            // it is on the list but not in the right place so we move it
-            this.cesiumDataAttributions.move(attributionIndex, index);
-          }
-        }
+        syncCesiumCreditsToAttributions(
+          creditDisplay._currentFrameCredits!.lightboxCredits
+            .values as CreditDisplayElement[],
+          this.cesiumDataAttributions
+        );
+        syncCesiumCreditsToAttributions(
+          creditDisplay._currentFrameCredits!.screenCredits
+            .values as CreditDisplayElement[],
+          this.cesiumScreenDataAttributions
+        );
       });
     };
   }
@@ -682,7 +667,7 @@ export default class Cesium extends GlobeOrMap {
     }
 
     // 2. Add new data sources
-    for (let ds of availableDataSources) {
+    for (const ds of availableDataSources) {
       if (!dataSources.contains(ds)) {
         await dataSources.add(ds);
       }
@@ -782,7 +767,9 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach((fn) => fn()); // Run the remover functions
-            } catch (error) {}
+            } catch (error) {
+              /* TODO: handle error */
+            }
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
             this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
@@ -994,6 +981,22 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
+  /**
+   * Helper method to clone a camera object
+   * @param camera
+   * @returns Camera
+   */
+  private cloneCamera(camera: Camera): Camera {
+    const result = new Camera(this.scene);
+    Cartesian3.clone(camera.position, result.position);
+    Cartesian3.clone(camera.direction, result.direction);
+    Cartesian3.clone(camera.up, result.up);
+    Cartesian3.clone(camera.right, result.right);
+    Matrix4.clone(camera.transform, result.transform);
+    result.frustum = camera.frustum.clone();
+    return result;
+  }
+
   getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
@@ -1004,13 +1007,42 @@ export default class Cesium extends GlobeOrMap {
     const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     const pickRay = scene.camera.getPickRay(centerOfScreen);
     const center = isDefined(pickRay)
-      ? scene.globe.pick(pickRay, scene)
+      ? scene.globe.pick(pickRay, scene) // will be undefined if we are facing above the horizon
       : undefined;
 
     if (!center) {
-      // TODO: binary search to find the horizon point and use that as the center.
-      return this.terriaViewer.homeCamera; // This is just a random rectangle. Replace it when there's a home view available
-      // return this.terria.homeView.rectangle;
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray,
+      but we need to return a useful CameraView that works in 3D mode and 2D mode.
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up,
+      but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
+
+      To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
+      **/
+
+      // Clone the camera
+      const cameraClone = this.cloneCamera(camera);
+
+      // Rotate camera straight down
+      cameraClone.setView({
+        orientation: {
+          heading: 0.0,
+          pitch: -CesiumMath.PI_OVER_TWO,
+          roll: 0.0
+        }
+      });
+
+      // Compute the bounding box on the ellipsoid
+      const rectangleFor2dView = cameraClone.computeViewRectangle(
+        this.scene.globe.ellipsoid
+      );
+
+      // Return the combined CameraView object
+      return new CameraView(
+        rectangleFor2dView || this.terriaViewer.homeCamera.rectangle, //TODO: Is this fallback appropriate?
+        camera.positionWC,
+        camera.directionWC,
+        camera.upWC
+      );
     }
 
     const ellipsoid = this.scene.globe.ellipsoid;
@@ -1121,21 +1153,27 @@ export default class Cesium extends GlobeOrMap {
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
   @computed
   private get _terrainWithCredits(): {
-    terrain: TerrainProvider;
+    terrainProviderPromise: Promise<TerrainProvider>;
     credit?: Credit;
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
-      return { terrain: new EllipsoidTerrainProvider() };
+      return {
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
+      };
     } else if (this._firstMapItemTerrainProvider) {
       // If there's a TerrainProvider in map items/workbench then use it
-      return { terrain: this._firstMapItemTerrainProvider };
+      return {
+        terrainProviderPromise: Promise.resolve(
+          this._firstMapItemTerrainProvider
+        )
+      };
     } else if (
       this.terria.configParameters.cesiumTerrainAssetId !== undefined
     ) {
       // Load the terrain provider from Ion
       return {
-        terrain: this.createTerrainProviderFromIonAssetId(
+        terrainProviderPromise: this.createTerrainProviderFromIonAssetId(
           this.terria.configParameters.cesiumTerrainAssetId,
           this.terria.configParameters.cesiumIonAccessToken
         )
@@ -1143,7 +1181,7 @@ export default class Cesium extends GlobeOrMap {
     } else if (this.terria.configParameters.cesiumTerrainUrl) {
       // Load the terrain provider from the given URL
       return {
-        terrain: this.createTerrainProviderFromUrl(
+        terrainProviderPromise: this.createTerrainProviderFromUrl(
           this.terria.configParameters.cesiumTerrainUrl
         )
       };
@@ -1157,12 +1195,14 @@ export default class Cesium extends GlobeOrMap {
         true
       );
       return {
-        terrain: this.createWorldTerrain(),
+        terrainProviderPromise: this.createWorldTerrain(),
         credit: ionCredit
       };
     } else {
       // Default to ellipsoid/3d-smooth
-      return { terrain: new EllipsoidTerrainProvider() };
+      return {
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
+      };
     }
   }
 
@@ -1174,15 +1214,14 @@ export default class Cesium extends GlobeOrMap {
   private createTerrainProviderFromIonAssetId(
     assetId: number,
     accessToken?: string
-  ): CesiumTerrainProvider {
-    const terrainProvider = new CesiumTerrainProvider({
-      url: IonResource.fromAssetId(assetId, {
+  ): Promise<TerrainProvider> {
+    const terrainProvider = CesiumTerrainProvider.fromUrl(
+      IonResource.fromAssetId(assetId, {
         accessToken
       })
-    });
+    );
     // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+    return this.catchTerrainProviderDown(terrainProvider);
   }
 
   /**
@@ -1190,14 +1229,8 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createTerrainProviderFromUrl(url: string): CesiumTerrainProvider {
-    const terrainProvider = new CesiumTerrainProvider({
-      url
-    });
-
-    // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+  private createTerrainProviderFromUrl(url: string): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(CesiumTerrainProvider.fromUrl(url));
   }
 
   /**
@@ -1205,16 +1238,41 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createWorldTerrain(): CesiumTerrainProvider {
-    const terrainProvider = createWorldTerrain({});
-    // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+  private createWorldTerrain(): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(createWorldTerrainAsync({}));
   }
 
+  /**
+   * An observable terrain provider promise
+   */
+  @computed
+  private get observableTerrainProviderPromise(): IPromiseBasedObservable<TerrainProvider> {
+    return fromPromise(this._terrainWithCredits.terrainProviderPromise);
+  }
+
+  /**
+   * Returns the currently active TerrainProvider
+   */
   @computed
   get terrainProvider(): TerrainProvider {
-    return this._terrainWithCredits.terrain;
+    return this.observableTerrainProviderPromise.case({
+      // Return the current provider from the scene instance if the promise is pending or rejected
+      pending: () => this.scene.terrainProvider,
+      rejected: () => this.scene.terrainProvider,
+      // When promise is fulfilled, return the new terrainProvider
+      fulfilled: (terrainProvider) => terrainProvider
+    });
+  }
+
+  /**
+   * Returns `true` if loading of a new TerrainProvider is in progress
+   *
+   * Note that until the loading is fully complete, `this.terrainProvider` will
+   * return the existing TerrainProvider.
+   */
+  @computed
+  get isTerrainLoading(): boolean {
+    return this.observableTerrainProviderPromise.state === "pending";
   }
 
   /**
@@ -1222,6 +1280,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
+  @action
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
@@ -1303,60 +1362,21 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
-   * @param latLngHeight The position on the earth to pick
-   * @param tileCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  async getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: TerriaFeature[] = []
-  ) {
-    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
-      Cartographic.fromDegrees(
-        latLngHeight.longitude,
-        latLngHeight.latitude,
-        latLngHeight.height
-      )
-    );
-    const pickPositionCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
-
-    const promises = this.terria.allowFeatureInfoRequests
-      ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
-      : [];
-
-    const pickedFeatures = this._buildPickedFeatures(
-      providerCoords,
-      pickPosition,
-      existingFeatures,
-      filterOutUndefined(promises),
-      pickPositionCartographic.height,
-      false
-    );
-
-    await pickedFeatures.allFeaturesAvailablePromise;
-    return pickedFeatures.features;
-  }
-
   private pickImageryLayerFeatures(
     pickPosition: Cartographic,
     providerCoords: ProviderCoordsMap
   ) {
     const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+    function hasUrl(o: any): o is { url: string } {
+      return typeof o?.url === "string";
+    }
 
     for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
       const imageryLayer = this.scene.imageryLayers.get(i);
       const imageryProvider = imageryLayer.imageryProvider;
 
-      function hasUrl(o: any): o is { url: string } {
-        return typeof o?.url === "string";
-      }
-
       if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
-        var coords = providerCoords[imageryProvider.url];
+        const coords = providerCoords[imageryProvider.url];
         promises.push(
           imageryProvider
             .pickFeatures(
@@ -1467,7 +1487,7 @@ export default class Cesium extends GlobeOrMap {
       longitude: number,
       latitude: number
     ) {
-      const url = (<any>imageryProvider).url;
+      const url = (imageryProvider as any).url;
 
       try {
         const featuresPromise = oldPick.call(
@@ -1542,7 +1562,7 @@ export default class Cesium extends GlobeOrMap {
         runInAction(() => {
           result.isLoading = false;
           result.features = allFeatures.reduce(
-            (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+            (resultFeaturesSoFar, imageryLayerFeatures, _i) => {
               if (!isDefined(imageryLayerFeatures)) {
                 return resultFeaturesSoFar;
               }
@@ -1623,7 +1643,9 @@ export default class Cesium extends GlobeOrMap {
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
-  ): ImageryLayer {
+  ): ImageryLayer | undefined {
+    if (parts.imageryProvider === undefined) return undefined;
+
     const layer = this._createImageryLayer(
       parts.imageryProvider,
       parts.clippingRectangle
@@ -1735,7 +1757,7 @@ export default class Cesium extends GlobeOrMap {
   }
 }
 
-var boundingSphereScratch = new BoundingSphere();
+const boundingSphereScratch = new BoundingSphere();
 
 function zoomToDataSource(
   cesium: Cesium,
@@ -1750,19 +1772,21 @@ function zoomToDataSource(
         return false;
       }
 
-      var entities = target.entities.values;
+      const entities = target.entities.values;
 
-      var boundingSpheres = [];
-      for (var i = 0, len = entities.length; i < len; i++) {
-        var state = BoundingSphereState.PENDING;
+      const boundingSpheres = [];
+      for (let i = 0, len = entities.length; i < len; i++) {
+        let state = BoundingSphereState.PENDING;
         try {
           // TODO: missing Cesium type info
-          state = (<any>dataSourceDisplay).getBoundingSphere(
+          state = (dataSourceDisplay as any).getBoundingSphere(
             entities[i],
             false,
             boundingSphereScratch
           );
-        } catch (e) {}
+        } catch (e) {
+          /* TODO: handle error */
+        }
 
         if (state === BoundingSphereState.PENDING) {
           return false;
@@ -1775,7 +1799,7 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere =
+        const boundingSphere =
           BoundingSphere.fromBoundingSpheres(boundingSpheres);
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
@@ -1833,4 +1857,47 @@ function flyToBoundingSpherePromise(
       cancel
     });
   });
+}
+
+function syncCesiumCreditsToAttributions(
+  creditsElements: CreditDisplayElement[],
+  dataAttributionsObservable: IObservableArray<string>
+) {
+  // sort credits by count (number of times they are added to map)
+  const credits = creditsElements
+    .sort((credit1, credit2) => {
+      return credit2.count - credit1.count;
+    })
+    .map(({ credit }) => credit.html);
+
+  if (isEqual(credits, toJS(dataAttributionsObservable))) return;
+
+  // first remove ones that are not on the map anymore
+  // Iterate backwards because we're removing items.
+  for (let i = dataAttributionsObservable.length - 1; i >= 0; i--) {
+    const attribution = dataAttributionsObservable[i];
+    if (!credits.includes(attribution)) {
+      dataAttributionsObservable.remove(attribution);
+    }
+  }
+
+  // then go through all credits and add them or update their position
+  for (const [index, credit] of credits.entries()) {
+    const attributionIndex = dataAttributionsObservable.indexOf(credit);
+
+    if (attributionIndex === index) {
+      // it is already on correct position in the list
+      continue;
+    } else if (attributionIndex === -1) {
+      // it is not on the list yet so we add it to the list
+      dataAttributionsObservable.splice(index, 0, credit);
+    } else {
+      // it is on the list but not in the right place so we move it
+      dataAttributionsObservable.splice(
+        index,
+        0,
+        dataAttributionsObservable.splice(attributionIndex, 1)[0]
+      );
+    }
+  }
 }

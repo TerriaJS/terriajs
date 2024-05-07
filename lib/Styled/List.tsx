@@ -10,6 +10,7 @@ interface IUlProps {
 export const Ul = styled(Box).attrs({
   as: "ul"
 })<IUlProps>`
+  padding-left: 0;
   list-style: none;
   margin: 0;
   ${(props) =>
@@ -27,7 +28,6 @@ export const Ul = styled(Box).attrs({
         padding-top: 5px;
       }
     `}
-
   ${(props) =>
     props.lined &&
     css`

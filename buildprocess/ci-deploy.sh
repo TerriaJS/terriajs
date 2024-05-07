@@ -10,14 +10,16 @@ if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
+SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:32}" | sed -e 's/./\L&/g' -e 's/[^-a-z0-9]/-/g' -e 's/-*$//')
+
+[[ $SAFE_BRANCH_NAME != $GITHUB_BRANCH ]] && echo "::warning file=buildprocess/ci-deploy.sh::Branch name sanitised to '${SAFE_BRANCH_NAME}' for kubernetes resources. This may work, however using branch names less than 32 characters long with [a-z0-9] and hyphen separators are preferred"
 
 gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=pending -f context=deployment -f target_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
 # Install some tools we need from npm
 npm install -g https://github.com/terriajs/sync-dependencies
-npm install request@^2.83.0
 npm install -g yarn@^1.19.0
+yarn add -W request@2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)

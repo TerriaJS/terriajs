@@ -6,11 +6,11 @@ import {
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
 import FlattenedFromTraits from "../../lib/Models/Definition/FlattenedFromTraits";
-import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
+import TraitsForTesting from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 
 type Flattened = FlattenedFromTraits<TraitsForTesting>;
-const flattened: Flattened = <any>{};
+const flattened: Flattened = {} as any;
 
 // Simple properties allow undefined, whether they have a default or not.
 expectTrue<Equals<typeof flattened.withDefault, number | undefined>>();

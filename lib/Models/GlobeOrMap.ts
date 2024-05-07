@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -9,9 +9,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
 import { isJsonObject } from "../Core/Json";
@@ -60,7 +58,7 @@ export default abstract class GlobeOrMap {
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
   // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
-  @observable mouseCoords: MouseCoords = new MouseCoords();
+  mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
 
@@ -68,6 +66,10 @@ export default abstract class GlobeOrMap {
     target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void>;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   /**
    * Zoom map to a dataset or the given bounds.
@@ -115,7 +117,6 @@ export default abstract class GlobeOrMap {
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */
-  @computed
   get attributions(): string[] {
     return [];
   }
@@ -131,17 +132,6 @@ export default abstract class GlobeOrMap {
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
   ): void;
-
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
-   * @param latLngHeight The position on the earth to pick
-   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  abstract getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
-  ): Promise<Entity[] | undefined> | void;
 
   /**
    * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.
@@ -168,7 +158,7 @@ export default abstract class GlobeOrMap {
       );
     }
 
-    (<any>feature).coords = (<any>imageryFeature).coords;
+    (feature as any).coords = (imageryFeature as any).coords;
 
     return feature;
   }
@@ -311,7 +301,7 @@ export default abstract class GlobeOrMap {
         const polylineMaterial = cesiumPolyline.polyline!.material;
         const polylineWidth = cesiumPolyline.polyline!.width;
 
-        (<any>cesiumPolyline).polyline.material =
+        (cesiumPolyline as any).polyline.material =
           Color.fromCssColorString(this.terria.baseMapContrastColor) ??
           Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
@@ -396,7 +386,7 @@ export default abstract class GlobeOrMap {
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
-              <any>geoJson
+              geoJson as any
             );
 
             catalogItem.setTrait(

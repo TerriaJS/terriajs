@@ -1,11 +1,11 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
@@ -58,6 +58,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -238,9 +239,9 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const getCapabilitiesStratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum) {
       await runLater(() => getCapabilitiesStratum.createMembersFromLayers());
     }

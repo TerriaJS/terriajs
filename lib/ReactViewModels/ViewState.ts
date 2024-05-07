@@ -4,7 +4,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -37,6 +38,9 @@ import {
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
+import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -47,8 +51,7 @@ export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
-  catalogSearchProvider: any;
-  locationSearchProviders: any[];
+  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
   errorHandlingProvider?: any;
 }
 
@@ -244,6 +247,7 @@ export default class ViewState {
   @observable currentTourIndex: number = -1;
   @observable showCollapsedNavigation: boolean = false;
 
+  @computed
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want
     // this to be the true source of tourPoints.
@@ -251,11 +255,12 @@ export default class ViewState {
     // properly clean up your refs - so we'll leave that up to the UI to
     // provide valid refs
     return this.tourPoints
+      .slice()
       .sort((a, b) => {
         return a.priority - b.priority;
       })
       .filter(
-        (tourPoint) => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        (tourPoint) => (this.appRefs as any).get(tourPoint.appRefName)?.current
       );
   }
   @action
@@ -365,16 +370,17 @@ export default class ViewState {
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
   private _previewedItemIdSubscription: IReactionDisposer;
+  private _locationMarkerSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
+    makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
-      terria: terria,
-      catalogSearchProvider: options.catalogSearchProvider,
-      locationSearchProviders: options.locationSearchProviders
+      terria,
+      catalogSearchProvider: options.catalogSearchProvider
     });
 
     this.errorProvider = options.errorHandlingProvider
@@ -472,6 +478,17 @@ export default class ViewState {
       }
     );
 
+    this._locationMarkerSubscription = reaction(
+      () => getMarkerCatalogItem(this.terria),
+      (item: CzmlCatalogItem | undefined) => {
+        if (item) {
+          terria.overlays.add(item);
+          /* dispose subscription after init */
+          this._locationMarkerSubscription();
+        }
+      }
+    );
+
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
       async (previewedItemId: string | undefined) => {
@@ -522,6 +539,7 @@ export default class ViewState {
     this._storyPromptSubscription();
     this._previewedItemIdSubscription();
     this._workbenchHasTimeWMSSubscription();
+    this._locationMarkerSubscription();
     this._disclaimerHandler.dispose();
     this.searchState.dispose();
   }

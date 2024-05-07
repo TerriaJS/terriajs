@@ -11,7 +11,7 @@ import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
-import TerrainSide from "../Map/Panels/TerrainSide";
+import TerrainSide from "./TerrainSide";
 
 interface IWorkbenchSplitScreenProps {
   terria: Terria;
@@ -77,7 +77,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
               `
               }}
               activeColor={theme.colorSecondary}
-            ></TerrainSide>
+            />
           </Box>
         </Box>
         <Spacing bottom={1} />

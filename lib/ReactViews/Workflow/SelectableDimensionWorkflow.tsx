@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
 import SelectableDimension from "../SelectableDimensions/SelectableDimension";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../Context";
 import WorkbenchItemControls, {
   hideAllControls
 } from "../Workbench/Controls/WorkbenchItemControls";
@@ -56,7 +56,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
       </Panel>
       {/* Render Panel for each top-level selectable dimension */}
       {terria.selectableDimensionWorkflow.selectableDimensions.map(
-        (groupDim, i) => {
+        (groupDim, _i) => {
           if (groupDim.disable) return null;
 
           const childDims = filterSelectableDimensions()(
@@ -71,7 +71,7 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
               key={groupDim.name ?? groupDim.id}
               isOpen={groupDim.isOpen ?? true}
               onToggle={groupDim.onToggle}
-              collapsible={true}
+              collapsible
             >
               {childDims.map((childDim) => (
                 <SelectableDimension

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -47,6 +47,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     private readonly ckanCatalogGroup: CkanCatalogGroup | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -142,14 +143,14 @@ export class CkanDatasetStratum extends LoadableStratum(
       }
     }
     if (this.ckanDataset.geo_coverage !== undefined) {
-      var bboxString = this.ckanDataset.geo_coverage;
-      var parts = bboxString.split(",");
+      const bboxString = this.ckanDataset.geo_coverage;
+      const parts = bboxString.split(",");
       if (parts.length === 4) {
         return createStratumInstance(RectangleTraits, {
-          west: parseInt(parts[0]),
-          south: parseInt(parts[1]),
-          east: parseInt(parts[2]),
-          north: parseInt(parts[3])
+          west: parseInt(parts[0], 10),
+          south: parseInt(parts[1], 10),
+          east: parseInt(parts[2], 10),
+          north: parseInt(parts[3], 10)
         });
       }
     }
@@ -157,7 +158,7 @@ export class CkanDatasetStratum extends LoadableStratum(
       isDefined(this.ckanDataset.spatial) &&
       this.ckanDataset.spatial !== ""
     ) {
-      var gj = JSON.parse(this.ckanDataset.spatial);
+      const gj = JSON.parse(this.ckanDataset.spatial);
       if (gj.type === "Polygon" && gj.coordinates[0].length === 5) {
         return createStratumInstance(RectangleTraits, {
           west: gj.coordinates[0][0][0],
@@ -265,6 +266,7 @@ export default class CkanItemReference extends UrlMixin(
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ) {
     super(id, terria, sourceReference, strata);
+    makeObservable(this);
     this.strata.set(
       CkanDefaultFormatsStratum.stratumName,
       new CkanDefaultFormatsStratum()
@@ -314,7 +316,8 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -436,7 +439,7 @@ export interface PreparedSupportedFormat
 }
 
 async function loadCkanDataset(ckanItem: CkanItemReference) {
-  var uri = new URI(ckanItem.url)
+  const uri = new URI(ckanItem.url)
     .segment("api/3/action/package_show")
     .addQuery({ id: ckanItem.datasetId });
 
@@ -448,7 +451,7 @@ async function loadCkanDataset(ckanItem: CkanItemReference) {
 }
 
 async function loadCkanResource(ckanItem: CkanItemReference) {
-  var uri = new URI(ckanItem.url)
+  const uri = new URI(ckanItem.url)
     .segment("api/3/action/resource_show")
     .addQuery({ id: ckanItem.resourceId });
 
@@ -517,7 +520,7 @@ export function isResourceInSupportedFormats(
   formats: PreparedSupportedFormat[]
 ): PreparedSupportedFormat | undefined {
   if (resource === undefined) return undefined;
-  let matches: PreparedSupportedFormat[] = [];
+  const matches: PreparedSupportedFormat[] = [];
   for (let i = 0; i < formats.length; ++i) {
     const format = formats[i];
     if (resourceIsSupported(resource, format)) return format;

@@ -62,11 +62,11 @@ describe("YDYRCatalogFunction", function () {
     });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
     ).andReturn({ responseText: sa4regionCodes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
     ).andReturn({ responseText: lga2011RegionCodes });
 
     jasmine.Ajax.stubRequest(
@@ -92,7 +92,7 @@ describe("YDYRCatalogFunction", function () {
     });
 
     // A few reactions will happen, while setting default values for functionParameters
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       reaction(
         () => ydyr.functionParameters,
         () => {
@@ -168,7 +168,7 @@ describe("YDYRCatalogFunction", function () {
 
     it("polls twice - and creates 2 log entries", async function () {
       // Wait until job finished
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.jobStatus,
           (status) => (status === "finished" ? resolve() : undefined)
@@ -185,7 +185,7 @@ describe("YDYRCatalogFunction", function () {
     });
     it("downloads results and creates CSVCatalogItem", async function () {
       // Wait until job finished downloading results
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.downloadedResults,
           (downloadedResults) => (downloadedResults ? resolve() : undefined)

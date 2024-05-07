@@ -19,7 +19,7 @@ describe("MapboxMapCatalogItem", function () {
   });
 
   it("can be created", function () {
-    new MapboxMapCatalogItem("test", terria);
+    return new MapboxMapCatalogItem("test", terria);
   });
 
   describe("mapItems", function () {

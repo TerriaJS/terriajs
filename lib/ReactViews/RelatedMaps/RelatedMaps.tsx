@@ -6,10 +6,7 @@ import { RelatedMap } from "../../Models/RelatedMaps";
 import Box from "../../Styled/Box";
 import { ExternalLinkIcon } from "../Custom/ExternalLink";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import {
-  withViewState,
-  WithViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { withViewState, WithViewState } from "../Context";
 import Styles from "./related-maps.scss";
 
 const MenuPanel =
@@ -54,7 +51,7 @@ class RelatedMaps extends React.Component<PropTypes> {
         {this.props.relatedMaps.map((map, i) => (
           <Box flex key={i}>
             <Box>
-              <a target="_blank" href={map.url}>
+              <a target="_blank" href={map.url} rel="noreferrer">
                 <img
                   style={{
                     marginRight: "10px",
@@ -73,6 +70,7 @@ class RelatedMaps extends React.Component<PropTypes> {
                 target="_blank"
                 style={{ color: this.props.theme.colorPrimary }}
                 href={map.url}
+                rel="noreferrer"
               >
                 {map.title}
                 <ExternalLinkIcon />

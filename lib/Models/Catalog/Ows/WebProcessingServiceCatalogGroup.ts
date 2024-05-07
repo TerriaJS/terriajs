@@ -1,8 +1,7 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import { isJsonObject } from "../../../Core/Json";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
 import TerriaError from "../../../Core/TerriaError";
@@ -23,6 +22,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import WebProcessingServiceCapabilities, {
   Process
 } from "./WebProcessingServiceCapabilities";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -33,6 +33,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebProcessingServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -216,6 +217,11 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
 ) {
   static readonly type = "wps-getCapabilities";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return WebProcessingServiceCatalogGroup.type;
   }
@@ -232,9 +238,9 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   }
 
   async forceLoadMembers(): Promise<void> {
-    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
+    const getCapabilitiesStratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum) {
       await runLater(() => getCapabilitiesStratum.createMembersForProcesses());
     }

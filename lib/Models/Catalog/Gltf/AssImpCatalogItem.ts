@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
@@ -11,6 +11,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { GlTf } from "./GLTF";
 
 // List of supported image formats from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
@@ -38,6 +39,11 @@ export default class AssImpCatalogItem
   protected gltfModelUrl: string | undefined;
 
   static readonly type = "assimp";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return AssImpCatalogItem.type;
@@ -153,7 +159,7 @@ export default class AssImpCatalogItem
     const ajs = await assimpjs();
 
     // Create assimpjs FileList object, and add the files
-    let fileList = new ajs.FileList();
+    const fileList = new ajs.FileList();
     for (let i = 0; i < fileArrayBuffers.length; i++) {
       fileList.AddFile(
         fileArrayBuffers[i].name,
@@ -162,10 +168,10 @@ export default class AssImpCatalogItem
     }
 
     // Convert files to GlTf 2
-    let result = ajs.ConvertFileList(fileList, "gltf2");
+    const result = ajs.ConvertFileList(fileList, "gltf2");
     const fileCount = result.FileCount();
 
-    if (!result.IsSuccess() || fileCount == 0) {
+    if (!result.IsSuccess() || fileCount === 0) {
       throw TerriaError.from(result.GetErrorCode(), {
         title: "Failed to convert files to GlTf"
       });

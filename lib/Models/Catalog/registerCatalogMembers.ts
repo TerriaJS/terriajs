@@ -283,17 +283,17 @@ export default function registerCatalogMembers() {
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
   UrlToCatalogMemberMapping.register(
-    matchesUrl(/\/wms|\=wms/i),
+    matchesUrl(/\/wms|=wms/i),
     WebMapServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    matchesUrl(/\/wfs|\=wfs/i),
+    matchesUrl(/\/wfs|=wfs/i),
     WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    matchesUrl(/\/wmts|\=wmts/i),
+    matchesUrl(/\/wmts|=wmts/i),
     WebMapTileServiceCatalogGroup.type,
     true
   );
@@ -355,37 +355,37 @@ export default function registerCatalogMembers() {
 
   // These don't even try to match a URL, they're just total fallbacks. We really, really want something to work.
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     WebMapServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisMapServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisMapServerCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisFeatureServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisFeatureServerCatalogGroup.type,
     true
   );
@@ -396,7 +396,7 @@ function matchesUrl(regex: RegExp) {
 }
 
 export function matchesExtension(extension: string) {
-  var regex = new RegExp("\\." + extension + "$", "i");
+  const regex = new RegExp("\\." + extension + "$", "i");
   return function (url: string) {
     return Boolean(url.match(regex));
   };

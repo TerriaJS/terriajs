@@ -48,7 +48,9 @@ export default class DiscreteColorMap extends ColorMap {
       i = 0, len = maximums.length - 1;
       i < len && value > maximums[i];
       ++i
-    ) {}
+    ) {
+      /* TODO: refactor */
+    }
 
     // Value may equal maximum, in which case we look at
     // `includeMinimumInThisBin` for the _next_ bin.

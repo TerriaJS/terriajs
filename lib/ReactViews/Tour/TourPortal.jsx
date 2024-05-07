@@ -23,8 +23,8 @@ import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMark
 import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import { useWindowSize } from "../Hooks/useWindowSize";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
-import { applyTranslationIfExists } from "./../../Language/languageHelpers";
+import { useViewState } from "../Context";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import {
   calculateLeftPosition,
   calculateTopPosition,

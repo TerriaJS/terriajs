@@ -1,9 +1,6 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import TestRenderer, {
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
+import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";

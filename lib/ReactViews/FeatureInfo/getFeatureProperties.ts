@@ -29,6 +29,9 @@ export default function getFeatureProperties(
 
   // Try JSON.parse on values that look like JSON arrays or objects
   let result = parseValues(properties);
+  if (result === undefined) {
+    return undefined;
+  }
   result = replaceBadKeyCharacters(result);
 
   if (formats) {
@@ -80,7 +83,9 @@ function parseValues(properties: JsonObject) {
       ) {
         try {
           val = JSON.parse(val as string);
-        } catch (e) {}
+        } catch (e) {
+          return;
+        }
       }
       result[key] = val;
     }

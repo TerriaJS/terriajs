@@ -1,17 +1,16 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
 import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
-import TerriaError from "../../../../lib/Core/TerriaError";
-import ArcGisMapServerCatalogGroup, {
-  MapServerStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
+import ArcGisMapServerCatalogGroup, {
+  MapServerStratum
+} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
+import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 
 configure({
   enforceActions: "observed",
@@ -23,7 +22,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisCatalogGroup", function () {
   const arcgisServerUrl = "http://example.com/arcgis/rest/services/";
@@ -44,6 +43,7 @@ describe("ArcGisCatalogGroup", function () {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
+
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
@@ -82,6 +82,12 @@ describe("ArcGisCatalogGroup", function () {
           "CommunityAddressingMS.json"
         );
         args[0] = "test/ArcGisServer/sampleserver6/" + url;
+      } else if (url.match("SingleFusedMapCache/MapServer")) {
+        url = url.replace(/^.*\/MapServer/, "MapServer");
+        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
+        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
+        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
+        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -105,14 +111,14 @@ describe("ArcGisCatalogGroup", function () {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(8);
 
-      let member0 = <ArcGisCatalogGroup>group.memberModels[0];
-      let member1 = <ArcGisCatalogGroup>group.memberModels[1];
-      let member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
-      let member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
-      let member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
-      let member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
-      let member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
-      let member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
+      const member0 = group.memberModels[0] as ArcGisCatalogGroup;
+      const member1 = group.memberModels[1] as ArcGisCatalogGroup;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogGroup;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
+      const member4 = group.memberModels[4] as ArcGisFeatureServerCatalogGroup;
+      const member5 = group.memberModels[5] as ArcGisMapServerCatalogGroup;
+      const member6 = group.memberModels[6] as ArcGisFeatureServerCatalogGroup;
+      const member7 = group.memberModels[7] as ArcGisMapServerCatalogGroup;
 
       expect(member0 instanceof ArcGisCatalogGroup).toBeTruthy();
       expect(member0.name).toBe("AGP");
@@ -200,9 +206,9 @@ describe("ArcGisCatalogGroup", function () {
       await group.loadMetadata();
     });
     it("proper init", function () {
-      const arcgisServerStratum = <MapServerStratum | undefined>(
-        group.strata.get(MapServerStratum.stratumName)
-      );
+      const arcgisServerStratum = group.strata.get(
+        MapServerStratum.stratumName
+      ) as MapServerStratum | undefined;
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof MapServerStratum).toBeTruthy();
     });
@@ -216,11 +222,37 @@ describe("ArcGisCatalogGroup", function () {
       await group.loadMetadata();
     });
     it("proper init", function () {
-      const arcgisServerStratum = <FeatureServerStratum | undefined>(
-        group.strata.get(FeatureServerStratum.stratumName)
-      );
+      const arcgisServerStratum = group.strata.get(
+        FeatureServerStratum.stratumName
+      ) as FeatureServerStratum | undefined;
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof FeatureServerStratum).toBeTruthy();
+    });
+  });
+
+  describe("Supports MapServer with TilesOnly single fused map cache", function () {
+    beforeEach(async () => {
+      runInAction(() => {
+        group.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://www.example.com/SingleFusedMapCache/MapServer"
+        );
+      });
+      (await group.loadMembers()).throwIfError();
+    });
+
+    it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {
+      expect(group.memberModels.length).toBe(1);
+      expect(
+        group.memberModels[0] instanceof ArcGisMapServerCatalogItem
+      ).toBeTruthy();
+      const item = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      expect(item.name).toBe(
+        "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"
+      );
+      expect(item.layers).toBeUndefined();
+      expect(item.layersArray.length).toBe(0);
     });
   });
 });

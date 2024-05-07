@@ -46,11 +46,11 @@ describe("SdmxJsonCatalogItem", function () {
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
     ).andReturn({ responseText: steCodes });
 
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
+      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
     ).andReturn({ responseText: isoCodes });
 
     jasmine.Ajax.stubRequest(
@@ -261,6 +261,34 @@ describe("SdmxJsonCatalogItem", function () {
     expect(primaryCol?.transformation.dependencies[0]).toBe("UNIT_MULT");
     expect(sdmxItem.activeTableStyle.colorTraits.legend.title).toBe(
       "Australian Dollars (Monthly)"
+    );
+  });
+
+  it("sets featureInfoTemplate with time-series chart", async function () {
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "ABS");
+      sdmxItem.setTrait("definition", "dataflowId", "RT");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id: "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)",
+          type: "region",
+          regionType: "STE_2016"
+        })
+      ]);
+    });
+
+    await sdmxItem.regionProviderLists?.[0]
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(1);
+
+    expect(sdmxItem.featureInfoTemplate).toBeDefined();
+    expect(sdmxItem.featureInfoTemplate?.template).toContain("<chart");
+    expect(sdmxItem.featureInfoTemplate?.template).toContain(
+      `y-column="Observation Value"`
     );
   });
 

@@ -1,9 +1,9 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable, override } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
@@ -27,18 +27,23 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
+  T extends AbstractConstructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin
     extends ChartableMixin(Base)
     implements TimeVarying
   {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasDiscreteTimes() {
       return true;
     }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
-    @computed
+    @override
     get currentTime(): string | undefined {
       const time = super.currentTime;
       if (time === undefined || time === null) {
@@ -110,7 +115,9 @@ function DiscretelyTimeVaryingMixin<
               tag: dt.tag !== undefined ? dt.tag : dt.time
             });
           }
-        } catch {}
+        } catch {
+          /* eslint-disable-line no-empty */
+        }
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;
@@ -234,7 +241,7 @@ function DiscretelyTimeVaryingMixin<
       return this.nextDiscreteTimeIndex !== undefined;
     }
 
-    @computed
+    @override
     get startTime(): string | undefined {
       const time = super.startTime;
       if (
@@ -250,7 +257,7 @@ function DiscretelyTimeVaryingMixin<
       return time;
     }
 
-    @computed
+    @override
     get stopTime(): string | undefined {
       const time = super.stopTime;
       if (
@@ -271,7 +278,7 @@ function DiscretelyTimeVaryingMixin<
     /**
      * Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds. For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing.
      */
-    @computed
+    @override
     get multiplier() {
       if (super.multiplier) return super.multiplier;
 
@@ -407,7 +414,7 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   const julianDate = JulianDate.fromIso8601(time);
 
   // Don't return an invalid JulianDate
-  if (julianDate.secondsOfDay === NaN || julianDate.dayNumber === NaN)
+  if (isNaN(julianDate.secondsOfDay) || isNaN(julianDate.dayNumber))
     return undefined;
 
   return julianDate;
@@ -431,15 +438,15 @@ export type ObjectifiedHours = DatesObject<Date[]>;
  *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
  */
 function objectifyDates(dates: Date[]): ObjectifiedDates {
-  let result: ObjectifiedDates = { index: [], dates };
+  const result: ObjectifiedDates = { index: [], dates };
 
   for (let i = 0; i < dates.length; i++) {
-    let date = dates[i];
-    let year = date.getFullYear();
-    let century = Math.floor(year / 100);
-    let month = date.getMonth();
-    let day = date.getDate();
-    let hour = date.getHours();
+    const date = dates[i];
+    const year = date.getFullYear();
+    const century = Math.floor(year / 100);
+    const month = date.getMonth();
+    const day = date.getDate();
+    const hour = date.getHours();
 
     // ObjectifiedDates
     if (!result[century]) {

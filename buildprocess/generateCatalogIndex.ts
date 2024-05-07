@@ -2,8 +2,8 @@ import Bottleneck from "bottleneck";
 import * as fse from "fs-extra";
 import { shuffle } from "lodash-es";
 import { join, parse } from "path";
-import filterOutUndefined from "../lib/Core/filterOutUndefined";
 import TerriaError from "../lib/Core/TerriaError";
+import filterOutUndefined from "../lib/Core/filterOutUndefined";
 import timeout from "../lib/Core/timeout";
 import CatalogMemberMixin, {
   getName
@@ -14,12 +14,14 @@ import ReferenceMixin from "../lib/ModelMixins/ReferenceMixin";
 import CatalogGroup from "../lib/Models/Catalog/CatalogGroup";
 import CkanItemReference from "../lib/Models/Catalog/Ckan/CkanItemReference";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
-import hasTraits from "../lib/Models/Definition/hasTraits";
 import { BaseModel } from "../lib/Models/Definition/Model";
+import hasTraits from "../lib/Models/Definition/hasTraits";
 import { CatalogIndexFile } from "../lib/Models/SearchProviders/CatalogIndex";
+import registerSearchProviders from "../lib/Models/SearchProviders/registerSearchProviders";
 import Terria from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
+import { program } from "commander";
 
 /** Add model to index */
 function indexModel(
@@ -131,62 +133,24 @@ async function loadReference(
   result.catchError((e) => console.error(e.toError().message));
 }
 
-/**
- * Generate catalog index (**experimental**)
- *
- * This will "crawl" a terria JS catalog, load all groups and references and then create an "index" file which contains fully resolved tree of models.
- *
- * It applies network request rate limiting (see `speedString` parameter)
- *
- * @param configUrl URL to map-config
- *
- * @param baseUrl baseUrl will be used as:
- * - `origin` property for CORS
- * - URL for `serverConfig`
- * - URL for `proxy`
- *
- * @param outPath catalog-index JSON file path
- *
- * @param speedString speed will control number of concurrently loaded catalog groups/references
- * - default value is 1 (which is around 10 loads per second)
- * - minimum value is 1
- * - If speed = 10 - then expect around 100 loads per second
- * - Note:
- *  - loads are somewhat randomised across catalog, so you don't hit one server with many requests
- *  - one load may not equal one request. some groups/references do not make network requests
- *
- * @param excludeIdsCsv CSV of model IDs to exclude from catalog index (eg "some-id-1,some-id-2")
- *
- * @param basicAuth basic auth token to add to requests which include `baseUrl` (or `proxy/`)
-
- * Example usage: node ./build/generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001/
- */
 export default async function generateCatalogIndex(
   configUrl: string,
   baseUrl: string,
   outPath: string | undefined,
   speedString: string | undefined,
-  excludeIdsCsv: string | undefined,
-  basicAuth: string | undefined
+  excludeIds: string[] | undefined,
+  basicAuth: string | undefined,
+  timeoutMs: number
 ) {
   let debug = false;
 
   let speed = speedString ? parseFloat(speedString) : 1;
   if (speed < 1) speed = 1;
 
-  const excludeIds = excludeIdsCsv ? excludeIdsCsv.split(",") : [];
-
-  if (!configUrl || !baseUrl) {
-    console.error(
-      `\nUSAGE: node ./build/generateCatalogIndex.js <config-url> <base-url> <out-path = ""> <speed = "1">\n`
-    );
-    process.exit(1);
-  }
-
   // Make sure baseURL has trailing slash
   baseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 
-  patchNetworkRequests(baseUrl, basicAuth);
+  patchNetworkRequests(baseUrl, basicAuth, true);
 
   console.log(`Config URL: ${configUrl}`);
 
@@ -195,9 +159,6 @@ export default async function generateCatalogIndex(
     maxConcurrent: 10 * speed,
     minTime: 100 / speed
   });
-
-  /** Timeout for loading groups/references */
-  const timeoutMs = 30000;
 
   let totalJobs = 0;
   let completedJobs = 0;
@@ -221,7 +182,7 @@ export default async function generateCatalogIndex(
     let name = getName(member);
     let path = getPath(terria, member);
 
-    if (member.uniqueId && excludeIds.includes(member.uniqueId)) {
+    if (member.uniqueId && excludeIds && excludeIds.includes(member.uniqueId)) {
       console.log(`Excluding model \`${member.uniqueId}\`:"${name}" (${path}`);
       return;
     }
@@ -347,6 +308,7 @@ export default async function generateCatalogIndex(
   const terria = new Terria(terriaOptions);
 
   registerCatalogMembers();
+  registerSearchProviders();
 
   try {
     terria.configParameters.serverConfigUrl = `${baseUrl}serverconfig`;
@@ -355,7 +317,7 @@ export default async function generateCatalogIndex(
 
     await terria.loadInitSources();
   } catch (e) {
-    console.error(TerriaError.from(e, `Failed to initialise Terria`).toError());
+    TerriaError.from(e, `Failed to initialise Terria`).log();
   }
 
   // Load group and references
@@ -412,14 +374,58 @@ export default async function generateCatalogIndex(
   }
 }
 
-const [configUrl, baseUrl, outPath, speedString, excludeIdsCsv, basicAuth] =
-  process.argv.slice(2);
+program
+  .name("generateCatalogIndex")
+  .description(
+    `Generate catalog index (**experimental**)
+
+This will "crawl" a terria JS catalog, load all groups and references and then create an "index" file which contains fully resolved tree of models.
+
+Example usage
+- node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/
+  `
+  )
+  .requiredOption("-c, --configUrl <configUrl>", "configUrl URL to map-config")
+  .requiredOption(
+    "-b, --baseUrl <baseUrl>",
+    "baseUrl will be used as:\n- `origin` property for CORS\n- URL for `serverConfig`\n- URL for `proxy`"
+  )
+  .option(
+    "-o, --outPath [outPath]",
+    "catalog-index JSON file path",
+    "catalog-index.json"
+  )
+  .option(
+    "--basicAuth [basicAuth]",
+    "basic auth token to add to requests which include `baseUrl` (or `proxy/`)"
+  )
+  .option(
+    "--excludeIds [ids...]",
+    'CSV of model IDs to exclude from catalog index (eg "some-id-1 some-id-2")'
+  )
+  .option(
+    "-s, --speed [speed]",
+    "speed will control number of concurrently loaded catalog groups/references:\n- default value is 1 (which is around 10 loads per second)\n- minimum value is 1\n- If speed = 10 - then expect around 100 loads per second\n- Note: loads are somewhat randomised across catalog, so you don't hit one server with many requests\n- Also note: one load may not equal one request. some groups/references do not make network requests",
+    parseFloat,
+    1
+  )
+  .option(
+    "-t, --timeout [timeout]",
+    "Network request timeout (in ms)",
+    parseFloat,
+    30000
+  );
+
+program.parse();
+
+const options = program.opts();
 
 generateCatalogIndex(
-  configUrl,
-  baseUrl,
-  outPath,
-  speedString,
-  excludeIdsCsv,
-  basicAuth
+  options.configUrl,
+  options.baseUrl,
+  options.outPath,
+  options.speed,
+  options.excludeIds,
+  options.basicAuth,
+  options.timeout
 );

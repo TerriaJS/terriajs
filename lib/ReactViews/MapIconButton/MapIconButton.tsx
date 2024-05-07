@@ -118,7 +118,7 @@ function MapIconButton(props: IMapIconButtonProps) {
     noExpand = false
   } = props;
   const expanded = !noExpand && (isExpanded || neverCollapse) && children;
-  const buttonRef = props.buttonRef || useRef();
+  const buttonRef = useRef();
   const theme = useTheme();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
@@ -131,7 +131,7 @@ function MapIconButton(props: IMapIconButtonProps) {
 
   const MapIconButtonRaw = (
     <StyledMapIconButton
-      ref={buttonRef}
+      ref={props.buttonRef || buttonRef}
       className={props.className}
       primary={primary}
       splitter={splitter}

@@ -1,0 +1,127 @@
+{
+  "general": {
+    "close": "Funga",
+    "open": "Fungua",
+    "prev": "Kilichotangulia",
+    "next": "Kinachofuata",
+    "back": "Rudia",
+    "skip": "Rukia",
+    "delete": "Ondoa",
+    "cancel": "Katisha",
+    "confirm": "Thibitisha"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "trainer": {
+    "showAllSteps": "Onyesha kila hatua",
+    "hideAllSteps": "Ficha kila hatua",
+    "expandTrainer": "Onyesha maelesho zaidi",
+    "collapseTrainer": "Ficha maelesho zaidi"
+  },
+  "tour": {
+    "preface": {
+      "title": "Chukua safari",
+      "start": "Anza safari",
+      "close": "Labda baadae",
+      "content": "Umeshindwa mahali ya kuanza ? Chukua safari ya haraka ya huduma kuu za programu yetu, na ujifunze kuhusu baadhi ya kazi muhimu kukusaidia kupata njia yako."
+    },
+    "finish": "Maliza",
+    "locationSearchInput": {
+      "content": "## Tafuta mahali\n\nWeka mahali au anwani ili kupata eneo bila shida kwenye ramani."
+    },
+    "exploreMapDataButton": {
+      "content": "## Chagua ramani\n\nVinjaria katlogi kwa kupata data na ongeza kwenye ramani hapa. Unaweza kuongeza data zaidi ya moja kwa wakati mmoja, na utaona zinaonyeshwa chini ndani ya Benchi la kazi (Workbench)."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "##Linganisha\n\nKipengele chenye nguvu cha Terria ni uwezo wa kulinganisha seti za data kwa kutumia mwonekano wa skrini uliogawanyika. Kwa seti za data zilizo na kijenzi cha mfululizo wa saa, kama vile picha za setilaiti, unaweza kulinganisha tarehe kwenda nyuma na mbele kwa wakati kwa kubofya kiteua tarehe."
+    },
+    "menuBarStoryButton": {
+      "content": "##Hadithi\n\nHadithi hukuruhusu kuongeza maelezo ya muktadha kwenye mkusanyiko wa data ili kuleta masimulizi hai. Unda hadithi yako ya data kwa kutumia Kihariri cha Hadithi, na ukishiriki kupitia kidirisha cha 'Shiriki' mara tu unapomaliza."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Vidhibiti vya kutazama\n\nHapa unaweza kubadilisha mwonekano wa ramani. Unaweza kubadilisha uelekeo wa mwonekano wako kwa kutumia pete ya nje, na unaweza kuinamisha pembe ya kamera kwa kutumia pete ya ndani. Bofya mara mbili ili kuweka upya mwonekano."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Pakia Data\n\nUnaweza kupakia data yako mwenyewe kwenye ramani ili kuiona na seti nyingine za data. Pakia faili au kiungo kwa seti iliyopo ya data mtandaoni au huduma ya data. Miundo ya data inayotumika ni pamoja na CSV, GeoJSON, KML, GPX na CZML."
+    }
+  },
+  "measure": {
+    "measureTool": "Zana ya kupima",
+    "measureToolTitle": "Pima Mstari",
+    "measureDistance": "Pima umbali kati ya maeneo"
+  },
+  "location": {
+    "location": "Mahali",
+    "errorGettingLocation": "Kosa kupata maeneo",
+    "myLocation": "Mahali yangu",
+    "browserCannotProvide": "Kivinjari chako hakiwezi kutoa mahali pako.",
+    "originError": "Kivinjari chako kinaweza kutoa mahali kutumia https. Tafadhali ujaribu {{secureUrl}} badala yake.",
+    "centreMap": "Songeza ramani katika eneo lako la sasa"
+  },
+  "core": {
+    "unverifiedExternalLink": {
+      "denyText": "Katisha"
+    }
+  },
+  "helpPanel": {
+    "takeTour": "Chukua safari"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Labda baadae"
+    }
+  },
+  "story": {
+    "next": "Kinachofuata",
+    "deleteStory": "Ondoa",
+    "editor": {
+      "cancelBtn": "Katisha",
+      "cancelEditing": "Katisha"
+    },
+    "delete": "Ondoa",
+    "prev": "Kilichotangulia"
+  },
+  "models": {
+    "userDrawing": {
+      "btnCancel": "Katisha"
+    }
+  },
+  "splitterTool": {
+    "workbench": {
+      "bothTitle": "Onyesha kwa pande zote",
+      "goleftTitle": "Onyesha kwa upande wa kushoto",
+      "goleft": "Kushoto",
+      "both": "Vyote",
+      "gorightTitle": "Onyesha kwa upande wa kulia",
+      "goright": "Kulia"
+    },
+    "toggleSplitterTool": "Wezesha kulinganisha upande kwa upande seti mbili tofauti za data",
+    "title": "Vuruta kushoto au kulia ili kurekebisha maoni"
+  },
+  "feedback": {
+    "cancel": "Katisha"
+  },
+  "welcomeMessage": {
+    "tourBtnText": "Chukua safari"
+  },
+  "addData": {
+    "back": "Rudia"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Katisha"
+    }
+  },
+  "deltaTool": {
+    "cancelBtn": "Katisha"
+  },
+  "compare": {
+    "dateLocationFilter": {
+      "cancel": "Katisha"
+    }
+  }
+}

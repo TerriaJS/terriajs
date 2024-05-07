@@ -45,10 +45,10 @@ Note: relative paths will be resolved to the base URL of client-side config URL 
 
 For example a map hosted at http://something.com/map
 
-- will have default `configUrl = http://something.com/map/config.json`
-- therefore will resolve `initFragmentPaths` to `http://something.com/map`
-- if using default `initFragmentPaths = ["init"]`
-  - init fragments will be resolved to `http://something.com/map/init`
+-   will have default `configUrl = http://something.com/map/config.json`
+-   therefore will resolve `initFragmentPaths` to `http://something.com/map`
+-   if using default `initFragmentPaths = ["init"]`
+    -   init fragments will be resolved to `http://something.com/map/init`
 
 ### `v7initializationUrls`
 
@@ -67,7 +67,7 @@ Specifies various options for configuring TerriaJS:
 | `defaultMaximumShownFeatureInfos` | no       | **number**                                                                                               | `100`                                                              | The maximum number of "feature info" boxes that can be displayed when clicking a point.                                                                                                                                                                                                                |
 | `regionMappingDefinitionsUrl`     | no       | **string**                                                                                               |                                                                    | **Deprecated** please use `regionMappingDefinitionsUrls` array instead. If this is defined, it will override `regionMappingDefinitionsUrls`                                                                                                                                                            |
 | `regionMappingDefinitionsUrls`    | no       | **string[]**                                                                                             | `["build/TerriaJS/data/regionMapping.json"]`                       | URLs of JSON files that define region mapping for Tabular data (eg CSV). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance. It multiple URLs are provided then the first matching region will be used (in order of URLs)     |
-| `catalogIndexUrl`                 | no       | **string**                                                                                               |                                                                    | URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)                                                                                                                                                                                                                 |
+| `catalogIndexUrl`                 | no       | **string**                                                                                               |                                                                    | URL of the JSON file that contains index of catalog. See [CatalogIndex](search-providers.md#catalogindex)                                                                                                                                                                                              |
 | `proj4ServiceBaseUrl`             | no       | **string**                                                                                               | `"proj4def/"`                                                      | URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.                                                                                                         |
 | `corsProxyBaseUrl`                | no       | **string**                                                                                               | `"proxy/"`                                                         | URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.                                                                                                                      |
 | `proxyableDomainsUrl`             | no       | **string**                                                                                               | `"proxyabledomains/"`                                              | Deprecated, will be determined from serverconfig.                                                                                                                                                                                                                                                      |
@@ -105,15 +105,18 @@ Specifies various options for configuring TerriaJS:
 | `customRequestSchedulerLimits`    | no       | **[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)** | undefined                                                          | Custom concurrent request limits for domains in Cesium's RequestScheduler.                                                                                                                                                                                                                             |
 | `persistViewerMode`               | no       | **boolean**                                                                                              | `true`                                                             | Whether to load persisted viewer mode from local storage.                                                                                                                                                                                                                                              |
 | `openAddData`                     | no       | **boolean**                                                                                              | `false`                                                            | Whether to open the add data explorer panel on load.                                                                                                                                                                                                                                                   |
-| feedbackPreamble                  | no       | **string**                                                                                               | feedback.feedbackPreamble                                          | Text showing at the top of feedback form, supports the internationalization using the translation key.                                                                                                                                                                                                 |
-| feedbackPostamble                 | no       | **string**                                                                                               | feedback.feedbackPostamble                                         | Text showing at the bottom of feedback form, supports the internationalization using the translation key.                                                                                                                                                                                              |
-| feedbackMinLength                 | no       | **number**                                                                                               | 0                                                                  | Minimum length of feedback comment.                                                                                                                                                                                                                                                                    |
+| `feedbackPreamble`                | no       | **string**                                                                                               | feedback.feedbackPreamble                                          | Text showing at the top of feedback form, supports the internationalization using the translation key.                                                                                                                                                                                                 |
+| `feedbackPostamble`               | no       | **string**                                                                                               | feedback.feedbackPostamble                                         | Text showing at the bottom of feedback form, supports the internationalization using the translation key.                                                                                                                                                                                              |
+| `feedbackMinLength`               | no       | **number**                                                                                               | 0                                                                  | Minimum length of feedback comment.                                                                                                                                                                                                                                                                    |
 | `theme`                           | no       | **any**                                                                                                  | `{}`                                                               | An object used to override theme properties - for example `{"logoHeight": "70px"}`.                                                                                                                                                                                                                    |
 | `storyRouteUrlPrefix`             | no       | **string**                                                                                               | undefined                                                          | (Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /                                                                                                                                                                    |
 | `leafletAttributionPrefix`        | no       | **string**                                                                                               | undefined                                                          | Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`                                                                                                                                              |
+| `extraCreditLinks`                | no       | **[Credit](#credits-attribution)**[]                                                                     | See [Credits default value](#credits-default-value)                | Credits (attribution) to be shown at the bottom of the map.                                                                                                                                                                                                                                            |
 | `storyVideo.videoUrl`             | no       | **string**                                                                                               | https://www.youtube-nocookie.com/embed/fbiQawV8IYY                 | Video to show in Story Editor panel under Getting Started.                                                                                                                                                                                                                                             |
 | `relatedMaps`                     | no       | **[RelatedMap](#relatedmap)[]**                                                                          | See [`lib/Models/RelatedMaps.ts`](../../lib/Models/RelatedMaps.ts) | Maps to show in "Related Maps" menu panel                                                                                                                                                                                                                                                              |
 | `aboutButtonHrefUrl`              | no       | **string**                                                                                               | `"about.html"`                                                     | About button URL. If set to `null`, then the About button will not be shown                                                                                                                                                                                                                            |
+| `searchBar`                       | no       | **[SearchBar](#searchbar)**                                                                              | `new SearchBar()`                                                  | Search bar configuration                                                                                                                                                                                                                                                                               |
+| `searchProviders`                 | no       | \*\*[SearchProviders](search-providers.md)                                                               | `[]`                                                               | Search providers that will be used for search                                                                                                                                                                                                                                                          |
 
 ### MagdaReferenceHeaders
 
@@ -186,22 +189,22 @@ Configuration of items to appear in the search bar
 
 ```json
 {
-  "enabled": true,
-  "debug": false,
-  "react": {
-    "useSuspense": false
-  },
-  "languages": {
-    "en": "english",
-    "de": "deutsch"
-  },
-  "fallbackLanguage": "en",
-  "changeLanguageOnStartWhen": [
-    "querystring",
-    "localStorage",
-    "navigator",
-    "htmlTag"
-  ]
+    "enabled": true,
+    "debug": false,
+    "react": {
+        "useSuspense": false
+    },
+    "languages": {
+        "en": "english",
+        "de": "deutsch"
+    },
+    "fallbackLanguage": "en",
+    "changeLanguageOnStartWhen": [
+        "querystring",
+        "localStorage",
+        "navigator",
+        "htmlTag"
+    ]
 }
 ```
 
@@ -220,39 +223,43 @@ Configuration of maps to appear in "Related Maps" menu panel
 
 ```json
 {
-  "imageUrl": "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/nationalmap.jpg",
-  "url": "http://nationalmap.gov.au/",
-  "title": "NationalMap",
-  "description": "The NationalMap is a website for map-based access to spatial data from Australian government agencies. It is an initiative of the Australian Government's Department of the Prime Minister and Cabinet and the software has been developed by Data61 working closely with the Department of the Prime Minister and Cabinet, Geoscience Australia and other government agencies."
+    "imageUrl": "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/nationalmap.jpg",
+    "url": "http://nationalmap.gov.au/",
+    "title": "NationalMap",
+    "description": "The NationalMap is a website for map-based access to spatial data from Australian government agencies. It is an initiative of the Australian Government's Department of the Prime Minister and Cabinet and the software has been developed by Data61 working closely with the Department of the Prime Minister and Cabinet, Geoscience Australia and other government agencies."
 }
+```
+
+### Credits (attribution)
+
+Credits/Attribution shown at the bottom of the map. Supports internationalization.
+
+#### Credits default value
+
+```json
+[
+    {
+        "text": "map.extraCreditLinks.dataAttribution",
+        "url": "about.html#data-attribution"
+    },
+    {
+        "text": "map.extraCreditLinks.disclaimer",
+        "url": "about.html#disclaimer"
+    }
+]
 ```
 
 ---
 
-### CatalogIndex
+### SearchBar
 
-If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded - for example CKAN, WMS-group...) it may be worth generating a static catalog index JSON file. This file will contain ID, name and description fields of all catalog items, which can be used to search through the catalog very quickly without needing to load dynamic references/groups (for example `MagdaReference` -> `WebMapServiceCatalogGroup` -> `WebMapServiceCatalogItem`).
+Configuration for the search bar. Some of the values will be used as default for
+search provider values.
 
-The https://github.com/nextapps-de/flexsearch library is used to index and search the catalog index file.
-
-To generate the catalog index:
-
-- `yarn build-tools`
-- `node .\build\generateCatalogIndex.js config-url base-url` where
-
-  - `config-url` is URL to client-side-config file
-  - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
-  - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
-
-- This will output three files
-  - `catalog-index.json`
-  - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-  - `catalog-index-errors-stack.json` with errors stack
-- Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
-
-This file will have to be re-generated manually every time the catalog structure changes - for example:
-
-- if items are renamed, or moved
-- dynamic groups are updated (for example, WMS server publishes new layers)
-
-For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
+| Name                  | Required | Type          | Default                        | Description                                                                                       |
+| --------------------- | -------- | ------------- | ------------------------------ | ------------------------------------------------------------------------------------------------- |
+| placeholder           | no       | **string**    | `translate#search.placeholder` | Input text field placeholder shown when no input has been given yet. The string is translateable. |
+| recommendedListLength | no       | **number**    | `5`                            | Maximum amount of entries in the suggestion list.                                                 |
+| flightDurationSeconds | no       | **number**    | `1.5`                          | The duration of the camera flight to an entered location, in seconds.                             |
+| minCharacters         | no       | **number**    | 3                              | Minimum number of characters required for search to start                                         |
+| boundingBoxLimit      | no       | **Rectangle** | `Cesium.Rectangle.MAX_VALUE`   | Bounding box limits for the search results {west, south, east, north}                             |

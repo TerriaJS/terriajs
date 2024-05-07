@@ -1,9 +1,12 @@
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
-import { JsonObject } from "../../Core/Json";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import JsonValue from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";
 
@@ -16,7 +19,7 @@ const customProperties = ["entityCollection", "properties", "data"];
 
 export default class TerriaFeature extends Entity {
   /** This object can be used to pass Terria-specific properties */
-  data?: TerriaFeatureData | JsonObject;
+  data?: TerriaFeatureData | JsonValue;
 
   cesiumEntity?: Entity;
   imageryLayer?: ImageryLayer | undefined;
@@ -34,6 +37,7 @@ export default class TerriaFeature extends Entity {
 
   constructor(options: Entity.ConstructorOptions) {
     super(options);
+    makeObservable(this);
     addCustomFeatureProperties(this);
   }
 
@@ -47,7 +51,7 @@ export default class TerriaFeature extends Entity {
 
     for (let i = 0; i < customProperties.length; i++) {
       if (entity.propertyNames.indexOf(customProperties[i]) === -1) {
-        (<any>feature)[customProperties[i]] = (<any>entity)[
+        (feature as any)[customProperties[i]] = (entity as any)[
           customProperties[i]
         ]; // Assume no merging or cloning needed.
       }
@@ -72,13 +76,34 @@ export default class TerriaFeature extends Entity {
     }
     return feature;
   }
+
+  static fromImageryLayerFeatureInfo(imageryFeature: ImageryLayerFeatureInfo) {
+    const feature = new TerriaFeature({
+      id: imageryFeature.name,
+      name: imageryFeature.name,
+      description: imageryFeature.description,
+      properties: imageryFeature.properties
+    });
+    feature.data = imageryFeature.data;
+    feature.imageryLayer = imageryFeature.imageryLayer;
+    if (imageryFeature.position) {
+      feature.position = new ConstantPositionProperty(
+        Ellipsoid.WGS84.cartographicToCartesian(imageryFeature.position)
+      );
+    }
+    return feature;
+  }
 }
 
 // Features have 'entityCollection', 'properties' and 'data' properties, which we must add to the entity's property list,
 // if they're not already there. (In case they are added in a future version of Cesium.)
 function addCustomFeatureProperties(entity: Entity) {
   for (let i = 0; i < customProperties.length; i++) {
-    if (entity.propertyNames.indexOf(customProperties[i]) === -1) {
+    const propertyName = customProperties[i];
+    if (
+      entity.propertyNames.indexOf(propertyName) === -1 &&
+      !(propertyName in entity)
+    ) {
       entity.addProperty(customProperties[i]);
     }
   }

@@ -1,19 +1,18 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
 import SenapsLocationsCatalogItem, {
   SenapsFeature,
   SenapsFeatureCollection
 } from "../../../../lib/Models/Catalog/CatalogItems/SenapsLocationsCatalogItem";
-import TerriaError from "../../../../lib/Core/TerriaError";
+import Terria from "../../../../lib/Models/Terria";
 
 interface ExtendedLoadWithXhr {
   (): any;
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("SenapsLocationsCatalogItem", function () {
   let terria: Terria;
@@ -68,7 +67,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
     const realLoadWithXhr = loadWithXhr.load;
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
+      const url = args[0];
       // if we have a ?id= then we've passed in a filter
       if (url.match(/locations\?id/g))
         args[0] = "test/Senaps/locations_filtered.json";
@@ -108,7 +107,7 @@ describe("SenapsLocationsCatalogItem", function () {
         let errorMessage: string = "";
         try {
           item._constructLocationsUrl();
-        } catch (e) {
+        } catch (e: any) {
           errorMessage = e.message;
         }
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
@@ -122,7 +121,7 @@ describe("SenapsLocationsCatalogItem", function () {
         let errorMessage: string = "";
         try {
           item._constructStreamsUrl("123");
-        } catch (e) {
+        } catch (e: any) {
           errorMessage = e.message;
         }
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");

@@ -1,4 +1,5 @@
 import fetch, { Headers, Request, Response } from "node-fetch";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 
 /** Patch XMLHttpRequest and Fetch so they work correctly in Node.js
@@ -24,6 +25,13 @@ export default function patchNetworkRequests(
     method: string,
     url: string
   ) {
+    // All URLs need to be absolute - so add the base URL if it's not already there
+    if (url.indexOf("http://") !== 0 && url.indexOf("https://") !== 0) {
+      console.log(`Rewrite relative URL: \`${url}\` to \`${arguments[1]}\``);
+      arguments[1] = `${baseUrl}${url}`;
+      url = `${baseUrl}${url}`;
+    }
+
     open.apply(this, arguments as any);
 
     console.log("\x1b[35m%s\x1b[0m", `Making XHR: ${url}`);
@@ -46,28 +54,43 @@ export default function patchNetworkRequests(
     }
   };
 
-  // Alternative approach using Resource instead of XMLHttpRequest (can be swapped over if needed)
+  const load = (Resource as any)._Implementations.loadWithXhr;
+  (Resource as any)._Implementations.loadWithXhr = function (...args: any) {
+    // Note we don't need to patch the loadWithXhr for basic auth, as it uses XMLHttpRequest
+    // if (URI(args[0]).hostname() === baseHostname) {
+    //   if (!args[4]) {
+    //     args[4] = {};
+    //   }
+    //   args[4]["authorization"] = `Basic ${basicAuth}`;
+    // }
 
-  // const load = (Resource as any)._Implementations.loadWithXhr;
-  // (Resource as any)._Implementations.loadWithXhr = function(...args: any) {
-  //   if (URI(args[0]).hostname() === baseHostname) {
-  //     if (!args[4]) {
-  //       args[4] = {};
-  //     }
-  //     args[4]["authorization"] = `Basic ${basicAuth}`;
-  //   }
+    console.log("\x1b[35m%s\x1b[0m", `Loading resource request: ${args[0]}`);
 
-  //   load.apply(this, args);
-  // };
+    // All URLs need to be absolute - so add the base URL if it's not already there
+    if (args[0].indexOf("http://") !== 0 && args[0].indexOf("https://") !== 0) {
+      console.log(
+        `Rewrite relative URL: \`${args[0]}\` to \`${baseUrl}${args[0]}\``
+      );
+      args[0] = `${baseUrl}${args[0]}`;
+    }
+
+    load.apply(this, args);
+  };
 
   // A fun method to add Auth headers to all requests with baseUrl
   const newFetch = (
     input: RequestInfo,
     init?: RequestInit
   ): Promise<Response> => {
-    const url = typeof input === "string" ? input : input.url;
+    let url = typeof input === "string" ? input : input.url;
 
     console.log("\x1b[35m%s\x1b[0m", `Making fetch request: ${url}`);
+
+    // All URLs need to be absolute - so add the base URL if it's not already there
+    if (url.indexOf("http://") !== 0 && url.indexOf("https://") !== 0) {
+      console.log(`Rewrite relative URL: \`${url}\` to \`${baseUrl}${url}\``);
+      url = `${baseUrl}${url}`;
+    }
 
     if (
       (basicAuth && URI(url).hostname() === baseHostname) ||

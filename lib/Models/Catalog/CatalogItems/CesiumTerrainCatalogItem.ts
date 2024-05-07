@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  computed,
+  makeObservable,
+  observable,
+  override,
+  runInAction
+} from "mobx";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -6,7 +12,7 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import TerriaError from "../../../Core/TerriaError";
+import { ModelConstructorParameters } from "../../Definition/Model";
 
 export default class CesiumTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
@@ -19,11 +25,16 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   @observable
   private terrainProvider: CesiumTerrainProvider | undefined = undefined;
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return CesiumTerrainCatalogItem.type;
   }
 
-  @computed
+  @override
   get disableZoomTo() {
     return true;
   }
@@ -33,7 +44,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return this.terria.terrainProvider === this.terrainProvider;
   }
 
-  @computed
+  @override
   get shortReport() {
     if (super.shortReport === undefined) {
       const status = this.isTerrainActive ? "In use" : "Not in use";
@@ -45,9 +56,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   /**
    * Returns a Promise to load the terrain provider
    */
-  private async loadTerrainProvider(): Promise<
-    CesiumTerrainProvider | undefined
-  > {
+  private loadTerrainProvider(): Promise<CesiumTerrainProvider | undefined> {
     const resource =
       this.ionAssetId !== undefined
         ? IonResource.fromAssetId(this.ionAssetId, {
@@ -59,34 +68,12 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
         : this.url;
 
     if (resource === undefined) {
-      return undefined;
+      return Promise.resolve(undefined);
     }
 
-    const terrainProvider = new CesiumTerrainProvider({
-      url: resource,
+    return CesiumTerrainProvider.fromUrl(resource, {
       credit: this.attribution
     });
-
-    // Some network errors are not rejected through readyPromise, so we have to
-    // listen to them using the error event and dispose it later
-    let networkErrorListener: (err: any) => void;
-    const networkErrorPromise = new Promise((_resolve, reject) => {
-      networkErrorListener = reject;
-      terrainProvider.errorEvent.addEventListener(networkErrorListener);
-    });
-
-    const isReady = await Promise.race([
-      networkErrorPromise,
-      terrainProvider.readyPromise
-    ])
-      .catch(() => false)
-      .finally(() =>
-        terrainProvider.errorEvent.removeEventListener(networkErrorListener)
-      );
-
-    return isReady
-      ? terrainProvider
-      : Promise.reject(TerriaError.from("Failed to load terrain provider"));
   }
 
   protected async forceLoadMapItems(): Promise<void> {

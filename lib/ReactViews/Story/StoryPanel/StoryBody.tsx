@@ -45,31 +45,67 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   }
 `;
 
+function shouldAddIframeTag(story: Story) {
+  const parser = new DOMParser();
+  const parsedDocument = parser.parseFromString(story.text, "text/html");
+  const iframes = parsedDocument.getElementsByTagName("iframe");
+  if (iframes.length < 1) return false;
+  let result = true;
+  for (const iframe of iframes) {
+    if (
+      !(
+        iframe.src?.startsWith("https://www.youtube.com/embed/") ||
+        iframe.src?.startsWith("https://www.youtube-nocookie.com/embed/") ||
+        iframe.src?.startsWith("https://player.vimeo.com/video/")
+      )
+    ) {
+      result = false;
+      break;
+    }
+  }
+  return result;
+}
+
+function sourceBasedParse(story: Story) {
+  if (shouldAddIframeTag(story)) {
+    return parseCustomHtmlToReact(
+      story.text,
+      { showExternalLinkWarning: true },
+      false,
+      {
+        ADD_TAGS: ["iframe"]
+      }
+    );
+  } else {
+    return parseCustomHtmlToReact(
+      story.text,
+      { showExternalLinkWarning: true },
+      false,
+      {}
+    );
+  }
+}
+
 const StoryBody = ({
   isCollapsed,
   story
 }: {
   isCollapsed: boolean;
   story: Story;
-}) => (
-  <>
-    {story.text && story.text !== "" ? (
-      <StoryContainer isCollapsed={isCollapsed} column>
-        <Text
-          css={`
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-          `}
-          medium
-        >
-          {parseCustomHtmlToReact(story.text, {
-            showExternalLinkWarning: true
-          })}
-        </Text>
-      </StoryContainer>
-    ) : null}
-  </>
-);
+}) =>
+  story.text && story.text !== "" ? (
+    <StoryContainer isCollapsed={isCollapsed} column>
+      <Text
+        css={`
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        `}
+        medium
+      >
+        {sourceBasedParse(story)}
+      </Text>
+    </StoryContainer>
+  ) : null;
 
 export default StoryBody;

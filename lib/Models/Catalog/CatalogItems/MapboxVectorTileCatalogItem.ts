@@ -1,6 +1,6 @@
 import bbox from "@turf/bbox";
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import {
   GeomType,
   json_style,
@@ -28,6 +28,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
@@ -40,6 +41,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     readonly styleJson: JsonObject | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -110,10 +112,12 @@ StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
-  @observable
-  public readonly forceProxy = true;
-
   static readonly type = "mvt";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return MapboxVectorTileCatalogItem.type;
@@ -121,6 +125,11 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
+  }
+
+  @override
+  get forceProxy() {
+    return true;
   }
 
   async forceLoadMetadata() {
@@ -143,7 +152,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
    * - `parsedJsonStyle`
    */
   get paintRules(): PaintRule[] {
-    let rules: PaintRule[] = [];
+    const rules: PaintRule[] = [];
 
     if (this.layer) {
       if (this.fillColor) {
@@ -168,7 +177,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     if (this.parsedJsonStyle) {
       rules.push(
-        ...((<unknown>this.parsedJsonStyle.paint_rules) as PaintRule[])
+        ...(this.parsedJsonStyle.paint_rules as unknown as PaintRule[])
       );
     }
 
@@ -178,7 +187,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   @computed
   get labelRules(): LabelRule[] {
     if (this.parsedJsonStyle) {
-      return (<unknown>this.parsedJsonStyle.label_rules) as LabelRule[];
+      return this.parsedJsonStyle.label_rules as unknown as LabelRule[];
     }
     return [];
   }
@@ -191,6 +200,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return new ProtomapsImageryProvider({
       terria: this.terria,
+      id: this.uniqueId,
       data: this.url,
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,

@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
@@ -80,16 +79,12 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
     };
   });
 
-  return (
-    <>
-      {showMouseTooltip && (
-        <MouseTooltip
-          scene={scene}
-          text={t("pedestrianMode.dropPedestrianTooltipMessage")}
-        />
-      )}
-    </>
-  );
+  return showMouseTooltip ? (
+    <MouseTooltip
+      scene={scene}
+      text={t("pedestrianMode.dropPedestrianTooltipMessage")}
+    />
+  ) : null;
 };
 
 async function getPrecisePosition(

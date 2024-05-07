@@ -62,7 +62,7 @@
     "browserCannotProvide": "Your browser cannot provide your location.",
     "myLocation": "My Location",
     "location": "Location",
-    "originError": "Your browser can only provide your location when using https. You may be able to use {{secureUrl}} instead.",
+    "originError": "Your browser can only provide your location when using HTTPS. You may be able to use {{secureUrl}} instead.",
     "centreMap": "Centre map at your current location"
   },
   "splitterTool": {
@@ -264,7 +264,7 @@
     "baseMap": "Base Map",
     "imageOptimisation": "Image Optimisation",
     "nativeResolutionHeader": "Use native device resolution",
-    "mapQuality": "Raster Map Quality:",
+    "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
@@ -448,7 +448,7 @@
     "resultsLabel": "Search Results",
     "done": "Done",
     "data": "Data",
-    "searchInDataCatalog": "Search <1>'{{locationSearchText}}'</1> in the Data Catalogue",
+    "searchInDataCatalog": "Search '{{locationSearchText}}' in the Data Catalogue",
     "search": "Search '{{searchText}}' in the Data Catalogue",
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
@@ -462,7 +462,10 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
-    "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
+    "selectToPreviewDataset": "Select a dataset to see a preview",
+    "selectMultipleDatasets": "<0>Press <strong>Shift</strong> and click</0><1 /><2>to add multiple datasets</2>",
+    "selectToPreviewSeparator": "OR",
+    "goToTheMap": "Go to the map",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
     "previewItemErrorTitle": "Catalog item could not be previewed.",
@@ -541,9 +544,6 @@
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
-    "dimensionsSelector": {
-      "undefinedLabel": "Not specified"
-    },
     "searchItem": "Search",
     "searchItemTitle": "Search",
     "splitScreenMode": "SPLIT SCREEN MODE"
@@ -609,7 +609,6 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
   "emptyWorkbench": {
     "emptyArea": "Your workbench is empty",
     "helpfulHints": "Helpful hints",
@@ -642,6 +641,8 @@
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
+    "searchMinCharacters": "You need to enter minimum {{count}} character",
+    "searchMinCharacters_plural": "You need to enter minimum {{count}} characters",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
     "searchNoPlaceNames": "Sorry, no official place names match your search query.",
@@ -881,7 +882,8 @@
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service."
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service.",
+      "singleFusedMapCacheLayerName": "All layers"
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",
@@ -1290,11 +1292,17 @@
       "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
+      "activeStyle": "Display Variable",
       "styleDisabledLabel": "Disable style",
       "zFilterEnabled": "Extreme values hidden (click to show)",
       "zFilterDisabled": "Extreme values detected (click to hide)",
       "timeDimensionEnabled": "Time enabled (click to disable)",
-      "timeDimensionDisabled": "Time disabled (click to enable)"
+      "timeDimensionDisabled": "Time disabled (click to enable)",
+      "editStyle": "Edit Style",
+      "custom": "Custom",
+      "regionMapping": "Region Mapping",
+      "regionColumn": "Region Column",
+      "manualRegionMapping": "Manual Region Mapping"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
@@ -1384,9 +1392,9 @@
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "noLayerFoundTitle": "No layer found",
-      "noLayerFoundMessage": "The WFS dataset '{{name}}' has no layers matching '{{typeNames}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WFS server has changed.",
+      "noLayerFoundMessage": "The WFS dataset '{{name}}' has no layers matching '{{typeNames}}'. Either the catalog file has been set up incorrectly, or the WFS server has changed.",
       "missingDataTitle": "Missing data",
-      "missingDataMessage": "The WFS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.",
+      "missingDataMessage": "The WFS dataset '{{name}}' did not return any data. Either the catalog file has been set up incorrectly, or the server address has changed.",
       "missingUrlTitle": "Unable to load GetCapabilities",
       "missingUrlMessage": "Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`.",
       "reachedMaxFeatureLimit": "Warning: This layer has reached the WFS feature limit ({{maxFeatures}})"
@@ -1413,7 +1421,7 @@
       "getCapabilitiesUrl": "GetCapabilities URL",
       "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
-      "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.",
+      "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. Either the catalog file has been set up incorrectly, or the WMS server has changed.",
       "badlyFormatedTitle": "Badly formatted periodicity",
       "badlyFormatedMessage": "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
       "missingDataTitle": "Missing data",
@@ -1519,6 +1527,516 @@
     "scaleDatasetNotVisible": {
       "scaleZoomIn": "Dataset is not available at this scale, zoom in to see it",
       "scaleZoomOut": "Dataset is not available at this scale, zoom out to see it"
+    },
+    "tableStyling": {
+      "hideAdvancedOptions": "Hide advanced options",
+      "showAdvancedOptions": "Show advanced options",
+      "copyUserStratum": "Copy user stratum to clipboard",
+      "name": "Style",
+      "reset": "Reset to default style",
+      "data": {
+        "name": "Data",
+        "selectableDimensions": {
+          "dataset": {
+            "name": "Dataset"
+          },
+          "tableStyle": {
+            "name": "Style"
+          },
+          "tableStyleType": {
+            "name": "Symbology",
+            "options": {
+              "fill": {
+                "name": "Fill color"
+              },
+              "pointSize": {
+                "name": "Point size"
+              },
+              "point": {
+                "name": "Point/Marker style"
+              },
+              "outline": {
+                "name": "Outline color"
+              },
+              "label": {
+                "name": "Label style"
+              },
+              "trail": {
+                "name": "Trail style"
+              }
+            }
+          }
+        }
+      },
+      "fill": {
+        "name": "Fill Color",
+        "selectableDimensions": {
+          "tableColorColumn": {
+            "name": "Variable"
+          },
+          "dataType": {
+            "name": "Column type (advanced)"
+          },
+          "type": {
+            "name": "Type",
+            "undefinedLabel": "Please specify",
+            "options": {
+              "noStyle": {
+                "name": "No style"
+              },
+              "sequentialContinuous": {
+                "name": "Sequential (continuous)"
+              },
+              "sequentialDiscrete": {
+                "name": "Sequential (discrete)"
+              },
+              "divergingContinuous": {
+                "name": "Divergent (continuous)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergent (discrete)"
+              },
+              "qualitative": {
+                "name": "Qualitative"
+              },
+              "customQualitative": {
+                "name": "Custom (qualitative)"
+              },
+              "customDiscrete": {
+                "name": "Custom (discrete)"
+              }
+            }
+          },
+          "scheme": {
+            "name": "Scheme"
+          },
+          "numberOfBins": {
+            "name": "Number of Bins"
+          }
+        }
+      },
+      "min": {
+        "name": "Min"
+      },
+      "displayRange": {
+        "name": "Display range",
+        "selectableDimensions": {
+          "max": {
+            "name": "Max"
+          }
+        }
+      },
+      "bins": {
+        "name": "Bins",
+        "selectableDimensions": {
+          "start": {
+            "name": "{{value1}} to {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Start"
+              },
+              "stop": {
+                "name": "Stop"
+              }
+            }
+          }
+        }
+      },
+      "colors": {
+        "name": "Colors",
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "value": {
+            "name": "Value"
+          },
+          "remove": {
+            "value": "Remove"
+          },
+          "add": {
+            "value": "Add Color"
+          }
+        }
+      },
+      "nullColor": {
+        "name": "Default color"
+      },
+      "outlierColor": {
+        "name": "Outlier color"
+      },
+      "additionalColors": {
+        "name": "Additional colors",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "Region color"
+          },
+          "nullColor": {
+            "name": "Default color"
+          },
+          "outlierColor": {
+            "name": "Outlier color"
+          }
+        }
+      },
+      "pointSize": {
+        "name": "Point size",
+        "selectableDimensions": {
+          "pointSizeColumn": {
+            "name": "Variable"
+          },
+          "pointSizeNull": {
+            "name": "Default size"
+          },
+          "pointSizesFactor": {
+            "name": "Size factor"
+          },
+          "pointSizeOffset": {
+            "name": "Size offset"
+          }
+        }
+      },
+      "regionMapping": {
+        "name": "Region mapping"
+      },
+      "legend": {
+        "name": "Legend",
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "Title"
+          },
+          "legendTicks": {
+            "name": "Ticks"
+          },
+          "title": {
+            "name": "Item {{index}} Title"
+          }
+        }
+      },
+      "styleOptions": {
+        "name": "Style options",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Title"
+          },
+          "longitudeColumn": {
+            "name": "Longitude column"
+          },
+          "latitudeColumn": {
+            "name": "Latitude column"
+          }
+        }
+      },
+      "timeOptions": {
+        "name": "Time options",
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "Time column"
+          },
+          "tableEndTimeColumn": {
+            "name": "End time column"
+          },
+          "tableTimeIdColumns": {
+            "name": "ID columns"
+          },
+          "tableTimeIsSampled": {
+            "name": "Is Sampled",
+            "options": {
+              "true": {
+                "name": "Yes"
+              },
+              "false": {
+                "name": "No"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Display Duration"
+          },
+          "tableTimeSpreadStartTime": {
+            "name": "Spread start time",
+            "options": {
+              "true": {
+                "name": "Yes"
+              },
+              "false": {
+                "name": "No"
+              }
+            }
+          },
+          "tableTimeSpreadFinishTime": {
+            "name": "Spread finish time",
+            "options": {
+              "true": {
+                "name": "Yes"
+              },
+              "false": {
+                "name": "No"
+              }
+            }
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "Workbench options",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "Show style in Workbench",
+            "options": {
+              "true": {
+                "name": "Style showing"
+              },
+              "false": {
+                "name": "Style hidden"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "Show disable style option"
+          },
+          "showDisableTimeOption": {
+            "name": "Show disable time option"
+          },
+          "enableManualRegionMapping": {
+            "name": "Enable manual region mapping"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "Variable/column",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Title"
+          },
+          "columnUnits": {
+            "name": "Units"
+          }
+        }
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "Variable"
+          },
+          "styleType": {
+            "name": "Type",
+            "undefinedLabel": "Please specify",
+            "constant": {
+              "name": "No style"
+            },
+            "bin": {
+              "name": "Discrete"
+            },
+            "enum": {
+              "name": "Qualitative"
+            }
+          },
+          "enum": {
+            "name": "Enum styles",
+            "selectableDimensions": {
+              "enum": {
+                "noValue": "No value",
+                "selectableDimensions": {
+                  "value": {
+                    "name": "Value"
+                  },
+                  "remove": {
+                    "value": "Remove"
+                  }
+                },
+                "add": {
+                  "value": "Add style for value"
+                }
+              }
+            }
+          },
+          "bin": {
+            "name": "Bin styles",
+            "selectableDimensions": {
+              "add": {
+                "value": "Add style bin"
+              },
+              "bin": {
+                "noValue": "No value",
+                "range": "{{value1}} to {{value2}}",
+                "selectableDimensions": {
+                  "start": {
+                    "name": "Start"
+                  },
+                  "stop": {
+                    "name": "Stop"
+                  },
+                  "remove": {
+                    "value": "Remove"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "null": {
+          "name": "Default"
+        }
+      },
+      "point": {
+        "name": "Marker style",
+        "selectableDimensions": {
+          "marker": {
+            "name": "Marker",
+            "tooltip": "Marker supports URL and base64 of any supported image format (eg PNG, SVG)"
+          },
+          "rotation": {
+            "name": "Rotation"
+          },
+          "height": {
+            "name": "Height"
+          },
+          "width": {
+            "name": "Width"
+          }
+        }
+      },
+      "outline": {
+        "name": "Outline style",
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Width"
+          }
+        }
+      },
+      "label": {
+        "name": "Label style",
+        "selectableDimensions": {
+          "column": {
+            "name": "Label column"
+          },
+          "font": {
+            "name": "Font"
+          },
+          "style": {
+            "name": "Label style",
+            "options": {
+              "fill": {
+                "name": "Fill only"
+              },
+              "outline": {
+                "name": "Outline only"
+              },
+              "fillAndOutline": {
+                "name": "Fill and outline"
+              }
+            }
+          },
+          "scale": {
+            "name": "Scale"
+          },
+          "fillColor": {
+            "name": "Fill color"
+          },
+          "outlineColor": {
+            "name": "Outline color"
+          },
+          "outlineWidth": {
+            "name": "Outline width"
+          },
+          "horizontalOrigin": {
+            "name": "Horizontal origin",
+            "options": {
+              "left": {
+                "name": "Left"
+              },
+              "center": {
+                "name": "Center"
+              },
+              "right": {
+                "name": "Right"
+              }
+            }
+          },
+          "verticalOrigin": {
+            "name": "Vertical origin",
+            "options": {
+              "top": {
+                "name": "Top"
+              },
+              "center": {
+                "name": "Center"
+              },
+              "baseline": {
+                "name": "Baseline"
+              },
+              "bottom": {
+                "name": "Bottom"
+              }
+            }
+          },
+          "offsetX": {
+            "name": "Pixel offset X"
+          },
+          "offsetY": {
+            "name": "Pixel offset Y"
+          }
+        }
+      },
+      "trail": {
+        "selectableDimensions": {
+          "leadTime": {
+            "name": "Lead time (secs)"
+          },
+          "trailTime": {
+            "name": "Trail time (secs)"
+          },
+          "width": {
+            "name": "Width"
+          },
+          "resolution": {
+            "name": "Resolution"
+          },
+          "growColor": {
+            "name": "Glow color"
+          },
+          "growPower": {
+            "name": "Glow power"
+          },
+          "taperPower": {
+            "name": "Taper power"
+          },
+          "solidColor": {
+            "name": "Solid color"
+          },
+          "trailStyleOptions": {
+            "name": "Trail style options",
+            "selectableDimensions": {
+              "material": {
+                "name": "Material type",
+                "options": {
+                  "solidColor": {
+                    "name": "Solid color"
+                  },
+                  "polylineGlow": {
+                    "name": "Polyline glow"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "searchProvider": {
+    "noSearchProviders": "There is no configured search providers",
+    "models": {
+      "unsupportedTypeTitle": "Unknown type",
+      "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
+      "idForMatchingErrorTitle": "Missing property",
+      "idForMatchingErrorMessage": "Model objects must have an `id`, `localId`, or `name` property."
     }
   },
   "deltaTool": {
@@ -1628,5 +2146,13 @@
       "mouseTooltipTitle": "Select location",
       "mouseTooltipMessage": "Right click to cancel"
     }
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "Not specified",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "colorAdd": "Add",
+    "colorRemove": "Remove",
+    "invalid": "Invalid"
   }
 }

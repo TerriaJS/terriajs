@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
@@ -62,7 +68,9 @@ export default class AugmentedVirtuality {
   // (and increment) we cycle and go to the first height.
   @observable hoverLevel = AugmentedVirtuality.PRESET_HEIGHTS.length - 1;
 
-  constructor(readonly terria: Terria) {}
+  constructor(readonly terria: Terria) {
+    makeObservable(this);
+  }
 
   toggleEnabled() {
     if (this.active) {
@@ -560,7 +568,7 @@ function computeTerriaOrientation(
   //  So P = ATan (-R12 / Sqrt(R22^2 + R02^2))
 
   const getColumn = (mat: CesiumMatrix3, col: number): number => {
-    return (<any>mat)[col];
+    return (mat as any)[col];
   };
 
   // Simplify notation for readability:

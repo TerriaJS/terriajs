@@ -24,7 +24,7 @@ support for it covers everything we need to use it in terriajs, including
 build times.
 
 - Using _only_ ts-loader is out of the question, as we rely on tools inside the
-  babel ecosystem including jsx-control-statements & styled-components to name a
+  babel ecosystem including ~jsx-control-statements~ (removed 2023-10-16) & styled-components to name a
   few.
 - Using _only_ babel
 - Using babel _with_ ts-loader in `transpileOnly` mode, if there are TypeScript

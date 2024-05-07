@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import ChartableMixin, {
   axesMatch,
   ChartItem
@@ -10,15 +10,15 @@ import Terria from "../Models/Terria";
  * workbench.
  */
 export default class ChartView {
-  constructor(readonly terria: Terria) {}
+  constructor(readonly terria: Terria) {
+    makeObservable(this);
+  }
 
   @computed
   get chartableItems(): ChartableMixin.Instance[] {
-    return <any>(
-      this.terria.workbench.items.filter(
-        (item) => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
-      )
-    );
+    return this.terria.workbench.items.filter(
+      (item) => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
+    ) as any;
   }
 
   /**

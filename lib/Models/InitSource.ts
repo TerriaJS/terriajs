@@ -55,7 +55,8 @@ export interface InitSourceData {
   viewerMode?: ViewModeJson;
   baseMaps?: BaseMapsJson;
   homeCamera?: JsonObject;
-  initialCamera?: JsonObject;
+  /* Either a `CameraView` instance or a flag for focusing the camera on the workbench items */
+  initialCamera?: JsonObject | { focusWorkbenchItems: boolean };
   showSplitter?: boolean;
   splitPosition?: number;
   workbench?: string[];
@@ -72,6 +73,11 @@ export interface InitSourceData {
     baseMapId?: string;
     terrainSplitDirection?: number;
     depthTestAgainstTerrainEnabled?: boolean;
+    /** Check or uncheck "Share/Print -> Advanced options -> Shorten the share URL using a web service".
+     * See https://github.com/TerriaJS/terriajs/discussions/6848#discussioncomment-6798623 for a typical use case.
+     * To disable the shortening url service, set it to false.
+     */
+    shortenShareUrls?: boolean;
   };
 }
 

@@ -2,8 +2,7 @@
 
 import { observer } from "mobx-react";
 import React, { useState } from "react";
-import { useTranslation, withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { useTranslation } from "react-i18next";
 import {
   applyTranslationIfExists,
   TRANSLATE_KEY_PREFIX
@@ -12,7 +11,7 @@ import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import Loader from "../../../Loader";
-import { useViewState } from "../../../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../../../Context";
 import Styles from "./tools-panel.scss";
 
 // let countValue = 1;
@@ -82,7 +81,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
           path.push(member.name!);
 
           const loadPromise = member.loadMembers();
-          let countPromise = member.isLoading
+          const countPromise = member.isLoading
             ? loadPromise
                 .then((result) => result.throwIfError())
                 .then(
@@ -116,7 +115,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
       const promise = counter(member, childStats, path).then(function () {
         stats.groups += childStats.groups + 1;
         stats.members += childStats.members;
-        stats.messages.push.apply(stats.messages, childStats.messages);
+        stats.messages.push(...childStats.messages);
         stats.subTotals.push(childStats);
       });
       return promise;

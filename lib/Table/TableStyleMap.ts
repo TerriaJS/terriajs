@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { PickProperties } from "ts-essentials";
 import { NotUndefined } from "../Core/TypeModifiers";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -53,7 +53,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     readonly key: NotUndefined<
       keyof PickProperties<TableStyleTraits, TableStyleMapModel<T>>
     >
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   /** Get traits for TableStyleMapSymbolTraits */
   @computed get commonTraits() {
@@ -114,7 +116,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
             i < binStyles.length - 1 &&
             value > (binStyles[i].maxValue ?? Infinity);
             ++i
-          ) {}
+          ) {
+            continue;
+          }
 
           return {
             ...this.traitValues.null,

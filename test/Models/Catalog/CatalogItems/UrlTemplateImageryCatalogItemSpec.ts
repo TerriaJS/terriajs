@@ -48,7 +48,7 @@ describe("UrlTemplateImageryCatalogItem", function () {
       expect(imageryProvider).toBeDefined();
       if (imageryProvider !== undefined) {
         expect(imageryProvider.url).toEqual(item.url ?? "");
-        expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
+        expect(imageryProvider.credit.html).toEqual(item.attribution as string);
         expect(imageryProvider.minimumLevel).toEqual(
           item.minimumLevel ?? Infinity
         );
@@ -63,7 +63,7 @@ describe("UrlTemplateImageryCatalogItem", function () {
         expect(imageryProvider.enablePickFeatures).toEqual(
           item.allowFeaturePicking
         );
-        expect((<any>imageryProvider)._subdomains).toEqual(item.subdomains);
+        expect((imageryProvider as any)._subdomains).toEqual(item.subdomains);
       }
     });
 

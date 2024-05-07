@@ -3,13 +3,11 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
 import registerCatalogMembers from "../../../../lib/Models/Catalog/registerCatalogMembers";
 
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import ArcGisPortalItemReference, {
   ArcGisPortalItemStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisPortalItemReference";
 import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
-import InfoSectionTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({
   enforceActions: "observed",
@@ -21,7 +19,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisPortalItemReference", function () {
   let terria: Terria;
@@ -77,11 +75,9 @@ describe("ArcGisPortalItemReference", function () {
       });
       await arcGisPortalItemReference.loadReference();
 
-      arcGisPortalItemStratum = <ArcGisPortalItemStratum>(
-        arcGisPortalItemReference.strata.get(
-          ArcGisPortalItemStratum.stratumName
-        )
-      );
+      arcGisPortalItemStratum = arcGisPortalItemReference.strata.get(
+        ArcGisPortalItemStratum.stratumName
+      ) as ArcGisPortalItemStratum;
 
       portalItemTarget = arcGisPortalItemReference.target;
     });

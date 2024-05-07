@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import loadCsv from "../../Core/loadCsv";
 import loadJson5 from "../../Core/loadJson5";
 import { SearchParameterTraits } from "../../Traits/TraitsClasses/SearchableItemTraits";
@@ -32,6 +32,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
    */
   constructor(options: any, parameterOptions: SearchParameterTraits[]) {
     super(options, parameterOptions);
+    makeObservable(this);
     const indexRootUrl = options?.indexRootUrl;
     if (typeof indexRootUrl !== "string")
       throw new Error(t("indexedItemSearchProvider.missingOptionIndexRootUrl"));
@@ -237,7 +238,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     // The record can have a bunch of arbitrary properties and a few known
     // properties. We use the latitude, longitude, height & radius for
     // constructing a zoom target for the search result.
-    let { latitude, longitude, height, ...properties } = record;
+    const { latitude, longitude, height, ...properties } = record;
     const _latitude = parseFloat(latitude);
     const _longitude = parseFloat(longitude);
     const _featureHeight = parseFloat(height);

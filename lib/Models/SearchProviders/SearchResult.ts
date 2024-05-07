@@ -1,8 +1,8 @@
-import { BaseModel } from "../Definition/Model";
-import { observable, action } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import GroupMixin from "../../ModelMixins/GroupMixin";
+import { BaseModel } from "../Definition/Model";
 
 export interface SearchResultOptions {
   name?: string;
@@ -24,6 +24,7 @@ export default class SearchResult {
   @observable location: { longitude: number; latitude: number } | undefined;
 
   constructor(options: SearchResultOptions) {
+    makeObservable(this);
     this.name = defaultValue(options.name, "Unknown");
     this.tooltip = options.tooltip;
     this.isImportant = defaultValue(options.isImportant, false);

@@ -4,7 +4,8 @@ import {
   computed,
   IReactionDisposer,
   observable,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -24,8 +25,8 @@ declare module "terriajs-cesium/Source/Scene/Scene" {
   }
 }
 
-var screenSpacePos = new Cartesian2();
-var offScreen = "-1000px";
+const screenSpacePos = new Cartesian2();
+const offScreen = "-1000px";
 
 export default class CesiumSelectionIndicator {
   /**
@@ -65,6 +66,7 @@ export default class CesiumSelectionIndicator {
   private _disposeAutorun: IReactionDisposer;
 
   constructor(cesium: import("../../Models/Cesium").default) {
+    makeObservable(this);
     this._cesium = cesium;
     this._tweens = cesium.scene.tweens;
     this.container = cesium.cesiumWidget.container;

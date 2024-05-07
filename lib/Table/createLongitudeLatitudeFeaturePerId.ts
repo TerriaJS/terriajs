@@ -191,7 +191,9 @@ function createFeature(
         color: createProperty(Color, interpolate),
         outlineColor: createProperty(Color, interpolate),
         pixelSize: createProperty(Number, interpolate),
-        outlineWidth: createProperty(Number, interpolate)
+        outlineWidth: createProperty(Number, interpolate),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -204,7 +206,9 @@ function createFeature(
         width: createProperty(Number, interpolate),
         color: createProperty(Color, interpolate),
         rotation: createProperty(Number, interpolate),
-        pixelOffset: createProperty(Cartesian2, interpolate)
+        pixelOffset: createProperty(Cartesian2, interpolate),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -254,7 +258,9 @@ function createFeature(
         outlineWidth: createProperty(Number, interpolate),
         pixelOffset: createProperty(Cartesian2, interpolate),
         verticalOrigin: new TimeIntervalCollectionProperty(),
-        horizontalOrigin: new TimeIntervalCollectionProperty()
+        horizontalOrigin: new TimeIntervalCollectionProperty(),
+        scaleByDistance: new TimeIntervalCollectionProperty(),
+        disableDepthTestDistance: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -481,8 +487,8 @@ function calculateShow(availability: TimeIntervalCollection) {
     const stop = availability.stop;
     show.intervals.addInterval(
       new TimeInterval({
-        start: <any>Iso8601.MINIMUM_VALUE,
-        stop: <any>Iso8601.MAXIMUM_VALUE,
+        start: Iso8601.MINIMUM_VALUE as any,
+        stop: Iso8601.MAXIMUM_VALUE as any,
         data: false
       })
     );
@@ -490,8 +496,8 @@ function calculateShow(availability: TimeIntervalCollection) {
   } else {
     show.intervals.addInterval(
       new TimeInterval({
-        start: <any>Iso8601.MINIMUM_VALUE,
-        stop: <any>Iso8601.MAXIMUM_VALUE,
+        start: Iso8601.MINIMUM_VALUE as any,
+        stop: Iso8601.MAXIMUM_VALUE as any,
         data: true
       })
     );

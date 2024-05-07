@@ -6,7 +6,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../Map/PickedFeatures/PickedFeatures";
@@ -28,8 +28,10 @@ type ModelType = Model<
  * A mixin for handling tile errors in raster layers
  *
  */
-function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
-  abstract class Klass extends Base {
+function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
+  Base: T
+) {
+  abstract class TileErrorHandlerMixin extends Base {
     tileFailures = 0;
     private readonly tileRetriesByMap: Map<string, number> = new Map();
 
@@ -264,7 +266,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               // - the ImageryCatalogItem looked at the error and said we should try again.
               tellMapToRetry();
             }
-          } catch (error) {
+          } catch (error: any) {
             // This attempt failed. We'll either retry (for 500s) or give up
             // depending on the status code.
             const e: Error & { statusCode?: number } = error || {};
@@ -362,7 +364,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
     return intersection === undefined;
   }
 
-  return Klass;
+  return TileErrorHandlerMixin;
 }
 
 namespace TileErrorHandlerMixin {

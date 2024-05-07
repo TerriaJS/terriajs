@@ -1,5 +1,4 @@
 import ReferenceMixin from "../../../lib/ModelMixins/ReferenceMixin";
-import TableMixin from "../../../lib/ModelMixins/TableMixin";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
 import registerCatalogMembers from "../../../lib/Models/Catalog/registerCatalogMembers";
 import hasTraits from "../../../lib/Models/Definition/hasTraits";
