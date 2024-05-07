@@ -27,7 +27,7 @@ module.exports = function () {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: "TerriaJS.css",
+        filename: "[name].css",
         disable: false,
         ignoreOrder: true
       }),
