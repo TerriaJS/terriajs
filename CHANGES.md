@@ -5,6 +5,7 @@
 - Add ability for users to select the palettes supplied by ncWMS servers for changing the visualisation of data.
 
 - [The next improvement]
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.7.1 - 2024-04-16
 
