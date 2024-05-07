@@ -1,14 +1,13 @@
-import { create } from "react-test-renderer";
-import React from "react";
 import { runInAction } from "mobx";
-import { ThemeProvider } from "styled-components";
 import { act } from "react-dom/test-utils";
+import { create } from "react-test-renderer";
+import { ThemeProvider } from "styled-components";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
-import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
-import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
+import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
+import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
+import { terriaTheme } from "../../lib/ViewModels/StandardTheme";
 
 describe("StyledHtml", function () {
   let terria: Terria;
