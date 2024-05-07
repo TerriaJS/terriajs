@@ -4,7 +4,7 @@ import {
   Feature as ProtomapsFeature,
   GeomType,
   PolygonSymbolizer
-} from "protomaps";
+} from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";

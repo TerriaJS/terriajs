@@ -1,5 +1,5 @@
 import { reaction, runInAction } from "mobx";
-import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
+import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
 import { CustomDataSource } from "terriajs-cesium";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
