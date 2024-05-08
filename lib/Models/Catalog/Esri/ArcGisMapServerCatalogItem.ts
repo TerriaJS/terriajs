@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import { fromPromise, IPromiseBasedObservable } from "mobx-utils";
+import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import moment from "moment";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -14,7 +15,6 @@ import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import { setsAreEqual } from "../../../Core/setsAreEqual";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
@@ -30,36 +30,18 @@ import LegendTraits, {
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import { RectangleCoordinates } from "../../FunctionParameters/RectangleParameter";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
-import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
+import { Extent, Layer, Legends, MapServer } from "./ArcGisInterfaces";
 
 const proj4 = require("proj4").default;
-
-interface RectangleExtent {
-  east: number;
-  south: number;
-  west: number;
-  north: number;
-}
-
-interface Legend {
-  label?: string;
-  contentType: string;
-  imageData: string;
-  width: number;
-  height: number;
-}
-
-interface Legends {
-  layers?: { layerId: number; layerName: string; legend?: Legend[] }[];
-}
 
 class MapServerStratum extends LoadableStratum(
   ArcGisMapServerCatalogItemTraits
@@ -228,7 +210,7 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get rectangle() {
-    const rectangle: RectangleExtent = {
+    const rectangle: RectangleCoordinates = {
       west: Infinity,
       south: Infinity,
       east: -Infinity,
@@ -681,14 +663,17 @@ function findLayers(layers: Layer[], names: string | undefined) {
   });
 }
 
-function updateBbox(extent: Extent, rectangle: RectangleExtent) {
+function updateBbox(extent: Extent, rectangle: RectangleCoordinates) {
   if (extent.xmin < rectangle.west) rectangle.west = extent.xmin;
   if (extent.ymin < rectangle.south) rectangle.south = extent.ymin;
   if (extent.xmax > rectangle.east) rectangle.east = extent.xmax;
   if (extent.ymax > rectangle.north) rectangle.north = extent.ymax;
 }
 
-function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
+export function getRectangleFromLayer(
+  extent: Extent,
+  rectangle: RectangleCoordinates
+) {
   const wkidCode =
     extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
@@ -723,7 +708,10 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
   }
 }
 
-function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
+function getRectangleFromLayers(
+  rectangle: RectangleCoordinates,
+  layers: Layer[]
+) {
   layers.forEach(function (item) {
     item.extent && getRectangleFromLayer(item.extent, rectangle);
   });
