@@ -17,6 +17,7 @@ import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFe
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import { JsonObject } from "../../Core/Json";
+import { ImageServerIdentifyResult } from "../../Models/Catalog/Esri/ArcGisInterfaces";
 
 interface Options {
   url: string;
@@ -211,12 +212,10 @@ export default class ArcGisImageServerImageryProvider {
 
     const query = {
       f: "json",
-      tolerance: 2,
       geometryType: "esriGeometryPoint",
-      geometry: `${horizontal},${vertical}`,
-      mapExtent: `${rectangle.west},${rectangle.south},${rectangle.east},${rectangle.north}`,
-      imageDisplay: `${this.tileWidth},${this.tileHeight},96`,
-      sr: sr
+      geometry: `{x: ${horizontal}, y: ${vertical}, spatialReference: {wkid: ${sr}}}`,
+      // Disable catalog items - as we don't use them
+      returnCatalogItems: false
     };
 
     const resource = this.baseResource.getDerivedResource({
@@ -224,50 +223,20 @@ export default class ArcGisImageServerImageryProvider {
       queryParameters: query
     });
 
-    const json = await resource.fetchJson();
+    const json = (await resource.fetchJson()) as ImageServerIdentifyResult;
     const result: ImageryLayerFeatureInfo[] = [];
 
-    const features = json.results;
-    if (!features) {
-      return result;
-    }
-
-    for (let i = 0; i < features.length; ++i) {
-      const feature = features[i];
-
+    if (json.value) {
       const featureInfo = new ImageryLayerFeatureInfo();
-      featureInfo.data = feature;
-      featureInfo.name = feature.value;
-      featureInfo.properties = feature.attributes;
-      featureInfo.configureDescriptionFromProperties(feature.attributes);
-
-      // If this is a point feature, use the coordinates of the point.
-      if (feature.geometryType === "esriGeometryPoint" && feature.geometry) {
-        const wkid =
-          feature.geometry.spatialReference &&
-          feature.geometry.spatialReference.wkid
-            ? feature.geometry.spatialReference.wkid
-            : 4326;
-        if (wkid === 4326 || wkid === 4283) {
-          featureInfo.position = Cartographic.fromDegrees(
-            feature.geometry.x,
-            feature.geometry.y,
-            feature.geometry.z
-          );
-        } else if (wkid === 102100 || wkid === 900913 || wkid === 3857) {
-          const projection = new WebMercatorProjection();
-          featureInfo.position = projection.unproject(
-            new Cartesian3(
-              feature.geometry.x,
-              feature.geometry.y,
-              feature.geometry.z
-            )
-          );
-        }
-      }
+      featureInfo.data = json;
+      featureInfo.name = json.name;
+      featureInfo.properties = json.properties;
+      featureInfo.description = json.value;
 
       result.push(featureInfo);
     }
+
+    // Todo: handle json.catalogItems
 
     return result;
   }

@@ -16,6 +16,7 @@ import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import { setsAreEqual } from "../../../Core/setsAreEqual";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
+import Reproject from "../../../Map/Vector/Reproject";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, {
@@ -150,6 +151,16 @@ class MapServerStratum extends LoadableStratum(
       legendMetadata,
       token
     );
+
+    // Add any Proj4 definitions if necessary
+    if (item.terria.configParameters.proj4ServiceBaseUrl) {
+      await Reproject.checkProjection(
+        item.terria.configParameters.proj4ServiceBaseUrl,
+        "EPSG:" + serviceMetadata.fullExtent.spatialReference?.latestWkid ??
+          serviceMetadata.fullExtent.spatialReference?.wkid
+      );
+    }
+
     return stratum;
   }
 
@@ -685,6 +696,7 @@ export function getRectangleFromLayer(
     const wkid = "EPSG:" + wkidCode;
 
     if (!isDefined(Proj4Definitions[wkid])) {
+      console.warn("No Proj4 definition for " + wkid);
       return;
     }
 

@@ -1,3 +1,5 @@
+import { JsonObject } from "../../../Core/Json";
+
 interface DocumentInfo {
   Title?: string;
   Author?: string;
@@ -120,4 +122,25 @@ export interface ImageServer {
 
   hasColormap: boolean;
   hasMultidimensions: boolean;
+}
+
+export interface ImageServerIdentifyResult {
+  objectId: number;
+  name: string;
+  /** CSV of pixel values per band */
+  value: string;
+  location: {
+    x: number;
+    y: number;
+    spatialReference: SpatialReference;
+  };
+  properties: JsonObject | null;
+  /** catalogItems are returned only when the image service source is a mosaic dataset */
+  catalogItems?: null | {
+    objectIdFieldName: string;
+    spatialReference: SpatialReference;
+    geometryType: string;
+    features: unknown[];
+  };
+  catalogItemVisibilities?: number[];
 }
