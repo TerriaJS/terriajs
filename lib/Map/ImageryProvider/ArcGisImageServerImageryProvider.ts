@@ -36,6 +36,12 @@ interface Options {
   parameters?: JsonObject;
 }
 
+/** This is adapted from Cesium's ArcGisMapServerImageryProvider
+ * https://github.com/CesiumGS/cesium/blob/51aae2d21014cfc28e948b1719d07f1912df9434/packages/engine/Source/Scene/ArcGisMapServerImageryProvider.js
+ * Code licensed under the Apache License v2.0.
+ * For details, see https://github.com/CesiumGS/cesium/blob/main/LICENSE.md
+ */
+
 export default class ArcGisImageServerImageryProvider {
   readonly tilingScheme: TilingScheme;
   readonly ellipsoid: Ellipsoid;
