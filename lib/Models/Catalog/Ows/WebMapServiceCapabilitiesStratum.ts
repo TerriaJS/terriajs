@@ -90,69 +90,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  async fetchPalettes(
-    abstract: string,
-    legend:
-      | Complete<{
-          title?: string | undefined;
-          url?: string | undefined;
-          imageScaling?: number | undefined;
-          urlMimeType?: string | undefined;
-          items?:
-            | Complete<{
-                title?: string | undefined;
-                multipleTitles?: string[] | undefined;
-                maxMultipleTitlesShowed: number | undefined;
-                titleAbove?: string | undefined;
-                titleBelow?: string | undefined;
-                color?: string | undefined;
-                outlineColor?: string | undefined;
-                outlineWidth?: number | undefined;
-                multipleColors?: string[] | undefined;
-                imageUrl?: string | undefined;
-                marker?: string | undefined;
-                rotation: number | undefined;
-                addSpacingAbove?: boolean | undefined;
-                imageHeight: number | undefined;
-                imageWidth: number | undefined;
-              }>[]
-            | undefined;
-          backgroundColor?: string | undefined;
-        }>
-      | undefined
-  ): Promise<StratumFromTraits<WebMapServiceAvailableStyleTraits>[]> {
-    const paletteResult: StratumFromTraits<WebMapServiceAvailableStyleTraits>[] =
-      [];
-
-    const url = this.catalogItem
-      .uri!.clone()
-      .setSearch({
-        service: "WMS",
-        version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
-        request: "GetMetadata",
-        item: "layerDetails",
-        layerName: this.catalogItem.layersArray[0]
-      })
-      .toString();
-
-    if (url) {
-      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, url);
-      const response = await fetch(paletteUrl);
-      const data = await response.json();
-      const palettes = data.palettes;
-      palettes.forEach((palette: any) => {
-        paletteResult.push({
-          name: palette,
-          title: palette,
-          abstract: abstract,
-          legend: legend
-        });
-      });
-    }
-
-    return paletteResult;
-  }
-
   @computed get metadataUrls() {
     const metadataUrls: MetadataURL[] = [];
 

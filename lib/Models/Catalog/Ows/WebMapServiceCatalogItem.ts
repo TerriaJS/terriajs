@@ -56,6 +56,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import NcWMSGetMetadataStratum from "./NcWMSGetMetadataStratum";
 
 // Remove problematic query parameters from URLs (GetCapabilities, GetMap, ...) - these are handled separately
 const QUERY_PARAMETERS_TO_REMOVE = [
@@ -226,9 +227,6 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (this.palettes.length === 0) {
-      this.fetchPalettes();
-    }
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -236,8 +234,15 @@ class WebMapServiceCatalogItem
       return;
     const stratum = await WebMapServiceCapabilitiesStratum.load(this);
 
+    // const ncWMS = await NcWMSGetMetadataStratum.load(
+    //   this,
+    //   this.availablePalettes
+    // );
+    // console.log(ncWMS);
+
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+      // this.strata.set(NcWMSGetMetadataStratum.stratumName, ncWMS);
     });
   }
 
@@ -247,6 +252,15 @@ class WebMapServiceCatalogItem
       return super.cacheDuration;
     }
     return "0d";
+  }
+
+  @computed
+  get availablePalettes(): string[] {
+    const ncWMSStrata = this.strata.get(
+      NcWMSGetMetadataStratum.stratumName
+    ) as NcWMSGetMetadataStratum;
+
+    return ncWMSStrata?.availablePalettes ?? [];
   }
 
   @computed
@@ -623,64 +637,6 @@ class WebMapServiceCatalogItem
     }
   );
 
-  fetchPalettes(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      if (!this.isThredds) {
-        resolve([]);
-      }
-
-      if (this.palettes.length > 0) {
-        resolve([...this.palettes]);
-      }
-
-      const extractedUrl = this.uri!.clone()
-        .setSearch({
-          service: "WMS",
-          version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
-          request: "GetMetadata",
-          item: "layerDetails",
-          layerName: this.layersArray[0]
-        })
-        .toString();
-
-      if (!extractedUrl) {
-        resolve([]);
-      }
-      const proxiedUrl = proxyCatalogItemUrl(this, extractedUrl!);
-
-      fetch(proxiedUrl, { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => {
-          this.setTrait(CommonStrata.user, "palettes", data.palettes);
-          this.setTrait(
-            CommonStrata.user,
-            "colorScaleMinimum",
-            data.scaleRange[0]
-          );
-          this.setTrait(
-            CommonStrata.user,
-            "colorScaleMaximum",
-            data.scaleRange[1]
-          );
-          this.setTrait(
-            CommonStrata.user,
-            "defaultPalette",
-            data.defaultPalette
-          );
-          this.setTrait(
-            CommonStrata.user,
-            "noPaletteStyles",
-            data.noPaletteStyles
-          );
-          this.setTrait(CommonStrata.user, "showPalettes", true);
-          resolve(data.palettes);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
-
   @computed
   get paletteDimensions(): SelectableDimensionEnum[] {
     if (!this.isNcWMS || !this.showPalettes) {
@@ -689,12 +645,16 @@ class WebMapServiceCatalogItem
 
     const options: { name: string; id: string }[] = [];
 
-    this.palettes.map((palette) => {
-      options.push({
-        name: palette,
-        id: palette
+    this;
+
+    if (this.availablePalettes) {
+      this.availablePalettes.map((palette) => {
+        options.push({
+          name: palette,
+          id: palette
+        });
       });
-    });
+    }
 
     return [
       {
@@ -715,7 +675,6 @@ class WebMapServiceCatalogItem
             const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
             this.setTrait(stratumId, "styles", newStyles);
           });
-          //}
         }
       }
     ];
