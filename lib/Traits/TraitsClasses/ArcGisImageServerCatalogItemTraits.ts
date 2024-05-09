@@ -82,4 +82,11 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
     type: "boolean"
   })
   usePreCachedTiles?: boolean;
+
+  @primitiveTrait({
+    name: "Has Multi-dimensions",
+    description: "If true, then multidimensionalInfo will be fetched.",
+    type: "boolean"
+  })
+  hasMultidimensions?: boolean;
 }

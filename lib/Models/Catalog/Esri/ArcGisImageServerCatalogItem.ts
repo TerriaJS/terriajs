@@ -37,7 +37,11 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import { RectangleCoordinates } from "../../FunctionParameters/RectangleParameter";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ImageServer, Legends } from "./ArcGisInterfaces";
+import {
+  ImageServer,
+  ImageServerMultidimensionInfo,
+  Legends
+} from "./ArcGisInterfaces";
 import { getRectangleFromLayer } from "./ArcGisMapServerCatalogItem";
 
 class ImageServerStratum extends LoadableStratum(
@@ -106,6 +110,16 @@ class ImageServerStratum extends LoadableStratum(
       });
 
     const stratum = new ImageServerStratum(item, serviceMetadata, token);
+
+    // let multidimensionalInfoUri = getBaseURI(item).segment("multidimensionalInfo");
+
+    // multidimensionalInfoUri.addQuery(item.flattenedParameters);
+
+    // if (isDefined(item.token)) {
+    //   multidimensionalInfoUri = multidimensionalInfoUri.addQuery("token", item.token);
+    // }
+
+    // const multidimensionalInfo: ImageServerMultidimensionInfo | undefined = await getJson(item, multidimensionalInfoUri);
 
     // Add any Proj4 definitions if necessary
     if (item.terria.configParameters.proj4ServiceBaseUrl) {
@@ -196,6 +210,10 @@ class ImageServerStratum extends LoadableStratum(
   get minimumLevel() {
     if (this.usePreCachedTiles && this.imageServer.tileInfo?.lods)
       return this.imageServer.tileInfo.lods[0].level;
+  }
+
+  get hasMultidimensions() {
+    return this.imageServer.hasMultidimensions;
   }
 }
 

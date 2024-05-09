@@ -1,3 +1,4 @@
+import { bool } from "prop-types";
 import { JsonObject } from "../../../Core/Json";
 
 interface DocumentInfo {
@@ -141,4 +142,33 @@ export interface ImageServerIdentifyResult {
     features: unknown[];
   };
   catalogItemVisibilities?: number[];
+}
+
+export interface ImageServerMultidimensionInfo {
+  multidimensionalInfo: {
+    variables: [
+      {
+        name: string;
+        description: string;
+        unit: string;
+        dimensions: [
+          {
+            name: string;
+            description: string;
+            unit: string;
+            field: string;
+            /** the extent of dimension values, the element type depends on the dimension's field type, can be time, or double */
+            extent: [number, number];
+            /** indicates whether one dimension value has both lower and upper bounds. */
+            hasRanges: boolean;
+            /** If hasRanges=false, each element is one single value; if hasRanges=true, each element is an array of lower/upper bounds */
+            values: number[] | [number, number][];
+            hasRegularIntervals?: boolean;
+            interval?: number;
+            intervalUnit?: string;
+          }
+        ];
+      }
+    ];
+  };
 }
