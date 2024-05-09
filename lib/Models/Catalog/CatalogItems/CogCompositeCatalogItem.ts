@@ -85,14 +85,14 @@ export default class CogCompositeCatalogItem extends MappableMixin(
                   georasters: georasters,
                   opacity: 1,
                   // Example pixel reclassification function:
-                  pixelValuesToColorFn: (georasters) => {
-                    const codeToExecute = `colourMappings.${pixelMappingFnName}(${fnBandInputsAsIndexes
-                      .map((bandIndex) => `georasters[${bandIndex}]`)
-                      .join(",")})`;
+                  // pixelValuesToColorFn: (georasters) => {
+                  //   const codeToExecute = `colourMappings.${pixelMappingFnName}(${fnBandInputsAsIndexes
+                  //     .map((bandIndex) => `georasters[${bandIndex}]`)
+                  //     .join(",")})`;
 
-                    // TODO: are there security concerns with using eval() statements?
-                    return eval(codeToExecute);
-                  },
+                  //   // TODO: are there security concerns with using eval() statements?
+                  //   return eval(codeToExecute);
+                  // },
                   resolution: 256
                 },
                 this.imageryProvider
@@ -190,7 +190,7 @@ export default class CogCompositeCatalogItem extends MappableMixin(
       enablePickFeatures: this.allowFeaturePicking
     };
 
-    let cogImageryProvider: CogImageryProvider = new CogImageryProvider(
+    const cogImageryProvider: CogImageryProvider = new CogImageryProvider(
       cogOptions
     );
 
