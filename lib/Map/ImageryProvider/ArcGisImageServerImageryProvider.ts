@@ -1,6 +1,5 @@
 import { makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -11,7 +10,6 @@ import Math from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TilingScheme from "terriajs-cesium/Source/Core/TilingScheme";
-import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import DiscardMissingTileImagePolicy from "terriajs-cesium/Source/Scene/DiscardMissingTileImagePolicy";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -29,6 +27,7 @@ interface Options {
   credit: Credit | string;
   tileCredits?: Credit[];
   enablePickFeatures?: boolean;
+  usePreCachedTiles?: boolean;
   tileWidth?: number;
   tileHeight?: number;
   ellipsoid?: Ellipsoid;
@@ -56,6 +55,7 @@ export default class ArcGisImageServerImageryProvider {
   readonly credit: Credit;
   readonly tileCredits: Credit[] | undefined;
   enablePickFeatures: boolean;
+  readonly usePreCachedTiles: boolean;
   readonly tileDiscardPolicy: TileDiscardPolicy;
   readonly baseResource: Resource;
 
@@ -105,6 +105,7 @@ export default class ArcGisImageServerImageryProvider {
         : (options.credit as Credit);
 
     this.enablePickFeatures = options.enablePickFeatures ?? true;
+    this.usePreCachedTiles = options.usePreCachedTiles ?? false;
 
     this.baseResource = new Resource(options.url);
     this.baseResource.appendForwardSlash();
@@ -141,33 +142,39 @@ export default class ArcGisImageServerImageryProvider {
   }
 
   buildImageResource(x: number, y: number, level: number) {
-    const nativeRectangle = this.tilingScheme.tileXYToNativeRectangle(
-      x,
-      y,
-      level
-    );
-    const bbox = `${nativeRectangle.west},${nativeRectangle.south},${nativeRectangle.east},${nativeRectangle.north}`;
-
-    const query: JsonObject = {
-      bbox: bbox,
-      size: `${this.tileWidth},${this.tileHeight}`,
-      format: "png32",
-      transparent: true,
-      f: "image"
-    };
-
-    if (this.tilingScheme.projection instanceof GeographicProjection) {
-      query.bboxSR = 4326;
-      query.imageSR = 4326;
+    if (this.usePreCachedTiles) {
+      return this.baseResource.getDerivedResource({
+        url: `tile/${level}/${y}/${x}`
+      });
     } else {
-      query.bboxSR = 3857;
-      query.imageSR = 3857;
-    }
+      const nativeRectangle = this.tilingScheme.tileXYToNativeRectangle(
+        x,
+        y,
+        level
+      );
+      const bbox = `${nativeRectangle.west},${nativeRectangle.south},${nativeRectangle.east},${nativeRectangle.north}`;
 
-    return this.baseResource.getDerivedResource({
-      url: "exportImage",
-      queryParameters: query
-    });
+      const query: JsonObject = {
+        bbox: bbox,
+        size: `${this.tileWidth},${this.tileHeight}`,
+        format: "png32",
+        transparent: true,
+        f: "image"
+      };
+
+      if (this.tilingScheme.projection instanceof GeographicProjection) {
+        query.bboxSR = 4326;
+        query.imageSR = 4326;
+      } else {
+        query.bboxSR = 3857;
+        query.imageSR = 3857;
+      }
+
+      return this.baseResource.getDerivedResource({
+        url: "exportImage",
+        queryParameters: query
+      });
+    }
   }
 
   getTileCredits(): Credit[] {
@@ -191,8 +198,6 @@ export default class ArcGisImageServerImageryProvider {
     if (!this.enablePickFeatures) {
       return [];
     }
-
-    const rectangle = this.tilingScheme.tileXYToNativeRectangle(x, y, level);
 
     let horizontal;
     let vertical;

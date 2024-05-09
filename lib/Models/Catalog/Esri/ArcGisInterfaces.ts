@@ -26,19 +26,17 @@ interface TileInfo {
   rows: number;
   cols: number;
   dpi: number;
-  format: "Mixed";
-  compressionQuality: number;
+  format: string;
+  compressionQuality?: number;
   origin: {
     x: number;
     y: number;
   };
-  storageInfo: {
-    storageFormat: "esriMapCacheStorageModeCompact";
+  storageInfo?: {
+    storageFormat: string;
     packetSize: number;
   };
-  spatialReference: {
-    wkt: string;
-  };
+  spatialReference: SpatialReference;
   lods: {
     level: number;
     resolution: number;

@@ -2,6 +2,7 @@ import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
 import AsyncLoader from "../../../Core/AsyncLoader";
@@ -9,7 +10,6 @@ import { JsonObject, isJsonObject } from "../../../Core/Json";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
@@ -24,7 +24,6 @@ import MappableMixin, {
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisImageServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import DiscreteTimeTraits from "../../../Traits/TraitsClasses/DiscreteTimeTraits";
 import LegendTraits, {
   LegendItemTraits
@@ -84,7 +83,6 @@ class ImageServerStratum extends LoadableStratum(
       serviceUri = serviceUri.addQuery("token", token);
     }
 
-    // TODO: if tokenUrl, fetch and pass token as parameter
     const serviceMetadata: ImageServer | undefined = await getJson(
       item,
       serviceUri
@@ -121,15 +119,15 @@ class ImageServerStratum extends LoadableStratum(
     return stratum;
   }
 
-  @computed get maximumScale() {
+  get maximumScale() {
     return this.imageServer.maxScale;
   }
 
-  @computed get name() {
+  get name() {
     return replaceUnderscores(this.imageServer.name);
   }
 
-  @computed get rectangle() {
+  get rectangle() {
     const rectangle: RectangleCoordinates = {
       west: Infinity,
       south: Infinity,
@@ -142,22 +140,11 @@ class ImageServerStratum extends LoadableStratum(
     return rectangle;
   }
 
-  @computed get info() {
-    return filterOutUndefined([
-      createStratumInstance(InfoSectionTraits, {
-        name: i18next.t(
-          "models.arcGisImageServerCatalogItem.serviceDescription"
-        ),
-        content: this.imageServer.serviceDescription
-      }),
-      createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisImageServerCatalogItem.description"),
-        content: this.imageServer.description
-      })
-    ]);
+  get description() {
+    return this.imageServer.description;
   }
 
-  @computed get attribution() {
+  get attribution() {
     return this.imageServer.copyrightText;
   }
 
@@ -165,18 +152,51 @@ class ImageServerStratum extends LoadableStratum(
     return this._token;
   }
 
-  // get tileHeight() {
-  //   return this.imageServer.tileInfo?.rows
-  // }
+  @computed get usePreCachedTiles() {
+    if (this._item.parameters || this._item.currentDiscreteJulianDate)
+      return false;
 
-  // get tileWidth() {
-  //   return this.imageServer.tileInfo?.cols
-  // }
+    return isDefined(this.imageServer.tileInfo);
+  }
 
-  // get maximumLevel() {
-  //   if (this.imageServer.tileInfo?.lods)
-  //     return this.imageServer.tileInfo.lods.length - 1
-  // }
+  get wkid() {
+    if (this._item.usePreCachedTiles) {
+      const wkid = this.imageServer.tileInfo?.spatialReference.wkid;
+      if (wkid === 102100 || wkid === 102113) return wkid;
+    }
+  }
+
+  get tileHeight() {
+    if (this.usePreCachedTiles) return this.imageServer.tileInfo?.rows;
+  }
+
+  get tileWidth() {
+    if (this.usePreCachedTiles) return this.imageServer.tileInfo?.cols;
+  }
+
+  get maximumLevel() {
+    const maximumLevelFromScale = scaleDenominatorToLevel(
+      this.maximumScale,
+      true,
+      false
+    );
+
+    // Make sure the maximum level is not higher than the maximum level of the server tiles
+    if (this.usePreCachedTiles && this.imageServer.tileInfo?.lods)
+      return Math.min(
+        this.imageServer.tileInfo.lods[
+          this.imageServer.tileInfo.lods.length - 1
+        ].level,
+        maximumLevelFromScale ?? Infinity
+      );
+
+    return maximumLevelFromScale;
+  }
+
+  get minimumLevel() {
+    if (this.usePreCachedTiles && this.imageServer.tileInfo?.lods)
+      return this.imageServer.tileInfo.lods[0].level;
+  }
 }
 
 StratumOrder.addLoadStratum(ImageServerStratum.stratumName);
@@ -324,7 +344,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
 
     if (imageServerStratum?.imageServer.timeInfo === undefined)
       return undefined;
-    // Add union type - as `time` is always defined
+
     const result: (StratumFromTraits<DiscreteTimeTraits> & {
       time: string;
     })[] = [];
@@ -348,7 +368,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
     this._legendStratumLoader.load();
 
     const imageryProvider = this._createImageryProvider(
-      this.currentDiscreteTimeTag
+      this.currentDiscreteJulianDate
     );
 
     if (imageryProvider) {
@@ -371,7 +391,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
       this.nextDiscreteTimeTag
     ) {
       const imageryProvider = this._createImageryProvider(
-        this.nextDiscreteTimeTag
+        this.nextDiscreteJulianDate
       );
 
       if (imageryProvider) {
@@ -404,20 +424,14 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
 
   private _createImageryProvider = createTransformerAllowUndefined(
     (
-      time: string | undefined
+      time: JulianDate | undefined
     ): ArcGisImageServerImageryProvider | undefined => {
       if (!isDefined(this.url)) {
         return undefined;
       }
 
       const params = { ...this.flattenedParameters };
-      if (time) params.time = time;
-
-      const maximumLevel = scaleDenominatorToLevel(
-        this.maximumScale,
-        true,
-        false
-      );
+      if (time) params.time = JulianDate.toDate(time).getTime();
 
       let tilingScheme: WebMercatorTilingScheme | GeographicTilingScheme;
 
@@ -434,12 +448,13 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
       return new ArcGisImageServerImageryProvider({
         url: cleanAndProxyUrl(this, this.url),
         tilingScheme: tilingScheme,
-        maximumLevel: maximumLevel,
+        maximumLevel: this.maximumLevel,
+        minimumLevel: this.minimumLevel,
         tileHeight: this.tileHeight,
         tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
-        // usePreCachedTilesIfAvailable: this.usePreCachedTilesIfAvailable,
+        usePreCachedTiles: this.usePreCachedTiles,
         token: this.token,
         credit: this.attribution ?? ""
       });

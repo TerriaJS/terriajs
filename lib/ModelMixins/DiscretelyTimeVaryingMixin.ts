@@ -207,6 +207,14 @@ function DiscretelyTimeVaryingMixin<
         : this.discreteTimesAsSortedJulianDates![index].time;
     }
 
+    @computed({ equals: JulianDate.equals })
+    get nextDiscreteJulianDate() {
+      const index = this.nextDiscreteTimeIndex;
+      return index === undefined
+        ? undefined
+        : this.discreteTimesAsSortedJulianDates![index].time;
+    }
+
     @computed
     get currentDiscreteTimeTag() {
       const index = this.currentDiscreteTimeIndex;

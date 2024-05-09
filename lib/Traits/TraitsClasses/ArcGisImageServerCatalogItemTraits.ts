@@ -32,7 +32,7 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
     type: "number",
     name: "Maximum scale",
     description:
-      "Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer."
+      "Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer. Note: maximumLevel overrides this property."
   })
   maximumScale?: number;
 
@@ -65,7 +65,7 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
       "The maximum number of discrete times that can be created by a single " +
       "date range when layer in time-enabled."
   })
-  maxRefreshIntervals: number = 1000;
+  maxRefreshIntervals: number = 10000;
 
   @primitiveTrait({
     type: "number",
@@ -74,4 +74,12 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
       "The well-known ID of the spatial reference of the image server. Only Web Mercator (102100 or 102113) and WGS84 (4326) are supported."
   })
   wkid?: number = 102100;
+
+  @primitiveTrait({
+    name: "Use Pre-Cached Tiles",
+    description:
+      "If true, the server's pre-cached tiles are used. If false, then the ImageServer exportImage endpoint will be used. This will default to false if parameters (including time) have been specified, otherwise it will default to true if a server supports pre-cached tiles.",
+    type: "boolean"
+  })
+  usePreCachedTiles?: boolean;
 }
