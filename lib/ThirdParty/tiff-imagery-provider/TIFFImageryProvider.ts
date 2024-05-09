@@ -540,6 +540,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
     ): { x: number; y: number } | null => {
       const xInMapPixels =
         innerTileTopLeftPoint.x + w * widthOfSampleInScreenPixels;
+      ``;
       const yInMapPixels =
         innerTileTopLeftPoint.y + h * heightOfSampleInScreenPixels;
 
@@ -548,7 +549,7 @@ const GeoRasterLayer: (new (options: GeoRasterLayerOptions) => any) &
 
       // ! This not working, lat, lng returning null
       const { lat, lng } = this.unproject(mapPoint, zoom);
-      debugger;
+      // debugger;
 
       if (this.projection === EPSG4326) {
         return {

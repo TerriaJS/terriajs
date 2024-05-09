@@ -16,7 +16,6 @@ const parseGeoRaster = require("georaster");
 import { GeoRaster } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
-import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
 import TIFFImageryProvider, {
   TIFFImageryProviderOptions
 } from "../../../ThirdParty/tiff-imagery-provider/TIFFImageryProvider";
@@ -48,9 +47,7 @@ export default class CogCatalogItem extends MappableMixin(
         show: this.show,
         alpha: this.opacity,
         imageryProvider,
-        clippingRectangle: imageryProvider.rectangle,
-        // Define our method for generating a leaflet layer in a different way, here
-        overrideCreateLeafletLayer: this.createGeoRasterLayer
+        clippingRectangle: imageryProvider.rectangle
       }
     ];
   }
