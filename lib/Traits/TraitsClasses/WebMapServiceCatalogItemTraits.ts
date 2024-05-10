@@ -72,11 +72,24 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 export class WebMapServiceAvailablePaletteTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
-    name: "URL",
-    description:
-      "The URL of the GetMetadata request for the palette. This is used to get the palettes available for a layer."
+    name: "Style Name",
+    description: "The name of the style."
   })
-  url?: string;
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "The title of the style."
+  })
+  title?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Abstract",
+    description: "The abstract describing the style."
+  })
+  abstract?: string;
 }
 
 export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
@@ -349,7 +362,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "Used to store the available palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
   })
-  availablePalettes?: string[] = [];
+  availablePalettes?: WebMapServiceAvailablePaletteTraits[] = [];
 
   @primitiveTrait({
     type: "string",

@@ -38,8 +38,7 @@ import {
 } from "../../../Table/tableFeatureInfoContext";
 import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326,
-  WebMapServiceAvailableLayerStylesTraits
+  SUPPORTED_CRS_4326
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
@@ -227,22 +226,27 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
+    if (this.isNcWMS) {
+      const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(this);
+
+      runInAction(() => {
+        this.strata.set(
+          NcWMSGetMetadataStratum.stratumName,
+          ncWMSGetMetadataStratum
+        );
+      });
+    }
+
     if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) ===
       undefined
     )
       return;
-    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
 
-    // const ncWMS = await NcWMSGetMetadataStratum.load(
-    //   this,
-    //   this.availablePalettes
-    // );
-    // console.log(ncWMS);
+    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
 
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-      // this.strata.set(NcWMSGetMetadataStratum.stratumName, ncWMS);
     });
   }
 
@@ -252,15 +256,6 @@ class WebMapServiceCatalogItem
       return super.cacheDuration;
     }
     return "0d";
-  }
-
-  @computed
-  get availablePalettes(): string[] {
-    const ncWMSStrata = this.strata.get(
-      NcWMSGetMetadataStratum.stratumName
-    ) as NcWMSGetMetadataStratum;
-
-    return ncWMSStrata?.availablePalettes ?? [];
   }
 
   @computed
@@ -399,7 +394,6 @@ class WebMapServiceCatalogItem
     if (time) {
       uri.addQuery("time", time);
     }
-
     return uri.toString();
   }
 
@@ -538,6 +532,8 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
+      console.log(`Creating new ImageryProvider for time ${time}`);
+
       // Set dimensionParameters
       const dimensionParameters = formatDimensionsForOws(this.dimensions);
       if (time !== undefined) {
@@ -639,19 +635,24 @@ class WebMapServiceCatalogItem
 
   @computed
   get paletteDimensions(): SelectableDimensionEnum[] {
-    if (!this.isNcWMS || !this.showPalettes) {
-      return [];
-    }
+    // if (!this.isNcWMS || !this.showPalettes) {
+    //   return [];
+    // }
 
-    const options: { name: string; id: string }[] = [];
+    // fetch ncWMS stratum
+    const ncWMSGetMetadataStratum = this.strata.get(
+      NcWMSGetMetadataStratum.stratumName
+    ) as NcWMSGetMetadataStratum;
 
-    this;
+    console.log(ncWMSGetMetadataStratum);
+
+    const options: { name: string | undefined; id: string | undefined }[] = [];
 
     if (this.availablePalettes) {
       this.availablePalettes.map((palette) => {
         options.push({
-          name: palette,
-          id: palette
+          name: palette.name,
+          id: palette.uniqueId
         });
       });
     }
@@ -679,6 +680,73 @@ class WebMapServiceCatalogItem
       }
     ];
   }
+
+  // @computed
+  // get styleSelectableDimensions(): SelectableDimensionEnum[] {
+  //   return this.availableStyles.map((layer, layerIndex) => {
+  //     let name = "Styles";
+
+  //     // If multiple layers -> prepend layer name to name
+  //     if (this.availableStyles.length > 1) {
+  //       // Attempt to get layer title from GetCapabilitiesStratum
+  //       const layerTitle =
+  //         layer.layerName &&
+  //         (
+  //           this.strata.get(
+  //             GetCapabilitiesMixin.getCapabilitiesStratumName
+  //           ) as WebMapServiceCapabilitiesStratum
+  //         ).capabilitiesLayers.get(layer.layerName)?.Title;
+
+  //       name = `${
+  //         layerTitle || layer.layerName || `Layer ${layerIndex + 1}`
+  //       } styles`;
+  //     }
+
+  //     const options = filterOutUndefined(
+  //       layer.styles.map(function (s) {
+  //         if (isDefined(s.name)) {
+  //           return {
+  //             name: s.title || s.name || "",
+  //             id: s.name as string
+  //           };
+  //         }
+  //       })
+  //     );
+
+  //     // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
+  //     // The `styles` parameter is CSV, a style for each layer
+  //     const selectedId = this.styles?.split(",")?.[layerIndex];
+
+  //     return {
+  //       name,
+  //       id: `${this.uniqueId}-${layer.layerName}-styles`,
+  //       options,
+  //       selectedId,
+  //       setDimensionValue: (
+  //         stratumId: string,
+  //         newStyle: string | undefined
+  //       ) => {
+  //         if (!newStyle) return;
+  //         runInAction(() => {
+  //           const styles = this.styleSelectableDimensions.map(
+  //             (style) => style.selectedId || ""
+  //           );
+  //           styles[layerIndex] = newStyle;
+  //           this.setTrait(stratumId, "styles", styles.join(","));
+  //         });
+  //       },
+  //       // There is no way of finding out default style if no style has been selected :(
+  //       // To use the default style, we just send empty "styles" to WMS server
+  //       // But if the server doesn't support GetLegendGraphic, then we can't request the default legend
+  //       // Therefore - we only add the "Default style" / undefined option if supportsGetLegendGraphic is true
+  //       allowUndefined: this.supportsGetLegendGraphic && options.length > 1,
+  //       undefinedLabel: i18next.t(
+  //         "models.webMapServiceCatalogItem.defaultStyleLabel"
+  //       ),
+  //       disable: this.isShowingDiff
+  //     };
+  //   });
+  // }
 
   @computed
   get styleSelectableDimensions(): SelectableDimensionEnum[] {
@@ -830,7 +898,7 @@ class WebMapServiceCatalogItem
       return super.selectableDimensions;
     }
 
-    const paletteDimensions = this.showPalettes ? this.paletteDimensions : [];
+    const paletteDimensions = this.paletteDimensions;
 
     return filterOutUndefined([
       ...super.selectableDimensions,

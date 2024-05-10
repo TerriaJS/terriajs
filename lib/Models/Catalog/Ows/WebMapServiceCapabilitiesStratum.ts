@@ -44,7 +44,6 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import { Complete } from "../../../Core/TypeModifiers";
 
 const dateFormat = require("dateformat");
 
