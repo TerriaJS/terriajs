@@ -217,7 +217,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       currentTime?: Date;
       timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
-      activeStyle?: Object;
+      activeStyle?: { id: string | undefined } | undefined;
     } = {
       partialByName: mustacheRenderPartialByName(
         this.props.catalogItem.featureInfoTemplate?.partials ?? {},
