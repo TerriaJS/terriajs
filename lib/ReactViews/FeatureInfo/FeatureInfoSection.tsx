@@ -46,6 +46,7 @@ import {
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
 } from "./mustacheExpressions";
+import TableMixin from "../../ModelMixins/TableMixin";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function (string) {
@@ -216,6 +217,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       currentTime?: Date;
       timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
+      activeStyle?: string;
     } = {
       partialByName: mustacheRenderPartialByName(
         this.props.catalogItem.featureInfoTemplate?.partials ?? {},
@@ -256,6 +258,10 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         this.props.catalogItem.currentTimeAsJulianDate
       );
     }
+
+    // Add activeStyle property
+    if (TableMixin.isMixedInto(this.props.catalogItem))
+      terria.activeStyle = this.props.catalogItem.activeStyle;
 
     // If catalog item has featureInfoContext function
     // Merge it into other properties

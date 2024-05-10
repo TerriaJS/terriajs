@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
-import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -32,6 +31,7 @@ import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/Feature
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -400,6 +400,30 @@ describe("FeatureInfoSection", function () {
       );
       const result = createWithContexts(viewState, section);
       expect(findWithText(result, "This is a steel bar.").length).toEqual(1);
+    });
+
+    it("uses activeStyle of catalog item having TableTraits in featureInfoTemplate", function () {
+      const csvItem = new CsvCatalogItem("testId", terria, undefined);
+      csvItem.setTrait(CommonStrata.user, "activeStyle", "COOL");
+      const template = "The active style is {{terria.activeStyle}}.";
+      csvItem.featureInfoTemplate.setTrait(
+        CommonStrata.definition,
+        "template",
+        template
+      );
+      const section = (
+        <FeatureInfoSection
+          catalogItem={csvItem}
+          feature={feature}
+          isOpen
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = createWithContexts(viewState, section);
+      expect(findWithText(result, "The active style is COOL.").length).toEqual(
+        1
+      );
     });
 
     it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {
