@@ -45,8 +45,11 @@ gulp.task("watch-specs", function (done) {
 
 gulp.task("lint", function (done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
+  var path = require("path");
 
-  runExternalModule("eslint/bin/eslint.js", [
+  const eslintDir = path.dirname(require.resolve("eslint/package.json"));
+  const eslintExecutable = path.join(eslintDir, "bin", "eslint.js");
+  runExternalModule(eslintExecutable, [
     "lib",
     "test",
     "--ext",

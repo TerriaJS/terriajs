@@ -36,9 +36,9 @@ module.exports = {
     }
   },
   rules: {
+    // TODO: re-enable the disabled @typescript-eslint rules.
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/unified-signatures": "error",
