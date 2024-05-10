@@ -32,6 +32,7 @@ import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -404,8 +405,31 @@ describe("FeatureInfoSection", function () {
 
     it("uses activeStyle of catalog item having TableTraits in featureInfoTemplate", function () {
       const csvItem = new CsvCatalogItem("testId", terria, undefined);
-      csvItem.setTrait(CommonStrata.user, "activeStyle", "COOL");
-      const template = "The active style is {{terria.activeStyle}}.";
+      csvItem.setTrait(CommonStrata.user, "activeStyle", "User Style");
+      // Do not specify the styles as TableStyleTraits[] type, as it will cause an error in the vscode editor.
+      const styles = [
+        {
+          id: "User Style",
+          color: {
+            colorColumn: "ste_name",
+            colorPalette: "HighContrast"
+          },
+          hidden: false
+        },
+        {
+          id: "Other Style",
+          color: {
+            colorColumn: "other",
+            colorPalette: "HighContrast"
+          },
+          hidden: false
+        }
+      ];
+
+      updateModelFromJson(csvItem, CommonStrata.user, { styles });
+
+      const template =
+        "For the active style, id: {{terria.activeStyle.id}}, color.colorColumn: {{terria.activeStyle.color.colorColumn}}.";
       csvItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -421,9 +445,12 @@ describe("FeatureInfoSection", function () {
         />
       );
       const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "The active style is COOL.").length).toEqual(
-        1
-      );
+      expect(
+        findWithText(
+          result,
+          "For the active style, id: User Style, color.colorColumn: ste_name."
+        ).length
+      ).toEqual(1);
     });
 
     it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {

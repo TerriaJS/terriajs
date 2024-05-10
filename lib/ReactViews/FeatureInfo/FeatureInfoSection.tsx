@@ -217,7 +217,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       currentTime?: Date;
       timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
-      activeStyle?: string;
+      activeStyle?: Object;
     } = {
       partialByName: mustacheRenderPartialByName(
         this.props.catalogItem.featureInfoTemplate?.partials ?? {},
@@ -260,8 +260,12 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     }
 
     // Add activeStyle property
-    if (TableMixin.isMixedInto(this.props.catalogItem))
-      terria.activeStyle = this.props.catalogItem.activeStyle;
+    if (TableMixin.isMixedInto(this.props.catalogItem)) {
+      const activeStyleId = this.props.catalogItem.activeStyle;
+      terria.activeStyle = this.props.catalogItem.styles.find(
+        (style) => style.id === activeStyleId
+      );
+    }
 
     // If catalog item has featureInfoContext function
     // Merge it into other properties
