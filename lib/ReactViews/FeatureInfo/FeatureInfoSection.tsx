@@ -261,10 +261,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     // Add activeStyle property
     if (TableMixin.isMixedInto(this.props.catalogItem)) {
-      const activeStyleId = this.props.catalogItem.activeStyle;
-      terria.activeStyle = this.props.catalogItem.styles.find(
-        (style) => style.id === activeStyleId
-      );
+      terria.activeStyle = { id: this.props.catalogItem.activeStyle };
     }
 
     // If catalog item has featureInfoContext function

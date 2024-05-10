@@ -428,8 +428,7 @@ describe("FeatureInfoSection", function () {
 
       updateModelFromJson(csvItem, CommonStrata.user, { styles });
 
-      const template =
-        "For the active style, id: {{terria.activeStyle.id}}, color.colorColumn: {{terria.activeStyle.color.colorColumn}}.";
+      const template = "The active style id is {{terria.activeStyle.id}}.";
       csvItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -446,10 +445,7 @@ describe("FeatureInfoSection", function () {
       );
       const result = createWithContexts(viewState, section);
       expect(
-        findWithText(
-          result,
-          "For the active style, id: User Style, color.colorColumn: ste_name."
-        ).length
+        findWithText(result, "The active style id is User Style.").length
       ).toEqual(1);
     });
 
