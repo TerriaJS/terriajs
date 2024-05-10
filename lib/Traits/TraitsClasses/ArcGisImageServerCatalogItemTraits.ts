@@ -1,6 +1,10 @@
+import { primitiveArrayTrait } from "terriajs-plugin-api";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -10,6 +14,92 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
+
+export class ArcGisImageServerAvailableBandTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Band ID",
+    description: "The ID of the Band."
+  })
+  id?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Band Name",
+    description: "The name of the band."
+  })
+  name?: string;
+}
+
+export class ArcGisImageServerRenderingRule extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "The name of the raster function."
+  })
+  rasterFunction?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Description",
+    description:
+      'optional for well known functions, default is "Raster" for raster function templates.'
+  })
+  variableName?: string;
+
+  @anyTrait({
+    name: "Arguments",
+    description:
+      "Overwrite the raster function default configuration by specifying argument parameters (argument names and value types are defined by the author of each raster function template and are not discoverable through ArcGis REST API)."
+  })
+  rasterFunctionArguments?: JsonObject;
+}
+
+export class ArcGisImageServerAvailableRasterFunctionTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "The name of the raster function."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Description",
+    description: "The description of the raster function."
+  })
+  description?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Unit",
+    description: "Help text for the raster function"
+  })
+  help?: string;
+}
+
+export class ArcGisImageServerAvailableVariableTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Variable Name",
+    description: "The name of the variable."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Description",
+    description: "The description of the variable."
+  })
+  description?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Unit",
+    description: "The unit of the variable."
+  })
+  unit?: string;
+}
 
 @traitClass({
   description: `TODO`,
@@ -83,10 +173,92 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
   })
   usePreCachedTiles?: boolean;
 
+  @primitiveArrayTrait({
+    name: "Band IDs",
+    description: "The band IDs to use when requesting images.",
+    type: "number"
+  })
+  bandIds?: number[];
+
+  @objectArrayTrait({
+    type: ArcGisImageServerAvailableBandTraits,
+    name: "Available variables",
+    description: "Available bands for the current ImageServer.",
+    idProperty: "id"
+  })
+  availableBands?: ArcGisImageServerAvailableBandTraits[];
+
+  @primitiveTrait({
+    name: "Disable variable selectors",
+    description:
+      "When true, disables the bands selector in the workbench. This will default to true if no bandIds are specified.",
+    type: "boolean"
+  })
+  disableBandsSelector?: boolean;
+
+  @objectTrait({
+    name: "Rendering Rule",
+    description:
+      'The rendering rule to apply to the image service. This must be a JSON object - for example `{"rasterFunction": "RFTAspectColor"}`. Note `allowRasterFunction` must be true for this to be applied.',
+    type: ArcGisImageServerRenderingRule
+  })
+  renderingRule?: ArcGisImageServerRenderingRule;
+
+  @primitiveTrait({
+    name: "Allow Raster Function",
+    description:
+      "If true, then the renderingRule will be applied to the image service. If false, the renderingRule will be ignored. This will default to true if an image service supports raster functions.",
+    type: "boolean"
+  })
+  allowRasterFunction?: boolean;
+
+  @objectArrayTrait({
+    type: ArcGisImageServerAvailableRasterFunctionTraits,
+    name: "Available raster functions",
+    description:
+      "The available raster functions for the ImageServer. Defaults to all raster functions in the service if the server supports raster functions. Note: `allowRasterFunction` must be true. The first raster function in the list will be applied by default.",
+    idProperty: "name"
+  })
+  availableRasterFunctions?: ArcGisImageServerAvailableRasterFunctionTraits[];
+
+  @primitiveTrait({
+    name: "Disable raster functions selectors",
+    description:
+      "When true, disables the dimension selectors in the workbench. This will default to true if the server does not support raster functions.",
+    type: "boolean"
+  })
+  disableRasterFunctionSelectors?: boolean;
+
+  @primitiveTrait({
+    name: "Disable color map selector",
+    description:
+      "When true, disables the color map selector in the workbench. This will default to true if the `rendererRule.rasterFunction` is not `Colormap`.",
+    type: "boolean"
+  })
+  disableColorMapSelector?: boolean;
+
   @primitiveTrait({
     name: "Has Multi-dimensions",
-    description: "If true, then multidimensionalInfo will be fetched.",
+    description:
+      "If true, then multidimensionalInfo will be fetched. This will default to true if the server has multidimensional data.",
     type: "boolean"
   })
   hasMultidimensions?: boolean;
+
+  @objectArrayTrait({
+    type: ArcGisImageServerAvailableVariableTraits,
+    name: "Available variables",
+    description:
+      "The available variables for multidimensional ImageServers. Defaults to all variables in mulidimensionalInfo. Note: `hasMultidimensions` must be true.",
+    idProperty: "name"
+  })
+  availableVariables?: ArcGisImageServerAvailableVariableTraits[];
+
+  @primitiveTrait({
+    name: "Disable variable selectors",
+    description:
+      "When true, disables the variable selectors in the workbench. This will default to true if the server does not have multidimensional data - or if a custom `rendererRule.rasterFunction` has been applied.",
+    type: "boolean"
+  })
+  disableVariableSelectors?: boolean;
 }

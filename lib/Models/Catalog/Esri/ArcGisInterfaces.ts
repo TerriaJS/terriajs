@@ -1,4 +1,3 @@
-import { bool } from "prop-types";
 import { JsonObject } from "../../../Core/Json";
 
 interface DocumentInfo {
@@ -121,6 +120,9 @@ export interface ImageServer {
 
   hasColormap: boolean;
   hasMultidimensions: boolean;
+
+  bandNames?: string[];
+  bandCount?: number;
 }
 
 export interface ImageServerIdentifyResult {
@@ -172,3 +174,108 @@ export interface ImageServerMultidimensionInfo {
     ];
   };
 }
+
+export const ImageServerWellKnownRasterFunctions = [
+  "ArgStatistics",
+  "Arithmetic",
+  "Aspect",
+  "BandArithmetic",
+  "Classify",
+  "Clip",
+  "Colormap",
+  "ColormapToRGB",
+  "Complex",
+  "CompositeBand",
+  "ContrastBrightness",
+  "Convolution",
+  "CreateColorComposite",
+  "Curvature",
+  "ElevationVoidFill",
+  "ExtractBand",
+  "Geometric",
+  "Greyscale",
+  "Identity",
+  "Hillshade",
+  "Local",
+  "Mask",
+  "MLClassify",
+  "NDVI",
+  "Pansharpening",
+  "RasterCalculator",
+  "Recast",
+  "Remap",
+  "Resample",
+  "SegmentMeanShift",
+  "ShadedRelief",
+  "Slope",
+  "Statistics",
+  "StatisticsHistogram",
+  "Stretch",
+  "SurfaceParamFunction",
+  "TasseledCap",
+  "Threshold",
+  "TransposeBits",
+  "UnitConversion",
+  "Vectorfield",
+  "VectorFieldRenderer",
+  "WeightedSum",
+  "WeightedOverlay"
+];
+
+export const ImageServerBuiltInColorRamps = [
+  "Black to White",
+  "Blue Bright",
+  "Blue Light to Dark",
+  "Blue-Green Bright",
+  "Blue-Green Light to Dark",
+  "Brown Light to Dark",
+  "Brown to Blue Green Diverging, Bright",
+  "Brown to Blue Green Diverging, Dark",
+  "Coefficient Bias",
+  "Cold to Hot Diverging",
+  "Condition Number",
+  "Cyan to Purple",
+  "Cyan-Light to Blue-Dark Distance",
+  "Elevation #1",
+  "Elevation #2",
+  "Errors",
+  "Gray Light to Dark",
+  "Green Bright",
+  "Green Light to Dark",
+  "Green to Blue",
+  "Orange Bright",
+  "Orange Light to Dark",
+  "Partial Spectrum",
+  "Partial Spectrum 1 Diverging",
+  "Partial Spectrum 2 Diverging",
+  "Pink to YellowGreen Diverging, Bright",
+  "Pink to YellowGreen Diverging, Dark",
+  "Precipitation",
+  "Prediction",
+  "Purple Bright",
+  "Purple to Green Diverging, Bright",
+  "Purple to Green Diverging, Dark",
+  "Purple-Blue Bright",
+  "Purple-Blue Light to Dark",
+  "Purple-Red Bright",
+  "Purple-Red Light to Dark",
+  "Red Bright",
+  "Red Light to Dark",
+  "Red to Blue Diverging, Bright",
+  "Red to Blue Diverging, Dark",
+  "Red to Green",
+  "Red to Green Diverging, Bright",
+  "Red to Green Diverging, Dark",
+  "Slope",
+  "Spectrum-Full Bright",
+  "Spectrum-Full Dark",
+  "Spectrum-Full Light",
+  "Surface",
+  "Temperature",
+  "White to Black",
+  "Yellow to Dark Red",
+  "Yellow to Green to Dark Blue",
+  "Yellow to Red",
+  "Yellow-Green Bright",
+  "Yellow-Green Light to Dark"
+];
