@@ -75,21 +75,21 @@ export class WebMapServiceAvailablePaletteTraits extends ModelTraits {
     name: "Style Name",
     description: "The name of the style."
   })
-  name?: string;
+  name: string = "default";
 
   @primitiveTrait({
     type: "string",
     name: "Title",
     description: "The title of the style."
   })
-  title?: string;
+  title: string = "default";
 
   @primitiveTrait({
     type: "string",
     name: "Abstract",
     description: "The abstract describing the style."
   })
-  abstract?: string;
+  abstract: string = "default";
 }
 
 export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
@@ -175,6 +175,20 @@ export class GetFeatureInfoFormat extends ModelTraits {
       "The info format to request from the WMS server.  This is usually a MIME type such as 'application/json' or text/xml'.  If this parameter is not specified, the provider will request 'json' using 'application/json', 'xml' using 'text/xml', 'html' using 'text/html', and 'text' using 'text/plain'."
   })
   format?: string;
+}
+
+@traitClass({})
+export class NcWMSGetMetadataStratumTraits extends mixTraits(
+  UrlTraits,
+  MappableTraits
+) {
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Available Palettes",
+    description:
+      "Used to store the available palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
+  })
+  availablePalettes?: WebMapServiceAvailablePaletteTraits[] = [];
 }
 
 @traitClass({
@@ -355,14 +369,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "palette is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is 'default'."
   })
   palette?: string = "default";
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Available Palettes",
-    description:
-      "Used to store the available palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
-  })
-  availablePalettes?: WebMapServiceAvailablePaletteTraits[] = [];
 
   @primitiveTrait({
     type: "string",

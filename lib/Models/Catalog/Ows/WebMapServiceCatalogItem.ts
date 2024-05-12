@@ -227,7 +227,9 @@ class WebMapServiceCatalogItem
 
   protected async forceLoadMetadata(): Promise<void> {
     if (this.isNcWMS) {
-      const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(this);
+      const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(
+        this.getPalettesUrl()
+      );
 
       runInAction(() => {
         this.strata.set(
@@ -395,6 +397,20 @@ class WebMapServiceCatalogItem
       uri.addQuery("time", time);
     }
     return uri.toString();
+  }
+
+  getPalettesUrl() {
+    const url = this.uri!.clone()
+      .setSearch({
+        service: "WMS",
+        version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
+        request: "GetMetadata",
+        item: "layerDetails",
+        layerName: this.layersArray[0]
+      })
+      .toString();
+
+    return proxyCatalogItemUrl(this, url);
   }
 
   @computed
@@ -633,53 +649,59 @@ class WebMapServiceCatalogItem
     }
   );
 
-  @computed
-  get paletteDimensions(): SelectableDimensionEnum[] {
-    // if (!this.isNcWMS || !this.showPalettes) {
-    //   return [];
-    // }
+  // @computed
+  // get paletteDimensions(): SelectableDimensionEnum[] {
+  //   // if (!this.isNcWMS || !this.showPalettes) {
+  //   //   return [];
+  //   // }
 
-    // fetch ncWMS stratum
-    const ncWMSGetMetadataStratum = this.strata.get(
-      NcWMSGetMetadataStratum.stratumName
-    ) as NcWMSGetMetadataStratum;
+  //   // fetch ncWMS stratum
+  //   const ncWMSGetMetadataStratum = this.strata.get(
+  //     NcWMSGetMetadataStratum.stratumName
+  //   ) as unknown as NcWMSGetMetadataStratum;
 
-    console.log(ncWMSGetMetadataStratum);
+  //   if (ncWMSGetMetadataStratum) {
+  //     console.log(ncWMSGetMetadataStratum);
 
-    const options: { name: string | undefined; id: string | undefined }[] = [];
+  //     const options: { name: string | undefined; id: string | undefined }[] =
+  //       [];
 
-    if (this.availablePalettes) {
-      this.availablePalettes.map((palette) => {
-        options.push({
-          name: palette.name,
-          id: palette.uniqueId
-        });
-      });
-    }
+  //     // if (this.availablePalettes) {
+  //     //   this.availablePalettes.map((palette) => {
+  //     //     options.push({
+  //     //       name: palette.name,
+  //     //       id: palette.uniqueId
+  //     //     });
+  //     //   });
+  //     }
 
-    return [
-      {
-        name: "Palettes",
-        id: `${this.uniqueId}-palettes`,
-        options,
-        selectedId: this.palette,
-        setDimensionValue: (
-          stratumId: string,
-          newPalette: string | undefined
-        ) => {
-          //if (this.stylesArray[0]) {
-          runInAction(() => {
-            this.setTrait(stratumId, "palette", newPalette);
-            const currentStyle = this.stylesArray[0]
-              ? this.stylesArray[0]
-              : "default";
-            const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
-            this.setTrait(stratumId, "styles", newStyles);
-          });
-        }
-      }
-    ];
-  }
+  //     // return [
+  //     //   {
+  //     //     name: "Palettes",
+  //     //     id: `${this.uniqueId}-palettes`,
+  //     //     options,
+  //     //     selectedId: this.palette,
+  //     //     setDimensionValue: (
+  //     //       stratumId: string,
+  //     //       newPalette: string | undefined
+  //     //     ) => {
+  //     //       //if (this.stylesArray[0]) {
+  //     //       runInAction(() => {
+  //     //         this.setTrait(stratumId, "palette", newPalette);
+  //     //         const currentStyle = this.stylesArray[0]
+  //     //           ? this.stylesArray[0]
+  //     //           : "default";
+  //     //         const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
+  //     //         this.setTrait(stratumId, "styles", newStyles);
+  //     //       });
+  //     //     }
+  //     //   }
+  //     // ];
+  //     //return []
+  //   }
+
+  //   return any []
+  // }
 
   // @computed
   // get styleSelectableDimensions(): SelectableDimensionEnum[] {
@@ -898,13 +920,13 @@ class WebMapServiceCatalogItem
       return super.selectableDimensions;
     }
 
-    const paletteDimensions = this.paletteDimensions;
+    // const paletteDimensions = this.paletteDimensions;
 
     return filterOutUndefined([
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
-      ...this.styleSelectableDimensions,
-      ...paletteDimensions
+      ...this.styleSelectableDimensions
+      //...paletteDimensions
     ]);
   }
 

@@ -2,6 +2,7 @@ import { computed, makeObservable, runInAction } from "mobx";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import WebMapServiceCatalogItemTraits, {
+  NcWMSGetMetadataStratumTraits,
   WebMapServiceAvailablePaletteTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
@@ -13,89 +14,22 @@ import { SelectableDimensionEnum } from "../../SelectableDimensions/SelectableDi
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import isDefined from "../../../Core/isDefined";
 import StratumOrder from "../../Definition/StratumOrder";
+import { CommonStrata } from "terriajs-plugin-api";
 
 export default class NcWMSGetMetadataStratum extends LoadableStratum(
-  WebMapServiceCatalogItemTraits
+  NcWMSGetMetadataStratumTraits
 ) {
   static stratumName = "ncWMSGetMetadata";
-  static availablePalettes: Complete<{
-    name?: string | undefined;
-    title?: string | undefined;
-    abstract?: string | undefined;
-  }>[];
-
-  static async load(
-    catalogItem: WebMapServiceCatalogItem,
-    availablePalettes?: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[]
-  ): Promise<NcWMSGetMetadataStratum> {
-    const paletteResult: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] =
-      [];
-
-    const url = catalogItem
-      .uri!.clone()
-      .setSearch({
-        service: "WMS",
-        version: catalogItem.useWmsVersion130 ? "1.3.0" : "1.1.1",
-        request: "GetMetadata",
-        item: "layerDetails",
-        layerName: catalogItem.layersArray[0]
-      })
-      .toString();
-
-    if (url) {
-      const paletteUrl = proxyCatalogItemUrl(catalogItem, url);
-      const response = await fetch(paletteUrl);
-      const data = await response.json();
-      const palettes = data.palettes;
-      palettes.forEach((palette: any) => {
-        paletteResult.push({
-          name: palette,
-          title: palette,
-          abstract: palette
-        });
-      });
-    }
-
-    const stratum = new NcWMSGetMetadataStratum(catalogItem, availablePalettes);
-    console.log(stratum);
-    return stratum;
-  }
-
-  constructor(
-    readonly catalogItem: WebMapServiceCatalogItem,
-    availablePalettes?: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[]
-  ) {
+  static palettes: WebMapServiceAvailablePaletteTraits[] = [];
+  constructor(readonly url: string) {
     super();
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new NcWMSGetMetadataStratum(
-      model as WebMapServiceCatalogItem,
-      this.availablePalettes
-    ) as this;
-  }
-
-  async fetchPalettes(): Promise<
-    StratumFromTraits<WebMapServiceAvailablePaletteTraits>[]
-  > {
-    const paletteResult: StratumFromTraits<WebMapServiceAvailablePaletteTraits>[] =
-      [];
-
-    const url = this.catalogItem
-      .uri!.clone()
-      .setSearch({
-        service: "WMS",
-        version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
-        request: "GetMetadata",
-        item: "layerDetails",
-        layerName: this.catalogItem.layersArray[0]
-      })
-      .toString();
-
+  static async load(url: string): Promise<NcWMSGetMetadataStratum> {
+    const paletteResult: WebMapServiceAvailablePaletteTraits[] = [];
     if (url) {
-      const paletteUrl = proxyCatalogItemUrl(this.catalogItem, url);
-      const response = await fetch(paletteUrl);
+      const response = await fetch(url);
       const data = await response.json();
       const palettes = data.palettes;
       palettes.forEach((palette: any) => {
@@ -107,7 +41,21 @@ export default class NcWMSGetMetadataStratum extends LoadableStratum(
       });
     }
 
-    return paletteResult;
+    NcWMSGetMetadataStratum.palettes = paletteResult.map((palette) => ({
+      name: palette.name,
+      title: palette.title,
+      abstract: palette.abstract
+    })) as Complete<WebMapServiceAvailablePaletteTraits>[];
+
+    const nc = new NcWMSGetMetadataStratum(url);
+
+    console.log(nc);
+
+    return nc;
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new NcWMSGetMetadataStratum(this.url) as this;
   }
 }
 
