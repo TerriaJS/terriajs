@@ -86,6 +86,9 @@ describe("ItemSearchTool", function () {
   it("initializes an describes the parameters when mounted", async function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
+    // FIXME: the await triggers the warning
+    //   "Do not await the result of calling act(...) with sync logic, it is not a Promise."
+    //   but removing the await makes the test for describeParameters fail.
     await act(() => {
       rendered = render({
         item,
@@ -188,6 +191,6 @@ function renderAndLoad(
 async function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
   const searchForm = root.findByType("form");
   expect(searchForm).toBeDefined();
-  await act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
+  act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
   return searchForm;
 }
