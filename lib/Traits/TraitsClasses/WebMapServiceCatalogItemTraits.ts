@@ -178,17 +178,13 @@ export class GetFeatureInfoFormat extends ModelTraits {
 }
 
 @traitClass({})
-export class NcWMSGetMetadataStratumTraits extends mixTraits(
-  UrlTraits,
-  MappableTraits
-) {
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Available Palettes",
-    description:
-      "Used to store the available palettes available for a layer. This is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is ['default']."
+export class NcWMSGetMetadataStratumTraits extends mixTraits(MappableTraits) {
+  @primitiveTrait({
+    name: "Item ID",
+    description: "The ID of the portal item.",
+    type: "string"
   })
-  availablePalettes?: WebMapServiceAvailablePaletteTraits[] = [];
+  itemId?: string;
 }
 
 @traitClass({

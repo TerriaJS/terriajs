@@ -20,42 +20,42 @@ export default class NcWMSGetMetadataStratum extends LoadableStratum(
   NcWMSGetMetadataStratumTraits
 ) {
   static stratumName = "ncWMSGetMetadata";
-  static palettes: WebMapServiceAvailablePaletteTraits[] = [];
-  constructor(readonly url: string) {
+
+  constructor(
+    readonly url: string,
+    readonly palettes: WebMapServiceAvailablePaletteTraits[] = []
+  ) {
     super();
     makeObservable(this);
   }
 
-  static async load(url: string): Promise<NcWMSGetMetadataStratum> {
+  static async load(
+    url: string,
+    palettes?: WebMapServiceAvailablePaletteTraits[]
+  ): Promise<NcWMSGetMetadataStratum> {
     const paletteResult: WebMapServiceAvailablePaletteTraits[] = [];
     if (url) {
       const response = await fetch(url);
       const data = await response.json();
-      const palettes = data.palettes;
-      palettes.forEach((palette: any) => {
+      const npalettes = data.palettes;
+      npalettes.forEach((palette: any) => {
         paletteResult.push({
           name: palette,
           title: palette,
           abstract: palette
         });
       });
+
+      palettes = paletteResult; // Initialize the 'palettes' array if it is undefined
     }
 
-    NcWMSGetMetadataStratum.palettes = paletteResult.map((palette) => ({
-      name: palette.name,
-      title: palette.title,
-      abstract: palette.abstract
-    })) as Complete<WebMapServiceAvailablePaletteTraits>[];
-
-    const nc = new NcWMSGetMetadataStratum(url);
-
-    console.log(nc);
+    const nc = new NcWMSGetMetadataStratum(url, palettes);
 
     return nc;
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new NcWMSGetMetadataStratum(this.url) as this;
+    return new NcWMSGetMetadataStratum(this.url, this.palettes) as this;
   }
 }
 

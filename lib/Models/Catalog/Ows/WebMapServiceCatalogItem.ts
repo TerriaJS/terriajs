@@ -649,126 +649,55 @@ class WebMapServiceCatalogItem
     }
   );
 
-  // @computed
-  // get paletteDimensions(): SelectableDimensionEnum[] {
-  //   // if (!this.isNcWMS || !this.showPalettes) {
-  //   //   return [];
-  //   // }
+  @computed
+  get paletteDimensions(): SelectableDimensionEnum[] {
+    if (!this.isNcWMS || !this.showPalettes) {
+      return [];
+    }
 
-  //   // fetch ncWMS stratum
-  //   const ncWMSGetMetadataStratum = this.strata.get(
-  //     NcWMSGetMetadataStratum.stratumName
-  //   ) as unknown as NcWMSGetMetadataStratum;
+    // fetch ncWMS stratum
+    const ncWMSGetMetadataStratum = this.strata.get(
+      NcWMSGetMetadataStratum.stratumName
+    ) as unknown as NcWMSGetMetadataStratum;
 
-  //   if (ncWMSGetMetadataStratum) {
-  //     console.log(ncWMSGetMetadataStratum);
+    if (ncWMSGetMetadataStratum) {
+      const options: { name: string | undefined; id: string | undefined }[] =
+        [];
 
-  //     const options: { name: string | undefined; id: string | undefined }[] =
-  //       [];
+      if (ncWMSGetMetadataStratum.palettes) {
+        ncWMSGetMetadataStratum.palettes.map((palette) => {
+          options.push({
+            name: palette.name,
+            id: palette.name
+          });
+        });
+      }
 
-  //     // if (this.availablePalettes) {
-  //     //   this.availablePalettes.map((palette) => {
-  //     //     options.push({
-  //     //       name: palette.name,
-  //     //       id: palette.uniqueId
-  //     //     });
-  //     //   });
-  //     }
-
-  //     // return [
-  //     //   {
-  //     //     name: "Palettes",
-  //     //     id: `${this.uniqueId}-palettes`,
-  //     //     options,
-  //     //     selectedId: this.palette,
-  //     //     setDimensionValue: (
-  //     //       stratumId: string,
-  //     //       newPalette: string | undefined
-  //     //     ) => {
-  //     //       //if (this.stylesArray[0]) {
-  //     //       runInAction(() => {
-  //     //         this.setTrait(stratumId, "palette", newPalette);
-  //     //         const currentStyle = this.stylesArray[0]
-  //     //           ? this.stylesArray[0]
-  //     //           : "default";
-  //     //         const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
-  //     //         this.setTrait(stratumId, "styles", newStyles);
-  //     //       });
-  //     //     }
-  //     //   }
-  //     // ];
-  //     //return []
-  //   }
-
-  //   return any []
-  // }
-
-  // @computed
-  // get styleSelectableDimensions(): SelectableDimensionEnum[] {
-  //   return this.availableStyles.map((layer, layerIndex) => {
-  //     let name = "Styles";
-
-  //     // If multiple layers -> prepend layer name to name
-  //     if (this.availableStyles.length > 1) {
-  //       // Attempt to get layer title from GetCapabilitiesStratum
-  //       const layerTitle =
-  //         layer.layerName &&
-  //         (
-  //           this.strata.get(
-  //             GetCapabilitiesMixin.getCapabilitiesStratumName
-  //           ) as WebMapServiceCapabilitiesStratum
-  //         ).capabilitiesLayers.get(layer.layerName)?.Title;
-
-  //       name = `${
-  //         layerTitle || layer.layerName || `Layer ${layerIndex + 1}`
-  //       } styles`;
-  //     }
-
-  //     const options = filterOutUndefined(
-  //       layer.styles.map(function (s) {
-  //         if (isDefined(s.name)) {
-  //           return {
-  //             name: s.title || s.name || "",
-  //             id: s.name as string
-  //           };
-  //         }
-  //       })
-  //     );
-
-  //     // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
-  //     // The `styles` parameter is CSV, a style for each layer
-  //     const selectedId = this.styles?.split(",")?.[layerIndex];
-
-  //     return {
-  //       name,
-  //       id: `${this.uniqueId}-${layer.layerName}-styles`,
-  //       options,
-  //       selectedId,
-  //       setDimensionValue: (
-  //         stratumId: string,
-  //         newStyle: string | undefined
-  //       ) => {
-  //         if (!newStyle) return;
-  //         runInAction(() => {
-  //           const styles = this.styleSelectableDimensions.map(
-  //             (style) => style.selectedId || ""
-  //           );
-  //           styles[layerIndex] = newStyle;
-  //           this.setTrait(stratumId, "styles", styles.join(","));
-  //         });
-  //       },
-  //       // There is no way of finding out default style if no style has been selected :(
-  //       // To use the default style, we just send empty "styles" to WMS server
-  //       // But if the server doesn't support GetLegendGraphic, then we can't request the default legend
-  //       // Therefore - we only add the "Default style" / undefined option if supportsGetLegendGraphic is true
-  //       allowUndefined: this.supportsGetLegendGraphic && options.length > 1,
-  //       undefinedLabel: i18next.t(
-  //         "models.webMapServiceCatalogItem.defaultStyleLabel"
-  //       ),
-  //       disable: this.isShowingDiff
-  //     };
-  //   });
-  // }
+      return [
+        {
+          name: "Palettes",
+          id: `${this.uniqueId}-palettes`,
+          options,
+          selectedId: this.palette,
+          setDimensionValue: (
+            stratumId: string,
+            newPalette: string | undefined
+          ) => {
+            //if (this.stylesArray[0]) {
+            runInAction(() => {
+              this.setTrait(stratumId, "palette", newPalette);
+              const currentStyle = this.stylesArray[0]
+                ? this.stylesArray[0]
+                : "default";
+              const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
+              this.setTrait(stratumId, "styles", newStyles);
+            });
+          }
+        }
+      ];
+    }
+    return [];
+  }
 
   @computed
   get styleSelectableDimensions(): SelectableDimensionEnum[] {
@@ -920,13 +849,13 @@ class WebMapServiceCatalogItem
       return super.selectableDimensions;
     }
 
-    // const paletteDimensions = this.paletteDimensions;
+    const paletteDimensions = this.paletteDimensions;
 
     return filterOutUndefined([
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
-      ...this.styleSelectableDimensions
-      //...paletteDimensions
+      ...this.styleSelectableDimensions,
+      ...paletteDimensions
     ]);
   }
 
