@@ -1,20 +1,11 @@
-import { computed, makeObservable, runInAction } from "mobx";
+import { makeObservable } from "mobx";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import WebMapServiceCatalogItemTraits, {
+import {
   NcWMSGetMetadataStratumTraits,
-  WebMapServiceAvailablePaletteTraits,
-  WebMapServiceAvailableStyleTraits
+  WebMapServiceAvailablePaletteTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import UrlReference from "../CatalogReferences/UrlReference";
-import { Complete } from "../../../Core/TypeModifiers";
-import StratumFromTraits from "../../Definition/StratumFromTraits";
-import { SelectableDimensionEnum } from "../../SelectableDimensions/SelectableDimensions";
-import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import isDefined from "../../../Core/isDefined";
 import StratumOrder from "../../Definition/StratumOrder";
-import { CommonStrata } from "terriajs-plugin-api";
 
 export default class NcWMSGetMetadataStratum extends LoadableStratum(
   NcWMSGetMetadataStratumTraits
