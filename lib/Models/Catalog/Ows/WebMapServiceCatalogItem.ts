@@ -849,13 +849,11 @@ class WebMapServiceCatalogItem
       return super.selectableDimensions;
     }
 
-    const paletteDimensions = this.paletteDimensions;
-
     return filterOutUndefined([
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions,
-      ...paletteDimensions
+      ...this.paletteDimensions
     ]);
   }
 

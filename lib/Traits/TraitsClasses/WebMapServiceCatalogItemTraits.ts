@@ -177,7 +177,6 @@ export class GetFeatureInfoFormat extends ModelTraits {
   format?: string;
 }
 
-@traitClass({})
 export class NcWMSGetMetadataStratumTraits extends mixTraits(MappableTraits) {
   @primitiveTrait({
     name: "Item ID",

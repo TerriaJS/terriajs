@@ -24,25 +24,19 @@ export default class NcWMSGetMetadataStratum extends LoadableStratum(
     url: string,
     palettes?: WebMapServiceAvailablePaletteTraits[]
   ): Promise<NcWMSGetMetadataStratum> {
-    const paletteResult: WebMapServiceAvailablePaletteTraits[] = [];
     if (url) {
       const response = await fetch(url);
       const data = await response.json();
-      const npalettes = data.palettes;
-      npalettes.forEach((palette: any) => {
-        paletteResult.push({
-          name: palette,
-          title: palette,
-          abstract: palette
-        });
-      });
+      const paletteResult = data.palettes.map((palette: any) => ({
+        name: palette,
+        title: palette,
+        abstract: palette
+      }));
 
-      palettes = paletteResult; // Initialize the 'palettes' array if it is undefined
+      palettes = paletteResult;
     }
 
-    const nc = new NcWMSGetMetadataStratum(url, palettes);
-
-    return nc;
+    return new NcWMSGetMetadataStratum(url, palettes);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
