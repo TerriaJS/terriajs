@@ -636,7 +636,7 @@
     "download": "Download",
     "showItemInChart": "Show {{value}} in chart",
     "loading": "Loading chart data...",
-    "noData": "No chartable data found."
+    "noData": "No chart data found."
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",

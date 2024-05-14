@@ -62,8 +62,7 @@ export default class TableChartStyleTraits extends ModelTraits {
     description:
       "Lines on the chart, each of which is formed by plotting a column as the Y-axis.",
     type: TableChartLineStyleTraits,
-    idProperty: "yAxisColumn",
-    merge: MergeStrategy.TopStratum
+    idProperty: "yAxisColumn"
   })
   lines?: TableChartLineStyleTraits[];
 }

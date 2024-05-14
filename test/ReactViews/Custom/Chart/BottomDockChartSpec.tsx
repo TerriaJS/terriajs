@@ -14,11 +14,12 @@ describe("BottomDockChart", function () {
     chartItems = [
       {
         item: {} as any,
+        id: "zzz",
         name: "zzz",
         categoryName: "ZZZ",
         key: `key-zzz`,
         type: "line",
-        xAxis: { scale: "time" },
+        xAxis: { name: "Time", scale: "time" },
         points: [{ x: 10, y: 10 }],
         domain: { x: [0, 100], y: [0, 50] },
         units: "time",
@@ -30,11 +31,12 @@ describe("BottomDockChart", function () {
       } as ChartItem,
       {
         item: {} as any,
+        id: "aaa",
         name: "aaa",
         categoryName: "AAA",
         key: `key-aaa`,
         type: "line",
-        xAxis: { scale: "time" },
+        xAxis: { name: "Time", scale: "time" },
         points: [{ x: 10, y: 10 }],
         domain: { x: [0, 100], y: [0, 50] },
         units: "time",

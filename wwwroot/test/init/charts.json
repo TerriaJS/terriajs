@@ -3,8 +3,7 @@
     {
       "name": "Chart examples",
       "type": "group",
-      "isOpen": true,
-      "items": [
+      "members": [
         {
           "name": "Power Stations",
           "type": "csv",
@@ -15,13 +14,17 @@
           "type": "csv",
           "url": "test/powergen_no_time.csv",
           "cacheDuration": "5m",
-          "featureInfoTemplate": "<h3>{{Station Name}} ({{DUID}})</h3><p><strong>{{Participant}}</strong><div><strong>{{Current Output (MW)}}MW</strong> at {{Most Recent Output Time (AEST)}}</div><div><strong>{{Current % of Reg Cap}}%</strong> of {{Reg Cap (MW)}}MW registered capacity</div><div><strong>{{Current % of Max Cap}}%</strong> of {{Max Cap (MW)}}MW maximum capacity</div></p><table><tbody><tr><td>Category</td><td class='strong'>{{Category}}</td></tr><tr><td>Classification</td><td class='strong'>{{Classification}}</td></tr><tr><td>Fuel Source</td><td class='strong'>{{Fuel Source - Primary}} ({{Fuel Source - Descriptor}})</td></tr><tr><td>Technology Type</td><td class='strong'>{{Technology Type - Primary}} ({{Technology Type - Descriptor}})</td></tr><tr><td>Physical Unit No.</td><td class='strong'>{{Physical Unit No_}}</td></tr><tr><td>Aggregation</td><td class='strong'>{{Aggregation}}</td></tr><tr><td>Unit Size (MW)</td><td class='strong'>{{Unit Size (MW)}}</td></tr><tr><td>Power generation</td><td><chart sources='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M' source-names='1d,5d,30d,3m' downloads='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1Y' download-names='1d,5d,30d,3m,1y' preview-x-label='Last 24 hours' column-names='Time,Power Generation' column-units='Date,MW'></chart></td></tr></tbody></table>"
+          "featureInfoTemplate": {
+            "template": "<h3>{{Station Name}} ({{DUID}})</h3><p><strong>{{Participant}}</strong><div><strong>{{Current Output (MW)}}MW</strong> at {{Most Recent Output Time (AEST)}}</div><div><strong>{{Current % of Reg Cap}}%</strong> of {{Reg Cap (MW)}}MW registered capacity</div><div><strong>{{Current % of Max Cap}}%</strong> of {{Max Cap (MW)}}MW maximum capacity</div></p><table><tbody><tr><td>Category</td><td class='strong'>{{Category}}</td></tr><tr><td>Classification</td><td class='strong'>{{Classification}}</td></tr><tr><td>Fuel Source</td><td class='strong'>{{Fuel Source - Primary}} ({{Fuel Source - Descriptor}})</td></tr><tr><td>Technology Type</td><td class='strong'>{{Technology Type - Primary}} ({{Technology Type - Descriptor}})</td></tr><tr><td>Physical Unit No.</td><td class='strong'>{{Physical Unit No_}}</td></tr><tr><td>Aggregation</td><td class='strong'>{{Aggregation}}</td></tr><tr><td>Unit Size (MW)</td><td class='strong'>{{Unit Size (MW)}}</td></tr><tr><td>Power generation</td><td><chart sources='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M' source-names='1d,5d,30d,3m' downloads='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1Y' download-names='1d,5d,30d,3m,1y' preview-x-label='Last 24 hours' column-names='Time,Power Generation' column-units='Date,MW'></chart></td></tr></tbody></table>"
+          }
         },
         {
           "name": "Star Stations",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
-          "featureInfoTemplate": "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          "featureInfoTemplate": {
+            "template": "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='Series 1'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          }
         },
         {
           "name": "Sheep Stations",
@@ -29,7 +32,7 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate": {
             "name": "Number {{value}}",
-            "template": "<p>All sheep stations have the same time series plot.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+            "template": "<p>All sheep stations have the same time series plot.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='Capacity'></chart>"
           }
         },
         {
@@ -42,23 +45,17 @@
           "name": "XY Plot with units and yAxisMax",
           "type": "csv",
           "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
-          "tableStyle": {
-            "columns": {
-              "y": {
-                "yAxisMax": 6,
-                "units": "km/hr"
-              }
+          "columns": [
+            {
+              "name": "y",
+              "units": "km/hr"
             }
-          }
+          ]
         },
         {
           "name": "XY Plot of plant height",
           "type": "csv",
-          "tableStyle": {
-            "xAxis": "z",
-            "dataVariable": "plant height"
-          },
-          "data": "y,z,plant height\n1,2,3\n4,5,6\n7,8,9\n10,12,2\n"
+          "csvString": "y,z,plant height\n1,2,3\n4,5,6\n7,8,9\n10,12,2\n"
         },
         {
           "name": "Time series",

@@ -376,14 +376,16 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           : xColumn.valuesAsNumbers.values;
 
       const xAxis: ChartAxis = {
+        name: xColumn.title || xColumn.name,
         scale: xColumn.type === TableColumnType.time ? "time" : "linear",
         units: xColumn.units
       };
 
       return filterOutUndefined(
         lines.map((line) => {
+          const yColumnId = line.yAxisColumn;
           const yColumn = this.findColumnByName(line.yAxisColumn);
-          if (yColumn === undefined) {
+          if (yColumnId === undefined || yColumn === undefined) {
             return undefined;
           }
           const yValues = yColumn.valuesAsNumbers.values;
@@ -403,16 +405,17 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
+            id: yColumnId,
             item: this,
             name: line.name ?? yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
+            units: yColumn.units,
             glyphStyle: this.chartGlyphStyle ?? "circle",
             xAxis,
             points,
             domain: calculateDomain(points),
-            units: yColumn.units,
             isSelectedInWorkbench: line.isSelectedInWorkbench,
             showInChartPanel: this.show && line.isSelectedInWorkbench,
             updateIsSelectedInWorkbench: (isSelected: boolean) => {

@@ -35,7 +35,7 @@ interface IStyledButtonProps extends IButtonProps {
   [key: string]: any;
 }
 
-const StyledButton = styled.button<IStyledButtonProps>`
+export const StyledButton = styled.button<IStyledButtonProps>`
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;

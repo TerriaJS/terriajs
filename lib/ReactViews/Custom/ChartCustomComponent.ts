@@ -325,9 +325,11 @@ export default abstract class ChartCustomComponent<
       chartElements.push(
         React.createElement(Chart, {
           key: "chart",
-          terria: context.terria,
           item: chartItem,
           xAxisLabel: attrs.previewXLabel,
+          // Currently implementation supports showing only one column in the
+          // feature info panel chart
+          yColumn: attrs.yColumns?.[0],
           height: 110
           // styling: attrs.styling,
           // highlightX: attrs.highlightX,
