@@ -6,6 +6,7 @@
 
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 - Feature info template has access to activeStyle of item having TableTraits.
+- Updated a few dependencies to fix security warnings: `underscore`, `visx`, `shpjs`, `resolve-uri-loader`, `svg-sprite-loader`
 
 #### 8.7.1 - 2024-04-16
 
