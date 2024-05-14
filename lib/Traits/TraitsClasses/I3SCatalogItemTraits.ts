@@ -1,14 +1,7 @@
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import I3STraits from "./I3STraits";
-import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
-import PlaceEditorTraits from "./PlaceEditorTraits";
-import SearchableItemTraits from "./SearchableItemTraits";
-import ShadowTraits from "./ShadowTraits";
-import TransformationTraits from "./TransformationTraits";
-import UrlTraits from "./UrlTraits";
+import Cesium3DTilesCatalogItemTraits from "./Cesium3DTilesCatalogItemTraits";
 
 @traitClass({
   description: `Creates an I3S item in the catalog from an slpk.`,
@@ -19,13 +12,6 @@ import UrlTraits from "./UrlTraits";
   }
 })
 export default class I3SCatalogItemTraits extends mixTraits(
-  SearchableItemTraits,
-  PlaceEditorTraits,
-  TransformationTraits,
-  FeatureInfoUrlTemplateTraits,
-  MappableTraits,
-  UrlTraits,
-  CatalogMemberTraits,
-  ShadowTraits,
+  Cesium3DTilesCatalogItemTraits,
   I3STraits
 ) {}
