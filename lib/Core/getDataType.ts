@@ -180,6 +180,10 @@ const builtinLocalDataTypes: LocalDataType[] = [
     value: "shp",
     name: "core.dataType.shp",
     extensions: ["zip"]
+  },
+  {
+    value: "i3s",
+    name: "core.dataType.i3s"
   }
   // Add next builtin local upload type
 ];

@@ -23,6 +23,7 @@ import {
   OptionsTraits,
   FilterTraits
 } from "../../../../lib/Traits/TraitsClasses/Cesium3dTilesTraits";
+import { showExpressionFromFilters } from "../../../../lib/ModelMixins/Cesium3dTilesMixin";
 
 describe("Cesium3DTilesCatalogItemSpec", function () {
   let item: Cesium3DTilesCatalogItem;
@@ -60,7 +61,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           createStratumLevelFilter(-2, 11, -1, 10)
         ])
       );
-      const show: any = item.showExpressionFromFilters;
+      const show: any = showExpressionFromFilters(item);
       expect(show).toBe(
         "Number(${feature['stratumlev']}) >= -1 && Number(${feature['stratumlev']}) <= 10"
       );
@@ -73,7 +74,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             createStratumLevelFilter(-2, 11, -2, 11)
           ])
         );
-        const show: any = item.showExpressionFromFilters;
+        const show: any = showExpressionFromFilters(item);
         expect(show).toBeUndefined();
       });
     });
@@ -128,7 +129,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
         style = item.cesiumTileStyle;
         await item.loadMapItems();
 
-        expect(style.show._expression).toBe(item.showExpressionFromFilters);
+        expect(style.show._expression).toBe(showExpressionFromFilters(item));
       });
     });
   });
