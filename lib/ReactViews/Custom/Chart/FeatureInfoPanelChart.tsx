@@ -2,7 +2,7 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { useParentSize } from "@visx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
-import { computed, makeObservable, trace } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,9 +33,11 @@ interface Margin {
 
 const defaultMargin: Margin = { top: 5, left: 5, right: 5, bottom: 5 };
 
+/**
+ * Chart component for feature info panel popup
+ */
 const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
   observer((props) => {
-    trace();
     const [loadingFailed, setLoadingFailed] = useState(false);
     const { t } = useTranslation();
 
@@ -44,7 +46,13 @@ const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
     const height = props.height || Math.max(parentSize.height, 200) || 0;
 
     const catalogItem = props.item;
-    const chartItem = findLineChartItem(catalogItem, props.yColumn);
+
+    // If a yColumn is specified, use it if it is of line type, otherwise use
+    // the first line type chart item.
+    let chartItem = props.yColumn
+      ? catalogItem.chartItems.find((it) => it.id === props.yColumn)
+      : catalogItem.chartItems.find(isLineType);
+    chartItem = chartItem && isLineType(chartItem) ? chartItem : undefined;
 
     const notChartable = !ChartableMixin.isMixedInto(catalogItem);
     const isLoading =
@@ -53,6 +61,7 @@ const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
       catalogItem.isLoadingMapItems;
     const noData = !chartItem || chartItem.points.length === 0;
 
+    // Text to show when chart is not ready or available
     const chartStatus = notChartable
       ? "chart.noData"
       : isLoading
@@ -99,16 +108,8 @@ const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
     );
   });
 
-function findLineChartItem(
-  catalogItem: CatalogItemType,
-  yColumn: string | undefined
-) {
-  return catalogItem.chartItems.find(
-    (it) =>
-      (yColumn ? it.id === yColumn : true) &&
-      (it.type === "line" || it.type === "lineAndPoint")
-  );
-}
+const isLineType = (chartItem: ChartItem) =>
+  chartItem.type === "line" || chartItem.type === "lineAndPoint";
 
 interface ChartPropsType {
   width: number;
@@ -119,6 +120,9 @@ interface ChartPropsType {
   xAxisLabel?: string;
 }
 
+/**
+ * Private Chart component that renders the SVG chart
+ */
 @observer
 class Chart extends React.Component<ChartPropsType> {
   xAxisHeight = 30;
@@ -235,7 +239,7 @@ class Chart extends React.Component<ChartPropsType> {
   }
 }
 
-const ChartStatusText = styled.div<{ width: number; height: number }>`
+export const ChartStatusText = styled.div<{ width: number; height: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,12 +253,15 @@ const defaultChartLabel = (opts: {
   yName: string;
   yUnits?: string;
 }) =>
-  `${withUnits(opts.xName, opts.xUnits)} x ${withUnits(
-    opts.yName,
-    opts.yUnits
+  `${withUnits(opts.yName, opts.yUnits)} x ${withUnits(
+    opts.xName,
+    opts.xUnits
   )}`;
 
 const withUnits = (name: string, units?: string) =>
   units ? `${name} (${units})` : name;
+
+// export Chart for use in specs
+export const SpecChart = Chart;
 
 export default FeatureInfoPanelChart;

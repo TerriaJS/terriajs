@@ -92,6 +92,31 @@ export interface ChartCustomComponentAttributes {
 }
 
 /**
+ * Valid attributes of a <chart> component.
+ */
+export const ChartAttributes = [
+  "src",
+  "src-preview",
+  "sources",
+  "source-names",
+  "downloads",
+  "download-names",
+  "preview-x-label",
+  "data",
+  "identifier",
+  "x-column",
+  "y-column",
+  "y-columns",
+  "column-titles",
+  "column-units",
+  "styling",
+  "highlight-x",
+  "title",
+  "can-download",
+  "hide-buttons"
+];
+
+/**
  * A chart custom component. It displays an interactive chart along with
  * "expand" and "download" buttons. The expand button adds a catalog item with
  * the data to the workbench, causing it to be displayed on the Chart Panel.
@@ -122,27 +147,7 @@ export default abstract class ChartCustomComponent<
   protected chartItemId?: string;
 
   get attributes(): Array<string> {
-    return [
-      "src",
-      "src-preview",
-      "sources",
-      "source-names",
-      "downloads",
-      "download-names",
-      "preview-x-label",
-      "data",
-      "identifier",
-      "x-column",
-      "y-column",
-      "y-columns",
-      "column-titles",
-      "column-units",
-      "styling",
-      "highlight-x",
-      "title",
-      "can-download",
-      "hide-buttons"
-    ];
+    return ChartAttributes;
   }
 
   abstract get name(): string;

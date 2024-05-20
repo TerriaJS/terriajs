@@ -2,12 +2,12 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  observable,
-  runInAction,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction
 } from "mobx";
-import { createTransformer, ITransformer } from "mobx-utils";
+import { ITransformer, createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -16,12 +16,12 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import flatten from "../Core/flatten";
-import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
+import isDefined from "../Core/isDefined";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
@@ -39,18 +39,18 @@ import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import Icon from "../Styled/Icon";
-import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
-import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
-import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
-import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
+import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
+import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
+import { ChartAxis, ChartItem, calculateDomain } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
