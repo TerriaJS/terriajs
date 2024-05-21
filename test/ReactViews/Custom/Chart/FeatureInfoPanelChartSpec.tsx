@@ -1,5 +1,6 @@
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
+import runLater from "../../../../lib/Core/runLater";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
@@ -61,10 +62,11 @@ describe("FeatureInfoPanelChart", function () {
   describe("yColumn prop", function () {
     describe("when specified", function () {
       it("renders the correct y-column", async function () {
-        const renderer = await renderChart(
+        const renderer = renderChart(
           `<chart src="test/csv_nongeo/x_height.csv" y-column="plant height"></chart>`,
           context
         );
+        await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -73,20 +75,22 @@ describe("FeatureInfoPanelChart", function () {
       });
 
       it("renders nothing if the specified y-column does not exist", async function () {
-        const renderer = await renderChart(
+        const renderer = renderChart(
           `<chart src="test/csv_nongeo/x_height.csv" y-column="foo-does-not-exist"></chart>`,
           context
         );
+        await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
         expect(() => renderer?.root.findByType(SpecChart)).toThrow();
       });
     });
 
     describe("otherwise", function () {
       it("renders the first line type chart item", async function () {
-        const renderer = await renderChart(
+        const renderer = renderChart(
           `<chart src="test/csv_nongeo/x_height.csv"></chart>`,
           context
         );
+        await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -97,10 +101,11 @@ describe("FeatureInfoPanelChart", function () {
   });
 
   it("can show a custom X axis label", async function () {
-    const renderer = await renderChart(
+    const renderer = renderChart(
       `<chart src="test/csv_nongeo/x_height.csv" preview-x-label="life-time"></chart>`,
       context
     );
+    await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
     const chart = renderer?.root.findByType(SpecChart)!;
     expect(chart).toBeDefined();
     expect(
@@ -112,16 +117,16 @@ describe("FeatureInfoPanelChart", function () {
 /**
  * Render the given chart markup and return the test renderer.
  */
-async function renderChart(
+function renderChart(
   chartMarkup: string,
   context: ProcessNodeContext
-): Promise<ReactTestRenderer | undefined> {
+): ReactTestRenderer | undefined {
   const chartElements = parseCustomHtmlToReact(chartMarkup, context, false, {
     ADD_TAGS: ["chart"],
     ADD_ATTR: ChartAttributes
   });
   let renderer;
-  await act(async () => {
+  act(() => {
     renderer = create(
       <ThemeProvider theme={terriaTheme}>{chartElements}</ThemeProvider>
     );
