@@ -86,16 +86,18 @@ describe("ItemSearchTool", function () {
   it("initializes an describes the parameters when mounted", async function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
-    // FIXME: the await triggers the warning
-    //   "Do not await the result of calling act(...) with sync logic, it is not a Promise."
-    //   but removing the await makes the test for describeParameters fail.
-    await act(() => {
-      rendered = render({
-        item,
-        itemSearchProvider,
-        viewState
-      });
+    let renderPromise: Promise<void> | undefined;
+    act(() => {
+      renderPromise = new Promise((resolve) =>
+        render({
+          item,
+          itemSearchProvider,
+          viewState,
+          afterLoad: resolve
+        })
+      );
     });
+    await renderPromise;
     expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
   });
