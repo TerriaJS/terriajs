@@ -26,9 +26,7 @@ import MappableMixin, {
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisImageServerCatalogItemTraits, {
-  ArcGisImageServerAvailableBandTraits,
   ArcGisImageServerAvailableRasterFunctionTraits,
-  ArcGisImageServerAvailableVariableTraits,
   ArcGisImageServerRenderingRule
 } from "../../../Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
 import DiscreteTimeTraits from "../../../Traits/TraitsClasses/DiscreteTimeTraits";
@@ -42,16 +40,9 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { RectangleCoordinates } from "../../FunctionParameters/RectangleParameter";
-import { SelectableDimensionMultiEnum } from "../../SelectableDimensions/SelectableDimensions";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import {
-  ImageServer,
-  ImageServerBuiltInColorRamps,
-  ImageServerMultidimensionInfo,
-  ImageServerWellKnownRasterFunctions,
-  Legends
-} from "./ArcGisInterfaces";
+import { ImageServer, Legends } from "./ArcGisInterfaces";
 import { getRectangleFromLayer } from "./ArcGisMapServerCatalogItem";
 
 class ImageServerStratum extends LoadableStratum(
@@ -62,7 +53,6 @@ class ImageServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisImageServerCatalogItem,
     readonly imageServer: ImageServer,
-    readonly multidimensionalInfo: ImageServerMultidimensionInfo | undefined,
     private readonly _token: string | undefined
   ) {
     super();
@@ -73,7 +63,6 @@ class ImageServerStratum extends LoadableStratum(
     return new ImageServerStratum(
       newModel as ArcGisImageServerCatalogItem,
       this.imageServer,
-      this.multidimensionalInfo,
       this._token
     ) as this;
   }
@@ -94,16 +83,9 @@ class ImageServerStratum extends LoadableStratum(
     }
 
     let serviceUri = getBaseURI(item);
-    let multidimensionalInfoUri = getBaseURI(item).segment(
-      "multidimensionalInfo"
-    );
 
     if (isDefined(token)) {
       serviceUri = serviceUri.addQuery("token", token);
-      multidimensionalInfoUri = multidimensionalInfoUri.addQuery(
-        "token",
-        item.token
-      );
     }
 
     const serviceMetadata: ImageServer | undefined = await getJson(
@@ -128,15 +110,6 @@ class ImageServerStratum extends LoadableStratum(
         )
       });
 
-    let multidimensionalInfo: ImageServerMultidimensionInfo | undefined =
-      undefined;
-    if (
-      serviceMetadata.hasMultidimensions &&
-      item.hasMultidimensions !== false
-    ) {
-      multidimensionalInfo = await getJson(item, multidimensionalInfoUri);
-    }
-
     // Add any Proj4 definitions if necessary
     if (item.terria.configParameters.proj4ServiceBaseUrl) {
       await Reproject.checkProjection(
@@ -146,22 +119,17 @@ class ImageServerStratum extends LoadableStratum(
       );
     }
 
-    const stratum = new ImageServerStratum(
-      item,
-      serviceMetadata,
-      multidimensionalInfo,
-      token
-    );
+    const stratum = new ImageServerStratum(item, serviceMetadata, token);
 
     return stratum;
   }
 
-  get maximumScale() {
-    return this.imageServer.maxScale;
-  }
-
   get name() {
     return replaceUnderscores(this.imageServer.name);
+  }
+
+  get cacheDuration(): string {
+    return "1d";
   }
 
   get rectangle() {
@@ -173,6 +141,14 @@ class ImageServerStratum extends LoadableStratum(
     };
 
     getRectangleFromLayer(this.imageServer.fullExtent, rectangle);
+
+    if (
+      rectangle.west === Infinity ||
+      rectangle.south === Infinity ||
+      rectangle.east === -Infinity ||
+      rectangle.north === -Infinity
+    )
+      return undefined;
 
     return rectangle;
   }
@@ -189,13 +165,19 @@ class ImageServerStratum extends LoadableStratum(
     return this._token;
   }
 
+  /** Disable pre-cached tiles if we are making dynamic requests - using parameters, time or rendering rule. */
   @computed get usePreCachedTiles() {
-    if (this._item.parameters || this._item.currentDiscreteJulianDate)
+    if (
+      this._item.parameters ||
+      this._item.currentDiscreteJulianDate ||
+      this._item.renderingRule
+    )
       return false;
 
     return isDefined(this.imageServer.tileInfo);
   }
 
+  /** Override wkid to web mercator if using pre-cached tiles (and web mercator is supported) */
   get wkid() {
     if (this._item.usePreCachedTiles) {
       const wkid = this.imageServer.tileInfo?.spatialReference.wkid;
@@ -209,6 +191,10 @@ class ImageServerStratum extends LoadableStratum(
 
   get tileWidth() {
     if (this._item.usePreCachedTiles) return this.imageServer.tileInfo?.cols;
+  }
+
+  get maximumScale() {
+    return this.imageServer.maxScale;
   }
 
   get maximumLevel() {
@@ -235,92 +221,32 @@ class ImageServerStratum extends LoadableStratum(
       return this.imageServer.tileInfo.lods[0].level;
   }
 
-  get availableBands() {
-    if (!this.imageServer.bandCount) return undefined;
-    const bandNames = this.imageServer.bandNames ?? [];
-    return new Array(this.imageServer.bandCount).fill(undefined).map((_, i) => {
-      return createStratumInstance(ArcGisImageServerAvailableBandTraits, {
-        id: i,
-        name: bandNames[i] ?? `Band ${i}`
-      });
-    });
-  }
-
-  get disableBandsSelector() {
-    return this._item.availableBands.length <= 1;
-  }
-
   get allowRasterFunction() {
     return this.imageServer.allowRasterFunction;
   }
 
   get availableRasterFunctions() {
     if (!this._item.allowRasterFunction) return [];
-    const builtInRasterFunctions = [
-      createStratumInstance(ArcGisImageServerAvailableRasterFunctionTraits, {
-        name: "Colormap",
-        description:
-          "The Colormap function transforms the pixel values to display the raster data as a red, green, blue (RGB) color image, based on specific colors in a color map or a color range defined in a color ramp"
-      })
-    ];
-    return [
-      ...(this.imageServer?.rasterFunctionInfos
-        .filter((rasterFn) => rasterFn.name && rasterFn.name !== "None")
-        .map((rasterFn) => {
-          return createStratumInstance(
-            ArcGisImageServerAvailableRasterFunctionTraits,
-            {
-              name: rasterFn.name,
-              description:
-                rasterFn.description !== "A raster function template."
-                  ? rasterFn.description
-                  : undefined,
-              help: rasterFn.help
-            }
-          );
-        }) ?? []),
-      ...builtInRasterFunctions
-    ];
+
+    return this.imageServer?.rasterFunctionInfos
+      .filter((rasterFn) => rasterFn.name && rasterFn.name !== "None")
+      .map((rasterFn) => {
+        return createStratumInstance(
+          ArcGisImageServerAvailableRasterFunctionTraits,
+          {
+            name: rasterFn.name,
+            description:
+              rasterFn.description !== "A raster function template."
+                ? rasterFn.description
+                : undefined,
+            help: rasterFn.help
+          }
+        );
+      });
   }
 
   get disableRasterFunctionSelectors() {
     return !this._item.allowRasterFunction;
-  }
-
-  get disableColorMapSelector() {
-    return (
-      !this._item.renderingRule ||
-      this._item.renderingRule.rasterFunction !== "Colormap" ||
-      // Also disable color map selector if Colormap manually set (Note the ColormapName property is used instead for pre-defined colormaps, ColorMap is used for custom colormaps)
-      !!this._item.renderingRule.rasterFunctionArguments?.Colormap
-    );
-  }
-
-  get hasMultidimensions() {
-    return this.imageServer.hasMultidimensions;
-  }
-
-  get availableVariables() {
-    return this.multidimensionalInfo?.multidimensionalInfo.variables.map(
-      (variable) => {
-        return createStratumInstance(ArcGisImageServerAvailableVariableTraits, {
-          name: variable.name,
-          description: variable.description,
-          unit: variable.unit
-        });
-      }
-    );
-  }
-
-  get disableVariableSelectors() {
-    return (
-      !this._item.hasMultidimensions ||
-      // Only show variable selector for well known raster raster functions
-      !this._item.renderingRule.rasterFunction ||
-      !ImageServerWellKnownRasterFunctions.includes(
-        this._item.renderingRule.rasterFunction
-      )
-    );
   }
 }
 
@@ -453,14 +379,6 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  @override
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   @computed
   get discreteTimes() {
     const imageServerStratum: ImageServerStratum | undefined = this.strata.get(
@@ -549,7 +467,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
       {}
     );
 
-    if (this.renderingRule)
+    if (this.renderingRule.rasterFunction)
       params.renderingRule = JSON.stringify(
         this.traits["renderingRule"].toJson(this.renderingRule)
       );
@@ -610,10 +528,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
   get selectableDimensions() {
     return filterOutUndefined([
       ...super.selectableDimensions,
-      this.bandsSelectableDimensions,
-      this.rasterFunctionSelectableDimensions,
-      this.colorMapSelectableDimensions,
-      this.variableSelectableDimensions
+      this.rasterFunctionSelectableDimensions
     ]);
   }
 
@@ -632,7 +547,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
         name: rasterFn.name,
         description: rasterFn.description
       })),
-      selectedId: this.renderingRule.rasterFunction,
+      selectedId: this.renderingRule?.rasterFunction,
       allowUndefined: true,
       undefinedLabel: "Default",
       setDimensionValue: (strata, rasterFunction) => {
@@ -646,93 +561,6 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
           );
         } else {
           this.renderingRule.setTrait(strata, "rasterFunction", rasterFunction);
-        }
-      }
-    };
-  }
-
-  @computed
-  get variableSelectableDimensions(): SelectableDimensionEnum | undefined {
-    if (this.disableVariableSelectors) return undefined;
-    return {
-      id: "variable-selector",
-      name: i18next.t(
-        "models.arcGisImageServerCatalogItem.selectableDimensions.variable"
-      ),
-      options: this.availableVariables.map((variable) => ({
-        id: variable.name,
-        name: variable.name,
-        description: variable.description
-      })),
-      selectedId: this.renderingRule.variableName,
-      allowUndefined: true,
-      undefinedLabel: "Default",
-      setDimensionValue: (strata, variableName) => {
-        if (!this.renderingRule) {
-          this.setTrait(
-            strata,
-            "renderingRule",
-            createStratumInstance(ArcGisImageServerRenderingRule, {
-              variableName
-            })
-          );
-        } else {
-          this.renderingRule.setTrait(strata, "variableName", variableName);
-        }
-      }
-    };
-  }
-
-  @computed get colorMapSelectableDimensions():
-    | SelectableDimensionEnum
-    | undefined {
-    if (this.disableColorMapSelector) return undefined;
-    return {
-      id: "colormap-selector",
-      name: i18next.t(
-        "models.arcGisImageServerCatalogItem.selectableDimensions.variable"
-      ),
-      options: ImageServerBuiltInColorRamps.map((ramp) => ({
-        id: ramp
-      })),
-      selectedId:
-        this.renderingRule.rasterFunctionArguments?.ColormapName?.toString(),
-      allowUndefined: true,
-      undefinedLabel: "Default",
-      setDimensionValue: (strata, ColormapName) => {
-        this.renderingRule.setTrait(strata, "rasterFunctionArguments", {
-          ...(this.renderingRule.rasterFunctionArguments ?? {}),
-          ColormapName
-        });
-      }
-    };
-  }
-
-  @computed get bandsSelectableDimensions():
-    | SelectableDimensionMultiEnum
-    | undefined {
-    if (this.disableBandsSelector) return undefined;
-    return {
-      id: "bands-selector",
-      name: i18next.t(
-        "models.arcGisImageServerCatalogItem.selectableDimensions.bands"
-      ),
-      options: this.availableBands.map((band) => ({
-        id: band.id?.toString(),
-        name: band.name
-      })),
-      type: "select-multi",
-      selectedIds: this.bandIds?.map((id) => id.toString()),
-      allowUndefined: true,
-      setDimensionValue: (strata, bands) => {
-        if (!bands || bands.length === 0) {
-          this.setTrait(strata, "bandIds", undefined);
-        } else {
-          this.setTrait(
-            strata,
-            "bandIds",
-            bands.map((id) => parseInt(id, 10)).filter((n) => !isNaN(n))
-          );
         }
       }
     };
