@@ -652,7 +652,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           for (const matched of matchedStyles) {
             for (const trait of Object.keys(matched.style.traits)) {
               featureProperties[trait] =
-                // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
+                // @ts-expect-error - TS can't tell that `trait` is of the correct index type for style
                 matched.style[trait] ?? featureProperties[trait];
             }
           }

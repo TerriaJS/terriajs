@@ -260,8 +260,6 @@ class StoryBuilder extends React.Component<
     return (
       <Box column>
         <VideoGuide
-          /*
-          // @ts-ignore */
           viewState={this.props.viewState}
           videoLink={
             this.props.viewState.terria.configParameters.storyVideo?.videoUrl ||

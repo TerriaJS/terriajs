@@ -959,9 +959,9 @@ const LegendImage = function (props: any) {
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
       style={{ display: "none", marginTop: "4px" }}
-      // @ts-ignore
+      // @ts-expect-error
       onLoad={(e) => (e.target.style.display = "block")}
-      // @ts-ignore
+      // @ts-expect-error
       onError={(e) => (e.target.style.display = "none")}
     />
   );
