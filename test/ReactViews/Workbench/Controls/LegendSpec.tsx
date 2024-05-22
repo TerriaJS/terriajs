@@ -34,7 +34,6 @@ describe("Legend", function () {
       wmsItem
         .loadMapItems()
         .then(() => {
-          // @ts-ignore
           const testRenderer = TestRenderer.create(<Legend item={wmsItem} />);
 
           const legends = testRenderer.root.findAllByType("img");
@@ -48,10 +47,9 @@ describe("Legend", function () {
       wmsItem
         .loadMapItems()
         .then(() => {
-          // @ts-ignore
           const legendSection = <Legend item={wmsItem} />;
           const result = getShallowRenderedOutput(legendSection);
-          // @ts-ignore
+          // @ts-expect-error
           expect(result).toEqual(null);
         })
         .then(done);
@@ -72,7 +70,6 @@ describe("Legend", function () {
     });
 
     it(" - can be generated", function () {
-      // @ts-ignore
       const legendSection = <Legend item={csvItem} />;
       const result = getShallowRenderedOutput(legendSection);
       const memberComponents = findAllWithClass(
@@ -92,7 +89,6 @@ describe("Legend", function () {
         minimumFractionDigits: 0
       });
 
-      // @ts-ignore
       const legendSection = <Legend item={csvItem} />;
       const result = getShallowRenderedOutput(legendSection);
       const memberComponents = findAllWithClass(
