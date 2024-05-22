@@ -124,6 +124,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "json",
     name: "core.dataType.json"
+  },
+  {
+    value: "i3s",
+    name: "core.dataType.i3s"
   }
   // Add next builtin remote upload type
 ];
@@ -180,10 +184,6 @@ const builtinLocalDataTypes: LocalDataType[] = [
     value: "shp",
     name: "core.dataType.shp",
     extensions: ["zip"]
-  },
-  {
-    value: "i3s",
-    name: "core.dataType.i3s"
   }
   // Add next builtin local upload type
 ];

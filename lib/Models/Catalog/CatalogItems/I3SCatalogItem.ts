@@ -13,10 +13,12 @@ import isDefined from "../../../Core/isDefined";
 import I3SCatalogItemTraits from "../../../Traits/TraitsClasses/I3SCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
-import { CatalogMemberMixin, MappableMixin } from "terriajs-plugin-api";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
-import { getName } from "../../../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, {
+  getName
+} from "../../../ModelMixins/CatalogMemberMixin";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import { createCesium3DTileStyle } from "../../../ModelMixins/Cesium3dTilesMixin";
 
