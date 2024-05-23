@@ -29,6 +29,7 @@
 - Fix WPS date time widget reset bug
 - Set default date for WPS date time widget on load
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
+- Fix bug with broken datetime after that Timeline has been closed once.
 
 #### 8.7.2 - 2024-05-14
 
