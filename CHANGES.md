@@ -2,6 +2,8 @@
 
 #### next release (8.7.3)
 
+- Fix bug with broken datetime after that Timeline has been closed once.
+
 #### 8.7.2 - 2024-05-14
 
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
