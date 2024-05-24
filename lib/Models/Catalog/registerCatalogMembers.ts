@@ -62,6 +62,7 @@ import WebProcessingServiceCatalogFunctionJob from "./Ows/WebProcessingServiceCa
 import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogGroup";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
+import CogCatalogItem from "./CatalogItems/CogCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -234,6 +235,7 @@ export default function registerCatalogMembers() {
     UrlTemplateImageryCatalogItem
   );
   CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
+  CatalogMemberFactory.register(CogCatalogItem.type, CogCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
