@@ -366,7 +366,8 @@
       "regionMapping": "Regionale Kartierung",
       "editStyle": "Stil bearbeiten",
       "regionColumn": "Spalte \"Region\"",
-      "activeStyle": "Anzeige Variable"
+      "activeStyle": "Anzeige Variable",
+      "manualRegionMapping": "Manuelles Region Mapping"
     },
     "terria": {
       "loadingInitSourcesErrorTitle": "Fehler beim Laden der Kartenkonfiguration",
@@ -428,9 +429,9 @@
       "accessConstraints": "Zugriffsbeschränkungen",
       "serviceContact": "Servicekontakt",
       "missingDataTitle": "Fehlende Daten",
-      "missingDataMessage": "Der WFS-Datensatz '{{name}}' hat keine Daten zurückgegeben.{{line}}{{line}}Die Katalogdatei wurde entweder falsch eingerichtet oder die Serveradresse hat sich geändert.",
+      "missingDataMessage": "Der WFS-Datensatz '{{name}}' hat keine Daten zurückgegeben. Die Katalogdatei wurde entweder falsch eingerichtet oder die Serveradresse hat sich geändert.",
       "reachedMaxFeatureLimit": "Warnung: Diese Ebene hat das WFS-Feature-Limit erreicht ({{maxFeatures}})",
-      "noLayerFoundMessage": "Der WFS-Datensatz '{{name}}' hat keine Layer, die zu '{{typeNames}}' passen. {{suggested}} {{line}}{{line}}Entweder wurde die Katalogdatei falsch eingerichtet oder der WFS-Server hat sich geändert.",
+      "noLayerFoundMessage": "Der WFS-Datensatz '{{name}}' hat keine Layer, die zu '{{typeNames}}' passen. Entweder wurde die Katalogdatei falsch eingerichtet oder der WFS-Server hat sich geändert.",
       "wfs": "Web Feature Service (WFS)",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "metadataUrls": "Links zu Metadaten"
@@ -557,7 +558,7 @@
     "webMapServiceCatalogItem": {
       "defaultStyleLabel": "Standard-Stil",
       "noLayerFoundTitle": "Kein Layer gefunden",
-      "noLayerFoundMessage": "Der WMS-Datensatz '{{name}}' hat keine Layer, die zu '{{layers}}' passen. {{suggested}} {{line}}{{line}}Die Katalogdatei wurde entweder falsch eingerichtet, oder der WMS-Server hat sich geändert.",
+      "noLayerFoundMessage": "Der WMS-Datensatz '{{name}}' hat keine Layer, die zu '{{layers}}' passen. Die Katalogdatei wurde entweder falsch eingerichtet, oder der WMS-Server hat sich geändert.",
       "missingDataTitle": "Fehlende Daten",
       "badlyFormatedTitle": "Fehlerhaft formatierte Periodizität",
       "badlyFormatedMessage": "Der Datensatz '{{name}}' hat eine schlecht geformte Periodizität, '{{isoSegments}}'. Klicken Sie auf die Schaltfläche \"Info\" des Datensatzes, um weitere Informationen über den Datensatz und den Datenverwalter zu erhalten.",
@@ -907,6 +908,138 @@
     },
     "ionImagery": {
       "name": "Cesium Ion Imagery"
+    },
+    "tableStyling": {
+      "copyUserStratum": "Benutzerschicht in die Zwischenablage kopieren",
+      "name": "Stil",
+      "data": {
+        "name": "Daten",
+        "selectableDimensions": {
+          "dataset": {
+            "name": "Datensatz"
+          },
+          "tableStyle": {
+            "name": "Stil"
+          },
+          "tableStyleType": {
+            "options": {
+              "fill": {
+                "name": "Füllfarbe"
+              },
+              "pointSize": {
+                "name": "Punktgröße"
+              },
+              "outline": {
+                "name": "Umrissfarbe"
+              },
+              "label": {
+                "name": "Label-Stil"
+              },
+              "trail": {
+                "name": "Pfad-Stil"
+              },
+              "point": {
+                "name": "Punkt/Marker-Stil"
+              }
+            },
+            "name": "Symbologie"
+          }
+        }
+      },
+      "fill": {
+        "selectableDimensions": {
+          "tableColorColumn": {
+            "name": "Variabel"
+          },
+          "dataType": {
+            "name": "Spaltentyp (erweitert)"
+          },
+          "type": {
+            "name": "Typ",
+            "undefinedLabel": "Bitte angeben",
+            "options": {
+              "noStyle": {
+                "name": "Kein Stil"
+              },
+              "sequentialContinuous": {
+                "name": "Sequentiell (kontinuierlich)"
+              },
+              "sequentialDiscrete": {
+                "name": "Sequentiell (diskret)"
+              },
+              "divergingContinuous": {
+                "name": "Divergent (fortlaufend)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergent (diskret)"
+              },
+              "qualitative": {
+                "name": "Qualitativ"
+              },
+              "customQualitative": {
+                "name": "Benutzerdefiniert (qualitativ)"
+              },
+              "customDiscrete": {
+                "name": "Benutzerdefiniert (diskret)"
+              }
+            }
+          },
+          "scheme": {
+            "name": "Schema"
+          },
+          "numberOfBins": {
+            "name": "Anzahl von Behältern"
+          }
+        },
+        "name": "Füllfarbe"
+      },
+      "min": {
+        "name": "Min"
+      },
+      "displayRange": {
+        "name": "Anzeigebereich",
+        "selectableDimensions": {
+          "max": {
+            "name": "Max"
+          }
+        }
+      },
+      "bins": {
+        "name": "Abfallbehälter",
+        "selectableDimensions": {
+          "start": {
+            "name": "{{value1}} bis {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "Farbe"
+              },
+              "start": {
+                "name": "Start"
+              },
+              "stop": {
+                "name": "Stop"
+              }
+            }
+          }
+        }
+      },
+      "colors": {
+        "name": "Farben",
+        "selectableDimensions": {
+          "color": {
+            "name": "Farbe"
+          },
+          "value": {
+            "name": "Wert"
+          },
+          "remove": {
+            "value": "entfernen"
+          }
+        }
+      },
+      "hideAdvancedOptions": "Erweiterte Optionen ausblenden",
+      "showAdvancedOptions": "Erweiterte Optionen anzeigen",
+      "reset": "Auf Standardstil zurücksetzen"
     }
   },
   "itemSearchTool": {
@@ -1308,7 +1441,7 @@
     "resultsLabel": "Suchergebnisse",
     "data": "Daten",
     "done": "Fertig",
-    "searchInDataCatalog": "Suche <1>'{{locationSearchText}}'</1> im Datenkatalog",
+    "searchInDataCatalog": "Suche '{{locationSearchText}}' im Datenkatalog",
     "search": "Suche '{{searchText}}' im Datenkatalog",
     "viewLess": "Weniger {{name}} Ergebnisse anzeigen",
     "viewMore": "Weitere {{name}} Ergebnisse anzeigen",
@@ -1349,7 +1482,8 @@
     "resourceDescription": "Beschreibung der Ressource",
     "dataPreviewError": "FEHLER BEI DER DATENVORSCHAU",
     "addToMap": "Zur Karte hinzufügen",
-    "mayBeExperiencingIssues": "Bei diesem Datensatz können derzeit Probleme auftreten"
+    "mayBeExperiencingIssues": "Bei diesem Datensatz können derzeit Probleme auftreten",
+    "selectMultipleDatasets": "<0>Drücken Sie die <strong>Umschalttaste</strong> und klicken Sie</0><1 /><2>um mehrere Datensätze hinzuzufügen</2>"
   },
   "description": {
     "layerName": "Layername",
@@ -1593,7 +1727,9 @@
     "searchCatalogueItem": "Katalogelemente",
     "searchNoCatalogueItem": "Leider entsprechen keine Katalogartikel Ihrer Suchanfrage.",
     "searchNoLocations": "Leider entsprechen keine Orte Ihrer Suchanfrage.",
-    "searchErrorOccurred": "Bei der Suche ist ein Fehler aufgetreten.  Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal."
+    "searchErrorOccurred": "Bei der Suche ist ein Fehler aufgetreten.  Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal.",
+    "searchMinCharacters": "Sie müssen mindestens {{count}} Zeichen eingeben",
+    "searchMinCharacters_plural": "Sie müssen mindestens {{count}} Zeichen eingeben"
   },
   "languagePanel": {
     "changeLanguage": "Sprache ändern"

@@ -2154,5 +2154,11 @@
     "colorAdd": "Add",
     "colorRemove": "Remove",
     "invalid": "Invalid"
+  },
+  "relatedMaps": {
+    "buttonText": "Related Maps",
+    "buttonTitle": "See related maps",
+    "panelHeading": "Related Maps",
+    "panelText": "Clicking on a map below will open it in a separate window or tab."
   }
 }

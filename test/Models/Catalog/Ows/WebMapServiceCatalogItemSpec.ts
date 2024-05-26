@@ -460,7 +460,7 @@ describe("WebMapServiceCatalogItem", function () {
     });
     try {
       await wms.loadMetadata();
-      //@ts-ignore
+      //@ts-expect-error
       expect(mapItems[0].imageryProvider.layers).toBe("landsat_barest_earth");
     } finally {
       cleanup();
