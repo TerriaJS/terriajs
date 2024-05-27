@@ -142,7 +142,7 @@ Run any of these tasks with `yarn gulp <task name>` from within the TerriaJS dir
 -   `build` - Builds a non-minified version of the TerriaJS tests. This task may take 10 seconds or more, which is the main reason for the next task.
 -   `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaJS or Cesium source file that was pulled in to the build. When a change to any of these files is detected, a fast incremental build is automatically kicked off. The incremental build is much faster than the full rebuild because dependencies between source files are cached.
 -   `release` - The same as `build` except that it also minifies the build tests.
--   `lint` - Runs ESLint on the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaJS. A stricter set of rules is also find in the `.eslintrc` file in `lib/ReactViews`.
+-   `lint` - Runs ESLint on the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc.js` file in the root directory of TerriaJS.
 -   `docs` - Generates the user guide and reference documentation. The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
 -   `make-schema` - Generates [JSON Schema](http://json-schema.org/) for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code. The schema is written to `wwwroot/schema`.
 -   `test` - Detects browsers available on the local system and launches the test suite in each. The results are reported on the command line.
