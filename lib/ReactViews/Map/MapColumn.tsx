@@ -60,7 +60,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
               `}
             >
               <MenuBar
-                // @ts-ignore
+                // @ts-expect-error
                 menuItems={customElements.menu}
                 menuLeftItems={customElements.menuLeft}
                 animationDuration={animationDuration}

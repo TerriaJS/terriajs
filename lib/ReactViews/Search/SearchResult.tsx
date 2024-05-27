@@ -69,7 +69,7 @@ const SearchResult: React.FC<SearchResultProps> = (
                   fillColor={isLightTheme && theme.textDarker}
                   light={isDarkTheme}
                   styledWidth={"16px"}
-                  // @ts-ignore
+                  // @ts-expect-error
                   glyph={Icon.GLYPHS[props.icon]}
                 />
               )}

@@ -3,10 +3,12 @@
 #### next release (8.7.3)
 
 - Fix bug with broken datetime after that Timeline has been closed once.
+- Fix WPS date time widget reset bug
+- Set default date for WPS date time widget on load
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.7.2 - 2024-05-14
 
-- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 - Feature info template has access to activeStyle of item having TableTraits.
 - Updated a few dependencies to fix security warnings: `underscore`, `visx`, `shpjs`, `resolve-uri-loader`, `svg-sprite-loader`
 - Allow related maps UI strings to be translated. Translation support for related maps content is not included.
