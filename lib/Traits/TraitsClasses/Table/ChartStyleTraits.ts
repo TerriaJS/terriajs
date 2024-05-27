@@ -1,6 +1,4 @@
-import objectArrayTrait, {
-  MergeStrategy
-} from "../../Decorators/objectArrayTrait";
+import objectArrayTrait from "../../Decorators/objectArrayTrait";
 import primitiveTrait from "../../Decorators/primitiveTrait";
 import ModelTraits from "../../ModelTraits";
 

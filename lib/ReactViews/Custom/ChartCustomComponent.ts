@@ -152,7 +152,7 @@ export default abstract class ChartCustomComponent<
 
   abstract get name(): string;
 
-  shouldProcessNode(context: ProcessNodeContext, node: DomElement): boolean {
+  shouldProcessNode(_context: ProcessNodeContext, node: DomElement): boolean {
     return (
       this.isChart(node) ||
       this.isFirstColumnOfChartRow(node) ||
@@ -224,7 +224,7 @@ export default abstract class ChartCustomComponent<
     context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[],
-    index: number
+    _index: number
   ): ReactElement | undefined {
     if (
       node.attribs === undefined ||
@@ -415,10 +415,10 @@ export default abstract class ChartCustomComponent<
   }
 
   private processFirstColumn(
-    context: ProcessNodeContext,
-    node: DomElement,
-    children: ReactElement[],
-    index: number
+    _context: ProcessNodeContext,
+    _node: DomElement,
+    _children: ReactElement[],
+    _index: number
   ): ReactElement | undefined {
     // Do not return a node.
     return undefined;
@@ -443,10 +443,10 @@ export default abstract class ChartCustomComponent<
   }
 
   private processSecondColumn(
-    context: ProcessNodeContext,
+    _context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[],
-    index: number
+    _index: number
   ): ReactElement | undefined {
     const title = node.parent!.children![0].children![0].data;
     const revisedChildren: ReactElement[] = [

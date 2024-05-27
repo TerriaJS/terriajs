@@ -799,7 +799,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Load all region in parallel (but preserve order)
       const regionProviderLists = await Promise.all(
         urls.map(
-          async (url, i) =>
+          async (url) =>
             // Note can be called many times - all promises/results are cached in RegionProviderList.metaList
             await RegionProviderList.fromUrl(url, this.terria.corsProxy)
         )
