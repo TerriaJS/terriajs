@@ -161,7 +161,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (!MappableMixin.isMixedInto(this)) return [];
       return filterOutUndefined(
         this.mapItems.map(
-          // @ts-ignore
+          // @ts-expect-error
           (mapItem) => ImageryParts.is(mapItem) && mapItem.imageryProvider.url
         )
       );

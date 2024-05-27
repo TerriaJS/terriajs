@@ -86,13 +86,18 @@ describe("ItemSearchTool", function () {
   it("initializes an describes the parameters when mounted", async function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
-    await act(() => {
-      rendered = render({
-        item,
-        itemSearchProvider,
-        viewState
-      });
+    let renderPromise: Promise<void> | undefined;
+    act(() => {
+      renderPromise = new Promise((resolve) =>
+        render({
+          item,
+          itemSearchProvider,
+          viewState,
+          afterLoad: resolve
+        })
+      );
     });
+    await renderPromise;
     expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
   });
@@ -188,6 +193,6 @@ function renderAndLoad(
 async function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
   const searchForm = root.findByType("form");
   expect(searchForm).toBeDefined();
-  await act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
+  act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
   return searchForm;
 }

@@ -233,7 +233,7 @@ class SettingPanel extends React.Component<PropTypes> {
       : t("settingPanel.timeline.hideLabel");
 
     return (
-      //@ts-ignore - not yet ready to tackle tsfying MenuPanel
+      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnRef={this.props.refFromHOC}
