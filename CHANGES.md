@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.7.3)
+#### next release (8.7.4)
+
+- [The next improvement]
+
+#### 8.7.3 - 2024-05-28
 
 - Fix broken chart selector
 - Feature info template `<chart>` definition now accepts a `y-column` attribute to set the y-column that should be rendered in the feature info panel chart.
