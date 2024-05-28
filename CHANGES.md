@@ -2,6 +2,9 @@
 
 #### next release (8.7.3)
 
+- Fix broken chart selector
+- Feature info template `<chart>` definition now accepts a `y-column` attribute to set the y-column that should be rendered in the feature info panel chart.
+- Upgrade `thredds-catalog-crawler` to `v0.0.7` which makes a few security upgrades.
 - Fix bug with broken datetime after that Timeline has been closed once.
 - Fix WPS date time widget reset bug
 - Set default date for WPS date time widget on load

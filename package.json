@@ -180,7 +180,7 @@
     "terriajs-cesium": "8.0.0",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "thredds-catalog-crawler": "0.0.6",
+    "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
