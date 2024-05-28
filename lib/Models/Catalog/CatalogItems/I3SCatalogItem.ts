@@ -1,12 +1,5 @@
 import i18next from "i18next";
-import {
-  computed,
-  makeObservable,
-  observable,
-  override,
-  runInAction,
-  toJS
-} from "mobx";
+import { computed, makeObservable, observable, override, toJS } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import isDefined from "../../../Core/isDefined";
@@ -20,21 +13,31 @@ import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
-import { createCesium3DTileStyle } from "../../../ModelMixins/Cesium3dTilesMixin";
+import Cesium3dTilesStyleMixin from "../../../ModelMixins/Cesium3dTilesStyleMixin";
 
-export default class I3SCatalogItem extends MappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits)))
+export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
+  MappableMixin(UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits))))
 ) {
   static readonly type = "I3S";
   readonly type = I3SCatalogItem.type;
 
   @observable
   private dataProvider?: I3SDataProvider;
-  public boundingSphere: BoundingSphere | undefined;
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
+  }
+
+  @computed
+  get boundingSphere() {
+    if (this.dataProvider?.layers) {
+      return BoundingSphere.fromBoundingSpheres(
+        this.dataProvider.layers
+          .map((layer) => layer.tileset?.boundingSphere)
+          .filter(isDefined)
+      );
+    }
   }
 
   async forceLoadMapItems() {
@@ -46,29 +49,6 @@ export default class I3SCatalogItem extends MappableMixin(
         ? await ArcGISTiledElevationTerrainProvider.fromUrl(this.terrainURL)
         : undefined
     });
-    this.boundingSphere = BoundingSphere.fromBoundingSpheres(
-      this.dataProvider.layers
-        .map((layer) => layer.tileset?.boundingSphere)
-        .filter(isDefined)
-    );
-    runInAction(() => {
-      this.dataProvider?.layers.forEach(({ tileset }) => {
-        if (!tileset) {
-          return;
-        }
-        /* Control "lightness" of textures */
-        if (this.lightingFactor) {
-          tileset.imageBasedLighting.imageBasedLightingFactor = new Cartesian2(
-            ...this.lightingFactor
-          );
-        }
-        tileset.style = this.cesiumTileStyle;
-      });
-    });
-  }
-
-  @computed get cesiumTileStyle() {
-    return createCesium3DTileStyle(this);
   }
 
   @computed
@@ -76,13 +56,15 @@ export default class I3SCatalogItem extends MappableMixin(
     if (this.isLoadingMapItems || !isDefined(this.dataProvider)) {
       return [];
     }
-    this.dataProvider.layers.forEach((layer) => {
-      layer.tileset!.style = toJS(this.cesiumTileStyle);
-      if (this.lightingFactor && layer.tileset?.imageBasedLighting) {
-        layer.tileset.imageBasedLighting.imageBasedLightingFactor =
-          new Cartesian2(...this.lightingFactor);
-      }
-    });
+    if (this.dataProvider) {
+      this.dataProvider.layers.forEach((layer) => {
+        layer.tileset!.style = toJS(this.cesiumTileStyle);
+        if (this.lightingFactor && layer.tileset?.imageBasedLighting) {
+          layer.tileset.imageBasedLighting.imageBasedLightingFactor =
+            new Cartesian2(...this.lightingFactor);
+        }
+      });
+    }
     return [this.dataProvider];
   }
 
