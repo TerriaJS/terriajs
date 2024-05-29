@@ -211,7 +211,7 @@ describe("TileErrorHandlerMixin", function () {
     it("fails with bad image error if the error defines a target element", async function () {
       try {
         const tileProviderError = newError(undefined);
-        // @ts-ignore
+        // @ts-expect-error
         tileProviderError.error = { ...tileProviderError.error, target: {} };
         await onTileLoadError(item, tileProviderError);
       } catch {
