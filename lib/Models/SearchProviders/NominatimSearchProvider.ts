@@ -1,5 +1,4 @@
-import i18next from "i18next";
-import { makeObservable, override, runInAction } from "mobx";
+import { makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import { Feature, Point } from "@turf/helpers";
@@ -8,12 +7,10 @@ import {
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 import loadJson from "../../Core/loadJson";
-import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import NominatimSearchProviderTraits from "../../Traits/SearchProviders/NominatimSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import CommonStrata from "../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
@@ -30,32 +27,12 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
     super(uniqueId, terria);
 
     makeObservable(this);
-
-    runInAction(() => {
-      if (this.terria.configParameters.bingMapsKey) {
-        this.setTrait(
-          CommonStrata.defaults,
-          "key",
-          this.terria.configParameters.bingMapsKey
-        );
-      }
-    });
-  }
-
-  @override
-  override showWarning() {
-    if (!this.key || this.key === "") {
-      console.warn(
-        `The ${applyTranslationIfExists(this.name, i18next)}(${this.type
-        }) geocoder will always return no results because a Bing Maps key has not been provided. Please get a Bing Maps key from bingmapsportal.com and add it to parameters.bingMapsKey in config.json.`
-      );
-    }
   }
 
   protected logEvent(searchText: string) {
     this.terria.analytics?.logEvent(
       Category.search,
-      SearchAction.gazetteer,
+      SearchAction.nominatim,
       searchText
     );
   }
