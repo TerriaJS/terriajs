@@ -2,7 +2,7 @@
 
 #### next release (8.7.4)
 
-- [The next improvement]
+- Add Nominatim search provider
 
 #### 8.7.3 - 2024-05-28
 
