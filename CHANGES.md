@@ -3,6 +3,7 @@
 #### next release (8.7.4)
 
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
+- Fix position of draggable point after moving.
 
 #### 8.7.3 - 2024-05-28
 
