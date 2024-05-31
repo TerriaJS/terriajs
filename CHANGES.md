@@ -2,7 +2,7 @@
 
 #### next release (8.7.4)
 
-- [The next improvement]
+- Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 
 #### 8.7.3 - 2024-05-28
 
