@@ -211,6 +211,15 @@ function CesiumIonConnector() {
         <label className={AddDataStyles.label}>
           <Trans i18nKey="addData.cesiumIonAsset">Cesium ion Asset:</Trans>
         </label>
+        {/* <table className={Styles.assetsList}>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+            </tr>
+            {assets.map(renderAssetRow)}
+          </tbody>
+        </table> */}
         <Dropdown
           options={assets}
           textProperty="uniqueName"
@@ -244,6 +253,15 @@ function CesiumIonConnector() {
           </button>
         </div>
       </div>
+    );
+  }
+
+  function renderAssetRow(asset: CesiumIonAsset) {
+    return (
+      <tr>
+        <td>{asset.name}</td>
+        <td>{asset.type}</td>
+      </tr>
     );
   }
 
@@ -309,12 +327,23 @@ function CesiumIonConnector() {
       CatalogMemberFactory,
       viewState.terria,
       "",
-      CommonStrata.defaults,
+      CommonStrata.definition,
       {
         type: "3d-tiles",
         name: selectedAsset.name ?? "Unnamed",
+        description: selectedAsset.description ?? "",
         ionAssetId: selectedAsset.id ?? "0",
-        ionAccessToken: selectedToken.token
+        ionAccessToken: selectedToken.token,
+        info: [
+          {
+            name: "Cesium ion Account",
+            content: userProfile.username
+          },
+          {
+            name: "Cesium ion Token",
+            content: selectedToken.name ?? selectedToken.id
+          }
+        ]
       },
       {}
     ).throwIfUndefined({
