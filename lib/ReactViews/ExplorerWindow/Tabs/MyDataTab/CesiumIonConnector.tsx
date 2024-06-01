@@ -13,6 +13,36 @@ import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJs
 import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
+import Dropdown from "../../../Generic/Dropdown";
+import Icon from "../../../../Styled/Icon";
+
+interface CesiumIonToken {
+  id?: string;
+  name?: string;
+  uniqueName?: string; // we populate this one ourselves
+  token?: string;
+  dateAdded?: string;
+  dateModified?: string;
+  dateLastUsed?: string;
+  assetIds?: number[];
+  isDefault?: boolean;
+  allowedUrls?: string[];
+  scopes?: string[];
+}
+
+interface CesiumIonAsset {
+  id?: string;
+  name?: string;
+  uniqueName?: string; // we populate this one ourselves
+  description?: string;
+  type?: string;
+  bytes?: number;
+  dateAdded?: string;
+  status?: string;
+  percentComplete?: number;
+  archivable?: boolean;
+  exportable?: boolean;
+}
 
 function CesiumIonConnector() {
   const tokenLocalStorageName = "cesium-ion-login-token";
@@ -24,10 +54,14 @@ function CesiumIonConnector() {
     hash: ""
   });
 
-  const [tokens, setTokens] = React.useState([]);
-  const [assets, setAssets] = React.useState([]);
-  const [selectedToken, setSelectedToken] = React.useState(undefined);
-  const [selectedAsset, setSelectedAsset] = React.useState(undefined);
+  const [tokens, setTokens] = React.useState<CesiumIonToken[]>([]);
+  const [assets, setAssets] = React.useState<CesiumIonAsset[]>([]);
+  const [selectedToken, setSelectedToken] = React.useState<
+    CesiumIonToken | undefined
+  >(undefined);
+  const [selectedAsset, setSelectedAsset] = React.useState<
+    CesiumIonAsset | undefined
+  >(undefined);
 
   const [accessToken, setAccessToken] = React.useState(
     localStorage.getItem(tokenLocalStorageName) ?? ""
@@ -89,7 +123,10 @@ function CesiumIonConnector() {
       }
     })
       .then((response) => response.json())
-      .then((assets) => {
+      .then((assets: { items: CesiumIonAsset[] }) => {
+        assets.items.forEach((item) => {
+          item.uniqueName = `${item.name} (${item.id})`;
+        });
         setAssets(assets.items);
       });
   }, [accessToken]);
@@ -103,7 +140,10 @@ function CesiumIonConnector() {
       }
     })
       .then((response) => response.json())
-      .then((tokens) => {
+      .then((tokens: { items: CesiumIonToken[] }) => {
+        tokens.items.forEach((item) => {
+          item.uniqueName = `${item.name} (${item.id})`;
+        });
         setTokens(tokens.items);
       });
   }, [accessToken]);
@@ -120,64 +160,69 @@ function CesiumIonConnector() {
   );
 
   function renderConnected() {
+    const dropdownTheme = {
+      list: AddDataStyles.dropdownList,
+      icon: <Icon glyph={Icon.GLYPHS.opened} />,
+      dropdown: Styles.dropDown,
+      button: Styles.dropDownButton
+    };
+
+    let numberOfAssetsAccessible = -1;
+    if (selectedToken && selectedToken.assetIds) {
+      numberOfAssetsAccessible = selectedToken.assetIds.length;
+    }
+
     return (
-      <div>
-        <div>
-          {userProfile.username.length > 0 ? (
-            <label className={AddDataStyles.label}>
-              Connected to Cesium ion as {userProfile.username}
-            </label>
-          ) : (
-            <label className={AddDataStyles.label}>
-              Loading user profile information...
-            </label>
-          )}
-          <button className={Styles.connectButton} onClick={disconnect}>
-            Disconnect
-          </button>
-        </div>
-        <div>
+      <>
+        {userProfile.username.length > 0 ? (
           <label className={AddDataStyles.label}>
-            <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
+            Connected to Cesium ion as {userProfile.username}
           </label>
-          <select
-            value={selectedToken}
-            onChange={(e) => setSelectedToken(e.target.value)}
-          >
-            {tokens.map((token) => renderTokenOption(token))}
-          </select>
-        </div>
-        <div>
+        ) : (
           <label className={AddDataStyles.label}>
-            <Trans i18nKey="addData.cesiumIonAsset">Cesium ion Asset:</Trans>
+            Loading user profile information...
           </label>
-          <select
-            value={selectedAsset}
-            onChange={(e) => setSelectedAsset(e.target.value)}
-          >
-            {assets.map((asset) => renderAssetOption(asset))}
-          </select>
+        )}
+        <button className={Styles.connectButton} onClick={disconnect}>
+          Disconnect
+        </button>
+        <label className={AddDataStyles.label}>
+          <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
+        </label>
+        <Dropdown
+          options={tokens}
+          textProperty="uniqueName"
+          selected={selectedToken}
+          selectOption={setSelectedToken}
+          matchWidth
+          theme={dropdownTheme}
+        />
+        <div className={Styles.tokenWarning}>
+          This token allows access to{" "}
+          <strong>
+            {numberOfAssetsAccessible < 0 ? "every" : numberOfAssetsAccessible}
+          </strong>{" "}
+          {numberOfAssetsAccessible <= 1 ? "asset" : "assets"} in your{" "}
+          <a href="https://ion.cesium.com/tokens" target="_blank">
+            Cesium ion account
+          </a>
+          .
         </div>
+        <label className={AddDataStyles.label}>
+          <Trans i18nKey="addData.cesiumIonAsset">Cesium ion Asset:</Trans>
+        </label>
+        <Dropdown
+          options={assets}
+          textProperty="uniqueName"
+          selected={selectedAsset}
+          selectOption={setSelectedAsset}
+          matchWidth
+          theme={dropdownTheme}
+        />
         <button className={Styles.connectButton} onClick={addToMap}>
           Add to Map
         </button>
-      </div>
-    );
-  }
-
-  function renderTokenOption(token) {
-    return (
-      <option key={token.id} value={token.id}>
-        {token.name}
-      </option>
-    );
-  }
-
-  function renderAssetOption(asset) {
-    return (
-      <option key={asset.id} value={asset.id}>
-        {asset.name}
-      </option>
+      </>
     );
   }
 
@@ -260,12 +305,6 @@ function CesiumIonConnector() {
 
   function addToMap() {
     if (!selectedAsset || !selectedToken) return;
-
-    const asset = assets?.find((asset) => asset?.id?.toString() === selectedAsset);
-    const token = tokens?.find((token) => token?.id?.toString() === selectedToken);
-
-    if (!asset || !token) return;
-
     const newItem = upsertModelFromJson(
       CatalogMemberFactory,
       viewState.terria,
@@ -273,30 +312,32 @@ function CesiumIonConnector() {
       CommonStrata.defaults,
       {
         type: "3d-tiles",
-        name: asset.name,
-        ionAssetId: asset.id,
-        ionAccessToken: token.token
+        name: selectedAsset.name ?? "Unnamed",
+        ionAssetId: selectedAsset.id ?? "0",
+        ionAccessToken: selectedToken.token
       },
       {}
     ).throwIfUndefined({
       message: `An error occurred trying to add asset: ${selectedAsset.name}`
     });
 
-    addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then((addedItem) => {
-      if (addedItem) {
-        // this.props.onFileAddFinished([addedItem]);
-        // if (TimeVarying.is(addedItem)) {
-        //   this.props.terria.timelineStack.addToTop(addedItem);
-        // }
-      }
+    addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then(
+      (addedItem) => {
+        if (addedItem) {
+          // this.props.onFileAddFinished([addedItem]);
+          // if (TimeVarying.is(addedItem)) {
+          //   this.props.terria.timelineStack.addToTop(addedItem);
+          // }
+        }
 
-      // FIXME: Setting state here might result in a react warning if the
-      // component unmounts before the promise finishes
-      // this.setState({
-      //   isLoading: false
-      // });
-      // this.props.resetTab();
-    });
+        // FIXME: Setting state here might result in a react warning if the
+        // component unmounts before the promise finishes
+        // this.setState({
+        //   isLoading: false
+        // });
+        // this.props.resetTab();
+      }
+    );
 
     //newItem.setTrait(CommonStrata.user, "url", url);
     // promise = newItem.loadMetadata().then((result) => {

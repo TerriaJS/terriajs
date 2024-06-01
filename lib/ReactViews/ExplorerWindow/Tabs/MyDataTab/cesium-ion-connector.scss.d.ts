@@ -3,6 +3,12 @@
 interface CssExports {
   'connect-button': string;
   'connectButton': string;
+  'drop-down': string;
+  'drop-down-button': string;
+  'dropDown': string;
+  'dropDownButton': string;
+  'token-warning': string;
+  'tokenWarning': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

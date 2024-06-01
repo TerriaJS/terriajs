@@ -59,6 +59,7 @@
 .dropdown {
   &__list {
     height: 250px;
+    overflow-y: visible;
   }
   @media (max-height: 800px) {
     &__list {

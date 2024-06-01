@@ -7,3 +7,17 @@
   composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   width: 200px;
 }
+
+.token-warning {
+  color: $warning;
+  font-family: $font-base;
+  font-size: 0.9em
+}
+
+.drop-down {
+  height: 40px;
+}
+
+.drop-down-button {
+  height: 100%;
+}
