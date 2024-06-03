@@ -14,9 +14,14 @@ import CatalogMemberMixin, {
 } from "../../../ModelMixins/CatalogMemberMixin";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Cesium3dTilesStyleMixin from "../../../ModelMixins/Cesium3dTilesStyleMixin";
+import ShadowMixin from "../../../ModelMixins/ShadowMixin";
 
 export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
-  MappableMixin(UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits))))
+  ShadowMixin(
+    MappableMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits)))
+    )
+  )
 ) {
   static readonly type = "I3S";
   readonly type = I3SCatalogItem.type;
@@ -57,6 +62,8 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
       return [];
     }
     if (this.dataProvider) {
+      this.dataProvider.show = this.show;
+
       this.dataProvider.layers.forEach((layer) => {
         layer.tileset!.style = toJS(this.cesiumTileStyle);
         if (this.lightingFactor && layer.tileset?.imageBasedLighting) {
