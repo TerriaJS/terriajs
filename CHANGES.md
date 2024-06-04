@@ -1,12 +1,27 @@
 # Change Log
 
-#### next release (8.7.2)
+#### next release (8.7.4)
 
 - Add ability for users to select the palettes supplied by ncWMS servers for changing the visualisation of data.
 
 - [The next improvement]
+- Fix position of draggable point after moving.
+
+#### 8.7.3 - 2024-05-28
+
+- Fix broken chart selector
+- Feature info template `<chart>` definition now accepts a `y-column` attribute to set the y-column that should be rendered in the feature info panel chart.
+- Upgrade `thredds-catalog-crawler` to `v0.0.7` which makes a few security upgrades.
+- Fix bug with broken datetime after that Timeline has been closed once.
+- Fix WPS date time widget reset bug
+- Set default date for WPS date time widget on load
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
+
+#### 8.7.2 - 2024-05-14
+
 - Feature info template has access to activeStyle of item having TableTraits.
+- Updated a few dependencies to fix security warnings: `underscore`, `visx`, `shpjs`, `resolve-uri-loader`, `svg-sprite-loader`
+- Allow related maps UI strings to be translated. Translation support for related maps content is not included.
 
 #### 8.7.1 - 2024-04-16
 
