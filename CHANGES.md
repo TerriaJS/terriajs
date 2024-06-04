@@ -3,6 +3,7 @@
 #### next release (8.7.4)
 
 - Fix position of draggable point after moving.
+- Added config parameter "searchInCatalogItemInfo" that allows you to search in the layers of the catalog also looking at their field "info".
 
 #### 8.7.3 - 2024-05-28
 

@@ -40,8 +40,9 @@ export function loadAndSearchCatalogRecursively(
       // saveModelToJson(modelToSave, {
       //   includeStrata: [CommonStrata.definition]
       // });
+      const searchInCatalogItemInfo = models[0].terria.configParameters.searchInCatalogItemInfo;
       autorun((reaction) => {
-        const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
+        const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}${searchInCatalogItemInfo ? " " + JSON.stringify(modelToSave.infoAsObject) : ""}`;
         const matchesString =
           searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
         resultMap.set(model.uniqueId, matchesString);
