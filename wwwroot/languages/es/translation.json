@@ -111,6 +111,12 @@
       "contact_point": "Contacto",
       "author": "Autor",
       "licence": "Licencia"
+    },
+    "webMapServiceCatalogItem": {
+      "getCapabilitiesUrl": "URL GetCapabilities"
+    },
+    "userDrawing": {
+      "messageHeader": "Dibujar en el mapa"
     }
   },
   "analytics": {
@@ -545,7 +551,8 @@
     "selectToPreviewDataset": "Seleccione un conjunto de datos para ver una vista previa",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vaya al mapa",
-    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE"
+    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE",
+    "selectMultipleDatasets": "<0>Pulse <strong>Mayus</strong> y haga click</0><1 /><2>para añadir múltiples conjuntos de datos</2>"
   },
   "description": {
     "typeName": "Nombre del tipo",
@@ -867,6 +874,16 @@
     },
     "mapboxVectorTileImageryProvider": {
       "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Atribución de los datos",
+      "disclaimer": "Descargo de responsabilidad"
     }
+  },
+  "relatedMaps": {
+    "buttonText": "Mapas relacionados",
+    "buttonTitle": "Ver mapas relacionados",
+    "panelHeading": "Mapas relacionados",
+    "panelText": "Hacer click en el mapa inferior lo abrirá en una ventana o pestaña separadas."
   }
 }
