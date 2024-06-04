@@ -15,6 +15,7 @@ import CatalogMemberMixin, {
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Cesium3dTilesStyleMixin from "../../../ModelMixins/Cesium3dTilesStyleMixin";
 import ShadowMixin from "../../../ModelMixins/ShadowMixin";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 
 export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
   ShadowMixin(
@@ -65,10 +66,22 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
       this.dataProvider.show = this.show;
 
       this.dataProvider.layers.forEach((layer) => {
-        layer.tileset!.style = toJS(this.cesiumTileStyle);
-        if (this.lightingFactor && layer.tileset?.imageBasedLighting) {
-          layer.tileset.imageBasedLighting.imageBasedLightingFactor =
-            new Cartesian2(...this.lightingFactor);
+        const tileset = layer.tileset;
+
+        if (tileset) {
+          tileset.style = toJS(this.cesiumTileStyle);
+          tileset.shadows = this.cesiumShadows;
+          if (this.lightingFactor && tileset.imageBasedLighting) {
+            tileset.imageBasedLighting.imageBasedLightingFactor =
+              new Cartesian2(...this.lightingFactor);
+          }
+
+          const key = this
+            .colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
+          const colorBlendMode = Cesium3DTileColorBlendMode[key];
+          if (colorBlendMode !== undefined)
+            tileset.colorBlendMode = colorBlendMode;
+          tileset.colorBlendAmount = this.colorBlendAmount;
         }
       });
     }
