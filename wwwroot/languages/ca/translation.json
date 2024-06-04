@@ -622,7 +622,7 @@
     "expand": "Expandir",
     "download": "Descarregar",
     "loading": "Carregant les dades del gràfic...",
-    "noData": "No s'han trobat dades del gràfic.",
+    "noData": "No s'ha trobat cap dada per fer gràfics.",
     "showItemInChart": "Mostra {{value}} al gràfic"
   },
   "viewModels": {
