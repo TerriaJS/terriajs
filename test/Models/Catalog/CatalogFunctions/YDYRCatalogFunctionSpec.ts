@@ -79,7 +79,7 @@ describe("YDYRCatalogFunction", function () {
     csv.setTrait(CommonStrata.user, "csvString", lga11Csv);
     await csv.loadRegionProviderList();
     await csv.loadMapItems();
-    addUserCatalogMember(terria, csv, { enable: true });
+    await addUserCatalogMember(terria, csv, { enable: true });
 
     ydyr = new YDYRCatalogFunction("testYdyr", terria);
     ydyr.setTrait(CommonStrata.definition, "parameters", {
