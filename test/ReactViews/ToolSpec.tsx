@@ -22,7 +22,7 @@ describe("Tool", function () {
   // 16.3.2, we can enable them after migrating to a newer version.
   xit("renders the item returned by getToolComponent", async function () {
     let rendered: any;
-    await act(async () => {
+    act(async () => {
       rendered = createWithContexts(
         viewState,
         <Tool
