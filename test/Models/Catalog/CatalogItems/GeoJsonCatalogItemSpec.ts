@@ -1558,5 +1558,29 @@ describe("GeoJsonCatalogItemSpec", () => {
       const terriaFeatureData = features[0].data as TerriaFeatureData;
       expect(terriaFeatureData.rowIds).toEqual([4, 5, 6, 7, 8]);
     });
+
+    describe("applies default featureInfoTemplate", function () {
+      let terria: Terria;
+      let geojson: GeoJsonCatalogItem;
+
+      beforeEach(async function () {
+        terria = new Terria({
+          baseUrl: "./"
+        });
+        geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      });
+
+      it("removes _id_ from template", async function () {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/height.geojson"
+        );
+
+        await geojson.loadMapItems();
+
+        expect(geojson.featureInfoTemplate.template?.indexOf("_id_")).toBe(-1);
+      });
+    });
   });
 });
