@@ -3,6 +3,9 @@
 #### next release (8.7.4)
 
 - Fix position of draggable point after moving.
+- Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
+- The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
+- [The next improvement]
 
 #### 8.7.3 - 2024-05-28
 
@@ -13,9 +16,6 @@
 - Fix WPS date time widget reset bug
 - Set default date for WPS date time widget on load
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
-- Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
-- The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
-- [The next improvement]
 
 #### 8.7.2 - 2024-05-14
 
