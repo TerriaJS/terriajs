@@ -111,11 +111,11 @@ export default class ArcGisImageServerImageryProvider {
     this.baseResource.appendForwardSlash();
 
     if (options.parameters) {
-      this.baseResource.setQueryParameters(options.parameters);
+      this.baseResource.appendQueryParameters(options.parameters);
     }
 
     if (options.token) {
-      this.baseResource.setQueryParameters({
+      this.baseResource.appendQueryParameters({
         token: options.token
       });
     }
