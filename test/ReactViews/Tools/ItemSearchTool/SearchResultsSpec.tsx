@@ -27,10 +27,10 @@ async function render(
   props: Omit<SearchResultsProps, "i18n" | "t" | "tReady">
 ): Promise<ReactTestRenderer> {
   let rendered: ReactTestRenderer;
-  await act(() => {
+  act(() => {
     rendered = create(<SearchResults {...props} />);
   });
-  // @ts-ignore
+  // @ts-expect-error
   return rendered;
 }
 

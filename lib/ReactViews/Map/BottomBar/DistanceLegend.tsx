@@ -160,7 +160,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
       runInAction(() => (terria.mainViewer.scale = maxMeters / 100));
-      // @ts-ignore
+      // @ts-expect-error
       const meters = L.control.scale()._getRoundNum(maxMeters);
       const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 

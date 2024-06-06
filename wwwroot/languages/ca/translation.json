@@ -2215,5 +2215,11 @@
       "unsupportedTypeTitle": "Tipus desconegut"
     },
     "noSearchProviders": "No hi ha proveïdors de cerca configurats"
+  },
+  "relatedMaps": {
+    "buttonTitle": "Veure mapes relacionats",
+    "panelText": "Si feu clic a un mapa de sota, s'obrirà en una finestra o pestanya independent.",
+    "buttonText": "Mapes relacionats",
+    "panelHeading": "Mapes relacionats"
   }
 }
