@@ -1,11 +1,14 @@
-import { runInAction } from "mobx";
+import { reaction, runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisImageServerImageryProvider from "../../../../lib/Map/ImageryProvider/ArcGisImageServerImageryProvider";
 import ArcGisImageServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisImageServerCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
+import { SelectableDimensionEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../../../lib/Models/Terria";
+import { ArcGisImageServerRenderingRule } from "../../../../lib/Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
 
 const rasterFnImageServer = JSON.stringify(
   require("../../../../wwwroot/test/ArcGisImageServer/rasterFns/imageserver.json")
@@ -46,11 +49,11 @@ describe("ArcGisImageServer", function () {
     });
 
     jasmine.Ajax.stubRequest(
-      /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfn\/ImageServer\?.+/
+      /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\?.+/
     ).andReturn({ responseText: rasterFnImageServer });
 
     jasmine.Ajax.stubRequest(
-      /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfn\/ImageServer\/legend\?.+/
+      /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\/legend\?.+/
     ).andReturn({ responseText: rasterFnLegend });
 
     jasmine.Ajax.stubRequest(
@@ -164,74 +167,32 @@ describe("ArcGisImageServer", function () {
       );
       expect(imageServerItem.mapItems[0].show).toBe(false);
     });
-
-    describe("imageryProvider", function () {
-      let imageryProvider: ArcGisImageServerImageryProvider;
-
-      beforeEach(async function () {
-        runInAction(() => {
-          imageServerItem.setTrait(CommonStrata.definition, "parameters", {
-            foo: "bar"
-          });
-          imageServerItem.setTrait(
-            CommonStrata.definition,
-            "minScaleDenominator",
-            1
-          );
-          imageServerItem.setTrait(
-            CommonStrata.definition,
-            "hideLayerAfterMinScaleDenominator",
-            true
-          );
-        });
-
-        await imageServerItem.loadMapItems();
-        imageryProvider = imageServerItem.mapItems[0]
-          .imageryProvider as ArcGisImageServerImageryProvider;
-      });
-
-      it("should be an ArcGisImageServerImageryProvider", function () {
-        expect(
-          imageryProvider instanceof ArcGisImageServerImageryProvider
-        ).toBeTruthy();
-      });
-
-      it("sets the URL correctly", function () {
-        expect(imageryProvider.baseResource.getBaseUri()).toBe(
-          "http://example.com/agsimage/rest/services/time/ImageServer/"
-        );
-      });
-
-      it("tilingScheme should be a WebMercatorTilingScheme", function () {
-        expect(
-          imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
-        ).toBeTruthy();
-      });
-
-      it("sets the maximumLevel", function () {
-        expect(imageryProvider.maximumLevel).toBe(25);
-      });
-
-      it("passes on request parameters", function () {
-        if (!imageServerItem.currentDiscreteJulianDate)
-          throw new Error("No currentDiscreteJulianDate");
-
-        expect(imageryProvider.baseResource.queryParameters).toEqual({
-          ...imageServerItem.parameters,
-          time: JulianDate.toDate(
-            imageServerItem.currentDiscreteJulianDate
-          ).getTime()
-        });
-      });
-
-      it("correctly sets enablePickFeatures", function () {
-        expect(imageryProvider.enablePickFeatures).toBe(true);
-      });
-    });
   });
 
-  it("adds bandIds to parameters", function () {
-    // TODO
+  describe("bandIds", function () {
+    it("adds to parameters", async function () {
+      runInAction(() =>
+        imageServerItem.setTrait(CommonStrata.definition, "bandIds", [2, 3])
+      );
+      expect(imageServerItem.flattenedParameters).toEqual({
+        bandIds: "2,3"
+      });
+
+      await imageServerItem.loadMapItems();
+
+      // Check legend URL
+      expect(spyOnLoad.calls.argsFor(1)[0]).toEqual(
+        "http://example.com/agsimage/rest/services/time/ImageServer/legend?bandIds=2%2C3&f=json"
+      );
+
+      // Check imagery provider
+      const imageryProvider = imageServerItem.mapItems[0]
+        .imageryProvider as ArcGisImageServerImageryProvider;
+
+      expect(imageryProvider.baseResource.queryParameters.bandIds).toEqual(
+        "2,3"
+      );
+    });
   });
 
   describe("image server with time", function () {
@@ -363,16 +324,16 @@ describe("ArcGisImageServer", function () {
     it("sets basic traits", async function () {
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
-      expect(imageServerItem.rectangle.east).toBe(179.6875);
-      expect(imageServerItem.rectangle.north).toBe(90.25);
-      expect(imageServerItem.rectangle.west).toBe(-180.3125);
-      expect(imageServerItem.rectangle.south).toBe(-90.25);
-      expect(imageServerItem.attribution).toBe("Some copyright");
+      expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
+      expect(imageServerItem.rectangle.north).toBe(46.31633967431312);
+      expect(imageServerItem.rectangle.west).toBe(-124.63200690054119);
+      expect(imageServerItem.rectangle.south).toBe(41.93340221567374);
+      expect(imageServerItem.attribution).toBe("Some Copyright");
       expect(imageServerItem.maximumScale).toBe(0);
       expect(imageServerItem.maximumLevel).toBeUndefined();
       expect(imageServerItem.minimumLevel).toBeUndefined();
       expect(imageServerItem.allowRasterFunction).toBe(true);
-      expect(imageServerItem.availableRasterFunctions.length).toBe(0);
+      expect(imageServerItem.availableRasterFunctions.length).toBe(3);
       expect(imageServerItem.disableRasterFunctionSelectors).toBe(false);
       expect(imageServerItem.usePreCachedTiles).toBe(false);
       expect(imageServerItem.tileHeight).toBe(256);
@@ -381,37 +342,126 @@ describe("ArcGisImageServer", function () {
     });
 
     it("creates legend", async function () {
+      await imageServerItem.loadMapItems();
       expect(imageServerItem.legends.length).toBe(1);
-      // TODO
+      expect(imageServerItem.legends[0].items.length).toBe(3);
+      expect(imageServerItem.legends[0].items[0].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAT0lEQVQ4je3RwQkAMAgDwAjiz/1XVUTtEE1/zQCHibK7C1JmRjQiWB7MDJqZXJB5obtzQQDQquKCzA0BPKhMB+mV6U/5G96Df8PrSHdTwQOUlT8HeNXIpAAAAABJRU5ErkJggg=="
+      );
+      expect(imageServerItem.legends[0].items[1].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAUElEQVQ4je3UwQkAMQhE0S+kbcGyjSK7RWQOOWQKeMgMaO7+IUpE2MpMlQfA2ntrQfmF3a0FX4fn4P0dVpUWvH/l1+FxDJB97JkxmxmVB8APVtY8xR14rRcAAAAASUVORK5CYII="
+      );
+      expect(imageServerItem.legends[0].items[2].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAIUlEQVQ4jWP8+/cvAzUBE1VNGzVw1MBRA0cNHDVwCBkIAEMfAx/78kANAAAAAElFTkSuQmCC"
+      );
+
+      expect(imageServerItem.legends[0].items[0].title).toBe(
+        "High : Some value"
+      );
+      expect(imageServerItem.legends[0].items[1].title).toBe("Some label");
+      expect(imageServerItem.legends[0].items[2].title).toBe(
+        "Low : Some value"
+      );
     });
 
-    it("creates legend - with raster fn", async function () {
-      expect(imageServerItem.legends.length).toBe(1);
-      // TODO
-    });
+    it("adds to rasterFn to legend URL - and reloads correctly", async function () {
+      await imageServerItem.loadMapItems();
 
-    it("creates legend - uses bandIds", async function () {
-      expect(imageServerItem.legends.length).toBe(1);
-      // TODO
+      expect(spyOnLoad.calls.argsFor(1)[0]).toEqual(
+        "http://example.com/agsimage/rest/services/rasterfns/ImageServer/legend?f=json"
+      );
+
+      // By observing mapItems, we can trigger a reload when the renderingRule changes
+      const disposer = reaction(
+        () => imageServerItem.mapItems,
+        () => {
+          console.log("woo");
+        }
+      );
+
+      runInAction(() => {
+        imageServerItem.setTrait(
+          CommonStrata.user,
+          "renderingRule",
+          createStratumInstance(ArcGisImageServerRenderingRule, {
+            rasterFunction: "RFTAspectColor"
+          })
+        );
+      });
+
+      expect(spyOnLoad.calls.argsFor(4)[0]).toEqual(
+        "http://example.com/agsimage/rest/services/rasterfns/ImageServer/legend?renderingRule={%22rasterFunction%22%3A%22RFTAspectColor%22}&f=json"
+      );
+
+      disposer();
     });
 
     it("has raster functions", async function () {
-      expect(imageServerItem.availableRasterFunctions.length).toBe(1);
+      expect(imageServerItem.availableRasterFunctions.length).toBe(3);
       expect(imageServerItem.availableRasterFunctions[0].name).toBe(
-        "Hillshade"
+        "RFTAspectColor"
+      );
+      expect(imageServerItem.availableRasterFunctions[1].name).toBe(
+        "RFTHillshade"
+      );
+      expect(imageServerItem.availableRasterFunctions[2].name).toBe(
+        "RFTShadedReliefElevationColorRamp"
+      );
+      expect(imageServerItem.availableRasterFunctions[0].description).toBe(
+        "This function generates a color representation of aspect."
+      );
+      expect(imageServerItem.availableRasterFunctions[1].description).toBe(
+        "This function creates a hillshade effect based on the elevation data source."
+      );
+      expect(imageServerItem.availableRasterFunctions[2].description).toBe(
+        "This function processes the elevation surface as shaded relief. "
       );
     });
 
     it("creates raster fn selectable dimensions", function () {
-      // TODO
+      expect(imageServerItem.selectableDimensions.length).toBe(1);
+      let selDim = imageServerItem
+        .selectableDimensions[0] as SelectableDimensionEnum;
+      expect(selDim.name).toBe(
+        "models.arcGisImageServerCatalogItem.selectableDimensions.rasterFunction"
+      );
+      expect(selDim.allowUndefined).toBeTruthy();
+      expect(selDim.selectedId).toBeUndefined();
+      expect(selDim.options?.length).toBe(3);
+      expect(selDim.options?.[0].id).toBe("RFTAspectColor");
+      expect(selDim.options?.[1].id).toBe("RFTHillshade");
+      expect(selDim.options?.[2].id).toBe("RFTShadedReliefElevationColorRamp");
+
+      runInAction(() => {
+        imageServerItem.setTrait(
+          CommonStrata.user,
+          "renderingRule",
+          createStratumInstance(ArcGisImageServerRenderingRule, {
+            rasterFunction: "RFTHillshade"
+          })
+        );
+      });
+
+      selDim = imageServerItem
+        .selectableDimensions[0] as SelectableDimensionEnum;
+
+      expect(selDim.selectedId).toBe("RFTHillshade");
     });
 
     it("adds rasterfn to parameters", function () {
-      // TODO
-    });
+      runInAction(() => {
+        imageServerItem.setTrait(
+          CommonStrata.user,
+          "renderingRule",
+          createStratumInstance(ArcGisImageServerRenderingRule, {
+            rasterFunction: "RFTHillshade"
+          })
+        );
+      });
 
-    it("creates imagery provider", function () {
-      // TODO
+      expect(imageServerItem.flattenedParameters).toEqual({
+        renderingRule: '{"rasterFunction":"RFTHillshade"}'
+      });
     });
   });
 
@@ -427,42 +477,127 @@ describe("ArcGisImageServer", function () {
     });
 
     it("sets basic traits", async function () {
-      expect(imageServerItem.name).toBe("Surface Geology");
-      expect(imageServerItem.description).toBe("Surface Geology");
-      expect(imageServerItem.rectangle.east).toBe(151.208);
-      expect(imageServerItem.rectangle.north).toBe(-33.868);
-      expect(imageServerItem.rectangle.west).toBe(151.207);
-      expect(imageServerItem.rectangle.south).toBe(-33.869);
-      expect(imageServerItem.attribution).toBe("Geoscience Australia");
-      expect(imageServerItem.maximumScale).toBe(1);
-      expect(imageServerItem.maximumLevel).toBe(1);
-      expect(imageServerItem.minimumLevel).toBe(1);
+      expect(imageServerItem.name).toBe("Some name");
+      expect(imageServerItem.description).toBe("Some description");
+      expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
+      expect(imageServerItem.rectangle.north).toBe(46.31633967431312);
+      expect(imageServerItem.rectangle.west).toBe(-124.63200690054119);
+      expect(imageServerItem.rectangle.south).toBe(41.93340221567374);
+      expect(imageServerItem.attribution).toBe("Some copyright");
+      expect(imageServerItem.maximumScale).toBe(1128.497176);
+      expect(imageServerItem.maximumLevel).toBe(19);
+      expect(imageServerItem.minimumLevel).toBe(0);
       expect(imageServerItem.allowRasterFunction).toBe(true);
       expect(imageServerItem.availableRasterFunctions.length).toBe(0);
       expect(imageServerItem.disableRasterFunctionSelectors).toBe(false);
-      expect(imageServerItem.usePreCachedTiles).toBe(false);
+      expect(imageServerItem.usePreCachedTiles).toBe(true);
       expect(imageServerItem.tileHeight).toBe(256);
       expect(imageServerItem.tileWidth).toBe(256);
       expect(imageServerItem.wkid).toBe(102100);
     });
 
-    it("creates legend", async function () {
-      expect(imageServerItem.legends.length).toBe(1);
-      // TODO
-    });
-
     it("disables tile if parameters", async function () {
-      expect(imageServerItem.legends.length).toBe(1);
-      // TODO
+      runInAction(() =>
+        imageServerItem.setTrait(CommonStrata.definition, "parameters", {
+          foo: "bar"
+        })
+      );
+      expect(imageServerItem.usePreCachedTiles).toBe(false);
     });
 
     it("disables tile if renderRule", async function () {
-      expect(imageServerItem.legends.length).toBe(1);
-      // TODO
+      runInAction(() =>
+        imageServerItem.setTrait(
+          CommonStrata.user,
+          "renderingRule",
+          createStratumInstance(ArcGisImageServerRenderingRule, {
+            rasterFunction: "RFTHillshade"
+          })
+        )
+      );
+
+      expect(imageServerItem.usePreCachedTiles).toBe(false);
     });
 
     it("creates imagery provider", function () {
-      // TODO
+      const imageryProvider = imageServerItem.mapItems[0]
+        ?.imageryProvider as ArcGisImageServerImageryProvider;
+
+      expect(imageryProvider.usePreCachedTiles).toBe(true);
     });
+  });
+});
+
+describe("ArcGisImageServerImageryProvider", function () {
+  let imageryProvider: ArcGisImageServerImageryProvider;
+
+  beforeEach(async function () {
+    imageryProvider = new ArcGisImageServerImageryProvider({
+      url: "http://example.com/agsimage/rest/services/time/ImageServer",
+      token: "fakeToken",
+      credit: "Some credit",
+      parameters: { foo: "bar" },
+      minimumLevel: 1,
+      maximumLevel: 25
+    });
+  });
+
+  it("should be an ArcGisImageServerImageryProvider", function () {
+    expect(
+      imageryProvider instanceof ArcGisImageServerImageryProvider
+    ).toBeTruthy();
+  });
+
+  it("sets the URL correctly", function () {
+    expect(imageryProvider.baseResource.toString()).toMatch(
+      /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\/exportImage+/
+    );
+  });
+
+  it("tilingScheme should be a WebMercatorTilingScheme", function () {
+    expect(
+      imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
+    ).toBeTruthy();
+  });
+
+  it("sets the maximumLevel", function () {
+    expect(imageryProvider.maximumLevel).toBe(25);
+  });
+
+  it("passes on request parameters", function () {
+    expect(imageryProvider.baseResource.queryParameters).toEqual({
+      foo: "bar"
+    });
+  });
+
+  it("correctly sets enablePickFeatures", function () {
+    expect(imageryProvider.enablePickFeatures).toBe(true);
+  });
+
+  it("creates correct image resource for dynamic services", function () {
+    expect(imageryProvider.usePreCachedTiles).toBe(false);
+
+    const testResource = imageryProvider.buildImageResource(0, 0, 0);
+    expect(testResource.url).toBe(
+      "http://example.com/agsimage/rest/services/tile/ImageServer/exportImage?bbox=-20037508.342789244,0,0,20037508.342789244&size=256,256"
+    );
+  });
+
+  it("creates correct image resource for tiles services", function () {
+    const tiledImageryProvider = new ArcGisImageServerImageryProvider({
+      url: "http://example.com/agsimage/rest/services/time/ImageServer",
+      token: "fakeToken",
+      credit: "Some credit",
+      parameters: { foo: "bar" },
+      minimumLevel: 1,
+      maximumLevel: 25,
+      usePreCachedTiles: true
+    });
+    expect(tiledImageryProvider.usePreCachedTiles).toBe(true);
+
+    const testResource = tiledImageryProvider.buildImageResource(0, 0, 0);
+    expect(testResource.url).toBe(
+      "http://example.com/agsimage/rest/services/tile/ImageServer/exportImage?bbox=-20037508.342789244,0,0,20037508.342789244&size=256,256"
+    );
   });
 });
