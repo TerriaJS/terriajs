@@ -3,6 +3,7 @@
 #### next release (8.7.4)
 
 - Fix position of draggable point after moving.
+- Fix bug in FilterSection
 
 #### 8.7.3 - 2024-05-28
 
