@@ -170,7 +170,7 @@ class ImageServerStratum extends LoadableStratum(
     if (
       this._item.parameters ||
       this._item.currentDiscreteJulianDate ||
-      this._item.renderingRule
+      this._item.renderingRule.rasterFunction
     )
       return false;
 
