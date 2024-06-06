@@ -224,14 +224,14 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 
           // Browsers don't tell us much about a failed image load, so we do an
           // XHR to get more error information if needed.
-          const maybeXhr =
+          const maybeXhr: Promise<HTMLImageElement | ImageBitmap> | undefined =
             attemptNumber === 1
               ? Promise.reject(tileProviderError.error)
               : fetchTileImage(tile, imageryProvider);
 
           if (this.handleTileError && maybeXhr) {
             // Give the catalog item a chance to handle this error.
-            this.handleTileError(maybeXhr as any, tile);
+            await this.handleTileError(maybeXhr as any, tile);
           }
 
           try {

@@ -81,7 +81,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
           path.push(member.name!);
 
           const loadPromise = member.loadMembers();
-          const countPromise = member.isLoading
+          const countPromise: Promise<void> = member.isLoading
             ? loadPromise
                 .then((result) => result.throwIfError())
                 .then(

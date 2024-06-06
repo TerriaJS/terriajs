@@ -412,7 +412,7 @@ function ExportWebCoverageServiceMixin<
           );
         });
 
-        pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
+        await pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
 
         // Load WCS metadata (DescribeCoverage request)
         (await this.loadWcsMetadata()).throwIfError();

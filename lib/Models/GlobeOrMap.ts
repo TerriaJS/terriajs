@@ -411,7 +411,7 @@ export default abstract class GlobeOrMap {
               })
             );
 
-            this.terria.overlays.add(catalogItem);
+            await this.terria.overlays.add(catalogItem);
             this._highlightPromise = catalogItem.loadMapItems();
 
             const removeCallback = (this._removeHighlightCallback = () => {

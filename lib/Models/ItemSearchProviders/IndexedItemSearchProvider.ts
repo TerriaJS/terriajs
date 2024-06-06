@@ -105,6 +105,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     const json = await loadJson5(indexRootUrl);
     try {
       this.indexRoot = parseIndexRoot(json);
+      // FIXME: missing await.
       this.getOrLoadResultsData();
     } catch (parseError) {
       console.warn(parseError);

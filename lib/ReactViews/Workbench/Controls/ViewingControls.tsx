@@ -262,7 +262,7 @@ class ViewingControls extends React.Component<
       });
 
       // Add it to terria.catalog, which is required so the new item can be shared.
-      addUserCatalogMember(terria, splitRef, {
+      await addUserCatalogMember(terria, splitRef, {
         open: false
       });
     });

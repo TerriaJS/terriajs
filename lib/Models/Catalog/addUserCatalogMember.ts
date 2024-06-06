@@ -23,7 +23,7 @@ export default async function addUserCatalogMember(
   newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
   options: AddUserCatalogMemberOptions = {}
 ): Promise<BaseModel | undefined> {
-  const promise =
+  const promise: Promise<BaseModel | undefined> =
     newCatalogMemberOrPromise instanceof Promise
       ? newCatalogMemberOrPromise
       : Promise.resolve(newCatalogMemberOrPromise);

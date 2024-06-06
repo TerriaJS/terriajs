@@ -28,7 +28,7 @@ class Tabs extends React.Component {
         result.raiseError(this.props.terria);
       } else {
         if (!file.disableZoomTo) {
-          this.props.terria.currentViewer.zoomTo(file, 1);
+          await this.props.terria.currentViewer.zoomTo(file, 1);
         }
       }
     }
