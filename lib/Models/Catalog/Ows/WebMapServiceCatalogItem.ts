@@ -226,6 +226,18 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) ===
+      undefined
+    )
+      return;
+
+    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
+
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+
     if (this.isNcWMS) {
       const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(
         this.getPalettesUrl()
@@ -238,18 +250,6 @@ class WebMapServiceCatalogItem
         );
       });
     }
-
-    if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) ===
-      undefined
-    )
-      return;
-
-    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
-
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
   }
 
   @override
@@ -664,13 +664,15 @@ class WebMapServiceCatalogItem
       const options: { name: string | undefined; id: string | undefined }[] =
         [];
 
-      if (ncWMSGetMetadataStratum.palettes) {
-        ncWMSGetMetadataStratum.palettes.map((palette) => {
-          options.push({
-            name: palette.name,
-            id: palette.name
-          });
-        });
+      if (ncWMSGetMetadataStratum.availablePalettes) {
+        ncWMSGetMetadataStratum.availablePalettes.map(
+          (palette: { name: any }) => {
+            options.push({
+              name: palette.name,
+              id: palette.name
+            });
+          }
+        );
       }
 
       return [

@@ -755,6 +755,16 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
+  get supportsGetMetadata(): boolean {
+    return this.catalogItem.isNcWMS;
+  }
+
+  @computed
+  get supportsPalettes(): boolean {
+    return this.catalogItem.isNcWMS;
+  }
+
+  @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
