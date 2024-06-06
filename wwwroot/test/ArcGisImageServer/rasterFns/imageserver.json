@@ -4,33 +4,33 @@
   "name": "Some name",
   "description": "Some description",
   "extent": {
-    "xmin": 1440000,
-    "ymin": 535000,
-    "xmax": 1455000,
-    "ymax": 550000,
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
     "spatialReference": {
-      "wkid": 102719,
-      "latestWkid": 2264
+      "wkid": 102100,
+      "latestWkid": 3857
     }
   },
   "initialExtent": {
-    "xmin": 1440000,
-    "ymin": 535000,
-    "xmax": 1455000,
-    "ymax": 550000,
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
     "spatialReference": {
-      "wkid": 102719,
-      "latestWkid": 2264
+      "wkid": 102100,
+      "latestWkid": 3857
     }
   },
   "fullExtent": {
-    "xmin": 1440000,
-    "ymin": 535000,
-    "xmax": 1455000,
-    "ymax": 550000,
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
     "spatialReference": {
-      "wkid": 102719,
-      "latestWkid": 2264
+      "wkid": 102100,
+      "latestWkid": 3857
     }
   },
   "hasMultidimensions": false,
@@ -294,7 +294,7 @@
     "supportsPagination": true
   },
   "spatialReference": {
-    "wkid": 102719,
-    "latestWkid": 2264
+    "wkid": 102100,
+    "latestWkid": 3857
   }
 }
