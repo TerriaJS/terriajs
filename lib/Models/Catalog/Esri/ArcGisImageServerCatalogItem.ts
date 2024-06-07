@@ -503,6 +503,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
       return new ArcGisImageServerImageryProvider({
         url: cleanAndProxyUrl(this, this.url),
         tilingScheme: tilingScheme,
+        rectangle: this.cesiumRectangle,
         maximumLevel: this.maximumLevel,
         minimumLevel: this.minimumLevel,
         tileHeight: this.tileHeight,

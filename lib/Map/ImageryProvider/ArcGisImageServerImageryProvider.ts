@@ -20,19 +20,15 @@ import { ImageServerIdentifyResult } from "../../Models/Catalog/Esri/ArcGisInter
 interface Options {
   url: string;
   token?: string;
-
   minimumLevel?: number;
   maximumLevel?: number;
   rectangle?: Rectangle;
   credit: Credit | string;
-  tileCredits?: Credit[];
   enablePickFeatures?: boolean;
   usePreCachedTiles?: boolean;
   tileWidth?: number;
   tileHeight?: number;
-  ellipsoid?: Ellipsoid;
   tilingScheme?: TilingScheme;
-  tileDiscardPolicy?: TileDiscardPolicy;
   parameters?: JsonObject;
 }
 
@@ -53,7 +49,8 @@ export default class ArcGisImageServerImageryProvider {
   readonly errorEvent = new CesiumEvent();
   readonly ready = true;
   readonly credit: Credit;
-  readonly tileCredits: Credit[] | undefined;
+
+  /** Note: this can be set dynamically */
   enablePickFeatures: boolean;
   readonly usePreCachedTiles: boolean;
   readonly tileDiscardPolicy: TileDiscardPolicy;
@@ -75,13 +72,10 @@ export default class ArcGisImageServerImageryProvider {
   constructor(options: Options) {
     makeObservable(this);
 
-    const ellipsoid = options.ellipsoid;
-    this.tilingScheme =
-      options.tilingScheme ??
-      new GeographicTilingScheme({ ellipsoid: ellipsoid });
+    this.tilingScheme = options.tilingScheme ?? new GeographicTilingScheme();
 
     this.rectangle = options.rectangle ?? this.tilingScheme.rectangle;
-    this.ellipsoid = ellipsoid ?? Ellipsoid.WGS84;
+    this.ellipsoid = Ellipsoid.WGS84;
 
     let credit = options.credit;
     if (typeof credit === "string") {
@@ -89,7 +83,6 @@ export default class ArcGisImageServerImageryProvider {
     }
 
     this.credit = credit;
-    this.tileCredits = options.tileCredits;
 
     this.tileWidth = options.tileWidth ?? 256;
     this.tileHeight = options.tileHeight ?? 256;
@@ -120,21 +113,17 @@ export default class ArcGisImageServerImageryProvider {
       });
     }
 
-    if (options.tileDiscardPolicy) {
-      this.tileDiscardPolicy = options.tileDiscardPolicy;
-    } else {
-      this.tileDiscardPolicy = new DiscardMissingTileImagePolicy({
-        missingImageUrl: this.buildImageResource(0, 0, this.maximumLevel).url,
-        pixelsToCheck: [
-          new Cartesian2(0, 0),
-          new Cartesian2(200, 20),
-          new Cartesian2(20, 200),
-          new Cartesian2(80, 110),
-          new Cartesian2(160, 130)
-        ],
-        disableCheckIfAllPixelsAreTransparent: true
-      });
-    }
+    this.tileDiscardPolicy = new DiscardMissingTileImagePolicy({
+      missingImageUrl: this.buildImageResource(0, 0, this.maximumLevel).url,
+      pixelsToCheck: [
+        new Cartesian2(0, 0),
+        new Cartesian2(200, 20),
+        new Cartesian2(20, 200),
+        new Cartesian2(80, 110),
+        new Cartesian2(160, 130)
+      ],
+      disableCheckIfAllPixelsAreTransparent: true
+    });
   }
 
   get proxy() {
@@ -178,7 +167,7 @@ export default class ArcGisImageServerImageryProvider {
   }
 
   getTileCredits(): Credit[] {
-    return this.tileCredits ?? [];
+    return [];
   }
 
   requestImage(x: number, y: number, level: number): any {
