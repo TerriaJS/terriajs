@@ -102,11 +102,10 @@ export class ArcGisImageServerAvailableVariableTraits extends ModelTraits {
 }
 
 @traitClass({
-  description: `TODO`,
   example: {
-    url: "TODO",
+    url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/CharlotteLAS/ImageServer",
     type: "esri-imageServer",
-    name: "Surface Geology"
+    name: "CharlotteLAS"
   }
 })
 export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
