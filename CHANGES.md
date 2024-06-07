@@ -1,12 +1,15 @@
 # Change Log
 
-#### next release (8.7.4)
+#### next release (8.7.5)
+
+- [The next improvement]
+
+#### 8.7.4 - 2024-06-07
 
 - Fix position of draggable point after moving.
 - Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
 - The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
 - Fix bug in FilterSection
-- [The next improvement]
 
 #### 8.7.3 - 2024-05-28
 
