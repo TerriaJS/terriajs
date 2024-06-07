@@ -431,7 +431,7 @@ describe("ArcGisImageServer", function () {
       let selDim = imageServerItem
         .selectableDimensions[0] as SelectableDimensionEnum;
       expect(selDim.name).toBe(
-        "models.arcGisImageServerCatalogItem.selectableDimensions.rasterFunction"
+        "models.arcGisImageServerCatalogItem.rasterFunction"
       );
       expect(selDim.allowUndefined).toBeTruthy();
       expect(selDim.selectedId).toBeUndefined();

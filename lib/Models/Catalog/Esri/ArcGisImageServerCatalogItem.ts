@@ -505,7 +505,6 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
       return new ArcGisImageServerImageryProvider({
         url: cleanAndProxyUrl(this, this.url),
         tilingScheme: tilingScheme,
-        rectangle: this.cesiumRectangle,
         maximumLevel: this.maximumLevel,
         minimumLevel: this.minimumLevel,
         tileHeight: this.tileHeight,
@@ -542,9 +541,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
     if (this.disableRasterFunctionSelectors) return undefined;
     return {
       id: "raster-functions",
-      name: i18next.t(
-        "models.arcGisImageServerCatalogItem.selectableDimensions.rasterFunction"
-      ),
+      name: i18next.t("models.arcGisImageServerCatalogItem.rasterFunction"),
       options: this.availableRasterFunctions.map((rasterFn) => ({
         id: rasterFn.name,
         name: rasterFn.name,
