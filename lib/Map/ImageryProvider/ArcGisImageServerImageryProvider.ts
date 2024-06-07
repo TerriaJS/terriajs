@@ -77,13 +77,6 @@ export default class ArcGisImageServerImageryProvider {
     this.rectangle = options.rectangle ?? this.tilingScheme.rectangle;
     this.ellipsoid = Ellipsoid.WGS84;
 
-    let credit = options.credit;
-    if (typeof credit === "string") {
-      credit = new Credit(credit);
-    }
-
-    this.credit = credit;
-
     this.tileWidth = options.tileWidth ?? 256;
     this.tileHeight = options.tileHeight ?? 256;
 
@@ -95,7 +88,7 @@ export default class ArcGisImageServerImageryProvider {
     this.credit =
       typeof options.credit === "string"
         ? new Credit(options.credit)
-        : (options.credit as Credit);
+        : options.credit;
 
     this.enablePickFeatures = options.enablePickFeatures ?? true;
     this.usePreCachedTiles = options.usePreCachedTiles ?? false;
