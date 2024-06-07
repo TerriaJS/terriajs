@@ -28,12 +28,20 @@ const timeLegend = JSON.stringify(
   require("../../../../wwwroot/test/ArcGisImageServer/time/legend.json")
 );
 
+const timeIdentify = JSON.stringify(
+  require("../../../../wwwroot/test/ArcGisImageServer/time/identify.json")
+);
+
 const tileImageServer = JSON.stringify(
   require("../../../../wwwroot/test/ArcGisImageServer/tile/imageserver.json")
 );
 
 const tileLegend = JSON.stringify(
   require("../../../../wwwroot/test/ArcGisImageServer/tile/legend.json")
+);
+
+const tileIdentify = JSON.stringify(
+  require("../../../../wwwroot/test/ArcGisImageServer/tile/identify.json")
 );
 
 let spyOnLoad: any;
@@ -539,6 +547,38 @@ describe("ArcGisImageServer", function () {
 describe("ArcGisImageServerImageryProvider", function () {
   let imageryProvider: ArcGisImageServerImageryProvider;
 
+  beforeEach(function () {
+    spyOnLoad = spyOn(loadWithXhr as any, "load").and.callThrough();
+    jasmine.Ajax.install();
+
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction((r) => {
+      console.error(r);
+      throw new Error("Unhandled request: " + r.url);
+    });
+
+    jasmine.Ajax.stubRequest(
+      /http:\/\/example.com\/agsimage\/rest\/services\/.+\/ImageServer.+/
+    ).andReturn({
+      responseText: "fakeImage"
+    });
+
+    jasmine.Ajax.stubRequest(
+      "http://example.com/agsimage/rest/services/time/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%2057.29577951308232%2C%20y%3A%2057.29577951308232%2C%20spatialReference%3A%20{wkid%3A%204326}}&returnCatalogItems=false&token=fakeToken&foo=bar"
+    ).andReturn({
+      responseText: timeIdentify
+    });
+
+    jasmine.Ajax.stubRequest(
+      "http://example.com/agsimage/rest/services/tile/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%206378137%2C%20y%3A%207820815.276085484%2C%20spatialReference%3A%20{wkid%3A%203857}}&returnCatalogItems=false&token=fakeToken&foo=bar"
+    ).andReturn({
+      responseText: tileIdentify
+    });
+  });
+
+  afterEach(function () {
+    jasmine.Ajax.uninstall();
+  });
+
   describe("dynamic web mercator", function () {
     beforeEach(async function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
@@ -661,6 +701,14 @@ describe("ArcGisImageServerImageryProvider", function () {
         "http://example.com/agsimage/rest/services/time/ImageServer/exportImage?bbox=-168.75%2C67.5%2C-157.5%2C78.75&size=512%2C512&format=png32&transparent=true&f=image&bboxSR=4326&imageSR=4326&token=fakeToken&foo=bar"
       );
     });
+
+    it("picks features", async function () {
+      const features = await imageryProvider.pickFeatures(1, 1, 4, 1, 1);
+
+      expect(features.length).toBe(1);
+      expect(features[0].name).toBe("Pixel");
+      expect(features[0].description).toBe("8");
+    });
   });
 
   describe("tiled web mercator", function () {
@@ -722,6 +770,14 @@ describe("ArcGisImageServerImageryProvider", function () {
       expect(testResource.url).toBe(
         "http://example.com/agsimage/rest/services/tile/ImageServer/tile/4/1/1?token=fakeToken&foo=bar"
       );
+    });
+
+    it("picks features", async function () {
+      const features = await imageryProvider.pickFeatures(1, 1, 4, 1, 1);
+
+      expect(features.length).toBe(1);
+      expect(features[0].name).toBe("Pixel");
+      expect(features[0].description).toBe("178, 135, 99, 255");
     });
   });
 });
