@@ -15,22 +15,6 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
 
-export class ArcGisImageServerAvailableBandTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "Band ID",
-    description: "The ID of the Band."
-  })
-  id?: number;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Band Name",
-    description: "The name of the band."
-  })
-  name?: string;
-}
-
 export class ArcGisImageServerRenderingRule extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -76,29 +60,6 @@ export class ArcGisImageServerAvailableRasterFunctionTraits extends ModelTraits 
     description: "Help text for the raster function"
   })
   help?: string;
-}
-
-export class ArcGisImageServerAvailableVariableTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "Variable Name",
-    description: "The name of the variable."
-  })
-  name?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Description",
-    description: "The description of the variable."
-  })
-  description?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Unit",
-    description: "The unit of the variable."
-  })
-  unit?: string;
 }
 
 @traitClass({
