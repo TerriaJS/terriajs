@@ -153,11 +153,13 @@ class MapServerStratum extends LoadableStratum(
     );
 
     // Add any Proj4 definitions if necessary
-    if (item.terria.configParameters.proj4ServiceBaseUrl) {
+    const epsgCode =
+      serviceMetadata.fullExtent.spatialReference?.latestWkid ??
+      serviceMetadata.fullExtent.spatialReference?.wkid;
+    if (epsgCode && item.terria.configParameters.proj4ServiceBaseUrl) {
       await Reproject.checkProjection(
         item.terria.configParameters.proj4ServiceBaseUrl,
-        "EPSG:" + serviceMetadata.fullExtent.spatialReference?.latestWkid ??
-          serviceMetadata.fullExtent.spatialReference?.wkid
+        `EPSG:${epsgCode}`
       );
     }
 
