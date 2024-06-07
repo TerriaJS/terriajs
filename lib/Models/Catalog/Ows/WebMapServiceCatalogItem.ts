@@ -226,18 +226,6 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) ===
-      undefined
-    )
-      return;
-
-    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
-
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
-
     if (this.isNcWMS) {
       const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(
         this.getPalettesUrl()
@@ -250,6 +238,18 @@ class WebMapServiceCatalogItem
         );
       });
     }
+
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+
+    const stratum = await WebMapServiceCapabilitiesStratum.load(this);
+
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
   }
 
   @override
@@ -758,7 +758,7 @@ class WebMapServiceCatalogItem
             const styles = this.styleSelectableDimensions.map(
               (style) => style.selectedId || ""
             );
-            styles[layerIndex] = newStyle ? newStyle : "";
+            styles[layerIndex] = newStyle;
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
