@@ -1,5 +1,7 @@
 import { reaction, runInAction } from "mobx";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisImageServerImageryProvider from "../../../../lib/Map/ImageryProvider/ArcGisImageServerImageryProvider";
@@ -80,6 +82,12 @@ describe("ArcGisImageServer", function () {
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example.com\/agsimage\/rest\/services\/.+\/ImageServer\/exportImage\?.+/
+    ).andReturn({
+      responseText: "fakeImage"
+    });
+
+    jasmine.Ajax.stubRequest(
+      /http:\/\/example.com\/agsimage\/rest\/services\/.+\/ImageServer\/tile.+/
     ).andReturn({
       responseText: "fakeImage"
     });
@@ -531,73 +539,189 @@ describe("ArcGisImageServer", function () {
 describe("ArcGisImageServerImageryProvider", function () {
   let imageryProvider: ArcGisImageServerImageryProvider;
 
-  beforeEach(async function () {
-    imageryProvider = new ArcGisImageServerImageryProvider({
-      url: "http://example.com/agsimage/rest/services/time/ImageServer",
-      token: "fakeToken",
-      credit: "Some credit",
-      parameters: { foo: "bar" },
-      minimumLevel: 1,
-      maximumLevel: 25
+  describe("dynamic web mercator", function () {
+    beforeEach(async function () {
+      imageryProvider = new ArcGisImageServerImageryProvider({
+        url: "http://example.com/agsimage/rest/services/time/ImageServer",
+        token: "fakeToken",
+        credit: "Some credit",
+        parameters: { foo: "bar" },
+        minimumLevel: 1,
+        maximumLevel: 25,
+        rectangle: Rectangle.fromDegrees(-20, -10, 20, 10),
+        enablePickFeatures: true,
+        usePreCachedTiles: false,
+        tileWidth: 256,
+        tileHeight: 256,
+        tilingScheme: new WebMercatorTilingScheme()
+      });
+    });
+
+    it("should be an ArcGisImageServerImageryProvider", function () {
+      expect(
+        imageryProvider instanceof ArcGisImageServerImageryProvider
+      ).toBeTruthy();
+    });
+
+    it("sets basic properties", function () {
+      expect(imageryProvider.credit.html).toBe("Some credit");
+      expect(imageryProvider.minimumLevel).toBe(1);
+      expect(imageryProvider.maximumLevel).toBe(25);
+      expect(imageryProvider.rectangle).toEqual(
+        Rectangle.fromDegrees(-20, -10, 20, 10)
+      );
+      expect(imageryProvider.enablePickFeatures).toBe(true);
+      expect(imageryProvider.tileWidth).toBe(256);
+      expect(imageryProvider.tileHeight).toBe(256);
+    });
+
+    it("sets the URL, token and parameters correctly", function () {
+      expect(imageryProvider.baseResource.toString()).toBe(
+        "http://example.com/agsimage/rest/services/time/ImageServer/?token=fakeToken&foo=bar"
+      );
+      expect(imageryProvider.baseResource.queryParameters).toEqual({
+        foo: "bar",
+        token: "fakeToken"
+      });
+    });
+
+    it("tilingScheme should be a WebMercatorTilingScheme", function () {
+      expect(
+        imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
+      ).toBeTruthy();
+    });
+
+    it("creates correct image resource", function () {
+      expect(imageryProvider.usePreCachedTiles).toBe(false);
+
+      const testResource = imageryProvider.buildImageResource(0, 0, 2);
+      expect(testResource.url).toBe(
+        "http://example.com/agsimage/rest/services/time/ImageServer/exportImage?bbox=-20037508.342789244%2C10018754.171394622%2C-10018754.171394622%2C20037508.342789244&size=256%2C256&format=png32&transparent=true&f=image&bboxSR=3857&imageSR=3857&token=fakeToken&foo=bar"
+      );
     });
   });
 
-  it("should be an ArcGisImageServerImageryProvider", function () {
-    expect(
-      imageryProvider instanceof ArcGisImageServerImageryProvider
-    ).toBeTruthy();
-  });
+  describe("dynamic wgs84", function () {
+    beforeEach(async function () {
+      imageryProvider = new ArcGisImageServerImageryProvider({
+        url: "http://example.com/agsimage/rest/services/time/ImageServer",
+        token: "fakeToken",
+        credit: "Some credit",
+        parameters: { foo: "bar" },
+        minimumLevel: 3,
+        maximumLevel: 5,
+        rectangle: Rectangle.fromDegrees(-20, -10, 20, 10),
+        enablePickFeatures: true,
+        usePreCachedTiles: false,
+        tileWidth: 512,
+        tileHeight: 512,
+        tilingScheme: new GeographicTilingScheme()
+      });
+    });
 
-  it("sets the URL correctly", function () {
-    expect(imageryProvider.baseResource.toString()).toMatch(
-      /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\/exportImage+/
-    );
-  });
+    it("should be an ArcGisImageServerImageryProvider", function () {
+      expect(
+        imageryProvider instanceof ArcGisImageServerImageryProvider
+      ).toBeTruthy();
+    });
 
-  it("tilingScheme should be a WebMercatorTilingScheme", function () {
-    expect(
-      imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
-    ).toBeTruthy();
-  });
+    it("sets basic properties", function () {
+      expect(imageryProvider.credit.html).toBe("Some credit");
+      expect(imageryProvider.minimumLevel).toBe(3);
+      expect(imageryProvider.maximumLevel).toBe(5);
+      expect(imageryProvider.rectangle).toEqual(
+        Rectangle.fromDegrees(-20, -10, 20, 10)
+      );
+      expect(imageryProvider.enablePickFeatures).toBe(true);
+      expect(imageryProvider.tileWidth).toBe(512);
+      expect(imageryProvider.tileHeight).toBe(512);
+    });
 
-  it("sets the maximumLevel", function () {
-    expect(imageryProvider.maximumLevel).toBe(25);
-  });
+    it("sets the URL, token and parameters correctly", function () {
+      expect(imageryProvider.baseResource.toString()).toBe(
+        "http://example.com/agsimage/rest/services/time/ImageServer/?token=fakeToken&foo=bar"
+      );
+      expect(imageryProvider.baseResource.queryParameters).toEqual({
+        foo: "bar",
+        token: "fakeToken"
+      });
+    });
 
-  it("passes on request parameters", function () {
-    expect(imageryProvider.baseResource.queryParameters).toEqual({
-      foo: "bar"
+    it("tilingScheme should be a GeographicTilingScheme", function () {
+      expect(
+        imageryProvider.tilingScheme instanceof GeographicTilingScheme
+      ).toBeTruthy();
+    });
+
+    it("creates correct image resource", function () {
+      expect(imageryProvider.usePreCachedTiles).toBe(false);
+
+      const testResource = imageryProvider.buildImageResource(1, 1, 4);
+      expect(testResource.url).toBe(
+        "http://example.com/agsimage/rest/services/time/ImageServer/exportImage?bbox=-168.75%2C67.5%2C-157.5%2C78.75&size=512%2C512&format=png32&transparent=true&f=image&bboxSR=4326&imageSR=4326&token=fakeToken&foo=bar"
+      );
     });
   });
 
-  it("correctly sets enablePickFeatures", function () {
-    expect(imageryProvider.enablePickFeatures).toBe(true);
-  });
-
-  it("creates correct image resource for dynamic services", function () {
-    expect(imageryProvider.usePreCachedTiles).toBe(false);
-
-    const testResource = imageryProvider.buildImageResource(0, 0, 0);
-    expect(testResource.url).toBe(
-      "http://example.com/agsimage/rest/services/tile/ImageServer/exportImage?bbox=-20037508.342789244,0,0,20037508.342789244&size=256,256"
-    );
-  });
-
-  it("creates correct image resource for tiles services", function () {
-    const tiledImageryProvider = new ArcGisImageServerImageryProvider({
-      url: "http://example.com/agsimage/rest/services/time/ImageServer",
-      token: "fakeToken",
-      credit: "Some credit",
-      parameters: { foo: "bar" },
-      minimumLevel: 1,
-      maximumLevel: 25,
-      usePreCachedTiles: true
+  describe("tiled web mercator", function () {
+    beforeEach(async function () {
+      imageryProvider = new ArcGisImageServerImageryProvider({
+        url: "http://example.com/agsimage/rest/services/tile/ImageServer",
+        token: "fakeToken",
+        credit: "Some credit",
+        parameters: { foo: "bar" },
+        minimumLevel: 0,
+        maximumLevel: 24,
+        rectangle: Rectangle.fromDegrees(-20, -10, 20, 10),
+        enablePickFeatures: true,
+        usePreCachedTiles: true,
+        tileWidth: 256,
+        tileHeight: 256,
+        tilingScheme: new WebMercatorTilingScheme()
+      });
     });
-    expect(tiledImageryProvider.usePreCachedTiles).toBe(true);
 
-    const testResource = tiledImageryProvider.buildImageResource(0, 0, 0);
-    expect(testResource.url).toBe(
-      "http://example.com/agsimage/rest/services/tile/ImageServer/exportImage?bbox=-20037508.342789244,0,0,20037508.342789244&size=256,256"
-    );
+    it("should be an ArcGisImageServerImageryProvider", function () {
+      expect(
+        imageryProvider instanceof ArcGisImageServerImageryProvider
+      ).toBeTruthy();
+    });
+
+    it("sets basic properties", function () {
+      expect(imageryProvider.credit.html).toBe("Some credit");
+      expect(imageryProvider.minimumLevel).toBe(0);
+      expect(imageryProvider.maximumLevel).toBe(24);
+      expect(imageryProvider.rectangle).toEqual(
+        Rectangle.fromDegrees(-20, -10, 20, 10)
+      );
+      expect(imageryProvider.enablePickFeatures).toBe(true);
+      expect(imageryProvider.tileWidth).toBe(256);
+      expect(imageryProvider.tileHeight).toBe(256);
+    });
+
+    it("sets the URL, token and parameters correctly", function () {
+      expect(imageryProvider.baseResource.toString()).toBe(
+        "http://example.com/agsimage/rest/services/tile/ImageServer/?token=fakeToken&foo=bar"
+      );
+      expect(imageryProvider.baseResource.queryParameters).toEqual({
+        foo: "bar",
+        token: "fakeToken"
+      });
+    });
+
+    it("tilingScheme should be a WebMercatorTilingScheme", function () {
+      expect(
+        imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
+      ).toBeTruthy();
+    });
+
+    it("creates correct image resource", function () {
+      expect(imageryProvider.usePreCachedTiles).toBe(true);
+
+      const testResource = imageryProvider.buildImageResource(1, 1, 4);
+      expect(testResource.url).toBe(
+        "http://example.com/agsimage/rest/services/tile/ImageServer/tile/4/1/1?token=fakeToken&foo=bar"
+      );
+    });
   });
 });
