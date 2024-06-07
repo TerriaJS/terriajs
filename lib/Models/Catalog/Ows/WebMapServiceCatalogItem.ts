@@ -651,7 +651,12 @@ class WebMapServiceCatalogItem
 
   @computed
   get paletteDimensions(): SelectableDimensionEnum[] {
-    if (!this.isNcWMS || !this.showPalettes) {
+    console.log(this.styles);
+    if (
+      !this.isNcWMS ||
+      !this.showPalettes ||
+      this.noPaletteStyles.includes(this.styles!)
+    ) {
       return [];
     }
 
@@ -747,26 +752,14 @@ class WebMapServiceCatalogItem
           newStyle: string | undefined
         ) => {
           if (!newStyle) return;
+          console.log("Setting style to", newStyle, "for layer", layerIndex);
 
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
               (style) => style.selectedId || ""
             );
             styles[layerIndex] = newStyle ? newStyle : "";
-
-            if (this.isNcWMS && this.palette) {
-              const currentStyle = newStyle.split("/")[0];
-              const currentPalette = this.palette;
-              const newStyles = currentStyle + "/" + currentPalette;
-              this.setTrait(stratumId, "styles", newStyles);
-              if (this.noPaletteStyles.includes(newStyle)) {
-                this.setTrait(stratumId, "showPalettes", false);
-              } else {
-                this.setTrait(stratumId, "showPalettes", true);
-              }
-            } else {
-              this.setTrait(stratumId, "styles", styles.join(","));
-            }
+            this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
         // There is no way of finding out default style if no style has been selected :(
