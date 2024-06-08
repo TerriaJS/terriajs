@@ -21,12 +21,13 @@ import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 
 const kmzRegex = /\.kmz$/i;
 
 class KmlCatalogItem
   extends MappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+    UrlMixin(CesiumIonMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits))))
   )
   implements HasLocalData
 {
@@ -73,6 +74,8 @@ class KmlCatalogItem
         } else {
           resolve(readXml(this._kmlFile));
         }
+      } else if (isDefined(this.ionResource)) {
+        resolve(this.ionResource);
       } else if (isDefined(this.url)) {
         resolve(proxyCatalogItemUrl(this, this.url));
       } else {
@@ -113,7 +116,7 @@ class KmlCatalogItem
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+    return this.loadIonResource();
   }
 
   private doneLoading(kmlDataSource: KmlDataSource) {

@@ -448,16 +448,28 @@ function CesiumIonConnector() {
       case "3DTILES":
         type = "3d-tiles";
         break;
-      case "TERRAIN":
-        type = "cesium-terrain";
-        break;
       case "GLTF":
         type = "gltf";
+        // TODO
         extras.origin = {
           longitude: 0.0,
           latitude: 0.0,
           height: 0.0
         };
+      case "IMAGERY":
+        type = "ion-imagery";
+        break;
+      case "TERRAIN":
+        type = "cesium-terrain";
+        break;
+      case "CZML":
+        type = "czml";
+        break;
+      case "KML":
+        type = "kml";
+        break;
+      case "GEOJSON":
+        type = "geojson";
         break;
     }
 
