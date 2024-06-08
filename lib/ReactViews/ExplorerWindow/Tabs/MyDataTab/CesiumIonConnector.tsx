@@ -283,9 +283,12 @@ function CesiumIonConnector() {
     if (dangerousScopes.length > 0) {
       return (
         <>
-          <strong>DO NOT USE THIS TOKEN!</strong> It allows access to your
-          Cesium ion account using the following scopes that provide potentially
-          sensitive information or allow changes to be made to your account:{" "}
+          <strong>DO NOT USE THIS TOKEN!</strong> It allows access to your{" "}
+          <a href="https://ion.cesium.com/tokens" target="_blank">
+            Cesium ion account
+          </a>{" "}
+          using the following scopes that provide potentially sensitive
+          information or allow changes to be made to your account:{" "}
           {dangerousScopes.join(", ")}
         </>
       );
