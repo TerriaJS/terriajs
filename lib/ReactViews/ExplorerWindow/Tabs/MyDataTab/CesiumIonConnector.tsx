@@ -210,11 +210,6 @@ function CesiumIonConnector() {
       button: Styles.dropDownButton
     };
 
-    let numberOfAssetsAccessible = -1;
-    if (selectedToken && selectedToken.assetIds) {
-      numberOfAssetsAccessible = selectedToken.assetIds.length;
-    }
-
     return (
       <>
         <label className={AddDataStyles.label}>
@@ -233,15 +228,7 @@ function CesiumIonConnector() {
             [Styles.tokenWarningHidden]: !selectedToken
           })}
         >
-          This token allows access to{" "}
-          <strong>
-            {numberOfAssetsAccessible < 0 ? "every" : numberOfAssetsAccessible}
-          </strong>{" "}
-          {numberOfAssetsAccessible <= 1 ? "asset" : "assets"} in your{" "}
-          <a href="https://ion.cesium.com/tokens" target="_blank">
-            Cesium ion account
-          </a>
-          .
+          {renderTokenWarning()}
         </div>
         <table className={Styles.assetsList}>
           <tbody>
@@ -279,6 +266,48 @@ function CesiumIonConnector() {
           </button>
         </div>
       </div>
+    );
+  }
+
+  function renderTokenWarning() {
+    if (!selectedToken) return;
+
+    const dangerousScopes = [];
+    for (const scope of selectedToken.scopes ?? []) {
+      // Only these scopes are "safe".
+      if (scope !== "assets:read" && scope !== "geocode") {
+        dangerousScopes.push(scope);
+      }
+    }
+
+    if (dangerousScopes.length > 0) {
+      return (
+        <>
+          <strong>DO NOT USE THIS TOKEN!</strong> It allows access to your
+          Cesium ion account using the following scopes that provide potentially
+          sensitive information or allow changes to be made to your account:{" "}
+          {dangerousScopes.join(", ")}
+        </>
+      );
+    }
+
+    let numberOfAssetsAccessible = -1;
+    if (selectedToken.assetIds) {
+      numberOfAssetsAccessible = selectedToken.assetIds.length;
+    }
+
+    return (
+      <>
+        This token allows access to{" "}
+        <strong>
+          {numberOfAssetsAccessible < 0 ? "every" : numberOfAssetsAccessible}
+        </strong>{" "}
+        {numberOfAssetsAccessible <= 1 ? "asset" : "assets"} in your{" "}
+        <a href="https://ion.cesium.com/tokens" target="_blank">
+          Cesium ion account
+        </a>
+        .
+      </>
     );
   }
 
