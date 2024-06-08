@@ -2,7 +2,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { addOrReplaceRemoteFileUploadType } from "../../../../Core/getDataType";
 import { t } from "i18next";
-import { useViewState } from "terriajs-plugin-api";
 import URI from "urijs";
 import { string } from "prop-types";
 import { Trans, withTranslation } from "react-i18next";
@@ -18,6 +17,7 @@ import Icon from "../../../../Styled/Icon";
 import classNames from "classnames";
 import { RawButton } from "../../../../Styled/Button";
 import styled from "styled-components";
+import { useViewState } from "../../../Context";
 
 interface CesiumIonToken {
   id?: string;
@@ -390,28 +390,19 @@ function CesiumIonConnector() {
 
   function addToMap(asset: CesiumIonAsset) {
     if (!selectedToken) return;
+
+    const definition = createCatalogItemDefinitionFromAsset(
+      asset,
+      selectedToken
+    );
+    if (!definition) return;
+
     const newItem = upsertModelFromJson(
       CatalogMemberFactory,
       viewState.terria,
       "",
       CommonStrata.definition,
-      {
-        type: "3d-tiles",
-        name: asset.name ?? "Unnamed",
-        description: asset.description ?? "",
-        ionAssetId: asset.id ?? "0",
-        ionAccessToken: selectedToken.token,
-        info: [
-          {
-            name: "Cesium ion Account",
-            content: userProfile.username
-          },
-          {
-            name: "Cesium ion Token",
-            content: selectedToken.name ?? selectedToken.id
-          }
-        ]
-      },
+      definition,
       {}
     ).throwIfUndefined({
       message: `An error occurred trying to add asset: ${asset.name}`
@@ -445,6 +436,51 @@ function CesiumIonConnector() {
     // });
 
     //console.log(`Token: ${selectedToken?.name} Asset: ${selectedAsset?.name}`);
+  }
+
+  function createCatalogItemDefinitionFromAsset(
+    asset: CesiumIonAsset,
+    token: CesiumIonToken
+  ) {
+    let type = "";
+    const extras: any = {};
+    switch (asset.type) {
+      case "3DTILES":
+        type = "3d-tiles";
+        break;
+      case "TERRAIN":
+        type = "cesium-terrain";
+        break;
+      case "GLTF":
+        type = "gltf";
+        extras.origin = {
+          longitude: 0.0,
+          latitude: 0.0,
+          height: 0.0
+        };
+        break;
+    }
+
+    if (type === "") return undefined;
+
+    return {
+      name: asset.name ?? "Unnamed",
+      type: type,
+      description: asset.description ?? "",
+      ionAssetId: Number.parseInt(asset.id ?? "0"),
+      ionAccessToken: token.token,
+      info: [
+        {
+          name: "Cesium ion Account",
+          content: userProfile.username
+        },
+        {
+          name: "Cesium ion Token",
+          content: token.name ?? token.id
+        }
+      ],
+      ...extras
+    };
   }
 }
 
