@@ -15,6 +15,9 @@ import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
 import Dropdown from "../../../Generic/Dropdown";
 import Icon from "../../../../Styled/Icon";
+import classNames from "classnames";
+import { RawButton } from "../../../../Styled/Button";
+import styled from "styled-components";
 
 interface CesiumIonToken {
   id?: string;
@@ -43,6 +46,22 @@ interface CesiumIonAsset {
   archivable?: boolean;
   exportable?: boolean;
 }
+
+const ActionButton = styled(RawButton)`
+  svg {
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+    fill: ${(p) => p.theme.charcoalGrey};
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: ${(p) => p.theme.modalHighlight};
+    }
+  }
+`;
 
 function CesiumIonConnector() {
   const tokenLocalStorageName = "cesium-ion-login-token";
@@ -155,9 +174,33 @@ function CesiumIonConnector() {
           <strong>Step 2:</strong>
         </Trans>
       </label>
-      {accessToken.length > 0 ? renderConnected() : renderDisconnected()}
+      {accessToken.length > 0
+        ? renderConnectedOrConnecting()
+        : renderDisconnected()}
     </>
   );
+
+  function renderConnectedOrConnecting() {
+    return (
+      <>
+        {userProfile.username.length > 0 ? (
+          <label className={AddDataStyles.label}>
+            Connected to Cesium ion as {userProfile.username}
+          </label>
+        ) : (
+          <label className={AddDataStyles.label}>
+            Loading user profile information...
+          </label>
+        )}
+        <button className={Styles.connectButton} onClick={disconnect}>
+          Disconnect
+        </button>
+        {userProfile.username.length > 0
+          ? renderConnected()
+          : renderConnecting()}
+      </>
+    );
+  }
 
   function renderConnected() {
     const dropdownTheme = {
@@ -174,18 +217,6 @@ function CesiumIonConnector() {
 
     return (
       <>
-        {userProfile.username.length > 0 ? (
-          <label className={AddDataStyles.label}>
-            Connected to Cesium ion as {userProfile.username}
-          </label>
-        ) : (
-          <label className={AddDataStyles.label}>
-            Loading user profile information...
-          </label>
-        )}
-        <button className={Styles.connectButton} onClick={disconnect}>
-          Disconnect
-        </button>
         <label className={AddDataStyles.label}>
           <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
         </label>
@@ -197,7 +228,11 @@ function CesiumIonConnector() {
           matchWidth
           theme={dropdownTheme}
         />
-        <div className={Styles.tokenWarning}>
+        <div
+          className={classNames(Styles.tokenWarning, {
+            [Styles.tokenWarningHidden]: !selectedToken
+          })}
+        >
           This token allows access to{" "}
           <strong>
             {numberOfAssetsAccessible < 0 ? "every" : numberOfAssetsAccessible}
@@ -208,31 +243,22 @@ function CesiumIonConnector() {
           </a>
           .
         </div>
-        <label className={AddDataStyles.label}>
-          <Trans i18nKey="addData.cesiumIonAsset">Cesium ion Asset:</Trans>
-        </label>
-        {/* <table className={Styles.assetsList}>
+        <table className={Styles.assetsList}>
           <tbody>
             <tr>
+              <th></th>
               <th>Name</th>
               <th>Type</th>
             </tr>
             {assets.map(renderAssetRow)}
           </tbody>
-        </table> */}
-        <Dropdown
-          options={assets}
-          textProperty="uniqueName"
-          selected={selectedAsset}
-          selectOption={setSelectedAsset}
-          matchWidth
-          theme={dropdownTheme}
-        />
-        <button className={Styles.connectButton} onClick={addToMap}>
-          Add to Map
-        </button>
+        </table>
       </>
     );
+  }
+
+  function renderConnecting() {
+    return <></>;
   }
 
   function renderDisconnected() {
@@ -259,6 +285,15 @@ function CesiumIonConnector() {
   function renderAssetRow(asset: CesiumIonAsset) {
     return (
       <tr>
+        <td>
+          <ActionButton
+            type="button"
+            onClick={addToMap.bind(undefined, asset)}
+            title={t("catalogItem.add")}
+          >
+            <Icon glyph={Icon.GLYPHS.add} className={Styles.addAssetButton} />
+          </ActionButton>
+        </td>
         <td>{asset.name}</td>
         <td>{asset.type}</td>
       </tr>
@@ -321,8 +356,8 @@ function CesiumIonConnector() {
     setUserProfile(defaultProfile);
   }
 
-  function addToMap() {
-    if (!selectedAsset || !selectedToken) return;
+  function addToMap(asset: CesiumIonAsset) {
+    if (!selectedToken) return;
     const newItem = upsertModelFromJson(
       CatalogMemberFactory,
       viewState.terria,
@@ -330,9 +365,9 @@ function CesiumIonConnector() {
       CommonStrata.definition,
       {
         type: "3d-tiles",
-        name: selectedAsset.name ?? "Unnamed",
-        description: selectedAsset.description ?? "",
-        ionAssetId: selectedAsset.id ?? "0",
+        name: asset.name ?? "Unnamed",
+        description: asset.description ?? "",
+        ionAssetId: asset.id ?? "0",
         ionAccessToken: selectedToken.token,
         info: [
           {
@@ -347,7 +382,7 @@ function CesiumIonConnector() {
       },
       {}
     ).throwIfUndefined({
-      message: `An error occurred trying to add asset: ${selectedAsset.name}`
+      message: `An error occurred trying to add asset: ${asset.name}`
     });
 
     addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then(

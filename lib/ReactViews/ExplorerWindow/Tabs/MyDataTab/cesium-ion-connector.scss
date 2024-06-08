@@ -14,6 +14,10 @@
   font-size: 0.9em
 }
 
+.token-warning-hidden {
+  visibility: hidden;
+}
+
 .drop-down {
   height: 40px;
 }
@@ -24,4 +28,8 @@
 
 .assets-list {
   overflow-y: auto;
+}
+
+.add-asset-button {
+  vertical-align: middle;
 }

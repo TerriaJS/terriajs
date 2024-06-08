@@ -110,6 +110,8 @@ export default class ViewState {
 
   @observable printWindow: Window | null = null;
 
+  @observable remoteDataType: any | undefined = undefined;
+
   /**
    * Toggles ActionBar visibility. Do not set manually, it is
    * automatically set when rendering <ActionBar>
