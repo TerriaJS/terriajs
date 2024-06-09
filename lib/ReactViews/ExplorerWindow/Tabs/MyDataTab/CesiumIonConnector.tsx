@@ -394,7 +394,7 @@ function CesiumIonConnector() {
     setUserProfile(defaultProfile);
   }
 
-  function addToMap(asset: CesiumIonAsset) {
+  function addToMap(asset: CesiumIonAsset, event: React.MouseEvent<HTMLButtonElement>) {
     if (!selectedToken) return;
 
     const definition = createCatalogItemDefinitionFromAsset(
@@ -414,6 +414,8 @@ function CesiumIonConnector() {
       message: `An error occurred trying to add asset: ${asset.name}`
     });
 
+    const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+
     addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then(
       (addedItem) => {
         if (addedItem) {
@@ -429,6 +431,10 @@ function CesiumIonConnector() {
         //   isLoading: false
         // });
         // this.props.resetTab();
+
+        if (!keepCatalogOpen) {
+          viewState.closeCatalog();
+        }
       }
     );
 
