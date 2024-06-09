@@ -8,7 +8,6 @@ import PropTypes from "prop-types";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import AddData from "./AddData.jsx";
 import { withTranslation, Trans } from "react-i18next";
-import "./CesiumIonConnector";
 
 import Styles from "./my-data-tab.scss";
 import DataCatalogMember from "../../../DataCatalog/DataCatalogMember";
