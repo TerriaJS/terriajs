@@ -377,7 +377,6 @@ function CesiumIonConnector() {
   }
 
   function connect() {
-    // TODO: these need to be configurable
     const clientID =
       viewState.terria.configParameters.cesiumIonOAuth2ApplicationID;
     const redirectUri = URI("build/TerriaJS/cesium-ion-oauth2.html")
