@@ -18,6 +18,7 @@ import classNames from "classnames";
 import { RawButton } from "../../../../Styled/Button";
 import styled from "styled-components";
 import { useViewState } from "../../../Context";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
 
 interface CesiumIonToken {
   id?: string;
@@ -74,9 +75,11 @@ function CesiumIonConnector() {
   });
 
   const [tokens, setTokens] = React.useState<CesiumIonToken[]>([]);
+  const [isLoadingTokens, setIsLoadingTokens] = React.useState<boolean>(false);
   const [assets, setAssets] = React.useState<CesiumIonAsset[]>([]);
+  const [isLoadingAssets, setIsLoadingAssets] = React.useState<boolean>(false);
 
-  const [accessToken, setAccessToken] = React.useState(
+  const [loginToken, setLoginToken] = React.useState(
     localStorage.getItem(tokenLocalStorageName) ?? ""
   );
 
@@ -90,6 +93,8 @@ function CesiumIonConnector() {
     storage: {}
   };
   const [userProfile, setUserProfile] = React.useState(defaultProfile);
+  const [isLoadingUserProfile, setIsLoadingUserProfile] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     const codeChallenge = [...crypto.getRandomValues(new Uint8Array(32))]
@@ -110,9 +115,11 @@ function CesiumIonConnector() {
   }, []);
 
   React.useEffect(() => {
+    setIsLoadingUserProfile(true);
+
     fetch("https://api.cesium.com/v1/me", {
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${loginToken}`
       }
     })
       .then((response) => {
@@ -124,15 +131,18 @@ function CesiumIonConnector() {
         } else {
           setUserProfile(defaultProfile);
         }
+        setIsLoadingUserProfile(false);
       });
-  }, [accessToken]);
+  }, [loginToken]);
 
   React.useEffect(() => {
-    if (accessToken.length === 0) return;
+    if (loginToken.length === 0) return;
+
+    setIsLoadingAssets(true);
 
     fetch("https://api.cesium.com/v1/assets", {
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${loginToken}`
       }
     })
       .then((response) => response.json())
@@ -141,15 +151,18 @@ function CesiumIonConnector() {
           item.uniqueName = `${item.name} (${item.id})`;
         });
         setAssets(assets.items);
+        setIsLoadingAssets(false);
       });
-  }, [accessToken]);
+  }, [loginToken]);
 
   React.useEffect(() => {
-    if (accessToken.length === 0) return;
+    if (loginToken.length === 0) return;
+
+    setIsLoadingTokens(true);
 
     fetch("https://api.cesium.com/v2/tokens", {
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${loginToken}`
       }
     })
       .then((response) => response.json())
@@ -158,8 +171,9 @@ function CesiumIonConnector() {
           item.uniqueName = `${item.name} (${item.id})`;
         });
         setTokens(tokens.items);
+        setIsLoadingTokens(false);
       });
-  }, [accessToken]);
+  }, [loginToken]);
 
   let selectedToken = viewState.currentCesiumIonToken
     ? tokens.find((token) => token.id == viewState.currentCesiumIonToken)
@@ -180,7 +194,7 @@ function CesiumIonConnector() {
           <strong>Step 2:</strong>
         </Trans>
       </label>
-      {accessToken.length > 0
+      {loginToken.length > 0
         ? renderConnectedOrConnecting()
         : renderDisconnected()}
     </>
@@ -189,13 +203,13 @@ function CesiumIonConnector() {
   function renderConnectedOrConnecting() {
     return (
       <>
-        {userProfile.username.length > 0 ? (
+        {isLoadingUserProfile ? (
           <label className={AddDataStyles.label}>
-            Connected to Cesium ion as {userProfile.username}
+            Loading user profile information...
           </label>
         ) : (
           <label className={AddDataStyles.label}>
-            Loading user profile information...
+            Connected to Cesium ion as {userProfile.username}
           </label>
         )}
         <button className={Styles.connectButton} onClick={disconnect}>
@@ -221,14 +235,18 @@ function CesiumIonConnector() {
         <label className={AddDataStyles.label}>
           <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
         </label>
-        <Dropdown
-          options={tokens}
-          textProperty="uniqueName"
-          selected={selectedToken}
-          selectOption={setSelectedToken}
-          matchWidth
-          theme={dropdownTheme}
-        />
+        {isLoadingTokens ? (
+          <label className={AddDataStyles.label}>Loading token list...</label>
+        ) : (
+          <Dropdown
+            options={tokens}
+            textProperty="uniqueName"
+            selected={selectedToken}
+            selectOption={setSelectedToken}
+            matchWidth
+            theme={dropdownTheme}
+          />
+        )}
         <div
           className={classNames(Styles.tokenWarning, {
             [Styles.tokenWarningHidden]: !selectedToken
@@ -236,16 +254,20 @@ function CesiumIonConnector() {
         >
           {renderTokenWarning()}
         </div>
-        <table className={Styles.assetsList}>
-          <tbody>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Type</th>
-            </tr>
-            {assets.map(renderAssetRow)}
-          </tbody>
-        </table>
+        {isLoadingAssets ? (
+          <label className={AddDataStyles.label}>Loading asset list...</label>
+        ) : (
+          <table className={Styles.assetsList}>
+            <tbody>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Type</th>
+              </tr>
+              {assets.map(renderAssetRow)}
+            </tbody>
+          </table>
+        )}
       </>
     );
   }
@@ -381,7 +403,7 @@ function CesiumIonConnector() {
         })
         .then((response) => {
           localStorage.setItem(tokenLocalStorageName, response.access_token);
-          setAccessToken(response.access_token);
+          setLoginToken(response.access_token);
         });
     };
 
@@ -390,11 +412,14 @@ function CesiumIonConnector() {
 
   function disconnect() {
     localStorage.removeItem(tokenLocalStorageName);
-    setAccessToken("");
+    setLoginToken("");
     setUserProfile(defaultProfile);
   }
 
-  function addToMap(asset: CesiumIonAsset, event: React.MouseEvent<HTMLButtonElement>) {
+  function addToMap(
+    asset: CesiumIonAsset,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
     if (!selectedToken) return;
 
     const definition = createCatalogItemDefinitionFromAsset(
@@ -419,35 +444,16 @@ function CesiumIonConnector() {
     addUserCatalogMember(viewState.terria, Promise.resolve(newItem)).then(
       (addedItem) => {
         if (addedItem) {
-          // this.props.onFileAddFinished([addedItem]);
-          // if (TimeVarying.is(addedItem)) {
-          //   this.props.terria.timelineStack.addToTop(addedItem);
-          // }
+          if (TimeVarying.is(addedItem)) {
+            viewState.terria.timelineStack.addToTop(addedItem);
+          }
         }
-
-        // FIXME: Setting state here might result in a react warning if the
-        // component unmounts before the promise finishes
-        // this.setState({
-        //   isLoading: false
-        // });
-        // this.props.resetTab();
 
         if (!keepCatalogOpen) {
           viewState.closeCatalog();
         }
       }
     );
-
-    //newItem.setTrait(CommonStrata.user, "url", url);
-    // promise = newItem.loadMetadata().then((result) => {
-    //   if (result.error) {
-    //     return Promise.reject(result.error);
-    //   }
-
-    //   return Promise.resolve(newItem);
-    // });
-
-    //console.log(`Token: ${selectedToken?.name} Asset: ${selectedAsset?.name}`);
   }
 
   function createCatalogItemDefinitionFromAsset(
