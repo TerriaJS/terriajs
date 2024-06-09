@@ -47,7 +47,6 @@ terriamap:
       - simple
     parameters:
       cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
-      cesiumIonOAuth2ApplicationID: 713
       useCesiumIonBingImagery: true
       googleAnalyticsKey:
       disclaimer:

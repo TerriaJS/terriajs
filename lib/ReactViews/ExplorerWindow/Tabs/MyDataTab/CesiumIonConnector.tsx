@@ -63,7 +63,7 @@ const ActionButton = styled(RawButton)`
 `;
 
 function CesiumIonConnector() {
-  if (!crypto.subtle) {
+  if (!crypto || !crypto.subtle) {
     return (
       <label className={AddDataStyles.label}>
         This service is not currently available. The most likely cause is that
