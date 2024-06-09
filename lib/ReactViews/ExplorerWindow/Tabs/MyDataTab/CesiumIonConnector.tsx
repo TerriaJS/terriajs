@@ -63,6 +63,14 @@ const ActionButton = styled(RawButton)`
 `;
 
 function CesiumIonConnector() {
+  if (!crypto.subtle) {
+    return (
+      <label className={AddDataStyles.label}>
+        This service is not currently available. The most likely cause is that
+        this web page is being accessed with `http` instead of `https`.
+      </label>
+    );
+  }
   const tokenLocalStorageName = "cesium-ion-login-token";
 
   const viewState = useViewState();
