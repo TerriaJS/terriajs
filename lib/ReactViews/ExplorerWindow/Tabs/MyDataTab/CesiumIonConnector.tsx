@@ -75,12 +75,6 @@ function CesiumIonConnector() {
 
   const [tokens, setTokens] = React.useState<CesiumIonToken[]>([]);
   const [assets, setAssets] = React.useState<CesiumIonAsset[]>([]);
-  const [selectedToken, setSelectedToken] = React.useState<
-    CesiumIonToken | undefined
-  >(undefined);
-  const [selectedAsset, setSelectedAsset] = React.useState<
-    CesiumIonAsset | undefined
-  >(undefined);
 
   const [accessToken, setAccessToken] = React.useState(
     localStorage.getItem(tokenLocalStorageName) ?? ""
@@ -166,6 +160,14 @@ function CesiumIonConnector() {
         setTokens(tokens.items);
       });
   }, [accessToken]);
+
+  const selectedToken = viewState.currentCesiumIonToken
+    ? tokens.find((token) => token.id == viewState.currentCesiumIonToken)
+    : undefined;
+
+  const setSelectedToken = (token: CesiumIonToken) => {
+    viewState.currentCesiumIonToken = token.id;
+  };
 
   return (
     <>
