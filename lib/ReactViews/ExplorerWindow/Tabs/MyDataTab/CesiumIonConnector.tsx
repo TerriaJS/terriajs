@@ -161,9 +161,13 @@ function CesiumIonConnector() {
       });
   }, [accessToken]);
 
-  const selectedToken = viewState.currentCesiumIonToken
+  let selectedToken = viewState.currentCesiumIonToken
     ? tokens.find((token) => token.id == viewState.currentCesiumIonToken)
     : undefined;
+
+  if (selectedToken === undefined && tokens.length > 0) {
+    selectedToken = tokens[0];
+  }
 
   const setSelectedToken = (token: CesiumIonToken) => {
     viewState.currentCesiumIonToken = token.id;
