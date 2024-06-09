@@ -63,14 +63,6 @@ const ActionButton = styled(RawButton)`
 `;
 
 function CesiumIonConnector() {
-  if (!crypto || !crypto.subtle) {
-    return (
-      <label className={AddDataStyles.label}>
-        This service is not currently available. The most likely cause is that
-        this web page is being accessed with `http` instead of `https`.
-      </label>
-    );
-  }
   const tokenLocalStorageName = "cesium-ion-login-token";
 
   const viewState = useViewState();
@@ -103,6 +95,8 @@ function CesiumIonConnector() {
     React.useState<boolean>(false);
 
   React.useEffect(() => {
+    if (!crypto || !crypto.subtle) return;
+
     const codeChallenge = [...crypto.getRandomValues(new Uint8Array(32))]
       .map((x) => x.toString(16).padStart(2, "0"))
       .join("");
@@ -121,6 +115,8 @@ function CesiumIonConnector() {
   }, []);
 
   React.useEffect(() => {
+    if (loginToken.length === 0) return;
+
     setIsLoadingUserProfile(true);
 
     fetch("https://api.cesium.com/v1/me", {
@@ -197,6 +193,15 @@ function CesiumIonConnector() {
   const setSelectedToken = (token: CesiumIonToken) => {
     viewState.currentCesiumIonToken = token.id;
   };
+
+  if (!crypto || !crypto.subtle) {
+    return (
+      <label className={AddDataStyles.label}>
+        This service is not currently available. The most likely cause is that
+        this web page is being accessed with `http` instead of `https`.
+      </label>
+    );
+  }
 
   return (
     <>
