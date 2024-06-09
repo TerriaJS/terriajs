@@ -6,7 +6,6 @@ import React, {
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
-import styled from "styled-components";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext

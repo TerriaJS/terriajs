@@ -2139,4 +2139,14 @@ describe("TableMixin", function () {
       expect(item.activeStyle).toBe("parkflag");
     });
   });
+
+  describe("applies default featureInfoTemplate", function () {
+    it("removes _id_ from template", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+
+      (await item.loadMapItems()).throwIfError();
+
+      expect(item.featureInfoTemplate.template?.indexOf("_id_")).toBe(-1);
+    });
+  });
 });

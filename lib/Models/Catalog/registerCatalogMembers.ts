@@ -1,4 +1,3 @@
-import { uniq } from "lodash-es";
 import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
 import CatalogGroup from "./CatalogGroup";
@@ -356,37 +355,37 @@ export default function registerCatalogMembers() {
 
   // These don't even try to match a URL, they're just total fallbacks. We really, really want something to work.
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     WebMapServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisMapServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisMapServerCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisFeatureServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    (s) => true,
+    (_s) => true,
     ArcGisFeatureServerCatalogGroup.type,
     true
   );

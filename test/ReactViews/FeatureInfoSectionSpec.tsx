@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
-import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -26,12 +25,14 @@ import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
-import mixTraits from "../../lib/Traits/mixTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -381,6 +382,31 @@ describe("FeatureInfoSection", function () {
     expect(findWithText(result, "ham").length).toEqual(1);
   });
 
+  it("gracefully handles bad nested JSON", function () {
+    feature = new Entity({
+      name: "Meals",
+      properties: {
+        somethingBad: "{broken object",
+        somethingGood: JSON.stringify({ good: "this object is good" })
+      }
+    });
+    const section = (
+      <FeatureInfoSection
+        catalogItem={catalogItem}
+        feature={feature}
+        isOpen
+        viewState={viewState}
+        t={() => {}}
+      />
+    );
+    const result = createWithContexts(viewState, section);
+
+    expect(findWithText(result, "{broken object").length).toEqual(1);
+    expect(
+      findWithText(result, `{"good":"this object is good"}`).length
+    ).toEqual(1);
+  });
+
   describe("templating", function () {
     it("uses and completes a string-form featureInfoTemplate if present", function () {
       const template = "This is a {{material}} {{foo}}.";
@@ -400,6 +426,52 @@ describe("FeatureInfoSection", function () {
       );
       const result = createWithContexts(viewState, section);
       expect(findWithText(result, "This is a steel bar.").length).toEqual(1);
+    });
+
+    it("uses activeStyle of catalog item having TableTraits in featureInfoTemplate", function () {
+      const csvItem = new CsvCatalogItem("testId", terria, undefined);
+      csvItem.setTrait(CommonStrata.user, "activeStyle", "User Style");
+      // Do not specify the styles as TableStyleTraits[] type, as it will cause an error in the vscode editor.
+      const styles = [
+        {
+          id: "User Style",
+          color: {
+            colorColumn: "ste_name",
+            colorPalette: "HighContrast"
+          },
+          hidden: false
+        },
+        {
+          id: "Other Style",
+          color: {
+            colorColumn: "other",
+            colorPalette: "HighContrast"
+          },
+          hidden: false
+        }
+      ];
+
+      updateModelFromJson(csvItem, CommonStrata.user, { styles });
+
+      const template = "The active style id is {{terria.activeStyle.id}}.";
+      csvItem.featureInfoTemplate.setTrait(
+        CommonStrata.definition,
+        "template",
+        template
+      );
+      const section = (
+        <FeatureInfoSection
+          catalogItem={csvItem}
+          feature={feature}
+          isOpen
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = createWithContexts(viewState, section);
+      expect(
+        findWithText(result, "The active style id is User Style.").length
+      ).toEqual(1);
     });
 
     it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {

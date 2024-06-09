@@ -17,7 +17,7 @@ import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
 import { WithViewState, withViewState } from "../Context";
-import { applyTranslationIfExists } from "./../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 interface IProps extends WithTranslation, WithViewState {
   theme: DefaultTheme;
@@ -124,7 +124,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     }
   }
 
-  changeSendShareUrl(e: React.ChangeEvent<HTMLInputElement>) {
+  changeSendShareUrl(_e: React.ChangeEvent<HTMLInputElement>) {
     this.setState((prevState: IState) => ({
       sendShareURL: !prevState.sendShareURL
     }));

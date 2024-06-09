@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
-import { SpacingSpan } from "./../../Styled/Spacing";
+import { SpacingSpan } from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
 

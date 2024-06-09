@@ -2,7 +2,7 @@
 import L from "leaflet";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { FC, useEffect, useState, memo } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
@@ -160,7 +160,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
       runInAction(() => (terria.mainViewer.scale = maxMeters / 100));
-      // @ts-ignore
+      // @ts-expect-error
       const meters = L.control.scale()._getRoundNum(maxMeters);
       const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 

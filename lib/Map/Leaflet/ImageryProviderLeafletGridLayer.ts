@@ -1,4 +1,4 @@
-import L, { TileEvent } from "leaflet";
+import L from "leaflet";
 import {
   autorun,
   computed,

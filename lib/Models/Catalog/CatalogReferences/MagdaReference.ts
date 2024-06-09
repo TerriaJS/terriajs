@@ -522,7 +522,7 @@ export default class MagdaReference extends AccessControlMixin(
         group.setTrait(magdaRecordStratum, "name", record.name);
       }
       group.setTrait(magdaRecordStratum, "members", filterOutUndefined(ids));
-      if (GroupMixin.isMixedInto(group)) {
+      if (GroupMixin.isMixedInto(group) && group.uniqueId) {
         console.log(`Refreshing ids for ${group.uniqueId}`);
         group.refreshKnownContainerUniqueIds(group.uniqueId);
       }

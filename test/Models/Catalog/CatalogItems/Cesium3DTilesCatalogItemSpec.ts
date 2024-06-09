@@ -337,7 +337,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       "color"
     ]);
     item.setFeatureVisibility(feature, false);
-    // @ts-ignore
+    // @ts-expect-error
     expect(item.style.show.conditions).toEqual([
       ['${color} === "red" && ${doorNumber} === 10', false],
       ["true", true] // fallback rule

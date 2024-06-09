@@ -12,7 +12,7 @@ import {
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
-import React, { Ref } from "react";
+import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -46,6 +46,7 @@ import {
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
 } from "./mustacheExpressions";
+import TableMixin from "../../ModelMixins/TableMixin";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function (string) {
@@ -216,6 +217,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       currentTime?: Date;
       timeSeries?: TimeSeriesContext;
       rawDataTable?: string;
+      activeStyle?: { id: string | undefined } | undefined;
     } = {
       partialByName: mustacheRenderPartialByName(
         this.props.catalogItem.featureInfoTemplate?.partials ?? {},
@@ -255,6 +257,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       terria.currentTime = JulianDate.toDate(
         this.props.catalogItem.currentTimeAsJulianDate
       );
+    }
+
+    // Add activeStyle property
+    if (TableMixin.isMixedInto(this.props.catalogItem)) {
+      terria.activeStyle = { id: this.props.catalogItem.activeStyle };
     }
 
     // If catalog item has featureInfoContext function

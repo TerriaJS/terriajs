@@ -1,17 +1,45 @@
 # Change Log
 
-#### next release (8.7.1)
+#### next release (8.7.5)
+
+- [The next improvement]
+
+#### 8.7.4 - 2024-06-07
+
+- Fix position of draggable point after moving.
+- Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
+- The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
+- Fix bug in FilterSection
+
+#### 8.7.3 - 2024-05-28
+
+- Fix broken chart selector
+- Feature info template `<chart>` definition now accepts a `y-column` attribute to set the y-column that should be rendered in the feature info panel chart.
+- Upgrade `thredds-catalog-crawler` to `v0.0.7` which makes a few security upgrades.
+- Fix bug with broken datetime after that Timeline has been closed once.
+- Fix WPS date time widget reset bug
+- Set default date for WPS date time widget on load
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
+
+#### 8.7.2 - 2024-05-14
+
+- Feature info template has access to activeStyle of item having TableTraits.
+- Updated a few dependencies to fix security warnings: `underscore`, `visx`, `shpjs`, `resolve-uri-loader`, `svg-sprite-loader`
+- Allow related maps UI strings to be translated. Translation support for related maps content is not included.
+
+#### 8.7.1 - 2024-04-16
 
 - Upgraded to TerriajS Cesium 1.115.0
 - Fix `PointStyleTraits.marker` bug where URLs were not being used.
-- [The next improvement]
+- Fixed a bug with passing a relative baseUrl to Cesium >= 1.113.0 when `document.baseURI` is different to its `location`.
+- Fix node v18 compatibility by forcing `webpack-terser-plugin` version resolution and fixing new type errors
+- Reduce log noise in `MagdaReference`.
 
 #### 8.7.0 - 2024-03-22
 
 - **Breaking changes:**
   - `generateCatalogIndex` now uses `commander` to parse arguments. Run `node ./build/generateCatalogIndex.js --help` for more information.
 - Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
-- Fixed a bug with passing a relative baseUrl to Cesium 1.113.0.
 - Fix `generateCatalogIndex` after `searchProvider` changes
 - Fix bug with relative URLs being ignored in `generateCatalogIndex`
 - Fix bug with ArcGisMapServerImageryProvider not correctly identifying if the `tile` endpoint can be used

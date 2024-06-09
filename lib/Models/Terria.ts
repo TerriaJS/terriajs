@@ -702,10 +702,9 @@ export default class Terria {
     makeObservable(this);
     if (options.appBaseHref) {
       this.appBaseHref = ensureSuffix(
-        new URL(
-          options.appBaseHref,
-          typeof document !== "undefined" ? document.baseURI : undefined
-        ).href,
+        typeof document !== "undefined"
+          ? new URI(options.appBaseHref).absoluteTo(document.baseURI).toString()
+          : options.appBaseHref,
         "/"
       );
     }
@@ -714,12 +713,15 @@ export default class Terria {
       this.baseUrl = ensureSuffix(options.baseUrl, "/");
     }
 
-    // Construct an absolute URL to send to Cesium, as otherwise it resolves relative
+    // Try to construct an absolute URL to send to Cesium, as otherwise it resolves relative
     // to document.location instead of the correct document.baseURI
+    // This URL can still be relative if Terria is running in an environment without `document`
+    // (e.g. Node.js) and no absolute URL is passed as an option for `appBaseHref`. In this case,
+    // send a relative URL to cesium
     const cesiumBaseUrlRelative =
       options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`;
     this.cesiumBaseUrl = ensureSuffix(
-      new URL(cesiumBaseUrlRelative, this.appBaseHref).href,
+      new URI(cesiumBaseUrlRelative).absoluteTo(this.appBaseHref).toString(),
       "/"
     );
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions

@@ -21,7 +21,7 @@ describe("SensorObservationServiceCatalogItem", function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.addCustomParamParser({
-      // @ts-ignore
+      // @ts-expect-error
       test: (xhr) => /^application\/soap\+xml/.test(xhr.contentType()),
       parse: (paramString) => paramString
     });

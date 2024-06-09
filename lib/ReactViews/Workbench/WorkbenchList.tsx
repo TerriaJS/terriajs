@@ -2,7 +2,6 @@ import "!!style-loader!css-loader?sourceMap!./sortable.css";
 import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-//@ts-ignore
 import Sortable from "react-anything-sortable";
 import styled from "styled-components";
 import Terria from "../../Models/Terria";

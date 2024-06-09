@@ -34,7 +34,7 @@ import ViewerMode from "../../lib/Models/ViewerMode";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
+import { defaultBaseMaps } from "../../lib/Models/BaseMaps/defaultBaseMaps";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -588,7 +588,7 @@ describe("Terria", function () {
         });
 
         UrlToCatalogMemberMapping.register(
-          (s) => true,
+          (_s) => true,
           WebMapServiceCatalogItem.type,
           true
         );
@@ -1526,7 +1526,7 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      //@ts-ignore
+      //@ts-expect-error
       const location: Location = {
         href: "http://test.com/#map=2d"
       };
@@ -1552,7 +1552,7 @@ describe("Terria", function () {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
-      //@ts-ignore
+      //@ts-expect-error
       const location: Location = {
         href: "http://test.com/#map=4d"
       };
