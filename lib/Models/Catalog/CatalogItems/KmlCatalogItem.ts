@@ -27,7 +27,9 @@ const kmzRegex = /\.kmz$/i;
 
 class KmlCatalogItem
   extends MappableMixin(
-    UrlMixin(CesiumIonMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits))))
+    UrlMixin(
+      CesiumIonMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+    )
   )
   implements HasLocalData
 {

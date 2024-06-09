@@ -155,7 +155,9 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       const url = this.gltfModelUrl;
 
       const options = {
-        uri: new ConstantProperty(typeof url === 'string' ? proxyCatalogItemUrl(this, url) : url),
+        uri: new ConstantProperty(
+          typeof url === "string" ? proxyCatalogItemUrl(this, url) : url
+        ),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),

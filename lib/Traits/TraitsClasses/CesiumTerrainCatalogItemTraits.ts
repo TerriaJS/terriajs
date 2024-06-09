@@ -21,5 +21,4 @@ export default class CesiumTerrainCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   CesiumIonTraits
-) {
-}
+) {}

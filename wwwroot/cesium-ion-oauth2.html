@@ -8,9 +8,12 @@
       const queryParams = new URLSearchParams(window.location.search);
       const state = queryParams.get("state");
       for (const c of state) {
-        const zeroToNine = c.charAt(0) >= "0".charAt(0) && c.charAt(0) <= "9".charAt(0);
-        const lowercase = c.charAt(0) >= "a".charAt(0) && c.charAt(0) <= "f".charAt(0);
-        const uppercase = c.charAt(0) >= "A".charAt(0) && c.charAt(0) <= "F".charAt(0);
+        const zeroToNine =
+          c.charAt(0) >= "0".charAt(0) && c.charAt(0) <= "9".charAt(0);
+        const lowercase =
+          c.charAt(0) >= "a".charAt(0) && c.charAt(0) <= "f".charAt(0);
+        const uppercase =
+          c.charAt(0) >= "A".charAt(0) && c.charAt(0) <= "F".charAt(0);
         if (!zeroToNine && !lowercase && !uppercase) {
           // Something dodgy in the state, abort.
           return;
@@ -22,6 +25,5 @@
       window.close();
     }
   </script>
-  <body onload="doTokenExchange()">
-  </body>
+  <body onload="doTokenExchange()"></body>
 </html>
