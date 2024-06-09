@@ -1,13 +1,11 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { addOrReplaceRemoteFileUploadType } from "../../../../Core/getDataType";
 import { t } from "i18next";
 import URI from "urijs";
 import { string } from "prop-types";
 import { Trans, withTranslation } from "react-i18next";
 import AddDataStyles from "./add-data.scss";
 import Styles from "./cesium-ion-connector.scss";
-import { OptionsTraits } from "../../../../Traits/TraitsClasses/Cesium3dTilesTraits";
 import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
 import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
@@ -147,10 +145,13 @@ function CesiumIonConnector() {
     })
       .then((response) => response.json())
       .then((assets: { items: CesiumIonAsset[] }) => {
-        assets.items.forEach((item) => {
-          item.uniqueName = `${item.name} (${item.id})`;
-        });
-        setAssets(assets.items);
+        if (assets.items) {
+          assets.items.forEach((item) => {
+            item.uniqueName = `${item.name} (${item.id})`;
+          });
+          setAssets(assets.items);
+        }
+
         setIsLoadingAssets(false);
       });
   }, [loginToken]);
@@ -167,10 +168,12 @@ function CesiumIonConnector() {
     })
       .then((response) => response.json())
       .then((tokens: { items: CesiumIonToken[] }) => {
-        tokens.items.forEach((item) => {
-          item.uniqueName = `${item.name} (${item.id})`;
-        });
-        setTokens(tokens.items);
+        if (tokens.items) {
+          tokens.items.forEach((item) => {
+            item.uniqueName = `${item.name} (${item.id})`;
+          });
+          setTokens(tokens.items);
+        }
         setIsLoadingTokens(false);
       });
   }, [loginToken]);
@@ -362,9 +365,13 @@ function CesiumIonConnector() {
 
   function connect() {
     // TODO: these need to be configurable
-    const clientID = 643;
-    const redirectUri =
-      "http://localhost:3001/build/TerriaJS/cesium-ion-oauth2.html";
+    const clientID =
+      viewState.terria.configParameters.cesiumIonOAuth2ApplicationID;
+    const redirectUri = URI("build/TerriaJS/cesium-ion-oauth2.html")
+      .absoluteTo(window.location.href)
+      .fragment("")
+      .query("")
+      .toString();
 
     const codeChallengeValue = codeChallenge.value;
     const codeChallengeHash = codeChallenge.hash;
@@ -403,7 +410,7 @@ function CesiumIonConnector() {
         })
         .then((response) => {
           localStorage.setItem(tokenLocalStorageName, response.access_token);
-          setLoginToken(response.access_token);
+          setLoginToken(response.access_token ?? "");
         });
     };
 
@@ -516,12 +523,3 @@ function CesiumIonConnector() {
 
 const CesiumIonConnectorObserver = observer<React.FC>(CesiumIonConnector);
 export default withTranslation()(CesiumIonConnectorObserver);
-
-addOrReplaceRemoteFileUploadType("cesium-ion", {
-  value: "cesium-ion",
-  // This doesn't work, probably because I don't know what I'm doing:
-  //   name: t("core.dataType.cesium-ion")
-  // So, hard-coding it instead.
-  name: "Cesium ion",
-  customComponent: CesiumIonConnectorObserver
-});
