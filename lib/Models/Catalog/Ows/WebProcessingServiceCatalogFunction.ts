@@ -572,10 +572,22 @@ const RectangleConverter = {
   parameterToInput: function (functionParameter: FunctionParameter) {
     const parameter = functionParameter as RectangleParameter;
     const value = parameter.value;
-
+    console.log(parameter);
     if (!isDefined(value)) {
       return;
     }
+
+    // if (
+    //   !isDefined(value.west) ||
+    //   !isDefined(value.south) ||
+    //   !isDefined(value.east) ||
+    //   !isDefined(value.north)
+    // ) {
+    //   value.west = -180;
+    //   value.south = -90;
+    //   value.east = 180;
+    //   value.north = 90;
+    // }
 
     let bboxMinCoord1, bboxMinCoord2, bboxMaxCoord1, bboxMaxCoord2, urn;
     // We only support CRS84 and EPSG:4326
@@ -724,6 +736,7 @@ function parameterTypeToConverter(
     case PolygonParameter.type:
       return PolygonConverter;
     case RectangleParameter.type:
+      console.log("RectangleConverter");
       return RectangleConverter;
     case GeoJsonParameter.type:
       return GeoJsonGeometryConverter;
