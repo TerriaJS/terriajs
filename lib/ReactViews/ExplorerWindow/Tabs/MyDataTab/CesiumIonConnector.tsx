@@ -101,7 +101,7 @@ function CesiumIonConnector() {
       .map((x) => x.toString(16).padStart(2, "0"))
       .join("");
 
-    const codeChallengeHash = crypto.subtle
+    crypto.subtle
       .digest("SHA-256", new TextEncoder().encode(codeChallenge))
       .then((hash) => {
         setCodeChallenge({
@@ -109,7 +109,7 @@ function CesiumIonConnector() {
           hash: btoa(String.fromCharCode(...new Uint8Array(hash)))
             .replace(/\+/g, "-")
             .replace(/\//g, "_")
-            .replace(/=/g, "")
+            .replace(/[=]/g, "")
         });
       });
   }, []);
@@ -183,7 +183,7 @@ function CesiumIonConnector() {
   }, [loginToken]);
 
   let selectedToken = viewState.currentCesiumIonToken
-    ? tokens.find((token) => token.id == viewState.currentCesiumIonToken)
+    ? tokens.find((token) => token.id === viewState.currentCesiumIonToken)
     : undefined;
 
   if (selectedToken === undefined && tokens.length > 0) {
@@ -231,9 +231,7 @@ function CesiumIonConnector() {
         <button className={Styles.connectButton} onClick={disconnect}>
           Disconnect
         </button>
-        {userProfile.username.length > 0
-          ? renderConnected()
-          : renderConnecting()}
+        {userProfile.username.length > 0 && renderConnected()}
       </>
     );
   }
@@ -276,7 +274,7 @@ function CesiumIonConnector() {
           <table className={Styles.assetsList}>
             <tbody>
               <tr>
-                <th></th>
+                <th />
                 <th>Name</th>
                 <th>Type</th>
               </tr>
@@ -286,10 +284,6 @@ function CesiumIonConnector() {
         )}
       </>
     );
-  }
-
-  function renderConnecting() {
-    return <></>;
   }
 
   function renderDisconnected() {
@@ -304,7 +298,7 @@ function CesiumIonConnector() {
           <button
             className={Styles.connectButton}
             onClick={connect}
-            disabled={codeChallenge.hash == ""}
+            disabled={codeChallenge.hash === ""}
           >
             Connect to Cesium ion
           </button>
@@ -328,7 +322,11 @@ function CesiumIonConnector() {
       return (
         <>
           <strong>DO NOT USE THIS TOKEN!</strong> It allows access to your{" "}
-          <a href="https://ion.cesium.com/tokens" target="_blank">
+          <a
+            href="https://ion.cesium.com/tokens"
+            target="_blank"
+            rel="noreferrer"
+          >
             Cesium ion account
           </a>{" "}
           using the following scopes that provide potentially sensitive
@@ -350,7 +348,11 @@ function CesiumIonConnector() {
           {numberOfAssetsAccessible < 0 ? "every" : numberOfAssetsAccessible}
         </strong>{" "}
         {numberOfAssetsAccessible <= 1 ? "asset" : "assets"} in your{" "}
-        <a href="https://ion.cesium.com/tokens" target="_blank">
+        <a
+          href="https://ion.cesium.com/tokens"
+          target="_blank"
+          rel="noreferrer"
+        >
           Cesium ion account
         </a>
         .
@@ -493,6 +495,7 @@ function CesiumIonConnector() {
           latitude: 0.0,
           height: 0.0
         };
+        break;
       case "IMAGERY":
         type = "ion-imagery";
         break;
@@ -516,7 +519,7 @@ function CesiumIonConnector() {
       name: asset.name ?? "Unnamed",
       type: type,
       description: asset.description ?? "",
-      ionAssetId: Number.parseInt(asset.id ?? "0"),
+      ionAssetId: Number.parseInt(asset.id ?? "0", 10),
       ionAccessToken: token.token,
       info: [
         {
