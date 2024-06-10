@@ -211,6 +211,13 @@ export interface ConfigParameters {
    */
   useCesiumIonBingImagery?: boolean;
   /**
+   * The OAuth2 application ID to use to allow login to Cesium ion on the "Add Data" panel. The referenced application must be configured on
+   * Cesium ion with a Redirect URI of `[TerriaMap Base URL]/build/TerriaJS/cesium-ion-oauth2.html`. For example, if users access your TerriaJS
+   * application at `https://example.com/AwesomeMap` then the Redirect URI must be exactly
+   * `https://example.com/AwesomeMap/build/TerriaJS/cesium-ion-oauth2.html`.
+   */
+  cesiumIonOAuth2ApplicationID?: number;
+  /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
@@ -516,6 +523,7 @@ export default class Terria {
     cesiumTerrainAssetId: undefined,
     cesiumIonAccessToken: undefined,
     useCesiumIonBingImagery: undefined,
+    cesiumIonOAuth2ApplicationID: undefined,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,

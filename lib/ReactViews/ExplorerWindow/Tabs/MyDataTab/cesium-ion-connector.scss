@@ -1,0 +1,35 @@
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
+
+.connect-button {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
+  width: 200px;
+}
+
+.token-warning {
+  color: $warning;
+  font-family: $font-base;
+  font-size: 0.9em;
+}
+
+.token-warning-hidden {
+  visibility: hidden;
+}
+
+.drop-down {
+  height: 40px;
+}
+
+.drop-down-button {
+  height: 100%;
+}
+
+.assets-list {
+  overflow-y: auto;
+}
+
+.add-asset-button {
+  vertical-align: middle;
+}

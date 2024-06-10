@@ -21,9 +21,10 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { featureCollection, FeatureCollection } from "@turf/helpers";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 
 class GeoJsonCatalogItem
-  extends GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits))
+  extends CesiumIonMixin(GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits)))
   implements HasLocalData
 {
   static readonly type = "geojson";
@@ -90,6 +91,12 @@ class GeoJsonCatalogItem
     return undefined;
   }
 
+  protected override async forceLoadMetadata() {
+    const ionResourcePromise = this.loadIonResource();
+    await super.forceLoadMetadata();
+    await ionResourcePromise;
+  }
+
   protected async forceLoadGeojsonData() {
     let jsonData: JsonValue | undefined = undefined;
 
@@ -110,6 +117,8 @@ class GeoJsonCatalogItem
       } else {
         jsonData = await readJson(this._file);
       }
+    } else if (isDefined(this.ionResource)) {
+      jsonData = await loadJson(this.ionResource);
     }
     // We have multiple sources.
     else if (this.urls.length > 0) {

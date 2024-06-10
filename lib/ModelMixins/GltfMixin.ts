@@ -17,6 +17,7 @@ import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -143,15 +144,20 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       };
     }
 
-    protected abstract get gltfModelUrl(): string | undefined;
+    protected abstract get gltfModelUrl(): string | Resource | undefined;
 
     @computed
     private get modelGraphics() {
       if (this.gltfModelUrl === undefined) {
         return undefined;
       }
+
+      const url = this.gltfModelUrl;
+
       const options = {
-        uri: new ConstantProperty(proxyCatalogItemUrl(this, this.gltfModelUrl)),
+        uri: new ConstantProperty(
+          typeof url === "string" ? proxyCatalogItemUrl(this, url) : url
+        ),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
