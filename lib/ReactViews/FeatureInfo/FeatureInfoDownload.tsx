@@ -54,7 +54,6 @@ class FeatureInfoDownload extends React.Component<{
           button: Styles.dropdownButton,
           icon: icon
         }}
-        buttonClassName={Styles.btn}
       >
         {t("featureInfo.download")}
       </Dropdown>
