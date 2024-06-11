@@ -3,6 +3,7 @@
 #### next release (8.7.5)
 
 - [The next improvement]
+- Fix no Rectangle parameter editor for WPS
 
 #### 8.7.4 - 2024-06-07
 
