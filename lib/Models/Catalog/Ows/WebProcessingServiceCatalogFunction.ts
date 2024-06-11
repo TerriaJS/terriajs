@@ -572,22 +572,9 @@ const RectangleConverter = {
   parameterToInput: function (functionParameter: FunctionParameter) {
     const parameter = functionParameter as RectangleParameter;
     const value = parameter.value;
-    console.log(parameter);
     if (!isDefined(value)) {
       return;
     }
-
-    // if (
-    //   !isDefined(value.west) ||
-    //   !isDefined(value.south) ||
-    //   !isDefined(value.east) ||
-    //   !isDefined(value.north)
-    // ) {
-    //   value.west = -180;
-    //   value.south = -90;
-    //   value.east = 180;
-    //   value.north = 90;
-    // }
 
     let bboxMinCoord1, bboxMinCoord2, bboxMaxCoord1, bboxMaxCoord2, urn;
     // We only support CRS84 and EPSG:4326
@@ -604,10 +591,10 @@ const RectangleConverter = {
       // 4326 specified in version 6.6 of the EPSG database available at http://www.epsg.org/. That CRS specifies
       // the axis order as Latitude followed by Longitude.
       // We don't know about other URN versions, so are going to return 6.6 regardless of what was requested.
-      bboxMinCoord1 = CesiumMath.toDegrees(value.south);
-      bboxMinCoord2 = CesiumMath.toDegrees(value.west);
-      bboxMaxCoord1 = CesiumMath.toDegrees(value.north);
-      bboxMaxCoord2 = CesiumMath.toDegrees(value.east);
+      bboxMinCoord1 = value.south;
+      bboxMinCoord2 = value.west;
+      bboxMaxCoord1 = value.north;
+      bboxMaxCoord2 = value.east;
       urn = "urn:ogc:def:crs:EPSG:6.6:4326";
     }
 
@@ -736,7 +723,6 @@ function parameterTypeToConverter(
     case PolygonParameter.type:
       return PolygonConverter;
     case RectangleParameter.type:
-      console.log("RectangleConverter");
       return RectangleConverter;
     case GeoJsonParameter.type:
       return GeoJsonGeometryConverter;
