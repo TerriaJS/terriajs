@@ -39,7 +39,6 @@ class RectangleParameterEditor extends React.Component {
     );
   }
 
-
   render() {
     const { t } = this.props;
     return (
@@ -55,7 +54,7 @@ class RectangleParameterEditor extends React.Component {
           onClick={this.selectPolygonOnMap.bind(this)}
           className={Styles.btnSelector}
         >
-        {t("analytics.clickToDrawRectangle")}
+          {t("analytics.clickToDrawRectangle")}
         </button>
       </div>
     );
@@ -77,15 +76,11 @@ RectangleParameterEditor.setValueFromText = function (e, parameter) {
  * @return {String} String for display
  */
 export function getDisplayValue(value) {
-  if (!defined(value) || value.length < 1) {
+  if (!defined(value)) {
     return "";
   }
-  const pointsLongLats = value[0];
-  console.log(pointsLongLats.latitude, pointsLongLats.longitude);
-
-  return JSON.stringify(pointsLongLats);
+  return `${value.east}, ${value.north}, ${value.west}, ${value.south}`;
 }
-
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
@@ -101,28 +96,31 @@ export function selectOnMap(terria, viewState, parameter) {
       viewState.openAddData();
     },
     onDrawingComplete: function (params) {
-      console.log(params);
-       if (params.points) {
-          const cartographicPoints = params.points.map((point) => {
-            const cartographic = Cartographic.fromCartesian(
-              point,
-              Ellipsoid.WGS84
-            );
-            return {
-              latitude: CesiumMath.toDegrees(cartographic.latitude),
-              longitude: CesiumMath.toDegrees(cartographic.longitude)
-            };
-          });
-          console.log(cartographicPoints);
-          runInAction(() => {
-            parameter.setValue(CommonStrata.user, cartographicPoints)
-          });
-        }
-    },
+      if (params.points) {
+        const cartographicPoints = params.points.map((point) => {
+          const cartographic = Cartographic.fromCartesian(
+            point,
+            Ellipsoid.WGS84
+          );
+          return {
+            latitude: CesiumMath.toDegrees(cartographic.latitude),
+            longitude: CesiumMath.toDegrees(cartographic.longitude)
+          };
+        });
+        const rectangle = {
+          west: cartographicPoints[0].longitude,
+          south: cartographicPoints[0].latitude,
+          east: cartographicPoints[1].longitude,
+          north: cartographicPoints[1].latitude
+        };
+        runInAction(() => {
+          parameter.setValue(CommonStrata.user, rectangle);
+        });
+      }
+    }
   });
 
   userDrawing.enterDrawMode();
 }
 
 export default withTranslation()(RectangleParameterEditor);
-
