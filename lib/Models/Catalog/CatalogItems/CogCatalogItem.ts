@@ -7,7 +7,7 @@ import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import TIFFImageryProvider, {
   TIFFImageryProviderOptionsWithUrl
-} from "@terriajs/tiff-imagery-provider";
+} from "terriajs-tiff-imagery-provider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
