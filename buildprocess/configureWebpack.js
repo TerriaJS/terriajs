@@ -32,6 +32,7 @@ function configureWebpack(
     ".webpack.js",
     ".web.js",
     ".js",
+    ".mjs",
     ".ts",
     ".tsx"
   ];
@@ -109,6 +110,14 @@ function configureWebpack(
         }
       ]
     })
+  });
+
+  // Some packages exports an .mjs file for ESM imports.
+  // This rule instructs webpack to import mjs modules correctly.
+  config.module.rules.push({
+    test: /\.mjs$/,
+    include: /node_modules/,
+    type: "javascript/auto"
   });
 
   const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
