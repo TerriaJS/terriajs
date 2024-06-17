@@ -2,6 +2,7 @@
 
 #### next release (8.7.5)
 
+- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - [The next improvement]
 
 #### 8.7.4 - 2024-06-07
@@ -24,7 +25,6 @@
 #### 8.7.2 - 2024-05-14
 
 - Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
-- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Feature info template has access to activeStyle of item having TableTraits.
 - Updated a few dependencies to fix security warnings: `underscore`, `visx`, `shpjs`, `resolve-uri-loader`, `svg-sprite-loader`
 - Allow related maps UI strings to be translated. Translation support for related maps content is not included.
