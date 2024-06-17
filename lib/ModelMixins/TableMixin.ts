@@ -2,12 +2,12 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  observable,
-  runInAction,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction
 } from "mobx";
-import { createTransformer, ITransformer } from "mobx-utils";
+import { ITransformer, createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -16,12 +16,12 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import flatten from "../Core/flatten";
-import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
+import isDefined from "../Core/isDefined";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
@@ -39,18 +39,18 @@ import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import Icon from "../Styled/Icon";
-import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
-import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
-import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
-import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
+import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
+import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
+import { ChartAxis, ChartItem, calculateDomain } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
@@ -376,14 +376,16 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           : xColumn.valuesAsNumbers.values;
 
       const xAxis: ChartAxis = {
+        name: xColumn.title || xColumn.name,
         scale: xColumn.type === TableColumnType.time ? "time" : "linear",
         units: xColumn.units
       };
 
       return filterOutUndefined(
         lines.map((line) => {
+          const yColumnId = line.yAxisColumn;
           const yColumn = this.findColumnByName(line.yAxisColumn);
-          if (yColumn === undefined) {
+          if (yColumnId === undefined || yColumn === undefined) {
             return undefined;
           }
           const yValues = yColumn.valuesAsNumbers.values;
@@ -403,16 +405,17 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
+            id: yColumnId,
             item: this,
             name: line.name ?? yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
+            units: yColumn.units,
             glyphStyle: this.chartGlyphStyle ?? "circle",
             xAxis,
             points,
             domain: calculateDomain(points),
-            units: yColumn.units,
             isSelectedInWorkbench: line.isSelectedInWorkbench,
             showInChartPanel: this.show && line.isSelectedInWorkbench,
             updateIsSelectedInWorkbench: (isSelected: boolean) => {
@@ -796,7 +799,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Load all region in parallel (but preserve order)
       const regionProviderLists = await Promise.all(
         urls.map(
-          async (url, i) =>
+          async (url) =>
             // Note can be called many times - all promises/results are cached in RegionProviderList.metaList
             await RegionProviderList.fromUrl(url, this.terria.corsProxy)
         )

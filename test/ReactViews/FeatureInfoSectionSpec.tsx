@@ -25,10 +25,10 @@ import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
-import mixTraits from "../../lib/Traits/mixTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -380,6 +380,31 @@ describe("FeatureInfoSection", function () {
     expect(findWithText(result, "eggs").length).toEqual(1);
     expect(findWithText(result, "dinner").length).toEqual(1);
     expect(findWithText(result, "ham").length).toEqual(1);
+  });
+
+  it("gracefully handles bad nested JSON", function () {
+    feature = new Entity({
+      name: "Meals",
+      properties: {
+        somethingBad: "{broken object",
+        somethingGood: JSON.stringify({ good: "this object is good" })
+      }
+    });
+    const section = (
+      <FeatureInfoSection
+        catalogItem={catalogItem}
+        feature={feature}
+        isOpen
+        viewState={viewState}
+        t={() => {}}
+      />
+    );
+    const result = createWithContexts(viewState, section);
+
+    expect(findWithText(result, "{broken object").length).toEqual(1);
+    expect(
+      findWithText(result, `{"good":"this object is good"}`).length
+    ).toEqual(1);
   });
 
   describe("templating", function () {
