@@ -6,7 +6,7 @@ import Terria from "./Terria";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
 
-//@ts-ignore
+// @ts-expect-error
 import markerIcon from "../../wwwroot/images/map-pin.png";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
