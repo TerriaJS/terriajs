@@ -188,11 +188,13 @@ class WpsLoadableStratum extends LoadableStratum(
   }
 
   get storeSupported() {
-    return Boolean(this.processDescription.storeSupported);
+    const value = this.processDescription.storeSupported?.toLowerCase();
+    return value === "true" ? true : value === "false" ? false : undefined;
   }
 
   get statusSupported() {
-    return Boolean(this.processDescription.statusSupported);
+    const value = this.processDescription.statusSupported?.toLowerCase();
+    return value === "true" ? true : value === "false" ? false : undefined;
   }
 }
 
