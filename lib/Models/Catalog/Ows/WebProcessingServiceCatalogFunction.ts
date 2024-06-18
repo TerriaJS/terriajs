@@ -582,10 +582,10 @@ const RectangleConverter = {
     // We only support CRS84 and EPSG:4326
     if (parameter.crs.indexOf("crs84") !== -1) {
       // CRS84 uses long, lat rather that lat, long order.
-      bboxMinCoord1 = CesiumMath.toDegrees(value.west);
-      bboxMinCoord2 = CesiumMath.toDegrees(value.south);
-      bboxMaxCoord1 = CesiumMath.toDegrees(value.east);
-      bboxMaxCoord2 = CesiumMath.toDegrees(value.north);
+      bboxMinCoord1 = value.west;
+      bboxMinCoord2 = value.south;
+      bboxMaxCoord1 = value.east;
+      bboxMaxCoord2 = value.north;
       // Comfortingly known as WGS 84 longitude-latitude according to Table 3 in OGC 07-092r1.
       urn = "urn:ogc:def:crs:OGC:1.3:CRS84";
     } else {
