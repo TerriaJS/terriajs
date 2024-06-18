@@ -1,5 +1,3 @@
-"use strict";
-
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
@@ -103,5 +101,3 @@ export default class ShortReport extends React.Component<{
     );
   }
 }
-
-module.exports = ShortReport;
