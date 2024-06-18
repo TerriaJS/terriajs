@@ -39,6 +39,11 @@ export default class CogCatalogItem extends MappableMixin(
       {
         show: this.show,
         alpha: this.opacity,
+        // The 'requestImage' method in Cesium's ImageryProvider has a return type that is stricter than necessary.
+        // In our custom ImageryProvider, we return ImageData, which is also a valid return type.
+        // However, since the current Cesium type definitions do not reflect this flexibility, we use a TypeScript ignore comment ('@ts-ignore')
+        // to suppress the type checking error. This is a temporary solution until the type definitions in Cesium are updated to accommodate ImageData.
+        // @ts-ignore
         imageryProvider,
         clippingRectangle: imageryProvider.rectangle
         // Define our method for generating a leaflet layer in a different way, here
