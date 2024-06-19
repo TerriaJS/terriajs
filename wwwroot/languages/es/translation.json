@@ -219,6 +219,9 @@
           },
           "value": {
             "name": "Valor"
+          },
+          "remove": {
+            "value": "Quitar"
           }
         },
         "name": "Colores"
@@ -1096,6 +1099,7 @@
   "selectableDimensions": {
     "undefinedLabel": "No especificado",
     "colorAdd": "Añadir",
-    "enabled": "Activado"
+    "enabled": "Activado",
+    "colorRemove": "Quitar"
   }
 }
