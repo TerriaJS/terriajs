@@ -58,10 +58,10 @@ export default class CogCatalogItem extends MappableMixin(
 
   /**
    * Handle all different possible projections of COGs
+   * Not currently used, as TIFFImageryProvider is not reprojecting correctly, so we only support EPSG3857 and EPSG4326 for now. Code retained for future use.
    * @param code Should be a number representing an EPSG code
    * @returns a Promise that resolves to a proj reprojection function
    */
-  // TODO: This needs to return an object with a project and an unproject function
   projFunc = (code: number) => {
     const sourceEpsgCode = `EPSG:${code}`;
     // Add the projection to our proj4 defs if we dont already have it:
@@ -107,9 +107,9 @@ export default class CogCatalogItem extends MappableMixin(
 
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
+      // TIFFImageryProvider's reprojection has now been declared experimental and is generating unnacceptable results in many cases. We can force it to fail on non 4326/3857 COGs by not passing in projFunc.
       projFunc: this.projFunc,
       renderOptions: {
-        /** nodata value, default read from tiff meta */
         nodata: 0
       },
       enablePickFeatures: this.allowFeaturePicking
