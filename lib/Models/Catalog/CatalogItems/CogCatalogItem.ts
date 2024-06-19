@@ -24,9 +24,7 @@ export default class CogCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    // return this.forceLoadMetadata();
     await this.imageryProvider?.readyPromise;
-
     return Promise.resolve();
   }
 
@@ -54,49 +52,9 @@ export default class CogCatalogItem extends MappableMixin(
         // @ts-ignore
         imageryProvider,
         clippingRectangle: imageryProvider.rectangle
-        // Define our method for generating a leaflet layer in a different way, here
-        // overrideCreateLeafletLayer: this.createGeoRasterLayer
       }
     ];
   }
-
-  // @computed get georasterLayer(): IPromiseBasedObservable<
-  //   GeorasterTerriaLayer | undefined
-  // > {
-  //   return fromPromise(
-  //     // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
-  //     isDefined(this.imageryProvider) &&
-  //       parseGeoRaster(this.url)
-  //         .then((georaster: GeoRaster) => {
-  //           return new GeorasterTerriaLayer(
-  //             this.terria.leaflet,
-  //             {
-  //               georaster: georaster,
-  //               opacity: 1,
-  //               // Example pixel reclassification function:
-  //               // pixelValuesToColorFn: (values) => {
-  //               //   return mapElevationToRgbaSmoothed(values, 0);
-  //               // },
-  //               resolution: 256
-  //               // debugLevel: 0
-  //             },
-  //             this.imageryProvider
-  //           );
-  //         })
-  //         .catch((error: Error) => {
-  //           this.terria.raiseErrorToUser(error);
-  //         })
-  //   );
-  // }
-
-  // createGeoRasterLayer = (
-  //   ip: ImageryProvider,
-  //   clippingRectangle: LatLngBounds | undefined
-  // ): GeorasterTerriaLayer | undefined => {
-  //   return this.url && this.georasterLayer.state === "fulfilled"
-  //     ? this.georasterLayer.value
-  //     : undefined;
-  // };
 
   /**
    * Handle all different possible projections of COGs
@@ -147,8 +105,6 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
-    // TODO: Where should we declare these?
-    // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
       projFunc: this.projFunc,
