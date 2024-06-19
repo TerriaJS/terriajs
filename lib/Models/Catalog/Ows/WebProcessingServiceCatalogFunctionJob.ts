@@ -372,7 +372,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           "Error ocurred while updating Input Features GeoJSON model JSON"
         );
       });
-      (await this.geoJsonItem!.loadMapItems()).throwIfError;
+      (await this.geoJsonItem!.loadMapItems()).throwIfError();
     }
 
     runInAction(() => {
