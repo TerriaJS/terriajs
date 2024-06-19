@@ -2,7 +2,7 @@
 
 #### next release (8.7.5)
 
-- [The next improvement]
+- Add clustering trait to GeoJson (and consequently to WFS, ...).
 
 #### 8.7.4 - 2024-06-07
 
