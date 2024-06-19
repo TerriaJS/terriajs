@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { zoom as d3Zoom } from "d3-zoom";
-import { select as d3Select, event as d3Event } from "d3-selection";
+import { select as d3Select } from "d3-selection";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -20,9 +20,9 @@ class ZoomX extends React.Component {
     this.zoom = d3Zoom()
       .scaleExtent(props.scaleExtent)
       .translateExtent(props.translateExtent)
-      .on("zoom", () =>
-        props.onZoom(d3Event.transform.rescaleX(this.props.initialScale))
-      );
+      .on("zoom", (event) => {
+        props.onZoom(event.transform.rescaleX(this.props.initialScale));
+      });
   }
 
   componentDidMount() {
