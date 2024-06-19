@@ -113,10 +113,37 @@
       "licence": "Licencia"
     },
     "webMapServiceCatalogItem": {
-      "getCapabilitiesUrl": "URL GetCapabilities"
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "serviceDescription": "Descripción del servicio",
+      "serviceContact": "Contacto del servicio",
+      "accessConstraints": "Restricciones de acceso",
+      "noLayerFoundTitle": "Capa no encontrada",
+      "defaultStyleLabel": "Estilo por defecto",
+      "dataDescription": "Descripción de los datos"
     },
     "userDrawing": {
-      "messageHeader": "Dibujar en el mapa"
+      "messageHeader": "Dibujar en el mapa",
+      "clickToAddFirstPoint": "Haga click para añadir un punto",
+      "btnCancel": "Cancelar"
+    },
+    "raiseError": {
+      "notificationFeedback": "Para preguntas y comentarios, haga click aquí.",
+      "developerDetails": "Detalles para desarrolladores"
+    },
+    "mapboxVectorTile": {
+      "name": "Teselas vectoriales de Mapbox (MVT)"
+    },
+    "webFeatureServiceCatalogItem": {
+      "noLayerFoundMessage": "El conjunto de dato WFS '{{name}}' no tiene capas que coincidan con '{{typeNames}}'. O el catálogo ha sido configurado erróneamente, o el servidor WFS ha cambiado."
+    },
+    "tableData": {
+      "activeStyle": "Mostrar Variable",
+      "editStyle": "Editar estilo"
+    },
+    "tableStyling": {
+      "reset": "Restaurar estilo por defecto",
+      "name": "Estilo",
+      "showAdvancedOptions": "Mostrar opciones avanzadas"
     }
   },
   "analytics": {
@@ -885,5 +912,11 @@
     "buttonTitle": "Ver mapas relacionados",
     "panelHeading": "Mapas relacionados",
     "panelText": "Hacer click en el mapa inferior lo abrirá en una ventana o pestaña separadas."
+  },
+  "compare": {
+    "done": "Hecho"
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "No especificado"
   }
 }
