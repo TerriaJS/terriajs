@@ -1281,7 +1281,10 @@ export default class Cesium extends GlobeOrMap {
    *
    */
   @action
-  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
+  async pickFromScreenPosition(
+    screenPosition: Cartesian2,
+    ignoreSplitter: boolean
+  ) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
@@ -1289,7 +1292,7 @@ export default class Cesium extends GlobeOrMap {
     const pickPositionCartographic =
       pickPosition && Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
-    const vectorFeatures = this.pickVectorFeatures(screenPosition);
+    const vectorFeatures = await this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
     const pickRasterPromise =
@@ -1407,7 +1410,7 @@ export default class Cesium extends GlobeOrMap {
    * @param screenPosition position on the screen to look for features
    * @returns The features found.
    */
-  private pickVectorFeatures(screenPosition: Cartesian2) {
+  private async pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
     const pickedList = this.scene.drillPick(screenPosition);
@@ -1436,7 +1439,9 @@ export default class Cesium extends GlobeOrMap {
         typeof catalogItem?.getFeaturesFromPickResult === "function" &&
         this.terria.allowFeatureInfoRequests
       ) {
-        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+        const result = await catalogItem.getFeaturesFromPickResult.bind(
+          catalogItem
+        )(
           screenPosition,
           picked,
           vectorFeatures.length < catalogItem.maxRequests

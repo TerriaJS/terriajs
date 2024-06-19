@@ -16,11 +16,16 @@ import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/Arc
 import Cesium3dTilesStyleMixin from "../../../ModelMixins/Cesium3dTilesStyleMixin";
 import ShadowMixin from "../../../ModelMixins/ShadowMixin";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
+import I3SNode from "terriajs-cesium/Source/Scene/I3SNode";
+import TerriaFeature from "../../Feature/Feature";
 
 export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
-  ShadowMixin(
-    MappableMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits)))
+  FeatureInfoUrlTemplateMixin(
+    ShadowMixin(
+      MappableMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(I3SCatalogItemTraits)))
+      )
     )
   )
 ) {
@@ -57,6 +62,42 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
     });
   }
 
+  /**
+   * This function should return null if allowFeaturePicking = false
+   * @param _screenPosition
+   * @param pickResult
+   */
+  buildFeatureFromPickResult(
+    _screenPosition: Cartesian2 | undefined,
+    pickResult: any
+  ) {
+    if (
+      this.allowFeaturePicking &&
+      isDefined(pickResult.content) &&
+      isDefined(pickResult.content.tile.i3sNode) &&
+      _screenPosition
+    ) {
+      let result;
+      const pickedPosition =
+        this.terria.cesium?.scene.pickPosition(_screenPosition);
+
+      if (pickedPosition === undefined) {
+        return;
+      }
+      const i3sNode: I3SNode = pickResult.content.tile.i3sNode;
+
+      return i3sNode.loadFields().then(() => {
+        const fields = i3sNode.getFieldsForPickedPosition(pickedPosition);
+        result = new TerriaFeature({
+          properties: fields
+        });
+        result._cesium3DTileFeature = pickResult.content.tile;
+        return result;
+      });
+    }
+    return undefined;
+  }
+
   @computed
   get mapItems() {
     if (this.isLoadingMapItems || !isDefined(this.dataProvider)) {
@@ -71,6 +112,8 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
         if (tileset) {
           tileset.style = toJS(this.cesiumTileStyle);
           tileset.shadows = this.cesiumShadows;
+          // @ts-expect-error - hacks ahoy
+          tileset._catalogItem = this;
           if (this.lightingFactor && tileset.imageBasedLighting) {
             tileset.imageBasedLighting.imageBasedLightingFactor =
               new Cartesian2(...this.lightingFactor);
