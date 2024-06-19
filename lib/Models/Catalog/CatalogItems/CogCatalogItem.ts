@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, override } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -11,6 +11,7 @@ import TIFFImageryProvider, {
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
+import i18next from "i18next";
 const proj4 = require("proj4").default;
 
 export default class CogCatalogItem extends MappableMixin(
@@ -27,6 +28,13 @@ export default class CogCatalogItem extends MappableMixin(
     await this.imageryProvider?.readyPromise;
 
     return Promise.resolve();
+  }
+
+  @override
+  get shortReport(): string | undefined {
+    if (this.terria.currentViewer.type === "Leaflet") {
+      return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+    }
   }
 
   @computed get mapItems(): MapItem[] {
