@@ -143,7 +143,10 @@
     "tableStyling": {
       "reset": "Restaurar estilo por defecto",
       "name": "Estilo",
-      "showAdvancedOptions": "Mostrar opciones avanzadas"
+      "showAdvancedOptions": "Mostrar opciones avanzadas",
+      "data": {
+        "name": "Datos"
+      }
     }
   },
   "analytics": {
