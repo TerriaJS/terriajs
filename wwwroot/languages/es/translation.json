@@ -138,14 +138,188 @@
     },
     "tableData": {
       "activeStyle": "Mostrar Variable",
-      "editStyle": "Editar estilo"
+      "editStyle": "Editar estilo",
+      "noData": "No hay datos que mostrar.",
+      "custom": "Personalizado"
     },
     "tableStyling": {
       "reset": "Restaurar estilo por defecto",
       "name": "Estilo",
       "showAdvancedOptions": "Mostrar opciones avanzadas",
       "data": {
-        "name": "Datos"
+        "name": "Datos",
+        "selectableDimensions": {
+          "tableStyle": {
+            "name": "Estilo"
+          },
+          "tableStyleType": {
+            "name": "Símbolos",
+            "options": {
+              "fill": {
+                "name": "Color de relleno"
+              },
+              "outline": {
+                "name": "Color del borde"
+              }
+            }
+          },
+          "dataset": {
+            "name": "Conjunto de datos"
+          }
+        }
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "divergingContinuous": {
+                "name": "Divergente (continuo)"
+              },
+              "noStyle": {
+                "name": "Sin estilo"
+              },
+              "sequentialContinuous": {
+                "name": "Secuencial (continuo)"
+              },
+              "sequentialDiscrete": {
+                "name": "Secuencial (discreto)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergente (concreto)"
+              },
+              "qualitative": {
+                "name": "Cualitativo"
+              },
+              "customQualitative": {
+                "name": "Personalizado (cualitativo)"
+              }
+            },
+            "name": "Tipo",
+            "undefinedLabel": "Por favor especifique"
+          },
+          "tableColorColumn": {
+            "name": "Variable"
+          },
+          "dataType": {
+            "name": "Tipo de columna (avanzada)"
+          },
+          "scheme": {
+            "name": "Esquema"
+          },
+          "numberOfBins": {
+            "name": "Número de contenedores"
+          }
+        },
+        "name": "Color de relleno"
+      },
+      "colors": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "value": {
+            "name": "Valor"
+          }
+        },
+        "name": "Colores"
+      },
+      "additionalColors": {
+        "selectableDimensions": {
+          "nullColor": {
+            "name": "Color por defecto"
+          },
+          "regionColor": {
+            "name": "Color región"
+          },
+          "outlierColor": {
+            "name": "Color valores atípicos"
+          }
+        },
+        "name": "Colores adicionales"
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "Variable"
+          }
+        },
+        "null": {
+          "name": "Por defecto"
+        }
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "Columna temporal"
+          },
+          "tableEndTimeColumn": {
+            "name": "Columna de tiempo final"
+          },
+          "tableTimeIdColumns": {
+            "name": "Columnas de identificador"
+          }
+        },
+        "name": "Opciones temporales"
+      },
+      "hideAdvancedOptions": "Ocultar opciones avanzadas",
+      "copyUserStratum": "Copiar configuración en el portapapeles",
+      "bins": {
+        "name": "Contenedores",
+        "selectableDimensions": {
+          "start": {
+            "name": "Desde {{value1}} hasta {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Inicio"
+              },
+              "stop": {
+                "name": "Final"
+              }
+            }
+          }
+        }
+      },
+      "min": {
+        "name": "Mín"
+      },
+      "displayRange": {
+        "name": "Rango de visualización",
+        "selectableDimensions": {
+          "max": {
+            "name": "Máx"
+          }
+        }
+      },
+      "legend": {
+        "name": "Leyenda"
+      },
+      "styleOptions": {
+        "name": "Opciones de estilo",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Título"
+          },
+          "longitudeColumn": {
+            "name": "Columna de longitud"
+          },
+          "latitudeColumn": {
+            "name": "Columna de latitud"
+          }
+        }
+      },
+      "outline": {
+        "name": "Estilo borde",
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Ancho"
+          }
+        }
       }
     }
   },
@@ -618,7 +792,7 @@
     "preface": {
       "title": "Hacer el recorrido",
       "close": "Tal vez más tarde",
-      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y aprenda algunas de las funciones clave para ayudarlo en su camino.",
+      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y conozca algunas de las funciones clave para ayudarlo en su camino.",
       "start": "Empezar Tour"
     },
     "locationSearchInput": {
@@ -629,7 +803,7 @@
       "content": "## Historias\nLas historias permiten añadir información contextual a un conjunto de datos para dar vida a una narración. Cree su propia historia de datos con el Editor de Historias y compártala a través del panel \"Compartir\" una vez que haya terminado."
     },
     "exploreMapDataButton": {
-      "content": "## Explorar datos del mapa\nBusca en el catálogo datos disponibles y agrega al mapa aquí. Tu puedes agregar múltiples set de datos en cualquier momento, y verás a ellos  en el listado abajo"
+      "content": "## Explore datos del mapa\n\nRecorra el catálogo de datos disponibles y agréguelos al mapa desde aquí. Puede agregar múltiples conjuntos de datos en cualquier momento, y los verá listados debajo en el Tablero."
     },
     "menuBarMapSettingsButton": {
       "content": "## Configuraciones de mapa\nPersonalice los ajustes de los mapas, como los mapas base, el terreno 2D/3D y la calidad de la imagen del mapa para mejorar el rendimiento."
@@ -920,6 +1094,8 @@
     "done": "Hecho"
   },
   "selectableDimensions": {
-    "undefinedLabel": "No especificado"
+    "undefinedLabel": "No especificado",
+    "colorAdd": "Añadir",
+    "enabled": "Activado"
   }
 }
