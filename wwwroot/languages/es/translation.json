@@ -276,6 +276,9 @@
             "options": {
               "false": {
                 "name": "No"
+              },
+              "true": {
+                "name": "Sí"
               }
             }
           },
@@ -286,6 +289,9 @@
             "options": {
               "false": {
                 "name": "No"
+              },
+              "true": {
+                "name": "Sí"
               }
             },
             "name": "Unificar fecha inicial datos"
@@ -394,6 +400,9 @@
         "selectableDimensions": {
           "columnTitle": {
             "name": "Título"
+          },
+          "columnUnits": {
+            "name": "Unidades"
           }
         }
       }
