@@ -140,7 +140,17 @@
       "activeStyle": "Mostrar Variable",
       "editStyle": "Editar estilo",
       "noData": "No hay datos que mostrar.",
-      "custom": "Personalizado"
+      "custom": "Personalizado",
+      "styleDisabledLabel": "Deshabilitar estilo",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}} direcciones faltan en el CSV.",
+      "timeDimensionEnabled": "Opciones temporales activadas (click para deshabilitar)",
+      "legendNullLabel": "(sin valor)",
+      "unsupportedCharactersTitle": "Carácteres erróneos en las columnas de latitud y longitud",
+      "timeDimensionDisabled": "Opciones temporales desactivadas (click para habilitar)",
+      "unsupportedCharactersMessage": "La pareja {{longitude}} (longitud), {{latitude}} (latitud) no pudo ser interpretada",
+      "regionMapping": "Mapeo de regiones",
+      "regionColumn": "Columna de región",
+      "manualRegionMapping": "Mapeo de regiones manual"
     },
     "tableStyling": {
       "reset": "Restaurar estilo por defecto",
@@ -260,6 +270,36 @@
           },
           "tableTimeIdColumns": {
             "name": "Columnas de identificador"
+          },
+          "tableTimeIsSampled": {
+            "name": "Es muestreado",
+            "options": {
+              "false": {
+                "name": "No"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Mostrar duración"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Unificar fecha inicial datos"
+          },
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "true": {
+                "name": "Sí"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Unificar fecha final datos"
           }
         },
         "name": "Opciones temporales"
@@ -321,6 +361,39 @@
           },
           "width": {
             "name": "Ancho"
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "Opciones del banco de trabajo",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "Mostrar estilo en el banco de trabajo",
+            "options": {
+              "true": {
+                "name": "Estilo mostrado"
+              },
+              "false": {
+                "name": "Estilo oculto"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "Mostrar opción para deshabilitar estilo"
+          },
+          "showDisableTimeOption": {
+            "name": "Mostrar opción para deshabilitar opciones temporales"
+          },
+          "enableManualRegionMapping": {
+            "name": "Permitir mapeo de regiones manual"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "Variable/columna",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Título"
           }
         }
       }
@@ -1100,6 +1173,32 @@
     "undefinedLabel": "No especificado",
     "colorAdd": "Añadir",
     "enabled": "Activado",
-    "colorRemove": "Quitar"
+    "colorRemove": "Quitar",
+    "disabled": "Deshabilitado"
+  },
+  "deltaTool": {
+    "titlePrefix": "Detección de cambio",
+    "generateDeltaBtn": "Generar mapa de diferencia",
+    "loadingError": {
+      "title": "Error al cargar la herramienta Delta",
+      "message": "Se produjo un error al intentar cargar la herramienta Delta desde el servidor. Por favor, inténtelo de nuevo."
+    },
+    "cancelBtn": "Cancelar",
+    "secondaryImage": "Imagen secundaria",
+    "selectedLocation": "Lugar Seleccionado",
+    "description": "Esta herramienta visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo.",
+    "pickLocation": "Para ver las imágenes disponibles, seleccione su ubicación de interés en el mapa opuesto.",
+    "pickerMessage": {
+      "pickFirst": "Seleccione un punto haciendo clic en el mapa.",
+      "pickAnother": "Haga clic en otro punto para cambiar la selección",
+      "pickError": "¡Error al intentar recuperar las imágenes de la ubicación! Por favor, seleccione un punto de nuevo haciendo clic en el mapa."
+    },
+    "catalogItem": {
+      "description": "Esta capa visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo"
+    },
+    "primaryImage": "Imagen primaria"
+  },
+  "mapNavigation": {
+    "additionalTools": "Herramientas adicionales"
   }
 }
