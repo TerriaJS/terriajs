@@ -17,7 +17,6 @@ describe("MobileHeader", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria;
     viewState = new ViewState({
       terria: terria,
       catalogSearchProvider: undefined
