@@ -48,7 +48,7 @@ import { getRectangleFromLayer } from "./ArcGisMapServerCatalogItem";
 class ImageServerStratum extends LoadableStratum(
   ArcGisImageServerCatalogItemTraits
 ) {
-  static stratumName = "ImageServer";
+  static stratumName = "arcgisImageserver";
 
   constructor(
     private readonly _item: ArcGisImageServerCatalogItem,
@@ -78,7 +78,7 @@ class ImageServerStratum extends LoadableStratum(
     }
 
     let token: string | undefined;
-    if (isDefined(item.tokenUrl)) {
+    if (isDefined(item.tokenUrl) && isDefined(item.url)) {
       token = await getToken(item.terria, item.tokenUrl, item.url);
     }
 
@@ -94,7 +94,7 @@ class ImageServerStratum extends LoadableStratum(
     );
 
     if (!isDefined(serviceMetadata)) {
-      throw networkRequestError({
+      throw new TerriaError({
         title: i18next.t("models.arcGisService.invalidServerTitle"),
         message: i18next.t("models.arcGisService.invalidServerMessage")
       });
@@ -176,14 +176,25 @@ class ImageServerStratum extends LoadableStratum(
     )
       return false;
 
-    return isDefined(this.imageServer.tileInfo);
+    // We only support web mercator or wgs84
+    if (isDefined(this.imageServer.tileInfo)) {
+      const wkid =
+        this.imageServer.tileInfo.spatialReference?.latestWkid ??
+        this.imageServer.tileInfo.spatialReference?.wkid;
+
+      if (wkid === 102100 || wkid === 102113 || wkid === 3857 || wkid === 4326)
+        return true;
+    }
+
+    return false;
   }
 
   /** Override wkid to web mercator if using pre-cached tiles (and web mercator is supported) */
   get wkid() {
     if (this._item.usePreCachedTiles) {
       const wkid = this.imageServer.tileInfo?.spatialReference.wkid;
-      if (wkid === 102100 || wkid === 102113) return wkid;
+      if (wkid === 102100 || wkid === 102113 || wkid === 3857 || wkid === 4326)
+        return wkid;
     }
   }
 
@@ -257,7 +268,7 @@ StratumOrder.addLoadStratum(ImageServerStratum.stratumName);
 class ImageServerLegendStratum extends LoadableStratum(
   ArcGisImageServerCatalogItemTraits
 ) {
-  static stratumName = "ImageServerLegend";
+  static stratumName = "arcgisImageserverLegend";
 
   constructor(
     private readonly _item: ArcGisImageServerCatalogItem,
@@ -492,7 +503,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
 
       let tilingScheme: WebMercatorTilingScheme | GeographicTilingScheme;
 
-      if (this.wkid === 102100 || this.wkid === 102113) {
+      if (this.wkid === 102100 || this.wkid === 102113 || this.wkid === 3857) {
         tilingScheme = new WebMercatorTilingScheme();
       } else if (this.wkid === 4326) {
         tilingScheme = new GeographicTilingScheme();

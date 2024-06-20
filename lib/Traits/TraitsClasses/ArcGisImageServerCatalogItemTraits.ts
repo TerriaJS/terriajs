@@ -121,7 +121,7 @@ export default class ArcGisImageServerCatalogItemTraits extends mixTraits(
     type: "number",
     name: "WKID",
     description:
-      "The well-known ID of the spatial reference of the image server. Only Web Mercator (102100 or 102113) and WGS84 (4326) are supported."
+      "The well-known ID of the spatial reference of the image server. Only Web Mercator (102100 or 102113 or 3857) and WGS84 (4326) are supported."
   })
   wkid?: number = 102100;
 
