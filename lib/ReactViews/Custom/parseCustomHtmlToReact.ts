@@ -1,21 +1,19 @@
-"use strict";
-
+import DOMPurify from "dompurify";
 import React, {
   AnchorHTMLAttributes,
   createElement,
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
+import combine from "terriajs-cesium/Source/Core/combine";
+import defined from "terriajs-cesium/Source/Core/defined";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import { ExternalLinkWithWarning, ExternalLinkIcon } from "./ExternalLink";
+import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
 
-const DOMPurify = require("dompurify/dist/purify");
 const HtmlToReact = require("html-to-react");
-const combine = require("terriajs-cesium/Source/Core/combine").default;
-const defined = require("terriajs-cesium/Source/Core/defined").default;
 const utils = require("html-to-react/lib/utils");
 
 const htmlToReactParser = new HtmlToReact.Parser({

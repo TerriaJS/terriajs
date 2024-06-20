@@ -63,28 +63,30 @@ class KmlCatalogItem
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string | Resource | Document | Blob>((resolve) => {
-      if (isDefined(this.kmlString)) {
-        const parser = new DOMParser();
-        resolve(parser.parseFromString(this.kmlString, "text/xml"));
-      } else if (isDefined(this._kmlFile)) {
-        if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
-          resolve(this._kmlFile);
+    return new Promise<string | Resource | Document | Blob | undefined>(
+      (resolve) => {
+        if (isDefined(this.kmlString)) {
+          const parser = new DOMParser();
+          resolve(parser.parseFromString(this.kmlString, "text/xml"));
+        } else if (isDefined(this._kmlFile)) {
+          if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
+            resolve(this._kmlFile);
+          } else {
+            resolve(readXml(this._kmlFile));
+          }
+        } else if (isDefined(this.url)) {
+          resolve(proxyCatalogItemUrl(this, this.url));
         } else {
-          resolve(readXml(this._kmlFile));
+          throw networkRequestError({
+            sender: this,
+            title: i18next.t("models.kml.unableToLoadItemTitle"),
+            message: i18next.t("models.kml.unableToLoadItemMessage")
+          });
         }
-      } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url));
-      } else {
-        throw networkRequestError({
-          sender: this,
-          title: i18next.t("models.kml.unableToLoadItemTitle"),
-          message: i18next.t("models.kml.unableToLoadItemMessage")
-        });
       }
-    })
+    )
       .then((kmlLoadInput) => {
-        return KmlDataSource.load(kmlLoadInput);
+        return KmlDataSource.load(kmlLoadInput!);
       })
       .then((dataSource) => {
         this._dataSource = dataSource;

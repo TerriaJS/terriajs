@@ -1,11 +1,13 @@
 import i18next from "i18next";
-import markerIcon from "./markerIcon";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import CommonStrata from "./Definition/CommonStrata";
 import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
+
+// @ts-expect-error
+import markerIcon from "../../wwwroot/images/map-pin.png";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
   "TerriaJS Location Marker Points";

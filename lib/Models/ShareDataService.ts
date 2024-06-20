@@ -58,7 +58,7 @@ export default class ShareDataService {
 
     try {
       const result = await loadWithXhr({
-        url: this.url,
+        url: this.url!,
         method: "POST",
         data: JSON.stringify(shareData),
         headers: { "Content-Type": "application/json" },

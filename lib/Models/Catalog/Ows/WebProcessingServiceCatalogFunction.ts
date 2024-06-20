@@ -188,11 +188,13 @@ class WpsLoadableStratum extends LoadableStratum(
   }
 
   get storeSupported() {
-    return Boolean(this.processDescription.storeSupported);
+    const value = this.processDescription.storeSupported?.toLowerCase();
+    return value === "true" ? true : value === "false" ? false : undefined;
   }
 
   get statusSupported() {
-    return Boolean(this.processDescription.statusSupported);
+    const value = this.processDescription.statusSupported?.toLowerCase();
+    return value === "true" ? true : value === "false" ? false : undefined;
   }
 }
 
@@ -572,7 +574,6 @@ const RectangleConverter = {
   parameterToInput: function (functionParameter: FunctionParameter) {
     const parameter = functionParameter as RectangleParameter;
     const value = parameter.value;
-
     if (!isDefined(value)) {
       return;
     }
@@ -581,10 +582,10 @@ const RectangleConverter = {
     // We only support CRS84 and EPSG:4326
     if (parameter.crs.indexOf("crs84") !== -1) {
       // CRS84 uses long, lat rather that lat, long order.
-      bboxMinCoord1 = CesiumMath.toDegrees(value.west);
-      bboxMinCoord2 = CesiumMath.toDegrees(value.south);
-      bboxMaxCoord1 = CesiumMath.toDegrees(value.east);
-      bboxMaxCoord2 = CesiumMath.toDegrees(value.north);
+      bboxMinCoord1 = value.west;
+      bboxMinCoord2 = value.south;
+      bboxMaxCoord1 = value.east;
+      bboxMaxCoord2 = value.north;
       // Comfortingly known as WGS 84 longitude-latitude according to Table 3 in OGC 07-092r1.
       urn = "urn:ogc:def:crs:OGC:1.3:CRS84";
     } else {
@@ -592,10 +593,10 @@ const RectangleConverter = {
       // 4326 specified in version 6.6 of the EPSG database available at http://www.epsg.org/. That CRS specifies
       // the axis order as Latitude followed by Longitude.
       // We don't know about other URN versions, so are going to return 6.6 regardless of what was requested.
-      bboxMinCoord1 = CesiumMath.toDegrees(value.south);
-      bboxMinCoord2 = CesiumMath.toDegrees(value.west);
-      bboxMaxCoord1 = CesiumMath.toDegrees(value.north);
-      bboxMaxCoord2 = CesiumMath.toDegrees(value.east);
+      bboxMinCoord1 = value.south;
+      bboxMinCoord2 = value.west;
+      bboxMaxCoord1 = value.north;
+      bboxMaxCoord2 = value.east;
       urn = "urn:ogc:def:crs:EPSG:6.6:4326";
     }
 

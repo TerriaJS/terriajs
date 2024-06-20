@@ -84,7 +84,9 @@ function parseValues(properties: JsonObject) {
         try {
           val = JSON.parse(val as string);
         } catch (e) {
-          return;
+          console.warn(
+            `Error parsing JSON in feature properties "${key}": ${e}\nWill use string value instead: "${val}"`
+          );
         }
       }
       result[key] = val;

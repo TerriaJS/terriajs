@@ -1,8 +1,7 @@
 import MiniSearch, { Options as MiniSearchOptions } from "minisearch";
-import joinUrl from "./joinUrl";
+import loadText from "../../Core/loadText";
 import { IndexBase, IndexType } from "./Types";
-
-const loadText = require("../../Core/loadText");
+import joinUrl from "./joinUrl";
 
 // Text search query
 type TextSearchQuery = string;
