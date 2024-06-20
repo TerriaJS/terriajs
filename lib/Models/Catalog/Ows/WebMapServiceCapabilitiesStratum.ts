@@ -221,9 +221,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         if (style) {
           legendUri.setQuery("style", style);
         }
-        if (this.isNcWMS && this.palette) {
-          legendUri.setQuery("palette", this.palette);
-        }
         legendUrlMimeType = "image/png";
       }
 
@@ -250,6 +247,21 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
           legendScaling = 0.5;
           legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
           legendUri.setQuery("transparent", "true");
+        }
+
+        // Add NcWMS palette if supported (only for first layer)
+        if (
+          i === 0 &&
+          this.catalogItem.supportsNcWmsPalettes &&
+          this.catalogItem.palette &&
+          style &&
+          !this.catalogItem.noPaletteStyles?.includes(style)
+        ) {
+          // We replace style with new palette
+          legendUri.setQuery("style", `${style}/${this.catalogItem.palette}`);
+          legendUri.removeQuery("styles");
+          legendUri.removeQuery("STYLES");
+          legendUri.setQuery("PALETTE", this.catalogItem.palette);
         }
 
         // Add colour scale range params if supported
@@ -398,9 +410,18 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
                   (capabilitiesLayers.size > 1 && layer?.Title) || undefined // Add layer Title as legend title if showing multiple layers
               });
 
+          let styleName = style.Name;
+          let styleTitle = style.Title;
+
+          // NcWMS services may include palette names in the style name (eg `style/palette`) - we handle palette names separately (See NcWmsGetMetadataStratum)
+          if (this.catalogItem.supportsNcWmsPalettes) {
+            styleName = styleName.split("/")[0];
+            styleTitle = styleName.split("/")[0];
+          }
+
           return {
-            name: style.Name,
-            title: style.Title,
+            name: styleName,
+            title: styleTitle,
             abstract: style.Abstract,
             legend: legend
           };
@@ -412,7 +433,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   /** There is no way of finding out default style if no style has been selected :(
-   * If !supportsGetLegendGraphic - we have to just use the first available style (for each layer)
+   * If !supportsGetLegendGraphic or supportsNcWmsPalettes - we have to just use the first available style (for each layer)
    * This is because, to request a "default" legend we need GetLegendGraphics
    **/
   @computed get styles() {
@@ -423,7 +444,10 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         return query.styles ?? query.STYLES;
     }
 
-    if (!this.catalogItem.supportsGetLegendGraphic) {
+    if (
+      !this.catalogItem.supportsGetLegendGraphic ||
+      this.catalogItem.supportsNcWmsPalettes
+    ) {
       return this.catalogItem.availableStyles
         .map((layer) => {
           if (layer.layerName && layer.styles.length > 0) {
@@ -755,12 +779,12 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get supportsGetMetadata(): boolean {
+  get supportsNcWmsGetMetadata(): boolean {
     return this.catalogItem.isNcWMS;
   }
 
   @computed
-  get supportsPalettes(): boolean {
+  get supportsNcWmsPalettes(): boolean {
     return this.catalogItem.isNcWMS;
   }
 

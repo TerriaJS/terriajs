@@ -18,7 +18,7 @@ import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
-import Styles, { legend } from "./legend.scss";
+import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [

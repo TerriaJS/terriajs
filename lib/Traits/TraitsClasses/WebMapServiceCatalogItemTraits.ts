@@ -177,15 +177,6 @@ export class GetFeatureInfoFormat extends ModelTraits {
   format?: string;
 }
 
-export class NcWMSGetMetadataStratumTraits extends mixTraits(MappableTraits) {
-  @primitiveTrait({
-    name: "Item ID",
-    description: "The ID of the portal item.",
-    type: "string"
-  })
-  itemId?: string;
-}
-
 @traitClass({
   description: `Creates a single item in the catalog from one or many WMS layers.
 
@@ -348,34 +339,41 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   colorScaleMaximum: number = 50;
 
-  // boolean trait showPalettes
   @primitiveTrait({
     type: "boolean",
-    name: "Show Palettes",
+    name: "Supports NcWMS Palettes",
     description:
-      "showPalettes is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is false."
+      "Gets or sets whether this WMS server has been identified as supporting NcWMS Palettes. This will default to true if the server is identified as an NcWMS server."
   })
-  showPalettes: boolean = false;
+  supportsNcWmsPalettes: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports NcWMS GetMetadata requests",
+    description:
+      "Gets or sets whether this WMS server supports NcWMS GetMetadata requests. This will default to true if the server is identified as an NcWMS server."
+  })
+  supportsNcWmsGetMetadata: boolean = false;
 
   @primitiveTrait({
     type: "string",
     name: "Palette",
     description:
-      "palette is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. The default value is 'default'."
+      "palette is a non-standard property supported by THREDDS servers. This property is ignored unless WebMapServiceCatalogItem's isThredds is true. If the server doesn't provide a default, the default palette is 'default'."
   })
   palette?: string = "default";
 
-  @primitiveTrait({
+  @primitiveArrayTrait({
     type: "string",
-    name: "Default Palette",
-    description: "The name of the defaultPalette"
+    name: "Available Palettes",
+    description: "The available palettes."
   })
-  defaultPalette?: string;
+  availablePalettes: string[] = [];
 
   @primitiveArrayTrait({
     type: "string",
     name: "No Palettes styles",
-    description: "Styles that do not require palettes"
+    description: "Styles that do not support palettes"
   })
   noPaletteStyles: string[] = [];
 

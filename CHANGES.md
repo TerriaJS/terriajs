@@ -29,9 +29,6 @@
 
 #### 8.7.1 - 2024-04-16
 
-- Add ability for users to select Thredds palettes when available from Thredds servers for changing the visualisation of data.
-
-- Fixed exception thrown from `objectArrayTrait` when a model has 0 strata and a `MergeStrategy` of `topStratum`.
 - Upgraded to TerriajS Cesium 1.115.0
 - Fix `PointStyleTraits.marker` bug where URLs were not being used.
 - Fixed a bug with passing a relative baseUrl to Cesium >= 1.113.0 when `document.baseURI` is different to its `location`.

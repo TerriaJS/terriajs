@@ -1,61 +1,68 @@
-import { computed, makeObservable } from "mobx";
+import { makeObservable } from "mobx";
+import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import {
-  NcWMSGetMetadataStratumTraits,
-  WebMapServiceAvailablePaletteTraits
-} from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 export default class NcWMSGetMetadataStratum extends LoadableStratum(
-  NcWMSGetMetadataStratumTraits
+  WebMapServiceCatalogItemTraits
 ) {
   static stratumName = "ncWMSGetMetadata";
 
-  constructor(readonly url: string, readonly metadata: any) {
+  constructor(
+    readonly catalogItem: WebMapServiceCatalogItem,
+    readonly metadata: any
+  ) {
     super();
     makeObservable(this);
   }
 
   static async load(
-    url: string,
-    metadata?: any
-  ): Promise<NcWMSGetMetadataStratum> {
-    if (url) {
-      const response = await fetch(url);
-      const _metadata = await response.json();
-      metadata = _metadata;
-    }
-    return new NcWMSGetMetadataStratum(url, metadata);
+    catalogItem: WebMapServiceCatalogItem
+  ): Promise<NcWMSGetMetadataStratum | undefined> {
+    if (!catalogItem.uri) return;
+    const url = proxyCatalogItemUrl(
+      catalogItem,
+      catalogItem.uri
+        .clone()
+        .setSearch({
+          service: "WMS",
+          version: catalogItem.useWmsVersion130 ? "1.3.0" : "1.1.1",
+          request: "GetMetadata",
+          item: "layerDetails",
+          layerName: catalogItem.layersArray[0]
+        })
+        .toString()
+    );
+    const response = await fetch(url);
+    const metadata = await response.json();
+    return new NcWMSGetMetadataStratum(catalogItem, metadata);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new NcWMSGetMetadataStratum(this.url, this.metadata) as this;
-  }
-  @computed
-  get showPalettes() {
-    return this.availablePalettes.length > 0;
+    return new NcWMSGetMetadataStratum(this.catalogItem, this.metadata) as this;
   }
 
-  @computed
   get availablePalettes() {
-    const paletteResult = this.metadata.palettes.map((palette: any) => ({
-      name: palette,
-      title: palette,
-      abstract: palette
-    }));
-
-    return paletteResult;
+    return this.metadata.palettes;
   }
 
-  @computed
   get noPaletteStyles() {
     return this.metadata.noPaletteStyles;
   }
 
-  @computed
-  get defaultPalette() {
+  get palette() {
     return this.metadata.defaultPalette;
+  }
+
+  get colorScaleMinimum() {
+    return this.metadata.scaleRange[0];
+  }
+
+  get colorScaleMaximum() {
+    return this.metadata.scaleRange[1];
   }
 }
 

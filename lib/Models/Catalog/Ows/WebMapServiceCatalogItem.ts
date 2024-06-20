@@ -226,22 +226,10 @@ class WebMapServiceCatalogItem
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (this.isNcWMS) {
-      const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(
-        this.getPalettesUrl()
-      );
-
-      runInAction(() => {
-        this.strata.set(
-          NcWMSGetMetadataStratum.stratumName,
-          ncWMSGetMetadataStratum
-        );
-      });
-    }
-
     if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-      undefined
+      isDefined(
+        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+      )
     )
       return;
 
@@ -250,6 +238,22 @@ class WebMapServiceCatalogItem
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
+
+    // Fetch NcWMS GetMetadata if supported
+    if (
+      this.supportsNcWmsGetMetadata &&
+      !isDefined(this.strata.get(NcWMSGetMetadataStratum.stratumName))
+    ) {
+      const ncWMSGetMetadataStratum = await NcWMSGetMetadataStratum.load(this);
+
+      if (ncWMSGetMetadataStratum)
+        runInAction(() => {
+          this.strata.set(
+            NcWMSGetMetadataStratum.stratumName,
+            ncWMSGetMetadataStratum
+          );
+        });
+    }
   }
 
   @override
@@ -588,9 +592,23 @@ class WebMapServiceCatalogItem
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
 
+      let styles = this.styles;
+      // If we are also using NcWMS Palettes - we need to append the palette to the styles parameter (for the first style only)
+      if (
+        this.stylesArray.length > 0 &&
+        this.supportsNcWmsPalettes &&
+        this.palette &&
+        !this.noPaletteStyles?.includes(this.stylesArray[0])
+      ) {
+        styles = [
+          `${this.stylesArray[0]}/${this.palette}`,
+          ...this.stylesArray.slice(1)
+        ].join(",");
+      }
+
       // Styles parameter is mandatory (for GetMap and GetFeatureInfo requests), but can be empty string to use default style
-      parameters.styles = this.styles ?? "";
-      getFeatureInfoParameters.styles = this.styles ?? "";
+      parameters.styles = styles ?? "";
+      getFeatureInfoParameters.styles = styles ?? "";
 
       Object.assign(parameters, diffModeParameters);
 
@@ -650,60 +668,26 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get paletteDimensions(): SelectableDimensionEnum[] {
-    console.log(this.styles);
+  get paletteDimensions(): SelectableDimensionEnum | undefined {
     if (
-      !this.isNcWMS ||
-      !this.showPalettes ||
-      this.noPaletteStyles.includes(this.styles!)
+      this.supportsNcWmsPalettes &&
+      !this.noPaletteStyles?.includes(this.stylesArray[0])
     ) {
-      return [];
-    }
-
-    // fetch ncWMS stratum
-    const ncWMSGetMetadataStratum = this.strata.get(
-      NcWMSGetMetadataStratum.stratumName
-    ) as unknown as NcWMSGetMetadataStratum;
-
-    if (ncWMSGetMetadataStratum) {
-      const options: { name: string | undefined; id: string | undefined }[] =
-        [];
-
-      if (ncWMSGetMetadataStratum.availablePalettes) {
-        ncWMSGetMetadataStratum.availablePalettes.map(
-          (palette: { name: any }) => {
-            options.push({
-              name: palette.name,
-              id: palette.name
-            });
-          }
-        );
-      }
-
-      return [
-        {
-          name: "Palettes",
-          id: `${this.uniqueId}-palettes`,
-          options,
-          selectedId: this.palette,
-          setDimensionValue: (
-            stratumId: string,
-            newPalette: string | undefined
-          ) => {
-            //if (this.stylesArray[0]) {
-            runInAction(() => {
-              this.setTrait(stratumId, "palette", newPalette);
-              const currentStyle = this.stylesArray[0]
-                ? this.stylesArray[0]
-                : "default";
-              const newStyles = currentStyle.split("/")[0] + "/" + newPalette;
-              this.setTrait(stratumId, "styles", newStyles);
-            });
-          }
+      return {
+        name: "Palettes",
+        id: `${this.uniqueId}-palettes`,
+        options: this.availablePalettes.map((palette) => ({ id: palette })),
+        selectedId: this.palette,
+        setDimensionValue: (
+          stratumId: string,
+          newPalette: string | undefined
+        ) => {
+          runInAction(() => {
+            this.setTrait(stratumId, "palette", newPalette);
+          });
         }
-      ];
+      };
     }
-    return [];
   }
 
   @computed
@@ -752,7 +736,6 @@ class WebMapServiceCatalogItem
           newStyle: string | undefined
         ) => {
           if (!newStyle) return;
-          console.log("Setting style to", newStyle, "for layer", layerIndex);
 
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
@@ -848,7 +831,7 @@ class WebMapServiceCatalogItem
       ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions,
-      ...this.paletteDimensions
+      this.paletteDimensions
     ]);
   }
 
