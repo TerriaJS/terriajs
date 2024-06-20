@@ -169,7 +169,7 @@ export class GeoJsonTraits extends mixTraits(
     type: ClusteringTraits,
     name: "clustering",
     description:
-      ""
+      "Allows to activate the clustering of entities, works only with Cesium as a viewer."
   })
   clustering?: ClusteringTraits;
 }
