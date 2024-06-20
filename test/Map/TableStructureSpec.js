@@ -443,7 +443,7 @@ describe("TableStructure", function () {
       }
     };
     var tableStructureNoAddr = new TableStructure("foo", optionsNoAddr);
-    tableStructureNoAddr = tableStructure.loadFromJson(dataNoAddr);
+    tableStructureNoAddr = tableStructureNoAddr.loadFromJson(dataNoAddr);
     expect(tableStructureNoAddr.hasAddress).toBe(false);
   });
 
