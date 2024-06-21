@@ -8,7 +8,6 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import TIFFImageryProvider, {
   TIFFImageryProviderOptionsWithUrl
 } from "terriajs-tiff-imagery-provider";
-import Credit from "terriajs-cesium/Source/Core/Credit";
 import i18next from "i18next";
 import proj4 from "proj4-fully-loaded";
 
@@ -47,7 +46,7 @@ export default class CogCatalogItem extends MappableMixin(
         // In our custom ImageryProvider, we return ImageData, which is also a valid return type.
         // However, since the current Cesium type definitions do not reflect this flexibility, we use a TypeScript ignore comment ('@ts-ignore')
         // to suppress the type checking error. This is a temporary solution until the type definitions in Cesium are updated to accommodate ImageData.
-        // @ts-expect-error
+        // @ts-expect-error - The return type of 'requestImage' method in our custom ImageryProvider can be ImageData, which is not currently allowed in Cesium's type definitions, but is fine.
         imageryProvider,
         clippingRectangle: imageryProvider.rectangle
       }
