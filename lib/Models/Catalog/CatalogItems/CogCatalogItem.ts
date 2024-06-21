@@ -47,7 +47,7 @@ export default class CogCatalogItem extends MappableMixin(
         // In our custom ImageryProvider, we return ImageData, which is also a valid return type.
         // However, since the current Cesium type definitions do not reflect this flexibility, we use a TypeScript ignore comment ('@ts-ignore')
         // to suppress the type checking error. This is a temporary solution until the type definitions in Cesium are updated to accommodate ImageData.
-        // @ts-ignore
+        // @ts-expect-error
         imageryProvider,
         clippingRectangle: imageryProvider.rectangle
       }
@@ -106,10 +106,6 @@ export class CogImageryProvider extends TIFFImageryProvider {
   defaultMinificationFilter = undefined as any;
   proxy = undefined as any;
   tileDiscardPolicy = undefined as any;
-
-  getTileCredits(x: number, y: number, level: number): Credit[] {
-    return [];
-  }
 
   constructor(options: TIFFImageryProviderOptionsWithUrl) {
     super(options);
