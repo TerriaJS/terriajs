@@ -9,10 +9,8 @@ import TIFFImageryProvider, {
   TIFFImageryProviderOptionsWithUrl
 } from "terriajs-tiff-imagery-provider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
-import Reproject from "../../../Map/Vector/Reproject";
 import i18next from "i18next";
-const proj4 = require("proj4").default;
+import proj4 from "proj4-fully-loaded";
 
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
@@ -56,48 +54,21 @@ export default class CogCatalogItem extends MappableMixin(
     ];
   }
 
-  /**
-   * Handle all different possible projections of COGs
-   * Not currently used, as TIFFImageryProvider is not reprojecting correctly, so we only support EPSG3857 and EPSG4326 for now. Code retained for future use.
-   * @param code Should be a number representing an EPSG code
-   * @returns a Promise that resolves to a proj reprojection function
-   */
   projFunc = (code: number) => {
-    const sourceEpsgCode = `EPSG:${code}`;
-    // Add the projection to our proj4 defs if we dont already have it:
-    const project = Reproject.checkProjection(
-      this.terria.configParameters.proj4ServiceBaseUrl,
-      sourceEpsgCode
-    )
-      .then(() => {
-        const sourceDef =
-          sourceEpsgCode in Proj4Definitions
-            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
-            : undefined;
-
-        return proj4(sourceDef, "EPSG:4326").forward;
-      })
-      .catch((error: Error) => {
-        this.terria.raiseErrorToUser(error);
-      });
-
-    const unproject = Reproject.checkProjection(
-      this.terria.configParameters.proj4ServiceBaseUrl,
-      sourceEpsgCode
-    )
-      .then(() => {
-        const sourceDef =
-          sourceEpsgCode in Proj4Definitions
-            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
-            : undefined;
-
-        return proj4("EPSG:4326", sourceDef).forward;
-      })
-      .catch((error: Error) => {
-        this.terria.raiseErrorToUser(error);
-      });
-
-    return { project, unproject };
+    if (![4326, 3857, 900913].includes(code)) {
+      {
+        try {
+          let prj = proj4("EPSG:4326", `EPSG:${code}`);
+          if (prj)
+            return {
+              project: prj.forward,
+              unproject: prj.inverse
+            };
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
   };
 
   @computed get imageryProvider() {
@@ -107,7 +78,6 @@ export default class CogCatalogItem extends MappableMixin(
 
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
-      // TIFFImageryProvider's reprojection has now been declared experimental and is generating unnacceptable results in many cases. We can force it to fail on non 4326/3857 COGs by not passing in projFunc.
       projFunc: this.projFunc,
       renderOptions: {
         nodata: 0
