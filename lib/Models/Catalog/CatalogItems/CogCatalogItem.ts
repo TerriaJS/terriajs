@@ -56,17 +56,15 @@ export default class CogCatalogItem extends MappableMixin(
 
   projFunc = (code: number) => {
     if (![4326, 3857, 900913].includes(code)) {
-      {
-        try {
-          let prj = proj4("EPSG:4326", `EPSG:${code}`);
-          if (prj)
-            return {
-              project: prj.forward,
-              unproject: prj.inverse
-            };
-        } catch (e) {
-          console.error(e);
-        }
+      try {
+        const prj = proj4("EPSG:4326", `EPSG:${code}`);
+        if (prj)
+          return {
+            project: prj.forward,
+            unproject: prj.inverse
+          };
+      } catch (e) {
+        console.error(e);
       }
     }
   };
