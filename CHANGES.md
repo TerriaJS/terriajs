@@ -1,6 +1,30 @@
 # Change Log
 
-#### next release (8.7.3)
+#### next release (8.7.5)
+
+- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
+- Upgraded a bunch of d3 dependencies for fixing security errors.
+- Show rectangle selector for WPS bounding box parameter
+- Fix `store` and `status` values send in WPS Execute request.
+- Add docs for `modelDimensions`
+- [The next improvement]
+
+#### 8.7.4 - 2024-06-07
+
+- Fix position of draggable point after moving.
+- Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
+- The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
+- Fix bug in FilterSection
+
+#### 8.7.3 - 2024-05-28
+
+- Fix broken chart selector
+- Feature info template `<chart>` definition now accepts a `y-column` attribute to set the y-column that should be rendered in the feature info panel chart.
+- Upgrade `thredds-catalog-crawler` to `v0.0.7` which makes a few security upgrades.
+- Fix bug with broken datetime after that Timeline has been closed once.
+- Fix WPS date time widget reset bug
+- Set default date for WPS date time widget on load
+- Add NumberParameterEditor to enable WPS AllowedValues Ranges to be set and use DefaultValue
 
 #### 8.7.2 - 2024-05-14
 

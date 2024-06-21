@@ -1,10 +1,8 @@
-"use strict";
-
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const MarkdownIt = require("markdown-it");
-const DOMPurify = require("dompurify/dist/purify");
-import injectTerms from "./injectTerms";
+import DOMPurify from "dompurify";
+import MarkdownIt from "markdown-it";
+import defined from "terriajs-cesium/Source/Core/defined";
 import { Term } from "../ReactViewModels/defaultTerms";
+import injectTerms from "./injectTerms";
 
 const md = new MarkdownIt({
   html: true,

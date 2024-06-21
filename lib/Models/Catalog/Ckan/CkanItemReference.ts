@@ -127,7 +127,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset === undefined) return undefined;
     if (this.ckanDataset.extras !== undefined) {
       const out: number[] = [];
-      const bboxExtras = this.ckanDataset.extras.forEach((e) => {
+      this.ckanDataset.extras.forEach((e) => {
         if (e.key === "bbox-west-long") out[0] = parseFloat(e.value);
         if (e.key === "bbox-south-lat") out[1] = parseFloat(e.value);
         if (e.key === "bbox-north-lat") out[2] = parseFloat(e.value);
