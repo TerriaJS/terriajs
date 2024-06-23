@@ -2,6 +2,7 @@
 
 #### next release (8.7.12)
 
+- Update to react-virtual 2.10.4.
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
