@@ -21,8 +21,12 @@ export default class CogCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    await this.imageryProvider?.readyPromise;
-    return Promise.resolve();
+    if (this.imageryProvider) {
+      await this.imageryProvider.readyPromise;
+    } else {
+      // Handle the case where imageryProvider is undefined
+      console.error("ImageryProvider is undefined.");
+    }
   }
 
   @override
@@ -38,6 +42,13 @@ export default class CogCatalogItem extends MappableMixin(
     if (!isDefined(imageryProvider) || this.isLoadingMapItems) {
       return [];
     }
+
+    // Ensure imageryProvider is fully initialized here
+    if (!imageryProvider.ready) {
+      // Return an empty array or a loading state if not ready
+      return [];
+    }
+
     return [
       {
         show: this.show,
@@ -47,8 +58,8 @@ export default class CogCatalogItem extends MappableMixin(
         // However, since the current Cesium type definitions do not reflect this flexibility, we use a TypeScript ignore comment ('@ts-ignore')
         // to suppress the type checking error. This is a temporary solution until the type definitions in Cesium are updated to accommodate ImageData.
         // @ts-expect-error - The return type of 'requestImage' method in our custom ImageryProvider can be ImageData, which is not currently allowed in Cesium's type definitions, but is fine.
-        imageryProvider,
-        clippingRectangle: imageryProvider.rectangle
+        imageryProvider: this.imageryProvider,
+        clippingRectangle: this.cesiumRectangle
       }
     ];
   }
