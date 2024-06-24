@@ -84,10 +84,19 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
+    // Construct the options object with properties from CogCatalogItemTraits
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
-      projFunc: this.projFunc,
-      enablePickFeatures: this.allowFeaturePicking
+      // requestOptions: this.requestOptions,
+      credit: this.credit,
+      tileSize: this.tileSize,
+      maximumLevel: this.maximumLevel,
+      minimumLevel: this.minimumLevel,
+      enablePickFeatures: this.allowFeaturePicking,
+      hasAlphaChannel: this.hasAlphaChannel,
+      cache: this.cache,
+      resampleMethod: this.resampleMethod,
+      projFunc: this.projFunc
     };
 
     const cogImageryProvider: CogImageryProvider = new CogImageryProvider(

@@ -6,6 +6,9 @@ import MappableTraits from "./MappableTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 import { traitClass } from "../Trait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import objectTrait from "../Decorators/objectTrait";
+import { CogRenderOptionsTraits } from "./CogRenderOptionsTraits";
 
 @traitClass({
   description:
@@ -25,4 +28,47 @@ export default class CogCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits
-) {}
+) {
+  @objectTrait({
+    type: CogRenderOptionsTraits,
+    name: "Render Options",
+    description: "Render options for COGs"
+  })
+  renderOptions?: CogRenderOptionsTraits;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Credit",
+    description: "Credit for the imagery provider."
+  })
+  credit?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile Size",
+    description: "The size of the tile."
+  })
+  tileSize?: number;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Has Alpha Channel",
+    description: "Whether the imagery has an alpha channel."
+  })
+  hasAlphaChannel?: boolean;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Cache",
+    description: "Cache survival time in milliseconds."
+  })
+  cache?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Resample Method",
+    description: "Geotiff resample method."
+    // options: ["nearest", "bilinear", "linear"]
+  })
+  resampleMethod?: "nearest" | "bilinear" | "linear";
+}
