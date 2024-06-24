@@ -76,9 +76,6 @@ export default class CogCatalogItem extends MappableMixin(
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
       projFunc: this.projFunc,
-      renderOptions: {
-        nodata: 0
-      },
       enablePickFeatures: this.allowFeaturePicking
     };
 
