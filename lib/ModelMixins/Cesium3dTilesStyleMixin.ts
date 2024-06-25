@@ -4,10 +4,12 @@ import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
 import Cesium3dTilesTraits from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import clone from "terriajs-cesium/Source/Core/clone";
-import { computed, toJS } from "mobx";
+import { computed, override, toJS } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 
 type BaseType = Model<Cesium3dTilesTraits>;
+
+const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
 function Cesium3dTilesStyleMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
@@ -19,6 +21,15 @@ function Cesium3dTilesStyleMixin<T extends AbstractConstructor<BaseType>>(
 
     get hasCesium3dTilesStyleMixin() {
       return true;
+    }
+
+    /**
+     * The color to use for highlighting features in this catalog item.
+     *
+     */
+    @override
+    get highlightColor(): string {
+      return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
     }
 
     @computed

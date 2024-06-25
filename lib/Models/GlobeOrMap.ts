@@ -32,6 +32,7 @@ import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
+import I3SCatalogItem from "./Catalog/CatalogItems/I3SCatalogItem";
 
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -235,7 +236,10 @@ export default abstract class GlobeOrMap {
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
         let highlightColor;
-        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
+        if (
+          catalogItem instanceof Cesium3DTilesCatalogItem ||
+          catalogItem instanceof I3SCatalogItem
+        ) {
           highlightColor =
             Color.fromCssColorString(
               runInAction(() => catalogItem.highlightColor)

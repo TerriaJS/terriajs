@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { computed, makeObservable, observable, override, toJS } from "mobx";
+import {
+  computed,
+  makeObservable,
+  observable,
+  override,
+  runInAction,
+  toJS
+} from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import isDefined from "../../../Core/isDefined";
@@ -55,10 +62,14 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
     if (!isDefined(this.url)) {
       throw `\`url\` is not defined for ${getName(this)}`;
     }
-    this.dataProvider = await I3SDataProvider.fromUrl(this.url, {
+    const i3sProvider = await I3SDataProvider.fromUrl(this.url, {
+      showFeatures: this.allowFeaturePicking,
       geoidTiledTerrainProvider: this.terrainURL
         ? await ArcGISTiledElevationTerrainProvider.fromUrl(this.terrainURL)
         : undefined
+    });
+    runInAction(() => {
+      this.dataProvider = i3sProvider;
     });
   }
 
@@ -85,13 +96,12 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
         return;
       }
       const i3sNode: I3SNode = pickResult.content.tile.i3sNode;
-
       return i3sNode.loadFields().then(() => {
         const fields = i3sNode.getFieldsForPickedPosition(pickedPosition);
         result = new TerriaFeature({
           properties: fields
         });
-        result._cesium3DTileFeature = pickResult.content.tile;
+        result._cesium3DTileFeature = pickResult;
         return result;
       });
     }
@@ -102,6 +112,9 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
   get mapItems() {
     if (this.isLoadingMapItems || !isDefined(this.dataProvider)) {
       return [];
+    }
+    if (this.dataProvider.isDestroyed()) {
+      this.forceLoadMapItems();
     }
     if (this.dataProvider) {
       this.dataProvider.show = this.show;

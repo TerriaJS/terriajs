@@ -24,7 +24,6 @@ import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTil
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
@@ -66,12 +65,10 @@ class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
 // Register the Cesium3dTilesStratum
 StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
-const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
-
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
-class ObservableCesium3DTileset extends Cesium3DTileset {
+export class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
   @observable destroyed = false;
 
@@ -541,15 +538,6 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           conditions
         }
       });
-    }
-
-    /**
-     * The color to use for highlighting features in this catalog item.
-     *
-     */
-    @override
-    get highlightColor(): string {
-      return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
     }
   }
 
