@@ -38,7 +38,7 @@ module.exports = function (hot, dev) {
         //   test: /\.(ts|js)x?$/,
         //   include: [path.resolve(terriaJSBasePath, "lib")],
         //   use: {
-        //     loader: "istanbul-instrumenter-loader"
+        //     loader: "@jsdevtools/coverage-istanbul-loader"
         //   },
         //   enforce: "post"
         // }
