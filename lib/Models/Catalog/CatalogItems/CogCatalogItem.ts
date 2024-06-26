@@ -1,15 +1,17 @@
+import i18next from "i18next";
 import { computed, override } from "mobx";
+import proj4 from "proj4-fully-loaded";
+import TextureMagnificationFilter from "terriajs-cesium/Source/Renderer/TextureMagnificationFilter";
+import TextureMinificationFilter from "terriajs-cesium/Source/Renderer/TextureMinificationFilter";
+import TIFFImageryProvider, {
+  TIFFImageryProviderOptionsWithUrl
+} from "terriajs-tiff-imagery-provider";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import TIFFImageryProvider, {
-  TIFFImageryProviderOptionsWithUrl
-} from "terriajs-tiff-imagery-provider";
-import i18next from "i18next";
-import proj4 from "proj4-fully-loaded";
 
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
@@ -108,20 +110,8 @@ export default class CogCatalogItem extends MappableMixin(
 }
 
 export class CogImageryProvider extends TIFFImageryProvider {
-  // Set values to please poor cesium types
-  defaultNightAlpha = undefined;
-  defaultDayAlpha = undefined;
-  hasAlphaChannel = true;
-  defaultAlpha = undefined as any;
-  defaultBrightness = undefined as any;
-  defaultContrast = undefined as any;
-  defaultGamma = undefined as any;
-  defaultHue = undefined as any;
-  defaultSaturation = undefined as any;
-  defaultMagnificationFilter = undefined as any;
-  defaultMinificationFilter = undefined as any;
-  proxy = undefined as any;
-  tileDiscardPolicy = undefined as any;
+  _defaultMagnificationFilter = TextureMagnificationFilter.NEAREST;
+  _defaultMinificationFilter = TextureMinificationFilter.NEAREST;
 
   constructor(options: TIFFImageryProviderOptionsWithUrl) {
     super(options);
