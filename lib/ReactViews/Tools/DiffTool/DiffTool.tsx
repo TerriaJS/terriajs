@@ -443,7 +443,7 @@ class Main extends React.Component<MainPropsType> {
       const imageryProvider =
         part && ImageryParts.is(part) && part.imageryProvider;
       if (imageryProvider) {
-        const promises = [
+        const promises: Promise<boolean>[] = [
           setTimeFilterFromLocation(
             this.props.leftItem,
             markerLocation,
