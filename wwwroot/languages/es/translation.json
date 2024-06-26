@@ -111,6 +111,301 @@
       "contact_point": "Contacto",
       "author": "Autor",
       "licence": "Licencia"
+    },
+    "webMapServiceCatalogItem": {
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "serviceDescription": "Descripción del servicio",
+      "serviceContact": "Contacto del servicio",
+      "accessConstraints": "Restricciones de acceso",
+      "noLayerFoundTitle": "Capa no encontrada",
+      "defaultStyleLabel": "Estilo por defecto",
+      "dataDescription": "Descripción de los datos"
+    },
+    "userDrawing": {
+      "messageHeader": "Dibujar en el mapa",
+      "clickToAddFirstPoint": "Haga click para añadir un punto",
+      "btnCancel": "Cancelar"
+    },
+    "raiseError": {
+      "notificationFeedback": "Para preguntas y comentarios, haga click aquí.",
+      "developerDetails": "Detalles para desarrolladores"
+    },
+    "mapboxVectorTile": {
+      "name": "Teselas vectoriales de Mapbox (MVT)"
+    },
+    "webFeatureServiceCatalogItem": {
+      "noLayerFoundMessage": "El conjunto de dato WFS '{{name}}' no tiene capas que coincidan con '{{typeNames}}'. O el catálogo ha sido configurado erróneamente, o el servidor WFS ha cambiado."
+    },
+    "tableData": {
+      "activeStyle": "Mostrar Variable",
+      "editStyle": "Editar estilo",
+      "noData": "No hay datos que mostrar.",
+      "custom": "Personalizado",
+      "styleDisabledLabel": "Deshabilitar estilo",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}} direcciones faltan en el CSV.",
+      "timeDimensionEnabled": "Opciones temporales activadas (click para deshabilitar)",
+      "legendNullLabel": "(sin valor)",
+      "unsupportedCharactersTitle": "Carácteres erróneos en las columnas de latitud y longitud",
+      "timeDimensionDisabled": "Opciones temporales desactivadas (click para habilitar)",
+      "unsupportedCharactersMessage": "La pareja {{longitude}} (longitud), {{latitude}} (latitud) no pudo ser interpretada",
+      "regionMapping": "Mapeo de regiones",
+      "regionColumn": "Columna de región",
+      "manualRegionMapping": "Mapeo de regiones manual"
+    },
+    "tableStyling": {
+      "reset": "Restaurar estilo por defecto",
+      "name": "Estilo",
+      "showAdvancedOptions": "Mostrar opciones avanzadas",
+      "data": {
+        "name": "Datos",
+        "selectableDimensions": {
+          "tableStyle": {
+            "name": "Estilo"
+          },
+          "tableStyleType": {
+            "name": "Símbolos",
+            "options": {
+              "fill": {
+                "name": "Color de relleno"
+              },
+              "outline": {
+                "name": "Color del borde"
+              }
+            }
+          },
+          "dataset": {
+            "name": "Conjunto de datos"
+          }
+        }
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "divergingContinuous": {
+                "name": "Divergente (continuo)"
+              },
+              "noStyle": {
+                "name": "Sin estilo"
+              },
+              "sequentialContinuous": {
+                "name": "Secuencial (continuo)"
+              },
+              "sequentialDiscrete": {
+                "name": "Secuencial (discreto)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergente (concreto)"
+              },
+              "qualitative": {
+                "name": "Cualitativo"
+              },
+              "customQualitative": {
+                "name": "Personalizado (cualitativo)"
+              }
+            },
+            "name": "Tipo",
+            "undefinedLabel": "Por favor especifique"
+          },
+          "tableColorColumn": {
+            "name": "Variable"
+          },
+          "dataType": {
+            "name": "Tipo de columna (avanzada)"
+          },
+          "scheme": {
+            "name": "Esquema"
+          },
+          "numberOfBins": {
+            "name": "Número de contenedores"
+          }
+        },
+        "name": "Color de relleno"
+      },
+      "colors": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "value": {
+            "name": "Valor"
+          },
+          "remove": {
+            "value": "Quitar"
+          }
+        },
+        "name": "Colores"
+      },
+      "additionalColors": {
+        "selectableDimensions": {
+          "nullColor": {
+            "name": "Color por defecto"
+          },
+          "regionColor": {
+            "name": "Color región"
+          },
+          "outlierColor": {
+            "name": "Color valores atípicos"
+          }
+        },
+        "name": "Colores adicionales"
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "Variable"
+          }
+        },
+        "null": {
+          "name": "Por defecto"
+        }
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "Columna temporal"
+          },
+          "tableEndTimeColumn": {
+            "name": "Columna de tiempo final"
+          },
+          "tableTimeIdColumns": {
+            "name": "Columnas de identificador"
+          },
+          "tableTimeIsSampled": {
+            "name": "Es muestreado",
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Sí"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Mostrar duración"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Sí"
+              }
+            },
+            "name": "Unificar fecha inicial datos"
+          },
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "true": {
+                "name": "Sí"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Unificar fecha final datos"
+          }
+        },
+        "name": "Opciones temporales"
+      },
+      "hideAdvancedOptions": "Ocultar opciones avanzadas",
+      "copyUserStratum": "Copiar configuración en el portapapeles",
+      "bins": {
+        "name": "Contenedores",
+        "selectableDimensions": {
+          "start": {
+            "name": "Desde {{value1}} hasta {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Inicio"
+              },
+              "stop": {
+                "name": "Final"
+              }
+            }
+          }
+        }
+      },
+      "min": {
+        "name": "Mín"
+      },
+      "displayRange": {
+        "name": "Rango de visualización",
+        "selectableDimensions": {
+          "max": {
+            "name": "Máx"
+          }
+        }
+      },
+      "legend": {
+        "name": "Leyenda"
+      },
+      "styleOptions": {
+        "name": "Opciones de estilo",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Título"
+          },
+          "longitudeColumn": {
+            "name": "Columna de longitud"
+          },
+          "latitudeColumn": {
+            "name": "Columna de latitud"
+          }
+        }
+      },
+      "outline": {
+        "name": "Estilo borde",
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Ancho"
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "Opciones del banco de trabajo",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "Mostrar estilo en el banco de trabajo",
+            "options": {
+              "true": {
+                "name": "Estilo mostrado"
+              },
+              "false": {
+                "name": "Estilo oculto"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "Mostrar opción para deshabilitar estilo"
+          },
+          "showDisableTimeOption": {
+            "name": "Mostrar opción para deshabilitar opciones temporales"
+          },
+          "enableManualRegionMapping": {
+            "name": "Permitir mapeo de regiones manual"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "Variable/columna",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Título"
+          },
+          "columnUnits": {
+            "name": "Unidades"
+          }
+        }
+      }
     }
   },
   "analytics": {
@@ -545,7 +840,8 @@
     "selectToPreviewDataset": "Seleccione un conjunto de datos para ver una vista previa",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vaya al mapa",
-    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE"
+    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE",
+    "selectMultipleDatasets": "<0>Pulse <strong>Mayus</strong> y haga click</0><1 /><2>para añadir múltiples conjuntos de datos</2>"
   },
   "description": {
     "typeName": "Nombre del tipo",
@@ -581,7 +877,7 @@
     "preface": {
       "title": "Hacer el recorrido",
       "close": "Tal vez más tarde",
-      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y aprenda algunas de las funciones clave para ayudarlo en su camino.",
+      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y conozca algunas de las funciones clave para ayudarlo en su camino.",
       "start": "Empezar Tour"
     },
     "locationSearchInput": {
@@ -592,7 +888,7 @@
       "content": "## Historias\nLas historias permiten añadir información contextual a un conjunto de datos para dar vida a una narración. Cree su propia historia de datos con el Editor de Historias y compártala a través del panel \"Compartir\" una vez que haya terminado."
     },
     "exploreMapDataButton": {
-      "content": "## Explorar datos del mapa\nBusca en el catálogo datos disponibles y agrega al mapa aquí. Tu puedes agregar múltiples set de datos en cualquier momento, y verás a ellos  en el listado abajo"
+      "content": "## Explore datos del mapa\n\nRecorra el catálogo de datos disponibles y agréguelos al mapa desde aquí. Puede agregar múltiples conjuntos de datos en cualquier momento, y los verá listados debajo en el Tablero."
     },
     "menuBarMapSettingsButton": {
       "content": "## Configuraciones de mapa\nPersonalice los ajustes de los mapas, como los mapas base, el terreno 2D/3D y la calidad de la imagen del mapa para mejorar el rendimiento."
@@ -867,6 +1163,51 @@
     },
     "mapboxVectorTileImageryProvider": {
       "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Atribución de los datos",
+      "disclaimer": "Descargo de responsabilidad"
     }
+  },
+  "relatedMaps": {
+    "buttonText": "Mapas relacionados",
+    "buttonTitle": "Ver mapas relacionados",
+    "panelHeading": "Mapas relacionados",
+    "panelText": "Hacer click en el mapa inferior lo abrirá en una ventana o pestaña separadas."
+  },
+  "compare": {
+    "done": "Hecho"
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "No especificado",
+    "colorAdd": "Añadir",
+    "enabled": "Activado",
+    "colorRemove": "Quitar",
+    "disabled": "Deshabilitado"
+  },
+  "deltaTool": {
+    "titlePrefix": "Detección de cambio",
+    "generateDeltaBtn": "Generar mapa de diferencia",
+    "loadingError": {
+      "title": "Error al cargar la herramienta Delta",
+      "message": "Se produjo un error al intentar cargar la herramienta Delta desde el servidor. Por favor, inténtelo de nuevo."
+    },
+    "cancelBtn": "Cancelar",
+    "secondaryImage": "Imagen secundaria",
+    "selectedLocation": "Lugar Seleccionado",
+    "description": "Esta herramienta visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo.",
+    "pickLocation": "Para ver las imágenes disponibles, seleccione su ubicación de interés en el mapa opuesto.",
+    "pickerMessage": {
+      "pickFirst": "Seleccione un punto haciendo clic en el mapa.",
+      "pickAnother": "Haga clic en otro punto para cambiar la selección",
+      "pickError": "¡Error al intentar recuperar las imágenes de la ubicación! Por favor, seleccione un punto de nuevo haciendo clic en el mapa."
+    },
+    "catalogItem": {
+      "description": "Esta capa visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo"
+    },
+    "primaryImage": "Imagen primaria"
+  },
+  "mapNavigation": {
+    "additionalTools": "Herramientas adicionales"
   }
 }
