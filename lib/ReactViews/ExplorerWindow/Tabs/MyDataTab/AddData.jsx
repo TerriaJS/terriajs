@@ -211,8 +211,7 @@ const AddData = createReactClass({
       } else {
         return result;
       }
-    },
-    []);
+    }, []);
 
     return (
       <div className={Styles.tabPanels}>

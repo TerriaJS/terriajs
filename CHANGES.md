@@ -3,6 +3,7 @@
 #### next release (8.7.6)
 
 - [The next improvement]
+- Upgrade prettier to version 3.3.2
 
 #### 8.7.5 - 2024-06-26
 

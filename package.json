@@ -227,7 +227,7 @@
     "minimist": "^1.2.8",
     "node-notifier": "^5.1.2",
     "plugin-error": "^1.0.1",
-    "prettier": "2.7.1",
+    "prettier": "3.3.2",
     "pretty-quick": "^1.10.0",
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",

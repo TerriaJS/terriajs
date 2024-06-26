@@ -844,8 +844,8 @@ export default class BoxDrawing {
     const normalAxis = planeLocal.normal.x
       ? Axis.X
       : planeLocal.normal.y
-      ? Axis.Y
-      : Axis.Z;
+        ? Axis.Y
+        : Axis.Z;
     const style: Readonly<SideStyle> = {
       fillColor: Color.WHITE.withAlpha(0.1),
       outlineColor: Color.WHITE,
@@ -896,8 +896,8 @@ export default class BoxDrawing {
     const axis = planeLocal.normal.x
       ? Axis.X
       : planeLocal.normal.y
-      ? Axis.Y
-      : Axis.Z;
+        ? Axis.Y
+        : Axis.Z;
 
     const scratchDirection = new Cartesian3();
     const scratchMoveVector = new Cartesian3();
