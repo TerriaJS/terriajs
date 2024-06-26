@@ -885,11 +885,11 @@ describe("CsvCatalogItem with lat and lon", function () {
           return csvItem2.load().yield(csvItem2);
         })
         .then(function (csvItem2) {
-          var pixelSizes = csvItem2.dataSource.entities.values.map(function (
-            e
-          ) {
-            return e.point._pixelSize._value;
-          });
+          var pixelSizes = csvItem2.dataSource.entities.values.map(
+            function (e) {
+              return e.point._pixelSize._value;
+            }
+          );
           var minPix = Math.min.apply(null, pixelSizes);
           var maxPix = Math.max.apply(null, pixelSizes);
           // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
