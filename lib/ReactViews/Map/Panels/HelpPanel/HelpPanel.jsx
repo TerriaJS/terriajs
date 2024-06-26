@@ -76,7 +76,7 @@ class HelpPanel extends React.Component {
             <StyledIcon
               styledWidth={"16px"}
               fillColor={this.props.theme.textDark}
-              opacity={"0.5"}
+              opacity={0.5}
               glyph={Icon.GLYPHS.closeLight}
             />
           </RawButton>
