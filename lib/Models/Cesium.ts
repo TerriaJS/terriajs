@@ -917,6 +917,15 @@ export default class Cesium extends GlobeOrMap {
             destination: target.cesiumRectangle
           });
         } else if (target.mapItems.length > 0) {
+          // If our first item is of ImageryParts type then we can use the rectangle on the imageryProvider to zoom to.
+          if (ImageryParts.is(target.mapItems[0])) {
+            if (target.mapItems[0].imageryProvider?.rectangle) {
+              return this.doZoomTo(
+                target.mapItems[0].imageryProvider.rectangle,
+                flightDurationSeconds
+              );
+            }
+          }
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         } else {
