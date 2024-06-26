@@ -135,7 +135,7 @@ export const SearchBox = createReactClass({
               glyph={Icon.GLYPHS.close}
               styledWidth={"15px"}
               fillColor={this.props.theme.charcoalGrey}
-              opacity={"0.5"}
+              opacity={0.5}
             />
           </BoxSpan>
         </RawButton>
@@ -167,7 +167,7 @@ export const SearchBox = createReactClass({
               glyph={Icon.GLYPHS.search}
               styledWidth={"20px"}
               fillColor={this.props.theme.charcoalGrey}
-              opacity={"0.5"}
+              opacity={0.5}
               css={`
                 position: absolute;
               `}
