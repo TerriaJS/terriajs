@@ -255,7 +255,7 @@ export function isShareable(terria: Terria) {
 
     // If this is a Reference, then use the model.target, otherwise use the model
     const dereferenced =
-      typeof model === undefined
+      typeof model === "undefined"
         ? model
         : getDereferencedIfExists(terria.getModelById(BaseModel, modelId)!);
 
