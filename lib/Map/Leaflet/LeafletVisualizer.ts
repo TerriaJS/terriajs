@@ -1106,8 +1106,6 @@ function getDashArray(
   material: PolylineDashMaterialProperty,
   time: JulianDate
 ): number[] {
-  let dashArray;
-
   const dashPattern = material.dashPattern
     ? material.dashPattern.getValue(time)
     : undefined;
