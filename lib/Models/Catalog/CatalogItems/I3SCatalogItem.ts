@@ -86,19 +86,13 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
       this.allowFeaturePicking &&
       isDefined(pickResult.content) &&
       isDefined(pickResult.content.tile.i3sNode) &&
+      isDefined(pickResult.featureId) &&
       _screenPosition
     ) {
-      let result;
-      const pickedPosition =
-        this.terria.cesium?.scene.pickPosition(_screenPosition);
-
-      if (pickedPosition === undefined) {
-        return;
-      }
       const i3sNode: I3SNode = pickResult.content.tile.i3sNode;
       return i3sNode.loadFields().then(() => {
-        const fields = i3sNode.getFieldsForPickedPosition(pickedPosition);
-        result = new TerriaFeature({
+        const fields = i3sNode.getFieldsForFeature(pickResult.featureId);
+        const result = new TerriaFeature({
           properties: fields
         });
         result._cesium3DTileFeature = pickResult;

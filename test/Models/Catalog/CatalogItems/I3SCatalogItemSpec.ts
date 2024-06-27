@@ -3,21 +3,13 @@ import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
-import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
-import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import I3SCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/I3SCatalogItem";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import I3SLayer from "terriajs-cesium/Source/Scene/I3SLayer";
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 
 const mockLayerData = {
   href: "layers/0/",
@@ -55,6 +47,7 @@ describe("I3SCatalogItemSpec", function () {
     item = new I3SCatalogItem("test", new Terria());
     runInAction(() => {
       item.setTrait("definition", "url", testUrl);
+      item.setTrait("definition", "allowFeaturePicking", true);
     });
   });
 
@@ -84,7 +77,6 @@ describe("I3SCatalogItemSpec", function () {
       } catch {
         /* eslint-disable-line no-empty */
       }
-      // observe mapItems
       dispose = reaction(
         () => item.mapItems,
         () => {}
@@ -150,59 +142,32 @@ describe("I3SCatalogItemSpec", function () {
             const tileset = item.mapItems[0].layers[0].tileset;
             expect(tileset?.style).toBe(item.cesiumTileStyle);
           });
-
-          xit("sets the rootTransform to IDENTITY", function () {
-            const tileset = item.mapItems[0].layers[0].tileset;
-            expect(
-              Matrix4.equals(tileset?.root.transform, Matrix4.IDENTITY)
-            ).toBeTruthy();
-          });
-
-          xit("computes a new model matrix from the given transformations", async function () {
-            item.setTrait(
-              CommonStrata.user,
-              "rotation",
-              createStratumInstance(HeadingPitchRollTraits, {
-                heading: 42,
-                pitch: 42,
-                roll: 42
-              })
-            );
-            item.setTrait(
-              CommonStrata.user,
-              "origin",
-              createStratumInstance(LatLonHeightTraits, {
-                latitude: 10,
-                longitude: 10
-              })
-            );
-            item.setTrait(CommonStrata.user, "scale", 5);
-            const tileset = item.mapItems[0].layers[0].tileset;
-            const modelMatrix = tileset!.modelMatrix;
-            const rotation = HeadingPitchRoll.fromQuaternion(
-              Quaternion.fromRotationMatrix(
-                Matrix4.getMatrix3(modelMatrix, new Matrix3())
-              )
-            );
-            expect(rotation.heading.toFixed(2)).toBe("-1.85");
-            expect(rotation.pitch.toFixed(2)).toBe("0.89");
-            expect(rotation.roll.toFixed(2)).toBe("2.40");
-
-            const scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-            expect(scale.x.toFixed(2)).toEqual("5.00");
-            expect(scale.y.toFixed(2)).toEqual("5.00");
-            expect(scale.z.toFixed(2)).toEqual("5.00");
-
-            const position = Matrix4.getTranslation(
-              modelMatrix,
-              new Cartesian3()
-            );
-            expect(position.x.toFixed(2)).toEqual("6186437.07");
-            expect(position.y.toFixed(2)).toEqual("1090835.77");
-            expect(position.z.toFixed(2)).toEqual("4081926.10");
-          });
         });
       });
+    });
+    it("correctly builds `Feature` from picked Cesium3DTileFeature", async function () {
+      const picked = new Cesium3DTileFeature();
+      /* @ts-expect-error - mock i3sNode */
+      picked._content = {
+        tile: {
+          i3sNode: {
+            parent: undefined,
+            loadFields: () => new Promise((f) => f(null)),
+            getFieldsForFeature: () => ({})
+          }
+        }
+      };
+      /* @ts-expect-error - mock featureId */
+      picked._batchId = 0;
+
+      const feature = await item.buildFeatureFromPickResult(
+        Cartesian2.ZERO,
+        picked
+      );
+      expect(feature).toBeDefined();
+      if (feature) {
+        expect(feature._cesium3DTileFeature).toBe(picked);
+      }
     });
   });
 });
