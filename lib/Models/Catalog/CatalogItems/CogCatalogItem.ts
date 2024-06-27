@@ -35,7 +35,6 @@ export default class CogCatalogItem extends MappableMixin(
   }
 
   @override
-  @computed
   get shortReport(): string | undefined {
     let content = "";
     // Warn for 2D mode
