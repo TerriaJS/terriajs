@@ -2029,6 +2029,9 @@
           }
         }
       }
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "This COG is not in a native projection (EPSG:4326 or EPSG:3857). Reprojecting is experimental and may not work as expected. If you have control of the source data we recommend reprojecting to EPSG:4326 or EPSG:3857 using GDAL or similar."
     }
   },
   "searchProvider": {

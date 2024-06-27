@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, override } from "mobx";
+import { computed, override, runInAction } from "mobx";
 import proj4 from "proj4-fully-loaded";
 import TextureMagnificationFilter from "terriajs-cesium/Source/Renderer/TextureMagnificationFilter";
 import TextureMinificationFilter from "terriajs-cesium/Source/Renderer/TextureMinificationFilter";
@@ -12,6 +12,9 @@ import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import CommonStrata from "../../Definition/CommonStrata";
 
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
@@ -32,10 +35,32 @@ export default class CogCatalogItem extends MappableMixin(
   }
 
   @override
+  @computed
   get shortReport(): string | undefined {
+    let content = "";
+    // Warn for 2D mode
     if (this.terria.currentViewer.type === "Leaflet") {
-      return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+      content = i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
     }
+
+    // Check if tilingScheme is neither WebMercatorTilingScheme nor GeographicTilingScheme
+    else if (
+      this.imageryProvider?.tilingScheme &&
+      !(
+        this.imageryProvider?.tilingScheme instanceof WebMercatorTilingScheme
+      ) &&
+      !(this.imageryProvider?.tilingScheme instanceof GeographicTilingScheme)
+    ) {
+      // Warning message about experimental reprojection
+      content = i18next.t(
+        "models.cogCatalogItem.experimentalReprojectionWarning",
+        this
+      );
+    } else {
+      content = "";
+    }
+
+    return "";
   }
 
   @computed get mapItems(): MapItem[] {
