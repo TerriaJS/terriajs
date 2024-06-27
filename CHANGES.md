@@ -2,6 +2,7 @@
 
 #### next release (8.7.6)
 
+- Fix `Key Share URL use case broken: share URL for Compare datasets forgets 2nd date`
 - [The next improvement]
 
 #### 8.7.5 - 2024-06-26
