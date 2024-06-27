@@ -41,6 +41,7 @@ import CkanItemReference from "./Ckan/CkanItemReference";
 import ArcGisCatalogGroup from "./Esri/ArcGisCatalogGroup";
 import ArcGisFeatureServerCatalogGroup from "./Esri/ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisImageServerCatalogItem from "./Esri/ArcGisImageServerCatalogItem";
 import ArcGisMapServerCatalogGroup from "./Esri/ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
@@ -104,6 +105,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogItem.type,
     ArcGisMapServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisImageServerCatalogItem.type,
+    ArcGisImageServerCatalogItem
   );
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogGroup.type,
@@ -303,6 +308,11 @@ export default function registerCatalogMembers() {
     true
   );
   UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/ImageServer(\/.*)?$/i),
+    ArcGisImageServerCatalogItem.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/MapServer(\/.*)?$/i),
     ArcGisMapServerCatalogGroup.type,
     true
@@ -330,6 +340,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/rest\/.*\/ImageServer(\/.*)?$/i),
+    ArcGisImageServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(

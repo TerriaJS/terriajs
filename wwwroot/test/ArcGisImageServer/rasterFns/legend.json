@@ -1,0 +1,38 @@
+{
+  "layers": [
+    {
+      "layerId": 0,
+      "layerName": "Layer Name",
+      "layerType": "Raster Layer",
+      "minScale": 0,
+      "maxScale": 0,
+      "legendType": "Stretched",
+      "legend": [
+        {
+          "label": "High : Some value",
+          "url": "a758ed6a2eb93b3f835ab3a17f21dfda",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAT0lEQVQ4je3RwQkAMAgDwAjiz/1XVUTtEE1/zQCHibK7C1JmRjQiWB7MDJqZXJB5obtzQQDQquKCzA0BPKhMB+mV6U/5G96Df8PrSHdTwQOUlT8HeNXIpAAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Some label",
+          "url": "b0b4583afdd50894cc0738805356a037",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAUElEQVQ4je3UwQkAMQhE0S+kbcGyjSK7RWQOOWQKeMgMaO7+IUpE2MpMlQfA2ntrQfmF3a0FX4fn4P0dVpUWvH/l1+FxDJB97JkxmxmVB8APVtY8xR14rRcAAAAASUVORK5CYII=",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Low : Some value",
+          "url": "92a46f91e372e90744ce1a7d03335211",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAIUlEQVQ4jWP8+/cvAzUBE1VNGzVw1MBRA0cNHDVwCBkIAEMfAx/78kANAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        }
+      ]
+    }
+  ]
+}

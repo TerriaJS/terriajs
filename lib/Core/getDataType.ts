@@ -44,6 +44,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
     value: "esri-mapServer",
     name: "core.dataType.esri-mapServer"
   },
+  {
+    value: "esri-imageServer",
+    name: "core.dataType.esri-imageServer"
+  },
   /* {
         value: "esri-mapServer-group",
         name: "Esri ArcGIS MapServer"

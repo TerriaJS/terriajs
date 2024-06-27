@@ -1,0 +1,38 @@
+{
+  "layers": [
+    {
+      "layerId": 0,
+      "layerName": "Some time layer",
+      "layerType": "Raster Layer",
+      "minScale": 0,
+      "maxScale": 0,
+      "legendType": "Stretched",
+      "legend": [
+        {
+          "label": "High : Some Value",
+          "url": "9632f29a708d14f7ffa6950657169300",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAeElEQVQ4ja3RsQ3CQBQE0TlYhAiQ8B04owD334q7gAACJ0jno4n5BTxp/paxXAfS7eunhHqwPADCfJTBm+oRHnbyZCc31SPMJxls+sr2KM1OrnLydvaSLzvk3asGPgvkxeSBQL7cNRAgG14yQH42OMQfApTeuwr+AYLYEoMMYRRCAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "",
+          "url": "993dab15d066b40b3591f48bd77d5666",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAh0lEQVQ4jbXTsQ3CQBSD4d/KEx26VCg1M7EBW2UDVkpBdZBQIEikSBR3gSWMB/ga27qU/ospJ50VA0+XB0DcaLzgnb0XHDl4wczRCopSbC1XSZEeLg7oINLoBicjCET7MoNpMYPt6nzKRiy5GkER89XoAfHJZnD33oxcQ6TZ6PGHHapWZ8vwA8yIImKpipDXAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Low : Some Value",
+          "url": "92a46f91e372e90744ce1a7d03335211",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAIUlEQVQ4jWP8+/cvAzUBE1VNGzVw1MBRA0cNHDVwCBkIAEMfAx/78kANAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        }
+      ]
+    }
+  ]
+}

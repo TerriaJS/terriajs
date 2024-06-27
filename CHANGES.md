@@ -10,6 +10,14 @@
 - Upgraded a bunch of d3 dependencies for fixing security errors.
 - Show rectangle selector for WPS bounding box parameter
 - Fix `store` and `status` values send in WPS Execute request.
+- Add support for ArcGis ImageServer - this includes
+  - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
+  - Support for web mercator and wgs84 precached tiles
+  - Basic support for raster functions - a dropdown is rendered in the workbench for custom raster functions
+  - Traits to configure `bandIds` and `renderingRule`
+- Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
+- Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
+- Add `EPSG:7899` to `Proj4Definitions`
 - Add docs for `modelDimensions`
 - [The next improvement]
 

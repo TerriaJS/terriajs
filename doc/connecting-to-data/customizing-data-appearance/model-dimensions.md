@@ -47,7 +47,7 @@ For example - this renders a new drop down called "Color" that changes the `colo
 
 ## Example with Mustache template
 
-Model dimensions also supports the use of [Mustache templates](https://mustache.github.io/) - this means you can refer to other parts of the model JSON in the value of the model dimension. For example, this changes the `colorPalette` trait based on the value of another trait `colorPalette2`:
+Model dimensions also supports the use of [Mustache templates](https://mustache.github.io/) - this means you can refer to other parts of the model JSON in the value of the model dimension. For example, this changes the `colorPalette` trait:
 
 ```json
 {
