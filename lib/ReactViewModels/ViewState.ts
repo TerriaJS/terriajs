@@ -7,7 +7,7 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
-import { Ref } from "react";
+import React, { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../Core/addedByUser";
 import {
