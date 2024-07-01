@@ -33,6 +33,7 @@ import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 import I3SCatalogItem from "./Catalog/CatalogItems/I3SCatalogItem";
+import TerriaError from "../Core/TerriaError";
 
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -262,9 +263,13 @@ export default abstract class GlobeOrMap {
         this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
-            !feature._cesium3DTileFeature.tileset.isDestroyed()
+            feature._cesium3DTileFeature.tileset.isDestroyed() === false
           ) {
-            feature._cesium3DTileFeature.color = originalColor;
+            try {
+              feature._cesium3DTileFeature.color = originalColor;
+            } catch (err) {
+              TerriaError.from(err).log();
+            }
           }
         };
       } else if (isDefined(feature.polygon)) {
