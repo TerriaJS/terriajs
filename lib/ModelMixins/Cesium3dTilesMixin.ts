@@ -11,8 +11,6 @@ import {
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";

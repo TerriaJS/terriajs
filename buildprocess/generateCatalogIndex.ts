@@ -21,7 +21,7 @@ import registerSearchProviders from "../lib/Models/SearchProviders/registerSearc
 import Terria from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
-import { Command } from "commander";
+import { program } from "commander";
 
 /** Add model to index */
 function indexModel(
@@ -374,7 +374,6 @@ export default async function generateCatalogIndex(
   }
 }
 
-const program = new Command();
 program
   .name("generateCatalogIndex")
   .description(
@@ -417,7 +416,7 @@ Example usage
     30000
   );
 
-program.parse(process.argv);
+program.parse();
 
 const options = program.opts();
 
