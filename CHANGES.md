@@ -2,7 +2,9 @@
 
 #### next release (8.7.6)
 
-- [The next improvement]
+- Add I3SCatalogItem
+  - getFeaturesFromPickResult now async to handle I3SNode.loadFields()
+  - extract common style logic to new Cesium3dTilesStyleMixin.ts
 
 #### 8.7.5 - 2024-06-26
 

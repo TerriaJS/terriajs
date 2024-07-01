@@ -598,7 +598,7 @@ export default class Leaflet extends GlobeOrMap {
    */
 
   @action
-  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
+  private async _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
@@ -621,7 +621,9 @@ export default class Leaflet extends GlobeOrMap {
       typeof catalogItem.getFeaturesFromPickResult === "function" &&
       this.terria.allowFeatureInfoRequests
     ) {
-      const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+      const result = await catalogItem.getFeaturesFromPickResult.bind(
+        catalogItem
+      )(
         undefined,
         entity,
         (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
