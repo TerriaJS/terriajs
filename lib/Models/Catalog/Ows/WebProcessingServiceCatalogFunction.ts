@@ -429,11 +429,17 @@ const LiteralDataConverter = {
           ...options
         });
       } else if (dtype === "date") {
-        const dt = new DateParameter(catalogFunction, { ...options });
+        const dt = new DateParameter(catalogFunction, {
+          ...options,
+          clock: catalogFunction.terria.timelineClock
+        });
         dt.variant = "literal";
         return dt;
       } else if (dtype?.toLowerCase() === "datetime") {
-        const dt = new DateTimeParameter(catalogFunction, { ...options });
+        const dt = new DateTimeParameter(catalogFunction, {
+          ...options,
+          clock: catalogFunction.terria.timelineClock
+        });
         dt.variant = "literal";
         return dt;
       }
@@ -471,7 +477,10 @@ const ComplexDateConverter = {
     if (schema !== "http://www.w3.org/TR/xmlschema-2/#date") {
       return undefined;
     }
-    const dparam = new DateParameter(catalogFunction, options);
+    const dparam = new DateParameter(catalogFunction, {
+      ...options,
+      clock: catalogFunction.terria.timelineClock
+    });
     dparam.variant = "complex";
     return dparam;
   },
@@ -504,7 +513,10 @@ const ComplexDateTimeConverter = {
     if (schema !== "http://www.w3.org/TR/xmlschema-2/#dateTime") {
       return undefined;
     }
-    const dt = new DateTimeParameter(catalogFunction, options);
+    const dt = new DateTimeParameter(catalogFunction, {
+      ...options,
+      clock: catalogFunction.terria.timelineClock
+    });
     dt.variant = "complex";
     return dt;
   },
