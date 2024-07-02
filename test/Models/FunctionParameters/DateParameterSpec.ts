@@ -16,12 +16,6 @@ describe("DateParameter", function () {
     clock.currentTime = JulianDate.fromDate(new Date("2024-01-01T00:00"));
   });
 
-  it("can be created", function () {
-    expect(() => {
-      new DateParameter(catalogFunction, { id: "date", clock });
-    }).not.toThrow();
-  });
-
   describe("its value", function () {
     it("defaults to undefined", function () {
       const param = new DateParameter(catalogFunction, {
