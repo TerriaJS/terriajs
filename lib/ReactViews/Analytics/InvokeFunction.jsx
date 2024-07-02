@@ -117,12 +117,10 @@ class InvokeFunction extends React.Component {
       return <Loader />;
     }
 
-    let invalidParameters = false;
-    if (defined(this.props.previewed.parameters)) {
-      invalidParameters = !this.props.previewed.functionParameters.every(
-        this.validateParameter.bind(this)
-      );
-    }
+    const invalidParameters = this.props.previewed.functionParameters.some(
+      (param) => this.validateParameter(param) !== true
+    );
+
     const { t } = this.props;
     return (
       <div className={Styles.invokeFunction}>

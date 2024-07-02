@@ -64,6 +64,11 @@
   margin-bottom: $padding;
   position: relative;
   clear: both;
+
+  input[type="datetime-local"] {
+    width: 50%;
+  }
+
   input[type="date"] {
     width: 50%;
     float: left;

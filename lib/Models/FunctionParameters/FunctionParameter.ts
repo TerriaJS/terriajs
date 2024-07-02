@@ -51,7 +51,7 @@ export default abstract class FunctionParameter<
     return this.catalogFunction.parameters?.[this.id] as T;
   }
 
-  setValue(strataId: string, v: T) {
+  setValue(strataId: string, v: T | undefined) {
     if (isDefined(v)) {
       let newParameters: JsonObject = {
         [this.id]: v!
