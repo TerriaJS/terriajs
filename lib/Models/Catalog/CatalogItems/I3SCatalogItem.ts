@@ -36,7 +36,7 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
     )
   )
 ) {
-  static readonly type = "I3S";
+  static readonly type = "i3s";
   readonly type = I3SCatalogItem.type;
 
   @observable
