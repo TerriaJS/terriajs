@@ -53,7 +53,7 @@ describe("I3SCatalogItemSpec", function () {
 
   it("should have a type and a typeName", function () {
     expect(I3SCatalogItem.type).toBe("I3S");
-    expect(item.type).toBe("I3S");
+    expect(item.type).toBe("i3s");
     expect(item.typeName).toBe(i18next.t("core.dataType.i3s"));
   });
 
