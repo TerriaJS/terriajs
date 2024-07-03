@@ -12,6 +12,7 @@
 - Show rectangle selector for WPS bounding box parameter
 - Fix `store` and `status` values send in WPS Execute request.
 - Add docs for `modelDimensions`
+- Add support for Cloud Optimised Geotiff (cog) in Cesium mode.
 - [The next improvement]
 
 #### 8.7.4 - 2024-06-07
