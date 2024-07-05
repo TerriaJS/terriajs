@@ -262,7 +262,7 @@ export const WelcomeMessagePure = (props) => {
                         viewState.terria.configParameters.welcomeMessageVideo
                           .placeholderImage
                       }
-                      backgroundBlackOverlay={"50%"}
+                      backgroundBlackOverlay={0.5}
                     >
                       <RawButton
                         fullWidth
