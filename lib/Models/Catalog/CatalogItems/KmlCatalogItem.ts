@@ -15,6 +15,7 @@ import readXml from "../../../Core/readXml";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
+import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
@@ -25,8 +26,10 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 const kmzRegex = /\.kmz$/i;
 
 class KmlCatalogItem
-  extends MappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+  extends AutoRefreshingMixin(
+    MappableMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+    )
   )
   implements HasLocalData
 {
@@ -116,6 +119,10 @@ class KmlCatalogItem
 
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
+  }
+
+  refreshData() {
+    this.loadMapItems(true);
   }
 
   private doneLoading(kmlDataSource: KmlDataSource) {

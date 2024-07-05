@@ -1,5 +1,6 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
@@ -9,7 +10,8 @@ export default class KmlCatalogItemTraits extends mixTraits(
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
-  LegendOwnerTraits
+  LegendOwnerTraits,
+  AutoRefreshingTraits
 ) {
   @primitiveTrait({
     type: "string",
