@@ -22,6 +22,7 @@ import Terria from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
 import { program } from "commander";
+import * as _getPath from "../lib/Core/getPath";
 
 /** Add model to index */
 function indexModel(
@@ -36,34 +37,39 @@ function indexModel(
   ) {
     const name = getName(member);
     const nameInCatalog = CatalogMemberMixin.isMixedInto(member)
-      ? member.nameInCatalog
+      ? /* @ts-expect-error */
+        member.nameInCatalog
       : undefined;
 
-    let description = "";
-    // Remove description from CatalogIndex - as it makes files too large
-    // if (CatalogMemberMixin.isMixedInto(member)) {
-    //   description =
-    //     member.description +
-    //     "\n" +
-    //     member.info
-    //       .map(i => i.content)
-    //       .filter(c => c)
-    //       .join("\n");
-    // }
+    let description: string | undefined = "";
 
+    //  Remove description from CatalogIndex - as it makes files too large
+    if (CatalogMemberMixin.isMixedInto(member)) {
+      description =
+        member.description +
+        "\n" +
+        member.info
+          .map((i) => i.content)
+          .filter((c) => c)
+          .join("\n");
+    }
+
+    /* @ts-expect-error */
     const shareKeys = terria.modelIdShareKeysMap.get(member.uniqueId);
 
     // If model isn't already in index - create it
+    /* @ts-expect-error */
     if (!index[member.uniqueId]) {
+      /* @ts-expect-error */
       index[member.uniqueId] = {
         name,
-        nameInCatalog: nameInCatalog !== name ? nameInCatalog : undefined,
-        description: description || undefined,
-        memberKnownContainerUniqueIds: [...member.knownContainerUniqueIds], // clone array
-        isGroup: GroupMixin.isMixedInto(member) ? true : undefined,
-        isMappable: MappableMixin.isMixedInto(member) ? true : undefined,
-        shareKeys:
-          shareKeys && shareKeys.length > 0 ? [...shareKeys] : undefined // clone array
+        nameInCatalog: nameInCatalog !== name ? nameInCatalog : null,
+        dataCustodian: (member as any).dataCustodian || null,
+        path: _getPath.default(member, " -> "),
+        type: member.type,
+        // memberKnownContainerUniqueIds: [...member.knownContainerUniqueIds], // clone array
+        isGroup: GroupMixin.isMixedInto(member)
+        // isMappable: MappableMixin.isMixedInto(member) ? true : undefined
       };
       // If model IS already in index - see if more info can be added
       // Merge shareKeys and memberKnownContainerUniqueIds
@@ -72,9 +78,11 @@ function indexModel(
       const mergedShareKeys = Array.from(
         new Set([
           ...(shareKeys ?? []),
+          /* @ts-expect-error */
           ...(index[member.uniqueId].shareKeys ?? [])
         ])
       );
+      /* @ts-expect-error */
       index[member.uniqueId].shareKeys =
         mergedShareKeys && mergedShareKeys.length > 0
           ? mergedShareKeys
@@ -83,9 +91,11 @@ function indexModel(
       const mergedContainerIds = Array.from(
         new Set([
           ...member.knownContainerUniqueIds,
+          /* @ts-expect-error */
           ...(index[member.uniqueId].memberKnownContainerUniqueIds ?? [])
         ])
       );
+      /* @ts-expect-error */
       index[member.uniqueId].memberKnownContainerUniqueIds = mergedContainerIds;
     }
   }
@@ -172,7 +182,7 @@ export default async function generateCatalogIndex(
     );
   };
 
-  const index: CatalogIndexFile = {};
+  const index = {};
   const errors: TerriaError[] = [];
 
   /** Recursively load all references and groups.
@@ -324,7 +334,7 @@ export default async function generateCatalogIndex(
 
   // rootId can be set to change root group that is loaded for testing purposes
   // If undefined, then terria root catalog group will be used
-  const rootId: string | undefined = undefined;
+  const rootId: string | undefined = undefined; // "cEynH3ca";
 
   const model = rootId
     ? terria.getModelById(BaseModel, rootId)
@@ -347,7 +357,7 @@ export default async function generateCatalogIndex(
   // Save index to file
   fse.writeFileSync(
     outPath ?? "catalog-index.json",
-    JSON.stringify(sortedIndex)
+    JSON.stringify(sortedIndex, null, 2)
   );
 
   // Save errors to file
