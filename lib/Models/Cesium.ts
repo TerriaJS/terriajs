@@ -90,8 +90,11 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import { setViewerMode } from "./ViewerMode";
+import ViewerMode, { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
+import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -189,7 +192,14 @@ export default class Cesium extends GlobeOrMap {
         SingleTileImageryProvider.fromUrl(img),
         {}
       ),
-      scene3DOnly: true,
+      scene3DOnly: false,
+      sceneMode: terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
+        ? SceneMode.SCENE3D
+        : SceneMode.SCENE2D,
+      mapProjection:
+        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
+          ? new GeographicProjection()
+          : new WebMercatorProjection(),
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
@@ -867,6 +877,12 @@ export default class Cesium extends GlobeOrMap {
           duration: flightDurationSeconds,
           destination: finalDestination
         });
+      } else if (defined(target.rectangle)) {
+        // target has a rectangle
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.rectangle
+        });
       } else if (defined(target.entities)) {
         // target is some DataSource
         return waitForDataSourceToLoad(target).then(() => {
@@ -922,12 +938,6 @@ export default class Cesium extends GlobeOrMap {
         } else {
           return Promise.resolve();
         }
-      } else if (defined(target.rectangle)) {
-        // target has a rectangle
-        return flyToPromise(camera, {
-          duration: flightDurationSeconds,
-          destination: target.rectangle
-        });
       } else {
         return Promise.resolve();
       }
@@ -1000,6 +1010,13 @@ export default class Cesium extends GlobeOrMap {
   getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
+
+    if (scene.mode === SceneMode.SCENE2D) {
+      const rect = camera.computeViewRectangle();
+      if (rect) {
+        return new CameraView(rect);
+      }
+    }
 
     const width = scene.canvas.clientWidth;
     const height = scene.canvas.clientHeight;

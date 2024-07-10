@@ -168,11 +168,13 @@ class SettingPanel extends React.Component<PropTypes> {
       2: t("settingPanel.qualityLabels.lowerPerformance")
     };
     const currentViewer =
-      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
-        ? this.props.terria.mainViewer.viewerOptions.useTerrain
-          ? "3d"
-          : "3dsmooth"
-        : "2d";
+      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+        ? ViewerMode.Cesium2D
+        : this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
+          ? this.props.terria.mainViewer.viewerOptions.useTerrain
+            ? "3d"
+            : "3dsmooth"
+          : "2d";
 
     const useNativeResolution = this.props.terria.useNativeResolution;
     const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
