@@ -53,6 +53,10 @@ class SettingPanel extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
     makeObservable(this);
+
+    Object.entries(MapViewers).forEach(([key, elem]) => {
+      elem.available = props.terria.configParameters.mapViewers.includes(key);
+    });
   }
 
   @observable _hoverBaseMap = null;
@@ -249,7 +253,7 @@ class SettingPanel extends React.Component<PropTypes> {
             <Text as="label">{t("settingPanel.mapView")}</Text>
           </Box>
           <FlexGrid gap={1} elementsNo={3}>
-            {Object.entries(MapViewers).map(([key, viewerMode]) => (
+            {Object.entries(MapViewers).filter(([_, viewerMode]) => viewerMode.available).map(([key, viewerMode]) => (
               <SettingsButton
                 key={key}
                 isActive={key === currentViewer}

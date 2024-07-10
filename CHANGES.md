@@ -4,6 +4,7 @@
 
 - Set default value for date and datetime WPS fields only when the field is marked as required.
 - Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
+- Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]
 
 #### 8.7.5 - 2024-06-26

@@ -351,6 +351,11 @@ export interface ConfigParameters {
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
+
+  /**
+   * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
+   */
+  mapViewers: string[];
 }
 
 interface StartOptions {
@@ -568,7 +573,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    mapViewers: ["3d", "3dsmooth", "2d"]
   };
 
   @observable
