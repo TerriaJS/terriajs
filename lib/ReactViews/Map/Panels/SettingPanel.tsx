@@ -53,6 +53,10 @@ class SettingPanel extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
     makeObservable(this);
+
+    Object.entries(MapViewers).forEach(([key, elem]) => {
+      elem.available = props.terria.configParameters.mapViewers.includes(key);
+    });
   }
 
   @observable _hoverBaseMap = null;
@@ -168,11 +172,13 @@ class SettingPanel extends React.Component<PropTypes> {
       2: t("settingPanel.qualityLabels.lowerPerformance")
     };
     const currentViewer =
-      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
-        ? this.props.terria.mainViewer.viewerOptions.useTerrain
-          ? "3d"
-          : "3dsmooth"
-        : "2d";
+      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+        ? ViewerMode.Cesium2D
+        : this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
+          ? this.props.terria.mainViewer.viewerOptions.useTerrain
+            ? "3d"
+            : "3dsmooth"
+          : "2d";
 
     const useNativeResolution = this.props.terria.useNativeResolution;
     const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
@@ -247,7 +253,7 @@ class SettingPanel extends React.Component<PropTypes> {
             <Text as="label">{t("settingPanel.mapView")}</Text>
           </Box>
           <FlexGrid gap={1} elementsNo={3}>
-            {Object.entries(MapViewers).map(([key, viewerMode]) => (
+            {Object.entries(MapViewers).filter(([_, viewerMode]) => viewerMode.available).map(([key, viewerMode]) => (
               <SettingsButton
                 key={key}
                 isActive={key === currentViewer}
