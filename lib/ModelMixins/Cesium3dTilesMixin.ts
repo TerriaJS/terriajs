@@ -44,25 +44,6 @@ import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 
-class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
-  constructor(...args: any[]) {
-    super(...args);
-    makeObservable(this);
-  }
-
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new Cesium3dTilesStratum() as this;
-  }
-
-  @computed
-  get opacity() {
-    return 1.0;
-  }
-}
-
-// Register the Cesium3dTilesStratum
-StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
-
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
@@ -99,9 +80,6 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
-      runInAction(() => {
-        this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
-      });
     }
 
     get hasCesium3dTilesMixin() {
