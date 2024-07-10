@@ -92,6 +92,7 @@ import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -1639,10 +1640,12 @@ export default class Cesium extends GlobeOrMap {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         } else if (isCesium3DTileset(m)) {
           return m;
+        } else if (m instanceof I3SDataProvider) {
+          return filterOutUndefined(m.layers.map((layer) => layer.tileset));
         }
         return undefined;
       })
-    );
+    ).flat(1); /* Flatten I3S tilesets */
   }
 
   private _makeImageryLayerFromParts(
