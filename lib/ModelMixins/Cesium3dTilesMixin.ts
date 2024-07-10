@@ -30,9 +30,7 @@ import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Model, { BaseModel } from "../Models/Definition/Model";
-import StratumOrder from "../Models/Definition/StratumOrder";
+import Model from "../Models/Definition/Model";
 import TerriaFeature from "../Models/Feature/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
