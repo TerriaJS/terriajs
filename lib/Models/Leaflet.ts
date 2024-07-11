@@ -927,7 +927,7 @@ export default class Leaflet extends GlobeOrMap {
   private _selectFeature(feature: TerriaFeature | undefined) {
     this._highlightFeature(feature);
 
-    if (isDefined(feature) && isDefined(feature.position)) {
+    if (isDefined(feature) && isDefined(feature.position) && this.terria.isPickInfoEnabled) {
       const cartographicScratch = new Cartographic();
       const cartesianPosition = feature.position.getValue(
         this.terria.timelineClock.currentTime
@@ -947,7 +947,7 @@ export default class Leaflet extends GlobeOrMap {
         ])
       );
       this._selectionIndicator.animateSelectionIndicatorAppear();
-    } else {
+    } else if (!(isDefined(feature) && isDefined(feature.position))) {
       this._selectionIndicator.animateSelectionIndicatorDepart();
     }
   }

@@ -344,6 +344,11 @@ export interface ConfigParameters {
    */
   plugins?: Record<string, any>;
 
+  /**
+   * If true start with Info enabled
+   */
+  isPickInfoEnabledDefaultValue: boolean;
+
   aboutButtonHrefUrl?: string | null;
 
   /**
@@ -567,6 +572,7 @@ export default class Terria {
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
+    isPickInfoEnabledDefaultValue: false,
     searchBarConfig: undefined,
     searchProviders: []
   };
@@ -636,6 +642,9 @@ export default class Terria {
 
   @observable stories: StoryData[] = [];
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
+
+  /* Custom Info Tool */
+  @observable isPickInfoEnabled: boolean = false;
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -1090,6 +1099,8 @@ export default class Terria {
         console.log(error);
       }
     }
+
+    this.isPickInfoEnabled = this.configParameters.isPickInfoEnabledDefaultValue;
 
     await this.restoreAppState(options);
   }
@@ -2094,16 +2105,18 @@ export default class Terria {
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
-      // Find picked feature by matching feature hash
-      // Also try to match name if defined
-      const current = pickedFeatures.current;
-      if (isJsonObject(current) && typeof current.hash === "number") {
-        const selectedFeature =
-          (featureIndex[current.hash] || []).find(
-            (feature) => feature.name === current.name
-          ) ?? featureIndex[current.hash]?.[0];
-        if (selectedFeature) {
-          this.selectedFeature = selectedFeature;
+      if (this.isPickInfoEnabled) {
+        // Find picked feature by matching feature hash
+        // Also try to match name if defined
+        const current = pickedFeatures.current;
+        if (isJsonObject(current) && typeof current.hash === "number") {
+          const selectedFeature =
+            (featureIndex[current.hash] || []).find(
+              (feature) => feature.name === current.name
+            ) ?? featureIndex[current.hash]?.[0];
+          if (selectedFeature) {
+            this.selectedFeature = selectedFeature;
+          }
         }
       }
     });

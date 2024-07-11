@@ -390,11 +390,13 @@ export default class ViewState {
     this._pickedFeaturesSubscription = reaction(
       () => this.terria.pickedFeatures,
       (pickedFeatures: PickedFeatures | undefined) => {
-        if (defined(pickedFeatures)) {
-          this.featureInfoPanelIsVisible = true;
-          this.featureInfoPanelIsCollapsed = false;
-        } else {
-          this.featureInfoPanelIsVisible = false;
+        if (this.terria.isPickInfoEnabled) {
+          if (defined(pickedFeatures)) {
+            this.featureInfoPanelIsVisible = true;
+            this.featureInfoPanelIsCollapsed = false;
+          } else {
+            this.featureInfoPanelIsVisible = false;
+          }
         }
       }
     );
