@@ -5,6 +5,9 @@
 - Add I3SCatalogItem
   - getFeaturesFromPickResult now async to handle I3SNode.loadFields()
   - extract common style logic to new Cesium3dTilesStyleMixin.ts
+- Set default value for date and datetime WPS fields only when the field is marked as required.
+- [The next improvement]
+
 
 #### 8.7.5 - 2024-06-26
 
