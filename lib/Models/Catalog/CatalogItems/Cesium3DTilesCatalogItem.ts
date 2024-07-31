@@ -64,7 +64,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     // Tag newly visible features with SEARCH_RESULT_TAG
     const disposeWatch = this._watchForNewTileFeatures(
       tileset,
-      (feature: Cesium3DTileFeature) => {
+      async (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
         if (resultIds.has(featureId)) {
           feature.setProperty(SEARCH_RESULT_TAG, true);
@@ -72,7 +72,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
 
           // If we only have a single result, show the feature info panel for it
           if (results.length === 1) {
-            disposeFeatureInfoPanel = openInfoPanelForFeature(
+            disposeFeatureInfoPanel = await openInfoPanelForFeature(
               this,
               feature,
               SEARCH_RESULT_TAG
@@ -249,13 +249,13 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
  * @returns A disposer to close the feature panel
  */
 const openInfoPanelForFeature = action(
-  (
+  async (
     item: Cesium3DTilesCatalogItem,
     cesium3DTileFeature: Cesium3DTileFeature,
     excludePropertyFromPanel: string
   ) => {
     const pickedFeatures = new PickedFeatures();
-    const feature = item.getFeaturesFromPickResult(
+    const feature = await item.getFeaturesFromPickResult(
       // The screenPosition param is not used by 3dtiles catalog item,
       // so just pass a fake value
       new Cartesian2(),

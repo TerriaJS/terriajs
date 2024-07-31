@@ -124,6 +124,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "json",
     name: "core.dataType.json"
+  },
+  {
+    value: "i3s",
+    name: "core.dataType.i3s"
   }
   // Add next builtin remote upload type
 ];

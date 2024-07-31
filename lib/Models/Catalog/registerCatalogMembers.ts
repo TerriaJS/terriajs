@@ -16,6 +16,7 @@ import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
 import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
+import I3SCatalogItem from "./CatalogItems/I3SCatalogItem";
 import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
 import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
 import MapboxMapCatalogItem from "./CatalogItems/MapboxMapCatalogItem";
@@ -140,6 +141,7 @@ export default function registerCatalogMembers() {
     CesiumTerrainCatalogItem.type,
     CesiumTerrainCatalogItem
   );
+  CatalogMemberFactory.register(I3SCatalogItem.type, I3SCatalogItem);
   CatalogMemberFactory.register(
     IonImageryCatalogItem.type,
     IonImageryCatalogItem
