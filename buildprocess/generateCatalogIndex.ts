@@ -23,6 +23,7 @@ import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMem
 import patchNetworkRequests from "./patchNetworkRequests";
 import { program } from "commander";
 import * as _getPath from "../lib/Core/getPath";
+import i18next from "i18next";
 
 /** Add model to index */
 function indexModel(
@@ -43,30 +44,35 @@ function indexModel(
 
     let description: string | undefined = "";
 
-    //  Remove description from CatalogIndex - as it makes files too large
-    if (CatalogMemberMixin.isMixedInto(member)) {
-      description =
-        member.description +
-        "\n" +
-        member.info
-          .map((i) => i.content)
-          .filter((c) => c)
-          .join("\n");
-    }
+    console.log(member.info);
 
     /* @ts-expect-error */
     const shareKeys = terria.modelIdShareKeysMap.get(member.uniqueId);
 
     // If model isn't already in index - create it
+
     /* @ts-expect-error */
     if (!index[member.uniqueId]) {
+      const infoO = member.infoAsObject ?? {};
+
+      const getByText = (str: string) =>
+        infoO[
+          Object.keys(infoO).find((key) => key.toLowerCase().includes(str))
+        ] || null;
+
       /* @ts-expect-error */
       index[member.uniqueId] = {
         name,
         nameInCatalog: nameInCatalog !== name ? nameInCatalog : null,
-        dataCustodian: (member as any).dataCustodian || null,
+        custodian: getByText("custodian") || null,
+        contact: getByText("contact") || null,
         path: _getPath.default(member, " -> "),
         type: member.type,
+        licence: getByText("licence") || null,
+        copyrighttext: getByText("copyright") || null,
+        // infoO: infoO,
+        // info: member.info,
+        url: member.url,
         // memberKnownContainerUniqueIds: [...member.knownContainerUniqueIds], // clone array
         isGroup: GroupMixin.isMixedInto(member)
         // isMappable: MappableMixin.isMixedInto(member) ? true : undefined
@@ -334,7 +340,7 @@ export default async function generateCatalogIndex(
 
   // rootId can be set to change root group that is loaded for testing purposes
   // If undefined, then terria root catalog group will be used
-  const rootId: string | undefined = undefined; // "cEynH3ca";
+  const rootId: string | undefined = "Root Group/National Data Sets"; //"BCN2Lkpj";
 
   const model = rootId
     ? terria.getModelById(BaseModel, rootId)

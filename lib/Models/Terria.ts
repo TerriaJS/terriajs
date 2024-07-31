@@ -514,7 +514,8 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumTerrainUrl: undefined,
     cesiumTerrainAssetId: undefined,
-    cesiumIonAccessToken: undefined,
+    cesiumIonAccessToken:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyZDIxNWZkMS0zYTg2LTQ2MWUtYWExNC0xMjBhY2NkMDQ2ZDciLCJpZCI6Mjk5MiwiaWF0IjoxNzE5OTkzMDI5fQ.26HMQ7szWUVB34bSHBdbk83vLm-HZW94Kjr5TCJ6zBw",
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
