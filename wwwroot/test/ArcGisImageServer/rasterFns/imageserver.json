@@ -1,0 +1,300 @@
+{
+  "currentVersion": 10.91,
+  "serviceDescription": "Some service description",
+  "name": "Some name",
+  "description": "Some description",
+  "extent": {
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "initialExtent": {
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "fullExtent": {
+    "xmin": -1.3873971544712003e7,
+    "ymin": 5151008.633437126,
+    "xmax": -1.2960958413099812e7,
+    "ymax": 5831188.605321072,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "hasMultidimensions": false,
+  "pixelSizeX": 10,
+  "pixelSizeY": 10,
+  "datasetFormat": "AMD",
+  "uncompressedSize": 9000000,
+  "blockWidth": 2048,
+  "blockHeight": 256,
+  "compressionType": "None",
+  "bandNames": ["Some Band Name"],
+  "allowCopy": true,
+  "allowAnalysis": true,
+  "bandCount": 1,
+  "pixelType": "F32",
+  "minPixelSize": 0,
+  "maxPixelSize": 0,
+  "copyrightText": "Some Copyright",
+  "serviceDataType": "esriImageServiceDataTypeElevation",
+  "serviceSourceType": "esriImageServiceSourceTypeMosaicDataset",
+  "minValues": [515.6699829101562],
+  "maxValues": [1611.125],
+  "meanValues": [712.371337411377],
+  "stdvValues": [45.56883666949917],
+  "objectIdField": "OBJECTID",
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+    },
+    {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "Shape",
+      "domain": null
+    },
+    {
+      "name": "Name",
+      "type": "esriFieldTypeString",
+      "alias": "Name",
+      "domain": null,
+      "length": 50
+    },
+    {
+      "name": "MinPS",
+      "type": "esriFieldTypeDouble",
+      "alias": "MinPS",
+      "domain": null
+    },
+    {
+      "name": "MaxPS",
+      "type": "esriFieldTypeDouble",
+      "alias": "MaxPS",
+      "domain": null
+    },
+    {
+      "name": "LowPS",
+      "type": "esriFieldTypeDouble",
+      "alias": "LowPS",
+      "domain": null
+    },
+    {
+      "name": "HighPS",
+      "type": "esriFieldTypeDouble",
+      "alias": "HighPS",
+      "domain": null
+    },
+    {
+      "name": "Category",
+      "type": "esriFieldTypeInteger",
+      "alias": "Category",
+      "domain": {
+        "type": "codedValue",
+        "name": "MosaicCatalogItemCategoryDomain",
+        "description": "Catalog item categories.",
+        "codedValues": [
+          {
+            "name": "Unknown",
+            "code": 0
+          },
+          {
+            "name": "Primary",
+            "code": 1
+          },
+          {
+            "name": "Overview",
+            "code": 2
+          },
+          {
+            "name": "Unprocessed Overview",
+            "code": 3
+          },
+          {
+            "name": "Partial Overview",
+            "code": 4
+          },
+          {
+            "name": "Uploaded",
+            "code": 253
+          },
+          {
+            "name": "Incomplete",
+            "code": 254
+          },
+          {
+            "name": "Custom",
+            "code": 255
+          }
+        ],
+        "mergePolicy": "esriMPTDefaultValue",
+        "splitPolicy": "esriSPTDefaultValue"
+      }
+    },
+    {
+      "name": "Tag",
+      "type": "esriFieldTypeString",
+      "alias": "Tag",
+      "domain": null,
+      "length": 20
+    },
+    {
+      "name": "GroupName",
+      "type": "esriFieldTypeString",
+      "alias": "GroupName",
+      "domain": null,
+      "length": 50
+    },
+    {
+      "name": "ProductName",
+      "type": "esriFieldTypeString",
+      "alias": "ProductName",
+      "domain": null,
+      "length": 50
+    },
+    {
+      "name": "CenterX",
+      "type": "esriFieldTypeDouble",
+      "alias": "CenterX",
+      "domain": null
+    },
+    {
+      "name": "CenterY",
+      "type": "esriFieldTypeDouble",
+      "alias": "CenterY",
+      "domain": null
+    },
+    {
+      "name": "ZOrder",
+      "type": "esriFieldTypeInteger",
+      "alias": "ZOrder",
+      "domain": null
+    },
+    {
+      "name": "Shape_Length",
+      "type": "esriFieldTypeDouble",
+      "alias": "Shape_Length",
+      "domain": null
+    },
+    {
+      "name": "Shape_Area",
+      "type": "esriFieldTypeDouble",
+      "alias": "Shape_Area",
+      "domain": null
+    },
+    {
+      "name": "Version",
+      "type": "esriFieldTypeString",
+      "alias": "Version",
+      "domain": null,
+      "length": 20
+    },
+    {
+      "name": "PointCount",
+      "type": "esriFieldTypeDouble",
+      "alias": "Point Count",
+      "domain": null
+    },
+    {
+      "name": "PointSpacing",
+      "type": "esriFieldTypeDouble",
+      "alias": "Point Spacing",
+      "domain": null
+    },
+    {
+      "name": "ZMin",
+      "type": "esriFieldTypeDouble",
+      "alias": "ZMin",
+      "domain": null
+    },
+    {
+      "name": "ZMax",
+      "type": "esriFieldTypeDouble",
+      "alias": "ZMax",
+      "domain": null
+    }
+  ],
+  "capabilities": "Image,Metadata,Catalog,Mensuration",
+  "defaultMosaicMethod": "Northwest",
+  "allowedMosaicMethods": "NorthWest,Center,LockRaster,ByAttribute,Nadir,Viewpoint,Seamline,None",
+  "sortField": "",
+  "sortValue": null,
+  "sortAscending": true,
+  "mosaicOperator": "First",
+  "maxDownloadSizeLimit": 0,
+  "defaultCompressionQuality": 10000,
+  "defaultResamplingMethod": "Bilinear",
+  "maxImageHeight": 4100,
+  "maxImageWidth": 15000,
+  "maxRecordCount": 1000,
+  "maxDownloadImageCount": 0,
+  "maxMosaicImageCount": 20,
+  "allowRasterFunction": true,
+  "rasterFunctionInfos": [
+    {
+      "name": "None",
+      "description": "Make a Raster or Raster Dataset into a Function Raster Dataset.",
+      "help": ""
+    },
+    {
+      "name": "RFTAspectColor",
+      "description": "This function generates a color representation of aspect."
+    },
+    {
+      "name": "RFTHillshade",
+      "description": "This function creates a hillshade effect based on the elevation data source.",
+      "help": ""
+    },
+    {
+      "name": "RFTShadedReliefElevationColorRamp",
+      "description": "This function processes the elevation surface as shaded relief. ",
+      "help": "This raster function template uses a shaded relief function.."
+    }
+  ],
+  "rasterTypeInfos": [
+    {
+      "name": "Raster Dataset",
+      "description": "Supports all ArcGIS Raster Datasets",
+      "help": ""
+    }
+  ],
+  "mensurationCapabilities": "Basic",
+  "hasHistograms": true,
+  "hasColormap": false,
+  "hasRasterAttributeTable": false,
+  "minScale": 0,
+  "maxScale": 0,
+  "exportTilesAllowed": false,
+  "supportsStatistics": true,
+  "supportsAdvancedQueries": true,
+  "editFieldsInfo": null,
+  "ownershipBasedAccessControlForRasters": null,
+  "allowComputeTiePoints": false,
+  "useStandardizedQueries": true,
+  "advancedQueryCapabilities": {
+    "useStandardizedQueries": true,
+    "supportsStatistics": true,
+    "supportsOrderBy": true,
+    "supportsDistinct": true,
+    "supportsPagination": true
+  },
+  "spatialReference": {
+    "wkid": 102100,
+    "latestWkid": 3857
+  }
+}

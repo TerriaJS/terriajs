@@ -23,10 +23,10 @@ describe("DiscretelyTimeVaryingMixin", () => {
     await wmsItem.loadMapItems();
 
     const years = wmsItem.objectifiedDates[20];
-    expect(years.dates.length).toBe(1000);
+    expect(years.dates.length).toBe(10000);
     expect(years.index[0]).toBe(2015);
     const months = years[years.index[0]];
-    expect(months.dates.length).toBe(1000);
+    expect(months.dates.length).toBe(10000);
     expect(months.index[0]).toBe(3);
   });
 
