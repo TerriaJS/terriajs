@@ -52,6 +52,7 @@ import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
 import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
+import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
 
 const dateFormat = require("dateformat");
 
@@ -404,6 +405,7 @@ class Main extends React.Component<MainPropsType> {
     const terria = this.props.terria;
     terria.overlays.remove(this.props.leftItem);
     terria.overlays.remove(this.props.rightItem);
+
     terria.workbench.add(this.diffItem);
 
     this.diffItem.setTrait(CommonStrata.user, "name", this.diffItemName);
@@ -992,6 +994,13 @@ async function createSplitItem(
       // we simply set the opacity of the item to 0.
       newItem.setTrait(CommonStrata.user, "opacity", 0);
     }
+
+    // Override feature info template as the parent featureInfoTemplate might
+    // not be relevant for the difference item. This has to be done in the user
+    // stratum to override template set in definition stratum.
+    updateModelFromJson(newItem, CommonStrata.user, {
+      featureInfoTemplate: { template: "" }
+    });
 
     setDefaultDiffStyle(newItem);
 
