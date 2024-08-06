@@ -825,7 +825,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get currentTime() {
     // Get default times for all layers
     const defaultTimes = filterOutUndefined(
-      Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
+      Array.from(this.capabilitiesLayers).map(([_layerName, layer]) => {
         if (!layer) return;
         const dimensions = this.capabilities.getInheritedValues(
           layer,

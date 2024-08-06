@@ -16,6 +16,7 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
+import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -23,7 +24,7 @@ import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import DiffableMixin from "../../../ModelMixins/DiffableMixin";
+import DiffableMixin, { DiffStratum } from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import MappableMixin, {
@@ -99,7 +100,9 @@ export class WebMapServiceUrlStratum extends LoadableStratum(
   }
 }
 
+// Order is important so that the traits are overridden correctly
 StratumOrder.addLoadStratum(WebMapServiceUrlStratum.stratumName);
+StratumOrder.addLoadStratum(DiffStratum.stratumName);
 
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
@@ -497,8 +500,13 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get diffModeParameters() {
-    return { styles: this.diffStyleId };
+  get diffModeParameters(): JsonObject {
+    return this.isShowingDiff ? { styles: this.diffStyleId } : {};
+  }
+
+  @computed
+  get diffModeGetFeatureInfoParameters(): JsonObject {
+    return this.isShowingDiff ? { styles: this.diffStyleId } : {};
   }
 
   getTagForTime(date: JulianDate): string | undefined {
@@ -550,10 +558,6 @@ class WebMapServiceCatalogItem
         ...this.getFeatureInfoParameters
       };
 
-      const diffModeParameters = this.isShowingDiff
-        ? this.diffModeParameters
-        : {};
-
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
@@ -562,7 +566,11 @@ class WebMapServiceCatalogItem
       parameters.styles = this.styles ?? "";
       getFeatureInfoParameters.styles = this.styles ?? "";
 
-      Object.assign(parameters, diffModeParameters);
+      Object.assign(parameters, this.diffModeParameters);
+      Object.assign(
+        getFeatureInfoParameters,
+        this.diffModeGetFeatureInfoParameters
+      );
 
       // Remove problematic query parameters from URL - these are handled by the parameters objects
 
