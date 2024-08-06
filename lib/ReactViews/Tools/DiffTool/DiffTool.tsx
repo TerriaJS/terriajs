@@ -356,7 +356,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  onUserPickingLocation(pickingLocation: LatLonHeight) {
+  onUserPickingLocation(_pickingLocation: LatLonHeight) {
     this._isPickingNewLocation = true;
   }
 
@@ -365,7 +365,7 @@ class Main extends React.Component<MainPropsType> {
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const { leftItem, rightItem, t } = this.props;
+    const { leftItem, rightItem } = this.props;
     const feature = pickedFeatures.features.find(
       (f) =>
         doesFeatureBelongToItem(f, leftItem) ||
@@ -961,10 +961,8 @@ const LegendImage = function (props: any) {
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
       style={{ display: "none", marginTop: "4px" }}
-      // @ts-expect-error
-      onLoad={(e) => (e.target.style.display = "block")}
-      // @ts-expect-error
-      onError={(e) => (e.target.style.display = "none")}
+      onLoad={(e) => (e.currentTarget.style.display = "block")}
+      onError={(e) => (e.currentTarget.style.display = "none")}
     />
   );
 };
