@@ -22,11 +22,7 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import {
-  Category,
-  DataSourceAction,
-  LaunchAction
-} from "../Core/AnalyticEvents/analyticEvents";
+import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -51,7 +47,6 @@ import { Complete } from "../Core/TypeModifiers";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
-import getPath from "../Core/getPath";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
@@ -106,13 +101,16 @@ import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
+  InitSourcePickedFeatures,
   ShareInitSourceData,
   StoryData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
-  isInitFromUrl
+  isInitFromUrl,
+  readPickedFeaturePosition
 } from "./InitSource";
+import { loadWorkbenchItems } from "./InitWorkbench";
 import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
@@ -128,6 +126,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -977,7 +976,17 @@ export default class Terria {
     this.initSources.push(...initSources);
   }
 
-  async start(options: StartOptions) {
+  /**
+   * Load config from StartOptions.
+   *
+   * Calling this method also triggers loading of init sources but does not
+   * wait for them to finish. If you need to wait for init sources to finish
+   * loading, call `await terria.loadInitSources()`.
+   *
+   * @param options StartOptions
+   * @return A Promise that resolves when the config is loaded.
+   */
+  async start(options: StartOptions): Promise<void> {
     // Some hashProperties need to be set before anything else happens
     const hashProperties = queryToObject(new URI(window.location).fragment());
 
@@ -1092,15 +1101,18 @@ export default class Terria {
     }
 
     await this.restoreAppState(options);
+
+    // We don't await here, we return before the init sources finish loading so that
+    // rest of the app can be rendered. By this point, the datasets will be
+    // added to the workbench and a spinner will indicate workbench items that
+    // are still loading.
+    this.loadInitSources();
   }
 
   private async restoreAppState(options: StartOptions) {
     if (options.applicationUrl) {
-      (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
-        this
-      );
+      await interpretApplicationUrl(this, options.applicationUrl.href);
     }
-
     this.loadPersistedMapSettings();
   }
 
@@ -1135,7 +1147,10 @@ export default class Terria {
       // a hanging promise if a valid viewer never becomes available,
       // for eg: when react is not rendered - `currentViewer` will always be `NoViewer`.
       await when(isViewerAvailable);
-      await this.currentViewer.zoomTo(firstMappableItem, 0.0);
+      // test flag again to make sure it didn't change while we were waiting for the viewer
+      if (this.focusWorkbenchItemsAfterLoadingInitSources) {
+        await this.currentViewer.zoomTo(firstMappableItem, 0.0);
+      }
     }
   }
 
@@ -1238,75 +1253,8 @@ export default class Terria {
   }
 
   async updateApplicationUrl(newUrl: string) {
-    const uri = new URI(newUrl);
-    const hash = uri.fragment();
-    const hashProperties = queryToObject(hash);
-
-    function checkSegments(urlSegments: string[], customRoute: string) {
-      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-      return (
-        ((urlSegments.length === 3 && urlSegments[2] === "") ||
-          urlSegments.length === 2) &&
-        urlSegments[0] === customRoute &&
-        urlSegments[1].length > 0
-      );
-    }
-
-    try {
-      await interpretHash(
-        this,
-        hashProperties,
-        this.userProperties,
-        new URI(newUrl).filename("").query("").hash("")
-      );
-
-      // /catalog/ and /story/ routes
-      if (newUrl.startsWith(this.appBaseHref)) {
-        const pageUrl = new URL(newUrl);
-        // Find relative path from baseURI to documentURI excluding query and hash
-        // then split into url segments
-        // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
-        const segments = (pageUrl.origin + pageUrl.pathname)
-          .slice(this.appBaseHref.length)
-          .split("/");
-        if (checkSegments(segments, "catalog")) {
-          this.initSources.push({
-            name: `Go to ${pageUrl.pathname}`,
-            errorSeverity: TerriaErrorSeverity.Error,
-            data: {
-              previewedItemId: decodeURIComponent(segments[1])
-            }
-          });
-          const replaceUrl = new URL(newUrl);
-          replaceUrl.pathname = new URL(this.appBaseHref).pathname;
-          history.replaceState({}, "", replaceUrl.href);
-        } else if (
-          checkSegments(segments, "story") &&
-          isDefined(this.configParameters.storyRouteUrlPrefix)
-        ) {
-          let storyJson;
-          try {
-            storyJson = await loadJson(
-              `${this.configParameters.storyRouteUrlPrefix}${segments[1]}`
-            );
-          } catch (e) {
-            throw TerriaError.from(e, {
-              message: `Failed to fetch story \`"${this.appName}/${segments[1]}"\``
-            });
-          }
-          await interpretStartData(
-            this,
-            storyJson,
-            `Start data from story \`"${this.appName}/${segments[1]}"\``
-          );
-          runInAction(() => this.userProperties.set("playStory", "1"));
-        }
-      }
-    } catch (e) {
-      this.raiseErrorToUser(e);
-    }
-
-    return await this.loadInitSources();
+    await interpretApplicationUrl(this, newUrl);
+    return this.loadInitSources();
   }
 
   @action
@@ -1737,6 +1685,7 @@ export default class Terria {
       } catch (error) {
         // Not a CameraView but does it specify focusWorkbenchItems?
         if (typeof initData.initialCamera.focusWorkbenchItems === "boolean") {
+          debugger;
           this.focusWorkbenchItemsAfterLoadingInitSources =
             initData.initialCamera.focusWorkbenchItems;
         } else {
@@ -1784,10 +1733,6 @@ export default class Terria {
     }
 
     // Copy but don't yet load the workbench.
-    const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice()
-      : [];
-
     const timeline = Array.isArray(initData.timeline)
       ? initData.timeline.slice()
       : [];
@@ -1815,45 +1760,30 @@ export default class Terria {
       }
     });
 
-    // Set the new contents of the workbench.
-    const newItemsRaw = filterOutUndefined(
-      workbench.map((modelId) => {
-        if (typeof modelId !== "string") {
-          errors.push(
-            new TerriaError({
-              sender: this,
-              title: "Invalid model ID in workbench",
-              message: "A model ID in the workbench list is not a string."
-            })
-          );
-        } else {
-          return this.getModelByIdOrShareKey(BaseModel, modelId);
-        }
-      })
-    );
+    const pickedFeaturesData = isJsonObject(initData.pickedFeatures)
+      ? (initData.pickedFeatures as InitSourcePickedFeatures)
+      : undefined;
+    let loadingPickedFeatures: PickedFeatures | undefined;
 
-    const newItems: BaseModel[] = [];
-
-    // Maintain the model order in the workbench.
-    for (;;) {
-      const model = newItemsRaw.shift();
-      if (model) {
-        await this.pushAndLoadMapItems(model, newItems, errors);
-      } else {
-        break;
-      }
+    if (pickedFeaturesData) {
+      // While we load the workbench items below, show feature info panel with
+      // a spinner
+      runInAction(() => {
+        loadingPickedFeatures = new PickedFeatures();
+        loadingPickedFeatures.isLoading = true;
+        loadingPickedFeatures.pickPosition =
+          readPickedFeaturePosition(pickedFeaturesData);
+        this.pickedFeatures = loadingPickedFeatures;
+      });
     }
 
-    newItems.forEach((item) => {
-      // fire the google analytics event
-      this.analytics?.logEvent(
-        Category.dataSource,
-        DataSourceAction.addFromShareOrInit,
-        getPath(item)
-      );
-    });
-
-    runInAction(() => (this.workbench.items = newItems));
+    // Load workbench items and collect any errors
+    const workbenchItemIds = Array.isArray(initData.workbench)
+      ? initData.workbench.slice()
+      : [];
+    errors.push(
+      ...(await loadWorkbenchItems(this, this.workbench, workbenchItemIds))
+    );
 
     // For ids that don't correspond to models resolve an id by share keys
     const timelineWithShareKeysResolved = new Set(
@@ -1892,10 +1822,12 @@ export default class Terria {
           .map((item) => item as TimeVarying))
     );
 
-    if (isJsonObject(initData.pickedFeatures)) {
+    if (pickedFeaturesData) {
       when(() => !(this.currentViewer instanceof NoViewer)).then(() => {
-        if (isJsonObject(initData.pickedFeatures)) {
-          this.loadPickedFeatures(initData.pickedFeatures);
+        // Load picked features only if the user or another init source hasn't
+        // overridden our loadingPickedFeatures instance.
+        if (this.pickedFeatures === loadingPickedFeatures) {
+          this.loadPickedFeatures(pickedFeaturesData);
         }
       });
     } else if (canUnsetFeaturePickingState) {
@@ -2026,7 +1958,9 @@ export default class Terria {
   }
 
   @action
-  async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
+  async loadPickedFeatures(
+    pickedFeatures: InitSourcePickedFeatures
+  ): Promise<void> {
     let vectorFeatures: TerriaFeature[] = [];
     const featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
@@ -2256,7 +2190,7 @@ async function interpretStartData(
   /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
-) {
+): Promise<void> {
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
@@ -2337,6 +2271,89 @@ async function interpretStartData(
         message: { key: "share.convertErrorMessage" }
       });
     }
+  }
+}
+
+/**
+ * Sets Terria state from the application URL.
+ *
+ * Note that this function does not load any new datasets added to the
+ * workbench. For that you need to subsequently call terria.loadInitSources().
+ *
+ * @param terria Terria instance
+ * @param newUrl The URL from which to read the state
+ *
+ */
+async function interpretApplicationUrl(
+  terria: Terria,
+  newUrl: string
+): Promise<void> {
+  const uri = new URI(newUrl);
+  const hash = uri.fragment();
+  const hashProperties = queryToObject(hash);
+
+  function checkSegments(urlSegments: string[], customRoute: string) {
+    // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+    return (
+      ((urlSegments.length === 3 && urlSegments[2] === "") ||
+        urlSegments.length === 2) &&
+      urlSegments[0] === customRoute &&
+      urlSegments[1].length > 0
+    );
+  }
+
+  try {
+    await interpretHash(
+      terria,
+      hashProperties,
+      terria.userProperties,
+      new URI(newUrl).filename("").query("").hash("")
+    );
+
+    // /catalog/ and /story/ routes
+    if (newUrl.startsWith(terria.appBaseHref)) {
+      const pageUrl = new URL(newUrl);
+      // Find relative path from baseURI to documentURI excluding query and hash
+      // then split into url segments
+      // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
+      const segments = (pageUrl.origin + pageUrl.pathname)
+        .slice(terria.appBaseHref.length)
+        .split("/");
+      if (checkSegments(segments, "catalog")) {
+        terria.initSources.push({
+          name: `Go to ${pageUrl.pathname}`,
+          errorSeverity: TerriaErrorSeverity.Error,
+          data: {
+            previewedItemId: decodeURIComponent(segments[1])
+          }
+        });
+        const replaceUrl = new URL(newUrl);
+        replaceUrl.pathname = new URL(terria.appBaseHref).pathname;
+        history.replaceState({}, "", replaceUrl.href);
+      } else if (
+        checkSegments(segments, "story") &&
+        isDefined(terria.configParameters.storyRouteUrlPrefix)
+      ) {
+        let storyJson;
+        try {
+          storyJson = await loadJson(
+            `${terria.configParameters.storyRouteUrlPrefix}${segments[1]}`
+          );
+        } catch (e) {
+          throw TerriaError.from(e, {
+            message: `Failed to fetch story \`"${terria.appName}/${segments[1]}"\``
+          });
+        }
+        await interpretStartData(
+          terria,
+          storyJson,
+          `Start data from story \`"${terria.appName}/${segments[1]}"\``
+        );
+        runInAction(() => terria.userProperties.set("playStory", "1"));
+      }
+    }
+  } catch (e) {
+    terria.raiseErrorToUser(e);
   }
 }
 
