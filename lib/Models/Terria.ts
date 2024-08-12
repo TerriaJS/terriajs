@@ -126,7 +126,6 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -1685,7 +1684,6 @@ export default class Terria {
       } catch (error) {
         // Not a CameraView but does it specify focusWorkbenchItems?
         if (typeof initData.initialCamera.focusWorkbenchItems === "boolean") {
-          debugger;
           this.focusWorkbenchItemsAfterLoadingInitSources =
             initData.initialCamera.focusWorkbenchItems;
         } else {
@@ -1921,7 +1919,7 @@ export default class Terria {
 
     const initObj = aspects["terria-init"];
     if (isJsonObject(initObj)) {
-      const { catalog, ...initObjWithoutCatalog } = initObj;
+      const { catalog: _, ...initObjWithoutCatalog } = initObj;
       /** Load the init data without the catalog yet, as we'll push the catalog
        * source up as an init source later */
       try {
