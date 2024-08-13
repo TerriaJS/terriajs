@@ -1,5 +1,5 @@
 import TerriaError from "../../Core/TerriaError";
-
+import SentryErrorServiceProvider from "./SentryErrorServiceProvider";
 export interface ErrorServiceOptions {
   provider: string;
   configuration: any;
@@ -25,6 +25,9 @@ export async function initializeErrorServiceProvider(
     const rollbarModule = await import("./RollbarErrorServiceProvider");
     const rollbarProvider = new rollbarModule.default(configuration);
     return rollbarProvider;
+  } else if (provider === "sentry") {
+    const sentryProvider = new SentryErrorServiceProvider();
+    return sentryProvider;
   } else {
     throw new Error(`Unknown error service provider: ${provider}`);
   }

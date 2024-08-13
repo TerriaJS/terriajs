@@ -919,6 +919,7 @@ export default class Terria {
     initializeErrorServiceProvider(errorService)
       .then((errorService) => {
         this.errorService = errorService;
+        console.log("error initd", errorService);
       })
       .catch((e) => {
         console.error("Failed to initialize error service", e);

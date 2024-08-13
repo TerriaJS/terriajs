@@ -9,6 +9,7 @@ import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorN
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
+import * as Sentry from "@sentry/react";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
  * This means we can create TerriaErrors before i18next has been initialised.
