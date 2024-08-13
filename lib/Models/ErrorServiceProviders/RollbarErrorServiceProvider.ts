@@ -5,6 +5,8 @@ import { ErrorServiceProvider } from "./ErrorService";
 export default class RollbarErrorServiceProvider
   implements ErrorServiceProvider
 {
+  static type = "rollbar";
+
   readonly rollbar: Rollbar;
 
   /**
