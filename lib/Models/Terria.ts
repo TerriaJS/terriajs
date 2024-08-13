@@ -96,8 +96,7 @@ import updateModelFromJson from "./Definition/updateModelFromJson";
 import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import {
   ErrorServiceOptions,
-  ErrorServiceProvider,
-  initializeErrorServiceProvider
+  ErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import TerriaFeature from "./Feature/Feature";
@@ -360,6 +359,7 @@ interface StartOptions {
   };
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
+  errorService?: ErrorServiceProvider;
   /**
    * i18nOptions is explicitly a separate option from `languageConfiguration`,
    * as `languageConfiguration` can be serialised, but `i18nOptions` may have
@@ -679,8 +679,8 @@ export default class Terria {
   readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
   /**
-   * An error service instance. The instance can be configured by setting the
-   * `errorService` config parameter. Here we initialize it to stub provider so
+   * An error service instance. The instance can be provided via the
+   * `errorService` startOption. Here we initialize it to stub provider so
    * that the `terria.errorService` always exists.
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
@@ -912,19 +912,6 @@ export default class Terria {
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
-  /**
-   * Initialize errorService from config parameters.
-   */
-  setupErrorServiceProvider(errorService: ErrorServiceOptions) {
-    initializeErrorServiceProvider(errorService)
-      .then((errorService) => {
-        this.errorService = errorService;
-      })
-      .catch((e) => {
-        console.error("Failed to initialize error service", e);
-      });
-  }
-
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map((url) => ({
@@ -1016,10 +1003,6 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
-
-        if (this.configParameters.errorService) {
-          this.setupErrorServiceProvider(this.configParameters.errorService);
-        }
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
@@ -1041,7 +1024,17 @@ export default class Terria {
     setCustomRequestSchedulerDomainLimits(
       this.configParameters.customRequestSchedulerLimits
     );
-
+    if (options.errorService) {
+      try {
+        this.errorService = options.errorService;
+        this.errorService.init(this.configParameters);
+      } catch (e) {
+        console.error(
+          `Failed to initialize error service: ${this.configParameters.errorService?.provider}`,
+          e
+        );
+      }
+    }
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent(
       Category.launch,
