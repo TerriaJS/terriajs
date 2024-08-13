@@ -61,8 +61,7 @@ export class DiffStratum extends LoadableStratum(DiffableTraits) {
     // disable export if showing diff
     // currently there is no way to generate export for the difference layer as
     // it requires 2 time parameters which is not supported in standard WCS
-    const disableExport = this.catalogItem.isShowingDiff;
-    return disableExport;
+    return this.catalogItem.isShowingDiff;
   }
 
   @computed
@@ -70,8 +69,7 @@ export class DiffStratum extends LoadableStratum(DiffableTraits) {
     // disable splitter if showing diff
     // currently there is no use splitting the difference layer because
     // most comparable features like style, datetime etc are disabled.
-    const disableSplitter = this.catalogItem.isShowingDiff;
-    return disableSplitter;
+    return this.catalogItem.isShowingDiff;
   }
 }
 
