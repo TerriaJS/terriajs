@@ -410,6 +410,12 @@ class Main extends React.Component<MainPropsType> {
 
     this.diffItem.setTrait(CommonStrata.user, "name", this.diffItemName);
     this.diffItem.showDiffImage(this.leftDate, this.rightDate, this.diffStyle);
+
+    // If given, appply additional properties for the diff item
+    const diffItemProperties = this.diffItem.diffItemProperties;
+    if (diffItemProperties) {
+      updateModelFromJson(this.diffItem, CommonStrata.user, diffItemProperties);
+    }
     terria.showSplitter = false;
   }
 
