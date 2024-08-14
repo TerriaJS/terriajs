@@ -1312,7 +1312,8 @@
       "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)",
       "custom": "Vlastní",
       "regionMapping": "Mapování regionu",
-      "editStyle": "Upravit Styl"
+      "editStyle": "Upravit Styl",
+      "activeStyle": "Zobrazit proměnnou"
     },
     "terria": {
       "loadConfigErrorTitle": "Nepodařilo se načíst konfiguraci mapy Terria",
