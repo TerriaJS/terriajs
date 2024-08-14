@@ -463,7 +463,7 @@
     "resultsLabel": "Výsledky hledání",
     "done": "Hotovo",
     "data": "Data",
-    "searchInDataCatalog": "Hledání <1>'{{locationSearchText}}'</1> v katalogu dat",
+    "searchInDataCatalog": "Hledání '{{locationSearchText}}' v katalogu dat",
     "search": "Hledat '{{searchText}}' v Katalogu dat",
     "viewMore": "Zobrazit více výsledků {{name}}",
     "placeholder": "Hledání lokalit",
@@ -504,7 +504,8 @@
     "previewItemErrorTitle": "Položku katalogu nelze zobrazit.",
     "dataDescription": "Popis dat",
     "resourceDescription": "Popis Zdroje",
-    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům"
+    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům",
+    "selectMultipleDatasets": "<0>Stiskněte <strong>Shift</strong> a klikněte</0><1 /><2>pro přidání více datových sad</2>"
   },
   "description": {
     "name": "Popis",
@@ -649,7 +650,7 @@
     "expand": "Rozbalit",
     "download": "Stáhnout",
     "loading": "Načítání dat grafu...",
-    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
+    "noData": "Nebyla nalezena žádná data grafu.",
     "showItemInChart": "Zobrazit {{value}} v tabulce"
   },
   "viewModels": {
@@ -662,7 +663,10 @@
     "searchLocations": "Poloha",
     "searchNoPlaceNames": "Litujeme, ale vašemu vyhledávacímu dotazu neodpovídají žádné oficiální názvy míst.",
     "searchErrorOccurred": "Při hledání došlo k chybě. Zkontrolujte prosím připojení k internetu nebo to zkuste znovu později.",
-    "searchPlaceNames": "Oficiální názvy míst"
+    "searchPlaceNames": "Oficiální názvy míst",
+    "searchMinCharacters_0": "Je třeba zadat minimálně {{count}} znak",
+    "searchMinCharacters_1": "Je třeba zadat minimálně {{count}} znaky",
+    "searchMinCharacters_2": "Je třeba zadat minimálně {{count}} znaků"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "Slabý výkon WebGL",
@@ -730,7 +734,8 @@
       "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
       "assimp-remote": "Převodník 3D souborů (experimentální)",
       "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
-      "carto-v3": "Carto V3"
+      "carto-v3": "Carto V3",
+      "i3s": "I3S"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -1304,7 +1309,10 @@
       "timeDimensionDisabled": "Čas zakázán (kliknutím povolíte)",
       "bulkGeocoderInfoMessage": "CSV obsahuje adresy, ale {{number}} nelze na mapě najít: ",
       "bulkGeocoderInfo2Message": "V CSV chybí adresy {{nullAddresses}}.",
-      "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)"
+      "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)",
+      "custom": "Vlastní",
+      "regionMapping": "Mapování regionu",
+      "editStyle": "Upravit Styl"
     },
     "terria": {
       "loadConfigErrorTitle": "Nepodařilo se načíst konfiguraci mapy Terria",
