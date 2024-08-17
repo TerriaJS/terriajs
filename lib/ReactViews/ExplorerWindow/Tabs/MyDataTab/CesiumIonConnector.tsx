@@ -17,6 +17,7 @@ import { RawButton } from "../../../../Styled/Button";
 import styled from "styled-components";
 import { useViewState } from "../../../Context";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import isDefined from "../../../../Core/isDefined";
 
 interface CesiumIonToken {
   id?: string;
@@ -350,6 +351,23 @@ function CesiumIonConnector() {
       );
     }
 
+    if (!siteMatchesAllowedUrls(selectedToken)) {
+      return (
+        <>
+          This token cannot be used with this map because the map is not in the
+          token's list of allowed URLs in your{" "}
+          <a
+            href="https://ion.cesium.com/tokens"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Cesium ion account
+          </a>
+          .
+        </>
+      );
+    }
+
     let numberOfAssetsAccessible = -1;
     if (selectedToken.assetIds) {
       numberOfAssetsAccessible = selectedToken.assetIds.length;
@@ -548,6 +566,46 @@ function CesiumIonConnector() {
       ...extras
     };
   }
+}
+
+function siteMatchesAllowedUrls(token: CesiumIonToken) {
+  if (!isDefined(token.allowedUrls)) {
+    return true;
+  }
+
+  const current = new URI(window.location.href);
+
+  for (const allowedUrl of token.allowedUrls) {
+    let allowed;
+
+    try {
+      allowed = new URI(allowedUrl);
+    } catch (e) {
+      continue;
+    }
+
+    const currentHostname = current.hostname();
+    const allowedHostname = allowed.hostname();
+
+    // Current hostname must either match the allowed one exactly, or be a subdomain of the allowed one.
+    const hostnameValid =
+      currentHostname === allowedHostname ||
+      (currentHostname.endsWith(allowedHostname) &&
+        currentHostname[currentHostname.length - allowedHostname.length - 1] ===
+          ".");
+    if (!hostnameValid) continue;
+
+    // If the current has a port, the allowed must match.
+    if (current.port().length > 0 && current.port() !== allowed.port())
+      continue;
+
+    // The current path must start with the allowed path.
+    if (!current.path().startsWith(allowed.path())) continue;
+
+    return true;
+  }
+
+  return false;
 }
 
 const CesiumIonConnectorObserver = observer<React.FC>(CesiumIonConnector);
