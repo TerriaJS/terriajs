@@ -355,7 +355,7 @@ function CesiumIonConnector() {
       return (
         <>
           This token cannot be used with this map because the map is not in the
-          token's list of allowed URLs in your{" "}
+          token&apos;s list of allowed URLs in your{" "}
           <a
             href="https://ion.cesium.com/tokens"
             target="_blank"
