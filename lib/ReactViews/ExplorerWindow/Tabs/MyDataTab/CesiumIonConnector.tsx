@@ -33,7 +33,7 @@ interface CesiumIonToken {
 }
 
 interface CesiumIonAsset {
-  id?: string;
+  id?: number;
   name?: string;
   uniqueName?: string; // we populate this one ourselves
   description?: string;
@@ -244,6 +244,18 @@ function CesiumIonConnector() {
       button: Styles.dropDownButton
     };
 
+    const isAssetAccessibleBySelectedToken = (asset: CesiumIonAsset) => {
+      if (!selectedToken) return false;
+      if (asset.id === undefined) return true;
+
+      if (selectedToken.assetIds === undefined) {
+        // Token allows access to all assets
+        return true;
+      }
+
+      return selectedToken.assetIds.indexOf(asset.id) >= 0;
+    };
+
     return (
       <>
         <label className={AddDataStyles.label}>
@@ -278,7 +290,9 @@ function CesiumIonConnector() {
                 <th>Name</th>
                 <th>Type</th>
               </tr>
-              {assets.map(renderAssetRow)}
+              {assets
+                .filter(isAssetAccessibleBySelectedToken)
+                .map(renderAssetRow)}
             </tbody>
           </table>
         )}
@@ -519,7 +533,7 @@ function CesiumIonConnector() {
       name: asset.name ?? "Unnamed",
       type: type,
       description: asset.description ?? "",
-      ionAssetId: Number.parseInt(asset.id ?? "0", 10),
+      ionAssetId: asset.id ?? 0,
       ionAccessToken: token.token,
       info: [
         {
