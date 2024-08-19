@@ -1614,6 +1614,9 @@
           },
           "tableStyle": {
             "name": "Styl"
+          },
+          "dataset": {
+            "name": "Datová sada"
           }
         }
       },
