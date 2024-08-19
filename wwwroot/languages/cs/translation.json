@@ -1400,7 +1400,7 @@
       "missingUrlTitle": "Nelze načíst GetCapabilities",
       "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WFS (Web Feature Service), protože položka katalogu nemá `url`.",
       "noLayerFoundTitle": "Nenalezena žádná vrstva",
-      "noLayerFoundMessage": "Datová sada WFS '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WFS.",
+      "noLayerFoundMessage": "WFS datová sada '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. Buď byl soubor katalogu nastaven nesprávně, nebo se změnil server WFS.",
       "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}})"
     },
     "webMapServiceCatalogGroup": {
@@ -1576,6 +1576,49 @@
       },
       "showClippingBox": "Zobrazit ořezový rámeček",
       "keepBoxAboveGround": "Pouze nad zemí"
+    },
+    "tableStyling": {
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "name": "Typ",
+            "undefinedLabel": "Prosím upřesněte",
+            "options": {
+              "noStyle": {
+                "name": "Bez stylu"
+              }
+            }
+          },
+          "tableColorColumn": {
+            "name": "Proměnná"
+          }
+        },
+        "name": "Barva výplně"
+      },
+      "hideAdvancedOptions": "Skrýt pokročilé možnosti",
+      "reset": "Obnovit výchozí styl",
+      "copyUserStratum": "Zkopírujte uživatelskou vrstvu do schránky",
+      "data": {
+        "name": "Data",
+        "selectableDimensions": {
+          "tableStyleType": {
+            "name": "Symbologie",
+            "options": {
+              "fill": {
+                "name": "Barva výplně"
+              },
+              "pointSize": {
+                "name": "Velikost bodu"
+              }
+            }
+          },
+          "tableStyle": {
+            "name": "Styl"
+          }
+        }
+      },
+      "name": "Styl",
+      "showAdvancedOptions": "Zobrazit pokročilé možnosti"
     }
   },
   "deltaTool": {
