@@ -1749,7 +1749,7 @@ export default class Cesium extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
       show: true,
