@@ -6,6 +6,8 @@
   - getFeaturesFromPickResult now async to handle I3SNode.loadFields()
   - extract common style logic to new Cesium3dTilesStyleMixin.ts
 - Set default value for date and datetime WPS fields only when the field is marked as required.
+- Fix legend shown for WMS difference output item
+- Add `diffItemProperties` trait to override properties of WSM difference output item. Useful for customizing feature info template strings etc.
 - Add Proj4 definition for EPSG:8059
 - Add support for ArcGis ImageServer - this includes
   - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
