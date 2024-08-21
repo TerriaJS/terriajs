@@ -88,7 +88,6 @@ describe("CartoMapV3CatalogItemSpec", function () {
       jasmine.Ajax.stubRequest(
         "https://BASE_URL/v3/maps/CONNECTION_NAME/query"
       ).andCallFunction((req) => {
-        req.data;
         const body = req.data();
         // Only respond if correct body parameters
         if (

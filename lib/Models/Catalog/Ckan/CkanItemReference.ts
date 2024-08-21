@@ -520,7 +520,6 @@ export function isResourceInSupportedFormats(
   formats: PreparedSupportedFormat[]
 ): PreparedSupportedFormat | undefined {
   if (resource === undefined) return undefined;
-  const matches: PreparedSupportedFormat[] = [];
   for (let i = 0; i < formats.length; ++i) {
     const format = formats[i];
     if (resourceIsSupported(resource, format)) return format;

@@ -361,7 +361,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
-          // Use cesium primitives so we don't have to deal with feature picking/selection
+          // Use cesium primitives, so we don't have to deal with feature picking/selection
           forceCesiumPrimitives: true,
           geoJsonData: {
             type: "FeatureCollection",
@@ -369,10 +369,10 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
             totalFeatures: this.geojsonFeatures!.length
           }
         }).logError(
-          "Error ocurred while updating Input Features GeoJSON model JSON"
+          "Error occurred while updating Input Features GeoJSON model JSON"
         );
       });
-      (await this.geoJsonItem!.loadMapItems()).throwIfError;
+      (await this.geoJsonItem!.loadMapItems()).throwIfError();
     }
 
     runInAction(() => {

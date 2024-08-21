@@ -38,21 +38,18 @@ function ramp(
   let colors: string[];
 
   /** This could be used to draw text on top of swatches/ramps */
-  let dark;
   if (
     n &&
     (d3Scale as any)[`scheme${name}`] &&
     (d3Scale as any)[`scheme${name}`][n]
   ) {
     colors = (d3Scale as any)[`scheme${name}`][n];
-    dark = lab(colors[0]).l < 50;
   } else {
     const interpolate = (d3Scale as any)[`interpolate${name}`];
     if (!interpolate) {
       return <Invalid />;
     }
     colors = [];
-    dark = lab(interpolate(0)).l < 50;
     for (let i = 0; i < interpolateWidth; ++i) {
       colors.push(rgb(interpolate(i / (interpolateWidth - 1))).hex());
     }
@@ -111,7 +108,6 @@ function swatches(name: string | undefined) {
   }
   if (!colors) return <Invalid />;
   const n = colors.length;
-  const dark = lab(colors[0]).l < 50;
   return (
     <svg
       viewBox={`0 0 ${n} 1`}
