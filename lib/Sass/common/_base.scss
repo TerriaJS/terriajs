@@ -429,6 +429,16 @@
 // This is what happens when we mess up with CSS Modules so make it SUPER SUPER OBVIOUS
 // TODO: Remove in build
 .undefined {
+  position: relative;
+  background: #f00 !important;
+  color: magenta !important;
+  border: 3px orange dashed !important;
+
+  animation-name: flash;
+  animation-duration: 1s;
+  animation-timing-function: step-start;
+  animation-iteration-count: infinite;
+
   &:before {
     position: fixed !important;
     top: 0 !important;
@@ -439,16 +449,6 @@
     opacity: 1 !important;
     z-index: 100000 !important;
   }
-
-  position: relative;
-  background: #f00 !important;
-  color: magenta !important;
-  border: 3px orange dashed !important;
-
-  animation-name: flash;
-  animation-duration: 1s;
-  animation-timing-function: step-start;
-  animation-iteration-count: infinite;
 }
 
 @keyframes flash {

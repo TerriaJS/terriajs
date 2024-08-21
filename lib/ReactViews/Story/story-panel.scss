@@ -2,10 +2,6 @@
 @import "../../Sass/common/mixins";
 
 .story-container {
-  &.is-mounted {
-    opacity: 1;
-    @include transform(none);
-  }
   @include transform(translateY(20%));
   opacity: 0;
   @include transition(all 0.3s);
@@ -19,6 +15,11 @@
   text-align: left;
   box-sizing: border-box;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
+
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
+  }
 
   .left {
     border-right: 1px solid $field-border;
