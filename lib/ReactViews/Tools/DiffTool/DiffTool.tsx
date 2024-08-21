@@ -52,6 +52,7 @@ import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
 import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
+import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
 
 const dateFormat = require("dateformat");
 
@@ -355,7 +356,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  onUserPickingLocation(pickingLocation: LatLonHeight) {
+  onUserPickingLocation(_pickingLocation: LatLonHeight) {
     this._isPickingNewLocation = true;
   }
 
@@ -364,7 +365,7 @@ class Main extends React.Component<MainPropsType> {
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const { leftItem, rightItem, t } = this.props;
+    const { leftItem, rightItem } = this.props;
     const feature = pickedFeatures.features.find(
       (f) =>
         doesFeatureBelongToItem(f, leftItem) ||
@@ -404,10 +405,17 @@ class Main extends React.Component<MainPropsType> {
     const terria = this.props.terria;
     terria.overlays.remove(this.props.leftItem);
     terria.overlays.remove(this.props.rightItem);
+
     terria.workbench.add(this.diffItem);
 
     this.diffItem.setTrait(CommonStrata.user, "name", this.diffItemName);
     this.diffItem.showDiffImage(this.leftDate, this.rightDate, this.diffStyle);
+
+    // If given, appply additional properties for the diff item
+    const diffItemProperties = this.diffItem.diffItemProperties;
+    if (diffItemProperties) {
+      updateModelFromJson(this.diffItem, CommonStrata.user, diffItemProperties);
+    }
     terria.showSplitter = false;
   }
 
@@ -959,10 +967,8 @@ const LegendImage = function (props: any) {
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
       style={{ display: "none", marginTop: "4px" }}
-      // @ts-expect-error
-      onLoad={(e) => (e.target.style.display = "block")}
-      // @ts-expect-error
-      onError={(e) => (e.target.style.display = "none")}
+      onLoad={(e) => (e.currentTarget.style.display = "block")}
+      onError={(e) => (e.currentTarget.style.display = "none")}
     />
   );
 };
@@ -992,6 +998,13 @@ async function createSplitItem(
       // we simply set the opacity of the item to 0.
       newItem.setTrait(CommonStrata.user, "opacity", 0);
     }
+
+    // Override feature info template as the parent featureInfoTemplate might
+    // not be relevant for the difference item. This has to be done in the user
+    // stratum to override template set in definition stratum.
+    updateModelFromJson(newItem, CommonStrata.user, {
+      featureInfoTemplate: { template: "" }
+    });
 
     setDefaultDiffStyle(newItem);
 

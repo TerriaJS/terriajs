@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css, DefaultTheme, useTheme } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 import Box, { IBoxProps } from "./Box";
 
 export interface CommonProps {

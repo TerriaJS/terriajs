@@ -76,7 +76,7 @@ See [Getting Started](https://docs.terria.io/guide/getting-started/) in the [Doc
 
 #### Related components
 
-- **[TerriaMapStatic](https://github.com/terriajs/terriamapstatic)**, a pre-built version of TerriaMap, which can be deployed as a static HTML website, such as on Github Pages.
+- **[TerriaMapStatic](https://github.com/terriajs/terriamap-static)**, a pre-built version of TerriaMap, which can be deployed as a static HTML website, such as on Github Pages.
 
 ### Big Thanks
 

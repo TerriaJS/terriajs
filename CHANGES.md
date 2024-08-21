@@ -7,6 +7,17 @@
   - extract common style logic to new Cesium3dTilesStyleMixin.ts
 - Set default value for date and datetime WPS fields only when the field is marked as required.
 - Fix Sass deprecation warnings (declarations after nested blocks)
+- Fix legend shown for WMS difference output item
+- Add `diffItemProperties` trait to override properties of WSM difference output item. Useful for customizing feature info template strings etc.
+- Add Proj4 definition for EPSG:8059
+- Add support for ArcGis ImageServer - this includes
+  - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
+  - Support for web mercator and wgs84 precached tiles
+  - Basic support for raster functions - a dropdown is rendered in the workbench for custom raster functions
+  - Traits to configure `bandIds` and `renderingRule`
+- Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
+- Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
+- Add `EPSG:7899` to `Proj4Definitions`
 - [The next improvement]
 
 #### 8.7.5 - 2024-06-26
@@ -16,7 +27,6 @@
 - Show rectangle selector for WPS bounding box parameter
 - Fix `store` and `status` values send in WPS Execute request.
 - Add docs for `modelDimensions`
-- [The next improvement]
 
 #### 8.7.4 - 2024-06-07
 

@@ -695,6 +695,7 @@
       "wps-getCapabilities": "Web Processing Service (WPS) Server",
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
+      "esri-imageServer": "Esri ArcGIS ImageServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
@@ -895,6 +896,14 @@
       "invalidUrlMessage": "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`.",
       "noLayersFoundTitle": "Could not load ArcGIS MapServer.",
       "noLayersFoundMessage": "The Esri ArcGIS MapServer '{{name}}' has no layers to show."
+    },
+    "arcGisImageServerCatalogItem": {
+      "name": "Esri ArcGIS ImageServer",
+      "invalidUrlTitle": "Unable to load ImageServer",
+      "invalidUrlMessage": "Could not load the ArcGis ImageServer endpoint because the catalog item does not have a `url`.",
+      "invalidServiceTitle": "Invalid ArcGIS Image Service",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Image Service.  The server's response does not appear to be a valid Image Service document.",
+      "rasterFunction": "Raster Function"
     },
     "bing": {
       "name": "Bing Maps"
