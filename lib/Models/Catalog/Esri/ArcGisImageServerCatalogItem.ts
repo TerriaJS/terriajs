@@ -7,7 +7,7 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import URI from "urijs";
 import AsyncLoader from "../../../Core/AsyncLoader";
 import { JsonObject, isJsonObject } from "../../../Core/Json";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import TerriaError from "../../../Core/TerriaError";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -419,6 +419,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
     return result;
   }
 
+  @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     // Make sure legend stays up to date
     this._legendStratumLoader.load();
@@ -587,7 +588,7 @@ function getBaseURI(item: ArcGisImageServerCatalogItem) {
   return uri;
 }
 
-async function getJson(item: ArcGisImageServerCatalogItem, uri: any) {
+async function getJson(item: ArcGisImageServerCatalogItem, uri: uri.URI) {
   try {
     const response = await loadJson(
       proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())

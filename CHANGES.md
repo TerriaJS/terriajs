@@ -7,14 +7,6 @@
   - extract common style logic to new Cesium3dTilesStyleMixin.ts
 - Set default value for date and datetime WPS fields only when the field is marked as required.
 - Add Proj4 definition for EPSG:8059
-- [The next improvement]
-
-#### 8.7.5 - 2024-06-26
-
-- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
-- Upgraded a bunch of d3 dependencies for fixing security errors.
-- Show rectangle selector for WPS bounding box parameter
-- Fix `store` and `status` values send in WPS Execute request.
 - Add support for ArcGis ImageServer - this includes
   - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
   - Support for web mercator and wgs84 precached tiles
@@ -23,8 +15,15 @@
 - Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
 - Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
 - Add `EPSG:7899` to `Proj4Definitions`
-- Add docs for `modelDimensions`
 - [The next improvement]
+
+#### 8.7.5 - 2024-06-26
+
+- TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
+- Upgraded a bunch of d3 dependencies for fixing security errors.
+- Show rectangle selector for WPS bounding box parameter
+- Fix `store` and `status` values send in WPS Execute request.
+- Add docs for `modelDimensions`
 
 #### 8.7.4 - 2024-06-07
 
