@@ -16,7 +16,6 @@ import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import { t } from "i18next";
 
 @observer
 class RectangleParameterEditor extends React.Component {
