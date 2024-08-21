@@ -3,7 +3,7 @@
 .legend {
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: list-reset from "../../../Sass/common/_base.scss";
-  font-family: $font-mono;  
+  font-family: $font-mono;
   // Small font size prevents the font from dictating the table row height.
   font-size: 5px;
 
