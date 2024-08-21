@@ -9,6 +9,8 @@
 - Fix legend shown for WMS difference output item
 - Add `diffItemProperties` trait to override properties of WSM difference output item. Useful for customizing feature info template strings etc.
 - Add Proj4 definition for EPSG:8059
+- Upgrade to terriajs-cesium 8.0.1.
+- Re-enable terrain splitting.
 - Add support for ArcGis ImageServer - this includes
   - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
   - Support for web mercator and wgs84 precached tiles
