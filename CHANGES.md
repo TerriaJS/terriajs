@@ -24,7 +24,6 @@
 - Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
 - Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
 - Add `EPSG:7899` to `Proj4Definitions`
-- [The next improvement]
 
 #### 8.7.5 - 2024-06-26
 
