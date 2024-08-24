@@ -617,6 +617,7 @@ function CesiumIonConnector() {
     return {
       name: asset.name ?? "Unnamed",
       type: type,
+      shareable: false,
       description: asset.description ?? "",
       ionAssetId: asset.id ?? 0,
       ionAccessToken: token.token,

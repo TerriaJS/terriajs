@@ -238,6 +238,13 @@ class CatalogMemberTraits extends ModelTraits {
     description: "Disables the 'About Data' button in the workbench."
   })
   disableAboutData?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Shareable",
+    description: "True (default) if this catalog member may be included in share links. False to exclude it from share links."
+  })
+  shareable: boolean = true;
 }
 
 interface CatalogMemberTraits {
