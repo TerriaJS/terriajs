@@ -63,10 +63,77 @@ const ActionButton = styled(RawButton)`
   }
 `;
 
-function CesiumIonConnector() {
-  const tokenLocalStorageName = "cesium-ion-login-token";
+interface LoginTokenPersistence {
+  get(): string | null;
+  set(token: string): void;
+  clear(): void;
+}
 
+class LoginTokenPersistenceInLocalStorage implements LoginTokenPersistence {
+  private storageName = "cesium-ion-login-token";
+
+  public get(): string | null {
+    return localStorage.getItem(this.storageName) ?? "";
+  }
+
+  public set(token: string) {
+    localStorage.setItem(this.storageName, token);
+  }
+
+  public clear() {
+    localStorage.removeItem(this.storageName);
+  }
+}
+
+class LoginTokenPersistenceInSessionStorage implements LoginTokenPersistence {
+  private storageName = "cesium-ion-login-token";
+
+  public get(): string | null {
+    return sessionStorage.getItem(this.storageName) ?? "";
+  }
+
+  public set(token: string) {
+    sessionStorage.setItem(this.storageName, token);
+  }
+
+  public clear() {
+    sessionStorage.removeItem(this.storageName);
+  }
+}
+
+class LoginTokenPersistenceInPage implements LoginTokenPersistence {
+  private loginToken: string | null = null;
+
+  public get(): string | null {
+    return this.loginToken;
+  }
+
+  public set(token: string) {
+    this.loginToken = token;
+  }
+
+  public clear() {
+    this.loginToken = null;
+  }
+}
+
+const loginTokenPersistenceTypes = {
+  page: new LoginTokenPersistenceInPage(),
+  sessionStorage: new LoginTokenPersistenceInSessionStorage(),
+  localStorage: new LoginTokenPersistenceInLocalStorage()
+};
+
+const loginTokenPersistenceLookup: {
+  [key: string]: LoginTokenPersistence | undefined;
+} = loginTokenPersistenceTypes;
+
+function CesiumIonConnector() {
   const viewState = useViewState();
+
+  const loginTokenPersistence =
+    loginTokenPersistenceLookup[
+      viewState.terria.configParameters.cesiumIonLoginTokenPersistence ?? ""
+    ] ?? loginTokenPersistenceTypes.page;
 
   const [codeChallenge, setCodeChallenge] = React.useState({
     value: "",
@@ -79,7 +146,7 @@ function CesiumIonConnector() {
   const [isLoadingAssets, setIsLoadingAssets] = React.useState<boolean>(false);
 
   const [loginToken, setLoginToken] = React.useState(
-    localStorage.getItem(tokenLocalStorageName) ?? ""
+    loginTokenPersistence.get() ?? ""
   );
 
   const defaultProfile = {
@@ -455,7 +522,7 @@ function CesiumIonConnector() {
           return response.json();
         })
         .then((response) => {
-          localStorage.setItem(tokenLocalStorageName, response.access_token);
+          loginTokenPersistence.set(response.access_token);
           setLoginToken(response.access_token ?? "");
         });
     };
@@ -464,7 +531,7 @@ function CesiumIonConnector() {
   }
 
   function disconnect() {
-    localStorage.removeItem(tokenLocalStorageName);
+    loginTokenPersistence.clear();
     setLoginToken("");
     setUserProfile(defaultProfile);
   }

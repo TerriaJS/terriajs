@@ -218,6 +218,13 @@ export interface ConfigParameters {
    */
   cesiumIonOAuth2ApplicationID?: number;
   /**
+   * Specifies where to store the Cesium ion login token. Valid values are:
+   *   - `page` (default) - The login token is associated with the current page load. Even simply reloading the current page will clear the token. This is the safest option.
+   *   - `sessionStorage` - The login token is associated with a browser session, which means it is shared/accessible from any page hosted on the same domain and running in the same browser tab.
+   *   - `localStorage` - The login token is shared/accessible from any page hosted on the same domain, even when running in different tabs or after exiting and restarted the web browser.
+   */
+  cesiumIonLoginTokenPersistence?: string;
+  /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
@@ -524,6 +531,7 @@ export default class Terria {
     cesiumIonAccessToken: undefined,
     useCesiumIonBingImagery: undefined,
     cesiumIonOAuth2ApplicationID: undefined,
+    cesiumIonLoginTokenPersistence: "page",
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
