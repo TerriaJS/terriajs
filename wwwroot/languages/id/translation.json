@@ -297,7 +297,18 @@
   },
   "compass": {
     "guidanceBtnText": "Lihat petunjuk lengkap tentang bagaimana cara menggunakan kompas",
-    "title": "Klik dan seret untuk memutar kamera"
+    "title": "Klik dan seret untuk memutar kamera",
+    "guidance": {
+      "title": "Kontrol Giroskop",
+      "innerCircleDescription1": "Klik di bagian tengah dan seret perlahan ke atas, bawah, kiri atau kanan untuk memiringkan dan memutar peta secara bersamaan.",
+      "innerCircleDescription2": "Klik dua kali di sini untuk mengatur ulang tampilan ke kondisi default.",
+      "ctrlDragDescription": "Anda juga dapat memiringkan dan memutar peta dengan menahan tombol CTRL dan menyeret peta.",
+      "outerRingTitle": "Cincin Luar",
+      "outerRingDescription": "Seret cincin luar dengan gerakan melingkar untuk memutar tampilan peta 360˚.",
+      "innerCircleTitle": "Lingkaran Dalam"
+    },
+    "description": "Seret cincin luar: memutar tampilan. \nSeret giroskop bagian dalam: membebaskan orbit. \nKlik dua kali: mengatur ulang tampilan. \nTIPS: Anda juga dapat membebaskan orbit dengan menahan tombol CTRL dan menyeret peta.",
+    "guidanceBtnTitle": "Panduan Giroskop"
   },
   "zoomCotrol": {
     "zoomOut": "Perkecil",
@@ -319,7 +330,8 @@
     "duplicateModelErrorMessage": "Terjadi error saat memisahkan item katalog`\"{{name}}\"`. Item katalog ini mungkin tidak mendukung fungsionalitas \"bandingkan\"",
     "modelNotFoundErrorMessage": "ID Model `\"{{id}}\"` tidak ditemukan",
     "toggleSplitterTool": "Aktifkan perbandingan berdampingan antara dua set data yang berbeda",
-    "toggleSplitterToolDisabled": "Harap nonaktifkan fitur perbandingan berdampingan lainnya untuk mengaktifkan perbandingan standar"
+    "toggleSplitterToolDisabled": "Harap nonaktifkan fitur perbandingan berdampingan lainnya untuk mengaktifkan perbandingan standar",
+    "title": "Seret ke kiri atau ke kanan untuk menyesuaikan tampilan"
   },
   "location": {
     "originError": "Browser Anda hanya dapat memberikan lokasi Anda saat menggunakan HTTPS. Anda mungkin dapat menggunakan {{secureUrl}} sebagai gantinya.",
