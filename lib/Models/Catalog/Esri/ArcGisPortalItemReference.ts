@@ -174,7 +174,8 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
       createStratumInstance(ArcGisPortalItemFormatTraits, {
         id: "ArcGIS MapServer Group",
         formatRegex: "Map Service",
-        urlRegex: /MapServer$|MapServer\/$|MapServer\?f=pjson$|MapServer\?f=json$/,
+        urlRegex:
+          /MapServer$|MapServer\/$|MapServer\?f=pjson$|MapServer\?f=json$/,
         definition: {
           type: "esri-mapServer-group"
         }
