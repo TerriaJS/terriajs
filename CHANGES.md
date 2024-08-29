@@ -13,6 +13,9 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
+- Set default value for date and datetime WPS fields only when the field is marked as required.
+- TSify MenuBar and Groups
+- Add elements config for MenuBar
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24

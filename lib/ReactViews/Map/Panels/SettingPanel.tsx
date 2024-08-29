@@ -9,8 +9,8 @@ import {
   Ref,
   useState
 } from "react";
-import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import { useTranslation, withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Cesium from "../../../Models/Cesium";
@@ -29,6 +29,8 @@ import { useViewState } from "../../Context";
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
+import withTerriaRef from "../../HOCs/withTerriaRef";
 
 const sides = {
   left: "settingPanel.terrain.left",
@@ -372,7 +374,13 @@ const SettingPanel: FC = observer(() => {
 });
 
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
-export default SettingPanel;
+
+export default withTranslation()(
+  withTheme(
+    // @ts-ignore
+    withTerriaRef(withControlledVisibility(SettingPanel), SETTING_PANEL_NAME)
+  )
+);
 
 type IFlexGrid = {
   gap: number;

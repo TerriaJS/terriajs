@@ -85,6 +85,7 @@ const Swipeable = ({
   children,
   ...props
 }: { children: ReactNode } & SwipeableProps) => {
+  // @ts-ignore
   const handlers = useSwipeable(props);
 
   return <div {...handlers}>{children}</div>;

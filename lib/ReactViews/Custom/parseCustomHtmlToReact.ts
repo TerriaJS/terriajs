@@ -15,7 +15,6 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
-import { Parser, ProcessNodeDefinitions } from "html-to-react";
 import { createElement as htmlCreateElement } from "html-to-react/lib/utils";
 
 const htmlToReactParser = Parser({

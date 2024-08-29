@@ -6,6 +6,7 @@ import Icon from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "../../MenuBar/menu-bar.scss";
+import withControlledVisibility from "../../../HOCs/withControlledVisibility";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
@@ -60,4 +61,4 @@ const LangPanel = (props: Props) => {
     </MenuPanel>
   );
 };
-export default LangPanel;
+export default withControlledVisibility (LangPanel);
