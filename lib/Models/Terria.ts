@@ -1042,6 +1042,11 @@ export default class Terria {
       this.configParameters.customRequestSchedulerLimits
     );
 
+    // Set site title from config.json
+    if (this.configParameters.appName) {
+      document.title = this.configParameters.appName;
+    }
+    
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent(
       Category.launch,

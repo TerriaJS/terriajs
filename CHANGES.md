@@ -2,6 +2,7 @@
 
 #### next release (8.7.7)
 
+- Use `appName` from `config.json` to set the title of the web page.
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22
