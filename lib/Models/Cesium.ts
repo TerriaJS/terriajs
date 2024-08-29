@@ -95,6 +95,7 @@ import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEven
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
+import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -419,16 +420,15 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this.terrainProvider;
-      // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
-      // this.scene.globe.splitDirection = this.terria.showSplitter
-      //   ? this.terria.terrainSplitDirection
-      //   : SplitDirection.NONE;
+      this.scene.globe.splitDirection = this.terria.showSplitter
+        ? this.terria.terrainSplitDirection
+        : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.depthTestAgainstTerrainEnabled;
-      // if (this.scene.skyAtmosphere) {
-      //   this.scene.skyAtmosphere.splitDirection =
-      //     this.scene.globe.splitDirection;
-      // }
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
+      }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -1298,7 +1298,10 @@ export default class Cesium extends GlobeOrMap {
    *
    */
   @action
-  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
+  async pickFromScreenPosition(
+    screenPosition: Cartesian2,
+    ignoreSplitter: boolean
+  ) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
@@ -1306,7 +1309,7 @@ export default class Cesium extends GlobeOrMap {
     const pickPositionCartographic =
       pickPosition && Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
-    const vectorFeatures = this.pickVectorFeatures(screenPosition);
+    const vectorFeatures = await this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
     const pickRasterPromise =
@@ -1424,7 +1427,7 @@ export default class Cesium extends GlobeOrMap {
    * @param screenPosition position on the screen to look for features
    * @returns The features found.
    */
-  private pickVectorFeatures(screenPosition: Cartesian2) {
+  private async pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
     const pickedList = this.scene.drillPick(screenPosition);
@@ -1453,7 +1456,9 @@ export default class Cesium extends GlobeOrMap {
         typeof catalogItem?.getFeaturesFromPickResult === "function" &&
         this.terria.allowFeatureInfoRequests
       ) {
-        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+        const result = await catalogItem.getFeaturesFromPickResult.bind(
+          catalogItem
+        )(
           screenPosition,
           picked,
           vectorFeatures.length < catalogItem.maxRequests
@@ -1651,10 +1656,12 @@ export default class Cesium extends GlobeOrMap {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         } else if (isCesium3DTileset(m)) {
           return m;
+        } else if (m instanceof I3SDataProvider) {
+          return filterOutUndefined(m.layers.map((layer) => layer.tileset));
         }
         return undefined;
       })
-    );
+    ).flat(1); /* Flatten I3S tilesets */
   }
 
   private _makeImageryLayerFromParts(
@@ -1759,7 +1766,7 @@ export default class Cesium extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
       show: true,

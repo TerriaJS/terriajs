@@ -2,10 +2,6 @@
 @import "../../Sass/common/mixins";
 
 .popupEditor {
-  &.is-mounted {
-    opacity: 1;
-    @include transform(none);
-  }
   @include transform(translateY(20%));
   opacity: 0;
   @include transition(all 0.3s);
@@ -19,6 +15,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
+  }
   .inner {
     max-width: 800px;
     width: 80vw;

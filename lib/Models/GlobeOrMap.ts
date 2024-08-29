@@ -27,13 +27,15 @@ import TableOutlineStyleTraits, {
 } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import CameraView from "./CameraView";
-import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
+import TerriaError from "../Core/TerriaError";
 
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
+import hasTraits from "./Definition/hasTraits";
+import HighlightColorTraits from "../Traits/TraitsClasses/HighlightColorTraits";
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
@@ -234,17 +236,16 @@ export default abstract class GlobeOrMap {
 
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
-        let highlightColor;
-        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
-          highlightColor =
-            Color.fromCssColorString(
-              runInAction(() => catalogItem.highlightColor)
-            ) ?? defaultColor;
+        let highlightColorString;
+        if (hasTraits(catalogItem, HighlightColorTraits, "highlightColor")) {
+          highlightColorString = runInAction(() => catalogItem.highlightColor);
+          runInAction(() => catalogItem.highlightColor);
         } else {
-          highlightColor =
-            Color.fromCssColorString(this.terria.baseMapContrastColor) ??
-            defaultColor;
+          highlightColorString = this.terria.baseMapContrastColor;
         }
+        const highlightColor: Color = isDefined(highlightColorString)
+          ? Color.fromCssColorString(highlightColorString)
+          : defaultColor;
 
         // highlighting doesn't work if the highlight colour is full white
         // so in this case use something close to white instead
@@ -258,9 +259,13 @@ export default abstract class GlobeOrMap {
         this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
-            !feature._cesium3DTileFeature.tileset.isDestroyed()
+            feature._cesium3DTileFeature.tileset.isDestroyed() === false
           ) {
-            feature._cesium3DTileFeature.color = originalColor;
+            try {
+              feature._cesium3DTileFeature.color = originalColor;
+            } catch (err) {
+              TerriaError.from(err).log();
+            }
           }
         };
       } else if (isDefined(feature.polygon)) {
