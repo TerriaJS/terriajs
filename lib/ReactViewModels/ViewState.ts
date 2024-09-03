@@ -536,6 +536,7 @@ export default class ViewState {
     this._previewedItemIdSubscription();
     this._workbenchHasTimeWMSSubscription();
     this._locationMarkerSubscription();
+    this._storyBeforeUnloadSubscription();
     this.searchState.dispose();
   }
 
