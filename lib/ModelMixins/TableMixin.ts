@@ -229,7 +229,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         }
 
         return {
-          name: (this.name || this.uniqueId)!,
+          name: name,
           file: new Blob([csvString])
         };
       }
