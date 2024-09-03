@@ -192,6 +192,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@jsdevtools/coverage-istanbul-loader": "^3.0.5",
     "@types/dateformat": "^3.0.1",
     "@types/node": "^18.15.11",
     "@types/webpack": "4.41.33",
@@ -207,7 +208,6 @@
     "fork-ts-checker-webpack-plugin": "^6.0.0",
     "glob-all": "^3.0.1",
     "husky": "^8.0.3",
-    "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
     "jsdom": "^17.0.0",
