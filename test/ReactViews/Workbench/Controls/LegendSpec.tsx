@@ -1,6 +1,5 @@
 const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
 
-import React from "react";
 import TestRenderer from "react-test-renderer";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -49,8 +48,7 @@ describe("Legend", function () {
         .then(() => {
           const legendSection = <Legend item={wmsItem} />;
           const result = getShallowRenderedOutput(legendSection);
-          // @ts-expect-error
-          expect(result).toEqual(null);
+          expect(result).toBeNull();
         })
         .then(done);
     });

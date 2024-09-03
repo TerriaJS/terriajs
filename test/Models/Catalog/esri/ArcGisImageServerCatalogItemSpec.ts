@@ -150,19 +150,16 @@ describe("ArcGisImageServer", function () {
 
     it("adds the token to subsequent requests", async function () {
       await imageServerItem.loadMapItems();
-      console.log(spyOnLoad.calls);
       const tokenre = /token=fakeToken/;
       expect(tokenre.test(spyOnLoad.calls.argsFor(1)[0])).toBeTruthy();
       expect(tokenre.test(spyOnLoad.calls.argsFor(2)[0])).toBeTruthy();
     });
 
     it("passes the token to the imageryProvider", async function () {
-      console.log(imageServerItem);
       await imageServerItem.loadMapItems();
       const imageryProvider = imageServerItem.mapItems[0]
         .imageryProvider as ArcGisImageServerImageryProvider;
 
-      console.log(imageryProvider.baseResource);
       expect(imageryProvider.baseResource.queryParameters.token).toBe(
         "fakeToken"
       );
