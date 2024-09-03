@@ -1,3 +1,4 @@
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import { TerriaErrorSeverity } from "../Core/TerriaError";
@@ -143,6 +144,23 @@ export function isInitFromOptions(
   initSource: InitSource
 ): initSource is InitSourceFromOptions {
   return "options" in initSource;
+}
+
+/**
+ * Return the lat, lng, height in pickedFeatures settings as Cartesian3.
+ *
+ * @param pickedFeatures The pickedFeatures setting in init source
+ * @return The position as Cartesian3 or `undefined` if it could not be parsed.
+ */
+export function readPickedFeaturePosition(
+  pickedFeatures: InitSourcePickedFeatures
+): Cartesian3 | undefined {
+  const { lng, lat, height } = pickedFeatures.pickCoords ?? {};
+  return typeof lng === "number" &&
+    typeof lat === "number" &&
+    (typeof height === "number" || height === undefined)
+    ? Cartesian3.fromDegrees(lng, lat, height)
+    : undefined;
 }
 
 export default InitSource;

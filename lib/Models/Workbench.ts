@@ -117,9 +117,11 @@ export default class Workbench {
    * Note that the model's dereferenced equivalent may appear in the {@link Workbench#items} list
    * rather than the model itself.
    * @param item The model to add.
+   *
+   * @private
    */
   @action
-  private insertItem(item: BaseModel, index: number = 0) {
+  _insertItem(item: BaseModel, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
@@ -189,7 +191,7 @@ export default class Workbench {
       });
     }
 
-    this.insertItem(item);
+    this._insertItem(item);
 
     let error: TerriaError | undefined;
 
@@ -267,7 +269,7 @@ export default class Workbench {
       return;
     }
     this.remove(item);
-    this.insertItem(item, newIndex);
+    this._insertItem(item, newIndex);
   }
 }
 
