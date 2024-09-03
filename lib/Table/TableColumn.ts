@@ -920,6 +920,6 @@ function toNumber(value: string): number | null {
   return null;
 }
 
-function nullFunction(rowIndex: number) {
+function nullFunction() {
   return null;
 }

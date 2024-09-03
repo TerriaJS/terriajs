@@ -87,7 +87,7 @@
     /* Variables */
     "no-label-var": 1,
     "no-unused-vars": [
-      1,
+      "warn",
       {
         "vars": "local",
         "args": "none"
@@ -111,10 +111,11 @@
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
+      "files": ["*.ts", "**/*.tsx"],
       "rules": {
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
+        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
           "warn",
           {
@@ -125,7 +126,7 @@
         ],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-loss-of-precision": "warn",
-        "@typescript-eslint/no-unsafe-declaration-merging": "warn",
+        "@typescript-eslint/no-unsafe-declaration-merging": "off",
         "react-hooks/exhaustive-deps": "warn",
         "react/prop-types": "warn"
       }

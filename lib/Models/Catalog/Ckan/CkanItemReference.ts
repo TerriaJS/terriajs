@@ -50,7 +50,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new CkanDatasetStratum(
       this.ckanItemReference,
       this.ckanCatalogGroup
