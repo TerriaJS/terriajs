@@ -16,7 +16,7 @@ export function getShallowRenderedOutput(jsx) {
 
 export function getMountedInstance(jsx) {
   const renderer = getRenderedRenderer(jsx);
-  return renderer.getMountedInstance(renderer);
+  return renderer.getMountedInstance();
 }
 
 export function findAllEqualTo(reactElement, text) {
