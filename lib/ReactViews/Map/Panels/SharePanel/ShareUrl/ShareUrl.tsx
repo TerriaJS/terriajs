@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   useEffect,
   useImperativeHandle,
   useState,
@@ -39,7 +38,7 @@ export interface IShareUrlRef {
   shorteningInProgress: boolean;
 }
 
-export const ShareUrl = forwardRef<
+export const ShareUrl = React.forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(

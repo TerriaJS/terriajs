@@ -206,10 +206,6 @@ function setCursor(el: HTMLElement, cursorName: string) {
   el.style.cursor = cursorName;
 }
 
-function truncate(text: string, length: number) {
-  return text.length <= length ? text : `${text.slice(0, length)}...`;
-}
-
 function pickGlobePosition(
   screenCoords: Cartesian2,
   scene: Scene,

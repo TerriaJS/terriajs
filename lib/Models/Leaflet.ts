@@ -63,7 +63,7 @@ import Terria from "./Terria";
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
+const _FeatureDetection: FeatureDetection =
   require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 // This class is an observer. It probably won't contain any observables itself

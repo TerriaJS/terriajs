@@ -220,7 +220,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
 
                 <section className={Styles.map}>
                   <MapColumn
-                    customFeedbacks={customElements.feedback}
                     customElements={customElements}
                     animationDuration={animationDuration}
                   />

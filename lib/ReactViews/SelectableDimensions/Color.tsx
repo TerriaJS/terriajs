@@ -23,7 +23,7 @@ const debounceSetColorDimensionValue = debounce(
 export const SelectableDimensionColor: React.FC<{
   id: string;
   dim: SelectableDimensionColorModel;
-}> = observer(({ id, dim }) => {
+}> = observer(({ dim }) => {
   const [open, setIsOpen] = useState(false);
   const { t } = useTranslation();
   return (

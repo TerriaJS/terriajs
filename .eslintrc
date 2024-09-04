@@ -111,7 +111,7 @@
   },
   "overrides": [
     {
-      "files": ["*.ts", "**/*.tsx"],
+      "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
@@ -121,13 +121,15 @@
           {
             "argsIgnorePattern": "^_",
             "varsIgnorePattern": "^_",
-            "caughtErrorsIgnorePattern": "^_"
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "ignoreRestSiblings": true
           }
         ],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-loss-of-precision": "warn",
         "@typescript-eslint/no-unsafe-declaration-merging": "off",
-        "react-hooks/exhaustive-deps": "warn",
+        "react-hooks/exhaustive-deps": "off",
         "react/prop-types": "warn"
       }
     }

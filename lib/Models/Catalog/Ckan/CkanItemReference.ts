@@ -348,7 +348,7 @@ export default class CkanItemReference extends UrlMixin(
   }
 
   async forceLoadReference(
-    previousTarget: BaseModel | undefined
+    _previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     await this.setCkanStrata(this);
 
@@ -388,7 +388,7 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     if (model === undefined) return;
-    previousTarget = model;
+    _previousTarget = model;
     await this.setCkanStrata(model);
 
     model.setTrait(CommonStrata.definition, "name", this.name);
