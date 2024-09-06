@@ -86,4 +86,20 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
       "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
   })
   style?: StyleTraits = undefined;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Time period filter start",
+    description:
+      "If time period filter start and end are non-empty, filter the results to that time period."
+  })
+  timePeriodFilterStart?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Time period filter end",
+    description:
+      "If time period filter start and end are non-empty, filter the results to that time period."
+  })
+  timePeriodFilterEnd?: string;
 }

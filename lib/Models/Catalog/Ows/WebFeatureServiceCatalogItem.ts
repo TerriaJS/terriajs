@@ -403,6 +403,11 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
+    const timeFilter =
+      this.timePeriodFilterStart && this.timePeriodFilterEnd
+        ? `(event_start>'${this.timePeriodFilterStart}T00:00:00' and event_start<'${this.timePeriodFilterEnd}T23:59:59')`
+        : undefined;
+
     const url = this.uri
       .clone()
       .setSearch(
@@ -414,7 +419,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             version: "1.1.0",
             outputFormat: this.outputFormat,
             srsName: this.srsName,
-            maxFeatures: this.maxFeatures
+            maxFeatures: this.maxFeatures,
+            cql_filter: timeFilter
           },
           this.parameters
         )

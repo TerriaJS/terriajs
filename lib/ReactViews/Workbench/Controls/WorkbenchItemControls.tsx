@@ -13,6 +13,7 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import ChartItemSelector from "./ChartItemSelector";
 import ColorScaleRangeSection from "./ColorScaleRangeSection";
+import DatePeriodSelector from "./DatePeriodSection";
 import DateTimeSelectorSection from "./DateTimeSelectorSection";
 import FilterSection from "./FilterSection";
 import GeneratedControlSection from "./GeneratedControlSection";
@@ -138,6 +139,7 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
             />
           )}
         {controls?.shortReport ? <ShortReport item={item} /> : null}
+        {<DatePeriodSelector item={item} />}
         {controls?.legend ? <Legend item={item} /> : null}
         {controls?.selectableDimensions ? (
           <DimensionSelectorSection item={item} placement={"belowLegend"} />
