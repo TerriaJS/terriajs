@@ -246,6 +246,9 @@ export default class ViewState {
   @observable currentTourIndex: number = -1;
   @observable showCollapsedNavigation: boolean = false;
 
+  @observable contentPopoutOpen: boolean = false;
+  @observable contentPopoutHtml: string = "";
+
   @computed
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want

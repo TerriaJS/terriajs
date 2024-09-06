@@ -7,6 +7,7 @@ import CustomComponent from "./CustomComponent";
 import FeedbackLinkCustomComponent from "./FeedbackLinkCustomComponent";
 import SOSChartCustomComponent from "./SOSChartCustomComponent";
 import TerriaTooltipCustomComponent from "./TerriaTooltip";
+import EmbedWebProcessingServiceHtml from "./EmbedWebProcessingServiceHtml";
 
 /**
  * Registers custom component types.
@@ -22,4 +23,5 @@ export default function registerCustomComponentTypes() {
   CustomComponent.register(new CollapsibleCustomComponent());
   CustomComponent.register(new FeedbackLinkCustomComponent());
   CustomComponent.register(new TerriaTooltipCustomComponent());
+  CustomComponent.register(new EmbedWebProcessingServiceHtml());
 }
