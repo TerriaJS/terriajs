@@ -56,7 +56,8 @@ describe("UploadDataTypes", function () {
         {
           value: "foo42",
           name: "Another Foo type",
-          description: "Some other foo files"
+          description: "Some other foo files",
+          customComponent: undefined
         }
       ]);
     });
@@ -82,12 +83,14 @@ describe("UploadDataTypes", function () {
         {
           value: "foo42",
           name: "Foo type",
-          description: "Foo files"
+          description: "Foo files",
+          customComponent: undefined
         },
         {
           value: "foo42",
           name: "Another Foo type",
-          description: "Some other foo files"
+          description: "Some other foo files",
+          customComponent: undefined
         }
       ]);
     });
@@ -129,7 +132,8 @@ describe("UploadDataTypes", function () {
         {
           value: "foo42",
           name: "Another Foo type",
-          description: "Some other foo files"
+          description: "Some other foo files",
+          customComponent: undefined
         }
       ]);
     });
@@ -155,12 +159,14 @@ describe("UploadDataTypes", function () {
         {
           value: "foo42",
           name: "Foo type",
-          description: "Foo files"
+          description: "Foo files",
+          customComponent: undefined
         },
         {
           value: "foo42",
           name: "Another Foo type",
-          description: "Some other foo files"
+          description: "Some other foo files",
+          customComponent: undefined
         }
       ]);
     });
