@@ -8,6 +8,12 @@ import IonResource from "terriajs-cesium/Source/Core/IonResource";
 
 type BaseType = Model<CesiumIonTraits & CatalogMemberTraits>;
 
+/**
+ * A mixin for a model that can be loaded from Cesium ion via an `ionAssetId`. If an asset ID is supplied,
+ * the `ionResource` will be populated asynchronously after `loadIonResource` is called (usually from
+ * `forceLoadMetadata`). If defined, the resource in this property should be used as the "URL" given to
+ * CesiumJS instead of a regular URL.
+ */
 export default function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
 ) {

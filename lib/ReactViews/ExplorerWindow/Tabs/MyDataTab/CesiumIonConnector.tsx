@@ -461,7 +461,7 @@ function CesiumIonConnector() {
 
   function renderAssetRow(asset: CesiumIonAsset) {
     return (
-      <tr>
+      <tr key={asset.id}>
         <td>
           <ActionButton
             type="button"

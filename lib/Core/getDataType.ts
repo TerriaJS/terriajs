@@ -1,12 +1,12 @@
 import i18next from "i18next";
 import { action, observable } from "mobx";
-import { ReactComponentLike } from "prop-types";
+import { type ComponentType } from "react";
 
 interface DataType {
   value: string;
   name: string;
   description?: string;
-  customComponent?: ReactComponentLike;
+  customComponent?: ComponentType;
 }
 
 export interface RemoteDataType extends DataType {}

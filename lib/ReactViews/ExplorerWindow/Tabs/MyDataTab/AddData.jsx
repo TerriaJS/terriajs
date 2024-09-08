@@ -1,5 +1,6 @@
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
@@ -76,7 +77,9 @@ class AddData extends React.Component {
   }
 
   selectRemoteOption(option) {
-    this.props.viewState.remoteDataType = option;
+    runInAction(() => {
+      this.props.viewState.remoteDataType = option;
+    });
   }
 
   handleUploadFile(e) {
