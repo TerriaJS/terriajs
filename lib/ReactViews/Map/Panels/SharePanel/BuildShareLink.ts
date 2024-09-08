@@ -264,7 +264,10 @@ export function isShareable(terria: Terria) {
         ? model
         : getDereferencedIfExists(terria.getModelById(BaseModel, modelId)!);
 
-    if (CatalogMemberMixin.isMixedInto(dereferenced) && !dereferenced.shareable) {
+    if (
+      CatalogMemberMixin.isMixedInto(dereferenced) &&
+      !dereferenced.shareable
+    ) {
       return false;
     }
 

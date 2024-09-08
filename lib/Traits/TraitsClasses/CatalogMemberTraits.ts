@@ -242,7 +242,8 @@ class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "boolean",
     name: "Shareable",
-    description: "True (default) if this catalog member may be included in share links. False to exclude it from share links."
+    description:
+      "True (default) if this catalog member may be included in share links. False to exclude it from share links."
   })
   shareable: boolean = true;
 }
