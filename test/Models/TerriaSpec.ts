@@ -1584,7 +1584,7 @@ describe("Terria", function () {
       await terria.loadInitSources();
 
       expect(terria.baseMaximumScreenSpaceError).toBe(1);
-      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.useNativeResolution).toBeTruthy();
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(

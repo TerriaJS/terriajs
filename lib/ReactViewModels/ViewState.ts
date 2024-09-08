@@ -36,7 +36,6 @@ import {
   RelativePosition,
   TourPoint
 } from "./defaultTourPoints";
-import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
@@ -384,7 +383,6 @@ export default class ViewState {
   private _locationMarkerSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
-  private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
@@ -459,8 +457,6 @@ export default class ViewState {
         }
       }
     );
-
-    this._disclaimerHandler = new DisclaimerHandler(terria, this);
 
     this._workbenchHasTimeWMSSubscription = reaction(
       () => this.terria.workbench.hasTimeWMS,
@@ -551,7 +547,6 @@ export default class ViewState {
     this._previewedItemIdSubscription();
     this._workbenchHasTimeWMSSubscription();
     this._locationMarkerSubscription();
-    this._disclaimerHandler.dispose();
     this.searchState.dispose();
   }
 

@@ -1,0 +1,121 @@
+{
+  "currentVersion": 10.91,
+  "serviceDescription": "Some service description.",
+  "name": "Some name",
+  "description": "Some description",
+  "extent": {
+    "xmin": -180.3125,
+    "ymin": -90.25,
+    "xmax": 179.6875,
+    "ymax": 90.25,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "initialExtent": {
+    "xmin": -180.3125,
+    "ymin": -90.25,
+    "xmax": 179.6875,
+    "ymax": 90.25,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "fullExtent": {
+    "xmin": -180.3125,
+    "ymin": -90.25,
+    "xmax": 179.6875,
+    "ymax": 90.25,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "hasMultidimensions": true,
+  "timeInfo": {
+    "startTimeField": "StdTime",
+    "endTimeField": "StdTime",
+    "timeExtent": [378604800000, 1640882880000],
+    "timeReference": null,
+    "defaultTimeInterval": 365.2425,
+    "defaultTimeIntervalUnits": "esriTimeUnitsDays"
+  },
+  "pixelSizeX": 0.5,
+  "pixelSizeY": 0.5,
+  "datasetFormat": "Cache/LERC2D",
+  "uncompressedSize": 2079360,
+  "blockWidth": 256,
+  "blockHeight": 256,
+  "compressionType": "LERC2D",
+  "bandNames": ["Band_1"],
+  "allowCopy": true,
+  "allowAnalysis": true,
+  "defaultVariable": "",
+  "bandCount": 1,
+  "noDataValue": -999,
+  "noDataValues": [-999],
+  "pixelType": "F64",
+  "minPixelSize": 0,
+  "maxPixelSize": 0,
+  "copyrightText": "Some copyright",
+  "serviceDataType": "esriImageServiceDataTypeScientific",
+  "serviceSourceType": "esriImageServiceSourceTypeDataset",
+  "minValues": [0],
+  "maxValues": [8972.0625],
+  "meanValues": [2224.8882386419177],
+  "stdvValues": [2508.1968623077223],
+  "objectIdField": "",
+  "fields": [],
+  "capabilities": "Mensuration,Image,Metadata",
+  "defaultMosaicMethod": "Center",
+  "allowedMosaicMethods": "",
+  "sortField": "",
+  "sortValue": null,
+  "sortAscending": true,
+  "mosaicOperator": "First",
+  "defaultCompressionQuality": 75,
+  "defaultResamplingMethod": "Bilinear",
+  "maxImageHeight": 4100,
+  "maxImageWidth": 15000,
+  "allowRasterFunction": true,
+  "rasterFunctionInfos": [
+    {
+      "name": "None",
+      "description": "",
+      "help": ""
+    }
+  ],
+  "rasterTypeInfos": [
+    {
+      "name": "Raster Dataset",
+      "description": "Supports all ArcGIS Raster Datasets",
+      "help": ""
+    }
+  ],
+  "mensurationCapabilities": "Basic",
+  "hasHistograms": true,
+  "hasColormap": false,
+  "hasRasterAttributeTable": false,
+  "minScale": 0,
+  "maxScale": 0,
+  "exportTilesAllowed": false,
+  "supportsStatistics": false,
+  "supportsAdvancedQueries": false,
+  "editFieldsInfo": null,
+  "ownershipBasedAccessControlForRasters": null,
+  "allowComputeTiePoints": false,
+  "useStandardizedQueries": true,
+  "advancedQueryCapabilities": {
+    "useStandardizedQueries": true,
+    "supportsStatistics": false,
+    "supportsOrderBy": false,
+    "supportsDistinct": false,
+    "supportsPagination": false
+  },
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  }
+}

@@ -4,14 +4,12 @@
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: list-reset from "../../../Sass/common/_base.scss";
   font-family: $font-mono;
-  font-size: $font-size-small;
+  // Small font size prevents the font from dictating the table row height.
+  font-size: 5px;
 
   li {
     display: block;
   }
-
-  // Small font size prevents the font from dictating the table row height.
-  font-size: 5px;
 
   .legendOpenExternally {
     font-size: $font-size-small;
@@ -25,11 +23,11 @@
 }
 
 .legend__inner {
+  padding: $padding 0 0 0;
   a {
     // Only the actual legend should be clickable rather than the whole area
     display: inline-block;
   }
-  padding: $padding 0 0 0;
 }
 
 .legend__legendBoxImg {
