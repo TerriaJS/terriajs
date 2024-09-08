@@ -18,6 +18,7 @@ import styled from "styled-components";
 import { useViewState } from "../../../Context";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
 import isDefined from "../../../../Core/isDefined";
+import Terria from "../../../../Models/Terria";
 
 interface CesiumIonToken {
   id?: string;
@@ -229,7 +230,12 @@ function CesiumIonConnector() {
   }, [loginToken]);
 
   React.useEffect(() => {
-    if (loginToken.length === 0) return;
+    if (
+      !viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets ||
+      loginToken.length === 0
+    ) {
+      return;
+    }
 
     setIsLoadingTokens(true);
 
@@ -271,6 +277,13 @@ function CesiumIonConnector() {
     );
   }
 
+  const dropdownTheme = {
+    list: AddDataStyles.dropdownList,
+    icon: <Icon glyph={Icon.GLYPHS.opened} />,
+    dropdown: Styles.dropDown,
+    button: Styles.dropDownButton
+  };
+
   return (
     <>
       <label className={AddDataStyles.label}>
@@ -305,15 +318,13 @@ function CesiumIonConnector() {
   }
 
   function renderConnected() {
-    const dropdownTheme = {
-      list: AddDataStyles.dropdownList,
-      icon: <Icon glyph={Icon.GLYPHS.opened} />,
-      dropdown: Styles.dropDown,
-      button: Styles.dropDownButton
-    };
-
     const isAssetAccessibleBySelectedToken = (asset: CesiumIonAsset) => {
-      if (!selectedToken) return false;
+      if (!selectedToken) {
+        if (viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets)
+          return false;
+        else return true;
+      }
+
       if (asset.id === undefined) return true;
 
       if (selectedToken.assetIds === undefined) {
@@ -323,6 +334,33 @@ function CesiumIonConnector() {
 
       return selectedToken.assetIds.indexOf(asset.id) >= 0;
     };
+
+    return (
+      <>
+        {renderTokenSelector()}
+        {isLoadingAssets ? (
+          <label className={AddDataStyles.label}>Loading asset list...</label>
+        ) : (
+          <table className={Styles.assetsList}>
+            <tbody>
+              <tr>
+                <th />
+                <th>Name</th>
+                <th>Type</th>
+              </tr>
+              {assets
+                .filter(isAssetAccessibleBySelectedToken)
+                .map(renderAssetRow)}
+            </tbody>
+          </table>
+        )}
+      </>
+    );
+  }
+
+  function renderTokenSelector() {
+    if (!viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets)
+      return undefined;
 
     return (
       <>
@@ -348,22 +386,6 @@ function CesiumIonConnector() {
         >
           {renderTokenWarning()}
         </div>
-        {isLoadingAssets ? (
-          <label className={AddDataStyles.label}>Loading asset list...</label>
-        ) : (
-          <table className={Styles.assetsList}>
-            <tbody>
-              <tr>
-                <th />
-                <th>Name</th>
-                <th>Type</th>
-              </tr>
-              {assets
-                .filter(isAssetAccessibleBySelectedToken)
-                .map(renderAssetRow)}
-            </tbody>
-          </table>
-        )}
       </>
     );
   }
@@ -465,7 +487,7 @@ function CesiumIonConnector() {
         <td>
           <ActionButton
             type="button"
-            onClick={addToMap.bind(undefined, asset)}
+            onClick={addToMap.bind(undefined, viewState.terria, asset)}
             title={t("catalogItem.add")}
           >
             <Icon glyph={Icon.GLYPHS.add} className={Styles.addAssetButton} />
@@ -537,14 +559,23 @@ function CesiumIonConnector() {
   }
 
   function addToMap(
+    terria: Terria,
     asset: CesiumIonAsset,
     event: React.MouseEvent<HTMLButtonElement>
   ) {
-    if (!selectedToken) return;
+    // If the asset may be shared, the user must choose a suitable token.
+    // If not, we can access the asset using the login token.
+    const allowSharing =
+      viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets;
+    const assetToken = allowSharing
+      ? selectedToken
+      : { token: loginToken, name: `${userProfile.username}'s login token` };
+    if (!assetToken) return;
 
     const definition = createCatalogItemDefinitionFromAsset(
+      terria,
       asset,
-      selectedToken
+      assetToken
     );
     if (!definition) return;
 
@@ -552,7 +583,9 @@ function CesiumIonConnector() {
       CatalogMemberFactory,
       viewState.terria,
       "",
-      CommonStrata.definition,
+      terria.configParameters.cesiumIonAllowSharingAddedAssets
+        ? CommonStrata.user
+        : CommonStrata.definition,
       definition,
       {}
     ).throwIfUndefined({
@@ -577,6 +610,7 @@ function CesiumIonConnector() {
   }
 
   function createCatalogItemDefinitionFromAsset(
+    terria: Terria,
     asset: CesiumIonAsset,
     token: CesiumIonToken
   ) {
@@ -617,7 +651,8 @@ function CesiumIonConnector() {
     return {
       name: asset.name ?? "Unnamed",
       type: type,
-      shareable: false,
+      shareable:
+        terria.configParameters.cesiumIonAllowSharingAddedAssets ?? false,
       description: asset.description ?? "",
       ionAssetId: asset.id ?? 0,
       ionAccessToken: token.token,

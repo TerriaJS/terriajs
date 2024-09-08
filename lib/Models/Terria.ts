@@ -225,6 +225,12 @@ export interface ConfigParameters {
    */
   cesiumIonLoginTokenPersistence?: string;
   /**
+   * Whether or not Cesium ion assets added via the "Add Data" panel will be shared with others via share links. If true, users will be asked to select a Cesium ion token when adding assets,
+   * and this choice must be made carefully to avoid exposing more Cesium ion assets than intended. If false, the account's default token will be used, which is safe because this token will
+   * not be shared with others.
+   */
+  cesiumIonAllowSharingAddedAssets?: boolean;
+  /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
@@ -532,6 +538,7 @@ export default class Terria {
     useCesiumIonBingImagery: undefined,
     cesiumIonOAuth2ApplicationID: undefined,
     cesiumIonLoginTokenPersistence: "page",
+    cesiumIonAllowSharingAddedAssets: false,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
