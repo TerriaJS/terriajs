@@ -30,6 +30,7 @@ export default function registerCustomComponentTypes(terria?: Terria) {
 
   // At the time this is called `cesiumIonOAuth2ApplicationID` won't be populated yet.
   // Subscribe to it now in case it's populated later.
+  // TODO: it would be better to move this to getDataType in the future, but how would we get the Terria instance?
   if (terria) {
     when(
       () => terria.configParameters.cesiumIonOAuth2ApplicationID !== undefined,

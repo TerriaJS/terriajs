@@ -1,9 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { t } from "i18next";
 import URI from "urijs";
 import { string } from "prop-types";
-import { Trans, withTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import AddDataStyles from "./add-data.scss";
 import Styles from "./cesium-ion-connector.scss";
 import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
@@ -64,6 +63,9 @@ const ActionButton = styled(RawButton)`
   }
 `;
 
+/**
+ * An interface getting and setting the user's Cesium ion login token obtained via OAuth2.
+ */
 interface LoginTokenPersistence {
   get(): string | null;
   set(token: string): void;
@@ -130,6 +132,7 @@ const loginTokenPersistenceLookup: {
 
 function CesiumIonConnector() {
   const viewState = useViewState();
+  const { t } = useTranslation();
 
   const loginTokenPersistence =
     loginTokenPersistenceLookup[
@@ -146,6 +149,8 @@ function CesiumIonConnector() {
   const [assets, setAssets] = React.useState<CesiumIonAsset[]>([]);
   const [isLoadingAssets, setIsLoadingAssets] = React.useState<boolean>(false);
 
+  // This is the Cesium ion token representing the currently logged-in user, as obtained via
+  // an OAuth2 Authorization Code Grant flow with Cesium ion.
   const [loginToken, setLoginToken] = React.useState(
     loginTokenPersistence.get() ?? ""
   );
@@ -712,4 +717,4 @@ function siteMatchesAllowedUrls(token: CesiumIonToken) {
 }
 
 const CesiumIonConnectorObserver = observer<React.FC>(CesiumIonConnector);
-export default withTranslation()(CesiumIonConnectorObserver);
+export default CesiumIonConnectorObserver;
