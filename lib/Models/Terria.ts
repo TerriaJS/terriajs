@@ -226,8 +226,8 @@ export interface ConfigParameters {
   cesiumIonLoginTokenPersistence?: string;
   /**
    * Whether or not Cesium ion assets added via the "Add Data" panel will be shared with others via share links. If true, users will be asked to select a Cesium ion token when adding assets,
-   * and this choice must be made carefully to avoid exposing more Cesium ion assets than intended. If false, the account's default token will be used, which is safe because this token will
-   * not be shared with others.
+   * and this choice must be made carefully to avoid exposing more Cesium ion assets than intended. If false (the default), the user's login token will be used, which is safe because this
+   * token will not be shared with others.
    */
   cesiumIonAllowSharingAddedAssets?: boolean;
   /**
