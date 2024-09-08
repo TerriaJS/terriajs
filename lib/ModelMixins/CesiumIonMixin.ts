@@ -18,6 +18,9 @@ export default function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
 ) {
   abstract class CesiumIonMixin extends Base {
+    /**
+     * The {@link IonResource} that can be given to CesiumJS most places that a resource URL can be used.
+     */
     @observable
     ionResource: IonResource | undefined = undefined;
 

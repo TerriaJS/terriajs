@@ -11,6 +11,7 @@ import TerriaTooltipCustomComponent from "./TerriaTooltip";
 import CesiumIonConnector from "../ExplorerWindow/Tabs/MyDataTab/CesiumIonConnector";
 import { addOrReplaceRemoteFileUploadType } from "../../Core/getDataType";
 import { when } from "mobx";
+import i18next from "i18next";
 
 /**
  * Registers custom component types.
@@ -35,10 +36,7 @@ export default function registerCustomComponentTypes(terria?: Terria) {
       () => {
         addOrReplaceRemoteFileUploadType("cesium-ion", {
           value: "cesium-ion",
-          // This doesn't work, probably because I don't know what I'm doing:
-          //   name: t("core.dataType.cesium-ion")
-          // So, hard-coding it instead.
-          name: "Cesium ion",
+          name: "core.dataType.cesium-ion",
           customComponent: CesiumIonConnector
         });
       }
