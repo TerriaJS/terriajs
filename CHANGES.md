@@ -2,7 +2,7 @@
 
 #### next release (8.7.7)
 
-- [The next improvement]
+- Fix sharing when using initfile.
 
 #### 8.7.6 - 2024-08-22
 
