@@ -1,13 +1,12 @@
 import { ReactElement, useState } from "react";
+import styled from "styled-components";
+import Button from "../../Styled/Button";
+import Text from "../../Styled/Text";
+import xml2json from "../../ThirdParty/xml2json";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import Button from "../../Styled/Button";
-import Text from "../../Styled/Text";
-import xml2json from "../../ThirdParty/xml2json";
-import { useViewState } from "../Context";
-import { action, runInAction } from "mobx";
 
 enum EmbedWpsHtmlState {
   Default,
@@ -16,10 +15,18 @@ enum EmbedWpsHtmlState {
   ResponseOk
 }
 
+const ContentIframe = styled.iframe`
+  width: 350px;
+  height: 300px;
+  margin: 3px;
+  border: none;
+`;
+
 function EmbedWpsHtml({ url }: { url: string }) {
-  const viewState = useViewState();
+  // const viewState = useViewState();
   // Doesn't support changing url
   const [state, setState] = useState(EmbedWpsHtmlState.Default);
+  const [replacedHtml, setReplacedHtml] = useState("");
 
   async function sendWpsRequest() {
     try {
@@ -36,10 +43,11 @@ function EmbedWpsHtml({ url }: { url: string }) {
         throw new Error("Data error: xml not in expected format");
       }
       setState(EmbedWpsHtmlState.ResponseOk);
-      runInAction(() => {
-        viewState.contentPopoutHtml = String(html);
-        viewState.contentPopoutOpen = true;
-      });
+      // runInAction(() => {
+      //   viewState.contentPopoutHtml = String(html);
+      //   viewState.contentPopoutOpen = true;
+      // });
+      setReplacedHtml(html.replace("&", "&amp;"));
     } catch (e: any) {
       console.error(`Error requesting WPS data: ${(e ?? "").toString()}`);
       setState(EmbedWpsHtmlState.ResponseError);
@@ -56,12 +64,15 @@ function EmbedWpsHtml({ url }: { url: string }) {
   } else if (state === EmbedWpsHtmlState.ResponseError) {
     text = "Data fetching failed";
   } else if (state === EmbedWpsHtmlState.ResponseOk) {
-    onClick = action(() => {
-      viewState.contentPopoutOpen = true;
-    });
+    // onClick = action(() => {
+    //   viewState.contentPopoutOpen = true;
+    // });
     text = "Open additional data";
   }
 
+  if (state === EmbedWpsHtmlState.ResponseOk) {
+    return <ContentIframe srcDoc={replacedHtml} />;
+  }
   return (
     <Button enabled={!!onClick} onClick={onClick}>
       <Text bold>{text}</Text>
