@@ -35,7 +35,10 @@
     "searchErrorOccurred": "Se ha producido un error en la búsqueda. Por favor, compruebe su conexión a internet o inténtelo más tarde.",
     "inDataCatalogue": "En el catálogo de datos",
     "searchNoCatalogueItem": "Lo sentimos, ningún artículo del catálogo coincide con su búsqueda.",
-    "searchNoPlaceNames": "Lo sentimos, ningún topónimo oficial coincide con su búsqueda."
+    "searchNoPlaceNames": "Lo sentimos, ningún topónimo oficial coincide con su búsqueda.",
+    "searchMinCharacters_0": "Necesita introducir al menos {{count}} carácter",
+    "searchMinCharacters_1": "Necesita introducir al menos {{count}} caracteres",
+    "searchMinCharacters_2": "Necesita introducir al menos {{count}} caracteres"
   },
   "catalogItem": {
     "trash": "Quitar del catálogo",
@@ -530,7 +533,7 @@
     "viewLess": "Ver menos resultados de {{name}}",
     "placeholder": "Buscar lugares",
     "searchCatalogue": "Buscar en el catálogo",
-    "searchInDataCatalog": "Buscar <1>'{{locationSearchText}}'</1> en el Catálogo de Datos"
+    "searchInDataCatalog": "Buscar '{{locationSearchText}}'en el Catálogo de Datos"
   },
   "addData": {
     "back": "Atrás",
@@ -671,7 +674,7 @@
     "location": "Localización",
     "myLocation": "Mi localización",
     "browserCannotProvide": "Su navegador no puede proporcionar su localización.",
-    "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Usted posible que usar {{secureUrl}} en su lugar."
+    "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Puede utilizar {{secureUrl}} en su lugar."
   },
   "countDatasets": {
     "loadError": "No se pudo cargar.",
@@ -736,7 +739,7 @@
       "balancedPerformance": "Balance entre rendimiento y calidad",
       "maximumPerformance": "Máximo rendimiento, baja calidad"
     },
-    "mapQuality": "Calidad del Mapa Ráster:",
+    "mapQuality": "Calidad del Mapa:",
     "nativeResolutionHeader": "Usar resolución nativa del dispositivo",
     "btnTitle": "Cambiar vista",
     "baseMap": "Mapa Base",
