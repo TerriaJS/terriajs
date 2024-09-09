@@ -56,7 +56,7 @@ export default class Workbench {
    */
   @computed
   get shouldExpandAll(): boolean {
-    return this._items.every((item) => !(item as any).isOpenInWorkbench);
+    return this.items.every((item) => !(item as any).isOpenInWorkbench);
   }
 
   /**
@@ -97,7 +97,7 @@ export default class Workbench {
    */
   @action
   collapseAll() {
-    this._items.map((item) => {
+    this.items.map((item) => {
       item.setTrait(CommonStrata.user, "isOpenInWorkbench", false);
     });
   }
@@ -107,7 +107,7 @@ export default class Workbench {
    */
   @action
   expandAll() {
-    this._items.map((item) => {
+    this.items.map((item) => {
       item.setTrait(CommonStrata.user, "isOpenInWorkbench", true);
     });
   }
