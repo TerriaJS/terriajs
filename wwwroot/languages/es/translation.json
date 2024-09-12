@@ -1070,7 +1070,9 @@
       "assimp-local": "Convertidor de archivos 3D (zip) (experimental)",
       "assimp-local-description": "**Atención:** El convertidor de archivos 3D es experimental.\nVer lista de [formatos soportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nLos archivos deben estar comprimidos.",
       "assimp-remote": "Convertidor de archivos 3D (experimental)",
-      "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip"
+      "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip",
+      "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
+      "i3s": "I3S"
     },
     "printWindow": {
       "errorTitle": "Error de impresión",
@@ -1121,7 +1123,8 @@
       "devError": "cesium es requerido",
       "failedToObtain": "No se pudo obtener la imagen X: {{x}} Y: {{y}} Nivel: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857)."
+      "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
+      "terrainServerErrorMessage": " El servidor de terreno no responde por el momento.  Puede seguir utilizando todas las functiones de {{appName}} pero no habrá detalles de terreno en el modo 3D.  Lamentamos los inconvenientes ocasionados.  Por favor intente nuevamente más tarde, el servidor debería responder correctamente.  Si el problema continúa contáctese por correo electrónico a {{supportEmail}}."
     },
     "displayVariablesConcept": {
       "defaultName": "Visualización de la variable"
@@ -1165,7 +1168,8 @@
       "devError": "No hay contexto para la recoloracion de imágenes"
     },
     "mapboxVectorTileImageryProvider": {
-      "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa"
+      "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa",
+      "requireStyles": "MapboxVectorTileImageryProvider requiere una función de estilo como parámetro en options.styleFunc"
     },
     "extraCreditLinks": {
       "dataAttribution": "Atribución de los datos",
