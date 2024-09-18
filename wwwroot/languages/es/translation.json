@@ -491,8 +491,8 @@
     "openFeature": "Zoom a",
     "openFeatureTitle": "Zoom al dato",
     "colorScaleUpdateRange": "Actualizar Rango",
-    "zoomToTitle": "Zoom a la Extensión",
-    "opacity": "Opacidad:{{opacity}}%",
+    "zoomToTitle": "Zoom a la extensión",
+    "opacity": "Opacidad: {{opacity}}%",
     "label": "Conjunto de Datos",
     "rangeMin": "Mínima:",
     "rangeMax": "Máxima:",
@@ -574,7 +574,7 @@
     "titleIII": "Carga de imágenes históricas",
     "bodyII": "Es posible que tenga que ajustar el nivel de zoom para que las imágenes por satélite sean visibles en el mapa.",
     "bodyIV": "Es posible que las imágenes por satélite no estén siempre disponibles en el momento y lugar que usted prefiera. Si sólo quieres ver las imágenes de una ubicación concreta, haz clic en \"filtrar por ubicación\" en tu banco de datos.",
-    "bodyV": "Puedes aplicar una serie de estilos, como el falso color, a las imágenes de satélite haciendo clic en el menú desplegable de estilos de la mesa de trabajo de datos."
+    "bodyV": "Puedes aplicar una serie de estilos, como el falso color, a las imágenes de satélite haciendo clic en el menú desplegable de estilos de el banco de trabajo de datos."
   },
   "story": {
     "story": "Historia",
@@ -585,7 +585,7 @@
       "cancelEditing": "Cancelar",
       "placeholder": "Introduzca un título aquí"
     },
-    "removeAllStories": "Eliminar Todos",
+    "removeAllStories": "Eliminar Todas",
     "delete": "Eliminar",
     "deleteStory": "borrar",
     "edit": "Editar",
@@ -597,12 +597,13 @@
     "gettingStarted": "Empezar",
     "gettingStartedTitle": "Empezar",
     "share": "Compartir",
-    "collapse": "Colapso",
+    "collapse": "Colapsar",
     "badgeBarLabel": "Escenas",
     "untitledScene": "escena sin título",
     "doesNotExist": "La historia no existe",
-    "removeAllStoriesDialog": "¿Está seguro de que desea eliminar la escena {{ count }}?",
-    "removeAllStoriesDialog_plural": "¿Está seguro de que desea eliminar las escenas {{ count }}?",
+    "removeAllStoriesDialog_0": "¿Está seguro de que desea eliminar {{ count }} escena?",
+    "removeAllStoriesDialog_1": "¿Está seguro de que desea eliminar las {{ count }} escenas?",
+    "removeAllStoriesDialog_2": "",
     "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa",
     "recapture": "Recaptura",
     "recaptureStory": "volver a capturar",
@@ -744,8 +745,8 @@
     "btnTitle": "Cambiar vista",
     "baseMap": "Mapa Base",
     "timeline": {
-      "alwaysShowLabel": "Pulse empezar a mostrar la línea de tiempo sólo cuando haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
-      "hideLabel": "Pulse para que se muestre siempre la línea de tiempo, aunque no haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
+      "alwaysShowLabel": "Pulse empezar a mostrar la línea de tiempo sólo cuando haya conjuntos de datos que varíen en el tiempo en el banco de trabajo",
+      "hideLabel": "Pulse para que se muestre siempre la línea de tiempo, aunque no haya conjuntos de datos que varíen en el tiempo el banco de trabajo",
       "title": "Línea de tiempo",
       "alwaysShow": "Siempre mostrar"
     },
@@ -1012,9 +1013,9 @@
   "emptyWorkbench": {
     "helpfulHints": "Consejos útiles",
     "emptyArea": "Su banco de trabajo está vacío",
-    "helpfulHintsOne": "Busque los datos disponibles seleccionando \"Explorar datos del mapa\" o haga clic en \"Cargar\" para añadir sus propios datos al mapa.",
+    "helpfulHintsOne": "Busque los datos disponibles seleccionando \"Explorar los datos del mapa\" o haga clic en \"Subir\" para añadir sus propios datos al mapa.",
     "helpfulHintsTwo": "Una vez que hayas añadido datos al mapa, tus conjuntos de datos activos aparecerán aquí en tu banco de trabajo. El banco de trabajo le ayudará a interactuar con los datos.",
-    "helpfulHintsThree": "En la mesa de trabajo puede activar y desactivar conjuntos de datos, cambiar su opacidad, activar la comparación en pantalla dividida, cambiar estilos y navegar por fechas y horas, si los datos admiten esta funcionalidad."
+    "helpfulHintsThree": "En el banco de trabajo puede activar y desactivar conjuntos de datos, cambiar su opacidad, activar la comparación en pantalla dividida, cambiar estilos y navegar por fechas y horas, si los datos admiten esta funcionalidad."
   },
   "timer": {
     "nextScheduledUpdateTime": "Próxima actualización de datos a {{scheduledUpdateTime}}",
