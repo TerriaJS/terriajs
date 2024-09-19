@@ -2,6 +2,10 @@
 
 #### next release (8.7.7)
 
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
 - Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
 - Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]
@@ -26,7 +30,6 @@
 - Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
 - Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
 - Add `EPSG:7899` to `Proj4Definitions`
-- [The next improvement]
 
 #### 8.7.5 - 2024-06-26
 
