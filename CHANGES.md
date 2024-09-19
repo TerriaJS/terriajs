@@ -2,7 +2,6 @@
 
 #### next release (8.7.7)
 
-
 - **Breaking changes:**
 
   - Remove RollbarErrorServiceProvder

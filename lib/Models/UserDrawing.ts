@@ -386,7 +386,7 @@ export default class UserDrawing extends MappableMixin(
     position: Cartesian3,
     index: number
   ) {
-    var pointEntity = new Entity({
+    const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
       billboard: <any>{
@@ -494,7 +494,7 @@ export default class UserDrawing extends MappableMixin(
           }
           if (isDefined(pickedFeatures.pickPosition)) {
             const pickedPoint = pickedFeatures.pickPosition;
-            const picketCarto = Cartographic.fromCartesian(pickedPoint);
+            const pickedCarto = Cartographic.fromCartesian(pickedPoint);
 
             let changeOrder: number = -1;
             for (
@@ -512,8 +512,8 @@ export default class UserDrawing extends MappableMixin(
                 const carto0 = Cartographic.fromCartesian(pos0);
                 const carto1 = Cartographic.fromCartesian(pos1);
                 const pt = turf.point([
-                  picketCarto.longitude,
-                  picketCarto.latitude
+                  pickedCarto.longitude,
+                  pickedCarto.latitude
                 ]);
                 const line = turf.lineString([
                   [carto1.longitude, carto1.latitude],
@@ -538,7 +538,6 @@ export default class UserDrawing extends MappableMixin(
               !this.clickedExistingPoint(pickedFeatures.features)
             ) {
               // No existing point was picked, so add a new point
-              //this.addPointToPointEntities("Another Point", pickedPoint);
               if (changeOrder >= 0) {
                 // Add the new point between 2 existing points
                 this.insertPointToPointEntities(
@@ -596,17 +595,15 @@ export default class UserDrawing extends MappableMixin(
             hierarchy: new CallbackProperty(function () {
               return new PolygonHierarchy(that.getPointsForShape());
             }, false),
-            //material: new Color(0.0, 0.666, 0.843, 0.25),
             material: this.autoClosePolygon
               ? new Color(0.0, 0.666, 0.843, 0.25)
               : new Color(0.0, 0.666, 0.843, 0),
             outlineColor: new Color(1.0, 1.0, 1.0, 1.0),
-            //perPositionHeight: true as any
             // Clamp to ground polygons of Measure Tool
             heightReference: new ConstantProperty(
               HeightReference.CLAMP_TO_GROUND
             ),
-            perPositionHeight: <any>false
+            perPositionHeight: false as any
           } as any
         } as any) as Entity;
         this.closeLoop = true;
@@ -654,8 +651,6 @@ export default class UserDrawing extends MappableMixin(
    */
   cleanUp() {
     this.terria.overlays.remove(this);
-    //this.pointEntities = new CustomDataSource("Points");
-    //this.otherEntities = new CustomDataSource("Lines and polygons");
     this.pointEntities.entities.removeAll();
     this.otherEntities.entities.removeAll();
 

@@ -135,9 +135,7 @@ export class MeasureLineTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    const distance = this.prettifyNumber(this.totalDistanceMetres, false);
-    let message = distance;
-    return message;
+    return this.prettifyNumber(this.totalDistanceMetres, false);
   };
 
   /**
