@@ -40,6 +40,8 @@
     "@turf/circle": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/meta": "^6.5.0",
+    "@turf/point-to-line-distance": "^7.1.0",
+    "@turf/turf": "^7.1.0",
     "@types/arcgis-rest-api": "^10.4.5",
     "@types/create-react-class": "^15.6.2",
     "@types/d3-array": "^3.2.1",

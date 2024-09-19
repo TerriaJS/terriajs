@@ -53,9 +53,12 @@
     }
   },
   "measure": {
-    "measureTool": "Measure Tool",
-    "measureToolTitle": "Line Measure",
-    "measureDistance": "Measure distance between locations"
+    "measureLineTool": "Measure Line Tool",
+    "measurePolygonTool": "Measure Polygon Tool",
+    "measureLineToolTitle": "Line Measure",
+    "measurePolygonToolTitle": "Polygon Measure",
+    "measureDistance": "Measure distance between locations",
+    "measureArea": "Measure the area of a polygon"
   },
   "location": {
     "errorGettingLocation": "Error getting location",
@@ -1376,8 +1379,8 @@
       "firstPoint": "First Point",
       "btnCancel": "Cancel",
       "btnDone": "Done",
-      "clickToAddFirstPoint": "Click to add a point",
-      "clickToAddAnotherPoint": "Click to add another point",
+      "clickToAddFirstPoint": "Click to add the first point",
+      "clickToAddAnotherPoint": "Click to add another new point, click an existing to remove or drag it to move",
       "clickToRedrawRectangle": "Click another point to redraw the rectangle",
       "anotherPoint": "Another Point",
       "userPolygon": "User polygon"

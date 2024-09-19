@@ -48,9 +48,12 @@
     "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br /><br />ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br /><br />La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
   },
   "measure": {
-    "measureDistance": "Misura la distanza fra punti",
-    "measureTool": "Strumento di misura",
-    "measureToolTitle": "Misuratore lineare"
+    "measureLineTool": "Strumento di misura di linee",
+    "measurePolygonTool": "Strumento di misura di aree",
+    "measureLineToolTitle": "Misuratore lineare",
+    "measurePolygonToolTitle": "Misuratore di area",
+    "measureDistance": "Misura la lunghezza di una lina",
+    "measureArea": "Misura l'area di un poligono"
   },
   "general": {
     "cancel": "Annulla",
@@ -239,8 +242,8 @@
       "devError": "È necessaria un'istanza di Terria.",
       "otherEntities": "Linee e poligoni",
       "messageHeader": "Disegnare sulla mappa",
-      "clickToAddAnotherPoint": "Clicca per aggiungere un altro punto",
-      "clickToAddFirstPoint": "Clicca per aggiungere un punto"
+      "clickToAddAnotherPoint": "Clicca per aggiungere un altro punto, clicca su un punto esistente per rimuoverlo, trascina un punto per spostarlo.",
+      "clickToAddFirstPoint": "Clicca per aggiungere il primo punto"
     },
     "terriaJSONcatalog": {
       "disclaimer": "Scarico di responsabilità",

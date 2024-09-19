@@ -22,7 +22,8 @@ import {
   CloseToolButton,
   Compass,
   COMPASS_TOOL_ID,
-  MeasureTool,
+  MeasureLineTool,
+  MeasurePolygonTool,
   MyLocation,
   ToggleSplitterController,
   ZoomControl,
@@ -91,7 +92,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 4
   });
 
-  const measureTool = new MeasureTool({
+  const measurePolygonTool = new MeasurePolygonTool({
     terria,
     onClose: () => {
       runInAction(() => {
@@ -100,11 +101,29 @@ export const registerMapNavigations = (viewState: ViewState) => {
     }
   });
   mapNavigationModel.addItem({
-    id: MeasureTool.id,
-    name: "translate#measure.measureToolTitle",
+    id: MeasurePolygonTool.id,
+    name: "translate#measure.measurePolygonToolTitle",
+    title: "translate#measure.measureArea",
+    location: "TOP",
+    controller: measurePolygonTool,
+    screenSize: undefined,
+    order: 6
+  });
+
+  const measureLineTool = new MeasureLineTool({
+    terria,
+    onClose: () => {
+      runInAction(() => {
+        viewState.panel = undefined;
+      });
+    }
+  });
+  mapNavigationModel.addItem({
+    id: MeasureLineTool.id,
+    name: "translate#measure.measureLineToolTitle",
     title: "translate#measure.measureDistance",
     location: "TOP",
-    controller: measureTool,
+    controller: measureLineTool,
     screenSize: undefined,
     order: 6
   });

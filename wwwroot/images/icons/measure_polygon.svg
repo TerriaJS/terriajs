@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="50px"
+   height="35px"
+   viewBox="0 0 50 35"
+   version="1.1"
+   id="svg49"
+   sodipodi:docname="measure_polygon.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview51"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="15.819376"
+     inkscape:cx="15.266089"
+     inkscape:cy="17.415352"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Page-1" />
+  <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title31">measure</title>
+  <desc
+     id="desc33">Created with Sketch.</desc>
+  <defs
+     id="defs35" />
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill-rule="evenodd">
+    <polygon
+       id="Line-Copy-13"
+       points="26.236229,34.451148 26.236229,23.466435 23.763771,23.466435 23.763771,34.451148 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-14"
+       points="12.182259,34.451148 12.182259,23.466435 9.7098009,23.466435 9.7098009,34.451148 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-15"
+       points="19.209243,31.22035 19.209243,23.466435 16.736786,23.466435 16.736786,31.22035 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-20"
+       points="5.1552735,31.22035 5.1552735,23.466435 2.6828158,23.466435 2.6828158,31.22035 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-17"
+       points="40.2902,34.451148 40.2902,23.466435 37.817742,23.466435 37.817742,34.451148 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-19"
+       points="33.263213,31.22035 33.263213,23.466435 30.790755,23.466435 30.790755,31.22035 "
+       style="fill-rule:nonzero" />
+    <polygon
+       id="Line-Copy-21"
+       points="47.317184,31.22035 47.317184,23.466435 44.844727,23.466435 44.844727,31.22035 "
+       style="fill-rule:nonzero" />
+    <path
+       d="m 17.034909,10.233911 c -2.282382,0 -4.132619,-1.8502362 -4.132619,-4.1326182 0,-2.282382 1.850237,-4.132618 4.132619,-4.132618 2.282381,0 4.132617,1.850236 4.132617,4.132618 0,2.282382 -1.850236,4.1326182 -4.132617,4.1326182 z m 0,-2.2057242 c 1.064194,0 1.926893,-0.8627 1.926893,-1.926894 0,-1.064194 -0.862699,-1.926894 -1.926893,-1.926894 -1.064195,0 -1.926894,0.8627 -1.926894,1.926894 0,1.064194 0.862699,1.926894 1.926894,1.926894 z"
+       id="Oval-46"
+       style="fill-rule:nonzero;stroke-width:0.490161" />
+    <path
+       d="m 6.8429753,21.106653 c -2.282382,0 -4.1326182,-1.850236 -4.1326182,-4.132618 0,-2.282382 1.8502362,-4.132618 4.1326182,-4.132618 2.2823821,0 4.1326177,1.850236 4.1326177,4.132618 0,2.282382 -1.8502356,4.132618 -4.1326177,4.132618 z m 0,-2.205724 c 1.0641941,0 1.9268936,-0.8627 1.9268936,-1.926894 0,-1.064194 -0.8626995,-1.926894 -1.9268936,-1.926894 -1.064194,0 -1.9268937,0.8627 -1.9268937,1.926894 0,1.064194 0.8626997,1.926894 1.9268937,1.926894 z"
+       id="Oval-46-Copy"
+       style="fill-rule:nonzero;stroke-width:0.490161" />
+    <polygon
+       id="Line"
+       points="33.263213,9.4775294 33.263213,7.0050717 16.736786,7.0050717 16.736786,9.4775294 "
+       style="fill-rule:nonzero"
+       transform="matrix(1.7830117,0,0,0.49016101,-19.17185,12.77501)" />
+    <polygon
+       id="Line-4"
+       points="16.736786,9.4775294 33.263213,9.4775294 33.263213,7.0050717 16.736786,7.0050717 "
+       style="fill-rule:nonzero"
+       transform="matrix(0.57434803,-0.05024894,0.04272035,0.4882958,9.7847342,2.7525106)" />
+    <path
+       d="m 40.702535,18.859375 c -1.613888,-1.613887 -1.613889,-4.230517 -10e-7,-5.844405 1.613888,-1.613888 4.230517,-1.613887 5.844405,10e-7 1.613887,1.613887 1.613887,4.230516 -1e-6,5.844404 -1.613888,1.613888 -4.230516,1.613888 -5.844403,0 z m 1.559682,-1.559682 c 0.752499,0.752499 1.97254,0.752498 2.725039,-1e-6 0.752499,-0.752498 0.752499,-1.97254 10e-7,-2.725038 -0.7525,-0.7525 -1.972541,-0.7525 -2.72504,0 -0.752499,0.752498 -0.7525,1.97254 0,2.725039 z"
+       id="Oval-46-1"
+       style="fill-rule:nonzero;stroke-width:0.490161" />
+    <path
+       d="m 29.562257,7.7190973 c -1.613888,-1.6138878 -1.613888,-4.2305166 0,-5.8444044 1.613887,-1.61388781 4.230516,-1.61388781 5.844404,0 1.613888,1.6138878 1.613888,4.2305166 0,5.8444044 -1.613888,1.6138878 -4.230516,1.6138878 -5.844404,0 z m 1.559682,-1.5596824 c 0.752499,0.7524988 1.972541,0.7524988 2.72504,0 0.752499,-0.7524988 0.752499,-1.9725408 0,-2.7250396 -0.752499,-0.7524988 -1.97254,-0.7524981 -2.725039,7e-7 -0.752499,0.7524988 -0.7525,1.9725401 -10e-7,2.7250389 z"
+       id="Oval-46-Copy-7"
+       style="fill-rule:nonzero;stroke-width:0.490161" />
+    <polygon
+       id="Line-1"
+       points="16.736786,9.4775294 33.263213,9.4775294 33.263213,7.0050717 16.736786,7.0050717 "
+       style="fill-rule:nonzero"
+       transform="matrix(0.34659617,0.34659617,-0.34659617,0.34659617,32.358852,-1.2670299)" />
+    <polygon
+       id="Line-1-4"
+       points="33.263213,7.0050717 16.736786,7.0050717 16.736786,9.4775294 33.263213,9.4775294 "
+       style="fill-rule:nonzero"
+       transform="matrix(0.34753163,-0.41417205,0.41417205,0.34753163,-0.02780794,19.89953)" />
+  </g>
+  <metadata
+     id="metadata219">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>measure</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
