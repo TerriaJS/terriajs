@@ -127,7 +127,9 @@
     "userDrawing": {
       "messageHeader": "Dibujar en el mapa",
       "clickToAddFirstPoint": "Haga click para añadir un punto",
-      "btnCancel": "Cancelar"
+      "btnCancel": "Cancelar",
+      "btnDone": "Hecho",
+      "clickToAddAnotherPoint": "Haga click para añadir otro punto"
     },
     "raiseError": {
       "notificationFeedback": "Para preguntas y comentarios, haga click aquí.",
@@ -641,7 +643,7 @@
     "btnCloseFeature": "Cerrar el panel de dato",
     "panelHeading": "Información del Elemento",
     "userSelection": "Selección de usuario",
-    "clickToAddData": "Pinche'$t(addData.addDataBtnText)' para añadir dato al mapa.",
+    "clickToAddData": "Pinche '$t(addData.addDataBtnText)' para añadir datos al mapa.",
     "noDataAvailable": "No hay datos disponibles aquí - pruebe otra localización.",
     "clickMap": "Pinchar en el mapa para conocer más sobre esta localización",
     "pickLocation": "Elegir localización",
@@ -1217,5 +1219,12 @@
   },
   "mapNavigation": {
     "additionalTools": "Herramientas adicionales"
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Modo Peatón",
+    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar la ubicación<br /><b>Click derecho / Esc</b> para cancelar",
+    "controls": {
+      "title": "Controles"
+    }
   }
 }
