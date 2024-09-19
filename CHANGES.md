@@ -2,6 +2,12 @@
 
 #### next release (8.7.7)
 
+
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
+
 - Splitting the measurement tool into lines and polygons. It is now possible to add a point to an existing segment.
 - [The next improvement]
 
