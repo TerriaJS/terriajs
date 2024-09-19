@@ -127,6 +127,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import MeasurableGeometryManager from "../ViewModels/MeasurableGeometryManager";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -350,6 +351,11 @@ export interface ConfigParameters {
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
+  
+  /**
+   * If true elevation is intended MSL, otherwise WGS84
+   */
+  useElevationMeanSeaLevel: boolean;
 }
 
 interface StartOptions {
@@ -471,7 +477,10 @@ export default class Terria {
       )
     )
   );
-
+  
+  @observable
+  readonly measurableGeometryManager = new MeasurableGeometryManager(this);
+  
   appName: string = "TerriaJS App";
   supportEmail: string = "info@terria.io";
 
@@ -568,7 +577,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    useElevationMeanSeaLevel: false
   };
 
   @observable
