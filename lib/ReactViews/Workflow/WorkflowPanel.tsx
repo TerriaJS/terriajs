@@ -37,6 +37,7 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
         viewState.terria.isWorkflowPanelActive = false;
       });
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (

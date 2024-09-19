@@ -67,6 +67,7 @@ export const ShareUrl = React.forwardRef<
       url: shareUrl,
       shorteningInProgress: shorteningInProgress
     }),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [forwardRef, shareUrl, shorteningInProgress]
   );
 
@@ -93,6 +94,7 @@ export const ShareUrl = React.forwardRef<
         })
       );
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
   return (

@@ -41,7 +41,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
 
     useEffect(() => {
       const viewerSubscriptions: CesiumEvent.RemoveCallback[] = [];
-
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
       removeUpdateSubscription = addUpdateSubscription();
 
       return () => {

@@ -22,6 +22,7 @@ type PortalProps = {
  */
 export const Portal: React.FC<PortalProps> = ({ id, className }) => {
   const viewState = useViewState();
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   useEffect(
     action(() => {
       viewState.portals.set(id, document.getElementById(id));

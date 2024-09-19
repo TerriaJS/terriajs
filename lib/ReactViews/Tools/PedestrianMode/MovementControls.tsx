@@ -35,6 +35,7 @@ const MovementControls: React.FC<MovementControlsProps> = (props) => {
     );
     const detach = movementsController.activate();
     return detach;
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.cesium]);
 
   return (

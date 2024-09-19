@@ -119,6 +119,7 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
     };
 
     // Init effect that sets up the event handlers etc.
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     useEffect(
       action(function init() {
         const canvas = cesium.scene.canvas;

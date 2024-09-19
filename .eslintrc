@@ -128,8 +128,8 @@
         ],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-loss-of-precision": "warn",
-        "@typescript-eslint/no-unsafe-declaration-merging": "off",
-        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-unsafe-declaration-merging": "error",
+        "react-hooks/exhaustive-deps": "error",
         "react/prop-types": "warn"
       }
     }
