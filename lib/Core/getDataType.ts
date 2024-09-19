@@ -44,6 +44,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
     value: "esri-mapServer",
     name: "core.dataType.esri-mapServer"
   },
+  {
+    value: "esri-imageServer",
+    name: "core.dataType.esri-imageServer"
+  },
   /* {
         value: "esri-mapServer-group",
         name: "Esri ArcGIS MapServer"
@@ -124,6 +128,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "json",
     name: "core.dataType.json"
+  },
+  {
+    value: "i3s",
+    name: "core.dataType.i3s"
   }
   // Add next builtin remote upload type
 ];
