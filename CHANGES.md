@@ -6,7 +6,7 @@
 
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
-
+- Use `appName` from `config.json` to set the title of the web page.
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22

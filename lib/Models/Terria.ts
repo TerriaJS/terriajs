@@ -1024,6 +1024,12 @@ export default class Terria {
     setCustomRequestSchedulerDomainLimits(
       this.configParameters.customRequestSchedulerLimits
     );
+
+    // Set site title from config.json
+    if (this.configParameters.appName) {
+      document.title = this.configParameters.appName;
+    }
+    
     if (options.errorService) {
       try {
         this.errorService = options.errorService;
@@ -1035,6 +1041,7 @@ export default class Terria {
         );
       }
     }
+
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent(
       Category.launch,
