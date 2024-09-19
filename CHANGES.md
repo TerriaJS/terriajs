@@ -2,6 +2,10 @@
 
 #### next release (8.7.7)
 
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
 - Use `appName` from `config.json` to set the title of the web page.
 - [The next improvement]
 
@@ -25,7 +29,6 @@
 - Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
 - Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
 - Add `EPSG:7899` to `Proj4Definitions`
-- [The next improvement]
 
 #### 8.7.5 - 2024-06-26
 
