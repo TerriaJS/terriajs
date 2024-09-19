@@ -581,6 +581,12 @@ export default class Terria {
   allowFeatureInfoRequests: boolean = true;
 
   /**
+     * Gets or sets a value indicating whether the path line drawn by MeasureTool is clamped to ground.
+     * @type {Boolean}
+     */
+  @observable clampMeasureLineToGround: boolean = true;
+
+  /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
    * (highest index) handles click interactions with the map
    */
