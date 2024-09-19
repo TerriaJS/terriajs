@@ -2,14 +2,12 @@
 
 #### next release (8.7.7)
 
-<<<<<<< error-service-refactor
 - **Breaking changes:**
-- Remove RollbarErrorServiceProvder
-- Error services now instantiated externally to terriajs
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
 
 - Set default value for date and datetime WPS fields only when the field is marked as required.
-=======
->>>>>>> main
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22
