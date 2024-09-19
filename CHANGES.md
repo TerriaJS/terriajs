@@ -2,7 +2,12 @@
 
 #### next release (8.7.7)
 
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
 - Fix sharing when using initfile.
+- [The next improvement]
 
 #### 8.7.6 - 2024-08-22
 
@@ -24,7 +29,6 @@
 - Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
 - Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
 - Add `EPSG:7899` to `Proj4Definitions`
-- [The next improvement]
 
 #### 8.7.5 - 2024-06-26
 
