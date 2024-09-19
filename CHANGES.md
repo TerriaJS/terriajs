@@ -2,6 +2,11 @@
 
 #### next release (8.7.7)
 
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
+
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22
