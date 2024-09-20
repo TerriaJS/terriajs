@@ -495,7 +495,7 @@
     "colorScaleUpdateRange": "Actualizar Rango",
     "zoomToTitle": "Zoom a la extensión",
     "opacity": "Opacidad: {{opacity}}%",
-    "label": "Conjunto de Datos",
+    "label": "Datasets",
     "rangeMin": "Mínima:",
     "rangeMax": "Máxima:",
     "colorScaleRangeMin": "El valor mínimo debe ser un número.",
@@ -503,8 +503,8 @@
     "diffImageTitle": "Ver las diferencias de imagen entre dos fechas",
     "diffImage": "Diferencia",
     "exportDataTitle": "Exportar datos",
-    "collapseAll": "Colapsar todo",
-    "expandAll": "Ampliar todo",
+    "collapseAll": "Colapsar Todo",
+    "expandAll": "Ampliar Todo",
     "toggleVisibility": "Mostrar/ocultar datos",
     "zoomTo": "Zoom ideal",
     "showMoreActionsTitle": "Mostrar mas acciones",
@@ -1222,7 +1222,7 @@
   },
   "pedestrianMode": {
     "toolButtonTitle": "Modo Peatón",
-    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar la ubicación<br /><b>Click derecho / Esc</b> para cancelar",
+    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar<br /><b>Click derecho / Esc</b> para cancelar",
     "controls": {
       "title": "Controles"
     }
