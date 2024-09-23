@@ -1,3 +1,5 @@
+import React from "react";
+
 interface PropsType {
   isVisible: boolean;
   onEnter?: () => void;

@@ -1,4 +1,5 @@
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import L from "leaflet";
 
 export default class LeafletScene {
   readonly map: L.Map;
