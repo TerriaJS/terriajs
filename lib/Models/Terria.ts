@@ -127,7 +127,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import MeasurableGeometryManager from "../ViewModels/MeasurableGeometryManager";
+import MeasurableGeometryManager, { MeasurableGeometry } from "../ViewModels/MeasurableGeometryManager";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -479,7 +479,11 @@ export default class Terria {
   );
   
   @observable
-  readonly measurableGeometryManager = new MeasurableGeometryManager(this);
+  measurableGeometryManager = new MeasurableGeometryManager(this);
+
+  @observable measurableGeom?: MeasurableGeometry;
+
+  @observable measurableGeomSamplingStep: number = 500;
   
   appName: string = "TerriaJS App";
   supportEmail: string = "info@terria.io";

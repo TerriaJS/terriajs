@@ -30,10 +30,6 @@ export default class MeasurableGeometryManager {
 
   private disposeSamplingPathStep?: IReactionDisposer;
 
-  @observable geom: MeasurableGeometry | undefined;
-
-  @observable samplingStep: number = 500;
-
   constructor(terria: Terria) {
     this.terria = terria;
 
@@ -41,10 +37,16 @@ export default class MeasurableGeometryManager {
       require("file-loader!../../wwwroot/data/WW15MGH.DAC")
     );
 
+
+    console.log("oooooo")
     this.disposeSamplingPathStep = reaction(
-      () => this.samplingStep,
-      () => {
-        this.sampleFromCartographics(this.geom?.stopPoints ?? []);
+      () => terria.measurableGeomSamplingStep,
+      (step) => {
+
+
+console.log("disposeeeeee")
+
+        this.sampleFromCartographics(terria.measurableGeom?.stopPoints ?? []);
       }
     );
   }
@@ -83,10 +85,15 @@ export default class MeasurableGeometryManager {
   }
 
   // sample the entire path (polyline) every "samplingStep" meters
+  @action
   sampleFromCartographics(
     cartoPositions: Cartographic[],
     closeLoop: boolean = false
   ) {
+
+
+console.log("sampleeee")
+
     const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
 
@@ -110,7 +117,7 @@ export default class MeasurableGeometryManager {
       const segmentDistance = geodesic.surfaceDistance;
       stopGeodeticDistances.push(segmentDistance);
       let y = 0;
-      while ((y += this.samplingStep) < segmentDistance) {
+      while ((y += this.terria.measurableGeomSamplingStep) < segmentDistance) {
         interpolatedCartographics.push(
           geodesic.interpolateUsingSurfaceDistance(y)
         );
@@ -200,7 +207,7 @@ export default class MeasurableGeometryManager {
     sampledDistances: number[],
     isClosed: boolean
   ) {
-    this.geom = {
+    this.terria.measurableGeom = {
       isClosed: isClosed,
       hasArea: false,
       stopPoints: stopPoints,

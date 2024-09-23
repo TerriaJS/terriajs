@@ -164,20 +164,6 @@ export default class UserDrawing extends MappableMixin(
      */
     this.closeLoop = false;
 
-    this.disposeClampMeasureLineToGround = reaction(
-      () => this.terria?.clampMeasureLineToGround,
-      (clampMeasureLineToGround) => {
-        if (
-          this.otherEntities.entities.values.length > 0 &&
-          this.otherEntities.entities.values[0]?.polyline
-        ) {
-          this.otherEntities.entities.values[0].polyline.clampToGround =
-            new ConstantProperty(clampMeasureLineToGround);
-          this.terria.currentViewer.notifyRepaintRequired();
-        }
-      }
-    );
-
     this.drawRectangle = defaultValue(options.drawRectangle, false);
 
     this.invisible = options.invisible;
@@ -235,6 +221,20 @@ export default class UserDrawing extends MappableMixin(
     runInAction(() => {
       this.inDrawMode = true;
     });
+
+    this.disposeClampMeasureLineToGround = reaction(
+      () => this.terria?.clampMeasureLineToGround,
+      (clampMeasureLineToGround) => {
+        if (
+          this.otherEntities.entities.values.length > 0 &&
+          this.otherEntities.entities.values[0]?.polyline
+        ) {
+          this.otherEntities.entities.values[0].polyline.clampToGround =
+            new ConstantProperty(clampMeasureLineToGround);
+          this.terria.currentViewer.notifyRepaintRequired();
+        }
+      }
+    );
 
     if (isDefined(this.terria.cesium)) {
       this.terria.cesium.cesiumWidget.canvas.setAttribute(

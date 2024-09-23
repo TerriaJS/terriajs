@@ -9,6 +9,7 @@ import withControlledVisibility from "../HOCs/withControlledVisibility";
 import Styles from "./bottom-dock.scss";
 import ChartDisclaimer from "./ChartDisclaimer";
 import Timeline from "./Timeline/Timeline";
+import MeasurableGeometryChartPanel from "../Custom/Chart/MeasurableGeometryChartPanel";
 
 interface PropsType {
   terria: Terria;
@@ -59,6 +60,14 @@ class BottomDock extends React.Component<PropsType & MeasureElementProps> {
         <div id="TJS-BottomDockFirstPortal" />
         <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
         <ChartPanel terria={terria} viewState={this.props.viewState} />
+        {this.props.viewState.measurableChartIsVisible &&
+          !!terria?.measurableGeom?.stopPoints &&
+          terria.measurableGeom.stopPoints.length > 0 && (
+            <MeasurableGeometryChartPanel
+              terria={terria}
+              viewState={this.props.viewState}
+            />
+          )}
         {top && (
           <Timeline
             terria={terria}
