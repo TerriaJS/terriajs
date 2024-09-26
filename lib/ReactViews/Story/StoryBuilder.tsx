@@ -329,7 +329,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(editingMode: boolean) {
+  renderStories(_editingMode: boolean) {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove

@@ -145,10 +145,12 @@ const PrintView = (props: Props) => {
     props.window.document.head.appendChild(mkStyle(styles));
     props.window.document.body.appendChild(rootNode.current);
     props.window.addEventListener("beforeunload", props.closeCallback);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.window]);
 
   useEffect(() => {
     setScreenshot(viewState.terria.currentViewer.captureScreenshot());
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.window]);
 
   useEffect(() => {

@@ -47,6 +47,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
     return () => {
       viewState.terria.mapNavigationModel.enable(MeasureTool.id);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(function closeOnZoomTo() {
@@ -56,6 +57,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
         if (isMapZooming) viewState.closeTool();
       }
     );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (

@@ -19,7 +19,7 @@ export default function autoUpdate(updater: (...args: any[]) => void) {
           updater.call(args.context, args.value);
         });
       },
-      (disposer, value) => {
+      (disposer, _value) => {
         console.log("cleanup");
         if (disposer) {
           disposer();

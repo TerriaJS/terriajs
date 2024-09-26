@@ -88,8 +88,10 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       return () => {
         window.removeEventListener("resize", resizeListener, false);
       };
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
 
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     useEffect(resizeListener, [props.minimumLargeScreenWidth]);
 
     useEffect(() => {
@@ -114,6 +116,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
           width: 300
         });
       }
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [props.terria.storyPromptShown]);
 
     // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
@@ -220,7 +223,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
 
                 <section className={Styles.map}>
                   <MapColumn
-                    customFeedbacks={customElements.feedback}
                     customElements={customElements}
                     animationDuration={animationDuration}
                   />

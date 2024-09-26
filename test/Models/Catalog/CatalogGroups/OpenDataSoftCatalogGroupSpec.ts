@@ -34,7 +34,6 @@ describe("OpenDataSoftCatalogGroup", function () {
   });
 
   afterEach(function () {
-    console.log(fetchMock.calls());
     fetchMock.restore();
   });
 

@@ -1148,7 +1148,7 @@ describe("Terria", function () {
           ]);
           done();
         })
-        .catch((error) => {
+        .catch((_error) => {
           done.fail();
         });
     });
@@ -1526,11 +1526,13 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      //@ts-expect-error
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=2d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
@@ -1552,11 +1554,13 @@ describe("Terria", function () {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
-      //@ts-expect-error
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=4d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);

@@ -71,7 +71,7 @@ export default class FeedbackLinkCustomComponent extends CustomComponent {
   processNode(
     context: ProcessNodeContext,
     node: DomElement,
-    children: ReactElement[]
+    _children: ReactElement[]
   ) {
     if (!context.viewState) return undefined;
 

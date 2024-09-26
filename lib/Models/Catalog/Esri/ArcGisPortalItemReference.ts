@@ -42,7 +42,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new ArcGisPortalItemStratum(
       this.arcgisPortalItemReference,
       this.arcgisPortalCatalogGroup
@@ -309,7 +309,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
   }
 
   async forceLoadReference(
-    previousTarget: BaseModel | undefined
+    _previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     // So when we first crawl we'll get this far
     await this.setArcgisStrata(this);
@@ -350,7 +350,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
 
     if (model === undefined) return;
-    previousTarget = model;
+    _previousTarget = model;
     await this.setArcgisStrata(model);
 
     const defintionStratum = this.strata.get(CommonStrata.definition);
@@ -370,11 +370,6 @@ interface ArcGisItemLayerInfo {
 interface ArcGisItemInfo {
   layers?: ArcGisItemLayerInfo[];
   error?: JsonObject;
-}
-
-interface ArcGisItemWithFormat {
-  supportedFormat: PreparedSupportedFormat;
-  arcgisItem: ArcGisItem;
 }
 
 interface PreparedSupportedFormat {
