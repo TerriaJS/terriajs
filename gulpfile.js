@@ -44,19 +44,32 @@ gulp.task("watch-specs", function (done) {
 });
 
 gulp.task("lint", function (done) {
-  var runExternalModule = require("./buildprocess/runExternalModule");
-
-  runExternalModule("eslint/bin/eslint.js", [
-    "lib",
-    "test",
-    "--ext",
-    ".jsx,.js,.ts,.tsx",
-    "--ignore-pattern",
-    "lib/ThirdParty",
-    "--max-warnings",
-    "0"
-  ]);
-
+  const spawnSync = require("child_process").spawnSync;
+  // If upgrading to ESLint 9 without changing config file format:
+  // process.env.ESLINT_USE_FLAT_CONFIG = "false";
+  const result = spawnSync(
+    "node_modules/eslint/bin/eslint.js",
+    [
+      "lib",
+      "test",
+      "--ext",
+      ".jsx,.js,.ts,.tsx",
+      "--ignore-pattern",
+      "lib/ThirdParty",
+      "--max-warnings",
+      "0"
+    ],
+    {
+      stdio: "inherit",
+      shell: true
+    }
+  );
+  if (result.status !== 0) {
+    const PluginError = require("plugin-error");
+    throw new PluginError("eslint", "ESLint exited with an error.", {
+      showStack: false
+    });
+  }
   done();
 });
 
