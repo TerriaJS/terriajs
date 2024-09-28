@@ -167,7 +167,7 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: this._leafletVisualizer.visualizersCallback as any // TODO: fix type error
+      visualizersCallback: this._leafletVisualizer.visualizersCallback
     });
 
     this._eventHelper = new EventHelper();

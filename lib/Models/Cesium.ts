@@ -197,7 +197,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-    const firefoxBugOptions = (FeatureDetection as any).isFirefox()
+    const firefoxBugOptions = FeatureDetection.isFirefox()
       ? {
           contextOptions: {
             webgl: { preserveDrawingBuffer: true }

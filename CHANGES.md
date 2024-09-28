@@ -8,6 +8,7 @@
   - Error services now instantiated externally to terriajs
 
 - Fix remaining lint warnings
+- Augment cesium types and start using import instead of require in ts files
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22
