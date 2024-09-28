@@ -431,12 +431,12 @@ function createFeature(
                 )
               )
             : pathGraphicsSolidColorTimeProperties
-            ? new ColorMaterialProperty(
-                convertPreSampledProperties(
-                  pathGraphicsSolidColorTimeProperties
-                ).color
-              )
-            : undefined
+              ? new ColorMaterialProperty(
+                  convertPreSampledProperties(
+                    pathGraphicsSolidColorTimeProperties
+                  ).color
+                )
+              : undefined
         })
       : undefined,
     label: labelGraphicsTimeProperties

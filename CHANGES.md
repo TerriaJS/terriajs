@@ -9,6 +9,7 @@
 
 - Fix remaining lint warnings
 - [The next improvement]
+- Upgrade prettier to version 3.3.2
 
 #### 8.7.6 - 2024-08-22
 
