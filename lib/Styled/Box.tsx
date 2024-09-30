@@ -243,7 +243,7 @@ export const Box = styled.div<IBoxProps>`
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+  (_props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
     as: "span"
   })
 )``;

@@ -92,7 +92,7 @@ describe("YDYRCatalogFunction", function () {
     });
 
     // A few reactions will happen, while setting default values for functionParameters
-    await new Promise<void>((resolve, reject) => {
+    await new Promise<void>((resolve) => {
       reaction(
         () => ydyr.functionParameters,
         () => {
