@@ -110,6 +110,17 @@ export default class ViewState {
   @observable printWindow: Window | null = null;
 
   /**
+   * The currently-selected web service type on the My Data -> Add web data panel.
+   */
+  @observable remoteDataType: any | undefined = undefined;
+
+  /**
+   * The ID of the Cesium ion token that is currently selected on the
+   * My Data -> Add web data -> Cesium ion panel.
+   */
+  @observable currentCesiumIonToken: string | undefined = undefined;
+
+  /**
    * Toggles ActionBar visibility. Do not set manually, it is
    * automatically set when rendering <ActionBar>
    */

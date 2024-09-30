@@ -210,6 +210,26 @@ export interface ConfigParameters {
    */
   useCesiumIonBingImagery?: boolean;
   /**
+   * The OAuth2 application ID to use to allow login to Cesium ion on the "Add Data" panel. The referenced application must be configured on
+   * Cesium ion with a Redirect URI of `[TerriaMap Base URL]/build/TerriaJS/cesium-ion-oauth2.html`. For example, if users access your TerriaJS
+   * application at `https://example.com/AwesomeMap` then the Redirect URI must be exactly
+   * `https://example.com/AwesomeMap/build/TerriaJS/cesium-ion-oauth2.html`.
+   */
+  cesiumIonOAuth2ApplicationID?: number;
+  /**
+   * Specifies where to store the Cesium ion login token. Valid values are:
+   *   - `page` (default) - The login token is associated with the current page load. Even simply reloading the current page will clear the token. This is the safest option.
+   *   - `sessionStorage` - The login token is associated with a browser session, which means it is shared/accessible from any page hosted on the same domain and running in the same browser tab.
+   *   - `localStorage` - The login token is shared/accessible from any page hosted on the same domain, even when running in different tabs or after exiting and restarted the web browser.
+   */
+  cesiumIonLoginTokenPersistence?: string;
+  /**
+   * Whether or not Cesium ion assets added via the "Add Data" panel will be shared with others via share links. If true, users will be asked to select a Cesium ion token when adding assets,
+   * and this choice must be made carefully to avoid exposing more Cesium ion assets than intended. If false (the default), the user's login token will be used, which is safe because this
+   * token will not be shared with others.
+   */
+  cesiumIonAllowSharingAddedAssets?: boolean;
+  /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
@@ -516,6 +536,9 @@ export default class Terria {
     cesiumTerrainAssetId: undefined,
     cesiumIonAccessToken: undefined,
     useCesiumIonBingImagery: undefined,
+    cesiumIonOAuth2ApplicationID: undefined,
+    cesiumIonLoginTokenPersistence: "page",
+    cesiumIonAllowSharingAddedAssets: false,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,

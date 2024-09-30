@@ -1,4 +1,5 @@
-import createReactClass from "create-react-class";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
@@ -26,10 +27,9 @@ import TerriaError from "../../../../Core/TerriaError";
 /**
  * Add data panel in modal window -> My data tab
  */
-const AddData = createReactClass({
-  displayName: "AddData",
-
-  propTypes: {
+@observer
+class AddData extends React.Component {
+  static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
@@ -42,9 +42,11 @@ const AddData = createReactClass({
     onFileAddFinished: PropTypes.func.isRequired,
     onUrlAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
-  },
+  };
 
-  getInitialState() {
+  constructor(props) {
+    super(props);
+
     const remoteDataTypes =
       this.props.remoteDataTypes ?? getDataType().remoteDataType;
 
@@ -58,27 +60,26 @@ const AddData = createReactClass({
       return { ...dataType, name: `${dataType.name}${extensions}` };
     });
 
-    return {
+    this.state = {
       remoteDataTypes,
       localDataTypes,
-      remoteDataType: remoteDataTypes[0], // By default select the first item (auto)
       localDataType: localDataTypes[0],
       remoteUrl: "", // By default there's no remote url
       isLoading: false
     };
-  },
+  }
 
   selectLocalOption(option) {
     this.setState({
       localDataType: option
     });
-  },
+  }
 
   selectRemoteOption(option) {
-    this.setState({
-      remoteDataType: option
+    runInAction(() => {
+      this.props.viewState.remoteDataType = option;
     });
-  },
+  }
 
   handleUploadFile(e) {
     this.setState({
@@ -99,7 +100,7 @@ const AddData = createReactClass({
       // reset active tab when file handling is done
       this.props.resetTab();
     });
-  },
+  }
 
   async handleUrl(e) {
     const url = this.state.remoteUrl;
@@ -113,14 +114,17 @@ const AddData = createReactClass({
       isLoading: true
     });
     let promise;
-    if (this.state.remoteDataType.value === "auto") {
+    if (
+      !this.props.viewState.remoteDataType ||
+      this.props.viewState.remoteDataType.value === "auto"
+    ) {
       promise = createCatalogItemFromFileOrUrl(
         this.props.terria,
         this.props.viewState,
         this.state.remoteUrl,
-        this.state.remoteDataType.value
+        this.props.viewState.remoteDataType.value
       );
-    } else if (this.state.remoteDataType.value === "json") {
+    } else if (this.props.viewState.remoteDataType.value === "json") {
       promise = loadJson(this.state.remoteUrl)
         .then((data) => {
           if (data.error) {
@@ -151,7 +155,7 @@ const AddData = createReactClass({
           this.props.terria,
           "",
           CommonStrata.defaults,
-          { type: this.state.remoteDataType.value, name: url },
+          { type: this.props.viewState.remoteDataType.value, name: url },
           {}
         ).throwIfUndefined({
           message: `An error occurred trying to add data from URL: ${url}`
@@ -183,13 +187,13 @@ const AddData = createReactClass({
       });
       this.props.resetTab();
     });
-  },
+  }
 
   onRemoteUrlChange(event) {
     this.setState({
       remoteUrl: event.target.value
     });
-  },
+  }
 
   renderPanels() {
     const { t } = this.props;
@@ -214,6 +218,9 @@ const AddData = createReactClass({
     },
     []);
 
+    const remoteDataType =
+      this.props.viewState.remoteDataType ?? this.state.remoteDataTypes[0];
+
     return (
       <div className={Styles.tabPanels}>
         {this.props.activeTab === "local" && (
@@ -228,7 +235,7 @@ const AddData = createReactClass({
               <Dropdown
                 options={this.state.localDataTypes}
                 selected={this.state.localDataType}
-                selectOption={this.selectLocalOption}
+                selectOption={this.selectLocalOption.bind(this)}
                 matchWidth
                 theme={dropdownTheme}
               />
@@ -244,7 +251,7 @@ const AddData = createReactClass({
               </label>
               <FileInput
                 accept={dataTypes.join(",")}
-                onChange={this.handleUploadFile}
+                onChange={this.handleUploadFile.bind(this)}
               />
               {this.state.isLoading && <Loader />}
             </section>
@@ -261,51 +268,65 @@ const AddData = createReactClass({
               </label>
               <Dropdown
                 options={this.state.remoteDataTypes}
-                selected={this.state.remoteDataType}
-                selectOption={this.selectRemoteOption}
+                selected={remoteDataType}
+                selectOption={this.selectRemoteOption.bind(this)}
                 matchWidth
                 theme={dropdownTheme}
               />
-              {this.state.remoteDataType?.description
+              {remoteDataType?.description
                 ? parseCustomMarkdownToReactWithOptions(
-                    this.state.remoteDataType?.description
+                    remoteDataType?.description
                   )
                 : null}
-              <label className={Styles.label}>
-                <Trans i18nKey="addData.webFile">
-                  <strong>Step 2:</strong> Enter the URL of the data file or web
-                  service
-                </Trans>
-              </label>
-              <form className={Styles.urlInput}>
-                <input
-                  value={this.state.remoteUrl}
-                  onChange={this.onRemoteUrlChange}
-                  className={Styles.urlInputTextBox}
-                  type="text"
-                  placeholder="e.g. http://data.gov.au/geoserver/wms"
-                />
-                <button
-                  disabled={this.state.remoteUrl.length === 0}
-                  type="submit"
-                  onClick={this.handleUrl}
-                  className={Styles.urlInputBtn}
-                >
-                  {t("addData.urlInputBtn")}
-                </button>
-                {this.state.isLoading && <Loader />}
-              </form>
+              {remoteDataType?.customComponent
+                ? this.renderCustomComponent(remoteDataType?.customComponent)
+                : this.renderDefaultForWebDataType(t)}
             </section>
           </>
         )}
       </div>
     );
-  },
+  }
+
+  renderCustomComponent(CustomComponent) {
+    return <CustomComponent />;
+  }
+
+  renderDefaultForWebDataType(t) {
+    return (
+      <>
+        <label className={Styles.label}>
+          <Trans i18nKey="addData.webFile">
+            <strong>Step 2:</strong> Enter the URL of the data file or web
+            service
+          </Trans>
+        </label>
+        <form className={Styles.urlInput}>
+          <input
+            value={this.state.remoteUrl}
+            onChange={this.onRemoteUrlChange.bind(this)}
+            className={Styles.urlInputTextBox}
+            type="text"
+            placeholder="e.g. http://data.gov.au/geoserver/wms"
+          />
+          <button
+            disabled={this.state.remoteUrl.length === 0}
+            type="submit"
+            onClick={this.handleUrl.bind(this)}
+            className={Styles.urlInputBtn}
+          >
+            {t("addData.urlInputBtn")}
+          </button>
+          {this.state.isLoading && <Loader />}
+        </form>
+      </>
+    );
+  }
 
   render() {
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
-});
+}
 
 /**
  * @param extensions - string[]

@@ -5,6 +5,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import ApiRequestTraits from "./ApiRequestTraits";
+import CesiumIonTraits from "./CesiumIonTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 
 @traitClass({
@@ -18,7 +19,8 @@ import { GeoJsonTraits } from "./GeoJsonTraits";
 })
 export default class GeoJsonCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
-  ApiRequestTraits
+  ApiRequestTraits,
+  CesiumIonTraits
 ) {
   @objectArrayTrait({
     type: ApiRequestTraits,
