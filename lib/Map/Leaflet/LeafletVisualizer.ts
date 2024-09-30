@@ -1056,7 +1056,6 @@ class LeafletGeomVisualizer {
       this
     );
     this.leafletScene.map.removeLayer(this._featureGroup);
-    console.log("destroy");
     return destroyObject(this);
   }
 
