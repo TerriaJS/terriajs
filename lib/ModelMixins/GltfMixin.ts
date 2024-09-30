@@ -9,6 +9,7 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
+import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -18,11 +19,6 @@ import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 type BaseType = Model<GltfTraits>;
 
