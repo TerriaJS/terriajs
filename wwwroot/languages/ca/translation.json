@@ -711,7 +711,8 @@
       "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip",
       "carto-v3": "Carto V3",
       "i3s": "I3S",
-      "esri-imageServer": "Esri ArcGIS ImageServer (capa única)"
+      "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
+      "cesium-ion": "Cesium ion"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
