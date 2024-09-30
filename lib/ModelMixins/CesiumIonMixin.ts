@@ -1,10 +1,9 @@
+import { observable, runInAction } from "mobx";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import CesiumIonTraits from "../Traits/TraitsClasses/CesiumIonTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
-import { makeObservable, observable, runInAction } from "mobx";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
 
 type BaseType = Model<CesiumIonTraits & CatalogMemberTraits>;
 

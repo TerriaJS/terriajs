@@ -1,6 +1,9 @@
 "use strict";
 
+import { when } from "mobx";
+import { addOrReplaceRemoteFileUploadType } from "../../Core/getDataType";
 import Terria from "../../Models/Terria";
+import CesiumIonConnector from "../ExplorerWindow/Tabs/MyDataTab/CesiumIonConnector";
 import ApiTableChartCustomComponent from "./ApiTableCustomComponent";
 import CollapsibleCustomComponent from "./CollapsibleCustomComponent";
 import CsvChartCustomComponent from "./CsvChartCustomComponent";
@@ -8,10 +11,6 @@ import CustomComponent from "./CustomComponent";
 import FeedbackLinkCustomComponent from "./FeedbackLinkCustomComponent";
 import SOSChartCustomComponent from "./SOSChartCustomComponent";
 import TerriaTooltipCustomComponent from "./TerriaTooltip";
-import CesiumIonConnector from "../ExplorerWindow/Tabs/MyDataTab/CesiumIonConnector";
-import { addOrReplaceRemoteFileUploadType } from "../../Core/getDataType";
-import { when } from "mobx";
-import i18next from "i18next";
 
 /**
  * Registers custom component types.

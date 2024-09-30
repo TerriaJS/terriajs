@@ -130,6 +130,16 @@ const loginTokenPersistenceLookup: {
   [key: string]: LoginTokenPersistence | undefined;
 } = loginTokenPersistenceTypes;
 
+const defaultUserProfile = {
+  id: 0,
+  scopes: [],
+  username: "",
+  email: "",
+  emailVerified: false,
+  avatar: string,
+  storage: {}
+};
+
 function CesiumIonConnector() {
   const viewState = useViewState();
   const { t } = useTranslation();
@@ -155,16 +165,7 @@ function CesiumIonConnector() {
     loginTokenPersistence.get() ?? ""
   );
 
-  const defaultProfile = {
-    id: 0,
-    scopes: [],
-    username: "",
-    email: "",
-    emailVerified: false,
-    avatar: string,
-    storage: {}
-  };
-  const [userProfile, setUserProfile] = React.useState(defaultProfile);
+  const [userProfile, setUserProfile] = React.useState(defaultUserProfile);
   const [isLoadingUserProfile, setIsLoadingUserProfile] =
     React.useState<boolean>(false);
 
@@ -205,7 +206,7 @@ function CesiumIonConnector() {
         if (profile && profile.username) {
           setUserProfile(profile);
         } else {
-          setUserProfile(defaultProfile);
+          setUserProfile(defaultUserProfile);
         }
         setIsLoadingUserProfile(false);
       });
@@ -259,7 +260,10 @@ function CesiumIonConnector() {
         }
         setIsLoadingTokens(false);
       });
-  }, [loginToken]);
+  }, [
+    loginToken,
+    viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets
+  ]);
 
   let selectedToken = viewState.currentCesiumIonToken
     ? tokens.find((token) => token.id === viewState.currentCesiumIonToken)
@@ -560,7 +564,7 @@ function CesiumIonConnector() {
   function disconnect() {
     loginTokenPersistence.clear();
     setLoginToken("");
-    setUserProfile(defaultProfile);
+    setUserProfile(defaultUserProfile);
   }
 
   function addToMap(
