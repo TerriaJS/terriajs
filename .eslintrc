@@ -33,6 +33,9 @@
     }
   },
   "rules": {
+    /* ban-types is split in ESLint v8:
+       https://typescript-eslint.io/rules/ban-types/ */
+    "@typescript-eslint/ban-types": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
     "react/no-arrow-function-lifecycle": "error",

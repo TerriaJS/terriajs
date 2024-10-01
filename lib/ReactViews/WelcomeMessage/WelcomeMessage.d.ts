@@ -8,5 +8,5 @@ interface WelcomeMessagePurePropsType {
 
 export declare const WelcomeMessagePure: React.FC<WelcomeMessagePurePropsType>;
 
-declare class WelcomeMessage extends React.Component<{}> {}
+declare class WelcomeMessage extends React.Component<object> {}
 export default WelcomeMessage;
