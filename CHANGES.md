@@ -4,7 +4,7 @@
 
 - [The next improvement]
 
-#### 8.7.7 - 2024-09-30
+#### 8.7.7 - 2024-10-01
 
 - **Breaking changes:**
 
