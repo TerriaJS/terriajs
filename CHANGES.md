@@ -14,7 +14,6 @@
 - Fix remaining lint warnings
 - Augment cesium types and start using import instead of require in ts files
 - Update to sass 1.79.1
-- [The next improvement]
 - Add option to import assets from Cesium ion through the Add data panel. Use map config parameter "cesiumIonOAuth2ApplicationID" to enable the feature.
 
 #### 8.7.6 - 2024-08-22
