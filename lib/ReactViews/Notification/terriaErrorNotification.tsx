@@ -125,7 +125,7 @@ export const terriaErrorNotification = (error: TerriaError) =>
               bodyBoxProps={{ padded: true }}
               isOpen={error.showDetails}
               onToggle={(show) => {
-                runInAction(() => (error.showDetails = show));
+                return runInAction(() => (error.showDetails = show));
               }}
             >
               <ErrorsBox errors={detailedErrors} viewState={viewState} />
