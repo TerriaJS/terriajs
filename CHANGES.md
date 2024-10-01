@@ -2,7 +2,7 @@
 
 #### next release (8.7.8)
 
-- [The next improvement]
+- Fix basemaps order
 
 #### 8.7.7 - 2024-10-01
 
