@@ -51,10 +51,6 @@ export class StyledHtmlRaw extends React.Component {
     injectTooltips: true
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { viewState, injectTooltips, i18n } = this.props;
     const styledTextProps = this.props.styledTextProps || {};
