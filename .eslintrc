@@ -117,6 +117,10 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
+        /* The no-useless-constructor needs to be disabled for
+            the @typescript-eslint-rule. */
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
         "no-unused-vars": "off",

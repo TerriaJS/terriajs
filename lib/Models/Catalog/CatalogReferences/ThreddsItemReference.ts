@@ -3,7 +3,6 @@ import { runInAction } from "mobx";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ThreddsItemReferenceTraits from "../../../Traits/TraitsClasses/ThreddsItemReferenceTraits";
-import ModelTraits from "../../../Traits/ModelTraits";
 import ThreddsCatalogGroup, {
   ThreddsDataset
 } from "../CatalogGroups/ThreddsCatalogGroup";
@@ -11,9 +10,7 @@ import CatalogMemberFactory from "../CatalogMemberFactory";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 import WebMapServiceCatalogGroup from "../Ows/WebMapServiceCatalogGroup";
 
 export class ThreddsDatasetStratum extends LoadableStratum(
@@ -70,15 +67,6 @@ export default class ThreddsItemReference extends UrlMixin(
 
   _threddsDataset: ThreddsDataset | undefined = undefined;
   _threddsCatalogGroup: ThreddsCatalogGroup | undefined = undefined;
-
-  constructor(
-    id: string | undefined,
-    terria: Terria,
-    sourceReference?: BaseModel,
-    strata?: Map<string, StratumFromTraits<ModelTraits>>
-  ) {
-    super(id, terria, sourceReference, strata);
-  }
 
   setDataset(dataset: ThreddsDataset) {
     this._threddsDataset = dataset;

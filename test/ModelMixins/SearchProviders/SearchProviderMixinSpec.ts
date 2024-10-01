@@ -9,10 +9,6 @@ class TestSearchProvider extends SearchProviderMixin(
 ) {
   type = "test";
 
-  constructor(uniqueId: string | undefined, terria: Terria) {
-    super(uniqueId, terria);
-  }
-
   public override logEvent = jasmine.createSpy();
   public override doSearch = jasmine
     .createSpy()

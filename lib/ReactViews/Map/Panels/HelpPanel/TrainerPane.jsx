@@ -33,10 +33,6 @@ class TrainerPane extends React.Component {
     i18n: PropTypes.object.isRequired
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { content, i18n, viewState } = this.props;
     const { trainerItems, markdownText } = content;

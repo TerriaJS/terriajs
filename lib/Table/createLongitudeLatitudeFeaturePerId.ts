@@ -119,8 +119,6 @@ class PreSampledPositionProperty {
 
   private allValuesAreTheSame = true;
 
-  constructor() {}
-
   getProperty() {
     if (this.allValuesAreTheSame) {
       return new ConstantPositionProperty(this.values[0]);

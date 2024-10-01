@@ -20,13 +20,6 @@ type PropTypes = WithViewState &
 
 @observer
 class RelatedMaps extends React.Component<PropTypes> {
-  /**
-   * @param {Props} props
-   */
-  constructor(props: PropTypes) {
-    super(props);
-  }
-
   render() {
     const t = this.props.t;
     const dropdownTheme = {
