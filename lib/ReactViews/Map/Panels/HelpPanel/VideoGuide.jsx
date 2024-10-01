@@ -69,10 +69,6 @@ class VideoGuide extends React.Component {
     t: PropTypes.func
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const backgroundOpacity = this.props.backgroundOpacity;
     const backgroundBlackOverlay =
