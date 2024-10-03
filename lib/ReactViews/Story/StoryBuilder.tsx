@@ -353,7 +353,7 @@ class StoryBuilder extends React.Component<
           </RawButton>
         </BadgeBar>
         <Spacing bottom={2} />
-        <Box column paddedHorizontally={2} flex={1}>
+        <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (
             <RemoveDialog
               theme={this.props.theme}
@@ -382,7 +382,7 @@ class StoryBuilder extends React.Component<
           )}
           <Box
             column
-            position="static"
+            styledHeight="100%"
             css={`
               ${(this.state.isRemoving || this.state.isSharing) &&
               `opacity: 0.3`}
@@ -392,8 +392,7 @@ class StoryBuilder extends React.Component<
               column
               scroll
               overflowY={"auto"}
-              styledMaxHeight={"calc(100vh - 283px)"}
-              position="static"
+              styledMaxHeight="100%"
               ref={this.storiesWrapperRef as React.RefObject<HTMLDivElement>}
               css={`
                 margin-right: -10px;
@@ -404,7 +403,6 @@ class StoryBuilder extends React.Component<
                 direction="vertical"
                 dynamic
                 css={`
-                  position: static;
                   margin-right: 10px;
                 `}
               >
@@ -433,8 +431,8 @@ class StoryBuilder extends React.Component<
               disabled={this.state.isRemoving}
               onClickCapture={this.onClickCapture}
             />
+            <Spacing bottom={2} />
           </Box>
-          <Spacing bottom={2} />
         </Box>
       </>
     );
