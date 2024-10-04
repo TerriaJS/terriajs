@@ -40,7 +40,6 @@ import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
 import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
-import { MeasurableGeometry } from "../ViewModels/MeasurableGeometryManager";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -391,6 +390,7 @@ export default class ViewState {
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
   private _measurablePanelIsVisibleSubscription: IReactionDisposer;
+  private _disposeSamplingPathStep: IReactionDisposer;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
@@ -536,6 +536,13 @@ console.log("qqqq")
       }
     );
 
+    this._disposeSamplingPathStep = reaction(
+      () => this.terria.measurableGeomSamplingStep,
+      () => {
+        this.terria.measurableGeometryManager.resample();
+      }
+    );
+
     const handleWindowClose = (e: BeforeUnloadEvent) => {
       // Cancel the event
       e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
@@ -566,6 +573,8 @@ console.log("qqqq")
     this._workbenchHasTimeWMSSubscription();
     this._locationMarkerSubscription();
     this._measurablePanelIsVisibleSubscription();
+    this._disposeSamplingPathStep();
+
     this.searchState.dispose();
   }
 

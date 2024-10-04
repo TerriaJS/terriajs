@@ -58,7 +58,45 @@
     "measureLineToolTitle": "Line Measure",
     "measurePolygonToolTitle": "Polygon Measure",
     "measureDistance": "Measure distance between locations",
-    "measureArea": "Measure the area of a polygon"
+    "measureArea": "Measure the area of a polygon",
+    "measureLineToolMessage": "geodetic dist.",
+    "measurePolygonToolMessagePerimeter": "perimeter",
+    "measurePolygonToolMessageArea": "area"
+  },
+  "measurableGeometry": {
+    "header": "MEASURABLE",
+    "clampLineToGround": "clamp lines to the ground",
+    "dontClampLineToGround": "free lines",
+    "clampLineButtonTitle": "turn on/off line clamping",
+    "samplingStepHeader": "Terrain sampling step (m)",
+    "samplingStepButtonText": "Change",
+    "samplingStepButtonTitle": "Change sampling step",
+    "showElevationChart": "Show/hide elevation chart",
+    "geometrySummaryHeader": "Summary",
+    "geometrySummaryElevationMin": "Alt. min",
+    "geometrySummaryElevationMax": "Alt. max",
+    "geometrySummaryElevationDiff": "Alt. diff.",
+    "geometrySummaryElevationBear": "Bearing",
+    "geometrySummaryElevation": "Alt.",
+    "geometrySummaryStopSummary": "Stop summary",
+    "geometrySummaryDistGeo": "Geodetic distance",
+    "geometrySummaryDistAir": "Air distance",
+    "geometrySummaryDistGround": "Ground distance",
+    "geometrySummaryPerimeterGeo": "Geodetic perimeter",
+    "geometrySummaryPerimeterAir": "Air perimeter",
+    "geometrySummaryAreaGeo": "Geodetic area",
+    "geometrySummaryAreaAir": "Air area",
+    "geometrySummarySlope": "Slope %"
+  },
+  "elevationChart": {
+    "header": "Elevation profile",
+    "measure": "Measure",
+    "measureAir": "free",
+    "measureGround": "clamped to ground"
+  },
+  "downloadData": {
+    "lines": "Lines",
+    "points": "Points"
   },
   "location": {
     "errorGettingLocation": "Error getting location",

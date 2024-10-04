@@ -96,7 +96,19 @@ export const registerMapNavigations = (viewState: ViewState) => {
     terria,
     onClose: () => {
       runInAction(() => {
+        viewState.terria.mapNavigationModel.enable(MeasureLineTool.id);
         viewState.panel = undefined;
+      });
+    },
+    onOpen: () => {
+      runInAction(() => {
+        const item = viewState.terria.mapNavigationModel.findItem(
+          MeasureLineTool.id
+        )?.controller;
+        if (item && item.active) {
+          item.deactivate();
+        }
+        viewState.terria.mapNavigationModel.disable(MeasureLineTool.id);
       });
     }
   });
@@ -106,7 +118,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "translate#measure.measureArea",
     location: "TOP",
     controller: measurePolygonTool,
-    screenSize: undefined,
+    screenSize: "medium",
     order: 6
   });
 
@@ -114,7 +126,19 @@ export const registerMapNavigations = (viewState: ViewState) => {
     terria,
     onClose: () => {
       runInAction(() => {
+        viewState.terria.mapNavigationModel.enable(MeasurePolygonTool.id);
         viewState.panel = undefined;
+      });
+    },
+    onOpen: () => {
+      runInAction(() => {
+        const item = viewState.terria.mapNavigationModel.findItem(
+          MeasurePolygonTool.id
+        )?.controller;
+        if (item && item.active) {
+          item.deactivate();
+        }
+        viewState.terria.mapNavigationModel.disable(MeasurePolygonTool.id);
       });
     }
   });

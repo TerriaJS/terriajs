@@ -1,15 +1,9 @@
 "use strict";
 import i18next from "i18next";
 import React from "react";
-import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
-import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import PolygonGeometryLibrary from "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
@@ -19,6 +13,7 @@ import MapNavigationItemController from "../../../../ViewModels/MapNavigation/Ma
 
 export interface MeasureToolOptions {
   terria: Terria;
+  onOpen(): void;
   onClose(): void;
 }
 
@@ -30,6 +25,7 @@ export class MeasureLineTool extends MapNavigationItemController {
   private totalDistanceMetres: number = 0;
   private userDrawing: UserDrawing;
 
+  onOpen: () => void;
   onClose: () => void;
   itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -45,6 +41,7 @@ export class MeasureLineTool extends MapNavigationItemController {
       onCleanUp: this.onCleanUp.bind(this),
       onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
     });
+    this.onOpen = props.onOpen;
     this.onClose = props.onClose;
   }
 
@@ -56,7 +53,7 @@ export class MeasureLineTool extends MapNavigationItemController {
     return undefined;
   }
 
-  prettifyNumber(number: number, squared: boolean) {
+  prettifyNumber(number: number) {
     if (number <= 0) {
       return "";
     }
@@ -122,11 +119,17 @@ export class MeasureLineTool extends MapNavigationItemController {
 
   onCleanUp() {
     this.totalDistanceMetres = 0;
+    this.onClose();
     super.deactivate();
   }
 
   onPointClicked(pointEntities: CustomDataSource) {
     this.updateDistance(pointEntities);
+    // compute sampled path
+    this.terria.measurableGeometryManager.sampleFromCustomDataSource(
+      pointEntities,
+      this.userDrawing.closeLoop
+    );
   }
 
   onPointMoved(pointEntities: CustomDataSource) {
@@ -135,13 +138,15 @@ export class MeasureLineTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    return this.prettifyNumber(this.totalDistanceMetres, false);
+    const distance = this.prettifyNumber(this.totalDistanceMetres);
+    return distance.length === 0 ? "" : `${i18next.t("measure.measureLineToolMessage")}: ${distance}`;
   };
 
   /**
    * @overrides
    */
   deactivate() {
+    this.onClose();
     this.userDrawing.endDrawing();
     super.deactivate();
   }
@@ -150,6 +155,7 @@ export class MeasureLineTool extends MapNavigationItemController {
    * @overrides
    */
   activate() {
+    this.onOpen();
     this.userDrawing.enterDrawMode();
     super.activate();
   }

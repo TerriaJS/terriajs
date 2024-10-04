@@ -16,6 +16,7 @@ import Terria from "../../Models/Terria";
 import { useTheme } from "styled-components";
 import { MeasurableGeometry } from "../../ViewModels/MeasurableGeometryManager";
 import MeasurableDownload from "./MeasurableDownload";
+import i18next from "i18next";
 
 const DragWrapper = require("../DragWrapper");
 
@@ -58,10 +59,6 @@ const MeasurablePanel = observer((props: Props) => {
   });
 
   const changeSamplingPathStep = action((val: number) => {
-
-console.log("mucca")
-console.log(val)
-
     terria.measurableGeomSamplingStep = val;
   });
 
@@ -84,10 +81,8 @@ console.log(val)
   });
 
   const getHeightDifference = computed(() => {
-    if (
-      !terria?.measurableGeom?.stopPoints ||
-      terria.measurableGeom.stopPoints.length < 2
-    ) {
+    if (!terria?.measurableGeom?.stopPoints ||
+      terria.measurableGeom.stopPoints.length < 2) {
       return "";
     }
 
@@ -156,7 +151,7 @@ console.log(val)
       <div className={Styles.header}>
         <div className={classNames("drag-handle", Styles.btnPanelHeading)}>
           <span style={{ display: "flex", justifyContent: "center" }}>
-            <b>PERCORSO</b>
+            <b>{i18next.t("measurableGeometry.header")}</b>
           </span>
           <button
             type="button"
@@ -175,7 +170,7 @@ console.log(val)
           type="button"
           onClick={close}
           className={Styles.btnCloseFeature}
-          title="Chiudi pannello"
+          title={i18next.t("general.close")}
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
@@ -187,7 +182,7 @@ console.log(val)
     return (
       <>
         <Text textLight style={{ marginLeft: 1 }} title="">
-          Passo di campionamento del terreno (metri):
+          {i18next.t("measurableGeometry.samplingStepHeader")}:
           <br />
           [min {rangeSamplingPathStep.get()[0]}, max{" "}
           {rangeSamplingPathStep.get()[1]}]
@@ -202,7 +197,7 @@ console.log(val)
                   ? theme.textLight
                   : "red"};
               `}
-              title="Passo di campionamento"
+              title={i18next.t("measurableGeometry.samplingStepHeader")}
               light={false}
               dark={true}
               type="number"
@@ -226,14 +221,14 @@ console.log(val)
               background: ${theme.colorPrimary};
               margin-left: 5px;
             `}
-            title="Modifica il passo di campionamento"
+            title={i18next.t("measurableGeometry.samplingStepButtonTitle")}
             onClick={() => {
               if (isValidSamplingPathStep) {
                 changeSamplingPathStep(samplingPathStep);
               }
             }}
           >
-            Cambia
+            {i18next.t("measurableGeometry.samplingStepButtonText")}
           </Button>
         </Box>
       </>
@@ -252,7 +247,7 @@ console.log(val)
                 margin-bottom: 20px;
               `}
               onClick={toggleChart}
-              title="Mostra/nascondi il grafo altimetrico"
+              title={i18next.t("measurableGeometry.showElevationChart")}
             >
               <StyledIcon
                 light={true}
@@ -270,12 +265,11 @@ console.log(val)
               margin-bottom: 20px;
             `}
             onClick={toggleLineClampToGround}
-            title={`Passa alla visualizzazione del percorso ${terria.clampMeasureLineToGround ? "in aria" : "al suolo"
-              }`}
+            title={i18next.t("measurableGeometry.clampLineButtonTitle")}
           >
             {terria.clampMeasureLineToGround
-              ? "vedi percorso in aria"
-              : "vedi percorso al suolo"}
+              ? i18next.t("measurableGeometry.clampLineToGround")
+              : i18next.t("measurableGeometry.dontClampLineToGround")}
           </Button>
         </Box>
         {!terria?.measurableGeom?.hasArea && renderSamplingStep()}
@@ -301,16 +295,16 @@ console.log(val)
     return (
       <>
         <Text textLight style={{ marginLeft: 1 }} title="">
-          Dettaglio percorso
+        {i18next.t("measurableGeometry.geometrySummaryHeader")}
         </Text>
         <small>
           <table className={Styles.elevation}>
             <thead>
               <tr>
-                <th>Alt. min</th>
-                <th>Alt. max</th>
-                <th>Rotta</th>
-                <th>Disl.</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevationMin")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevationMax")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevationBear")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevationDiff")}</th>
               </tr>
             </thead>
             <tbody>
@@ -325,21 +319,9 @@ console.log(val)
           <table className={Styles.elevation}>
             <thead>
               <tr>
-                <th>
-                  Dist.
-                  <br />
-                  geodetica
-                </th>
-                <th>
-                  Dist.
-                  <br />
-                  in aria
-                </th>
-                <th>
-                  Dist.
-                  <br />
-                  al suolo
-                </th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistGeo")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistAir")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistGround")}</th>
               </tr>
             </thead>
             <tbody>
@@ -367,32 +349,16 @@ console.log(val)
     return (
       <>
         <Text textLight style={{ marginLeft: 1 }} title="">
-          Dettaglio area poligonale
+          {i18next.t("measurableGeometry.geometrySummaryHeader")}
         </Text>
         <small>
           <table className={Styles.elevation}>
             <thead>
               <tr>
-                <th>
-                  Perimetro
-                  <br />
-                  geodetico
-                </th>
-                <th>
-                  Perimetro
-                  <br />
-                  in aria
-                </th>
-                <th>
-                  Area
-                  <br />
-                  geodetica
-                </th>
-                <th>
-                  Area
-                  <br />
-                  in aria
-                </th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryPerimeterGeo")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryPerimeterAir")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryAreaGeo")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryAreaAir")}</th>
               </tr>
             </thead>
             <tbody>
@@ -426,34 +392,19 @@ console.log(val)
     return (
       <>
         <Text textLight style={{ marginLeft: 1 }} title="">
-          Dettaglio tappe
+        {i18next.t("measurableGeometry.geometrySummaryStopSummary")}
         </Text>
         <small>
           <table className={Styles.elevation}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Alt.</th>
-                <th>Disl.</th>
-                <th>
-                  Dist.
-                  <br />
-                  geodetica
-                </th>
-                <th>
-                  Dist.
-                  <br />
-                  in aria
-                </th>
-                <th>
-                  Dist.
-                  <br />
-                  al suolo
-                </th>
-                <th>
-                  Pendenza
-                  <br />%
-                </th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevation")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryElevationDiff")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistGeo")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistAir")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummaryDistGround")}</th>
+                <th>{i18next.t("measurableGeometry.geometrySummarySlope")}</th>
               </tr>
             </thead>
             <tbody>

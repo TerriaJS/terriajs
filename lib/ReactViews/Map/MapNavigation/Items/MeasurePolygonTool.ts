@@ -17,6 +17,7 @@ import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import { MeasureToolOptions } from "./MeasureLineTool";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
 export class MeasurePolygonTool extends MapNavigationItemController {
   static id = "measure-polygon-tool";
@@ -25,8 +26,10 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   private readonly terria: Terria;
   private totalDistanceMetres: number = 0;
   private totalAreaMetresSquared: number = 0;
+  private totalFlatAreaMetresSquared: number = 0;
   private userDrawing: UserDrawing;
 
+  onOpen: () => void;
   onClose: () => void;
   itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -43,6 +46,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
       onCleanUp: this.onCleanUp.bind(this),
       onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
     });
+    this.onOpen = props.onOpen;
     this.onClose = props.onClose;
   }
 
@@ -177,6 +181,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
       );
     }
     let area = 0;
+    let flatArea = 0;
     for (let i = 0; i < geom.indices.length; i += 3) {
       const ind1 = geom.indices[i];
       const ind2 = geom.indices[i + 1];
@@ -189,8 +194,22 @@ export class MeasurePolygonTool extends MapNavigationItemController {
       // Heron's formula
       const s = (a + b + c) / 2.0;
       area += Math.sqrt(s * (s - a) * (s - b) * (s - c));
+
+      // Flat area with Heron's formula
+      const carto1 = Cartographic.fromCartesian(coords[ind1], Ellipsoid.WGS84);
+      const carto2 = Cartographic.fromCartesian(coords[ind2], Ellipsoid.WGS84);
+      const carto3 = Cartographic.fromCartesian(coords[ind3], Ellipsoid.WGS84);
+      const aGeod = new EllipsoidGeodesic(carto1, carto2, Ellipsoid.WGS84);
+      const aDist = aGeod.surfaceDistance;
+      const bGeod = new EllipsoidGeodesic(carto2, carto3, Ellipsoid.WGS84);
+      const bDist = bGeod.surfaceDistance;
+      const cGeod = new EllipsoidGeodesic(carto3, carto1, Ellipsoid.WGS84);
+      const cDist = cGeod.surfaceDistance;
+      const s2 = (aDist + bDist + cDist) / 2.0;
+      flatArea += Math.sqrt(s2 * (s2 - aDist) * (s2 - bDist) * (s2 - cDist));
     }
     this.totalAreaMetresSquared = area;
+    this.totalFlatAreaMetresSquared = flatArea;
   }
 
   getGeodesicDistance(pointOne: Cartesian3, pointTwo: Cartesian3) {
@@ -210,12 +229,19 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   onCleanUp() {
     this.totalDistanceMetres = 0;
     this.totalAreaMetresSquared = 0;
+    this.totalFlatAreaMetresSquared = 0;
+    this.onClose();
     super.deactivate();
   }
 
   onPointClicked(pointEntities: CustomDataSource) {
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
+    // compute sampled path
+    this.terria.measurableGeometryManager.sampleFromCustomDataSource(
+      pointEntities,
+      this.userDrawing.closeLoop
+    );
   }
 
   onPointMoved(pointEntities: CustomDataSource) {
@@ -224,19 +250,40 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    const distance = this.prettifyNumber(this.totalDistanceMetres, false);
-    let message = distance;
-    if (this.totalAreaMetresSquared !== 0) {
-      message +=
-        "<br>" + this.prettifyNumber(this.totalAreaMetresSquared, true);
-    }
-    return message;
+    return this.totalDistanceMetres === 0 ? "" : `
+      <table>
+        <tbody>
+          <tr>
+            <td>${i18next.t("measure.measurePolygonToolMessagePerimeter")}: </td>
+            <td>${this.totalDistanceMetres
+        ? this.prettifyNumber(this.totalDistanceMetres, false)
+        : ""
+      }</td>
+          </tr>
+          <tr>
+            <td>${i18next.t("measure.measurePolygonToolMessageArea")}:</td>
+            <td>${this.totalAreaMetresSquared
+        ? this.prettifyNumber(this.totalAreaMetresSquared, true)
+        : ""
+      }</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>${this.totalAreaMetresSquared
+        ? (this.totalAreaMetresSquared * 0.0001).toFixed(2) + " ha"
+        : ""
+      }</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
   };
 
   /**
    * @overrides
    */
   deactivate() {
+    this.onClose();
     this.userDrawing.endDrawing();
     super.deactivate();
   }
@@ -245,6 +292,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
    * @overrides
    */
   activate() {
+    this.onOpen();
     this.userDrawing.enterDrawMode();
     super.activate();
   }

@@ -14,6 +14,7 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import BillboardCollection from "terriajs-cesium/Source/Scene/BillboardCollection";
 
 import markerIcon from "./markerIcon.js";
+import i18next from "i18next";
 
 enum ChartKeys {
   AirChart = "path",
@@ -82,13 +83,11 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
   };
 
   const updateChartPointNearMouse = (newPoint: ChartPoint) => {
-    if (
-      newPoint &&
+    if (newPoint &&
       terria?.cesium?.scene &&
       (!chartPoint?.current || chartPoint.current !== newPoint)
     ) {
       chartPoint.current = newPoint;
-
       const pointIndex = chartItems
         ?.find((item) => item.key === ChartKeys.GroundChart)
         ?.points.findIndex((elem) => elem === newPoint);
@@ -108,10 +107,6 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
         image: markerIcon,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0),
         heightReference: HeightReference.CLAMP_TO_GROUND,
-        //scale: 0.5,
-        //verticalOrigin: VerticalOrigin.BOTTOM,
-        //color: new CesiumColor(0.0, 1.0, 0.0, 0.5),
-        //disableDepthTestDistance: Number.POSITIVE_INFINITY,
         id: "chartPointPlaceholder"
       });
 
@@ -122,10 +117,6 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
   };
 
   useEffect(() => {
-
-
-console.log("zioooo")
-
     if (terria?.measurableGeom) {
       const airData = fetchPathDataChart(
         terria.measurableGeom.stopPoints,
@@ -142,8 +133,8 @@ console.log("zioooo")
 
       if (groundData?.chartPoints && groundData.chartDomain) {
         items.push({
-          categoryName: "Percorso",
-          name: "al suolo",
+          categoryName: i18next.t("elevationChart.measure"),
+          name: i18next.t("elevationChart.measureGround"),
           units: "m",
           key: ChartKeys.GroundChart,
           type: "lineAndPoint",
@@ -155,8 +146,8 @@ console.log("zioooo")
       }
       if (airData?.chartPoints && airData.chartDomain) {
         items.push({
-          categoryName: "Percorso",
-          name: "in aria",
+          categoryName: i18next.t("elevationChart.measure"),
+          name: i18next.t("elevationChart.measureAir"),
           units: "m",
           key: ChartKeys.AirChart,
           type: "lineAndPoint",
@@ -176,7 +167,7 @@ console.log("zioooo")
       <div className={Styles.inner}>
         <div className={Styles.chartPanel} style={{ height: PANEL_HEIGHT }}>
           <div className={Styles.header}>
-            <label className={Styles.sectionLabel}>Profilo altimetrico</label>
+            <label className={Styles.sectionLabel}>{i18next.t("elevationChart.header")}</label>
             <button
               type="button"
               className={Styles.btnCloseChartPanel}

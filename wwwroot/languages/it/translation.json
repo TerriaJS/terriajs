@@ -53,7 +53,45 @@
     "measureLineToolTitle": "Misuratore lineare",
     "measurePolygonToolTitle": "Misuratore di area",
     "measureDistance": "Misura la lunghezza di una lina",
-    "measureArea": "Misura l'area di un poligono"
+    "measureArea": "Misura l'area di un poligono",
+    "measureLineToolMessage": "dist. geodetica",
+    "measurePolygonToolMessagePerimeter": "perimetro",
+    "measurePolygonToolMessageArea": "area"
+  },
+  "measurableGeometry": {
+    "header": "MISURE",
+    "clampLineToGround": "ancorato al terreno",
+    "dontClampLineToGround": "non ancorato",
+    "clampLineButtonTitle": "cambia la modalità di disegno delle geometrie sulla mappa, da ancorato a libero e viceversa",
+    "samplingStepHeader": "Passo di campionamento del terreno (m)",
+    "samplingStepButtonText": "Cambia",
+    "samplingStepButtonTitle": "Cambia passo di campionamento",
+    "showElevationChart": "Mostra/nascondi il grafico altimetrico",
+    "geometrySummaryHeader": "Dettaglio",
+    "geometrySummaryElevationMin": "Alt. min",
+    "geometrySummaryElevationMax": "Alt. max",
+    "geometrySummaryElevationDiff": "Disl.",
+    "geometrySummaryElevationBear": "Rotta",
+    "geometrySummaryElevation": "Alt.",
+    "geometrySummaryStopSummary": "Dettaglio tappe",
+    "geometrySummaryDistGeo": "Dist. geodetica",
+    "geometrySummaryDistAir": "Dist. in aria",
+    "geometrySummaryDistGround": "Dist. al suolo",
+    "geometrySummaryPerimeterGeo": "Perimetro geodetica",
+    "geometrySummaryPerimeterAir": "Perimetro in aria",
+    "geometrySummaryAreaGeo": "Area geodetica",
+    "geometrySummaryAreaAir": "Area in aria",
+    "geometrySummarySlope": "Pendenza %"
+  },
+  "elevationChart": {
+    "header": "Profilo altimetrico",
+    "measure": "Misura",
+    "measureAir": "in aria",
+    "measureGround": "al suolo"
+  },
+  "downloadData": {
+    "lines": "Linee",
+    "points": "Punti"
   },
   "general": {
     "cancel": "Annulla",

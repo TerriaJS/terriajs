@@ -1,5 +1,5 @@
 import Terria from "../Models/Terria";
-import { reaction, IReactionDisposer, action, observable } from "mobx";
+import { action, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
@@ -28,33 +28,17 @@ export default class MeasurableGeometryManager {
 
   readonly geoidModel: EarthGravityModel1996;
 
-  private disposeSamplingPathStep?: IReactionDisposer;
-
   constructor(terria: Terria) {
+    makeObservable(this);
     this.terria = terria;
 
     this.geoidModel = new EarthGravityModel1996(
       require("file-loader!../../wwwroot/data/WW15MGH.DAC")
     );
-
-
-    console.log("oooooo")
-    this.disposeSamplingPathStep = reaction(
-      () => terria.measurableGeomSamplingStep,
-      (step) => {
-
-
-console.log("disposeeeeee")
-
-        this.sampleFromCartographics(terria.measurableGeom?.stopPoints ?? []);
-      }
-    );
   }
 
-  dispose() {
-    if (this.disposeSamplingPathStep) {
-      this.disposeSamplingPathStep();
-    }
+  resample() {
+    this.sampleFromCartographics(this.terria.measurableGeom?.stopPoints ?? []);
   }
 
   sampleFromCustomDataSource(
@@ -90,10 +74,6 @@ console.log("disposeeeeee")
     cartoPositions: Cartographic[],
     closeLoop: boolean = false
   ) {
-
-
-console.log("sampleeee")
-
     const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
 

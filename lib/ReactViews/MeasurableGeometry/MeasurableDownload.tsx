@@ -12,6 +12,7 @@ import Icon from "../../Styled/Icon";
 import Styles from "./measurable-download.scss";
 import { exportKmlResultKml } from "terriajs-cesium";
 import { MeasurableGeometry } from "../../ViewModels/MeasurableGeometryManager";
+import i18next from "i18next";
 
 const Dropdown = require("../Generic/Dropdown");
 
@@ -42,7 +43,7 @@ const MeasurableDownload = (props: Props) => {
           )
           : false,
         download: `${name}_lines.kml`,
-        label: "Linee KML"
+        label: `${i18next.t("downloadData.lines")} KML`
       },
       {
         href: kmlPoints
@@ -52,27 +53,27 @@ const MeasurableDownload = (props: Props) => {
           )
           : false,
         download: `${name}_points.kml`,
-        label: "Punti KML"
+        label: `${i18next.t("downloadData.points")} KML`
       },
       {
         href: DataUri.make("json", generateJsonLineStrings(geom)),
         download: `${name}_lines.json`,
-        label: "Linee JSON"
+        label: `${i18next.t("downloadData.lines")} JSON`
       },
       {
         href: DataUri.make("json", generateJsonPoints(geom)),
         download: `${name}_points.json`,
-        label: "Punti JSON"
+        label: `${i18next.t("downloadData.points")} JSON`
       },
       {
         href: DataUri.make("xml", generateGpxTracks(geom)),
         download: `${name}_lines.gpx`,
-        label: "Linee GPX"
+        label: `${i18next.t("downloadData.lines")} GPX`
       },
       {
         href: DataUri.make("xml", generateGpxWaypoints(geom)),
         download: `${name}_points.gpx`,
-        label: "Punti GPX"
+        label: `${i18next.t("downloadData.points")} GPX`
       }
     ].filter((download) => !!download.href);
   };
