@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { lab, rgb } from "d3-color";
+import { rgb } from "d3-color";
 import * as d3Scale from "d3-scale-chromatic";
 import React from "react";
 import StandardCssColors from "../../Core/StandardCssColors";

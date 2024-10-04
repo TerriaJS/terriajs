@@ -2,6 +2,7 @@ declare module "terriajs-cesium/Source/Scene/TweenCollection" {
   export default class TweenCollection {
     get length(): number;
     add(options: any): any;
+    update(time?: number): void;
   }
 }
 
@@ -44,24 +45,23 @@ declare module "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
 
 declare module "terriajs-cesium/Source/DataSources/getElement";
 
-declare interface Axis {
-  X: number;
-  Y: number;
-  Z: number;
-  fromName(name: string): number;
-}
-
-declare interface FeatureDetection {
-  isEdge(): boolean;
-  isInternetExplorer(): boolean;
-  internetExplorerVersion(): number[];
-  chromeVersion(): number[];
-}
-
 // This is a workaround for Cesium's incorrect type declaration for raiseEvent.
 declare module "terriajs-cesium" {
   export interface Event {
     raiseEvent(...arguments: any[]): void;
+  }
+
+  namespace FeatureDetection {
+    function isChrome(): boolean;
+    function isEdge(): boolean;
+    function isInternetExplorer(): boolean;
+    function isFirefox(): boolean;
+    function internetExplorerVersion(): number[];
+    function chromeVersion(): number[];
+  }
+
+  namespace Axis {
+    function fromName(name: string): number;
   }
 }
 

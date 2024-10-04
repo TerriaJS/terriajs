@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,400italic,600,700&display=swap");
 
 $font-pop: "Nunito", sans-serif;
@@ -9,7 +11,7 @@ $font: $font-base;
 $color-primary: #519ac2;
 $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
-  @return lighten($base-color, 10%);
+  @return color.adjust($base-color, $lightness: 10%);
 }
 $color-secondary: #ff6f00;
 
@@ -169,7 +171,7 @@ $chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
 $chart-preview-line-color: $chart-line-color;
-$chart-darker: darken($dark, 8%);
+$chart-darker: color.adjust($dark, $lightness: -8%);
 $chart-panel-background: $dark;
 $chart-panel-header: $chart-darker;
 

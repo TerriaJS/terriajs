@@ -62,7 +62,10 @@ describe("TileErrorHandlerMixin", function () {
   let item: TestCatalogItem;
   let imageryProvider: ImageryProvider;
 
-  const newError = (statusCode: number | undefined, timesRetried = 0) => {
+  const newError = (
+    statusCode: number | undefined,
+    timesRetried = 0
+  ): TileProviderError => {
     const httpError = new RequestErrorEvent(statusCode) as any as Error;
     return new TileProviderError(
       imageryProvider,
@@ -210,9 +213,12 @@ describe("TileErrorHandlerMixin", function () {
 
     it("fails with bad image error if the error defines a target element", async function () {
       try {
-        const tileProviderError = newError(undefined);
-        // @ts-expect-error
-        tileProviderError.error = { ...tileProviderError.error, target: {} };
+        const tileProviderError: TileProviderError = newError(undefined);
+
+        tileProviderError.error = {
+          ...tileProviderError.error,
+          target: {}
+        } as Error;
         await onTileLoadError(item, tileProviderError);
       } catch {
         /* eslint-disable-line no-empty */

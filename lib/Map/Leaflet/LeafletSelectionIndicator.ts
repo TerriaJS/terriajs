@@ -1,24 +1,17 @@
+import L from "leaflet";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import L from "leaflet";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
 
-const TweenCollection =
-  require("terriajs-cesium/Source/Scene/TweenCollection").default;
 const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {
   cancelTween(): void;
-}
-
-interface TweenCollection {
-  length: number;
-  add(args: any): Tween;
-  update(): void;
 }
 
 const cartographicScratch = new Cartographic();

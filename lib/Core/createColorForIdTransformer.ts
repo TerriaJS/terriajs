@@ -15,7 +15,7 @@ const usedColors: { [c: string]: number | undefined } = {};
  */
 function createColorForIdTransformer() {
   return createTransformer(
-    (id: string): string => {
+    (_id: string): string => {
       const nextColor = leastUsedColor();
       useColor(nextColor);
       return nextColor;

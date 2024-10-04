@@ -26,7 +26,7 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<A
   protected constructCatalogItem(
     id: string | undefined,
     context: ProcessNodeContext,
-    sourceReference: ApiTableCatalogItem | undefined
+    _sourceReference: ApiTableCatalogItem | undefined
   ): ApiTableCatalogItem | undefined {
     const terria = context.terria;
     // This differs from other custom in that if a catalog item with the same id has already been created, it'll return that rather than a new one
@@ -43,7 +43,7 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<A
   protected setTraitsFromAttrs(
     item: ApiTableCatalogItem,
     attrs: ApiTableCustomChartComponentAttributes,
-    sourceIndex: number
+    _sourceIndex: number
   ): void {
     const json: any | undefined = attrs.apiTableCatalogItemJson;
     if (json === undefined) {

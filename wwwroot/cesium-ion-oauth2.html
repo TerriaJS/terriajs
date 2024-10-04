@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cesium ion OAuth2 Token Exchange</title>
+  </head>
+  <script>
+    function doTokenExchange() {
+      const queryParams = new URLSearchParams(window.location.search);
+      const state = queryParams.get("state");
+      if (typeof state !== "string") {
+        // state parameter does not exist or is invalid, abort.
+        window.close();
+        return;
+      }
+
+      for (const c of state) {
+        const zeroToNine =
+          c.charAt(0) >= "0".charAt(0) && c.charAt(0) <= "9".charAt(0);
+        const lowercase =
+          c.charAt(0) >= "a".charAt(0) && c.charAt(0) <= "f".charAt(0);
+        const uppercase =
+          c.charAt(0) >= "A".charAt(0) && c.charAt(0) <= "F".charAt(0);
+        if (!zeroToNine && !lowercase && !uppercase) {
+          // Something dodgy in the state, abort.
+          window.close();
+          return;
+        }
+      }
+      const code = queryParams.get("code");
+      const functionName = "cesiumIonOAuth2_" + state;
+      window.opener[functionName](code);
+      window.close();
+    }
+  </script>
+  <body onload="doTokenExchange()"></body>
+</html>

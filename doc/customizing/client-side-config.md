@@ -180,10 +180,10 @@ Configuration of items to appear in the search bar
 
 ### ErrorServiceOptions
 
-| Name          | Required | Type       | Default     | Description                                                                                                                                                                                                                                                    |
-| ------------- | -------- | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| provider      | yes      | **string** | `undefined` | A string identifying the error service provider to use. Currently only `rollbar` is supported.                                                                                                                                                                 |
-| configuration | no       | **any**    | `undefined` | The configuration object to pass as constructor parameters to the error service provider instance. See the [provider implementation](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/ErrorServiceProviders/) for supported configuration parameters. |
+| Name          | Required | Type       | Default     | Description                                                            |
+| ------------- | -------- | ---------- | ----------- | ---------------------------------------------------------------------- |
+| provider      | no       | **string** | `undefined` | A string identifying the error service provider.                       |
+| configuration | no       | **any**    | `undefined` | The configuration object to be used when initializing an ErrorService. |
 
 **Example**
 

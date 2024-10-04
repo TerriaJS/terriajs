@@ -27,7 +27,7 @@ class NoViewer extends GlobeOrMap {
 
   doZoomTo(
     v: CameraView | Rectangle | MappableMixin.Instance,
-    t: any
+    _t: any
   ): Promise<void> {
     if (v instanceof CameraView) {
       this._currentView = v;
@@ -40,9 +40,9 @@ class NoViewer extends GlobeOrMap {
   notifyRepaintRequired() {}
 
   pickFromLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: TerriaFeature[]
+    _latLngHeight: LatLonHeight,
+    _providerCoords: ProviderCoordsMap,
+    _existingFeatures: TerriaFeature[]
   ) {}
 
   getCurrentCameraView(): CameraView {
@@ -56,8 +56,10 @@ class NoViewer extends GlobeOrMap {
   pauseMapInteraction() {}
   resumeMapInteraction() {}
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _imageryProvider:
+      | MapboxVectorTileImageryProvider
+      | ProtomapsImageryProvider,
+    _rectangle: Rectangle
   ) {
     return () => {};
   }

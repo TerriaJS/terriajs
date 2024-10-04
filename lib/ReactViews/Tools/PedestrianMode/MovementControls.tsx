@@ -35,6 +35,7 @@ const MovementControls: React.FC<MovementControlsProps> = (props) => {
     );
     const detach = movementsController.activate();
     return detach;
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.cesium]);
 
   return (
@@ -75,10 +76,10 @@ const Title = styled(Box).attrs({
   border-bottom: 1px solid #c0c0c0;
 `;
 
-const MinimizeMaximizeButton = styled(Button).attrs((props) => ({
+const MinimizeMaximizeButton = styled(Button).attrs(({ maximized }) => ({
   renderIcon: () => (
     <ButtonIcon
-      glyph={props.maximized ? Icon.GLYPHS.minimize : Icon.GLYPHS.maximize}
+      glyph={maximized ? Icon.GLYPHS.minimize : Icon.GLYPHS.maximize}
     />
   )
 }))<{ maximized: boolean }>`

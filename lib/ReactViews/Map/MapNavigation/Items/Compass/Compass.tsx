@@ -421,8 +421,6 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
               `}
             >
               <GyroscopeGuidance
-                //@ts-expect-error
-                rightOffset="72px"
                 viewState={this.props.viewState}
                 // handleHelp={() => {
                 //   this.props.viewState.showHelpPanel();

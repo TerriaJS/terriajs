@@ -37,6 +37,7 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
         viewState.terria.isWorkflowPanelActive = false;
       });
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (
@@ -72,6 +73,7 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
 
 type ErrorBoundaryProps = {
   viewState: ViewState;
+  children: React.ReactNode;
 };
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
@@ -116,10 +118,6 @@ const TitleBar = styled.div`
   align-items: center;
   padding: 0.7em;
   border-bottom: 1px solid ${(p) => p.theme.darkLighter};
-`;
-
-const FooterBar = styled(TitleBar)`
-  border: none;
 `;
 
 const Title = styled(Text).attrs({

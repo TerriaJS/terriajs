@@ -48,7 +48,7 @@ describe("All Catalog models", () => {
     // The only correct way to provide a legend is through legendOwnerTraits.
     models
       .filter(
-        ([modelName, model]) => !hasTraits(model, LegendOwnerTraits, "legends")
+        ([_modelName, model]) => !hasTraits(model, LegendOwnerTraits, "legends")
       )
       .forEach(([modelName, model]) => {
         expect((model as any).legends).toBeUndefined(
