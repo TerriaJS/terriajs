@@ -98,6 +98,19 @@
     "email": "Indirizzo email (opzionale)<br/><em>Non possiamo proseguire senza!</em>",
     "feedbackPreamble": "Ci piacerebbe sentire la tua opinione!"
   },
+  "coordsPanel": {
+    "header": "Coordinate",
+    "btnConvert": "Converti",
+    "btnConvertTitle": "Converti coordinate",
+    "btnReset": "Reset",
+    "btnResetTitle": "Pulisci i campi",
+    "coordsInputMessage": "Lat, Lon (in gradi decimali) oppure X, Y oppure Est, Nord",
+    "coordsInputTooltip": "Se la finestra 'Informazioni' è aperta le coordinate sono lette da lì e non sono modificabili",
+    "srsSelectionTooltip": "Clicca per scegliere la conversione da utilizzare (se le coordinate sono geografiche l'elenco delle conversioni è filtrato con solo quelle ammissibili)",
+    "coordsResultMessage": "Lat, Lon (in gradi decimali) oppure X, Y oppure Est, Nord",
+    "copyTooltip": "Copia le coordinate negli Appunti",
+    "centerMaptooltip": "Centra la mappa alle coordinate indicate (attivo solo se sono cartografiche)"
+  },
   "settingPanel": {
     "performanceLabel": "Prestazioni",
     "qualityLabel": "Qualità",

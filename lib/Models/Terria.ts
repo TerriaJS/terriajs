@@ -128,6 +128,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -351,6 +352,11 @@ export interface ConfigParameters {
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
+
+  /**
+   * Url to coordinates converter service.
+   */
+  coordsConverterUrl?: string;
 }
 
 interface StartOptions {
@@ -568,7 +574,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    coordsConverterUrl: undefined
   };
 
   @observable
@@ -579,6 +586,12 @@ export default class Terria {
 
   @observable
   allowFeatureInfoRequests: boolean = true;
+
+  /**
+   * Gets or sets the last position picked by FeatureInfo.
+   * @type {Cartographic}
+   */
+  @observable pickedPosition: Cartographic | undefined;
 
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack

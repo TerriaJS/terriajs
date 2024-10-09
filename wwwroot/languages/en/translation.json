@@ -297,6 +297,18 @@
     "feedbackBtnText": "Give Feedback",
     "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
+  "coordsPanel": {
+    "header": "Coordinate converter",
+    "btnConvert": "Convert",
+    "btnConvertTitle": "Convert coordinate",
+    "btnReset": "Reset",
+    "btnResetTitle": "Clean fields",
+    "coordsInputMessage": "Lat, Lon or X, Y or East, North",
+    "coordsInputTooltip": "If 'Info' panel is open, coords are getted from there and are readonly",
+    "srsSelectionTooltip": "Click to select conversion (if coordinates are geographic, only allowed conversions are showed)",
+    "copyTooltip": "Copy to clipboard",
+    "centerMaptooltip": "Move to coordinates (only with cartographic coordinates)"
+  },
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
