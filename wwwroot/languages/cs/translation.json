@@ -197,7 +197,7 @@
   },
   "share": {
     "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
-    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
+    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
     "generatingUrl": "Generování sdílené adresy URL...",
     "printTitle": "Tisk mapy",
     "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
@@ -736,7 +736,8 @@
       "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
       "carto-v3": "Carto V3",
       "i3s": "I3S",
-      "esri-imageServer": "Esri ArcGIS ImageServer (jedna vrstva)"
+      "esri-imageServer": "Esri ArcGIS ImageServer (jedna vrstva)",
+      "cesium-ion": "Ionty cesia"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -2032,6 +2033,9 @@
           },
           "title": {
             "name": "Název položky {{index}}"
+          },
+          "legendTicks": {
+            "name": "Ticks"
           }
         }
       },
