@@ -26,10 +26,6 @@ class HelpPanelItem extends React.Component {
     i18n: PropTypes.object.isRequired
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { i18n } = this.props;
 
