@@ -343,7 +343,7 @@ class FeatureInfoPanel extends React.Component<Props> {
                 <StyledIcon
                   light={true}
                   realDark={false}
-                  glyph={Icon.GLYPHS.compassInner}
+                  glyph={Icon.GLYPHS.copy}
                   styledWidth="16px"
                 />
               </Button>
