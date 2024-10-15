@@ -341,6 +341,17 @@ export interface ConfigParameters {
   relatedMaps?: RelatedMap[];
 
   /**
+   * Parameters to whereAmI service.
+   */
+  whereAmIParams?: {
+    urlFast: string;
+    urlSlowButAccurate?: string;
+    fieldId?: string;
+    fieldResult: string;
+    fieldResultDetailed?: string;
+  };
+
+  /**
    * Optional plugin configuration
    */
   plugins?: Record<string, any>;
@@ -571,6 +582,7 @@ export default class Terria {
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
     relatedMaps: defaultRelatedMaps,
+    whereAmIParams: undefined,
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,

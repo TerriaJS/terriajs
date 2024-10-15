@@ -16,6 +16,7 @@ import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 interface Cancelable {
   cancel: () => void;
@@ -36,6 +37,11 @@ const pickedTriangleScratch: PickTriangleResult = {
   v2: new Cartesian3()
 };
 
+export type AskWhereAmICallback = (
+  whereAmI: string | undefined,
+  whereAmIDetailed: string | undefined
+) => void;
+
 export default class MouseCoords {
   readonly geoidModel: EarthGravityModel1996;
   readonly proj4Projection: string;
@@ -45,6 +51,12 @@ export default class MouseCoords {
   readonly debounceSampleAccurateHeight: ((
     terrainProvider: TerrainProvider,
     position: Cartographic
+  ) => void) &
+    Cancelable;
+  readonly debounceAskWhereAmI: ((
+    terria: Terria,
+    position: Cartographic,
+    setResult?: AskWhereAmICallback
   ) => void) &
     Cancelable;
   tileRequestInFlight?: unknown;
@@ -58,6 +70,9 @@ export default class MouseCoords {
   cartographic?: Cartographic;
 
   @observable useProjection = false;
+
+  @observable whereAmI?: string;
+  @observable whereAmIDetailed?: string;
 
   updateEvent = new CesiumEvent();
 
@@ -76,6 +91,10 @@ export default class MouseCoords {
 
     this.debounceSampleAccurateHeight = debounce(
       this.sampleAccurateHeight,
+      this.accurateSamplingDebounceTime
+    );
+    this.debounceAskWhereAmI = debounce(
+      this.askWhereAmI,
       this.accurateSamplingDebounceTime
     );
   }
@@ -176,6 +195,9 @@ export default class MouseCoords {
       if (!(terrainProvider instanceof EllipsoidTerrainProvider)) {
         this.debounceSampleAccurateHeight(terrainProvider, intersection);
       }
+      if (terria.configParameters.whereAmIParams) {
+        this.debounceAskWhereAmI(terria, intersection);
+      }
     } else {
       runInAction(() => {
         this.elevation = undefined;
@@ -203,6 +225,10 @@ export default class MouseCoords {
       scratchCartographic
     );
     this.cartographicToFields(coordinates);
+
+    if (terria.configParameters.whereAmIParams) {
+      this.debounceAskWhereAmI(terria, coordinates);
+    }
   }
 
   @action
@@ -234,6 +260,95 @@ export default class MouseCoords {
     this.elevation = prettyCoordinate.elevation;
     this.updateEvent.raiseEvent();
   }
+
+  @action
+  async askWhereAmI(
+    terria: Terria | undefined,
+    cartographicPosition: Cartographic,
+    setResult?: AskWhereAmICallback
+  ) {
+    if (
+      !terria?.configParameters?.whereAmIParams?.urlFast ||
+      !terria?.configParameters?.whereAmIParams?.fieldResult
+    ) {
+      return;
+    }
+    const urlFast = terria?.corsProxy.getURL(
+      terria.configParameters.whereAmIParams.urlFast
+    );
+    if (!urlFast) {
+      return;
+    }
+    const urlSlowButAccurate = terria.configParameters.whereAmIParams
+      .urlSlowButAccurate
+      ? terria?.corsProxy.getURL(
+        terria.configParameters.whereAmIParams.urlSlowButAccurate
+      )
+      : "";
+
+    const latitude = CesiumMath.toDegrees(cartographicPosition.latitude);
+    const longitude = CesiumMath.toDegrees(cartographicPosition.longitude);
+
+    let newWhereAmI = "";
+    let newWhereAmIDetailed = "";
+    const tmpResults = await Resource.fetchJson({
+      url: urlFast,
+      queryParameters: {
+        geometry: `${longitude}, ${latitude}`
+      }
+    });
+    if (
+      tmpResults?.features?.length > 1 &&
+      urlSlowButAccurate &&
+      terria.configParameters.whereAmIParams?.fieldId
+    ) {
+      const fieldId = terria.configParameters.whereAmIParams.fieldId;
+      const results = await Resource.fetchJson({
+        url: urlSlowButAccurate,
+        queryParameters: {
+          geometry: `${longitude}, ${latitude}`,
+          objectIds: `${tmpResults?.features.map(
+            (feat: any) => feat.attributes[fieldId]
+          )}`
+        }
+      });
+      newWhereAmI =
+        results?.features[0].attributes[
+        terria.configParameters.whereAmIParams.fieldResult
+        ];
+      const fieldResultDetailed =
+        terria.configParameters.whereAmIParams?.fieldResultDetailed;
+      if (fieldResultDetailed) {
+        newWhereAmIDetailed =
+          results?.features[0].attributes[fieldResultDetailed];
+      }
+    } else if (tmpResults?.features?.length > 0) {
+      newWhereAmI =
+        tmpResults?.features[0].attributes[
+        terria.configParameters.whereAmIParams.fieldResult
+        ];
+      const fieldResultDetailed =
+        terria.configParameters.whereAmIParams?.fieldResultDetailed;
+      if (fieldResultDetailed) {
+        newWhereAmIDetailed =
+          tmpResults?.features[0].attributes[fieldResultDetailed];
+      }
+    }
+    if (setResult) {
+      setResult(newWhereAmI, newWhereAmIDetailed);
+    }
+    this.setWhereAmI(newWhereAmI, newWhereAmIDetailed);
+  }
+
+  @action
+  setWhereAmI = (
+    whereAmI: string | undefined,
+    whereAmIDetailed: string | undefined
+  ) => {
+    this.whereAmI = whereAmI;
+    this.whereAmIDetailed = whereAmIDetailed;
+  };
+
 
   sampleAccurateHeight(
     terrainProvider: TerrainProvider,

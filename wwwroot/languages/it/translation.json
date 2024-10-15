@@ -19,7 +19,15 @@
     "showRawData": "Mostra i dati grezzi",
     "satelliteSuggestionBtn": "Mostra {{catalogItemName}} in questa posizione",
     "clickToAddData": "Clicca su '$t(addData.addDataBtnText)' per aggiungere dati alla mappa.",
-    "clickMap": "Clicca sulla mappa per saperne di più su una posizione"
+    "clickMap": "Clicca sulla mappa per saperne di più su una posizione",
+    "heightAboveSea": "m s.l.m.",
+    "elevation": "Altitudine",
+    "copyButtonTooltip": "Copia le coordinate negli appunti",
+    "pinButtonTooltip": "Mostra il punto sulla mappa",
+    "downloadButtonTooltip": "Scarica le coordinate come GPX",
+    "whereAmI": "Dove sono?",
+    "positionDetails": "dettagli della posizione",
+    "details": "Dettagli"
   },
   "countDatasets": {
     "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>",
