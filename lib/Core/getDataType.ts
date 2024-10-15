@@ -1,10 +1,12 @@
 import i18next from "i18next";
 import { action, observable } from "mobx";
+import { type ComponentType } from "react";
 
 interface DataType {
   value: string;
   name: string;
   description?: string;
+  customComponent?: ComponentType;
 }
 
 export interface RemoteDataType extends DataType {}
@@ -43,6 +45,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "esri-mapServer",
     name: "core.dataType.esri-mapServer"
+  },
+  {
+    value: "esri-imageServer",
+    name: "core.dataType.esri-imageServer"
   },
   /* {
         value: "esri-mapServer-group",
@@ -128,6 +134,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "cog",
     name: "core.dataType.cog"
+  },
+  {
+    value: "i3s",
+    name: "core.dataType.i3s"
   }
   // Add next builtin remote upload type
 ];
@@ -190,14 +200,14 @@ const builtinLocalDataTypes: LocalDataType[] = [
 ];
 
 /**
- * Custom remote data types. Add to it by calling addRemoteDataType().
+ * Custom remote data types. Add to it by calling addOrReplaceRemoteFileUploadType().
  */
 export const customRemoteDataTypes: Map<string, RemoteDataType> = observable(
   new Map()
 );
 
 /**
- * Custom local data types. Add by calling addLocalDataType().
+ * Custom local data types. Add by calling addOrReplaceLocalFileUploadType().
  */
 export const customLocalDataTypes: Map<string, LocalDataType> = observable(
   new Map()
@@ -205,24 +215,24 @@ export const customLocalDataTypes: Map<string, LocalDataType> = observable(
 
 export default function getDataTypes(): GetDataTypes {
   const uniqueRemoteDataTypes: Map<string, RemoteDataType> = new Map([
-    ...(builtinRemoteDataTypes.map((dtype) => [
-      dtype.value,
-      translateDataType(dtype)
-    ]) as [string, RemoteDataType][]),
+    ...(builtinRemoteDataTypes.map((dtype) => [dtype.value, dtype]) as [
+      string,
+      RemoteDataType
+    ][]),
     ...customRemoteDataTypes.entries()
   ]);
 
   const uniqueLocalDataTypes: Map<string, LocalDataType> = new Map([
-    ...(builtinLocalDataTypes.map((dtype) => [
-      dtype.value,
-      translateDataType(dtype)
-    ]) as [string, LocalDataType][]),
+    ...(builtinLocalDataTypes.map((dtype) => [dtype.value, dtype]) as [
+      string,
+      LocalDataType
+    ][]),
     ...customLocalDataTypes.entries()
   ]);
 
   return {
-    remoteDataType: [...uniqueRemoteDataTypes.values()],
-    localDataType: [...uniqueLocalDataTypes.values()]
+    remoteDataType: [...uniqueRemoteDataTypes.values()].map(translateDataType),
+    localDataType: [...uniqueLocalDataTypes.values()].map(translateDataType)
   };
 }
 
@@ -261,6 +271,7 @@ function translateDataType<T extends DataType>(dataType: T): T {
     name: i18next.t(dataType.name),
     description: dataType.description
       ? i18next.t(dataType.description)
-      : undefined
+      : undefined,
+    customComponent: dataType.customComponent
   };
 }

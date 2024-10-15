@@ -6,6 +6,7 @@ type PropsType = {
   viewState: ViewState;
   // Pass in options to customize the title and other presentation aspects of the error
   terriaErrorOptions?: TerriaErrorOverrides;
+  children?: React.ReactNode;
 };
 
 /**
@@ -14,13 +15,13 @@ type PropsType = {
 export default class RaiseToUserErrorBoundary extends React.Component<PropsType> {
   state = { hasError: false };
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError(_error: Error) {
     return {
       hasError: true
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
     this.props.viewState.terria.raiseErrorToUser(
       error,
       this.props.terriaErrorOptions

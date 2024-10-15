@@ -60,8 +60,6 @@ export class ArcGisPortalStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisPortalCatalogGroup
   ): Promise<ArcGisPortalStratum | undefined> {
-    const terria = catalogGroup.terria;
-
     let portalGroupsServerResponse:
       | ArcGisPortalGroupSearchResponse
       | undefined = undefined;

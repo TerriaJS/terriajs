@@ -4,11 +4,12 @@
 @include empty-module("inner");
 
 .tab-panels {
-  width: 50%;
+  width: fit-content;
+  min-width: 50%;
   max-width: 600px;
   margin: 3vh auto;
   text-align: left;
-  padding-top: 10vh;
+  //padding-top: 10vh;
 }
 .tab-panel {
   text-align: left;
@@ -59,6 +60,7 @@
 .dropdown {
   &__list {
     height: 250px;
+    overflow-y: visible;
   }
   @media (max-height: 800px) {
     &__list {

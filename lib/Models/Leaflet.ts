@@ -60,12 +60,6 @@ import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import Terria from "./Terria";
 
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
-
 // This class is an observer. It probably won't contain any observables itself
 
 export default class Leaflet extends GlobeOrMap {
@@ -173,7 +167,7 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: this._leafletVisualizer.visualizersCallback as any // TODO: fix type error
+      visualizersCallback: this._leafletVisualizer.visualizersCallback
     });
 
     this._eventHelper = new EventHelper();
@@ -602,7 +596,7 @@ export default class Leaflet extends GlobeOrMap {
    */
 
   @action
-  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
+  private async _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
@@ -625,7 +619,9 @@ export default class Leaflet extends GlobeOrMap {
       typeof catalogItem.getFeaturesFromPickResult === "function" &&
       this.terria.allowFeatureInfoRequests
     ) {
-      const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+      const result = await catalogItem.getFeaturesFromPickResult.bind(
+        catalogItem
+      )(
         undefined,
         entity,
         (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests

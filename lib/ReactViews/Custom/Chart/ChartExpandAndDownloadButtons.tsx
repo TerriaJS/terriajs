@@ -13,8 +13,7 @@ import { Button, StyledButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
 import Styles from "./chart-expand-and-download-buttons.scss";
-
-const Dropdown = require("../../Generic/Dropdown");
+import Dropdown from "../../Generic/Dropdown";
 
 interface PropsType extends WithTranslation {
   terria: Terria;

@@ -178,7 +178,7 @@ function WebFeatureServiceSearchProviderMixin<
             results.results.push(...searchResults);
           });
         })
-        .catch((e) => {
+        .catch((_e) => {
           if (results.isCanceled) {
             // A new search has superseded this one, so ignore the result.
             return;

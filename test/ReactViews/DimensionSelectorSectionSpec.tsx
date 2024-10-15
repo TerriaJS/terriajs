@@ -43,7 +43,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-2",
       allowUndefined: true,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
+      setDimensionValue: (_stratumId: string, _newStyle: string) => {}
     },
     {
       id: "some-id-2",
@@ -55,7 +55,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-3",
       allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
+      setDimensionValue: (_stratumId: string, _newStyle: string) => {}
     },
     {
       id: "some-id-3",
@@ -67,7 +67,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-8",
       allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {},
+      setDimensionValue: (_stratumId: string, _newStyle: string) => {},
       disable: true
     },
     {
@@ -79,7 +79,7 @@ export default class TestCatalogItem
       ],
       selectedId: "false",
       type: "checkbox",
-      setDimensionValue: (stratumId, newStyle) => {}
+      setDimensionValue: (_stratumId, _newStyle) => {}
     }
   ];
 }

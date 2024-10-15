@@ -10,6 +10,7 @@ import {
   toJS
 } from "mobx";
 import Mustache from "mustache";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
@@ -35,8 +36,6 @@ import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
-
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits
@@ -361,7 +360,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
-          // Use cesium primitives so we don't have to deal with feature picking/selection
+          // Use cesium primitives, so we don't have to deal with feature picking/selection
           forceCesiumPrimitives: true,
           geoJsonData: {
             type: "FeatureCollection",
@@ -369,10 +368,10 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
             totalFeatures: this.geojsonFeatures!.length
           }
         }).logError(
-          "Error ocurred while updating Input Features GeoJSON model JSON"
+          "Error occurred while updating Input Features GeoJSON model JSON"
         );
       });
-      (await this.geoJsonItem!.loadMapItems()).throwIfError;
+      (await this.geoJsonItem!.loadMapItems()).throwIfError();
     }
 
     runInAction(() => {

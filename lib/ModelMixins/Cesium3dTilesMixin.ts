@@ -11,8 +11,6 @@ import {
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -24,7 +22,6 @@ import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTil
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
@@ -33,9 +30,7 @@ import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Model, { BaseModel } from "../Models/Definition/Model";
-import StratumOrder from "../Models/Definition/StratumOrder";
+import Model from "../Models/Definition/Model";
 import TerriaFeature from "../Models/Feature/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
@@ -45,32 +40,12 @@ import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-
-class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
-  constructor(...args: any[]) {
-    super(...args);
-    makeObservable(this);
-  }
-
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new Cesium3dTilesStratum() as this;
-  }
-
-  @computed
-  get opacity() {
-    return 1.0;
-  }
-}
-
-// Register the Cesium3dTilesStratum
-StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
-
-const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
+import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
-class ObservableCesium3DTileset extends Cesium3DTileset {
+export class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
   @observable destroyed = false;
 
@@ -95,17 +70,14 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 type BaseType = Model<Cesium3dTilesTraits>;
 
 function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
-  abstract class Cesium3dTilesMixin extends ClippingMixin(
-    ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
+  abstract class Cesium3dTilesMixin extends Cesium3dTilesStyleMixin(
+    ClippingMixin(ShadowMixin(MappableMixin(CatalogMemberMixin(Base))))
   ) {
     protected tileset?: ObservableCesium3DTileset;
 
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
-      runInAction(() => {
-        this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
-      });
     }
 
     get hasCesium3dTilesMixin() {
@@ -374,98 +346,6 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return resource;
     }
 
-    @computed get showExpressionFromFilters() {
-      if (!isDefined(this.filters)) {
-        return;
-      }
-      const terms = this.filters.map((filter) => {
-        if (!isDefined(filter.property)) {
-          return "";
-        }
-
-        // Escape single quotes, cast property value to number
-        const property =
-          "Number(${feature['" + filter.property.replace(/'/g, "\\'") + "']})";
-        const min =
-          isDefined(filter.minimumValue) &&
-          isDefined(filter.minimumShown) &&
-          filter.minimumShown > filter.minimumValue
-            ? property + " >= " + filter.minimumShown
-            : "";
-        const max =
-          isDefined(filter.maximumValue) &&
-          isDefined(filter.maximumShown) &&
-          filter.maximumShown < filter.maximumValue
-            ? property + " <= " + filter.maximumShown
-            : "";
-
-        return [min, max].filter((x) => x.length > 0).join(" && ");
-      });
-
-      const showExpression = terms.filter((x) => x.length > 0).join("&&");
-      if (showExpression.length > 0) {
-        return showExpression;
-      }
-    }
-
-    @computed get cesiumTileStyle() {
-      if (
-        !isDefined(this.style) &&
-        (!isDefined(this.opacity) || this.opacity === 1) &&
-        !isDefined(this.showExpressionFromFilters)
-      ) {
-        return;
-      }
-
-      const style = clone(toJS(this.style) || {});
-      const opacity = clone(toJS(this.opacity));
-
-      if (!isDefined(style.defines)) {
-        style.defines = { opacity };
-      } else {
-        style.defines = Object.assign(style.defines, { opacity });
-      }
-
-      // Rewrite color expression to also use the models opacity setting
-      if (!isDefined(style.color)) {
-        // Some tilesets (eg. point clouds) have a ${COLOR} variable which
-        // stores the current color of a feature, so if we have that, we should
-        // use it, and only change the opacity.  We have to do it
-        // component-wise because `undefined` is mapped to a large float value
-        // (czm_infinity) in glsl in Cesium and so can only be compared with
-        // another float value.
-        //
-        // There is also a subtle bug which prevents us from using an
-        // expression in the alpha part of the rgba().  eg, using the
-        // expression '${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity}'
-        // to generate an opacity value will cause Cesium to generate wrong
-        // translucency values making the tileset translucent even when the
-        // computed opacity is 1.0. It also makes the whole of the point cloud
-        // appear white when zoomed out to some distance.  So for now, the only
-        // solution is to discard the opacity from the tileset and only use the
-        // value from the opacity trait.
-        style.color =
-          "(rgba(" +
-          "(${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255," +
-          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255," +
-          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
-          "${opacity}" +
-          "))";
-      } else if (typeof style.color === "string") {
-        // Check if the color specified is just a css color
-        const cssColor = Color.fromCssColorString(style.color);
-        if (isDefined(cssColor)) {
-          style.color = `color('${style.color}', \${opacity})`;
-        }
-      }
-
-      if (isDefined(this.showExpressionFromFilters)) {
-        style.show = toJS(this.showExpressionFromFilters);
-      }
-
-      return new Cesium3DTileStyle(style);
-    }
-
     /**
      * This function should return null if allowFeaturePicking = false
      * @param _screenPosition
@@ -633,15 +513,6 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         }
       });
     }
-
-    /**
-     * The color to use for highlighting features in this catalog item.
-     *
-     */
-    @override
-    get highlightColor(): string {
-      return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
-    }
   }
 
   return Cesium3dTilesMixin;
@@ -654,8 +525,6 @@ namespace Cesium3dTilesMixin {
     return model && model.hasCesium3dTilesMixin;
   }
 }
-
-export default Cesium3dTilesMixin;
 
 function normalizeShowExpression(show: any): {
   conditions: [string, boolean][];
@@ -682,3 +551,5 @@ function normalizeColorExpression(expr: any): {
   if (isJsonObject(expr)) Object.assign(normalized, expr);
   return normalized;
 }
+
+export default Cesium3dTilesMixin;

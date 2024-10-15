@@ -1,6 +1,43 @@
 # Change Log
 
-#### next release (8.7.5)
+#### next release (8.7.8)
+
+- [The next improvement]
+
+#### 8.7.7 - 2024-10-01
+
+- **Breaking changes:**
+
+  - Remove RollbarErrorServiceProvder
+  - Error services now instantiated externally to terriajs
+
+- Fix remaining lint warnings
+- Augment cesium types and start using import instead of require in ts files
+- Update to sass 1.79.1
+- Add option to import assets from Cesium ion through the Add data panel. Use map config parameter "cesiumIonOAuth2ApplicationID" to enable the feature.
+
+#### 8.7.6 - 2024-08-22
+
+- Add I3SCatalogItem
+  - getFeaturesFromPickResult now async to handle I3SNode.loadFields()
+  - extract common style logic to new Cesium3dTilesStyleMixin.ts
+- Set default value for date and datetime WPS fields only when the field is marked as required.
+- Fix Sass deprecation warnings (declarations after nested blocks)
+- Fix legend shown for WMS difference output item
+- Add `diffItemProperties` trait to override properties of WSM difference output item. Useful for customizing feature info template strings etc.
+- Add Proj4 definition for EPSG:8059
+- Upgrade to terriajs-cesium 8.0.1.
+- Re-enable terrain splitting.
+- Add support for ArcGis ImageServer - this includes
+  - Support for "dynamic" `exportImage` endpoint (using `102100` wkid)
+  - Support for web mercator and wgs84 precached tiles
+  - Basic support for raster functions - a dropdown is rendered in the workbench for custom raster functions
+  - Traits to configure `bandIds` and `renderingRule`
+- Increase `maxRefreshIntervals` from 1000 to 10000 for `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem`.
+- Add `nextDiscreteJulianDate` helper computed value to `DiscretelyTimeVaryingMixin`
+- Add `EPSG:7899` to `Proj4Definitions`
+
+#### 8.7.5 - 2024-06-26
 
 - TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Upgraded a bunch of d3 dependencies for fixing security errors.

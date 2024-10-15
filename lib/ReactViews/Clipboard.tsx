@@ -58,6 +58,7 @@ const Clipboard: React.FC<ClipboardProps> = (props) => {
       removeTimeout();
       clipboardBtn.destroy();
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [id]);
 
   const isLightTheme = theme === "light";
