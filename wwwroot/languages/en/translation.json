@@ -336,7 +336,15 @@
     "siteData": "Site Data",
     "latLon": "Lat / Lon ",
     "showRawData": "Show Raw Data",
-    "showCuratedData": "Show Curated Data"
+    "showCuratedData": "Show Curated Data",
+    "heightAboveSea": "m a.t.s.",
+    "elevation": "Elevation",
+    "copyButtonTooltip": "Copy coordinates to the clipboard",
+    "pinButtonTooltip": "Show the pin on the map",
+    "downloadButtonTooltip": "Dowload point as GPX",
+    "whereAmI": "Where am I?",
+    "positionDetails": "position details",
+    "details": "Details"
   },
   "welcomeMessage": {
     "title": "Let's get you started",
