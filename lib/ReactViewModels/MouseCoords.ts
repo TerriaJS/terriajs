@@ -253,7 +253,8 @@ export default class MouseCoords {
 
     const prettyCoordinate = prettifyCoordinates(longitude, latitude, {
       height: coordinates.height,
-      errorBar: errorBar
+      errorBar: undefined,
+      digits: 6
     });
     this.latitude = prettyCoordinate.latitude;
     this.longitude = prettyCoordinate.longitude;

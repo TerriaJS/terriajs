@@ -263,7 +263,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);
-    const pretty = prettifyCoordinates(longitude, latitude);
+    const pretty = prettifyCoordinates(longitude, latitude, { errorBar: undefined, digits: 6 });
     // this.locationUpdated(longitude, latitude);
 
     const prettyHeight = this.props.viewState.terria.cesium
@@ -412,15 +412,7 @@ class FeatureInfoPanel extends React.Component<Props> {
         cartographic,
         this.setWhereAmI
       );
-      /*terria.pickedPosition = terria.currentViewer.mouseCoords.cartographic;
-      if(terria.pickedPosition)
-        terria.pickedPosition.height = parseFloat(terria.currentViewer.mouseCoords.elevation ?? "");*/
-      if (!terria.pickedPosition) {
-        terria.pickedPosition = cartographic;
-      }
-      terria.pickedPosition.latitude = cartographic.latitude;
-      terria.pickedPosition.longitude = cartographic.longitude;
-      terria.pickedPosition.height = cartographic.height;
+      terria.pickedPosition = cartographic.clone();
     }
   }
 

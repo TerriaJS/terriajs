@@ -16,7 +16,7 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel").default;
 import createZoomToFunction from "../../../../Map/Vector/zoomRectangleFromPoint";
 import loadJson from "../../../../Core/loadJson";
-import { action, IReactionDisposer, makeObservable, observable, reaction, runInAction } from "mobx";
+import { action, autorun, IReactionDisposer, makeObservable, observable, reaction, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 
@@ -36,13 +36,6 @@ const CoordsText = (props: ICoordsTextProps) => {
 
   useEffect(() => {
     const clipboardBtn = new clipboard(`.btn-copy-${props.name}`);
-
-    clipboardBtn.on("success", (evt) => {
-      console.log("ok");
-    });
-    clipboardBtn.on("error", () => {
-      console.log("error");
-    });
 
     return function cleanup() {
       clipboardBtn.destroy();
@@ -442,8 +435,9 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
           const longitude = CesiumMath.toDegrees(
             pickedPosition.longitude
           ).toFixed(6);
-          if (this.coordsInputTxt !== `${latitude}, ${longitude}`) {
-            this.coordsInputTxt = `${latitude}, ${longitude}`;
+          const newText = `${latitude}, ${longitude}`;
+          if (this.coordsInputTxt !== newText) {
+            this.coordsInputTxt = newText;
           }
         }
       }
@@ -451,15 +445,12 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
   }
 
   changeOpenState(open: boolean) {
-
-
-    console.log("aproooo: " + open)
-
     this.setState({
       isOpen: open
     });
   }
 
+  @action
   reset() {
     this.coordsInputTxt = "";
     this.coordsOutputTxt = "";
