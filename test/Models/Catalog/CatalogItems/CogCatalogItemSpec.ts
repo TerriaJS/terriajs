@@ -64,7 +64,6 @@ xdescribe("CogCatalogItem", function () {
           cogItem.setTrait(CommonStrata.user, "url", url);
           await cogItem.loadMapItems();
           const mapItem = cogItem.mapItems[0];
-          debugger;
           expect(ImageryParts.is(mapItem)).toBe(true);
           if (ImageryParts.is(mapItem)) {
             expect(mapItem.imageryProvider instanceof TIFFImageryProvider).toBe(
