@@ -24,6 +24,13 @@ export class CogRenderOptionsTraits extends ModelTraits {
     description: "Try to render multi band cog to RGB, priority 1"
   })
   convertToRGB?: boolean;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Resample Method",
+    description: "Geotiff resample method. Defaults to `bilinear`."
+  })
+  resampleMethod?: "nearest" | "bilinear" = "bilinear";
 }
 
 @traitClass({
@@ -79,12 +86,4 @@ export default class CogCatalogItemTraits extends mixTraits(
     description: "Cache survival time in milliseconds."
   })
   cache?: number;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Resample Method",
-    description: "Geotiff resample method."
-    // options: ["nearest", "bilinear", "linear"]
-  })
-  resampleMethod?: "nearest" | "bilinear" | "linear";
 }

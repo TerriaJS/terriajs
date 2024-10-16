@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01
@@ -44,8 +45,6 @@
 - Show rectangle selector for WPS bounding box parameter
 - Fix `store` and `status` values send in WPS Execute request.
 - Add docs for `modelDimensions`
-- Add support for Cloud Optimised Geotiff (cog) in Cesium mode.
-- [The next improvement]
 
 #### 8.7.4 - 2024-06-07
 

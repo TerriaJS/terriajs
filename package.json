@@ -177,7 +177,7 @@
     "terriajs-cesium": "8.0.1",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "terriajs-tiff-imagery-provider": "2.10.5-terria.1.1",
+    "terriajs-tiff-imagery-provider": "2.13.3",
     "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
