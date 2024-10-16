@@ -829,7 +829,7 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "disclaimer": "Disclaimer",
-      "basemap": "Basemap",
+      "basemap": "Basemap attribution",
       "dataProvider": "Data provided by:"
     }
   },
