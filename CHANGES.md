@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Fix the layout of the story builder and the item search tool.
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01
