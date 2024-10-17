@@ -30,7 +30,7 @@ export class CogRenderOptionsTraits extends ModelTraits {
     name: "Resample Method",
     description: "Geotiff resample method. Defaults to `bilinear`."
   })
-  resampleMethod?: "nearest" | "bilinear" = "bilinear";
+  resampleMethod?: "nearest" | "bilinear" = "nearest";
 }
 
 @traitClass({
