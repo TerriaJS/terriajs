@@ -1,130 +1,121 @@
-import { action } from "mobx";
 import { TIFFImageryProvider } from "terriajs-tiff-imagery-provider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CogCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CogCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
 
-const TEST_URLS = [
-  "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/52/J/FS/2023/5/S2A_52JFS_20230501_0_L2A/TCI.tif",
-  "https://oin-hotosm.s3.amazonaws.com/5b17d8822b6a08001185f75f/0/5b17d8822b6a08001185f760.tif",
-  "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n32w100/USGS_13_n32w100.tif"
-];
+const TEST_URLS = {
+  "4326": "/test/cogs/4326.tif", // a 1x1 tif in native EPSG:4326 projection
+  "32756": "/test/cogs/32756.tif" // a 1x1 tif in non-native 32756 projection
+};
 
-/**
- * Checks if a given URL returns a 200 status. This is used to determine which URLs are valid for testing, in case any are taken down in the future.
- * Tests fail if no URLS found to be valid, and pass if at least one can be used to run successful tests.
- *
- * @param url The URL to check.
- * @returns A promise that resolves to true if the URL returns a 200 status, otherwise false.
- */
-async function urlExists(url: string): Promise<boolean> {
-  try {
-    const response = await fetch(url, { method: "HEAD" });
-    return response.ok;
-  } catch (error) {
-    return false;
-  }
-}
+describe("CogCatalogItem", function () {
+  let item: CogCatalogItem;
 
-xdescribe("CogCatalogItem", function () {
-  let terria: Terria;
-  let validUrls: string[] = [];
-
-  beforeAll(async function () {
-    terria = new Terria();
-
-    // Check which URLs are valid
-    const results = await Promise.all(TEST_URLS.map(urlExists));
-    validUrls = TEST_URLS.filter((url, index) => results[index]);
-    // Fail the tests if no valid URLs are found
-    if (validUrls.length === 0) {
-      throw new Error("No valid test URLs found.");
-    }
+  beforeEach(function () {
+    item = new CogCatalogItem("test", new Terria());
   });
 
   it("should have a type 'cog'", function () {
-    const cogItem = new CogCatalogItem("test", terria);
-    expect(cogItem.type).toEqual("cog");
+    expect(item.type).toEqual("cog");
   });
 
   it("can be instantiated", function () {
-    const cogItem = new CogCatalogItem("test", terria);
-    expect(cogItem).toBeDefined();
+    expect(item).toBeDefined();
   });
 
   describe("mapItems", function () {
     // Test for each valid URL
-
-    function testMapItems(url: string) {
-      it(
-        `should return a TIFFImageryProvider for URL: ${url}`,
-        action(async function () {
-          const cogItem = new CogCatalogItem("test", terria);
-          cogItem.setTrait(CommonStrata.user, "url", url);
-          await cogItem.loadMapItems();
-          const mapItem = cogItem.mapItems[0];
-          expect(ImageryParts.is(mapItem)).toBe(true);
-          if (ImageryParts.is(mapItem)) {
-            expect(mapItem.imageryProvider instanceof TIFFImageryProvider).toBe(
-              true
-            );
-          }
-        })
-      );
-    }
-
-    validUrls.forEach(testMapItems);
+    it(`should return a TIFFImageryProvider`, async function () {
+      const testUrl = TEST_URLS["4326"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
+      await item.loadMapItems();
+      const mapItem = item.mapItems[0];
+      expect(mapItem).toBeDefined();
+      expect(ImageryParts.is(mapItem)).toBe(true);
+      if (ImageryParts.is(mapItem)) {
+        expect(mapItem.imageryProvider instanceof TIFFImageryProvider).toBe(
+          true
+        );
+      }
+    });
   });
 
-  describe("the constructed TIFFImageryProvider", function () {
-    let item: CogCatalogItem;
+  describe("TIFFImageryProvider initialization", function () {
+    it("uses the correct url", async function () {
+      const testUrl = TEST_URLS["4326"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
 
-    beforeEach(function () {
-      item = new CogCatalogItem("test", terria);
+      const fromUrl = spyOn(TIFFImageryProvider, "fromUrl").and.callThrough();
+      await item.loadMapItems();
+      debugger;
+      expect(item.mapItems[0]).toBeDefined();
+
+      const [url] = fromUrl.calls.first().args;
+      expect(url).toBe(testUrl);
     });
 
-    // Test each valid URL for various properties and functions
-    validUrls.forEach((url) => {
-      it(`should set the URL from traits for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "url", url);
-        const imageryProvider = getImageryProvider(item);
-        expect((imageryProvider as any).options.url.startsWith(url)).toBe(true);
+    it("correctly initializes the basic TIFFImageryProvider options", async function () {
+      const testUrl = TEST_URLS["4326"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
+      item.setTrait(CommonStrata.user, "credit", "Y");
+      item.setTrait(CommonStrata.user, "tileSize", 1);
+      item.setTrait(CommonStrata.user, "minimumLevel", 5);
+      item.setTrait(CommonStrata.user, "maximumLevel", 10);
+      item.setTrait(CommonStrata.user, "hasAlphaChannel", false);
+      await item.loadMapItems();
+
+      const imageryProvider = getImageryProvider(item);
+      expect(imageryProvider).toBeDefined();
+      expect(imageryProvider.credit.html).toBe("Y");
+      expect(imageryProvider.tileSize).toBe(1);
+      expect(imageryProvider.minimumLevel).toBe(5);
+      expect(imageryProvider.maximumLevel).toBe(10);
+      expect(imageryProvider.hasAlphaChannel).toBe(false);
+    });
+
+    describe("renderOptions", function () {
+      it("is set correctly", async function () {
+        const testUrl = TEST_URLS["4326"];
+        item.setTrait(CommonStrata.user, "url", testUrl);
+        updateModelFromJson(item.renderOptions, CommonStrata.user, {
+          nodata: 42,
+          convertToRGB: true,
+          resampleMethod: "bilinear"
+        });
+        await item.loadMapItems();
+        const renderOptions = getImageryProvider(item)?.renderOptions;
+        expect(renderOptions).toBeDefined();
+
+        expect(renderOptions.nodata).toBe(42);
+        expect(renderOptions.convertToRGB).toBe(true);
+        expect(renderOptions.resampleMethod).toBe("bilinear");
       });
 
-      it(`should set the nodata value from renderOptions for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "url", url);
-        const imageryProvider = getImageryProvider(item);
-        expect((imageryProvider as any).options.renderOptions.nodata).toBe(0);
+      it("uses a default value of `bilinear` for `resampleMethod'", async function () {
+        const testUrl = TEST_URLS["4326"];
+        item.setTrait(CommonStrata.user, "url", testUrl);
+        updateModelFromJson(item.renderOptions, CommonStrata.user, {});
+        await item.loadMapItems();
+        const renderOptions = getImageryProvider(item)?.renderOptions;
+        expect(renderOptions).toBeDefined();
+        expect(renderOptions.resampleMethod).toBe("nearest");
       });
+    });
+  });
 
-      it(`should enable feature picking if allowFeaturePicking is true for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "allowFeaturePicking", true);
-        item.setTrait(CommonStrata.user, "url", url);
-        const imageryProvider = getImageryProvider(item);
-        expect((imageryProvider as any).options.enablePickFeatures).toBe(true);
-      });
+  describe("reprojection", function () {
+    it("reprojects non native projections", async function () {
+      const testUrl = TEST_URLS["32756"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
 
-      it(`should set the correct projection function for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "url", url);
-        const imageryProvider = getImageryProvider(item);
-        const projFunc = (imageryProvider as any).options.projFunc(32752);
-        expect(projFunc).toBeDefined();
-        expect(typeof projFunc.project).toBe("function");
-        expect(typeof projFunc.unproject).toBe("function");
-      });
+      const mockReprojector = jasmine.createSpy();
+      item.reprojector = () => mockReprojector;
+      await item.loadMapItems();
 
-      it(`should return undefined projFunc for native projections for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "url", url);
-        const imageryProvider = getImageryProvider(item);
-        const projFunc = (imageryProvider as any).options.projFunc(4326);
-        expect(projFunc).toBeUndefined();
-      });
-
-      it(`should return an empty array when imageryProvider is not defined for URL: ${url}`, function () {
-        item.setTrait(CommonStrata.user, "url", url);
-        expect(item.mapItems).toEqual([]);
-      });
+      expect(mockReprojector.calls.count()).toBe(1);
+      expect(mockReprojector.calls.first().args[0]).toBe(32756);
     });
   });
 });

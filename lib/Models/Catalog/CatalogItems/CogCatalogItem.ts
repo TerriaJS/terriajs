@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { computed, makeObservable, observable, runInAction } from "mobx";
-import proj4 from "proj4-fully-loaded";
 import {
   GeographicTilingScheme,
   WebMercatorTilingScheme
@@ -84,6 +83,13 @@ export default class CogCatalogItem extends MappableMixin(
   @observable
   _imageryProvider: TIFFImageryProvider | undefined;
 
+  /**
+   * The reprojector function to use for reprojecting non native projections
+   *
+   * Exposed here as instance variable for stubbing in specs.
+   */
+  reprojector = reprojector;
+
   get type() {
     return CogCatalogItem.type;
   }
@@ -140,9 +146,12 @@ export default class CogCatalogItem extends MappableMixin(
     url: string
   ): Promise<TIFFImageryProvider> {
     // lazy load the imagery provider, only when needed
-    const { default: TIFFImageryProvider } = await import(
-      "terriajs-tiff-imagery-provider"
-    );
+    const [{ default: TIFFImageryProvider }, { default: proj4 }] =
+      await Promise.all([
+        import("terriajs-tiff-imagery-provider"),
+        import("proj4-fully-loaded")
+      ]);
+
     return runInAction(() =>
       TIFFImageryProvider.fromUrl(url, {
         credit: this.credit,
@@ -153,7 +162,7 @@ export default class CogCatalogItem extends MappableMixin(
         hasAlphaChannel: this.hasAlphaChannel,
         // used for reprojecting from an unknown projection to 4326/3857
         // note that this is experimental and could be slow as it runs on the main thread
-        projFunc: reprojector,
+        projFunc: this.reprojector(proj4),
         // make sure we omit `undefined` options so as not to override the library defaults
         renderOptions: omitUndefined({
           nodata: this.renderOptions.nodata,
@@ -168,19 +177,21 @@ export default class CogCatalogItem extends MappableMixin(
 /**
  * Function returning a custom reprojector
  */
-function reprojector(code: number) {
-  if (![4326, 3857, 900913].includes(code)) {
-    try {
-      const prj = proj4("EPSG:4326", `EPSG:${code}`);
-      if (prj)
-        return {
-          project: prj.forward,
-          unproject: prj.inverse
-        };
-    } catch (e) {
-      console.error(e);
+function reprojector(proj4: any) {
+  return (code: number) => {
+    if (![4326, 3857, 900913].includes(code)) {
+      try {
+        const prj = proj4("EPSG:4326", `EPSG:${code}`);
+        if (prj)
+          return {
+            project: prj.forward,
+            unproject: prj.inverse
+          };
+      } catch (e) {
+        console.error(e);
+      }
     }
-  }
+  };
 }
 
 /**
