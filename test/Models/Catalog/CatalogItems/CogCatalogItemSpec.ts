@@ -49,7 +49,6 @@ describe("CogCatalogItem", function () {
 
       const fromUrl = spyOn(TIFFImageryProvider, "fromUrl").and.callThrough();
       await item.loadMapItems();
-      debugger;
       expect(item.mapItems[0]).toBeDefined();
 
       const [url] = fromUrl.calls.first().args;
