@@ -289,6 +289,10 @@ export default function registerCatalogMembers() {
     matchesExtension("zip"),
     ShapefileCatalogItem.type
   );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("tif", "tiff", "geotiff"),
+    CogCatalogItem.type
+  );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
   UrlToCatalogMemberMapping.register(
@@ -414,8 +418,8 @@ function matchesUrl(regex: RegExp) {
   return /./.test.bind(regex);
 }
 
-export function matchesExtension(extension: string) {
-  const regex = new RegExp("\\." + extension + "$", "i");
+export function matchesExtension(...extensions: string[]) {
+  const regex = new RegExp("\\.(" + extensions.join("|") + ")$", "i");
   return function (url: string) {
     return Boolean(url.match(regex));
   };
