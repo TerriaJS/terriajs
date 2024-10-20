@@ -198,7 +198,7 @@ export default class Leaflet extends GlobeOrMap {
         map.boxZoom,
         map.keyboard,
         map.dragging,
-        map.tap
+        map.tapHold
       ]);
       const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
@@ -495,11 +495,9 @@ export default class Leaflet extends GlobeOrMap {
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
-      //throw new DeveloperError("target is required.");
     }
     let bounds;
 
-    // Target is a KML data source
     if (isDefined(target.entities)) {
       if (isDefined(this.dataSourceDisplay)) {
         bounds = this.dataSourceDisplay.getLatLngBounds(target);
@@ -516,19 +514,25 @@ export default class Leaflet extends GlobeOrMap {
           extent = target.cesiumRectangle;
         }
         if (!isDefined(extent)) {
-          // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
         extent = target.rectangle;
       }
 
-      // Account for a bounding box crossing the date line.
-      if (extent.east < extent.west) {
-        extent = Rectangle.clone(extent);
-        extent.east += CesiumMath.TWO_PI;
+      // Ensure extent is defined before accessing its properties
+      if (isDefined(extent)) {
+        // Account for a bounding box crossing the date line.
+        if (extent.east < extent.west) {
+          extent = Rectangle.clone(extent);
+          extent.east += CesiumMath.TWO_PI;
+        }
+        bounds = rectangleToLatLngBounds(extent);
+      } else {
+        // Handle the case where extent is undefined
+        console.error("Unable to determine bounds for zooming.");
+        return Promise.resolve();
       }
-      bounds = rectangleToLatLngBounds(extent);
     }
 
     if (isDefined(bounds)) {

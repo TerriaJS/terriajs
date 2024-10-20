@@ -122,7 +122,7 @@ class AddData extends React.Component {
         this.props.terria,
         this.props.viewState,
         this.state.remoteUrl,
-        this.props.viewState.remoteDataType.value
+        this.props.viewState.remoteDataType?.value
       );
     } else if (this.props.viewState.remoteDataType.value === "json") {
       promise = loadJson(this.state.remoteUrl)
