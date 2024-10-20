@@ -1,3 +1,4 @@
+import { reaction, when } from "mobx";
 import { TIFFImageryProvider } from "terriajs-tiff-imagery-provider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CogCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CogCatalogItem";
@@ -115,6 +116,50 @@ describe("CogCatalogItem", function () {
 
       expect(mockReprojector.calls.count()).toBe(1);
       expect(mockReprojector.calls.first().args[0]).toBe(32756);
+    });
+  });
+
+  describe("imageryProvider destruction", function () {
+    it("destroys the imageryProvider when `mapItems` is no longer observed", async function () {
+      const testUrl = TEST_URLS["4326"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
+      const destroyReaction = reaction(
+        () => item.mapItems,
+        () => {},
+        { fireImmediately: true }
+      );
+      await when(() => item.mapItems.length > 0);
+      const imageryProvider = getImageryProvider(item);
+      expect(imageryProvider).toBeDefined();
+      const destroy = spyOn(imageryProvider, "destroy");
+
+      destroyReaction();
+      expect(destroy).toHaveBeenCalledTimes(1);
+    });
+
+    it("once destroyed, it re-creates imageryProvider if `mapItems` is observed again", async function () {
+      const testUrl = TEST_URLS["4326"];
+      item.setTrait(CommonStrata.user, "url", testUrl);
+      const destroyReaction1 = reaction(
+        () => item.mapItems,
+        () => {},
+        { fireImmediately: true }
+      );
+      await when(() => item.mapItems.length > 0);
+      const imageryProvider1 = getImageryProvider(item);
+      expect(imageryProvider1).toBeDefined();
+      destroyReaction1();
+      expect(item.mapItems.length).toBe(0);
+
+      const destroyReaction2 = reaction(
+        () => item.mapItems,
+        () => {},
+        { fireImmediately: true }
+      );
+      await when(() => item.mapItems.length > 0);
+      const imageryProvider2 = getImageryProvider(item);
+      expect(imageryProvider2).toBeDefined();
+      destroyReaction2();
     });
   });
 });

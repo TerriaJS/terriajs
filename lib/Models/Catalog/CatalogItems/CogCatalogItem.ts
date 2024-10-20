@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { computed, makeObservable, observable, runInAction } from "mobx";
+import {
+  computed,
+  makeObservable,
+  observable,
+  onBecomeObserved,
+  onBecomeUnobserved,
+  runInAction
+} from "mobx";
 import {
   GeographicTilingScheme,
   WebMercatorTilingScheme
@@ -105,6 +112,26 @@ export default class CogCatalogItem extends MappableMixin(
       CogLoadableStratum.stratumName,
       new CogLoadableStratum(this)
     );
+
+    // Destroy the imageryProvider when `mapItems` is no longer consumed. This
+    // is so that the webworkers and other resources created by the
+    // imageryProvider can be freed. Ideally, there would be a more explicit
+    // `destroy()` method in Terria life-cycle so that we don't have to rely on
+    // mapItems becoming observed or unobserved.
+    onBecomeUnobserved(this, "mapItems", () => {
+      if (this._imageryProvider) {
+        this._imageryProvider.destroy();
+        this._imageryProvider = undefined;
+      }
+    });
+
+    // Re-create the imageryProvider if `mapItems` is consumed again after we
+    // destroyed it
+    onBecomeObserved(this, "mapItems", () => {
+      if (!this._imageryProvider && !this.isLoadingMapItems) {
+        this.loadMapItems(true);
+      }
+    });
   }
 
   protected async forceLoadMapItems(): Promise<void> {
