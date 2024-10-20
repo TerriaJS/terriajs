@@ -198,7 +198,7 @@ export default class Leaflet extends GlobeOrMap {
         map.boxZoom,
         map.keyboard,
         map.dragging,
-        map.tap
+        map.tapHold
       ]);
       const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
