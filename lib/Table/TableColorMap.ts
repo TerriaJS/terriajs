@@ -111,10 +111,10 @@ export default class TableColorMap {
     return this.colorMap instanceof DiscreteColorMap
       ? "bin"
       : this.colorMap instanceof ContinuousColorMap
-      ? "continuous"
-      : this.colorMap instanceof EnumColorMap
-      ? "enum"
-      : "constant";
+        ? "continuous"
+        : this.colorMap instanceof EnumColorMap
+          ? "enum"
+          : "constant";
   }
 
   /**

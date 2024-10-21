@@ -4,6 +4,7 @@
 
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - [The next improvement]
+- Upgrade prettier to version 3.3.2
 
 #### 8.7.7 - 2024-10-01
 
