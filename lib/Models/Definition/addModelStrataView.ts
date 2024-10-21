@@ -14,14 +14,11 @@ import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
 >(
-  model: Stratified<InstanceType<T>>,
+  /* TODO: Use a more specific type than "Function". */
+  /* eslint-disable-next-line @typescript-eslint/ban-types */
+  model: Stratified<InstanceType<T>> | Function,
   Traits: T
 ): ModelPropertiesFromTraits<InstanceType<T>>;
-export default function addModelStrataView<
-  T extends TraitsConstructor<ModelTraits>
-  /* TODO: Fix this overload type */
-  /* eslint-disable-next-line @typescript-eslint/ban-types */
->(model: Function, Traits: T): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
 >(model: any, Traits: T): ModelPropertiesFromTraits<InstanceType<T>> {

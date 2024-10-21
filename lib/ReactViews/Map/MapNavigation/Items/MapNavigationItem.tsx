@@ -20,10 +20,6 @@ interface PropTypes {
 
 @observer
 class MapNavigationItemBase extends React.Component<PropTypes> {
-  constructor(props: PropTypes) {
-    super(props);
-  }
-
   render() {
     const { closeTool = true, item, expandInPlace, i18n } = this.props;
     if (item.render)
