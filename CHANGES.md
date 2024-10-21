@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01

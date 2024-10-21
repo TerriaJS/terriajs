@@ -1,16 +1,20 @@
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
-import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Workbench from "../../lib/Models/Workbench";
 import Result from "../../lib/Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
+import TerriaReference from "../../lib/Models/Catalog/CatalogReferences/TerriaReference";
 
 describe("Workbench", function () {
   let terria: Terria;
   let workbench: Workbench;
-  let item1: BaseModel, item2: BaseModel, item3: BaseModel, item4: BaseModel;
+  let item1: WebMapServiceCatalogItem,
+    item2: WebMapServiceCatalogItem,
+    item3: WebMapServiceCatalogItem,
+    item4: WebMapServiceCatalogItem,
+    ref: TerriaReference;
 
   beforeEach(function () {
     terria = new Terria();
@@ -20,6 +24,9 @@ describe("Workbench", function () {
     item2 = new WebMapServiceCatalogItem("B", terria);
     item3 = new WebMapServiceCatalogItem("C", terria);
     item4 = new WebMapServiceCatalogItem("D", terria);
+    ref = new TerriaReference("test", new Terria());
+    ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
+    ref.setTrait(CommonStrata.user, "path", ["MLzS8W", "fCUx4Y"]);
 
     item1.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
     item2.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
@@ -29,6 +36,24 @@ describe("Workbench", function () {
     terria.addModel(item1);
     terria.addModel(item2);
     terria.addModel(item3);
+  });
+
+  it("can collapse/expand all catalog items", async function () {
+    // See if it is compatible with references as well as ordinary catalog items.
+    workbench.items = [item1, ref];
+    await ref.loadReference();
+    workbench.collapseAll();
+    expect(item1.isOpenInWorkbench).toBe(false);
+    expect((ref.target as WebMapServiceCatalogItem).isOpenInWorkbench).toBe(
+      false
+    );
+    expect(workbench.shouldExpandAll).toBe(true);
+    workbench.expandAll();
+    expect(item1.isOpenInWorkbench).toBe(true);
+    expect((ref.target as WebMapServiceCatalogItem).isOpenInWorkbench).toBe(
+      true
+    );
+    expect(workbench.shouldExpandAll).toBe(false);
   });
 
   it("re-orders items correctly", function () {
