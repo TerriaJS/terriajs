@@ -62,7 +62,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     order: 2,
     screenSize: "medium",
-    render: <ZoomControl terria={terria} />
+    render: <ZoomControl terria={terria} viewState={viewState} />
   });
 
   const myLocation = new MyLocation({ terria });

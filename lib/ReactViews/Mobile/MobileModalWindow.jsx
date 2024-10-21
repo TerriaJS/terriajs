@@ -11,6 +11,8 @@ import DataPreview from "../Preview/DataPreview";
 import WorkbenchList from "../Workbench/WorkbenchList";
 import Styles from "./mobile-modal-window.scss";
 import MobileSearch from "./MobileSearch";
+import MappableMixin from "../../ModelMixins/MappableMixin";
+import MyDataTab from "../ExplorerWindow/Tabs/MyDataTab/MyDataTab.jsx";
 
 @observer
 class MobileModalWindow extends React.Component {
@@ -19,6 +21,19 @@ class MobileModalWindow extends React.Component {
     viewState: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
   };
+
+  async onFileAddFinished(files) {
+    const file = files.find(f => MappableMixin.isMixedInto(f));
+    if (file) {
+      const result = await this.props.viewState.viewCatalogMember(file);
+      if (result.error) {
+        result.raiseError(this.props.terria);
+      } else {
+        this.props.terria.currentViewer.zoomTo(file, 1);
+      }
+    }
+    this.props.viewState.myDataIsUploadView = false;
+  }
 
   renderModalContent() {
     const viewState = this.props.viewState;
@@ -42,10 +57,30 @@ class MobileModalWindow extends React.Component {
       case viewState.mobileViewOptions.data:
         // No multiple catalogue tabs in mobile
         return (
-          <DataCatalog
+          <div>
+            <div>
+              <DataCatalog
+                items={this.props.terria.catalog.userAddedDataGroup.items}
+                removable={true}
+                viewState={this.props.viewState}
+                terria={this.props.terria}
+              />
+            </div>
+            <div>
+              <DataCatalog
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                items={this.props.terria.catalog.group.memberModels}
+              />
+            </div>
+          </div>
+        );
+      case viewState.mobileViewOptions.addData:
+        return (
+          <MyDataTab
             terria={this.props.terria}
             viewState={this.props.viewState}
-            items={this.props.terria.catalog.group.memberModels}
+            onFileAddFinished={files => this.onFileAddFinished(files)}
           />
         );
       case viewState.mobileViewOptions.preview:
