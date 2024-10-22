@@ -49,6 +49,7 @@
 
 #### 8.7.4 - 2024-06-07
 
+- Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Fix position of draggable point after moving.
 - Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
 - The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
