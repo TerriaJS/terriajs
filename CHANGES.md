@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01
