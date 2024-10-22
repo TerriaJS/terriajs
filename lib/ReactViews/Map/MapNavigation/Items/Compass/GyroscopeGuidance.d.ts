@@ -1,4 +1,5 @@
 import ViewState from "../../../../../ReactViewModels/ViewState";
+import React from "react";
 
 interface PropsType {
   viewState: ViewState;

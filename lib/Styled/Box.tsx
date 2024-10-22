@@ -1,4 +1,4 @@
-import { Ref } from "react";
+import React, { Ref } from "react";
 import styled from "styled-components";
 import { Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
