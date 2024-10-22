@@ -5,7 +5,6 @@ interface CssExports {
   'cancelBtn': string;
   'doneBtn': string;
   'editor': string;
-  'editorHeader': string;
   'field': string;
   'fieldBtn': string;
   'header': string;

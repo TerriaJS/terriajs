@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Fix the layout of the story builder and the item search tool.
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - [The next improvement]
 
