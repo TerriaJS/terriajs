@@ -928,7 +928,10 @@ export default class Cesium extends GlobeOrMap {
           duration: flightDurationSeconds,
           destination: target.rectangle
         });
-      } else if (defined(target.imageryProvider) && defined(target.imageryProvider.rectangle)) {
+      } else if (
+        defined(target.imageryProvider) &&
+        defined(target.imageryProvider.rectangle)
+      ) {
         return flyToPromise(camera, {
           duration: flightDurationSeconds,
           destination: target.imageryProvider.rectangle
