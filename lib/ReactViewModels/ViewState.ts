@@ -509,7 +509,7 @@ export default class ViewState {
           );
           result.throwIfError();
           const model = result.throwIfUndefined();
-          this.viewCatalogMember(model);
+          await this.viewCatalogMember(model);
         } catch (e) {
           terria.raiseErrorToUser(e, {
             message: `Couldn't find model \`${previewedItemId}\` for preview`

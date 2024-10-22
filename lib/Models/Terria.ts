@@ -1438,6 +1438,7 @@ export default class Terria {
 
     // Zoom to workbench items if any of the init sources specifically requested it
     if (this.focusWorkbenchItemsAfterLoadingInitSources) {
+      // FIXME: missing await.
       this.doZoomToWorkbenchItems();
     }
 
@@ -1747,7 +1748,7 @@ export default class Terria {
       // - If there are multiple initSources, the setting from the last source takes effect
       try {
         const initialCamera = CameraView.fromJson(initData.initialCamera);
-        this.currentViewer.zoomTo(initialCamera, 2.0);
+        await this.currentViewer.zoomTo(initialCamera, 2.0);
         // reset in case this was enabled by a previous initSource
         this.focusWorkbenchItemsAfterLoadingInitSources = false;
       } catch (error) {
@@ -1784,7 +1785,7 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this.mainViewer.setBaseMap(
+        await this.mainViewer.setBaseMap(
           this.baseMapsModel.baseMapItems.find(
             (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item

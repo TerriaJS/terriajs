@@ -96,9 +96,9 @@ class DragDropFile extends React.Component<PropsType> {
         );
 
         isDefined(firstZoomableItem) &&
-          runInAction(() =>
+          (await runInAction(() =>
             props.viewState.terria.currentViewer.zoomTo(firstZoomableItem, 1)
-          );
+          ));
       }
 
       runInAction(() => (props.viewState.isDraggingDroppingFile = false));
