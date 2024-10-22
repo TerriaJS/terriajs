@@ -2,6 +2,7 @@
 
 #### next release (8.7.8)
 
+- Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - [The next improvement]
 
