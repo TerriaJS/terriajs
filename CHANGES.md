@@ -2,6 +2,9 @@
 
 #### next release (8.7.8)
 
+- Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
+- Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
+- Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
 - [The next improvement]
 
