@@ -328,7 +328,7 @@ export interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
-  /** If undefined, then Leaflet's default attribution will be used */
+  /** Maximum zoom level for Leaflet map */
   leafletMaxZoom: number;
 
   /** If undefined, then Leaflet's default attribution will be used */
