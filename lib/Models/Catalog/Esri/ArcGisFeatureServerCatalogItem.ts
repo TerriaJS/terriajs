@@ -201,16 +201,11 @@ class FeatureServerStratum extends LoadableStratum(
     item: ArcGisFeatureServerCatalogItem
   ): Promise<FeatureServerStratum> {
     if (item.url === undefined) {
-      /* TODO: Should this be returned? */
-      /* eslint-disable-next-line no-new */
-      new FeatureServerStratum(item, undefined, undefined);
+      return new FeatureServerStratum(item, undefined, undefined);
     }
     const metaUrl = buildMetadataUrl(item);
     const featureServer = await loadJson(metaUrl);
-
-    const stratum = new FeatureServerStratum(item, featureServer, undefined);
-
-    return stratum;
+    return new FeatureServerStratum(item, featureServer, undefined);
   }
 
   @computed

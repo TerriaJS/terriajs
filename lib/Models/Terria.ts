@@ -819,7 +819,7 @@ export default class Terria {
   }
 
   @computed get modelValues() {
-    return Array.from(this.models.values());
+    return Array.from<BaseModel>(this.models.values());
   }
 
   @computed
