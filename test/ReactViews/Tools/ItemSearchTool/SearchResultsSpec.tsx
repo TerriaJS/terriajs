@@ -1,4 +1,3 @@
-import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
 import Terria from "../../../../lib/Models/Terria";
@@ -30,7 +29,7 @@ async function render(
   act(() => {
     rendered = create(<SearchResults {...props} />);
   });
-  // @ts-expect-error
+  // @ts-expect-error assigned in callback
   return rendered;
 }
 

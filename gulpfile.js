@@ -54,7 +54,7 @@ gulp.task("lint", function (done) {
     "--ignore-pattern",
     "lib/ThirdParty",
     "--max-warnings",
-    "264" // TODO: Bring this back to 0
+    "0"
   ]);
 
   done();

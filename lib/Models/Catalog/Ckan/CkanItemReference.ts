@@ -50,7 +50,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new CkanDatasetStratum(
       this.ckanItemReference,
       this.ckanCatalogGroup
@@ -127,7 +127,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset === undefined) return undefined;
     if (this.ckanDataset.extras !== undefined) {
       const out: number[] = [];
-      const bboxExtras = this.ckanDataset.extras.forEach((e) => {
+      this.ckanDataset.extras.forEach((e) => {
         if (e.key === "bbox-west-long") out[0] = parseFloat(e.value);
         if (e.key === "bbox-south-lat") out[1] = parseFloat(e.value);
         if (e.key === "bbox-north-lat") out[2] = parseFloat(e.value);
@@ -348,7 +348,7 @@ export default class CkanItemReference extends UrlMixin(
   }
 
   async forceLoadReference(
-    previousTarget: BaseModel | undefined
+    _previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     await this.setCkanStrata(this);
 
@@ -388,7 +388,7 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     if (model === undefined) return;
-    previousTarget = model;
+    _previousTarget = model;
     await this.setCkanStrata(model);
 
     model.setTrait(CommonStrata.definition, "name", this.name);
@@ -520,7 +520,6 @@ export function isResourceInSupportedFormats(
   formats: PreparedSupportedFormat[]
 ): PreparedSupportedFormat | undefined {
   if (resource === undefined) return undefined;
-  const matches: PreparedSupportedFormat[] = [];
   for (let i = 0; i < formats.length; ++i) {
     const format = formats[i];
     if (resourceIsSupported(resource, format)) return format;

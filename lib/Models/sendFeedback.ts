@@ -28,6 +28,7 @@ export default function sendFeedback(options: {
     raiseError(terria, "`terria.configParameters.feedbackUrl` is not defined");
     return;
   }
+  const feedbackUrl = terria.configParameters.feedbackUrl;
 
   const shareLinkPromise = options.sendShareURL
     ? canShorten(terria)
@@ -56,7 +57,7 @@ export default function sendFeedback(options: {
         );
       }
       return loadWithXhr({
-        url: terria.configParameters.feedbackUrl,
+        url: feedbackUrl,
         responseType: "json",
         method: "POST",
         data: JSON.stringify(feedbackData),

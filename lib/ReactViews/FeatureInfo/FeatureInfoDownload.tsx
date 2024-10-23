@@ -8,8 +8,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-download.scss";
-
-const Dropdown = require("../Generic/Dropdown");
+import Dropdown from "../Generic/Dropdown";
 
 class FeatureInfoDownload extends React.Component<{
   data: JsonObject;
@@ -55,7 +54,6 @@ class FeatureInfoDownload extends React.Component<{
           button: Styles.dropdownButton,
           icon: icon
         }}
-        buttonClassName={Styles.btn}
       >
         {t("featureInfo.download")}
       </Dropdown>

@@ -31,8 +31,6 @@ describe("ApiTableCatalogItem", function () {
   });
 
   it("creates a table from api calls", async function () {
-    const valueApiIdx = 0;
-    const positionApiIdx = 1;
     runInAction(() => {
       updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
         idKey: "id",

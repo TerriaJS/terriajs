@@ -27,7 +27,7 @@ class FilterSection extends React.Component {
     }
     return (
       <div className={Styles.filters}>
-        {item.filters.map(this.renderFilter)}
+        {item.filters.map(this.renderFilter, this)}
       </div>
     );
   }

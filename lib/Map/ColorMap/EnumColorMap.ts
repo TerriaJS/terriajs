@@ -40,7 +40,6 @@ export default class EnumColorMap extends ColorMap {
     }
 
     const values = this.values;
-    let i, len;
     for (let i = 0, len = values.length; i < len; ++i) {
       if (values[i] === value) {
         return this.colors[i];

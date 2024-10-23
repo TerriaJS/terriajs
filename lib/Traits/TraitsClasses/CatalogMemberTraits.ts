@@ -100,6 +100,7 @@ export class ShortReportTraits extends ModelTraits {
   show = true;
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -238,8 +239,17 @@ class CatalogMemberTraits extends ModelTraits {
     description: "Disables the 'About Data' button in the workbench."
   })
   disableAboutData?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Shareable",
+    description:
+      "True (default) if this catalog member may be included in share links. False to exclude it from share links."
+  })
+  shareable: boolean = true;
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 interface CatalogMemberTraits {
   // Add traits here that you want to override from some Mixin or Model class
   // without generating TS2611 type error.

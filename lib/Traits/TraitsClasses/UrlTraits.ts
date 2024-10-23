@@ -1,6 +1,7 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -25,6 +26,7 @@ class UrlTraits extends ModelTraits {
   cacheDuration?: string;
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 interface UrlTraits {
   // Add traits here that you want to override from some Mixin or Model class
   // without generating TS2611 type error.

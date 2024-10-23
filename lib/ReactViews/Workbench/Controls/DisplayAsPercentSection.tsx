@@ -13,7 +13,7 @@ const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
   props: IDisplayAsPercentSection
 ) => {
   const { t } = useTranslation();
-  const theme = useTheme();
+  useTheme();
   const togglePercentage = () => {
     props.item.displayPercent = !props.item.displayPercent;
   };

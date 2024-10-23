@@ -152,11 +152,11 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     // an error event.  We want to first raise an error event that optionally returns a promise and
     // retries after the promise resolves.
 
-    const doRequest = (waitPromise?: any) => {
+    const _doRequest = (waitPromise?: any) => {
       if (waitPromise) {
         waitPromise
           .then(function () {
-            doRequest();
+            _doRequest();
           })
           .catch((e: unknown) => {
             // The tile has failed irrecoverably, so invoke Leaflet's standard

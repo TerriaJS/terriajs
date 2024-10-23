@@ -153,23 +153,22 @@ $btn-setting-size: 35px;
 
 .btn--catalog {
   padding: $padding 30px + $padding;
-  @media (min-width: $sm) {
-    padding: $padding-small 30px + $padding;
-  }
-
   position: relative;
   width: 100%;
   font-weight: bold;
+  @media (min-width: $sm) {
+    padding: $padding-small 30px + $padding;
+  }
   .btn--group-indicator {
     position: absolute;
     left: 0;
     padding: $padding $padding * 2.2 $padding $padding * 1.5;
-    @media (min-width: $sm) {
-      padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
-    }
     top: 0;
     font-size: $font-size-mid-large;
     opacity: 0.5;
+    @media (min-width: $sm) {
+      padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
+    }
   }
   &:before {
     position: absolute;
