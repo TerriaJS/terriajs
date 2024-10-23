@@ -329,7 +329,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(_editingMode: boolean) {
+  renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove
@@ -494,7 +494,7 @@ class StoryBuilder extends React.Component<
           {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories(this.state.editingMode)}
+        {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}
