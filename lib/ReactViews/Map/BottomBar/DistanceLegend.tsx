@@ -7,7 +7,6 @@ import { useTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../../../Core/isDefined";
 import Box from "../../../Styled/Box";
@@ -42,7 +41,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
 
     useEffect(() => {
       const viewerSubscriptions: CesiumEvent.RemoveCallback[] = [];
-
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
       removeUpdateSubscription = addUpdateSubscription();
 
       return () => {
@@ -91,8 +90,6 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
     };
 
     const updateDistanceLegendCesium = (scene: Scene) => {
-      const now = getTimestamp();
-
       // Find the distance between two pixels at the bottom center of the screen.
       const width = scene.canvas.clientWidth;
       const height = scene.canvas.clientHeight;
@@ -160,7 +157,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
       runInAction(() => (terria.mainViewer.scale = maxMeters / 100));
-      // @ts-expect-error
+      // @ts-expect-error Accessing private method
       const meters = L.control.scale()._getRoundNum(maxMeters);
       const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 

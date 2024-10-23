@@ -1,8 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import CkanItemReference, {
-  CkanDatasetStratum
-} from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
+import CkanItemReference from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
@@ -15,7 +13,6 @@ const wmsNoLayerResource = require("../../../../wwwroot/test/CKAN/wms-no-layer-r
 describe("CkanItemReference", function () {
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
-  let ckanDatasetStratum: CkanDatasetStratum;
   let ckanItemTarget: any;
 
   beforeEach(async function () {
@@ -75,9 +72,6 @@ describe("CkanItemReference", function () {
         );
       });
       (await ckanItemReference.loadReference()).throwIfError();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
 
@@ -161,9 +155,6 @@ describe("CkanItemReference", function () {
         "tax-stats-wms-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -191,9 +182,6 @@ describe("CkanItemReference", function () {
         "wms-no-layers-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -229,9 +217,6 @@ describe("CkanItemReference", function () {
         );
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
     it("uses LAYERS from url query string for WMS item", function () {

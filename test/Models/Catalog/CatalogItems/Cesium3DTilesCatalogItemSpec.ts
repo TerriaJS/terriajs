@@ -316,10 +316,13 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
     });
   });
 
-  it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
+  it("correctly builds `Feature` from picked Cesium3DTileFeature", async function () {
     const picked = new Cesium3DTileFeature();
     spyOn(picked, "getPropertyIds").and.returnValue([]);
-    const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
+    const feature = await item.buildFeatureFromPickResult(
+      Cartesian2.ZERO,
+      picked
+    );
     expect(feature).toBeDefined();
     if (feature) {
       expect(feature._cesium3DTileFeature).toBe(picked);
@@ -337,7 +340,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       "color"
     ]);
     item.setFeatureVisibility(feature, false);
-    // @ts-expect-error
+    // @ts-expect-error JsonValue
     expect(item.style.show.conditions).toEqual([
       ['${color} === "red" && ${doorNumber} === 10', false],
       ["true", true] // fallback rule

@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import PointParameterEditor from "./PointParameterEditor";
 import LineParameterEditor from "./LineParameterEditor";
 import PolygonParameterEditor from "./PolygonParameterEditor";
+import RectangleParameterEditor from "./RectangleParameterEditor";
 import RegionParameterEditor from "./RegionParameterEditor";
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import BooleanParameterEditor from "./BooleanParameterEditor";
@@ -142,27 +143,27 @@ ParameterEditor.parameterTypeConverters = [
       }
     }
   },
-  // {
-  //   id: "rectangle",
-  //   parameterTypeToDiv: function RectangleParameterToDiv(
-  //     type,
-  //     parameterEditor
-  //   ) {
-  //     if (type === this.id) {
-  //       return (
-  //         <div>
-  //           {parameterEditor.renderLabel()}
-  //           <RectangleParameterEditor
-  //             previewed={parameterEditor.props.previewed}
-  //             viewState={parameterEditor.props.viewState}
-  //             parameter={parameterEditor.props.parameter}
-  //             parameterViewModel={parameterEditor.props.parameterViewModel}
-  //           />
-  //         </div>
-  //       );
-  //     }
-  //   }
-  // },
+  {
+    id: "rectangle",
+    parameterTypeToDiv: function RectangleParameterToDiv(
+      type,
+      parameterEditor
+    ) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <RectangleParameterEditor
+              previewed={parameterEditor.props.previewed}
+              viewState={parameterEditor.props.viewState}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
   {
     id: "polygon",
     parameterTypeToDiv: function PolygonParameterToDiv(type, parameterEditor) {

@@ -8,7 +8,7 @@ type SingleTrait<TTrait> = If<
   TTrait extends ModelTraits ? FlattenedFromTraits<TTrait> : never
 >;
 
-type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
+type ArrayTrait<_TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 
 /**
  * Transforms a {@link ModelTraits} class into a type usable as a flattened view of multiple strata.

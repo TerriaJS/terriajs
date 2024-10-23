@@ -11,7 +11,7 @@ import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 export const SelectableDimensionButton: React.FC<{
   id: string;
   dim: SelectableDimensionButtonModel;
-}> = ({ id, dim }) => {
+}> = ({ dim }) => {
   const iconGlyph = dim.icon;
   const iconProps = { light: true, styledWidth: "16px", styledHeight: "16px" };
   return (

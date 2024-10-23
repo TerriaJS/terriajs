@@ -24,7 +24,7 @@ export default function LoadableStratum<
         get: function () {
           return undefined;
         },
-        set: function (value: any) {
+        set: function (_value: any) {
           throw new DeveloperError(
             "Traits of a LoadableStratum may not be set."
           );

@@ -25,11 +25,6 @@ import ArcGisMapServerCatalogGroup, {
   MapServerStratum
 } from "./ArcGisMapServerCatalogGroup";
 
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
 interface Service {
   name: string;
   type: string;
@@ -68,7 +63,6 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   static async load(
     catalogGroup: ArcGisCatalogGroup
   ): Promise<ArcGisServerStratum> {
-    const terria = catalogGroup.terria;
     const uri = new URI(catalogGroup.url).addQuery("f", "json");
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((arcgisServer: ArcGisServer) => {

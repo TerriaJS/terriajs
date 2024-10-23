@@ -46,6 +46,7 @@ const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
           }
         });
       },
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
       [item, cesium]
     );
 

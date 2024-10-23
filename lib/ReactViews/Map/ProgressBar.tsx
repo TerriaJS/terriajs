@@ -31,6 +31,7 @@ export const ProgressBar: VFC = observer(() => {
     return () => {
       eventHelper.removeAll();
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   const backgroundColor =
