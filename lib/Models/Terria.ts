@@ -328,6 +328,9 @@ export interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /** Maximum zoom level for Leaflet map */
+  leafletMaxZoom: number;
+
   /** If undefined, then Leaflet's default attribution will be used */
   leafletAttributionPrefix?: string;
 
@@ -574,6 +577,7 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
+    leafletMaxZoom: 18,
     leafletAttributionPrefix: undefined,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
