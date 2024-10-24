@@ -41,6 +41,7 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, Legends, MapServer } from "./ArcGisInterfaces";
+import CommonStrata from "../../Definition/CommonStrata";
 
 const proj4 = require("proj4").default;
 
@@ -371,6 +372,17 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
+
+      if (
+        isDefined(this.maximumScale) &&
+        !isDefined(this.minScaleDenominator)
+      ) {
+        this.setTrait(
+          CommonStrata.user,
+          "minScaleDenominator",
+          this.maximumScale
+        );
+      }
     });
   }
 
@@ -582,7 +594,10 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         {
           layers: this.layersArray.map((l) => l.id).join(","),
           tilingScheme: new WebMercatorTilingScheme(),
-          maximumLevel: maximumLevel,
+          maximumLevel:
+            !!maximumLevel && this.hideLayerAfterMinScaleDenominator
+              ? maximumLevel + 1
+              : maximumLevel,
           tileHeight: this.tileHeight,
           tileWidth: this.tileWidth,
           parameters: params,
