@@ -650,7 +650,7 @@
     "expand": "Rozbalit",
     "download": "Stáhnout",
     "loading": "Načítání dat grafu...",
-    "noData": "Nebyla nalezena žádná data grafu.",
+    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
     "showItemInChart": "Zobrazit {{value}} v tabulce"
   },
   "viewModels": {
@@ -1674,7 +1674,7 @@
           "start": {
             "selectableDimensions": {
               "start": {
-                "name": "Start"
+                "name": "Spustit"
               },
               "stop": {
                 "name": "Stop"
@@ -1812,16 +1812,16 @@
                 "range": "{{value1}} až {{value2}}",
                 "selectableDimensions": {
                   "remove": {
-                    "value": "Odebrat"
+                    "value": "Odstranit"
                   },
                   "start": {
-                    "name": "Start"
+                    "name": "Spustit"
                   },
                   "stop": {
                     "name": "Stop"
                   }
                 },
-                "noValue": "Bez hodnoty"
+                "noValue": "(Bez hodnoty)"
               }
             }
           },
@@ -1830,7 +1830,7 @@
           },
           "styleType": {
             "name": "Typ",
-            "undefinedLabel": "Upřesněte prosím",
+            "undefinedLabel": "Prosím upřesněte",
             "constant": {
               "name": "Bez stylu"
             },
@@ -1844,13 +1844,13 @@
           "enum": {
             "selectableDimensions": {
               "enum": {
-                "noValue": "Žádná hodnota",
+                "noValue": "(Bez hodnoty)",
                 "selectableDimensions": {
                   "value": {
                     "name": "Hodnota"
                   },
                   "remove": {
-                    "value": "Odebrat"
+                    "value": "Odstranit"
                   }
                 },
                 "add": {
@@ -2015,7 +2015,7 @@
             "name": "Hodnota"
           },
           "remove": {
-            "value": "Odebrat"
+            "value": "Odstranit"
           },
           "add": {
             "value": "Přidat barvu"
@@ -2234,7 +2234,7 @@
     "enabled": "Povoleno",
     "disabled": "Vypnuto",
     "colorAdd": "Přidat",
-    "colorRemove": "Odebrat",
+    "colorRemove": "Odstranit",
     "invalid": "Neplatné"
   }
 }
