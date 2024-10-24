@@ -204,7 +204,7 @@ export default class Leaflet extends GlobeOrMap {
         map.boxZoom,
         map.keyboard,
         map.dragging,
-        map.tap
+        map.tapHold
       ]);
       const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
@@ -927,7 +927,11 @@ export default class Leaflet extends GlobeOrMap {
   private _selectFeature(feature: TerriaFeature | undefined) {
     this._highlightFeature(feature);
 
-    if (isDefined(feature) && isDefined(feature.position) && this.terria.isPickInfoEnabled) {
+    if (
+      isDefined(feature) &&
+      isDefined(feature.position) &&
+      this.terria.isPickInfoEnabled
+    ) {
       const cartographicScratch = new Cartographic();
       const cartesianPosition = feature.position.getValue(
         this.terria.timelineClock.currentTime

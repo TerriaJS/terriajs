@@ -1100,7 +1100,8 @@ export default class Terria {
       }
     }
 
-    this.isPickInfoEnabled = this.configParameters.isPickInfoEnabledDefaultValue;
+    this.isPickInfoEnabled =
+      this.configParameters.isPickInfoEnabledDefaultValue;
 
     await this.restoreAppState(options);
   }

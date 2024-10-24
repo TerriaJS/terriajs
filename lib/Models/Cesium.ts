@@ -1689,7 +1689,11 @@ export default class Cesium extends GlobeOrMap {
 
     this._highlightFeature(feature);
 
-    if (isDefined(feature) && isDefined(feature.position) && this.terria.isPickInfoEnabled) {
+    if (
+      isDefined(feature) &&
+      isDefined(feature.position) &&
+      this.terria.isPickInfoEnabled
+    ) {
       this._selectionIndicator.position = feature.position.getValue(
         this.terria.timelineClock.currentTime
       );
