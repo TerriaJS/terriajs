@@ -1,6 +1,12 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, reaction, runInAction, makeObservable, observable } from "mobx";
+import {
+  action,
+  reaction,
+  runInAction,
+  makeObservable,
+  observable
+} from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
@@ -263,15 +269,19 @@ class FeatureInfoPanel extends React.Component<Props> {
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);
-    const pretty = prettifyCoordinates(longitude, latitude, { errorBar: undefined, digits: 6 });
+    const pretty = prettifyCoordinates(longitude, latitude, {
+      errorBar: undefined,
+      digits: 6
+    });
     // this.locationUpdated(longitude, latitude);
 
     const prettyHeight = this.props.viewState.terria.cesium
-      ? (this.props.viewState.terria.pickedPosition?.height
-        ? `${this.props.viewState.terria.pickedPosition?.height.toFixed(1)}${t("featureInfo.heightAboveSea")}`
-        : "")
+      ? this.props.viewState.terria.pickedPosition?.height
+        ? `${this.props.viewState.terria.pickedPosition?.height.toFixed(1)}${t(
+            "featureInfo.heightAboveSea"
+          )}`
+        : ""
       : "2D";
-
 
     const that = this;
     const pinClicked = function () {
@@ -281,9 +291,9 @@ class FeatureInfoPanel extends React.Component<Props> {
     /*const locationButtonStyle = isMarkerVisible(this.props.viewState.terria)
       ? Styles.btnLocationSelected
       : Styles.btnLocation;*/
-      const downloadLocationAsGpx = () => {
-        that.downloadLocationAsGpx(that.generateGpxWaypoints(cartographic));
-      };
+    const downloadLocationAsGpx = () => {
+      that.downloadLocationAsGpx(that.generateGpxWaypoints(cartographic));
+    };
 
     return (
       /*<div className={Styles.location}>
@@ -314,9 +324,7 @@ class FeatureInfoPanel extends React.Component<Props> {
         {!!cartographic && (
           <div className={Styles.location}>
             <span>{t("featureInfo.elevation")}</span>
-            <span>
-              {prettyHeight}
-            </span>
+            <span>{prettyHeight}</span>
           </div>
         )}
         <div className={Styles.location}>
@@ -333,15 +341,15 @@ class FeatureInfoPanel extends React.Component<Props> {
                 primary
                 title={t("featureInfo.copyButtonTooltip")}
                 css={`
-                 width: 14px;
-                 border-radius: 2px;
-                 margin: 2px;
-               `}
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                `}
                 className={`btn-copy-featureinfopanel`}
                 data-clipboard-target={`#featureinfopanel`}
               >
                 <StyledIcon
-                  light={true}
+                  light
                   realDark={false}
                   glyph={Icon.GLYPHS.copy}
                   styledWidth="16px"
@@ -352,17 +360,17 @@ class FeatureInfoPanel extends React.Component<Props> {
                 title={t("featureInfo.pinButtonTooltip")}
                 onClick={pinClicked}
                 css={`
-                 width: 14px;
-                 border-radius: 2px;
-                 margin: 2px;
-                 border-width: ${isMarkerVisible(this.props.viewState.terria)
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                  border-width: ${isMarkerVisible(this.props.viewState.terria)
                     ? "2px"
                     : "0px"};
-                 border-color: red;
-               `}
+                  border-color: red;
+                `}
               >
                 <StyledIcon
-                  light={true}
+                  light
                   realDark={false}
                   glyph={Icon.GLYPHS.location}
                   styledWidth="16px"
@@ -373,13 +381,13 @@ class FeatureInfoPanel extends React.Component<Props> {
                 title={t("featureInfo.downloadButtonTooltip")}
                 onClick={downloadLocationAsGpx}
                 css={`
-                 width: 14px;
-                 border-radius: 2px;
-                 margin: 2px;
-               `}
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                `}
               >
                 <StyledIcon
-                  light={true}
+                  light
                   realDark={false}
                   glyph={Icon.GLYPHS.downloadNew}
                   styledWidth="16px"

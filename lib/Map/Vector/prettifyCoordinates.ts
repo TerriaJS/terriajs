@@ -33,14 +33,12 @@ export default function prettifyCoordinates(
   latitude: number,
   { height, errorBar, digits = 5 }: PrettifyOptions = {}
 ) {
-  const prettyLatitude =
-    Math.abs(latitude).toFixed(digits);
-  const prettyLongitude =
-    Math.abs(longitude).toFixed(digits);
+  const prettyLatitude = Math.abs(latitude).toFixed(digits);
+  const prettyLongitude = Math.abs(longitude).toFixed(digits);
 
   let prettyElevation = undefined;
   if (height !== undefined) {
-    prettyElevation = 
+    prettyElevation =
       Math.round(height) +
       (errorBar !== undefined ? "±" + Math.round(errorBar) : "") +
       "m";

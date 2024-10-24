@@ -283,8 +283,8 @@ export default class MouseCoords {
     const urlSlowButAccurate = terria.configParameters.whereAmIParams
       .urlSlowButAccurate
       ? terria?.corsProxy.getURL(
-        terria.configParameters.whereAmIParams.urlSlowButAccurate
-      )
+          terria.configParameters.whereAmIParams.urlSlowButAccurate
+        )
       : "";
 
     const latitude = CesiumMath.toDegrees(cartographicPosition.latitude);
@@ -315,7 +315,7 @@ export default class MouseCoords {
       });
       newWhereAmI =
         results?.features[0].attributes[
-        terria.configParameters.whereAmIParams.fieldResult
+          terria.configParameters.whereAmIParams.fieldResult
         ];
       const fieldResultDetailed =
         terria.configParameters.whereAmIParams?.fieldResultDetailed;
@@ -326,7 +326,7 @@ export default class MouseCoords {
     } else if (tmpResults?.features?.length > 0) {
       newWhereAmI =
         tmpResults?.features[0].attributes[
-        terria.configParameters.whereAmIParams.fieldResult
+          terria.configParameters.whereAmIParams.fieldResult
         ];
       const fieldResultDetailed =
         terria.configParameters.whereAmIParams?.fieldResultDetailed;
@@ -349,7 +349,6 @@ export default class MouseCoords {
     this.whereAmI = whereAmI;
     this.whereAmIDetailed = whereAmIDetailed;
   };
-
 
   sampleAccurateHeight(
     terrainProvider: TerrainProvider,

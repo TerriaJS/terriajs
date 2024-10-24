@@ -12,28 +12,34 @@ import Select from "../../../../Styled/Select";
 import Button from "../../../../Styled/Button";
 import Input from "../../../../Styled/Input";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
-
-const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel").default;
 import createZoomToFunction from "../../../../Map/Vector/zoomRectangleFromPoint";
 import loadJson from "../../../../Core/loadJson";
-import { action, autorun, IReactionDisposer, makeObservable, observable, reaction, runInAction } from "mobx";
+import {
+  action,
+  IReactionDisposer,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
+const MenuPanel =
+  require("../../../StandardUserInterface/customizable/MenuPanel").default;
 
 interface ICoordsTextProps {
-  name: string,
-  title: string,
-  message: string,
-  tooltip: string,
-  value: string,
-  setValue: (value: string) => void,
-  isCartographic: boolean,
-  moveTo: () => void,
-  readonly: boolean
+  name: string;
+  title: string;
+  message: string;
+  tooltip: string;
+  value: string;
+  setValue: (value: string) => void;
+  isCartographic: boolean;
+  moveTo: () => void;
+  readonly: boolean;
 }
 
 const CoordsText = (props: ICoordsTextProps) => {
-
   useEffect(() => {
     const clipboardBtn = new clipboard(`.btn-copy-${props.name}`);
 
@@ -43,7 +49,7 @@ const CoordsText = (props: ICoordsTextProps) => {
   }, []);
 
   return (
-    <div >
+    <div>
       <div>{props.title}</div>
       <div className={Styles.explanation}>
         <i>{props.message}</i>
@@ -52,8 +58,8 @@ const CoordsText = (props: ICoordsTextProps) => {
         <Input
           title={props.tooltip}
           className={Styles.shareUrlfield}
-          light={false}
-          dark={true}
+          light
+          dark
           large
           type="text"
           value={props.value}
@@ -75,7 +81,7 @@ const CoordsText = (props: ICoordsTextProps) => {
           data-clipboard-target={`#${props.name}`}
         >
           <StyledIcon
-            light={true}
+            light
             realDark={false}
             glyph={Icon.GLYPHS.copy}
             styledWidth="24px"
@@ -93,7 +99,7 @@ const CoordsText = (props: ICoordsTextProps) => {
           onClick={props.moveTo}
         >
           <StyledIcon
-            light={true}
+            light
             realDark={false}
             glyph={Icon.GLYPHS.location}
             styledWidth="24px"
@@ -105,25 +111,24 @@ const CoordsText = (props: ICoordsTextProps) => {
 };
 
 interface ISrsConversion {
-  desc: string,
-  from: number,
-  to: number,
-  transformForward: boolean,
-  wkt?: string
+  desc: string;
+  from: number;
+  to: number;
+  transformForward: boolean;
+  wkt?: string;
 }
 
 interface ISrsSelectionProps {
-  title: string,
-  tooltip: string,
-  isCartographic: boolean,
-  setSrs: (value: ISrsConversion) => void,
-  reset: () => void,
-  convert: () => void,
-  conversionList: ISrsConversion[]
+  title: string;
+  tooltip: string;
+  isCartographic: boolean;
+  setSrs: (value: ISrsConversion) => void;
+  reset: () => void;
+  convert: () => void;
+  conversionList: ISrsConversion[];
 }
 
 const SrsSelection = (props: ISrsSelectionProps) => {
-
   useEffect(() => {
     props.setSrs(props.conversionList[0]);
   }, [props.isCartographic]);
@@ -134,12 +139,15 @@ const SrsSelection = (props: ISrsSelectionProps) => {
 
       <Select
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-          props.setSrs(props.conversionList[parseInt(e.target.value)]);
+          props.setSrs(props.conversionList[parseInt(e.target.value, 10)]);
         }}
         title={props.tooltip}
       >
         {props.conversionList.map((conv, index) => {
-          if (!props.isCartographic || (props.isCartographic && conv.from === 4326))
+          if (
+            !props.isCartographic ||
+            (props.isCartographic && conv.from === 4326)
+          )
             return (
               <option key={index} className={Styles.crsItem} value={index}>
                 {conv.desc}
@@ -421,9 +429,14 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
           const splitted = coordsInputTxt.toString().split(/[ |,|;]+/g);
           this.inputX = parseFloat(splitted[0]);
           this.inputY = parseFloat(splitted[1]);
-          this.isInputCartographic = this.inputX >= 0 && this.inputX <= 360 && this.inputY >= 0 && this.inputY <= 360;
+          this.isInputCartographic =
+            this.inputX >= 0 &&
+            this.inputX <= 360 &&
+            this.inputY >= 0 &&
+            this.inputY <= 360;
         }
-      });
+      }
+    );
 
     this.pickedPositionSubscription = reaction(
       () => this.props.terria.pickedPosition,
@@ -471,18 +484,29 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
 
   async callConverter() {
     const terria = this.props.terria;
-    if (!this.srs || !this.inputX || !this.inputY || !terria.configParameters.coordsConverterUrl) {
+    if (
+      !this.srs ||
+      !this.inputX ||
+      !this.inputY ||
+      !terria.configParameters.coordsConverterUrl
+    ) {
       return;
     }
 
-    const url = terria.corsProxy.getURLProxyIfNecessary(terria.configParameters.coordsConverterUrl);
+    const url = terria.corsProxy.getURLProxyIfNecessary(
+      terria.configParameters.coordsConverterUrl
+    );
 
     const results = await loadJson(`${url}?inSR=${this.srs.from}
       &outSR=${this.srs.to}
-      &geometries=${this.isInputCartographic ?
-        this.inputY.toString() + "," + this.inputX.toString() :
-        this.inputX.toString() + "," + this.inputY.toString()}
-      &transformation=${this.srs.wkt ? JSON.stringify({ "wkt": this.srs.wkt }) : "{}"}
+      &geometries=${
+        this.isInputCartographic
+          ? this.inputY.toString() + "," + this.inputX.toString()
+          : this.inputX.toString() + "," + this.inputY.toString()
+      }
+      &transformation=${
+        this.srs.wkt ? JSON.stringify({ wkt: this.srs.wkt }) : "{}"
+      }
       &transformForward=${this.srs.transformForward}
       &f=json`);
 
@@ -502,7 +526,7 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
     } else {
       runInAction(() => {
         this.coordsOutputTxt = results.error.message;
-      })
+      });
     }
   }
 
@@ -530,7 +554,9 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
           name="coordsIn"
           title="Coordinate"
           value={this.coordsInputTxt}
-          setValue={action(value => { this.coordsInputTxt = value; })}
+          setValue={action((value) => {
+            this.coordsInputTxt = value;
+          })}
           isCartographic={this.isInputCartographic}
           moveTo={() => {
             this.moveToA(this.inputX, this.inputY);
@@ -542,9 +568,15 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
         <SrsSelection
           title="Conversione"
           isCartographic={this.isInputCartographic}
-          setSrs={(value: ISrsConversion) => { this.srs = value; }}
-          reset={() => { this.reset() }}
-          convert={() => { this.callConverter() }}
+          setSrs={(value: ISrsConversion) => {
+            this.srs = value;
+          }}
+          reset={() => {
+            this.reset();
+          }}
+          convert={() => {
+            this.callConverter();
+          }}
           conversionList={this.conversionList}
           tooltip={t("coordsPanel.srsSelectionTooltip")}
         />
@@ -552,12 +584,14 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
           name="coordsOut"
           title="Risultato"
           value={this.coordsOutputTxt}
-          setValue={action(value => { this.coordsOutputTxt = value; })}
+          setValue={action((value) => {
+            this.coordsOutputTxt = value;
+          })}
           isCartographic={this.isOutputCartographic}
           moveTo={() => {
             this.moveToA(this.outputY, this.outputX);
           }}
-          readonly={true}
+          readonly
           message={t("coordsPanel.coordsInputMessage")}
           tooltip=""
         />

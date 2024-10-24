@@ -72,10 +72,7 @@ const MenuBar = observer((props) => {
           </li>
           {terria.configParameters.coordsConverterUrl && (
             <li className={Styles.menuItem}>
-              <CoordsPanel
-                terria={terria}
-                viewState={viewState}
-              />
+              <CoordsPanel terria={terria} viewState={viewState} />
             </li>
           )}
           <li className={Styles.menuItem}>
