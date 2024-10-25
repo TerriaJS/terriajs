@@ -16,7 +16,7 @@ describe("UploadDataTypes", function () {
     });
 
     it("returns all the builtin remote upload types", function () {
-      expect(UploadDataTypes.getDataTypes().remoteDataType.length).toEqual(25);
+      expect(UploadDataTypes.getDataTypes().remoteDataType.length).toEqual(26);
     });
   });
 

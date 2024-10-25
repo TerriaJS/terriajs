@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import VarType from "../../Map/VarType";
-import CatalogItem from "../DataCatalog/CatalogItem";
+import CatalogItem, { ButtonState } from "../DataCatalog/CatalogItem";
 import CatalogGroup from "../DataCatalog/CatalogGroup";
 
 import Styles from "./parameter-editors.scss";
@@ -238,7 +238,11 @@ const RegionDataParameterEditor = createReactClass({
                 selected={this.isActive(catalogItem, column)}
                 text={column.name}
                 onBtnClick={this.toggleActive.bind(this, catalogItem, column)}
-                btnState={this.isActive(catalogItem, column) ? "remove" : "add"}
+                btnState={
+                  this.isActive(catalogItem, column)
+                    ? ButtonState.Remove
+                    : ButtonState.Add
+                }
               />
             );
           }
