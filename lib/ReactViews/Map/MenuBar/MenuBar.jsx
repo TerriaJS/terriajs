@@ -14,6 +14,7 @@ import StoryButton from "./StoryButton/StoryButton";
 import HelpButton from "./HelpButton/HelpButton";
 
 import Styles from "./menu-bar.scss";
+import CoordsPanel from "../Panels/CoordsPanel/CoordsPanel";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -69,6 +70,11 @@ const MenuBar = observer((props) => {
           <li className={Styles.menuItem}>
             <SettingPanel terria={terria} viewState={viewState} />
           </li>
+          {terria.configParameters.coordsConverterUrl && (
+            <li className={Styles.menuItem}>
+              <CoordsPanel terria={terria} viewState={viewState} />
+            </li>
+          )}
           <li className={Styles.menuItem}>
             <HelpButton viewState={viewState} />
           </li>
