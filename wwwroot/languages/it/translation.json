@@ -52,6 +52,10 @@
     "measureTool": "Strumento di misura",
     "measureToolTitle": "Misuratore lineare"
   },
+  "pickInfo": {
+    "toolName": "Info",
+    "title": "Attiva la funzione Info quando si clicca in un punto della mappa"
+  },
   "general": {
     "cancel": "Annulla",
     "delete": "Cancella",

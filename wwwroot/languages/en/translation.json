@@ -57,6 +57,10 @@
     "measureToolTitle": "Line Measure",
     "measureDistance": "Measure distance between locations"
   },
+  "pickInfo": {
+    "toolName": "Info",
+    "title": "Info on mouse click"
+  },
   "location": {
     "errorGettingLocation": "Error getting location",
     "browserCannotProvide": "Your browser cannot provide your location.",

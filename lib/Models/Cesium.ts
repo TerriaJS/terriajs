@@ -373,34 +373,36 @@ export default class Cesium extends GlobeOrMap {
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
       // Post render, update selection indicator position
-      const feature = this.terria.selectedFeature;
+      if (this.terria.isPickInfoEnabled) {
+        const feature = this.terria.selectedFeature;
 
-      // If the feature has an associated primitive and that primitive has
-      // a clamped position, use that instead, because the regular
-      // position doesn't take terrain clamping into account.
-      if (isDefined(feature)) {
-        if (
-          isDefined(feature.cesiumPrimitive) &&
-          isDefined(feature.cesiumPrimitive._clampedPosition)
-        ) {
-          this._selectionIndicator.position =
-            feature.cesiumPrimitive._clampedPosition;
-        } else if (
-          isDefined(feature.cesiumPrimitive) &&
-          isDefined(feature.cesiumPrimitive._clampedModelMatrix)
-        ) {
-          this._selectionIndicator.position = Matrix4.getTranslation(
-            feature.cesiumPrimitive._clampedModelMatrix,
-            this._selectionIndicator.position || new Cartesian3()
-          );
-        } else if (isDefined(feature.position)) {
-          this._selectionIndicator.position = feature.position.getValue(
-            this.terria.timelineClock.currentTime
-          );
+        // If the feature has an associated primitive and that primitive has
+        // a clamped position, use that instead, because the regular
+        // position doesn't take terrain clamping into account.
+        if (isDefined(feature)) {
+          if (
+            isDefined(feature.cesiumPrimitive) &&
+            isDefined(feature.cesiumPrimitive._clampedPosition)
+          ) {
+            this._selectionIndicator.position =
+              feature.cesiumPrimitive._clampedPosition;
+          } else if (
+            isDefined(feature.cesiumPrimitive) &&
+            isDefined(feature.cesiumPrimitive._clampedModelMatrix)
+          ) {
+            this._selectionIndicator.position = Matrix4.getTranslation(
+              feature.cesiumPrimitive._clampedModelMatrix,
+              this._selectionIndicator.position || new Cartesian3()
+            );
+          } else if (isDefined(feature.position)) {
+            this._selectionIndicator.position = feature.position.getValue(
+              this.terria.timelineClock.currentTime
+            );
+          }
         }
-      }
 
-      this._selectionIndicator.update();
+        this._selectionIndicator.update();
+      }
     });
 
     this._disposeSelectedFeatureSubscription = autorun(() => {
@@ -1702,12 +1704,16 @@ export default class Cesium extends GlobeOrMap {
 
     this._highlightFeature(feature);
 
-    if (isDefined(feature) && isDefined(feature.position)) {
+    if (
+      isDefined(feature) &&
+      isDefined(feature.position) &&
+      this.terria.isPickInfoEnabled
+    ) {
       this._selectionIndicator.position = feature.position.getValue(
         this.terria.timelineClock.currentTime
       );
       this._selectionIndicator.animateAppear();
-    } else {
+    } else if (!(isDefined(feature) && isDefined(feature.position))) {
       this._selectionIndicator.animateDepart();
     }
 
