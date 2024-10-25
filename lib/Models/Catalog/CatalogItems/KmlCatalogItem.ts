@@ -10,6 +10,9 @@ import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import ArcType from "terriajs-cesium/Source/Core/ArcType";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import isDefined from "../../../Core/isDefined";
 import readXml from "../../../Core/readXml";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
@@ -147,41 +150,53 @@ class KmlCatalogItem
             );
           }
         }
+
+        // Clamp to ground
+        if (isDefined(entity.polyline)) {
+          entity.polyline.clampToGround = new ConstantProperty(true);
+          entity.polyline.arcType = new ConstantProperty(ArcType.GEODESIC);
+        } else if (isDefined(entity.billboard)) {
+          entity.billboard.heightReference = new ConstantProperty(
+            HeightReference.CLAMP_TO_GROUND
+          );
+        }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
-      sampleTerrain(terrainProvider, 11, positionsToSample).then(function () {
-        for (let i = 0; i < positionsToSample.length; ++i) {
-          const position = positionsToSample[i];
-          if (!isDefined(position.height)) {
-            continue;
-          }
+      sampleTerrainMostDetailed(terrainProvider, positionsToSample).then(
+        function () {
+          for (let i = 0; i < positionsToSample.length; ++i) {
+            const position = positionsToSample[i];
+            if (!isDefined(position.height)) {
+              continue;
+            }
 
-          Ellipsoid.WGS84.cartographicToCartesian(
-            position,
-            correspondingCartesians[i]
-          );
-        }
-
-        // Force the polygons to be rebuilt.
-        for (let i = 0; i < entities.length; ++i) {
-          const polygon = entities[i].polygon;
-          if (!isDefined(polygon)) {
-            continue;
-          }
-
-          const existingHierarchy = getPropertyValue<PolygonHierarchy>(
-            polygon.hierarchy
-          );
-          if (existingHierarchy) {
-            polygon.hierarchy = new ConstantProperty(
-              new PolygonHierarchy(
-                existingHierarchy.positions,
-                existingHierarchy.holes
-              )
+            Ellipsoid.WGS84.cartographicToCartesian(
+              position,
+              correspondingCartesians[i]
             );
           }
+
+          // Force the polygons to be rebuilt.
+          for (let i = 0; i < entities.length; ++i) {
+            const polygon = entities[i].polygon;
+            if (!isDefined(polygon)) {
+              continue;
+            }
+
+            const existingHierarchy = getPropertyValue<PolygonHierarchy>(
+              polygon.hierarchy
+            );
+            if (existingHierarchy) {
+              polygon.hierarchy = new ConstantProperty(
+                new PolygonHierarchy(
+                  existingHierarchy.positions,
+                  existingHierarchy.holes
+                )
+              );
+            }
+          }
         }
-      });
+      );
     }
   }
 }
