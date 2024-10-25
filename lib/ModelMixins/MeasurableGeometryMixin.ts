@@ -9,7 +9,9 @@ import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 
 type MixinModel = Model<MappableTraits>;
 
-function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(Base: T) {
+function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
+  Base: T
+) {
   abstract class MeasurableGeometryMixin extends Base {
     @computed
     get hasMeasurableMixin() {

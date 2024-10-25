@@ -38,9 +38,9 @@ const MeasurableDownload = (props: Props) => {
       {
         href: kmlLines
           ? DataUri.make(
-            "application/vnd.google-earth.kml+xml;charset=utf-8",
-            kmlLines
-          )
+              "application/vnd.google-earth.kml+xml;charset=utf-8",
+              kmlLines
+            )
           : false,
         download: `${name}_lines.kml`,
         label: `${i18next.t("downloadData.lines")} KML`
@@ -48,9 +48,9 @@ const MeasurableDownload = (props: Props) => {
       {
         href: kmlPoints
           ? DataUri.make(
-            "application/vnd.google-earth.kml+xml;charset=utf-8",
-            kmlPoints
-          )
+              "application/vnd.google-earth.kml+xml;charset=utf-8",
+              kmlPoints
+            )
           : false,
         download: `${name}_points.kml`,
         label: `${i18next.t("downloadData.points")} KML`
@@ -162,14 +162,14 @@ const MeasurableDownload = (props: Props) => {
         <desc>Percorso salvato da rer3d-map</desc>
         <trkseg>
           ${geom.stopPoints
-        .map(
-          (elem) =>
-            `<trkpt lat="${CesiumMath.toDegrees(elem.latitude)}" 
+            .map(
+              (elem) =>
+                `<trkpt lat="${CesiumMath.toDegrees(elem.latitude)}" 
                   lon="${CesiumMath.toDegrees(elem.longitude)}" 
                   ele="${elem.height.toFixed(2)}">
                 </trkpt>`
-        )
-        .join("")}
+            )
+            .join("")}
         </trkseg>
       </trk>
     </gpx>`;

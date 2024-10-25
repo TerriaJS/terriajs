@@ -409,8 +409,7 @@ export default class ViewState {
     this._pickedFeaturesSubscription = reaction(
       () => this.terria.pickedFeatures,
       (pickedFeatures: PickedFeatures | undefined) => {
-
-console.log("qqqq")
+        console.log("qqqq");
 
         if (defined(pickedFeatures)) {
           this.featureInfoPanelIsVisible = true;
@@ -532,7 +531,8 @@ console.log("qqqq")
     this._measurablePanelIsVisibleSubscription = reaction(
       () => this.terria.measurableGeom,
       (geom) => {
-        this.measurablePanelIsVisible = !!geom && geom.stopPoints && geom.stopPoints.length > 0;
+        this.measurablePanelIsVisible =
+          !!geom && geom.stopPoints && geom.stopPoints.length > 0;
       }
     );
 

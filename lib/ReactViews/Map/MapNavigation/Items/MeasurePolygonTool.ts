@@ -250,29 +250,36 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    return this.totalDistanceMetres === 0 ? "" : `
+    return this.totalDistanceMetres === 0
+      ? ""
+      : `
       <table>
         <tbody>
           <tr>
-            <td>${i18next.t("measure.measurePolygonToolMessagePerimeter")}: </td>
-            <td>${this.totalDistanceMetres
-        ? this.prettifyNumber(this.totalDistanceMetres, false)
-        : ""
-      }</td>
+            <td>${i18next.t(
+              "measure.measurePolygonToolMessagePerimeter"
+            )}: </td>
+            <td>${
+              this.totalDistanceMetres
+                ? this.prettifyNumber(this.totalDistanceMetres, false)
+                : ""
+            }</td>
           </tr>
           <tr>
             <td>${i18next.t("measure.measurePolygonToolMessageArea")}:</td>
-            <td>${this.totalAreaMetresSquared
-        ? this.prettifyNumber(this.totalAreaMetresSquared, true)
-        : ""
-      }</td>
+            <td>${
+              this.totalAreaMetresSquared
+                ? this.prettifyNumber(this.totalAreaMetresSquared, true)
+                : ""
+            }</td>
           </tr>
           <tr>
             <td></td>
-            <td>${this.totalAreaMetresSquared
-        ? (this.totalAreaMetresSquared * 0.0001).toFixed(2) + " ha"
-        : ""
-      }</td>
+            <td>${
+              this.totalAreaMetresSquared
+                ? (this.totalAreaMetresSquared * 0.0001).toFixed(2) + " ha"
+                : ""
+            }</td>
           </tr>
         </tbody>
       </table>

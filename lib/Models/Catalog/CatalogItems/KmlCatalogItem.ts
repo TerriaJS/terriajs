@@ -196,7 +196,7 @@ class KmlCatalogItem
         (elem) => elem && typeof elem.polyline !== "undefined"
       );
       if (
-        items.length == 1 &&
+        items.length === 1 &&
         items[0]?.polyline?.positions?.getValue(JulianDate.now()).length > 1
       ) {
         return true;

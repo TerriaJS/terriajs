@@ -389,11 +389,11 @@ export default class UserDrawing extends MappableMixin(
     const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
-      billboard: <any>{
+      billboard: {
         image: this.svgPoint,
         heightReference: HeightReference.CLAMP_TO_GROUND,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
-      }
+      } as any
     });
     this.pointEntities.entities.suspendEvents();
     const points: Entity[] = clone(this.pointEntities.entities.values, false);

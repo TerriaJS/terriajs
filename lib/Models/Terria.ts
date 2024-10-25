@@ -127,7 +127,9 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import MeasurableGeometryManager, { MeasurableGeometry } from "../ViewModels/MeasurableGeometryManager";
+import MeasurableGeometryManager, {
+  MeasurableGeometry
+} from "../ViewModels/MeasurableGeometryManager";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -351,7 +353,7 @@ export interface ConfigParameters {
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
-  
+
   /**
    * If true elevation is intended MSL, otherwise WGS84
    */
@@ -477,14 +479,14 @@ export default class Terria {
       )
     )
   );
-  
+
   @observable
   readonly measurableGeometryManager = new MeasurableGeometryManager(this);
 
   @observable measurableGeom?: MeasurableGeometry;
 
   @observable measurableGeomSamplingStep: number = 500;
-  
+
   appName: string = "TerriaJS App";
   supportEmail: string = "info@terria.io";
 
@@ -595,9 +597,9 @@ export default class Terria {
   allowFeatureInfoRequests: boolean = true;
 
   /**
-     * Gets or sets a value indicating whether the path line drawn by MeasureTool is clamped to ground.
-     * @type {Boolean}
-     */
+   * Gets or sets a value indicating whether the path line drawn by MeasureTool is clamped to ground.
+   * @type {Boolean}
+   */
   @observable clampMeasureLineToGround: boolean = true;
 
   /**

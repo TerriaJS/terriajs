@@ -109,7 +109,6 @@ import TableMixin from "./TableMixin";
 import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
-
 enum PathTypes {
   noPath = 0,
   featureCollectionLineString = 1,
@@ -241,9 +240,7 @@ type BaseType = Model<GeoJsonTraits>;
 
 function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class GeoJsonMixin extends MeasurableGeometryMixin(
-    TableMixin(
-      FeatureInfoUrlTemplateMixin(UrlMixin(Base))
-    )
+    TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
   ) {
     @observable
     private _dataSource:
@@ -1391,7 +1388,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     protected _pathType: PathTypes = PathTypes.noPath;
-    
+
     @computed get canUseAsPath() {
       let pathType: PathTypes = PathTypes.noPath;
 
@@ -1405,14 +1402,14 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         if (
           this.readyData.type === "FeatureCollection" &&
           isJsonArray(this.readyData.features) &&
-          this.readyData.features.length == 1 &&
+          this.readyData.features.length === 1 &&
           isJsonObject(this.readyData.features[0])
         ) {
           const geometry = this.readyData.features[0].geometry;
           if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
             if (
               geometry.type === "MultiLineString" &&
-              geometry.coordinates.length == 1 &&
+              geometry.coordinates.length === 1 &&
               isJsonArray(geometry.coordinates[0]) &&
               geometry.coordinates[0].length > 1
             ) {

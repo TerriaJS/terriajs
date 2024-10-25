@@ -59,11 +59,19 @@ export default class MeasurableGeometryManager {
       cartesianEntities.push(pointEntities.entities.values[0]);
     }
     // convert from cartesian to cartographic because "sampleTerrainMostDetailed" work with cartographic
-    const cartoPositions = cartesianEntities.map((elem) => {
-      return elem.position!.getValue(this.terria.timelineClock.currentTime) ?? Cartesian3.ZERO
-    }).filter((elem) => { return !elem.equals(Cartesian3.ZERO); }).map((elem) => {
-      return Cartographic.fromCartesian(elem, ellipsoid);
-    });
+    const cartoPositions = cartesianEntities
+      .map((elem) => {
+        return (
+          elem.position!.getValue(this.terria.timelineClock.currentTime) ??
+          Cartesian3.ZERO
+        );
+      })
+      .filter((elem) => {
+        return !elem.equals(Cartesian3.ZERO);
+      })
+      .map((elem) => {
+        return Cartographic.fromCartesian(elem, ellipsoid);
+      });
 
     this.sampleFromCartographics(cartoPositions, closeLoop);
   }

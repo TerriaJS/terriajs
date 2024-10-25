@@ -83,7 +83,8 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
   };
 
   const updateChartPointNearMouse = (newPoint: ChartPoint) => {
-    if (newPoint &&
+    if (
+      newPoint &&
       terria?.cesium?.scene &&
       (!chartPoint?.current || chartPoint.current !== newPoint)
     ) {
@@ -167,7 +168,9 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
       <div className={Styles.inner}>
         <div className={Styles.chartPanel} style={{ height: PANEL_HEIGHT }}>
           <div className={Styles.header}>
-            <label className={Styles.sectionLabel}>{i18next.t("elevationChart.header")}</label>
+            <label className={Styles.sectionLabel}>
+              {i18next.t("elevationChart.header")}
+            </label>
             <button
               type="button"
               className={Styles.btnCloseChartPanel}

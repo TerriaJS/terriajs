@@ -139,7 +139,9 @@ export class MeasureLineTool extends MapNavigationItemController {
 
   onMakeDialogMessage = () => {
     const distance = this.prettifyNumber(this.totalDistanceMetres);
-    return distance.length === 0 ? "" : `${i18next.t("measure.measureLineToolMessage")}: ${distance}`;
+    return distance.length === 0
+      ? ""
+      : `${i18next.t("measure.measureLineToolMessage")}: ${distance}`;
   };
 
   /**
