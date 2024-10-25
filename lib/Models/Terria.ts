@@ -128,6 +128,9 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import MeasurableGeometryManager, {
+  MeasurableGeometry
+} from "../ViewModels/MeasurableGeometryManager";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -397,6 +400,11 @@ export interface ConfigParameters {
    * Url to coordinates converter service.
    */
   coordsConverterUrl?: string;
+
+  /**
+   * If true elevation is intended MSL, otherwise WGS84
+   */
+  useElevationMeanSeaLevel: boolean;
 }
 
 interface StartOptions {
@@ -519,6 +527,13 @@ export default class Terria {
     )
   );
 
+  @observable
+  readonly measurableGeometryManager = new MeasurableGeometryManager(this);
+
+  @observable measurableGeom?: MeasurableGeometry;
+
+  @observable measurableGeomSamplingStep: number = 500;
+
   appName: string = "TerriaJS App";
   supportEmail: string = "info@terria.io";
 
@@ -622,7 +637,8 @@ export default class Terria {
     searchInCatalogItemInfo: false,
     searchBarConfig: undefined,
     searchProviders: [],
-    coordsConverterUrl: undefined
+    coordsConverterUrl: undefined,
+    useElevationMeanSeaLevel: false
   };
 
   @observable
@@ -639,6 +655,12 @@ export default class Terria {
    * @type {Cartographic}
    */
   @observable pickedPosition: Cartographic | undefined;
+
+  /**
+   * Gets or sets a value indicating whether the path line drawn by MeasureTool is clamped to ground.
+   * @type {Boolean}
+   */
+  @observable clampMeasureLineToGround: boolean = true;
 
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack

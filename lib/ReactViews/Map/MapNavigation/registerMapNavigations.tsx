@@ -22,7 +22,8 @@ import {
   CloseToolButton,
   Compass,
   COMPASS_TOOL_ID,
-  MeasureTool,
+  MeasureLineTool,
+  MeasurePolygonTool,
   MyLocation,
   ToggleSplitterController,
   ZoomControl,
@@ -92,20 +93,62 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 4
   });
 
-  const measureTool = new MeasureTool({
+  const measurePolygonTool = new MeasurePolygonTool({
     terria,
     onClose: () => {
       runInAction(() => {
+        viewState.terria.mapNavigationModel.enable(MeasureLineTool.id);
         viewState.panel = undefined;
+      });
+    },
+    onOpen: () => {
+      runInAction(() => {
+        const item = viewState.terria.mapNavigationModel.findItem(
+          MeasureLineTool.id
+        )?.controller;
+        if (item && item.active) {
+          item.deactivate();
+        }
+        viewState.terria.mapNavigationModel.disable(MeasureLineTool.id);
       });
     }
   });
   mapNavigationModel.addItem({
-    id: MeasureTool.id,
-    name: "translate#measure.measureToolTitle",
+    id: MeasurePolygonTool.id,
+    name: "translate#measure.measurePolygonToolTitle",
+    title: "translate#measure.measureArea",
+    location: "TOP",
+    controller: measurePolygonTool,
+    screenSize: "medium",
+    order: 6
+  });
+
+  const measureLineTool = new MeasureLineTool({
+    terria,
+    onClose: () => {
+      runInAction(() => {
+        viewState.terria.mapNavigationModel.enable(MeasurePolygonTool.id);
+        viewState.panel = undefined;
+      });
+    },
+    onOpen: () => {
+      runInAction(() => {
+        const item = viewState.terria.mapNavigationModel.findItem(
+          MeasurePolygonTool.id
+        )?.controller;
+        if (item && item.active) {
+          item.deactivate();
+        }
+        viewState.terria.mapNavigationModel.disable(MeasurePolygonTool.id);
+      });
+    }
+  });
+  mapNavigationModel.addItem({
+    id: MeasureLineTool.id,
+    name: "translate#measure.measureLineToolTitle",
     title: "translate#measure.measureDistance",
     location: "TOP",
-    controller: measureTool,
+    controller: measureLineTool,
     screenSize: undefined,
     order: 6
   });

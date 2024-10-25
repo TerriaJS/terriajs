@@ -44,6 +44,7 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import MeasurableGeometryMixin from "../../../ModelMixins/MeasurableGeometryMixin";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -457,6 +458,19 @@ class ViewingControls extends React.Component<
             </ViewingControlMenuButton>
           </li>
         ) : null}
+        {MeasurableGeometryMixin.isMixedInto(item) && item.canUseAsPath && (
+          <li key={"workbench.measureItem"}>
+            <ViewingControlMenuButton
+              onClick={() => runInAction(() => item.computePath())}
+              title="Usa il dato del layer come percorso di cui misurare altitudine e statistiche"
+            >
+              <BoxViewingControl>
+                <StyledIcon glyph={Icon.GLYPHS.lineChart} />
+                <span>Percorso</span>
+              </BoxViewingControl>
+            </ViewingControlMenuButton>
+          </li>
+        )}
         <li key={"workbench.removeFromMap"}>
           <ViewingControlMenuButton
             onClick={this.removeFromMap.bind(this)}

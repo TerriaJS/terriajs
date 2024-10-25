@@ -71,6 +71,7 @@ import {
   isJsonNumber,
   isJsonObject,
   isJsonString,
+  JsonArray,
   JsonObject
 } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
@@ -105,6 +106,16 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
+import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+
+enum PathTypes {
+  noPath = 0,
+  featureCollectionLineString = 1,
+  featureCollectionMultiLineString = 2,
+  lineString = 3,
+  multiLineString = 4
+}
 
 export const FEATURE_ID_PROP = "_id_";
 
@@ -228,8 +239,8 @@ interface FeatureCounts {
 type BaseType = Model<GeoJsonTraits>;
 
 function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
-  abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(Base))
+  abstract class GeoJsonMixin extends MeasurableGeometryMixin(
+    TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
   ) {
     @observable
     private _dataSource:
@@ -1378,6 +1389,105 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     async forceLoadTableData() {
       return undefined;
+    }
+
+    protected _pathType: PathTypes = PathTypes.noPath;
+
+    @computed get canUseAsPath() {
+      let pathType: PathTypes = PathTypes.noPath;
+
+      if (
+        this.readyData &&
+        isJsonObject(this.readyData.crs) &&
+        this.readyData.crs.type === "EPSG" &&
+        isJsonObject(this.readyData.crs.properties) &&
+        this.readyData.crs.properties.code === "4326"
+      ) {
+        if (
+          this.readyData.type === "FeatureCollection" &&
+          isJsonArray(this.readyData.features) &&
+          this.readyData.features.length === 1 &&
+          isJsonObject(this.readyData.features[0])
+        ) {
+          const geometry = this.readyData.features[0].geometry;
+          if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
+            if (
+              geometry.type === "MultiLineString" &&
+              geometry.coordinates.length === 1 &&
+              isJsonArray(geometry.coordinates[0]) &&
+              geometry.coordinates[0].length > 1
+            ) {
+              pathType = PathTypes.featureCollectionMultiLineString;
+            } else if (
+              geometry.type === "LineString" &&
+              geometry.coordinates.length > 1
+            ) {
+              pathType = PathTypes.featureCollectionLineString;
+            }
+          }
+        }
+      }
+
+      this._pathType = pathType;
+      return pathType !== PathTypes.noPath;
+    }
+
+    computePath() {
+      let jsonCoords: JsonArray | undefined;
+
+      switch (this._pathType) {
+        case PathTypes.featureCollectionMultiLineString:
+          if (
+            this.readyData &&
+            isJsonArray(this.readyData.features) &&
+            this.readyData.features.length > 0 &&
+            isJsonObject(this.readyData.features[0]) &&
+            isJsonObject(this.readyData.features[0].geometry) &&
+            isJsonArray(this.readyData.features[0].geometry.coordinates) &&
+            this.readyData.features[0].geometry.coordinates.length > 0 &&
+            isJsonArray(this.readyData.features[0].geometry.coordinates[0])
+          ) {
+            jsonCoords = this.readyData.features[0].geometry.coordinates[0];
+          }
+          break;
+        case PathTypes.featureCollectionLineString:
+          if (
+            this.readyData &&
+            isJsonArray(this.readyData.features) &&
+            this.readyData.features.length > 0 &&
+            isJsonObject(this.readyData.features[0]) &&
+            isJsonObject(this.readyData.features[0].geometry) &&
+            isJsonArray(this.readyData.features[0].geometry.coordinates)
+          ) {
+            jsonCoords = this.readyData.features[0].geometry.coordinates;
+          }
+          break;
+      }
+
+      if (!jsonCoords || jsonCoords.length === 0) {
+        return;
+      }
+
+      const coordinates: Cartographic[] = jsonCoords.map((elem) => {
+        if (
+          elem &&
+          isJsonArray(elem) &&
+          elem.length === 3 &&
+          isJsonNumber(elem[0]) &&
+          isJsonNumber(elem[1]) &&
+          isJsonNumber(elem[2])
+        ) {
+          return Cartographic.fromDegrees(
+            elem[0],
+            elem[1],
+            Math.round(elem[2])
+          );
+        } else {
+          return Cartographic.fromDegrees(0, 0, 0);
+        }
+      });
+
+      this.asPath(coordinates);
     }
 
     @override

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, computed, observable, makeObservable, autorun } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
@@ -35,7 +35,9 @@ class BottomDockChart extends React.Component {
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired,
-    margin: PropTypes.object
+    margin: PropTypes.object,
+    chartItemKeyForPointMouseNear: PropTypes.string,
+    onPointMouseNear: PropTypes.func
   };
 
   static defaultProps = {
@@ -50,6 +52,8 @@ class BottomDockChart extends React.Component {
           chartMinWidth,
           this.props.width || this.props.parentWidth
         )}
+        chartItemKeyForPointMouseNear={this.props.chartItemKeyForPointMouseNear}
+        onPointMouseNear={this.props.onPointMouseNear}
       />
     );
   }
@@ -65,7 +69,9 @@ class Chart extends React.Component {
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired,
-    margin: PropTypes.object
+    margin: PropTypes.object,
+    chartItemKeyForPointMouseNear: PropTypes.string,
+    onPointMouseNear: PropTypes.func
   };
 
   static defaultProps = {
@@ -241,6 +247,23 @@ class Chart extends React.Component {
     if (prevProps.chartItems.length !== this.props.chartItems.length) {
       this.setZoomedXScale(undefined);
     }
+
+    // When pointsNearMouse changes, call onPointMouseNear callback to create the placeholder
+    autorun(() => {
+      if (
+        this.pointsNearMouse &&
+        this.pointsNearMouse.length > 0 &&
+        this.props.onPointMouseNear
+      ) {
+        const pointNearMouse = this.pointsNearMouse.find(
+          (elem) =>
+            elem.chartItem.key === this.props.chartItemKeyForPointMouseNear
+        );
+        if (pointNearMouse) {
+          this.props.onPointMouseNear(pointNearMouse.point);
+        }
+      }
+    });
   }
 
   render() {
@@ -265,7 +288,11 @@ class Chart extends React.Component {
             width="100%"
             height={height}
             onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
-            onMouseLeave={() => this.setMouseCoords(undefined)}
+            onMouseLeave={() => {
+              this.setMouseCoords(undefined);
+              // On mouseLeave event remove position placeholder
+              this.props.onPointMouseNear(undefined);
+            }}
           >
             <Group
               left={this.adjustedMargin.left}
