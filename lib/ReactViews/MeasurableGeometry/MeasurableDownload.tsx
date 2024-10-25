@@ -13,8 +13,7 @@ import Styles from "./measurable-download.scss";
 import { exportKmlResultKml } from "terriajs-cesium";
 import { MeasurableGeometry } from "../../ViewModels/MeasurableGeometryManager";
 import i18next from "i18next";
-
-const Dropdown = require("../Generic/Dropdown");
+import Dropdown from "../Generic/Dropdown";
 
 interface Props {
   geom: MeasurableGeometry;
@@ -230,7 +229,6 @@ const MeasurableDownload = (props: Props) => {
         button: Styles.dropdownButton,
         icon: icon
       }}
-      buttonClassName={Styles.btn}
     >
       Download
     </Dropdown>
