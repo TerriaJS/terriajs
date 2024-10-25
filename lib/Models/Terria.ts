@@ -383,6 +383,11 @@ export interface ConfigParameters {
   aboutButtonHrefUrl?: string | null;
 
   /**
+   * If true search also in info of catalog layers.
+   */
+  searchInCatalogItemInfo: boolean;
+
+  /**
    * The search bar allows requesting information from various search services at once.
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
@@ -614,6 +619,7 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     isPickInfoEnabledDefaultValue: false,
+    searchInCatalogItemInfo: false,
     searchBarConfig: undefined,
     searchProviders: [],
     coordsConverterUrl: undefined
