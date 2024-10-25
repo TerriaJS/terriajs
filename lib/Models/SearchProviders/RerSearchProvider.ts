@@ -1,6 +1,6 @@
 import { makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+//import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import { Category } from "../../Core/AnalyticEvents/analyticEvents";
 import loadJson from "../../Core/loadJson";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
