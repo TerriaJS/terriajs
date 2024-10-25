@@ -46,7 +46,7 @@ const CoordsText = (props: ICoordsTextProps) => {
     return function cleanup() {
       clipboardBtn.destroy();
     };
-  }, []);
+  }, [props.name]);
 
   return (
     <div>
