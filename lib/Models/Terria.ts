@@ -347,15 +347,15 @@ export interface ConfigParameters {
   aboutButtonHrefUrl?: string | null;
 
   /**
+   * If true search also in info of catalog layers.
+   */
+  searchInCatalogItemInfo: boolean;
+
+  /**
    * The search bar allows requesting information from various search services at once.
    */
   searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
-
-  /**
-   * If true search also in info of catalog layers.
-   */
-  searchInCatalogItemInfo: boolean;
 }
 
 interface StartOptions {
@@ -572,9 +572,9 @@ export default class Terria {
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
+    searchInCatalogItemInfo: false,
     searchBarConfig: undefined,
-    searchProviders: [],
-    searchInCatalogItemInfo: false
+    searchProviders: []
   };
 
   @observable
