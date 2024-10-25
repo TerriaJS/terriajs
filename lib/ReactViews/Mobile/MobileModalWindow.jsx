@@ -23,7 +23,7 @@ class MobileModalWindow extends React.Component {
   };
 
   async onFileAddFinished(files) {
-    const file = files.find(f => MappableMixin.isMixedInto(f));
+    const file = files.find((f) => MappableMixin.isMixedInto(f));
     if (file) {
       const result = await this.props.viewState.viewCatalogMember(file);
       if (result.error) {
@@ -61,7 +61,7 @@ class MobileModalWindow extends React.Component {
             <div>
               <DataCatalog
                 items={this.props.terria.catalog.userAddedDataGroup.items}
-                removable={true}
+                removable
                 viewState={this.props.viewState}
                 terria={this.props.terria}
               />
@@ -80,7 +80,7 @@ class MobileModalWindow extends React.Component {
           <MyDataTab
             terria={this.props.terria}
             viewState={this.props.viewState}
-            onFileAddFinished={files => this.onFileAddFinished(files)}
+            onFileAddFinished={(files) => this.onFileAddFinished(files)}
           />
         );
       case viewState.mobileViewOptions.preview:

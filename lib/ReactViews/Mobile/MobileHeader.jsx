@@ -71,8 +71,12 @@ class MobileHeader extends React.Component {
 
   onMobileSwitchViewClicked() {
     runInAction(() => {
+      const viewState = this.props.viewState;
       const mainViewer = viewState.terria.mainViewer;
-      if (mainViewer.viewerMode === ViewerMode.Leaflet || mainViewer.viewerMode === ViewerMode.Preview) {
+      if (
+        mainViewer.viewerMode === ViewerMode.Leaflet ||
+        mainViewer.viewerMode === ViewerMode.Preview
+      ) {
         setViewerMode("3d", mainViewer);
         viewState.terria.setLocalProperty("viewermode", ViewerMode.Cesium);
       } else {
@@ -235,8 +239,10 @@ class MobileHeader extends React.Component {
                   className={Styles.btnViewMode}
                   onClick={this.onMobileSwitchViewClicked}
                 >
-                  {viewState.terria.mainViewer.viewerMode === ViewerMode.Leaflet
-                    ? "3D" : "2D"}
+                  {this.props.viewState.terria.mainViewer.viewerMode ===
+                  ViewerMode.Leaflet
+                    ? "3D"
+                    : "2D"}
                 </button>
                 <button
                   type="button"
