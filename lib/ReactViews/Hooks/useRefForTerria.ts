@@ -17,6 +17,7 @@ export function useRefForTerria<E extends HTMLElement>(
     return function removeRefFromTerria() {
       viewState.deleteAppRef(refName);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [ref]);
   return ref;
 }

@@ -50,6 +50,7 @@ const ModalPopup: React.FC<IProps> = (props) => {
     } else {
       slideOut();
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.isVisible]);
 
   useEffect(() => {

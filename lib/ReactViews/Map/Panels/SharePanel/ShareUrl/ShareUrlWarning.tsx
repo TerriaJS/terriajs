@@ -60,8 +60,8 @@ export const ShareUrlWarning: FC<IShareUrlWarningProps> = observer(
           </Text>
           <Text>
             The following data sources will NOT be shared because they include
-            data from this local system. To share these data sources, publish
-            their data on a web server and{" "}
+            data from this local system or from an authenticated online service.
+            To share these data sources, publish their data on a web server and{" "}
             <WarningLink onClick={addWebData}>add them using a url</WarningLink>
             .
           </Text>

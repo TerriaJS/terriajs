@@ -40,14 +40,14 @@
 .ui-root {
   // This is a workaround for a bug in IE11 on Windows 7.
   // https://connect.microsoft.com/IE/feedback/details/796745/mouse-events-are-not-delivered-at-all-anymore-when-inside-an-svg-a-use-is-removed-from-the-dom
-  svg use {
-    pointer-events: none;
-  }
   position: relative;
   flex-basis: 100%;
   height: 100vh;
   @media (max-width: $sm) {
     position: unset;
+  }
+  svg use {
+    pointer-events: none;
   }
 }
 
@@ -153,8 +153,6 @@
 }
 
 @media (min-width: $sm) {
-  .ui {
-  }
   .uiInner {
     display: flex;
     overflow: hidden;

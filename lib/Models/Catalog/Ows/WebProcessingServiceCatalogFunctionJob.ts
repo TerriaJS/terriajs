@@ -3,17 +3,18 @@ import {
   action,
   computed,
   isObservableArray,
-  observable,
-  runInAction,
-  toJS,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction,
+  toJS
 } from "mobx";
 import Mustache from "mustache";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import URI from "urijs";
-import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
+import isDefined from "../../../Core/isDefined";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
@@ -23,21 +24,18 @@ import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/Feature
 import WebProcessingServiceCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/WebProcessingServiceCatalogFunctionJobTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
-
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits
@@ -362,7 +360,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
-          // Use cesium primitives so we don't have to deal with feature picking/selection
+          // Use cesium primitives, so we don't have to deal with feature picking/selection
           forceCesiumPrimitives: true,
           geoJsonData: {
             type: "FeatureCollection",
@@ -370,10 +368,10 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
             totalFeatures: this.geojsonFeatures!.length
           }
         }).logError(
-          "Error ocurred while updating Input Features GeoJSON model JSON"
+          "Error occurred while updating Input Features GeoJSON model JSON"
         );
       });
-      (await this.geoJsonItem!.loadMapItems()).throwIfError;
+      (await this.geoJsonItem!.loadMapItems()).throwIfError();
     }
 
     runInAction(() => {

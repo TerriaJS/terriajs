@@ -28,7 +28,7 @@ interface SearchResultProps {
   clickAction(): void;
   isLastResult: boolean;
   locationSearchText: string;
-  icon: string;
+  icon: keyof typeof Icon.GLYPHS;
 }
 
 const SearchResult: React.FC<SearchResultProps> = (
@@ -69,7 +69,6 @@ const SearchResult: React.FC<SearchResultProps> = (
                   fillColor={isLightTheme && theme.textDarker}
                   light={isDarkTheme}
                   styledWidth={"16px"}
-                  // @ts-expect-error
                   glyph={Icon.GLYPHS[props.icon]}
                 />
               )}

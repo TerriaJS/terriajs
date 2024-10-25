@@ -165,6 +165,10 @@ export const RawButton = styled.button<IButtonProps>`
 export type ButtonProps = {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
+  primary?: boolean;
+  secondary?: boolean;
+  warning?: boolean;
+  textLight?: boolean;
   rightIcon?: boolean;
   textProps?: any;
   children?: React.ReactChildren;

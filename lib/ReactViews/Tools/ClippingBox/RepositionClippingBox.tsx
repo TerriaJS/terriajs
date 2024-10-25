@@ -119,6 +119,7 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
     };
 
     // Init effect that sets up the event handlers etc.
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     useEffect(
       action(function init() {
         const canvas = cesium.scene.canvas;
@@ -204,10 +205,6 @@ const CursorPrompt = styled.div.attrs<CursorPromptProps>(({ x, y }) => ({
 
 function setCursor(el: HTMLElement, cursorName: string) {
   el.style.cursor = cursorName;
-}
-
-function truncate(text: string, length: number) {
-  return text.length <= length ? text : `${text.slice(0, length)}...`;
 }
 
 function pickGlobePosition(

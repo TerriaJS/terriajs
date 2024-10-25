@@ -1,12 +1,10 @@
 import Terria from "../../../lib/Models/Terria";
-import ViewState from "../../../lib/ReactViewModels/ViewState";
 import MapNavigationModel from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
 import { IMapNavigationItem } from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
 import { GenericMapNavigationItemController } from "../../../lib/ViewModels/MapNavigation/MapNavigationItemController";
 
 describe("MapNavigationModel", function () {
   let terria: Terria;
-  let viewState: ViewState;
   let item1: IMapNavigationItem;
   let item2: IMapNavigationItem;
   let item3: IMapNavigationItem;
@@ -17,10 +15,6 @@ describe("MapNavigationModel", function () {
   beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
-    });
-    viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: undefined
     });
     item1 = {
       id: "item1",

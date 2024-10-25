@@ -202,7 +202,7 @@
     "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
     "shortLinkShortening": "Shortening...",
     "shortLinkError": "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
-    "localDataNote": "<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
+    "localDataNote": "<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system or from an authenticated online service. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
     "generatingUrl": "Generating share URL...",
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
@@ -695,6 +695,7 @@
       "wps-getCapabilities": "Web Processing Service (WPS) Server",
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
+      "esri-imageServer": "Esri ArcGIS ImageServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
@@ -716,7 +717,10 @@
       "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",
       "assimp-remote": "3D file converter (experimental)",
       "assimp-remote-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nZip files are also supported",
-      "ifc": "IFC"
+      "ifc": "IFC",
+      "cog": "Cloud Optimised Geotiff",
+      "i3s": "I3S",
+      "cesium-ion": "Cesium ion"
     },
     "printWindow": {
       "errorTitle": "Error printing",
@@ -894,6 +898,14 @@
       "invalidUrlMessage": "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`.",
       "noLayersFoundTitle": "Could not load ArcGIS MapServer.",
       "noLayersFoundMessage": "The Esri ArcGIS MapServer '{{name}}' has no layers to show."
+    },
+    "arcGisImageServerCatalogItem": {
+      "name": "Esri ArcGIS ImageServer",
+      "invalidUrlTitle": "Unable to load ImageServer",
+      "invalidUrlMessage": "Could not load the ArcGis ImageServer endpoint because the catalog item does not have a `url`.",
+      "invalidServiceTitle": "Invalid ArcGIS Image Service",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Image Service.  The server's response does not appear to be a valid Image Service document.",
+      "rasterFunction": "Raster Function"
     },
     "bing": {
       "name": "Bing Maps"
@@ -2028,6 +2040,9 @@
           }
         }
       }
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "This COG is not in a native projection (EPSG:4326 or EPSG:3857). Reprojecting is experimental and may not work as expected. If you have control of the source data we recommend reprojecting to EPSG:4326 or EPSG:3857 using GDAL or similar."
     }
   },
   "searchProvider": {
