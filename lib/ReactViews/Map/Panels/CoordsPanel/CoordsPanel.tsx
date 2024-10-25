@@ -129,9 +129,12 @@ interface ISrsSelectionProps {
 }
 
 const SrsSelection = (props: ISrsSelectionProps) => {
+  const isCartographic = props.isCartographic;
+  const conversionList = props.conversionList;
+  const setSrs = props.setSrs;
   useEffect(() => {
-    props.setSrs(props.conversionList[0]);
-  }, [props.isCartographic]);
+    setSrs(conversionList[0]);
+  }, [isCartographic, conversionList, setSrs]);
 
   return (
     <div>
