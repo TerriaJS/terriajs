@@ -33,6 +33,18 @@
   vertical-align: top;
 }
 
+.btn-view-mode {
+  composes: btn;
+
+  position: relative;
+  margin: 0 $padding-small;
+  padding: $padding $padding $padding $padding;
+  width: auto;
+  text-align: center;
+  font-size: 0.95rem;
+  border-radius: 4px;
+}
+
 .btn-add {
   composes: btn;
 
@@ -40,14 +52,14 @@
   margin: 0 $padding-small;
   padding: $padding $padding $padding $padding * 3;
   width: auto;
-  text-align: right;
+  text-align: center;
   font-size: 0.95rem;
   border-radius: 4px;
 
   svg {
     position: absolute;
     top: $padding;
-    left: calc($padding / 2);
+    left: calc($padding);
     fill: #ffffff;
   }
 }

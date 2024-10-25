@@ -25,7 +25,7 @@ class MobileMenu extends React.Component {
     showFeedback: PropTypes.bool,
     terria: PropTypes.object.isRequired,
     i18n: PropTypes.object,
-    allBaseMaps: PropTypes.array.isRequired,
+    //allBaseMaps: PropTypes.array.isRequired,
     t: PropTypes.func.isRequired
   };
 

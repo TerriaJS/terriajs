@@ -37,7 +37,7 @@ export function setViewerMode(
   runInAction(() => {
     if (viewerMode === "3d" || viewerMode === "3dsmooth") {
       viewer.viewerMode = ViewerMode.Cesium;
-      viewer.viewerOptions.useTerrain = viewerMode === "3d";
+      //viewer.viewerOptions.useTerrain = viewerMode === "3d";
     } else if (viewerMode === "2d") {
       viewer.viewerMode = ViewerMode.Leaflet;
     } else {
