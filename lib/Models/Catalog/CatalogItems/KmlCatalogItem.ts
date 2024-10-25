@@ -6,7 +6,6 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import Property from "terriajs-cesium/Source/DataSources/Property";
