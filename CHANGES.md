@@ -6,6 +6,7 @@
 - Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
+- Allow to modify `lookupCookie` for i18next
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01
@@ -52,7 +53,6 @@
 #### 8.7.4 - 2024-06-07
 
 - Fix position of draggable point after moving.
-- Allow to modify `lookupCookie` for i18next
 - Fix `getFeatureProperties` (in `FeatureInfoSection`) failing due to bad JSON parsing of nested strings.
 - The `TableFeatureInfoStratum` default `featureInfoTemplate` will now not show `_id_` (internal Terria feature ID) in feature info
 - Fix bug in FilterSection
