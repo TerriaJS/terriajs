@@ -65,6 +65,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const clipboardBtn = new clipboard(`.btn-copy-featureinfopanel`);
 
     disposeOnUnmount(

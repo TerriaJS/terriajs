@@ -232,6 +232,7 @@ export default class MouseCoords {
   }
 
   @action
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   cartographicToFields(coordinates: Cartographic, errorBar?: number) {
     this.cartographic = Cartographic.clone(coordinates, scratchCartographic);
 
