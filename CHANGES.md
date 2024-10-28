@@ -1,8 +1,9 @@
 # Change Log
 
+
 #### next release (8.7.4)
 
-- Add Nominatim search provider
+- [The next improvement]
 
 #### 8.7.3 - 2024-05-28
 

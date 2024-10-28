@@ -49,19 +49,27 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
     }
 
     const view = this.terria.currentViewer.getCurrentCameraView();
-    const bboxStr = CesiumMath.toDegrees(view.rectangle.west) +
-      ", " + CesiumMath.toDegrees(view.rectangle.north) +
-      ", " + CesiumMath.toDegrees(view.rectangle.east) +
-      ", " + CesiumMath.toDegrees(view.rectangle.south);
+    const bboxStr =
+      CesiumMath.toDegrees(view.rectangle.west) +
+      ", " +
+      CesiumMath.toDegrees(view.rectangle.north) +
+      ", " +
+      CesiumMath.toDegrees(view.rectangle.east) +
+      ", " +
+      CesiumMath.toDegrees(view.rectangle.south);
 
     const promise = loadJson(
       this.url +
-      "search?q=" + searchText +
-      "&viewbox=" + bboxStr +
-      "&bounded=0" +
-      "&format=geojson" +
-      "&countrycodes=" + this.countryCodes +
-      "&limit=" + this.maxResults
+        "search?q=" +
+        searchText +
+        "&viewbox=" +
+        bboxStr +
+        "&bounded=0" +
+        "&format=geojson" +
+        "&countrycodes=" +
+        this.countryCodes +
+        "&limit=" +
+        this.maxResults
     );
     return promise
       .then((result) => {
@@ -70,7 +78,11 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
           return;
         }
 
-        if (!result?.features || !Array.isArray(result.features) || result.features.length === 0) {
+        if (
+          !result?.features ||
+          !Array.isArray(result.features) ||
+          result.features.length === 0
+        ) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
           };
@@ -78,8 +90,10 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
         }
 
         const locations: SearchResult[] = (result.features as Feature<Point>[])
-          .filter((feat) => feat.properties && feat.geometry
-            && feat.properties.display_name)
+          .filter(
+            (feat) =>
+              feat.properties && feat.geometry && feat.properties.display_name
+          )
           .sort((a, b) => b.properties!.importance - a.properties!.importance)
           .map((feat) => {
             return new SearchResult({
@@ -89,7 +103,7 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
                 latitude: feat.geometry.coordinates[1],
                 longitude: feat.geometry.coordinates[0]
               }
-            })
+            });
           });
 
         runInAction(() => {
