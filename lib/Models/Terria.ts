@@ -405,6 +405,11 @@ export interface ConfigParameters {
    * If true elevation is intended MSL, otherwise WGS84
    */
   useElevationMeanSeaLevel: boolean;
+
+  /**
+   * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
+   */
+  mapViewers: string[];
 }
 
 interface StartOptions {
@@ -638,7 +643,8 @@ export default class Terria {
     searchBarConfig: undefined,
     searchProviders: [],
     coordsConverterUrl: undefined,
-    useElevationMeanSeaLevel: false
+    useElevationMeanSeaLevel: false,
+    mapViewers: ["3d", "3dsmooth", "2d"]
   };
 
   @observable

@@ -20,6 +20,8 @@
 - Update to sass 1.79.1
 - Add option to import assets from Cesium ion through the Add data panel. Use map config parameter "cesiumIonOAuth2ApplicationID" to enable the feature.
 - Splitting the measurement tool into lines and polygons. It is now possible to add a point to an existing segment.
+- Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
+- Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]
 
 #### 8.7.6 - 2024-08-22
