@@ -58,7 +58,6 @@ const CoordsText = (props: ICoordsTextProps) => {
         <Input
           title={props.tooltip}
           className={Styles.shareUrlfield}
-          light
           dark
           large
           type="text"
