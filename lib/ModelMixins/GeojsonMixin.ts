@@ -106,6 +106,8 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
+import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
@@ -613,6 +615,33 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           });
         } else {
           const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+
+          if (this.clustering.enabled) {
+            const pinBackgroundColor = this.clustering.pinBackgroundColor;
+            const pinSize = this.clustering.pinSize;
+
+            const pinBuilder = new PinBuilder();
+            dataSource.clustering.enabled = true;
+            dataSource.clustering.pixelRange = this.clustering.pixelRange;
+            dataSource.clustering.minimumClusterSize =
+              this.clustering.minimumClusterSize;
+            dataSource.clustering.clusterEvent.addEventListener(function (
+              entities,
+              cluster
+            ) {
+              cluster.label.show = false;
+              cluster.billboard.verticalOrigin = VerticalOrigin.BOTTOM;
+              cluster.billboard.image = pinBuilder
+                .fromText(
+                  entities.length.toLocaleString(),
+                  Color.fromCssColorString(pinBackgroundColor),
+                  pinSize
+                )
+                .toDataURL();
+              cluster.billboard.show = true;
+            });
+          }
+
           runInAction(() => {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
