@@ -194,9 +194,10 @@ export default class Cesium extends GlobeOrMap {
         {}
       ),
       scene3DOnly: false,
-      sceneMode: terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
-        ? SceneMode.SCENE3D
-        : SceneMode.SCENE2D,
+      sceneMode:
+        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
+          ? SceneMode.SCENE3D
+          : SceneMode.SCENE2D,
       mapProjection:
         terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
           ? new GeographicProjection()

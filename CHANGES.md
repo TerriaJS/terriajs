@@ -6,6 +6,7 @@
 
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
+
 - Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
 - Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]

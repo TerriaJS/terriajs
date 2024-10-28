@@ -175,10 +175,10 @@ class SettingPanel extends React.Component<PropTypes> {
       this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
         ? ViewerMode.Cesium2D
         : this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
-          ? this.props.terria.mainViewer.viewerOptions.useTerrain
-            ? "3d"
-            : "3dsmooth"
-          : "2d";
+        ? this.props.terria.mainViewer.viewerOptions.useTerrain
+          ? "3d"
+          : "3dsmooth"
+        : "2d";
 
     const useNativeResolution = this.props.terria.useNativeResolution;
     const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
@@ -253,15 +253,17 @@ class SettingPanel extends React.Component<PropTypes> {
             <Text as="label">{t("settingPanel.mapView")}</Text>
           </Box>
           <FlexGrid gap={1} elementsNo={3}>
-            {Object.entries(MapViewers).filter(([_, viewerMode]) => viewerMode.available).map(([key, viewerMode]) => (
-              <SettingsButton
-                key={key}
-                isActive={key === currentViewer}
-                onClick={(event: any) => this.selectViewer(key as any, event)}
-              >
-                <Text mini>{t(viewerMode.label)}</Text>
-              </SettingsButton>
-            ))}
+            {Object.entries(MapViewers)
+              .filter(([_, viewerMode]) => viewerMode.available)
+              .map(([key, viewerMode]) => (
+                <SettingsButton
+                  key={key}
+                  isActive={key === currentViewer}
+                  onClick={(event: any) => this.selectViewer(key as any, event)}
+                >
+                  <Text mini>{t(viewerMode.label)}</Text>
+                </SettingsButton>
+              ))}
           </FlexGrid>
           {!!supportsSide && (
             <>

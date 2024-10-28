@@ -26,7 +26,7 @@ export const MapViewers = Object.seal({
     label: "settingPanel.viewerModeLabels.Leaflet",
     available: true
   },
-  "cesium2d": {
+  cesium2d: {
     viewerMode: ViewerMode.Cesium2D,
     terrain: false,
     label: "settingPanel.viewerModeLabels.Leaflet",
