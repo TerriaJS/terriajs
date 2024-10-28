@@ -1,6 +1,5 @@
 # Change Log
 
-
 #### next release (8.7.4)
 
 - [The next improvement]
