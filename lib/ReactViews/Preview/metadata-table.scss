@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
@@ -6,7 +8,7 @@
 }
 
 .root table tr:nth-child(odd) {
-  background-color: darken($faint-bg, 8%);
+  background-color: color.adjust($faint-bg, $lightness: -8%);
 }
 .root table tr:nth-child(even) {
   background-color: $faint-bg;

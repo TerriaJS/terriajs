@@ -197,7 +197,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-    const firefoxBugOptions = (FeatureDetection as any).isFirefox()
+    const firefoxBugOptions = FeatureDetection.isFirefox()
       ? {
           contextOptions: {
             webgl: { preserveDrawingBuffer: true }
@@ -241,7 +241,7 @@ export default class Cesium extends GlobeOrMap {
     this._eventHelper.add(
       this.scene.globe.tileLoadProgressEvent,
       (currentLoadQueueLength: number) =>
-        this._updateTilesLoadingCount(currentLoadQueueLength) as any
+        this._updateTilesLoadingCount(currentLoadQueueLength)
     );
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
@@ -927,6 +927,14 @@ export default class Cesium extends GlobeOrMap {
         return flyToPromise(camera, {
           duration: flightDurationSeconds,
           destination: target.rectangle
+        });
+      } else if (
+        defined(target.imageryProvider) &&
+        defined(target.imageryProvider.rectangle)
+      ) {
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.imageryProvider.rectangle
         });
       } else {
         return Promise.resolve();

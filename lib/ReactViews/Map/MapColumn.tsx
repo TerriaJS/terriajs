@@ -16,7 +16,6 @@ import { TerriaViewerWrapper } from "./TerriaViewerWrapper";
 import Toast from "./Toast";
 
 interface IMapColumnProps {
-  customFeedbacks: any;
   animationDuration: number;
   customElements: any;
 }
@@ -26,7 +25,7 @@ interface IMapColumnProps {
  * the timeline and charts.
  */
 export const MapColumn: FC<IMapColumnProps> = observer(
-  ({ customFeedbacks, customElements, animationDuration }) => {
+  ({ customElements, animationDuration }) => {
     const viewState = useViewState();
     const { t } = useTranslation();
 

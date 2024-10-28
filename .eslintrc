@@ -87,7 +87,7 @@
     /* Variables */
     "no-label-var": 1,
     "no-unused-vars": [
-      1,
+      "warn",
       {
         "vars": "local",
         "args": "none"
@@ -115,18 +115,21 @@
       "rules": {
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
+        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
           "warn",
           {
             "argsIgnorePattern": "^_",
             "varsIgnorePattern": "^_",
-            "caughtErrorsIgnorePattern": "^_"
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "ignoreRestSiblings": true
           }
         ],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-loss-of-precision": "warn",
-        "@typescript-eslint/no-unsafe-declaration-merging": "warn",
-        "react-hooks/exhaustive-deps": "warn",
+        "@typescript-eslint/no-unsafe-declaration-merging": "error",
+        "react-hooks/exhaustive-deps": "error",
         "react/prop-types": "warn"
       }
     }

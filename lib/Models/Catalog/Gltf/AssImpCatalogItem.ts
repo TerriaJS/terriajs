@@ -13,6 +13,7 @@ import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import { GlTf } from "./GLTF";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 // List of supported image formats from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
 // + Cesium adds support for ktx2
@@ -36,7 +37,7 @@ export default class AssImpCatalogItem
   implements HasLocalData
 {
   @observable
-  protected gltfModelUrl: string | undefined;
+  protected gltfModelUrl: string | Resource | undefined;
 
   static readonly type = "assimp";
 
@@ -178,7 +179,7 @@ export default class AssImpCatalogItem
     }
 
     /** This is used so we only set `this.gltfModelUrl` after process has finished */
-    let gltfModelUrl: string | undefined;
+    let gltfModelUrl: string | Resource | undefined;
     /** List of unsupported texture URLs to show in warning message */
     const unsupportedTextures: string[] = [];
 

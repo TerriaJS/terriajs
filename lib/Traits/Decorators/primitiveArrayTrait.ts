@@ -5,7 +5,7 @@ import Trait, { TraitOptions } from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
 
-export interface PrimitiveArrayTraitOptions<T> extends TraitOptions {
+export interface PrimitiveArrayTraitOptions<_T> extends TraitOptions {
   type: PrimitiveType;
   isNullable?: boolean;
 }

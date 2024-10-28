@@ -52,7 +52,7 @@ describe("BingMapsSearchProvider", function () {
       })
     );
 
-    const searchResult = bingMapsSearchProvider.search("test");
+    bingMapsSearchProvider.search("test");
 
     expect(test).toHaveBeenCalledWith(
       new Resource({
@@ -86,7 +86,7 @@ describe("BingMapsSearchProvider", function () {
         false
       );
     });
-    const test = spyOn(loadJsonp, "loadJsonp").and.returnValue(
+    spyOn(loadJsonp, "loadJsonp").and.returnValue(
       Promise.resolve({
         resourceSets: [
           {

@@ -180,7 +180,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
   }
 
   render() {
-    const { t, theme } = this.props;
+    const { t } = this.props;
     return (
       <StyledZoomControl>
         <Ul
