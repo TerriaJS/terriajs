@@ -13,6 +13,7 @@ import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 export default class NominatimSearchProvider extends LocationSearchProviderMixin(
   CreateModel(NominatimSearchProviderTraits)
@@ -44,10 +45,6 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
-    if (searchText === undefined || /^\s*$/.test(searchText)) {
-      return Promise.resolve();
-    }
-
     const view = this.terria.currentViewer.getCurrentCameraView();
     const bboxStr =
       CesiumMath.toDegrees(view.rectangle.west) +
@@ -59,17 +56,17 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
       CesiumMath.toDegrees(view.rectangle.south);
 
     const promise = loadJson(
-      this.url +
-        "search?q=" +
-        searchText +
-        "&viewbox=" +
-        bboxStr +
-        "&bounded=0" +
-        "&format=geojson" +
-        "&countrycodes=" +
-        this.countryCodes +
-        "&limit=" +
-        this.maxResults
+      new Resource({
+        url: this.url,
+        queryParameters: {
+          q: searchText,
+          viewbox: bboxStr,
+          bounded: 0,
+          format: "geojson",
+          countrycodes: this.countryCodes,
+          limit: this.maxResults
+        }
+      })
     );
     return promise
       .then((result) => {
@@ -129,8 +126,11 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
   }
 }
 
-function createZoomToFunction(model: NominatimSearchProvider, resource: any) {
-  const [west, south, east, north] = resource.bbox;
+function createZoomToFunction(
+  model: NominatimSearchProvider,
+  resource: Feature<Point>
+) {
+  const [west, south, east, north] = resource.bbox!;
   const rectangle = Rectangle.fromDegrees(west, south, east, north);
 
   return function () {
