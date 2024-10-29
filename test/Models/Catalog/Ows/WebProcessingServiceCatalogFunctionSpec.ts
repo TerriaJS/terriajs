@@ -148,7 +148,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose: any;
       job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         dispose = reaction(
           () => job.downloadedResults,
           () => {
@@ -220,7 +220,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose2: any;
 
       // Wait for job to finish polling, then check if finished
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {
@@ -307,7 +307,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose2: any;
 
       // Wait for job to finish polling, then check if failed
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {

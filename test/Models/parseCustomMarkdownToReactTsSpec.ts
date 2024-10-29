@@ -1,6 +1,5 @@
 import { parseCustomMarkdownToReactWithOptions } from "../../lib/ReactViews/Custom/parseCustomMarkdownToReact";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import Terria from "../../lib/Models/Terria";
 import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 
 const isComponentOfType: any =
@@ -8,12 +7,7 @@ const isComponentOfType: any =
 const findAll: any = require("react-shallow-testutils").findAll;
 
 describe("parseCustomMarkdownToReactTs", function () {
-  let terria: Terria;
-
   beforeEach(function () {
-    terria = new Terria({
-      baseUrl: "./"
-    });
     registerCustomComponentTypes();
   });
   it("correctly parses tooltip terms", function () {

@@ -30,13 +30,13 @@ export default class StubSearchProvider extends SearchProviderMixin(
     return StubSearchProvider.type;
   }
 
-  protected logEvent(searchText: string) {
+  protected logEvent(_searchText: string) {
     return;
   }
 
   protected doSearch(
-    searchText: string,
-    results: SearchProviderResults
+    _searchText: string,
+    _results: SearchProviderResults
   ): Promise<void> {
     return Promise.resolve();
   }

@@ -885,6 +885,7 @@ const AreaFilterSelection = (props: {
   t: TFunction;
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
+  theme?: any;
 }) => {
   const { t, location, isPickingNewLocation } = props;
   let locationText = "-";

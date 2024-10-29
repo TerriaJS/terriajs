@@ -207,11 +207,6 @@ const FACE_POINT_VECTORS = [
   new Cartesian3(0.0, 0.0, 0.5)
 ];
 
-// The box has 8 corner points and 6 face points that act as scaling grips.
-// Here we represent them as 7 vectors in local coordinates space.
-// Each vector represents a point and its opposite points can be easily derived from it.
-const SCALE_POINT_VECTORS = [...CORNER_POINT_VECTORS, ...FACE_POINT_VECTORS];
-
 /**
  * Checks whether the given entity is updatable (i.e repsonds to box parameter changes).
  */
@@ -1778,23 +1773,6 @@ export function screenToGlobePosition(
   const globePosition = scene.globe.pick(pickRay, scene, result);
   return globePosition;
 }
-
-/**
- * Project the given point to the ellipsoid surface.
- */
-function projectPointToSurface(
-  position: Cartesian3,
-  result: Cartesian3
-): Cartesian3 {
-  const cartographic = Cartographic.fromCartesian(
-    position,
-    undefined,
-    scratchCartographic
-  );
-  cartographic.height = 0;
-  return Cartographic.toCartesian(cartographic, undefined, result);
-}
-const scratchCartographic = new Cartographic();
 
 function setPlaneDimensions(
   boxDimensions: Cartesian3,

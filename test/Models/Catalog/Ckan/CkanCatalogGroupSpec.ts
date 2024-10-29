@@ -29,7 +29,6 @@ interface ExtendedLoadWithXhr {
 const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("CkanCatalogGroup", function () {
-  const ckanServerUrl = "http://data.gov.au";
   let terria: Terria;
   let ckanCatalogGroup: CkanCatalogGroup;
   let ckanServerStratum: CkanServerStratum;

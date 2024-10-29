@@ -144,7 +144,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     this.removeFeatureChangedSubscription?.();
     this.removeFeatureChangedSubscription =
       feature.definitionChanged.addEventListener(
-        ((changedFeature: TerriaFeature) => {
+        ((_changedFeature: TerriaFeature) => {
           runInAction(() => {
             this.featureChangedCounter++;
           });
