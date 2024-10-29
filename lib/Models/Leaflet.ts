@@ -103,6 +103,7 @@ export default class Leaflet extends GlobeOrMap {
     clippingRectangle: Rectangle | undefined
   ) => GridLayer = computedFn((ip, clippingRectangle) => {
     const layerOptions = {
+      maxZoom: this.terria.configParameters.leafletMaxZoom,
       bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
     };
     // We have two different kinds of ImageryProviderLeaflet layers
