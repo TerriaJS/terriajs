@@ -7,6 +7,7 @@
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
+- Properly initialize react ref in functional components
 - [The next improvement]
 
 #### 8.7.7 - 2024-10-01
