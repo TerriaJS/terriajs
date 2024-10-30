@@ -119,7 +119,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "translate#measure.measureArea",
     location: "TOP",
     controller: measurePolygonTool,
-    screenSize: "medium",
+    screenSize: undefined,
     order: 6
   });
 
