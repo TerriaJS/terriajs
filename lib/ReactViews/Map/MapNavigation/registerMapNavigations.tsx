@@ -61,7 +61,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     controller: zoomToolController,
     location: "TOP",
     order: 2,
-    screenSize: "medium",
+    screenSize: undefined,
     render: <ZoomControl terria={terria} viewState={viewState} />
   });
 
