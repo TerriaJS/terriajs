@@ -11,6 +11,7 @@
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
+- Restrict `sass` version to `< 1.80`- to avoid deprecations.
 
 #### 8.7.7 - 2024-10-01
 
