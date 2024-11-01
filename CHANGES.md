@@ -1,13 +1,16 @@
 # Change Log
 
-#### next release (8.7.8)
+#### next release (8.7.9)
+
+- [The next improvement]
+
+#### 8.7.8 - 2024-11-01
 
 - Fix the layout of the story builder and the item search tool.
 - Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
-- [The next improvement]
 
 #### 8.7.7 - 2024-10-01
 
