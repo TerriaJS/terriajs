@@ -99,6 +99,27 @@ describe("SearchBoxAndResults", function () {
       );
     });
 
+    it("renders with an input & no SearchInDataCatalog when showSearchInCatalogLink is false", function () {
+      const searchText = "timmynook";
+      runInAction(() => {
+        viewState.searchState.locationSearchText = searchText;
+        viewState.searchState.showLocationSearchResults = true;
+        viewState.searchState.locationSearchResults = [];
+        viewState.terria.configParameters.showSearchInCatalogLink = false;
+      });
+      act(() => {
+        testRenderer = create(
+          <ThemeProvider theme={terriaTheme}>
+            <SearchBoxAndResults
+              t={() => {}}
+              terria={terria}
+              viewState={viewState}
+            />
+          </ThemeProvider>
+        );
+      });
+    });
+
     const searchBox = testRenderer.root.findByType("input");
     expect(searchBox).toBeDefined();
     expect(() => {
