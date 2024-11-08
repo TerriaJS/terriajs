@@ -418,6 +418,11 @@ export interface ConfigParameters {
    * Side size for the drill pick in Cesium
    */
   pickSize?: number;
+
+  /**
+   * CSS color of Cesium globe (see doc of Cesium.Color.fromCssColorString)
+   */
+  cesiumGlobeColor?: string;
 }
 
 interface StartOptions {
@@ -654,7 +659,8 @@ export default class Terria {
     coordsConverterUrl: undefined,
     useElevationMeanSeaLevel: false,
     mapViewers: ["3d", "3dsmooth", "2d"],
-    pickSize: undefined
+    pickSize: undefined,
+    cesiumGlobeColor: undefined
   };
 
   @observable
