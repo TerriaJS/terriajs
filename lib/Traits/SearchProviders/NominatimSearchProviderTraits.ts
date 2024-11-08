@@ -8,7 +8,7 @@ export default class NominatimSearchProviderTraits extends mixTraits(
   LocationSearchProviderTraits,
   SearchProviderMapCenterTraits
 ) {
-  url: string = "//nominatim.openstreetmap.org/";
+  url: string = "//nominatim.openstreetmap.org/search";
 
   @primitiveTrait({
     type: "string",
@@ -22,7 +22,7 @@ export default class NominatimSearchProviderTraits extends mixTraits(
     name: "Primary country",
     description: "Name of the country to prioritize the search results."
   })
-  countryCodes: string = "it";
+  countryCodes?: string;
 
   @primitiveTrait({
     type: "number",
