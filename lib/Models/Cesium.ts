@@ -96,6 +96,7 @@ import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
+import Color from "terriajs-cesium/Source/Core/Color";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -261,6 +262,12 @@ export default class Cesium extends GlobeOrMap {
     this.scene.imageryLayers.removeAll();
 
     this.updateCredits(container);
+
+    if (this.terria.configParameters.cesiumGlobeColor) {
+      this.scene.globe.baseColor = Color.fromCssColorString(
+        this.terria.configParameters.cesiumGlobeColor
+      );
+    }
 
     this.scene.globe.depthTestAgainstTerrain = false;
 

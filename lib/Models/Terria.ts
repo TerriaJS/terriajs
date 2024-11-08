@@ -413,6 +413,11 @@ export interface ConfigParameters {
    * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
    */
   mapViewers: string[];
+
+  /**
+   * CSS color of Cesium globe (see doc of Cesium.Color.fromCssColorString)
+   */
+  cesiumGlobeColor?: string;
 }
 
 interface StartOptions {
@@ -648,7 +653,8 @@ export default class Terria {
     searchProviders: [],
     coordsConverterUrl: undefined,
     useElevationMeanSeaLevel: false,
-    mapViewers: ["3d", "3dsmooth", "2d"]
+    mapViewers: ["3d", "3dsmooth", "2d"],
+    cesiumGlobeColor: undefined,
   };
 
   @observable
