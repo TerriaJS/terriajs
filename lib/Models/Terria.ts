@@ -413,6 +413,11 @@ export interface ConfigParameters {
    * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
    */
   mapViewers: string[];
+
+  /**
+   * Side size for the drill pick in Cesium
+   */
+  pickSize?: number;
 }
 
 interface StartOptions {
@@ -648,7 +653,8 @@ export default class Terria {
     searchProviders: [],
     coordsConverterUrl: undefined,
     useElevationMeanSeaLevel: false,
-    mapViewers: ["3d", "3dsmooth", "2d"]
+    mapViewers: ["3d", "3dsmooth", "2d"],
+    pickSize: undefined
   };
 
   @observable

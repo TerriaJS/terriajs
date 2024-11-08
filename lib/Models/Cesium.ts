@@ -1441,7 +1441,12 @@ export default class Cesium extends GlobeOrMap {
   private async pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
-    const pickedList = this.scene.drillPick(screenPosition);
+    const pickedList = this.scene.drillPick(
+      screenPosition,
+      undefined,
+      this.terria.configParameters.pickSize,
+      this.terria.configParameters.pickSize
+    );
     for (let i = 0; i < pickedList.length; ++i) {
       const picked = pickedList[i];
       let id = picked.id;
