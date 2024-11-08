@@ -654,7 +654,7 @@ export default class Terria {
     coordsConverterUrl: undefined,
     useElevationMeanSeaLevel: false,
     mapViewers: ["3d", "3dsmooth", "2d"],
-    cesiumGlobeColor: undefined,
+    cesiumGlobeColor: undefined
   };
 
   @observable
