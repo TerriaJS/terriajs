@@ -2,6 +2,7 @@
 
 #### next release (8.7.9)
 
+- Add NominatimSearchProvider.
 - [The next improvement]
 
 #### 8.7.8 - 2024-11-01
