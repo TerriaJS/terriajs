@@ -423,6 +423,11 @@ export interface ConfigParameters {
    * CSS color of Cesium globe (see doc of Cesium.Color.fromCssColorString)
    */
   cesiumGlobeColor?: string;
+
+  /**
+   * Polyline width for KML and GeoJson (and derived)
+   */
+  polylineWidth?: number;
 }
 
 interface StartOptions {
@@ -660,7 +665,8 @@ export default class Terria {
     useElevationMeanSeaLevel: false,
     mapViewers: ["3d", "3dsmooth", "2d"],
     pickSize: undefined,
-    cesiumGlobeColor: undefined
+    cesiumGlobeColor: undefined,
+    polylineWidth: undefined
   };
 
   @observable

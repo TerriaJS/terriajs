@@ -156,6 +156,9 @@ class KmlCatalogItem
 
         // Clamp to ground
         if (isDefined(entity.polyline)) {
+          entity.polyline.width = new ConstantProperty(
+            this.terria.configParameters.polylineWidth ?? 2
+          );
           entity.polyline.clampToGround = new ConstantProperty(true);
           entity.polyline.arcType = new ConstantProperty(ArcType.GEODESIC);
         } else if (isDefined(entity.billboard)) {

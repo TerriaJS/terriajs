@@ -857,7 +857,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               color: useOutlineColorForLineFeatures
                 ? getOutlineColorValue
                 : getColorValue,
-              width: getOutlineWidthValue
+              width:
+                this.terria.configParameters.polylineWidth ??
+                getOutlineWidthValue
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -1076,7 +1078,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         polygonStroke: getColor(this.terria.baseMapContrastColor),
         polylineStroke: getRandomCssColor(this.name ?? ""),
         markerStrokeWidth: 1,
-        polylineStrokeWidth: 2,
+        polylineStrokeWidth: this.terria.configParameters.polylineWidth ?? 2,
         polygonStrokeWidth: 1,
         fill: getRandomCssColor((this.name ?? "") + " fill"),
         fillAlpha: 0.75
