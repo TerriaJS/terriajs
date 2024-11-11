@@ -19,6 +19,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 
 /**
  * A loadable stratum for CzmlCatalogItemTraits that derives TimeVaryingTraits
@@ -70,7 +71,9 @@ StratumOrder.addLoadStratum(CzmlTimeVaryingStratum.stratumName);
 export default class CzmlCatalogItem
   extends AutoRefreshingMixin(
     MappableMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+      UrlMixin(
+        CesiumIonMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+      )
     )
   )
   implements TimeVarying, HasLocalData
@@ -107,6 +110,8 @@ export default class CzmlCatalogItem
       loadableData = JSON.parse(this.czmlString);
     } else if (isDefined(this._czmlFile)) {
       loadableData = readJson(this._czmlFile);
+    } else if (isDefined(this.ionResource)) {
+      loadableData = this.ionResource;
     } else if (isDefined(this.url)) {
       loadableData = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
     }
@@ -145,7 +150,7 @@ export default class CzmlCatalogItem
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+    return this.loadIonResource();
   }
 
   @computed

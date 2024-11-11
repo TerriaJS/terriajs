@@ -35,6 +35,7 @@ const MiniMap: React.FC<MiniMapProps> = (props) => {
   >();
   const [locationMarker, setLocationMarker] = useState<Marker | undefined>();
 
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   useEffect(
     action(() => {
       const marker = new Marker(

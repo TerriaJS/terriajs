@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
@@ -26,7 +28,7 @@
 
 .notification {
   border-radius: $radius-small;
-  border: 1px solid darken($dark, 3%);
+  border: 1px solid color.adjust($dark, $lightness: -3%);
   // background: $dark;
   z-index: 300;
   pre {

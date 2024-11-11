@@ -7,7 +7,7 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
-import { Ref } from "react";
+import React, { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../Core/addedByUser";
 import {
@@ -36,7 +36,6 @@ import {
   RelativePosition,
   TourPoint
 } from "./defaultTourPoints";
-import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
@@ -109,6 +108,17 @@ export default class ViewState {
   @observable currentTrainerStepIndex: number = 0;
 
   @observable printWindow: Window | null = null;
+
+  /**
+   * The currently-selected web service type on the My Data -> Add web data panel.
+   */
+  @observable remoteDataType: any | undefined = undefined;
+
+  /**
+   * The ID of the Cesium ion token that is currently selected on the
+   * My Data -> Add web data -> Cesium ion panel.
+   */
+  @observable currentCesiumIonToken: string | undefined = undefined;
 
   /**
    * Toggles ActionBar visibility. Do not set manually, it is
@@ -373,7 +383,6 @@ export default class ViewState {
   private _locationMarkerSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
-  private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
@@ -448,8 +457,6 @@ export default class ViewState {
         }
       }
     );
-
-    this._disclaimerHandler = new DisclaimerHandler(terria, this);
 
     this._workbenchHasTimeWMSSubscription = reaction(
       () => this.terria.workbench.hasTimeWMS,
@@ -540,7 +547,7 @@ export default class ViewState {
     this._previewedItemIdSubscription();
     this._workbenchHasTimeWMSSubscription();
     this._locationMarkerSubscription();
-    this._disclaimerHandler.dispose();
+    this._storyBeforeUnloadSubscription();
     this.searchState.dispose();
   }
 

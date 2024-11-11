@@ -28,7 +28,7 @@ export class ThreddsDatasetStratum extends LoadableStratum(
     super();
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new ThreddsDatasetStratum(
       this.threddsItemReference,
       this.threddsDataset
@@ -109,7 +109,7 @@ export default class ThreddsItemReference extends UrlMixin(
   }
 
   async forceLoadReference(
-    previousTarget: BaseModel | undefined
+    _previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     this.setThreddsStrata(this);
 
@@ -121,7 +121,7 @@ export default class ThreddsItemReference extends UrlMixin(
     );
     if (model === undefined) return;
     this.setThreddsStrata(model);
-    previousTarget = model;
+    _previousTarget = model;
     return model;
   }
 }

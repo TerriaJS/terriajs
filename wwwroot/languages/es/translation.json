@@ -35,7 +35,10 @@
     "searchErrorOccurred": "Se ha producido un error en la búsqueda. Por favor, compruebe su conexión a internet o inténtelo más tarde.",
     "inDataCatalogue": "En el catálogo de datos",
     "searchNoCatalogueItem": "Lo sentimos, ningún artículo del catálogo coincide con su búsqueda.",
-    "searchNoPlaceNames": "Lo sentimos, ningún topónimo oficial coincide con su búsqueda."
+    "searchNoPlaceNames": "Lo sentimos, ningún topónimo oficial coincide con su búsqueda.",
+    "searchMinCharacters_0": "Necesita introducir al menos {{count}} carácter",
+    "searchMinCharacters_1": "Necesita introducir al menos {{count}} caracteres",
+    "searchMinCharacters_2": "Necesita introducir al menos {{count}} caracteres"
   },
   "catalogItem": {
     "trash": "Quitar del catálogo",
@@ -111,6 +114,303 @@
       "contact_point": "Contacto",
       "author": "Autor",
       "licence": "Licencia"
+    },
+    "webMapServiceCatalogItem": {
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "serviceDescription": "Descripción del servicio",
+      "serviceContact": "Contacto del servicio",
+      "accessConstraints": "Restricciones de acceso",
+      "noLayerFoundTitle": "Capa no encontrada",
+      "defaultStyleLabel": "Estilo por defecto",
+      "dataDescription": "Descripción de los datos"
+    },
+    "userDrawing": {
+      "messageHeader": "Dibujar en el mapa",
+      "clickToAddFirstPoint": "Haga click para añadir un punto",
+      "btnCancel": "Cancelar",
+      "btnDone": "Hecho",
+      "clickToAddAnotherPoint": "Haga click para añadir otro punto"
+    },
+    "raiseError": {
+      "notificationFeedback": "Para preguntas y comentarios, haga click aquí.",
+      "developerDetails": "Detalles para desarrolladores"
+    },
+    "mapboxVectorTile": {
+      "name": "Teselas vectoriales de Mapbox (MVT)"
+    },
+    "webFeatureServiceCatalogItem": {
+      "noLayerFoundMessage": "El conjunto de dato WFS '{{name}}' no tiene capas que coincidan con '{{typeNames}}'. O el catálogo ha sido configurado erróneamente, o el servidor WFS ha cambiado."
+    },
+    "tableData": {
+      "activeStyle": "Mostrar Variable",
+      "editStyle": "Editar estilo",
+      "noData": "No hay datos que mostrar.",
+      "custom": "Personalizado",
+      "styleDisabledLabel": "Deshabilitar estilo",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}} direcciones faltan en el CSV.",
+      "timeDimensionEnabled": "Opciones temporales activadas (click para deshabilitar)",
+      "legendNullLabel": "(sin valor)",
+      "unsupportedCharactersTitle": "Carácteres erróneos en las columnas de latitud y longitud",
+      "timeDimensionDisabled": "Opciones temporales desactivadas (click para habilitar)",
+      "unsupportedCharactersMessage": "La pareja {{longitude}} (longitud), {{latitude}} (latitud) no pudo ser interpretada",
+      "regionMapping": "Mapeo de regiones",
+      "regionColumn": "Columna de región",
+      "manualRegionMapping": "Mapeo de regiones manual"
+    },
+    "tableStyling": {
+      "reset": "Restaurar estilo por defecto",
+      "name": "Estilo",
+      "showAdvancedOptions": "Mostrar opciones avanzadas",
+      "data": {
+        "name": "Datos",
+        "selectableDimensions": {
+          "tableStyle": {
+            "name": "Estilo"
+          },
+          "tableStyleType": {
+            "name": "Símbolos",
+            "options": {
+              "fill": {
+                "name": "Color de relleno"
+              },
+              "outline": {
+                "name": "Color del borde"
+              }
+            }
+          },
+          "dataset": {
+            "name": "Conjunto de datos"
+          }
+        }
+      },
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "options": {
+              "divergingContinuous": {
+                "name": "Divergente (continuo)"
+              },
+              "noStyle": {
+                "name": "Sin estilo"
+              },
+              "sequentialContinuous": {
+                "name": "Secuencial (continuo)"
+              },
+              "sequentialDiscrete": {
+                "name": "Secuencial (discreto)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergente (concreto)"
+              },
+              "qualitative": {
+                "name": "Cualitativo"
+              },
+              "customQualitative": {
+                "name": "Personalizado (cualitativo)"
+              }
+            },
+            "name": "Tipo",
+            "undefinedLabel": "Por favor especifique"
+          },
+          "tableColorColumn": {
+            "name": "Variable"
+          },
+          "dataType": {
+            "name": "Tipo de columna (avanzada)"
+          },
+          "scheme": {
+            "name": "Esquema"
+          },
+          "numberOfBins": {
+            "name": "Número de contenedores"
+          }
+        },
+        "name": "Color de relleno"
+      },
+      "colors": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "value": {
+            "name": "Valor"
+          },
+          "remove": {
+            "value": "Quitar"
+          }
+        },
+        "name": "Colores"
+      },
+      "additionalColors": {
+        "selectableDimensions": {
+          "nullColor": {
+            "name": "Color por defecto"
+          },
+          "regionColor": {
+            "name": "Color región"
+          },
+          "outlierColor": {
+            "name": "Color valores atípicos"
+          }
+        },
+        "name": "Colores adicionales"
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "Variable"
+          }
+        },
+        "null": {
+          "name": "Por defecto"
+        }
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "Columna temporal"
+          },
+          "tableEndTimeColumn": {
+            "name": "Columna de tiempo final"
+          },
+          "tableTimeIdColumns": {
+            "name": "Columnas de identificador"
+          },
+          "tableTimeIsSampled": {
+            "name": "Es muestreado",
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Sí"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Mostrar duración"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "false": {
+                "name": "No"
+              },
+              "true": {
+                "name": "Sí"
+              }
+            },
+            "name": "Unificar fecha inicial datos"
+          },
+          "tableTimeSpreadFinishTime": {
+            "options": {
+              "true": {
+                "name": "Sí"
+              },
+              "false": {
+                "name": "No"
+              }
+            },
+            "name": "Unificar fecha final datos"
+          }
+        },
+        "name": "Opciones temporales"
+      },
+      "hideAdvancedOptions": "Ocultar opciones avanzadas",
+      "copyUserStratum": "Copiar configuración en el portapapeles",
+      "bins": {
+        "name": "Contenedores",
+        "selectableDimensions": {
+          "start": {
+            "name": "Desde {{value1}} hasta {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "Color"
+              },
+              "start": {
+                "name": "Inicio"
+              },
+              "stop": {
+                "name": "Final"
+              }
+            }
+          }
+        }
+      },
+      "min": {
+        "name": "Mín"
+      },
+      "displayRange": {
+        "name": "Rango de visualización",
+        "selectableDimensions": {
+          "max": {
+            "name": "Máx"
+          }
+        }
+      },
+      "legend": {
+        "name": "Leyenda"
+      },
+      "styleOptions": {
+        "name": "Opciones de estilo",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "Título"
+          },
+          "longitudeColumn": {
+            "name": "Columna de longitud"
+          },
+          "latitudeColumn": {
+            "name": "Columna de latitud"
+          }
+        }
+      },
+      "outline": {
+        "name": "Estilo borde",
+        "selectableDimensions": {
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Ancho"
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "Opciones del banco de trabajo",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "Mostrar estilo en el banco de trabajo",
+            "options": {
+              "true": {
+                "name": "Estilo mostrado"
+              },
+              "false": {
+                "name": "Estilo oculto"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "Mostrar opción para deshabilitar estilo"
+          },
+          "showDisableTimeOption": {
+            "name": "Mostrar opción para deshabilitar opciones temporales"
+          },
+          "enableManualRegionMapping": {
+            "name": "Permitir mapeo de regiones manual"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "Variable/columna",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Título"
+          },
+          "columnUnits": {
+            "name": "Unidades"
+          }
+        }
+      }
     }
   },
   "analytics": {
@@ -193,9 +493,9 @@
     "openFeature": "Zoom a",
     "openFeatureTitle": "Zoom al dato",
     "colorScaleUpdateRange": "Actualizar Rango",
-    "zoomToTitle": "Zoom a la Extensión",
-    "opacity": "Opacidad:{{opacity}}%",
-    "label": "Conjunto de Datos",
+    "zoomToTitle": "Zoom a la extensión",
+    "opacity": "Opacidad: {{opacity}}%",
+    "label": "Datasets",
     "rangeMin": "Mínima:",
     "rangeMax": "Máxima:",
     "colorScaleRangeMin": "El valor mínimo debe ser un número.",
@@ -203,8 +503,8 @@
     "diffImageTitle": "Ver las diferencias de imagen entre dos fechas",
     "diffImage": "Diferencia",
     "exportDataTitle": "Exportar datos",
-    "collapseAll": "Colapsar todo",
-    "expandAll": "Ampliar todo",
+    "collapseAll": "Colapsar Todo",
+    "expandAll": "Ampliar Todo",
     "toggleVisibility": "Mostrar/ocultar datos",
     "zoomTo": "Zoom ideal",
     "showMoreActionsTitle": "Mostrar mas acciones",
@@ -235,7 +535,7 @@
     "viewLess": "Ver menos resultados de {{name}}",
     "placeholder": "Buscar lugares",
     "searchCatalogue": "Buscar en el catálogo",
-    "searchInDataCatalog": "Buscar <1>'{{locationSearchText}}'</1> en el Catálogo de Datos"
+    "searchInDataCatalog": "Buscar '{{locationSearchText}}'en el Catálogo de Datos"
   },
   "addData": {
     "back": "Atrás",
@@ -276,7 +576,7 @@
     "titleIII": "Carga de imágenes históricas",
     "bodyII": "Es posible que tenga que ajustar el nivel de zoom para que las imágenes por satélite sean visibles en el mapa.",
     "bodyIV": "Es posible que las imágenes por satélite no estén siempre disponibles en el momento y lugar que usted prefiera. Si sólo quieres ver las imágenes de una ubicación concreta, haz clic en \"filtrar por ubicación\" en tu banco de datos.",
-    "bodyV": "Puedes aplicar una serie de estilos, como el falso color, a las imágenes de satélite haciendo clic en el menú desplegable de estilos de la mesa de trabajo de datos."
+    "bodyV": "Puedes aplicar una serie de estilos, como el falso color, a las imágenes de satélite haciendo clic en el menú desplegable de estilos de el banco de trabajo de datos."
   },
   "story": {
     "story": "Historia",
@@ -287,7 +587,7 @@
       "cancelEditing": "Cancelar",
       "placeholder": "Introduzca un título aquí"
     },
-    "removeAllStories": "Eliminar Todos",
+    "removeAllStories": "Eliminar Todas",
     "delete": "Eliminar",
     "deleteStory": "borrar",
     "edit": "Editar",
@@ -299,12 +599,13 @@
     "gettingStarted": "Empezar",
     "gettingStartedTitle": "Empezar",
     "share": "Compartir",
-    "collapse": "Colapso",
+    "collapse": "Colapsar",
     "badgeBarLabel": "Escenas",
     "untitledScene": "escena sin título",
     "doesNotExist": "La historia no existe",
-    "removeAllStoriesDialog": "¿Está seguro de que desea eliminar la escena {{ count }}?",
-    "removeAllStoriesDialog_plural": "¿Está seguro de que desea eliminar las escenas {{ count }}?",
+    "removeAllStoriesDialog_0": "¿Está seguro de que desea eliminar {{ count }} escena?",
+    "removeAllStoriesDialog_1": "¿Está seguro de que desea eliminar las {{ count }} escenas?",
+    "removeAllStoriesDialog_2": "",
     "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa",
     "recapture": "Recaptura",
     "recaptureStory": "volver a capturar",
@@ -342,7 +643,7 @@
     "btnCloseFeature": "Cerrar el panel de dato",
     "panelHeading": "Información del Elemento",
     "userSelection": "Selección de usuario",
-    "clickToAddData": "Pinche'$t(addData.addDataBtnText)' para añadir dato al mapa.",
+    "clickToAddData": "Pinche '$t(addData.addDataBtnText)' para añadir datos al mapa.",
     "noDataAvailable": "No hay datos disponibles aquí - pruebe otra localización.",
     "clickMap": "Pinchar en el mapa para conocer más sobre esta localización",
     "pickLocation": "Elegir localización",
@@ -376,7 +677,7 @@
     "location": "Localización",
     "myLocation": "Mi localización",
     "browserCannotProvide": "Su navegador no puede proporcionar su localización.",
-    "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Usted posible que usar {{secureUrl}} en su lugar."
+    "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Puede utilizar {{secureUrl}} en su lugar."
   },
   "countDatasets": {
     "loadError": "No se pudo cargar.",
@@ -441,13 +742,13 @@
       "balancedPerformance": "Balance entre rendimiento y calidad",
       "maximumPerformance": "Máximo rendimiento, baja calidad"
     },
-    "mapQuality": "Calidad del Mapa Ráster:",
+    "mapQuality": "Calidad del Mapa:",
     "nativeResolutionHeader": "Usar resolución nativa del dispositivo",
     "btnTitle": "Cambiar vista",
     "baseMap": "Mapa Base",
     "timeline": {
-      "alwaysShowLabel": "Pulse empezar a mostrar la línea de tiempo sólo cuando haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
-      "hideLabel": "Pulse para que se muestre siempre la línea de tiempo, aunque no haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
+      "alwaysShowLabel": "Pulse empezar a mostrar la línea de tiempo sólo cuando haya conjuntos de datos que varíen en el tiempo en el banco de trabajo",
+      "hideLabel": "Pulse para que se muestre siempre la línea de tiempo, aunque no haya conjuntos de datos que varíen en el tiempo el banco de trabajo",
       "title": "Línea de tiempo",
       "alwaysShow": "Siempre mostrar"
     },
@@ -545,7 +846,8 @@
     "selectToPreviewDataset": "Seleccione un conjunto de datos para ver una vista previa",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vaya al mapa",
-    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE"
+    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE",
+    "selectMultipleDatasets": "<0>Pulse <strong>Mayus</strong> y haga click</0><1 /><2>para añadir múltiples conjuntos de datos</2>"
   },
   "description": {
     "typeName": "Nombre del tipo",
@@ -581,7 +883,7 @@
     "preface": {
       "title": "Hacer el recorrido",
       "close": "Tal vez más tarde",
-      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y aprenda algunas de las funciones clave para ayudarlo en su camino.",
+      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y conozca algunas de las funciones clave para ayudarlo en su camino.",
       "start": "Empezar Tour"
     },
     "locationSearchInput": {
@@ -592,7 +894,7 @@
       "content": "## Historias\nLas historias permiten añadir información contextual a un conjunto de datos para dar vida a una narración. Cree su propia historia de datos con el Editor de Historias y compártala a través del panel \"Compartir\" una vez que haya terminado."
     },
     "exploreMapDataButton": {
-      "content": "## Explorar datos del mapa\nBusca en el catálogo datos disponibles y agrega al mapa aquí. Tu puedes agregar múltiples set de datos en cualquier momento, y verás a ellos  en el listado abajo"
+      "content": "## Explore datos del mapa\n\nRecorra el catálogo de datos disponibles y agréguelos al mapa desde aquí. Puede agregar múltiples conjuntos de datos en cualquier momento, y los verá listados debajo en el Tablero."
     },
     "menuBarMapSettingsButton": {
       "content": "## Configuraciones de mapa\nPersonalice los ajustes de los mapas, como los mapas base, el terreno 2D/3D y la calidad de la imagen del mapa para mejorar el rendimiento."
@@ -713,9 +1015,9 @@
   "emptyWorkbench": {
     "helpfulHints": "Consejos útiles",
     "emptyArea": "Su banco de trabajo está vacío",
-    "helpfulHintsOne": "Busque los datos disponibles seleccionando \"Explorar datos del mapa\" o haga clic en \"Cargar\" para añadir sus propios datos al mapa.",
+    "helpfulHintsOne": "Busque los datos disponibles seleccionando \"Explorar los datos del mapa\" o haga clic en \"Subir\" para añadir sus propios datos al mapa.",
     "helpfulHintsTwo": "Una vez que hayas añadido datos al mapa, tus conjuntos de datos activos aparecerán aquí en tu banco de trabajo. El banco de trabajo le ayudará a interactuar con los datos.",
-    "helpfulHintsThree": "En la mesa de trabajo puede activar y desactivar conjuntos de datos, cambiar su opacidad, activar la comparación en pantalla dividida, cambiar estilos y navegar por fechas y horas, si los datos admiten esta funcionalidad."
+    "helpfulHintsThree": "En el banco de trabajo puede activar y desactivar conjuntos de datos, cambiar su opacidad, activar la comparación en pantalla dividida, cambiar estilos y navegar por fechas y horas, si los datos admiten esta funcionalidad."
   },
   "timer": {
     "nextScheduledUpdateTime": "Próxima actualización de datos a {{scheduledUpdateTime}}",
@@ -771,7 +1073,9 @@
       "assimp-local": "Convertidor de archivos 3D (zip) (experimental)",
       "assimp-local-description": "**Atención:** El convertidor de archivos 3D es experimental.\nVer lista de [formatos soportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nLos archivos deben estar comprimidos.",
       "assimp-remote": "Convertidor de archivos 3D (experimental)",
-      "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip"
+      "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip",
+      "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
+      "i3s": "I3S"
     },
     "printWindow": {
       "errorTitle": "Error de impresión",
@@ -822,7 +1126,8 @@
       "devError": "cesium es requerido",
       "failedToObtain": "No se pudo obtener la imagen X: {{x}} Y: {{y}} Nivel: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857)."
+      "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
+      "terrainServerErrorMessage": " El servidor de terreno no responde por el momento.  Puede seguir utilizando todas las functiones de {{appName}} pero no habrá detalles de terreno en el modo 3D.  Lamentamos los inconvenientes ocasionados.  Por favor intente nuevamente más tarde, el servidor debería responder correctamente.  Si el problema continúa contáctese por correo electrónico a {{supportEmail}}."
     },
     "displayVariablesConcept": {
       "defaultName": "Visualización de la variable"
@@ -866,7 +1171,60 @@
       "devError": "No hay contexto para la recoloracion de imágenes"
     },
     "mapboxVectorTileImageryProvider": {
-      "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa"
+      "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa",
+      "requireStyles": "MapboxVectorTileImageryProvider requiere una función de estilo como parámetro en options.styleFunc"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Atribución de los datos",
+      "disclaimer": "Descargo de responsabilidad"
+    }
+  },
+  "relatedMaps": {
+    "buttonText": "Mapas relacionados",
+    "buttonTitle": "Ver mapas relacionados",
+    "panelHeading": "Mapas relacionados",
+    "panelText": "Hacer click en el mapa inferior lo abrirá en una ventana o pestaña separadas."
+  },
+  "compare": {
+    "done": "Hecho"
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "No especificado",
+    "colorAdd": "Añadir",
+    "enabled": "Activado",
+    "colorRemove": "Quitar",
+    "disabled": "Deshabilitado"
+  },
+  "deltaTool": {
+    "titlePrefix": "Detección de cambio",
+    "generateDeltaBtn": "Generar mapa de diferencia",
+    "loadingError": {
+      "title": "Error al cargar la herramienta Delta",
+      "message": "Se produjo un error al intentar cargar la herramienta Delta desde el servidor. Por favor, inténtelo de nuevo."
+    },
+    "cancelBtn": "Cancelar",
+    "secondaryImage": "Imagen secundaria",
+    "selectedLocation": "Lugar Seleccionado",
+    "description": "Esta herramienta visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo.",
+    "pickLocation": "Para ver las imágenes disponibles, seleccione su ubicación de interés en el mapa opuesto.",
+    "pickerMessage": {
+      "pickFirst": "Seleccione un punto haciendo clic en el mapa.",
+      "pickAnother": "Haga clic en otro punto para cambiar la selección",
+      "pickError": "¡Error al intentar recuperar las imágenes de la ubicación! Por favor, seleccione un punto de nuevo haciendo clic en el mapa."
+    },
+    "catalogItem": {
+      "description": "Esta capa visualiza la diferencia entre las imágenes capturadas en dos puntos discretos en el tiempo"
+    },
+    "primaryImage": "Imagen primaria"
+  },
+  "mapNavigation": {
+    "additionalTools": "Herramientas adicionales"
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Modo Peatón",
+    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar<br /><b>Click derecho / Esc</b> para cancelar",
+    "controls": {
+      "title": "Controles"
     }
   }
 }

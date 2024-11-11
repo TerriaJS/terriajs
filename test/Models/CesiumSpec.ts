@@ -254,7 +254,6 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
-      fakeIonTerrainProvider.availability;
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"

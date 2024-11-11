@@ -1,11 +1,12 @@
+import { computed, makeObservable } from "mobx";
+import { FEATURE_ID_PROP } from "../ModelMixins/GeojsonMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
-import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
-import { computed, makeObservable } from "mobx";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";
-import StratumOrder from "../Models/Definition/StratumOrder";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 
 export default class TableFeatureInfoStratum extends LoadableStratum(
   TableTraits
@@ -29,6 +30,7 @@ export default class TableFeatureInfoStratum extends LoadableStratum(
     let template = '<table class="cesium-infoBox-defaultTable">';
 
     template += this.catalogItem.tableColumns
+      ?.filter((col) => col.name !== FEATURE_ID_PROP)
       ?.map(
         (col) =>
           `<tr><td style="vertical-align: middle"><b>${col.title}</b></td><td>{{${col.name}}}</td></tr>`

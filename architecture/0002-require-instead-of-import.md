@@ -4,7 +4,7 @@ Date: 2020-08-07 recorded, decision made earlier
 
 ## Status
 
-Accepted
+Superseded by [0012-do-not-use-require-for-cesium-in-ts](./0012-do-not-use-require-for-cesium-in-ts.md) on 2024-09-28
 
 ## Context
 
