@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.7.7",
+  "version": "8.7.8",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -233,7 +233,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "sass": "^1.79.1",
+    "sass": "<1.80",
     "terriajs-server": "^4.0.0",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
