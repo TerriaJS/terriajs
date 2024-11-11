@@ -236,7 +236,11 @@
     "convertNotificationFeedback": "Per domande o feedback, clicca qui.",
     "convertNotificationHelp": "Se hai creato il link di condivisione, controlla il menu Aiuto per vedere i suggerimenti su come aggiornare il link di condivisione.",
     "embedDescription": "Per incorporare, copia questo codice per incorporare questa mappa in una pagina HTML:",
-    "downloadMap": "Scarica mappa (png)"
+    "downloadMap": "Scarica mappa (png)",
+    "importExportMapTitle": "Salva/Carica da file",
+    "importExportMapExplanation": "Permette di esportare e importare la vista corrente della mappa in un file",
+    "importMapButton": "Carica",
+    "exportMapButton": "Salva"
   },
   "zoomCotrol": {
     "zoomReset": "Ripristina lo zoom",

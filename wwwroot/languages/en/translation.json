@@ -270,7 +270,11 @@
     "convertNotificationWarningsTitle": "Technical details",
     "convertErrorTitle": "Could not upgrade share link to V8",
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
-    "getShareSaveHelpMessage": "How to Bookmark Sharelinks"
+    "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
+    "importExportMapTitle": "Save/Load from file",
+    "importExportMapExplanation": "Import or export current map view and layers to a file",
+    "importMapButton": "Load",
+    "exportMapButton": "Save"
   },
   "countDatasets": {
     "btnText": "Start",

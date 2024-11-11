@@ -21,6 +21,8 @@ import {
   Category,
   ShareAction
 } from "../../../../../Core/AnalyticEvents/analyticEvents";
+import Box from "../../../../../Styled/Box";
+import Button from "../../../../../Styled/Button";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -97,6 +99,36 @@ export const ShareUrl = React.forwardRef<
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
+  const exportMap = () => {
+    const link = document.createElement("a");
+    link.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(shareUrl)
+    );
+    link.setAttribute("download", `mappa.geo3d`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const importMap = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.onchange = () => {
+      const files = input.files;
+      if (files && files?.length > 0) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = function (f: any) {
+          window.open(f.target.result, "_self");
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
   return (
     <>
       <Explanation textDark={theme === "light"}>
@@ -139,10 +171,27 @@ export const ShareUrl = React.forwardRef<
         viewState={viewState}
         callback={callback || (() => {})}
       />
+      <Spacing bottom={2} />
+      <Box column>
+        <TextSpan medium>{t("share.importExportMapTitle")}</TextSpan>
+        <Explanation>{t("share.importExportMapExplanation")}</Explanation>
+        <Box gap>
+          <PrintButton primary fullWidth onClick={exportMap}>
+            {t("share.exportMapButton")}
+          </PrintButton>
+          <PrintButton primary fullWidth onClick={importMap}>
+            {t("share.importMapButton")}
+          </PrintButton>
+        </Box>
+      </Box>
     </>
   );
 });
 
 const Explanation = styled(TextSpan)`
   opacity: 0.8;
+`;
+
+const PrintButton = styled(Button)`
+  border-radius: 4px;
 `;
