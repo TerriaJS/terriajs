@@ -358,6 +358,19 @@
     "copyTooltip": "Copy to clipboard",
     "centerMaptooltip": "Move to coordinates (only with cartographic coordinates)"
   },
+  "colorPanel": {
+    "header": "Color",
+    "headerTitle": "Color terreno by elevation",
+    "title": "Range of elevation",
+    "explanation": "range min - max (in meters)",
+    "warning": "Click on the map to update it after clicking Apply.",
+    "transparency": "Transparency",
+    "addButtonTitle": "Add a color range",
+    "removeButtonTitle": "Remove the color range",
+    "fromPlaceholder": "From",
+    "toPlaceholder": "To",
+    "applyButton": "Apply"
+  },
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",

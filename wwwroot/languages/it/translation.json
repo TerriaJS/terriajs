@@ -164,6 +164,19 @@
     "copyTooltip": "Copia le coordinate negli Appunti",
     "centerMaptooltip": "Centra la mappa alle coordinate indicate (attivo solo se sono cartografiche)"
   },
+  "colorPanel": {
+    "header": "Colora",
+    "headerTitle": "Colora il terreno in base all'altitudine",
+    "title": "Range di altitudine da colorare",
+    "explanation": "range min - max (in metri)",
+    "warning": "Dopo aver premuto il bottone Applica, clicca sulla mappa per aggiornarla.",
+    "transparency": "Trasparenza",
+    "addButtonTitle": "Aggiungi un nuovo range",
+    "removeButtonTitle": "Rimuovi il range",
+    "fromPlaceholder": "Da",
+    "toPlaceholder": "A",
+    "applyButton": "Applica"
+  },
   "settingPanel": {
     "performanceLabel": "Prestazioni",
     "qualityLabel": "Qualità",

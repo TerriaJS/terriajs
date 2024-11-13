@@ -15,6 +15,7 @@ import HelpButton from "./HelpButton/HelpButton";
 
 import Styles from "./menu-bar.scss";
 import CoordsPanel from "../Panels/CoordsPanel/CoordsPanel";
+import ColorPanel from "../Panels/ColorPanel/ColorPanel";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -75,6 +76,9 @@ const MenuBar = observer((props) => {
               <CoordsPanel terria={terria} viewState={viewState} />
             </li>
           )}
+          <li className={Styles.menuItem}>
+            <ColorPanel terria={terria} viewState={viewState} />
+          </li>
           <li className={Styles.menuItem}>
             <HelpButton viewState={viewState} />
           </li>

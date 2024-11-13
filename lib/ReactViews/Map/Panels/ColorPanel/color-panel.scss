@@ -1,0 +1,9 @@
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
+
+.dropdown-inner {
+  width: $share-panel-width;
+  padding: 10px;
+  font-size: $font-size-mid-small;
+  @include transform-origin(50%, top);
+}
