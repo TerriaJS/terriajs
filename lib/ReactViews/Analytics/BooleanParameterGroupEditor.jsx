@@ -2,9 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import MoreOrLess from "../Generic/MoreOrLess.jsx";
-
 import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
-
 import Styles from "./parameter-editors.scss";
 
 const BooleanParameterGroupEditor = createReactClass({
@@ -122,4 +120,5 @@ const BooleanParameterGroupEditor = createReactClass({
     return <div>{this.renderCheckboxGroup()}</div>;
   }
 });
-module.exports = BooleanParameterGroupEditor;
+
+export default BooleanParameterGroupEditor;

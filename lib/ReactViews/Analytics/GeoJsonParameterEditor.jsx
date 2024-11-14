@@ -1,5 +1,3 @@
-"use strict";
-
 import React from "react";
 import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -144,4 +142,4 @@ function getDisplayValue(value, parameter) {
   return getRegionPickerDisplayValue(value, parameter);
 }
 
-module.exports = withTranslation()(GeoJsonParameterEditor);
+export default withTranslation()(GeoJsonParameterEditor);

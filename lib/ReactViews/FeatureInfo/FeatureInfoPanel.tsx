@@ -30,8 +30,7 @@ import Loader from "../Loader";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-
-const DragWrapper = require("../DragWrapper");
+import DragWrapper from "../DragWrapper";
 
 interface Props {
   viewState: ViewState;

@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-
 import classNames from "classnames";
 import Icon from "../../../../Styled/Icon";
 import Box from "../../../../Styled/Box";
@@ -8,7 +7,6 @@ import PropTypes from "prop-types";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import AddData from "./AddData.jsx";
 import { withTranslation, Trans } from "react-i18next";
-
 import Styles from "./my-data-tab.scss";
 import DataCatalogMember from "../../../DataCatalog/DataCatalogMember";
 
@@ -210,4 +208,4 @@ class MyDataTab extends React.Component {
   }
 }
 
-module.exports = withTranslation()(MyDataTab);
+export default withTranslation()(MyDataTab);
