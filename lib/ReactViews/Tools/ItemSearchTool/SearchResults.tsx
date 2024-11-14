@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import Mustache from "mustache";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useVirtual } from "react-virtual";
 import styled from "styled-components";
@@ -28,7 +28,7 @@ const SearchResults: React.FC<SearchResultsProps> = (props) => {
     currentMapEffect.is === "highlightSingleResult"
       ? currentMapEffect.result
       : undefined;
-  const parentRef = React.createRef<HTMLDivElement>();
+  const parentRef = useRef<HTMLDivElement>(null);
   const list = useVirtual({
     size: results.length,
     parentRef,

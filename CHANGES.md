@@ -2,6 +2,7 @@
 
 #### next release (8.7.9)
 
+- Properly initialize react ref in functional components
 - Add NominatimSearchProvider.
 - [The next improvement]
 
