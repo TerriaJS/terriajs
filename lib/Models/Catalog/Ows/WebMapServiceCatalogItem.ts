@@ -1,5 +1,3 @@
-// const mobx = require('mobx');
-// const mobxUtils = require('mobx-utils');
 // Problems in current architecture:
 // 1. After loading, can't tell what user actually set versus what came from e.g. GetCapabilities.
 //  Solution: layering

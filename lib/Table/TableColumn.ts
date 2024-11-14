@@ -13,8 +13,6 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-const naturalSort = require("javascript-natural-sort");
-naturalSort.insensitive = true;
 
 type TypeHintSet = {
   /** RegEx to match column name */

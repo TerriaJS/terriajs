@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Box from "../../Styled/Box";
-import { TOUR_WIDTH } from "./tour-helpers.ts";
+import { TOUR_WIDTH } from "./tour-helpers";
 // TODO: make relative to app z-index
 export const TourExplanationBoxZIndex = 10000;
 
-export const TourExplanationBox = styled(Box)`
+export const TourExplanationBox = styled(Box)<{ longer?: boolean }>`
   position: absolute;
   width: ${(p) => (p.longer ? `${TOUR_WIDTH + 55}` : `${TOUR_WIDTH}`)}px;
   // background-color: $modal-bg;
@@ -31,7 +31,7 @@ export const TourExplanationBox = styled(Box)`
   h1,
   h2,
   h3 {
-    margin-bottom: ${(p) => p.theme.spacing * 3}px;
+    margin-bottom: ${(p) => (p.theme.spacing as any) * 3}px;
     font-size: 16px;
     font-weight: bold;
   }

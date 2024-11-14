@@ -8,9 +8,7 @@ import { ExternalLinkIcon } from "../Custom/ExternalLink";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { withViewState, WithViewState } from "../Context";
 import Styles from "./related-maps.scss";
-
-const MenuPanel =
-  require("../StandardUserInterface/customizable/MenuPanel").default;
+import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 
 type PropTypes = WithViewState &
   WithTranslation & {
@@ -37,6 +35,7 @@ class RelatedMaps extends React.Component<PropTypes> {
     const smallScreen = this.props.viewState.useSmallScreenInterface;
 
     return (
+      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnText={t("relatedMaps.buttonText")}

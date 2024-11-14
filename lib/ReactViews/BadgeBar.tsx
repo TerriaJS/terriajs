@@ -1,7 +1,7 @@
 import React from "react";
 import { useTheme } from "styled-components";
 import { TextSpan } from "../Styled/Text";
-const Box = require("../Styled/Box").default;
+import Box from "../Styled/Box";
 
 interface IProps {
   label: string;

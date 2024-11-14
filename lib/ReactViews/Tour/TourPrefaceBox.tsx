@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Box from "../../Styled/Box";
 
-export const TourPrefaceBox = styled(Box)`
+export const TourPrefaceBox = styled(Box)<{ pseudoBg?: boolean }>`
   position: fixed;
   width: 100%;
   height: 100%;

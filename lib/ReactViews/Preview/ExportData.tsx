@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 
 import isDefined from "../../Core/isDefined";
 import ExportableMixin from "../../ModelMixins/ExportableMixin";
-const FileSaver = require("file-saver");
+import FileSaver from "file-saver";
 
 interface PropsType extends WithTranslation {
   item: ExportableMixin.Instance;

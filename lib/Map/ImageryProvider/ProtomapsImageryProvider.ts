@@ -42,8 +42,7 @@ import {
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-
-const geojsonvt = require("geojson-vt").default;
+import geojsonvt from "geojson-vt";
 
 type GeojsonVtFeature = {
   id: any;

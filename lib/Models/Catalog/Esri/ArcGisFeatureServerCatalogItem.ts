@@ -38,8 +38,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-
-const proj4 = require("proj4").default;
+import proj4 from "proj4";
 
 interface DocumentInfo {
   Author?: string;
@@ -257,7 +256,9 @@ class FeatureServerStratum extends LoadableStratum(
         return undefined;
       }
 
+      // @ts-expect-error @types/proj4 doesn't define a constructor type
       const source = new proj4.Proj((proj4definitions as any)[wkid]);
+      // @ts-expect-error @types/proj4 doesn't define a constructor type
       const dest = new proj4.Proj("EPSG:4326");
 
       let p = proj4(source, dest, [extent.xmin, extent.ymin]);

@@ -41,8 +41,7 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, Legends, MapServer } from "./ArcGisInterfaces";
-
-const proj4 = require("proj4").default;
+import proj4 from "proj4";
 
 class MapServerStratum extends LoadableStratum(
   ArcGisMapServerCatalogItemTraits
@@ -702,7 +701,9 @@ export function getRectangleFromLayer(
       return;
     }
 
+    // @ts-expect-error @types/proj4 doesn't define a constructor type
     const source = new proj4.Proj(Proj4Definitions[wkid]);
+    // @ts-expect-error @types/proj4 doesn't define a constructor type
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
