@@ -118,7 +118,7 @@ describe("SearchBoxAndResults", function () {
         viewState.terria.searchBarModel,
         "showSearchInCatalog",
         {
-          value: true,
+          value: false,
           writable: true
         }
       );
