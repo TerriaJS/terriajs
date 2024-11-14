@@ -2,7 +2,7 @@
 
 #### next release (8.7.9)
 
-- Add "searchBar.showSearchInCatalog" to configParameters so that the link in location search results can be disabled.
+- Add "searchBarConfig.showSearchInCatalog" to configParameters so that the link in location search results can be disabled.
 - [The next improvement]
 
 #### 8.7.8 - 2024-11-01
