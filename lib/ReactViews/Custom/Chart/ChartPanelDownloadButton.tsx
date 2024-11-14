@@ -1,4 +1,3 @@
-"use strict";
 import FileSaver from "file-saver";
 import { runInAction, toJS } from "mobx";
 import { observer } from "mobx-react";

@@ -1,5 +1,3 @@
-"use strict";
-
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import Box, { IBoxProps } from "../../../Styled/Box";

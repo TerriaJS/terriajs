@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import { Lambda, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";

@@ -1,5 +1,3 @@
-"use strict";
-
 import { TFunction } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
