@@ -650,7 +650,7 @@
     "expand": "Rozbalit",
     "download": "Stáhnout",
     "loading": "Načítání dat grafu...",
-    "noData": "Nebyla nalezena žádná data grafu.",
+    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
     "showItemInChart": "Zobrazit {{value}} v tabulce"
   },
   "viewModels": {
@@ -737,7 +737,8 @@
       "carto-v3": "Carto V3",
       "i3s": "I3S",
       "esri-imageServer": "Esri ArcGIS ImageServer (jedna vrstva)",
-      "cesium-ion": "Ionty cesia"
+      "cesium-ion": "Ionty cesia",
+      "cog": "Geotiff optimalizovaný pro cloud"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -1404,7 +1405,7 @@
       "missingUrlTitle": "Nelze načíst GetCapabilities",
       "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WFS (Web Feature Service), protože položka katalogu nemá `url`.",
       "noLayerFoundTitle": "Nenalezena žádná vrstva",
-      "noLayerFoundMessage": "WFS datová sada '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. Buď byl soubor katalogu nastaven nesprávně, nebo se změnil server WFS.",
+      "noLayerFoundMessage": "Datová sada WFS '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WFS.",
       "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}})"
     },
     "webMapServiceCatalogGroup": {
@@ -1673,7 +1674,7 @@
           "start": {
             "selectableDimensions": {
               "start": {
-                "name": "Start"
+                "name": "Spustit"
               },
               "stop": {
                 "name": "Stop"
@@ -1811,16 +1812,16 @@
                 "range": "{{value1}} až {{value2}}",
                 "selectableDimensions": {
                   "remove": {
-                    "value": "Odebrat"
+                    "value": "Odstranit"
                   },
                   "start": {
-                    "name": "Start"
+                    "name": "Spustit"
                   },
                   "stop": {
                     "name": "Stop"
                   }
                 },
-                "noValue": "Bez hodnoty"
+                "noValue": "(Bez hodnoty)"
               }
             }
           },
@@ -1829,7 +1830,7 @@
           },
           "styleType": {
             "name": "Typ",
-            "undefinedLabel": "Upřesněte prosím",
+            "undefinedLabel": "Prosím upřesněte",
             "constant": {
               "name": "Bez stylu"
             },
@@ -1843,13 +1844,13 @@
           "enum": {
             "selectableDimensions": {
               "enum": {
-                "noValue": "Žádná hodnota",
+                "noValue": "(Bez hodnoty)",
                 "selectableDimensions": {
                   "value": {
                     "name": "Hodnota"
                   },
                   "remove": {
-                    "value": "Odebrat"
+                    "value": "Odstranit"
                   }
                 },
                 "add": {
@@ -2014,7 +2015,7 @@
             "name": "Hodnota"
           },
           "remove": {
-            "value": "Odebrat"
+            "value": "Odstranit"
           },
           "add": {
             "value": "Přidat barvu"
@@ -2089,6 +2090,9 @@
       "invalidUrlMessage": "Nelze načíst koncový bod ArcGis ImageServer, protože položka katalogu nemá `url`.",
       "invalidServiceTitle": "Neplatná služba ArcGIS Image Service",
       "rasterFunction": "Rastrová funkce"
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "Tento COG není v nativní projekci (EPSG:4326 nebo EPSG:3857). Reprojekce je experimentální a nemusí fungovat podle očekávání. Pokud máte kontrolu nad zdrojovými daty, doporučujeme reprojekci do EPSG:4326 nebo EPSG:3857 pomocí GDAL nebo podobného nástroje."
     }
   },
   "deltaTool": {
@@ -2230,7 +2234,7 @@
     "enabled": "Povoleno",
     "disabled": "Vypnuto",
     "colorAdd": "Přidat",
-    "colorRemove": "Odebrat",
+    "colorRemove": "Odstranit",
     "invalid": "Neplatné"
   }
 }
