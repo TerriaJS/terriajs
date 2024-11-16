@@ -972,6 +972,40 @@ describe("WebMapServiceCatalogItem", function () {
       .catch(done.fail);
   });
 
+  it("supports parameters in a GetLegendGraphic request for a layer without a style configured", function (done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "url",
+        "http://example.com/mapserv?map=%2Fmap%2Fexample.map"
+      );
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "supportsGetLegendGraphic",
+        true
+      );
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function () {
+        expect(wmsItem.legends.length).toBe(1);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://example.com/mapserv?map=%2Fmap%2Fexample.map&service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A"
+        );
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
   it("fetches legend with colourScaleRange", function (done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);

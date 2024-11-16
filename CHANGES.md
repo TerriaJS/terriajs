@@ -2,6 +2,7 @@
 
 #### next release (8.7.9)
 
+- support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Properly initialize react ref in functional components
 - Add NominatimSearchProvider.
 - [The next improvement]
