@@ -121,7 +121,6 @@ export default class ThreddsItemReference extends UrlMixin(
     );
     if (model === undefined) return;
     this.setThreddsStrata(model);
-    _previousTarget = model;
     return model;
   }
 }

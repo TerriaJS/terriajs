@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.7.7",
+  "version": "8.7.8",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -54,7 +54,7 @@
     "@types/fs-extra": "^7.0.0",
     "@types/jasmine": "^2.8.8",
     "@types/jasmine-ajax": "^3.3.0",
-    "@types/leaflet": "^1.7.10",
+    "@types/leaflet": "^1.9.12",
     "@types/linkify-it": "^3.0.5",
     "@types/lodash-es": "^4.17.3",
     "@types/markdown-it": "^14.0.1",
@@ -147,6 +147,7 @@
     "pbf": "^3.0.1",
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
+    "proj4-fully-loaded": "^0.2.0",
     "prop-types": "^15.6.0",
     "protomaps": "1.19.0",
     "raw-loader": "^1.0.0",
@@ -176,6 +177,7 @@
     "terriajs-cesium": "8.0.1",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
+    "terriajs-tiff-imagery-provider": "2.13.3",
     "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
@@ -231,7 +233,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "sass": "^1.79.1",
+    "sass": "<1.80",
     "terriajs-server": "^4.0.0",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
