@@ -3,6 +3,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import { runInAction } from "mobx";
 import Terria from "../../../lib/Models/Terria";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
@@ -114,13 +115,10 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
 
-      Object.defineProperty(
-        viewState.terria.searchBarModel,
+      viewState.terria.searchBarModel.setTrait(
+        CommonStrata.user,
         "showSearchInCatalog",
-        {
-          value: false,
-          writable: true
-        }
+        false
       );
     });
     act(() => {
