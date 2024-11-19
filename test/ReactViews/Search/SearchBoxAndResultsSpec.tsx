@@ -3,6 +3,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import { runInAction } from "mobx";
 import Terria from "../../../lib/Models/Terria";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
@@ -86,6 +87,39 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
       viewState.terria.searchBarModel.catalogSearchProvider = undefined;
+    });
+    act(() => {
+      testRenderer = create(
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults
+            t={() => {}}
+            terria={terria}
+            viewState={viewState}
+          />
+        </ThemeProvider>
+      );
+    });
+
+    const searchBox = testRenderer.root.findByType("input");
+    expect(searchBox).toBeDefined();
+    expect(() => {
+      testRenderer.root.findByType(SearchInDataCatalog);
+    }).toThrow();
+    expect(searchBox.props.value).toEqual(searchText);
+  });
+
+  it("renders with an input & no SearchInDataCatalog when showSearchInCatalog is false", function () {
+    const searchText = "timmynook";
+    runInAction(() => {
+      viewState.searchState.locationSearchText = searchText;
+      viewState.searchState.showLocationSearchResults = true;
+      viewState.searchState.locationSearchResults = [];
+
+      viewState.terria.searchBarModel.setTrait(
+        CommonStrata.user,
+        "showSearchInCatalog",
+        false
+      );
     });
     act(() => {
       testRenderer = create(
