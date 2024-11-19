@@ -94,50 +94,5 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
     contrastColor: "#000000"
   });
 
-  baseMaps.push({
-    item: {
-      id: "basemap-black-marble",
-      name: "NASA Black Marble",
-      type: "wms",
-      url: "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
-      attribution:
-        "<a href='https://earthobservatory.nasa.gov/Features/NightLights'>Black Marble</a> - From NASA's Earth Observatory. <a href='https://earthobservatory.nasa.gov/image-use-policy'>Use Policy</a>.",
-      layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
-      opacity: 1.0
-    },
-    image: "build/TerriaJS/images/black-marble.png",
-    contrastColor: "#ffffff"
-  });
-
-  baseMaps.push({
-    item: {
-      id: "basemap-positron",
-      name: "Positron (Light)",
-      type: "open-street-map",
-      url: "https://basemaps.cartocdn.com/light_all/",
-      attribution:
-        "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-      subdomains: ["a", "b", "c", "d"],
-      opacity: 1.0
-    },
-    image: "build/TerriaJS/images/positron.png",
-    contrastColor: "#000000"
-  });
-
-  baseMaps.push({
-    item: {
-      id: "basemap-darkmatter",
-      name: "Dark Matter",
-      type: "open-street-map",
-      url: "https://basemaps.cartocdn.com/dark_all/",
-      attribution:
-        "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-      subdomains: ["a", "b", "c", "d"],
-      opacity: 1.0
-    },
-    image: "build/TerriaJS/images/dark-matter.png",
-    contrastColor: "#ffffff"
-  });
-
   return baseMaps;
 }
