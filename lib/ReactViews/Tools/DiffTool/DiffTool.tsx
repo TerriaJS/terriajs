@@ -53,8 +53,7 @@ import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
 import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
 import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
-
-const dateFormat = require("dateformat");
+import dateFormat from "dateformat";
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -250,8 +249,8 @@ class Main extends React.Component<MainPropsType> {
     if (!firstDate || !secondDate) {
       return name;
     } else {
-      const d1 = dateFormat(firstDate, format);
-      const d2 = dateFormat(secondDate, format);
+      const d1 = dateFormat(JulianDate.toDate(firstDate), format);
+      const d2 = dateFormat(JulianDate.toDate(secondDate), format);
       return `${name} - difference for dates ${d1}, ${d2}`;
     }
   }
@@ -567,7 +566,11 @@ class Main extends React.Component<MainPropsType> {
                 <Box column alignItemsFlexStart>
                   {this.leftDate && (
                     <Text large>
-                      (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
+                      (A){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.leftDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.leftDate && (
@@ -580,7 +583,11 @@ class Main extends React.Component<MainPropsType> {
                   <Spacing bottom={1} />
                   {this.rightDate && (
                     <Text large>
-                      (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
+                      (B){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.rightDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.rightDate && (
