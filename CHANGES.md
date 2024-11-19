@@ -3,6 +3,8 @@
 #### next release (8.7.9)
 
 - Add "searchBarConfig.showSearchInCatalog" to configParameters so that the link in location search results can be disabled.
+- Properly initialize react ref in functional components
+- Add NominatimSearchProvider.
 - [The next improvement]
 
 #### 8.7.8 - 2024-11-01
