@@ -2198,6 +2198,10 @@
       "title": "Controls"
     }
   },
+  "keyboardControls": {
+    "toolButtonTitle": "Keyboard navigation",
+    "header": "Keyboard map controls"
+  },
   "notification": {
     "title": "Message"
   },

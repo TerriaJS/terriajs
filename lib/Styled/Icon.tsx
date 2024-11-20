@@ -42,6 +42,7 @@ export const GLYPHS = {
   help: require("../../wwwroot/images/icons/help.svg"),
   helpThick: require("../../wwwroot/images/icons/help-thick.svg"),
   increase: require("../../wwwroot/images/icons/increase.svg"),
+  keyboard: require("../../wwwroot/images/icons/keyboard.svg"),
   left: require("../../wwwroot/images/icons/left.svg"),
   lineChart: require("../../wwwroot/images/icons/line-chart.svg"),
   link: require("../../wwwroot/images/icons/link.svg"),

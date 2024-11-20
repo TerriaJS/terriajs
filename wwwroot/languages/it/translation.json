@@ -1558,6 +1558,10 @@
     "toolButtonTitle": "Modalità pedonale",
     "dropPedestrianTooltipMessage": "<b>Clic sinistro</b> per selezionare la posizione della goccia<br /><b>Clic destro / Esc</b> per annullare"
   },
+  "keyboardControls": {
+    "toolButtonTitle": "Navigazione da tastiera",
+    "header": "Controlli mappa da tastiera"
+  },
   "itemSearchTool": {
     "resetBtnText": "Cancella input",
     "searchBtnText": "Cerca",

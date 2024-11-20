@@ -30,6 +30,9 @@ import {
   ZOOM_CONTROL_ID
 } from "./Items";
 import { TogglePickInfoController } from "./Items/TogglePickInfoTool";
+import KeyboardMode, {
+  KEYBOARD_MODE_ID
+} from "../../Tools/KeyboardMode/KeyboardMode";
 
 export const CLOSE_TOOL_ID = "close-tool";
 
@@ -246,6 +249,22 @@ export const registerMapNavigations = (viewState: ViewState) => {
     ),
     order: 1,
     noExpand: true
+  });
+
+  const keyboardModeToolController = new ToolButtonController({
+    toolName: KEYBOARD_MODE_ID,
+    viewState: viewState,
+    getToolComponent: () => KeyboardMode as any,
+    icon: GLYPHS.keyboard
+  });
+  mapNavigationModel.addItem({
+    id: KEYBOARD_MODE_ID,
+    name: "translate#keyboardControls.toolButtonTitle",
+    title: "translate#keyboardControls.toolButtonTitle",
+    location: "TOP",
+    screenSize: "medium",
+    controller: keyboardModeToolController,
+    order: 9
   });
 
   const feedbackController = new FeedbackButtonController(viewState);
