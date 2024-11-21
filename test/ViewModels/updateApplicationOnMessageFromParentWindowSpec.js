@@ -36,7 +36,7 @@ describe("updateApplicationOnMessageFromParentWindow", function () {
 
   it("updates the model when it receives a message from the parent", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (_eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
@@ -64,7 +64,7 @@ describe("updateApplicationOnMessageFromParentWindow", function () {
 
   it("updates the model when it receives a message from the opener", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (_eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
@@ -92,7 +92,7 @@ describe("updateApplicationOnMessageFromParentWindow", function () {
 
   it("ignores messages that are not from its parent or opener window", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (_eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);

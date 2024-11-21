@@ -25,7 +25,7 @@ if (typeof document.hidden !== "undefined") {
 }
 
 class Timer extends React.PureComponent {
-  constructor(props) {
+  constructor(_props) {
     super();
 
     // We need a unique selector for the timer container. If there are multiple timers, we need to know which one to

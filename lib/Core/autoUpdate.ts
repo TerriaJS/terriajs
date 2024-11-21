@@ -9,7 +9,7 @@ interface Args {
 
 export default function autoUpdate(updater: (...args: any[]) => void) {
   return function (
-    target: any,
+    _target: any,
     propertyName: string,
     property: PropertyDescriptor
   ) {

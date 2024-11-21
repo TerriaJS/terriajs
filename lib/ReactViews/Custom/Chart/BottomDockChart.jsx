@@ -289,7 +289,7 @@ class Chart extends React.Component {
                   offset={i * 50}
                 />
               ))}
-              {this.yAxes.map((y, i) => (
+              {this.yAxes.map((y, _i) => (
                 <GridRows
                   key={`grid-${y.units}`}
                   width={this.plotWidth}

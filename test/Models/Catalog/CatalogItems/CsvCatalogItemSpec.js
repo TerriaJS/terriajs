@@ -52,7 +52,7 @@ describe("CsvCatalogItem with lat and lon", function () {
 
   it("throws if constructed without a Terria instance", function () {
     expect(function () {
-      var viewModel = new CsvCatalogItem(); // eslint-disable-line no-unused-vars
+      var viewModel = new CsvCatalogItem(); // eslint-disable-line @typescript-eslint/no-unused-vars
     }).toThrow();
   });
 
@@ -1579,7 +1579,7 @@ describe("CsvCatalogItem with region mapping", function () {
         csvFile,
         terria.configParameters.regionMappingDefinitionsUrl,
         "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json"
-      ]).then(function (resources) {
+      ]).then(function (_resources) {
         jasmine.Ajax.stubRequest(
           "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson"
         ).andReturn({
@@ -1625,7 +1625,7 @@ describe("CsvCatalogItem with region mapping", function () {
         terria.configParameters.regionMappingDefinitionsUrl,
         "data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
         "data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
-      ]).then(function (resources) {
+      ]).then(function (_resources) {
         jasmine.Ajax.stubRequest(
           "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson"
         ).andReturn({
@@ -1698,7 +1698,7 @@ describe("CsvCatalogItem with region mapping", function () {
         "data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
         "data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
         "data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json"
-      ]).then(function (resources) {
+      ]).then(function (_resources) {
         jasmine.Ajax.stubRequest(
           "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&srs=EPSG%3A3857&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson"
         ).andReturn({
@@ -1821,7 +1821,7 @@ describe("CsvCatalogItem with region mapping", function () {
         csvFile,
         terria.configParameters.regionMappingDefinitionsUrl,
         "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json"
-      ]).then(function (resources) {
+      ]).then(function (_resources) {
         jasmine.Ajax.stubRequest(
           "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson"
         ).andReturn({

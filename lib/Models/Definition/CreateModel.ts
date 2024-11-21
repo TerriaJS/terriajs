@@ -108,7 +108,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
           this.terria,
           sourceReference
         );
-      } catch (e) {
+      } catch (_e) {
         throw TerriaError.from(`Failed to create model \`"${newId}"\``);
       }
 
@@ -191,7 +191,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         let maxIndex = -1;
         this.strata.forEach((s) =>
           (s[traitId] as Array<unknown> | undefined)?.forEach(
-            (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
+            (_e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
           )
         );
 
