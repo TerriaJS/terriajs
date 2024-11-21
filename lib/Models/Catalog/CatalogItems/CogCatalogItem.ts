@@ -224,7 +224,7 @@ function reprojector(proj4: any) {
 /**
  * Returns true if the tilingScheme is custom
  */
-function isCustomTilingScheme(tilingScheme: Object) {
+function isCustomTilingScheme(tilingScheme: object) {
   // The upstream library defines a TIFFImageryTillingScheme but it is not
   // exported so we have to check if it is not one of the standard Cesium
   // tiling schemes. Also, because TIFFImageryTillingScheme derives from
@@ -236,7 +236,7 @@ function isCustomTilingScheme(tilingScheme: Object) {
   );
 }
 
-function omitUndefined(obj: Object) {
+function omitUndefined(obj: object) {
   return Object.fromEntries(
     Object.entries(obj).filter(([_, value]) => value !== undefined)
   );
