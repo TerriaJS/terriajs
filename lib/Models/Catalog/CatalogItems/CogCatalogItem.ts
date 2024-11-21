@@ -1,17 +1,18 @@
 import i18next from "i18next";
 import {
+  action,
   computed,
   makeObservable,
   observable,
   onBecomeObserved,
   onBecomeUnobserved,
+  override,
   runInAction
 } from "mobx";
-import {
-  GeographicTilingScheme,
-  WebMercatorTilingScheme
-} from "terriajs-cesium";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import TileCoordinatesImageryProvider from "terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider";
 import type TIFFImageryProvider from "terriajs-tiff-imagery-provider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -24,6 +25,8 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import Color from "terriajs-cesium/Source/Core/Color";
+import { SelectableDimensionCheckbox } from "../../SelectableDimensions/SelectableDimensions";
 
 /**
  * Loadable stratum for overriding CogCatalogItem traits
@@ -82,6 +85,8 @@ export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
 ) {
   static readonly type = "cog";
+
+  @observable private _showGrid = true;
 
   /**
    * Private imageryProvider instance. This is set once forceLoadMapItems is
@@ -153,6 +158,17 @@ export default class CogCatalogItem extends MappableMixin(
 
     return [
       {
+        show: this._showGrid,
+        alpha: this.opacity,
+        imageryProvider: new TileCoordinatesImageryProvider({
+          tilingScheme: this._imageryProvider?.tilingScheme,
+          tileWidth: this._imageryProvider?.tileWidth,
+          tileHeight: this._imageryProvider?.tileHeight,
+          color: Color.YELLOW.withAlpha(0.5)
+        }),
+        clippingRectangle: this.cesiumRectangle
+      },
+      {
         show: this.show,
         alpha: this.opacity,
         // The 'requestImage' method in Cesium's ImageryProvider has a return type that is stricter than necessary.
@@ -198,6 +214,23 @@ export default class CogCatalogItem extends MappableMixin(
         })
       })
     );
+  }
+
+  @override
+  get selectableDimensions() {
+    const showGrid: SelectableDimensionCheckbox = {
+      id: "show-grid",
+      type: "checkbox",
+      options: [
+        { id: "true", name: "Show tile grid" },
+        { id: "false", name: "Show tile grid" }
+      ],
+      selectedId: this._showGrid ? "true" : "false",
+      setDimensionValue: action((_, value) => {
+        this._showGrid = value === "true";
+      })
+    };
+    return [showGrid, ...super.selectableDimensions];
   }
 }
 
