@@ -7,6 +7,7 @@
 - Add NominatimSearchProvider.
 - Removed the basemaps - positron, darkmatter and black-marble - from the default settings. The Carto ones are no longer free and requires an [Enterprise or Grantee license](https://carto.com/basemaps). If you have the appropriate license you can add them via your [initialization file](https://docs.terria.io/guide/customizing/initialization-files/#basemaps). [Example configuration](https://gist.github.com/na9da/ef7871afee7cbe3d0a95e5b6351834c9).
 - Restrict mobx version to '< 6.13.0' to avoid tsc errors because mobx now uses iterator helper types introduced in TypeScript 5.6.
+- Remove unused ts-node dependency.
 - [The next improvement]
 
 #### 8.7.8 - 2024-11-01
