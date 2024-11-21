@@ -1615,7 +1615,7 @@ describe("Terria", function () {
       );
     });
 
-    it("propperly loads base maps", async function () {
+    it("correctly loads the base maps", async function () {
       await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
@@ -1623,16 +1623,17 @@ describe("Terria", function () {
             items: [
               {
                 item: {
-                  id: "basemap-positron",
-                  name: "Positron (Light)",
-                  type: "open-street-map",
-                  url: "https://basemaps.cartocdn.com/light_all/",
+                  id: "basemap-natural-earth-II",
+                  name: "Natural Earth II",
+                  type: "url-template-imagery",
+                  url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
                   attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                  subdomains: ["a", "b", "c", "d"],
+                    "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+                  maximumLevel: 7,
                   opacity: 1.0
                 },
-                image: "/images/positron.png"
+                image: "build/TerriaJS/images/natural-earth.png",
+                contrastColor: "#000000"
               },
               {
                 item: {
