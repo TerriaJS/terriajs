@@ -7,11 +7,9 @@ import {
   onBecomeUnobserved,
   runInAction
 } from "mobx";
-import {
-  GeographicTilingScheme,
-  WebMercatorTilingScheme
-} from "terriajs-cesium";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import type TIFFImageryProvider from "terriajs-tiff-imagery-provider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
