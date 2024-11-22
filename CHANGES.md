@@ -2,6 +2,7 @@
 
 #### next release (8.7.10)
 
+- Update to node-notifier 10.0.1 to fix security vulnerabilities.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
