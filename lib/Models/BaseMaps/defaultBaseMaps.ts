@@ -94,5 +94,19 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
     contrastColor: "#000000"
   });
 
+  baseMaps.push({
+    item: {
+      id: "basemap-openstreetmap",
+      name: "Openstreetmap",
+      type: "open-street-map",
+      url: "https://tile.openstreetmap.org/",
+      attribution:
+        "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>",
+      opacity: 1.0
+    },
+    image: "build/TerriaJS/images/openstreetmap.png",
+    contrastColor: "#000000"
+  });
+
   return baseMaps;
 }
