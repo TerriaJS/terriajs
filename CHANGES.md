@@ -2,6 +2,7 @@
 
 #### next release (8.7.10)
 
+- Add OpenStreetMap as a basemap option.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22

@@ -97,7 +97,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
   baseMaps.push({
     item: {
       id: "basemap-openstreetmap",
-      name: "Openstreetmap",
+      name: "OpenStreetMap",
       type: "open-street-map",
       url: "https://tile.openstreetmap.org/",
       attribution:
