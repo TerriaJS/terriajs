@@ -230,7 +230,9 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
   })
-  disableZoomTo: boolean = false;
+  get disableZoomTo(): boolean {
+    return false;
+  }
 
   @primitiveTrait({
     type: "boolean",
@@ -281,7 +283,7 @@ class MappableTraits extends mixTraits(AttributionTraits) {
   maximumShownFeatureInfos?: number;
 }
 
-/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
+// /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 interface MappableTraits {
   // Add traits here that you want to override from some Mixin or Model class
   // without generating TS2611 type error.

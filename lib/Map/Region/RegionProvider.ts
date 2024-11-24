@@ -447,8 +447,8 @@ export default class RegionProvider {
       if (!isDefined(disambigCode)) {
         // we have an ambiguous value, but nothing with which to disambiguate. We pick the first, warn.
         console.warn(
-          "Ambiguous value found in region mapping: " + codeAfterReplacement ??
-            code
+          "Ambiguous value found in region mapping: " +
+            (codeAfterReplacement || code)
         );
         return ids[0];
       }

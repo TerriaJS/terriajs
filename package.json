@@ -181,7 +181,7 @@
     "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
-    "typescript": "~5.2.0",
+    "typescript": "^5.6.2",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
     "webpack": "~4.47.0",
