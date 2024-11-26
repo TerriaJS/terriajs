@@ -91,7 +91,6 @@
     "babel-plugin-lodash": "^3.3.4",
     "bottleneck": "^2.19.5",
     "catalog-converter": "^0.0.9",
-    "class-list": "^0.1.1",
     "classnames": "^2.3.1",
     "clipboard": "^2.0.8",
     "commander": "^11.1.0 ",
