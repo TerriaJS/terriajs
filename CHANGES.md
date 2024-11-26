@@ -2,6 +2,7 @@
 
 #### next release (8.7.10)
 
+- TSify `ConsoleAnalytics` module.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
