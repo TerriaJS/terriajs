@@ -259,7 +259,7 @@ class CatalogMemberTraits extends ModelTraits {
   shareable: boolean = true;
 }
 
-// /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 interface CatalogMemberTraits {
   // Add traits here that you want to override from some Mixin or Model class
   // without generating TS2611 type error.
