@@ -15,7 +15,9 @@
     "@types/node": "^18.15.11",
     "@types/css-font-loading-module": "^0.0.14",
     "terser-webpack-plugin": "^4.2.3",
-    "underscore": "^1.12.1"
+    "underscore": "^1.12.1",
+    "@types/lodash": "4.14.182",
+    "@types/react": "^17.0.3"
   },
   "dependencies": {
     "@babel/core": "^7.23.5",
