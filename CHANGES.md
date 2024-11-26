@@ -3,6 +3,7 @@
 #### next release (8.7.10)
 
 - Remove unused ts-loader dependency.
+- Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
 - [The next improvement]
 
