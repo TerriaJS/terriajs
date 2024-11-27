@@ -6,6 +6,7 @@
 - Remove unused ts-loader dependency.
 - Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
+- Update to style-loader 2.0.0 and mini-css-extract-plugin 1.6.2.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
