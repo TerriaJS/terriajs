@@ -8,6 +8,7 @@
 - TSify `ConsoleAnalytics` module.
 - Update to gulp 5.0 to fix security vulnerabilities.
 - Update to dompurify 2.5.7 to fix security vulnerabilities.
+- Remove unused simple-statistics dependency.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
