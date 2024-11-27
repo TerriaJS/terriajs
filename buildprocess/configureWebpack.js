@@ -351,10 +351,11 @@ function configureWebpack(
           loader: require.resolve("css-loader"),
           options: {
             sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
-            importLoaders: 2
+            localsConvention: "camelCase",
+            importLoaders: 2,
+            modules: {
+              localIdentName: "tjs-[name]__[local]"
+            }
           }
         },
         "resolve-url-loader?sourceMap",
@@ -376,10 +377,11 @@ function configureWebpack(
           loader: require.resolve("css-loader"),
           options: {
             sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
-            importLoaders: 2
+            localsConvention: "camelCase",
+            importLoaders: 2,
+            modules: {
+              localIdentName: "tjs-[name]__[local]"
+            }
           }
         },
         "resolve-url-loader?sourceMap",
