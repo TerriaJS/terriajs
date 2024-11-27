@@ -2,6 +2,7 @@
 
 #### next release (8.7.10)
 
+- Update to node-notifier 10.0.1 to fix security vulnerabilities.
 - Remove unused ts-loader dependency.
 - Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
