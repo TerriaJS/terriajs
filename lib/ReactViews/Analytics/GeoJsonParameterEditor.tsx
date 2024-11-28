@@ -14,8 +14,11 @@ import {
   getDisplayValue as getExistingPolygonParameterDisplayValue
 } from "./SelectAPolygonParameterEditor";
 import { getDisplayValue as getRegionPickerDisplayValue } from "./RegionPicker";
-import { TFunction } from "i18next";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {
+  type TFunction,
+  WithTranslation,
+  withTranslation
+} from "react-i18next";
 import { observer } from "mobx-react";
 import { makeObservable, runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";

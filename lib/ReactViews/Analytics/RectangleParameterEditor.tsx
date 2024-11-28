@@ -1,41 +1,61 @@
-"use strict";
-
-import React from "react";
-
-import PropTypes from "prop-types";
-
+import React, { type ChangeEvent } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-
 import Styles from "./parameter-editors.scss";
-
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import UserDrawing from "../../Models/UserDrawing";
-import { withTranslation } from "react-i18next";
+import {
+  type TFunction,
+  WithTranslation,
+  withTranslation
+} from "react-i18next";
 import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { makeObservable, runInAction } from "mobx";
+import { BaseModel } from "../../Models/Definition/Model";
+import RectangleParameter from "../../Models/FunctionParameters/RectangleParameter";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import Terria from "../../Models/Terria";
+import UserDrawing from "../../Models/UserDrawing";
+import ViewState from "../../ReactViewModels/ViewState";
+
+interface RectangleParameterEditorProps extends WithTranslation {
+  previewed: BaseModel | undefined;
+  parameter: RectangleParameter;
+  viewState: ViewState;
+  t: TFunction;
+}
 
 @observer
-class RectangleParameterEditor extends React.Component {
-  static propTypes = {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
-  };
+class RectangleParameterEditor extends React.Component<RectangleParameterEditorProps> {
+  constructor(props: RectangleParameterEditorProps) {
+    super(props);
+    makeObservable(this);
+  }
 
-  setValueFromText(e) {
-    RectangleParameterEditor.setValueFromText(e, this.props.parameter);
+  setValueFromText(e: ChangeEvent<HTMLInputElement>) {
+    this.setParameterValueFromText(e, this.props.parameter);
+  }
+
+  /**
+   * Triggered when user types value directly into field.
+   * @param e Text that user has entered manually.
+   * @param parameter Parameter to set value on.
+   */
+  setParameterValueFromText(
+    e: ChangeEvent<HTMLInputElement>,
+    parameter: RectangleParameter
+  ) {
+    parameter.setValue(CommonStrata.user, JSON.parse(e.target.value));
   }
 
   selectPolygonOnMap() {
-    selectOnMap(
-      this.props.previewed.terria,
-      this.props.viewState,
-      this.props.parameter
-    );
+    if (this.props.previewed) {
+      selectOnMap(
+        this.props.previewed.terria,
+        this.props.viewState,
+        this.props.parameter
+      );
+    }
   }
 
   render() {
@@ -61,20 +81,11 @@ class RectangleParameterEditor extends React.Component {
 }
 
 /**
- * Triggered when user types value directly into field.
- * @param {String} e Text that user has entered manually.
- * @param {FunctionParameter} parameter Parameter to set value on.
- */
-RectangleParameterEditor.setValueFromText = function (e, parameter) {
-  parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
-};
-
-/**
  * Given a value, return it in human readable form for display.
- * @param {Object} value Native format of parameter value.
- * @return {String} String for display
+ * @param value Native format of parameter value.
+ * @return String for display
  */
-export function getDisplayValue(value) {
+export function getDisplayValue(value: any) {
   if (!defined(value)) {
     return "";
   }
@@ -83,11 +94,15 @@ export function getDisplayValue(value) {
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
- * @param {Terria} terria Terria instance.
- * @param {Object} viewState ViewState.
- * @param {FunctionParameter} parameter Parameter.
+ * @param terria Terria instance.
+ * @param viewState ViewState.
+ * @param parameter Parameter.
  */
-export function selectOnMap(terria, viewState, parameter) {
+export function selectOnMap(
+  terria: Terria,
+  viewState: ViewState,
+  parameter: RectangleParameter
+) {
   const userDrawing = new UserDrawing({
     terria: terria,
     drawRectangle: true,
