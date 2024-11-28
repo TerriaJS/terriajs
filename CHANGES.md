@@ -6,6 +6,7 @@
 - Remove unused ts-loader dependency.
 - Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
+- Update to gulp 5.0 to fix security vulnerabilities.
 - Update to dompurify 2.5.7 to fix security vulnerabilities.
 - [The next improvement]
 
