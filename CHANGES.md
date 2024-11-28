@@ -8,6 +8,7 @@
 - TSify `ConsoleAnalytics` module.
 - Update to gulp 5.0 to fix security vulnerabilities.
 - Update to dompurify 2.5.7 to fix security vulnerabilities.
+- Update to @mapbox/togeojson 0.16.2 to fix security vulnerabilities.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
