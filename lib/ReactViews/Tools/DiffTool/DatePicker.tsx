@@ -13,7 +13,7 @@ import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
-const dateFormat = require("dateformat");
+import dateFormat from "dateformat";
 
 interface PropsType extends WithTranslation {
   heading: string;
