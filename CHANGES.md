@@ -11,6 +11,7 @@
 - Remove unused simple-statistics dependency.
 - Update to pretty-quick 4.0.0 to fix security vulnerabilities.
 - TSify `GeoJsonParameterEditor` module.
+- TSify `RectangleParameterEditor` module.
 - [The next improvement]
 
 #### 8.7.9 - 2024-11-22
