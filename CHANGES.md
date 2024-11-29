@@ -2,6 +2,7 @@
 
 #### next release (8.7.11)
 
+- Move release guide from README.md to RELEASE_GUIDE.md
 - [The next improvement]
 
 #### 8.7.10 - 2024-11-29
