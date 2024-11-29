@@ -11,61 +11,60 @@ Then, the parent window can send messages like this:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>NationalMap Embed Test</title>
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>NationalMap Embed Test</title>
+  </head>
 
-    <body>
-        <iframe
-            id="embeddedNationalMap"
-            src="https://nationalmap.gov.au"
-            width="1024"
-            height="768"
-        ></iframe>
+  <body>
+    <iframe
+      id="embeddedNationalMap"
+      src="https://nationalmap.gov.au"
+      width="1024"
+      height="768"
+    ></iframe>
 
-        <script type="text/javascript">
-            window.addEventListener("message", function (e) {
-                var iframeWindow = document.getElementById(
-                    "embeddedNationalMap"
-                ).contentWindow;
-                if (e.source === iframeWindow && e.data === "ready") {
-                    // NationalMap is ready to receive messages!
-                    iframeWindow.postMessage(
+    <script type="text/javascript">
+      window.addEventListener("message", function (e) {
+        var iframeWindow = document.getElementById(
+          "embeddedNationalMap"
+        ).contentWindow;
+        if (e.source === iframeWindow && e.data === "ready") {
+          // NationalMap is ready to receive messages!
+          iframeWindow.postMessage(
+            {
+              initSources: [
+                {
+                  initialCamera: {
+                    north: -33.827,
+                    east: 151.249,
+                    south: -33.907,
+                    west: 151.165
+                  },
+                  workbench: ["my-data"],
+                  catalog: [
+                    {
+                      type: "group",
+                      name: "Foo",
+                      members: [
                         {
-                            initSources: [
-                                {
-                                    initialCamera: {
-                                        north: -33.827,
-                                        east: 151.249,
-                                        south: -33.907,
-                                        west: 151.165
-                                    },
-                                    workbench: ["my-data"],
-                                    catalog: [
-                                        {
-                                            type: "group",
-                                            name: "Foo",
-                                            members: [
-                                                {
-                                                    type: "csv",
-                                                    name: "My Data",
-                                                    id: "my-data",
-                                                    csvString:
-                                                        "POA,Some Value\n2000,1\n2205,2"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        "https://nationalmap.gov.au"
-                    );
+                          type: "csv",
+                          name: "My Data",
+                          id: "my-data",
+                          csvString: "POA,Some Value\n2000,1\n2205,2"
+                        }
+                      ]
+                    }
+                  ]
                 }
-            });
-        </script>
-    </body>
+              ]
+            },
+            "https://nationalmap.gov.au"
+          );
+        }
+      });
+    </script>
+  </body>
 </html>
 ```
 

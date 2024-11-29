@@ -42,12 +42,12 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
 
 Key points:
 
--   `catalog` is an array.
--   Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
--   The three major categories of catalog member types are:
-    -   [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
-    -   [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
-    -   [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
+- `catalog` is an array.
+- Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
+- The three major categories of catalog member types are:
+  - [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
+  - [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
+  - [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
 
 Most of the other properties of each layer depend on the specific type. See the links above for details of each type.
 

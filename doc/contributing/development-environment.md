@@ -59,10 +59,10 @@ yarn install
 
 Yarn will:
 
--   Install all dependencies for both TerriaMap and any packages in your `packages` directory.
--   Install the `devDependencies` for packages in the `packages` directory so you can actually develop on them.
--   Create sym-links so that everything works.
--   De-duplicate semver-compatible packages and bubble them up to the root `node_modules` directory.
+- Install all dependencies for both TerriaMap and any packages in your `packages` directory.
+- Install the `devDependencies` for packages in the `packages` directory so you can actually develop on them.
+- Create sym-links so that everything works.
+- De-duplicate semver-compatible packages and bubble them up to the root `node_modules` directory.
 
 Now, we can edit TerriaJS in `packages/terriajs` with the benefit of a full-featured git repo.
 
@@ -138,17 +138,17 @@ The test suite is run by opening a web browser on [http://localhost:3002/SpecRun
 
 Run any of these tasks with `yarn gulp <task name>` from within the TerriaJS directory:
 
--   default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
--   `build` - Builds a non-minified version of the TerriaJS tests. This task may take 10 seconds or more, which is the main reason for the next task.
--   `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaJS or Cesium source file that was pulled in to the build. When a change to any of these files is detected, a fast incremental build is automatically kicked off. The incremental build is much faster than the full rebuild because dependencies between source files are cached.
--   `release` - The same as `build` except that it also minifies the build tests.
--   `lint` - Runs ESLint on the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaJS. A stricter set of rules is also find in the `.eslintrc` file in `lib/ReactViews`.
--   `docs` - Generates the user guide and reference documentation. The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
--   `make-schema` - Generates [JSON Schema](http://json-schema.org/) for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code. The schema is written to `wwwroot/schema`.
--   `test` - Detects browsers available on the local system and launches the test suite in each. The results are reported on the command line.
--   `test-electron` - Runs the tests in Electron, a headless (no UI) Chrome-like browser.
--   `test-saucelabs` - Runs the tests on a bunch of browsers on [Sauce Labs](https://saucelabs.com/). You will need to [Set up Sauce Labs](setting-up-saucelabs.md).
--   `test-browserstack` - Runs the tests on a bunch of browsers on [BrowserStack](https://www.browserstack.com/). You will need to set up a BrowserStack account.
+- default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
+- `build` - Builds a non-minified version of the TerriaJS tests. This task may take 10 seconds or more, which is the main reason for the next task.
+- `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaJS or Cesium source file that was pulled in to the build. When a change to any of these files is detected, a fast incremental build is automatically kicked off. The incremental build is much faster than the full rebuild because dependencies between source files are cached.
+- `release` - The same as `build` except that it also minifies the build tests.
+- `lint` - Runs ESLint on the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaJS. A stricter set of rules is also find in the `.eslintrc` file in `lib/ReactViews`.
+- `docs` - Generates the user guide and reference documentation. The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
+- `make-schema` - Generates [JSON Schema](http://json-schema.org/) for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code. The schema is written to `wwwroot/schema`.
+- `test` - Detects browsers available on the local system and launches the test suite in each. The results are reported on the command line.
+- `test-electron` - Runs the tests in Electron, a headless (no UI) Chrome-like browser.
+- `test-saucelabs` - Runs the tests on a bunch of browsers on [Sauce Labs](https://saucelabs.com/). You will need to [Set up Sauce Labs](setting-up-saucelabs.md).
+- `test-browserstack` - Runs the tests on a bunch of browsers on [BrowserStack](https://www.browserstack.com/). You will need to set up a BrowserStack account.
 
 See `gulpfile.js` for more gulp tasks.
 
@@ -156,12 +156,12 @@ See `gulpfile.js` for more gulp tasks.
 
 Run any of these tasks with `yarn gulp <task name>` from within the TerriaMap directory:
 
--   default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
--   `build` - Builds a non-minified version of TerriaMap, TerriaJS, Cesium, and all other dependencies, together in one JS file (called `wwwroot/build/TerriaMap.js`). Only the parts of TerriaJS and Cesium that we use (directly or indirectly) are pulled in. Web Workers, CSS, and other resources are also built by this task. This task may take 10 seconds or more, which is the main reason for the next task.
--   `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaMap, TerriaJS, or Cesium resource. When a change to any of these files is detected, a fast incremental build is automatically kicked off. The incremental build is much faster than the full rebuild because dependencies between source files are cached.
--   `release` - The same as `build` except that it also minifies the built JavaScript files. This task should be used when building for production.
--   `lint` - Runs ESLint on `index.js` and the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaMap.
--   `make-package` - Creates a `.tar.gz` package in `deploy/packages` from the current build. This package can be copied to another machine to run the application there. The arguments are:
+- default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
+- `build` - Builds a non-minified version of TerriaMap, TerriaJS, Cesium, and all other dependencies, together in one JS file (called `wwwroot/build/TerriaMap.js`). Only the parts of TerriaJS and Cesium that we use (directly or indirectly) are pulled in. Web Workers, CSS, and other resources are also built by this task. This task may take 10 seconds or more, which is the main reason for the next task.
+- `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaMap, TerriaJS, or Cesium resource. When a change to any of these files is detected, a fast incremental build is automatically kicked off. The incremental build is much faster than the full rebuild because dependencies between source files are cached.
+- `release` - The same as `build` except that it also minifies the built JavaScript files. This task should be used when building for production.
+- `lint` - Runs ESLint on `index.js` and the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaMap.
+- `make-package` - Creates a `.tar.gz` package in `deploy/packages` from the current build. This package can be copied to another machine to run the application there. The arguments are:
 
 | Argument                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -169,5 +169,5 @@ Run any of these tasks with `yarn gulp <task name>` from within the TerriaMap di
 | `--serverConfigOverride <file>` | The path to a file with overrides of the `devserverconfig.json` file. If not specified, `devserverconfig.json` is used unmodified.                                                                                                                                                                                                                                                                                                                                 |
 | `--clientConfigOverride <file>` | The path to a file with overrides of the `wwwroot/config.json` file. If not specified, `wwwroot/config.json` is used unmodified.                                                                                                                                                                                                                                                                                                                                   |
 
--   `clean` - Removes the `wwwroot/build` directory.
--   `sync-terriajs-dependencies` - For all npm packages used by both TerriaMap and TerriaJS, updates TerriaMap's `package.json` to use the same version as TerriaJS. This avoids build problems (errors, hangs) caused by package version conflicts.
+- `clean` - Removes the `wwwroot/build` directory.
+- `sync-terriajs-dependencies` - For all npm packages used by both TerriaMap and TerriaJS, updates TerriaMap's `package.json` to use the same version as TerriaJS. This avoids build problems (errors, hangs) caused by package version conflicts.

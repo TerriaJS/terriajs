@@ -8,10 +8,10 @@ It is also helpful to understand [what MobX reacts to](https://mobx.js.org/best/
 
 ## Types of classes in the Model layer
 
--   _Traits_: Define the configurable properties of a each stratum of a model object. Traits classes have no logic or behavior, only properties. Note that traits classes are often built by mixing in several sets of traits. Example: `WebMapServiceCatalogItemTraits`.
--   _Models_: Concrete, usable model objects representing things like map items and groups in the catalog. They are composed of mix-ins plus some model-specific computed properties and logic. Example: `WebMapServiceCatalogItem`.
--   _Mixins_: Provide computed properties and behavior intended to be mixed into model objects to add capabilities to them. Example: `GetCapabilitiesMixin`.
--   _Load Strata_: (singular: Load Stratum) Strata that provide values for a subset of the properties defined on model's traits class, usually by loading them from an external source such as WMS GetCapabilities service. Example: `GetCapabilitiesStratum`.
+- _Traits_: Define the configurable properties of a each stratum of a model object. Traits classes have no logic or behavior, only properties. Note that traits classes are often built by mixing in several sets of traits. Example: `WebMapServiceCatalogItemTraits`.
+- _Models_: Concrete, usable model objects representing things like map items and groups in the catalog. They are composed of mix-ins plus some model-specific computed properties and logic. Example: `WebMapServiceCatalogItem`.
+- _Mixins_: Provide computed properties and behavior intended to be mixed into model objects to add capabilities to them. Example: `GetCapabilitiesMixin`.
+- _Load Strata_: (singular: Load Stratum) Strata that provide values for a subset of the properties defined on model's traits class, usually by loading them from an external source such as WMS GetCapabilities service. Example: `GetCapabilitiesStratum`.
 
 ## Reactivity
 
@@ -33,8 +33,8 @@ A good rule of thumb is this: all properties should either be simple data proper
 
 Computed properties with setters should be avoided. In our _old_ architecture, we frequently used computed properties with a setter to model properties that are configurable by the user, but that have a default value computed from other properties when there is no user-specified value. In the current architecture, this is better modeled by:
 
--   Defining the configurable property on the `Traits` class.
--   Defining a computed property on the derived Model class that accesses `super.propertyName` (if mixins should be allowed to define the property) or `this.flattened.propertyName` (if only a directly-configured property value should be used) and, if that is undefined, computes and returns the default value from other properties.
+- Defining the configurable property on the `Traits` class.
+- Defining a computed property on the derived Model class that accesses `super.propertyName` (if mixins should be allowed to define the property) or `this.flattened.propertyName` (if only a directly-configured property value should be used) and, if that is undefined, computes and returns the default value from other properties.
 
 If a property does have a setter, it should obey these laws:
 
@@ -80,8 +80,8 @@ In this scenario, consider whether you could instead let the reactive world take
 
 We want to keep the UI as small and simple as possible, because:
 
--   The UI is the hardest part of TerriaJS to test with automated tests. If it has lots of complicated logic, we will need to spend a lot of time writing tests for it to ensure that it behaves correctly. A very simple UI is easier to test, and is perhaps so simple that automated tests for it are not needed at all.
--   We would like everything that can be done by a user interacting with the UI to be doable programmatically as well. If the UI encodes complex rules or has its own states, this may not be possible, or doing so may require duplicating complicated "business logic" that already exists in the UI.
+- The UI is the hardest part of TerriaJS to test with automated tests. If it has lots of complicated logic, we will need to spend a lot of time writing tests for it to ensure that it behaves correctly. A very simple UI is easier to test, and is perhaps so simple that automated tests for it are not needed at all.
+- We would like everything that can be done by a user interacting with the UI to be doable programmatically as well. If the UI encodes complex rules or has its own states, this may not be possible, or doing so may require duplicating complicated "business logic" that already exists in the UI.
 
 Therefore, whenever possible, TerriaJS logic should be in the Model layer instead of in the UI. The UI should be a pure function from Model state to React components, and actions that simply execute functions or change a small number of properties in the Model layer.
 
@@ -91,9 +91,9 @@ Evaluate observable properties as late as possible. In particular, avoid getting
 
 A few notes on defining properties in Model classes:
 
--   _Set only traits_: All settable properties of a Model should be in its Traits. Because Traits are the only properties that are serialized/deserialized for catalog configuration and for sharing, settable properties that are not part of Traits prevent us from being able to completely recover application state. The only exception to this rule is for highly transient properties, such as whether a load from a remote source is currently in progress.
--   _Covariance_: If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationship is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
--   _Equals_: Pay attention to the comparer/equals to use with observables to determine if a new value is equal to an old one. The default `equals` is usually fine for primitive types (e.g. string, number, boolean), observable arrays, and objects whose properties are themselves observable (e.g. Traits). But for other types, especially Cesium types like JulianDate, Cartographic, and Cartesian3, it is essential to specify an `equals`. Typically this looks like this: `@computed({ equals: JulianDate.equals })`.
+- _Set only traits_: All settable properties of a Model should be in its Traits. Because Traits are the only properties that are serialized/deserialized for catalog configuration and for sharing, settable properties that are not part of Traits prevent us from being able to completely recover application state. The only exception to this rule is for highly transient properties, such as whether a load from a remote source is currently in progress.
+- _Covariance_: If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationship is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
+- _Equals_: Pay attention to the comparer/equals to use with observables to determine if a new value is equal to an old one. The default `equals` is usually fine for primitive types (e.g. string, number, boolean), observable arrays, and objects whose properties are themselves observable (e.g. Traits). But for other types, especially Cesium types like JulianDate, Cartographic, and Cartesian3, it is essential to specify an `equals`. Typically this looks like this: `@computed({ equals: JulianDate.equals })`.
 
 ## `Traits`
 
@@ -153,8 +153,8 @@ So, instead of trying to make a model change type upon load, `ReferenceMixin` cr
 
 There are two types of references
 
--   Strong references
--   Weak references
+- Strong references
+- Weak references
 
 ### Strong references
 
@@ -162,12 +162,12 @@ These are a one-to-one mapping from a reference to it's target. The target can o
 
 #### Some rules
 
--   The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
--   For simplicity, a particular model may _only_ be the target of a single reference. Multiple references cannot point to the same target. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
--   The `uniqueId` of the `target` model must be the same as the `uniqueId` of the model with `ReferenceMixin`.
--   The model with `ReferenceMixin` _may_ be in `terria.models`.
--   The `target` model must _not_ be in `terria.models`.
--   The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
+- The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
+- For simplicity, a particular model may _only_ be the target of a single reference. Multiple references cannot point to the same target. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
+- The `uniqueId` of the `target` model must be the same as the `uniqueId` of the model with `ReferenceMixin`.
+- The model with `ReferenceMixin` _may_ be in `terria.models`.
+- The `target` model must _not_ be in `terria.models`.
+- The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
 
 ### Weak References
 
@@ -194,18 +194,18 @@ This means that we can call `asyncLoader.load()` many times without worrying abo
 
 `forceLoadX()` shouldn't be called directly - instead you should use `asyncLoader.load()` method - for example in `CatalogMemberMixin` we have
 
--   the abstract method `forceLoadMetadata`
--   `loadMetadata()` which wraps `asyncLoader.load()`
--   `loadMetadata()` can be called as many times as needed
--   See [CatalogMemberMixin example](#CatalogMemberMixin-example)
+- the abstract method `forceLoadMetadata`
+- `loadMetadata()` which wraps `asyncLoader.load()`
+- `loadMetadata()` can be called as many times as needed
+- See [CatalogMemberMixin example](#CatalogMemberMixin-example)
 
 A **correct** example:
 
 ```ts
 async function forceLoadX() {
-    const url = this.someObservableUrl;
-    const someData = await loadText(url);
-    runInAction(() => (this.someOtherObservable = someData));
+  const url = this.someObservableUrl;
+  const someData = await loadText(url);
+  runInAction(() => (this.someOtherObservable = someData));
 }
 ```
 
@@ -219,9 +219,9 @@ An **incorrect** example:
 
 ```ts
 async function forceLoadX() {
-    const arg = this.someObservable;
-    const someData = someSynchronousFn(arg);
-    runInAction(() => (this.someOtherObservable = someData));
+  const arg = this.someObservable;
+  const someData = someSynchronousFn(arg);
+  runInAction(() => (this.someOtherObservable = someData));
 }
 ```
 
@@ -238,13 +238,13 @@ get newComputed {
 
 **Other tips**:
 
--   You should not nest together `AsyncLoaders`.
-    Eg.
-    ```ts
-    async function forceLoadX() {
-        await this.forceLoadY();
-    }
-    ```
+- You should not nest together `AsyncLoaders`.
+  Eg.
+  ```ts
+  async function forceLoadX() {
+    await this.forceLoadY();
+  }
+  ```
 
 For more info, see `lib\Core\AsyncLoader.ts`
 

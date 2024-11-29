@@ -17,10 +17,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 export function MyComponent() {
-    const { t, i18n } = useTranslation();
-    // or const [t, i18n] = useTranslation();
+  const { t, i18n } = useTranslation();
+  // or const [t, i18n] = useTranslation();
 
-    return <p>{t("key")}</p>; //returns corresponding translated text from translation files
+  return <p>{t("key")}</p>; //returns corresponding translated text from translation files
 }
 ```
 
@@ -37,7 +37,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 
 function MyComponent({ t, i18n }) {
-    return <p>{t("my translated text")}</p>;
+  return <p>{t("my translated text")}</p>;
 }
 
 export default withTranslation()(MyComponent);
@@ -56,13 +56,13 @@ import React from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 function MyComponent() {
-    const { t } = useTranslation("myNamespace");
+  const { t } = useTranslation("myNamespace");
 
-    return (
-        <Trans t={t} key="keyHelloWorld">
-            Hello World
-        </Trans>
-    );
+  return (
+    <Trans t={t} key="keyHelloWorld">
+      Hello World
+    </Trans>
+  );
 }
 ```
 
@@ -76,7 +76,7 @@ Use dynamic values in translations.
 
 ```json
 {
-    "key": "{{what}} is {{how}}"
+  "key": "{{what}} is {{how}}"
 }
 ```
 
@@ -99,10 +99,10 @@ i18next features automatic recognition of singular and plural forms.
 
 ```json
 {
-    "key": "item",
-    "key_plural": "items",
-    "keyWithCount": "{{count}} item",
-    "keyWithCount_plural": "{{count}} items"
+  "key": "item",
+  "key_plural": "items",
+  "keyWithCount": "{{count}} item",
+  "keyWithCount_plural": "{{count}} items"
 }
 ```
 
@@ -129,9 +129,9 @@ Nesting allows you to reference other keys in a translation.
 
 ```json
 {
-    "nesting1": "1 $t(nesting2)",
-    "nesting2": "2 $t(nesting3)",
-    "nesting3": "3"
+  "nesting1": "1 $t(nesting2)",
+  "nesting2": "2 $t(nesting3)",
+  "nesting3": "3"
 }
 ```
 
@@ -151,9 +151,9 @@ By providing a context you can differ translations.
 
 ```json
 {
-    "friend": "A friend",
-    "friend_male": "A boyfriend",
-    "friend_female": "A girlfriend"
+  "friend": "A friend",
+  "friend_male": "A boyfriend",
+  "friend_female": "A girlfriend"
 }
 ```
 
@@ -169,4 +169,4 @@ See the [react-i18next context documentation](https://www.i18next.com/translatio
 
 ## Future work
 
--   Support internationalization of catalog content.
+- Support internationalization of catalog content.
