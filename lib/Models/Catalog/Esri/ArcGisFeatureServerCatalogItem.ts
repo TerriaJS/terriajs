@@ -8,7 +8,7 @@ import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
-import proj4definitions from "../../../Map/Vector/Proj4Definitions";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -252,12 +252,12 @@ class FeatureServerStratum extends LoadableStratum(
       extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
     if (isDefined(extent) && isDefined(wkidCode)) {
-      const wkid = "EPSG:" + wkidCode;
-      if (!isDefined((proj4definitions as any)[wkid])) {
+      const epsgSrc = Proj4Definitions["EPSG:" + wkidCode];
+      if (!isDefined(epsgSrc)) {
         return undefined;
       }
 
-      const source = new proj4.Proj((proj4definitions as any)[wkid]);
+      const source = new proj4.Proj(epsgSrc);
       const dest = new proj4.Proj("EPSG:4326");
 
       let p = proj4(source, dest, [extent.xmin, extent.ymin]);
