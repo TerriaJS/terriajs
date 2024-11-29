@@ -111,7 +111,7 @@
     "dateformat": "^5.0.3",
     "dompurify": "^2.5.7",
     "file-loader": "^3.0.1",
-    "file-saver": "^2.0.4",
+    "file-saver": "^2.0.5",
     "flexsearch": "0.7.21",
     "fs-extra": "^7.0.1",
     "geojson-vt": "^3.2.1",
