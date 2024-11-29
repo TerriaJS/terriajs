@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.7.10)
+#### next release (8.7.11)
+
+- [The next improvement]
+
+#### 8.7.10 - 2024-11-29
 
 - Add OpenStreetMap as a basemap option.
 - Update to node-notifier 10.0.1 to fix security vulnerabilities.
@@ -13,7 +17,6 @@
 - Update to @mapbox/togeojson 0.16.2 to fix security vulnerabilities.
 - Remove unused simple-statistics dependency.
 - Update to pretty-quick 4.0.0 to fix security vulnerabilities.
-- [The next improvement]
 
 #### 8.7.9 - 2024-11-22
 
