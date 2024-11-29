@@ -12,7 +12,6 @@
   },
   "resolutions": {
     "colors": "1.4.0",
-    "@types/node": "^18.15.11",
     "@types/css-font-loading-module": "^0.0.14",
     "terser-webpack-plugin": "^4.2.3",
     "underscore": "^1.12.1",
