@@ -12,7 +12,8 @@ describe("ViewState", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria
+      terria: terria,
+      catalogSearchProvider: undefined
     });
   });
 
