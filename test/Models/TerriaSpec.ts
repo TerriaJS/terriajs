@@ -1645,8 +1645,7 @@ describe("Terria", function () {
                     "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
                   subdomains: ["a", "b", "c", "d"],
                   opacity: 1.0
-                },
-                image: "/images/dark-matter.png"
+                }
               }
             ]
           }
