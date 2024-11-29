@@ -81,7 +81,8 @@ gulp.task("copy-cesium-workers", function () {
 
   return gulp
     .src([path.join(cesiumWorkersRoot, "**")], {
-      base: cesiumWorkersRoot
+      base: cesiumWorkersRoot,
+      encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
 });
@@ -95,7 +96,8 @@ gulp.task("copy-cesium-thirdparty", function () {
 
   return gulp
     .src([path.join(cesiumThirdPartyRoot, "**")], {
-      base: cesiumThirdPartyRoot
+      base: cesiumThirdPartyRoot,
+      encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
 });
@@ -109,7 +111,8 @@ gulp.task("copy-cesium-source-assets", function () {
 
   return gulp
     .src([path.join(cesiumAssetsRoot, "**")], {
-      base: cesiumAssetsRoot
+      base: cesiumAssetsRoot,
+      encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
 });

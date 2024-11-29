@@ -1,8 +1,22 @@
 # Change Log
 
-#### next release (8.7.10)
+#### next release (8.7.11)
 
 - [The next improvement]
+
+#### 8.7.10 - 2024-11-29
+
+- Add OpenStreetMap as a basemap option.
+- Update to node-notifier 10.0.1 to fix security vulnerabilities.
+- Remove unused ts-loader dependency.
+- Remove unused class-list dependency.
+- TSify `ConsoleAnalytics` module.
+- Update to gulp 5.0 to fix security vulnerabilities.
+  - Gulp 5 defaults to encoding copied files as utf-8, had turn off encoding by setting `encoding: false` to correctly copy binary assets from dependencies.
+- Update to dompurify 2.5.7 to fix security vulnerabilities.
+- Update to @mapbox/togeojson 0.16.2 to fix security vulnerabilities.
+- Remove unused simple-statistics dependency.
+- Update to pretty-quick 4.0.0 to fix security vulnerabilities.
 
 #### 8.7.9 - 2024-11-22
 

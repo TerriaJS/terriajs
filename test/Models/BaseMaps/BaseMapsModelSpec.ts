@@ -11,8 +11,7 @@ const baseMapPositron = {
       "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
     subdomains: ["a", "b", "c", "d"],
     opacity: 1.0
-  },
-  image: "/images/positron.png"
+  }
 };
 
 const baseMapDarkMatter = {
@@ -25,8 +24,7 @@ const baseMapDarkMatter = {
       "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
     subdomains: ["a", "b", "c", "d"],
     opacity: 1.0
-  },
-  image: "/images/dark-matter.png"
+  }
 };
 
 describe("BaseMapModel", () => {
