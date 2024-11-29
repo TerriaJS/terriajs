@@ -1,5 +1,5 @@
 "use strict";
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
 import { SpacingSpan } from "../../Styled/Spacing";
@@ -88,7 +88,7 @@ interface IProps {
   onClick?: (e?: any) => void;
 }
 
-const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
+const WorkbenchButton: FC<IProps> = (props: IProps) => {
   const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (

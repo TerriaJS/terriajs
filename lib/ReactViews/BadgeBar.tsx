@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode, FC } from "react";
 import { useTheme } from "styled-components";
 import { TextSpan } from "../Styled/Text";
 const Box = require("../Styled/Box").default;
@@ -6,9 +6,9 @@ const Box = require("../Styled/Box").default;
 interface IProps {
   label: string;
   badge?: number;
-  children: React.ReactNode;
+  children: ReactNode;
 }
-const BadgeBar: React.FC<IProps> = (props: IProps) => {
+const BadgeBar: FC<IProps> = (props: IProps) => {
   const theme = useTheme();
   return (
     <Box

@@ -1,8 +1,9 @@
-import React, {
+import {
   useEffect,
   useImperativeHandle,
   useState,
-  PropsWithChildren
+  PropsWithChildren,
+  forwardRef
 } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -38,7 +39,7 @@ export interface IShareUrlRef {
   shorteningInProgress: boolean;
 }
 
-export const ShareUrl = React.forwardRef<
+export const ShareUrl = forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(

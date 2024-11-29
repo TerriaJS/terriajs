@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -28,7 +28,7 @@ interface PropTypes extends WithTranslation {
 
 export const ZOOM_CONTROL_ID = "zoom";
 
-class ZoomControlBase extends React.Component<PropTypes> {
+class ZoomControlBase extends Component<PropTypes> {
   static displayName = "ZoomControl";
 
   flyToPosition(

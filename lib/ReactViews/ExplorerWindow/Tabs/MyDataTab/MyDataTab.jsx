@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { observer } from "mobx-react";
 
 import classNames from "classnames";
@@ -14,7 +14,7 @@ import DataCatalogMember from "../../../DataCatalog/DataCatalogMember";
 
 // My data tab include Add data section and preview section
 @observer
-class MyDataTab extends React.Component {
+class MyDataTab extends Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, { useCallback } from "react";
+import { FC, ChangeEvent, useCallback } from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import DateTimeParameter from "../../Models/FunctionParameters/DateTimeParameter";
 import Styles from "./parameter-editors.scss";
@@ -8,15 +8,15 @@ interface DateTimeParameterEditorProps {
   parameter: DateTimeParameter;
 }
 
-const DateTimeParameterEditor: React.FC<DateTimeParameterEditorProps> =
-  observer(({ parameter }) => {
+const DateTimeParameterEditor: FC<DateTimeParameterEditorProps> = observer(
+  ({ parameter }) => {
     const style =
       parameter?.value !== undefined
         ? Styles.field
         : Styles.fieldDatePlaceholder;
 
     const onDateTimeChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) =>
+      (e: ChangeEvent<HTMLInputElement>) =>
         parameter.setValue(CommonStrata.user, e.target.value),
       [parameter]
     );
@@ -31,6 +31,7 @@ const DateTimeParameterEditor: React.FC<DateTimeParameterEditorProps> =
         />
       </div>
     );
-  });
+  }
+);
 
 export default DateTimeParameterEditor;

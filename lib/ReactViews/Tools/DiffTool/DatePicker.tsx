@@ -1,19 +1,19 @@
-import { action, computed, observable, makeObservable } from "mobx";
+import dateFormat from "dateformat";
+import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import Icon, { StyledIcon } from "../../../Styled/Icon";
-import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
-import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
-import dateFormat from "dateformat";
+import Text, { TextSpan } from "../../../Styled/Text";
+import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
+import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 
 interface PropsType extends WithTranslation {
   heading: string;
@@ -23,7 +23,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class DatePicker extends React.Component<PropsType> {
+class DatePicker extends Component<PropsType> {
   @observable private isOpen = false;
 
   constructor(props: PropsType) {

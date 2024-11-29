@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { TFunction } from "i18next";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -27,7 +27,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
+class ChartExpandAndDownloadButtons extends Component<PropsType> {
   @observable sourceItems: ChartableMixin.Instance[] = [];
 
   constructor(props: PropsType) {
