@@ -12,7 +12,7 @@
 import { TFunction } from "i18next";
 import { computed, runInAction, when } from "mobx";
 import debounce from "lodash-es/debounce";
-import React from "react";
+import { Ref, PureComponent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -138,7 +138,7 @@ const StyledCompassRotationMarker = styled.div`
 type PropTypes = WithTranslation & {
   terria: Terria;
   viewState: ViewState;
-  refFromHOC?: React.Ref<HTMLDivElement>;
+  refFromHOC?: Ref<HTMLDivElement>;
   theme: DefaultTheme;
   t: TFunction;
 };
@@ -152,7 +152,7 @@ type IStateTypes = {
 };
 
 // the compass on map
-class Compass extends React.PureComponent<PropTypes, IStateTypes> {
+class Compass extends PureComponent<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;

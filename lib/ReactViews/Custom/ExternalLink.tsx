@@ -1,4 +1,10 @@
-import { AnchorHTMLAttributes, default as React } from "react";
+import {
+  ReactNode,
+  FC,
+  MouseEvent,
+  AnchorHTMLAttributes,
+  default as React
+} from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useViewState } from "../Context";
@@ -8,17 +14,17 @@ const { StyledIcon } = require("../../Styled/Icon");
 
 interface Props {
   attributes: AnchorHTMLAttributes<HTMLAnchorElement>;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const ExternalLinkWithWarning: React.FC<Props> = (props: {
+export const ExternalLinkWithWarning: FC<Props> = (props: {
   attributes: AnchorHTMLAttributes<HTMLAnchorElement>;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const viewState = useViewState();
   const { t } = useTranslation();
 
-  const onClick = (evt: React.MouseEvent) => {
+  const onClick = (evt: MouseEvent) => {
     evt.stopPropagation();
     evt.preventDefault();
     viewState.terria.notificationState.addNotificationToQueue({
