@@ -263,3 +263,4 @@ search provider values.
 | flightDurationSeconds | no       | **number**    | `1.5`                          | The duration of the camera flight to an entered location, in seconds.                             |
 | minCharacters         | no       | **number**    | 3                              | Minimum number of characters required for search to start                                         |
 | boundingBoxLimit      | no       | **Rectangle** | `Cesium.Rectangle.MAX_VALUE`   | Bounding box limits for the search results {west, south, east, north}                             |
+| showSearchInCatalog   | no       | **boolean**   | true                           | True to show "Search in Catalog" link in location search results.                                 |

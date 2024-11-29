@@ -3,9 +3,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
-import StratumFromTraits from "../../Definition/StratumFromTraits";
 import Terria from "../../Terria";
-import ModelTraits from "../../../Traits/ModelTraits";
 import UrlReferenceTraits from "../../../Traits/TraitsClasses/UrlReferenceTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -21,15 +19,6 @@ export default class UrlReference extends UrlMixin(
 
   get type() {
     return UrlReference.type;
-  }
-
-  constructor(
-    id: string | undefined,
-    terria: Terria,
-    sourceReference?: BaseModel,
-    strata?: Map<string, StratumFromTraits<ModelTraits>>
-  ) {
-    super(id, terria, sourceReference, strata);
   }
 
   protected forceLoadReference(

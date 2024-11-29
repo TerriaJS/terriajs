@@ -712,7 +712,8 @@
       "carto-v3": "Carto V3",
       "i3s": "I3S",
       "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
-      "cesium-ion": "Cesium ion"
+      "cesium-ion": "Cesium ion",
+      "cog": "Geotiff optimitzat al núvol (COG)"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
@@ -2090,6 +2091,9 @@
       "name": "Esri ArcGIS ImageServer",
       "invalidUrlMessage": "No s'ha pogut carregar el punt final de l'ArcGis ImageServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceMessage": "S'ha produït un error en invocar ArcGIS Image Service. La resposta del servidor no sembla ser un document Image Service vàlid."
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "Aquest COG no es està en una projecció nativa (EPG:4326 o EPSG:3857). La reprojecció és experimental i pot ser que no funcioni com s'esperava. Si teniu el control de les dades d'origen, us recomanem que torneu a projectar a EPSG:4326 o EPSG:3857 mitjançant GDAL o similar."
     }
   },
   "deltaTool": {

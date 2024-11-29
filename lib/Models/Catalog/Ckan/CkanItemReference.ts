@@ -388,7 +388,6 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     if (model === undefined) return;
-    _previousTarget = model;
     await this.setCkanStrata(model);
 
     model.setTrait(CommonStrata.definition, "name", this.name);

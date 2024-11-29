@@ -63,3 +63,6 @@ The following people have contributed to TerriaJS:
 - [J. Garcia](https://github.com/ctwhome)
 - [Yusuke Kiuchi](https://github.com/ykiu)
 - [Tomoyuki Hisada](https://github.com/hisayan)
+- [Peter A. Jonsson](https://github.com/pjonsson)
+- [Giovanni Lughi](https://github.com/glughi)
+- [Andrew Cleland](https://github.com/aclel)

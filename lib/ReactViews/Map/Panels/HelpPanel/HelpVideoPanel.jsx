@@ -34,10 +34,6 @@ class HelpVideoPanel extends React.Component {
     i18n: PropTypes.object.isRequired
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel
     const itemSelected =
