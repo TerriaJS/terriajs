@@ -113,6 +113,7 @@ const SidePanelButton = forwardRef<HTMLButtonElement, SidePanelButtonProps>(
       <Button
         primary
         ref={ref}
+        // eslint-disable-next-line react/prop-types
         renderIcon={props.children && (() => props.children)}
         textProps={{
           large: true

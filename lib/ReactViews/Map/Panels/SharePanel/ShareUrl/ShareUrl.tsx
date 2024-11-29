@@ -126,6 +126,7 @@ export const ShareUrl = forwardRef<
         id="share-url"
         rounded={rounded}
         onCopy={(text) =>
+          // eslint-disable-next-line react/prop-types
           terria.analytics?.logEvent(
             Category.share,
             ShareAction.storyCopy,
