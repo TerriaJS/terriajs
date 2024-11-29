@@ -7,6 +7,7 @@
 - Remove unused class-list dependency.
 - TSify `ConsoleAnalytics` module.
 - Update to gulp 5.0 to fix security vulnerabilities.
+  - Gulp 5 defaults to encoding copied files as utf-8, had turn off encoding by setting `encoding: false` to correctly copy binary assets from dependencies.
 - Update to dompurify 2.5.7 to fix security vulnerabilities.
 - Remove unused simple-statistics dependency.
 - Update to pretty-quick 4.0.0 to fix security vulnerabilities.
