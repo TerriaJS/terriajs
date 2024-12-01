@@ -1,6 +1,6 @@
 "use strict";
 
-var glob = require("glob-all");
+var glob = require("fast-glob");
 var configureWebpack = require("./configureWebpack");
 var path = require("path");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
