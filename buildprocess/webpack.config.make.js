@@ -1,3 +1,5 @@
+"use strict";
+
 var glob = require("glob-all");
 var configureWebpack = require("./configureWebpack");
 var path = require("path");
@@ -11,12 +13,13 @@ var testGlob = [
   "./test/Models/Experiment.ts"
 ];
 
-console.log(glob.sync(testGlob));
+const files = glob.sync(testGlob);
+console.log(files);
 module.exports = function (hot, dev) {
   const terriaJSBasePath = path.resolve(__dirname, "../");
   var config = {
     mode: dev ? "development" : "production",
-    entry: glob.sync(testGlob),
+    entry: files,
     output: {
       path: path.resolve(__dirname, "..", "wwwroot", "build"),
       filename: "TerriaJS-specs.js",
