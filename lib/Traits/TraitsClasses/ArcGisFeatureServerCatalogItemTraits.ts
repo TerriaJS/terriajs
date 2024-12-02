@@ -1,3 +1,5 @@
+import { JsonObject } from "../../Core/Json";
+import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
@@ -81,4 +83,11 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "Whether this feature service supports pagination. By default, this will be inferred from the server's response."
   })
   supportsPagination?: boolean;
+
+  @anyTrait({
+    name: "Parameters",
+    description:
+      "Additional parameters to pass to the ESRI Feature Server when requesting features."
+  })
+  parameters?: JsonObject;
 }

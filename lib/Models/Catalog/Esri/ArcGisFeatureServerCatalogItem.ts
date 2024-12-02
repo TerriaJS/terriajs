@@ -1,17 +1,20 @@
 import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import URI from "urijs";
+import { networkRequestError } from "../../../Core/TerriaError";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
+import Icon from "../../../Styled/Icon";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
@@ -31,13 +34,14 @@ import TablePointStyleTraits, {
 } from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import { ModelConstructorParameters } from "../../Definition/Model";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import updateModelFromJson from "../../Definition/updateModelFromJson";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { SelectableDimensionButton } from "../../SelectableDimensions/SelectableDimensions";
 
 const proj4 = require("proj4").default;
 
@@ -170,6 +174,9 @@ interface Extent {
   ymax: number;
   spatialReference?: SpatialReference;
 }
+
+// CRS to use in requests, eg for the inSR and outSR parameters
+const REQUEST_CRS = "4326";
 
 class FeatureServerStratum extends LoadableStratum(
   ArcGisFeatureServerCatalogItemTraits
@@ -596,7 +603,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       .addQuery("f", "json")
       .addQuery("where", where)
       .addQuery("outFields", "*")
-      .addQuery("outSR", "4326");
+      .addQuery("outSR", REQUEST_CRS);
 
     if (resultOffset !== undefined) {
       // Pagination specific parameters
@@ -605,7 +612,61 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         .addQuery("resultOffset", resultOffset);
     }
 
+    if (this.parameters) {
+      Object.entries(this.parameters).forEach(([name, value]) =>
+        uri.addQuery(name, value)
+      );
+    }
+
     return proxyCatalogItemUrl(this, uri.toString());
+  }
+
+  @override
+  get selectableDimensions() {
+    return [this.showCurrentViewButton, ...super.selectableDimensions];
+  }
+
+  /**
+   * A selectable dimension button to set WFS bbox to the current camera view
+   */
+  @computed
+  private get showCurrentViewButton(): SelectableDimensionButton {
+    return {
+      type: "button",
+      value: "Load features for current view",
+      icon: Icon.GLYPHS.refresh,
+      disable: !this.show,
+      setDimensionValue: (stratumId: string) => {
+        const cameraView = this.terria.currentViewer.getCurrentCameraView();
+        const bbox = this.bboxParam(cameraView.rectangle);
+        updateModelFromJson(this, stratumId, {
+          parameters: {
+            ...this.parameters,
+            spatialRel: "esriSpatialRelIntersects",
+            geometryType: "esriGeometryEnvelope",
+            geometry: bbox,
+            inSR: REQUEST_CRS // matches outSR setting buildEsriJsonUrl
+          },
+          idealZoom: { camera: cameraView.toJson() }
+        });
+        this.loadMapItems();
+      }
+    };
+  }
+
+  /**
+   * Return a WFS bbox parameter for the given rectangle
+   */
+  private bboxParam(rectangle: Rectangle) {
+    const west = CesiumMath.toDegrees(rectangle.west);
+    const north = CesiumMath.toDegrees(rectangle.north);
+    const east = CesiumMath.toDegrees(rectangle.east);
+    const south = CesiumMath.toDegrees(rectangle.south);
+    //const bboxCrs = "urn:ogc:def:crs:EPSG:4326";
+    const [xmin, xmax] = [east, west].sort();
+    const [ymin, ymax] = [north, south].sort();
+    const bbox = `${xmin},${ymin},${xmax},${ymax}`;
+    return bbox;
   }
 }
 
