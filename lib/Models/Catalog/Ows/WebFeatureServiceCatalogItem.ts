@@ -30,6 +30,11 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { SelectableDimensionButton } from "../../SelectableDimensions/SelectableDimensions";
+import Icon from "../../../Styled/Icon";
+import updateModelFromJson from "../../Definition/updateModelFromJson";
 
 export class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -492,6 +497,52 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       );
     }
     return undefined;
+  }
+
+  @override
+  //@ts-ignore - the dreaded TS2611, because GeoJsonMixin now includes
+  //ShadowMixin. Don't know what else to do here!
+  get selectableDimensions() {
+    return [this.showCurrentViewButton, ...super.selectableDimensions];
+  }
+
+  /**
+   * A selectable dimension button to set WFS bbox to the current camera view
+   */
+  @computed
+  private get showCurrentViewButton(): SelectableDimensionButton {
+    return {
+      type: "button",
+      value: "Load features for current view",
+      icon: Icon.GLYPHS.refresh,
+      disable: !this.show,
+      setDimensionValue: (stratumId: string) => {
+        const cameraView = this.terria.currentViewer.getCurrentCameraView();
+        updateModelFromJson(this, stratumId, {
+          parameters: {
+            ...this.parameters,
+            bbox: this.bboxParam(cameraView.rectangle)
+          },
+          idealZoom: { camera: cameraView.toJson() }
+        });
+        this.loadMapItems();
+      }
+    };
+  }
+
+  /**
+   * Return a WFS bbox parameter for the given rectangle
+   */
+  private bboxParam(rectangle: Rectangle) {
+    const west = CesiumMath.toDegrees(rectangle.west);
+    const north = CesiumMath.toDegrees(rectangle.north);
+    const east = CesiumMath.toDegrees(rectangle.east);
+    const south = CesiumMath.toDegrees(rectangle.south);
+    const bboxCrs = "urn:ogc:def:crs:EPSG:4326";
+    const [xmin, xmax] = [east, west].sort();
+    const [ymin, ymax] = [north, south].sort();
+    const bbox = `${ymin},${xmin},${ymax},${xmax},${bboxCrs}`;
+    return bbox;
   }
 }
 
