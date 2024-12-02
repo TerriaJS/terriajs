@@ -256,10 +256,8 @@ class FeatureServerStratum extends LoadableStratum(
         return undefined;
       }
 
-      // @ts-expect-error @types/proj4 doesn't define a constructor type
-      const source = new proj4.Proj((proj4definitions as any)[wkid]);
-      // @ts-expect-error @types/proj4 doesn't define a constructor type
-      const dest = new proj4.Proj("EPSG:4326");
+      const source = (proj4definitions as any)[wkid];
+      const dest = "EPSG:4326";
 
       let p = proj4(source, dest, [extent.xmin, extent.ymin]);
 
