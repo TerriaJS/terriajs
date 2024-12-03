@@ -136,6 +136,21 @@
       "description": "Suburbs and Localities 2021",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
+    "SAL_NAME_2021": {
+      "layerName": "SAL_2021",
+      "server": "https://tiles.terria.io/SAL_2021/{z}/{x}/{y}.pbf",
+      "serverType": "MVT",
+      "serverMaxNativeZoom": 12,
+      "serverMinZoom": 0,
+      "serverMaxZoom": 28,
+      "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-SAL_2021.json",
+      "uniqueIdProp": "FID",
+      "regionProp": "SAL_NAME_2021",
+      "nameProp": "SAL_NAME_2021",
+      "aliases": ["sal_name_2021", "sal_name"],
+      "description": "Suburbs and Localities 2021",
+      "bbox": [96.81, -43.74, 168.0, -9.14]
+    },
     "ADD_2021": {
       "layerName": "ADD_2021",
       "server": "https://tiles.terria.io/ADD_2021/{z}/{x}/{y}.pbf",
