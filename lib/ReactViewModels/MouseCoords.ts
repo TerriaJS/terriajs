@@ -81,13 +81,13 @@ export default class MouseCoords {
   }
 
   @action.bound
-  toggleUseProjection() {
+  toggleUseProjection(): void {
     this.useProjection = !this.useProjection;
     this.updateEvent.raiseEvent();
   }
 
   @action
-  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
+  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2): void {
     if (!terria.cesium) {
       return;
     }
@@ -190,7 +190,10 @@ export default class MouseCoords {
   }
 
   @action
-  updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
+  updateCoordinatesFromLeaflet(
+    terria: Terria,
+    mouseMoveEvent: MouseEvent
+  ): void {
     if (!terria.leaflet) {
       return;
     }
@@ -206,7 +209,7 @@ export default class MouseCoords {
   }
 
   @action
-  cartographicToFields(coordinates: Cartographic, errorBar?: number) {
+  cartographicToFields(coordinates: Cartographic, errorBar?: number): void {
     this.cartographic = Cartographic.clone(coordinates, scratchCartographic);
 
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
@@ -238,7 +241,7 @@ export default class MouseCoords {
   sampleAccurateHeight(
     terrainProvider: TerrainProvider,
     position: Cartographic
-  ) {
+  ): void {
     if (this.tileRequestInFlight) {
       // A tile request is already in flight, so reschedule for later.
       this.debounceSampleAccurateHeight.cancel();

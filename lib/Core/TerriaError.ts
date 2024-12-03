@@ -325,7 +325,7 @@ export default class TerriaError {
   }
 
   /** Print error to console */
-  log() {
+  log(): void {
     this.resolvedSeverity === TerriaErrorSeverity.Warning
       ? console.warn(this.toString())
       : console.error(this.toString());
@@ -467,7 +467,7 @@ export default class TerriaError {
     terria: Terria,
     errorOverrides?: TerriaErrorOverrides,
     forceRaiseToUser?: boolean
-  ) {
+  ): void {
     terria.raiseErrorToUser(this, errorOverrides, forceRaiseToUser);
   }
 }
