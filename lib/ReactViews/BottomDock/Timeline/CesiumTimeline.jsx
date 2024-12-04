@@ -1,4 +1,4 @@
-import Styles from "!style-loader!css-loader!sass-loader!./cesium-timeline.scss";
+import Styles from "./cesium-timeline.scss";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { autorun, runInAction } from "mobx";
@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-//import WrappedTimeline from "terriajs-cesium-widgets/Source/Timeline/Timeline";
+import WrappedTimeline from "terriajs-cesium-widgets/Source/Timeline/Timeline";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { formatDate, formatDateTime, formatTime } from "./DateFormats";
 
@@ -16,8 +16,6 @@ const CesiumTimeline = createReactClass({
   },
 
   componentDidMount() {
-    // TODO: fix timeline import
-    // eslint-disable-next-line
     this.cesiumTimeline = new WrappedTimeline(
       this.timelineContainer,
       this.props.terria.timelineClock
