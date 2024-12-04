@@ -38,7 +38,8 @@
 
   position: relative;
   margin: 0 variables.$padding-small;
-  padding: variables.$padding variables.$padding variables.$padding variables.$padding * 3;
+  padding: variables.$padding variables.$padding variables.$padding
+    variables.$padding * 3;
   width: auto;
   text-align: right;
   font-size: 0.95rem;

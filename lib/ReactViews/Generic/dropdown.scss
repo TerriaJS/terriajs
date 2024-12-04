@@ -9,7 +9,9 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   @include mixins.transform(scaleY(0));
-  @include mixins.transition(transform variables.$animation-fast cubic-bezier(0.19, 1, 0.22, 1));
+  @include mixins.transition(
+    transform variables.$animation-fast cubic-bezier(0.19, 1, 0.22, 1)
+  );
   @include mixins.transform-origin(center, top);
   position: absolute;
   min-width: 100%;
