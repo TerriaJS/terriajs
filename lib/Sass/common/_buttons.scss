@@ -163,12 +163,14 @@ $btn-setting-size: 35px;
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: variables.$padding variables.$padding * 2.2 variables.$padding variables.$padding * 1.5;
+    padding: variables.$padding variables.$padding * 2.2 variables.$padding
+      variables.$padding * 1.5;
     top: 0;
     font-size: variables.$font-size-mid-large;
     opacity: 0.5;
     @media (min-width: variables.$sm) {
-      padding: variables.$padding-small variables.$padding * 2.2 variables.$padding-small variables.$padding * 1.5;
+      padding: variables.$padding-small variables.$padding * 2.2
+        variables.$padding-small variables.$padding * 1.5;
     }
   }
   &:before {
@@ -192,7 +194,8 @@ $btn-setting-size: 35px;
 .btn--catalog-item {
   position: relative;
   width: 100%;
-  padding: variables.$padding-small variables.$padding * 2.2 variables.$padding-small variables.$padding * 1.5;
+  padding: variables.$padding-small variables.$padding * 2.2
+    variables.$padding-small variables.$padding * 1.5;
 
   &:focus,
   &:hover {
@@ -300,7 +303,8 @@ $btn-setting-size: 35px;
   &:before {
     color: variables.$color-primary;
     display: inline-block;
-    padding: variables.$padding-small variables.$padding-small variables.$padding-small 0;
+    padding: variables.$padding-small variables.$padding-small
+      variables.$padding-small 0;
   }
 }
 

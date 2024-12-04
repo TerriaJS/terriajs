@@ -27,7 +27,9 @@
   height: calc(100vh - #{variables.$workbench-header + variables.$logo-height});
 
   @media (max-width: variables.$sm) {
-    height: calc(100vh - #{variables.$mobile-header-height + variables.$modal-header-height});
+    height: calc(
+      100vh - #{variables.$mobile-header-height + variables.$modal-header-height}
+    );
   }
 }
 
