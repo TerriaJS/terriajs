@@ -31,20 +31,20 @@ import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
-
 import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
 
-const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
-const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
-const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
-const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
-const LatLonEnumDateIdWithRegionCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
-const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
-const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
-const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
-const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
+import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
+import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv";
+import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv";
+import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
+import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv";
+import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv";
+import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv";
+import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv";
+import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv";
+
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );

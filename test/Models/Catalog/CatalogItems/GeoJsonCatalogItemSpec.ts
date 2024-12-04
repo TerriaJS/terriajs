@@ -1,6 +1,6 @@
 import { reaction, runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
-import { CustomDataSource } from "terriajs-cesium";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
