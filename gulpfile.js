@@ -13,10 +13,7 @@ var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 gulp.task("build-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    true
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   runWebpack(webpack, webpackConfig, done);
 });
@@ -24,10 +21,7 @@ gulp.task("build-specs", function (done) {
 gulp.task("release-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    false
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(false);
 
   runWebpack(webpack, webpackConfig, done);
 });
@@ -35,10 +29,7 @@ gulp.task("release-specs", function (done) {
 gulp.task("watch-specs", function (done) {
   var watchWebpack = require("./buildprocess/watchWebpack");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    true
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   watchWebpack(webpack, webpackConfig, done);
 });
