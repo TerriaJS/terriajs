@@ -4,8 +4,10 @@ const path = require("path");
 const { IgnorePlugin } = require("webpack");
 
 module.exports = function () {
+  const devMode = true;
+
   const config = {
-    mode: "development",
+    mode: devMode ? "development" : "production",
     entry: {
       generateDocs: path.resolve(__dirname, "generateDocs.ts"),
       generateCatalogIndex: path.resolve(__dirname, "generateCatalogIndex.ts")
@@ -28,20 +30,28 @@ module.exports = function () {
     plugins: [
       new MiniCssExtractPlugin({
         filename: "TerriaJS.css",
-        disable: false,
         ignoreOrder: true
       }),
       // This is needed for a jsdom issue
-      new IgnorePlugin(/canvas/, /jsdom$/)
+      new IgnorePlugin({
+        resourceRegExp: /canvas/,
+        contextRegExp: /jsdom$/
+      })
     ]
   };
-  return configureWebpackForTerriaJS(
-    path.dirname(require.resolve("../package.json")),
-    config,
-    true,
-    // devMode,
-    // hot,
-    false,
-    MiniCssExtractPlugin
+
+  const babelLoader = require("./defaultBabelLoader")({ devMode });
+
+  // Transform to CJS for node (until we switch the library to ESM modules)
+  babelLoader.options.plugins.unshift(
+    "@babel/plugin-transform-modules-commonjs"
   );
+
+  return configureWebpackForTerriaJS({
+    terriaJSBasePath: path.dirname(require.resolve("../package.json")),
+    config,
+    devMode,
+    MiniCssExtractPlugin,
+    babelLoader
+  });
 };
