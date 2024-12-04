@@ -17,10 +17,10 @@ const isoCodes = JSON.stringify(
   require("../../../../wwwroot/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json")
 );
 
-const dataflowNoRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-noregion.csv");
-const dataflowRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region.csv");
-const dataflowRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region-time.csv");
-const dataflowSingleRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-single-region-time.csv");
+import dataflowNoRegionData from "../../../../wwwroot/test/SDMX-JSON/data-noregion.csv";
+import dataflowRegionData from "../../../../wwwroot/test/SDMX-JSON/data-region.csv";
+import dataflowRegionTimeData from "../../../../wwwroot/test/SDMX-JSON/data-region-time.csv";
+import dataflowSingleRegionTimeData from "../../../../wwwroot/test/SDMX-JSON/data-single-region-time.csv";
 
 const dataflowNoRegion = JSON.stringify(
   require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")

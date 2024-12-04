@@ -24,7 +24,7 @@ configure({
   computedRequiresReaction: true
 });
 
-const lga11Csv = require("raw-loader!../../../../wwwroot/test/csv/lga_code_2011.csv");
+import lga11Csv from "../../../../wwwroot/test/csv/lga_code_2011.csv";
 
 describe("YDYRCatalogFunction", function () {
   let terria: Terria;

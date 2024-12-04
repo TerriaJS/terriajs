@@ -19,7 +19,7 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
-const csv = require("raw-loader!../../../../wwwroot/test/csv_nongeo/x_height.csv");
+import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv";
 
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;

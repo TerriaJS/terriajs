@@ -2,7 +2,7 @@ import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatal
 import { runInAction } from "mobx";
 import Terria from "../../../../lib/Models/Terria";
 
-const latLonDateValueCsv = require("raw-loader!../../../../wwwroot/test/csv/lat_lon_date_value.csv");
+import latLonDateValueCsv from "../../../../wwwroot/test/csv/lat_lon_date_value.csv";
 const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
