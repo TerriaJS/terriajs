@@ -16,6 +16,8 @@ const CesiumTimeline = createReactClass({
   },
 
   componentDidMount() {
+    // TODO: fix timeline import
+    // eslint-disable-next-line
     this.cesiumTimeline = new WrappedTimeline(
       this.timelineContainer,
       this.props.terria.timelineClock
