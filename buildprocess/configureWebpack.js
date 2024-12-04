@@ -95,16 +95,16 @@ function configureWebpack({
   });
 
   // Remove Cesium debug mode checks in production. This might slightly improve performance.
-  // It is good to have it in devMode though, to discover issues with code
-  !devMode &&
-    config.module.rules.push({
-      test: /\.js$/,
-      include: path.resolve(
-        path.dirname(require.resolve("terriajs-cesium/package.json")),
-        "Source"
-      ),
-      use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
-    });
+  // TODO: It will be good to have it enabled in devMode though, to discover issues with code
+  // however doing so currently breaks a few specs.
+  config.module.rules.push({
+    test: /\.js$/,
+    include: path.resolve(
+      path.dirname(require.resolve("terriajs-cesium/package.json")),
+      "Source"
+    ),
+    use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
+  });
 
   // handle image imports
   config.module.rules.push({
