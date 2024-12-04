@@ -168,7 +168,7 @@
     "terriajs-cesium": "8.0.1",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "terriajs-tiff-imagery-provider": "2.13.3",
+    "terriajs-tiff-imagery-provider": "2.13.3-webpack5",
     "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "typescript": "~5.2.0",
@@ -221,7 +221,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "sass": "^1.79.1",
+    "sass": "^1.81.0",
     "terriajs-server": "^4.0.0",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
