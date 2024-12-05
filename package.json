@@ -6,6 +6,7 @@
   "engines": {
     "node": ">= 16.0.0"
   },
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
@@ -91,7 +92,7 @@
     "catalog-converter": "^0.0.9",
     "classnames": "^2.3.1",
     "clipboard": "^2.0.8",
-    "commander": "^11.1.0 ",
+    "commander": "^12.1.0 ",
     "copy-webpack-plugin": "^6.4.0",
     "core-js": "^3.1.4",
     "create-react-class": "^15.7.0",
@@ -168,7 +169,7 @@
     "terriajs-cesium": "8.0.1",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "terriajs-tiff-imagery-provider": "2.13.3-webpack5",
+    "terriajs-tiff-imagery-provider": "2.13.3-webpack5-1",
     "thredds-catalog-crawler": "0.0.7",
     "ts-essentials": "^5.0.0",
     "typescript": "~5.2.0",
