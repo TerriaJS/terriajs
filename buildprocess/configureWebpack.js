@@ -3,16 +3,15 @@ const CopyPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const webpack = require("webpack");
-const defaultBabelLoader = require("./defaultBabelLoader");
 
 /**
  * Supplements the given webpack config with options required to build TerriaJS
  *
- * @param terriaJSBasePath The TerriaJS source directory
- * @param config Base webpack configuration
- * @param devMode Set to `true` to generate for development build, default is `false`.
- * @param MiniCssExtractPlugin
- * @param babelLoader Optional babelLoader config, defaults to ./defaultBabelLoader.js
+ * @param [options.terriaJSBasePath] The TerriaJS source directory
+ * @param [options.config] Base webpack configuration
+ * @param [options.devMode] Set to `true` to generate for development build, default is `false`.
+ * @param [options.MiniCssExtractPlugin]
+ * @param [options.babelLoader] Optional babelLoader config, defaults to ./defaultBabelLoader.js
  */
 function configureWebpack({
   terriaJSBasePath,
@@ -50,6 +49,8 @@ function configureWebpack({
       require.resolve("terriajs-cesium/package.json"),
       ".."
     ),
+    // resolve import of 'cesium' from tiff-imagery-provider as 'terriajs-cesium'
+    cesium: path.resolve(require.resolve("terriajs-cesium/package.json"), ".."),
     ...config.resolve.alias
   };
   config.resolve.modules = config.resolve.modules || [];
@@ -267,5 +268,31 @@ function configureWebpack({
   config.resolve.alias["lodash"] = "lodash-es";
   return config;
 }
+
+const defaultBabelLoader = ({ devMode }) => ({
+  loader: "babel-loader",
+  options: {
+    cacheDirectory: true,
+    sourceMaps: !!devMode,
+    presets: [
+      [
+        "@babel/preset-env",
+        {
+          corejs: 3,
+          useBuiltIns: "usage"
+        }
+      ],
+      ["@babel/preset-react", { runtime: "automatic" }],
+      ["@babel/typescript", { allowNamespaces: true }]
+    ],
+    plugins: [
+      ["@babel/plugin-proposal-decorators", { legacy: true }],
+      "babel-plugin-styled-components"
+    ],
+    assumptions: {
+      setPublicClassFields: false
+    }
+  }
+});
 
 module.exports = configureWebpack;
