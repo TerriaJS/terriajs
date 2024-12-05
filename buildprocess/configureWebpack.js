@@ -49,8 +49,6 @@ function configureWebpack({
       require.resolve("terriajs-cesium/package.json"),
       ".."
     ),
-    // resolve import of 'cesium' from tiff-imagery-provider as 'terriajs-cesium'
-    cesium: path.resolve(require.resolve("terriajs-cesium/package.json"), ".."),
     ...config.resolve.alias
   };
   config.resolve.modules = config.resolve.modules || [];
