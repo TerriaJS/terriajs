@@ -1,11 +1,11 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 .filters {
   composes: clearfix from "../../../Sass/common/_base.scss";
-  padding: $padding 0;
-  border-bottom: 1px solid $border-color;
-  font-size: $font-size-mini;
+  padding: variables.$padding 0;
+  border-bottom: 1px solid variables.$border-color;
+  font-size: variables.$font-size-mini;
   label {
-    margin-right: $padding-small;
+    margin-right: variables.$padding-small;
     float: left;
     width: 80px;
   }

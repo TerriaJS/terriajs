@@ -1,15 +1,15 @@
-@import "~terriajs-variables";
-@import "../../../../Sass/common/mixins";
+@use "../../../../Sass/common/_variables";
+@use "../../../../Sass/common/mixins";
 @import url("https://fonts.googleapis.com/css?family=Nunito:600,800&display=swap");
 .help-panel {
-  font-family: $font-base;
+  font-family: variables.$font-base;
   width: 320px;
   height: 100%;
   color: #000;
   background-color: #fff;
   position: fixed;
   z-index: 110;
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -26,7 +26,7 @@
 }
 
 .video-panel {
-  font-family: $font-base;
+  font-family: variables.$font-base;
   width: 490px;
   height: 100%;
   color: #000;
@@ -36,7 +36,7 @@
   // right: 0px;
   top: 0px;
   z-index: 110;
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   &.isVisible {
@@ -60,10 +60,10 @@
 .tourBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   // color: $text-light;
-  font-size: $font-size-button;
-  padding: $padding $padding * 2;
+  font-size: variables.$font-size-button;
+  padding: variables.$padding variables.$padding * 2;
   // background-color: #519ac2;
-  border-radius: $padding * 2;
+  border-radius: variables.$padding * 2;
 
   min-width: 240px;
   text-align: center;
@@ -78,7 +78,7 @@
   }
 }
 
-@include keyframes(story-fade-in) {
+@include mixins.keyframes(story-fade-in) {
   0% {
     opacity: 0;
   }
@@ -86,7 +86,7 @@
     opacity: 1;
   }
 }
-@include keyframes(story-fade-out) {
+@include mixins.keyframes(story-fade-out) {
   0% {
     opacity: 1;
   }
@@ -95,25 +95,25 @@
   }
 }
 
-@include keyframes(story-slide-up) {
+@include mixins.keyframes(story-slide-up) {
   0% {
-    @include transform(translate(-50%, 0%));
+    @include mixins.transform(translate(-50%, 0%));
   }
   100% {
-    @include transform(translate(-50%, -50%));
+    @include mixins.transform(translate(-50%, -50%));
   }
 }
-@include keyframes(story-slide-down) {
+@include mixins.keyframes(story-slide-down) {
   0% {
-    @include transform(translate(-50%, -50%));
+    @include mixins.transform(translate(-50%, -50%));
   }
   100% {
-    @include transform(translate(-50%, 0%));
+    @include mixins.transform(translate(-50%, 0%));
   }
 }
 
 .link {
-  color: $color-primary;
+  color: variables.$color-primary;
 }
 
 .videoLink {
@@ -144,11 +144,11 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   opacity: 1;
-  @include animation("story-fade-in 0.3s");
+  @include mixins.animation("story-fade-in 0.3s");
 }
 
 .videoGuide {
-  box-shadow: $box-shadow;
+  box-shadow: variables.$box-shadow;
   margin: 0;
   width: 90%;
   height: 90%;
@@ -156,7 +156,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
-  @include transform(translate(0%, 5%));
+  @include mixins.transform(translate(0%, 5%));
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   margin: auto;

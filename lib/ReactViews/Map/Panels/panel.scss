@@ -1,13 +1,13 @@
-@import "~terriajs-variables";
-@import "../../../Sass/common/mixins";
+@use "../../../Sass/common/_variables";
+@use "../../../Sass/common/mixins";
 
 .panel {
   width: auto;
-  font-family: $font-base;
+  font-family: variables.$font-base;
 }
 
 .content {
-  composes: scrollbars from from "../../../Sass/common/_base.scss";
+  composes: scrollbars from "../../../Sass/common/_base.scss";
 
   max-height: calc(100vh - 150px);
   overflow-y: auto;
@@ -15,26 +15,26 @@
 }
 
 .inner {
-  @include transform(scale(0) translateZ(0));
-  @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
-  @include transform-origin(50%, top);
+  @include mixins.transform(scale(0) translateZ(0));
+  @include mixins.transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+  @include mixins.transform-origin(50%, top);
 
-  box-shadow: $box-shadow;
+  box-shadow: variables.$box-shadow;
   z-index: 20;
-  border-radius: $radius-small;
+  border-radius: variables.$radius-small;
   // background: $dark;
-  color: $text-light;
-  border: $border-style;
+  color: variables.$text-light;
+  border: variables.$border-style;
   max-width: calc(100vw - 10px);
 
   position: fixed;
-  top: $mobile-header-height;
+  top: variables.$mobile-header-height;
   left: 0;
   margin: 14px 5px 5px 5px;
 
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     position: absolute;
-    right: $padding * 2;
+    right: variables.$padding * 2;
     top: auto;
     bottom: auto;
     left: auto;
@@ -42,35 +42,35 @@
   }
 
   &.is-open {
-    @include transform(scale(1) translateZ(0));
+    @include mixins.transform(scale(1) translateZ(0));
   }
 
   &.show-dropdown-in-center {
-    @include transform(scale(0) translate3d(-50%, 0, 0));
+    @include mixins.transform(scale(0) translate3d(-50%, 0, 0));
   }
   &.is-open.show-dropdown-in-center {
-    @include transform(scale(1) translate3d(-50%, 0, 0));
+    @include mixins.transform(scale(1) translate3d(-50%, 0, 0));
   }
 
   &.show-dropdown-as-modal {
-    @include transform(translate3d(0, -300px, 0));
+    @include mixins.transform(translate3d(0, -300px, 0));
     opacity: 0;
   }
   &.is-open.show-dropdown-as-modal {
-    @include transform(translate3d(0, 0, 0));
+    @include mixins.transform(translate3d(0, 0, 0));
     opacity: 1;
   }
 
   button {
-    color: $text-light;
+    color: variables.$text-light;
   }
 }
 .inner-close-btn {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: $padding-small;
-  right: $padding-small;
+  top: variables.$padding-small;
+  right: variables.$padding-small;
 
   // &:hover,
   // &:focus {
@@ -104,27 +104,27 @@
   position: absolute;
   top: -10px;
   z-index: -1;
-  @include transform(rotate(45deg));
+  @include mixins.transform(rotate(45deg));
 }
 
 .label {
-  padding: $padding-small 0;
+  padding: variables.$padding-small 0;
   display: block;
 }
 
 .heading {
   composes: label;
-  padding: $padding-small 0;
-  font-size: $font-size-small;
+  padding: variables.$padding-small 0;
+  font-size: variables.$font-size-small;
 }
 
 .sub-heading {
   composes: label;
-  font-size: $font-size-mini;
+  font-size: variables.$font-size-mini;
 }
 
 .section {
-  padding: $padding-small;
+  padding: variables.$padding-small;
   display: block;
 }
 
@@ -164,7 +164,7 @@
 }
 .button-for-modal-dropdown {
   svg {
-    fill: $color-primary;
+    fill: variables.$color-primary;
   }
 }
 
@@ -177,5 +177,5 @@
 }
 
 .link {
-  @include link($dark);
+  @include mixins.link(variables.$dark);
 }

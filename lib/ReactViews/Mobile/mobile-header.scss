@@ -1,14 +1,14 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .ui {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: $mobile-header-height;
+  height: variables.$mobile-header-height;
   z-index: 102;
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     left: -99999px;
   }
 }
@@ -17,10 +17,10 @@
   composes: sm-hide from "../../Sass/common/_base.scss";
   composes: clearfix from "../../Sass/common/_base.scss";
   justify-content: space-between;
-  font-family: $font-pop;
+  font-family: variables.$font-pop;
   width: 100%;
-  background: $dark;
-  padding: $padding-small;
+  background: variables.$dark;
+  padding: variables.$padding-small;
   height: 100%;
   box-sizing: border-box;
 }
@@ -37,8 +37,9 @@
   composes: btn;
 
   position: relative;
-  margin: 0 $padding-small;
-  padding: $padding $padding $padding $padding * 3;
+  margin: 0 variables.$padding-small;
+  padding: variables.$padding variables.$padding variables.$padding
+    variables.$padding * 3;
   width: auto;
   text-align: right;
   font-size: 0.95rem;
@@ -46,16 +47,16 @@
 
   svg {
     position: absolute;
-    top: $padding;
-    left: calc($padding / 2);
+    top: variables.$padding;
+    left: calc(variables.$padding / 2);
     fill: #ffffff;
   }
 }
 
 .btn-search {
   composes: btn;
-  margin: 0 $padding-small;
-  padding: $padding-small;
+  margin: 0 variables.$padding-small;
+  padding: variables.$padding-small;
   position: relative;
   width: 40px;
   border-radius: 4px;
@@ -68,9 +69,9 @@
 
 .btn-now-viewing {
   composes: btn;
-  margin: 0 $padding-small;
-  padding: $padding-small;
-  padding-right: $padding;
+  margin: 0 variables.$padding-small;
+  padding: variables.$padding-small;
+  padding-right: variables.$padding;
   position: relative;
   width: 50px;
   svg {
@@ -80,8 +81,8 @@
   }
   .nowViewingCount {
     position: absolute;
-    top: $padding-small;
-    right: $padding-small;
+    top: variables.$padding-small;
+    right: variables.$padding-small;
   }
   .doubleDigit {
     font-size: 0.8rem;

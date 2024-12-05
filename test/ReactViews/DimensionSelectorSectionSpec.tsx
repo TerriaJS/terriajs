@@ -19,6 +19,7 @@ import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
@@ -178,7 +179,7 @@ describe("DimensionSelectorSection", function () {
     });
 
     jasmine.Ajax.stubRequest("test/csv/lga_code_2015.csv").andReturn({
-      responseText: require("raw-loader!../../wwwroot/test/csv/lga_code_2015.csv")
+      responseText: lgaCode2015
     });
 
     const csvItem = new CsvCatalogItem("some-csv", terria, undefined);

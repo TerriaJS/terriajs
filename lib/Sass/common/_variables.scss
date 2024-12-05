@@ -1,3 +1,4 @@
+@use "sass:meta";
 @use "sass:color";
 
 @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,400italic,600,700&display=swap");
@@ -47,13 +48,13 @@ $text-light-dimmed: #bbbbbb;
 // }
 // It would make sense to extend this approach to all text and button coloring.
 @function get-link-color($bg-color) {
-  @if variable-exists(text-link) {
+  @if meta.variable-exists(text-link) {
     @return $text-link;
   }
   @return $color-primary;
 }
 @function get-visited-link-color($bg-color) {
-  @if variable-exists(text-visited-link) {
+  @if meta.variable-exists(text-visited-link) {
     @return $text-visited-link;
   }
   @return get-link-color($bg-color);

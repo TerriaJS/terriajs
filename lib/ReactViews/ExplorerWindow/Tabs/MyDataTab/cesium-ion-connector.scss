@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../../../Sass/common/mixins";
+@use "../../../../Sass/common/_variables";
+@use "../../../../Sass/common/mixins";
 
 .connect-button {
   composes: btn from "../../../../Sass/common/_buttons.scss";
@@ -9,8 +9,8 @@
 }
 
 .token-warning {
-  color: $warning;
-  font-family: $font-base;
+  color: variables.$warning;
+  font-family: variables.$font-base;
   font-size: 0.9em;
 }
 

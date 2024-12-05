@@ -1,23 +1,23 @@
 @use "sass:color";
 
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .wrapper {
   composes: flex from "../../Sass/common/_base.scss";
-  color: $text-light;
-  font-family: $font-base;
+  color: variables.$text-light;
+  font-family: variables.$font-base;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: $notification-window-z-index;
+  z-index: variables.$notification-window-z-index;
   align-items: center;
   justify-content: center;
 
   a {
-    @include link($dark);
+    @include mixins.link(variables.$dark);
   }
   pre {
     display: block;
@@ -27,8 +27,8 @@
 }
 
 .notification {
-  border-radius: $radius-small;
-  border: 1px solid color.adjust($dark, $lightness: -3%);
+  border-radius: variables.$radius-small;
+  border: 1px solid color.adjust(variables.$dark, $lightness: -3%);
   // background: $dark;
   z-index: 300;
   pre {
@@ -56,9 +56,9 @@
 
 .inner {
   composes: scrollbars from "../../Sass/common/_base.scss";
-  padding: $padding $padding * 2;
+  padding: variables.$padding variables.$padding * 2;
   height: 100%;
-  max-height: calc(100vh - #{$input-height * 3});
+  max-height: calc(100vh - #{variables.$input-height * 3});
   overflow-y: auto;
   max-width: calc(100vw - 20px);
   box-sizing: border-box;
@@ -69,16 +69,16 @@
 }
 
 .body {
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
 }
 
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
-  padding: $padding;
+  padding: variables.$padding;
   background: rgba(#fff, 0.5);
   text-align: center;
   width: 100%;
-  font-size: $font-size-small;
-  color: $text-light;
-  border-radius: 0 0 $radius-small $radius-small;
+  font-size: variables.$font-size-small;
+  color: variables.$text-light;
+  border-radius: 0 0 variables.$radius-small variables.$radius-small;
 }

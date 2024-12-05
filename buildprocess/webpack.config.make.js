@@ -1,10 +1,13 @@
-var glob = require("glob-all");
-var configureWebpack = require("./configureWebpack");
-var path = require("path");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+/**
+ * Webpack config for building specs
+ */
 
-//var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = [
+const glob = require("glob-all");
+const configureWebpack = require("./configureWebpack");
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const testGlob = [
   "./test/SpecMain.ts",
   "./test/**/*Spec.ts",
   "./test/**/*Spec.tsx",
@@ -12,38 +15,21 @@ var testGlob = [
 ];
 
 console.log(glob.sync(testGlob));
-module.exports = function (hot, dev) {
+
+module.exports = function (devMode) {
   const terriaJSBasePath = path.resolve(__dirname, "../");
-  var config = {
-    mode: dev ? "development" : "production",
+
+  // base config for specs
+  const config = {
+    mode: devMode ? "development" : "production",
     entry: glob.sync(testGlob),
     output: {
       path: path.resolve(__dirname, "..", "wwwroot", "build"),
       filename: "TerriaJS-specs.js",
       publicPath: "build/"
     },
-    // devtool: 'source-map',
     // Use eval cheap module source map for quicker incremental tests
-    devtool: dev ? "eval-cheap-module-source-map" : "source-map",
-    module: {
-      rules: [
-        {
-          // Don't let jasmine-ajax detect require and import jasmine-core, because we bring
-          // in Jasmine via a script tag instead.
-          test: require.resolve("jasmine-ajax"),
-          loader: "imports-loader?require=>false"
-        }
-
-        // {
-        //   test: /\.(ts|js)x?$/,
-        //   include: [path.resolve(terriaJSBasePath, "lib")],
-        //   use: {
-        //     loader: "istanbul-instrumenter-loader"
-        //   },
-        //   enforce: "post"
-        // }
-      ]
-    },
+    devtool: devMode ? "eval-cheap-module-source-map" : "source-map",
     devServer: {
       stats: "minimal",
       port: 3002,
@@ -58,22 +44,28 @@ module.exports = function (hot, dev) {
     resolve: {
       alias: {},
       modules: ["node_modules"]
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        ignoreOrder: true
+      })
+    ],
+    module: {
+      rules: [
+        // handle imports of text fixtures from specs
+        {
+          test: /\.(csv|xml)$/i,
+          include: [path.resolve(terriaJSBasePath, "wwwroot", "test")],
+          type: "asset/source"
+        }
+      ]
     }
   };
 
-  config.plugins = [
-    new MiniCssExtractPlugin({
-      filename: "nationalmap.css",
-      disable: false,
-      ignoreOrder: true
-    })
-  ];
-  return configureWebpack(
+  return configureWebpack({
     terriaJSBasePath,
     config,
-    dev || hot,
-    hot,
-    MiniCssExtractPlugin,
-    true
-  );
+    devMode,
+    MiniCssExtractPlugin
+  });
 };

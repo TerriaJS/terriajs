@@ -1,15 +1,15 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .preview {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: $font-base;
-  font-size: $font-size-mid-small;
+  font-family: variables.$font-base;
+  font-size: variables.$font-size-mid-small;
 
-  @media (max-width: $sm) {
-    height: calc(100% - #{$mobile-modal-top-height});
+  @media (max-width: variables.$sm) {
+    height: calc(100% - #{variables.$mobile-modal-top-height});
     composes: scrollbars from "../../Sass/common/_base.scss";
     overflow: auto;
   }
@@ -17,14 +17,14 @@
 
 .placeholder {
   text-align: center;
-  color: $text-dark;
+  color: variables.$text-dark;
   padding-top: 80px;
 }
 
 .btn--back-to-map {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--tertiary from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .preview__inner {
@@ -33,8 +33,8 @@
   overflow-x: auto;
   composes: scrollbars from "../../Sass/common/_base.scss";
 
-  margin: 0 $padding-small;
-  padding: $padding * 2;
+  margin: 0 variables.$padding-small;
+  padding: variables.$padding * 2;
   position: relative;
   box-sizing: border-box;
 
@@ -42,7 +42,7 @@
     margin: 0;
   }
 
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     h3 {
       margin: 0.5em 0;
     }
@@ -52,7 +52,7 @@
 .preview-chart {
   padding-top: 10px;
   margin: 20px 0;
-  background: $modal-secondary-bg;
+  background: variables.$modal-secondary-bg;
 }
 
 .field {
@@ -62,7 +62,7 @@
 .h4 {
   composes: h4 from "../../Sass/common/_base.scss";
 
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .h3 {

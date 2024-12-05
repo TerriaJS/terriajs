@@ -1,11 +1,11 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 .story-panel {
-  font-family: $font-base;
+  font-family: variables.$font-base;
   flex-basis: 400px;
   max-width: 400px;
-  color: $text-light;
-  font-size: $font-size-mid-small;
+  color: variables.$text-light;
+  font-size: variables.$font-size-mid-small;
   // background: $dark;
   display: block;
   transition: all 0.25s;
@@ -19,7 +19,7 @@
     margin-right: -400px;
   }
   & .actions {
-    padding: $padding;
+    padding: variables.$padding;
   }
 }
 
@@ -28,19 +28,19 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   align-items: baseline;
-  padding-left: $padding-small + $padding;
-  padding-right: $padding-small + $padding;
-  padding-top: $padding-small;
-  padding-bottom: $padding-small;
-  color: $text-light;
-  height: $story-title-height;
-  line-height: $story-title-height;
-  border-bottom: 1px solid $overlay;
+  padding-left: variables.$padding-small + variables.$padding;
+  padding-right: variables.$padding-small + variables.$padding;
+  padding-top: variables.$padding-small;
+  padding-bottom: variables.$padding-small;
+  color: variables.$text-light;
+  height: variables.$story-title-height;
+  line-height: variables.$story-title-height;
+  border-bottom: 1px solid variables.$overlay;
   li {
     display: inline-block;
     float: left;
-    font-size: $font-size-mid-small;
-    font-weight: $font-weight-bold;
+    font-size: variables.$font-size-mid-small;
+    font-weight: variables.$font-weight-bold;
     &:last-child {
       float: right;
     }
@@ -50,13 +50,14 @@
 .hide-button {
   composes: btn from "../../Sass/common/_buttons.scss";
   // color: $text-light;
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   text-transform: uppercase;
-  padding: $padding $padding $padding 5 * $padding;
+  padding: variables.$padding variables.$padding variables.$padding 5 *
+    variables.$padding;
   border: 0;
   svg {
-    height: $font-size-mid-small;
-    width: $font-size-mid-small;
+    height: variables.$font-size-mid-small;
+    width: variables.$font-size-mid-small;
     // fill: $text-light;
     vertical-align: middle;
     display: inline-block;
@@ -74,7 +75,7 @@
 
 .header {
   & .actions {
-    border-bottom: 1px solid $overlay;
+    border-bottom: 1px solid variables.$overlay;
   }
 
   & .stories-actions {
@@ -93,11 +94,11 @@
 }
 
 .story {
-  padding: $padding-small;
-  margin: $padding-small;
+  padding: variables.$padding-small;
+  margin: variables.$padding-small;
   background: #667080;
   color: #ffffff;
-  margin: $padding;
+  margin: variables.$padding;
   border: 1px solid rgba(255, 255, 255, 0.15);
   h3 {
     font-weight: normal;
@@ -109,10 +110,10 @@
 .removeBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  margin-right: $padding;
+  margin-right: variables.$padding;
   background: #9ca1aa;
   border-radius: 4px;
-  padding: $padding-small $padding;
+  padding: variables.$padding-small variables.$padding;
   svg {
     height: 25px;
     width: 25px;
@@ -121,7 +122,7 @@
 }
 
 .footer {
-  padding: $padding;
+  padding: variables.$padding;
 }
 
 .previewBtn {
@@ -140,20 +141,20 @@
     height: 25px;
     fill: #ffffff;
     position: absolute;
-    left: $padding;
+    left: variables.$padding;
     top: 8px;
   }
 }
 
 .story:hover {
-  background-color: $dark-with-overlay;
+  background-color: variables.$dark-with-overlay;
 }
 
 .intro {
   // background: $dark-with-overlay;
   // color: $text-light;
-  font-family: $font-pop;
-  margin: $padding $padding 0 $padding;
+  font-family: variables.$font-pop;
+  margin: variables.$padding variables.$padding 0 variables.$padding;
   border-radius: 4px;
   text-align: center;
   padding: 30px 10px;
@@ -170,8 +171,8 @@
 }
 .remove-button {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: $text-light;
-  font-size: $font-size-mid-mini;
+  color: variables.$text-light;
+  font-size: variables.$font-size-mid-mini;
   padding: 0;
   svg {
     height: 12px;
@@ -185,24 +186,24 @@
 
 .tutBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: $text-light;
-  font-size: $font-size-button;
-  padding: $padding $padding * 2;
-  background: $overlay;
-  border-radius: $padding * 2;
-  margin-top: $padding;
+  color: variables.$text-light;
+  font-size: variables.$font-size-button;
+  padding: variables.$padding variables.$padding * 2;
+  background: variables.$overlay;
+  border-radius: variables.$padding * 2;
+  margin-top: variables.$padding;
 
   svg {
     height: 20px;
     width: 20px;
     margin: 0 4px;
-    fill: $faint-bg;
+    fill: variables.$faint-bg;
     vertical-align: bottom;
     display: inline-block;
   }
 }
 
-@include keyframes(story-fade-in) {
+@include mixins.keyframes(story-fade-in) {
   0% {
     opacity: 0;
   }
@@ -210,7 +211,7 @@
     opacity: 1;
   }
 }
-@include keyframes(story-fade-out) {
+@include mixins.keyframes(story-fade-out) {
   0% {
     opacity: 1;
   }
@@ -219,20 +220,20 @@
   }
 }
 
-@include keyframes(story-slide-up) {
+@include mixins.keyframes(story-slide-up) {
   0% {
-    @include transform(translate(-50%, 0%));
+    @include mixins.transform(translate(-50%, 0%));
   }
   100% {
-    @include transform(translate(-50%, -50%));
+    @include mixins.transform(translate(-50%, -50%));
   }
 }
-@include keyframes(story-slide-down) {
+@include mixins.keyframes(story-slide-down) {
   0% {
-    @include transform(translate(-50%, -50%));
+    @include mixins.transform(translate(-50%, -50%));
   }
   100% {
-    @include transform(translate(-50%, 0%));
+    @include mixins.transform(translate(-50%, 0%));
   }
 }
 .VideoGuideWrapper {
@@ -242,19 +243,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba($dark-with-overlay, 0.8);
+  background: rgba(variables.$dark-with-overlay, 0.8);
   opacity: 1;
-  @include animation("story-fade-in 0.3s");
+  @include mixins.animation("story-fade-in 0.3s");
 }
 .VideoGuideWrapper--closing {
-  @include animation("story-fade-out 0.3s");
+  @include mixins.animation("story-fade-out 0.3s");
   & > div {
-    @include animation("story-slide-down 0.3s");
+    @include mixins.animation("story-slide-down 0.3s");
   }
 }
 
 .videoGuide {
-  box-shadow: $box-shadow;
+  box-shadow: variables.$box-shadow;
   margin: 0;
   width: 40%;
   min-height: 31.5%;
@@ -265,8 +266,8 @@
   top: 40%;
   left: 50%;
   max-width: 100%;
-  @include transform(translate(-50%, -50%));
-  @include animation("story-slide-up 0.3s");
+  @include mixins.transform(translate(-50%, -50%));
+  @include mixins.animation("story-slide-up 0.3s");
 }
 .videoGuideRatio {
   padding-bottom: 58.5%;

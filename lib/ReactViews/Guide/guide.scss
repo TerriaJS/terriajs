@@ -1,8 +1,8 @@
-@import "~terriajs-variables";
+@use "../../Sass/common/_variables";
 
 .guide {
   position: relative;
-  background-color: $modal-bg;
+  background-color: variables.$modal-bg;
   // shadow from design
   // box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
   // box-shadow: $box-shadow;
@@ -15,7 +15,7 @@
 
   // width: 384px;
 
-  @media (max-width: $sm), (max-height: 540px) {
+  @media (max-width: variables.$sm), (max-height: 540px) {
     width: 100%;
     transform: none;
     left: 0;
@@ -28,7 +28,7 @@
 
 .image {
   height: 216px;
-  background-color: $faint-bg;
+  background-color: variables.$faint-bg;
 }
 .image-wrapper {
   width: 384px;
@@ -45,8 +45,8 @@
 
   box-sizing: border-box;
   // background-color: $modal-bg;
-  padding: $padding-small * 5;
-  color: $text-darker;
+  padding: variables.$padding-small * 5;
+  color: variables.$text-darker;
 
   // IE HACK!@!@!@!!@!@
   height: 243px;
@@ -71,35 +71,35 @@
 }
 .btn--tertiary {
   composes: btn--tertiary from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-button;
+  font-size: variables.$font-size-button;
 }
 .btn-next {
-  margin-left: $padding-small;
+  margin-left: variables.$padding-small;
 }
 
 .inner-close-btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: $padding-small * 3;
-  right: $padding-small * 3;
+  top: variables.$padding-small * 3;
+  right: variables.$padding-small * 3;
 
   padding: 7px;
 
-  background-color: $modal-bg;
+  background-color: variables.$modal-bg;
   border-radius: 50%;
 
   &:hover,
   &:focus {
     svg {
-      fill: $color-secondary;
+      fill: variables.$color-secondary;
     }
   }
 
   svg {
-    fill: $color-primary;
-    height: $padding;
-    width: $padding;
+    fill: variables.$color-primary;
+    height: variables.$padding;
+    width: variables.$padding;
   }
 }
 
@@ -115,13 +115,13 @@
   height: 7px;
   width: 7px;
 
-  background-color: $modal-bg;
-  border: 1px solid $color-primary;
+  background-color: variables.$modal-bg;
+  border: 1px solid variables.$color-primary;
 
   margin-right: 7px;
   border-radius: 50%;
 }
 
 .indicatorEnabled {
-  background-color: $color-primary;
+  background-color: variables.$color-primary;
 }

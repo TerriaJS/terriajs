@@ -3,7 +3,7 @@
 
 // This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
 // resolves back to our base one provided in terriajs
-@import "~terriajs-variables";
+@use "../common/_variables";
 
 :export {
   // TODO: find a better solution for this - some of these we need to provide as
@@ -28,49 +28,49 @@
 
   spacing: 5;
 
-  frontComponentZIndex: $front-component-z-index;
-  notificationWindowZIndex: $notification-window-z-index;
+  frontComponentZIndex: variables.$front-component-z-index;
+  notificationWindowZIndex: variables.$notification-window-z-index;
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radius40Button: 20;
-  radiusLarge: $radius-large;
-  radiusSmall: $radius-small;
+  radiusLarge: variables.$radius-large;
+  radiusSmall: variables.$radius-small;
 
-  overlay: $overlay;
-  overlayInvert: $overlay-invert;
+  overlay: variables.$overlay;
+  overlayInvert: variables.$overlay-invert;
 
   // Colours
-  colorPrimary: $color-primary;
-  colorSecondary: $color-secondary;
-  textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
-  textLightTranslucent: rgba($text-light, 0.3);
-  textLightDimmed: $text-light-dimmed;
-  textDark: $text-dark;
-  textDarker: $text-darker;
-  textBlack: $text-black;
-  turquoiseBlue: $turquoise-blue;
-  dark: $dark;
-  darkWithOverlay: $dark-with-overlay;
-  darkLighter: $dark-lighter;
-  grey: $grey;
-  greyLighter: $grey-lighter;
-  greyLighter2: $grey-lighter2;
-  greyLightest: $grey-lightest;
-  charcoalGrey: $charcoal-grey;
+  colorPrimary: variables.$color-primary;
+  colorSecondary: variables.$color-secondary;
+  textLight: variables.$text-light; // essentially #fff until we sort out the colour palette from vic
+  textLightTranslucent: rgba(variables.$text-light, 0.3);
+  textLightDimmed: variables.$text-light-dimmed;
+  textDark: variables.$text-dark;
+  textDarker: variables.$text-darker;
+  textBlack: variables.$text-black;
+  turquoiseBlue: variables.$turquoise-blue;
+  dark: variables.$dark;
+  darkWithOverlay: variables.$dark-with-overlay;
+  darkLighter: variables.$dark-lighter;
+  grey: variables.$grey;
+  greyLighter: variables.$grey-lighter;
+  greyLighter2: variables.$grey-lighter2;
+  greyLightest: variables.$grey-lightest;
+  charcoalGrey: variables.$charcoal-grey;
 
   // Fonts
-  fontPop: $font-pop;
-  fontBase: $font-base;
-  fontMono: $font-mono;
-  fontFeatureInfo: $font-feature-info;
-  font: $font;
+  fontPop: variables.$font-pop;
+  fontBase: variables.$font-base;
+  fontMono: variables.$font-mono;
+  fontFeatureInfo: variables.$font-feature-info;
+  font: variables.$font;
 
-  modalBg: $modal-bg;
-  modalText: $modal-text;
-  modalHighlight: $modal-highlight;
+  modalBg: variables.$modal-bg;
+  modalText: variables.$modal-text;
+  modalHighlight: variables.$modal-highlight;
 
   // TODO: fix, these are stopgaps & should get merged in with something else(?)
-  mapButtonColor: $map-button-color;
+  mapButtonColor: variables.$map-button-color;
   mapButtonTop: 18;
   mapNavigationTop: 80;
 
@@ -78,17 +78,17 @@
   workbenchWidth: 350;
   workflowPanelWidth: 350;
 
-  toolPrimaryColor: $tool-primary-color;
+  toolPrimaryColor: variables.$tool-primary-color;
 
   // Branding
-  logoHeight: $logo-height;
+  logoHeight: variables.$logo-height;
   logoPaddingVertical: 15px;
   logoPaddingHorizontal: 5px;
 
-  logoSmallHeight: $input-height;
+  logoSmallHeight: variables.$input-height;
   logoSmallPaddingHorizontal: 0;
   logoSmallPaddingVertical: 5px;
 
-  inputHeight: $input-height;
-  inputHeightLarge: $input-height-large;
+  inputHeight: variables.$input-height;
+  inputHeightLarge: variables.$input-height-large;
 }

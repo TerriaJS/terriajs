@@ -1,9 +1,10 @@
-var PluginError = require("plugin-error");
+const PluginError = require("plugin-error");
 
+/**
+ * Run webpack once and print out stats
+ */
 function runWebpack(webpack, config, doneCallback) {
-  // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
-  // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
-  var wp = webpack(config);
+  const wp = webpack(config);
   wp.run(function (err, stats) {
     if (stats) {
       // Fairly verbose output. See https://webpack.github.io/docs/node.js-api.html#stats-tojson for options.

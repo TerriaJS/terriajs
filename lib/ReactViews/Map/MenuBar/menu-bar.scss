@@ -1,11 +1,11 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .menu-bar {
   position: absolute;
   z-index: 108;
-  top: $map-button-top;
+  top: variables.$map-button-top;
   left: 0;
-  right: $padding;
+  right: variables.$padding;
 
   // todo: find some non-layout-change animation technique for
   // this flex-menu-bar-workbench problem
@@ -26,7 +26,8 @@
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: sm-show from "../../../Sass/common/_base.scss";
 
-  margin: 0 $padding-small $padding-small $padding-small;
+  margin: 0 variables.$padding-small variables.$padding-small
+    variables.$padding-small;
 
   /* Align About button with compass */
   // margin-right: 7px;
@@ -44,7 +45,7 @@
   flex-direction: row;
   align-items: center;
 
-  margin-right: $padding-tiny;
+  margin-right: variables.$padding-tiny;
 
   &:last-child {
     margin-right: 0;
@@ -57,20 +58,23 @@
   &:first-child > div > a,
   &:first-child > button,
   &:first-child > a {
-    border-radius: $map-button-border-radius 0 0 $map-button-border-radius;
+    border-radius: variables.$map-button-border-radius 0 0
+      variables.$map-button-border-radius;
   }
   &:last-child > div > button,
   &:last-child > div > a,
   &:last-child > button,
   &:last-child > a {
-    border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
+    border-radius: 0 variables.$map-button-border-radius
+      variables.$map-button-border-radius 0;
   }
   &:only-child > div > button,
   &:only-child > div > a,
   &:only-child > button,
   &:only-child > a {
-    border-radius: $map-button-border-radius $map-button-border-radius
-      $map-button-border-radius $map-button-border-radius;
+    border-radius: variables.$map-button-border-radius
+      variables.$map-button-border-radius variables.$map-button-border-radius
+      variables.$map-button-border-radius;
   }
 }
 

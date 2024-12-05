@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .full-screen {
   position: absolute;
@@ -13,10 +13,10 @@
 .minifiedFullscreenBtnWrapper {
   // work bench width
   left: 350px;
-  top: $map-button-top;
+  top: variables.$map-button-top;
 }
 .trainerBarVisible {
-  top: $map-button-top + $trainer-height;
+  top: variables.$map-button-top + variables.$trainer-height;
 }
 
 .btn {
@@ -39,13 +39,14 @@
   &,
   &:hover,
   &:focus {
-    border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
+    border-radius: 0 variables.$map-button-border-radius
+      variables.$map-button-border-radius 0;
     padding: 0;
-    padding-right: $padding-small;
+    padding-right: variables.$padding-small;
     box-shadow: none;
   }
   svg:not(:root) {
-    margin: auto $padding-small;
+    margin: auto variables.$padding-small;
   }
 }
 

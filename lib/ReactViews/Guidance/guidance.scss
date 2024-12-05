@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "../../Sass/common/_variables";
 
 .guidance {
   position: relative;
@@ -7,9 +7,9 @@
 .context {
   box-sizing: border-box;
   width: 256px;
-  background-color: $modal-bg;
+  background-color: variables.$modal-bg;
   padding: 16px;
-  color: $text-darker;
+  color: variables.$text-darker;
 
   min-height: 136px;
   border-radius: 4px;
@@ -33,7 +33,7 @@
   height: 2px;
   width: 8px;
   // border: 2px solid #519ac2;
-  background-color: $color-primary;
+  background-color: variables.$color-primary;
   opacity: 0.35;
   // margin-left: 8px;
 

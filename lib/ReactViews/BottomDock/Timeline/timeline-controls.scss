@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .controls {
   display: table-cell;
@@ -18,7 +18,7 @@
 
   &.is-active {
     svg {
-      fill: $color-primary;
+      fill: variables.$color-primary;
     }
   }
 }

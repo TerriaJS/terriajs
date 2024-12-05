@@ -1,21 +1,22 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
-@include empty-module("time-series-chart");
+@use "sass:meta";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
+@include mixins.empty-module("time-series-chart");
 
 .section {
   composes: clearfix from "../../Sass/common/_base.scss";
-  background: $feature-info-section-bg;
-  border-top: 1px solid $dark-lighter;
+  background: variables.$feature-info-section-bg;
+  border-top: 1px solid variables.$dark-lighter;
 }
 
 .title {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: $feature-info-btn-color;
+  color: variables.$feature-info-btn-color;
   position: relative;
   padding: 4px 30px 4px 8px;
   margin-right: 30px;
   width: 100%;
-  background: $feature-info-header-bg;
+  background: variables.$feature-info-header-bg;
   min-height: 40px;
   margin: 0;
   border: none;
@@ -23,7 +24,7 @@
   span {
     display: block;
     font-weight: 300;
-    font-size: $font-size-mid-small;
+    font-size: variables.$font-size-mid-small;
   }
   svg {
     height: 10px;
@@ -37,15 +38,15 @@
 }
 
 .content {
-  padding: $padding-small;
+  padding: variables.$padding-small;
   position: relative;
 
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
     @extend %clearfix;
-    font-family: $font-feature-info;
+    font-family: variables.$font-feature-info;
     max-width: 100%;
-    @if variable-exists(feature-info-table-width) {
+    @if meta.variable-exists(feature-info-table-width) {
       width: $feature-info-table-width;
     }
     border-collapse: collapse;
@@ -54,12 +55,12 @@
   td {
     position: relative;
     border-collapse: collapse;
-    border: $feature-info-table-border-style;
+    border: variables.$feature-info-table-border-style;
     padding: 5px;
   }
 
   tr:nth-child(odd) {
-    @if variable-exists(feature-info-table-odd-row-bg) {
+    @if meta.variable-exists(feature-info-table-odd-row-bg) {
       background-color: $feature-info-table-odd-row-bg;
     }
   }
