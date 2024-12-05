@@ -40,12 +40,24 @@ module.exports = function () {
     ]
   };
 
-  const babelLoader = require("./defaultBabelLoader")({ devMode });
-
-  // Transform to CJS for node (until we switch the library to ESM modules)
-  babelLoader.options.plugins.unshift(
-    "@babel/plugin-transform-modules-commonjs"
-  );
+  const babelLoader = {
+    loader: "babel-loader",
+    options: {
+      cacheDirectory: true,
+      sourceMaps: !!devMode,
+      presets: [
+        ["@babel/preset-react", { runtime: "automatic" }],
+        ["@babel/typescript", { allowNamespaces: true }]
+      ],
+      plugins: [
+        ["@babel/plugin-proposal-decorators", { legacy: true }],
+        "babel-plugin-styled-components"
+      ],
+      assumptions: {
+        setPublicClassFields: false
+      }
+    }
+  };
 
   return configureWebpackForTerriaJS({
     terriaJSBasePath: path.dirname(require.resolve("../package.json")),
