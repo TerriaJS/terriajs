@@ -313,7 +313,7 @@ describe("Catalog", function () {
 
     it("ignores properties filtered out by propertyFilter", function () {
       var serialized = catalog.serializeToJson({
-        propertyFilter: function (property, item) {
+        propertyFilter: function (property, _item) {
           return property !== "name";
         }
       });
