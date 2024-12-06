@@ -196,7 +196,7 @@ export default class WebFeatureServiceCapabilities {
   readonly featureTypes: FeatureType[];
   readonly srsNames: SrsNamesForLayer[] | undefined;
 
-  private constructor(xml: XMLDocument, json: any) {
+  private constructor(_xml: XMLDocument, json: any) {
     this.service = getService(json);
     this.outputTypes = getOutputTypes(json);
     this.featureTypes = getFeatureTypes(json);

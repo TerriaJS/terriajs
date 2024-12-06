@@ -66,7 +66,7 @@ class Tabs extends React.Component {
           .filter(
             (member) => member !== this.props.terria.catalog.userAddedDataGroup
           )
-          .map((member, i) => ({
+          .map((member, _i) => ({
             name: member.nameInCatalog,
             title: `data-catalog-${member.name}`,
             category: "data-catalog",

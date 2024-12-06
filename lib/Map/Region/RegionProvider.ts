@@ -282,7 +282,7 @@ export default class RegionProvider {
         ];
       }
       await Promise.all(this._loadRegionIDsPromises);
-    } catch (e) {
+    } catch (_e) {
       console.log(`Failed to load region IDS for ${this.regionType}`);
     } finally {
       runInAction(() => (this._loaded = true));

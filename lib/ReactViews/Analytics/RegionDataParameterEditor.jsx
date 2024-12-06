@@ -27,7 +27,7 @@ const RegionDataParameterEditor = createReactClass({
   },
 
   /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(_nextProps) {
     this.catalogItemDetails = {};
   },
 
@@ -190,7 +190,7 @@ const RegionDataParameterEditor = createReactClass({
       return (
         <div className={Styles.data}>
           <ul className={Styles.tree}>
-            {this.catalogItemsWithMatchingRegion().map((catalogItem, i) => (
+            {this.catalogItemsWithMatchingRegion().map((catalogItem, _i) => (
               <CatalogGroup
                 key={catalogItem.uniqueId}
                 text={catalogItem.name}
@@ -229,7 +229,7 @@ const RegionDataParameterEditor = createReactClass({
   renderItemChildren(catalogItem) {
     return (
       <ul className={Styles.tree}>
-        {catalogItem.regionMapping.tableStructure.columns.map((column, i) => {
+        {catalogItem.regionMapping.tableStructure.columns.map((column, _i) => {
           if (column.type === VarType.SCALAR) {
             return (
               <CatalogItem

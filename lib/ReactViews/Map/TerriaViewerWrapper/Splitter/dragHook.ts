@@ -23,7 +23,7 @@ try {
 
   window.addEventListener("test", callback, options);
   window.removeEventListener("test", callback, options);
-} catch (err) {
+} catch (_err) {
   /* eslint-disable-line no-empty */
 }
 

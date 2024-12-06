@@ -13,7 +13,7 @@ const BooleanParameterGroupEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object
   },
-  toggleDiv: function (divID, ev) {
+  toggleDiv: function (divID, _ev) {
     const thisDiv = document.getElementById(divID);
     if (thisDiv.style.display === "none") {
       thisDiv.style.display = "block";
@@ -21,7 +21,7 @@ const BooleanParameterGroupEditor = createReactClass({
       thisDiv.style.display = "none";
     }
   },
-  toggleAll: function (inputArgs, ev) {
+  toggleAll: function (inputArgs, _ev) {
     // if OneForAll selected, set the value of all BooleanParameters in
     // ParameterList to true, disable them,
     // else set the value of all BooleanParameters in ParameterList to

@@ -122,7 +122,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
     }
 
     function reportLoadError(
-      member: GroupAndMember,
+      _member: GroupAndMember,
       stats: CounterStats,
       path: string[]
     ) {
