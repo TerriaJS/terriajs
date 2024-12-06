@@ -1,9 +1,10 @@
-import { action, observable, reaction, makeObservable } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import markerIcon from "../../../../wwwroot/images/difference-pin.png";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";
@@ -117,7 +118,7 @@ function showMarker(terria: Terria, location: LatLonHeight) {
   addMarker(terria, {
     name: "User selection",
     location,
-    customMarkerIcon: require("../../../../wwwroot/images/difference-pin.png")
+    customMarkerIcon: markerIcon
   });
 }
 
