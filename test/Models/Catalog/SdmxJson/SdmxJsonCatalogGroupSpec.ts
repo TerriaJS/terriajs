@@ -4,21 +4,10 @@ import SdmxCatalogGroup from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCa
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
 
-const agencyScheme = JSON.stringify(
-  require("../../../../wwwroot/test/SDMX-JSON/agency-scheme.json")
-);
-
-const categoryScheme = JSON.stringify(
-  require("../../../../wwwroot/test/SDMX-JSON/category-scheme.json")
-);
-
-const dataflowNoRegion = JSON.stringify(
-  require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
-);
-
-const dataflowRegion = JSON.stringify(
-  require("../../../../wwwroot/test/SDMX-JSON/dataflow-region.json")
-);
+import agencyScheme from "../../../../wwwroot/test/SDMX-JSON/agency-scheme.json";
+import categoryScheme from "../../../../wwwroot/test/SDMX-JSON/category-scheme.json";
+import dataflowNoRegion from "../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json";
+import dataflowRegion from "../../../../wwwroot/test/SDMX-JSON/dataflow-region.json";
 
 describe("SdmxCatalogGroup", function () {
   let terria: Terria;
@@ -27,19 +16,19 @@ describe("SdmxCatalogGroup", function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest("http://www.example.com/agencyscheme/").andReturn({
-      responseText: agencyScheme
+      responseJSON: agencyScheme
     });
     jasmine.Ajax.stubRequest(
       "http://www.example.com/categoryscheme?references=parentsandsiblings"
-    ).andReturn({ responseText: categoryScheme });
+    ).andReturn({ responseJSON: categoryScheme });
 
     jasmine.Ajax.stubRequest(
       "http://www.example.com/dataflow/SPC/DF_COMMODITY_PRICES?references=all"
-    ).andReturn({ responseText: dataflowNoRegion });
+    ).andReturn({ responseJSON: dataflowNoRegion });
 
     jasmine.Ajax.stubRequest(
       "http://www.example.com/dataflow/SPC/DF_CPI?references=all"
-    ).andReturn({ responseText: dataflowRegion });
+    ).andReturn({ responseJSON: dataflowRegion });
 
     terria = new Terria();
     sdmxGroup = new SdmxCatalogGroup("test", terria);

@@ -11,9 +11,7 @@ import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetF
 import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml";
 import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
@@ -27,7 +25,7 @@ describe("SensorObservationServiceCatalogItem", function () {
     });
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
 
     item = new SensorObservationServiceCatalogItem("test", new Terria());
     item.setTrait(CommonStrata.user, "url", "https://sos.example.com");

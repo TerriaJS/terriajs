@@ -36,22 +36,18 @@ import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/Build
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "../../lib/Models/BaseMaps/defaultBaseMaps";
 
-const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
-const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
-
-const mapConfigV7Json = require("../../wwwroot/test/Magda/map-config-v7.json");
-const mapConfigV7String = JSON.stringify(mapConfigV7Json);
-
-const mapConfigInlineInitJson = require("../../wwwroot/test/Magda/map-config-inline-init.json");
-const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
-
-const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
-const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
-
-const mapConfigDereferencedNewJson = require("../../wwwroot/test/Magda/map-config-dereferenced-new.json");
-const mapConfigDereferencedNewString = JSON.stringify(
-  mapConfigDereferencedNewJson
-);
+import mapConfigBasicJson from "../../wwwroot/test/Magda/map-config-basic.json";
+import mapConfigV7Json from "../../wwwroot/test/Magda/map-config-v7.json";
+import mapConfigInlineInitJson from "../../wwwroot/test/Magda/map-config-inline-init.json";
+import mapConfigDereferencedJson from "../../wwwroot/test/Magda/map-config-dereferenced.json";
+import mapConfigDereferencedNewJson from "../../wwwroot/test/Magda/map-config-dereferenced-new.json";
+import magdaRecord1 from "../../wwwroot/test/Magda/shareKeys/6b24aa39-1aa7-48d1-b6a6-9e755aff4476.json";
+import magdaRecord2 from "../../wwwroot/test/Magda/shareKeys/bfc69476-1c85-4208-9046-4f736bab9b8e.json";
+import magdaRecord3 from "../../wwwroot/test/Magda/shareKeys/12f26f07-f39e-4753-979d-2de01af54bd1.json";
+import mapConfigOld from "../../wwwroot/test/Magda/shareKeys/map-config-example-old.json";
+import mapConfigNew from "../../wwwroot/test/Magda/shareKeys/map-config-example-new.json";
+import configProxy from "../../wwwroot/test/init/configProxy.json";
+import serverConfig from "../../wwwroot/test/init/serverconfig.json";
 
 // i18nOptions for CI
 const i18nOptions = {
@@ -147,34 +143,34 @@ describe("Terria", function () {
 
       jasmine.Ajax.stubRequest(/.*(serverconfig|proxyabledomains).*/).andReturn(
         {
-          responseText: JSON.stringify({ foo: "bar" })
+          responseJSON: { foo: "bar" }
         }
       );
 
       // from `terria.start()`
       jasmine.Ajax.stubRequest("test/Magda/map-config-basic.json").andReturn({
-        responseText: mapConfigBasicString
+        responseJSON: mapConfigBasicJson
       });
 
       jasmine.Ajax.stubRequest("test/Magda/map-config-v7.json").andReturn({
-        responseText: mapConfigV7String
+        responseJSON: mapConfigV7Json
       });
 
       // terria's "Magda derived url"
       jasmine.Ajax.stubRequest(
         /.*api\/v0\/registry\/records\/map-config-basic.*/
-      ).andReturn({ responseText: mapConfigBasicString });
+      ).andReturn({ responseJSON: mapConfigBasicJson });
 
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-inline-init.*/).andReturn({
-        responseText: mapConfigInlineInitString
+        responseJSON: mapConfigInlineInitJson
       });
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced.*/).andReturn({
-        responseText: mapConfigDereferencedString
+        responseJSON: mapConfigDereferencedJson
       });
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced-new.*/).andReturn({
-        responseText: mapConfigDereferencedNewString
+        responseJSON: mapConfigDereferencedNewJson
       });
     });
 
@@ -292,7 +288,7 @@ describe("Terria", function () {
 
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -314,7 +310,7 @@ describe("Terria", function () {
       it("works with basic initializationUrls", function (done) {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -345,7 +341,7 @@ describe("Terria", function () {
       it("works with v7initializationUrls", async function () {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         const groupName = "Simple converter test";
         jasmine.Ajax.stubRequest(
@@ -387,7 +383,7 @@ describe("Terria", function () {
       it("works with inline init", async function () {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigInlineInitString
+          responseJSON: mapConfigInlineInitJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -418,7 +414,7 @@ describe("Terria", function () {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigDereferencedString
+          responseJSON: mapConfigDereferencedJson
         });
         await terria
           .start({
@@ -936,31 +932,23 @@ describe("Terria", function () {
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/6b24aa39-1aa7-48d1-b6a6-9e755aff4476?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/6b24aa39-1aa7-48d1-b6a6-9e755aff4476.json")
-          )
+          responseJSON: magdaRecord1
         });
 
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/bfc69476-1c85-4208-9046-4f736bab9b8e?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/bfc69476-1c85-4208-9046-4f736bab9b8e.json")
-          )
+          responseJSON: magdaRecord2
         });
 
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/12f26f07-f39e-4753-979d-2de01af54bd1?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/12f26f07-f39e-4753-979d-2de01af54bd1.json")
-          )
+          responseJSON: magdaRecord3
         });
 
         jasmine.Ajax.stubRequest(configUrl).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/map-config-example-old.json")
-          )
+          responseJSON: mapConfigOld
         });
 
         await terria.start({
@@ -968,9 +956,7 @@ describe("Terria", function () {
           i18nOptions
         });
         jasmine.Ajax.stubRequest(configUrl).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/map-config-example-new.json")
-          )
+          responseJSON: mapConfigNew
         });
 
         await newTerria.start({
@@ -1119,14 +1105,10 @@ describe("Terria", function () {
     beforeEach(function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(/.*(test\/init\/configProxy).*/).andReturn({
-        responseText: JSON.stringify(
-          require("../../wwwroot/test/init/configProxy.json")
-        )
+        responseJSON: configProxy
       });
       jasmine.Ajax.stubRequest(/.*(serverconfig).*/).andReturn({
-        responseText: JSON.stringify(
-          require("../../wwwroot/test/init/serverconfig.json")
-        )
+        responseJSON: serverConfig
       });
     });
 
