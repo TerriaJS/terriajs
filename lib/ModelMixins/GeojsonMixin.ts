@@ -737,14 +737,14 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         this.useOutlineColorForLineFeatures;
 
       // Style function
-      const getColorValue = (z: number, f?: ProtomapsFeature) => {
+      const getColorValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return colorMap
           .mapValueToColor(isJsonNumber(rowId) ? rows?.[rowId] : null)
           .toCssColorString();
       };
 
-      const getOutlineWidthValue = (z: number, f?: ProtomapsFeature) => {
+      const getOutlineWidthValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return (
           (isConstantStyleMap(outlineStyleMap)
@@ -754,7 +754,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         );
       };
 
-      const getOutlineColorValue = (z: number, f?: ProtomapsFeature) => {
+      const getOutlineColorValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return (
           (isConstantStyleMap(outlineStyleMap)
@@ -765,7 +765,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       };
 
       // Filter features by time if applicable
-      const showFeature = (z: number, f?: ProtomapsFeature) =>
+      const showFeature = (_z: number, f?: ProtomapsFeature) =>
         !currentTimeRows ||
         (isJsonNumber(f?.props[FEATURE_ID_PROP]) &&
           currentTimeRows.includes(f?.props[FEATURE_ID_PROP] as number));

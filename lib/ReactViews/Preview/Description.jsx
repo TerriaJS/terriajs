@@ -105,7 +105,7 @@ class Description extends React.Component {
         {metadataUrls && metadataUrls.length > 0 && (
           <>
             <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-            {metadataUrls.map((metadataUrl, i) => (
+            {metadataUrls.map((metadataUrl, _i) => (
               <Box paddedVertically key={metadataUrl.url}>
                 <a
                   href={metadataUrl.url}
@@ -185,7 +185,7 @@ class Description extends React.Component {
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
                 {dataUrls.map(
-                  (dataUrl, i) =>
+                  (dataUrl, _i) =>
                     (dataUrl.type?.startsWith("wfs") ||
                       dataUrl.type?.startsWith("wcs")) && (
                       <>

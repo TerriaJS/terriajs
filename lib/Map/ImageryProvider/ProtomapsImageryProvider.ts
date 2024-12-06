@@ -498,8 +498,8 @@ export default class ProtomapsImageryProvider
   }
 
   async pickFeatures(
-    x: number,
-    y: number,
+    _x: number,
+    _y: number,
     level: number,
     longitude: number,
     latitude: number
@@ -715,7 +715,7 @@ export default class ProtomapsImageryProvider
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (zoom, feature) =>
+            filter: (_zoom, feature) =>
               feature.props?.[featureProp!] === featureId
           }
         ]

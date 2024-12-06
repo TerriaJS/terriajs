@@ -89,7 +89,7 @@ const renderStep = (
       </Box>
       <Box column>
         <Translation>
-          {(t, { i18n }) => (
+          {(_t, { i18n }) => (
             <Text textLight extraExtraLarge semiBold>
               {applyTranslationIfExists(step.title, i18n)}
             </Text>
