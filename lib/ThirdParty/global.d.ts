@@ -1,14 +1,6 @@
-declare module "*.DAC" {
-  const url: string;
-  export default url;
-}
-
-declare module "*.csv" {
-  const csv: string;
-  export default csv;
-}
-
-declare module "*.xml" {
-  const xml: string;
-  export default xml;
-}
+declare module "*.DAC";
+declare module "*.csv";
+declare module "*.xml";
+declare module "*.svg";
+declare module "*.png";
+declare module "*.jpg";
