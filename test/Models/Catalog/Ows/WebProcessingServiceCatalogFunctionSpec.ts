@@ -20,9 +20,8 @@ import StringParameter from "../../../../lib/Models/FunctionParameters/StringPar
 import Terria from "../../../../lib/Models/Terria";
 import "../../../SpecHelpers";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
@@ -61,7 +60,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
   });
 
   afterEach(function () {

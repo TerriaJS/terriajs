@@ -3,9 +3,7 @@ import { runInAction } from "mobx";
 import Terria from "../../../../lib/Models/Terria";
 
 import latLonDateValueCsv from "../../../../wwwroot/test/csv/lat_lon_date_value.csv";
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("CsvCatalogItem", function () {
   let terria: Terria;
@@ -17,7 +15,7 @@ describe("CsvCatalogItem", function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
   });
 
   afterEach(function () {
