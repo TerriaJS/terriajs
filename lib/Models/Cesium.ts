@@ -527,18 +527,18 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  getContainer() {
+  getContainer(): Element {
     return this.cesiumWidget.container;
   }
 
-  pauseMapInteraction() {
+  pauseMapInteraction(): void {
     ++this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 1) {
       this.scene.screenSpaceCameraController.enableInputs = false;
     }
   }
 
-  resumeMapInteraction() {
+  resumeMapInteraction(): void {
     --this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 0) {
       setTimeout(() => {
@@ -570,7 +570,7 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  destroy() {
+  destroy(): void {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
     this.scene.renderError.removeEventListener(this.onRenderError);
@@ -813,7 +813,7 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  stopObserving() {
+  stopObserving(): void {
     if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
       this._disposeWorkbenchMapItemsSubscription();
     }
@@ -948,7 +948,7 @@ export default class Cesium extends GlobeOrMap {
     return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
-  notifyRepaintRequired() {
+  notifyRepaintRequired(): void {
     this.pauser.notifyRepaintRequired();
   }
 
@@ -1292,7 +1292,7 @@ export default class Cesium extends GlobeOrMap {
   async pickFromScreenPosition(
     screenPosition: Cartesian2,
     ignoreSplitter: boolean
-  ) {
+  ): Promise<void> {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
@@ -1336,7 +1336,7 @@ export default class Cesium extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {
+  ): void {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
         latLngHeight.longitude,
@@ -1697,7 +1697,7 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
-  _selectFeature() {
+  _selectFeature(): void {
     const feature = this.terria.selectedFeature;
 
     this._highlightFeature(feature);
