@@ -24,7 +24,7 @@ describe("ArcGisPortalCatalogGroup", function () {
   let portalCatalogGroup: ArcGisPortalCatalogGroup;
   let portalServerStratum: ArcGisPortalStratum;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

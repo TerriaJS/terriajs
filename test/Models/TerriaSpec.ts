@@ -743,7 +743,7 @@ describe("Terria", function () {
     });
 
     describe("using story route", function () {
-      beforeEach(async function () {
+      beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with Karma runner
         terria.updateParameters({
@@ -1465,7 +1465,7 @@ describe("Terria", function () {
       });
     });
 
-    describe("Enable/disable shorten share URL via init data", async function () {
+    describe("Enable/disable shorten share URL via init data", function () {
       beforeEach(function () {
         window.localStorage.clear();
       });
@@ -1751,7 +1751,7 @@ describe("Terria", function () {
     describe("behaviour of `initialCamera.focusWorkbenchItems`", function () {
       let container: HTMLElement;
 
-      beforeEach(async function () {
+      beforeEach(function () {
         jasmine.Ajax.install();
 
         // Attach cesium viewer and wait for it to be loaded

@@ -54,7 +54,7 @@ describe("SdmxCatalogGroup", function () {
   });
 
   describe("after loading agency + category schemes", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         sdmxGroup.setTrait("definition", "url", "http://www.example.com");
       });
