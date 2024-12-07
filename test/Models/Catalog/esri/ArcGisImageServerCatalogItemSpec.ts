@@ -50,7 +50,7 @@ describe("ArcGisImageServer", function () {
   let terria: Terria;
   let imageServerItem: ArcGisImageServerCatalogItem;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     spyOnLoad = spyOn(loadWithXhr as any, "load").and.callThrough();
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(/.*/).andCallFunction((r) => {
@@ -219,7 +219,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       console.log(imageServerItem);
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
@@ -240,7 +240,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.wkid).toBe(102100);
     });
 
-    it("creates legend", async function () {
+    it("creates legend", function () {
       expect(imageServerItem.legends.length).toBe(1);
       expect(imageServerItem.legends[0].items.length).toBe(3);
       expect(imageServerItem.legends[0].items[0].imageUrl).toBe(
@@ -262,7 +262,7 @@ describe("ArcGisImageServer", function () {
       );
     });
 
-    it("creates time intervals", async function () {
+    it("creates time intervals", function () {
       expect(imageServerItem.startTime).toBe("1981-12-31T00:00:00.000000000Z");
       expect(imageServerItem.stopTime).toBe("2021-12-30T16:48:00.000000000Z");
       expect(imageServerItem.currentDiscreteTimeTag).toBe(
@@ -271,7 +271,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.discreteTimes?.length).toBe(482);
     });
 
-    it("Sets `time` parameter", async function () {
+    it("Sets `time` parameter", function () {
       let imageryProvider = imageServerItem.mapItems[0]
         .imageryProvider as ArcGisImageServerImageryProvider;
 
@@ -298,7 +298,7 @@ describe("ArcGisImageServer", function () {
       });
     });
 
-    it("creates next imagery provider", async function () {
+    it("creates next imagery provider", function () {
       const time = imageServerItem.discreteTimes?.[100]?.time ?? "";
       const nextTime = imageServerItem.discreteTimes?.[101]?.time ?? "";
 
@@ -334,7 +334,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
       expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
@@ -409,7 +409,7 @@ describe("ArcGisImageServer", function () {
       disposer();
     });
 
-    it("has raster functions", async function () {
+    it("has raster functions", function () {
       expect(imageServerItem.availableRasterFunctions.length).toBe(3);
       expect(imageServerItem.availableRasterFunctions[0].name).toBe(
         "RFTAspectColor"
@@ -489,7 +489,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
       expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
@@ -509,7 +509,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.wkid).toBe(102100);
     });
 
-    it("disables tile if parameters", async function () {
+    it("disables tile if parameters", function () {
       runInAction(() =>
         imageServerItem.setTrait(CommonStrata.definition, "parameters", {
           foo: "bar"
@@ -518,7 +518,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.usePreCachedTiles).toBe(false);
     });
 
-    it("disables tile if renderRule", async function () {
+    it("disables tile if renderRule", function () {
       runInAction(() =>
         imageServerItem.setTrait(
           CommonStrata.user,
@@ -577,7 +577,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("dynamic web mercator", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/time/ImageServer",
         token: "fakeToken",
@@ -639,7 +639,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("dynamic wgs84", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/time/ImageServer",
         token: "fakeToken",
@@ -709,7 +709,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("tiled web mercator", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/tile/ImageServer",
         token: "fakeToken",

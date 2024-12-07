@@ -95,15 +95,15 @@ describe("SenapsLocationsCatalogItem", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  describe("Can not get any items without base url", async function () {
-    beforeEach(async function () {
+  describe("Can not get any items without base url", function () {
+    beforeEach(function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
       });
     });
 
     it("- fail to construct locations url", async function () {
-      async function foundError() {
+      function foundError() {
         let errorMessage: string = "";
         try {
           item._constructLocationsUrl();
@@ -117,7 +117,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
 
     it("- fail to construct streams url", async function () {
-      async function foundError() {
+      function foundError() {
         let errorMessage: string = "";
         try {
           item._constructStreamsUrl("123");
@@ -131,7 +131,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get all items via implicitly specified proxy", async function () {
+  describe("Can get all items via implicitly specified proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -182,7 +182,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get all items via default proxy", async function () {
+  describe("Can get all items via default proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -233,7 +233,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get filtered items via default proxy", async function () {
+  describe("Can get filtered items via default proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -267,18 +267,18 @@ describe("SenapsLocationsCatalogItem", function () {
       );
     });
 
-    it("- only retrieves matching features", async function () {
+    it("- only retrieves matching features", function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData.type).toEqual("FeatureCollection");
       expect(geoJsonData.features.length).toEqual(1);
     });
 
-    it("- only retrieves matching streams", async function () {
+    it("- only retrieves matching streams", function () {
       expect(feature.properties.streamIds.length).toEqual(1);
     });
   });
 
-  describe("Can get filtered items via implicitly specified alternative proxy", async function () {
+  describe("Can get filtered items via implicitly specified alternative proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -312,13 +312,13 @@ describe("SenapsLocationsCatalogItem", function () {
       );
     });
 
-    it("- only retrieves matching features", async function () {
+    it("- only retrieves matching features", function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData.type).toEqual("FeatureCollection");
       expect(geoJsonData.features.length).toEqual(1);
     });
 
-    it("- only retrieves matching streams", async function () {
+    it("- only retrieves matching streams", function () {
       expect(feature.properties.streamIds.length).toEqual(1);
     });
   });

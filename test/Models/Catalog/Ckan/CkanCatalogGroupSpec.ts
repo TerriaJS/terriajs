@@ -33,7 +33,7 @@ describe("CkanCatalogGroup", function () {
   let ckanCatalogGroup: CkanCatalogGroup;
   let ckanServerStratum: CkanServerStratum;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -193,7 +193,7 @@ describe("CkanCatalogGroup", function () {
     });
   });
   describe("with item naming using", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -287,7 +287,7 @@ describe("CkanCatalogGroup", function () {
   });
 
   describe("filters resources according to supportedResourceFormats", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -503,7 +503,7 @@ describe("CkanCatalogGroup", function () {
   });
 
   describe("allowEntireWmsServers", () => {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -574,7 +574,7 @@ describe("CkanCatalogGroup", function () {
   });
 
   describe("excludeInactiveDatasets", () => {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -613,7 +613,7 @@ describe("CkanCatalogGroup", function () {
   });
 
   describe("when `resourceIdTemplate` is given", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",

@@ -698,7 +698,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -928,7 +928,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1105,7 +1105,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1135,7 +1135,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1190,7 +1190,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1237,7 +1237,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1408,7 +1408,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1563,7 +1563,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       let terria: Terria;
       let geojson: GeoJsonCatalogItem;
 
-      beforeEach(async function () {
+      beforeEach(function () {
         terria = new Terria({
           baseUrl: "./"
         });

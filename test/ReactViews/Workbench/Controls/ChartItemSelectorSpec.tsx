@@ -65,7 +65,7 @@ describe("ChartItemSelector", function () {
   let item: SomeChartableItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

@@ -22,7 +22,7 @@ describe("MapboxVectorTileCatalogItem", function () {
   describe("imageryProvider", function () {
     let imageryProvider: ProtomapsImageryProvider;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       mvt.setTrait(CommonStrata.user, "url", "http://test");
       mvt.setTrait(CommonStrata.user, "layer", "test-layer");
     });
@@ -89,7 +89,7 @@ describe("MapboxVectorTileCatalogItem", function () {
   describe("paint rules", function () {
     it(
       "creates paint rules from simple styles",
-      action(async function () {
+      action(function () {
         mvt.setTrait(CommonStrata.user, "fillColor", "red");
         mvt.setTrait(CommonStrata.user, "lineColor", "yellow");
         mvt.setTrait(CommonStrata.user, "layer", "Test");

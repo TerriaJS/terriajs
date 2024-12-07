@@ -9,7 +9,7 @@ const wmsGetCapabilitiesXml = require("raw-loader!../../wwwroot/test/WMS/wms_crs
 describe("ExportWebCoverageServiceMixin", function () {
   let terria: Terria;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

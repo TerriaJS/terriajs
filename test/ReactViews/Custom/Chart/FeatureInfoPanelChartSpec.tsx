@@ -24,7 +24,7 @@ const csv = require("raw-loader!../../../../wwwroot/test/csv_nongeo/x_height.csv
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     const terria = new Terria();
     const catalogItem = new CsvCatalogItem("test", terria, undefined);
     catalogItem.setTrait(

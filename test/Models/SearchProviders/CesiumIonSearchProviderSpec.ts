@@ -21,7 +21,7 @@ describe("CesiumIonSearchProvider", () => {
   let terria: Terria;
   let searchProvider: CesiumIonSearchProvider;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

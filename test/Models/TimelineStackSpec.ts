@@ -23,11 +23,11 @@ describe("TimelineStack", function () {
     terria.timelineStack.deactivate();
   });
 
-  it(" - is populated with items", async function () {
+  it(" - is populated with items", function () {
     expect(terria.timelineStack.items.length).toBe(1);
   });
 
-  it(" - contains method works", async function () {
+  it(" - contains method works", function () {
     expect(terria.timelineStack.contains(wms)).toBe(true);
   });
 

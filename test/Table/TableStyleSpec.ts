@@ -36,7 +36,7 @@ const YouthUnEmployCsv = require("raw-loader!../../wwwroot/test/csv/youth-unempl
 describe("TableStyle", function () {
   let terria: Terria;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -72,7 +72,7 @@ describe("TableStyle", function () {
   describe(" - Scalar", function () {
     let csvItem: CsvCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       csvItem = new CsvCatalogItem("SmallCsv", terria, undefined);
     });
 
@@ -400,7 +400,7 @@ describe("TableStyle", function () {
       expect(activeStyle.colorMap instanceof EnumColorMap).toBeTruthy();
     });
 
-    describe(" - applies zScoreFilter, outlierColor and minimumValue/maximumValue correctly", async function () {
+    describe(" - applies zScoreFilter, outlierColor and minimumValue/maximumValue correctly", function () {
       beforeEach(async function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           csvString: SedCsv,
@@ -418,7 +418,7 @@ describe("TableStyle", function () {
         await csvItem.activeTableStyle.regionColumn?.regionType?.loadRegionIDs();
       });
 
-      it(" - should expect no filter applied", async function () {
+      it(" - should expect no filter applied", function () {
         expect(
           csvItem.activeTableStyle.colorColumn?.valuesAsNumbers.minimum
         ).toBe(0);
@@ -442,7 +442,7 @@ describe("TableStyle", function () {
         expect(csvItem.legends[0].items.length).toBe(7);
       });
 
-      it(" - Change zScoreFilter and rangeFilter - should also expect not to be applied", async function () {
+      it(" - Change zScoreFilter and rangeFilter - should also expect not to be applied", function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           defaultStyle: {
             color: {
@@ -468,7 +468,7 @@ describe("TableStyle", function () {
         expect(csvItem.legends[0].items.length).toBe(7);
       });
 
-      it(" - Change zScoreFilter and rangeFilter again - should be applied this time", async function () {
+      it(" - Change zScoreFilter and rangeFilter again - should be applied this time", function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           defaultStyle: {
             color: {
@@ -507,7 +507,7 @@ describe("TableStyle", function () {
         );
       });
 
-      it(" - Set colorTraits.minimumValue to disable zScoreFilter", async function () {
+      it(" - Set colorTraits.minimumValue to disable zScoreFilter", function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           defaultStyle: {
             color: {
@@ -536,7 +536,7 @@ describe("TableStyle", function () {
         );
       });
 
-      it(" - Set colorTraits.maximumValue to disable zScoreFilter", async function () {
+      it(" - Set colorTraits.maximumValue to disable zScoreFilter", function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           defaultStyle: {
             color: {
@@ -565,7 +565,7 @@ describe("TableStyle", function () {
         );
       });
 
-      it(" - Now if we set min/max outside range, then colorMap.outlierColor should be undefined", async function () {
+      it(" - Now if we set min/max outside range, then colorMap.outlierColor should be undefined", function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           defaultStyle: {
             color: {
@@ -615,7 +615,7 @@ describe("TableStyle", function () {
   describe(" - Enum", function () {
     let csvItem: CsvCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       csvItem = new CsvCatalogItem("SmallCsv", terria, undefined);
     });
 

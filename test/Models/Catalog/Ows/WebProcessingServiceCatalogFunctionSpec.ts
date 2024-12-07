@@ -122,13 +122,13 @@ describe("WebProcessingServiceCatalogFunction", function () {
       disposeMapItems();
     });
 
-    it("makes a POST request to the Execute endpoint", async function () {
+    it("makes a POST request to the Execute endpoint", function () {
       expect(job.identifier).toBe("someId");
       // expect(job.).toMatch(/geometry=/);
       expect(job.jobStatus).toBe("finished");
     });
 
-    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function () {
+    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", function () {
       runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
 
       expect(job.identifier).toBe("someId");
@@ -137,7 +137,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       expect(job.jobStatus).toBe("finished");
     });
 
-    it("adds a ResultPendingCatalogItem to the workbench", async function () {
+    it("adds a ResultPendingCatalogItem to the workbench", function () {
       expect(job.inWorkbench).toBeTruthy();
     });
   });
@@ -161,11 +161,11 @@ describe("WebProcessingServiceCatalogFunction", function () {
       dispose();
     });
 
-    it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function () {
+    it("adds a WebProcessingServiceCatalogFunctionJob to workbench", function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 
-    it("adds result to workbench", async function () {
+    it("adds result to workbench", function () {
       expect(job.results.length).toBe(2);
       expect(MappableMixin.isMixedInto(job.results[0])).toBeTruthy();
       expect(MappableMixin.isMixedInto(job.results[1])).toBeTruthy();
@@ -173,21 +173,21 @@ describe("WebProcessingServiceCatalogFunction", function () {
       expect(job.results[1].inWorkbench).toBeTruthy();
     });
 
-    it("adds a new catalog member for the output", async function () {
+    it("adds a new catalog member for the output", function () {
       expect(job.results[0].type).toBe(CsvCatalogItem.type);
     });
 
-    it("adds a short report", async function () {
+    it("adds a short report", function () {
       expect(job.shortReportSections[0].content).toBe(
         "Chart Vegetation Cover generated."
       );
     });
-    it("returns mapItems", async function () {
+    it("returns mapItems", function () {
       expect(job.mapItems.length).toBe(1);
       expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
     });
 
-    it("defines a rectangle", async function () {
+    it("defines a rectangle", function () {
       expect(job.rectangle).toBeDefined();
     });
   });
