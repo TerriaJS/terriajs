@@ -631,8 +631,8 @@ export default class OpenDataSoftCatalogItem
           ([field, value]) => {
             // geoPoint2dFieldName will return a JSON object - spilt lat/lon columns
             if (field === this.geoPoint2dFieldName && isJsonObject(value)) {
-              cols.lat[index] = `${value.lat}` ?? "";
-              cols.lon[index] = `${value.lon}` ?? "";
+              cols.lat[index] = `${value.lat}`;
+              cols.lon[index] = `${value.lon}`;
             } else {
               // Copy current field into columns object
               if (!Array.isArray(cols[field])) {

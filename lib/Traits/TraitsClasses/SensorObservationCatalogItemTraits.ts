@@ -166,5 +166,7 @@ export default class SensorObservationCatalogItemTraits extends mixTraits(
     type: "string",
     description: "The identifier of the selected observable property"
   })
-  selectedObservableId?: string;
+  get selectedObservableId(): string | undefined {
+    return;
+  }
 }

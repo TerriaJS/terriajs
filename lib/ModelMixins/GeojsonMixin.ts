@@ -31,10 +31,10 @@ import {
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
 } from "protomaps";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -77,8 +77,8 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
+  GeojsonSource,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import Reproject from "../Map/Vector/Reproject";
@@ -1491,7 +1491,7 @@ export function toFeatureCollection(
   }
   if (Array.isArray(json) && json.every((item) => isGeometries(item))) {
     return featureCollection(
-      json.map((item) => feature(item, item.properties))
+      json.map((item) => feature(item))
     ) as FeatureCollectionWithCrs;
   }
 }

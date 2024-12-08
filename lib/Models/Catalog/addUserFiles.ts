@@ -27,12 +27,7 @@ export default async function addUserFiles(
 
   function loadCatalogItemFromFile(file: File) {
     try {
-      const item = createCatalogItemFromFileOrUrl(
-        terria,
-        viewState,
-        file,
-        dataType.value
-      );
+      const item = createCatalogItemFromFileOrUrl(terria, file, dataType.value);
       return addUserCatalogMember(terria, item);
     } catch (e) {
       return Promise.reject(e);
