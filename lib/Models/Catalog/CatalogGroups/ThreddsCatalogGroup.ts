@@ -122,7 +122,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
     // Create members for individual datasets
     for (let i = 0; i < this.threddsCatalog.datasets.length; i++) {
       const ds = this.threddsCatalog.datasets[i];
-      await ds.loadAllNestedCatalogs();
+      ds.loadAllNestedCatalogs();
       for (let ii = 0; ii < ds.catalogs.length; ii++) {
         this.createThreddsCatalog(ds.catalogs[ii]);
       }
