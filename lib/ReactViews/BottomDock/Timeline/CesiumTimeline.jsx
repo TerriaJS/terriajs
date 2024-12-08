@@ -1,5 +1,3 @@
-"use strict";
-
 import Styles from "!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
@@ -105,4 +103,4 @@ const CesiumTimeline = createReactClass({
   }
 });
 
-module.exports = CesiumTimeline;
+export default CesiumTimeline;

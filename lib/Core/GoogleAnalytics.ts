@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import ReactGA from "react-ga4";
 import { Analytics, ConfigParameters } from "../Models/Terria";

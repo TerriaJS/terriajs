@@ -1,4 +1,3 @@
-"use strict";
 import L from "leaflet";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";

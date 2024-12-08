@@ -1,5 +1,3 @@
-"use strict";
-
 import Terria from "../../../../lib/Models/Terria";
 
 import CswCatalogGroup from "../../../../lib/Models/Catalog/Ows/CswCatalogGroup";

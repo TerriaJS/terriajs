@@ -1,9 +1,7 @@
 import React from "react";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-
 import PropTypes from "prop-types";
-
 import { addMarker } from "../../Models/LocationMarkerUtils";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchResult from "../Search/SearchResult";
@@ -97,4 +95,4 @@ class MobileSearch extends React.Component {
   }
 }
 
-module.exports = withTranslation()(MobileSearch);
+export default withTranslation()(MobileSearch);

@@ -12,9 +12,8 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
-
-const HtmlToReact = require("html-to-react");
-const utils = require("html-to-react/lib/utils");
+import HtmlToReact from "html-to-react";
+import utils from "html-to-react/lib/utils";
 
 const htmlToReactParser = new HtmlToReact.Parser({
   decodeEntities: true

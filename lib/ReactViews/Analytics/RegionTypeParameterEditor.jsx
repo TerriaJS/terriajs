@@ -1,5 +1,3 @@
-"use strict";
-
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -64,4 +62,4 @@ const RegionTypeParameterEditor = createReactClass({
   }
 });
 
-module.exports = RegionTypeParameterEditor;
+export default RegionTypeParameterEditor;

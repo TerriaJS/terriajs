@@ -1,5 +1,3 @@
-"use strict";
-
 import { when } from "mobx";
 import { addOrReplaceRemoteFileUploadType } from "../../Core/getDataType";
 import Terria from "../../Models/Terria";

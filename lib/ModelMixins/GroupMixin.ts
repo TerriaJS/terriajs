@@ -19,8 +19,8 @@ import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import { ItemPropertiesTraits } from "../Traits/TraitsClasses/ItemPropertiesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import ReferenceMixin from "./ReferenceMixin";
+import naturalSort from "javascript-natural-sort";
 
-const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
 const MERGED_GROUP_ID_PREPEND = "__merged__";

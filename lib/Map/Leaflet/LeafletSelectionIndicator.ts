@@ -5,7 +5,6 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
 import isDefined from "../../Core/isDefined";
-
 import Leaflet from "../../Models/Leaflet";
 
 const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");

@@ -19,10 +19,8 @@ import Text, { TextSpan } from "../../../Styled/Text";
 import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { WithViewState, withViewState } from "../../Context";
 import { applyTranslationIfExists } from "../../../Language/languageHelpers";
-
-const StyledHtml: any =
-  require("../../Map/Panels/HelpPanel/StyledHtml").default;
-const CloseButton: any = require("../../Generic/CloseButton").default;
+import StyledHtml from "../../Map/Panels/HelpPanel/StyledHtml";
+import CloseButton from "../../Generic/CloseButton";
 
 const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
