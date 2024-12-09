@@ -87,7 +87,7 @@ export default class SdmxJsonCatalogItem
             (sdmxDim) => sdmxDim.id === dim.id
           );
           if (!isDefined(dimensionTraits)) {
-            dimensionTraits = this.addObject(stratumId, "dimensions", dim.id!)!;
+            dimensionTraits = this.addObject(stratumId, "dimensions", dim.id)!;
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
