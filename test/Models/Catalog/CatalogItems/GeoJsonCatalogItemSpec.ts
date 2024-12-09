@@ -718,9 +718,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       ).toBeTruthy();
 
       const protomaps =
-        "imageryProvider" in mapItem
-          ? (mapItem.imageryProvider as ProtomapsImageryProvider)
-          : undefined;
+        "imageryProvider" in mapItem ? mapItem.imageryProvider : undefined;
 
       if (!protomaps) throw "protomaps should be defined";
 
@@ -1028,7 +1026,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const firstProtomapsImageryProvider =
         "imageryProvider" in geojson.mapItems[0]
-          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          ? geojson.mapItems[0].imageryProvider
           : undefined;
 
       if (!firstProtomapsImageryProvider) throw "protomaps should be defined";
@@ -1062,7 +1060,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       // Check new imagery provider
       const nextProtomapsImageryProvider =
         "imageryProvider" in geojson.mapItems[0]
-          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          ? geojson.mapItems[0].imageryProvider
           : undefined;
 
       if (!nextProtomapsImageryProvider) throw "protomaps should be defined";
@@ -1088,7 +1086,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       // Check new imagery provider
       const lastProtomapsImageryProvider =
         "imageryProvider" in geojson.mapItems[0]
-          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          ? geojson.mapItems[0].imageryProvider
           : undefined;
 
       if (!lastProtomapsImageryProvider) throw "protomaps should be defined";

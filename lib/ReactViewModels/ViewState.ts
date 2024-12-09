@@ -862,7 +862,7 @@ export default class ViewState {
   get hideMapUi() {
     return (
       this.terria.notificationState.currentNotification !== undefined &&
-      this.terria.notificationState.currentNotification!.hideUi
+      this.terria.notificationState.currentNotification.hideUi
     );
   }
 

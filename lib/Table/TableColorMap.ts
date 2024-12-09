@@ -340,7 +340,7 @@ export default class TableColorMap {
   @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
     if (this.colorTraits.enumColors?.length ?? 0 > 0) {
-      return this.colorTraits.enumColors!;
+      return this.colorTraits.enumColors;
     }
 
     const colorColumn = this.colorColumn;
