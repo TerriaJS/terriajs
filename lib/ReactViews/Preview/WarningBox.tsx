@@ -53,8 +53,8 @@ const WarningBox: React.FC<{
 
             {/* Add "show details" button if there are nested errors */}
             {props.viewState &&
-            Array.isArray(props.error!.originalError) &&
-            props.error!.originalError.length > 0 ? (
+            Array.isArray(props.error.originalError) &&
+            props.error.originalError.length > 0 ? (
               <div>
                 <RawButton
                   activeStyles

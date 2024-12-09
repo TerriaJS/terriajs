@@ -364,7 +364,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           geoJsonData: {
             type: "FeatureCollection",
             features: geojsonFeatures,
-            totalFeatures: this.geojsonFeatures!.length
+            totalFeatures: this.geojsonFeatures.length
           }
         }).logError(
           "Error occurred while updating Input Features GeoJSON model JSON"

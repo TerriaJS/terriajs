@@ -431,7 +431,7 @@ class DateTimePicker extends React.Component<PropsType> {
       );
       const selected = isDefined(this.currentDateIndice.day)
         ? moment()
-            .date(this.currentDateIndice.day!)
+            .date(this.currentDateIndice.day)
             .month(this.currentDateIndice.month)
             .year(this.currentDateIndice.year)
         : null;
@@ -696,7 +696,7 @@ class DateTimePicker extends React.Component<PropsType> {
               {isDefined(this.currentDateIndice.century) &&
                 !isDefined(this.currentDateIndice.year) &&
                 this.renderYearGrid(
-                  datesObject[this.currentDateIndice.century!]
+                  datesObject[this.currentDateIndice.century]
                 )}
               {isDefined(this.currentDateIndice.year) &&
                 !isDefined(this.currentDateIndice.month) &&

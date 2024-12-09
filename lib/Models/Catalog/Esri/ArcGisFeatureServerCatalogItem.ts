@@ -212,7 +212,7 @@ class FeatureServerStratum extends LoadableStratum(
     // Show notice if reached
     if (
       this._item.readyData?.features !== undefined &&
-      this._item.readyData!.features.length >= this._item.maxFeatures
+      this._item.readyData.features.length >= this._item.maxFeatures
     ) {
       return i18next.t(
         "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",

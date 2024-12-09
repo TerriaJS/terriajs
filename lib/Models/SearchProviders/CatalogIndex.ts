@@ -127,7 +127,7 @@ export default class CatalogIndex {
           model.shareKeys.map((s) => this.shareKeysMap.set(s, id));
         }
         // Add model to CatalogIndexReference map
-        this._models!.set(id, reference);
+        this._models.set(id, reference);
 
         // Add document to search index
         promises.push(

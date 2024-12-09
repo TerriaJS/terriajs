@@ -447,7 +447,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       const uri = uris[m];
       if (!uri) return;
       const resourceIndex = filteredResourceFormats.findIndex((f) =>
-        (uri!.protocol ?? uri!.scheme)?.match(f.regex)
+        (uri.protocol ?? uri.scheme)?.match(f.regex)
       );
 
       // If matching resource is found, and an acceptable URL hasn't been set for it -> add it

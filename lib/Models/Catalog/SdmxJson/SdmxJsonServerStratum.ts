@@ -213,7 +213,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     // Find first node in tree which has more than 1 child
     const findRootGroup = (node: DataflowTreeNode): DataflowTreeNode => {
       const children: DataflowTreeNode[] | undefined = isDefined(node?.members)
-        ? Object.values(node!.members)
+        ? Object.values(node.members)
         : undefined;
 
       // If only 1 child -> keep searching
@@ -339,11 +339,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       );
     }
 
-    itemModel.setTrait(
-      CommonStrata.definition,
-      "agencyId",
-      node.item.agencyID as string
-    );
+    itemModel.setTrait(CommonStrata.definition, "agencyId", node.item.agencyID);
     itemModel.setTrait(CommonStrata.definition, "dataflowId", node.item.id);
 
     itemModel.setTrait(

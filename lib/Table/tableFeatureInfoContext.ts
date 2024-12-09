@@ -57,9 +57,9 @@ export const tableFeatureInfoContext: (
 
     const chartColumns = [style.timeColumn, style.colorColumn];
     const csvData = [
-      chartColumns.map((col) => col!.title).join(","),
+      chartColumns.map((col) => col.title).join(","),
       ...rowIds.map((i) =>
-        chartColumns!.map((col) => col.valueFunctionForType(i)).join(",")
+        chartColumns.map((col) => col.valueFunctionForType(i)).join(",")
       )
     ]
       .join("\n")

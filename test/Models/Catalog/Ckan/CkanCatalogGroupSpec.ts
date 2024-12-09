@@ -110,18 +110,18 @@ describe("CkanCatalogGroup", function () {
           expect(ckanServerStratum.groups.length).toBe(3);
 
           // 3 groups are sorted by name
-          const group0 = ckanServerStratum.groups[0] as CatalogGroup;
+          const group0 = ckanServerStratum.groups[0];
           expect(group0.name).toBe("Department of the Environment and Energy");
           // There is only 1 resource on the 1 dataset
           expect(group0.members.length).toBe(1);
 
-          const group1 = ckanServerStratum.groups[1] as CatalogGroup;
+          const group1 = ckanServerStratum.groups[1];
           expect(group1.name).toBe("Murray-Darling Basin Authority");
           // There are 2 resources on the 2 datasets
           expect(group1.members.length).toBe(9);
 
           // "Ungrouped" group should be last
-          const group2 = ckanServerStratum.groups[2] as CatalogGroup;
+          const group2 = ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
           expect(group2.name).toBe("No group");
           expect(group2.members.length).toBe(0);

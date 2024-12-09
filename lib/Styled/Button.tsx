@@ -205,7 +205,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
             rightIcon={props.rightIcon}
             {...iconProps}
           >
-            {props!.renderIcon!()}
+            {props.renderIcon!()}
           </IconSpan>
         )
       : undefined;
