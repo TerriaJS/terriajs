@@ -665,7 +665,7 @@ class WebMapServiceCatalogItem
           if (isDefined(s.name)) {
             return {
               name: s.title || s.name || "",
-              id: s.name as string
+              id: s.name
             };
           }
         })

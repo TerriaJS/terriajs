@@ -43,7 +43,7 @@ export default function createRegionMappedImageryProvider(
   if (currentTime && style.timeIntervals && style.moreThanOneTimeInterval) {
     currentTimeRows = style.timeIntervals.reduce<number[]>(
       (rows, timeInterval, index) => {
-        if (timeInterval && TimeInterval.contains(timeInterval, currentTime!)) {
+        if (timeInterval && TimeInterval.contains(timeInterval, currentTime)) {
           rows.push(index);
         }
         return rows;
@@ -157,7 +157,7 @@ const getImageryLayerFilteredRow = action(
       return rowNumbers;
     } else if (Array.isArray(rowNumbers)) {
       const matchingTimeRows: number[] = rowNumbers.filter((row) =>
-        currentTimeRows!.includes(row)
+        currentTimeRows.includes(row)
       );
       if (matchingTimeRows.length <= 1) {
         return matchingTimeRows[0];

@@ -44,7 +44,7 @@ export default class SelectAPolygonParameter
         geometry: featureData.geometry,
         properties: {}
       };
-    }) as any;
+    });
   }
 
   @computed get geoJsonFeature() {

@@ -571,7 +571,7 @@ export default class TableStyle {
         if (date) {
           finishDates[i] = JulianDate.addMinutes(
             date,
-            this.timeTraits.displayDuration!,
+            this.timeTraits.displayDuration,
             new JulianDate()
           );
         }
