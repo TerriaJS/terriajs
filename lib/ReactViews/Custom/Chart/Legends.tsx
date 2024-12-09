@@ -18,13 +18,15 @@ class Legends extends React.PureComponent {
   static maxHeightPx = 33;
 
   render() {
+    // @ts-expect-error TS(2339): Property 'chartItems' does not exist on type 'Read... Remove this comment to see the full error message
     const chartItems = this.props.chartItems;
     const colorScale = scaleOrdinal({
-      domain: chartItems.map((c) => `${c.categoryName} ${c.name}`),
-      range: chartItems.map((c) => c.getColor())
+      domain: chartItems.map((c: any) => `${c.categoryName} ${c.name}`),
+      range: chartItems.map((c: any) => c.getColor())
     });
 
     return (
+      // @ts-expect-error TS(2339): Property 'width' does not exist on type 'Readonly<... Remove this comment to see the full error message
       <LegendsContainer style={{ maxWidth: this.props.width }}>
         <LegendOrdinal scale={colorScale}>
           {(labels) =>
@@ -51,10 +53,13 @@ class Legend extends React.PureComponent {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'label' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const label = this.props.label;
     const squareSize = 20;
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
+      // @ts-expect-error TS(2769): No overload matches this call.
       <LegendWrapper title={label.text} ariaLabel={label.text}>
         <svg
           width={`${squareSize}px`}

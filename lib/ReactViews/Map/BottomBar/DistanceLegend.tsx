@@ -156,7 +156,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
       runInAction(() => (terria.mainViewer.scale = maxMeters / 100));
-      // @ts-expect-error Accessing private method
+      // @ts-expect-error TS(2339): Property '_getRoundNum' does not exist on type 'Sc... Remove this comment to see the full error message
       const meters = L.control.scale()._getRoundNum(maxMeters);
       const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 

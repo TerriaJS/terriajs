@@ -5,14 +5,14 @@
  * @param {Function} [compareFunction] The usual compare function, eg. function(a, b) { return a - b }.
  * @return {Array} The sorted indices, such that array[sortedIndices[0]] = sortedArray[0].
  */
-function sortedIndices(array, compareFunction) {
+function sortedIndices(array: any, compareFunction: any) {
   const length = array.length;
   const indices = new Array(length);
   for (let i = 0; i < length; i++) {
     indices[i] = i;
   }
   if (!compareFunction) {
-    compareFunction = function (a, b) {
+    compareFunction = function (a: any, b: any) {
       return a < b ? -1 : a > b ? 1 : 0;
     };
   }

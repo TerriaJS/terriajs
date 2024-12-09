@@ -32,19 +32,23 @@ class Breadcrumbs extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  async openInCatalog(items) {
-    items.forEach((item) => {
+  async openInCatalog(items: any) {
+    items.forEach((item: any) => {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     (await this.props.viewState.viewCatalogMember(items[0])).raiseError(
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.terria
     );
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.changeSearchState("");
   }
 
-  renderCrumb(parent, i, parentGroups) {
+  renderCrumb(parent: any, i: any, parentGroups: any) {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const ancestors = getAncestors(this.props.previewed).map((ancestor) =>
       getDereferencedIfExists(ancestor)
     );
@@ -81,8 +85,10 @@ class Breadcrumbs extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const parentGroups = this.props.previewed
-      ? getParentGroups(this.props.previewed)
+      ? // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+        getParentGroups(this.props.previewed)
       : undefined;
 
     return (
@@ -91,6 +97,7 @@ class Breadcrumbs extends React.Component {
         left
         styledMinHeight={"32px"}
         fullWidth
+        // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
         backgroundColor={this.props.theme.greyLighter}
         paddedHorizontally={2.4}
         paddedVertically={1}
@@ -98,6 +105,7 @@ class Breadcrumbs extends React.Component {
       >
         <StyledIcon
           styledWidth={"16px"}
+          // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
           fillColor={this.props.theme.textDark}
           glyph={Icon.GLYPHS.globe}
         />

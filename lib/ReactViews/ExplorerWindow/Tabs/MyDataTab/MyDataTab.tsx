@@ -24,7 +24,7 @@ class MyDataTab extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       activeTab: null
@@ -32,10 +32,11 @@ class MyDataTab extends React.Component {
   }
 
   hasUserAddedData() {
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     return this.props.terria.catalog.userAddedDataGroup.members.length > 0;
   }
 
-  changeTab(active) {
+  changeTab(active: any) {
     this.setState({
       activeTab: active
     });
@@ -48,6 +49,7 @@ class MyDataTab extends React.Component {
   }
 
   renderTabs() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const tabs = [
       {
@@ -68,19 +70,22 @@ class MyDataTab extends React.Component {
               onClick={() => this.changeTab(tab.id)}
               title={tab.caption}
               className={classNames(Styles.tabListBtn, {
+                // @ts-expect-error TS(2339): Property 'isActive' does not exist on type 'IMyDat... Remove this comment to see the full error message
                 [Styles.isActive]: this.state.activeTab === tab.id
               })}
               css={`
-                color: ${(p) => p.theme.colorPrimary};
+                color: ${(p: any) => p.theme.colorPrimary};
                 &:hover,
                 &:focus {
-                  color: ${(p) => p.theme.grey};
+                  color: ${(p: any) => p.theme.grey};
                 }
                 svg {
-                  fill: ${(p) => p.theme.colorPrimary};
+                  fill: ${(p: any) => p.theme.colorPrimary};
                 }
               `}
             >
+              // @ts-expect-error TS(7053): Element implicitly has an 'any' type
+              because expre... Remove this comment to see the full error message
               <Icon glyph={Icon.GLYPHS[tab.id]} />
               {tab.caption}
             </button>
@@ -92,6 +97,7 @@ class MyDataTab extends React.Component {
 
   renderPromptBox() {
     if (this.hasUserAddedData()) {
+      // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
       const { t } = this.props;
       return (
         <div className={Styles.dataTypeTab}>
@@ -120,7 +126,9 @@ class MyDataTab extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'activeTab' does not exist on type 'Reado... Remove this comment to see the full error message
     const showTwoColumn = !!(this.hasUserAddedData() && !this.state.activeTab);
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t, className } = this.props;
     return (
       <Box
@@ -134,6 +142,8 @@ class MyDataTab extends React.Component {
             [Styles.oneCol]: !showTwoColumn
           })}
         >
+          // @ts-expect-error TS(2339): Property 'activeTab' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           {this.state.activeTab && (
             <>
               <button
@@ -141,13 +151,13 @@ class MyDataTab extends React.Component {
                 onClick={() => this.resetTab()}
                 className={Styles.btnBackToMyData}
                 css={`
-                  color: ${(p) => p.theme.colorPrimary};
+                  color: ${(p: any) => p.theme.colorPrimary};
                   &:hover,
                   &:focus {
-                    border: 1px solid ${(p) => p.theme.colorPrimary};
+                    border: 1px solid ${(p: any) => p.theme.colorPrimary};
                   }
                   svg {
-                    fill: ${(p) => p.theme.colorPrimary};
+                    fill: ${(p: any) => p.theme.colorPrimary};
                   }
                 `}
               >
@@ -155,13 +165,20 @@ class MyDataTab extends React.Component {
                 {t("addData.back")}
               </button>
               <AddData
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
+                // @ts-expect-error TS(2339): Property 'activeTab' does not exist on type 'Reado... Remove this comment to see the full error message
                 activeTab={this.state.activeTab}
                 resetTab={() => this.resetTab()}
+                // @ts-expect-error TS(2339): Property 'onFileAddFinished' does not exist on typ... Remove this comment to see the full error message
                 onFileAddFinished={this.props.onFileAddFinished}
+                // @ts-expect-error TS(2339): Property 'onUrlAddFinished' does not exist on type... Remove this comment to see the full error message
                 onUrlAddFinished={this.props.onUrlAddFinished}
+                // @ts-expect-error TS(2339): Property 'localDataTypes' does not exist on type '... Remove this comment to see the full error message
                 localDataTypes={this.props.localDataTypes}
+                // @ts-expect-error TS(2339): Property 'remoteDataTypes' does not exist on type ... Remove this comment to see the full error message
                 remoteDataTypes={this.props.remoteDataTypes}
               />
             </>
@@ -177,13 +194,18 @@ class MyDataTab extends React.Component {
               <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
               <ul className={Styles.dataCatalog}>
+                // @ts-expect-error TS(2339): Property 'terria' does not exist
+                on type 'Readonly... Remove this comment to see the full error
+                message
                 {this.props.terria.catalog.userAddedDataGroup.memberModels.map(
-                  (item) => (
+                  (item: any) => (
                     <DataCatalogMember
+                      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                       viewState={this.props.viewState}
                       member={item}
                       key={item.uniqueId}
                       removable
+                      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                       terria={this.props.terria}
                       isTopLevel
                     />
@@ -192,13 +214,18 @@ class MyDataTab extends React.Component {
               </ul>
             </Box>
           )}
+          // @ts-expect-error TS(2339): Property 'activeTab' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           {!this.state.activeTab && this.renderPromptBox()}
         </div>
         {showTwoColumn && (
           <Box styledWidth="60%">
             <DataPreview
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               terria={this.props.terria}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               previewed={this.props.viewState.userDataPreviewedItem}
             />
           </Box>

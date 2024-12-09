@@ -29,14 +29,15 @@ const PointParameterEditor = createReactClass({
     t: PropTypes.func.isRequired
   },
 
-  inputOnChange(e) {
+  inputOnChange(e: any) {
     const text = e.target.value;
     this.props.parameterViewModel.userValue = text;
     this.props.parameterViewModel.isValueValid =
+      // @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
       PointParameterEditor.setValueFromText(e, this.props.parameter);
   },
 
-  inputOnBlur(_e) {
+  inputOnBlur(_e: any) {
     const isCurrentlyInvalid = !this.props.parameterViewModel.isValueValid;
     this.props.parameterViewModel.wasEverBlurredWhileInvalid =
       this.props.parameterViewModel.wasEverBlurredWhileInvalid ||
@@ -102,7 +103,8 @@ const PointParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter to set value on.
  * @returns {Boolean} True if the value was set successfully; false if the value could not be parsed.
  */
-PointParameterEditor.setValueFromText = function (e, parameter) {
+// @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
+PointParameterEditor.setValueFromText = function (e: any, parameter: any) {
   const text = e.target.value;
 
   if (text.trim().length === 0 && !parameter.isRequired) {
@@ -148,7 +150,7 @@ PointParameterEditor.setValueFromText = function (e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-export function getDisplayValue(value) {
+export function getDisplayValue(value: any) {
   const digits = 5;
 
   if (defined(value)) {
@@ -168,13 +170,18 @@ export function getDisplayValue(value) {
  * @param {Object} viewState ViewState.
  * @param {FunctionParameter} parameter Parameter.
  */
-export function selectOnMap(terria, viewState, parameter, interactionMessage) {
+export function selectOnMap(
+  terria: any,
+  viewState: any,
+  parameter: any,
+  interactionMessage: any
+) {
   runInAction(() => {
     // Cancel any feature picking already in progress.
     terria.pickedFeatures = undefined;
   });
 
-  let pickedFeaturesSubscription;
+  let pickedFeaturesSubscription: any;
   const pickPointMode = new MapInteractionMode({
     message: interactionMessage,
     onCancel: function () {
@@ -197,6 +204,7 @@ export function selectOnMap(terria, viewState, parameter, interactionMessage) {
       if (pickedFeatures.pickPosition) {
         runInAction(() => {
           const value = Ellipsoid.WGS84.cartesianToCartographic(
+            // @ts-expect-error TS(2345): Argument of type 'Cartesian3 | undefined' is not a... Remove this comment to see the full error message
             pickedFeatures.pickPosition
           );
           terria.mapInteractionModeStack.pop();

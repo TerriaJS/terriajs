@@ -661,6 +661,7 @@ async function loadSoapBody(
     return;
   }
 
+  // @ts-expect-error TS(2554)
   const json = xml2json(responseXml);
   if (json.Exception) {
     let errorMessage = i18next.t(

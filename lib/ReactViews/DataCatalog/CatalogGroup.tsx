@@ -22,6 +22,7 @@ const CatalogGroupButton = styled.button`
       }
     }
     ${
+      // @ts-expect-error TS(2339): Property 'active' does not exist on type 'ThemedSt... Remove this comment to see the full error message
       props.active &&
       `
         color: ${props.theme.textLight};
@@ -39,7 +40,7 @@ const CatalogGroupButton = styled.button`
  *
  * @constructor
  */
-function CatalogGroup(props) {
+function CatalogGroup(props: any) {
   const { t } = useTranslation();
   return (
     <li className={Styles.root}>
@@ -78,11 +79,14 @@ function CatalogGroup(props) {
           className={classNames(
             Styles.btnCatalog,
             { [Styles.btnCatalogTopLevel]: props.topLevel },
+            // @ts-expect-error TS(2339): Property 'btnIsOpen' does not exist on type 'IData... Remove this comment to see the full error message
             { [Styles.btnIsOpen]: props.open },
+            // @ts-expect-error TS(2339): Property 'isPreviewed' does not exist on type 'IDa... Remove this comment to see the full error message
             { [Styles.isPreviewed]: props.selected }
           )}
           title={props.title}
           onClick={props.onClick}
+          // @ts-expect-error TS(2769): No overload matches this call.
           active={props.selected}
         >
           {!props.topLevel && (

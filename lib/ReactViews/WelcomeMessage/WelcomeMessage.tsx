@@ -26,7 +26,7 @@ const WelcomeModalWrapper = styled(Box)`
   background-color: rgba(0, 0, 0, 0.75);
 `;
 
-function WelcomeMessageButton(props) {
+function WelcomeMessageButton(props: any) {
   return (
     <Button primary rounded fullWidth onClick={props.onClick}>
       <Box centered>
@@ -60,33 +60,39 @@ class WelcomeMessage extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const viewState = this.props.viewState;
     const shouldShow =
       (viewState.terria.configParameters.showWelcomeMessage &&
         !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
       false;
 
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.setShowWelcomeMessage(shouldShow);
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const viewState = this.props.viewState || {};
     return (
       <WelcomeMessagePure
         showWelcomeMessage={viewState.showWelcomeMessage}
         setShowWelcomeMessage={(bool) =>
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           this.props.viewState.setShowWelcomeMessage(bool)
         }
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         viewState={this.props.viewState}
       />
     );
   }
 }
 
-export const WelcomeMessagePure = (props) => {
+export const WelcomeMessagePure = (props: any) => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -305,6 +311,7 @@ export const WelcomeMessagePure = (props) => {
                       <Spacing bottom={4} />
                       <WelcomeMessageButton
                         buttonText={t("welcomeMessage.helpBtnText")}
+                        // @ts-expect-error TS(2339): Property 'newHelp' does not exist on type '{ calen... Remove this comment to see the full error message
                         buttonIcon={Icon.GLYPHS.newHelp}
                         onClick={() => {
                           handleClose(false);
@@ -360,4 +367,5 @@ WelcomeMessagePure.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
+// @ts-expect-error TS(2345): Argument of type 'ForwardRefExoticComponent<WithOp... Remove this comment to see the full error message
 export default withTranslation()(withViewState(withTheme(WelcomeMessage)));

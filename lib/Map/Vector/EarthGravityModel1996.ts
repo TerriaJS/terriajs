@@ -6,7 +6,7 @@ import loadArrayBuffer from "../../Core/loadArrayBuffer";
  * The Earth Gravity Model 1996 (EGM96) geoid.
  * @param {String} gridFileUrl The URL of the WW15MGH.DAC file.
  */
-const EarthGravityModel1996 = function (gridFileUrl) {
+const EarthGravityModel1996 = function (this: any, gridFileUrl: any) {
   this.gridFileUrl = gridFileUrl;
   this.data = undefined;
 
@@ -33,13 +33,16 @@ EarthGravityModel1996.isSupported = function () {
  * @return {Promise|Number} A promise, that, when it results The height of mean sea level above the ellipsoid at the specified location.  Negative numbers indicate that mean sea level
  *                  is below the ellipsoid.
  */
-EarthGravityModel1996.prototype.getHeight = function (longitude, latitude) {
+EarthGravityModel1996.prototype.getHeight = function (
+  longitude: any,
+  latitude: any
+) {
   return getHeightData(this).then(function (data) {
     return getHeightFromData(data, longitude, latitude);
   });
 };
 
-EarthGravityModel1996.prototype.getHeights = function (cartographicArray) {
+EarthGravityModel1996.prototype.getHeights = function (cartographicArray: any) {
   return getHeightData(this).then(function (data) {
     for (let i = 0; i < cartographicArray.length; ++i) {
       const cartographic = cartographicArray[i];
@@ -53,7 +56,7 @@ EarthGravityModel1996.prototype.getHeights = function (cartographicArray) {
   });
 };
 
-function getHeightData(model) {
+function getHeightData(model: any) {
   if (!defined(model.data)) {
     model.data = loadArrayBuffer(model.gridFileUrl);
   }
@@ -74,7 +77,7 @@ function getHeightData(model) {
   });
 }
 
-function getHeightFromData(data, longitude, latitude) {
+function getHeightFromData(data: any, longitude: any, latitude: any) {
   let recordIndex = (720 * (CesiumMath.PI_OVER_TWO - latitude)) / Math.PI;
   if (recordIndex < 0) {
     recordIndex = 0;
@@ -113,7 +116,7 @@ function getHeightFromData(data, longitude, latitude) {
 }
 
 // Heights returned by this function are in centimeters.
-function getHeightValue(data, recordIndex, heightIndex) {
+function getHeightValue(data: any, recordIndex: any, heightIndex: any) {
   if (recordIndex > 720) {
     recordIndex = 720;
   } else if (recordIndex < 0) {

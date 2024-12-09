@@ -55,6 +55,7 @@ const RegionPicker = createReactClass({
     this._lastFeature = undefined;
     this._lastPickedFeatures = undefined;
 
+    // @ts-expect-error TS(2554): Expected 0 arguments, but got 3.
     knockout.defineProperty(this, "regionProvider", {
       get: function () {
         return this.props.parameter.regionProvider;
@@ -63,15 +64,18 @@ const RegionPicker = createReactClass({
 
     this._subscriptions.push(
       knockout
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 2.
         .getObservable(this, "regionProvider")
+        // @ts-expect-error TS(2339): Property 'subscribe' does not exist on type 'never... Remove this comment to see the full error message
         .subscribe(this.addRegionLayer)
     );
 
+    // @ts-expect-error TS(2554): Expected 0 arguments, but got 3.
     knockout.defineProperty(this, "regionValue", {
       get: function () {
         return this.props.parameter.value;
       },
-      set: function (value) {
+      set: function (value: any) {
         if (defined(value) && defined(value.realRegion)) {
           value = value.realRegion;
         }
@@ -82,10 +86,12 @@ const RegionPicker = createReactClass({
     const that = this;
     knockout
       .getObservable(
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 2.
         this.props.previewed.terria.mapInteractionModeStack[0],
         "pickedFeatures"
       )
-      .subscribe(function (pickedFeatures) {
+      // @ts-expect-error TS(2339): Property 'subscribe' does not exist on type 'never... Remove this comment to see the full error message
+      .subscribe(function (pickedFeatures: any) {
         if (!defined(pickedFeatures)) {
           return;
         }
@@ -106,7 +112,7 @@ const RegionPicker = createReactClass({
   },
 
   componentWillUnmount() {
-    this._subscriptions.forEach((subscription) => subscription.dispose());
+    this._subscriptions.forEach((subscription: any) => subscription.dispose());
     if (defined(this._regionsCatalogItem)) {
       this._regionsCatalogItem.isEnabled = false;
       this._regionsCatalogItem = undefined;
@@ -117,7 +123,7 @@ const RegionPicker = createReactClass({
     }
   },
 
-  updateFeature(feature) {
+  updateFeature(feature: any) {
     this._lastRegionFeature = feature.data;
     const regionProperty = feature.properties[this.regionProvider.regionProp];
     const regionId =
@@ -133,6 +139,7 @@ const RegionPicker = createReactClass({
     }
 
     if (defined(feature.data) && feature.data.type === "Feature") {
+      // @ts-expect-error TS(2554): Expected 2-4 arguments, but got 1.
       this._selectedRegionCatalogItem = new GeoJsonCatalogItem(
         this.props.previewed.terria
       );
@@ -176,6 +183,7 @@ const RegionPicker = createReactClass({
         that._regionsCatalogItem = undefined;
       }
 
+      // @ts-expect-error TS(2554): Expected 2-3 arguments, but got 1.
       that._regionsCatalogItem = new WebMapServiceCatalogItem(
         that.props.previewed.terria
       );
@@ -209,7 +217,7 @@ const RegionPicker = createReactClass({
     const that = this;
     this.regionProvider
       .getRegionFeature(terria, value, that._lastRegionFeature)
-      .then(function (feature) {
+      .then(function (feature: any) {
         if (!defined(feature)) {
           return;
         }
@@ -219,6 +227,7 @@ const RegionPicker = createReactClass({
         }
 
         if (defined(feature) && feature.type === "Feature") {
+          // @ts-expect-error TS(2554): Expected 2-4 arguments, but got 1.
           that._selectedRegionCatalogItem = new GeoJsonCatalogItem(
             that.props.previewed.terria
           );
@@ -241,7 +250,7 @@ const RegionPicker = createReactClass({
       });
   },
 
-  textChange(e) {
+  textChange(e: any) {
     // Reset region value
     this.regionValue = undefined;
 
@@ -289,7 +298,7 @@ const RegionPicker = createReactClass({
     });
   },
 
-  selectRegion(region) {
+  selectRegion(region: any) {
     this.regionValue = region;
     // After choosing a region from auto complete
     this.setState({
@@ -305,6 +314,7 @@ const RegionPicker = createReactClass({
     return (
       <div className={Styles.parameterEditor}>
         <RegionTypeParameterEditor
+          // @ts-expect-error TS(2769): No overload matches this call.
           previewed={this.props.previewed}
           parameter={this.props.parameter.regionTypeParameter}
         />
@@ -332,7 +342,7 @@ const RegionPicker = createReactClass({
 
     return (
       <ul className={className}>
-        {this.state.autocompleteOptions.map((op, i) => (
+        {this.state.autocompleteOptions.map((op: any, i: any) => (
           <li key={i}>
             <button
               type="button"
@@ -353,7 +363,7 @@ const RegionPicker = createReactClass({
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-export function getDisplayValue(region, parameter) {
+export function getDisplayValue(region: any, parameter: any) {
   if (!defined(region)) {
     return "";
   }

@@ -10,7 +10,7 @@ import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 import { RawButton } from "../../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 
-const VideoWrapperBox = (props) => {
+const VideoWrapperBox = (props: any) => {
   const { viewState } = props;
   const handleClose = () => viewState.setVideoGuideVisible("");
 
@@ -70,20 +70,25 @@ class VideoGuide extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'backgroundOpacity' does not exist on typ... Remove this comment to see the full error message
     const backgroundOpacity = this.props.backgroundOpacity;
     const backgroundBlackOverlay =
       backgroundOpacity === undefined ? undefined : 1.0 - backgroundOpacity;
     return (
       <FadeIn
         isVisible={
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           this.props.viewState.videoGuideVisible === this.props.videoName
         }
       >
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         <VideoWrapperBox viewState={this.props.viewState}>
           <Box
             centered
             col11
             styledHeight={"87%"}
+            // @ts-expect-error TS(2339): Property 'background' does not exist on type 'Read... Remove this comment to see the full error message
             backgroundImage={this.props.background}
             backgroundBlackOverlay={backgroundBlackOverlay}
             css={`
@@ -99,6 +104,7 @@ class VideoGuide extends React.Component {
           >
             <Loader message={` `} />
             <iframe
+              // @ts-expect-error TS(2339): Property 'videoLink' does not exist on type 'Reado... Remove this comment to see the full error message
               src={this.props.videoLink}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               css={`

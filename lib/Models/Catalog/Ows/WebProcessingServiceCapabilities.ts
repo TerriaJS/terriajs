@@ -60,6 +60,7 @@ export default class WebProcessingServiceCapabilities {
 
   static fromUrl(url: string): Promise<WebProcessingServiceCapabilities> {
     return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
+      // @ts-expect-error TS(2554)
       const capabilities = parseCapabilities(xml2json(capabilitiesXml));
 
       if (capabilitiesXml === undefined || capabilities === undefined) {

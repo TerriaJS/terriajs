@@ -29,7 +29,7 @@ const CleanDropdownPanel = createReactClass({
     };
   },
 
-  onInnerMounted(innerElement) {
+  onInnerMounted(innerElement: any) {
     const centerInnerDropdown = this.props.showDropdownInCenter;
     const refForCaret =
       this.props.refForCaret && this.props.refForCaret.current;
@@ -67,6 +67,7 @@ const CleanDropdownPanel = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(nextProps) {
+    // @ts-expect-error TS(2339): Property 'forceClosed' does not exist on type 'Rea... Remove this comment to see the full error message
     if (nextProps.forceClosed) {
       this.onDismissed();
     }
@@ -82,7 +83,7 @@ const CleanDropdownPanel = createReactClass({
           // mix of scss+styled-components atm
           .tjs-sc-InnerPanelCloseButton {
             svg:not(:hover):not(:focus) {
-              fill: ${(p) => p.theme.textLight};
+              fill: ${(p: any) => p.theme.textLight};
             }
             svg {
               height: 12px;
@@ -95,6 +96,7 @@ const CleanDropdownPanel = createReactClass({
       >
         {this.isOpen() && (
           <InnerPanel
+            // @ts-expect-error TS(2322): Type '{ children: any; showDropdownInCenter: any; ... Remove this comment to see the full error message
             showDropdownInCenter={this.props.showDropdownInCenter}
             showDropdownAsModal={this.props.showDropdownAsModal}
             modalWidth={this.props.modalWidth}

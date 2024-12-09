@@ -17,7 +17,11 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  */
-const LeafletDragPoints = function (terria, pointMovedCallback) {
+const LeafletDragPoints = function (
+  this: any,
+  terria: any,
+  pointMovedCallback: any
+) {
   this._terria = terria;
   this._setUp = false;
   this.type = "Leaflet";
@@ -71,7 +75,7 @@ LeafletDragPoints.prototype.setUp = function () {
  *
  * @param {Entity} entity The entity that user mouse downs on.
  */
-LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity) {
+LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity: any) {
   if (
     !defined(this._draggableObjects.entities) ||
     this._draggableObjects.entities.length === 0
@@ -80,7 +84,7 @@ LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity) {
   }
 
   const dragEntity = this._draggableObjects.entities.values.filter(function (
-    dragObjEntity
+    dragObjEntity: any
   ) {
     // Not necessarily same entity, but will have same id.
     return dragObjEntity.id === entity.id;
@@ -107,7 +111,7 @@ LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity) {
  *
  * @param {Leaflet.MouseEvent} move Information about the move such as the final position of the mouse.
  */
-LeafletDragPoints.prototype._onMouseMove = function (move) {
+LeafletDragPoints.prototype._onMouseMove = function (move: any) {
   if (!this._dragInProgress) {
     return;
   }
@@ -125,7 +129,7 @@ LeafletDragPoints.prototype._onMouseMove = function (move) {
  *
  * @param {Leaflet.MouseEvent} e Information about where the event occurred.
  */
-LeafletDragPoints.prototype._onMouseUp = function (e) {
+LeafletDragPoints.prototype._onMouseUp = function (e: any) {
   if (
     this._dragInProgress &&
     Cartesian3.fromDegrees(e.latlng.lng, e.latlng.lat) !==
@@ -147,7 +151,7 @@ LeafletDragPoints.prototype._onMouseUp = function (e) {
  *
  * @param {CustomDataSource} entities Entities that user has drawn on the map.
  */
-LeafletDragPoints.prototype.updateDraggableObjects = function (entities) {
+LeafletDragPoints.prototype.updateDraggableObjects = function (entities: any) {
   this._draggableObjects = entities;
 };
 

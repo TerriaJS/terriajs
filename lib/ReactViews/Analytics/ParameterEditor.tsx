@@ -50,10 +50,12 @@ const ParameterEditor = createReactClass({
           ? parseCustomMarkdownToReact(
               `${this.props.parameter.description} ${this.props.parameter.rangeDescription}`,
               {
+                // @ts-expect-error TS(2345): Argument of type '{ parameter: any; }' is not assi... Remove this comment to see the full error message
                 parameter: this.props.parameter
               }
             )
           : parseCustomMarkdownToReact(this.props.parameter.description, {
+              // @ts-expect-error TS(2345): Argument of type '{ parameter: any; }' is not assi... Remove this comment to see the full error message
               parameter: this.props.parameter
             })}
       </div>
@@ -61,7 +63,9 @@ const ParameterEditor = createReactClass({
   },
 
   renderEditor() {
+    // @ts-expect-error TS(2339): Property 'parameterTypeConverters' does not exist ... Remove this comment to see the full error message
     for (let i = 0; i < ParameterEditor.parameterTypeConverters.length; ++i) {
+      // @ts-expect-error TS(2339): Property 'parameterTypeConverters' does not exist ... Remove this comment to see the full error message
       const converter = ParameterEditor.parameterTypeConverters[i];
       const editor = converter.parameterTypeToDiv(
         this.props.parameter.type,
@@ -79,8 +83,9 @@ const ParameterEditor = createReactClass({
         );
       }
     }
+    // @ts-expect-error TS(2339): Property 'parameterTypeConverters' does not exist ... Remove this comment to see the full error message
     const genericEditor = ParameterEditor.parameterTypeConverters.filter(
-      function (item) {
+      function (item: any) {
         return item.id === "generic";
       }
     )[0];
@@ -99,15 +104,20 @@ const ParameterEditor = createReactClass({
   }
 });
 
+// @ts-expect-error TS(2339): Property 'parameterTypeConverters' does not exist ... Remove this comment to see the full error message
 ParameterEditor.parameterTypeConverters = [
   {
     id: "point",
-    parameterTypeToDiv: function PointParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function PointParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <PointParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; viewState: any; parameter:... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
@@ -120,12 +130,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "line",
-    parameterTypeToDiv: function LineParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function LineParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <LineParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; viewState: any; parameter:... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
@@ -139,8 +153,8 @@ ParameterEditor.parameterTypeConverters = [
   {
     id: "rectangle",
     parameterTypeToDiv: function RectangleParameterToDiv(
-      type,
-      parameterEditor
+      type: any,
+      parameterEditor: any
     ) {
       if (type === this.id) {
         return (
@@ -150,6 +164,7 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
+              // @ts-expect-error TS(2322): Type '{ previewed: any; viewState: any; parameter:... Remove this comment to see the full error message
               parameterViewModel={parameterEditor.props.parameterViewModel}
             />
           </div>
@@ -159,7 +174,10 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "polygon",
-    parameterTypeToDiv: function PolygonParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function PolygonParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
@@ -168,6 +186,7 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
+              // @ts-expect-error TS(2322): Type '{ previewed: any; viewState: any; parameter:... Remove this comment to see the full error message
               parameterViewModel={parameterEditor.props.parameterViewModel}
             />
           </div>
@@ -178,14 +197,15 @@ ParameterEditor.parameterTypeConverters = [
   {
     id: "enumeration",
     parameterTypeToDiv: function EnumerationParameterToDiv(
-      type,
-      parameterEditor
+      type: any,
+      parameterEditor: any
     ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <EnumerationParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; viewState: any; parameter:... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
@@ -198,12 +218,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "date",
-    parameterTypeToDiv: function DateParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function DateParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <DateParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; parameter: any; parameterV... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -215,12 +239,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "dateTime",
-    parameterTypeToDiv: function DateTimeParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function DateTimeParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <DateTimeParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; parameter: any; parameterV... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -233,12 +261,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "region",
-    parameterTypeToDiv: function RegionParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function RegionParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <RegionParameterEditor
+              // @ts-expect-error TS(2769): No overload matches this call.
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
@@ -252,12 +284,12 @@ ParameterEditor.parameterTypeConverters = [
   {
     id: "regionType",
     parameterTypeToDiv: function RegionTypeParameterToDiv(
-      type,
-      parameterEditor
+      type: any,
+      parameterEditor: any
     ) {
       if (type === this.id) {
         const regionParam = parameterEditor.props.previewed.parameters.filter(
-          function (param) {
+          function (param: any) {
             return (
               defined(param.regionTypeParameter) &&
               param.regionTypeParameter === parameterEditor.props.parameter
@@ -270,6 +302,7 @@ ParameterEditor.parameterTypeConverters = [
               <>
                 {parameterEditor.renderLabel()}
                 <RegionTypeParameterEditor
+                  // @ts-expect-error TS(2769): No overload matches this call.
                   previewed={parameterEditor.props.previewed}
                   parameter={parameterEditor.props.parameter}
                   parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -287,13 +320,17 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "boolean",
-    parameterTypeToDiv: function BooleanParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function BooleanParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.props.parameter.hasNamedStates &&
               parameterEditor.renderLabel()}
             <BooleanParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; parameter: any; parameterV... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -306,14 +343,15 @@ ParameterEditor.parameterTypeConverters = [
   {
     id: "boolean-group",
     parameterTypeToDiv: function BooleanParameterGroupToDiv(
-      type,
-      parameterEditor
+      type: any,
+      parameterEditor: any
     ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <BooleanParameterGroupEditor
+              // @ts-expect-error TS(2769): No overload matches this call.
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -325,7 +363,10 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "geojson",
-    parameterTypeToDiv: function GeoJsonParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function GeoJsonParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
@@ -342,12 +383,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "info",
-    parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function GenericParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <InfoParameterEditor
+              // @ts-expect-error TS(2769): No overload matches this call.
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -359,12 +404,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "generic",
-    parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function GenericParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <GenericParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; parameter: any; parameterV... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
@@ -376,12 +425,16 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "number",
-    parameterTypeToDiv: function NumberParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function NumberParameterToDiv(
+      type: any,
+      parameterEditor: any
+    ) {
       if (type === this.id) {
         return (
           <div>
             {parameterEditor.renderLabel()}
             <NumberParameterEditor
+              // @ts-expect-error TS(2322): Type '{ previewed: any; parameter: any; parameterV... Remove this comment to see the full error message
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}

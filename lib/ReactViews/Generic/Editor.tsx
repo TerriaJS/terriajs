@@ -21,14 +21,17 @@ import "tinymce/plugins/table";
 import "tinymce/plugins/autolink";
 
 // Extra css to enable proper behaviour of tinymce, including image resize handles
+// @ts-expect-error TS(2307): Cannot find module 'tinymce/skins/content/default/... Remove this comment to see the full error message
 import contentCss from "tinymce/skins/content/default/content.min.css";
+// @ts-expect-error TS(2307): Cannot find module 'tinymce/skins/ui/oxide/content... Remove this comment to see the full error message
 import contentUiCss from "tinymce/skins/ui/oxide/content.min.css";
 
-export default function TinyEditor(props) {
+export default function TinyEditor(props: any) {
   const editorRef = useRef(null);
 
   return (
     <Editor
+      // @ts-expect-error TS(2322): Type 'Editor' is not assignable to type 'null'.
       onInit={(_evt, editor) => (editorRef.current = editor)}
       value={props.html}
       onEditorChange={props.onChange}

@@ -51,15 +51,16 @@ class Disclaimer extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  confirm(confirmCallbackFn) {
+  confirm(confirmCallbackFn: any) {
     if (confirmCallbackFn) {
       confirmCallbackFn();
     }
 
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.hideDisclaimer();
   }
 
-  deny(denyCallbackFn) {
+  deny(denyCallbackFn: any) {
     if (denyCallbackFn) {
       denyCallbackFn();
     }
@@ -67,6 +68,7 @@ class Disclaimer extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const disclaimer = this.props.viewState.disclaimerSettings;
     const disclaimerTitle = disclaimer?.title || "Disclaimer";
     const disclaimerConfirm = disclaimer?.confirmText || "Ok";
@@ -74,9 +76,11 @@ class Disclaimer extends React.Component {
     const disclaimerMessage =
       disclaimer?.message || "Disclaimer text goes here";
     const useSmallScreenInterface =
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.useSmallScreenInterface;
     const renderDenyButton = !!disclaimer?.denyAction;
     return disclaimer ? (
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
         <TopElementBox position="absolute" fullWidth fullHeight centered>
           <BackgroundImage
@@ -112,6 +116,7 @@ class Disclaimer extends React.Component {
             <Text
               styledLineHeight={"18px"}
               textLight
+              // @ts-expect-error TS(2769): No overload matches this call.
               css={(props) =>
                 `
                 // not sure of the ideal way to deal with this
@@ -160,4 +165,5 @@ class Disclaimer extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2345): Argument of type 'ForwardRefExoticComponent<WithOp... Remove this comment to see the full error message
 export default withTranslation()(withViewState(withTheme(Disclaimer)));

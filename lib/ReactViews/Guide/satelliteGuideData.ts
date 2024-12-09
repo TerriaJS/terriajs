@@ -4,7 +4,7 @@ import satelliteTime from "../../../wwwroot/images/guides/satellite-time.jpg";
 import satelliteZoom from "../../../wwwroot/images/guides/satellite-zoom.jpg";
 
 // Pass i18next.t from React component to re-render on language change
-function satelliteGuideData(t) {
+function satelliteGuideData(t: any) {
   return [
     {
       imageSrc: satelliteZoom,

@@ -39,15 +39,21 @@ class MappablePreview extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  async toggleOnMap(event) {
+  refToMeasure: any;
+
+  async toggleOnMap(event: any) {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     if (defined(this.props.viewState.storyShown)) {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       runInAction(() => (this.props.viewState.storyShown = false));
     }
 
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
 
     await toggleItemOnMapFromCatalog(
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState,
+      // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.previewed,
       keepCatalogOpen,
       {
@@ -58,21 +64,28 @@ class MappablePreview extends React.Component {
   }
 
   backToMap() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.explorerPanelIsVisible = false;
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const catalogItem = this.props.previewed;
     return (
+      // @ts-expect-error TS(2339): Property 'root' does not exist on type 'IMappableP... Remove this comment to see the full error message
       <div className={Styles.root}>
         {MappableMixin.isMixedInto(catalogItem) &&
           !catalogItem.disablePreview && (
             <DataPreviewMap
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               terria={this.props.terria}
               previewed={catalogItem}
               showMap={
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 !this.props.viewState.explorerPanelAnimating ||
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 this.props.viewState.useSmallScreenInterface
               }
             />
@@ -82,6 +95,7 @@ class MappablePreview extends React.Component {
           onClick={this.toggleOnMap.bind(this)}
           className={Styles.btnAdd}
         >
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           {this.props.terria.workbench.contains(catalogItem)
             ? t("preview.removeFromMap")
             : t("preview.addToMap")}
@@ -93,13 +107,18 @@ class MappablePreview extends React.Component {
           >
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
             {!catalogItem.hasLocalData &&
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               !this.props.viewState.useSmallScreenInterface && (
                 <div className={Styles.shareLinkWrapper}>
+                  // @ts-expect-error TS(2739): Remove this comment to see the full error message
                   <SharePanel
                     catalogShare
                     catalogShareWithoutText
+                    // @ts-expect-error TS(2339): Property 'widthFromMeasureElementHOC' does not exi... Remove this comment to see the full error message
                     modalWidth={this.props.widthFromMeasureElementHOC}
+                    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                     terria={this.props.terria}
+                    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                     viewState={this.props.viewState}
                   />
                 </div>
@@ -108,12 +127,14 @@ class MappablePreview extends React.Component {
           {catalogItem.loadMetadataResult?.error && (
             <WarningBox
               error={catalogItem.loadMetadataResult?.error}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
             />
           )}
           {catalogItem.loadMapItemsResult?.error && (
             <WarningBox
               error={catalogItem.loadMapItemsResult?.error}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
             />
           )}
@@ -124,4 +145,5 @@ class MappablePreview extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2345): Argument of type 'typeof MappablePreview' is not a... Remove this comment to see the full error message
 export default withTranslation()(measureElement(MappablePreview));

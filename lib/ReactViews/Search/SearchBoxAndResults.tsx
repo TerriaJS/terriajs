@@ -13,7 +13,10 @@ import Text from "../../Styled/Text";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchBox from "../Search/SearchBox";
 
-export function SearchInDataCatalog({ viewState, handleClick }) {
+export function SearchInDataCatalog({
+  viewState,
+  handleClick
+}: any) {
   const locationSearchText = viewState.searchState.locationSearchText;
   const { t } = useTranslation();
   return (
@@ -52,6 +55,7 @@ const PresentationBox = styled(Box).attrs({
   fullWidth: true
 })`
   ${(props) =>
+    // @ts-expect-error TS(2339): Property 'highlightBottom' does not exist on type ... Remove this comment to see the full error message
     props.highlightBottom &&
     `
       // styled-components doesn't seem to prefix linear-gradient.. soo
@@ -66,12 +70,15 @@ const PresentationBox = styled(Box).attrs({
 export const LOCATION_SEARCH_INPUT_NAME = "LocationSearchInput";
 
 export class SearchBoxAndResultsRaw extends React.Component {
-  constructor(props) {
+  _nowViewingChangeSubscription: any;
+  locationSearchRef: any;
+  constructor(props: any) {
     super(props);
     this.locationSearchRef = React.createRef();
   }
 
   componentDidMount() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.updateAppRef(
       LOCATION_SEARCH_INPUT_NAME,
       this.locationSearchRef
@@ -93,8 +100,10 @@ export class SearchBoxAndResultsRaw extends React.Component {
     // TODO(wing): why is this a reaction here and not in viewState itself?
     // Close the search results when the Now Viewing changes (so that it's visible).
     this._nowViewingChangeSubscription = reaction(
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       () => this.props.terria.workbench.items,
       () => {
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.searchState.showLocationSearchResults = false;
       }
     );
@@ -107,12 +116,14 @@ export class SearchBoxAndResultsRaw extends React.Component {
     }
   }
 
-  changeSearchText(newText) {
+  changeSearchText(newText: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.locationSearchText = newText;
     });
 
     if (newText.length === 0) {
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       removeMarker(this.props.terria);
       runInAction(() => {
         this.toggleShowLocationSearchResults(false);
@@ -120,6 +131,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
     }
     if (
       newText.length > 0 &&
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       !this.props.viewState.searchState.showLocationSearchResults
     ) {
       runInAction(() => {
@@ -129,11 +141,13 @@ export class SearchBoxAndResultsRaw extends React.Component {
   }
 
   search() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.searchState.searchLocations();
   }
 
-  toggleShowLocationSearchResults(bool) {
+  toggleShowLocationSearchResults(bool: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.showLocationSearchResults = bool;
     });
   }
@@ -143,6 +157,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const { viewState, placeholder } = this.props;
     const searchState = viewState.searchState;
     const locationSearchText = searchState.locationSearchText;
@@ -154,6 +169,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
     return (
       <Text textDarker>
         <Box fullWidth>
+          // @ts-expect-error TS(2769): No overload matches this call.
           <PresentationBox highlightBottom={shouldShowResults}>
             <SearchBox
               ref={this.locationSearchRef}
@@ -172,15 +188,16 @@ export class SearchBoxAndResultsRaw extends React.Component {
               column
               css={`
                 top: 100%;
-                background-color: ${(props) => props.theme.greyLightest};
+                background-color: ${(props: any) => props.theme.greyLightest};
                 max-height: calc(100vh - 120px);
-                border-radius: 0 0 ${(props) => props.theme.radius40Button}px
-                  ${(props) => props.theme.radius40Button}px;
+                border-radius: 0 0 ${(props: any) => props.theme.radius40Button}px
+                  ${(props: any) => props.theme.radius40Button}px;
               `}
             >
               {/* search {searchterm} in data catalog */}
               {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
               {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               {this.props.terria.searchBarModel.showSearchInCatalog &&
                 searchState.catalogSearchProvider && (
                   <Box column paddedRatio={2}>
@@ -198,25 +215,28 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   overflow-y: auto;
                 `}
               >
-                {searchState.locationSearchResults.map((search) => (
-                  <LocationSearchResults
-                    key={search.searchProvider.uniqueId}
-                    terria={this.props.terria}
-                    viewState={this.props.viewState}
-                    search={search}
-                    locationSearchText={locationSearchText}
-                    onLocationClick={(result) => {
-                      addMarker(this.props.terria, result);
-                      result.clickAction();
-                      runInAction(() => {
-                        searchState.showLocationSearchResults = false;
-                      });
-                    }}
-                    isWaitingForSearchToStart={
-                      searchState.isWaitingToStartLocationSearch
-                    }
-                  />
-                ))}
+                // @ts-expect-error TS(2741): Property 'theme' is missing in type. Remove this comment to see the full error message
+                {searchState.locationSearchResults.map((search: any) => <LocationSearchResults
+                  key={search.searchProvider.uniqueId}
+                  // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
+                  terria={this.props.terria}
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+                  viewState={this.props.viewState}
+                  search={search}
+                  locationSearchText={locationSearchText}
+                  onLocationClick={(result) => {
+                    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
+                    addMarker(this.props.terria, result);
+                    // @ts-expect-error TS(2722): Cannot invoke an object which is possibly 'undefin... Remove this comment to see the full error message
+                    result.clickAction();
+                    runInAction(() => {
+                      searchState.showLocationSearchResults = false;
+                    });
+                  }}
+                  isWaitingForSearchToStart={
+                    searchState.isWaitingToStartLocationSearch
+                  }
+                />)}
               </Box>
             </Box>
           )}
@@ -226,6 +246,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type 'typeo... Remove this comment to see the full error message
 SearchBoxAndResultsRaw.propTypes = {
   terria: PropTypes.object.isRequired,
   viewState: PropTypes.object.isRequired,

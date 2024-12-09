@@ -12,15 +12,17 @@ class FilterSection extends React.Component {
     item: PropTypes.object.isRequired
   };
 
-  change(filter, values) {
+  change(filter: any, values: any) {
     runInAction(() => {
       filter.setTrait(CommonStrata.user, "minimumShown", values[0]);
       filter.setTrait(CommonStrata.user, "maximumShown", values[1]);
     });
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     this.props.item.terria.currentViewer.notifyRepaintRequired();
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const item = this.props.item;
     if (!item.filters || item.filters.length === 0) {
       return null;
@@ -32,7 +34,7 @@ class FilterSection extends React.Component {
     );
   }
 
-  renderFilter(filter) {
+  renderFilter(filter: any) {
     const values = [filter.minimumShown, filter.maximumShown];
     return (
       <div key={filter.property} className={Styles.filter}>

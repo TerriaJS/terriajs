@@ -44,21 +44,24 @@ class AddData extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
 
     const remoteDataTypes =
+      // @ts-expect-error TS(2339): Property 'remoteDataTypes' does not exist on type ... Remove this comment to see the full error message
       this.props.remoteDataTypes ?? getDataType().remoteDataType;
 
     // Automatically suffix supported extension types to localDataType names
-    const localDataTypes = (
-      this.props.localDataTypes ?? getDataType().localDataType
-    ).map((dataType) => {
-      const extensions = dataType.extensions?.length
-        ? ` (${buildExtensionsList(dataType.extensions)})`
-        : "";
-      return { ...dataType, name: `${dataType.name}${extensions}` };
-    });
+    const localDataTypes =
+      // @ts-expect-error TS(2339): Property 'localDataTypes' does not exist on type '... Remove this comment to see the full error message
+      (this.props.localDataTypes ?? getDataType().localDataType).map(
+        (dataType: any) => {
+          const extensions = dataType.extensions?.length
+            ? ` (${buildExtensionsList(dataType.extensions)})`
+            : "";
+          return { ...dataType, name: `${dataType.name}${extensions}` };
+        }
+      );
 
     this.state = {
       remoteDataTypes,
@@ -69,42 +72,50 @@ class AddData extends React.Component {
     };
   }
 
-  selectLocalOption(option) {
+  selectLocalOption(option: any) {
     this.setState({
       localDataType: option
     });
   }
 
-  selectRemoteOption(option) {
+  selectRemoteOption(option: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.remoteDataType = option;
     });
   }
 
-  handleUploadFile(e) {
+  handleUploadFile(e: any) {
     this.setState({
       isLoading: true
     });
     addUserFiles(
       e.target.files,
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria,
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState,
+      // @ts-expect-error TS(2339): Property 'localDataType' does not exist on type 'R... Remove this comment to see the full error message
       this.state.localDataType
     ).then((addedCatalogItems) => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
+        // @ts-expect-error TS(2339): Property 'onFileAddFinished' does not exist on typ... Remove this comment to see the full error message
         this.props.onFileAddFinished(addedCatalogItems);
       }
       this.setState({
         isLoading: false
       });
       // reset active tab when file handling is done
+      // @ts-expect-error TS(2339): Property 'resetTab' does not exist on type 'Readon... Remove this comment to see the full error message
       this.props.resetTab();
     });
   }
 
-  async handleUrl(e) {
+  async handleUrl(e: any) {
+    // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
     const url = this.state.remoteUrl;
     e.preventDefault();
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     this.props.terria.analytics?.logEvent(
       Category.dataTab,
       DatatabAction.addDataUrl,
@@ -115,31 +126,44 @@ class AddData extends React.Component {
     });
     let promise;
     if (
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       !this.props.viewState.remoteDataType ||
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.remoteDataType.value === "auto"
     ) {
       promise = createCatalogItemFromFileOrUrl(
+        // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
         this.props.terria,
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState,
+        // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
         this.state.remoteUrl,
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.remoteDataType?.value
       );
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     } else if (this.props.viewState.remoteDataType.value === "json") {
+      // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
       promise = loadJson(this.state.remoteUrl)
         .then((data) => {
           if (data.error) {
             return Promise.reject(data.error);
           }
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           this.props.terria.catalog.group
             .addMembersFromJson(CommonStrata.user, data.catalog)
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             .raiseError(this.props.terria, "Failed to load catalog from file");
         })
         .then(() => {
+          // @ts-expect-error TS(2339): Property 'onUrlAddFinished' does not exist on type... Remove this comment to see the full error message
           this.props.onUrlAddFinished();
         })
         .catch((error) =>
           TerriaError.from(error).raiseError(
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             this.props.terria,
+            // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
             `An error occurred trying to add data from URL: ${this.state.remoteUrl}`
           )
         )
@@ -152,16 +176,19 @@ class AddData extends React.Component {
       try {
         const newItem = upsertModelFromJson(
           CatalogMemberFactory,
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           this.props.terria,
           "",
           CommonStrata.defaults,
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           { type: this.props.viewState.remoteDataType.value, name: url },
           {}
         ).throwIfUndefined({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem.loadMetadata().then((result) => {
+        // @ts-expect-error TS(2339): Property 'loadMetadata' does not exist on type 'Ba... Remove this comment to see the full error message
+        promise = newItem.loadMetadata().then((result: any) => {
           if (result.error) {
             return Promise.reject(result.error);
           }
@@ -172,10 +199,13 @@ class AddData extends React.Component {
         promise = Promise.reject(e);
       }
     }
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     addUserCatalogMember(this.props.terria, promise).then((addedItem) => {
       if (addedItem) {
+        // @ts-expect-error TS(2339): Property 'onFileAddFinished' does not exist on typ... Remove this comment to see the full error message
         this.props.onFileAddFinished([addedItem]);
         if (TimeVarying.is(addedItem)) {
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           this.props.terria.timelineStack.addToTop(addedItem);
         }
       }
@@ -185,32 +215,37 @@ class AddData extends React.Component {
       this.setState({
         isLoading: false
       });
+      // @ts-expect-error TS(2339): Property 'resetTab' does not exist on type 'Readon... Remove this comment to see the full error message
       this.props.resetTab();
     });
   }
 
-  onRemoteUrlChange(event) {
+  onRemoteUrlChange(event: any) {
     this.setState({
       remoteUrl: event.target.value
     });
   }
 
   renderPanels() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const dropdownTheme = {
+      // @ts-expect-error TS(2339): Property 'dropdown' does not exist on type 'IAddDa... Remove this comment to see the full error message
       dropdown: Styles.dropdown,
       list: Styles.dropdownList,
+      // @ts-expect-error TS(2339): Property 'dropdownListIsOpen' does not exist on ty... Remove this comment to see the full error message
       isOpen: Styles.dropdownListIsOpen,
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
+    // @ts-expect-error TS(2339): Property 'localDataTypes' does not exist on type '... Remove this comment to see the full error message
     const dataTypes = this.state.localDataTypes.reduce(function (
-      result,
-      currentDataType
+      result: any,
+      currentDataType: any
     ) {
       if (currentDataType.extensions) {
         return result.concat(
-          currentDataType.extensions.map((extension) => "." + extension)
+          currentDataType.extensions.map((extension: any) => "." + extension)
         );
       } else {
         return result;
@@ -219,10 +254,13 @@ class AddData extends React.Component {
     []);
 
     const remoteDataType =
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.remoteDataType ?? this.state.remoteDataTypes[0];
 
     return (
       <div className={Styles.tabPanels}>
+        // @ts-expect-error TS(2339): Property 'activeTab' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         {this.props.activeTab === "local" && (
           <>
             <div className={Styles.tabHeading}>{t("addData.localAdd")}</div>
@@ -233,14 +271,21 @@ class AddData extends React.Component {
                 </Trans>
               </label>
               <Dropdown
+                // @ts-expect-error TS(2339): Property 'localDataTypes' does not exist on type '... Remove this comment to see the full error message
                 options={this.state.localDataTypes}
+                // @ts-expect-error TS(2339): Property 'localDataType' does not exist on type 'R... Remove this comment to see the full error message
                 selected={this.state.localDataType}
+                // @ts-expect-error TS(2769): No overload matches this call.
                 selectOption={this.selectLocalOption.bind(this)}
                 matchWidth
                 theme={dropdownTheme}
               />
+              // @ts-expect-error TS(2339): Property 'localDataType' does not
+              exist on type 'R... Remove this comment to see the full error
+              message
               {this.state.localDataType?.description
                 ? parseCustomMarkdownToReactWithOptions(
+                    // @ts-expect-error TS(2339): Property 'localDataType' does not exist on type 'R... Remove this comment to see the full error message
                     this.state.localDataType?.description
                   )
                 : null}
@@ -250,13 +295,19 @@ class AddData extends React.Component {
                 </Trans>
               </label>
               <FileInput
+                // @ts-expect-error TS(2322): Type '{ accept: any; onChange: (e: any) => void; }... Remove this comment to see the full error message
                 accept={dataTypes.join(",")}
                 onChange={this.handleUploadFile.bind(this)}
               />
+              // @ts-expect-error TS(2339): Property 'isLoading' does not exist
+              on type 'Reado... Remove this comment to see the full error
+              message
               {this.state.isLoading && <Loader />}
             </section>
           </>
         )}
+        // @ts-expect-error TS(2339): Property 'activeTab' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         {this.props.activeTab === "web" && (
           <>
             <div className={Styles.tabHeading}>{t("addData.webAdd")}</div>
@@ -267,8 +318,10 @@ class AddData extends React.Component {
                 </Trans>
               </label>
               <Dropdown
+                // @ts-expect-error TS(2339): Property 'remoteDataTypes' does not exist on type ... Remove this comment to see the full error message
                 options={this.state.remoteDataTypes}
                 selected={remoteDataType}
+                // @ts-expect-error TS(2769): No overload matches this call.
                 selectOption={this.selectRemoteOption.bind(this)}
                 matchWidth
                 theme={dropdownTheme}
@@ -288,11 +341,11 @@ class AddData extends React.Component {
     );
   }
 
-  renderCustomComponent(CustomComponent) {
+  renderCustomComponent(CustomComponent: any) {
     return <CustomComponent />;
   }
 
-  renderDefaultForWebDataType(t) {
+  renderDefaultForWebDataType(t: any) {
     return (
       <>
         <label className={Styles.label}>
@@ -303,6 +356,7 @@ class AddData extends React.Component {
         </label>
         <form className={Styles.urlInput}>
           <input
+            // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
             value={this.state.remoteUrl}
             onChange={this.onRemoteUrlChange.bind(this)}
             className={Styles.urlInputTextBox}
@@ -310,6 +364,7 @@ class AddData extends React.Component {
             placeholder="e.g. http://data.gov.au/geoserver/wms"
           />
           <button
+            // @ts-expect-error TS(2339): Property 'remoteUrl' does not exist on type 'Reado... Remove this comment to see the full error message
             disabled={this.state.remoteUrl.length === 0}
             type="submit"
             onClick={this.handleUrl.bind(this)}
@@ -317,6 +372,8 @@ class AddData extends React.Component {
           >
             {t("addData.urlInputBtn")}
           </button>
+          // @ts-expect-error TS(2339): Property 'isLoading' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           {this.state.isLoading && <Loader />}
         </form>
       </>
@@ -332,8 +389,8 @@ class AddData extends React.Component {
  * @param extensions - string[]
  * @returns Comma separated string of extensions
  */
-function buildExtensionsList(extensions) {
-  return extensions.map((ext) => `.${ext}`).join(", ");
+function buildExtensionsList(extensions: any) {
+  return extensions.map((ext: any) => `.${ext}`).join(", ");
 }
 
 export default withTranslation()(AddData);

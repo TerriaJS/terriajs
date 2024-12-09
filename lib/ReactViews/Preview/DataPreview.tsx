@@ -29,12 +29,15 @@ class DataPreview extends React.Component {
 
   backToMap() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.explorerPanelIsVisible = false;
     });
   }
 
   renderInner() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     let previewed = this.props.previewed;
     if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
       // We are loading the nested target because we could be dealing with a nested reference here
@@ -61,8 +64,11 @@ class DataPreview extends React.Component {
       return (
         <div className={Styles.previewInner}>
           <MappablePreview
+            // @ts-expect-error TS(2322): Type '{ previewed: any; terria: any; viewState: an... Remove this comment to see the full error message
             previewed={previewed}
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             terria={this.props.terria}
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             viewState={this.props.viewState}
           />
         </div>
@@ -88,7 +94,9 @@ class DataPreview extends React.Component {
       return (
         <InvokeFunction
           previewed={previewed}
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           terria={this.props.terria}
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           viewState={this.props.viewState}
         />
       );
@@ -96,8 +104,11 @@ class DataPreview extends React.Component {
       return (
         <div className={Styles.previewInner}>
           <GroupPreview
+            // @ts-expect-error TS(2322): Type '{ previewed: any; terria: any; viewState: an... Remove this comment to see the full error message
             previewed={previewed}
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             terria={this.props.terria}
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             viewState={this.props.viewState}
           />
         </div>
@@ -112,13 +123,14 @@ class DataPreview extends React.Component {
                 Press <strong>Shift</strong> and click
               </span>
               <Icon
+                // @ts-expect-error TS(2339): Property 'GLYPHS' does not exist on type 'FC<IconP... Remove this comment to see the full error message
                 glyph={Icon.GLYPHS.add}
                 css={{
                   height: "20px",
                   width: "20px",
                   margin: "0px 5px",
                   verticalAlign: "middle",
-                  fill: `${(p) => p.theme.charcoalGrey}`
+                  fill: `${(p: any) => p.theme.charcoalGrey}`
                 }}
               />
               <span>to add multiple datasets</span>
@@ -141,7 +153,9 @@ class DataPreview extends React.Component {
   }
 
   renderUnloadedReference() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const isLoading = this.props.previewed.isLoadingReference;
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const hasTarget = this.props.previewed.target !== undefined;
     return (
       <div className={Styles.preview}>
@@ -151,6 +165,9 @@ class DataPreview extends React.Component {
             <>
               <div className={Styles.placeholder}>
                 <h2>Unable to resolve reference</h2>
+                // @ts-expect-error TS(2339): Property 'previewed' does not
+                exist on type 'Reado... Remove this comment to see the full
+                error message
                 {!this.props.previewed.loadReferenceResult?.error ? (
                   <p>
                     This reference could not be resolved because it is invalid
@@ -158,9 +175,14 @@ class DataPreview extends React.Component {
                   </p>
                 ) : null}
               </div>
+              // @ts-expect-error TS(2339): Property 'previewed' does not exist
+              on type 'Reado... Remove this comment to see the full error
+              message
               {this.props.previewed.loadReferenceResult?.error ? (
                 <WarningBox
+                  // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
                   error={this.props.previewed.loadReferenceResult?.error}
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                   viewState={this.props.viewState}
                 />
               ) : null}

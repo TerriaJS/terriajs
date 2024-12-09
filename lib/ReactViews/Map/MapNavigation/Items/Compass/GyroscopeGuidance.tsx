@@ -44,6 +44,7 @@ const CompassIcon = styled(Icon)`
   left: 50%;
   transform: translate(-50%, -50%);
   ${(props) =>
+    // @ts-expect-error TS(2339): Property 'inner' does not exist on type 'ThemedSty... Remove this comment to see the full error message
     props.inner
       ? `
       fill: ${props.theme.textDarker};
@@ -56,13 +57,14 @@ const CompassIcon = styled(Icon)`
       height: 64px;
     `}
   ${(props) =>
+    // @ts-expect-error TS(2339): Property 'darken' does not exist on type 'ThemedSt... Remove this comment to see the full error message
     props.darken &&
     `
       opacity: 0.2;
     `}
 `;
 
-function GyroscopeGuidancePanel(props) {
+function GyroscopeGuidancePanel(props: any) {
   const { t } = useTranslation();
   return (
     <Box
@@ -79,6 +81,7 @@ function GyroscopeGuidancePanel(props) {
         <Box>
           <CompassWrapper>
             <CompassIcon glyph={Icon.GLYPHS.compassOuterEnlarged} />
+            // @ts-expect-error TS(2769): No overload matches this call.
             <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
           </CompassWrapper>
           <Spacing right={2} />
@@ -96,8 +99,10 @@ function GyroscopeGuidancePanel(props) {
             <CompassIcon
               glyph={Icon.GLYPHS.compassOuterEnlarged}
               css={CompassPositioning}
+              // @ts-expect-error TS(2769): No overload matches this call.
               darken
             />
+            // @ts-expect-error TS(2769): No overload matches this call.
             <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
             <Spacing right={2} />
           </CompassWrapper>
@@ -129,7 +134,7 @@ GyroscopeGuidancePanel.propTypes = {
   onClose: PropTypes.func.isRequired
 };
 
-export function GyroscopeGuidance(props) {
+export function GyroscopeGuidance(props: any) {
   const [controlPanelOpen, setControlPanelOpen] = useState(false);
   const controlsMapIcon = useRef();
   const { t } = useTranslation();
@@ -179,6 +184,7 @@ export function GyroscopeGuidance(props) {
           `}
           refForCaret={controlsMapIcon}
           isOpen={controlPanelOpen}
+          // @ts-expect-error TS(2769): No overload matches this call.
           onOpenChanged={() => controlPanelOpen}
           // onDismissed={() => setControlPanelOpen(false)}
           btnTitle={t("compass.guidanceBtnTitle")}

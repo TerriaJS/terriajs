@@ -20,6 +20,7 @@ class DataCatalog extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const searchState = this.props.viewState.searchState;
     const isSearching = searchState.catalogSearchText.length > 0;
     const catalogSearchProvider = searchState.catalogSearchProvider;
@@ -28,10 +29,12 @@ class DataCatalog extends React.Component {
       catalogSearchProvider &&
       searchState.catalogSearchResults?.results
         ? searchState.catalogSearchResults.results.map(
-            (result) => result.catalogItem
+            (result: any) => result.catalogItem
           )
-        : this.props.items;
+        : // @ts-expect-error TS(2339): Property 'items' does not exist on type 'Readonly<... Remove this comment to see the full error message
+          this.props.items;
     const items = (unfilteredItems || []).filter(defined);
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <ul className={Styles.dataCatalog}>
@@ -47,9 +50,10 @@ class DataCatalog extends React.Component {
           </>
         )}
         {items.map(
-          (item) =>
+          (item: any) =>
             item !== this.props.terria.catalog.userAddedDataGroup && (
               <DataCatalogMember
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
                 member={item}
                 // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
@@ -58,8 +62,11 @@ class DataCatalog extends React.Component {
                   isSearching && !catalogSearchProvider.resultsAreReferences
                 }
                 key={item.uniqueId}
+                // @ts-expect-error TS(2339): Property 'onActionButtonClicked' does not exist on... Remove this comment to see the full error message
                 onActionButtonClicked={this.props.onActionButtonClicked}
+                // @ts-expect-error TS(2339): Property 'removable' does not exist on type 'Reado... Remove this comment to see the full error message
                 removable={this.props.removable}
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
                 isTopLevel
               />

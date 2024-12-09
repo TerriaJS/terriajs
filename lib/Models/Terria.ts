@@ -1068,6 +1068,7 @@ export default class Terria {
       LaunchAction.url,
       launchUrlForAnalytics
     );
+    // @ts-expect-error TS(7009)
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
       this.configParameters.serverConfigUrl

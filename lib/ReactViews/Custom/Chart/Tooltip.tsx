@@ -20,7 +20,7 @@ class Tooltip extends React.Component {
 
   prevItems = [];
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
@@ -30,6 +30,7 @@ class Tooltip extends React.Component {
     // When items` is unset, hold on to its last value. We do this because we
     // want to keep showing the tooltip. We then fade it out using the
     // CSSTransition below.
+    // @ts-expect-error TS(2339): Property 'items' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const items = this.props.items;
     if (items && items.length > 0) {
       this.prevItems = items;
@@ -53,7 +54,7 @@ class Tooltip extends React.Component {
   get groups() {
     // momentLines and momentPoints are not shown in the tooltip body
     const tooltipItems = this.items.filter(
-      ({ chartItem }) =>
+      ({ chartItem }: any) =>
         chartItem.type !== "momentLines" && chartItem.type !== "momentPoints"
     );
     return Object.entries(groupBy(tooltipItems, "chartItem.categoryName")).map(
@@ -66,6 +67,7 @@ class Tooltip extends React.Component {
 
   @computed
   get style() {
+    // @ts-expect-error TS(2339): Property 'left' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const { left, right, top, bottom } = this.props;
     return {
       left: left === undefined ? "" : `${left}px`,
@@ -78,6 +80,7 @@ class Tooltip extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'items' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const { items } = this.props;
     const show = items.length > 0;
     return (
@@ -90,8 +93,11 @@ class Tooltip extends React.Component {
         <VisxTooltip
           className={Styles.tooltip}
           key={Math.random()}
+          // @ts-expect-error TS(2322): Type '{ left: string; right: string; top: string; ... Remove this comment to see the full error message
           style={this.style}
         >
+          // @ts-expect-error TS(2339): Property 'title' does not exist on type
+          'ITooltipS... Remove this comment to see the full error message
           <div className={Styles.title}>{this.title}</div>
           <div>
             {this.groups.map((group) => (
@@ -115,11 +121,14 @@ class TooltipGroup extends React.PureComponent {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'name' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const { name, items } = this.props;
     return (
       <div className={Styles.group}>
+        // @ts-expect-error TS(2339): Property 'groupName' does not exist on
+        type 'ITool... Remove this comment to see the full error message
         {name && <div className={Styles.groupName}>{name}</div>}
-        {items.map((item) => (
+        {items.map((item: any) => (
           <TooltipItem key={`tooltipitem-${item.chartItem.key}`} item={item} />
         ))}
       </div>
@@ -134,7 +143,9 @@ class TooltipItem extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const chartItem = this.props.item.chartItem;
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const value = this.props.item.point.y;
     const formattedValue = isNaN(value) ? value : value.toFixed(2);
     return (
@@ -145,6 +156,8 @@ class TooltipItem extends React.Component {
         />
         <div className={Styles.itemName}>{chartItem.name}</div>
         <div className={Styles.itemValue}>{formattedValue}</div>
+        // @ts-expect-error TS(2339): Property 'itemUnits' does not exist on
+        type 'ITool... Remove this comment to see the full error message
         <div className={Styles.itemUnits}>{chartItem.units}</div>
       </div>
     );

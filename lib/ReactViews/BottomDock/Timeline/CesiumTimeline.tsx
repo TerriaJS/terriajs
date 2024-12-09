@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'terr... Remove this comment to see the full error message
 import WrappedTimeline from "terriajs-cesium-widgets/Source/Timeline/Timeline";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { formatDate, formatDateTime, formatTime } from "./DateFormats";
@@ -21,7 +22,7 @@ const CesiumTimeline = createReactClass({
       this.props.terria.timelineClock
     );
 
-    this.cesiumTimeline.makeLabel = (time) => {
+    this.cesiumTimeline.makeLabel = (time: any) => {
       if (defined(this.props.terria.timelineStack.top)) {
         const layer = this.props.terria.timelineStack.top;
         if (
@@ -50,7 +51,7 @@ const CesiumTimeline = createReactClass({
 
     this.cesiumTimeline.addEventListener(
       "settime",
-      (e) => {
+      (e: any) => {
         const clock = e.clock;
         clock.currentTime = e.timeJulian;
         clock.shouldAnimate = false;

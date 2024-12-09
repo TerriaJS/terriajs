@@ -19,7 +19,7 @@ import ViewerMode from "../../Models/ViewerMode";
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  */
-const DragPoints = function (terria, pointMovedCallback) {
+const DragPoints = function (this: any, terria: any, pointMovedCallback: any) {
   this._terria = terria;
   this._createDragPointsHelper(pointMovedCallback);
 
@@ -70,7 +70,7 @@ DragPoints.prototype.resetDragCount = function () {
  *
  * @param {CustomDataSource} entities Entities that user has drawn on the map.
  */
-DragPoints.prototype.updateDraggableObjects = function (entities) {
+DragPoints.prototype.updateDraggableObjects = function (entities: any) {
   this._entities = entities;
   this._dragPointsHelper.updateDraggableObjects(entities);
 };
@@ -80,16 +80,20 @@ DragPoints.prototype.updateDraggableObjects = function (entities) {
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  * @private
  */
-DragPoints.prototype._createDragPointsHelper = function (pointMovedCallback) {
+DragPoints.prototype._createDragPointsHelper = function (
+  pointMovedCallback: any
+) {
   if (defined(this._dragPointsHelper)) {
     this._dragPointsHelper.destroy();
   }
   if (this._terria.mainViewer.viewerMode === ViewerMode.Leaflet) {
+    // @ts-expect-error TS(7009)
     this._dragPointsHelper = new LeafletDragPoints(
       this._terria,
       pointMovedCallback
     );
   } else {
+    // @ts-expect-error TS(7009)
     this._dragPointsHelper = new CesiumDragPoints(
       this._terria,
       pointMovedCallback

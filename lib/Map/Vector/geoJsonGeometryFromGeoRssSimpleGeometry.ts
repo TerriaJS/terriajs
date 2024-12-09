@@ -8,8 +8,9 @@ const featureCreators = {
   polygon: createPolygonGeometry,
   box: createGeometryFromBox
 };
-function geoJsonGeometryFromGeoRssSimpleGeometry(geometry) {
+function geoJsonGeometryFromGeoRssSimpleGeometry(geometry: any) {
   const type = geometry.localName;
+  // @ts-expect-error TS(7053)
   const creator = featureCreators[type];
   if (!defined(creator)) {
     throw new RuntimeError(
@@ -22,27 +23,27 @@ function geoJsonGeometryFromGeoRssSimpleGeometry(geometry) {
   return creator(geometry);
 }
 
-function createPointGeometry(pointGeometry) {
+function createPointGeometry(pointGeometry: any) {
   return {
     type: "Point",
     coordinates: geom2coord(pointGeometry.textContent.trim())[0]
   };
 }
-function createLineGeometry(lineGeometry) {
+function createLineGeometry(lineGeometry: any) {
   return {
     type: "LineString",
     coordinates: geom2coord(lineGeometry.textContent)
   };
 }
 
-function createPolygonGeometry(polygonGeometry) {
+function createPolygonGeometry(polygonGeometry: any) {
   return {
     type: "Polygon",
     coordinates: [geom2coord(polygonGeometry.textContent.trim())]
   };
 }
 
-function createGeometryFromBox(bboxGeometry) {
+function createGeometryFromBox(bboxGeometry: any) {
   const coordinates = bboxGeometry.textContent
     .trim()
     .split(/\s+/)
@@ -69,12 +70,12 @@ function createGeometryFromBox(bboxGeometry) {
   };
 }
 
-function isNotEmpty(s) {
+function isNotEmpty(s: any) {
   return s.length !== 0;
 }
 
 //Utility function to change esri gml positions to geojson positions
-function geom2coord(posList) {
+function geom2coord(posList: any) {
   const pnts = posList.split(/\s+/).filter(isNotEmpty);
   const coords = [];
   for (let i = 0; i < pnts.length; i += 2) {

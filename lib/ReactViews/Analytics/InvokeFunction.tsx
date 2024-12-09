@@ -11,12 +11,14 @@ import Styles from "./invoke-function.scss";
 import ParameterEditor from "./ParameterEditor";
 
 class FunctionViewModel {
-  constructor(catalogFunction) {
+  _parameters: any;
+  catalogFunction: any;
+  constructor(catalogFunction: any) {
     this.catalogFunction = catalogFunction;
     this._parameters = {};
   }
 
-  getParameter(parameter) {
+  getParameter(parameter: any) {
     let result = this._parameters[parameter.id];
     if (!result || result.parameter !== parameter) {
       result = this._parameters[parameter.id] = new ParameterViewModel(
@@ -37,7 +39,7 @@ class ParameterViewModel {
   @observable
   wasEverBlurredWhileInvalid = false;
 
-  constructor(parameter) {
+  constructor(parameter: any) {
     makeObservable(this);
     this.parameter = parameter;
   }
@@ -52,13 +54,16 @@ class InvokeFunction extends React.Component {
     t: PropTypes.func.isRequired
   };
 
+  parametersViewModel: any;
+
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     this.parametersViewModel = new FunctionViewModel(this.props.previewed);
   }
 
   /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillUpdate(nextProps, _nextState) {
+  UNSAFE_componentWillUpdate(nextProps: any, _nextState: any) {
     if (nextProps.previewed !== this.parametersViewModel.catalogFunction) {
       // Clear previous parameters view model, because this is a different catalog function.
       this.parametersViewModel = new FunctionViewModel(nextProps.previewed);
@@ -66,15 +71,20 @@ class InvokeFunction extends React.Component {
   }
 
   submit() {
-    this.props.previewed.submitJob().catch((e) => {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+    this.props.previewed.submitJob().catch((e: any) => {
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria.raiseErrorToUser(e);
     });
 
     runInAction(() => {
       // Close modal window
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.explorerPanelIsVisible = false;
       // mobile switch to nowvewing
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.switchMobileView(
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.mobileViewOptions.preview
       );
     });
@@ -84,18 +94,25 @@ class InvokeFunction extends React.Component {
     // Key should include the previewed item identifier so that
     // components are refreshed when different previewed items are
     // displayed
-    return this.props.previewed.functionParameters.map((param, _i) => (
-      <ParameterEditor
-        key={param.id + this.props.previewed.uniqueId}
-        parameter={param}
-        viewState={this.props.viewState}
-        previewed={this.props.previewed}
-        parameterViewModel={this.parametersViewModel.getParameter(param)}
-      />
-    ));
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+    return this.props.previewed.functionParameters.map(
+      (param: any, _i: any) => (
+        <ParameterEditor
+          // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+          key={param.id + this.props.previewed.uniqueId}
+          // @ts-expect-error TS(2769): No overload matches this call.
+          parameter={param}
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+          viewState={this.props.viewState}
+          // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+          previewed={this.props.previewed}
+          parameterViewModel={this.parametersViewModel.getParameter(param)}
+        />
+      )
+    );
   }
 
-  validateParameter(parameter) {
+  validateParameter(parameter: any) {
     if (
       !parameter.isValid ||
       !this.parametersViewModel.getParameter(parameter).isValueValid
@@ -113,27 +130,39 @@ class InvokeFunction extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     if (this.props.previewed.isLoading) {
       return <Loader />;
     }
 
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const invalidParameters = this.props.previewed.functionParameters.some(
-      (param) => this.validateParameter(param) !== true
+      (param: any) => this.validateParameter(param) !== true
     );
 
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <div className={Styles.invokeFunction}>
         <div className={Styles.content}>
+          // @ts-expect-error TS(2339): Property 'previewed' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           <h3>{this.props.previewed.name}</h3>
+          // @ts-expect-error TS(2339): Property 'previewed' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           {this.props.previewed.loadMetadataResult?.error && (
             <WarningBox
+              // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
               error={this.props.previewed.loadMetadataResult?.error}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
             />
           )}
           <div className={Styles.description}>
+            // @ts-expect-error TS(2339): Property 'previewed' does not exist on
+            type 'Reado... Remove this comment to see the full error message
             {parseCustomMarkdownToReact(this.props.previewed.description, {
+              // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
               catalogItem: this.props.previewed
             })}
           </div>

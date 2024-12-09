@@ -33,12 +33,14 @@ const ColorScaleRangeSection = createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
+      // @ts-expect-error TS(2339): Property 'minValue' does not exist on type 'Readon... Remove this comment to see the full error message
       minRange: nextProps.minValue,
+      // @ts-expect-error TS(2339): Property 'maxValue' does not exist on type 'Readon... Remove this comment to see the full error message
       maxRange: nextProps.maxValue
     });
   },
 
-  updateRange(e) {
+  updateRange(e: any) {
     e.preventDefault();
     const { t } = this.props;
     const min = parseFloat(this.state.minRange);
@@ -81,13 +83,13 @@ const ColorScaleRangeSection = createReactClass({
     this.props.item.setTrait("user", "colorScaleMaximum", max);
   },
 
-  changeRangeMin(event) {
+  changeRangeMin(event: any) {
     this.setState({
       minRange: event.target.value
     });
   },
 
-  changeRangeMax(event) {
+  changeRangeMax(event: any) {
     this.setState({
       maxRange: event.target.value
     });

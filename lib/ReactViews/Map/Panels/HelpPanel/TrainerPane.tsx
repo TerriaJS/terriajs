@@ -34,6 +34,7 @@ class TrainerPane extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
     const { content, i18n, viewState } = this.props;
     const { trainerItems, markdownText } = content;
     return (
@@ -44,7 +45,7 @@ class TrainerPane extends React.Component {
           )}
           {trainerItems?.map && (
             <UlTrainerItems column fullWidth justifySpaceBetween>
-              {trainerItems.map((item, index) => (
+              {trainerItems.map((item: any, index: any) => (
                 <li key={index}>
                   <TrainerButton
                     secondary

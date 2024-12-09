@@ -9,12 +9,13 @@ import Styles from "./menu-button.scss";
  *
  * @constructor
  */
-function MenuButton(props) {
+function MenuButton(props: any) {
   const target = props.href !== "#" ? "_blank" : undefined;
   const rel = target === "_blank" ? "noreferrer" : undefined;
   return (
     <a
       className={classNames(Styles.btnAboutLink, {
+        // @ts-expect-error TS(2339): Property 'aboutTweak' does not exist on type 'IMen... Remove this comment to see the full error message
         [Styles.aboutTweak]: props.href === "about.html"
       })}
       href={props.href}

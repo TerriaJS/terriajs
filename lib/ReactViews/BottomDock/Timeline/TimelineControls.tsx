@@ -31,6 +31,7 @@ const TimelineControls = createReactClass({
   },
 
   gotoStart() {
+    // @ts-expect-error TS(2551): Property 'gotoStart' does not exist on type 'typeo... Remove this comment to see the full error message
     this.props.analytics?.logEvent(Category.timeLine, TimeLineAction.gotoStart);
     this.props.clock.currentTime = this.props.clock.startTime;
     this.props.currentViewer.notifyRepaintRequired();
@@ -79,6 +80,7 @@ const TimelineControls = createReactClass({
 
   toggleLoop() {
     this.props.analytics?.logEvent(
+      // @ts-expect-error TS(2551): Property 'timeline' does not exist on type 'typeof... Remove this comment to see the full error message
       Category.timeline,
       TimeLineAction.toggleLoop
     );

@@ -19,10 +19,11 @@ const Numbers = styled(Text)`
   background-color: ${(props) => props.theme.textDarker};
 `;
 
-const renderOrderedList = function (contents) {
-  return contents.map((content, i) => (
+const renderOrderedList = function (contents: any) {
+  return contents.map((content: any, i: any) => (
     <Box key={i} paddedVertically>
       <Box alignItemsFlexStart>
+        // @ts-expect-error TS(2769): No overload matches this call.
         <Numbers textLight textAlignCenter darkBg>
           {i + 1}
         </Numbers>
@@ -52,9 +53,12 @@ export class StyledHtmlRaw extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const { viewState, injectTooltips, i18n } = this.props;
+    // @ts-expect-error TS(2339): Property 'styledTextProps' does not exist on type ... Remove this comment to see the full error message
     const styledTextProps = this.props.styledTextProps || {};
 
+    // @ts-expect-error TS(2339): Property 'markdown' does not exist on type 'Readon... Remove this comment to see the full error message
     const markdownToParse = applyTranslationIfExists(this.props.markdown, i18n);
 
     const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
@@ -68,7 +72,7 @@ export class StyledHtmlRaw extends React.Component {
     return (
       <div>
         {content?.map &&
-          content.map((item, i) => {
+          content.map((item: any, i: any) => {
             if (!item) return null;
 
             /* Either a header or paragraph tag */
@@ -88,7 +92,9 @@ export class StyledHtmlRaw extends React.Component {
               return (
                 <>
                   {renderOrderedList(
-                    item.props.children.map((point) => point.props.children)
+                    item.props.children.map(
+                      (point: any) => point.props.children
+                    )
                   )}
                   <Spacing bottom={4} />
                 </>

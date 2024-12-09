@@ -22,6 +22,7 @@ class MobileHeader extends React.Component {
   static displayName = "MobileHeader";
 
   showSearch() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const viewState = this.props.viewState;
     const mobileView = viewState.mobileView;
     const mobileViewOptions = viewState.mobileViewOptions;
@@ -41,35 +42,46 @@ class MobileHeader extends React.Component {
 
   closeLocationSearch() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.showMobileLocationSearch = false;
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.explorerPanelIsVisible = false;
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.switchMobileView(null);
     });
   }
 
   closeCatalogSearch() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.showMobileCatalogSearch = false;
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.catalogSearchText = "";
     });
   }
 
   onMobileDataCatalogClicked() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.setTopElement("DataCatalog");
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.toggleView(this.props.viewState.mobileViewOptions.data);
   }
 
   onMobileNowViewingClicked() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.setTopElement("NowViewing");
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
   }
 
-  changeLocationSearchText(newText) {
+  changeLocationSearchText(newText: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.locationSearchText = newText;
     });
 
     if (newText.length === 0) {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       removeMarker(this.props.viewState.terria);
     }
 
@@ -78,48 +90,63 @@ class MobileHeader extends React.Component {
 
   showLocationSearchResults() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       const text = this.props.viewState.searchState.locationSearchText;
       if (text && text.length > 0) {
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.explorerPanelIsVisible = true;
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.mobileView =
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           this.props.viewState.mobileViewOptions.locationSearchResults;
       } else {
         // TODO: return to the preview mobileView, rather than dropping back to the map
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.explorerPanelIsVisible = false;
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.mobileView = null;
       }
     });
   }
 
-  changeCatalogSearchText(newText) {
+  changeCatalogSearchText(newText: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.catalogSearchText = newText;
     });
   }
 
   searchLocations() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.searchState.searchLocations();
   }
 
   searchCatalog() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.searchState.searchCatalog();
   }
 
-  toggleView(viewname) {
+  toggleView(viewname: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       if (this.props.viewState.mobileView !== viewname) {
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.explorerPanelIsVisible = true;
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.switchMobileView(viewname);
       } else {
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.explorerPanelIsVisible = false;
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState.switchMobileView(null);
       }
     });
   }
 
-  onClickFeedback(e) {
+  onClickFeedback(e: any) {
     e.preventDefault();
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.feedbackFormIsVisible = true;
     });
     this.setState({
@@ -128,6 +155,7 @@ class MobileHeader extends React.Component {
   }
 
   renderSearch() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t, viewState } = this.props;
     const searchState = viewState.searchState;
     return (
@@ -139,6 +167,7 @@ class MobileHeader extends React.Component {
             onDoSearch={this.searchLocations.bind(this)}
             placeholder={applyTranslationIfExists(
               viewState.terria.searchBarModel.placeholder,
+              // @ts-expect-error TS(2339): Property 'i18n' does not exist on type 'Readonly<{... Remove this comment to see the full error message
               this.props.i18n
             )}
             alwaysShowClear
@@ -161,11 +190,15 @@ class MobileHeader extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const searchState = this.props.viewState.searchState;
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const nowViewingLength =
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.terria.workbench.items !== undefined
-        ? this.props.viewState.terria.workbench.items.length
+        ? // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+          this.props.viewState.terria.workbench.items.length
         : 0;
 
     return (
@@ -175,6 +208,7 @@ class MobileHeader extends React.Component {
           fullWidth
           fullHeight
           paddedRatio={1}
+          // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
           backgroundColor={this.props.theme.dark}
         >
           {!searchState.showMobileLocationSearch &&
@@ -188,7 +222,9 @@ class MobileHeader extends React.Component {
               >
                 <HamburgerButton
                   type="button"
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                   onClick={this.props.viewState.toggleMobileMenu.bind(
+                    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                     this.props.viewState
                   )}
                   title={t("mobile.toggleNavigation")}
@@ -201,15 +237,18 @@ class MobileHeader extends React.Component {
                   />
                 </HamburgerButton>
                 <Branding
+                  // @ts-expect-error TS(2322): Type '{ terria: any; viewState: any; version: any;... Remove this comment to see the full error message
                   terria={this.props.viewState.terria}
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                   viewState={this.props.viewState}
+                  // @ts-expect-error TS(2339): Property 'version' does not exist on type 'Readonl... Remove this comment to see the full error message
                   version={this.props.version}
                 />
               </Box>
               <div
                 className={Styles.groupRight}
                 css={`
-                  background-color: ${(p) => p.theme.dark};
+                  background-color: ${(p: any) => p.theme.dark};
                 `}
               >
                 <button
@@ -258,20 +297,29 @@ class MobileHeader extends React.Component {
           )}
         </Box>
         <MobileMenu
+          // @ts-expect-error TS(2339): Property 'menuItems' does not exist on type 'Reado... Remove this comment to see the full error message
           menuItems={this.props.menuItems}
+          // @ts-expect-error TS(2339): Property 'menuLeftItems' does not exist on type 'R... Remove this comment to see the full error message
           menuLeftItems={this.props.menuLeftItems}
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           viewState={this.props.viewState}
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           terria={this.props.viewState.terria}
           showFeedback={
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             !!this.props.viewState.terria.configParameters.feedbackUrl
           }
         />
         {/* Don't show mobile modal window if user is currently interacting
               with map - like picking a point or drawing shapes
            */}
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         {!this.props.viewState.isMapInteractionActive && (
           <MobileModalWindow
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             terria={this.props.viewState.terria}
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             viewState={this.props.viewState}
           />
         )}
@@ -298,6 +346,7 @@ const HamburgerButton = styled(RawButton)`
   }
 `;
 
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type 'typeo... Remove this comment to see the full error message
 MobileHeader.propTypes = {
   viewState: PropTypes.object.isRequired,
   version: PropTypes.string,
@@ -308,4 +357,5 @@ MobileHeader.propTypes = {
   i18n: PropTypes.object
 };
 
+// @ts-expect-error TS(2345): Argument of type 'FC<Omit<WithViewState, "viewStat... Remove this comment to see the full error message
 export default withTranslation()(withTheme(withViewState(MobileHeader)));

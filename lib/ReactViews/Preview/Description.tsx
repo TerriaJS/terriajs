@@ -24,7 +24,7 @@ class Description extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  renderDescription(catalogItem) {
+  renderDescription(catalogItem: any) {
     if (catalogItem.type === "wms") {
       return (
         <p key="wms-description">
@@ -64,12 +64,14 @@ class Description extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const catalogItem = this.props.item;
 
     // Make sure all data and metadata URLs have `url` set
-    const metadataUrls = catalogItem.metadataUrls?.filter((m) => m.url);
-    const dataUrls = catalogItem.dataUrls?.filter((m) => m.url);
+    const metadataUrls = catalogItem.metadataUrls?.filter((m: any) => m.url);
+    const dataUrls = catalogItem.dataUrls?.filter((m: any) => m.url);
 
     return (
       <div
@@ -77,14 +79,13 @@ class Description extends React.Component {
         css={`
           a,
           a:visited {
-            color: ${(p) => p.theme.colorPrimary};
+            color: ${(p: any) => p.theme.colorPrimary};
           }
         `}
       >
         {catalogItem.isExperiencingIssues && (
           <WarningBox>{t("preview.mayBeExperiencingIssues")}</WarningBox>
         )}
-
         {catalogItem.description && catalogItem.description.length > 0 && (
           <div>
             <h4 className={Styles.h4}>{t("description.name")}</h4>
@@ -93,27 +94,25 @@ class Description extends React.Component {
             })}
           </div>
         )}
-
         {catalogItem.hasLocalData && <p>{t("description.dataLocal")}</p>}
-
         {!catalogItem.hasLocalData &&
           !catalogItem.hasDescription &&
           !catalogItem.hideDefaultDescription && (
             <p>{t("description.dataNotLocal")}</p>
           )}
-
         {metadataUrls && metadataUrls.length > 0 && (
           <>
             <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-            {metadataUrls.map((metadataUrl, _i) => (
+            {metadataUrls.map((metadataUrl: any, _i: any) => (
               <Box paddedVertically key={metadataUrl.url}>
                 <a
                   href={metadataUrl.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  // @ts-expect-error TS(2339): Property 'link' does not exist on type 'IMappableP... Remove this comment to see the full error message
                   className={`${Styles.link} description-metadataUrls`}
                   css={`
-                    color: ${(p) => p.theme.colorPrimary};
+                    color: ${(p: any) => p.theme.colorPrimary};
                   `}
                 >
                   {metadataUrl.title && (
@@ -125,9 +124,7 @@ class Description extends React.Component {
             ))}
           </>
         )}
-
         <DataPreviewSections metadataItem={catalogItem} />
-
         {catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0 && (
           <div>
             <h4 className={Styles.h4}>{t("description.dataCustodian")}</h4>
@@ -136,15 +133,15 @@ class Description extends React.Component {
             })}
           </div>
         )}
-
         {!catalogItem.hideSource && (
           <>
             {catalogItem.url && (
               <>
                 <h4 className={Styles.h4}>{catalogItem.typeName} URL</h4>
-
                 {this.renderDescription(catalogItem)}
-
+                // @ts-expect-error TS(2339): Property 'printView' does not
+                exist on type 'Reado... Remove this comment to see the full
+                error message
                 {this.props.printView ? (
                   <code>{catalogItem.url}</code>
                 ) : (
@@ -153,10 +150,10 @@ class Description extends React.Component {
                     className={Styles.field}
                     type="text"
                     value={catalogItem.url}
+                    // @ts-expect-error TS(2339): Property 'select' does not exist on type 'EventTar... Remove this comment to see the full error message
                     onClick={(e) => e.target.select()}
                   />
                 )}
-
                 {catalogItem.type === "wms" ||
                   (catalogItem.type === "esri-mapServer" &&
                     defined(catalogItem.layers) && (
@@ -168,7 +165,6 @@ class Description extends React.Component {
                         : {catalogItem.layers}
                       </p>
                     ))}
-
                 {catalogItem.type === "wfs" && (
                   <p key="wfs-typeNames">
                     {t("description.typeName")}
@@ -180,12 +176,11 @@ class Description extends React.Component {
                 )}
               </>
             )}
-
             {dataUrls && dataUrls.length > 0 && (
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
                 {dataUrls.map(
-                  (dataUrl, _i) =>
+                  (dataUrl: any, _i: any) =>
                     (dataUrl.type?.startsWith("wfs") ||
                       dataUrl.type?.startsWith("wcs")) && (
                       <>
@@ -224,9 +219,10 @@ class Description extends React.Component {
                             href={dataUrl.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            // @ts-expect-error TS(2339): Property 'link' does not exist on type 'IMappableP... Remove this comment to see the full error message
                             className={`${Styles.link} description-dataUrls`}
                             css={`
-                              color: ${(p) => p.theme.colorPrimary};
+                              color: ${(p: any) => p.theme.colorPrimary};
                             `}
                           >
                             {dataUrl.title && (
@@ -240,7 +236,8 @@ class Description extends React.Component {
                 )}
               </>
             )}
-
+            // @ts-expect-error TS(2339): Property 'printView' does not exist on
+            type 'Reado... Remove this comment to see the full error message
             {!this.props.printView && defined(catalogItem.metadata) && (
               <>
                 {defined(catalogItem.metadata.dataSourceMetadata) &&
@@ -248,9 +245,11 @@ class Description extends React.Component {
                     <div className={Styles.metadata}>
                       <Collapsible
                         title={t("description.dataSourceDetails")}
+                        // @ts-expect-error TS(2322): Type '{ children: Element; title: any; isInverse: ... Remove this comment to see the full error message
                         isInverse
                       >
                         <MetadataTable
+                          // @ts-expect-error TS(2769): No overload matches this call.
                           metadataItem={catalogItem.metadata.dataSourceMetadata}
                         />
                       </Collapsible>
@@ -261,9 +260,11 @@ class Description extends React.Component {
                     <div className={Styles.metadata}>
                       <Collapsible
                         title={t("description.dataServiceDetails")}
+                        // @ts-expect-error TS(2322): Type '{ children: Element; title: any; isInverse: ... Remove this comment to see the full error message
                         isInverse
                       >
                         <MetadataTable
+                          // @ts-expect-error TS(2769): No overload matches this call.
                           metadataItem={catalogItem.metadata.serviceMetadata}
                         />
                       </Collapsible>
@@ -273,6 +274,8 @@ class Description extends React.Component {
             )}
           </>
         )}
+        // @ts-expect-error TS(2339): Property 'printView' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         {!this.props.printView ? <ExportData item={catalogItem} /> : null}
       </div>
     );

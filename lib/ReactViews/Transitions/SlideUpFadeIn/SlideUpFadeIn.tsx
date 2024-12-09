@@ -11,7 +11,7 @@ export function SlideUpFadeIn({
   onEnter = () => {},
   onExited = () => {},
   transitionProps
-}) {
+}: any) {
   return (
     <CSSTransition
       in={isVisible}

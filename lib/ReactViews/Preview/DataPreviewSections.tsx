@@ -29,10 +29,11 @@ class DataPreviewSections extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  sortInfoSections(items) {
+  sortInfoSections(items: any) {
+    // @ts-expect-error TS(2339): Property 'metadataItem' does not exist on type 'Re... Remove this comment to see the full error message
     const infoSectionOrder = this.props.metadataItem.infoSectionOrder;
 
-    items.sort(function (a, b) {
+    items.sort(function (a: any, b: any) {
       const aIndex = infoSectionOrder.indexOf(a.name);
       const bIndex = infoSectionOrder.indexOf(b.name);
       if (aIndex >= 0 && bIndex < 0) {
@@ -46,16 +47,17 @@ class DataPreviewSections extends React.Component {
     });
 
     return items.filter(
-      (item) =>
+      (item: any) =>
         isDefined(item.content ?? item.contentAsObject) &&
         (item.content ?? item.contentAsObject) !== null &&
         item.content !== ""
     );
   }
 
-  clickInfoSection(reportName, isOpen) {
+  clickInfoSection(reportName: any, isOpen: any) {
+    // @ts-expect-error TS(2339): Property 'metadataItem' does not exist on type 'Re... Remove this comment to see the full error message
     const info = this.props.metadataItem.info;
-    const clickedInfo = info.find((report) => report.name === reportName);
+    const clickedInfo = info.find((report: any) => report.name === reportName);
 
     if (isDefined(clickedInfo)) {
       runInAction(() => {
@@ -66,12 +68,13 @@ class DataPreviewSections extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'metadataItem' does not exist on type 'Re... Remove this comment to see the full error message
     const metadataItem = this.props.metadataItem;
     const items = metadataItem.hideSource
       ? metadataItem.infoWithoutSources
       : metadataItem.info.slice();
 
-    const renderSection = (item) => {
+    const renderSection = (item: any) => {
       let content = item.content;
       try {
         content = Mustache.render(content, metadataItem);
@@ -88,7 +91,7 @@ class DataPreviewSections extends React.Component {
 
     return (
       <div>
-        {this.sortInfoSections(items).map((item, i) => (
+        {this.sortInfoSections(items).map((item: any, i: any) => (
           <Box paddedVertically displayInlineBlock fullWidth key={i}>
             <Collapsible
               key={i}
@@ -104,6 +107,8 @@ class DataPreviewSections extends React.Component {
                 ? renderSection(item)
                 : item.contentAsObject !== undefined && (
                     <Box paddedVertically={3} fullWidth>
+                      // @ts-expect-error TS(2769): No overload matches this
+                      call.
                       <MetadataTable metadataItem={item.contentAsObject} />
                     </Box>
                   )}

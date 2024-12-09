@@ -44,10 +44,12 @@ class BottomDockChart extends React.Component {
 
   render() {
     return (
+      // @ts-expect-error TS(2739): Type '{ width: number; children?: ReactNode; }' is... Remove this comment to see the full error message
       <Chart
         {...this.props}
         width={Math.max(
           chartMinWidth,
+          // @ts-expect-error TS(2339): Property 'width' does not exist on type 'Readonly<... Remove this comment to see the full error message
           this.props.width || this.props.parentWidth
         )}
       />
@@ -72,40 +74,44 @@ class Chart extends React.Component {
     margin: { left: 20, right: 30, top: 10, bottom: 50 }
   };
 
-  @observable.ref zoomedXScale;
-  @observable mouseCoords;
+  @observable.ref zoomedXScale: any;
+  @observable mouseCoords: any;
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
 
   @computed
   get chartItems() {
+    // @ts-expect-error TS(2339): Property 'chartItems' does not exist on type 'Read... Remove this comment to see the full error message
     return sortChartItemsByType(this.props.chartItems)
-      .map((chartItem) => {
+      .map((chartItem: any) => {
         return {
           ...chartItem,
-          points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
+          points: chartItem.points.sort((p1: any, p2: any) => p1.x - p2.x)
         };
       })
-      .filter((chartItem) => chartItem.points.length > 0);
+      .filter((chartItem: any) => chartItem.points.length > 0);
   }
 
   @computed
   get plotHeight() {
+    // @ts-expect-error TS(2339): Property 'height' does not exist on type 'Readonly... Remove this comment to see the full error message
     const { height, margin } = this.props;
     return height - margin.top - margin.bottom - Legends.maxHeightPx;
   }
 
   @computed
   get plotWidth() {
+    // @ts-expect-error TS(2339): Property 'width' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const { width, margin } = this.props;
     return width - margin.left - margin.right - this.estimatedYAxesWidth;
   }
 
   @computed
   get adjustedMargin() {
+    // @ts-expect-error TS(2339): Property 'margin' does not exist on type 'Readonly... Remove this comment to see the full error message
     const margin = this.props.margin;
     return {
       ...margin,
@@ -115,6 +121,7 @@ class Chart extends React.Component {
 
   @computed
   get initialXScale() {
+    // @ts-expect-error TS(2339): Property 'xAxis' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const xAxis = this.props.xAxis;
     const domain = calculateDomain(this.chartItems);
     const params = {
@@ -145,16 +152,18 @@ class Chart extends React.Component {
 
   @computed
   get initialScales() {
-    return this.chartItems.map((c) => ({
+    return this.chartItems.map((c: any) => ({
       x: this.initialXScale,
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       y: this.yAxes.find((y) => y.units === c.units).scale
     }));
   }
 
   @computed
   get zoomedScales() {
-    return this.chartItems.map((c) => ({
+    return this.chartItems.map((c: any) => ({
       x: this.xScale,
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       y: this.yAxes.find((y) => y.units === c.units).scale
     }));
   }
@@ -170,8 +179,9 @@ class Chart extends React.Component {
   get pointsNearMouse() {
     if (!this.mouseCoords) return [];
     return this.chartItems
-      .map((chartItem) => ({
+      .map((chartItem: any) => ({
         chartItem,
+
         point: findNearestPoint(
           chartItem.points,
           this.mouseCoords,
@@ -179,7 +189,7 @@ class Chart extends React.Component {
           7
         )
       }))
-      .filter(({ point }) => point !== undefined);
+      .filter(({ point }: any) => point !== undefined);
   }
 
   @computed
@@ -190,11 +200,14 @@ class Chart extends React.Component {
     };
 
     if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.5) {
+      // @ts-expect-error TS(2339): Property 'right' does not exist on type '{ items: ... Remove this comment to see the full error message
       tooltip.right = this.props.width - (this.plotWidth + margin.right);
     } else {
+      // @ts-expect-error TS(2339): Property 'left' does not exist on type '{ items: a... Remove this comment to see the full error message
       tooltip.left = margin.left;
     }
 
+    // @ts-expect-error TS(2339): Property 'bottom' does not exist on type '{ items:... Remove this comment to see the full error message
     tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
     return tooltip;
   }
@@ -215,16 +228,16 @@ class Chart extends React.Component {
   }
 
   @action
-  setZoomedXScale(scale) {
+  setZoomedXScale(scale: any) {
     this.zoomedXScale = scale;
   }
 
   @action
-  setMouseCoords(coords) {
+  setMouseCoords(coords: any) {
     this.mouseCoords = coords;
   }
 
-  setMouseCoordsFromEvent(event) {
+  setMouseCoordsFromEvent(event: any) {
     const coords = localPoint(
       event.target.ownerSVGElement || event.target,
       event
@@ -236,14 +249,16 @@ class Chart extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     // Unset zoom scale if any chartItems are added or removed
+    // @ts-expect-error TS(2339): Property 'chartItems' does not exist on type 'Read... Remove this comment to see the full error message
     if (prevProps.chartItems.length !== this.props.chartItems.length) {
       this.setZoomedXScale(undefined);
     }
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'height' does not exist on type 'Readonly... Remove this comment to see the full error message
     const { height, xAxis, terria } = this.props;
     if (this.chartItems.length === 0)
       return <div className={Styles.empty}>No data available</div>;
@@ -311,6 +326,7 @@ class Chart extends React.Component {
                   fill="transparent"
                 />
                 {this.cursorX && (
+                  // @ts-expect-error TS(2769): No overload matches this call.
                   <Cursor x={this.cursorX} stroke={defaultGridColor} />
                 )}
                 <Plot
@@ -337,27 +353,31 @@ class Plot extends React.Component {
     zoomedScales: PropTypes.array.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
 
   @computed
   get chartRefs() {
-    return this.props.chartItems.map((_) => React.createRef());
+    // @ts-expect-error TS(2339): Property 'chartItems' does not exist on type 'Read... Remove this comment to see the full error message
+    return this.props.chartItems.map((_: any) => React.createRef());
   }
 
   componentDidUpdate() {
+    // @ts-expect-error TS(2769): No overload matches this call.
     Object.values(this.chartRefs).forEach(({ current: ref }, i) => {
       if (typeof ref.doZoom === "function") {
+        // @ts-expect-error TS(2339): Property 'zoomedScales' does not exist on type 'Re... Remove this comment to see the full error message
         ref.doZoom(this.props.zoomedScales[i]);
       }
     });
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'chartItems' does not exist on type 'Read... Remove this comment to see the full error message
     const { chartItems, initialScales } = this.props;
-    return chartItems.map((chartItem, i) => {
+    return chartItems.map((chartItem: any, i: any) => {
       switch (chartItem.type) {
         case "line":
           return (
@@ -373,7 +393,7 @@ class Plot extends React.Component {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
           const basisItemIndex = chartItems.findIndex(
-            (item) =>
+            (item: any) =>
               (item.type === "line" || item.type === "lineAndPoint") &&
               item.xAxis.scale === "time"
           );
@@ -426,8 +446,10 @@ class XAxis extends React.PureComponent {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'scale' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const { scale, ...restProps } = this.props;
     return (
+      // @ts-expect-error TS(2322): Type '{ children?: ReactNode; stroke: string; tick... Remove this comment to see the full error message
       <AxisBottom
         stroke="#efefef"
         tickStroke="#efefef"
@@ -462,6 +484,7 @@ class YAxis extends React.PureComponent {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'scale' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const { scale, color, units, offset } = this.props;
     return (
       <AxisLeft
@@ -496,14 +519,15 @@ class Cursor extends React.PureComponent {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'x' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { x, ...rest } = this.props;
     return <Line from={{ x, y: 0 }} to={{ x, y: 1000 }} {...rest} />;
   }
 }
 
-function PointsOnMap({ chartItems, terria }) {
+function PointsOnMap({ chartItems, terria }: any) {
   return chartItems.map(
-    (chartItem) =>
+    (chartItem: any) =>
       chartItem.pointOnMap && (
         <PointOnMap
           key={`point-on-map-${chartItem.key}`}
@@ -518,11 +542,11 @@ function PointsOnMap({ chartItems, terria }) {
 /**
  * Calculates a combined domain of all chartItems.
  */
-function calculateDomain(chartItems) {
-  const xmin = Math.min(...chartItems.map((c) => c.domain.x[0]));
-  const xmax = Math.max(...chartItems.map((c) => c.domain.x[1]));
-  const ymin = Math.min(...chartItems.map((c) => c.domain.y[0]));
-  const ymax = Math.max(...chartItems.map((c) => c.domain.y[1]));
+function calculateDomain(chartItems: any) {
+  const xmin = Math.min(...chartItems.map((c: any) => c.domain.x[0]));
+  const xmax = Math.max(...chartItems.map((c: any) => c.domain.x[1]));
+  const ymin = Math.min(...chartItems.map((c: any) => c.domain.y[0]));
+  const ymax = Math.max(...chartItems.map((c: any) => c.domain.y[1]));
   return {
     x: [xmin, xmax],
     y: [ymin, ymax]
@@ -534,8 +558,8 @@ function calculateDomain(chartItems) {
  * `momentLines` and then any other types.
  * @param {ChartItem[]} chartItems array of chartItems to sort
  */
-function sortChartItemsByType(chartItems) {
-  return chartItems.slice().sort((a, b) => {
+function sortChartItemsByType(chartItems: any) {
+  return chartItems.slice().sort((a: any, b: any) => {
     if (a.type === "momentPoints") return 1;
     else if (b.type === "momentPoints") return -1;
     else if (a.type === "momentLines") return 1;
@@ -544,8 +568,13 @@ function sortChartItemsByType(chartItems) {
   });
 }
 
-function findNearestPoint(points, coords, xScale, maxDistancePx) {
-  function distance(coords, point) {
+function findNearestPoint(
+  points: any,
+  coords: any,
+  xScale: any,
+  maxDistancePx: any
+) {
+  function distance(coords: any, point: any) {
     return point ? coords.x - xScale(point.x) : Infinity;
   }
 
@@ -573,7 +602,7 @@ function findNearestPoint(points, coords, xScale, maxDistancePx) {
     : undefined;
 }
 
-function sanitizeIdString(id) {
+function sanitizeIdString(id: any) {
   // delete all non-alphanum chars
   return id.replace(/[^a-zA-Z0-9_-]/g, "");
 }

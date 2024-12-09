@@ -26,7 +26,7 @@ const DropdownPanel = createReactClass({
     };
   },
 
-  onInnerMounted(innerElement) {
+  onInnerMounted(innerElement: any) {
     const centerInnerDropdown = this.props.showDropdownInCenter;
     if (centerInnerDropdown) {
       this.setState({
@@ -67,12 +67,13 @@ const DropdownPanel = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(nextProps) {
+    // @ts-expect-error TS(2339): Property 'forceClosed' does not exist on type 'Rea... Remove this comment to see the full error message
     if (nextProps.forceClosed) {
       this.onDismissed();
     }
   },
 
-  openWithUserClick(e) {
+  openWithUserClick(e: any) {
     if (this.props.userOnClick) {
       this.props.userOnClick();
     }
@@ -81,7 +82,9 @@ const DropdownPanel = createReactClass({
 
   render() {
     let iconGlyph;
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if (defined(Icon.GLYPHS[this.props.theme.icon])) {
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       iconGlyph = Icon.GLYPHS[this.props.theme.icon];
     } else {
       iconGlyph = this.props.theme.icon;
@@ -100,16 +103,17 @@ const DropdownPanel = createReactClass({
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
           /* eslint-disable-next-line react/no-unknown-property */
+          // @ts-expect-error TS(2322): Type '{ children: any[]; onClick: any; type: "butt... Remove this comment to see the full error message
           isOpen={this.isOpen()}
           css={`
-            ${(p) =>
+            ${(p: any) =>
               p.isOpen &&
               `&:not(.foo) {
-                background: ${p.theme.colorPrimary};
-                svg {
-                  fill: ${p.theme.textLight};
-                }
-              }`}
+            background: ${p.theme.colorPrimary};
+            svg {
+              fill: ${p.theme.textLight};
+            }
+          }`}
           `}
         >
           {this.props.theme.icon && <Icon glyph={iconGlyph} />}
@@ -117,6 +121,7 @@ const DropdownPanel = createReactClass({
         </button>
         {this.isOpen() && (
           <InnerPanel
+            // @ts-expect-error TS(2322): Type '{ children: any; showDropdownInCenter: any; ... Remove this comment to see the full error message
             showDropdownInCenter={this.props.showDropdownInCenter}
             showDropdownAsModal={this.props.showDropdownAsModal}
             modalWidth={this.props.modalWidth}

@@ -227,6 +227,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       throw `Invalid XML response for WPS ExecuteResponse`;
     }
 
+    // @ts-expect-error TS(2554)
     const json = xml2json(executeResponseXml);
 
     // Check if finished
@@ -286,6 +287,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     );
     const xml = await promise;
 
+    // @ts-expect-error TS(2554)
     const json = xml2json(xml);
 
     return this.checkStatus(json);
@@ -294,6 +296,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   async downloadResults() {
     if (isDefined(this.wpsResponseUrl) && !isDefined(this.wpsResponse)) {
       const url = proxyCatalogItemUrl(this, this.wpsResponseUrl, "0d");
+      // @ts-expect-error TS(2554)
       const wpsResponse = xml2json(await this.getXml(url));
       runInAction(() => {
         this.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);

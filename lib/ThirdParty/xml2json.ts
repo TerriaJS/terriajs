@@ -15,27 +15,27 @@
 
 // The jQuery dependency has been removed for use in TerriaJS!
 
-var xml2json = function (xml, extended) {
+const xml2json = function (xml: any, extended: any) {
   if (!xml) return {}; // quick fail
 
   //### PARSER LIBRARY
   // Core function
-  function parseXML(node, simple) {
+  function parseXML(node: any, simple: any) {
     if (!node) return null;
-    var txt = "",
+    let txt = "",
       obj = null,
       att = null;
-    var nt = node.nodeType,
+    const nt = node.nodeType,
       nn = jsVar(node.localName || node.nodeName);
-    var nv = node.text || node.nodeValue || ""; //if(window.console) console.log(['x2j',nn,nt,nv.length+' bytes']);
+    const nv = node.text || node.nodeValue || ""; //if(window.console) console.log(['x2j',nn,nt,nv.length+' bytes']);
     /*DBG*/ if (node.childNodes) {
       if (node.childNodes.length > 0) {
         /*DBG*/ //if(window.console) console.log(['x2j',nn,'CHILDREN',node.childNodes]);
-        for (var n = 0; n < node.childNodes.length; ++n) {
-          var cn = node.childNodes[n];
+        for (let n = 0; n < node.childNodes.length; ++n) {
+          const cn = node.childNodes[n];
           var cnt = cn.nodeType,
             cnn = jsVar(cn.localName || cn.nodeName);
-          var cnv = cn.text || cn.nodeValue || ""; //if(window.console) console.log(['x2j',nn,'node>a',cnn,cnt,cnv]);
+          const cnv = cn.text || cn.nodeValue || ""; //if(window.console) console.log(['x2j',nn,'node>a',cnn,cnt,cnv]);
           /*DBG*/ if (cnt == 8) {
             /*DBG*/ //if(window.console) console.log(['x2j',nn,'node>b',cnn,'COMMENT (ignore)']);
             continue; // ignore comment node
@@ -54,13 +54,18 @@ var xml2json = function (xml, extended) {
               /*DBG*/ //if(window.console) console.log(['x2j',nn,'node>f',cnn,'ARRAY']);
 
               // http://forum.jquery.com/topic/jquery-jquery-xml2json-problems-when-siblings-of-the-same-tagname-only-have-a-textnode-as-a-child
+              // @ts-expect-error TS(2532)
               if (!obj[cnn].length) obj[cnn] = myArr(obj[cnn]);
+              // @ts-expect-error TS(7053)
               obj[cnn] = myArr(obj[cnn]);
 
+              // @ts-expect-error TS(2532)
               obj[cnn][obj[cnn].length] = parseXML(cn, true /* simple */);
+              // @ts-expect-error TS(2532)
               obj[cnn].length = obj[cnn].length;
             } else {
               /*DBG*/ //if(window.console) console.log(['x2j',nn,'node>g',cnn,'dig deeper...']);
+              // @ts-expect-error TS(7053)
               obj[cnn] = parseXML(cn);
             }
           }
@@ -72,22 +77,27 @@ var xml2json = function (xml, extended) {
         /*DBG*/ //if(window.console) console.log(['x2j',nn,'ATTRIBUTES',node.attributes])
         att = {};
         obj = obj || {};
-        for (var a = 0; a < node.attributes.length; ++a) {
-          var at = node.attributes[a];
-          var atn = jsVar(at.name),
+        for (let a = 0; a < node.attributes.length; ++a) {
+          const at = node.attributes[a];
+          const atn = jsVar(at.name),
             atv = at.value;
+          // @ts-expect-error TS(7053)
           att[atn] = atv;
           if (obj[atn]) {
             /*DBG*/ //if(window.console) console.log(['x2j',nn,'attr>',atn,'ARRAY']);
 
             // http://forum.jquery.com/topic/jquery-jquery-xml2json-problems-when-siblings-of-the-same-tagname-only-have-a-textnode-as-a-child
             //if(!obj[atn].length) obj[atn] = myArr(obj[atn]);//[ obj[ atn ] ];
+            // @ts-expect-error TS(7053)
             obj[cnn] = myArr(obj[cnn]);
 
+            // @ts-expect-error TS(2532)
             obj[atn][obj[atn].length] = atv;
+            // @ts-expect-error TS(2532)
             obj[atn].length = obj[atn].length;
           } else {
             /*DBG*/ //if(window.console) console.log(['x2j',nn,'attr>',atn,'TEXT']);
+            // @ts-expect-error TS(7053)
             obj[atn] = atv;
           }
         }
@@ -95,23 +105,28 @@ var xml2json = function (xml, extended) {
       } //node.attributes.length>0
     } //node.attributes
     if (obj) {
-      var newObj = txt != "" ? new String(txt) : {};
-      for (var prop in obj) {
+      const newObj = txt != "" ? new String(txt) : {};
+      for (const prop in obj) {
         if (obj.hasOwnProperty(prop)) {
+          // @ts-expect-error TS(7053)
           newObj[prop] = obj[prop];
         }
       }
       obj = newObj;
       //txt = (obj.text) ? (typeof(obj.text)=='object' ? obj.text : [obj.text || '']).concat([txt]) : txt;
+      // @ts-expect-error TS(2322)
       txt = obj.text ? [obj.text || ""].concat([txt]) : txt;
+      // @ts-expect-error TS(2339)
       if (txt) obj.text = txt;
       txt = "";
     }
-    var out = obj || txt;
+    let out = obj || txt;
     //console.log([extended, simple, out]);
     if (extended) {
       if (txt) out = {}; //new String(out);
+      // @ts-expect-error TS(2339)
       txt = out.text || txt || "";
+      // @ts-expect-error TS(2339)
       if (txt) out.text = txt;
       if (!simple) out = myArr(out);
     }
@@ -119,29 +134,30 @@ var xml2json = function (xml, extended) {
   } // parseXML
   // Core Function End
   // Utility functions
-  var jsVar = function (s) {
+  var jsVar = function (s: any) {
     return String(s || "").replace(/-/g, "_");
   };
 
   // NEW isNum function: 01/09/2010
   // Thanks to Emile Grau, GigaTecnologies S.L., www.gigatransfer.com, www.mygigamail.com
-  function isNum(s) {
+  function isNum(s: any) {
     // based on utility function isNum from xml2json plugin (http://www.fyneworks.com/ - diego@fyneworks.com)
     // few bugs corrected from original function :
     // - syntax error : regexp.test(string) instead of string.test(reg)
     // - regexp modified to accept  comma as decimal mark (latin syntax : 25,24 )
     // - regexp modified to reject if no number before decimal mark  : ".7" is not accepted
     // - string is "trimmed", allowing to accept space at the beginning and end of string
-    var regexp = /^((-)?([0-9]+)(([\.\,]{0,1})([0-9]+))?$)/;
+    const regexp = /^((-)?([0-9]+)(([\.\,]{0,1})([0-9]+))?$)/;
     return (
-      typeof s == "number" ||
-      regexp.test(String(s && typeof s == "string" ? jQuery.trim(s) : ""))
+      typeof s === "number" ||
+      // @ts-expect-error TS(2304)
+      regexp.test(String(s && typeof s === "string" ? jQuery.trim(s) : ""))
     );
   }
   // OLD isNum function: (for reference only)
   //var isNum = function(s){ return (typeof s == "number") || String((s && typeof s == "string") ? s : '').test(/^((-)?([0-9]*)((\.{0,1})([0-9]+))?$)/); };
 
-  var myArr = function (o) {
+  var myArr = function (o: any) {
     // http://forum.jquery.com/topic/jquery-jquery-xml2json-problems-when-siblings-of-the-same-tagname-only-have-a-textnode-as-a-child
     //if(!o.length) o = [ o ]; o.length=o.length;
     if (!Array.isArray(o)) o = [o];
@@ -154,17 +170,17 @@ var xml2json = function (xml, extended) {
   //### PARSER LIBRARY END
 
   // Convert plain text to xml
-  if (typeof xml == "string") xml = text2xml(xml);
+  if (typeof xml === "string") xml = text2xml(xml);
 
   // Quick fail if not xml (or if this is a node)
   if (!xml.nodeType) return;
   if (xml.nodeType == 3 || xml.nodeType == 4) return xml.nodeValue;
 
   // Find xml root node
-  var root = xml.nodeType == 9 ? xml.documentElement : xml;
+  let root = xml.nodeType == 9 ? xml.documentElement : xml;
 
   // Convert xml to json
-  var out = parseXML(root, true /* simple */);
+  const out = parseXML(root, true /* simple */);
 
   // Clean-up memory
   xml = null;
@@ -175,8 +191,8 @@ var xml2json = function (xml, extended) {
 };
 
 // Convert text to XML DOM
-function text2xml(str) {
-  var parser = new DOMParser();
+function text2xml(str: any) {
+  const parser = new DOMParser();
   return parser.parseFromString(str, "text/xml");
 }
 

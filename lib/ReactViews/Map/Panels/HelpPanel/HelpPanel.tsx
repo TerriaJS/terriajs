@@ -29,7 +29,7 @@ class HelpPanel extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       isAnimatingOpen: true
@@ -45,24 +45,32 @@ class HelpPanel extends React.Component {
     // Make sure that retainSharePanel is set to false. This property is used to temporarily disable closing when Share Panel loses focus.
     // If the Share Panel is open underneath help panel, we now want to allow it to close normally.
     setTimeout(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.setRetainSharePanel(false);
     }, 500); // We need to re-enable closing of share panel when loses focus.
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const helpItems = this.props.viewState.terria.configParameters.helpContent;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const isExpanded = this.props.viewState.helpPanelExpanded;
+    // @ts-expect-error TS(2339): Property 'isAnimatingOpen' does not exist on type ... Remove this comment to see the full error message
     const isAnimatingOpen = this.state.isAnimatingOpen;
     return (
       <Box
         displayInlineBlock
+        // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
         backgroundColor={this.props.theme.textLight}
         styledWidth={"320px"}
         fullHeight
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         onClick={() => this.props.viewState.setTopElement("HelpPanel")}
         css={`
           position: fixed;
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
           z-index: ${this.props.viewState.topElement === "HelpPanel"
             ? 99999
             : 110};
@@ -72,9 +80,12 @@ class HelpPanel extends React.Component {
         `}
       >
         <Box position="absolute" paddedRatio={3} topRight>
+          // @ts-expect-error TS(2339): Property 'viewState' does not exist on
+          type 'Reado... Remove this comment to see the full error message
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
+              // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
               fillColor={this.props.theme.textDark}
               opacity={0.5}
               glyph={Icon.GLYPHS.closeLight}
@@ -99,6 +110,7 @@ class HelpPanel extends React.Component {
           <Text medium textDark highlightLinks>
             {parseCustomMarkdownToReact(
               t("helpPanel.menuPaneBody", {
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 supportEmail: this.props.viewState.terria.supportEmail
               })
             )}
@@ -110,12 +122,15 @@ class HelpPanel extends React.Component {
               rounded
               styledMinWidth={"240px"}
               onClick={() => {
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 this.props.viewState.terria.analytics?.logEvent(
                   Category.help,
                   HelpAction.takeTour
                 );
                 runInAction(() => {
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                   this.props.viewState.hideHelpPanel();
+                  // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                   this.props.viewState.setTourIndex(0);
                 });
               }}
@@ -130,7 +145,7 @@ class HelpPanel extends React.Component {
                 large: true
               }}
               css={`
-                ${(p) => p.theme.addTerriaPrimaryBtnStyles(p)}
+                ${(p: any) => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
               {t("helpPanel.takeTour")}
@@ -140,10 +155,12 @@ class HelpPanel extends React.Component {
         <Spacing bottom={10} />
         <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
           {helpItems &&
-            helpItems.map((item, i) => (
+            helpItems.map((item: any, i: any) => (
               <HelpPanelItem
                 key={i}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 terria={this.props.viewState.terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
                 content={item}
               />
@@ -154,4 +171,5 @@ class HelpPanel extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2345): Argument of type 'ForwardRefExoticComponent<WithOp... Remove this comment to see the full error message
 export default withTranslation()(withViewState(withTheme(HelpPanel)));

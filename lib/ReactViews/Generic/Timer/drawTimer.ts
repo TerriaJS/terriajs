@@ -3,6 +3,7 @@
 import { arc as d3Arc } from "d3-shape";
 import { select as d3Select } from "d3-selection";
 import { interpolate as d3Interpolate } from "d3-interpolate";
+// @ts-expect-error TS(7016)
 import { easeLinear as d3EaseLinear } from "d3-ease";
 import "d3-transition";
 
@@ -13,12 +14,12 @@ import defined from "terriajs-cesium/Source/Core/defined";
  *
  * @param {number} radius
  */
-function arcFactory(radius) {
+function arcFactory(radius: any) {
   return d3Arc().innerRadius(0).outerRadius(radius).startAngle(0);
 }
 
 // Interpolate from 0 to 2*pi radians
-function angleInterpolator(t, startAngle = 0) {
+function angleInterpolator(t: any, startAngle = 0) {
   return d3Interpolate(startAngle, Math.PI * 2)(t);
 }
 
@@ -34,39 +35,46 @@ function angleInterpolator(t, startAngle = 0) {
  * @param {number} [options.elapsed=0] How much time has already passed.
  */
 function animateTimer(
-  radius,
-  interval,
-  elapsedTimeElement,
-  backgroundElement,
+  radius: any,
+  interval: any,
+  elapsedTimeElement: any,
+  backgroundElement: any,
   options = {}
 ) {
   options = {
+    // @ts-expect-error TS(2339)
     deltaOpacity: defined(options.deltaOpacity) ? options.deltaOpacity : 0.7,
+    // @ts-expect-error TS(2339)
     opacityAnimationInterval: defined(options.opacityAnimationInterval)
-      ? options.opacityAnimationInterval
+      ? // @ts-expect-error TS(2339)
+        options.opacityAnimationInterval
       : 3,
+    // @ts-expect-error TS(2339)
     minOpacity: defined(options.minOpacity) ? options.minOpacity : 0.1,
+    // @ts-expect-error TS(2339)
     elapsed: defined(options.elapsed) ? options.elapsed : 0
   };
 
   // The arc representing the elapsed time should be filled up to the current time.
   // We find the elapsed time as a percentage of the total duration, and then get the angle interpolator to calculate
   // the corresponding angle.
+  // @ts-expect-error TS(2339)
   const startAngle = angleInterpolator(options.elapsed / interval);
   elapsedTimeElement
     .datum({ endAngle: angleInterpolator(startAngle) })
     .transition("arc" + new Date().getTime().toString())
+    // @ts-expect-error TS(2339)
     .duration((interval - options.elapsed) * 1000) // d3 uses milliseconds
     .ease(d3EaseLinear)
     // attrTween requires a function A that returns an interpolator function B
     // when B is passed the time, t, it should return the new value of the attribute, in this case `d`
     .attrTween(
       "d",
-      () => (t) =>
+      () => (t: any) =>
         arcFactory(radius)({ endAngle: angleInterpolator(t, startAngle) })
     );
 
-  const opacityTransition = (element, max, repeatsLeft) => {
+  const opacityTransition = (element: any, max: any, repeatsLeft: any) => {
     if (repeatsLeft <= 0) {
       element.interrupt();
       return;
@@ -74,24 +82,31 @@ function animateTimer(
 
     // Clamp the minimum opacity to options.minOpacity.
     const min =
+      // @ts-expect-error TS(2339)
       max - options.deltaOpacity > options.minOpacity
-        ? max - options.deltaOpacity
-        : options.minOpacity;
+        ? // @ts-expect-error TS(2339)
+          max - options.deltaOpacity
+        : // @ts-expect-error TS(2339)
+          options.minOpacity;
 
     element
       .transition("in")
+      // @ts-expect-error TS(2339)
       .duration((options.opacityAnimationInterval * 1000) / 2)
-      .styleTween("opacity", () => (t) => d3Interpolate(max, min)(t));
+      .styleTween("opacity", () => (t: any) => d3Interpolate(max, min)(t));
 
     element
       .transition("out")
+      // @ts-expect-error TS(2339)
       .delay((options.opacityAnimationInterval * 1000) / 2)
+      // @ts-expect-error TS(2339)
       .duration((options.opacityAnimationInterval * 1000) / 2)
-      .styleTween("opacity", () => (t) => d3Interpolate(min, max)(t))
+      .styleTween("opacity", () => (t: any) => d3Interpolate(min, max)(t))
       .on("end", () => opacityTransition(element, max, repeatsLeft - 1)); // start cycle again
   };
 
   // Start our opacity animation.
+  // @ts-expect-error TS(2339)
   const repeats = Math.ceil(interval / options.opacityAnimationInterval) - 1;
 
   // Use the element's existing opacity as the maximum opacity.
@@ -111,10 +126,10 @@ function animateTimer(
  * @param {string} backgroundClass A class for styling the timer's background circle.
  */
 export function createTimer(
-  radius,
-  containerId,
-  elapsedTimeClass,
-  backgroundClass
+  radius: any,
+  containerId: any,
+  elapsedTimeClass: any,
+  backgroundClass: any
 ) {
   const container = d3Select("#" + containerId);
   if (!defined(container)) {
@@ -145,6 +160,7 @@ export function createTimer(
   g.append("path")
     .attr("class", elapsedTimeClass)
     .datum({ endAngle: 0 })
+    // @ts-expect-error TS(2345)
     .attr("d", arcFactory(radius));
 }
 
@@ -158,11 +174,11 @@ export function createTimer(
  * @param {number} [elapsed=0] How much time (in seconds) has already passed.
  */
 export function startTimer(
-  radius,
-  interval,
-  containerId,
-  elapsedTimeClass,
-  backgroundClass,
+  radius: any,
+  interval: any,
+  containerId: any,
+  elapsedTimeClass: any,
+  backgroundClass: any,
   elapsed = 0
 ) {
   const elapsedTimeElement = d3Select("#" + containerId).select(

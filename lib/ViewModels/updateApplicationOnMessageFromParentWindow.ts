@@ -1,12 +1,15 @@
 import { TerriaErrorSeverity } from "../Core/TerriaError";
 import defined from "terriajs-cesium/Source/Core/defined";
 
-const updateApplicationOnMessageFromParentWindow = function (terria, window) {
-  let allowOrigin;
+const updateApplicationOnMessageFromParentWindow = function (
+  terria: any,
+  window: any
+) {
+  let allowOrigin: any;
 
   window.addEventListener(
     "message",
-    async function (event) {
+    async function (event: any) {
       let origin = event.origin;
       if (!defined(origin) && defined(event.originalEvent)) {
         // For Chrome, the origin property is in the event.originalEvent object.

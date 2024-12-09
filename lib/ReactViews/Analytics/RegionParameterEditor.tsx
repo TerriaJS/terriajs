@@ -15,6 +15,7 @@ const RegionParameterEditor = createReactClass({
   },
 
   selectRegionOnMap() {
+    // @ts-expect-error TS(2339): Property 'selectOnMap' does not exist on type 'Cla... Remove this comment to see the full error message
     RegionParameterEditor.selectOnMap(
       this.props.viewState,
       this.props.parameter,
@@ -52,7 +53,12 @@ const RegionParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter.
  * @param {Object} previewed Previewed.
  */
-RegionParameterEditor.selectOnMap = function (viewState, parameter, previewed) {
+// @ts-expect-error TS(2339): Property 'selectOnMap' does not exist on type 'Cla... Remove this comment to see the full error message
+RegionParameterEditor.selectOnMap = function (
+  viewState: any,
+  parameter: any,
+  previewed: any
+) {
   const terria = previewed.terria;
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
@@ -67,6 +73,7 @@ RegionParameterEditor.selectOnMap = function (viewState, parameter, previewed) {
     customUi: function Done() {
       return (
         <RegionPicker
+          // @ts-expect-error TS(2322): Type '{ className: string; previewed: any; paramet... Remove this comment to see the full error message
           className={Styles.parameterEditor}
           previewed={previewed}
           parameter={parameter}

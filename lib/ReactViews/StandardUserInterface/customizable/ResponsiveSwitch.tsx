@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
  * Higher-order component that either shows a one element or the other, depending on whether the "smallScreen" prop
  * passed to it is true or false.
  */
-export default (LargeScreenComponent, SmallScreenComponent) => {
+export default (LargeScreenComponent: any, SmallScreenComponent: any) => {
   // eslint-disable-next-line require-jsdoc
-  function ResponsiveSwitch(props) {
+  function ResponsiveSwitch(props: any) {
     return props.smallScreen ? (
       <SmallScreenComponent {...props} />
     ) : (

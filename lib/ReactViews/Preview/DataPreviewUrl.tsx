@@ -17,7 +17,7 @@ const DataPreviewUrl = createReactClass({
     metadataItem: PropTypes.object.isRequired
   },
 
-  selectUrl(e) {
+  selectUrl(e: any) {
     e.target.select();
   },
 

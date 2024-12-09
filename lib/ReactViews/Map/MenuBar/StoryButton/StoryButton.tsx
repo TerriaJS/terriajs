@@ -98,6 +98,7 @@ const StoryButton = (props: Props) => {
         <span>{t("story.story")}</span>
       </button>
       <Prompt
+        // @ts-expect-error TS(2322): Type '{ centered: true; isVisible: boolean; conten... Remove this comment to see the full error message
         centered
         isVisible={
           storyEnabled && props.viewState.featurePrompts.indexOf("story") >= 0

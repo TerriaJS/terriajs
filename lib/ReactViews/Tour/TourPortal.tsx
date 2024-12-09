@@ -29,6 +29,7 @@ import {
   calculateLeftPosition,
   calculateTopPosition,
   getOffsetsFromTourPoint
+  // @ts-expect-error TS(2691): An import path cannot end with a '.ts' extension. ... Remove this comment to see the full error message
 } from "./tour-helpers.ts";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
@@ -42,7 +43,7 @@ import TourProgressDot from "./TourProgressDot.jsx";
  * Indicator bar/"dots" on progress of tour.
  * Fill in indicator dot depending on progress determined from count & max count
  */
-const TourProgress = ({ max, step, setTourIndex }) => {
+const TourProgress = ({ max, step, setTourIndex }: any) => {
   const countArray = Array.from(Array(max).keys()).map((e) => e++);
   const countStep = step;
   return (
@@ -52,6 +53,7 @@ const TourProgress = ({ max, step, setTourIndex }) => {
           <TourProgressDot
             onClick={() => setTourIndex(count)}
             key={count}
+            // @ts-expect-error TS(2769): No overload matches this call.
             active={count < countStep}
           />
         );
@@ -83,7 +85,7 @@ export const TourExplanation = ({
   isFirstTourPoint,
   isLastTourPoint,
   children
-}) => {
+}: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   if (!active) {
@@ -193,7 +195,7 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-const TourGrouping = observer(({ tourPoints }) => {
+const TourGrouping = observer(({ tourPoints }: any) => {
   const { i18n } = useTranslation();
   const viewState = useViewState();
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
@@ -201,6 +203,7 @@ const TourGrouping = observer(({ tourPoints }) => {
     currentTourPoint?.appRefName
   );
   const currentRectangle =
+    // @ts-expect-error TS(2339): Property 'current' does not exist on type 'RefObje... Remove this comment to see the full error message
     currentTourPointRef?.current?.getBoundingClientRect?.();
   if (!currentRectangle) {
     console.log(
@@ -215,10 +218,11 @@ const TourGrouping = observer(({ tourPoints }) => {
           onCancel={() => viewState.nextTourPoint()}
         />
       )}
-      {tourPoints.map((tourPoint, index) => {
+      {tourPoints.map((tourPoint: any, index: any) => {
         const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
 
         const currentRectangle =
+          // @ts-expect-error TS(2339): Property 'current' does not exist on type 'RefObje... Remove this comment to see the full error message
           tourPointRef?.current?.getBoundingClientRect?.();
         const {
           offsetTop,
@@ -322,7 +326,7 @@ export const TourPreface = () => {
             <Button
               fullWidth
               secondary
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 viewState.closeTour();
               }}
@@ -334,7 +338,7 @@ export const TourPreface = () => {
               primary
               fullWidth
               textProps={{ noFontSize: true }}
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 viewState.setShowTour(true);
               }}
@@ -370,6 +374,7 @@ export const TourPortal = observer(() => {
     return null;
   }
   if (showPreface) {
+    // @ts-expect-error TS(2322): Type '{ viewState: ViewState; }' is not assignable... Remove this comment to see the full error message
     return <TourPreface viewState={viewState} />;
   }
 
@@ -382,8 +387,10 @@ export const TourPortal = observer(() => {
   );
 });
 
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type '() =>... Remove this comment to see the full error message
 TourPortal.propTypes = {
   children: PropTypes.node
 };
 
+// @ts-expect-error TS(2345): Argument of type '() => JSX.Element | null' is not... Remove this comment to see the full error message
 export default withTheme(TourPortal);

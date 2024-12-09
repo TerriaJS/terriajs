@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
+// @ts-expect-error TS(2691): An import path cannot end with a '.ts' extension. ... Remove this comment to see the full error message
 import ChartView from "../../../Charts/ChartView.ts";
 import Result from "../../../Core/Result";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -29,18 +30,19 @@ class ChartPanel extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
 
   @computed
   get chartView() {
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     return new ChartView(this.props.terria);
   }
 
   closePanel() {
-    this.chartView.chartItems.forEach((chartItem) => {
+    this.chartView.chartItems.forEach((chartItem: any) => {
       chartItem.updateIsSelectedInWorkbench(false);
     });
   }
@@ -48,8 +50,11 @@ class ChartPanel extends React.Component {
   componentDidUpdate() {
     // Required so that components like the splitter that depend on screen
     // height will re-adjust.
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.triggerResizeEvent();
+    // @ts-expect-error TS(2339): Property 'onHeightChange' does not exist on type '... Remove this comment to see the full error message
     if (defined(this.props.onHeightChange)) {
+      // @ts-expect-error TS(2339): Property 'onHeightChange' does not exist on type '... Remove this comment to see the full error message
       this.props.onHeightChange();
     }
   }
@@ -57,8 +62,9 @@ class ChartPanel extends React.Component {
   render() {
     const chartableCatalogItems = this.chartView.chartableItems;
     const chartItems = this.chartView.chartItems.filter(
-      (c) => c.showInChartPanel
+      (c: any) => c.showInChartPanel
     );
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     this.props.terria.currentViewer.notifyRepaintRequired();
     if (chartItems.length === 0) {
       return null;
@@ -74,22 +80,25 @@ class ChartPanel extends React.Component {
     if (isLoading) {
       loader = <Loader className={Styles.loader} />;
     }
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     const items = this.props.terria.workbench.items;
     if (items.length > 0) {
       // Load all items
       Promise.all(
         items
-          .filter((item) => MappableMixin.isMixedInto(item))
-          .map((item) => item.loadMapItems())
+          .filter((item: any) => MappableMixin.isMixedInto(item))
+          .map((item: any) => item.loadMapItems())
       ).then((results) =>
         Result.combine(results, {
           message: "Failed to load chart items",
           importance: -1
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
         }).raiseError(this.props.terria)
       );
 
       chart = (
         <Chart
+          // @ts-expect-error TS(2322): Type '{ terria: any; chartItems: any; xAxis: any; ... Remove this comment to see the full error message
           terria={this.props.terria}
           chartItems={chartItems}
           xAxis={this.chartView.xAxis}
@@ -97,11 +106,14 @@ class ChartPanel extends React.Component {
         />
       );
     }
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <div className={Styles.holder}>
         <div className={Styles.inner}>
           <div className={Styles.chartPanel} style={{ height: height }}>
+            // @ts-expect-error TS(2339): Property 'body' does not exist on type
+            'IChartPane... Remove this comment to see the full error message
             <div className={Styles.body}>
               <div className={Styles.header}>
                 <label className={Styles.sectionLabel}>

@@ -27,16 +27,21 @@ class HelpPanelItem extends React.Component {
   };
 
   render() {
+    // @ts-expect-error TS(2339): Property 'i18n' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const { i18n } = this.props;
 
     const itemSelected =
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
 
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
+    // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
     const title = isJsonString(this.props.content.title)
-      ? applyTranslationIfExists(this.props.content.title, i18n)
+      ? // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
+        applyTranslationIfExists(this.props.content.title, i18n)
       : "";
+    // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
     const paneMode = this.props.content.paneMode;
     const opensInPanel = paneMode !== "externalLink";
     const iconGlyph = opensInPanel
@@ -45,19 +50,26 @@ class HelpPanelItem extends React.Component {
     return (
       <div>
         <MenuButton
+          // @ts-expect-error TS(2769): No overload matches this call.
           isSelected={itemSelected}
           role={paneMode === "externalLink" ? "link" : undefined}
           onClick={() => {
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             this.props.terria.analytics?.logEvent(
               Category.help,
+              // @ts-expect-error TS(2339): Property 'itemSelected' does not exist on type 'ty... Remove this comment to see the full error message
               HelpAction.itemSelected,
               title
             );
             if (opensInPanel) {
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               this.props.viewState.selectHelpMenuItem(
+                // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
                 this.props.content.itemName
               );
+              // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             } else if (paneMode === "externalLink" && this.props.content.url) {
+              // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
               window.open(this.props.content.url);
             }
           }}
@@ -65,31 +77,43 @@ class HelpPanelItem extends React.Component {
           <MenuItemText>{title}</MenuItemText>
           <StyledIcon
             styledWidth={"12px"}
+            // @ts-expect-error TS(2339): Property 'theme' does not exist on type 'Readonly<... Remove this comment to see the full error message
             fillColor={this.props.theme.textLightDimmed}
             glyph={iconGlyph}
           />
         </MenuButton>
         {opensInPanel && (
           <HelpVideoPanel
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             terria={this.props.terria}
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             viewState={this.props.viewState}
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             content={this.props.content}
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             itemString={this.props.content.itemName}
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             paneMode={this.props.content.paneMode}
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             markdownContent={this.props.content.markdownText}
             videoUrl={
+              // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
               isJsonString(this.props.content.videoUrl)
-                ? applyTranslationIfExists(this.props.content.videoUrl, i18n)
+                ? // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
+                  applyTranslationIfExists(this.props.content.videoUrl, i18n)
                 : undefined
             }
             placeholderImage={
+              // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
               isJsonString(this.props.content.placeholderImage)
                 ? applyTranslationIfExists(
+                    // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
                     this.props.content.placeholderImage,
                     i18n
                   )
                 : undefined
             }
+            // @ts-expect-error TS(2339): Property 'content' does not exist on type 'Readonl... Remove this comment to see the full error message
             videoCoverImageOpacity={this.props.content.videoCoverImageOpacity}
           />
         )}
@@ -116,8 +140,10 @@ const MenuButton = styled.button`
     }
   }
 
+  // @ts-expect-error TS(2339): Property 'isSelected' does not exist on type 'Them... Remove this comment to see the full error message
   color: ${(p) => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
   & ${StyledIcon} {
+    // @ts-expect-error TS(2339): Property 'isSelected' does not exist on type 'Them... Remove this comment to see the full error message
     fill: ${(p) => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
   }
 `;

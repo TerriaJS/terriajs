@@ -23,7 +23,7 @@ const StorySharePanel = createReactClass({
     };
   },
 
-  onInnerMounted(innerElement) {
+  onInnerMounted(innerElement: any) {
     if (innerElement) {
       this.setState({
         caretOffset: "0px",
@@ -39,12 +39,13 @@ const StorySharePanel = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(nextProps) {
+    // @ts-expect-error TS(2339): Property 'forceClosed' does not exist on type 'Rea... Remove this comment to see the full error message
     if (nextProps.forceClosed) {
       this.onDismissed();
     }
   },
 
-  openWithUserClick(e) {
+  openWithUserClick(e: any) {
     if (this.props.onUserClick) {
       this.props.onUserClick();
     }
@@ -80,10 +81,11 @@ const StorySharePanel = createReactClass({
           <div
             css={`
               margin-top: 35px;
-              font-family: ${(p) => p.theme.fontBase};
+              font-family: ${(p: any) => p.theme.fontBase};
             `}
           >
             <InnerPanel
+              // @ts-expect-error TS(2322): Type '{ children: any; showDropdownAsModal: any; m... Remove this comment to see the full error message
               showDropdownAsModal={this.props.showDropdownAsModal}
               modalWidth={this.props.modalWidth}
               onDismissed={this.onClose}

@@ -8,7 +8,7 @@ const gmlNamespace = "http://www.opengis.net/gml";
  * @param  {Document|String} xml The GML document.
  * @return {Object} The GeoJSON object.
  */
-function gmlToGeoJson(xml) {
+function gmlToGeoJson(xml: any) {
   if (typeof xml === "string") {
     const parser = new DOMParser();
     xml = parser.parseFromString(xml, "text/xml");
@@ -62,7 +62,7 @@ const gmlSimpleFeatureNames = [
   "Surface"
 ];
 
-function getGmlPropertiesRecursively(gmlNode, properties) {
+function getGmlPropertiesRecursively(gmlNode: any, properties: any) {
   let isSingleValue = true;
 
   for (let i = 0; i < gmlNode.childNodes.length; ++i) {
@@ -87,7 +87,8 @@ function getGmlPropertiesRecursively(gmlNode, properties) {
   return isSingleValue;
 }
 
-function getGmlGeometry(gmlNode) {
+// @ts-expect-error TS(7023)
+function getGmlGeometry(gmlNode: any) {
   let result;
 
   for (let i = 0; !defined(result) && i < gmlNode.childNodes.length; ++i) {

@@ -62,7 +62,7 @@ const Dropdown = createReactClass({
     this.buttonElement?.removeEventListener("click", this.nativeButtonListener);
     this.nativeButtonListener = undefined;
 
-    (this.scrollListeners || []).forEach((listenerElement) =>
+    (this.scrollListeners || []).forEach((listenerElement: any) =>
       listenerElement?.removeEventListener("scroll", this.hideList)
     );
     this.scrollListeners = undefined;
@@ -70,7 +70,8 @@ const Dropdown = createReactClass({
 
   showList() {
     // Add a listener to every ancestor capable of scrolling that will close the dropdown when this occurs.
-    const addScrollListeners = (element, listeningToSoFar) => {
+    // @ts-expect-error TS(7023): 'addScrollListeners' implicitly has return type 'a... Remove this comment to see the full error message
+    const addScrollListeners = (element: any, listeningToSoFar: any) => {
       if (element.scrollHeight > element.clientHeight) {
         element.addEventListener("scroll", this.hideList);
         listeningToSoFar.push(element);
@@ -94,7 +95,7 @@ const Dropdown = createReactClass({
 
     // Unfortunately we need to add a native event listener because the native event hits document.body before
     // the react event ever gets triggered.
-    this.nativeButtonListener = (event) => {
+    this.nativeButtonListener = (event: any) => {
       event.stopPropagation();
       this.hideList();
     };
@@ -102,7 +103,7 @@ const Dropdown = createReactClass({
     this.buttonElement.addEventListener("click", this.nativeButtonListener);
   },
 
-  select(option, index) {
+  select(option: any, index: any) {
     this.props.selectOption(option, index);
     this.hideList();
   },
@@ -138,7 +139,7 @@ const Dropdown = createReactClass({
             [isOpenStyle]: this.state.isOpen
           })}
         >
-          {this.props.options.map((option, i) => (
+          {this.props.options.map((option: any, i: any) => (
             <li key={option[this.props.textProperty]}>
               {option.href ? (
                 <a

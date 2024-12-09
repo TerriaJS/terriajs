@@ -24,9 +24,10 @@ import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
 
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
-  previewed;
+  previewed: any;
 
-  constructor(...args) {
+  constructor(...args: any[]) {
+    // @ts-expect-error TS(2556): A spread argument must either have a tuple type or... Remove this comment to see the full error message
     super(...args);
     makeObservable(this);
   }
@@ -37,7 +38,7 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   @computed
   get mapItems() {
     return (
-      this.previewed?.mapItems.map((m) =>
+      this.previewed?.mapItems.map((m: any) =>
         ImageryParts.is(m)
           ? {
               ...m,
@@ -85,21 +86,29 @@ class DataPreviewMap extends React.Component {
     t: PropTypes.func.isRequired
   };
 
+  _disposeZoomToExtentSubscription: any;
+  _unsubscribeErrorHandler: any;
+  containerRef: any;
+
   @computed
   get previewBadgeState() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     if (this.props.previewed?.isLoading) return "loading";
     if (
+      // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.previewed?.loadMetadataResult?.error ||
+      // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.previewed?.loadMapItemsResult?.error
     )
       return "dataPreviewError";
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     if (this.props.previewed?.mapItems?.length === 0)
       return "noPreviewAvailable";
 
     return "dataPreview";
   }
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
 
     makeObservable(this);
@@ -107,16 +116,18 @@ class DataPreviewMap extends React.Component {
     /**
      * @param {HTMLElement | null} container
      */
-    this.containerRef = action((container) => {
+    this.containerRef = action((container: any) => {
       this.previewViewer.attached && this.previewViewer.detach();
       if (container !== null) {
         this.initPreview(container);
       }
     });
     this.previewViewer = new TerriaViewer(
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria,
       computed(() => {
         const previewItem = new AdaptForPreviewMap();
+        // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
         previewItem.previewed = this.props.previewed;
         // Can previewed be undefined?
         return filterOutUndefined([
@@ -128,6 +139,7 @@ class DataPreviewMap extends React.Component {
     runInAction(() => {
       this.previewViewer.viewerMode = ViewerMode.Leaflet;
       this.previewViewer.disableInteraction = true;
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
     // Not yet implemented
@@ -140,16 +152,18 @@ class DataPreviewMap extends React.Component {
    * @param {HTMLElement} container
    */
   @action
-  initPreview(container) {
+  initPreview(container: any) {
     console.log(
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
     // Find preview basemap using `terria.previewBaseMapId`
     const initPreviewBaseMap = baseMapItems.find(
-      (baseMap) =>
+      (baseMap: any) =>
         baseMap.item.uniqueId ===
+        // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
         this.props.terria.baseMapsModel.previewBaseMapId
     );
     if (initPreviewBaseMap !== undefined) {
@@ -164,6 +178,7 @@ class DataPreviewMap extends React.Component {
 
     this._disposeZoomToExtentSubscription = autorun(() => {
       if (this.isZoomedToExtent) {
+        // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
       } else {
         this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
@@ -184,6 +199,7 @@ class DataPreviewMap extends React.Component {
 
   @computed
   get boundingRectangleCatalogItem() {
+    // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
     const rectangle = this.props.previewed.rectangle;
     if (rectangle === undefined) {
       return undefined;
@@ -227,6 +243,7 @@ class DataPreviewMap extends React.Component {
 
     const rectangleCatalogItem = new GeoJsonCatalogItem(
       "__preview-data-extent",
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria
     );
     rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {
@@ -257,11 +274,12 @@ class DataPreviewMap extends React.Component {
   }
 
   @action.bound
-  clickMap(_evt) {
+  clickMap(_evt: any) {
     this.isZoomedToExtent = !this.isZoomedToExtent;
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const previewBadgeLabels = {
       loading: t("preview.loading"),
@@ -271,6 +289,8 @@ class DataPreviewMap extends React.Component {
     };
     return (
       <div className={Styles.map} onClick={this.clickMap}>
+        // @ts-expect-error TS(2339): Property 'showMap' does not exist on type
+        'Readonl... Remove this comment to see the full error message
         {this.props.showMap ? (
           <div
             className={classNames(Styles.terriaPreview)}

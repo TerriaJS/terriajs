@@ -17,31 +17,37 @@ class MobileSearch extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  onLocationClick(result) {
+  onLocationClick(result: any) {
     runInAction(() => {
       result.clickAction();
 
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       addMarker(this.props.terria, result);
 
       // Close modal window
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.switchMobileView(null);
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.showMobileLocationSearch = false;
     });
   }
 
   searchInDataCatalog() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const { searchState } = this.props.viewState;
     runInAction(() => {
       // Set text here so that it doesn't get batched up and the catalog
       // search text has a chance to set isWaitingToStartCatalogSearch
       searchState.catalogSearchText = searchState.locationSearchText;
     });
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.searchInCatalog(searchState.locationSearchText);
   }
 
   render() {
     const theme = "light";
     return (
+      // @ts-expect-error TS(2339): Property 'mobileSearch' does not exist on type 'IM... Remove this comment to see the full error message
       <div className={Styles.mobileSearch}>
         <div>{this.renderSearchInCatalogLink(theme)}</div>
         <div className={Styles.location}>
@@ -51,8 +57,10 @@ class MobileSearch extends React.Component {
     );
   }
 
-  renderSearchInCatalogLink(theme) {
+  renderSearchInCatalogLink(theme: any) {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const searchState = this.props.viewState.searchState;
 
     if (searchState.locationSearchText.length === 0) {
@@ -65,6 +73,7 @@ class MobileSearch extends React.Component {
           {searchState.catalogSearchProvider && (
             <SearchResult
               clickAction={() => this.searchInDataCatalog()}
+              // @ts-expect-error TS(2322): Type 'null' is not assignable to type '"data" | "l... Remove this comment to see the full error message
               icon={null}
               locationSearchText={searchState.locationSearchText}
               name={t("search.search", {
@@ -78,12 +87,15 @@ class MobileSearch extends React.Component {
     );
   }
 
-  renderLocationResult(theme) {
+  renderLocationResult(theme: any) {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const searchState = this.props.viewState.searchState;
-    return searchState.locationSearchResults.map((search) => (
+    return searchState.locationSearchResults.map((search: any) => (
       <LocationSearchResults
         key={search.searchProvider.name}
+        // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
         terria={this.props.terria}
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         viewState={this.props.viewState}
         search={search}
         locationSearchText={searchState.locationSearchText}

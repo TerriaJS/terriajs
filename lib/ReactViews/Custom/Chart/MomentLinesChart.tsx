@@ -11,9 +11,11 @@ class MomentLines extends React.Component {
     scales: PropTypes.object.isRequired
   };
 
-  doZoom(scales) {
+  doZoom(scales: any) {
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
     const lines = document.querySelectorAll(`g#${this.props.id} line`);
     lines.forEach((line, i) => {
+      // @ts-expect-error TS(2339): Property 'chartItem' does not exist on type 'Reado... Remove this comment to see the full error message
       const point = this.props.chartItem.points[i];
       if (point) {
         const x = scales.x(point.x);
@@ -24,11 +26,12 @@ class MomentLines extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
     const { id, chartItem, scales } = this.props;
     const baseKey = `moment-line-${chartItem.categoryName}-${chartItem.name}`;
     return (
       <g id={id}>
-        {chartItem.points.map((p, i) => {
+        {chartItem.points.map((p: any, i: any) => {
           const x = scales.x(p.x);
           const y = scales.y(0);
           return (

@@ -6,9 +6,9 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 const DEFAULT_BOUNDING_BOX_SIZE = 0.2;
 
 export default function createZoomToFunction(
-  latitude,
-  longitude,
-  boundingBoxSize
+  latitude: any,
+  longitude: any,
+  boundingBoxSize: any
 ) {
   boundingBoxSize = defaultValue(boundingBoxSize, DEFAULT_BOUNDING_BOX_SIZE);
 

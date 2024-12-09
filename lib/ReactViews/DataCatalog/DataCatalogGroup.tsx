@@ -33,7 +33,9 @@ class DataCatalogGroup extends React.Component {
     userData: false
   };
 
-  constructor(props) {
+  _cleanupLoadMembersReaction: any;
+
+  constructor(props: any) {
     super(props);
     this.state = {
       /** Only used if manageIsOpenLocally === true */
@@ -42,35 +44,48 @@ class DataCatalogGroup extends React.Component {
   }
 
   isOpen() {
+    // @ts-expect-error TS(2339): Property 'manageIsOpenLocally' does not exist on t... Remove this comment to see the full error message
     if (this.props.manageIsOpenLocally) {
+      // @ts-expect-error TS(2339): Property 'isOpen' does not exist on type 'Readonly... Remove this comment to see the full error message
       return this.state.isOpen;
     }
+    // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
     return this.props.group.isOpen;
   }
 
   async clickGroup() {
+    // @ts-expect-error TS(2339): Property 'manageIsOpenLocally' does not exist on t... Remove this comment to see the full error message
     if (this.props.manageIsOpenLocally) {
       this.setState({
+        // @ts-expect-error TS(2339): Property 'isOpen' does not exist on type 'Readonly... Remove this comment to see the full error message
         isOpen: !this.state.isOpen
       });
     }
 
     (
       await this.props.viewState.viewCatalogMember(
+        // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
         this.props.group,
+        // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
         !this.props.group.isOpen
       )
-    ).raiseError(this.props.viewState.terria);
+    )
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+      .raiseError(this.props.viewState.terria);
   }
 
   isSelected() {
+    // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
     return addedByUser(this.props.group)
-      ? this.props.viewState.userDataPreviewedItem === this.props.group
-      : this.props.viewState.previewedItem === this.props.group;
+      ? // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+        this.props.viewState.userDataPreviewedItem === this.props.group
+      : // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+        this.props.viewState.previewedItem === this.props.group;
   }
 
   getNameOrPrettyUrl() {
     // Grab a name via nameInCatalog, if it's a blank string, try and generate one from the url
+    // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const group = this.props.group;
     const nameInCatalog = group.nameInCatalog || "";
     if (nameInCatalog !== "") {
@@ -84,6 +99,7 @@ class DataCatalogGroup extends React.Component {
 
   componentDidMount() {
     this._cleanupLoadMembersReaction = reaction(
+      // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
       () => [this.props.group, this.isOpen()],
       ([group, isOpen]) => {
         if (isOpen) {
@@ -99,23 +115,30 @@ class DataCatalogGroup extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const group = this.props.group;
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
 
     return (
       <CatalogGroup
         text={this.getNameOrPrettyUrl()}
         isPrivate={group.isPrivate}
+        // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
         title={getPath(this.props.group, " → ")}
+        // @ts-expect-error TS(2339): Property 'isTopLevel' does not exist on type 'Read... Remove this comment to see the full error message
         topLevel={this.props.isTopLevel}
         open={this.isOpen()}
         loading={group.isLoading || group.isLoadingMembers}
         emptyMessage={t("dataCatalog.groupEmpty")}
         onClick={() => this.clickGroup()}
+        // @ts-expect-error TS(2339): Property 'removable' does not exist on type 'Reado... Remove this comment to see the full error message
         removable={this.props.removable}
         removeUserAddedData={removeUserAddedData.bind(
           this,
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           this.props.terria,
+          // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
           this.props.group
         )}
         selected={this.isSelected()}
@@ -123,26 +146,36 @@ class DataCatalogGroup extends React.Component {
         displayGroup={group.displayGroup}
         addRemoveButtonFunction={(event) => {
           addRemoveButtonClicked(
+            // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
             this.props.group,
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             this.props.viewState,
+            // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
             this.props.terria,
             event.shiftKey || event.ctrlKey
           );
         }}
         allItemsLoaded={allMappableMembersInWorkbench(
+          // @ts-expect-error TS(2339): Property 'group' does not exist on type 'Readonly<... Remove this comment to see the full error message
           this.props.group.members,
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           this.props.terria
         )}
       >
         {this.isOpen()
-          ? group.memberModels.map((item) => (
+          ? group.memberModels.map((item: any) => (
               <DataCatalogMember
                 key={item.uniqueId}
                 member={item}
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
+                // @ts-expect-error TS(2769): No overload matches this call.
                 userData={this.props.userData}
+                // @ts-expect-error TS(2339): Property 'manageIsOpenLocally' does not exist on t... Remove this comment to see the full error message
                 overrideOpen={this.props.manageIsOpenLocally}
+                // @ts-expect-error TS(2339): Property 'onActionButtonClicked' does not exist on... Remove this comment to see the full error message
                 onActionButtonClicked={this.props.onActionButtonClicked}
               />
             ))

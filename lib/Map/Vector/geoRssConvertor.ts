@@ -8,7 +8,7 @@ import geoJsonGeometryFromW3cGeometry from "./geoJsonGeometryFromW3cGeometry";
  * @param  {Document|String} xml The GML document.
  * @return {Object} The GeoJSON object.
  */
-export const geoRss2ToGeoJson = function (xml) {
+export const geoRss2ToGeoJson = function (xml: any) {
   if (typeof xml === "string") {
     const parser = new DOMParser();
     xml = parser.parseFromString(xml, "text/xml");
@@ -46,7 +46,7 @@ export const geoRss2ToGeoJson = function (xml) {
  * @param  {Document|String} xml The GML document.
  * @return {Object} The GeoJSON object.
  */
-export const geoRssAtomToGeoJson = function (xml) {
+export const geoRssAtomToGeoJson = function (xml: any) {
   if (typeof xml === "string") {
     const parser = new DOMParser();
     xml = parser.parseFromString(xml, "text/xml");
@@ -95,7 +95,7 @@ const identifyW3C = ["Point"];
 
 const simpleGeometryNames = ["point", "line", "polygon", "box"];
 
-function getGeoRssPropertiesRecursively(gmlNode, properties) {
+function getGeoRssPropertiesRecursively(gmlNode: any, properties: any) {
   let constainsGeometry = false;
 
   for (let i = 0; i < gmlNode.childNodes.length; ++i) {
@@ -128,7 +128,8 @@ function getGeoRssPropertiesRecursively(gmlNode, properties) {
  * - W3C geometry (i.e. <geo:Point><geo:lat>55.701</geo:lat><geo:long>12.552</geo:long></geo:Point>)
  * @param {*} node
  */
-function getGeometry(node) {
+// @ts-expect-error TS(7023)
+function getGeometry(node: any) {
   let result;
   for (let i = 0; !defined(result) && i < node.childNodes.length; ++i) {
     const child = node.childNodes[i];
@@ -145,7 +146,7 @@ function getGeometry(node) {
   }
   return result;
 }
-function getGeometryFromWhere(node) {
+function getGeometryFromWhere(node: any) {
   let result;
   for (let i = 0; !defined(result) && i < node.childNodes.length; ++i) {
     const child = node.childNodes[i];
@@ -159,14 +160,14 @@ function getGeometryFromWhere(node) {
   }
 }
 
-function createGeoJsonGeometryFeatureFromGmlGeometry(geometry) {
+function createGeoJsonGeometryFeatureFromGmlGeometry(geometry: any) {
   return geoJsonGeometryFromGmlGeometry(geometry);
 }
 
-function createGeoJsonGeometryFeatureFromSimpleGeoRssGeometry(geometry) {
+function createGeoJsonGeometryFeatureFromSimpleGeoRssGeometry(geometry: any) {
   return geoJsonGeometryFromGeoRssSimpleGeometry(geometry);
 }
 
-function createGeoJsonGeometryFeatureFromW3cGeometry(geometry) {
+function createGeoJsonGeometryFeatureFromW3cGeometry(geometry: any) {
   return geoJsonGeometryFromW3cGeometry(geometry);
 }

@@ -28,14 +28,14 @@ const NotificationWindow = createReactClass({
     width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   },
 
-  confirm(e) {
+  confirm(e: any) {
     e.stopPropagation();
     if (this.props.onConfirm) {
       this.props.onConfirm();
     }
   },
 
-  deny(e) {
+  deny(e: any) {
     e.stopPropagation();
     if (this.props.onDeny) {
       this.props.onDeny();
@@ -72,13 +72,14 @@ const NotificationWindow = createReactClass({
         <div
           className={Styles.notification}
           /* eslint-disable-next-line react/no-unknown-property */
+          // @ts-expect-error TS(2322): Type '{ children: Element[]; className: string; is... Remove this comment to see the full error message
           isStory={isStory}
           css={`
-            background: ${(p) =>
+            background: ${(p: any) =>
               p.isStory ? p.theme.colorPrimary : p.theme.dark};
             a,
             a:visited {
-              color: ${(p) => p.theme.primary};
+              color: ${(p: any) => p.theme.primary};
             }
           `}
         >

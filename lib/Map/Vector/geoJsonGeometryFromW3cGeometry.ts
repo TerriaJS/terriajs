@@ -6,7 +6,7 @@ const featureCreators = {
   Point: createPointGeometry
 };
 
-function geoJsonGeometryFromW3cGeometry(geometry) {
+function geoJsonGeometryFromW3cGeometry(geometry: any) {
   const type = "Point";
   const creator = featureCreators[type];
   if (!defined(creator)) {
@@ -20,7 +20,7 @@ function geoJsonGeometryFromW3cGeometry(geometry) {
   return creator(geometry);
 }
 
-function createPointGeometry(geometry) {
+function createPointGeometry(geometry: any) {
   /*
     avoid using geo namespace since user defines it in different way
     and we already know that Point in W3C geometry supports only lat and long elements

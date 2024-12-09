@@ -34,36 +34,43 @@ class MobileMenu extends React.Component {
     showFeedback: false
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {};
   }
 
   toggleMenu() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.mobileMenuVisible =
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         !this.props.viewState.mobileMenuVisible;
     });
   }
 
   onFeedbackFormClick() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.feedbackFormIsVisible = true;
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.mobileMenuVisible = false;
     });
   }
 
   hideMenu() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.mobileMenuVisible = false;
     });
   }
 
   runStories() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.runStories();
   }
 
   dismissSatelliteGuidanceAction() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   }
 
@@ -72,23 +79,29 @@ class MobileMenu extends React.Component {
    * method returns props for showing it in the mobile menu.
    */
   mapUserGuide() {
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     const helpItems = this.props.terria.configParameters.helpContent;
     const mapUserGuideItem = helpItems?.find(
-      ({ itemName }) => itemName === "mapuserguide"
+      ({
+        itemName
+      }: any) => itemName === "mapuserguide"
     );
     if (!mapUserGuideItem) {
       return undefined;
     }
     const title = applyTranslationIfExists(
       mapUserGuideItem.title,
+      // @ts-expect-error TS(2339): Property 'i18n' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.props.i18n
     );
     return {
       href: mapUserGuideItem.url,
       caption: title,
       onClick: () => {
+        // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
         this.props.terria.analytics?.logEvent(
           Category.help,
+          // @ts-expect-error TS(2339): Property 'itemSelected' does not exist on type 'ty... Remove this comment to see the full error message
           HelpAction.itemSelected,
           title
         );
@@ -97,10 +110,14 @@ class MobileMenu extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const hasStories =
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria.configParameters.storyEnabled &&
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       defined(this.props.terria.stories) &&
+      // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
       this.props.terria.stories.length > 0;
 
     const mapUserGuide = this.mapUserGuide();
@@ -108,62 +125,75 @@ class MobileMenu extends React.Component {
     // return this.props.viewState.mobileMenuVisible ? (
     return (
       <div>
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         {this.props.viewState.mobileMenuVisible && (
           <div className={Styles.overlay} onClick={() => this.toggleMenu()} />
         )}
         <div
           className={classNames(Styles.mobileNav, {
+            // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
             [Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible
           })}
         >
-          {this.props.menuLeftItems.map((menuItem) => (
-            <div
-              onClick={() => this.hideMenu()}
-              key={menuItem ? menuItem.key : undefined}
-            >
-              {menuItem}
-            </div>
-          ))}
+          // @ts-expect-error TS(2339): Property 'menuLeftItems' does not exist on type 'R... Remove this comment to see the full error message
+          {this.props.menuLeftItems.map((menuItem: any) => <div
+            onClick={() => this.hideMenu()}
+            key={menuItem ? menuItem.key : undefined}
+          >
+            {menuItem}
+          </div>)}
           <div onClick={() => this.hideMenu()}>
             <SettingPanel
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               terria={this.props.terria}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
             />
           </div>
           <div onClick={() => this.hideMenu()}>
+            // @ts-expect-error TS(2739): Type is missing. Remove this comment to see the full error message
             <SharePanel
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               terria={this.props.terria}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
             />
           </div>
-          {this.props.menuItems.map((menuItem) => (
-            <div
-              onClick={() => this.hideMenu()}
-              key={menuItem ? menuItem.key : undefined}
-            >
-              {menuItem}
-            </div>
-          ))}
+          // @ts-expect-error TS(2339): Property 'menuItems' does not exist on type 'Reado... Remove this comment to see the full error message
+          {this.props.menuItems.map((menuItem: any) => <div
+            onClick={() => this.hideMenu()}
+            key={menuItem ? menuItem.key : undefined}
+          >
+            {menuItem}
+          </div>)}
+          // @ts-expect-error TS(2741): Property 'icon' is missing in type. Remove this comment to see the full error message
           {mapUserGuide && <MobileMenuItem {...mapUserGuide} />}
+          // @ts-expect-error TS(2339): Property 'showFeedback' does not exist on type 'Re... Remove this comment to see the full error message
           {this.props.showFeedback && (
+            // @ts-expect-error TS(2741): Property 'icon' is missing in type '{ onClick: () ... Remove this comment to see the full error message
             <MobileMenuItem
               onClick={() => this.onFeedbackFormClick()}
               caption={t("feedback.feedbackBtnText")}
             />
           )}
           {hasStories && (
+            // @ts-expect-error TS(2741): Property 'icon' is missing in type '{ onClick: () ... Remove this comment to see the full error message
             <MobileMenuItem
               onClick={() => this.runStories()}
               caption={t("story.mobileViewStory", {
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 storiesLength: this.props.terria.stories.length
               })}
             />
           )}
+          // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
           {this.props.terria.configParameters.languageConfiguration
             ?.enabled && (
             <div onClick={() => this.hideMenu()}>
               <LangPanel
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 smallScreen={this.props.viewState.useSmallScreenInterface}
               />
             </div>

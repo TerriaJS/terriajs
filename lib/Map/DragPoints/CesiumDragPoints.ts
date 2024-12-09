@@ -18,7 +18,11 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  */
-const CesiumDragPoints = function (terria, pointMovedCallback) {
+const CesiumDragPoints = function (
+  this: any,
+  terria: any,
+  pointMovedCallback: any
+) {
   this._terria = terria;
   this._setUp = false;
   this.type = "Cesium";
@@ -66,13 +70,14 @@ CesiumDragPoints.prototype.setUp = function () {
   }
   this._scene = this._terria.cesium.scene;
   this._viewer = this._terria.cesium.cesiumWidget;
+  // @ts-expect-error TS(2554)
   this._mouseHandler = new ScreenSpaceEventHandler(this._scene.canvas, false);
 
   const that = this;
 
   // Mousedown event. This is called for all mousedown events, not just mousedown on entity events like the Leaflet
   // equivalent.
-  this._mouseHandler.setInputAction(function (click) {
+  this._mouseHandler.setInputAction(function (click: any) {
     if (
       !defined(that._draggableObjects.entities) ||
       that._draggableObjects.entities.length === 0
@@ -84,7 +89,7 @@ CesiumDragPoints.prototype.setUp = function () {
     if (defined(pickedObject)) {
       const pickedEntity = pickedObject.id;
       const draggedEntity = that._draggableObjects.entities.values.filter(
-        function (dragObjEntity) {
+        function (dragObjEntity: any) {
           return dragObjEntity.id === pickedEntity.id;
         }
       )[0];
@@ -97,7 +102,7 @@ CesiumDragPoints.prototype.setUp = function () {
   }, ScreenSpaceEventType.LEFT_DOWN);
 
   // Mouse move event.
-  this._mouseHandler.setInputAction(function (move) {
+  this._mouseHandler.setInputAction(function (move: any) {
     if (!that._dragInProgress) {
       return;
     }
@@ -115,7 +120,7 @@ CesiumDragPoints.prototype.setUp = function () {
   }, ScreenSpaceEventType.MOUSE_MOVE);
 
   // Mouse release event.
-  this._mouseHandler.setInputAction(function (mouseUp) {
+  this._mouseHandler.setInputAction(function (mouseUp: any) {
     if (that._dragInProgress && mouseUp.position !== that._originalPosition) {
       that._pointMovedCallback(that._draggableObjects);
     }
@@ -132,7 +137,7 @@ CesiumDragPoints.prototype.setUp = function () {
  *
  * @param {CustomDataSource} entities Entities that user has drawn on the map.
  */
-CesiumDragPoints.prototype.updateDraggableObjects = function (entities) {
+CesiumDragPoints.prototype.updateDraggableObjects = function (entities: any) {
   this._draggableObjects = entities;
 };
 
@@ -151,7 +156,7 @@ CesiumDragPoints.prototype.destroy = function () {
  * @param {Boolean} state True to enable and false to disable camera motion.
  * @private
  */
-CesiumDragPoints.prototype._setCameraMotion = function (state) {
+CesiumDragPoints.prototype._setCameraMotion = function (state: any) {
   this._scene.screenSpaceCameraController.enableRotate = state;
   this._scene.screenSpaceCameraController.enableZoom = state;
   this._scene.screenSpaceCameraController.enableLook = state;

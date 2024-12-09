@@ -6,7 +6,7 @@ const DEFAULT_URL = "serverconfig/";
 /**
  * Provides information about the configuration of the Terria server, by querying /serverconfig
  */
-function ServerConfig() {
+function ServerConfig(this: any) {
   /**
    * Contains configuration information retrieved from the server. The attributes are defined by TerriaJS-Server but include:
    *   version: current version of server
@@ -27,7 +27,7 @@ function ServerConfig() {
  * @param  {String} serverConfigUrl Optional override URL.
  * @return {Object} Promise that resolves to the configuration object itself.
  */
-ServerConfig.prototype.init = function (serverConfigUrl) {
+ServerConfig.prototype.init = function (serverConfigUrl: any) {
   if (this.config !== undefined) {
     return Promise.resolve(this.config);
   }

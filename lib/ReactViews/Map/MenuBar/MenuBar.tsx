@@ -18,13 +18,14 @@ import Styles from "./menu-bar.scss";
 const StyledMenuBar = styled.div`
   pointer-events: none;
   ${(p) =>
+    // @ts-expect-error TS(2339): Property 'trainerBarVisible' does not exist on typ... Remove this comment to see the full error message
     p.trainerBarVisible &&
     `
     top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapButtonTop)}px;
   `}
 `;
 // The map navigation region
-const MenuBar = observer((props) => {
+const MenuBar = observer((props: any) => {
   const viewState = useViewState();
   const terria = viewState.terria;
   const menuItems = props.menuItems || [];
@@ -47,6 +48,7 @@ const MenuBar = observer((props) => {
         }
       )}
       onClick={handleClick}
+      // @ts-expect-error TS(2769): No overload matches this call.
       trainerBarVisible={viewState.trainerBarVisible}
     >
       <section>
@@ -57,7 +59,7 @@ const MenuBar = observer((props) => {
             </li>
           )}
           {!viewState.useSmallScreenInterface &&
-            props.menuLeftItems.map((element, i) => (
+            props.menuLeftItems.map((element: any, i: any) => (
               <li className={Styles.menuItem} key={i}>
                 {element}
               </li>
@@ -70,6 +72,7 @@ const MenuBar = observer((props) => {
             <SettingPanel terria={terria} viewState={viewState} />
           </li>
           <li className={Styles.menuItem}>
+            // @ts-expect-error TS(2322): Type is not assignable... Remove this comment to see the full error message
             <HelpButton viewState={viewState} />
           </li>
 
@@ -85,6 +88,7 @@ const MenuBar = observer((props) => {
         {storyEnabled && (
           <ul className={classNames(Styles.menu)}>
             <li className={Styles.menuItem}>
+              // @ts-expect-error TS(2741): Property 'animationDuration' is missing in type. Remove this comment to see the full error message
               <StoryButton
                 terria={terria}
                 viewState={viewState}
@@ -98,12 +102,13 @@ const MenuBar = observer((props) => {
             <SharePanel
               terria={terria}
               viewState={viewState}
+              // @ts-expect-error TS(2322): Type. Remove this comment to see the full error message
               animationDuration={props.animationDuration}
             />
           </li>
         </ul>
         {!viewState.useSmallScreenInterface &&
-          menuItems.map((element, i) => (
+          menuItems.map((element: any, i: any) => (
             <li className={Styles.menuItem} key={i}>
               {element}
             </li>
@@ -112,7 +117,9 @@ const MenuBar = observer((props) => {
     </StyledMenuBar>
   );
 });
+// @ts-expect-error TS(2339): Property 'displayName' does not exist on type. Remove this comment to see the full error message
 MenuBar.displayName = "MenuBar";
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type '(prop... Remove this comment to see the full error message
 MenuBar.propTypes = {
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),

@@ -25,19 +25,24 @@ class PolygonParameterEditor extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  setValueFromText(e) {
+  setValueFromText(e: any) {
+    // @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
     PolygonParameterEditor.setValueFromText(e, this.props.parameter);
   }
 
   selectPolygonOnMap() {
     selectOnMap(
+      // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.previewed.terria,
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState,
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter
     );
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <div>
@@ -45,6 +50,7 @@ class PolygonParameterEditor extends React.Component {
           className={Styles.field}
           type="text"
           onChange={this.setValueFromText.bind(this)}
+          // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
           value={getDisplayValue(this.props.parameter.value)}
         />
         <button
@@ -64,7 +70,8 @@ class PolygonParameterEditor extends React.Component {
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-PolygonParameterEditor.setValueFromText = function (e, parameter) {
+// @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
+PolygonParameterEditor.setValueFromText = function (e: any, parameter: any) {
   parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
 };
 
@@ -73,7 +80,7 @@ PolygonParameterEditor.setValueFromText = function (e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-export function getDisplayValue(value) {
+export function getDisplayValue(value: any) {
   if (!defined(value) || value.length < 1) {
     return "";
   }
@@ -101,7 +108,7 @@ export function getDisplayValue(value) {
 /**
  * Helper function for processing clicked/moved points.
  */
-function getPointsLongLats(pointEntities, terria) {
+function getPointsLongLats(pointEntities: any, terria: any) {
   const pointEnts = pointEntities.entities.values;
   const pointsLongLats = [];
   for (let i = 0; i < pointEnts.length; i++) {
@@ -131,7 +138,7 @@ function getPointsLongLats(pointEntities, terria) {
  * @param {Object} viewState ViewState.
  * @param {FunctionParameter} parameter Parameter.
  */
-export function selectOnMap(terria, viewState, parameter) {
+export function selectOnMap(terria: any, viewState: any, parameter: any) {
   const userDrawing = new UserDrawing({
     terria: terria,
     onPointClicked: function (pointEntities) {

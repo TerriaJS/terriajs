@@ -24,31 +24,39 @@ class DataCatalogTab extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
 
   @computed
   get searchPlaceholder() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
+    // @ts-expect-error TS(2339): Property 'searchPlaceholder' does not exist on typ... Remove this comment to see the full error message
     return this.props.searchPlaceholder || t("addData.searchPlaceholder");
   }
 
-  changeSearchText(newText) {
+  changeSearchText(newText: any) {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.viewState.searchState.catalogSearchText = newText;
     });
   }
 
   search() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.searchState.searchCatalog();
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
     const terria = this.props.terria;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const searchState = this.props.viewState.searchState;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const previewed = this.props.viewState.previewedItem;
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
     return (
       <div className={Styles.root}>
@@ -60,7 +68,7 @@ class DataCatalogTab extends React.Component {
               {searchState.catalogSearchProvider && (
                 <SearchBox
                   searchText={searchState.catalogSearchText}
-                  onSearchTextChanged={(val) => this.changeSearchText(val)}
+                  onSearchTextChanged={(val: any) => this.changeSearchText(val)}
                   onDoSearch={() => this.search()}
                   placeholder={this.searchPlaceholder}
                   debounceDuration={
@@ -73,15 +81,20 @@ class DataCatalogTab extends React.Component {
                 />
               )}
               <DataCatalog
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
+                // @ts-expect-error TS(2339): Property 'onActionButtonClicked' does not exist on... Remove this comment to see the full error message
                 onActionButtonClicked={this.props.onActionButtonClicked}
+                // @ts-expect-error TS(2339): Property 'items' does not exist on type 'Readonly<... Remove this comment to see the full error message
                 items={this.props.items}
               />
             </Box>
             <Box styledWidth="60%">
               <DataPreview
                 terria={terria}
+                // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
                 viewState={this.props.viewState}
                 previewed={previewed}
               />
@@ -90,7 +103,9 @@ class DataCatalogTab extends React.Component {
 
           {showBreadcrumbs && (
             <Breadcrumbs
+              // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
               terria={this.props.terria}
+              // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
               viewState={this.props.viewState}
               previewed={previewed}
             />

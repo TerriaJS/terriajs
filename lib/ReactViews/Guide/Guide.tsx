@@ -42,7 +42,7 @@ import {
   GuideAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 
-const GuideProgress = (props) => {
+const GuideProgress = (props: any) => {
   // doesn't work for IE11
   // const countArray = Array.from(Array(props.maxStepCount).keys()).map(e => e++);
 
@@ -72,10 +72,10 @@ GuideProgress.propTypes = {
 };
 
 export const analyticsSetShowGuide = (
-  isOpen,
-  index,
-  guideKey,
-  terria,
+  isOpen: any,
+  index: any,
+  guideKey: any,
+  terria: any,
   options = {
     setCalledFromInside: false
   }
@@ -101,7 +101,7 @@ export const GuidePure = ({
   hasIntroSlide = false,
   guideData,
   setShowGuide
-}) => {
+}: any) => {
   // Handle index locally for now (unless we do a "open guide at X point" in the future?)
   const [currentGuideIndex, setCurrentGuideIndex] = useState(0);
 
@@ -136,7 +136,7 @@ export const GuidePure = ({
   };
 
   const { t } = useTranslation();
-  const handleSetShowGuide = (bool) => {
+  const handleSetShowGuide = (bool: any) => {
     analyticsSetShowGuide(bool, currentGuideIndex, guideKey, terria, {
       setCalledFromInside: true
     });

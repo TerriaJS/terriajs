@@ -22,13 +22,14 @@ class MomentPointsChart extends React.Component {
     glyph: "circle"
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     makeObservable(this);
   }
 
   @computed
   get points() {
+    // @ts-expect-error TS(2339): Property 'chartItem' does not exist on type 'Reado... Remove this comment to see the full error message
     const { chartItem, basisItem, basisItemScales, scales } = this.props;
     if (basisItem) {
       // We want to stick the chartItem points to the basis item, to do this we
@@ -38,7 +39,7 @@ class MomentPointsChart extends React.Component {
         domain: basisItemScales.y.domain(),
         range: scales.y.domain()
       });
-      const interpolatedPoints = chartItem.points.map((p) => ({
+      const interpolatedPoints = chartItem.points.map((p: any) => ({
         ...p,
         ...interpolate(p, basisItem.points, basisToSourceScale)
       }));
@@ -47,12 +48,13 @@ class MomentPointsChart extends React.Component {
     return chartItem.points;
   }
 
-  doZoom(scales) {
+  doZoom(scales: any) {
     const points = this.points;
     if (points.length === 0) {
       return;
     }
     const glyphs = document.querySelectorAll(
+      // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
       `g#${this.props.id} > g.visx-glyph`
     );
     glyphs.forEach((glyph, i) => {
@@ -62,17 +64,19 @@ class MomentPointsChart extends React.Component {
         const top = scales.y(point.y);
         const scale = point.isSelected ? "scale(1.4, 1.4)" : "";
         glyph.setAttribute("transform", `translate(${left}, ${top}) ${scale}`);
+        // @ts-expect-error TS(2769): No overload matches this call.
         glyph.setAttribute("fill-opacity", point.isSelected ? 1.0 : 0.3);
       }
     });
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
     const { id, chartItem, scales, glyph } = this.props;
     const baseKey = `moment-point-${chartItem.categoryName}-${chartItem.name}`;
     const fillColor = chartItem.getColor();
     const isClickable = chartItem.onClick !== undefined;
-    const clickProps = (point) => {
+    const clickProps = (point: any) => {
       if (isClickable) {
         return {
           pointerEvents: "all",
@@ -82,10 +86,11 @@ class MomentPointsChart extends React.Component {
       }
       return {};
     };
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const Glyph = Glyphs[glyph] ?? GlyphCircle;
     return (
       <g id={id}>
-        {this.points.map((p, i) => (
+        {this.points.map((p: any, i: any) => (
           <Glyph
             key={`${baseKey}-${i}`}
             left={scales.x(p.x)}
@@ -106,7 +111,11 @@ class MomentPointsChart extends React.Component {
  * The source point and `sortedBasisPoints` may be of different scale, so we use `basisToSourceScale`
  * to generate a point in the original source items scale.
  */
-function interpolate({ x, y }, sortedBasisPoints, basisToSourceScale) {
+function interpolate(
+  { x, y }: any,
+  sortedBasisPoints: any,
+  basisToSourceScale: any
+) {
   const closest = closestPointIndex(x, sortedBasisPoints);
   if (closest === undefined) {
     return { x, y };
@@ -131,7 +140,7 @@ function interpolate({ x, y }, sortedBasisPoints, basisToSourceScale) {
   return interpolated;
 }
 
-function closestPointIndex(x, sortedPoints) {
+function closestPointIndex(x: any, sortedPoints: any) {
   for (let i = 0; i < sortedPoints.length; i++) {
     if (sortedPoints[i].x.getTime() >= x.getTime()) {
       if (i === 0) return 0;

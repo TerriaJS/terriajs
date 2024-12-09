@@ -1,6 +1,6 @@
 import defined from "terriajs-cesium/Source/Core/defined";
 
-let result;
+let result: any;
 
 /**
  * Determines if the current browser supports WebGL.

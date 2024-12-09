@@ -11,7 +11,7 @@ import sortedIndices from "../../../Core/sortedIndices";
  * @param {Array[]} valueArrays See description above.
  * @return {Array[]} The synthesized values which could be passed to a table structure.
  */
-function combineValueArrays(valueArrays) {
+function combineValueArrays(valueArrays: any) {
   if (!defined(valueArrays) || valueArrays.length < 1) {
     return;
   }
@@ -29,12 +29,14 @@ function combineValueArrays(valueArrays) {
   for (let i = 1; i < valueArrays.length; i++) {
     const currentValueArray = valueArrays[i];
     const currentFirstArray = currentValueArray[0];
+    // @ts-expect-error TS(7022)
     const preExistingValuesLength = combinedValueArrays[0].length;
     combinedValueArrays[0] = combinedValueArrays[0].concat(currentFirstArray);
     const empty1 = new Array(currentFirstArray.length); // elements are undefined.
     for (let k = 1; k < combinedValueArrays.length; k++) {
       combinedValueArrays[k] = combinedValueArrays[k].concat(empty1);
     }
+    // @ts-expect-error TS(7022)
     const empty2 = new Array(preExistingValuesLength); // elements are undefined.
     for (let j = 1; j < currentValueArray.length; j++) {
       const values = currentValueArray[j];
@@ -54,10 +56,11 @@ function combineValueArrays(valueArrays) {
  * @param  {Array[]} valueArrays The array of arrays of values to sort.
  * @return {Array[]} The values sorted by the first column.
  */
-function sortByFirst(valueArrays) {
+function sortByFirst(valueArrays: any) {
   const firstValues = valueArrays[0];
+  // @ts-expect-error TS(2554)
   const indices = sortedIndices(firstValues);
-  return valueArrays.map(function (values) {
+  return valueArrays.map(function (values: any) {
     return indices.map(function (sortedIndex) {
       return values[sortedIndex];
     });
@@ -74,7 +77,7 @@ function sortByFirst(valueArrays) {
  * combineRepeated(x);
  * # x is [['a', 'b', 'c'], [1, 2, 3], [4, 5, undefined]].
  */
-function combineRepeated(sortedValueArrays) {
+function combineRepeated(sortedValueArrays: any) {
   const result = new Array(sortedValueArrays.length);
   for (let i = 0; i < result.length; i++) {
     result[i] = [sortedValueArrays[i][0]];
@@ -102,12 +105,12 @@ function combineRepeated(sortedValueArrays) {
  * @param  {String[]} columnNames Array of column names, eg ['x', 'y'].
  * @return {Array[]} Array of rows, starting with the column names, eg. [['x', 'y'], [1, 4], [2, 5], [3, 6]].
  */
-function toArrayOfRows(columnValueArrays, columnNames) {
+function toArrayOfRows(columnValueArrays: any, columnNames: any) {
   if (columnValueArrays.length < 1) {
     return;
   }
-  const rows = columnValueArrays[0].map(function (_value0, rowIndex) {
-    return columnValueArrays.map(function (values) {
+  const rows = columnValueArrays[0].map(function (_value0: any, rowIndex: any) {
+    return columnValueArrays.map(function (values: any) {
       return values[rowIndex];
     });
   });
@@ -116,13 +119,13 @@ function toArrayOfRows(columnValueArrays, columnNames) {
 }
 
 onmessage = function (event) {
-  const valueArrays = event.data.values.map((valuesArray) =>
-    valuesArray.map((values) => Array.prototype.slice.call(values))
+  const valueArrays = event.data.values.map((valuesArray: any) =>
+    valuesArray.map((values: any) => Array.prototype.slice.call(values))
   ); // Convert from typed arrays.
   const nameArrays = event.data.names;
   const combinedValues = combineValueArrays(valueArrays);
   const rows = toArrayOfRows(combinedValues, nameArrays);
-  const joinedRows = rows.map(function (row) {
+  const joinedRows = rows.map(function (row: any) {
     return row.join(",");
   });
   const csvString = joinedRows.join("\n");

@@ -12,7 +12,7 @@ import Text from "../../Styled/Text";
 
 import GuidanceDot from "./GuidanceDot.jsx";
 
-const GuidanceProgress = (props) => {
+const GuidanceProgress = (props: any) => {
   const countArray = Array.from(Array(props.max).keys()).map((e) => e++);
   const countStep = props.step;
   return (
@@ -36,14 +36,18 @@ GuidanceProgress.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-const GuidanceContextModal = ({ children }) => {
+const GuidanceContextModal = ({
+  children
+}: any) => {
   const { t } = useTranslation();
   return (
     <div className={Styles.context}>
+      // @ts-expect-error TS(2769): No overload matches this call.
       <Text tallerHeight>{children}</Text>
       <button className={Styles.btn}>{t("general.next")}</button>
       {t("general.skip")}
       {/* ? */}
+      // @ts-expect-error TS(2741): Property 'children' is missing in type Remove this comment to see the full error message
       <GuidanceProgress step={2} max={4} />
     </div>
   );
@@ -53,7 +57,9 @@ GuidanceContextModal.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export const Guidance = ({ children }) => {
+export const Guidance = ({
+  children
+}: any) => {
   const [showGuidance, setShowGuidance] = useState(false);
 
   return (

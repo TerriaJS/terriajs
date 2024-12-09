@@ -20,17 +20,21 @@ class SatelliteImageryTimeFilterSection extends React.Component {
   };
 
   removeFilter() {
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     this.props.item.removeTimeFilterFeature();
   }
 
   zoomTo() {
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const feature = this.props.item.timeFilterFeature;
     const position =
       feature !== undefined && feature.position !== undefined
-        ? feature.position.getValue(this.props.item.currentTime)
+        ? // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
+          feature.position.getValue(this.props.item.currentTime)
         : undefined;
     if (defined(position)) {
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.props.item.terria.currentViewer.zoomTo(
         new Rectangle(
           cartographic.longitude - 0.0005,
@@ -43,8 +47,10 @@ class SatelliteImageryTimeFilterSection extends React.Component {
   }
 
   newLocation() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     // Cancel any feature picking already in progress.
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const terria = this.props.item.terria;
 
     const pickPointMode = new MapInteractionMode({
@@ -65,6 +71,7 @@ class SatelliteImageryTimeFilterSection extends React.Component {
           };
         });
 
+        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         await pickedFeatures.allFeaturesAvailablePromise;
         if (
           terria.mapInteractionModeStack[
@@ -76,11 +83,13 @@ class SatelliteImageryTimeFilterSection extends React.Component {
           return;
         }
 
+        // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
         const item = this.props.item;
+        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         const thisLayerFeature = pickedFeatures.features.filter((feature) => {
           return (
             item.mapItems.find(
-              (mapItem) =>
+              (mapItem: any) =>
                 mapItem.imageryProvider &&
                 mapItem.imageryProvider ===
                   feature.imageryLayer?.imageryProvider
@@ -92,6 +101,7 @@ class SatelliteImageryTimeFilterSection extends React.Component {
           try {
             item.setTimeFilterFeature(
               thisLayerFeature,
+              // @ts-expect-error TS(2532): Object is possibly 'undefined'.
               pickedFeatures.providerCoords
             );
           } catch (e) {
@@ -106,10 +116,12 @@ class SatelliteImageryTimeFilterSection extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     if (!this.props.item.canFilterTimeByFeature) {
       return null;
     }
 
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     const feature = this.props.item.timeFilterFeature;
     if (feature === undefined) {
       return this.renderNoFeatureSelected();
@@ -119,6 +131,7 @@ class SatelliteImageryTimeFilterSection extends React.Component {
   }
 
   renderNoFeatureSelected() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <div className={Styles.inactive}>
@@ -131,19 +144,21 @@ class SatelliteImageryTimeFilterSection extends React.Component {
     );
   }
 
-  renderFeatureSelected(feature) {
+  renderFeatureSelected(feature: any) {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     // TODO: if the feature itself doesn't have a position, we should be able to use the position the user clicked on.
     const position =
       feature.position !== undefined
-        ? feature.position.getValue(this.props.item.currentTime)
+        ? // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
+          feature.position.getValue(this.props.item.currentTime)
         : undefined;
 
     return (
       <div
         className={Styles.active}
         css={`
-          background: ${(p) => p.theme.colorPrimary};
+          background: ${(p: any) => p.theme.colorPrimary};
         `}
       >
         <div className={Styles.infoGroup}>

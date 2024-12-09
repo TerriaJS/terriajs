@@ -35,6 +35,7 @@ const MobilePanel = createReactClass({
             <div className={Styles.overlay} />
 
             <InnerPanel
+              // @ts-expect-error TS(2322): Type '{ children: any; theme: any; caretOffset: st... Remove this comment to see the full error message
               theme={this.props.theme}
               caretOffset="15px"
               doNotCloseFlag={this.getDoNotCloseFlag()}

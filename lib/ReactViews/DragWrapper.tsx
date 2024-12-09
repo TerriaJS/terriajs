@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import interact from "interactjs";
 
 class DragWrapper extends React.Component {
-  constructor(props) {
+  node: any;
+  resizeListener: any;
+  constructor(props: any) {
     super(props);
     this.resizeListener = null;
   }
@@ -11,7 +13,7 @@ class DragWrapper extends React.Component {
   componentDidMount() {
     const node = this.node;
 
-    const dragMoveListener = (event) => {
+    const dragMoveListener = (event: any) => {
       const target = event.target;
       // keep the dragged position in the data-x/data-y attributes
       const x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
@@ -42,6 +44,7 @@ class DragWrapper extends React.Component {
     this.resizeListener = () => {
       const draggable = interact(node);
       const dragEvent = { name: "drag", axis: "xy" };
+      // @ts-expect-error TS(2339): Property 'reflow' does not exist on type 'Interact... Remove this comment to see the full error message
       draggable.reflow(dragEvent);
     };
     window.addEventListener("resize", this.resizeListener, false);
@@ -59,6 +62,7 @@ class DragWrapper extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type 'typeo... Remove this comment to see the full error message
 DragWrapper.propTypes = {
   children: PropTypes.node.isRequired
 };

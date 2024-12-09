@@ -206,6 +206,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
           throw `Invalid XML response`;
         }
 
+        // @ts-expect-error TS(2554)
         domainResponse = xml2json(xml) as GetDomainResponseType;
       } catch (error) {
         console.log(error);
@@ -283,6 +284,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         });
       }
 
+      // @ts-expect-error TS(2554)
       const json = xml2json(xml) as GetRecordsResponse;
 
       if (json.Exception) {

@@ -14,8 +14,9 @@ const MetadataTable = createReactClass({
     metadataItem: PropTypes.object.isRequired // A MetadataItem instance.
   },
 
-  renderDataCell(metadataItem, key) {
+  renderDataCell(metadataItem: any, key: any) {
     if (typeof metadataItem[key] === "object") {
+      // @ts-expect-error TS(2769): No overload matches this call.
       return <MetadataTable metadataItem={metadataItem[key]} />;
     } else if (
       Array.isArray(metadataItem[key]) ||
@@ -27,10 +28,12 @@ const MetadataTable = createReactClass({
     } else return metadataItem[key];
   },
 
-  renderObjectItemRow(key, i) {
+  renderObjectItemRow(key: any, i: any) {
     const metadataItem = this.props.metadataItem;
     return (
       <tr key={i}>
+        // @ts-expect-error TS(2339): Property 'name' does not exist on type
+        'IMetadataT... Remove this comment to see the full error message
         <th className={Styles.name}>{key}</th>
         <td className={Styles.value}>
           {this.renderDataCell(metadataItem, key)}
@@ -71,7 +74,7 @@ const MetadataTable = createReactClass({
  * @return {Boolean} Returns true if the object obj is a string or a number.
  * @private
  */
-function isStringOrNumber(obj) {
+function isStringOrNumber(obj: any) {
   return (
     typeof obj === "string" || obj instanceof String || !isNaN(parseFloat(obj))
   );
@@ -82,7 +85,7 @@ function isStringOrNumber(obj) {
  * @return {Boolean} Returns true if the array only contains objects which can be joined.
  * @private
  */
-function isJoinable(array) {
+function isJoinable(array: any) {
   return array.every(isStringOrNumber);
 }
 

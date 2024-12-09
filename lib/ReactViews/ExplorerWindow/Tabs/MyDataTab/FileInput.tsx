@@ -22,7 +22,7 @@ const FileInput = createReactClass({
     };
   },
 
-  handleChange(e) {
+  handleChange(e: any) {
     this.setState({
       value: e.target.value.split(/(\\|\/)/g).pop()
     });

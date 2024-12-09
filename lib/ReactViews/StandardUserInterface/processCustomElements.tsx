@@ -28,11 +28,15 @@ const groupElementKeys = Object.keys(GROUP_ELEMENT_TO_KEY_MAPPING);
  * @returns {Object<Array<Element>>} An index of arrays of custom elements against where they should go - e.g. an array
  *      for "menu", an array for "nav" etc.
  */
-export default function processCustomElements(isSmallScreen, customUI) {
+export default function processCustomElements(
+  isSmallScreen: any,
+  customUI: any
+) {
   const groupElements = React.Children.toArray(customUI);
 
   return groupElements.reduce((soFar, groupElement) => {
     const key = findKeyForGroupElement(groupElement);
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     soFar[key] = soFar[key].concat(
       getGroupChildren(isSmallScreen, groupElement)
     );
@@ -44,14 +48,16 @@ export default function processCustomElements(isSmallScreen, customUI) {
 /** Builds an empty accumulator object - each location for custom elements will have an empty array in the return object */
 function buildEmptyAccumulator() {
   return groupElementKeys.reduce((acc, key) => {
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     acc[key] = [];
     return acc;
   }, {});
 }
 
 /** Finds the associated key string for the grouping element provided - e.g. a <Nav> element will resolve to 'nav' */
-function findKeyForGroupElement(groupElement) {
+function findKeyForGroupElement(groupElement: any) {
   return groupElementKeys.filter(
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     (key) => groupElement.type === GROUP_ELEMENT_TO_KEY_MAPPING[key]
   )[0];
 }
@@ -64,7 +70,7 @@ function findKeyForGroupElement(groupElement) {
  * @param groupElement {Element} a grouping element to get children from.
  * @returns {Array<Element>} a collection of processed children.
  */
-function getGroupChildren(isSmallScreen, groupElement) {
+function getGroupChildren(isSmallScreen: any, groupElement: any) {
   return React.Children.map(groupElement.props.children, (child) => {
     if (typeof child === "string") {
       return <span>{child}</span>;

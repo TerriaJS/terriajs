@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Styles from "./location-item.scss";
 
-export default function LocationItem(props) {
+export default function LocationItem(props: any) {
   let latitude = "";
   let longitude = "";
   if (props.position) {

@@ -34,11 +34,12 @@ const LineParameterEditor = createReactClass({
     this.props.viewState.openAddData();
   },
 
-  setValueFromText(e) {
+  setValueFromText(e: any) {
+    // @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
     LineParameterEditor.setValueFromText(e, this.props.parameter);
   },
 
-  onPointClicked(pointEntities) {
+  onPointClicked(pointEntities: any) {
     const pointEnts = pointEntities.entities.values;
     const pointsLongLats = [];
     for (let i = 0; i < pointEnts.length; i++) {
@@ -88,7 +89,8 @@ const LineParameterEditor = createReactClass({
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-LineParameterEditor.setValueFromText = function (e, parameter) {
+// @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
+LineParameterEditor.setValueFromText = function (e: any, parameter: any) {
   const coordinatePairs = e.target.value.split("], [");
   const pointsLongLats = [];
   for (let i = 0; i < coordinatePairs.length; i++) {
@@ -110,7 +112,7 @@ LineParameterEditor.setValueFromText = function (e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-export function getDisplayValue(value) {
+export function getDisplayValue(value: any) {
   const pointsLongLats = value;
   if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
     return "";

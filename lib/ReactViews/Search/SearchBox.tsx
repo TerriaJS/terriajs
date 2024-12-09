@@ -68,6 +68,7 @@ export const SearchBox = createReactClass({
 
   componentDidUpdate(prevProps) {
     if (
+      // @ts-expect-error TS(2339): Property 'debounceDuration' does not exist on type... Remove this comment to see the full error message
       prevProps.debounceDuration !== this.props.debounceDuration &&
       this.props.debounceDuration > 0
     ) {
@@ -93,7 +94,7 @@ export const SearchBox = createReactClass({
     this.props.onDoSearch();
   },
 
-  handleChange(event) {
+  handleChange(event: any) {
     const value = event.target.value;
     // immediately bypass debounce if we started with no value
     if (this.props.searchText.length === 0) {
@@ -114,7 +115,7 @@ export const SearchBox = createReactClass({
     }
   },
 
-  onKeyDown(event) {
+  onKeyDown(event: any) {
     if (event.keyCode === 13) {
       this.search();
     }
@@ -187,6 +188,7 @@ export const SearchBox = createReactClass({
             placeholder={this.props.placeholder}
             autoComplete="off"
             autoFocus={this.props.autoFocus}
+            // @ts-expect-error TS(2769): No overload matches this call.
             rounded
           />
         </Text>
@@ -196,8 +198,9 @@ export const SearchBox = createReactClass({
   }
 });
 
-const SearchBoxWithRef = (props, ref) => (
+const SearchBoxWithRef = (props: any, ref: any) => (
   <SearchBox {...props} inputBoxRef={ref} />
 );
 
+// @ts-expect-error TS(2345): Argument of type 'ForwardRefExoticComponent<Pick<a... Remove this comment to see the full error message
 export default withTheme(React.forwardRef(SearchBoxWithRef));

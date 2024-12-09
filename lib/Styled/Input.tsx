@@ -129,6 +129,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   useTheme();
   return (
     <Box fullWidth {...boxProps}>
+      // @ts-expect-error TS(2769): No overload matches this call.
       <StyledInput {...rest} />
     </Box>
   );

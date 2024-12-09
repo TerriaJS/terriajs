@@ -38,6 +38,7 @@ const pickedTriangleScratch: PickTriangleResult = {
 };
 
 export default class MouseCoords {
+  // @ts-expect-error TS(2709)
   readonly geoidModel: EarthGravityModel1996;
   readonly proj4Projection: string;
   readonly projectionUnits: string;
@@ -64,6 +65,7 @@ export default class MouseCoords {
 
   constructor() {
     makeObservable(this);
+    // @ts-expect-error TS(7009)
     this.geoidModel = new EarthGravityModel1996(gridFileUrl);
     this.proj4Projection = "+proj=utm +ellps=GRS80 +units=m +no_defs";
     this.projectionUnits = "m";

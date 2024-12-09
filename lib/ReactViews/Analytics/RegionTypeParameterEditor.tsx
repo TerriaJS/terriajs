@@ -14,14 +14,14 @@ const RegionTypeParameterEditor = createReactClass({
     parameter: PropTypes.object
   },
 
-  onChange(e) {
+  onChange(e: any) {
     const regionProviders = this.getRegionProviders();
     if (!regionProviders) {
       return;
     }
 
     const value = regionProviders.filter(
-      (r) => r.regionType === e.target.value
+      (r: any) => r.regionType === e.target.value
     )[0];
     this.props.parameter.setValue(CommonStrata.user, value);
   },
@@ -31,7 +31,7 @@ const RegionTypeParameterEditor = createReactClass({
 
     // We expect this promise to resolve immediately because the parameter
     // should already be loaded before we display this React component.
-    this.props.parameter.getAllRegionTypes().then((rp) => {
+    this.props.parameter.getAllRegionTypes().then((rp: any) => {
       regionProviders = rp;
     });
 
@@ -52,7 +52,7 @@ const RegionTypeParameterEditor = createReactClass({
         onChange={this.onChange}
         value={defined(value) ? value.regionType : ""}
       >
-        {regionProviders.map((r, i) => (
+        {regionProviders.map((r: any, i: any) => (
           <option value={r.regionType} key={i}>
             {r.regionType}
           </option>

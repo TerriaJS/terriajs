@@ -31,47 +31,65 @@ class GeoJsonParameterEditor extends React.Component {
   };
 
   onCleanUp() {
+    // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.viewState.openAddData();
   }
 
   selectPointOnMap() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.setValue(CommonStrata.user, undefined);
       selectPointOnMap(
+        // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.previewed.terria,
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState,
+        // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.parameter,
+        // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
         this.props.t("analytics.selectLocation")
       );
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.subtype = GeoJsonParameter.PointType;
     });
   }
 
   selectPolygonOnMap() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.setValue(CommonStrata.user, undefined);
       selectPolygonOnMap(
+        // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.previewed.terria,
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState,
+        // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.parameter
       );
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.subtype = GeoJsonParameter.PolygonType;
     });
   }
 
   selectExistingPolygonOnMap() {
     runInAction(() => {
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.setValue(CommonStrata.user, undefined);
       selectExistingPolygonOnMap(
+        // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.previewed.terria,
+        // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.viewState,
+        // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
         this.props.parameter
       );
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
       this.props.parameter.subtype = GeoJsonParameter.SelectAPolygonType;
     });
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return (
       <div>
@@ -115,10 +133,14 @@ class GeoJsonParameterEditor extends React.Component {
           type="text"
           readOnly
           value={getDisplayValue(
+            // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
             this.props.parameter.value,
+            // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
             this.props.parameter
           )}
         />
+        // @ts-expect-error TS(2339): Property 'parameter' does not exist on
+        type 'Reado... Remove this comment to see the full error message
         {getDisplayValue(this.props.parameter.value, this.props.parameter) ===
           "" && <div>{t("analytics.nothingSelected")}</div>}
       </div>
@@ -126,7 +148,7 @@ class GeoJsonParameterEditor extends React.Component {
   }
 }
 
-function getDisplayValue(value, parameter) {
+function getDisplayValue(value: any, parameter: any) {
   if (!defined(parameter.subtype)) {
     return "";
   }

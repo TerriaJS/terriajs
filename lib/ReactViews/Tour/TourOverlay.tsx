@@ -13,7 +13,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
  * to grey out the rest of the screen. A fifth panel, which is clear, covers the whole screen to prevent the highlighted
  * element from being selectable.
  */
-const TourOverlay = ({ rectangle, onCancel }) => {
+const TourOverlay = ({ rectangle, onCancel }: any) => {
   const advance = () => {
     // this.props.helpViewState.advance = true;
   };
@@ -47,6 +47,7 @@ const TourOverlay = ({ rectangle, onCancel }) => {
   const bottomOverlayHeight = "100%";
   const bottomOverlayWidth = "100%";
 
+  // @ts-expect-error TS(2339): Property 'window' does not exist on type 'IObscure... Remove this comment to see the full error message
   const windowClass = classNames(Styles.window, {
     [Styles.isActive]: rectangle
   });

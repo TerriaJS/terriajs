@@ -13,7 +13,10 @@ class TimerSection extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  interval: any;
+  nextUpdate: any;
+
+  constructor(props: any) {
     super(props);
     this.state = {
       secondsLeft: 0
@@ -22,9 +25,13 @@ class TimerSection extends React.Component {
 
   isEnabled() {
     return (
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       defined(this.props.item) &&
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.props.item.isPolling &&
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       defined(this.props.item.nextScheduledUpdateTime) &&
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.props.item.refreshInterval < 30 * 60 * 1000 // only show refresh timer for refresh intervals less than 30 minutes
     );
   }
@@ -32,6 +39,7 @@ class TimerSection extends React.Component {
   getCountdownDuration() {
     // How many seconds until our next update?
     return Math.round(
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       (this.props.item.nextScheduledUpdateTime.getTime() -
         new Date().getTime()) /
         1000
@@ -40,16 +48,20 @@ class TimerSection extends React.Component {
 
   getTimerStartTime() {
     return new Date(
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.props.item.nextScheduledUpdateTime -
+        // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
         this.props.item.refreshInterval * 1000
     );
   }
 
   // Ticks down the countdown clock
   countdown() {
+    // @ts-expect-error TS(2339): Property 'secondsLeft' does not exist on type 'Rea... Remove this comment to see the full error message
     if (this.state.secondsLeft > 0) {
       this.setState((state) => {
         return {
+          // @ts-expect-error TS(2339): Property 'secondsLeft' does not exist on type 'Rea... Remove this comment to see the full error message
           secondsLeft: state.secondsLeft - 1
         };
       });
@@ -67,10 +79,12 @@ class TimerSection extends React.Component {
   }
 
   getCountdownString() {
+    // @ts-expect-error TS(2769): No overload matches this call.
     const date = new Date(null);
+    // @ts-expect-error TS(2339): Property 'secondsLeft' does not exist on type 'Rea... Remove this comment to see the full error message
     date.setSeconds(this.state.secondsLeft);
 
-    const addLeadingZeroIfRequired = (numString) =>
+    const addLeadingZeroIfRequired = (numString: any) =>
       numString.length < 2 ? "0" + numString : numString;
 
     const minutes = addLeadingZeroIfRequired(date.getMinutes().toString());
@@ -84,11 +98,13 @@ class TimerSection extends React.Component {
       return;
     }
 
+    // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
     if (this.nextUpdate !== this.props.item.nextScheduledUpdateTime) {
       if (defined(this.interval)) {
         clearInterval(this.interval);
       }
       this.startCountdown();
+      // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       this.nextUpdate = this.props.item.nextScheduledUpdateTime;
     }
   }
@@ -106,16 +122,20 @@ class TimerSection extends React.Component {
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     return this.isEnabled() ? (
       <div className={Styles.section}>
         <div className={Styles.timerContainer}>
           <Timer
+            // @ts-expect-error TS(2322): Type '{ tooltipText: any; radius: number; start: n... Remove this comment to see the full error message
             tooltipText={t("timer.nextScheduledUpdateTime", {
+              // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
               scheduledUpdateTime: this.props.item.nextScheduledUpdateTime
             })}
             radius={10}
             start={this.getTimerStartTime().getTime()}
+            // @ts-expect-error TS(2339): Property 'item' does not exist on type 'Readonly<{... Remove this comment to see the full error message
             stop={this.props.item.nextScheduledUpdateTime.getTime()}
           />
         </div>

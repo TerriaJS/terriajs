@@ -55,7 +55,7 @@ const InnerPanel = createReactClass({
   },
 
   componentDidMount() {
-    this.escKeyListener = (e) => {
+    this.escKeyListener = (e: any) => {
       if (e.keyCode === 27) {
         this.close(e);
       }
@@ -88,7 +88,7 @@ const InnerPanel = createReactClass({
     }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
   },
 
-  close(e) {
+  close(e: any) {
     // Only close if this wasn't a click on an open/close button.
     if (
       (!this.props.doNotCloseFlag || !e[this.props.doNotCloseFlag]) &&
@@ -112,7 +112,7 @@ const InnerPanel = createReactClass({
           { [Styles.showDropdownInCenter]: this.props.showDropdownInCenter }
         )}
         css={`
-          background: ${(p) => p.theme.dark};
+          background: ${(p: any) => p.theme.dark};
         `}
         ref={this.props.innerRef}
         onClick={(e) => e.stopPropagation()}
@@ -140,24 +140,25 @@ const InnerPanel = createReactClass({
           title={t("general.close")}
           aria-label={t("general.close")}
           /* eslint-disable-next-line react/no-unknown-property */
+          // @ts-expect-error TS(2322): Type '{ children: Element; type: "button"; classNa... Remove this comment to see the full error message
           showDropdownAsModal={this.props.showDropdownAsModal}
           css={`
             svg {
-              fill: ${(p) => p.theme.textLight};
+              fill: ${(p: any) => p.theme.textLight};
             }
             &:hover,
             &:focus {
               svg {
-                fill: ${(p) => p.theme.colorPrimary};
+                fill: ${(p: any) => p.theme.colorPrimary};
               }
             }
-            ${(p) =>
+            ${(p: any) =>
               p.showDropdownAsModal &&
               `
-                svg {
-                  fill: ${p.theme.grey};
-                }
-            `}
+            svg {
+              fill: ${p.theme.grey};
+            }
+        `}
           `}
         >
           <Icon glyph={Icon.GLYPHS.close} />
@@ -167,7 +168,7 @@ const InnerPanel = createReactClass({
             className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
             style={{ left: this.props.caretOffset }}
             css={`
-              background: ${(p) => p.theme.dark};
+              background: ${(p: any) => p.theme.dark};
             `}
           />
         )}

@@ -8,7 +8,12 @@ import tinymce from "tinymce";
 // Lazy load the Editor component as the tinyMCE library is large
 const Editor = React.lazy(() => import("../Generic/Editor.jsx"));
 class StoryEditor extends React.Component {
-  constructor(props) {
+  escKeyListener: any;
+  keys: any;
+  slideInTimer: any;
+  slideOutTimer: any;
+  titleInput: any;
+  constructor(props: any) {
     super(props);
     this.state = {
       title: "",
@@ -35,6 +40,7 @@ class StoryEditor extends React.Component {
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    // @ts-expect-error TS(2339): Property 'story' does not exist on type 'Readonly<... Remove this comment to see the full error message
     const story = this.props.story;
     this.setState({
       title: story.title,
@@ -78,16 +84,20 @@ class StoryEditor extends React.Component {
     });
   }
 
-  updateTitle(event) {
+  updateTitle(event: any) {
     this.setState({
       title: event.target.value
     });
   }
 
   saveStory() {
+    // @ts-expect-error TS(2339): Property 'saveStory' does not exist on type 'Reado... Remove this comment to see the full error message
     this.props.saveStory({
+      // @ts-expect-error TS(2339): Property 'title' does not exist on type 'Readonly<... Remove this comment to see the full error message
       title: this.state.title,
+      // @ts-expect-error TS(2339): Property 'text' does not exist on type 'Readonly<{... Remove this comment to see the full error message
       text: this.state.text,
+      // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
       id: this.state.id
     });
 
@@ -97,14 +107,17 @@ class StoryEditor extends React.Component {
   }
 
   cancelEditing() {
+    // @ts-expect-error TS(2339): Property 'exitEditingMode' does not exist on type ... Remove this comment to see the full error message
     this.props.exitEditingMode();
     this.setState({
+      // @ts-expect-error TS(2339): Property 'story' does not exist on type 'Readonly<... Remove this comment to see the full error message
       title: this.props.story.title,
+      // @ts-expect-error TS(2339): Property 'story' does not exist on type 'Readonly<... Remove this comment to see the full error message
       text: this.props.story.text
     });
   }
 
-  onKeyDown(event) {
+  onKeyDown(event: any) {
     if (event.keyCode === 27) {
       this.cancelEditing();
     }
@@ -116,7 +129,7 @@ class StoryEditor extends React.Component {
     }
   }
 
-  onKeyUp(event) {
+  onKeyUp(event: any) {
     if (
       (event.keyCode === 13 || event.keyCode === 17) &&
       this.keys.enter &&
@@ -132,18 +145,22 @@ class StoryEditor extends React.Component {
     }
   }
 
-  handleChange(value) {
+  handleChange(value: any) {
     this.setState({ text: value });
   }
 
   removeStory() {
+    // @ts-expect-error TS(2339): Property 'exitEditingMode' does not exist on type ... Remove this comment to see the full error message
     this.props.exitEditingMode();
+    // @ts-expect-error TS(2339): Property 'id' does not exist on type 'Readonly<{}>... Remove this comment to see the full error message
     if (this.state.id) {
+      // @ts-expect-error TS(2339): Property 'removeStory' does not exist on type 'Rea... Remove this comment to see the full error message
       this.props.removeStory(this.state.id);
     }
   }
 
   render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
     const { t } = this.props;
     const maxImageHeight = "350px"; // TODO: where to put this to reduce coupling?
     return (
@@ -151,6 +168,7 @@ class StoryEditor extends React.Component {
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
         className={classNames(Styles.popupEditor, {
+          // @ts-expect-error TS(2339): Property 'inView' does not exist on type 'Readonly... Remove this comment to see the full error message
           [Styles.isMounted]: this.state.inView
         })}
       >
@@ -163,6 +181,7 @@ class StoryEditor extends React.Component {
               className={Styles.field}
               type="text"
               id="title"
+              // @ts-expect-error TS(2339): Property 'title' does not exist on type 'Readonly<... Remove this comment to see the full error message
               value={this.state.title}
               onChange={this.updateTitle}
             />
@@ -175,6 +194,7 @@ class StoryEditor extends React.Component {
               {t("story.editor.cancelEditing")}
             </button>
             <button
+              // @ts-expect-error TS(2339): Property 'title' does not exist on type 'Readonly<... Remove this comment to see the full error message
               disabled={!this.state.title.length}
               className={Styles.saveBtn}
               onClick={this.saveStory}
@@ -187,16 +207,20 @@ class StoryEditor extends React.Component {
           <div className={Styles.body}>
             <Suspense fallback={<div>Loading...</div>}>
               <Editor
+                // @ts-expect-error TS(2339): Property 'text' does not exist on type 'Readonly<{... Remove this comment to see the full error message
                 html={this.state.text}
                 onChange={(_newValue, editor) => {
                   // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
+                  // @ts-expect-error TS(2531): Object is possibly 'null'.
                   tinymce.activeEditor.dom.setStyles(
+                    // @ts-expect-error TS(2531): Object is possibly 'null'.
                     tinymce.activeEditor.dom.select("img"),
                     { "max-height": `${maxImageHeight}`, width: "auto" }
                   );
                   const text = editor.getBody().innerHTML;
                   this.setState({ text });
                 }}
+                // @ts-expect-error TS(2339): Property 'terria' does not exist on type 'Readonly... Remove this comment to see the full error message
                 terria={this.props.terria}
               />
             </Suspense>
@@ -207,6 +231,7 @@ class StoryEditor extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'propTypes' does not exist on type 'typeo... Remove this comment to see the full error message
 StoryEditor.propTypes = {
   story: PropTypes.object,
   removeStory: PropTypes.func,
@@ -216,5 +241,6 @@ StoryEditor.propTypes = {
   terria: PropTypes.object
 };
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 StoryEditor.defaultProps = { story: { title: "", text: "", id: undefined } };
 export default withTranslation()(StoryEditor);

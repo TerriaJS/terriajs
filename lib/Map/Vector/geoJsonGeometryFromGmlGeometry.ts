@@ -4,7 +4,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 
 const gmlNamespace = "http://www.opengis.net/gml";
 
-function createLineStringFromGmlGeometry(geometry) {
+function createLineStringFromGmlGeometry(geometry: any) {
   const coordinates = [];
 
   const posNodes = geometry.getElementsByTagNameNS(gmlNamespace, "posList");
@@ -21,7 +21,7 @@ function createLineStringFromGmlGeometry(geometry) {
   };
 }
 
-function createPointFromGmlGeometry(geometry) {
+function createPointFromGmlGeometry(geometry: any) {
   const posNodes = geometry.getElementsByTagNameNS(gmlNamespace, "pos");
   if (posNodes < 1) {
     throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingPos"));
@@ -33,7 +33,7 @@ function createPointFromGmlGeometry(geometry) {
   };
 }
 
-function createPolygonFromEnvelope(geometry) {
+function createPolygonFromEnvelope(geometry: any) {
   const lowerCorners = geometry.getElementsByTagNameNS(
     gmlNamespace,
     "lowerCorner"
@@ -63,7 +63,7 @@ function createPolygonFromEnvelope(geometry) {
   };
 }
 
-function createMultiLineStringFromGmlGeometry(geometry) {
+function createMultiLineStringFromGmlGeometry(geometry: any) {
   const curveMembers = geometry.getElementsByTagNameNS(gmlNamespace, "posList");
   const curves = [];
   for (let i = 0; i < curveMembers.length; ++i) {
@@ -76,7 +76,7 @@ function createMultiLineStringFromGmlGeometry(geometry) {
   };
 }
 
-function createMultiPolygonFromGmlGeomtry(geometry) {
+function createMultiPolygonFromGmlGeomtry(geometry: any) {
   const coordinates = [];
 
   const polygons = geometry.getElementsByTagNameNS(gmlNamespace, "Polygon");
@@ -93,7 +93,10 @@ function createMultiPolygonFromGmlGeomtry(geometry) {
     const polygonCoordinates = [];
 
     const exterior = exteriorNodes[0];
-    const posListNodes = exterior.getElementsByTagNameNS(gmlNamespace, "posList");
+    const posListNodes = exterior.getElementsByTagNameNS(
+      gmlNamespace,
+      "posList"
+    );
     if (posListNodes.length < 1) {
       throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingPosList"));
     }
@@ -123,10 +126,13 @@ function createMultiPolygonFromGmlGeomtry(geometry) {
   };
 }
 
-function createPolygonFromGmlGeometry(geometry) {
+function createPolygonFromGmlGeometry(geometry: any) {
   const polygonCoordinates = [];
 
-  const exteriorNodes = geometry.getElementsByTagNameNS(gmlNamespace, "exterior");
+  const exteriorNodes = geometry.getElementsByTagNameNS(
+    gmlNamespace,
+    "exterior"
+  );
   if (exteriorNodes.length < 1) {
     throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingExteriorRing"));
   }
@@ -158,7 +164,7 @@ function createPolygonFromGmlGeometry(geometry) {
   };
 }
 
-function createMultiPointFromGmlGeometry(geometry) {
+function createMultiPointFromGmlGeometry(geometry: any) {
   const posNodes = geometry.getElementsByTagNameNS(gmlNamespace, "pos");
   const coordinates = [];
 
@@ -184,8 +190,9 @@ const featureCreators = {
   Envelope: createPolygonFromEnvelope
 };
 
-function geoJsonGeometryFeatureFromGmlGeometry(geometry) {
+function geoJsonGeometryFeatureFromGmlGeometry(geometry: any) {
   const type = geometry.localName;
+  // @ts-expect-error TS(7053)
   const creator = featureCreators[type];
   if (!defined(creator)) {
     throw new RuntimeError(
@@ -198,12 +205,12 @@ function geoJsonGeometryFeatureFromGmlGeometry(geometry) {
   return creator(geometry);
 }
 
-function isNotEmpty(s) {
+function isNotEmpty(s: any) {
   return s.length !== 0;
 }
 
 //Utility function to change esri gml positions to geojson positions
-function gml2coord(posList) {
+function gml2coord(posList: any) {
   const pnts = posList.split(/[ ,]+/).filter(isNotEmpty);
   const coords = [];
   for (let i = 0; i < pnts.length; i += 2) {
