@@ -81,7 +81,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   describe("cesiumTileStyle", function () {
     let style: any;
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -268,7 +268,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             ).toBeTruthy();
           });
 
-          it("computes a new model matrix from the given transformations", async function () {
+          it("computes a new model matrix from the given transformations", function () {
             item.setTrait(
               CommonStrata.user,
               "rotation",

@@ -1098,7 +1098,7 @@ describe("WebMapServiceCatalogItem", function () {
     let item: WebMapServiceCatalogItem;
     let imageryProvider: WebMapServiceImageryProvider;
     const wmsUrl = "http://example.com";
-    beforeEach(async () => {
+    beforeEach(() => {
       item = new WebMapServiceCatalogItem("test", new Terria());
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", wmsUrl);

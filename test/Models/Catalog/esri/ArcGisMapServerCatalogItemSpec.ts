@@ -515,7 +515,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with duplicate legends", async function () {
+    it("defines legends - with single layer specified - with duplicate legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "61");
 
       expect(item.legends).toBeDefined();
@@ -530,7 +530,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with unique legends", async function () {
+    it("defines legends - with single layer specified - with unique legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "67");
 
       expect(item.legends).toBeDefined();
@@ -545,7 +545,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with multiple layers specified", async function () {
+    it("defines legends - with multiple layers specified", function () {
       item.setTrait(
         CommonStrata.definition,
         "layers",
@@ -731,17 +731,17 @@ describe("ArcGisMapServerCatalogItem", function () {
       (await item.loadMapItems()).throwIfError();
     });
 
-    it("doesn't request specific layers", async function () {
+    it("doesn't request specific layers", function () {
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
     });
 
-    it("defines legends", async function () {
+    it("defines legends", function () {
       expect(item.legends.length).toBe(1);
       expect(item.legends[0].items.length).toBe(3);
     });
 
-    it("defines name", async function () {
+    it("defines name", function () {
       expect(item.name).toBe("Layers");
     });
 

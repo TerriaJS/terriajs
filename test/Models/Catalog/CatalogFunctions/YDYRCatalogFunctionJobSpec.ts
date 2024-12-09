@@ -28,7 +28,7 @@ describe("YDYRCatalogFunctionJob", function () {
   let terria: Terria;
   let job: YDYRCatalogFunctionJob;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
@@ -92,7 +92,7 @@ describe("YDYRCatalogFunctionJob", function () {
     expect(job.typeName).toBe("YourDataYourRegions Job");
   });
 
-  describe("start polling after added to workbench", async function () {
+  describe("start polling after added to workbench", function () {
     let dispose: () => void;
     beforeEach(() => {
       terria.workbench.add(job);
@@ -105,7 +105,7 @@ describe("YDYRCatalogFunctionJob", function () {
       dispose();
     });
 
-    it("should be in workbench", async function () {
+    it("should be in workbench", function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 

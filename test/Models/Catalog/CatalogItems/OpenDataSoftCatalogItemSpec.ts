@@ -60,7 +60,7 @@ describe("OpenDataSoftCatalogItem", function () {
   });
 
   describe("loads dataset", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         odsItem.setTrait("definition", "url", "https://example.com");
         odsItem.setTrait("definition", "datasetId", "weather-stations");
