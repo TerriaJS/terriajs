@@ -132,6 +132,7 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
             "colorScaleMaximum"
           ) && (
             <ColorScaleRangeSection
+              // @ts-expect-error TS(2322): Type '{ item: BaseModel & ModelPropertiesFromCompl... Remove this comment to see the full error message
               item={item}
               minValue={item.colorScaleMinimum}
               maxValue={item.colorScaleMaximum}

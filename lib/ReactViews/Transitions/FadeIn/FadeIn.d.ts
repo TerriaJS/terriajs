@@ -1,7 +1,7 @@
 import React from "react";
 
 interface PropsType {
-  isVisible: boolean;
+  isVisible?: boolean;
   onEnter?: () => void;
   onExited?: () => void;
   transitionProps?: any;

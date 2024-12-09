@@ -1,5 +1,5 @@
-@import "../../../Sass/common/mixins";
-@import "~terriajs-variables";
+@use "../../../Sass/common/mixins";
+@use "../../../Sass/common/_variables";
 
 .timeline {
   display: table;
@@ -7,7 +7,7 @@
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 5px;
-  font-family: $font-base;
+  font-family: variables.$font-base;
 
   // @media (max-width: $mobile) {
   //   position: fixed;
@@ -19,7 +19,7 @@
 .text-row {
   display: block;
   color: #fff;
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   position: absolute;
   bottom: 44px;
   left: 0px;
@@ -36,18 +36,19 @@
 }
 
 .layer-name-truncated {
-  padding-right: $padding-small;
+  padding-right: variables.$padding-small;
 
-  @media (max-width: $mobile), (min-width: $sm) and (max-width: $lg) {
+  @media (max-width: variables.$mobile),
+    (min-width: variables.$sm) and (max-width: variables.$lg) {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
-  @media (max-width: $mobile) {
+  @media (max-width: variables.$mobile) {
     max-width: 52vw;
   }
 
-  @media (min-width: $sm) and (max-width: $lg) {
+  @media (min-width: variables.$sm) and (max-width: variables.$lg) {
     max-width: 30vw;
   }
 }

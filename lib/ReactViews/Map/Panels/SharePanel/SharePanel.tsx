@@ -142,7 +142,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       : t("share.btnMapShareTitle");
 
     return !storyShare ? (
-      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
+      // @ts-expect-error TS(2322): Type '{ children: false | Element; theme: { btn: s... Remove this comment to see the full error message
       <MenuPanel
         theme={dropdownTheme}
         btnText={catalogShareWithoutText ? null : btnText}
@@ -167,7 +167,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         viewState={this.props.viewState}
         btnTitle={btnTitle}
         isOpen={this.state.isOpen}
-        //@ts-expect-error - not yet ready to tackle tsfying StorySharePanel
+        // @ts-expect-error TS(2769): No overload matches this call.
         onOpenChanged={this.changeOpenState}
         showDropdownAsModal={storyShare}
         modalWidth={modalWidth}

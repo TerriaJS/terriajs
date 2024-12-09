@@ -46,6 +46,7 @@ class FeatureInfoDownload extends React.Component<{
 
     return (
       <Dropdown
+        // @ts-expect-error TS(2769): No overload matches this call.
         options={links}
         textProperty="label"
         theme={{

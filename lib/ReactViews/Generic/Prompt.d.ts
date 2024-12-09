@@ -2,7 +2,7 @@ import React from "react";
 
 interface PropsType {
   content: React.ReactNode;
-  isVisible: boolean;
+  isVisible?: boolean;
   displayDelay: number;
   dismissText: string;
   dismissAction: () => void;

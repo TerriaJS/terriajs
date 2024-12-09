@@ -1,4 +1,4 @@
-const create: any = require("react-test-renderer").create;
+import { create } from "react-test-renderer";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";

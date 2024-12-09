@@ -91,6 +91,7 @@ function WebFeatureServiceSearchProviderMixin<
 
       return this.getXml(_wfsServiceUrl.toString())
         .then((xml: any) => {
+          // @ts-expect-error TS(2554)
           const json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {

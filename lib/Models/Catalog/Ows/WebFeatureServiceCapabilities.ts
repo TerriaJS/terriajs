@@ -177,6 +177,7 @@ export default class WebFeatureServiceCapabilities {
   static fromUrl: (url: string) => Promise<WebFeatureServiceCapabilities> =
     createTransformer((url: string) => {
       return loadXML(url).then(function (capabilitiesXml: any) {
+        // @ts-expect-error TS(2554)
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw new TerriaError({

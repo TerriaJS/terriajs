@@ -1,49 +1,53 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .modal-wrapper {
   position: fixed;
-  z-index: $front-component-z-index - 1;
-  padding-left: $padding * 2;
+  z-index: variables.$front-component-z-index - 1;
+  padding-left: variables.$padding * 2;
   padding-right: 80px;
   padding-top: calc(
-    (100vh - #{$modal-content-height} - #{$modal-header-height}) / 2
+    (
+        100vh - #{variables.$modal-content-height} - #{variables.$modal-header-height}
+      ) / 2
   );
   padding-bottom: calc(
-    (100vh - #{$modal-content-height} - #{$modal-header-height}) / 2
+    (
+        100vh - #{variables.$modal-content-height} - #{variables.$modal-header-height}
+      ) / 2
   );
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
 
-  @media (min-width: $md) {
-    padding-left: 30px + $work-bench-width;
+  @media (min-width: variables.$md) {
+    padding-left: 30px + variables.$work-bench-width;
     padding-right: 30px;
   }
 }
 
 .explorer-panel {
   position: relative;
-  background: $modal-bg;
-  color: $modal-text;
-  border-radius: $radius-small;
+  background: variables.$modal-bg;
+  color: variables.$modal-text;
+  border-radius: variables.$radius-small;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
-  z-index: $front-component-z-index - 1;
+  z-index: variables.$front-component-z-index - 1;
   height: 100%;
   max-width: 1200px;
   margin: 0 auto;
 
-  @include transform(translateY(20%));
+  @include mixins.transform(translateY(20%));
   opacity: 0;
-  @include transition(all 0.3s);
+  @include mixins.transition(all 0.3s);
 
   &.is-mounted {
     opacity: 1;
-    @include transform(none);
+    @include mixins.transform(none);
   }
   a {
-    @include link($modal-bg);
+    @include mixins.link(variables.$modal-bg);
   }
 }
 
@@ -54,7 +58,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  z-index: $front-component-z-index - 10;
+  z-index: variables.$front-component-z-index - 10;
   opacity: 1;
   visibility: visible;
 }
@@ -63,9 +67,9 @@
   composes: sm-show from "../../Sass/common/_base.scss";
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   padding: 4px 10px;
-  margin: $padding-small * 1.5 $padding-small;
+  margin: variables.$padding-small * 1.5 variables.$padding-small;
   font-weight: bold;
   position: absolute;
   top: 0;
@@ -74,7 +78,7 @@
   &,
   &:hover,
   &:focus {
-    color: $text-light;
+    color: variables.$text-light;
     border: 2px solid rgba(#ffffff, 0.7);
     border-radius: 3px;
   }

@@ -1,8 +1,8 @@
-@import "~terriajs-variables";
-@import "../Sass/common/mixins";
+@use "../Sass/common/_variables";
+@use "../Sass/common/mixins";
 
 .notification {
-  font-family: $font-base;
+  font-family: variables.$font-base;
   right: -280px;
   top: 80px;
   background: #ffffff;
@@ -18,7 +18,7 @@
 }
 
 .icon {
-  background: $color-primary;
+  background: variables.$color-primary;
   padding: 15px;
   position: absolute;
   left: 0;
@@ -33,13 +33,13 @@
 
 .info {
   padding: 15px 15px 15px 80px;
-  color: $dark;
+  color: variables.$dark;
   width: 180px;
   word-wrap: break-word;
   .filename {
     font-weight: 600;
   }
   .action {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }

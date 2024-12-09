@@ -64,6 +64,7 @@ class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
     const capabilitiesXml = await loadXML(
       proxyCatalogItemUrl(catalogItem, url)
     );
+    // @ts-expect-error TS(2554)
     const json = xml2json(capabilitiesXml);
     if (!isDefined(json.ServiceMetadata)) {
       throw networkRequestError({
@@ -131,6 +132,7 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
     const capabilitiesXml = await loadXML(
       proxyCatalogItemUrl(catalogItem, url)
     );
+    // @ts-expect-error TS(2554)
     const json = xml2json(capabilitiesXml);
     if (typeof json.CoverageDescription?.CoverageId !== "string") {
       throw networkRequestError({

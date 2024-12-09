@@ -28,7 +28,7 @@ class RelatedMaps extends React.Component<PropTypes> {
     const smallScreen = this.props.viewState.useSmallScreenInterface;
 
     return (
-      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
+      // @ts-expect-error TS(2322): Type '{ children: (Element | Element[])[]; theme: ... Remove this comment to see the full error message
       <MenuPanel
         theme={dropdownTheme}
         btnText={t("relatedMaps.buttonText")}

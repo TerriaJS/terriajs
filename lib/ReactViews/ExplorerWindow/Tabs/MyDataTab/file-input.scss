@@ -1,7 +1,7 @@
-@import "~terriajs-variables";
-@import "../../../../Sass/common/mixins";
+@use "../../../../Sass/common/_variables";
+@use "../../../../Sass/common/mixins";
 
-@include empty-module("file-input");
+@include mixins.empty-module("file-input");
 
 // Add data from url form
 //
@@ -18,7 +18,7 @@
   width: 100%;
   opacity: 0;
   position: absolute;
-  padding: $padding;
+  padding: variables.$padding;
   cursor: pointer;
 }
 

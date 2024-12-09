@@ -1,7 +1,7 @@
-@import "~terriajs-variables";
+@use "../../Sass/common/_variables";
 
 .root {
-  padding: 0 $padding-small * 3;
+  padding: 0 variables.$padding-small * 3;
 }
 
 .link {
@@ -10,30 +10,30 @@
   font-size: 1rem;
   width: 100%;
   text-align: left;
-  padding: $padding-small * 3 0;
-  color: $text-dark;
+  padding: variables.$padding-small * 3 0;
+  color: variables.$text-dark;
   display: block;
-  border-bottom: 1px solid $grey-lighter;
+  border-bottom: 1px solid variables.$grey-lighter;
   font-weight: 400;
   display: flex;
   justify-content: space-between;
   svg {
-    fill: $text-dark;
+    fill: variables.$text-dark;
     width: 14px;
     height: 14px;
     padding: 3px;
   }
   &:hover,
   &:focus {
-    color: $color-primary;
+    color: variables.$color-primary;
     text-decoration: underline;
-    border-bottom: 1px solid $grey-lighter;
+    border-bottom: 1px solid variables.$grey-lighter;
     svg {
-      fill: $color-primary;
+      fill: variables.$color-primary;
     }
   }
 }
 
 .icon {
-  margin-right: $padding-small;
+  margin-right: variables.$padding-small;
 }

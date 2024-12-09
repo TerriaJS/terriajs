@@ -1,12 +1,11 @@
-const create: any = require("react-test-renderer").create;
+import { create } from "react-test-renderer";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
-const DataCatalogTab: any =
-  require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
+import DataCatalogTab from "../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab";
 import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";

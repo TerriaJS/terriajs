@@ -5,8 +5,6 @@ import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
-
-// @ts-expect-error image import
 import markerIcon from "../../wwwroot/images/map-pin.png";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =

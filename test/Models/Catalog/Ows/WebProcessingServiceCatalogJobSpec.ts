@@ -7,9 +7,7 @@ import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catal
 
 // For more tests see - test\Models\WebProcessingServiceCatalogFunctionSpec.ts
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 configure({
   enforceActions: "observed",
@@ -42,7 +40,7 @@ describe("WebProcessingServiceCatalogFunctionJob", function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
   });
 
   afterEach(function () {

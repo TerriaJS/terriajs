@@ -161,6 +161,7 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           `}
         >
           <SearchBoxAndResults
+            // @ts-expect-error TS(2322): Type '{ viewState: ViewState; terria: Terria; plac... Remove this comment to see the full error message
             viewState={viewState}
             terria={terria}
             placeholder={applyTranslationIfExists(

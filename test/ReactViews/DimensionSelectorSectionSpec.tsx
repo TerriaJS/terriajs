@@ -20,6 +20,10 @@ import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
+import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
+import lgaCodeJson from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionMapping from "../../wwwroot/data/regionMapping.json";
+
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
   implements SelectableDimensions
@@ -164,21 +168,17 @@ describe("DimensionSelectorSection", function () {
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({
-      responseText: JSON.stringify(
-        require("../../wwwroot/data/regionMapping.json")
-      )
+      responseJSON: regionMapping
     });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
     ).andReturn({
-      responseText: JSON.stringify(
-        require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
-      )
+      responseJSON: lgaCodeJson
     });
 
     jasmine.Ajax.stubRequest("test/csv/lga_code_2015.csv").andReturn({
-      responseText: require("raw-loader!../../wwwroot/test/csv/lga_code_2015.csv")
+      responseText: lgaCode2015
     });
 
     const csvItem = new CsvCatalogItem("some-csv", terria, undefined);

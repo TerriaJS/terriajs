@@ -1,5 +1,6 @@
+@use "sass:meta";
 :global {
-  @import "~rc-slider/assets/index";
+  @include meta.load-css("~rc-slider/assets/index");
   .rc-slider {
     margin-right: 5px;
     margin-top: 5px;

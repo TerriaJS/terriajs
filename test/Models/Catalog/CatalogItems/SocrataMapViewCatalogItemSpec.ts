@@ -2,9 +2,7 @@ import { runInAction } from "mobx";
 import SocrataMapViewCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/SocrataMapViewCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 
-const view = JSON.stringify(
-  require("../../../../wwwroot/test/Socrata/view.json")
-);
+import view from "../../../../wwwroot/test/Socrata/view.json";
 
 describe("SocrataMapViewCatalogItem", function () {
   let terria: Terria;
@@ -13,7 +11,7 @@ describe("SocrataMapViewCatalogItem", function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest("http://example.com/views/y79a-us3f").andReturn({
-      responseText: view
+      responseJSON: view
     });
 
     terria = new Terria();

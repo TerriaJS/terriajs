@@ -41,6 +41,7 @@ const Notification = observer(() => {
 
   return (
     <NotificationWindow
+      // @ts-expect-error TS(2769): No overload matches this call.
       viewState={viewState}
       title={notification.title}
       message={notification.message}

@@ -168,12 +168,14 @@ const ExpandAndDownloadDropdowns = function (props: {
     <ExpandAndDownloadContainer raiseToTitle={props.raiseToTitle}>
       <Dropdown
         selectOption={props.onExpand}
+        // @ts-expect-error TS(2769): No overload matches this call.
         options={props.sourceNames.map((name) => ({ name }))}
         theme={expandDropdownTheme}
       >
         {props.t("chart.expand") + " ▾"}
       </Dropdown>
       {props.canDownload && (
+        // @ts-expect-error TS(2769): No overload matches this call.
         <Dropdown options={props.downloads} theme={downloadDropdownTheme}>
           {props.t("chart.download") + " ▾"}
         </Dropdown>

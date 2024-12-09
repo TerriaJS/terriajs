@@ -1,5 +1,4 @@
-const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
-
+import { findAllWithClass } from "react-shallow-testutils";
 import TestRenderer from "react-test-renderer";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

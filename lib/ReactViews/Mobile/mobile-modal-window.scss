@@ -1,15 +1,15 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .mobileModal {
   composes: scrollbars from "../../Sass/common/_base.scss";
   position: fixed;
-  top: $mobile-header-height;
+  top: variables.$mobile-header-height;
   bottom: 0;
   background: rgba(#fff, 0.9);
   left: 0;
   right: 0;
-  color: $modal-text;
+  color: variables.$modal-text;
   display: none;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -29,9 +29,9 @@
 }
 
 .modal-top {
-  height: $mobile-modal-top-height;
+  height: variables.$mobile-modal-top-height;
   width: 100%;
-  background: $color-primary;
+  background: variables.$color-primary;
   box-shadow: 2px 0 2px rgba(100, 100, 100, 0.5);
 }
 
@@ -46,7 +46,7 @@
   composes: button;
 
   float: right;
-  padding: $padding;
+  padding: variables.$padding;
 }
 
 .back-button {

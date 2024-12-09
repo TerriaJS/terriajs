@@ -1,15 +1,15 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .section {
-  background: $overlay;
+  background: variables.$overlay;
   margin-top: 10px;
   display: flex;
-  padding: $padding;
+  padding: variables.$padding;
   // align-items: center;
   align-content: flex-start;
 
-  font-weight: $font-weight-light;
-  font-size: $font-size-mid-small;
+  font-weight: variables.$font-weight-light;
+  font-size: variables.$font-size-mid-small;
 }
 
 .timer-container {

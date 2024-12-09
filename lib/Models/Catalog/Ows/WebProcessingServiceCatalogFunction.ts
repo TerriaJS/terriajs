@@ -144,6 +144,7 @@ class WpsLoadableStratum extends LoadableStratum(
       throwInvalidWpsServerError(item, "DescribeProcess");
     }
 
+    // @ts-expect-error TS(2554)
     const json = xml2json(xml);
     if (!isDefined(json.ProcessDescription)) {
       throw networkRequestError({

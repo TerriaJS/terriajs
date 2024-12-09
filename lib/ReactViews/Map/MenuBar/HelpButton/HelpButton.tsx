@@ -26,6 +26,7 @@ const HelpButton = observer(() => {
         <span>{t("helpPanel.btnText")}</span>
       </button>
       <Prompt
+        // @ts-expect-error TS(2322): Type '{ content: Element; displayDelay: number; di... Remove this comment to see the full error message
         content={
           <div>
             <Text bold extraLarge textLight>

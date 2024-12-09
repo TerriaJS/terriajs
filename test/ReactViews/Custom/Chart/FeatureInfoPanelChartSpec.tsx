@@ -15,11 +15,9 @@ import CustomComponent, {
 import parseCustomHtmlToReact from "../../../../lib/ReactViews/Custom/parseCustomHtmlToReact";
 import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
-const csv = require("raw-loader!../../../../wwwroot/test/csv_nongeo/x_height.csv");
+import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv";
 
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;
@@ -45,7 +43,7 @@ describe("FeatureInfoPanelChart", function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
 
     // Without stubbing the chart csv, the specs could fail due to loadMapItems
     // not finishing by the time the test renderer returns.

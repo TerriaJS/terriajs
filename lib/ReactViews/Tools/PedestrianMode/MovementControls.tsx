@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import heightControlsImage from "../../../../wwwroot/images/height-controls.svg";
+import mouseControlsImage from "../../../../wwwroot/images/mouse-control.svg";
+import wasdControlsImage from "../../../../wwwroot/images/wasd.svg";
 import Cesium from "../../../Models/Cesium";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
-import Icon, { StyledIcon } from "../../../Styled/Icon";
 import MovementsController from "./MovementsController";
-
-const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");
-const wasdControlsImage = require("../../../../wwwroot/images/wasd.svg");
-const heightControlsImage = require("../../../../wwwroot/images/height-controls.svg");
 
 type MovementControlsProps = {
   cesium: Cesium;

@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import Box from "../../../../Styled/Box";
-
-const logo = require("../../../../../wwwroot/images/terria-watermark.svg");
+import logo from "../../../../../wwwroot/images/terria-watermark.svg";
 
 export const TerriaLogo: FC = () => {
   return (

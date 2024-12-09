@@ -4,8 +4,10 @@ const path = require("path");
 const { IgnorePlugin } = require("webpack");
 
 module.exports = function () {
+  const devMode = true;
+
   const config = {
-    mode: "development",
+    mode: devMode ? "development" : "production",
     entry: {
       generateDocs: path.resolve(__dirname, "generateDocs.ts"),
       generateCatalogIndex: path.resolve(__dirname, "generateCatalogIndex.ts")
@@ -28,20 +30,40 @@ module.exports = function () {
     plugins: [
       new MiniCssExtractPlugin({
         filename: "TerriaJS.css",
-        disable: false,
         ignoreOrder: true
       }),
       // This is needed for a jsdom issue
-      new IgnorePlugin(/canvas/, /jsdom$/)
+      new IgnorePlugin({
+        resourceRegExp: /canvas/,
+        contextRegExp: /jsdom$/
+      })
     ]
   };
-  return configureWebpackForTerriaJS(
-    path.dirname(require.resolve("../package.json")),
+
+  const babelLoader = {
+    loader: "babel-loader",
+    options: {
+      cacheDirectory: true,
+      sourceMaps: !!devMode,
+      presets: [
+        ["@babel/preset-react", { runtime: "automatic" }],
+        ["@babel/typescript", { allowNamespaces: true }]
+      ],
+      plugins: [
+        ["@babel/plugin-proposal-decorators", { legacy: true }],
+        "babel-plugin-styled-components"
+      ],
+      assumptions: {
+        setPublicClassFields: false
+      }
+    }
+  };
+
+  return configureWebpackForTerriaJS({
+    terriaJSBasePath: path.dirname(require.resolve("../package.json")),
     config,
-    true,
-    // devMode,
-    // hot,
-    false,
-    MiniCssExtractPlugin
-  );
+    devMode,
+    MiniCssExtractPlugin,
+    babelLoader
+  });
 };

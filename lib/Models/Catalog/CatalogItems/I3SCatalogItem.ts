@@ -119,7 +119,7 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
         if (tileset) {
           tileset.style = toJS(this.cesiumTileStyle);
           tileset.shadows = this.cesiumShadows;
-          // @ts-expect-error - Attach terria catalog item to tileset
+          // @ts-expect-error TS(2339)
           tileset._catalogItem = this;
           if (this.lightingFactor && tileset.imageBasedLighting) {
             tileset.imageBasedLighting.imageBasedLightingFactor =

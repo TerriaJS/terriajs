@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .overlay {
   position: fixed;
@@ -14,9 +14,9 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: $mobile-header-height;
-  background: $mobile-main-bg;
-  color: $mobile-text;
+  top: variables.$mobile-header-height;
+  background: variables.$mobile-main-bg;
+  color: variables.$mobile-text;
   text-align: left;
 
   &--hidden {

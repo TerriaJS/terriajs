@@ -157,7 +157,7 @@ export default class CogCatalogItem extends MappableMixin(
         // In our custom ImageryProvider, we return ImageData, which is also a valid return type.
         // However, since the current Cesium type definitions do not reflect this flexibility, we use a TypeScript ignore comment ('@ts-ignore')
         // to suppress the type checking error. This is a temporary solution until the type definitions in Cesium are updated to accommodate ImageData.
-        // @ts-expect-error - The return type of 'requestImage' method in our custom ImageryProvider can be ImageData, which is not currently allowed in Cesium's type definitions, but is fine.
+        // @ts-expect-error TS(2739)
         imageryProvider,
         clippingRectangle: this.cesiumRectangle
       }

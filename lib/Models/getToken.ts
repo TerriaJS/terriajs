@@ -15,7 +15,7 @@ function getToken(terria: Terria, tokenUrl: string, url: string) {
   };
 
   return loadWithXhr(options)
-    .then(function (result) {
+    .then(function (result: any) {
       const tokenResponse = JSON.parse(result);
 
       if (!defined(tokenResponse.token)) {

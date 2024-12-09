@@ -170,7 +170,9 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                   <>
                     <Small>
                       <MobileHeader
+                        // @ts-expect-error TS(2769): No overload matches this call.
                         menuItems={customElements.menu}
+                        // @ts-expect-error TS(2339): Property 'menuLeft' does not exist on type 'ReactC... Remove this comment to see the full error message
                         menuLeftItems={customElements.menuLeft}
                         version={props.version}
                       />
@@ -188,6 +190,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                           }
                         >
                           <FullScreenButton
+                            // @ts-expect-error TS(2322): Type '{ minified: true; animationDuration: number;... Remove this comment to see the full error message
                             minified
                             animationDuration={250}
                             btnText={t("addData.btnHide")}
@@ -211,6 +214,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                     })}
                   >
                     <FullScreenButton
+                      // @ts-expect-error TS(2322): Type '{ minified: boolean; btnText: string; animat... Remove this comment to see the full error message
                       minified={false}
                       btnText={t("sui.showWorkbench")}
                       animationDuration={animationDuration}
@@ -232,6 +236,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                     {props.terria.configParameters.experimentalFeatures &&
                       !props.viewState.hideMapUi && (
                         <ExperimentalFeatures
+                          // @ts-expect-error TS(2339): Property 'experimentalMenu' does not exist on type... Remove this comment to see the full error message
                           experimentalItems={customElements.experimentalMenu}
                         />
                       )}
@@ -250,11 +255,11 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 <Tool {...props.viewState.currentTool!} />
               )}
             </Medium>
-
             {props.viewState.panel}
-
             <Notification />
             <MapInteractionWindow />
+            // @ts-expect-error TS(2339): Property 'feedback' does not exist on
+            type 'ReactC... Remove this comment to see the full error message
             {!customElements.feedback.length &&
               props.terria.configParameters.feedbackUrl &&
               !props.viewState.hideMapUi &&

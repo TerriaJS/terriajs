@@ -2,7 +2,7 @@ import { configure } from "mobx";
 import AustralianGazetteerSearchProvider from "../../../lib/Models/SearchProviders/AustralianGazetteerSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 
-const wfsResponseXml = require("raw-loader!../../../wwwroot/test/WFS/getWithFilter.xml");
+import wfsResponseXml from "../../../wwwroot/test/WFS/getWithFilter.xml";
 
 configure({
   enforceActions: "observed",

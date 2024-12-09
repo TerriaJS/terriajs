@@ -1,9 +1,9 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .root {
-  font-family: $font-base;
-  color: $data-catalog-color;
+  font-family: variables.$font-base;
+  color: variables.$data-catalog-color;
   position: relative;
 }
 
@@ -12,16 +12,16 @@
   // position: absolute;
   // right: 2px;
   // top: 5px;
-  color: $color-primary;
+  color: variables.$color-primary;
   margin-right: 3px;
-  @media (max-width: $sm) {
+  @media (max-width: variables.$sm) {
     top: 10px;
   }
   svg {
     height: 18px;
     width: 18px;
     margin: 3px;
-    fill: $charcoal-grey;
+    fill: variables.$charcoal-grey;
   }
 }
 
@@ -30,8 +30,8 @@
   @extend %wrap;
 
   text-align: left;
-  font-size: $font-size-small;
-  padding: 8px 30px + $padding;
+  font-size: variables.$font-size-small;
+  padding: 8px 30px + variables.$padding;
   padding-right: 0;
   min-height: 35px;
   position: relative;
@@ -43,11 +43,11 @@
   svg {
     display: inline-block;
   }
-  @media (max-width: $sm) {
-    font-size: $font-size-mid-small;
+  @media (max-width: variables.$sm) {
+    font-size: variables.$font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid $grey-lighter;
+    border-bottom: 1px solid variables.$grey-lighter;
   }
 
   &:hover,
@@ -59,8 +59,8 @@
 
 .btnCatalogTopLevel {
   font-weight: 600;
-  border-bottom: 1px solid $grey-lighter;
-  padding-left: $padding;
+  border-bottom: 1px solid variables.$grey-lighter;
+  padding-left: variables.$padding;
 }
 
 .isPreviewed {
@@ -78,7 +78,7 @@
     width: 30px;
     display: block;
   }
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     top: 5px;
     svg {
       height: 25px;
@@ -94,9 +94,9 @@
   top: 10px;
   margin: 0 5px 0 10px;
   svg {
-    fill: $charcoal-grey;
+    fill: variables.$charcoal-grey;
   }
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     right: 5px;
     top: 8px;
     svg {
@@ -111,17 +111,17 @@
 
 .catalog-group {
   composes: list-reset from "../../Sass/common/_base.scss";
-  padding-left: $padding;
-  padding-top: calc($padding / 2);
+  padding-left: variables.$padding;
+  padding-top: calc(variables.$padding / 2);
   &--lower-level {
     margin-left: 20px;
-    border-left: 1px solid $grey-lighter;
+    border-left: 1px solid variables.$grey-lighter;
   }
 }
 
 .label {
   composes: label from "../../Sass/common/_labels.scss";
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
 }
 
 .label--no-results {
@@ -134,15 +134,15 @@
   z-index: 9;
   right: 30px;
   top: 5px;
-  color: $color-primary;
+  color: variables.$color-primary;
   margin-right: 3px;
-  @media (max-width: $sm) {
+  @media (max-width: variables.$sm) {
     top: 10px;
   }
   svg {
     height: 18px;
     width: 18px;
     margin: 3px;
-    fill: $charcoal-grey;
+    fill: variables.$charcoal-grey;
   }
 }

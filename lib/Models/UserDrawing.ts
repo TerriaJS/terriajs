@@ -67,6 +67,7 @@ export default class UserDrawing extends MappableMixin(
   private readonly invisible?: boolean;
 
   // helper for dragging points around
+  // @ts-expect-error TS(2749)
   private dragHelper?: DragPoints;
 
   pointEntities: CustomDataSource;
@@ -190,7 +191,8 @@ export default class UserDrawing extends MappableMixin(
 
   enterDrawMode(): void {
     // Create and setup a new dragHelper
-    this.dragHelper = new DragPoints(this.terria, (customDataSource) => {
+    // @ts-expect-error TS(7009)
+    this.dragHelper = new DragPoints(this.terria, (customDataSource: any) => {
       if (typeof this.onPointMoved === "function") {
         this.onPointMoved(customDataSource);
       }
