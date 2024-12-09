@@ -40,7 +40,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       throw "The apiUrl parameter must be defined.";
     }
 
-    if (!isDefined(this.parameters!["Input Layer"])) {
+    if (!isDefined(this.parameters["Input Layer"])) {
       throw "The input layer must be defined";
     }
 
@@ -49,9 +49,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       .filter((item) => item.uniqueId === this.parameters!["Input Layer"])[0];
 
     if (!isDefined(tableCatalogItem)) {
-      throw `Layer ${
-        this.parameters!["Input Layer"]
-      } is not a valid layer in the workbench`;
+      throw `Layer ${this.parameters["Input Layer"]} is not a valid layer in the workbench`;
     }
 
     if (

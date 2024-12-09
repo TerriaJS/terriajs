@@ -487,7 +487,7 @@ export default class UserDrawing extends MappableMixin(
             outlineColor: new Color(1.0, 1.0, 1.0, 1.0),
             perPositionHeight: true as any
           } as any
-        } as any) as Entity;
+        } as any);
         this.closeLoop = true;
         // A point has not been added, but conceptually it has because the first point is now also the last point.
         if (typeof that.onPointClicked === "function") {
