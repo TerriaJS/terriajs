@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";

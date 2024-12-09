@@ -58,7 +58,7 @@ class InvokeFunction extends React.Component {
   }
 
   /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate(nextProps, _nextState) {
     if (nextProps.previewed !== this.parametersViewModel.catalogFunction) {
       // Clear previous parameters view model, because this is a different catalog function.
       this.parametersViewModel = new FunctionViewModel(nextProps.previewed);
@@ -84,7 +84,7 @@ class InvokeFunction extends React.Component {
     // Key should include the previewed item identifier so that
     // components are refreshed when different previewed items are
     // displayed
-    return this.props.previewed.functionParameters.map((param, i) => (
+    return this.props.previewed.functionParameters.map((param, _i) => (
       <ParameterEditor
         key={param.id + this.props.previewed.uniqueId}
         parameter={param}
@@ -154,4 +154,4 @@ class InvokeFunction extends React.Component {
   }
 }
 
-module.exports = withTranslation()(InvokeFunction);
+export default withTranslation()(InvokeFunction);

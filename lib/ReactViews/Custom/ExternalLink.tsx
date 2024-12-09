@@ -2,9 +2,7 @@ import { AnchorHTMLAttributes, default as React } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useViewState } from "../Context";
-
-const Icon = require("../../Styled/Icon").default;
-const { StyledIcon } = require("../../Styled/Icon");
+import Icon, { StyledIcon } from "../../Styled/Icon";
 
 interface Props {
   attributes: AnchorHTMLAttributes<HTMLAnchorElement>;

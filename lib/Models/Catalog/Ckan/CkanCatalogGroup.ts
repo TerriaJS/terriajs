@@ -237,7 +237,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   @action
   addCatalogItemToCatalogGroup(
     catalogItem: any,
-    dataset: CkanDataset,
+    _dataset: CkanDataset,
     groupId: string
   ) {
     const group: CatalogGroup | undefined =

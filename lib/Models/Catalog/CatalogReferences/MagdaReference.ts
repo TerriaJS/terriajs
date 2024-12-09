@@ -559,7 +559,7 @@ export default class MagdaReference extends AccessControlMixin(
   private static createMemberFromTerriaAspect(
     terria: Terria,
     sourceReference: BaseModel | undefined,
-    magdaUri: uri.URI | undefined,
+    _magdaUri: uri.URI | undefined,
     id: string | undefined,
     record: JsonObject,
     terriaAspect: JsonObject,
@@ -634,7 +634,7 @@ export default class MagdaReference extends AccessControlMixin(
   private static createMemberFromDistributionFormat(
     terria: Terria,
     sourceReference: BaseModel | undefined,
-    magdaUri: uri.URI | undefined,
+    _magdaUri: uri.URI | undefined,
     id: string | undefined,
     datasetRecord: JsonObject,
     distributionRecord: JsonObject,

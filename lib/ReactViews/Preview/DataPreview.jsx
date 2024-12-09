@@ -1,4 +1,3 @@
-"use strict";
 // import Chart from "../Custom/Chart/Chart";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -173,4 +172,4 @@ class DataPreview extends React.Component {
   }
 }
 
-module.exports = withTranslation()(DataPreview);
+export default withTranslation()(DataPreview);

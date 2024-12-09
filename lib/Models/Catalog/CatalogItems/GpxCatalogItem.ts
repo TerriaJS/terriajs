@@ -12,8 +12,7 @@ import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-
-const toGeoJSON = require("@mapbox/togeojson");
+import toGeoJSON from "@mapbox/togeojson";
 
 class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
   static readonly type = "gpx";

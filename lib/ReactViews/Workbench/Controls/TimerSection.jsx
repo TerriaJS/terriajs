@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Timer from "../../Generic/Timer/Timer";
 import { withTranslation } from "react-i18next";
-
 import Styles from "./timer-section.scss";
 
 @observer

@@ -2145,7 +2145,7 @@ export default class Terria {
       if (!defined(window.localStorage)) {
         return null;
       }
-    } catch (e) {
+    } catch (_e) {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
@@ -2163,7 +2163,7 @@ export default class Terria {
       if (!defined(window.localStorage)) {
         return false;
       }
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
     window.localStorage.setItem(this.appName + "." + key, value.toString());

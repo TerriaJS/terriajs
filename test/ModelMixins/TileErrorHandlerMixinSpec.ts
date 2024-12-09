@@ -177,7 +177,7 @@ describe("TileErrorHandlerMixin", function () {
           Promise.reject(error.error)
         );
         await onTileLoadError(item, error);
-      } catch (e) {
+      } catch (_e) {
         /* eslint-disable-line no-empty */
       }
       expect(Resource.fetchImage).toHaveBeenCalled();

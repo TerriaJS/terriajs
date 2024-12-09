@@ -1,11 +1,6 @@
-"use strict";
-
 import React from "react";
-
 import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
-
 import Styles from "./parameter-editors.scss";
 import RegionPicker, { getDisplayValue } from "./RegionPicker";
 import MapInteractionMode from "../../Models/MapInteractionMode";
@@ -83,4 +78,4 @@ RegionParameterEditor.selectOnMap = function (viewState, parameter, previewed) {
   viewState.explorerPanelIsVisible = false;
 };
 
-module.exports = RegionParameterEditor;
+export default RegionParameterEditor;

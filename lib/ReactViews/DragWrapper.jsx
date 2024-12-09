@@ -63,4 +63,4 @@ DragWrapper.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-module.exports = DragWrapper;
+export default DragWrapper;

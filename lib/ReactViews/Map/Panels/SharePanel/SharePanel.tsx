@@ -12,10 +12,8 @@ import { canShorten } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
-
-const MenuPanel =
-  require("../../../StandardUserInterface/customizable/MenuPanel").default;
-const StorySharePanel = require("./StorySharePanel").default;
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import StorySharePanel from "./StorySharePanel";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
@@ -144,6 +142,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       : t("share.btnMapShareTitle");
 
     return !storyShare ? (
+      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnText={catalogShareWithoutText ? null : btnText}
@@ -168,6 +167,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         viewState={this.props.viewState}
         btnTitle={btnTitle}
         isOpen={this.state.isOpen}
+        //@ts-expect-error - not yet ready to tackle tsfying StorySharePanel
         onOpenChanged={this.changeOpenState}
         showDropdownAsModal={storyShare}
         modalWidth={modalWidth}

@@ -45,6 +45,8 @@ declare module "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
 
 declare module "terriajs-cesium/Source/DataSources/getElement";
 
+declare module "terriajs-cesium/Source/Scene/CameraFlightPath";
+
 // This is a workaround for Cesium's incorrect type declaration for raiseEvent.
 declare module "terriajs-cesium" {
   export interface Event {

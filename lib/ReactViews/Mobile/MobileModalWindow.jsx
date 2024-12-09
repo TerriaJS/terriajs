@@ -142,4 +142,5 @@ class MobileModalWindow extends React.Component {
     );
   }
 }
-module.exports = withTranslation()(MobileModalWindow);
+
+export default withTranslation()(MobileModalWindow);

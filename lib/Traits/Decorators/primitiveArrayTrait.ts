@@ -49,8 +49,8 @@ export class PrimitiveArrayTrait<T> extends Trait {
   }
 
   fromJson(
-    model: BaseModel,
-    stratumName: string,
+    _model: BaseModel,
+    _stratumName: string,
     jsonValue: any
   ): Result<T[] | undefined> {
     if (!this.isValidJson(jsonValue)) {

@@ -42,8 +42,7 @@ import {
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-
-const geojsonvt = require("geojson-vt").default;
+import geojsonvt from "geojson-vt";
 
 type GeojsonVtFeature = {
   id: any;
@@ -499,8 +498,8 @@ export default class ProtomapsImageryProvider
   }
 
   async pickFeatures(
-    x: number,
-    y: number,
+    _x: number,
+    _y: number,
     level: number,
     longitude: number,
     latitude: number
@@ -716,7 +715,7 @@ export default class ProtomapsImageryProvider
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (zoom, feature) =>
+            filter: (_zoom, feature) =>
               feature.props?.[featureProp!] === featureId
           }
         ]

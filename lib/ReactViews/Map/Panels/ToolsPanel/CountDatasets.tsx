@@ -1,5 +1,3 @@
-"use strict";
-
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -122,7 +120,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
     }
 
     function reportLoadError(
-      member: GroupAndMember,
+      _member: GroupAndMember,
       stats: CounterStats,
       path: string[]
     ) {
