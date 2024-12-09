@@ -142,7 +142,7 @@ export default abstract class GlobeOrMap {
    */
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
-  ) {
+  ): TerriaFeature {
     const feature = new TerriaFeature({
       id: imageryFeature.name
     });
@@ -215,7 +215,7 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: TerriaFeature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined): Promise<void> {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
