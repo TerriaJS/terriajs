@@ -2,6 +2,7 @@
 
 #### next release (8.7.11)
 
+- Explicitly set prettier tab-width
 - Move release guide from README.md to RELEASE_GUIDE.md
 - [The next improvement]
 
