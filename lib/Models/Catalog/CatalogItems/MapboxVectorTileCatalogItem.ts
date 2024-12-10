@@ -8,6 +8,9 @@ import {
   PolygonSymbolizer,
   PaintRule
 } from "protomaps-leaflet";
+
+console.log(require("protomaps-leaflet"));
+
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";

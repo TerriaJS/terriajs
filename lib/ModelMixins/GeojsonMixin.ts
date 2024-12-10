@@ -35,7 +35,7 @@ import {
   GeomType,
   LineSymbolizer,
   PolygonSymbolizer
-} from "protomaps-leaflet";
+} from "protomaps-leaflet/dist/cjs/index.cjs";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";

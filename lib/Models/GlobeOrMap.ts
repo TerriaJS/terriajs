@@ -14,7 +14,6 @@ import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
 import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
@@ -211,7 +210,7 @@ export default abstract class GlobeOrMap {
   }
 
   abstract _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void;
 
@@ -321,29 +320,9 @@ export default abstract class GlobeOrMap {
 
       if (!hasGeometry) {
         let vectorTileHighlightCreated = false;
-        // Feature from MapboxVectorTileImageryProvider
+
+        // Feature from ProtomapsImageryProvider
         if (
-          feature.imageryLayer?.imageryProvider instanceof
-          MapboxVectorTileImageryProvider
-        ) {
-          const featureId =
-            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
-            feature.properties?.id?.getValue?.();
-          if (isDefined(featureId)) {
-            const highlightImageryProvider =
-              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
-                featureId
-              );
-            this._removeHighlightCallback =
-              this.terria.currentViewer._addVectorTileHighlight(
-                highlightImageryProvider,
-                feature.imageryLayer.imageryProvider.rectangle
-              );
-          }
-          vectorTileHighlightCreated = true;
-        }
-        // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
-        else if (
           feature.imageryLayer?.imageryProvider instanceof
           ProtomapsImageryProvider
         ) {

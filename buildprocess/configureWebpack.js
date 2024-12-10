@@ -422,13 +422,11 @@ function configureWebpack(
     require.resolve("react-dom")
   );
 
-  config.resolve.alias["protomaps-leaflet"] = path.dirname(
-    require.resolve("protomaps-leaflet")
-  );
-  config.resolve.alias["pmtiles"] = path.dirname(require.resolve("pmtiles"));
-
   // Alias all lodash imports (including from our dependencies) to lodash-es
   config.resolve.alias["lodash"] = "lodash-es";
+
+  // Fix issue with pmtiles TS import (through protomaps-leaflet)
+  config.resolve.alias["pmtiles"] = "pmtiles/dist/index.js";
 
   return config;
 }

@@ -1,19 +1,15 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import { action, runInAction } from "mobx";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
-  PolygonSymbolizer
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
 } from "protomaps-leaflet";
-import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
 import { isJsonNumber } from "../Core/Json";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import TableStyle from "./TableStyle";
@@ -126,7 +122,14 @@ export default function createRegionMappedImageryProvider(
         }
       }
     ],
-    labelRules: []
+    labelRules: [],
+
+    processPickedFeatures: async (features) =>
+      features
+        .map((feature) =>
+          getImageryLayerFeatureInfo(style, feature, currentTimeRows)
+        )
+        .filter(isDefined)
   });
 }
 
@@ -180,64 +183,61 @@ const getImageryLayerFilteredRow = action(
  * Get ImageryLayerFeatureInfo for a given ImageryLayer input and feature.
  */
 
-const getImageryLayerFeatureInfo = action(
-  (
-    style: TableStyle,
-    feature: VectorTileFeature,
-    currentTimeRows: number[] | undefined
-  ) => {
-    if (isDefined(style.regionColumn?.regionType?.uniqueIdProp)) {
-      const regionType = style.regionColumn!.regionType!;
-      const regionRows =
-        style.regionColumn!.valuesAsRegions.regionIdToRowNumbersMap.get(
-          feature.properties[regionType.uniqueIdProp]
-        ) ?? [];
+const getImageryLayerFeatureInfo = (
+  style: TableStyle,
+  feature: ImageryLayerFeatureInfo,
+  currentTimeRows: number[] | undefined
+) => {
+  if (isDefined(style.regionColumn?.regionType?.uniqueIdProp)) {
+    const regionType = style.regionColumn!.regionType!;
+    const regionRows =
+      style.regionColumn!.valuesAsRegions.regionIdToRowNumbersMap.get(
+        feature.properties[regionType.uniqueIdProp]
+      ) ?? [];
 
-      const rowId = getImageryLayerFilteredRow(
-        style,
-        currentTimeRows,
-        regionRows
-      );
+    const rowId = getImageryLayerFilteredRow(
+      style,
+      currentTimeRows,
+      regionRows
+    );
 
-      if (!isDefined(rowId)) return;
+    if (!isDefined(rowId)) return;
 
-      style.tableModel.tableColumns;
+    style.tableModel.tableColumns;
 
-      const rowObject = style.tableModel.tableColumns.reduce<{
-        [key: string]: string | number | null;
-      }>((obj, column) => {
-        obj[column.name] = column.valueFunctionForType(rowId);
+    const rowObject = style.tableModel.tableColumns.reduce<{
+      [key: string]: string | number | null;
+    }>((obj, column) => {
+      obj[column.name] = column.valueFunctionForType(rowId);
 
-        return obj;
-      }, {});
+      return obj;
+    }, {});
 
-      // Preserve values from d and insert feature properties after entries from d
-      const featureData = Object.assign(
-        {},
-        rowObject,
-        feature.properties,
-        rowObject
-      );
+    // Preserve values from d and insert feature properties after entries from d
+    const featureData = Object.assign(
+      {},
+      rowObject,
+      feature.properties,
+      rowObject
+    );
 
-      const featureInfo = new ImageryLayerFeatureInfo();
-      if (isDefined(regionType.nameProp)) {
-        featureInfo.name = featureData[regionType.nameProp] as string;
-      }
-
-      featureData.id = feature.properties[regionType.uniqueIdProp];
-      featureInfo.properties = featureData;
-      const terriaFeatureData: TerriaFeatureData = {
-        rowIds: isJsonNumber(regionRows) ? [regionRows] : [...regionRows],
-        type: "terriaFeatureData"
-      };
-      featureInfo.data = terriaFeatureData;
-
-      featureInfo.configureDescriptionFromProperties(featureData);
-      featureInfo.configureNameFromProperties(featureData);
-
-      return featureInfo;
+    if (isDefined(regionType.nameProp)) {
+      feature.name = featureData[regionType.nameProp] as string;
     }
 
-    return undefined;
+    featureData.id = feature.properties[regionType.uniqueIdProp];
+    feature.properties = featureData;
+    const terriaFeatureData: TerriaFeatureData = {
+      rowIds: isJsonNumber(regionRows) ? [regionRows] : [...regionRows],
+      type: "terriaFeatureData"
+    };
+    feature.data = terriaFeatureData;
+
+    feature.configureDescriptionFromProperties(featureData);
+    feature.configureNameFromProperties(featureData);
+
+    return feature;
   }
-);
+
+  return undefined;
+};
