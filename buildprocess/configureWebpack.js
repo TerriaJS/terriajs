@@ -21,6 +21,10 @@ function configureWebpack(
   // console.log(fontAwesomeDir);
   // console.log(reactMdeDir);
 
+  config.stats = {
+    errorDetails: true
+  };
+
   config.node = config.node || {};
 
   // Resolve node module use of fs
@@ -420,6 +424,9 @@ function configureWebpack(
 
   // Alias all lodash imports (including from our dependencies) to lodash-es
   config.resolve.alias["lodash"] = "lodash-es";
+
+  // Fix issue with pmtiles TS import (through protomaps-leaflet)
+  config.resolve.alias["pmtiles"] = "pmtiles/dist/index.js";
 
   return config;
 }
