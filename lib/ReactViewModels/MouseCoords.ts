@@ -9,20 +9,13 @@ import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import isDefined from "../Core/isDefined";
-import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
+import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
-
-// TypeScript 3.6.3 can't tell JSEarthGravityModel1996 is a class and reports
-//   Cannot use namespace 'JSEarthGravityModel1996' as a type.ts(2709)
-// This is a dodgy workaround.
-class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
-
-const sampleTerrainMostDetailed =
-  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface Cancelable {
   cancel: () => void;
@@ -88,13 +81,13 @@ export default class MouseCoords {
   }
 
   @action.bound
-  toggleUseProjection() {
+  toggleUseProjection(): void {
     this.useProjection = !this.useProjection;
     this.updateEvent.raiseEvent();
   }
 
   @action
-  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
+  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2): void {
     if (!terria.cesium) {
       return;
     }
@@ -197,7 +190,10 @@ export default class MouseCoords {
   }
 
   @action
-  updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
+  updateCoordinatesFromLeaflet(
+    terria: Terria,
+    mouseMoveEvent: MouseEvent
+  ): void {
     if (!terria.leaflet) {
       return;
     }
@@ -213,7 +209,7 @@ export default class MouseCoords {
   }
 
   @action
-  cartographicToFields(coordinates: Cartographic, errorBar?: number) {
+  cartographicToFields(coordinates: Cartographic, errorBar?: number): void {
     this.cartographic = Cartographic.clone(coordinates, scratchCartographic);
 
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
@@ -245,7 +241,7 @@ export default class MouseCoords {
   sampleAccurateHeight(
     terrainProvider: TerrainProvider,
     position: Cartographic
-  ) {
+  ): void {
     if (this.tileRequestInFlight) {
       // A tile request is already in flight, so reschedule for later.
       this.debounceSampleAccurateHeight.cancel();

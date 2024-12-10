@@ -33,9 +33,7 @@ import Icon, { StyledIcon } from "../../../../../Styled/Icon";
 import { GyroscopeGuidance } from "./GyroscopeGuidance";
 import { withTerriaRef } from "../../../../HOCs/withTerriaRef";
 import FadeIn from "../../../../Transitions/FadeIn/FadeIn";
-
-const CameraFlightPath =
-  require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
+import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
@@ -421,8 +419,6 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
               `}
             >
               <GyroscopeGuidance
-                //@ts-ignore
-                rightOffset="72px"
                 viewState={this.props.viewState}
                 // handleHelp={() => {
                 //   this.props.viewState.showHelpPanel();

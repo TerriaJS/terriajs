@@ -30,12 +30,12 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
 import Styles from "./story-builder.scss";
-import StoryEditor from "./StoryEditor.jsx";
+import StoryEditor from "./StoryEditor";
 const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";
 
-type StoryData = ViewState["terria"]["stories"][number];
+export type StoryData = ViewState["terria"]["stories"][number];
 
 interface IProps {
   isVisible?: boolean;
@@ -85,7 +85,7 @@ class StoryBuilder extends React.Component<
       storyWithOpenMenuId: undefined
     };
   }
-  removeStory = (index: number, story: StoryData) => {
+  removeStory = (index: number, story?: StoryData) => {
     this.setState({
       isSharing: false,
       isRemoving: true,
@@ -260,8 +260,6 @@ class StoryBuilder extends React.Component<
     return (
       <Box column>
         <VideoGuide
-          /*
-          // @ts-ignore */
           viewState={this.props.viewState}
           videoLink={
             this.props.viewState.terria.configParameters.storyVideo?.videoUrl ||
@@ -295,13 +293,13 @@ class StoryBuilder extends React.Component<
     });
   };
 
-  renderPlayShare(hasStories: boolean | undefined) {
+  renderPlayShare() {
     const { t } = this.props;
     return (
       <Box justifySpaceBetween>
         <StoryButton
           fullWidth
-          disabled={this.state.editingMode || !hasStories}
+          disabled={this.state.editingMode}
           title={t("story.preview")}
           btnText={t("story.play")}
           onClick={this.runStories}
@@ -315,7 +313,7 @@ class StoryBuilder extends React.Component<
         <Spacing right={1} />
         <SharePanel
           storyShare
-          btnDisabled={this.state.editingMode || !hasStories}
+          btnDisabled={this.state.editingMode}
           terria={this.props.viewState.terria}
           viewState={this.props.viewState}
           modalWidth={(this.props.widthFromMeasureElementHOC ?? 100) - 22}
@@ -331,7 +329,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(editingMode: boolean) {
+  renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove
@@ -340,7 +338,7 @@ class StoryBuilder extends React.Component<
         : t("story.untitledScene")
       : "";
     return (
-      <Box displayInlineBlock>
+      <>
         <BadgeBar
           label={t("story.badgeBarLabel")}
           badge={this.props.viewState.terria.stories.length}
@@ -355,7 +353,7 @@ class StoryBuilder extends React.Component<
           </RawButton>
         </BadgeBar>
         <Spacing bottom={2} />
-        <Box column paddedHorizontally={2}>
+        <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (
             <RemoveDialog
               theme={this.props.theme}
@@ -384,7 +382,7 @@ class StoryBuilder extends React.Component<
           )}
           <Box
             column
-            position="static"
+            styledHeight="100%"
             css={`
               ${(this.state.isRemoving || this.state.isSharing) &&
               `opacity: 0.3`}
@@ -394,8 +392,7 @@ class StoryBuilder extends React.Component<
               column
               scroll
               overflowY={"auto"}
-              styledMaxHeight={"calc(100vh - 283px)"}
-              position="static"
+              styledMaxHeight="100%"
               ref={this.storiesWrapperRef as React.RefObject<HTMLDivElement>}
               css={`
                 margin-right: -10px;
@@ -406,7 +403,6 @@ class StoryBuilder extends React.Component<
                 direction="vertical"
                 dynamic
                 css={`
-                  position: static;
                   margin-right: 10px;
                 `}
               >
@@ -435,10 +431,10 @@ class StoryBuilder extends React.Component<
               disabled={this.state.isRemoving}
               onClickCapture={this.onClickCapture}
             />
+            <Spacing bottom={2} />
           </Box>
-          <Spacing bottom={2} />
         </Box>
-      </Box>
+      </>
     );
   }
 
@@ -467,8 +463,6 @@ class StoryBuilder extends React.Component<
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
         isVisible={this.props.isVisible}
         isHidden={!this.props.isVisible}
-        styledWidth={"320px"}
-        styledMinWidth={"320px"}
         charcoalGreyBg
         column
       >
@@ -497,10 +491,10 @@ class StoryBuilder extends React.Component<
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
-          {hasStories && this.renderPlayShare(hasStories)}
+          {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories(this.state.editingMode)}
+        {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}
@@ -523,6 +517,9 @@ type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
 const Panel = styled(Box)<PanelProps>`
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  width: 320px;
+  min-width: 320px;
+  height: 100vh;
   ${(props) =>
     props.isVisible &&
     `
@@ -533,7 +530,7 @@ const Panel = styled(Box)<PanelProps>`
     props.isHidden &&
     `
     visibility: hidden;
-    margin-right: -${props.styledWidth ? props.styledWidth : "320px"};
+    margin-right: -100%;
   `}
 `;
 

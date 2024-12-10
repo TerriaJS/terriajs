@@ -1,12 +1,7 @@
-"use strict";
-
 import React from "react";
 import PropTypes from "prop-types";
-
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-
 import { createTimer, startTimer as startTimerAnimation } from "./drawTimer";
-
 import Styles from "./timer.scss";
 
 // Set the name of the hidden property and the change event for visibility
@@ -25,7 +20,7 @@ if (typeof document.hidden !== "undefined") {
 }
 
 class Timer extends React.PureComponent {
-  constructor(props) {
+  constructor(_props) {
     super();
 
     // We need a unique selector for the timer container. If there are multiple timers, we need to know which one to
@@ -118,4 +113,4 @@ Timer.propTypes = {
   tooltipText: PropTypes.string
 };
 
-module.exports = Timer;
+export default Timer;

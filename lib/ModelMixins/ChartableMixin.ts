@@ -9,6 +9,7 @@ import ModelTraits from "../Traits/ModelTraits";
 type Scale = "linear" | "time";
 
 export interface ChartAxis {
+  name: string;
   scale: Scale;
   units?: string;
 }
@@ -46,12 +47,18 @@ export interface ChartPoint {
   isSelected?: boolean;
 }
 
+/**
+ * Describes a quantity that can be rendered on the chart along its y-axis.
+ */
 export interface ChartItem {
+  // id of the chart item - for table mixins this is the same a the id of the column
+  id: string;
   name: string;
   categoryName?: string;
   key: string;
   item: Model<ModelTraits>;
   type: ChartItemType;
+  units?: string;
   showInChartPanel: boolean;
   isSelectedInWorkbench: boolean;
   xAxis: ChartAxis;

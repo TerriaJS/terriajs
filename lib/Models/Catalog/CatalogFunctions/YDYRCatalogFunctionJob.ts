@@ -104,9 +104,9 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       data.values.map((val, idx) => (val === null ? idx : undefined))
     );
 
-    data.ids = data.ids.filter((id, idx) => !invalidRows.includes(idx));
+    data.ids = data.ids.filter((_id, idx) => !invalidRows.includes(idx));
     data.values = data.values.filter(
-      (value, idx) => !invalidRows.includes(idx)
+      (_value, idx) => !invalidRows.includes(idx)
     );
 
     const params = {
@@ -244,15 +244,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       this.terria,
       undefined
     );
-
-    const regionColumnSplit = DATASETS.find(
-      (d) => d.title === this.parameters?.["Output Geography"]
-    )?.geographyName.split("_");
-    let regionColumn = "";
-
-    if (isDefined(regionColumnSplit) && regionColumnSplit!.length === 2) {
-      regionColumn = `${regionColumnSplit![0]}_code_${regionColumnSplit![1]}`;
-    }
 
     runInAction(() => {
       csvResult.setTrait(CommonStrata.user, "name", `${this.name} Results`);

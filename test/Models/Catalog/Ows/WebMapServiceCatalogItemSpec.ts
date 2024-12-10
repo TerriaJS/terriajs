@@ -460,8 +460,9 @@ describe("WebMapServiceCatalogItem", function () {
     });
     try {
       await wms.loadMetadata();
-      //@ts-ignore
-      expect(mapItems[0].imageryProvider.layers).toBe("landsat_barest_earth");
+      expect(
+        (mapItems[0].imageryProvider as WebMapServiceImageryProvider).layers
+      ).toBe("landsat_barest_earth");
     } finally {
       cleanup();
     }
@@ -1097,7 +1098,7 @@ describe("WebMapServiceCatalogItem", function () {
     let item: WebMapServiceCatalogItem;
     let imageryProvider: WebMapServiceImageryProvider;
     const wmsUrl = "http://example.com";
-    beforeEach(async () => {
+    beforeEach(() => {
       item = new WebMapServiceCatalogItem("test", new Terria());
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", wmsUrl);

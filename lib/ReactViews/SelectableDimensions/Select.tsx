@@ -15,7 +15,7 @@ import {
 export const SelectableDimensionEnum: React.FC<{
   id: string;
   dim: SelectableDimensionEnumModel;
-}> = observer(({ id, dim }) => {
+}> = observer(({ dim }) => {
   const theme = useTheme();
 
   const undefinedOption = {
@@ -96,7 +96,7 @@ export const SelectableDimensionEnum: React.FC<{
 export const SelectableDimensionEnumMulti: React.FC<{
   id: string;
   dim: SelectableDimensionEnumMultiModel;
-}> = observer(({ id, dim }) => {
+}> = observer(({ dim }) => {
   const theme = useTheme();
 
   const options = dim.options?.map((option) => ({

@@ -1,9 +1,8 @@
+import proj4 from "proj4";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Proj4Definitions from "./Proj4Definitions";
 import urijs from "urijs";
-
-const proj4 = require("proj4").default;
-const loadText = require("../../Core/loadText");
+import loadText from "../../Core/loadText";
+import Proj4Definitions from "./Proj4Definitions";
 
 export default {
   TERRIA_CRS: "EPSG:4326",
@@ -60,16 +59,21 @@ export default {
   ): [number, number] | undefined {
     const source =
       sourceCode in Proj4Definitions
-        ? new proj4.Proj(Proj4Definitions[sourceCode])
+        ? proj4.Proj(Proj4Definitions[sourceCode])
         : undefined;
     const dest =
       destCode in Proj4Definitions
-        ? new proj4.Proj(Proj4Definitions[destCode])
+        ? proj4.Proj(Proj4Definitions[destCode])
         : undefined;
-    if (!sourceCode || !destCode) {
+    if (!source || !dest) {
       return;
     }
-    return proj4(source, dest, coordinates);
+    const result = proj4.transform(source, dest, coordinates) ?? {};
+    if (result) {
+      const { x, y } = result;
+      return [x, y];
+    }
+    return undefined;
   },
 
   /**

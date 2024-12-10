@@ -23,7 +23,7 @@ try {
 
   window.addEventListener("test", callback, options);
   window.removeEventListener("test", callback, options);
-} catch (err) {
+} catch (_err) {
   /* eslint-disable-line no-empty */
 }
 
@@ -103,6 +103,7 @@ export const useDragHook = (
       e.preventDefault();
       e.stopPropagation();
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [viewState]
   );
 
@@ -119,6 +120,7 @@ export const useDragHook = (
       e.preventDefault();
       e.stopPropagation();
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [viewState]
   );
 

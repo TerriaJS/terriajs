@@ -21,7 +21,7 @@ describe("CesiumIonSearchProvider", () => {
   let terria: Terria;
   let searchProvider: CesiumIonSearchProvider;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -49,7 +49,6 @@ describe("CesiumIonSearchProvider", () => {
       new Promise((resolve) => resolve([]))
     );
     const result = await searchProvider.search("test");
-    console.log(result);
     expect(result.results.length).toBe(0);
     expect(result.message?.content).toBe(
       "translate#viewModels.searchNoLocations"

@@ -197,7 +197,7 @@
   },
   "share": {
     "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
-    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
+    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
     "generatingUrl": "Generování sdílené adresy URL...",
     "printTitle": "Tisk mapy",
     "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
@@ -463,7 +463,7 @@
     "resultsLabel": "Výsledky hledání",
     "done": "Hotovo",
     "data": "Data",
-    "searchInDataCatalog": "Hledání <1>'{{locationSearchText}}'</1> v katalogu dat",
+    "searchInDataCatalog": "Hledání '{{locationSearchText}}' v katalogu dat",
     "search": "Hledat '{{searchText}}' v Katalogu dat",
     "viewMore": "Zobrazit více výsledků {{name}}",
     "placeholder": "Hledání lokalit",
@@ -504,7 +504,8 @@
     "previewItemErrorTitle": "Položku katalogu nelze zobrazit.",
     "dataDescription": "Popis dat",
     "resourceDescription": "Popis Zdroje",
-    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům"
+    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům",
+    "selectMultipleDatasets": "<0>Stiskněte <strong>Shift</strong> a klikněte</0><1 /><2>pro přidání více datových sad</2>"
   },
   "description": {
     "name": "Popis",
@@ -662,7 +663,10 @@
     "searchLocations": "Poloha",
     "searchNoPlaceNames": "Litujeme, ale vašemu vyhledávacímu dotazu neodpovídají žádné oficiální názvy míst.",
     "searchErrorOccurred": "Při hledání došlo k chybě. Zkontrolujte prosím připojení k internetu nebo to zkuste znovu později.",
-    "searchPlaceNames": "Oficiální názvy míst"
+    "searchPlaceNames": "Oficiální názvy míst",
+    "searchMinCharacters_0": "Je třeba zadat minimálně {{count}} znak",
+    "searchMinCharacters_1": "Je třeba zadat minimálně {{count}} znaky",
+    "searchMinCharacters_2": "Je třeba zadat minimálně {{count}} znaků"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "Slabý výkon WebGL",
@@ -730,7 +734,11 @@
       "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
       "assimp-remote": "Převodník 3D souborů (experimentální)",
       "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
-      "carto-v3": "Carto V3"
+      "carto-v3": "Carto V3",
+      "i3s": "I3S",
+      "esri-imageServer": "Esri ArcGIS ImageServer (jedna vrstva)",
+      "cesium-ion": "Ionty cesia",
+      "cog": "Geotiff optimalizovaný pro cloud"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -1304,7 +1312,13 @@
       "timeDimensionDisabled": "Čas zakázán (kliknutím povolíte)",
       "bulkGeocoderInfoMessage": "CSV obsahuje adresy, ale {{number}} nelze na mapě najít: ",
       "bulkGeocoderInfo2Message": "V CSV chybí adresy {{nullAddresses}}.",
-      "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)"
+      "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)",
+      "custom": "Vlastní",
+      "regionMapping": "Mapování regionu",
+      "editStyle": "Upravit Styl",
+      "activeStyle": "Zobrazit proměnnou",
+      "regionColumn": "Sloupec Region",
+      "manualRegionMapping": "Ruční mapování regionu"
     },
     "terria": {
       "loadConfigErrorTitle": "Nepodařilo se načíst konfiguraci mapy Terria",
@@ -1567,6 +1581,518 @@
       },
       "showClippingBox": "Zobrazit ořezový rámeček",
       "keepBoxAboveGround": "Pouze nad zemí"
+    },
+    "tableStyling": {
+      "fill": {
+        "selectableDimensions": {
+          "type": {
+            "name": "Typ",
+            "undefinedLabel": "Prosím upřesněte",
+            "options": {
+              "noStyle": {
+                "name": "Bez stylu"
+              },
+              "sequentialContinuous": {
+                "name": "Sekvenční (průběžný)"
+              },
+              "sequentialDiscrete": {
+                "name": "Sekvenční (diskrétní)"
+              },
+              "divergingContinuous": {
+                "name": "Divergentní (průběžný)"
+              },
+              "divergingDiscrete": {
+                "name": "Divergentní (diskrétní)"
+              },
+              "qualitative": {
+                "name": "Kvalitativní"
+              },
+              "customQualitative": {
+                "name": "Vlastní (kvalitativní)"
+              },
+              "customDiscrete": {
+                "name": "Vlastní (diskrétní)"
+              }
+            }
+          },
+          "tableColorColumn": {
+            "name": "Proměnná"
+          },
+          "dataType": {
+            "name": "Typ sloupce (rozšířený)"
+          },
+          "scheme": {
+            "name": "Schéma"
+          },
+          "numberOfBins": {
+            "name": "Počet zásobníků"
+          }
+        },
+        "name": "Barva výplně"
+      },
+      "hideAdvancedOptions": "Skrýt pokročilé možnosti",
+      "reset": "Obnovit výchozí styl",
+      "copyUserStratum": "Zkopírujte uživatelskou vrstvu do schránky",
+      "data": {
+        "name": "Data",
+        "selectableDimensions": {
+          "tableStyleType": {
+            "name": "Symbologie",
+            "options": {
+              "fill": {
+                "name": "Barva výplně"
+              },
+              "pointSize": {
+                "name": "Velikost bodu"
+              },
+              "point": {
+                "name": "Styl bodu / značky"
+              },
+              "outline": {
+                "name": "Barva obrysu"
+              },
+              "label": {
+                "name": "Styl štítku"
+              },
+              "trail": {
+                "name": "Styl trasy"
+              }
+            }
+          },
+          "tableStyle": {
+            "name": "Styl"
+          },
+          "dataset": {
+            "name": "Datová sada"
+          }
+        }
+      },
+      "name": "Styl",
+      "showAdvancedOptions": "Zobrazit pokročilé možnosti",
+      "bins": {
+        "selectableDimensions": {
+          "start": {
+            "selectableDimensions": {
+              "start": {
+                "name": "Spustit"
+              },
+              "stop": {
+                "name": "Stop"
+              },
+              "color": {
+                "name": "Barva"
+              }
+            },
+            "name": "{{value1}} až {{value2}}"
+          }
+        },
+        "name": "Zásobníky"
+      },
+      "nullColor": {
+        "name": "Výchozí barva"
+      },
+      "outlierColor": {
+        "name": "Odlehlá barva"
+      },
+      "additionalColors": {
+        "name": "Další barvy",
+        "selectableDimensions": {
+          "nullColor": {
+            "name": "Výchozí barva"
+          },
+          "outlierColor": {
+            "name": "Odlehlá barva"
+          },
+          "regionColor": {
+            "name": "Barva regionu"
+          }
+        }
+      },
+      "pointSize": {
+        "selectableDimensions": {
+          "pointSizeNull": {
+            "name": "Výchozí velikost"
+          },
+          "pointSizeColumn": {
+            "name": "Proměnná"
+          },
+          "pointSizesFactor": {
+            "name": "Faktor velikosti"
+          },
+          "pointSizeOffset": {
+            "name": "Odsazení velikosti"
+          }
+        },
+        "name": "Velikost bodu"
+      },
+      "timeOptions": {
+        "selectableDimensions": {
+          "tableTimeIsSampled": {
+            "options": {
+              "true": {
+                "name": "Ano"
+              },
+              "false": {
+                "name": "Ne"
+              }
+            },
+            "name": "Je vybrán vzorek"
+          },
+          "tableEndTimeColumn": {
+            "name": "Sloupec času ukončení"
+          },
+          "tableTimeIdColumns": {
+            "name": "ID sloupců"
+          },
+          "tableTimeDisplayDuration": {
+            "name": "Doba zobrazení"
+          },
+          "tableTimeSpreadStartTime": {
+            "options": {
+              "true": {
+                "name": "Ano"
+              },
+              "false": {
+                "name": "Ne"
+              }
+            },
+            "name": "Rozptyl času spuštění"
+          },
+          "tableTimeSpreadFinishTime": {
+            "name": "Rozptyl času dokončení",
+            "options": {
+              "true": {
+                "name": "Ano"
+              },
+              "false": {
+                "name": "Ne"
+              }
+            }
+          },
+          "tableTimeColumn": {
+            "name": "Sloupec času"
+          }
+        },
+        "name": "Možnosti času"
+      },
+      "workbenchOptions": {
+        "name": "Možnosti pracovní plochy",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "Zobrazit styl v pracovní ploše",
+            "options": {
+              "false": {
+                "name": "Styl skrytý"
+              },
+              "true": {
+                "name": "Styl zobrazený"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "Zobrazit možnost zakázat styl"
+          },
+          "showDisableTimeOption": {
+            "name": "Zobrazit možnost vypnutí času"
+          },
+          "enableManualRegionMapping": {
+            "name": "Povolit ruční mapování oblastí"
+          }
+        }
+      },
+      "style": {
+        "selectableDimensions": {
+          "bin": {
+            "name": "Koš stylů",
+            "selectableDimensions": {
+              "add": {
+                "value": "Přidat koš stylů"
+              },
+              "bin": {
+                "range": "{{value1}} až {{value2}}",
+                "selectableDimensions": {
+                  "remove": {
+                    "value": "Odstranit"
+                  },
+                  "start": {
+                    "name": "Spustit"
+                  },
+                  "stop": {
+                    "name": "Stop"
+                  }
+                },
+                "noValue": "(Bez hodnoty)"
+              }
+            }
+          },
+          "column": {
+            "name": "Proměnná"
+          },
+          "styleType": {
+            "name": "Typ",
+            "undefinedLabel": "Prosím upřesněte",
+            "constant": {
+              "name": "Bez stylu"
+            },
+            "bin": {
+              "name": "Diskrétní"
+            },
+            "enum": {
+              "name": "Kvalitativní"
+            }
+          },
+          "enum": {
+            "selectableDimensions": {
+              "enum": {
+                "noValue": "(Bez hodnoty)",
+                "selectableDimensions": {
+                  "value": {
+                    "name": "Hodnota"
+                  },
+                  "remove": {
+                    "value": "Odstranit"
+                  }
+                },
+                "add": {
+                  "value": "Přidat styl pro hodnotu"
+                }
+              }
+            },
+            "name": "Výčet stylů"
+          }
+        },
+        "null": {
+          "name": "Výchozí"
+        }
+      },
+      "point": {
+        "selectableDimensions": {
+          "height": {
+            "name": "Výška"
+          },
+          "marker": {
+            "name": "Značka",
+            "tooltip": "Marker podporuje URL a base64 libovolného podporovaného formátu obrázku (např. PNG, SVG)"
+          },
+          "rotation": {
+            "name": "Rotace"
+          },
+          "width": {
+            "name": "Šířka"
+          }
+        },
+        "name": "Styl značky"
+      },
+      "label": {
+        "name": "Styl štítku",
+        "selectableDimensions": {
+          "column": {
+            "name": "Sloupec štítku"
+          },
+          "scale": {
+            "name": "Měřítko"
+          },
+          "outlineColor": {
+            "name": "Barva obrysu"
+          },
+          "outlineWidth": {
+            "name": "Šířka obrysu"
+          },
+          "fillColor": {
+            "name": "Barva výplně"
+          },
+          "font": {
+            "name": "Font"
+          },
+          "style": {
+            "name": "Styl štítku",
+            "options": {
+              "fill": {
+                "name": "Pouze výplň"
+              },
+              "outline": {
+                "name": "Pouze obrys"
+              },
+              "fillAndOutline": {
+                "name": "Výplň a obrys"
+              }
+            }
+          },
+          "horizontalOrigin": {
+            "options": {
+              "left": {
+                "name": "Vlevo"
+              },
+              "center": {
+                "name": "Center"
+              },
+              "right": {
+                "name": "Vpravo"
+              }
+            },
+            "name": "Horizontální počátek"
+          },
+          "verticalOrigin": {
+            "name": "Vertikální počátek",
+            "options": {
+              "top": {
+                "name": "Nahoře"
+              },
+              "center": {
+                "name": "Center"
+              },
+              "baseline": {
+                "name": "Baseline"
+              },
+              "bottom": {
+                "name": "Dole"
+              }
+            }
+          },
+          "offsetX": {
+            "name": "Pixel offset X"
+          },
+          "offsetY": {
+            "name": "Pixel offset Y"
+          }
+        }
+      },
+      "trail": {
+        "selectableDimensions": {
+          "trailTime": {
+            "name": "Čas trasy (sekundy)"
+          },
+          "resolution": {
+            "name": "Rozlišení"
+          },
+          "trailStyleOptions": {
+            "selectableDimensions": {
+              "material": {
+                "options": {
+                  "solidColor": {
+                    "name": "Plná barva"
+                  },
+                  "polylineGlow": {
+                    "name": "Záře polylinií"
+                  }
+                },
+                "name": "Typ materiálu"
+              }
+            },
+            "name": "Možnosti stylu trasy"
+          },
+          "width": {
+            "name": "Šířka"
+          },
+          "solidColor": {
+            "name": "Plná barva"
+          },
+          "taperPower": {
+            "name": "Síla kužele"
+          },
+          "growColor": {
+            "name": "Barva záře"
+          },
+          "leadTime": {
+            "name": "Průběžná doba (s)"
+          },
+          "growPower": {
+            "name": "Síla záře"
+          }
+        }
+      },
+      "displayRange": {
+        "name": "Rozsah zobrazení",
+        "selectableDimensions": {
+          "max": {
+            "name": "Max"
+          }
+        }
+      },
+      "colors": {
+        "selectableDimensions": {
+          "value": {
+            "name": "Hodnota"
+          },
+          "remove": {
+            "value": "Odstranit"
+          },
+          "add": {
+            "value": "Přidat barvu"
+          },
+          "color": {
+            "name": "Barva"
+          }
+        },
+        "name": "Barvy"
+      },
+      "legend": {
+        "name": "Legenda",
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "Název"
+          },
+          "title": {
+            "name": "Název položky {{index}}"
+          },
+          "legendTicks": {
+            "name": "Ticks"
+          }
+        }
+      },
+      "styleOptions": {
+        "name": "Možnosti stylu",
+        "selectableDimensions": {
+          "latitudeColumn": {
+            "name": "Sloupec zeměpisná šířka"
+          },
+          "styleTitle": {
+            "name": "Název"
+          },
+          "longitudeColumn": {
+            "name": "Sloupec zeměpisná délka"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "Název"
+          },
+          "columnUnits": {
+            "name": "Jednotky"
+          }
+        },
+        "name": "Proměnná/sloupec"
+      },
+      "outline": {
+        "selectableDimensions": {
+          "color": {
+            "name": "Barva"
+          },
+          "width": {
+            "name": "Šířka"
+          }
+        },
+        "name": "Styl obrysu"
+      },
+      "min": {
+        "name": "Min"
+      },
+      "regionMapping": {
+        "name": "Mapování regionu"
+      }
+    },
+    "arcGisImageServerCatalogItem": {
+      "invalidServiceMessage": "Při vyvolání služby ArcGIS Image Service došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem služby Image Service.",
+      "name": "Esri ArcGIS ImageServer",
+      "invalidUrlTitle": "Nelze načíst ImageServer",
+      "invalidUrlMessage": "Nelze načíst koncový bod ArcGis ImageServer, protože položka katalogu nemá `url`.",
+      "invalidServiceTitle": "Neplatná služba ArcGIS Image Service",
+      "rasterFunction": "Rastrová funkce"
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "Tento COG není v nativní projekci (EPSG:4326 nebo EPSG:3857). Reprojekce je experimentální a nemusí fungovat podle očekávání. Pokud máte kontrolu nad zdrojovými daty, doporučujeme reprojekci do EPSG:4326 nebo EPSG:3857 pomocí GDAL nebo podobného nástroje."
     }
   },
   "deltaTool": {
@@ -1687,5 +2213,28 @@
   },
   "includeStory": {
     "message": "Zahrnout příběh do sdílení"
+  },
+  "relatedMaps": {
+    "buttonText": "Související mapy",
+    "buttonTitle": "Zobrazit související mapy",
+    "panelHeading": "Související mapy",
+    "panelText": "Kliknutím na níže uvedenou mapu ji otevřete v samostatném okně nebo kartě."
+  },
+  "searchProvider": {
+    "models": {
+      "idForMatchingErrorTitle": "Chybějící vlastnost",
+      "idForMatchingErrorMessage": "Objekty modelu musí mít vlastnost `id`, `localId` nebo `name`.",
+      "unsupportedTypeTitle": "Neznámý typ",
+      "unsupportedTypeMessage": "Nepodařilo se vytvořit neznámý typ modelu {{type}}."
+    },
+    "noSearchProviders": "Neexistují žádní nakonfigurovaní poskytovatelé vyhledávání"
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "Neuvedeno",
+    "enabled": "Povoleno",
+    "disabled": "Vypnuto",
+    "colorAdd": "Přidat",
+    "colorRemove": "Odstranit",
+    "invalid": "Neplatné"
   }
 }

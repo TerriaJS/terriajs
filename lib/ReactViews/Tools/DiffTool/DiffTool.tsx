@@ -52,8 +52,8 @@ import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
 import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
-
-const dateFormat = require("dateformat");
+import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
+import dateFormat from "dateformat";
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -249,8 +249,8 @@ class Main extends React.Component<MainPropsType> {
     if (!firstDate || !secondDate) {
       return name;
     } else {
-      const d1 = dateFormat(firstDate, format);
-      const d2 = dateFormat(secondDate, format);
+      const d1 = dateFormat(JulianDate.toDate(firstDate), format);
+      const d2 = dateFormat(JulianDate.toDate(secondDate), format);
       return `${name} - difference for dates ${d1}, ${d2}`;
     }
   }
@@ -355,7 +355,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  onUserPickingLocation(pickingLocation: LatLonHeight) {
+  onUserPickingLocation(_pickingLocation: LatLonHeight) {
     this._isPickingNewLocation = true;
   }
 
@@ -364,7 +364,7 @@ class Main extends React.Component<MainPropsType> {
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const { leftItem, rightItem, t } = this.props;
+    const { leftItem, rightItem } = this.props;
     const feature = pickedFeatures.features.find(
       (f) =>
         doesFeatureBelongToItem(f, leftItem) ||
@@ -404,10 +404,17 @@ class Main extends React.Component<MainPropsType> {
     const terria = this.props.terria;
     terria.overlays.remove(this.props.leftItem);
     terria.overlays.remove(this.props.rightItem);
+
     terria.workbench.add(this.diffItem);
 
     this.diffItem.setTrait(CommonStrata.user, "name", this.diffItemName);
     this.diffItem.showDiffImage(this.leftDate, this.rightDate, this.diffStyle);
+
+    // If given, appply additional properties for the diff item
+    const diffItemProperties = this.diffItem.diffItemProperties;
+    if (diffItemProperties) {
+      updateModelFromJson(this.diffItem, CommonStrata.user, diffItemProperties);
+    }
     terria.showSplitter = false;
   }
 
@@ -559,7 +566,11 @@ class Main extends React.Component<MainPropsType> {
                 <Box column alignItemsFlexStart>
                   {this.leftDate && (
                     <Text large>
-                      (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
+                      (A){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.leftDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.leftDate && (
@@ -572,7 +583,11 @@ class Main extends React.Component<MainPropsType> {
                   <Spacing bottom={1} />
                   {this.rightDate && (
                     <Text large>
-                      (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
+                      (B){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.rightDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.rightDate && (
@@ -877,6 +892,7 @@ const AreaFilterSelection = (props: {
   t: TFunction;
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
+  theme?: any;
 }) => {
   const { t, location, isPickingNewLocation } = props;
   let locationText = "-";
@@ -959,10 +975,8 @@ const LegendImage = function (props: any) {
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
       style={{ display: "none", marginTop: "4px" }}
-      // @ts-ignore
-      onLoad={(e) => (e.target.style.display = "block")}
-      // @ts-ignore
-      onError={(e) => (e.target.style.display = "none")}
+      onLoad={(e) => (e.currentTarget.style.display = "block")}
+      onError={(e) => (e.currentTarget.style.display = "none")}
     />
   );
 };
@@ -992,6 +1006,13 @@ async function createSplitItem(
       // we simply set the opacity of the item to 0.
       newItem.setTrait(CommonStrata.user, "opacity", 0);
     }
+
+    // Override feature info template as the parent featureInfoTemplate might
+    // not be relevant for the difference item. This has to be done in the user
+    // stratum to override template set in definition stratum.
+    updateModelFromJson(newItem, CommonStrata.user, {
+      featureInfoTemplate: { template: "" }
+    });
 
     setDefaultDiffStyle(newItem);
 

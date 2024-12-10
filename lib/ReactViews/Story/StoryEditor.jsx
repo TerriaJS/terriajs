@@ -136,7 +136,14 @@ class StoryEditor extends React.Component {
     this.setState({ text: value });
   }
 
-  renderPopupEditor() {
+  removeStory() {
+    this.props.exitEditingMode();
+    if (this.state.id) {
+      this.props.removeStory(this.state.id);
+    }
+  }
+
+  render() {
     const { t } = this.props;
     const maxImageHeight = "350px"; // TODO: where to put this to reduce coupling?
     return (
@@ -181,7 +188,7 @@ class StoryEditor extends React.Component {
             <Suspense fallback={<div>Loading...</div>}>
               <Editor
                 html={this.state.text}
-                onChange={(newValue, editor) => {
+                onChange={(_newValue, editor) => {
                   // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
                   tinymce.activeEditor.dom.setStyles(
                     tinymce.activeEditor.dom.select("img"),
@@ -197,17 +204,6 @@ class StoryEditor extends React.Component {
         </div>
       </div>
     );
-  }
-
-  removeStory() {
-    this.props.exitEditingMode();
-    if (this.state.id) {
-      this.props.removeStory(this.state.id);
-    }
-  }
-
-  render() {
-    return <div className={Styles.editor}>{this.renderPopupEditor()}</div>;
   }
 }
 

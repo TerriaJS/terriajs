@@ -1,2 +1,2 @@
-export { IShareUrlRef, ShareUrl } from "./ShareUrl";
+export { type IShareUrlRef, ShareUrl } from "./ShareUrl";
 export { ShareUrlBookmark } from "./ShareUrlBookmark";

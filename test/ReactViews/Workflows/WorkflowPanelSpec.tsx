@@ -21,9 +21,9 @@ describe("WorkflowPanel", function () {
     });
   });
 
-  it("sets isWorkflowPanelActive when opened", async function () {
+  it("sets isWorkflowPanelActive when opened", function () {
     expect(viewState.terria.isWorkflowPanelActive).toBe(false);
-    await act(() => {
+    act(() => {
       TestRenderer.create(
         <WorkflowPanel
           viewState={viewState}
@@ -37,8 +37,8 @@ describe("WorkflowPanel", function () {
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
   });
 
-  it("unsets isWorkflowPanelActive sidepanel when closed", async function () {
-    await act(() => {
+  it("unsets isWorkflowPanelActive sidepanel when closed", function () {
+    act(() => {
       testRenderer = TestRenderer.create(
         <WorkflowPanel
           viewState={viewState}

@@ -743,7 +743,7 @@ describe("Terria", function () {
     });
 
     describe("using story route", function () {
-      beforeEach(async function () {
+      beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with Karma runner
         terria.updateParameters({
@@ -1148,7 +1148,7 @@ describe("Terria", function () {
           ]);
           done();
         })
-        .catch((error) => {
+        .catch((_error) => {
           done.fail();
         });
     });
@@ -1465,7 +1465,7 @@ describe("Terria", function () {
       });
     });
 
-    describe("Enable/disable shorten share URL via init data", async function () {
+    describe("Enable/disable shorten share URL via init data", function () {
       beforeEach(function () {
         window.localStorage.clear();
       });
@@ -1526,11 +1526,13 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      //@ts-ignore
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=2d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
@@ -1552,11 +1554,13 @@ describe("Terria", function () {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
-      //@ts-ignore
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=4d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
@@ -1584,7 +1588,7 @@ describe("Terria", function () {
       await terria.loadInitSources();
 
       expect(terria.baseMaximumScreenSpaceError).toBe(1);
-      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.useNativeResolution).toBeTruthy();
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(
@@ -1611,7 +1615,7 @@ describe("Terria", function () {
       );
     });
 
-    it("propperly loads base maps", async function () {
+    it("correctly loads the base maps", async function () {
       await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
@@ -1619,16 +1623,17 @@ describe("Terria", function () {
             items: [
               {
                 item: {
-                  id: "basemap-positron",
-                  name: "Positron (Light)",
-                  type: "open-street-map",
-                  url: "https://basemaps.cartocdn.com/light_all/",
+                  id: "basemap-natural-earth-II",
+                  name: "Natural Earth II",
+                  type: "url-template-imagery",
+                  url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
                   attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                  subdomains: ["a", "b", "c", "d"],
+                    "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+                  maximumLevel: 7,
                   opacity: 1.0
                 },
-                image: "/images/positron.png"
+                image: "build/TerriaJS/images/natural-earth.png",
+                contrastColor: "#000000"
               },
               {
                 item: {
@@ -1640,8 +1645,7 @@ describe("Terria", function () {
                     "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
                   subdomains: ["a", "b", "c", "d"],
                   opacity: 1.0
-                },
-                image: "/images/dark-matter.png"
+                }
               }
             ]
           }
@@ -1747,7 +1751,7 @@ describe("Terria", function () {
     describe("behaviour of `initialCamera.focusWorkbenchItems`", function () {
       let container: HTMLElement;
 
-      beforeEach(async function () {
+      beforeEach(function () {
         jasmine.Ajax.install();
 
         // Attach cesium viewer and wait for it to be loaded

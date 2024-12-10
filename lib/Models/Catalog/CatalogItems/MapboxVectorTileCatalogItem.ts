@@ -162,7 +162,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           minzoom: this.minimumZoom,
           maxzoom: this.maximumZoom,
           // Only apply polygon/fill symbolizer to polygon features (otherwise it will also apply to line features)
-          filter: (z, f) => f.geomType === GeomType.Polygon
+          filter: (_z, f) => f.geomType === GeomType.Polygon
         });
       }
       if (this.lineColor) {

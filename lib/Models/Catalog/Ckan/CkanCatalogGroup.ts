@@ -117,8 +117,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static async load(
     catalogGroup: CkanCatalogGroup
   ): Promise<CkanServerStratum | undefined> {
-    const terria = catalogGroup.terria;
-
     let ckanServerResponse: CkanServerResponse | undefined = undefined;
 
     // Each item in the array causes an independent request to the CKAN, and the results are concatenated
@@ -239,7 +237,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   @action
   addCatalogItemToCatalogGroup(
     catalogItem: any,
-    dataset: CkanDataset,
+    _dataset: CkanDataset,
     groupId: string
   ) {
     const group: CatalogGroup | undefined =

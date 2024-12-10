@@ -81,10 +81,7 @@ describe("ChartCustomComponent", function () {
         sources: "a, b"
       }
     };
-    const spy = spyOn(
-      component,
-      "constructShareableCatalogItem"
-    ).and.callThrough();
+    spyOn(component, "constructShareableCatalogItem").and.callThrough();
     component.processNode(context, node, [], 0);
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
     // Make sure the id is dependent on parent, title & source name

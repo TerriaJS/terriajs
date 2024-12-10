@@ -1,4 +1,3 @@
-import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
 import Terria from "../../../../lib/Models/Terria";
@@ -23,14 +22,14 @@ describe("SearchResults", function () {
   });
 });
 
-async function render(
+function render(
   props: Omit<SearchResultsProps, "i18n" | "t" | "tReady">
 ): Promise<ReactTestRenderer> {
   let rendered: ReactTestRenderer;
-  await act(() => {
+  act(() => {
     rendered = create(<SearchResults {...props} />);
   });
-  // @ts-ignore
+  // @ts-expect-error assigned in callback
   return rendered;
 }
 

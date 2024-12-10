@@ -51,10 +51,6 @@ class Disclaimer extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   confirm(confirmCallbackFn) {
     if (confirmCallbackFn) {
       confirmCallbackFn();

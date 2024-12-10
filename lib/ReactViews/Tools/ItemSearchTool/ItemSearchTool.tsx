@@ -66,6 +66,7 @@ const ItemSearchTool: React.FC<PropsType> = observer((props) => {
         })
         .finally(() => props.afterLoad?.());
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [itemSearchProvider]
   );
 
@@ -78,6 +79,7 @@ const ItemSearchTool: React.FC<PropsType> = observer((props) => {
       );
       return disposeListener;
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [item]
   );
 

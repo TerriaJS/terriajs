@@ -31,10 +31,6 @@ export const ZOOM_CONTROL_ID = "zoom";
 class ZoomControlBase extends React.Component<PropTypes> {
   static displayName = "ZoomControl";
 
-  constructor(props: PropTypes) {
-    super(props);
-  }
-
   flyToPosition(
     scene: Scene,
     position: Cartesian3,
@@ -180,7 +176,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
   }
 
   render() {
-    const { t, theme } = this.props;
+    const { t } = this.props;
     return (
       <StyledZoomControl>
         <Ul

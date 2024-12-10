@@ -11,8 +11,7 @@ const baseMapPositron = {
       "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
     subdomains: ["a", "b", "c", "d"],
     opacity: 1.0
-  },
-  image: "/images/positron.png"
+  }
 };
 
 const baseMapDarkMatter = {
@@ -25,8 +24,7 @@ const baseMapDarkMatter = {
       "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
     subdomains: ["a", "b", "c", "d"],
     opacity: 1.0
-  },
-  image: "/images/dark-matter.png"
+  }
 };
 
 describe("BaseMapModel", () => {
@@ -63,7 +61,7 @@ describe("BaseMapModel", () => {
   it("properly use enabledBaseMaps list", () => {
     const baseMaps: any = {
       items: [baseMapPositron],
-      enabledBaseMaps: ["basemap-positron"]
+      enabledBaseMaps: ["basemap-natural-earth-II"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
     expect(baseMapsModel.items.length).toBe(
@@ -73,12 +71,27 @@ describe("BaseMapModel", () => {
   });
 
   it("propperly override image", () => {
-    const _baseMapPositron = JSON.parse(JSON.stringify(baseMapPositron));
-    _baseMapPositron.item.id = "basemap-positron";
-    _baseMapPositron.image = "test";
+    const _baseMapNaturalEarth = JSON.parse(
+      JSON.stringify({
+        item: {
+          id: "basemap-natural-earth-II-test",
+          name: "Natural Earth II",
+          type: "url-template-imagery",
+          url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+          attribution:
+            "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+          maximumLevel: 7,
+          opacity: 1.0
+        },
+        image: "build/TerriaJS/images/natural-earth.png",
+        contrastColor: "#000000"
+      })
+    );
+    _baseMapNaturalEarth.item.id = "basemap-natural-earth-II";
+    _baseMapNaturalEarth.image = "test";
     const baseMaps: any = {
-      items: [_baseMapPositron],
-      enabledBaseMaps: ["basemap-positron"]
+      items: [_baseMapNaturalEarth],
+      enabledBaseMaps: ["basemap-natural-earth-II"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
     expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength);

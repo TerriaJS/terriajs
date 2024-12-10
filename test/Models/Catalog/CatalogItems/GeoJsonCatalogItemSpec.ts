@@ -73,12 +73,12 @@ describe("GeoJsonCatalogItemSpec", () => {
                 type: "Polygon",
                 coordinates: [
                   [
-                    [144.80667114257812, -32.96258644191746],
+                    [144.806671142578125, -32.96258644191746],
                     [145.008544921875, -33.19273094190691],
                     [145.557861328125, -32.659031913817685],
-                    [145.04287719726562, -32.375322284319346],
+                    [145.042877197265625, -32.375322284319346],
                     [144.7998046875, -32.96719522935591],
-                    [144.80667114257812, -32.96258644191746]
+                    [144.806671142578125, -32.96258644191746]
                   ]
                 ]
               }
@@ -698,7 +698,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -928,7 +928,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1105,7 +1105,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1135,7 +1135,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1190,7 +1190,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1237,7 +1237,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1408,7 +1408,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1557,6 +1557,30 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const terriaFeatureData = features[0].data as TerriaFeatureData;
       expect(terriaFeatureData.rowIds).toEqual([4, 5, 6, 7, 8]);
+    });
+
+    describe("applies default featureInfoTemplate", function () {
+      let terria: Terria;
+      let geojson: GeoJsonCatalogItem;
+
+      beforeEach(function () {
+        terria = new Terria({
+          baseUrl: "./"
+        });
+        geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      });
+
+      it("removes _id_ from template", async function () {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/height.geojson"
+        );
+
+        await geojson.loadMapItems();
+
+        expect(geojson.featureInfoTemplate.template?.indexOf("_id_")).toBe(-1);
+      });
     });
   });
 });

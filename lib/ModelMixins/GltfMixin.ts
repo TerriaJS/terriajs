@@ -9,6 +9,7 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
+import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -17,11 +18,7 @@ import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 type BaseType = Model<GltfTraits>;
 
@@ -89,8 +86,8 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     private get cesiumHeightReference() {
       const heightReference: HeightReference =
-        // @ts-ignore
-        HeightReference[this.heightReference] || HeightReference.NONE;
+        HeightReference[this.heightReference as keyof typeof HeightReference] ||
+        HeightReference.NONE;
       return heightReference;
     }
 
@@ -143,15 +140,20 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       };
     }
 
-    protected abstract get gltfModelUrl(): string | undefined;
+    protected abstract get gltfModelUrl(): string | Resource | undefined;
 
     @computed
     private get modelGraphics() {
       if (this.gltfModelUrl === undefined) {
         return undefined;
       }
+
+      const url = this.gltfModelUrl;
+
       const options = {
-        uri: new ConstantProperty(proxyCatalogItemUrl(this, this.gltfModelUrl)),
+        uri: new ConstantProperty(
+          typeof url === "string" ? proxyCatalogItemUrl(this, url) : url
+        ),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),

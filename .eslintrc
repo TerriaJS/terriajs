@@ -2,7 +2,8 @@
   "root": true,
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v6/packages/eslint-plugin/src/configs/recommended.ts
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "prettier"
@@ -33,6 +34,12 @@
     }
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "@typescript-eslint/no-this-alias": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/unified-signatures": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
     "react/no-arrow-function-lifecycle": "error",
@@ -86,14 +93,18 @@
 
     /* Variables */
     "no-label-var": 1,
-    "no-unused-vars": [
-      1,
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
       {
-        "vars": "local",
-        "args": "none"
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "ignoreRestSiblings": true
       }
     ],
-
     "camelcase": [
       0,
       {
@@ -113,20 +124,13 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
+        /* The no-useless-constructor needs to be disabled for
+            the @typescript-eslint-rule. */
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            "argsIgnorePattern": "^_",
-            "varsIgnorePattern": "^_",
-            "caughtErrorsIgnorePattern": "^_"
-          }
-        ],
-        "@typescript-eslint/ban-ts-comment": "warn",
-        "@typescript-eslint/no-loss-of-precision": "warn",
-        "@typescript-eslint/no-unsafe-declaration-merging": "warn",
-        "react-hooks/exhaustive-deps": "warn",
+        "react-hooks/exhaustive-deps": "error",
         "react/prop-types": "warn"
       }
     }

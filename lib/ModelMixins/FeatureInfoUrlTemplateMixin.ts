@@ -36,19 +36,19 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
     abstract buildFeatureFromPickResult(
       screenPosition: Cartesian2 | undefined,
       pickResult: any
-    ): TerriaFeature | undefined;
+    ): Promise<TerriaFeature> | TerriaFeature | undefined;
 
     /**
      * Returns a {@link Feature} for the pick result. If `featureInfoUrlTemplate` is set,
      * it asynchronously loads additional info from the url.
      */
     @action
-    getFeaturesFromPickResult(
+    async getFeaturesFromPickResult(
       screenPosition: Cartesian2 | undefined,
       pickResult: any,
       loadExternal = true
-    ): TerriaFeature | undefined {
-      const feature = this.buildFeatureFromPickResult(
+    ): Promise<TerriaFeature | undefined> {
+      const feature = await this.buildFeatureFromPickResult(
         screenPosition,
         pickResult
       );
@@ -86,7 +86,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
                     : undefined
                 )
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = new PropertyBag();
               }
@@ -163,7 +163,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
                   ? catalogItem.showStringIfPropertyValueIsNull
                   : undefined
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = {};
               }

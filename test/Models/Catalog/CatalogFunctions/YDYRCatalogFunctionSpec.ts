@@ -79,7 +79,7 @@ describe("YDYRCatalogFunction", function () {
     csv.setTrait(CommonStrata.user, "csvString", lga11Csv);
     await csv.loadRegionProviderList();
     await csv.loadMapItems();
-    addUserCatalogMember(terria, csv, { enable: true });
+    await addUserCatalogMember(terria, csv, { enable: true });
 
     ydyr = new YDYRCatalogFunction("testYdyr", terria);
     ydyr.setTrait(CommonStrata.definition, "parameters", {
@@ -92,7 +92,7 @@ describe("YDYRCatalogFunction", function () {
     });
 
     // A few reactions will happen, while setting default values for functionParameters
-    await new Promise<void>((resolve, reject) => {
+    await new Promise<void>((resolve) => {
       reaction(
         () => ydyr.functionParameters,
         () => {
@@ -111,7 +111,7 @@ describe("YDYRCatalogFunction", function () {
     expect(ydyr.typeName).toBe("YourDataYourRegions");
   });
 
-  describe("when loading", async function () {
+  describe("when loading", function () {
     it("should correctly render functionParameters", function () {
       expect(ydyr.functionParameters.map(({ type }) => type)).toEqual([
         "string",
@@ -141,7 +141,7 @@ describe("YDYRCatalogFunction", function () {
     });
   });
 
-  describe("when submitted", async function () {
+  describe("when submitted", function () {
     let job: YDYRCatalogFunctionJob;
     let dispose: () => void;
     beforeEach(async () => {
@@ -154,15 +154,15 @@ describe("YDYRCatalogFunction", function () {
     afterEach(() => {
       dispose();
     });
-    it("should correctly set parameters", async function () {
+    it("should correctly set parameters", function () {
       expect(toJS(job.parameters)).toEqual(toJS(ydyr.parameters));
     });
 
-    it("should be in workbench", async function () {
+    it("should be in workbench", function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 
-    it("calls YDYR api and sets status id", async function () {
+    it("calls YDYR api and sets status id", function () {
       expect(job.jobId).toEqual("someStatusId");
     });
 

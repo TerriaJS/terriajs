@@ -92,6 +92,7 @@ import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -196,7 +197,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-    const firefoxBugOptions = (FeatureDetection as any).isFirefox()
+    const firefoxBugOptions = FeatureDetection.isFirefox()
       ? {
           contextOptions: {
             webgl: { preserveDrawingBuffer: true }
@@ -240,7 +241,7 @@ export default class Cesium extends GlobeOrMap {
     this._eventHelper.add(
       this.scene.globe.tileLoadProgressEvent,
       (currentLoadQueueLength: number) =>
-        this._updateTilesLoadingCount(currentLoadQueueLength) as any
+        this._updateTilesLoadingCount(currentLoadQueueLength)
     );
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
@@ -409,16 +410,15 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this.terrainProvider;
-      // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
-      // this.scene.globe.splitDirection = this.terria.showSplitter
-      //   ? this.terria.terrainSplitDirection
-      //   : SplitDirection.NONE;
+      this.scene.globe.splitDirection = this.terria.showSplitter
+        ? this.terria.terrainSplitDirection
+        : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.depthTestAgainstTerrainEnabled;
-      // if (this.scene.skyAtmosphere) {
-      //   this.scene.skyAtmosphere.splitDirection =
-      //     this.scene.globe.splitDirection;
-      // }
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
+      }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -502,7 +502,7 @@ export default class Cesium extends GlobeOrMap {
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
-      } catch (err) {
+      } catch (_err) {
         /* TODO: handle Error */
       }
     };
@@ -527,18 +527,18 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  getContainer() {
+  getContainer(): Element {
     return this.cesiumWidget.container;
   }
 
-  pauseMapInteraction() {
+  pauseMapInteraction(): void {
     ++this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 1) {
       this.scene.screenSpaceCameraController.enableInputs = false;
     }
   }
 
-  resumeMapInteraction() {
+  resumeMapInteraction(): void {
     --this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 0) {
       setTimeout(() => {
@@ -552,7 +552,7 @@ export default class Cesium extends GlobeOrMap {
   private previousRenderError: string | undefined;
 
   /** Show error message to user if Cesium stops rendering. */
-  private onRenderError(scene: Scene, error: unknown) {
+  private onRenderError(_scene: Scene, error: unknown) {
     // This function can be called many times with the same error
     // So we do a rudimentary check to only show the error message once
     // - by comparing error.toString() to this.previousRenderError
@@ -570,7 +570,7 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  destroy() {
+  destroy(): void {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
     this.scene.renderError.removeEventListener(this.onRenderError);
@@ -767,7 +767,7 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach((fn) => fn()); // Run the remover functions
-            } catch (error) {
+            } catch (_error) {
               /* TODO: handle error */
             }
 
@@ -813,7 +813,7 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  stopObserving() {
+  stopObserving(): void {
     if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
       this._disposeWorkbenchMapItemsSubscription();
     }
@@ -928,6 +928,14 @@ export default class Cesium extends GlobeOrMap {
           duration: flightDurationSeconds,
           destination: target.rectangle
         });
+      } else if (
+        defined(target.imageryProvider) &&
+        defined(target.imageryProvider.rectangle)
+      ) {
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.imageryProvider.rectangle
+        });
       } else {
         return Promise.resolve();
       }
@@ -940,7 +948,7 @@ export default class Cesium extends GlobeOrMap {
     return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
-  notifyRepaintRequired() {
+  notifyRepaintRequired(): void {
     this.pauser.notifyRepaintRequired();
   }
 
@@ -1281,7 +1289,10 @@ export default class Cesium extends GlobeOrMap {
    *
    */
   @action
-  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
+  async pickFromScreenPosition(
+    screenPosition: Cartesian2,
+    ignoreSplitter: boolean
+  ): Promise<void> {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
@@ -1289,7 +1300,7 @@ export default class Cesium extends GlobeOrMap {
     const pickPositionCartographic =
       pickPosition && Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
-    const vectorFeatures = this.pickVectorFeatures(screenPosition);
+    const vectorFeatures = await this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
     const pickRasterPromise =
@@ -1325,7 +1336,7 @@ export default class Cesium extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {
+  ): void {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
         latLngHeight.longitude,
@@ -1407,7 +1418,7 @@ export default class Cesium extends GlobeOrMap {
    * @param screenPosition position on the screen to look for features
    * @returns The features found.
    */
-  private pickVectorFeatures(screenPosition: Cartesian2) {
+  private async pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
     const pickedList = this.scene.drillPick(screenPosition);
@@ -1436,7 +1447,9 @@ export default class Cesium extends GlobeOrMap {
         typeof catalogItem?.getFeaturesFromPickResult === "function" &&
         this.terria.allowFeatureInfoRequests
       ) {
-        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+        const result = await catalogItem.getFeaturesFromPickResult.bind(
+          catalogItem
+        )(
           screenPosition,
           picked,
           vectorFeatures.length < catalogItem.maxRequests
@@ -1634,10 +1647,12 @@ export default class Cesium extends GlobeOrMap {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         } else if (isCesium3DTileset(m)) {
           return m;
+        } else if (m instanceof I3SDataProvider) {
+          return filterOutUndefined(m.layers.map((layer) => layer.tileset));
         }
         return undefined;
       })
-    );
+    ).flat(1); /* Flatten I3S tilesets */
   }
 
   private _makeImageryLayerFromParts(
@@ -1682,7 +1697,7 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
-  _selectFeature() {
+  _selectFeature(): void {
     const feature = this.terria.selectedFeature;
 
     this._highlightFeature(feature);
@@ -1742,7 +1757,7 @@ export default class Cesium extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
       show: true,
@@ -1784,7 +1799,7 @@ function zoomToDataSource(
             false,
             boundingSphereScratch
           );
-        } catch (e) {
+        } catch (_e) {
           /* TODO: handle error */
         }
 

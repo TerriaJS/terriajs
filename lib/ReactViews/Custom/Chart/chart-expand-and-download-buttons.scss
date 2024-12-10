@@ -1,6 +1,8 @@
 @import "~terriajs-variables";
 @import "../../../Sass/common/mixins";
 
+// These remaining SCSS styles can be removed when we refactor Dropdown.jsx to use styled-components.
+
 .dropdown {
   float: left;
   &__list {
@@ -26,21 +28,6 @@
   }
 }
 
-.chart-expand {
-  z-index: 999;
-  position: absolute;
-  right: 0;
-}
-
-.raise-to-title {
-  top: -21px;
-}
-
-.chart-dropdown-button {
-  position: relative;
-  float: right;
-}
-
 .btn--dropdown {
   // largely to undo .btn--dropdown
   // It would be better to add a class to the Add Data dropdown instead.
@@ -63,40 +50,6 @@
   padding: 4px 3px;
   margin-left: 3px;
   vertical-align: top;
-
-  svg {
-    height: 20px;
-    width: 20px;
-  }
-
-  &:hover,
-  &:focus {
-    text-decoration: none;
-  }
-}
-
-.btn--chart-expand {
-  composes: btn from "../../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../../Sass/common/_buttons.scss";
-
-  display: inline-block;
-  z-index: 999;
-  padding: 1px 8px;
-  right: 0;
-  margin-right: 3px;
-  width: 65px;
-}
-
-.a--download {
-  composes: btn--download from "../../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../../Sass/common/_buttons.scss";
-
-  display: inline-block;
-  text-align: center;
-  padding: 1px 5px 0 5px;
-  margin-left: 3px;
-  width: 30px;
-  vertical-align: -5px;
 
   svg {
     height: 20px;

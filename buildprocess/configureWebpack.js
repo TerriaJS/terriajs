@@ -36,6 +36,7 @@ function configureWebpack(
     ".webpack.js",
     ".web.js",
     ".js",
+    ".mjs",
     ".ts",
     ".tsx"
   ];
@@ -115,6 +116,14 @@ function configureWebpack(
     })
   });
 
+  // Some packages exports an .mjs file for ESM imports.
+  // This rule instructs webpack to import mjs modules correctly.
+  config.module.rules.push({
+    test: /\.mjs$/,
+    include: /node_modules/,
+    type: "javascript/auto"
+  });
+
   const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
 
   config.module.rules.push({
@@ -173,29 +182,8 @@ function configureWebpack(
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts")
     ],
-    use: [
-      babelLoader
-      // Re-enable this if we need to observe any differences in the
-      // transpilation via ts-loader, & babel's stripping of types,
-      // or if TypeScript has newer features that babel hasn't
-      // caught up with
-      // {
-      //     loader: 'ts-loader',
-      //     options: {
-      //       transpileOnly: true
-      //     }
-      // }
-    ]
+    use: [babelLoader]
   });
-
-  // config.module.loaders.push({
-  //     test: /\.(ts|js)$/,
-  //     include: [
-  //         path.resolve(terriaJSBasePath, 'lib'),
-  //         path.resolve(terriaJSBasePath, 'test')
-  //     ],
-  //     loader: require.resolve('ts-loader')
-  // });
 
   // Use the raw loader for our view HTML.  We don't use the html-loader because it
   // will doing things with images that we don't (currently) want.

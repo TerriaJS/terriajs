@@ -23,11 +23,11 @@ class NoViewer extends GlobeOrMap {
     this.terria = terriaViewer.terria;
   }
 
-  destroy() {}
+  destroy(): void {}
 
   doZoomTo(
     v: CameraView | Rectangle | MappableMixin.Instance,
-    t: any
+    _t: any
   ): Promise<void> {
     if (v instanceof CameraView) {
       this._currentView = v;
@@ -37,13 +37,13 @@ class NoViewer extends GlobeOrMap {
     return Promise.resolve();
   }
 
-  notifyRepaintRequired() {}
+  notifyRepaintRequired(): void {}
 
   pickFromLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: TerriaFeature[]
-  ) {}
+    _latLngHeight: LatLonHeight,
+    _providerCoords: ProviderCoordsMap,
+    _existingFeatures: TerriaFeature[]
+  ): void {}
 
   getCurrentCameraView(): CameraView {
     return this._currentView;
@@ -53,11 +53,13 @@ class NoViewer extends GlobeOrMap {
     return undefined;
   }
 
-  pauseMapInteraction() {}
-  resumeMapInteraction() {}
+  pauseMapInteraction(): void {}
+  resumeMapInteraction(): void {}
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _imageryProvider:
+      | MapboxVectorTileImageryProvider
+      | ProtomapsImageryProvider,
+    _rectangle: Rectangle
   ) {
     return () => {};
   }

@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
@@ -325,7 +323,7 @@ export default class TerriaError {
   }
 
   /** Print error to console */
-  log() {
+  log(): void {
     this.resolvedSeverity === TerriaErrorSeverity.Warning
       ? console.warn(this.toString())
       : console.error(this.toString());
@@ -467,7 +465,7 @@ export default class TerriaError {
     terria: Terria,
     errorOverrides?: TerriaErrorOverrides,
     forceRaiseToUser?: boolean
-  ) {
+  ): void {
     terria.raiseErrorToUser(this, errorOverrides, forceRaiseToUser);
   }
 }

@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   useEffect,
   useImperativeHandle,
   useState,
@@ -39,7 +38,7 @@ export interface IShareUrlRef {
   shorteningInProgress: boolean;
 }
 
-export const ShareUrl = forwardRef<
+export const ShareUrl = React.forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(
@@ -68,6 +67,7 @@ export const ShareUrl = forwardRef<
       url: shareUrl,
       shorteningInProgress: shorteningInProgress
     }),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [forwardRef, shareUrl, shorteningInProgress]
   );
 
@@ -94,6 +94,7 @@ export const ShareUrl = forwardRef<
         })
       );
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
   return (

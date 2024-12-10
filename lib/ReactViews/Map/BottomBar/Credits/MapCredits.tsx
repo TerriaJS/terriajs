@@ -42,6 +42,7 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
           }
         }
       );
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [currentViewer]);
 
     if (currentViewer.type === "none") {

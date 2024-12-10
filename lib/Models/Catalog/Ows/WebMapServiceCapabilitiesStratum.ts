@@ -44,8 +44,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-
-const dateFormat = require("dateformat");
+import dateFormat from "dateformat";
 
 /** Transforms WMS GetCapabilities XML into WebMapServiceCatalogItemTraits */
 export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
@@ -825,7 +824,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get currentTime() {
     // Get default times for all layers
     const defaultTimes = filterOutUndefined(
-      Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
+      Array.from(this.capabilitiesLayers).map(([_layerName, layer]) => {
         if (!layer) return;
         const dimensions = this.capabilities.getInheritedValues(
           layer,

@@ -267,7 +267,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   }
 
   private _createLegendItemsFromConstantColorMap(
-    style: TableStyle,
+    _style: TableStyle,
     colorMap: ConstantColorMap,
     legendItemOverrides: Partial<LegendItemTraits>
   ): StratumFromTraits<LegendItemTraits>[] {

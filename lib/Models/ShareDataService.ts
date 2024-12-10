@@ -28,7 +28,7 @@ export default class ShareDataService {
     this.url = options.url;
   }
 
-  init(serverConfig: any) {
+  init(serverConfig: any): void {
     this.url = defaultValue(
       this.url,
       defaultValue(this.terria.configParameters.shareUrl, "share")
@@ -58,7 +58,7 @@ export default class ShareDataService {
 
     try {
       const result = await loadWithXhr({
-        url: this.url,
+        url: this.url!,
         method: "POST",
         data: JSON.stringify(shareData),
         headers: { "Content-Type": "application/json" },

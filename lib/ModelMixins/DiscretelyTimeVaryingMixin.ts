@@ -207,6 +207,14 @@ function DiscretelyTimeVaryingMixin<
         : this.discreteTimesAsSortedJulianDates![index].time;
     }
 
+    @computed({ equals: JulianDate.equals })
+    get nextDiscreteJulianDate() {
+      const index = this.nextDiscreteTimeIndex;
+      return index === undefined
+        ? undefined
+        : this.discreteTimesAsSortedJulianDates![index].time;
+    }
+
     @computed
     get currentDiscreteTimeTag() {
       const index = this.currentDiscreteTimeIndex;
@@ -352,12 +360,13 @@ function DiscretelyTimeVaryingMixin<
       const colorId = `color-${this.name}`;
       return {
         item: this,
+        id: this.name || "",
         name: this.name || "",
         categoryName: this.name,
         key: `key${this.uniqueId}-${this.name}`,
         type: this.chartType || "momentLines",
         glyphStyle: this.chartGlyphStyle,
-        xAxis: { scale: "time" },
+        xAxis: { name: "Time", scale: "time" },
         points,
         domain: { ...calculateDomain(points), y: [0, 1] },
         showInChartPanel: this.show && this.showInChartPanel,

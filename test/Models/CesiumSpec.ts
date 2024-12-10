@@ -24,8 +24,7 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-
-const supportsWebGL = require("../../lib/Core/supportsWebGL");
+import supportsWebGL from "../../lib/Core/supportsWebGL";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -254,7 +253,6 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
-      fakeIonTerrainProvider.availability;
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
