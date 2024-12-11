@@ -176,6 +176,7 @@ const getImageryLayerFeatureInfo = action(
 
       if (!isDefined(rowId)) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       style.tableModel.tableColumns;
 
       const rowObject = style.tableModel.tableColumns.reduce<{
