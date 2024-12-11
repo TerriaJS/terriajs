@@ -12,8 +12,8 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
+import TerriaError from "../Core/TerriaError";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
@@ -30,11 +30,10 @@ import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
-import TerriaError from "../Core/TerriaError";
 
-import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
-import hasTraits from "./Definition/hasTraits";
 import HighlightColorTraits from "../Traits/TraitsClasses/HighlightColorTraits";
+import hasTraits from "./Definition/hasTraits";
+import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;

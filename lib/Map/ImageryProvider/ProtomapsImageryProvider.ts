@@ -632,8 +632,6 @@ export default class ProtomapsImageryProvider
       });
     }
 
-    console.log(featureInfos);
-
     if (this.processPickedFeatures) {
       return await this.processPickedFeatures(featureInfos);
     }

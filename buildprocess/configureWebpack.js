@@ -21,10 +21,6 @@ function configureWebpack(
   // console.log(fontAwesomeDir);
   // console.log(reactMdeDir);
 
-  config.stats = {
-    errorDetails: true
-  };
-
   config.node = config.node || {};
 
   // Resolve node module use of fs
