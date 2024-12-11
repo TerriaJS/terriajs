@@ -40,7 +40,10 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-empty-object-type": [
+      "error",
+      { allowInterfaces: "with-single-extends" }
+    ],
     "@typescript-eslint/unified-signatures": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { always: [] }],
@@ -134,7 +137,8 @@ module.exports = {
         // @TODO: revise these rules
         "@typescript-eslint/consistent-type-assertions": "error",
         "react-hooks/exhaustive-deps": "error",
-        "react/prop-types": "warn"
+        // FIXME: typescript-eslint 8 gave 1400+ react/prop-types warnings.
+        "react/prop-types": "off"
       }
     }
   ]
