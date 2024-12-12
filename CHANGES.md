@@ -7,6 +7,7 @@
 - Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
 - Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
   - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
+- Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - [The next improvement]
 
 #### 8.7.10 - 2024-11-29
