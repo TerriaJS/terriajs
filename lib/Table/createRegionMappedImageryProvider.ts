@@ -16,7 +16,6 @@ import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
 
 export default function createRegionMappedImageryProvider(
-  id: string | undefined,
   style: TableStyle,
   currentTime: JulianDate | undefined
 ): ImageryProvider | undefined {

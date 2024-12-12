@@ -5,21 +5,16 @@ import circle from "@turf/circle";
 import { Feature } from "@turf/helpers";
 import i18next from "i18next";
 import { cloneDeep, isEmpty } from "lodash-es";
-import { action, makeObservable, observable, runInAction } from "mobx";
+import { action, makeObservable } from "mobx";
 import {
-  Bbox,
-  GeomType,
   LabelRule,
   Labelers,
   LineSymbolizer,
   PaintRule,
   PmtilesSource,
   PreparedTile,
-  Feature as ProtomapsFeature,
   TileCache,
-  TileSource,
   View,
-  Zxy,
   ZxySource,
   paint
 } from "protomaps-leaflet";
@@ -36,13 +31,11 @@ import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
 import {
   FeatureCollectionWithCrs,
-  FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
-  toFeatureCollection
+  FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP
 } from "../../ModelMixins/GeojsonMixin";
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-import geojsonvt from "geojson-vt";
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
