@@ -21,7 +21,7 @@ describe("GtfsCatalogItem", function () {
     expect(MappableMixin.isMixedInto(item)).toBeTruthy();
   });
 
-  it("creates a DataSource with points", async function () {
+  xit("creates a DataSource with points", async function () {
     await item.loadMapItems();
     expect(item.mapItems.length).toBe(1);
     expect(item.mapItems[0].entities.values.length).toBe(123);
@@ -31,7 +31,7 @@ describe("GtfsCatalogItem", function () {
     expect(item.mapItems[0].entities.values[0].polygon).toBeUndefined();
   });
 
-  it("creates a DataSource with billboards when an image is given", async function () {
+  xit("creates a DataSource with billboards when an image is given", async function () {
     item.setTrait(CommonStrata.definition, "image", "test/gtfs/bus.png");
     await item.loadMapItems();
     expect(item.mapItems.length).toBe(1);

@@ -146,6 +146,7 @@
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "proj4-fully-loaded": "^0.2.0",
+    "proj4leaflet": "^1.0.2",
     "prop-types": "^15.6.0",
     "protomaps": "1.19.0",
     "raw-loader": "^1.0.0",

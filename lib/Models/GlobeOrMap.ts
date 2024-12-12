@@ -116,6 +116,10 @@ export default abstract class GlobeOrMap {
 
   abstract notifyRepaintRequired(): void;
 
+  get crs(): import("leaflet").Proj.CRS | undefined {
+    return undefined;
+  }
+
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */

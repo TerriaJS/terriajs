@@ -27,8 +27,12 @@ export const MapViewers = Object.seal({
   }
 });
 
-export const isViewerMode = (mode: string): mode is keyof typeof MapViewers =>
-  mode in MapViewers;
+export const isMapViewerType = (
+  mode: string
+): mode is keyof typeof MapViewers => mode in MapViewers;
+
+export const isViewerModeType = (mode: string): mode is ViewerMode =>
+  Object.values(ViewerMode).includes(mode as any);
 
 export function setViewerMode(
   viewerMode: keyof typeof MapViewers,
@@ -37,7 +41,7 @@ export function setViewerMode(
   runInAction(() => {
     if (viewerMode === "3d" || viewerMode === "3dsmooth") {
       viewer.viewerMode = ViewerMode.Cesium;
-      viewer.viewerOptions.useTerrain = viewerMode === "3d";
+      viewer.cesiumViewerOptions.useTerrain = viewerMode === "3d";
     } else if (viewerMode === "2d") {
       viewer.viewerMode = ViewerMode.Leaflet;
     } else {

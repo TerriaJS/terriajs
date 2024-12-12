@@ -10,6 +10,7 @@ import {
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
+import "proj4leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -22,6 +23,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import html2canvas from "terriajs-html2canvas";
@@ -51,11 +53,16 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import {
+  LeafletCrsTraits,
+  LeafletOptionsTraits
+} from "../Traits/TraitsClasses/BaseMapTraits";
 import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
+import Model from "./Definition/Model";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
@@ -72,6 +79,8 @@ export default class Leaflet extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
   readonly canShowSplitter = true;
+
+  private readonly _crs: L.Proj.CRS | undefined = undefined;
   private readonly _attributionControl: LeafletAttribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
@@ -104,7 +113,9 @@ export default class Leaflet extends GlobeOrMap {
     clippingRectangle: Rectangle | undefined
   ) => GridLayer = computedFn((ip, clippingRectangle) => {
     const layerOptions = {
-      maxZoom: this.terria.configParameters.leafletMaxZoom,
+      maxZoom:
+        this.terria.mainViewer.leafletViewerOptions?.maxZoom ??
+        this.terria.configParameters.leafletMaxZoom,
       bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
     };
     // We have two different kinds of ImageryProviderLeaflet layers
@@ -142,18 +153,33 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
+  constructor(
+    terriaViewer: TerriaViewer,
+    container: string | HTMLElement,
+    initialViewerOptions?: Model<LeafletOptionsTraits>
+  ) {
     super();
     makeObservable(this);
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
+
+    const crsOptions = initialViewerOptions?.crs;
+    const defaultCrs = L.CRS.EPSG3857;
+    const crs = crsOptions ? this.buildCrs(crsOptions) : undefined;
+    const maxBounds = crs && unprojectBounds(crs.projection.bounds, crs);
+    this._crs = crs;
+    console.log("**new leaflet**", crs, maxBounds);
     this.map = L.map(container, {
+      crs: crs ?? defaultCrs,
+      maxBounds,
       zoomControl: false,
       attributionControl: false,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
       worldCopyJump: false
-    }).setView([-28.5, 135], 5);
+    }).setView([-90, 0], 0);
+
+    addDebugLayers();
 
     this.map.on("move", () => this.updateMapObservables());
     this.map.on("zoom", () => this.updateMapObservables());
@@ -234,6 +260,80 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._initProgressEvent();
+  }
+
+  get crs(): L.Proj.CRS | undefined {
+    return this._crs;
+  }
+
+  private buildCrs(
+    crsOptions: Model<LeafletCrsTraits>
+  ): L.Proj.CRS | undefined {
+    const { epsgCode, proj4Definition } = crsOptions;
+
+    if (!epsgCode || !proj4Definition) {
+      console.warn(
+        "Missing EPSG code and/or Proj4 definition, ignoring viewer CRS"
+      );
+      return;
+    }
+
+    const originX = crsOptions.origin.x;
+    const originY = crsOptions.origin.y;
+    if (originX === undefined || originY === undefined) {
+      console.warn("Missing or invalid origin option, ignoring viewer CRS");
+      return;
+    }
+
+    const resolutions = crsOptions.resolutions;
+    if (!Array.isArray(resolutions)) {
+      console.warn("Missing `resolutions` option, ignoring viewer CRS");
+      return;
+    }
+
+    const { x: xMin, y: yMin } = crsOptions.bounds.min;
+    const { x: xMax, y: yMax } = crsOptions.bounds.max;
+    if (
+      xMin === undefined ||
+      yMin === undefined ||
+      xMax === undefined ||
+      yMax === undefined
+    ) {
+      console.warn("Missing or invalid `bounds` option, ignoring viewer CRS");
+      return;
+    }
+
+    const crs = new L.Proj.CRS(epsgCode, proj4Definition, {
+      origin: [originX, originY],
+      bounds: L.bounds([xMin, yMin], [xMax, yMax]),
+      resolutions
+    });
+    return crs;
+
+    // const crsOptions = this.terriaViewer.baseMap
+
+    // const crsOptions = this.terriaViewer.baseMap.crs;
+    // if (!crsOptions) {
+    //   return;
+    // }
+    // const proj = "EPSG:3031";
+    // const proj4 =
+    //   "+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs";
+    // const max_zoom = 20;
+    // const tile_size = 256;
+    // const extent = 12367396.2185; // To the Equator
+    // const resolutions = Array(max_zoom + 1)
+    //   .fill(0)
+    //   .map((_, i) => extent / tile_size / Math.pow(2, i - 1));
+
+    // return new L.Proj.CRS(proj, proj4, {
+    //   resolutions,
+    //   origin: [-extent, extent],
+    //   bounds: L.bounds([-extent, extent], [extent, -extent])
+    //   // resolutions: [8192, 4096, 2048, 1024, 512, 256]
+    //   // origin: [-4194304, 4194304],
+    //   // bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
+    // });
   }
 
   get attributionPrefix() {
@@ -324,6 +424,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   destroy(): void {
+    console.log("**destroy leaflet**");
     this._disposeSelectedFeatureSubscription &&
       this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();
@@ -538,6 +639,18 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     if (isDefined(bounds)) {
+      if (this.crs) {
+        const projBounds = this.crs.projection.bounds;
+        const extent = unprojectBounds(projBounds, this.crs);
+        if (!extent.contains(bounds)) {
+          console.log(
+            "**zoom extent out ouf map projection bounds - not zooming**"
+          );
+          return Promise.resolve();
+        }
+      }
+      console.log("**zooming**");
+
       this.map.flyToBounds(bounds, {
         animate: flightDurationSeconds > 0.0,
         duration: flightDurationSeconds
@@ -738,6 +851,10 @@ export default class Leaflet extends GlobeOrMap {
           latRadians
         ));
 
+      if (!coords) {
+        return;
+      }
+
       const features = await imageryLayer.pickFeatures(
         coords.x,
         coords.y,
@@ -770,8 +887,13 @@ export default class Leaflet extends GlobeOrMap {
 
           pickedFeatures.providerCoords = {};
           const filteredResults = results.filter(
-            (result) => isDefined(result.features) && result.features.length > 0
-          );
+            (result) =>
+              result && isDefined(result.features) && result.features.length > 0
+          ) as {
+            features: ImageryLayerFeatureInfo[] | undefined;
+            imageryLayer: ImageryProviderLeafletTileLayer;
+            coords: ProviderCoords;
+          }[];
 
           pickedFeatures.providerCoords = filteredResults.reduce(function (
             coordsSoFar: ProviderCoordsMap,
@@ -1105,4 +1227,157 @@ function isImageryLayer(
 
 function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
+}
+
+function unprojectBounds(crsBounds: L.Bounds, crs: L.CRS) {
+  return L.latLngBounds(
+    crs.unproject(crsBounds.min!),
+    crs.unproject(crsBounds.max!)
+  );
+}
+
+function addDebugLayers() {
+  // this.map.addLayer(
+  //   L.tileLayer.wms("https://maps.bas.ac.uk/antarctic/wms", {
+  //     layers: "add:Antarctic_surface_dem_bathymetry"
+  //   })
+  // );
+  // what?
+  // this.map.addLayer(
+  //   L.tileLayer.wms(
+  //     "/proxy/https://gibs.earthdata.nasa.gov/wms/epsg3031/best/wms.cgi",
+  //     {
+  //       layers: "NASA_GIBS_EPSG3031_best",
+  //       format: "image/png",
+  //       transparent: true
+  //     }
+  //   )
+  // );
+  // L.tileLayer(
+  //   "http://map1{s}.vis.earthdata.nasa.gov/wmts-antarctic/{layer}/default/{time}/{tileMatrixSet}/{z}/{y}/{x}.jpg",
+  //   {
+  //     layer: "MODIS_Aqua_CorrectedReflectance_TrueColor",
+  //     tileMatrixSet: "EPSG3031_250m",
+  //     time: "2022-10-01",
+  //     tileSize: 512,
+  //     //continuousWorld: true,
+  //     attribution: "<a href='https://earthdata.nasa.gov/gibs'> NASA </a>"
+  //   }
+  // ).addTo(this.map);
+  // clouds
+  // L.tileLayer(
+  //   "http://map1{s}.vis.earthdata.nasa.gov/wmts-antarctic/{layer}/default/{time}/{tileMatrixSet}/{z}/{y}/{x}.jpg",
+  //   {
+  //     layer: "MODIS_Aqua_CorrectedReflectance_TrueColor",
+  //     tileMatrixSet: "EPSG3031_250m",
+  //     time: "2022-10-01",
+  //     tileSize: 512,
+  //     attribution: "<a href='https://earthdata.nasa.gov/gibs'> NASA </a>"
+  //   }
+  // ).addTo(this.map);
+  // coast
+  // L.tileLayer
+  //   .wms("https://geos.polarview.aq/geoserver/wms", {
+  //     layers: "polarview:coastS10",
+  //     format: "image/png",
+  //     transparent: true,
+  //     attribution:
+  //       "<a href='https://www.polarview.aq/antarctic'>Polarview</a>",
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  // L.tileLayer
+  //   .wms("https://geoserver.dea.ga.gov.au/geoserver/dea/ows", {
+  //     layers: "DEACoastlines",
+  //     format: "image/png",
+  //     transparent: true,
+  //     attribution:
+  //       "<a href='https://www.polarview.aq/antarctic'>Polarview</a>",
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  // L.tileLayer
+  //   .wms("https://maps.bas.ac.uk/antarctic/wms", {
+  //     layers: "add:antarctic_coastal_change",
+  //     format: "image/png",
+  //     transparent: true,
+  //     attribution:
+  //       "<a href='https://www.polarview.aq/antarctic'>Polarview</a>",
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  // L.tileLayer
+  //   .wms("https://geoserver.sochic-h2020.eu/geoserver/wms", {
+  //     layers: "SOOS:add_coastline_high_res_line_v7_7",
+  //     format: "image/png",
+  //     transparent: true,
+  //     attribution:
+  //       "<a href='https://www.polarview.aq/antarctic'>Polarview</a>",
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  // L.tileLayer
+  //   .wms("https://maps.bas.ac.uk/antarctic/wms", {
+  //     //layers: "add:Antarctic_surface_dem_bathymetry",
+  //     layers: "add:antarctic_surface_dem",
+  //     format: "image/png",
+  //     transparent: true,
+  //     attribution:
+  //       "<a href='https://www.polarview.aq/antarctic'>Polarview</a>",
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  //bathymetry
+  // L.tileLayer
+  //   .wms("https://maps.bas.ac.uk/antarctic/wms", {
+  //     layers: "add:Antarctic_surface_dem_bathymetry",
+  //     format: "image/png",
+  //     transparent: true,
+  //     tileSize: 512
+  //   })
+  //   .addTo(this.map);
+  // L.tileLayer
+  //   .wms("https://maps.bas.ac.uk/antarctic/wms", {
+  //     layers: "add:antarctic_landsat_rock",
+  //     format: "image/png",
+  //     transparent: true,
+  //     tileSize: 256
+  //   })
+  //   .addTo(this.map);
+  // this.map.addLayer(
+  //   L.tileLayer.wms("https://geos.polarview.aq/geoserver/wms", {
+  //     layers: "polarview:coastS10",
+  //     format: "image/png",
+  //     transparent: true
+  //   })
+  // );
+  // const pixelRatio = window.devicePixelRatio ?? 1;
+  // L.tileLayer(
+  //   "https://tile.gbif.org/3031/omt/{z}/{x}/{y}@{r}x.png?style=gbif-geyser".replace(
+  //     "{r}",
+  //     `${pixelRatio}`
+  //   ),
+  //   {
+  //     tileSize: 512
+  //   }
+  // ).addTo(this.map);
+  // Turn on to debug tiles
+  // L.GridLayer.GridDebug = L.GridLayer.extend({
+  //   createTile: function (coords) {
+  //     const tile = document.createElement("div");
+  //     tile.style.outline = "2px solid green";
+  //     tile.style.fontWeight = "bold";
+  //     tile.style.fontSize = "14pt";
+  //     tile.style.display = "flex";
+  //     tile.style.justifyContent = "center";
+  //     tile.style.alignItems = "center";
+  //     tile.innerHTML = [coords.x, coords.y, coords.z].join("/");
+  //     return tile;
+  //   }
+  // });
+  // this.map.addLayer(
+  //   new L.GridLayer.GridDebug({
+  //     tileSize: 256
+  //   })
+  // );
 }

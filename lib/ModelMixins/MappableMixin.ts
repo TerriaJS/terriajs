@@ -8,7 +8,9 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import Result from "../Core/Result";
-import Model from "../Models/Definition/Model";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
@@ -96,6 +98,38 @@ export function isDataSource(object: MapItem): object is DataSource {
 
 type BaseType = Model<MappableTraits>;
 
+class MappableStratum extends LoadableStratum(MappableTraits) {
+  static stratumName = "mappableStratum";
+
+  constructor(readonly model: MappableMixin.Instance) {
+    super();
+    makeObservable(this);
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new MappableStratum(model as MappableMixin.Instance) as this;
+  }
+
+  @computed
+  get show() {
+    const customCrs = this.model.terria.currentViewer.crs;
+    if (customCrs) {
+      return this.model.supportsCustomCrs;
+    }
+    return true;
+  }
+
+  @computed
+  get shortReport() {
+    const customCrs = this.model.terria.currentViewer.crs;
+    if (customCrs && !this.model.supportsCustomCrs) {
+      return `Warning: Basemap CRS (${customCrs.code}) is not supported by this dataset`;
+    }
+  }
+}
+
+StratumOrder.addLoadStratum(MappableStratum.stratumName);
+
 function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
@@ -103,6 +137,7 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
+      this.strata.set(MappableStratum.stratumName, new MappableStratum(this));
     }
 
     get isMappable() {
@@ -233,6 +268,11 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     dispose() {
       super.dispose();
       this._mapItemsLoader.dispose();
+    }
+
+    // TODO: should this accept crs epsg to check which crs it is?
+    get supportsCustomCrs() {
+      return false;
     }
   }
 

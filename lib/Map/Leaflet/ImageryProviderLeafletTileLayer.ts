@@ -1,25 +1,24 @@
 import i18next from "i18next";
 import L, { TileEvent } from "leaflet";
 import {
+  IReactionDisposer,
   autorun,
   computed,
-  IReactionDisposer,
-  observable,
-  makeObservable
+  makeObservable,
+  observable
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
-import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import defined from "terriajs-cesium/Source/Core/defined";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
-import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
+import isDefined from "../../Core/isDefined";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
@@ -243,28 +242,30 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         }
 
         const tilingScheme = this.imageryProvider.tilingScheme;
-        if (!(tilingScheme instanceof WebMercatorTilingScheme)) {
-          this.errorEvent.raiseEvent(
-            this,
-            i18next.t("map.cesium.notWebMercatorTilingScheme")
-          );
-          return;
-        }
+        // if (!(tilingScheme instanceof WebMercatorTilingScheme)) {
+        //   this.errorEvent.raiseEvent(
+        //     this,
+        //     i18next.t("map.cesium.notWebMercatorTilingScheme")
+        //   );
+        //   return;
+        // }
 
         if (
           tilingScheme.getNumberOfXTilesAtLevel(0) === 2 &&
           tilingScheme.getNumberOfYTilesAtLevel(0) === 2
         ) {
-          this._zSubtract = 1;
+          // why is this needed? is it for cesium?
+          // bing maps doesn't work correctly without this
+          // this._zSubtract = 1;
         } else if (
           tilingScheme.getNumberOfXTilesAtLevel(0) !== 1 ||
           tilingScheme.getNumberOfYTilesAtLevel(0) !== 1
         ) {
-          this.errorEvent.raiseEvent(
-            this,
-            i18next.t("map.cesium.unusalTilingScheme")
-          );
-          return;
+          // this.errorEvent.raiseEvent(
+          //   this,
+          //   i18next.t("map.cesium.unusalTilingScheme")
+          // );
+          // return;
         }
 
         if (isDefined(this.imageryProvider.maximumLevel)) {
@@ -396,7 +397,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<ProviderCoords> {
+  ): Promise<ProviderCoords | undefined> {
     const ll = new Cartographic(
       CesiumMath.negativePiToPi(longitudeRadians),
       latitudeRadians,
@@ -406,11 +407,13 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
 
     const tilingScheme = this.imageryProvider.tilingScheme;
     const coords = tilingScheme.positionToTileXY(ll, level);
-    return {
-      x: coords.x,
-      y: coords.y,
-      level: level
-    };
+    return coords
+      ? {
+          x: coords.x,
+          y: coords.y,
+          level: level
+        }
+      : undefined;
   }
 
   async pickFeatures(

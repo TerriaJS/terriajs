@@ -1,26 +1,31 @@
 import { isEqual } from "lodash-es";
 import {
-  action,
-  computed,
   IComputedValue,
   IObservableValue,
   IReactionDisposer,
+  action,
+  computed,
+  makeObservable,
   observable,
   reaction,
   runInAction,
-  untracked,
-  makeObservable
+  untracked
 } from "mobx";
-import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
+import { FULFILLED, IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CameraView from "../Models/CameraView";
+import Model from "../Models/Definition/Model";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
-import ViewerMode from "../Models/ViewerMode";
+import ViewerMode, { isViewerModeType } from "../Models/ViewerMode";
+import {
+  BaseMapViewerTraits,
+  LeafletOptionsTraits
+} from "../Traits/TraitsClasses/BaseMapTraits";
 
 // Async loading of Leaflet and Cesium
 
@@ -37,12 +42,12 @@ const cesiumFromPromise = computed(
 );
 
 // Viewer options. Designed to be easily serialisable
-interface ViewerOptions {
+interface CesiumViewerOptions {
   useTerrain: boolean;
   [key: string]: string | number | boolean;
 }
 
-const viewerOptionsDefaults: ViewerOptions = {
+const defaultCesiumViewerOptions: CesiumViewerOptions = {
   useTerrain: true
 };
 /**
@@ -59,7 +64,10 @@ export default class TerriaViewer {
     return this._baseMap;
   }
 
-  async setBaseMap(baseMap?: MappableMixin.Instance): Promise<void> {
+  async setBaseMap(
+    baseMap?: MappableMixin.Instance,
+    viewerSettings?: Model<BaseMapViewerTraits>
+  ): Promise<void> {
     if (!baseMap) return;
 
     const result = await baseMap.loadMapItems();
@@ -76,7 +84,16 @@ export default class TerriaViewer {
         }
       });
     } else {
-      runInAction(() => (this._baseMap = baseMap));
+      const viewerMode: ViewerMode | undefined =
+        viewerSettings?.mode && isViewerModeType(viewerSettings.mode)
+          ? viewerSettings.mode
+          : undefined;
+
+      runInAction(() => {
+        this._baseMap = baseMap;
+        this.viewerMode = viewerMode ?? this.viewerMode;
+        this.leafletViewerOptions = viewerSettings?.leafletOptions;
+      });
     }
   }
 
@@ -90,7 +107,10 @@ export default class TerriaViewer {
 
   // Set by UI
   @observable
-  viewerOptions: ViewerOptions = viewerOptionsDefaults;
+  cesiumViewerOptions: CesiumViewerOptions = defaultCesiumViewerOptions;
+
+  @observable
+  leafletViewerOptions?: Model<LeafletOptionsTraits>;
 
   // Disable all mouse (& keyboard) interaction
   @observable
@@ -196,7 +216,17 @@ export default class TerriaViewer {
         this._currentViewerConstructorPromise.state === FULFILLED
       ) {
         const SomeViewer = this._currentViewerConstructorPromise.value;
-        newViewer = untracked(() => new SomeViewer(this, this.mapContainer!));
+        const viewerOptions =
+          this.viewerMode === ViewerMode.Leaflet
+            ? this.leafletViewerOptions
+            : undefined;
+        newViewer = untracked(
+          // we need to pass some viewer options during instantiation, eg leaflet crs which cannot
+          // be changed after map creation. And a new viewer instance needs to be created when these options change.
+          // So we need to be able to pass viewerOptions here
+          // @ts-expect-error TODO change the constructor signature?
+          () => new SomeViewer(this, this.mapContainer!, viewerOptions)
+        );
       } else {
         newViewer = untracked(() => new NoViewer(this));
       }

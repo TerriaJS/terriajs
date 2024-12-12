@@ -2,19 +2,19 @@ import { TFunction } from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { BaseMapItem } from "../../../Models/BaseMaps/BaseMapsModel";
 import Cesium from "../../../Models/Cesium";
-import { BaseModel } from "../../../Models/Definition/Model";
 import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
@@ -66,11 +66,16 @@ class SettingPanel extends React.Component<PropTypes> {
       : "(None)";
   }
 
-  selectBaseMap(baseMap: BaseModel, event: MouseEvent<HTMLButtonElement>) {
+  selectBaseMap(
+    baseMapItem: BaseMapItem,
+    event: MouseEvent<HTMLButtonElement>
+  ) {
+    const baseMap = baseMapItem.item;
+
     event.stopPropagation();
     if (!MappableMixin.isMixedInto(baseMap)) return;
 
-    this.props.terria.mainViewer.setBaseMap(baseMap);
+    this.props.terria.mainViewer.setBaseMap(baseMap, baseMapItem.viewer);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
@@ -169,7 +174,7 @@ class SettingPanel extends React.Component<PropTypes> {
     };
     const currentViewer =
       this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
-        ? this.props.terria.mainViewer.viewerOptions.useTerrain
+        ? this.props.terria.mainViewer.cesiumViewerOptions.useTerrain
           ? "3d"
           : "3dsmooth"
         : "2d";
@@ -190,7 +195,7 @@ class SettingPanel extends React.Component<PropTypes> {
 
     const isCesiumWithTerrain =
       this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium &&
-      this.props.terria.mainViewer.viewerOptions.useTerrain &&
+      this.props.terria.mainViewer.cesiumViewerOptions.useTerrain &&
       this.props.terria.currentViewer &&
       this.props.terria.currentViewer instanceof Cesium &&
       this.props.terria.currentViewer.scene &&
@@ -316,7 +321,7 @@ class SettingPanel extends React.Component<PropTypes> {
                     isActive={
                       baseMap.item === this.props.terria.mainViewer.baseMap
                     }
-                    onClick={(event) => this.selectBaseMap(baseMap.item, event)}
+                    onClick={(event) => this.selectBaseMap(baseMap, event)}
                     onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
                     onMouseLeave={this.mouseLeaveBaseMap.bind(this)}
                     onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}

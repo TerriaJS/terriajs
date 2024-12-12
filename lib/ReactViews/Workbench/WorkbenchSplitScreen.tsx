@@ -23,7 +23,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
     const { terria } = props;
     const isCesiumWithTerrain =
       terria.mainViewer.viewerMode === ViewerMode.Cesium &&
-      terria.mainViewer.viewerOptions.useTerrain &&
+      terria.mainViewer.cesiumViewerOptions.useTerrain &&
       (terria.currentViewer as any)?.scene?.globe;
 
     if (!isCesiumWithTerrain) return null;

@@ -124,7 +124,7 @@ import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
-import { isViewerMode, setViewerMode } from "./ViewerMode";
+import { isMapViewerType, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
@@ -1162,11 +1162,11 @@ export default class Terria {
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
     const hashViewerMode = this.userProperties.get("map");
-    if (hashViewerMode && isViewerMode(hashViewerMode)) {
+    if (hashViewerMode && isMapViewerType(hashViewerMode)) {
       setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
       const viewerMode = this.getLocalProperty("viewermode") as string;
-      if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
+      if (isDefined(viewerMode) && isMapViewerType(viewerMode)) {
         setViewerMode(viewerMode, this.mainViewer);
       }
     }
@@ -1223,7 +1223,10 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    await this.mainViewer.setBaseMap(
+      baseMap.item as MappableMixin.Instance,
+      baseMap.viewer
+    );
   }
 
   get isLoadingInitSources(): boolean {
@@ -1730,7 +1733,8 @@ export default class Terria {
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
-      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
+      if (isMapViewerType(viewerMode))
+        setViewerMode(viewerMode, this.mainViewer);
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1788,11 +1792,10 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this.mainViewer.setBaseMap(
-          this.baseMapsModel.baseMapItems.find(
-            (item) => item.item.uniqueId === initData.settings!.baseMapId
-          )?.item
+        const baseMap = this.baseMapsModel.baseMapItems.find(
+          (item) => item.item.uniqueId === initData.settings!.baseMapId
         );
+        this.mainViewer.setBaseMap(baseMap?.item, baseMap?.viewer);
       }
       if (isJsonNumber(initData.settings.terrainSplitDirection)) {
         this.terrainSplitDirection = initData.settings.terrainSplitDirection;

@@ -64,7 +64,7 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
 
     const isCesiumWithTerrain =
       terria.mainViewer.viewerMode === ViewerMode.Cesium &&
-      terria.mainViewer.viewerOptions.useTerrain &&
+      terria.mainViewer.cesiumViewerOptions.useTerrain &&
       (terria.currentViewer as any)?.scene?.globe;
 
     const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;

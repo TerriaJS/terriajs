@@ -1164,7 +1164,7 @@ export default class Cesium extends GlobeOrMap {
     terrainProviderPromise: Promise<TerrainProvider>;
     credit?: Credit;
   } {
-    if (!this.terriaViewer.viewerOptions.useTerrain) {
+    if (!this.terriaViewer.cesiumViewerOptions.useTerrain) {
       // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
       return {
         terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())

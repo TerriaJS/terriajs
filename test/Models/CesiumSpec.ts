@@ -203,7 +203,7 @@ describeIfSupported("Cesium Model", function () {
         cesium.destroy();
         cesium = new Cesium(terria.mainViewer, container);
         scene = cesium.scene;
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         terria.configParameters.cesiumTerrainAssetId = 123;
         terria.configParameters.cesiumTerrainUrl =
           "https://cesium-terrain.example.com/";
@@ -232,7 +232,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", async function () {
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = false;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = false;
       });
       await terrainLoadPromise(cesium);
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
@@ -244,7 +244,7 @@ describeIfSupported("Cesium Model", function () {
       "should otherwise use the first terrain provider from the workbench or overlay",
       action(async function () {
         runInAction(() => {
-          cesium.terriaViewer.viewerOptions.useTerrain = true;
+          cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         });
         await terrainLoadPromise(cesium);
         expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
@@ -259,7 +259,7 @@ describeIfSupported("Cesium Model", function () {
       ).and.returnValue(Promise.resolve(fakeIonTerrainProvider));
 
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         terria.workbench.removeAll();
       });
 
@@ -277,7 +277,7 @@ describeIfSupported("Cesium Model", function () {
       ).and.returnValue(Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
       });
@@ -295,7 +295,7 @@ describeIfSupported("Cesium Model", function () {
       ).and.returnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
 
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
@@ -309,7 +309,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise fallback to Elliposidal/3d-smooth", async function () {
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.terriaViewer.cesiumViewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
@@ -373,7 +373,7 @@ describeIfSupported("Cesium Model", function () {
     });
 
     it("should revert to 3dSmooth mode when cesiumIonAccessToken is invalid", async function () {
-      expect(terriaViewer2.viewerOptions.useTerrain).toBe(true, "1");
+      expect(terriaViewer2.cesiumViewerOptions.useTerrain).toBe(true, "1");
       runInAction(() => {
         // Set an invalid token for the test
         terria2.configParameters.cesiumIonAccessToken = "expired_token";
@@ -384,7 +384,7 @@ describeIfSupported("Cesium Model", function () {
 
       await terrainLoadPromise(cesium2);
 
-      expect(terriaViewer2.viewerOptions.useTerrain).toBe(false, "2");
+      expect(terriaViewer2.cesiumViewerOptions.useTerrain).toBe(false, "2");
       expect(
         cesium2.scene.terrainProvider instanceof EllipsoidTerrainProvider
       ).toBe(true, "3");

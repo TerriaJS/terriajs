@@ -37,6 +37,7 @@ function getUrlForImageryTile(
     ImageryProvider.loadImage = oldLoadImage;
   }
 
+  console.log("czm", x, y, level, tileUrl);
   return tileUrl;
 }
 

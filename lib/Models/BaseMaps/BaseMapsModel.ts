@@ -7,12 +7,13 @@ import TerriaError from "../../Core/TerriaError";
 import ModelReference from "../../Traits/ModelReference";
 import {
   BaseMapsTraits,
-  BaseMapTraits
+  BaseMapTraits,
+  BaseMapViewerTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
 import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
-import { BaseModel } from "../Definition/Model";
+import Model, { BaseModel } from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
@@ -37,6 +38,7 @@ export interface BaseMapItem {
   image?: string;
   contrastColor?: string;
   item: MappableMixin.Instance;
+  viewer?: Model<BaseMapViewerTraits>;
 }
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
@@ -64,7 +66,8 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
           enabledBaseMaps.push({
             image: baseMapItem.image,
             contrastColor: baseMapItem.contrastColor,
-            item: itemModel
+            item: itemModel,
+            viewer: baseMapItem.viewer
           });
       }
     });
@@ -98,9 +101,11 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
 
     const items = this.getTrait(stratumId, "items");
     if (isDefined(items)) {
+      /* eslint-disable-line */ // @ts-ignore wth?
       items.push(baseMap);
     } else {
-      this.setTrait(stratumId, "items", [baseMap]);
+      /* eslint-disable-line */ // @ts-ignore wth?
+      this.setTrait(stratumId, "items", [baseMap]); /* eslint-disable-line */
     }
   }
 

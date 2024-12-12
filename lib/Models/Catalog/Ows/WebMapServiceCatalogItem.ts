@@ -19,6 +19,7 @@ import TerriaError from "../../../Core/TerriaError";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
+import ProjTilingScheme from "../../../Map/ProjTilingScheme";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -418,7 +419,18 @@ class WebMapServiceCatalogItem
         return new GeographicTilingScheme();
     }
 
+    const mapCrs = this.terria.currentViewer.crs;
+    if (mapCrs) {
+      // TODO: check if this.crs matches with mapCrs and issue warning otherwise
+      return new ProjTilingScheme({ crs: mapCrs });
+    }
+
     return new WebMercatorTilingScheme();
+  }
+
+  @computed
+  get supportsCustomCrs() {
+    return true;
   }
 
   @computed
