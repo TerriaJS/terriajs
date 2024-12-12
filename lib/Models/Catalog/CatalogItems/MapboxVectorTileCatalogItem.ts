@@ -173,7 +173,8 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return new ProtomapsImageryProvider({
       terria: this.terria,
-      id: this.uniqueId,
+      // Use the URL as the id, this is needed for backward compatibility with MapboxImageryProvider, for when picking features (as it uses the URL as the id)
+      id: this.url,
       data: this.url,
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,

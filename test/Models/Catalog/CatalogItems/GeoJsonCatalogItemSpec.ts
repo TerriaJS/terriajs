@@ -15,9 +15,8 @@ import StandardCssColors from "../../../../lib/Core/StandardCssColors";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
-import ProtomapsImageryProvider, {
-  GEOJSON_SOURCE_LAYER_NAME
-} from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/ProtomapsGeojsonSource";
 import {
   FEATURE_ID_PROP,
   getColor

@@ -31,10 +31,10 @@ import {
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
 } from "protomaps-leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -77,10 +77,12 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GeojsonSource,
-  GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import {
+  GEOJSON_SOURCE_LAYER_NAME,
+  ProtomapsGeojsonSource
+} from "../Map/Vector/ProtomapsGeojsonSource";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -778,7 +780,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // If so we can copy GeojsonSource over to save running geojson-vt again
       if (
         this._imageryProvider instanceof ProtomapsImageryProvider &&
-        this._imageryProvider.source instanceof GeojsonSource &&
+        this._imageryProvider.source instanceof ProtomapsGeojsonSource &&
         this._imageryProvider.source.geojsonObject === this.readyData
       ) {
         protomapsData = this._imageryProvider.source;

@@ -100,7 +100,8 @@ export default function createRegionMappedImageryProvider(
 
   return new ProtomapsImageryProvider({
     terria,
-    id,
+    // Use the URL as the id, this is needed for backward compatibility with MapboxImageryProvider, for when picking features (as it uses the URL as the id)
+    id: regionType.server,
     data: regionType.server,
     minimumZoom: regionType.serverMinZoom,
     maximumNativeZoom: regionType.serverMaxNativeZoom,

@@ -6,17 +6,17 @@ import {
   PolygonSymbolizer
 } from "protomaps-leaflet";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
-import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
-import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import Terria from "../../../../lib/Models/Terria";
 import {
   filterFn,
   getFont,
   numberFn,
   numberOrFn
 } from "../../../../lib/Map/Vector/mapboxStyleJsonToProtomaps";
+import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
+import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../../../lib/Models/Terria";
 
 describe("MapboxVectorTileCatalogItem", function () {
   let mvt: MapboxVectorTileCatalogItem;
