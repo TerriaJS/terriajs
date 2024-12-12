@@ -93,10 +93,12 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     Array.from(this.capabilitiesLayers.values()).forEach((layer) => {
       if (!layer?.MetadataURL) return;
-      Array.isArray(layer?.MetadataURL)
-        ? // eslint-disable-next-line no-unsafe-optional-chaining
-          metadataUrls.push(...layer?.MetadataURL)
-        : metadataUrls.push(layer?.MetadataURL as MetadataURL);
+      if (Array.isArray(layer?.MetadataURL)) {
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        metadataUrls.push(...layer?.MetadataURL);
+      } else {
+        metadataUrls.push(layer?.MetadataURL as MetadataURL);
+      }
     });
 
     return metadataUrls
