@@ -67,7 +67,6 @@ import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import PickedFeatures, {
   ProviderCoordsMap
@@ -1756,7 +1755,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
