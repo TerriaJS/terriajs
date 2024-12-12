@@ -498,8 +498,8 @@ export default class ProtomapsImageryProvider
   }
 
   async pickFeatures(
-    _x: number,
-    _y: number,
+    x: number,
+    y: number,
     level: number,
     longitude: number,
     latitude: number
@@ -508,6 +508,14 @@ export default class ProtomapsImageryProvider
     // If view is set - this means we are using actual vector tiles (that is not GeoJson object)
     // So we use this.view.queryFeatures
     if (this.view) {
+      try {
+        // Make sure tile is loaded, this will use cache if tile is already loaded
+        await this.view.getDisplayTile({ x, y, z: level });
+      } catch (e) {
+        TerriaError.from(e, "Error while picking features").log();
+        return [];
+      }
+
       // Get list of vector tile layers which are rendered
       const renderedLayers = [...this.paintRules, ...this.labelRules].map(
         (r) => r.dataLayer

@@ -145,16 +145,15 @@ describe("MapboxVectorTileCatalogItem", function () {
 
     it("correctly picks features", async function () {
       // Get polygon
-      await imageryProvider.requestImage(1883, 1230, 11);
       const polygon = await imageryProvider.pickFeatures(
-        1883,
-        1230,
+        1881,
+        1229,
         11,
-        2.6367590357631925,
-        -0.5952036287719671
+        2.630470869072516,
+        -0.5932730847619763
       );
       expect(polygon.length).toBe(1);
-      expect(polygon[0]?.properties?.LGA_CODE13).toBe("17150");
+      expect(polygon[0]?.properties?.LGA_CODE13).toBe("11450");
 
       // Select nothing
       const nothingToSelect = await imageryProvider.pickFeatures(
