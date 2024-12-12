@@ -865,7 +865,11 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         style: TableStyle;
         currentTime: JulianDate | undefined;
       }): ImageryProvider | undefined =>
-        createRegionMappedImageryProvider(input.style, input.currentTime)
+        createRegionMappedImageryProvider(
+          this.uniqueId,
+          input.style,
+          input.currentTime
+        )
     );
 
     private readonly getTableColumn: ITransformer<number, TableColumn> =

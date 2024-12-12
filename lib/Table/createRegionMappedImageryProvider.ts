@@ -16,6 +16,7 @@ import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
 
 export default function createRegionMappedImageryProvider(
+  id: string | undefined,
   style: TableStyle,
   currentTime: JulianDate | undefined
 ): ImageryProvider | undefined {
@@ -99,6 +100,7 @@ export default function createRegionMappedImageryProvider(
 
   return new ProtomapsImageryProvider({
     terria,
+    id,
     data: regionType.server,
     minimumZoom: regionType.serverMinZoom,
     maximumNativeZoom: regionType.serverMaxNativeZoom,
