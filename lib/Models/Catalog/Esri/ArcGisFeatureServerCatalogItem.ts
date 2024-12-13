@@ -575,7 +575,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   @computed get imageryProvider() {
     let provider = new ProtomapsImageryProvider({
       terria: this.terria,
-      data: new ArcGisPbfSource(this, new WebMercatorTilingScheme(), false),
+      data: new ArcGisPbfSource(this, new WebMercatorTilingScheme()),
       id: this.uniqueId,
       paintRules: [
         // Polygon features
