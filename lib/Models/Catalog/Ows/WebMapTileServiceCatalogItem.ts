@@ -506,30 +506,11 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       format = "image/jpeg";
     }
 
-    // if layer has defined ResourceURL we should use it because some layers support only Restful encoding. See #2927
-    const resourceUrl: ResourceUrl | ResourceUrl[] | undefined =
-      layer.ResourceURL;
-    let baseUrl: string = new URI(this.url).search("").toString();
-    if (resourceUrl) {
-      if (Array.isArray(resourceUrl)) {
-        for (let i = 0; i < resourceUrl.length; i++) {
-          const url: ResourceUrl = resourceUrl[i];
-          if (
-            url.format.indexOf(format) !== -1 ||
-            url.format.indexOf("png") !== -1
-          ) {
-            baseUrl = url.template;
-          }
-        }
-      } else {
-        if (
-          format === resourceUrl.format ||
-          resourceUrl.format.indexOf("png") !== -1
-        ) {
-          baseUrl = resourceUrl.template;
-        }
-      }
-    }
+    const baseUrl: string = this.getTileUrl(
+      layer,
+      stratum.capabilities,
+      format
+    );
 
     const tileMatrixSet = this.tileMatrixSet;
     if (!isDefined(tileMatrixSet)) {
@@ -554,6 +535,56 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       //enablePickFeatures: this.allowFeaturePicking
     });
     return imageryProvider;
+  }
+
+  getTileUrl(
+    layer: WmtsLayer,
+    capabilities: WebMapTileServiceCapabilities,
+    format: string
+  ) {
+    if (
+      capabilities.OperationsMetadata &&
+      "GetTile" in capabilities.OperationsMetadata
+    ) {
+      const gets = capabilities.OperationsMetadata.GetTile["Get"];
+
+      for (let i = 0; i < gets.length; i++) {
+        let constraints = gets[i].Constraint;
+        if (constraints) {
+          constraints = Array.isArray(constraints)
+            ? constraints
+            : [constraints];
+          const getEncodingConstraint = constraints.find(
+            (element) => element.name === "GetEncoding"
+          );
+
+          const encodings = getEncodingConstraint?.AllowedValues?.Value;
+          if (encodings?.includes("KVP")) {
+            return gets[i]["xlink:href"];
+          }
+        } else if (gets[i]["xlink:href"]) {
+          return gets[i]["xlink:href"];
+        }
+      }
+    }
+    const resourceUrls: ResourceUrl[] | undefined =
+      !layer.ResourceURL || Array.isArray(layer.ResourceURL)
+        ? layer.ResourceURL
+        : [layer.ResourceURL];
+
+    if (resourceUrls) {
+      for (let i = 0; i < resourceUrls.length; i++) {
+        const url: ResourceUrl = resourceUrls[i];
+        if (
+          (url.resourceType === "tile" && url.format.indexOf(format) !== -1) ||
+          url.format.indexOf("png") !== -1
+        ) {
+          return url.template;
+        }
+      }
+    }
+
+    return new URI(this.url).search("").toString();
   }
 
   @computed
