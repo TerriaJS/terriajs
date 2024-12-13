@@ -7,7 +7,12 @@ import {
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import proj4 from "proj4";
-import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
+import {
+  CircleSymbolizer,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer
+} from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
@@ -598,6 +603,16 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
           minzoom: 0,
           maxzoom: Infinity,
           filter: (z, f) => f.geomType === GeomType.Line
+        },
+        {
+          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+          symbolizer: new CircleSymbolizer({
+            fill: "#ff0000",
+            radius: 2
+          }),
+          minzoom: 0,
+          maxzoom: Infinity,
+          filter: (z, f) => f.geomType === GeomType.Point
         }
       ],
       labelRules: []
