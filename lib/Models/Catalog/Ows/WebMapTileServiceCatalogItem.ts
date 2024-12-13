@@ -542,6 +542,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     capabilities: WebMapTileServiceCapabilities,
     format: string
   ) {
+    let url: string | undefined = undefined;
     if (
       capabilities.OperationsMetadata &&
       "GetTile" in capabilities.OperationsMetadata
@@ -560,31 +561,33 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
           const encodings = getEncodingConstraint?.AllowedValues?.Value;
           if (encodings?.includes("KVP")) {
-            return gets[i]["xlink:href"];
+            url = gets[i]["xlink:href"];
           }
         } else if (gets[i]["xlink:href"]) {
-          return gets[i]["xlink:href"];
+          url = gets[i]["xlink:href"];
         }
       }
     }
+
     const resourceUrls: ResourceUrl[] | undefined =
       !layer.ResourceURL || Array.isArray(layer.ResourceURL)
         ? layer.ResourceURL
         : [layer.ResourceURL];
 
-    if (resourceUrls) {
+    if (resourceUrls && (this.requestEncoding === "RESTful" || !url)) {
       for (let i = 0; i < resourceUrls.length; i++) {
-        const url: ResourceUrl = resourceUrls[i];
+        const resourceUrl: ResourceUrl = resourceUrls[i];
         if (
-          (url.resourceType === "tile" && url.format.indexOf(format) !== -1) ||
-          url.format.indexOf("png") !== -1
+          (resourceUrl.resourceType === "tile" &&
+            resourceUrl.format.indexOf(format) !== -1) ||
+          resourceUrl.format.indexOf("png") !== -1
         ) {
-          return url.template;
+          url = resourceUrl.template;
         }
       }
     }
 
-    return new URI(this.url).search("").toString();
+    return url ?? new URI(this.url).search("").toString();
   }
 
   @computed
