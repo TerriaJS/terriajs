@@ -82,7 +82,7 @@ import ProtomapsImageryProvider, {
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
-} from "../Map/Vector/ProtomapsGeojsonSource";
+} from "../Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -1432,6 +1432,53 @@ export function isMultiPoint(json: any): json is Feature<MultiPoint> {
     json.type === "Feature" &&
     isJsonObject(json.geometry, false) &&
     json.geometry.type === "MultiPoint"
+  );
+}
+
+export function isLine(json: any): json is Feature<LineString> {
+  return (
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "LineString"
+  );
+}
+
+export function isMultiLineString(json: any): json is Feature<MultiLineString> {
+  return (
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "MultiLineString"
+  );
+}
+
+export function isPolygon(json: any): json is Feature<Polygon> {
+  return (
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "Polygon"
+  );
+}
+
+export function isMultiPolygon(json: any): json is Feature<MultiPolygon> {
+  return (
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "MultiPolygon"
+  );
+}
+
+export function isGeometryCollection(
+  json: any
+): json is Feature<GeometryCollection> {
+  return (
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "GeometryCollection"
   );
 }
 

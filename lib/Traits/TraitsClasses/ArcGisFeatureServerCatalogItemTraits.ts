@@ -81,4 +81,12 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "Whether this feature service supports pagination. By default, this will be inferred from the server's response."
   })
   supportsPagination?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Tile requests",
+    description:
+      "Whether this feature service supports tiled requests. By default, this will be inferred from the server's response."
+  })
+  tileRequests?: boolean = true;
 }

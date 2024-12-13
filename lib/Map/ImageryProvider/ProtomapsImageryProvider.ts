@@ -36,10 +36,11 @@ import {
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
+import { ArcGisPbfSource } from "../Vector/Protomaps/ArcGisPbfSource";
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
-} from "../Vector/ProtomapsGeojsonSource";
+} from "../Vector/Protomaps/ProtomapsGeojsonSource";
 
 export const LAYER_NAME_PROP = "__LAYERNAME";
 
@@ -78,7 +79,11 @@ interface Options {
   ) => Promise<ImageryLayerFeatureInfo[]>;
 }
 
-type Source = PmtilesSource | ZxySource | ProtomapsGeojsonSource;
+type Source =
+  | PmtilesSource
+  | ZxySource
+  | ProtomapsGeojsonSource
+  | ArcGisPbfSource;
 
 /** Tile size in pixels (for canvas and geojson-vt) */
 export const PROTOMAPS_DEFAULT_TILE_SIZE = 256;
@@ -218,7 +223,8 @@ export default class ProtomapsImageryProvider
     else if (
       this.data instanceof ProtomapsGeojsonSource ||
       this.data instanceof PmtilesSource ||
-      this.data instanceof ZxySource
+      this.data instanceof ZxySource ||
+      this.data instanceof ArcGisPbfSource
     ) {
       this.source = this.data;
     }
@@ -276,7 +282,10 @@ export default class ProtomapsImageryProvider
 
     // Get PreparedTile from source or view
     // Here we need a little bit of extra logic for the ProtomapsGeojsonSource
-    if (this.source instanceof ProtomapsGeojsonSource) {
+    if (
+      this.source instanceof ProtomapsGeojsonSource ||
+      this.source instanceof ArcGisPbfSource
+    ) {
       const data = await this.source.get(coords, this.tileHeight);
 
       tile = {
@@ -289,6 +298,7 @@ export default class ProtomapsImageryProvider
       };
     } else if (this.view) {
       tile = await this.view.getDisplayTile(coords);
+      console.log(tile);
     }
 
     if (!tile) return;
@@ -482,7 +492,11 @@ export default class ProtomapsImageryProvider
     // To clone data/source, we want to minimize any unnecessary processing
     if (!data) {
       // These can be passed straight in without processing
-      if (typeof this.data === "string" || this.data instanceof PmtilesSource) {
+      if (
+        typeof this.data === "string" ||
+        this.data instanceof PmtilesSource ||
+        this.data instanceof ArcGisPbfSource
+      ) {
         data = this.data;
         // We can't just clone ZxySource objects, so just pass in URL
       } else if (this.data instanceof ZxySource) {

@@ -1,14 +1,25 @@
-import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
+import {
+  featureCollection,
+  Geometry,
+  GeometryCollection,
+  Properties
+} from "@turf/helpers";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
+import proj4 from "proj4";
+import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
+import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
+import { ArcGisPbfSource } from "../../../Map/Vector/Protomaps/ArcGisPbfSource";
+import { GEOJSON_SOURCE_LAYER_NAME } from "../../../Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -33,12 +44,10 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import proj4 from "proj4";
 
 interface DocumentInfo {
   Author?: string;
@@ -489,8 +498,15 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   protected async forceLoadGeojsonData(): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
-    const getEsriLayerJson = async (resultOffset?: number) =>
-      await loadJson(this.buildEsriJsonUrl(resultOffset));
+    if (this.tileRequests) return featureCollection([]);
+
+    const getEsriLayerJson = async (resultOffset?: number) => {
+      const url = proxyCatalogItemUrl(
+        this,
+        this.buildEsriJsonUrl(resultOffset).toString()
+      );
+      return await loadJson(url);
+    };
 
     if (!this.supportsPagination) {
       // Make a single request without pagination
@@ -556,6 +572,57 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     );
   }
 
+  @computed get imageryProvider() {
+    let provider = new ProtomapsImageryProvider({
+      terria: this.terria,
+      data: new ArcGisPbfSource(this, new WebMercatorTilingScheme(), false),
+      id: this.uniqueId,
+      paintRules: [
+        // Polygon features
+        {
+          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+          symbolizer: new PolygonSymbolizer({
+            // fill: "#ff0000",
+            stroke: "#000000",
+            width: 1
+          }),
+          minzoom: 0,
+          maxzoom: Infinity,
+          filter: (z, f) => f.geomType === GeomType.Polygon
+        },
+        {
+          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+          symbolizer: new LineSymbolizer({
+            color: "#ff0000"
+          }),
+          minzoom: 0,
+          maxzoom: Infinity,
+          filter: (z, f) => f.geomType === GeomType.Line
+        }
+      ],
+      labelRules: []
+    });
+
+    provider = this.wrapImageryPickFeatures(provider);
+
+    return provider;
+  }
+
+  @override
+  get mapItems() {
+    console.log(this.tileRequests);
+    if (!this.tileRequests) return [];
+
+    return [
+      {
+        imageryProvider: this.imageryProvider,
+        show: true,
+        alpha: 1,
+        clippingRectangle: undefined
+      }
+    ];
+  }
+
   @computed get featureServerData(): FeatureServer | undefined {
     const stratum = this.strata.get(
       FeatureServerStratum.stratumName
@@ -604,7 +671,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         .addQuery("resultOffset", resultOffset);
     }
 
-    return proxyCatalogItemUrl(this, uri.toString());
+    return uri;
   }
 }
 

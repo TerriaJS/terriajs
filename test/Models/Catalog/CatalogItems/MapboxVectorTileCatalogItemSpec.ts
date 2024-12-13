@@ -11,7 +11,7 @@ import {
   getFont,
   numberFn,
   numberOrFn
-} from "../../../../lib/Map/Vector/mapboxStyleJsonToProtomaps";
+} from "../../../../lib/Map/Vector/Protomaps/mapboxStyleJsonToProtomaps";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
