@@ -67,6 +67,7 @@ describe("FeatureInfoPanelChart", function () {
           context
         );
         await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -91,6 +92,7 @@ describe("FeatureInfoPanelChart", function () {
           context
         );
         await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -106,6 +108,7 @@ describe("FeatureInfoPanelChart", function () {
       context
     );
     await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const chart = renderer?.root.findByType(SpecChart)!;
     expect(chart).toBeDefined();
     expect(
