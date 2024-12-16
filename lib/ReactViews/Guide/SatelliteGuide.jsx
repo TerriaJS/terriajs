@@ -16,8 +16,8 @@ class SatelliteGuide extends Component {
     t: PropTypes.func.isRequired
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     makeObservable(this);
   }
 
