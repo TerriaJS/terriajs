@@ -1,6 +1,6 @@
 "use strict";
 
-var defined = require("terriajs-cesium/Source/Core/defined").default;
+import defined from "terriajs-cesium/Source/Core/defined";
 
 function equals(util, customEqualityTesters, a, b) {
   return util.equals(a, b, customEqualityTesters);

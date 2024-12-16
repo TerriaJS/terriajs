@@ -1,6 +1,6 @@
 "use strict";
 
-var loadText = require("../../lib/Core/loadText");
+import loadText from "../../lib/Core/loadText";
 
 function loadTextResources(resources) {
   var result = {};

@@ -1,9 +1,9 @@
 "use strict";
 
-var DragPoints = require("../../lib/Map/DragPoints/DragPoints");
-var Terria = require("../../lib/Models/Terria");
-var ViewerMode = require("../../lib/Models/ViewerMode");
-var Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
+import DragPoints from "../../lib/Map/DragPoints/DragPoints";
+import Terria from "../../lib/Models/Terria";
+import ViewerMode from "../../lib/Models/ViewerMode";
+import Entity from "terriajs-cesium/Source/DataSources/Entity.js";
 
 describe("DragPoints", function () {
   var terria;
