@@ -4,6 +4,7 @@
 
 - Explicitly set prettier tab-width
 - Move release guide from README.md to RELEASE_GUIDE.md
+- Add internationalization support to tinymce editor used in story editor
 - [The next improvement]
 
 #### 8.7.10 - 2024-11-29
