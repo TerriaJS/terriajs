@@ -1,10 +1,9 @@
 "use strict";
 
-var CesiumTerrainCatalogItem = require("../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem");
-var CesiumTerrainProvider =
-  require("terriajs-cesium/Source/Core/CesiumTerrainProvider").default;
-var loadWithXhr = require("../../../../lib/Core/loadWithXhr");
-var Terria = require("../../../../lib/Models/Terria");
+import CesiumTerrainCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
+import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
+import loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import Terria from "../../../../lib/Models/Terria";
 
 describe("CesiumTerrainCatalogItem", function () {
   var terria;
