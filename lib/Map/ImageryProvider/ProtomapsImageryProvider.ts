@@ -86,7 +86,7 @@ type Source =
 export const PROTOMAPS_DEFAULT_TILE_SIZE = 256;
 
 /** Buffer (in pixels) used when rendering (and generating - through geojson-vt) vector tiles */
-export const PROTOMAPS_TILE_BUFFER = 64;
+export const PROTOMAPS_TILE_BUFFER = 32;
 
 export default class ProtomapsImageryProvider
   implements ImageryProviderWithGridLayerSupport

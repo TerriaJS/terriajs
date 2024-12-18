@@ -18,6 +18,7 @@ import {
   isPoint,
   isPolygon
 } from "../../../ModelMixins/GeojsonMixin";
+import { PROTOMAPS_TILE_BUFFER } from "../../ImageryProvider/ProtomapsImageryProvider";
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   geomTypeMap
@@ -53,19 +54,27 @@ export class ArcGisPbfSource implements TileSource {
 
   public async get(
     c: Zxy,
-    tileSize: number,
+    tileSizePixels: number,
     request?: Request
   ): Promise<Map<string, ProtomapsFeature[]>> {
     const rect = this.tilingScheme.tileXYToNativeRectangle(c.x, c.y, c.z);
 
-    const arcGisExtent = {
+    const tileExtent = {
       xmin: rect.west,
       ymin: rect.south,
       xmax: rect.east,
       ymax: rect.north
     };
 
-    const mapWidth = arcGisExtent.xmax - arcGisExtent.xmin;
+    const tileWidthNative = tileExtent.xmax - tileExtent.xmin;
+    const nativePixelSize = tileWidthNative / tileSizePixels;
+
+    const tileExtentWithBuffer = {
+      xmin: rect.west - PROTOMAPS_TILE_BUFFER * nativePixelSize,
+      ymin: rect.south - PROTOMAPS_TILE_BUFFER * nativePixelSize,
+      xmax: rect.east + PROTOMAPS_TILE_BUFFER * nativePixelSize,
+      ymax: rect.north + PROTOMAPS_TILE_BUFFER * nativePixelSize
+    };
 
     const arcGisFeatures: Feature[] = [];
 
@@ -86,25 +95,25 @@ export class ArcGisPbfSource implements TileSource {
         f: "pbf",
         resultType: "tile",
         inSR: "102100",
-        geometry: JSON.stringify(arcGisExtent),
+        geometry: JSON.stringify(tileExtentWithBuffer),
         geometryType: "esriGeometryEnvelope",
         outFields: this.outFields.join(","),
         where: "1=1",
-        maxRecordCountFactor: this.maxRecordCountFactor.toString(),
-        resultRecordCount: this.featuresPerTileRequest.toString(),
+        maxRecordCountFactor: this.maxRecordCountFactor,
+        resultRecordCount: this.featuresPerTileRequest,
         outSR: "102100",
         spatialRel: "esriSpatialRelIntersects",
-        maxAllowableOffset: (arcGisExtent.xmax - arcGisExtent.xmin) / tileSize,
+        maxAllowableOffset: nativePixelSize,
         quantizationParameters: JSON.stringify({
-          extent: arcGisExtent,
+          extent: tileExtentWithBuffer,
           spatialReference: { wkid: 102100, latestWkid: 3857 },
           mode: "view",
           originPosition: "upperLeft",
-          tolerance: (arcGisExtent.xmax - arcGisExtent.xmin) / tileSize
+          tolerance: nativePixelSize
         }),
         outSpatialReference: "102100",
         precision: "8",
-        resultOffset: offset.toString()
+        resultOffset: offset
       });
 
       const arrayBufferPromise = tileResource.fetchArrayBuffer();
@@ -143,7 +152,7 @@ export class ArcGisPbfSource implements TileSource {
     const protomapsFeatures: ProtomapsFeature[] = [];
 
     for (const f of arcGisFeatures) {
-      processFeature(f, arcGisExtent, mapWidth, tileSize).forEach((pf) =>
+      processFeature(f, tileExtentWithBuffer, tileSizePixels).forEach((pf) =>
         protomapsFeatures.push(pf)
       );
     }
@@ -167,10 +176,18 @@ export class ArcGisPbfSource implements TileSource {
 
 function processFeature(
   feature: Feature,
-  arcGisExtent: { xmin: number; ymin: number; xmax: number; ymax: number },
-  mapWidth: number,
-  tileSize: number
+  tileExtentWithBuffer: {
+    xmin: number;
+    ymin: number;
+    xmax: number;
+    ymax: number;
+  },
+  tileWidthPixels: number
 ): ProtomapsFeature[] {
+  const tileWidthWithBuffer =
+    tileExtentWithBuffer.xmax - tileExtentWithBuffer.xmin;
+  const tileWidthWithBufferPixels = tileWidthPixels + 2 * PROTOMAPS_TILE_BUFFER;
+
   const geomType = geomTypeMap(feature.geometry?.type);
 
   if (geomType === null) {
@@ -207,9 +224,8 @@ function processFeature(
           properties: feature.properties,
           geometry: { type: "Polygon", coordinates: polygon }
         },
-        arcGisExtent,
-        mapWidth,
-        tileSize
+        tileExtentWithBuffer,
+        tileWidthPixels
       )
     );
   } else if (isLine(feature)) {
@@ -222,9 +238,8 @@ function processFeature(
           properties: feature.properties,
           geometry
         },
-        arcGisExtent,
-        mapWidth,
-        tileSize
+        tileExtentWithBuffer,
+        tileWidthPixels
       )
     );
   } else {
@@ -235,8 +250,12 @@ function processFeature(
     const transformedG1: Point[] = [];
     for (const g2 of g1) {
       const transformedG2 = [
-        ((g2[0] - arcGisExtent.xmin) / mapWidth) * tileSize,
-        (1 - (g2[1] - arcGisExtent.ymin) / mapWidth) * tileSize
+        ((g2[0] - tileExtentWithBuffer.xmin) / tileWidthWithBuffer) *
+          tileWidthWithBufferPixels -
+          PROTOMAPS_TILE_BUFFER,
+        (1 - (g2[1] - tileExtentWithBuffer.ymin) / tileWidthWithBuffer) *
+          tileWidthWithBufferPixels -
+          PROTOMAPS_TILE_BUFFER
       ];
       if (bbox.minX > transformedG2[0]) {
         bbox.minX = transformedG2[0];
