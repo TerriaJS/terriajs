@@ -1,3 +1,4 @@
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
@@ -88,5 +89,54 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "Whether this feature service supports tiled requests. By default, this will be inferred from the server's response."
   })
-  tileRequests?: boolean = true;
+  tileRequests: boolean = true;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum features",
+    description:
+      "For each tile, the maximum number of features to be retrieved from the feature service."
+  })
+  maxTiledFeatures: number = 100000;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Features per request",
+    description:
+      "The number of features to be retrieved from the feature service in each request. This should be equal to the " +
+      "tileMaxRecordCount specified by the server."
+  })
+  featuresPerTileRequest: number = 4000;
+
+  @primitiveTrait({
+    type: "number",
+    name: "maxRecordCountFactor",
+    description:
+      "When set, the maximum number of features returned by the query will equal the maxRecordCount of the service multiplied by this factor. This only applies to tiled requests"
+  })
+  maxRecordCountFactor: number = 1;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Tile requests",
+    description:
+      "Whether this feature service supports tiled requests. By default, this will be inferred from the server's response."
+  })
+  supportsQuantization: boolean = true;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Object ID Field",
+    description:
+      "The field in the feature service that contains the unique identifier for each feature."
+  })
+  objectIdField: string = "OBJECTID";
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Out Fields",
+    description:
+      "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling."
+  })
+  outFields: string[] = ["OBJECTID"];
 }

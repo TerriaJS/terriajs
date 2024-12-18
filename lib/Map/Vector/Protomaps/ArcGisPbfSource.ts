@@ -1,185 +1,151 @@
 import Point from "@mapbox/point-geometry";
 import { Feature, Position } from "@turf/helpers";
-import arcgisPbfDecode from "arcgis-pbf-parser";
+import arcGisPbfDecode from "arcgis-pbf-parser";
 import {
   Feature as ProtomapsFeature,
   TileSource,
   Zxy
 } from "protomaps-leaflet";
+import Request from "terriajs-cesium/Source/Core/Request";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import {
+  isGeometryCollection,
   isLine,
   isMultiLineString,
   isMultiPolygon,
   isPoint,
   isPolygon
 } from "../../../ModelMixins/GeojsonMixin";
-import ArcGisFeatureServerCatalogItem from "../../../Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
-import { PROTOMAPS_DEFAULT_TILE_SIZE } from "../../ImageryProvider/ProtomapsImageryProvider";
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   geomTypeMap
 } from "./ProtomapsGeojsonSource";
 
+interface ArcGisPbfSourceOptions {
+  url: string;
+  outFields: string[];
+  maxRecordCountFactor: number;
+  featuresPerTileRequest: number;
+  maxTiledFeatures: number;
+  tilingScheme: WebMercatorTilingScheme;
+}
+
 export class ArcGisPbfSource implements TileSource {
-  constructor(
-    private featureServerCatalogItem: ArcGisFeatureServerCatalogItem,
-    private tilingScheme: WebMercatorTilingScheme
-  ) {}
+  private readonly baseResource: Resource;
+  private readonly tilingScheme: WebMercatorTilingScheme;
+  private readonly outFields: string[];
+  private readonly maxRecordCountFactor: number;
+  private readonly featuresPerTileRequest: number;
+  private readonly maxTiledFeatures: number;
 
-  public async get(c: Zxy): Promise<Map<string, ProtomapsFeature[]>> {
-    const uri = this.featureServerCatalogItem.buildEsriJsonUrl();
+  constructor(options: ArcGisPbfSourceOptions) {
+    this.baseResource = new Resource(options.url);
+    this.baseResource.appendForwardSlash();
+    this.tilingScheme = options.tilingScheme;
 
+    this.outFields = options.outFields;
+    this.maxRecordCountFactor = options.maxRecordCountFactor;
+    this.featuresPerTileRequest = options.featuresPerTileRequest;
+    this.maxTiledFeatures = options.maxTiledFeatures;
+  }
+
+  public async get(
+    c: Zxy,
+    tileSize: number,
+    request?: Request
+  ): Promise<Map<string, ProtomapsFeature[]>> {
     const rect = this.tilingScheme.tileXYToNativeRectangle(c.x, c.y, c.z);
 
-    const arcgisExtent = {
+    const arcGisExtent = {
       xmin: rect.west,
       ymin: rect.south,
       xmax: rect.east,
       ymax: rect.north
     };
-    uri.setQuery("geometry", JSON.stringify(arcgisExtent));
-    uri.setQuery("geometryType", "esriGeometryEnvelope");
-    uri.setQuery("inSR", "102100");
 
-    uri.setQuery("f", "pbf");
-    uri.setQuery("resultType", "tile");
+    const mapWidth = arcGisExtent.xmax - arcGisExtent.xmin;
 
-    uri.setQuery("orderByFields", "objectid");
-    uri.setQuery("outFields", "objectid");
-    uri.setQuery("where", "1=1");
-
-    uri.setQuery("maxRecordCountFactor", "4");
-    const maxRecordCount = 8000;
-    uri.setQuery("resultRecordCount", maxRecordCount.toString());
-
-    // uri.setQuery("defaultSR", "102100");
-    uri.setQuery("outSR", "102100");
-    uri.setQuery("spatialRel", "esriSpatialRelIntersects");
-
-    const precision = 8;
-    const mapWidth = arcgisExtent.xmax - arcgisExtent.xmin;
-    const tolerance = mapWidth / PROTOMAPS_DEFAULT_TILE_SIZE;
-
-    uri.setQuery("maxAllowableOffset", tolerance.toString());
-
-    const quantizationParameters = {
-      extent: arcgisExtent,
-      spatialReference: { wkid: 102100, latestWkid: 3857 },
-      mode: "view",
-      originPosition: "upperLeft",
-      tolerance
-    };
-    uri.setQuery(
-      "quantizationParameters",
-      JSON.stringify(quantizationParameters)
-    );
-    uri.setQuery("outSpatialReference", "102100");
-    uri.setQuery("precision", precision.toString());
-
-    // returnZ: false,
-    // returnM: false,
-
-    const arcgisFeatures: Feature[] = [];
+    const arcGisFeatures: Feature[] = [];
 
     let offset = 0;
     let fetching = true;
 
     while (fetching) {
-      uri.setQuery("resultOffset", offset.toString());
+      if (request && "cancelled" in request && request.cancelled) {
+        console.log("CANCELLED");
+        fetching = false;
+        continue;
+      }
+      const tileResource = this.baseResource.getDerivedResource({
+        // Not sure how to handle request here - as we are making multiple requests
+        // request: request
+      });
+      tileResource.setQueryParameters({
+        f: "pbf",
+        resultType: "tile",
+        inSR: "102100",
+        geometry: JSON.stringify(arcGisExtent),
+        geometryType: "esriGeometryEnvelope",
+        outFields: this.outFields.join(","),
+        where: "1=1",
+        maxRecordCountFactor: this.maxRecordCountFactor.toString(),
+        resultRecordCount: this.featuresPerTileRequest.toString(),
+        outSR: "102100",
+        spatialRel: "esriSpatialRelIntersects",
+        maxAllowableOffset: (arcGisExtent.xmax - arcGisExtent.xmin) / tileSize,
+        quantizationParameters: JSON.stringify({
+          extent: arcGisExtent,
+          spatialReference: { wkid: 102100, latestWkid: 3857 },
+          mode: "view",
+          originPosition: "upperLeft",
+          tolerance: (arcGisExtent.xmax - arcGisExtent.xmin) / tileSize
+        }),
+        outSpatialReference: "102100",
+        precision: "8",
+        resultOffset: offset.toString()
+      });
 
-      const response = await fetch(uri.toString());
-      const arrayBuffer = await response.arrayBuffer();
+      const arrayBufferPromise = tileResource.fetchArrayBuffer();
 
-      const arcgisResponse = arcgisPbfDecode(new Uint8Array(arrayBuffer));
+      const arrayBuffer = await arrayBufferPromise;
 
-      arcgisFeatures.push(...arcgisResponse.featureCollection.features);
+      if (!arrayBuffer) {
+        console.error("No data for URL: " + tileResource.url);
+        fetching = false;
+        continue;
+      }
 
-      if (arcgisResponse.featureCollection.features.length >= maxRecordCount) {
-        offset = offset + maxRecordCount;
+      const arcGisResponse = arcGisPbfDecode(new Uint8Array(arrayBuffer));
+      arcGisFeatures.push(...arcGisResponse.featureCollection.features);
+
+      if (arcGisResponse.featureCollection.features.length === 0) {
+        fetching = false;
+        continue;
+      }
+
+      if (
+        arcGisResponse.featureCollection.features.length <=
+        this.maxTiledFeatures
+      ) {
+        offset = offset + this.featuresPerTileRequest;
       } else {
         fetching = false;
       }
 
-      if (offset > 100000) {
-        console.error("too many features");
+      if (offset > this.maxTiledFeatures) {
+        console.warn(`ArcGisPbfSource: maxTiledFeatures exceeded`);
         fetching = false;
       }
     }
 
     const protomapsFeatures: ProtomapsFeature[] = [];
 
-    for (const f of arcgisFeatures) {
-      const geomType = geomTypeMap(f.geometry?.type);
-
-      if (geomType === null) {
-        continue;
-      }
-
-      const transformedGeom: Point[][] = [];
-      let numVertices = 0;
-
-      // Calculate bbox
-      const bbox = {
-        minX: Infinity,
-        minY: Infinity,
-        maxX: -Infinity,
-        maxY: -Infinity
-      };
-
-      let points: Position[][];
-
-      if (isPoint(f)) {
-        points = [[f.geometry.coordinates]];
-      } else if (isMultiLineString(f)) {
-        points = f.geometry.coordinates;
-      } else if (isPolygon(f)) {
-        points = f.geometry.coordinates;
-      } else if (isMultiPolygon(f) && f.geometry.coordinates.length > 0) {
-        throw new Error("MultiPolygon not supported");
-      } else if (isLine(f)) {
-        points = [f.geometry.coordinates];
-      } else {
-        throw new Error("GeometryCollection not supported");
-      }
-
-      for (const g1 of points) {
-        const transformedG1: Point[] = [];
-        for (const g2 of g1) {
-          const transformedG2 = [
-            ((g2[0] - arcgisExtent.xmin) / mapWidth) *
-              PROTOMAPS_DEFAULT_TILE_SIZE,
-            (1 - (g2[1] - arcgisExtent.ymin) / mapWidth) *
-              PROTOMAPS_DEFAULT_TILE_SIZE
-          ];
-          if (bbox.minX > transformedG2[0]) {
-            bbox.minX = transformedG2[0];
-          }
-
-          if (bbox.maxX < transformedG2[0]) {
-            bbox.maxX = transformedG2[0];
-          }
-
-          if (bbox.minY > transformedG2[1]) {
-            bbox.minY = transformedG2[1];
-          }
-
-          if (bbox.maxY < transformedG2[1]) {
-            bbox.maxY = transformedG2[1];
-          }
-          transformedG1.push(new Point(transformedG2[0], transformedG2[1]));
-          numVertices++;
-        }
-        transformedGeom.push(transformedG1);
-      }
-
-      protomapsFeatures.push({
-        props: f.properties ?? {},
-        bbox,
-        geomType,
-        geom: transformedGeom,
-        numVertices
-      });
+    for (const f of arcGisFeatures) {
+      processFeature(f, arcGisExtent, mapWidth, tileSize).forEach((pf) =>
+        protomapsFeatures.push(pf)
+      );
     }
 
     const result = new Map<string, ProtomapsFeature[]>();
@@ -187,4 +153,119 @@ export class ArcGisPbfSource implements TileSource {
 
     return result;
   }
+
+  public async pickFeatures(
+    _x: number,
+    _y: number,
+    level: number,
+    longitude: number,
+    latitude: number
+  ): Promise<ImageryLayerFeatureInfo[]> {
+    return [];
+  }
+}
+
+function processFeature(
+  feature: Feature,
+  arcGisExtent: { xmin: number; ymin: number; xmax: number; ymax: number },
+  mapWidth: number,
+  tileSize: number
+): ProtomapsFeature[] {
+  const geomType = geomTypeMap(feature.geometry?.type);
+
+  if (geomType === null) {
+    return [];
+  }
+
+  const transformedGeom: Point[][] = [];
+  let numVertices = 0;
+
+  // Calculate bbox
+  const bbox = {
+    minX: Infinity,
+    minY: Infinity,
+    maxX: -Infinity,
+    maxY: -Infinity
+  };
+
+  let points: Position[][];
+
+  if (isPoint(feature)) {
+    points = [[feature.geometry.coordinates]];
+  } else if (isMultiLineString(feature)) {
+    points = feature.geometry.coordinates;
+  } else if (isPolygon(feature)) {
+    points = feature.geometry.coordinates;
+  } else if (
+    isMultiPolygon(feature) &&
+    feature.geometry.coordinates.length > 0
+  ) {
+    return feature.geometry.coordinates.flatMap((polygon) =>
+      processFeature(
+        {
+          type: "Feature",
+          properties: feature.properties,
+          geometry: { type: "Polygon", coordinates: polygon }
+        },
+        arcGisExtent,
+        mapWidth,
+        tileSize
+      )
+    );
+  } else if (isLine(feature)) {
+    points = [feature.geometry.coordinates];
+  } else if (isGeometryCollection(feature)) {
+    return feature.geometry.geometries.flatMap((geometry) =>
+      processFeature(
+        {
+          type: "Feature",
+          properties: feature.properties,
+          geometry
+        },
+        arcGisExtent,
+        mapWidth,
+        tileSize
+      )
+    );
+  } else {
+    return [];
+  }
+
+  for (const g1 of points) {
+    const transformedG1: Point[] = [];
+    for (const g2 of g1) {
+      const transformedG2 = [
+        ((g2[0] - arcGisExtent.xmin) / mapWidth) * tileSize,
+        (1 - (g2[1] - arcGisExtent.ymin) / mapWidth) * tileSize
+      ];
+      if (bbox.minX > transformedG2[0]) {
+        bbox.minX = transformedG2[0];
+      }
+
+      if (bbox.maxX < transformedG2[0]) {
+        bbox.maxX = transformedG2[0];
+      }
+
+      if (bbox.minY > transformedG2[1]) {
+        bbox.minY = transformedG2[1];
+      }
+
+      if (bbox.maxY < transformedG2[1]) {
+        bbox.maxY = transformedG2[1];
+      }
+      transformedG1.push(new Point(transformedG2[0], transformedG2[1]));
+      numVertices++;
+    }
+    transformedGeom.push(transformedG1);
+  }
+
+  return [
+    {
+      props: feature.properties ?? {},
+      bbox,
+      geomType,
+      geom: transformedGeom,
+      numVertices
+    }
+  ];
 }

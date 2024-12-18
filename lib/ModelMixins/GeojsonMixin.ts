@@ -30,12 +30,6 @@ import {
   toJS
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import {
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer,
-  Feature as ProtomapsFeature
-} from "protomaps-leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -79,10 +73,8 @@ import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
-import {
-  GEOJSON_SOURCE_LAYER_NAME,
-  ProtomapsGeojsonSource
-} from "../Map/Vector/Protomaps/ProtomapsGeojsonSource";
+import { ProtomapsGeojsonSource } from "../Map/Vector/Protomaps/ProtomapsGeojsonSource";
+import { tableStyleToProtomaps } from "../Map/Vector/Protomaps/tableStyleToProtomaps";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -98,7 +90,6 @@ import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import TableStyle, { createRowGroupId } from "../Table/TableStyle";
-import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
@@ -299,17 +290,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (!this.tableStyleReactionDisposer) {
         // Update protomaps imagery provider if activeTableStyle changes
         this.tableStyleReactionDisposer = reaction(
-          () => [
-            this.useTableStylingAndProtomaps,
-            this.readyData,
-            this.currentDiscreteJulianDate,
-            this.activeTableStyle.timeIntervals,
-            this.activeTableStyle.colorMap,
-            this.activeTableStyle.pointSizeMap,
-            this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues,
-            this.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
-          ],
+          () => getStyleReactiveDependencies(this),
           () => {
             if (
               this._imageryProvider &&
@@ -709,68 +690,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Points are handled by this.createPoints()
       if (this.featureCounts.line + this.featureCounts.polygon === 0) return;
 
-      let currentTimeRows: number[] | undefined;
-
-      // If time varying, get row indices which match
-      // This is used to filter feature[FEATURE_ID_PROP]
-      if (
-        this.currentTimeAsJulianDate &&
-        this.activeTableStyle.timeIntervals &&
-        this.activeTableStyle.moreThanOneTimeInterval
-      ) {
-        currentTimeRows = this.activeTableStyle.timeIntervals.reduce<number[]>(
-          (rows, timeInterval, index) => {
-            if (
-              timeInterval &&
-              TimeInterval.contains(timeInterval, this.currentTimeAsJulianDate!)
-            ) {
-              rows.push(index);
-            }
-            return rows;
-          },
-          []
-        );
-      }
-
-      const rows = this.activeTableStyle.colorColumn?.valuesForType;
-      const colorMap = this.activeTableStyle.colorMap;
-      const outlineStyleMap = this.activeTableStyle.outlineStyleMap.styleMap;
-      const useOutlineColorForLineFeatures =
-        this.useOutlineColorForLineFeatures;
-
-      // Style function
-      const getColorValue = (_z: number, f?: ProtomapsFeature) => {
-        const rowId = f?.props[FEATURE_ID_PROP];
-        return colorMap
-          .mapValueToColor(isJsonNumber(rowId) ? rows?.[rowId] : null)
-          .toCssColorString();
-      };
-
-      const getOutlineWidthValue = (_z: number, f?: ProtomapsFeature) => {
-        const rowId = f?.props[FEATURE_ID_PROP];
-        return (
-          (isConstantStyleMap(outlineStyleMap)
-            ? outlineStyleMap.style.width
-            : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
-                .width) ?? this.defaultStyles.polygonStrokeWidth
-        );
-      };
-
-      const getOutlineColorValue = (_z: number, f?: ProtomapsFeature) => {
-        const rowId = f?.props[FEATURE_ID_PROP];
-        return (
-          (isConstantStyleMap(outlineStyleMap)
-            ? outlineStyleMap.style.color
-            : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
-                .color) ?? runInAction(() => this.terria.baseMapContrastColor)
-        );
-      };
-
-      // Filter features by time if applicable
-      const showFeature = (_z: number, f?: ProtomapsFeature) =>
-        !currentTimeRows ||
-        (isJsonNumber(f?.props[FEATURE_ID_PROP]) &&
-          currentTimeRows.includes(f?.props[FEATURE_ID_PROP] as number));
+      const { paintRules, labelRules, currentTimeRows } =
+        tableStyleToProtomaps(this);
 
       let protomapsData: ProtomapsData = Object.assign({}, geoJson, {
         features: geoJson.features.filter((f) => f.geometry.type !== "Point")
@@ -790,49 +711,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         terria: this.terria,
         data: protomapsData,
         id: this.uniqueId,
-        paintRules: [
-          // Polygon features
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new PolygonSymbolizer({
-              fill: getColorValue,
-              stroke: getOutlineColorValue,
-              width: getOutlineWidthValue
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Polygon &&
-                showFeature(zoom, feature)
-              );
-            }
-          },
-
-          // Line features
-          // Note - line color will use TableColorStyleTraits by default.
-          // If useOutlineColorForLineFeatures is true, then line color will use TableOutlineStyle traits
-
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: useOutlineColorForLineFeatures
-                ? getOutlineColorValue
-                : getColorValue,
-              width: getOutlineWidthValue
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Line &&
-                showFeature(zoom, feature)
-              );
-            }
-          }
-          // See `createPoints` for Point features - they are handled by Cesium
-        ],
-        labelRules: [],
+        paintRules,
+        labelRules,
 
         // Process picked features to add terriaFeatureData (with rowIds)
         // This is used by tableFeatureInfoContext to add time-series chart
@@ -1924,4 +1804,18 @@ function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
 
     return properties;
   }, {});
+}
+
+export function getStyleReactiveDependencies(item: GeoJsonMixin.Instance) {
+  return [
+    item.useTableStylingAndProtomaps,
+    item.readyData,
+    item.currentDiscreteJulianDate,
+    item.activeTableStyle.timeIntervals,
+    item.activeTableStyle.colorMap,
+    item.activeTableStyle.pointSizeMap,
+    item.activeTableStyle.pointStyleMap.traitValues,
+    item.activeTableStyle.outlineStyleMap.traitValues,
+    item.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
+  ];
 }

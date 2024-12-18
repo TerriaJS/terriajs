@@ -7,12 +7,6 @@ import {
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import proj4 from "proj4";
-import {
-  CircleSymbolizer,
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer
-} from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
@@ -24,7 +18,7 @@ import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImag
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import { ArcGisPbfSource } from "../../../Map/Vector/Protomaps/ArcGisPbfSource";
-import { GEOJSON_SOURCE_LAYER_NAME } from "../../../Map/Vector/Protomaps/ProtomapsGeojsonSource";
+import { tableStyleToProtomaps } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -169,6 +163,13 @@ interface FeatureServer {
   advancedQueryCapabilities?: {
     supportsPagination: boolean;
   };
+  supportedQueryFormats?: string;
+  maxRecordCount?: number;
+  tileMaxRecordCount?: number;
+  maxRecordCountFactor?: number;
+  supportsCoordinatesQuantization?: boolean;
+  supportsTilesAndBasicQueriesMode?: boolean;
+  objectIdField?: string;
 }
 
 interface SpatialReference {
@@ -192,7 +193,7 @@ class FeatureServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
     private readonly _featureServer?: FeatureServer,
-    private _esriJson?: any
+    private _esriJson?: any | undefined
   ) {
     super();
     makeObservable(this);
@@ -377,6 +378,7 @@ class FeatureServerStratum extends LoadableStratum(
           color: includeColor
             ? createStratumInstance(TableColorStyleTraits, {
                 colorColumn: uniqueValueRenderer.field1,
+                mapType: "enum",
                 enumColors: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
                   createStratumInstance(EnumColorTraits, {
                     value: v.value,
@@ -390,6 +392,7 @@ class FeatureServerStratum extends LoadableStratum(
               }),
           pointSize: createStratumInstance(TablePointSizeStyleTraits, {}),
           point: createStratumInstance(TablePointStyleTraits, {
+            mapType: "enum",
             column: uniqueValueRenderer.field1,
             enum: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
               createStratumInstance(EnumPointSymbolTraits, {
@@ -400,6 +403,7 @@ class FeatureServerStratum extends LoadableStratum(
             null: defaultSymbolStyle.point
           }),
           outline: createStratumInstance(TableOutlineStyleTraits, {
+            mapType: "enum",
             column: uniqueValueRenderer.field1,
             enum: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
               createStratumInstance(EnumOutlineSymbolTraits, {
@@ -434,6 +438,7 @@ class FeatureServerStratum extends LoadableStratum(
           hidden: false,
           color: includeColor
             ? createStratumInstance(TableColorStyleTraits, {
+                mapType: "bin",
                 colorColumn: classBreaksRenderer.field,
                 binColors: symbolStyles.map((s) => s.color ?? ""),
                 binMaximums: classBreaksRenderer.classBreakInfos.map(
@@ -446,6 +451,7 @@ class FeatureServerStratum extends LoadableStratum(
               }),
           pointSize: createStratumInstance(TablePointSizeStyleTraits, {}),
           point: createStratumInstance(TablePointStyleTraits, {
+            mapType: "bin",
             column: classBreaksRenderer.field,
             bin: classBreaksRenderer.classBreakInfos.map((c, i) =>
               createStratumInstance(BinPointSymbolTraits, {
@@ -456,6 +462,7 @@ class FeatureServerStratum extends LoadableStratum(
             null: defaultSymbolStyle.point
           }),
           outline: createStratumInstance(TableOutlineStyleTraits, {
+            mapType: "bin",
             column: classBreaksRenderer.field,
             bin: classBreaksRenderer.classBreakInfos.map((c, i) =>
               createStratumInstance(BinOutlineSymbolTraits, {
@@ -468,6 +475,57 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
     }
+  }
+
+  get featuresPerRequest() {
+    return this._featureServer?.maxRecordCount;
+  }
+
+  get featuresPerTileRequest() {
+    return this._featureServer?.tileMaxRecordCount;
+  }
+
+  get maxRecordCountFactor() {
+    return this._featureServer?.maxRecordCountFactor;
+  }
+
+  get supportsQuantization() {
+    return !!this._featureServer?.supportsCoordinatesQuantization;
+  }
+
+  get tileRequests() {
+    return (
+      this._featureServer?.supportsTilesAndBasicQueriesMode &&
+      typeof this._featureServer?.supportedQueryFormats === "string" &&
+      (this._featureServer.supportedQueryFormats as string)
+        .toLowerCase()
+        .includes("pbf")
+    );
+  }
+
+  get objectIdField() {
+    return this._featureServer?.objectIdField;
+  }
+
+  get outFields() {
+    console.log(
+      Array.from(
+        new Set([
+          this._item.objectIdField,
+          this._item.activeTableStyle.tableColorMap.colorTraits.colorColumn,
+          this._item.activeTableStyle.outlineStyleMap.traits?.column,
+          this._item.activeTableStyle.pointStyleMap.traits?.column
+        ])
+      ).filter((t): t is string => !!t)
+    );
+    return Array.from(
+      new Set([
+        this._item.objectIdField,
+        this._item.activeTableStyle.tableColorMap.colorTraits.colorColumn,
+        this._item.activeTableStyle.outlineStyleMap.traits?.column,
+        this._item.activeTableStyle.pointStyleMap.traits?.column
+      ])
+    ).filter((t): t is string => !!t);
   }
 }
 
@@ -578,44 +636,21 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   }
 
   @computed get imageryProvider() {
+    const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
+
     let provider = new ProtomapsImageryProvider({
       terria: this.terria,
-      data: new ArcGisPbfSource(this, new WebMercatorTilingScheme()),
+      data: new ArcGisPbfSource({
+        url: this.buildEsriJsonUrl().toString(),
+        outFields: [...this.outFields],
+        featuresPerTileRequest: this.featuresPerTileRequest,
+        maxRecordCountFactor: this.maxRecordCountFactor,
+        maxTiledFeatures: this.maxTiledFeatures,
+        tilingScheme: new WebMercatorTilingScheme()
+      }),
       id: this.uniqueId,
-      paintRules: [
-        // Polygon features
-        {
-          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-          symbolizer: new PolygonSymbolizer({
-            // fill: "#ff0000",
-            stroke: "#000000",
-            width: 1
-          }),
-          minzoom: 0,
-          maxzoom: Infinity,
-          filter: (z, f) => f.geomType === GeomType.Polygon
-        },
-        {
-          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-          symbolizer: new LineSymbolizer({
-            color: "#ff0000"
-          }),
-          minzoom: 0,
-          maxzoom: Infinity,
-          filter: (z, f) => f.geomType === GeomType.Line
-        },
-        {
-          dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-          symbolizer: new CircleSymbolizer({
-            fill: "#ff0000",
-            radius: 2
-          }),
-          minzoom: 0,
-          maxzoom: Infinity,
-          filter: (z, f) => f.geomType === GeomType.Point
-        }
-      ],
-      labelRules: []
+      paintRules,
+      labelRules
     });
 
     provider = this.wrapImageryPickFeatures(provider);
@@ -625,14 +660,13 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
 
   @override
   get mapItems() {
-    console.log(this.tileRequests);
     if (!this.tileRequests) return [];
 
     return [
       {
         imageryProvider: this.imageryProvider,
-        show: true,
-        alpha: 1,
+        show: this.show,
+        alpha: this.opacity,
         clippingRectangle: undefined
       }
     ];
