@@ -283,7 +283,7 @@ const Story = (props: Props) => {
               : t("story.untitledScene")}
           </Text>
           <Box>
-            {props.recaptureStorySuccessful && (
+            {props.recaptureStorySuccessful ? (
               <RawButton>
                 <StyledIcon
                   styledWidth="20px"
@@ -294,7 +294,7 @@ const Story = (props: Props) => {
                   `}
                 />
               </RawButton>
-            )}
+            ) : null}
             <MenuButton theme={theme} onClick={toggleMenu(props)}>
               <StyledIcon
                 styledWidth="20px"
@@ -303,7 +303,7 @@ const Story = (props: Props) => {
               />
             </MenuButton>
           </Box>
-          {props.menuOpen && <StoryMenu {...props} storyRef={storyRef} />}
+          {props.menuOpen ? <StoryMenu {...props} storyRef={storyRef} /> : null}
         </Box>
         {bodyText.length > 0 && (
           <Box paddedRatio={2} paddedHorizontally={3}>

@@ -135,7 +135,7 @@ class MapInteractionWindow extends React.Component<{
         </div>
         {typeof this.currentInteractionMode?.customUi === "function" &&
           this.currentInteractionMode.customUi()}
-        {this.currentInteractionMode?.onCancel && (
+        {this.currentInteractionMode?.onCancel ? (
           <button
             type="button"
             onClick={this.currentInteractionMode.onCancel}
@@ -143,7 +143,7 @@ class MapInteractionWindow extends React.Component<{
           >
             {this.currentInteractionMode.buttonText}
           </button>
-        )}
+        ) : null}
       </MapInteractionWindowWrapper>
     );
   }

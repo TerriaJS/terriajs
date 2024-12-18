@@ -99,8 +99,8 @@ const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
             inline: true
           })}
         </TextSpan>
-        {props.btnRight && <SpacingSpan right={1} />}
-        {props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
+        {props.btnRight ? <SpacingSpan right={1} /> : null}
+        {props.btnRight ? <CollapseIcon {...props} isOpen={isOpen} /> : null}
       </RawButton>
       {isOpen ? (
         <Box {...props.bodyBoxProps}>

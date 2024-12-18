@@ -544,7 +544,7 @@ class ViewingControls extends React.Component<
             iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
           />
         </Ul>
-        {showMenu && (
+        {showMenu ? (
           <Box
             css={`
               position: absolute;
@@ -564,7 +564,7 @@ class ViewingControls extends React.Component<
           >
             {this.renderViewingControlsMenu()}
           </Box>
-        )}
+        ) : null}
       </Box>
     );
   }

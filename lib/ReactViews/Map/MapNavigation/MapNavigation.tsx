@@ -298,7 +298,7 @@ class MapNavigationBase extends React.Component<PropTypes> {
                 />
               );
             })}
-            {this.overflows && (
+            {this.overflows ? (
               <Control key={OVERFLOW_ITEM_ID}>
                 <MapIconButton
                   expandInPlace
@@ -313,7 +313,7 @@ class MapNavigationBase extends React.Component<PropTypes> {
                   {t("mapNavigation.additionalTools")}
                 </MapIconButton>
               </Control>
-            )}
+            ) : null}
           </ControlWrapper>
           <ControlWrapper column={this.orientation === Orientation.VERTICAL}>
             {bottomItems?.map((item) => (

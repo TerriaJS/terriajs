@@ -196,7 +196,7 @@ export const GuidePure = ({
             primary
             onClick={() => handleNext()}
             styledMinWidth={"94px"}
-            css={hideNext && `visibility: hidden;`}
+            css={hideNext ? `visibility: hidden;` : null}
           >
             {nextButtonText}
           </Button>

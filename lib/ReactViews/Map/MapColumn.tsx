@@ -103,7 +103,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
                 <BottomBar />
               </Box>
 
-              {viewState.terria.configParameters.printDisclaimer && (
+              {viewState.terria.configParameters.printDisclaimer ? (
                 <a
                   css={`
                     display: none;
@@ -117,7 +117,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
                 >
                   {viewState.terria.configParameters.printDisclaimer.text}
                 </a>
-              )}
+              ) : null}
             </>
           )}
         </Box>

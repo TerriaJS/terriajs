@@ -239,19 +239,19 @@ export default class Legend extends React.Component<{
     };
     return (
       <React.Fragment key={i}>
-        {legendItem.addSpacingAbove && (
+        {legendItem.addSpacingAbove ? (
           <tr className={Styles.legendSpacer}>
             <td />
           </tr>
-        )}
+        ) : null}
         <tr style={rowStyle}>
           <td style={boxStyle}>{boxContents}</td>
           <td className={Styles.legendTitles}>
-            {legendItem.titleAbove && (
+            {legendItem.titleAbove ? (
               <div className={Styles.legendTitleAbove}>
                 {legendItem.titleAbove}
               </div>
-            )}
+            ) : null}
             <div
               title={
                 isDefined(legendItem.multipleTitles)
@@ -270,11 +270,11 @@ export default class Legend extends React.Component<{
                   }`
                 : legendItem.title}
             </div>
-            {legendItem.titleBelow && (
+            {legendItem.titleBelow ? (
               <div className={Styles.legendTitleBelow}>
                 {legendItem.titleBelow}
               </div>
-            )}
+            ) : null}
           </td>
         </tr>
       </React.Fragment>

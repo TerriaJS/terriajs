@@ -230,11 +230,11 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                   <main>
                     <ExplorerWindow />
                     {props.terria.configParameters.experimentalFeatures &&
-                      !props.viewState.hideMapUi && (
-                        <ExperimentalFeatures
-                          experimentalItems={customElements.experimentalMenu}
-                        />
-                      )}
+                    !props.viewState.hideMapUi ? (
+                      <ExperimentalFeatures
+                        experimentalItems={customElements.experimentalMenu}
+                      />
+                    ) : null}
                   </main>
                 </section>
               </div>
@@ -246,9 +246,9 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
             )}
             <Medium>
               {/* I think this does what the previous boolean condition does, but without the console error */}
-              {props.viewState.isToolOpen && (
+              {props.viewState.isToolOpen ? (
                 <Tool {...props.viewState.currentTool!} />
-              )}
+              ) : null}
             </Medium>
 
             {props.viewState.panel}
@@ -256,9 +256,11 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
             <Notification />
             <MapInteractionWindow />
             {!customElements.feedback.length &&
-              props.terria.configParameters.feedbackUrl &&
-              !props.viewState.hideMapUi &&
-              props.viewState.feedbackFormIsVisible && <FeedbackForm />}
+            props.terria.configParameters.feedbackUrl &&
+            !props.viewState.hideMapUi &&
+            props.viewState.feedbackFormIsVisible ? (
+              <FeedbackForm />
+            ) : null}
             <div
               className={classNames(
                 Styles.featureInfo,
@@ -279,24 +281,26 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
             </div>
             <DragDropFile />
             <DragDropNotification />
-            {showStoryPanel && <StoryPanel />}
+            {showStoryPanel ? <StoryPanel /> : null}
           </div>
-          {props.terria.configParameters.storyEnabled && showStoryBuilder && (
+          {props.terria.configParameters.storyEnabled && showStoryBuilder ? (
             <StoryBuilder
               isVisible={showStoryBuilder}
               animationDuration={animationDuration}
             />
-          )}
+          ) : null}
           {props.viewState.showHelpMenu &&
-            props.viewState.topElement === "HelpPanel" && <HelpPanel />}
+          props.viewState.topElement === "HelpPanel" ? (
+            <HelpPanel />
+          ) : null}
           <Disclaimer />
         </div>
-        {props.viewState.printWindow && (
+        {props.viewState.printWindow ? (
           <PrintView
             window={props.viewState.printWindow}
             closeCallback={() => props.viewState.setPrintWindow(null)}
           />
-        )}
+        ) : null}
         <ClippingBoxToolLauncher viewState={props.viewState} />
       </ContextProviders>
     );

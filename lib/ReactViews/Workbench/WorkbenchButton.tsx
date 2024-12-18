@@ -103,8 +103,8 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
-        {props.iconElement && props.iconElement()}
-        {children && (
+        {props.iconElement ? props.iconElement() : null}
+        {children ? (
           <>
             <SpacingSpan right={1} />
             <TextSpan
@@ -119,7 +119,7 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
               {children}
             </TextSpan>
           </>
-        )}
+        ) : null}
       </ButtonWrapper>
     </StyledWorkbenchButton>
   );

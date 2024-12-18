@@ -94,7 +94,7 @@ const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
             {t(chartStatus)}
           </ChartStatusText>
         )}
-        {canShowChart && chartItem && (
+        {canShowChart && chartItem ? (
           <Chart
             width={width}
             height={height}
@@ -103,7 +103,7 @@ const FeatureInfoPanelChart: React.FC<FeatureInfoPanelChartPropTypes> =
             baseColor={baseColor}
             xAxisLabel={props.xAxisLabel}
           />
-        )}
+        ) : null}
       </div>
     );
   });

@@ -153,7 +153,7 @@ function MapIconButton(props: IMapIconButtonProps) {
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
-        {primary && props.closeIconElement && (
+        {primary && props.closeIconElement ? (
           <span
             css={`
               display: block;
@@ -161,8 +161,8 @@ function MapIconButton(props: IMapIconButtonProps) {
           >
             {props.closeIconElement()}
           </span>
-        )}
-        {children && (
+        ) : null}
+        {children ? (
           <TextSpan
             noWrap
             medium
@@ -178,8 +178,8 @@ function MapIconButton(props: IMapIconButtonProps) {
           >
             {children}
           </TextSpan>
-        )}
-        {props.iconElement && (
+        ) : null}
+        {props.iconElement ? (
           <span
             css={`
               display: block;
@@ -187,7 +187,7 @@ function MapIconButton(props: IMapIconButtonProps) {
           >
             {props.iconElement()}
           </span>
-        )}
+        ) : null}
       </ButtonWrapper>
     </StyledMapIconButton>
   );
@@ -196,33 +196,25 @@ function MapIconButton(props: IMapIconButtonProps) {
   if (expandInPlace) {
     return (
       <div
-        css={
-          expandInPlace &&
-          `
-            position:relative;
-            width: 32px;
-            height: 32px;
-            margin:auto;
-            @media (max-width: ${theme.mobile}px) {
-              width: ${
-                primary && !!props.closeIconElement && !isExpanded
-                  ? "64px"
-                  : "32px"
-              };
-            }
-          `
-        }
+        css={`
+          position: relative;
+          width: 32px;
+          height: 32px;
+          margin: auto;
+          @media (max-width: ${theme.mobile}px) {
+            width: ${primary && !!props.closeIconElement && !isExpanded
+              ? "64px"
+              : "32px"};
+          }
+        `}
       >
         <div
-          css={
-            expandInPlace &&
-            `
-              position:absolute;
-              top:0;
-              right:0;
-              ${isExpanded && `z-index:10;`}
-            `
-          }
+          css={`
+            position: absolute;
+            top: 0;
+            right: 0;
+            ${isExpanded && `z-index:10;`}
+          `}
         >
           {MapIconButtonRaw}
         </div>

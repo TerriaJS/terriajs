@@ -25,7 +25,9 @@ const MobileMenuItem = (props: Props) => (
       </a>
     ) : (
       <button onClick={props.onClick} className={Styles.link}>
-        {props.icon && <Icon className={Styles.icon} glyph={props.icon} />}
+        {props.icon ? (
+          <Icon className={Styles.icon} glyph={props.icon} />
+        ) : null}
         {props.caption}
       </button>
     )}

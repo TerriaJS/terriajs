@@ -67,43 +67,44 @@ export class StyledHtmlRaw extends React.Component {
 
     return (
       <div>
-        {content?.map &&
-          content.map((item, i) => {
-            if (!item) return null;
+        {content?.map
+          ? content.map((item, i) => {
+              if (!item) return null;
 
-            /* Either a header or paragraph tag */
-            if (/(h[0-6]|p)/i.test(item.type)) {
-              return (
-                <Text
-                  as={item.type}
-                  key={i}
-                  textDark
-                  medium={item.type === "p"}
-                  {...styledTextProps}
-                >
-                  {item.props.children}
-                </Text>
-              );
-            } else if (item.type === "ol") {
-              return (
-                <>
-                  {renderOrderedList(
-                    item.props.children.map((point) => point.props.children)
-                  )}
-                  <Spacing bottom={4} />
-                </>
-              );
-              /* If it's none of the above tags, just render as
+              /* Either a header or paragraph tag */
+              if (/(h[0-6]|p)/i.test(item.type)) {
+                return (
+                  <Text
+                    as={item.type}
+                    key={i}
+                    textDark
+                    medium={item.type === "p"}
+                    {...styledTextProps}
+                  >
+                    {item.props.children}
+                  </Text>
+                );
+              } else if (item.type === "ol") {
+                return (
+                  <>
+                    {renderOrderedList(
+                      item.props.children.map((point) => point.props.children)
+                    )}
+                    <Spacing bottom={4} />
+                  </>
+                );
+                /* If it's none of the above tags, just render as
                   normal html but with the same text formatting.
                   We can style more tags as necessary */
-            } else {
-              return (
-                <Text key={i} textDark medium {...styledTextProps}>
-                  {item}
-                </Text>
-              );
-            }
-          })}
+              } else {
+                return (
+                  <Text key={i} textDark medium {...styledTextProps}>
+                    {item}
+                  </Text>
+                );
+              }
+            })
+          : null}
       </div>
     );
   }

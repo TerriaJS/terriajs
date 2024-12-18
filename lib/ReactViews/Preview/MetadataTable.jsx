@@ -50,11 +50,11 @@ const MetadataTable = createReactClass({
       <div className={Styles.root}>
         <table>
           <tbody>
-            {isArr && metadataItem.length > 0 && isJoinable(metadataItem) && (
+            {isArr && metadataItem.length > 0 && isJoinable(metadataItem) ? (
               <tr>
                 <td>{metadataItem.join(", ")}</td>
               </tr>
-            )}
+            ) : null}
 
             {!isArr &&
               keys.length > 0 &&

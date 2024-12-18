@@ -43,7 +43,7 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
       <PanelMenuButton isOpen={isOpen} onClick={() => setIsOpen(true)}>
         <StyledIcon glyph={GLYPHS.menuDotted} />
       </PanelMenuButton>
-      {isOpen && (
+      {isOpen ? (
         <ul>
           {options.map(({ text, onSelect, disabled }) => (
             <li key={text}>
@@ -58,7 +58,7 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
             </li>
           ))}
         </ul>
-      )}
+      ) : null}
     </PanelMenuContainer>
   );
 };

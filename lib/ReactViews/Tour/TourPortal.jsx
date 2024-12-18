@@ -209,12 +209,12 @@ const TourGrouping = observer(({ tourPoints }) => {
   }
   return (
     <>
-      {currentRectangle && (
+      {currentRectangle ? (
         <TourOverlay
           rectangle={currentRectangle}
           onCancel={() => viewState.nextTourPoint()}
         />
-      )}
+      ) : null}
       {tourPoints.map((tourPoint, index) => {
         const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
 

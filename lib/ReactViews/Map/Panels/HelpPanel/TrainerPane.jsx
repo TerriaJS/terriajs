@@ -39,10 +39,10 @@ class TrainerPane extends React.Component {
     return (
       <Text textDark noFontSize>
         <Box column>
-          {markdownText && (
+          {markdownText ? (
             <StyledHtml viewState={viewState} markdown={markdownText} />
-          )}
-          {trainerItems?.map && (
+          ) : null}
+          {trainerItems?.map ? (
             <UlTrainerItems column fullWidth justifySpaceBetween>
               {trainerItems.map((item, index) => (
                 <li key={index}>
@@ -66,7 +66,7 @@ class TrainerPane extends React.Component {
                 </li>
               ))}
             </UlTrainerItems>
-          )}
+          ) : null}
         </Box>
       </Text>
     );

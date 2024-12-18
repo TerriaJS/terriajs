@@ -30,7 +30,7 @@ const FeatureInfoPanelButton: React.FC<FeatureInfoPanelButtonModel> = (
           : undefined
       }
     >
-      {text && <Text textLight>{text}</Text>}
+      {text ? <Text textLight>{text}</Text> : null}
     </StyledButton>
   );
 };

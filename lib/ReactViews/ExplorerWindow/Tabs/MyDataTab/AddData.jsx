@@ -252,7 +252,7 @@ class AddData extends React.Component {
                 accept={dataTypes.join(",")}
                 onChange={this.handleUploadFile.bind(this)}
               />
-              {this.state.isLoading && <Loader />}
+              {this.state.isLoading ? <Loader /> : null}
             </section>
           </>
         )}
@@ -316,7 +316,7 @@ class AddData extends React.Component {
           >
             {t("addData.urlInputBtn")}
           </button>
-          {this.state.isLoading && <Loader />}
+          {this.state.isLoading ? <Loader /> : null}
         </form>
       </>
     );

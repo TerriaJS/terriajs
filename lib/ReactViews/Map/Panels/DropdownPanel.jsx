@@ -111,8 +111,8 @@ const DropdownPanel = createReactClass({
               }`}
           `}
         >
-          {this.props.theme.icon && <Icon glyph={iconGlyph} />}
-          {this.props.btnText && <span>{this.props.btnText}</span>}
+          {this.props.theme.icon ? <Icon glyph={iconGlyph} /> : null}
+          {this.props.btnText ? <span>{this.props.btnText}</span> : null}
         </button>
         {this.isOpen() && (
           <InnerPanel
