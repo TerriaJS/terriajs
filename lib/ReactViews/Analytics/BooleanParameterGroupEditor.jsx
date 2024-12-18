@@ -76,10 +76,10 @@ const BooleanParameterGroupEditor = createReactClass({
   renderCheckboxGroup() {
     const whichIcon = true;
     const OneForAll = this.props.parameter.OneForAll;
-    let name;
-    this.props.parameter.name
-      ? (name = this.props.parameter.name + "_Group")
-      : (name = this.props.parameter.id + "_Group");
+    const name =
+      (this.props.parameter.name
+        ? this.props.parameter.name
+        : this.props.parameter.id) + "_Group";
     const OneForAllDivName = name + "_OneForAllDiv";
     const groupClick = this.toggleDiv.bind(this, name);
     const allClick = this.toggleAll.bind(this, {

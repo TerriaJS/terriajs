@@ -74,7 +74,9 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
   }
 
   dismiss = () => {
-    this.props.onDismiss && this.props.onDismiss();
+    if (this.props.onDismiss) {
+      this.props.onDismiss();
+    }
     this.setState({ open: false });
   };
 

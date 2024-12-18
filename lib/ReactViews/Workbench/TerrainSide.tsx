@@ -32,8 +32,9 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
     const { terria } = props;
 
     const showTerrainOnSide = (side: string, event: any) => {
-      event && event.stopPropagation();
-
+      if (event) {
+        event.stopPropagation();
+      }
       runInAction(() => {
         switch (side) {
           case sides.left:

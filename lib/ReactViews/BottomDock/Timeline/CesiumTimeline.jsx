@@ -77,7 +77,9 @@ const CesiumTimeline = createReactClass({
     });
 
     this.resizeListener = () => {
-      this.cesiumTimeline && this.cesiumTimeline.resize();
+      if (this.cesiumTimeline) {
+        this.cesiumTimeline.resize();
+      }
     };
     window.addEventListener("resize", this.resizeListener, false);
   },
