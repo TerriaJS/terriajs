@@ -23,7 +23,8 @@ class KmlCatalogItem
       CesiumIonMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
     )
   )
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "kml";
 
   constructor(...args: ModelConstructorParameters) {
@@ -70,6 +71,8 @@ class KmlCatalogItem
         } else {
           kmlLoadInput = await readXml(this._kmlFile);
         }
+      } else if (isDefined(this.ionResource)) {
+        kmlLoadInput = this.ionResource;
       } else if (isDefined(this.url)) {
         kmlLoadInput = proxyCatalogItemUrl(this, this.url);
       }
