@@ -1,22 +1,20 @@
-import clipboard from "clipboard";
-import { ReactElement, FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../Styled/Box";
 import Button from "../Styled/Button";
+import Icon, { StyledIcon } from "../Styled/Icon";
 import { verticalAlign } from "../Styled/mixins";
 import Spacing from "../Styled/Spacing";
-import Icon, { StyledIcon } from "../Styled/Icon";
 
 enum CopyStatus {
   Success,
   Error,
-  NotCopiedOrWaiting // Copy button hasn't been clicked or clipboard.js hasn't copied the data yet
+  Default
 }
 
 interface ClipboardProps {
-  id: string;
-  source: ReactElement;
+  source: ReactNode;
   theme: "dark" | "light";
   rounded?: boolean;
   text?: string;
@@ -24,63 +22,57 @@ interface ClipboardProps {
 }
 
 const Clipboard: FC<ClipboardProps> = (props) => {
-  const { id, source, theme, rounded } = props;
+  const { source, theme, rounded, text, onCopy } = props;
   const { t } = useTranslation();
-  const [status, setStatus] = useState<CopyStatus>(
-    CopyStatus.NotCopiedOrWaiting
-  );
-  useEffect(() => {
-    // Setup clipboard.js and show a tooltip on copy success or error for 3s
-    const clipboardBtn = new clipboard(`.btn-copy-${id}`);
-    let timerId: ReturnType<typeof setTimeout> | null = null;
-    function removeTimeout() {
-      if (timerId !== null) {
-        clearTimeout(timerId);
-        timerId = null;
+  const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
+
+  const handleCopy = async () => {
+    try {
+      if (text) {
+        await navigator.clipboard.writeText(text);
+        setStatus(CopyStatus.Success);
+        if (onCopy) onCopy(text);
+      } else {
+        setStatus(CopyStatus.Error);
       }
-    }
-    function resetTooltipLater() {
-      removeTimeout();
-      timerId = setTimeout(() => {
-        setStatus(CopyStatus.NotCopiedOrWaiting);
-      }, 3000);
-    }
-    clipboardBtn.on("success", (evt) => {
-      props.onCopy?.(evt.text);
-      setStatus(CopyStatus.Success);
-      resetTooltipLater();
-    });
-    clipboardBtn.on("error", () => {
+    } catch {
       setStatus(CopyStatus.Error);
-      resetTooltipLater();
-    });
-    return function cleanup() {
-      removeTimeout();
-      clipboardBtn.destroy();
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [id]);
+    }
+  };
+
+  useEffect(() => {
+    if (status === CopyStatus.Success || status === CopyStatus.Error) {
+      const timer = setTimeout(() => {
+        setStatus(CopyStatus.Default);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const isLightTheme = theme === "light";
+  const canCopy = !!navigator.clipboard;
+
   return (
     <ClipboardDiv>
       <Box>
         {source}
-        <Button
-          primary
-          css={`
-            width: 80px;
-            border-radius: 2px;
-            ${rounded && `border-radius:  0 32px 32px 0;`}
-          `}
-          className={`btn-copy-${id}`}
-          data-clipboard-target={`#${id}`}
-          textProps={{ large: true }}
-        >
-          {t("clipboard.copy")}
-        </Button>
+        {canCopy && (
+          <Button
+            onClick={handleCopy}
+            primary
+            css={`
+              width: 80px;
+              border-radius: 2px;
+              ${rounded && `border-radius:  0 32px 32px 0;`}
+            `}
+            textProps={{ large: true }}
+          >
+            {t("clipboard.copy")}
+          </Button>
+        )}
       </Box>
-      {status !== CopyStatus.NotCopiedOrWaiting && (
+      {canCopy && status !== CopyStatus.Default && (
         <>
           <Spacing bottom={2} />
           <Box
