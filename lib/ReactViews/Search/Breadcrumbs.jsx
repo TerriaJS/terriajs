@@ -103,19 +103,20 @@ class Breadcrumbs extends React.Component {
         />
         <Spacing right={1.2} />
         <Box flexWrap>
-          {parentGroups &&
-            parentGroups.map((parent, i) => (
-              <React.Fragment key={i}>
-                {this.renderCrumb(parent, i, parentGroups)}
-                {i !== parentGroups.length - 1 && (
-                  <Box paddedHorizontally={1}>
-                    <Text small textDark>
-                      {">"}
-                    </Text>
-                  </Box>
-                )}
-              </React.Fragment>
-            ))}
+          {parentGroups
+            ? parentGroups.map((parent, i) => (
+                <React.Fragment key={i}>
+                  {this.renderCrumb(parent, i, parentGroups)}
+                  {i !== parentGroups.length - 1 && (
+                    <Box paddedHorizontally={1}>
+                      <Text small textDark>
+                        {">"}
+                      </Text>
+                    </Box>
+                  )}
+                </React.Fragment>
+              ))
+            : null}
         </Box>
       </Box>
     );

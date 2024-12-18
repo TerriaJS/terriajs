@@ -159,7 +159,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         onUserClick={this.props.onUserClick}
         disableCloseOnFocusLoss={this.props.viewState.retainSharePanel}
       >
-        {this.state.isOpen && this.renderContent()}
+        {this.state.isOpen ? this.renderContent() : null}
       </MenuPanel>
     ) : (
       <StorySharePanel
@@ -178,7 +178,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         }}
         onUserClick={this.props.onUserClick}
       >
-        {this.state.isOpen && this.renderContent()}
+        {this.state.isOpen ? this.renderContent() : null}
       </StorySharePanel>
     );
   }

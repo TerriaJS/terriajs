@@ -95,7 +95,7 @@ const renderStep = (
             </Text>
           )}
         </Translation>
-        {options.renderDescription && step?.markdownDescription && (
+        {options.renderDescription && step?.markdownDescription ? (
           <>
             {/* {options.comfortable && <Spacing bottom={2} />} */}
             <Spacing bottom={options.comfortable ? 2 : 1} />
@@ -107,7 +107,7 @@ const renderStep = (
               />
             </StepText>
           </>
-        )}
+        ) : null}
         {options.footerComponent?.()}
       </Box>
     </Box>
@@ -188,7 +188,7 @@ class StepAccordionRaw extends React.Component<
           )}
         </Box>
         {/* expanded version of the box step */}
-        {isExpanded && (
+        {isExpanded ? (
           <Box
             paddedHorizontally={4}
             column
@@ -233,7 +233,7 @@ class StepAccordionRaw extends React.Component<
               }
             )}
           </Box>
-        )}
+        ) : null}
         <Box paddedHorizontally={2}>
           <RawButton
             onClick={() => setIsExpanded(!isExpanded)}
@@ -257,7 +257,7 @@ class StepAccordionRaw extends React.Component<
           </RawButton>
         </Box>
         {/* Accordion / child steps? */}
-        {isShowingAllSteps && (
+        {isShowingAllSteps ? (
           <BoxTrainerExpandedSteps
             column
             position="absolute"
@@ -288,7 +288,7 @@ class StepAccordionRaw extends React.Component<
               <Spacing bottom={3} />
             )}
           </BoxTrainerExpandedSteps>
-        )}
+        ) : null}
       </Box>
     );
   }

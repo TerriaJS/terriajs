@@ -93,11 +93,11 @@ const NotificationWindow = createReactClass({
             <div className={Styles.body}>{message}</div>
           </div>
           <div className={Styles.footer}>
-            {denyText && (
+            {denyText ? (
               <button type="button" className={Styles.btn} onClick={this.deny}>
                 {denyText}
               </button>
-            )}
+            ) : null}
             <button type="button" className={Styles.btn} onClick={this.confirm}>
               {confirmText}
             </button>

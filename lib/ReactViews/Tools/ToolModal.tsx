@@ -47,7 +47,7 @@ export const Frame: React.FC<FrameProps> = observer((props) => {
           </RawButton>
         </Box>
       </Toggle>
-      {showChildren && props.children}
+      {showChildren ? props.children : null}
     </Wrapper>
   );
 });
@@ -111,9 +111,9 @@ const Title: React.FC<TitleProps> = (props) => {
   return (
     <Box centered>
       <Box>
-        {props.icon && (
+        {props.icon ? (
           <StyledIcon styledWidth="20px" light glyph={props.icon} />
-        )}
+        ) : null}
       </Box>
       <Spacing right={1} />
       <TitleText

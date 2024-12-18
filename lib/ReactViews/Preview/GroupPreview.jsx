@@ -74,46 +74,45 @@ class GroupPreview extends React.Component {
             />
           </div>
         </div>
-        {this.props.previewed.loadMetadataResult?.error && (
+        {this.props.previewed.loadMetadataResult?.error ? (
           <WarningBox
             error={this.props.previewed.loadMetadataResult?.error}
             viewState={this.props.viewState}
           />
-        )}
-        {this.props.previewed.loadMembersResult?.error && (
+        ) : null}
+        {this.props.previewed.loadMembersResult?.error ? (
           <WarningBox
             error={this.props.previewed.loadMembersResult?.error}
             viewState={this.props.viewState}
           />
-        )}
+        ) : null}
         <div className={Styles.previewedInfo}>
           <div className={Styles.url}>
             {this.props.previewed.description &&
-              this.props.previewed.description.length > 0 && (
-                <div>
-                  <h4 className={Styles.h4}>{t("description.name")}</h4>
-                  {parseCustomMarkdownToReact(
-                    this.props.previewed.description,
-                    { catalogItem: this.props.previewed }
-                  )}
-                </div>
-              )}
+            this.props.previewed.description.length > 0 ? (
+              <div>
+                <h4 className={Styles.h4}>{t("description.name")}</h4>
+                {parseCustomMarkdownToReact(this.props.previewed.description, {
+                  catalogItem: this.props.previewed
+                })}
+              </div>
+            ) : null}
             <DataPreviewSections metadataItem={metadataItem} />
 
-            {metadataItem.dataCustodian && (
+            {metadataItem.dataCustodian ? (
               <div>
                 <h4 className={Styles.h4}>{t("preview.dataCustodian")}</h4>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}
               </div>
-            )}
+            ) : null}
 
             {metadataItem.url &&
-              metadataItem.url.length &&
-              !metadataItem.hideSource && (
-                <DataPreviewUrl metadataItem={metadataItem} />
-              )}
+            metadataItem.url.length &&
+            !metadataItem.hideSource ? (
+              <DataPreviewUrl metadataItem={metadataItem} />
+            ) : null}
           </div>
         </div>
       </div>

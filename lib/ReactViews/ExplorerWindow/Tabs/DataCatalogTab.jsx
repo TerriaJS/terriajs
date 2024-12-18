@@ -57,7 +57,7 @@ class DataCatalogTab extends React.Component {
             <Box className={Styles.dataExplorer} styledWidth="40%">
               {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
               {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
-              {searchState.catalogSearchProvider && (
+              {searchState.catalogSearchProvider ? (
                 <SearchBox
                   searchText={searchState.catalogSearchText}
                   onSearchTextChanged={(val) => this.changeSearchText(val)}
@@ -71,7 +71,7 @@ class DataCatalogTab extends React.Component {
                       : DEBOUNCE_INTERVAL
                   }
                 />
-              )}
+              ) : null}
               <DataCatalog
                 terria={this.props.terria}
                 viewState={this.props.viewState}
@@ -88,13 +88,13 @@ class DataCatalogTab extends React.Component {
             </Box>
           </Box>
 
-          {showBreadcrumbs && (
+          {showBreadcrumbs ? (
             <Breadcrumbs
               terria={this.props.terria}
               viewState={this.props.viewState}
               previewed={previewed}
             />
-          )}
+          ) : null}
         </Box>
       </div>
     );

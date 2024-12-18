@@ -70,7 +70,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
           pedestrianHeight={PEDESTRIAN_HEIGHT}
         />
       )}
-      {isDropped && (
+      {isDropped ? (
         <>
           <ControlsContainer viewState={viewState}>
             <MovementControls
@@ -88,7 +88,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
             />
           </MiniMapContainer>
         </>
-      )}
+      ) : null}
     </>
   );
 });

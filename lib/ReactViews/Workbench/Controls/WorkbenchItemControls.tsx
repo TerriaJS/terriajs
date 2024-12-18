@@ -121,22 +121,14 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {/* TODO: remove min max props and move the checks to
       ColorScaleRangeSection to keep this component simple. */}
         {controls?.colorScaleRange &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMinimum"
-          ) &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMaximum"
-          ) && (
-            <ColorScaleRangeSection
-              item={item}
-              minValue={item.colorScaleMinimum}
-              maxValue={item.colorScaleMaximum}
-            />
-          )}
+        hasTraits(item, WebMapServiceCatalogItemTraits, "colorScaleMinimum") &&
+        hasTraits(item, WebMapServiceCatalogItemTraits, "colorScaleMaximum") ? (
+          <ColorScaleRangeSection
+            item={item}
+            minValue={item.colorScaleMinimum}
+            maxValue={item.colorScaleMaximum}
+          />
+        ) : null}
         {controls?.shortReport ? <ShortReport item={item} /> : null}
         {controls?.legend ? <Legend item={item} /> : null}
         {controls?.selectableDimensions ? (

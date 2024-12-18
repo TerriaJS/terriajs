@@ -131,7 +131,7 @@ class Disclaimer extends React.Component {
               centered
               displayInlineBlock={useSmallScreenInterface}
             >
-              {renderDenyButton && (
+              {renderDenyButton ? (
                 <DisclaimerButton
                   denyButton
                   onClick={() => this.deny(disclaimer.denyAction)}
@@ -139,7 +139,7 @@ class Disclaimer extends React.Component {
                 >
                   {disclaimerDeny}
                 </DisclaimerButton>
-              )}
+              ) : null}
               {useSmallScreenInterface ? (
                 <Spacing bottom={3} />
               ) : (

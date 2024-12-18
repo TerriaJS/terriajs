@@ -54,9 +54,9 @@ class WorkbenchList extends React.Component<IProps> {
         fullHeight
         column
       >
-        {this.props.terria.showSplitter && (
+        {this.props.terria.showSplitter ? (
           <WorkbenchSplitScreen terria={this.props.terria} />
-        )}
+        ) : null}
         <Sortable
           onSort={this.onSort}
           direction="vertical"

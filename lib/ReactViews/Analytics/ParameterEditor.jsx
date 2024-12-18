@@ -41,7 +41,7 @@ const ParameterEditor = createReactClass({
           htmlFor={this.fieldId + this.props.parameter.type}
         >
           {this.props.parameter.name}
-          {this.props.parameter.isRequired && <span> (required)</span>}
+          {this.props.parameter.isRequired ? <span> (required)</span> : null}
         </label>
         {typeof this.props.parameter.description === "string" &&
         this.props.parameter.description !== "" &&
@@ -291,8 +291,9 @@ ParameterEditor.parameterTypeConverters = [
       if (type === this.id) {
         return (
           <div>
-            {parameterEditor.props.parameter.hasNamedStates &&
-              parameterEditor.renderLabel()}
+            {parameterEditor.props.parameter.hasNamedStates
+              ? parameterEditor.renderLabel()
+              : null}
             <BooleanParameterEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}

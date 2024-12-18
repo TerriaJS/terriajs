@@ -132,7 +132,7 @@ class MobileHeader extends React.Component {
     const searchState = viewState.searchState;
     return (
       <div className={Styles.formSearchData}>
-        {searchState.showMobileLocationSearch && (
+        {searchState.showMobileLocationSearch ? (
           <SearchBox
             searchText={searchState.locationSearchText}
             onSearchTextChanged={this.changeLocationSearchText.bind(this)}
@@ -145,8 +145,8 @@ class MobileHeader extends React.Component {
             onClear={this.closeLocationSearch.bind(this)}
             autoFocus
           />
-        )}
-        {searchState.showMobileCatalogSearch && (
+        ) : null}
+        {searchState.showMobileCatalogSearch ? (
           <SearchBox
             searchText={searchState.catalogSearchText}
             onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
@@ -155,7 +155,7 @@ class MobileHeader extends React.Component {
             onClear={this.closeCatalogSearch.bind(this)}
             autoFocus
           />
-        )}
+        ) : null}
       </div>
     );
   }

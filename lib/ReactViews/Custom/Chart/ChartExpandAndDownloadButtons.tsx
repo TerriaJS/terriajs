@@ -173,11 +173,11 @@ const ExpandAndDownloadDropdowns = function (props: {
       >
         {props.t("chart.expand") + " ▾"}
       </Dropdown>
-      {props.canDownload && (
+      {props.canDownload ? (
         <Dropdown options={props.downloads} theme={downloadDropdownTheme}>
           {props.t("chart.download") + " ▾"}
         </Dropdown>
-      )}
+      ) : null}
     </ExpandAndDownloadContainer>
   );
 };
@@ -193,14 +193,14 @@ const ExpandAndDownloadButtons = function (props: {
       <ButtonChartExpand type="button" onClick={props.onExpand}>
         {props.t("chart.expand")}
       </ButtonChartExpand>
-      {props.downloadUrl && (
+      {props.downloadUrl ? (
         <DownloadLink download href={props.downloadUrl}>
           <StyledIcon
             fillColor={theme.textLight}
             glyph={Icon.GLYPHS.download}
           />
         </DownloadLink>
-      )}
+      ) : null}
     </ExpandAndDownloadContainer>
   );
 };

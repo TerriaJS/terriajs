@@ -134,7 +134,7 @@ class MyDataTab extends React.Component {
             [Styles.oneCol]: !showTwoColumn
           })}
         >
-          {this.state.activeTab && (
+          {this.state.activeTab ? (
             <>
               <button
                 type="button"
@@ -165,8 +165,8 @@ class MyDataTab extends React.Component {
                 remoteDataTypes={this.props.remoteDataTypes}
               />
             </>
-          )}
-          {showTwoColumn && (
+          ) : null}
+          {showTwoColumn ? (
             <Box flexShrinkZero column>
               <p className={Styles.explanation}>
                 <Trans i18nKey="addData.note">
@@ -191,10 +191,10 @@ class MyDataTab extends React.Component {
                 )}
               </ul>
             </Box>
-          )}
+          ) : null}
           {!this.state.activeTab && this.renderPromptBox()}
         </div>
-        {showTwoColumn && (
+        {showTwoColumn ? (
           <Box styledWidth="60%">
             <DataPreview
               terria={this.props.terria}
@@ -202,7 +202,7 @@ class MyDataTab extends React.Component {
               previewed={this.props.viewState.userDataPreviewedItem}
             />
           </Box>
-        )}
+        ) : null}
       </Box>
     );
   }

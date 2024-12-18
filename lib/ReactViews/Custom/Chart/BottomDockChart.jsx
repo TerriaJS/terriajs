@@ -310,9 +310,9 @@ class Chart extends React.Component {
                   height={this.plotHeight}
                   fill="transparent"
                 />
-                {this.cursorX && (
+                {this.cursorX ? (
                   <Cursor x={this.cursorX} stroke={defaultGridColor} />
-                )}
+                ) : null}
                 <Plot
                   chartItems={this.chartItems}
                   initialScales={this.initialScales}
