@@ -1,14 +1,24 @@
-import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
+import {
+  featureCollection,
+  Geometry,
+  GeometryCollection,
+  Properties
+} from "@turf/helpers";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
+import proj4 from "proj4";
 import Color from "terriajs-cesium/Source/Core/Color";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
+import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
+import { ArcGisPbfSource } from "../../../Map/Vector/Protomaps/ArcGisPbfSource";
+import { tableStyleToProtomaps } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -33,12 +43,10 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import proj4 from "proj4";
 
 interface DocumentInfo {
   Author?: string;
@@ -155,6 +163,13 @@ interface FeatureServer {
   advancedQueryCapabilities?: {
     supportsPagination: boolean;
   };
+  supportedQueryFormats?: string;
+  maxRecordCount?: number;
+  tileMaxRecordCount?: number;
+  maxRecordCountFactor?: number;
+  supportsCoordinatesQuantization?: boolean;
+  supportsTilesAndBasicQueriesMode?: boolean;
+  objectIdField?: string;
 }
 
 interface SpatialReference {
@@ -178,7 +193,7 @@ class FeatureServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
     private readonly _featureServer?: FeatureServer,
-    private _esriJson?: any
+    private _esriJson?: any | undefined
   ) {
     super();
     makeObservable(this);
@@ -363,6 +378,7 @@ class FeatureServerStratum extends LoadableStratum(
           color: includeColor
             ? createStratumInstance(TableColorStyleTraits, {
                 colorColumn: uniqueValueRenderer.field1,
+                mapType: "enum",
                 enumColors: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
                   createStratumInstance(EnumColorTraits, {
                     value: v.value,
@@ -376,6 +392,7 @@ class FeatureServerStratum extends LoadableStratum(
               }),
           pointSize: createStratumInstance(TablePointSizeStyleTraits, {}),
           point: createStratumInstance(TablePointStyleTraits, {
+            mapType: "enum",
             column: uniqueValueRenderer.field1,
             enum: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
               createStratumInstance(EnumPointSymbolTraits, {
@@ -386,6 +403,7 @@ class FeatureServerStratum extends LoadableStratum(
             null: defaultSymbolStyle.point
           }),
           outline: createStratumInstance(TableOutlineStyleTraits, {
+            mapType: "enum",
             column: uniqueValueRenderer.field1,
             enum: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
               createStratumInstance(EnumOutlineSymbolTraits, {
@@ -420,6 +438,7 @@ class FeatureServerStratum extends LoadableStratum(
           hidden: false,
           color: includeColor
             ? createStratumInstance(TableColorStyleTraits, {
+                mapType: "bin",
                 colorColumn: classBreaksRenderer.field,
                 binColors: symbolStyles.map((s) => s.color ?? ""),
                 binMaximums: classBreaksRenderer.classBreakInfos.map(
@@ -432,6 +451,7 @@ class FeatureServerStratum extends LoadableStratum(
               }),
           pointSize: createStratumInstance(TablePointSizeStyleTraits, {}),
           point: createStratumInstance(TablePointStyleTraits, {
+            mapType: "bin",
             column: classBreaksRenderer.field,
             bin: classBreaksRenderer.classBreakInfos.map((c, i) =>
               createStratumInstance(BinPointSymbolTraits, {
@@ -442,6 +462,7 @@ class FeatureServerStratum extends LoadableStratum(
             null: defaultSymbolStyle.point
           }),
           outline: createStratumInstance(TableOutlineStyleTraits, {
+            mapType: "bin",
             column: classBreaksRenderer.field,
             bin: classBreaksRenderer.classBreakInfos.map((c, i) =>
               createStratumInstance(BinOutlineSymbolTraits, {
@@ -454,6 +475,57 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
     }
+  }
+
+  get featuresPerRequest() {
+    return this._featureServer?.maxRecordCount;
+  }
+
+  get featuresPerTileRequest() {
+    return this._featureServer?.tileMaxRecordCount;
+  }
+
+  get maxRecordCountFactor() {
+    return this._featureServer?.maxRecordCountFactor;
+  }
+
+  get supportsQuantization() {
+    return !!this._featureServer?.supportsCoordinatesQuantization;
+  }
+
+  get tileRequests() {
+    return (
+      this._featureServer?.supportsTilesAndBasicQueriesMode &&
+      typeof this._featureServer?.supportedQueryFormats === "string" &&
+      (this._featureServer.supportedQueryFormats as string)
+        .toLowerCase()
+        .includes("pbf")
+    );
+  }
+
+  get objectIdField() {
+    return this._featureServer?.objectIdField;
+  }
+
+  get outFields() {
+    console.log(
+      Array.from(
+        new Set([
+          this._item.objectIdField,
+          this._item.activeTableStyle.tableColorMap.colorTraits.colorColumn,
+          this._item.activeTableStyle.outlineStyleMap.traits?.column,
+          this._item.activeTableStyle.pointStyleMap.traits?.column
+        ])
+      ).filter((t): t is string => !!t)
+    );
+    return Array.from(
+      new Set([
+        this._item.objectIdField,
+        this._item.activeTableStyle.tableColorMap.colorTraits.colorColumn,
+        this._item.activeTableStyle.outlineStyleMap.traits?.column,
+        this._item.activeTableStyle.pointStyleMap.traits?.column
+      ])
+    ).filter((t): t is string => !!t);
   }
 }
 
@@ -489,8 +561,15 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   protected async forceLoadGeojsonData(): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
-    const getEsriLayerJson = async (resultOffset?: number) =>
-      await loadJson(this.buildEsriJsonUrl(resultOffset));
+    if (this.tileRequests) return featureCollection([]);
+
+    const getEsriLayerJson = async (resultOffset?: number) => {
+      const url = proxyCatalogItemUrl(
+        this,
+        this.buildEsriJsonUrl(resultOffset).toString()
+      );
+      return await loadJson(url);
+    };
 
     if (!this.supportsPagination) {
       // Make a single request without pagination
@@ -556,6 +635,43 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     );
   }
 
+  @computed get imageryProvider() {
+    const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
+
+    let provider = new ProtomapsImageryProvider({
+      terria: this.terria,
+      data: new ArcGisPbfSource({
+        url: this.buildEsriJsonUrl().toString(),
+        outFields: [...this.outFields],
+        featuresPerTileRequest: this.featuresPerTileRequest,
+        maxRecordCountFactor: this.maxRecordCountFactor,
+        maxTiledFeatures: this.maxTiledFeatures,
+        tilingScheme: new WebMercatorTilingScheme()
+      }),
+      id: this.uniqueId,
+      paintRules,
+      labelRules
+    });
+
+    provider = this.wrapImageryPickFeatures(provider);
+
+    return provider;
+  }
+
+  @override
+  get mapItems() {
+    if (!this.tileRequests) return [];
+
+    return [
+      {
+        imageryProvider: this.imageryProvider,
+        show: this.show,
+        alpha: this.opacity,
+        clippingRectangle: undefined
+      }
+    ];
+  }
+
   @computed get featureServerData(): FeatureServer | undefined {
     const stratum = this.strata.get(
       FeatureServerStratum.stratumName
@@ -604,7 +720,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         .addQuery("resultOffset", resultOffset);
     }
 
-    return proxyCatalogItemUrl(this, uri.toString());
+    return uri;
   }
 }
 
