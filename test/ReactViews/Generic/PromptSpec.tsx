@@ -33,8 +33,9 @@ describe("HelpPrompt", function () {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
-              !viewState.showWelcomeMessage
+              terria.configParameters.showWelcomeMessage
+                ? !viewState.showWelcomeMessage
+                : null
             }
             theme={terriaTheme}
           />
@@ -53,8 +54,9 @@ describe("HelpPrompt", function () {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
-              !viewState.showWelcomeMessage
+              terria.configParameters.showWelcomeMessage
+                ? !viewState.showWelcomeMessage
+                : null
             }
             theme={terriaTheme}
           />
@@ -74,8 +76,9 @@ describe("HelpPrompt", function () {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
-              !viewState.showWelcomeMessage
+              terria.configParameters.showWelcomeMessage
+                ? !viewState.showWelcomeMessage
+                : null
             }
             theme={terriaTheme}
           />

@@ -190,7 +190,7 @@ export const SearchBox = createReactClass({
             rounded
           />
         </Text>
-        {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
+        {this.props.alwaysShowClear || this.hasValue() ? clearButton : null}
       </form>
     );
   }

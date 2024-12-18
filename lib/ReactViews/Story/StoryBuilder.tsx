@@ -354,7 +354,7 @@ class StoryBuilder extends React.Component<
         </BadgeBar>
         <Spacing bottom={2} />
         <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
-          {this.state.isRemoving && (
+          {this.state.isRemoving ? (
             <RemoveDialog
               theme={this.props.theme}
               text={
@@ -379,7 +379,7 @@ class StoryBuilder extends React.Component<
               onConfirm={this.removeAction}
               closeDialog={this.toggleRemoveDialog}
             />
-          )}
+          ) : null}
           <Box
             column
             styledHeight="100%"
@@ -491,11 +491,11 @@ class StoryBuilder extends React.Component<
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
-          {hasStories && this.renderPlayShare()}
+          {hasStories ? this.renderPlayShare() : null}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories()}
-        {this.state.editingMode && (
+        {hasStories ? this.renderStories() : null}
+        {this.state.editingMode ? (
           <StoryEditor
             removeStory={this.removeStory}
             exitEditingMode={() => this.setState({ editingMode: false })}
@@ -503,7 +503,7 @@ class StoryBuilder extends React.Component<
             saveStory={this.onSave}
             terria={this.props.viewState.terria}
           />
-        )}
+        ) : null}
       </Panel>
     );
   }
@@ -564,7 +564,7 @@ export const StoryButton: React.FC<StoryButtonProps> = (props) => {
   return (
     <Button
       primary
-      renderIcon={props.children && (() => props.children)}
+      renderIcon={props.children ? () => props.children : null}
       textProps={{
         large: true
       }}

@@ -137,7 +137,7 @@ class LocationSearchResults extends React.Component<PropsType> {
           </BoxSpan>
         </RawButtonAndHighlight>
         <Text textDarker>
-          {isOpen && (
+          {isOpen ? (
             <>
               <SearchHeader
                 searchResults={search}
@@ -173,7 +173,7 @@ class LocationSearchResults extends React.Component<PropsType> {
                 </BoxSpan>
               )}
             </>
-          )}
+          ) : null}
         </Text>
       </Box>
     );
@@ -220,9 +220,9 @@ const NameWithLoader: React.FC<NameWithLoaderProps> = observer(
           </TextSpan>
         </BoxSpan>
         {!props.isOpen &&
-          (props.search.isSearching || props.isWaitingForSearchToStart) && (
-            <Loader hideMessage boxProps={{ fullWidth: false }} />
-          )}
+        (props.search.isSearching || props.isWaitingForSearchToStart) ? (
+          <Loader hideMessage boxProps={{ fullWidth: false }} />
+        ) : null}
       </BoxSpan>
     );
   }

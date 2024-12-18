@@ -51,11 +51,11 @@ const MenuBar = observer((props) => {
     >
       <section>
         <ul className={classNames(Styles.menu)}>
-          {enableTools && (
+          {enableTools ? (
             <li className={Styles.menuItem}>
               <ToolsPanel />
             </li>
-          )}
+          ) : null}
           {!viewState.useSmallScreenInterface &&
             props.menuLeftItems.map((element, i) => (
               <li className={Styles.menuItem} key={i}>
@@ -82,7 +82,7 @@ const MenuBar = observer((props) => {
             </li>
           ) : null}
         </ul>
-        {storyEnabled && (
+        {storyEnabled ? (
           <ul className={classNames(Styles.menu)}>
             <li className={Styles.menuItem}>
               <StoryButton
@@ -92,7 +92,7 @@ const MenuBar = observer((props) => {
               />
             </li>
           </ul>
-        )}
+        ) : null}
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <SharePanel

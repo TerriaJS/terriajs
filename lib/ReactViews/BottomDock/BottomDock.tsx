@@ -59,12 +59,12 @@ class BottomDock extends React.Component<PropsType & MeasureElementProps> {
         <div id="TJS-BottomDockFirstPortal" />
         <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
         <ChartPanel terria={terria} viewState={this.props.viewState} />
-        {top && (
+        {top ? (
           <Timeline
             terria={terria}
             elementConfig={this.props.terria.elements.get("timeline")}
           />
-        )}
+        ) : null}
         {/* Used for react portals - do not remove without updating portals using this */}
         <div id="TJS-BottomDockLastPortal" />
       </div>
