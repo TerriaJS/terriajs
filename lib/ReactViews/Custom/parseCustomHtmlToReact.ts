@@ -78,7 +78,6 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
     shouldProcessNode: (node: DomElement) => node.name === "a",
     processNode: function (node: DomElement, children, index) {
       // Make sure any <a href> tags open in a new window
-      // eslint-disable-line react/display-name
       const elementProps = {
         key: "anchor-" + keyIndex++,
         target: "_blank",
