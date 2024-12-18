@@ -1683,6 +1683,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           // If feature data doesn't contain current discrete time - we can safely continue
@@ -1837,6 +1838,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           // If feature data doesn't contain current discrete time - we can safely continue
@@ -1999,6 +2001,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           const featureIdColumnValue = featureData?.getValue(time)?.id;

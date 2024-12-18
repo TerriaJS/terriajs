@@ -200,6 +200,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           member.name
         ) {
           // Push member to map
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           membersByName.get(member.name)?.push(member) ??
             membersByName.set(member.name, [member]);
         }
