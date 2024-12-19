@@ -2,6 +2,7 @@
 
 #### next release (8.7.12)
 
+- Update to interactjs 1.10.27 to fix Safari issues.
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
