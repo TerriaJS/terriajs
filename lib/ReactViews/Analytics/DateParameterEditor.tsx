@@ -15,18 +15,15 @@ const DateParameterEditor: React.FC<DateParameterEditorProps> = observer(
         ? Styles.field
         : Styles.fieldDatePlaceholder;
 
-    const onChangeDate = useCallback(
-      (e) => parameter.setValue(CommonStrata.user, e.target.value),
-      [parameter]
-    );
-
     return (
       <div>
         <input
           className={style}
           type="date"
           placeholder="YYYY-MM-DD"
-          onChange={onChangeDate}
+          onChange={(e) =>
+            parameter.setValue(CommonStrata.user, e.target.value)
+          }
           value={parameter.value ?? ""}
         />
       </div>
