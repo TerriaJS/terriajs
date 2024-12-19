@@ -430,6 +430,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     ) {
       let errorMessage: string | undefined;
       try {
+        // @ts-expect-error TS(2554)
         errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
       } catch {
         /* eslint-disable-line no-empty */

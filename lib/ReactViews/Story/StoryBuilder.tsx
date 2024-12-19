@@ -1,16 +1,17 @@
-import { action, toJS, makeObservable } from "mobx";
+import { action, makeObservable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
+  WithTranslation,
   useTranslation,
-  withTranslation,
-  WithTranslation
+  withTranslation
 } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import {
   Category,
   StoryAction
@@ -23,15 +24,14 @@ import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
+import { WithViewState, withViewState } from "../Context";
 import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
-import Styles from "./story-builder.scss";
 import StoryEditor from "./StoryEditor";
-const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
+import Styles from "./story-builder.scss";
 
 const STORY_VIDEO = "storyVideo";
 

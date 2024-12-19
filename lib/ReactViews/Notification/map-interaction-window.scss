@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .window {
   display: none;
@@ -12,7 +12,7 @@
   top: 50px;
   z-index: 999;
   color: #000;
-  padding: $padding;
+  padding: variables.$padding;
 }
 
 .isActive {
@@ -20,7 +20,7 @@
 }
 
 .content {
-  margin-bottom: $padding;
+  margin-bottom: variables.$padding;
 }
 
 .btn {

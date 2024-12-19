@@ -233,7 +233,7 @@ class SettingPanel extends React.Component<PropTypes> {
       : t("settingPanel.timeline.hideLabel");
 
     return (
-      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
+      // @ts-expect-error TS(2322): Type '{ children: Element; theme: { inner: string;... Remove this comment to see the full error message
       <MenuPanel
         theme={dropdownTheme}
         btnRef={this.props.refFromHOC}

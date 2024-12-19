@@ -1,0 +1,165 @@
+"use strict";
+
+import React from "react";
+
+import PropTypes from "prop-types";
+
+import defined from "terriajs-cesium/Source/Core/defined";
+
+import Styles from "./parameter-editors.scss";
+
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import UserDrawing from "../../Models/UserDrawing";
+import { withTranslation } from "react-i18next";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+
+@observer
+class PolygonParameterEditor extends React.Component {
+  static propTypes = {
+    previewed: PropTypes.object,
+    parameter: PropTypes.object,
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
+  };
+
+  setValueFromText(e: any) {
+    // @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
+    PolygonParameterEditor.setValueFromText(e, this.props.parameter);
+  }
+
+  selectPolygonOnMap() {
+    selectOnMap(
+      // @ts-expect-error TS(2339): Property 'previewed' does not exist on type 'Reado... Remove this comment to see the full error message
+      this.props.previewed.terria,
+      // @ts-expect-error TS(2339): Property 'viewState' does not exist on type 'Reado... Remove this comment to see the full error message
+      this.props.viewState,
+      // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
+      this.props.parameter
+    );
+  }
+
+  render() {
+    // @ts-expect-error TS(2339): Property 't' does not exist on type 'Readonly<{}> ... Remove this comment to see the full error message
+    const { t } = this.props;
+    return (
+      <div>
+        <input
+          className={Styles.field}
+          type="text"
+          onChange={this.setValueFromText.bind(this)}
+          // @ts-expect-error TS(2339): Property 'parameter' does not exist on type 'Reado... Remove this comment to see the full error message
+          value={getDisplayValue(this.props.parameter.value)}
+        />
+        <button
+          type="button"
+          onClick={this.selectPolygonOnMap.bind(this)}
+          className={Styles.btnSelector}
+        >
+          {t("analytics.clickToDrawPolygon")}
+        </button>
+      </div>
+    );
+  }
+}
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+// @ts-expect-error TS(2339): Property 'setValueFromText' does not exist on type... Remove this comment to see the full error message
+PolygonParameterEditor.setValueFromText = function (e: any, parameter: any) {
+  parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+export function getDisplayValue(value: any) {
+  if (!defined(value) || value.length < 1) {
+    return "";
+  }
+  const pointsLongLats = value[0];
+
+  let polygon = "";
+  for (let i = 0; i < pointsLongLats.length; i++) {
+    polygon +=
+      "[" +
+      pointsLongLats[i][0].toFixed(3) +
+      ", " +
+      pointsLongLats[i][1].toFixed(3) +
+      "]";
+    if (i !== pointsLongLats.length - 1) {
+      polygon += ", ";
+    }
+  }
+  if (polygon.length > 0) {
+    return "[" + polygon + "]";
+  } else {
+    return "";
+  }
+}
+
+/**
+ * Helper function for processing clicked/moved points.
+ */
+function getPointsLongLats(pointEntities: any, terria: any) {
+  const pointEnts = pointEntities.entities.values;
+  const pointsLongLats = [];
+  for (let i = 0; i < pointEnts.length; i++) {
+    const currentPoint = pointEnts[i];
+    const currentPointPos = currentPoint.position.getValue(
+      terria.timelineClock.currentTime
+    );
+    const cartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
+    const points = [];
+    points.push(CesiumMath.toDegrees(cartographic.longitude));
+    points.push(CesiumMath.toDegrees(cartographic.latitude));
+    pointsLongLats.push(points);
+  }
+
+  // Close the polygon.
+  if (pointsLongLats.length > 0) {
+    pointsLongLats.push(pointsLongLats[0]);
+  }
+
+  return pointsLongLats;
+}
+
+/**
+ * Prompt user to select/draw on map in order to define parameter.
+ * @param {Terria} terria Terria instance.
+ * @param {Object} viewState ViewState.
+ * @param {FunctionParameter} parameter Parameter.
+ */
+export function selectOnMap(terria: any, viewState: any, parameter: any) {
+  const userDrawing = new UserDrawing({
+    terria: terria,
+    onPointClicked: function (pointEntities) {
+      runInAction(() => {
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(pointEntities, terria)
+        ]);
+      });
+    },
+    onCleanUp: function () {
+      viewState.openAddData();
+    },
+    onPointMoved: function (customDataSource) {
+      runInAction(() => {
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(customDataSource, terria)
+        ]);
+      });
+    }
+  });
+  userDrawing.enterDrawMode();
+}
+
+export default withTranslation()(PolygonParameterEditor);

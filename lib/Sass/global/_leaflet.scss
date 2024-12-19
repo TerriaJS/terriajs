@@ -1,4 +1,4 @@
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/mixins";
 
 // This makes Leaflet work in hot mode
 :global {
@@ -273,7 +273,7 @@
   }
   .leaflet-container a {
     color: #0078a8;
-    @include link(#fff);
+    @include mixins.link(#fff);
   }
   .leaflet-container a.leaflet-active {
     outline: 2px solid orange;

@@ -59,6 +59,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
               `}
             >
               <MenuBar
+                // @ts-expect-error TS(2322): Type '{ menuItems: any; menuLeftItems: any; animat... Remove this comment to see the full error message
                 menuItems={customElements.menu}
                 menuLeftItems={customElements.menuLeft}
                 animationDuration={animationDuration}

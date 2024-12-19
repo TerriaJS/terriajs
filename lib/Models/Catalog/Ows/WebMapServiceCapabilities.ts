@@ -162,6 +162,7 @@ export default class WebMapServiceCapabilities {
   static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> =
     createTransformer((url: string) => {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
+        // @ts-expect-error TS(2554)
         const json = xml2json(capabilitiesXml);
         if (!capabilitiesXml || !defined(json.Capability)) {
           throw networkRequestError({

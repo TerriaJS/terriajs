@@ -1,8 +1,8 @@
-@import "~terriajs-variables";
-@import "../../../../Sass/common/mixins";
+@use "../../../../Sass/common/_variables";
+@use "../../../../Sass/common/mixins";
 
 .share-panel {
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .catalog-share {
@@ -13,47 +13,47 @@
   position: relative;
   text-align: center;
   width: 50%;
-  margin-left: $padding-small;
+  margin-left: variables.$padding-small;
 }
 
 .catalog-share-inner {
-  background: $grey-lightest;
-  color: $text-darker;
+  background: variables.$grey-lightest;
+  color: variables.$text-darker;
 }
 
 .story-share-inner {
-  background: $grey-lightest;
-  color: $text-darker;
+  background: variables.$grey-lightest;
+  color: variables.$text-darker;
   right: 0;
   text-align: left;
 }
 
 .dropdown-inner {
-  width: $share-panel-width;
-  @include transform-origin(50%, top);
+  width: variables.$share-panel-width;
+  @include mixins.transform-origin(50%, top);
 }
 
 .btn--catalogShare {
-  font-size: $font-size-data-preview;
+  font-size: variables.$font-size-data-preview;
   background: transparent;
-  color: $color-primary;
+  color: variables.$color-primary;
   box-shadow: none;
   svg {
-    fill: $color-primary;
+    fill: variables.$color-primary;
   }
   &:hover,
   &:focus {
-    color: $text-light;
+    color: variables.$text-light;
   }
 }
 
 .btn--withoutText {
   svg {
-    fill: $text-darker;
+    fill: variables.$text-darker;
   }
   // not in design but should give life to the button?
   &:hover,
   &:focus {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }

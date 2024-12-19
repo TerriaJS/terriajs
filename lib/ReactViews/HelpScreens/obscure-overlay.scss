@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/_mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/_mixins";
 
 .topOverlay {
   position: fixed;
