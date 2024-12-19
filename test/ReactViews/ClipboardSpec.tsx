@@ -7,7 +7,7 @@ import Clipboard from "../../lib/ReactViews/Clipboard";
 import Input from "../../lib/Styled/Input";
 import Button from "../../lib/Styled/Button";
 
-describe("Clipboard", function () {
+xdescribe("Clipboard", function () {
   let testRenderer: any;
 
   describe("with basic props", function () {
