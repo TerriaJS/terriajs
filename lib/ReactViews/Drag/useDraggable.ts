@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export const useDraggable = (options?: { handleSelector?: string }) => {
-  const [node, setNode] = useState<HTMLElement>();
+  const [node, setNode] = useState<HTMLElement | null>();
   // Use refs to track current values without triggering rerenders
   const dxRef = useRef(0);
   const dyRef = useRef(0);
@@ -12,7 +12,7 @@ export const useDraggable = (options?: { handleSelector?: string }) => {
     handleSelectorRef.current = options?.handleSelector;
   }, [options?.handleSelector]);
 
-  const ref = useCallback((nodeEle) => {
+  const ref = useCallback((nodeEle: HTMLElement | null) => {
     setNode(nodeEle);
   }, []);
 
