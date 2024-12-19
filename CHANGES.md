@@ -4,6 +4,7 @@
 
 - Remove unused klaw-sync dependency.
 - Remove unused hammerjs dependency.
+- Remove unused turf/meta dependency.
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18
