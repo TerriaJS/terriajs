@@ -430,7 +430,10 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     ) {
       let errorMessage: string | undefined;
       try {
-        errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
+        const jsonResponse = xml2json(getFeatureResponse);
+        errorMessage = jsonResponse
+          ? jsonResponse.Exception?.ExceptionText
+          : undefined;
       } catch {
         /* eslint-disable-line no-empty */
       }

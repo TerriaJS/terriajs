@@ -145,7 +145,7 @@ class WpsLoadableStratum extends LoadableStratum(
     }
 
     const json = xml2json(xml);
-    if (!isDefined(json.ProcessDescription)) {
+    if (!json || !isDefined(json.ProcessDescription)) {
       throw networkRequestError({
         sender: this,
         title: i18next.t(

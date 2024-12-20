@@ -250,7 +250,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
    */
   @action
   checkStatus(json: any) {
-    const status = json.Status;
+    const status = json ? json.Status : undefined;
     if (!isDefined(status)) {
       throw new TerriaError({
         sender: this,
@@ -296,6 +296,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     if (isDefined(this.wpsResponseUrl) && !isDefined(this.wpsResponse)) {
       const url = proxyCatalogItemUrl(this, this.wpsResponseUrl, "0d");
       const wpsResponse = xml2json(await this.getXml(url));
+      if (!wpsResponse) return;
       runInAction(() => {
         this.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
       });

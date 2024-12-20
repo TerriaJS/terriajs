@@ -65,7 +65,7 @@ class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
       proxyCatalogItemUrl(catalogItem, url)
     );
     const json = xml2json(capabilitiesXml);
-    if (!isDefined(json.ServiceMetadata)) {
+    if (!json || !isDefined(json.ServiceMetadata)) {
       throw networkRequestError({
         title: "Invalid GetCapabilities",
         message:
@@ -132,7 +132,7 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
       proxyCatalogItemUrl(catalogItem, url)
     );
     const json = xml2json(capabilitiesXml);
-    if (typeof json.CoverageDescription?.CoverageId !== "string") {
+    if (!json || typeof json.CoverageDescription?.CoverageId !== "string") {
       throw networkRequestError({
         title: "Invalid DescribeCoverage",
         message:

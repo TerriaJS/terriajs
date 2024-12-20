@@ -131,7 +131,7 @@ export default class WebMapTileServiceCapabilities {
     createTransformer((url: string) => {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
-        if (!capabilitiesXml || !defined(json.ServiceIdentification)) {
+        if (!capabilitiesXml || !json || !defined(json.ServiceIdentification)) {
           throw networkRequestError({
             title: i18next.t(
               "models.webMapTileServiceCatalogGroup.invalidCapabilitiesTitle"
