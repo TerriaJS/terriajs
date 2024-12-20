@@ -6,7 +6,7 @@ import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
-import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
+import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox";
 import Styles from "./data-catalog-tab.scss";
 import Breadcrumbs from "../../Search/Breadcrumbs";
 import Box from "../../../Styled/Box";

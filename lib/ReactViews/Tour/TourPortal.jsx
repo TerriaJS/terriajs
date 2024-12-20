@@ -29,14 +29,14 @@ import {
   calculateLeftPosition,
   calculateTopPosition,
   getOffsetsFromTourPoint
-} from "./tour-helpers.ts";
+} from "./tour-helpers";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox";
-import TourIndicator from "./TourIndicator.jsx";
-import TourOverlay from "./TourOverlay.jsx";
+import TourIndicator from "./TourIndicator";
+import TourOverlay from "./TourOverlay";
 import TourPrefaceBox from "./TourPrefaceBox";
-import TourProgressDot from "./TourProgressDot.jsx";
+import TourProgressDot from "./TourProgressDot";
 
 /**
  * Indicator bar/"dots" on progress of tour.

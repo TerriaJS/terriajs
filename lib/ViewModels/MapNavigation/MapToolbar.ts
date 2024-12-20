@@ -28,7 +28,7 @@ export interface ToolConfig {
    *
    * example: ```
    *  {
-   *    toolComponentLoader: () => import("./MyToolModule.tsx"),
+   *    toolComponentLoader: () => import("./MyToolModule"),
    *  }
    * ```
    */
@@ -94,7 +94,7 @@ export { default as ViewerMode } from "../../Models/ViewerMode";
  * Example:
  * const toolId = addTool(viewState, {
  *   name: "X Tool",
- *   toolComponentLoader: () => import("./XTool.tsx"),
+ *   toolComponentLoader: () => import("./XTool"),
  *   toolButton: {
  *        text: "Open X tool",
  *        tooltip: "X Tool",
