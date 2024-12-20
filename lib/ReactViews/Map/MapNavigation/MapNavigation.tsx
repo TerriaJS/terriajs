@@ -1,4 +1,3 @@
-import { TFunction } from "i18next";
 import { debounce } from "lodash-es";
 import {
   action,
@@ -11,7 +10,7 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
