@@ -1,5 +1,4 @@
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction } from "i18next";
 import {
   action,
   computed,
@@ -12,7 +11,7 @@ import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
