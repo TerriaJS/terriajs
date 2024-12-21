@@ -2,6 +2,7 @@
 
 #### next release (8.7.12)
 
+- Update to math-expression-evaluator 2.0.6.
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
