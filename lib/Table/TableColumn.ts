@@ -77,11 +77,13 @@ export interface UniqueColumnValues {
 export default class TableColumn {
   readonly columnNumber: number;
   readonly tableModel: TableMixin.Instance;
+  readonly evaluator: Mexp;
 
   constructor(tableModel: TableMixin.Instance, columnNumber: number) {
     makeObservable(this);
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
+    this.evaluator = new Mexp();
   }
 
   /**
@@ -117,6 +119,7 @@ export default class TableColumn {
     return [
       {
         type: 3, // This type defines a constant value - see https://bugwheels94.github.io/math-expression-evaluator/#how-to-define-a-token for types
+        precedence: 0, // Same precedence as other constants.
         token: THIS_COLUMN_EXPRESSION_TOKEN,
         show: THIS_COLUMN_EXPRESSION_TOKEN,
         value: THIS_COLUMN_EXPRESSION_TOKEN
@@ -128,6 +131,7 @@ export default class TableColumn {
           ) {
             return {
               type: 3, // This type defines a constant value
+              precedence: 0,
               token: colName,
               show: colName,
               value: colName
@@ -183,14 +187,14 @@ export default class TableColumn {
   get mexpPostfix() {
     if (this.traits.transformation?.expression) {
       try {
-        // Try to parse the expression and then add tokens
-        const lexed = Mexp.lex(
+        // Try to lex the expression knowing about the additional column tokens.
+        const lexed = this.evaluator.lex(
           this.traits.transformation.expression,
           this.mexpColumnTokens
         );
 
         // Converts to postfix notation
-        return lexed.toPostfix();
+        return this.evaluator.toPostfix(lexed);
       } catch (error) {
         // TODO: deal with error handling when we have it
         console.log(
@@ -239,17 +243,17 @@ export default class TableColumn {
         }
       }
 
-      if (n !== null) {
-        // If we have a `math-expression-evaluator` - use it to transform value
-        if (isDefined(this.mexpPostfix)) {
-          const columnPairs = this.mexpColumnValuePairs(i, n);
+      // If we have a `math-expression-evaluator` - use it to transform value
+      if (n !== null && this.mexpPostfix) {
+        const columnPairs = this.mexpColumnValuePairs(i, n);
 
-          // Only transform value if all columnPairs have been set
-          // This means that if one of the columnPairs has a null values - the whole expression WON'T be evaluated
-          if (!Object.values(columnPairs).includes(null)) {
-            const result = this.mexpPostfix.postfixEval(columnPairs);
-            n = typeof result === "string" ? toNumber(result) : result;
-          }
+        // Only transform value if all columnPairs have been set
+        // This means that if one of the columnPairs has a null values - the whole expression WON'T be evaluated
+        if (!Object.values(columnPairs).includes(null)) {
+          n = this.evaluator.postfixEval(
+            this.mexpPostfix,
+            columnPairs as { [key: string]: number }
+          );
         }
       }
 
