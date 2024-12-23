@@ -72,6 +72,7 @@ module.exports = {
     "no-alert": ["error"],
     "no-caller": ["error"],
     "no-div-regex": ["error"],
+    "no-empty": ["error", { allowEmptyCatch: true }],
     "no-eval": ["error"],
     "no-extend-native": ["error"],
     "no-fallthrough": 0,
