@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
