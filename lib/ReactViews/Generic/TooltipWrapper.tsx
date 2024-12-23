@@ -236,7 +236,7 @@ type ButtonLauncherProps = {
   [spread: string]: any;
 };
 
-export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = (
+export const TooltipWithButtonLauncher: React.FC<ButtonLauncherProps> = (
   props
 ) => {
   const { launcherComponent, children, dismissOnLeave, orientation, ...rest } =
