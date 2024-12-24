@@ -6,7 +6,7 @@ import { withTheme } from "styled-components";
 import Box from "../../../../Styled/Box";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import Loader from "../../../Loader";
-import { useKeyPress } from "../../../Hooks/useKeyPress.js";
+import { useKeyPress } from "../../../Hooks/useKeyPress";
 import { RawButton } from "../../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 

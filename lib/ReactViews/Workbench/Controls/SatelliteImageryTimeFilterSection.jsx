@@ -5,7 +5,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import MapInteractionMode from "../../../Models/MapInteractionMode";
 import Loader from "../../Loader";
-import LocationItem from "../../LocationItem.jsx";
+import LocationItem from "../../LocationItem";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction, reaction } from "mobx";
