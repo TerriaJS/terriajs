@@ -18,10 +18,10 @@ import Styles from "./parameter-editors.scss";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const knockout = {
-  defineProperty() {
+  defineProperty(_cls, _name, _fn) {
     throw new Error("This component needs to be fixed to not use Knockout.");
   },
-  getObservable() {
+  getObservable(_cls, _name) {
     throw new Error("This component needs to be fixed to not use Knockout.");
   }
 };
