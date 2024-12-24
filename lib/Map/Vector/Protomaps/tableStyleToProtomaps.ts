@@ -147,6 +147,12 @@ export function tableStyleToProtomaps(
     catalogItem.terria.baseMapContrastColor,
     useRowIds
   );
+  const getOutlineDashValue = getStyleValueFn(
+    catalogItem.activeTableStyle.outlineStyleMap,
+    "dash",
+    [] as number[],
+    useRowIds
+  );
 
   // Filter features by time if applicable
   const showFeature = (_z: number, f?: ProtomapsFeature) =>
@@ -185,7 +191,12 @@ export function tableStyleToProtomaps(
           color: useOutlineColorForLineFeatures
             ? getOutlineColorValue
             : getColorValue,
-          width: getOutlineWidthValue
+          width: getOutlineWidthValue,
+          dash: getOutlineDashValue as any, // Incorrect type upstream
+          dashColor: useOutlineColorForLineFeatures
+            ? getOutlineColorValue
+            : getColorValue,
+          dashWidth: getOutlineWidthValue
         }),
         minzoom: 0,
         maxzoom: Infinity,

@@ -190,6 +190,7 @@ const getOutlineLegend: GetLegendForStyle<OutlineSymbolTraits> = (
   return {
     outlineWidth: outline.width,
     outlineColor: outline.color,
+    outlineStyle: outline.dash && outline.dash.length > 1 ? "dashed" : "solid",
     title: outline.legendTitle ?? defaultLabel
   };
 };

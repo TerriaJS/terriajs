@@ -73,7 +73,6 @@ type SupportedSimpleMarkerStyle =
   | "esriSMSTriangle"
   | "esriSMSX";
 
-/** Terria only supports solid lines at the moment*/
 export type SupportedLineStyle =
   | "esriSLSSolid" // solid line
   | "esriSLSDash" // dashes (-----)
@@ -777,6 +776,7 @@ function esriSymbolToTableStyle(
   label?: string | undefined
 ) {
   if (!symbol) return {};
+
   return {
     // For esriPMS - just use white color
     // This is so marker icons aren't colored by default
@@ -805,15 +805,24 @@ function esriSymbolToTableStyle(
     outline:
       symbol.outline?.style !== "esriSLSNull"
         ? createStratumInstance(OutlineSymbolTraits, {
-            color: convertEsriColorToCesiumColor(
-              symbol.outline?.color
-            )?.toCssColorString(),
+            color:
+              symbol.type === "esriSLS"
+                ? convertEsriColorToCesiumColor(
+                    symbol.color
+                  )?.toCssColorString()
+                : convertEsriColorToCesiumColor(
+                    symbol.outline?.color
+                  )?.toCssColorString(),
             // Use width if Line style
             width:
               symbol.type === "esriSLS"
                 ? convertEsriPointSizeToPixels(symbol.width)
                 : convertEsriPointSizeToPixels(symbol.outline?.width),
-            legendTitle: label || undefined
+            legendTitle: label || undefined,
+            dash:
+              symbol.type === "esriSLS"
+                ? convertEsriLineStyleToDashArray(symbol.style)
+                : convertEsriLineStyleToDashArray(symbol.outline?.style)
           })
         : undefined
   };
@@ -836,5 +845,40 @@ function convertEsriMarkerToMaki(
     case "esriSMSCircle":
     default:
       return "point";
+  }
+}
+
+// Adapted from https://github.com/EventKit/eventkit-cloud/blob/5b57506073f36e883e1b8c01d823b1bb40dc2f99/eventkit_cloud/utils/arcgis/arcgis_layer.py#L34C8-L62
+// Copyright (c) 2015, Humanitarian OpenStreetMap Team All rights reserved.
+// Licensed under BSD 3-Clause License
+// Full license https://github.com/EventKit/eventkit-cloud/blob/master/LICENSE.md
+function convertEsriLineStyleToDashArray(
+  style: string | SupportedLineStyle | undefined
+) {
+  switch (style) {
+    case "esriSLSDash":
+      return [6, 6];
+    case "esriSLSDashDot":
+      return [6, 3, 1, 3];
+    case "esriSLSDashDotDot":
+      return [6, 3, 1, 3, 1, 3];
+    case "esriSLSDot":
+      return [2, 4];
+    case "esriSLSLongDash":
+      return [8, 4];
+    case "esriSLSLongDashDot":
+      return [8, 3, 1, 3];
+    case "esriSLSShortDash":
+      return [4, 4];
+    case "esriSLSShortDashDot":
+      return [4, 2, 1, 2];
+    case "esriSLSShortDashDotDot":
+      return [4, 2, 1, 2, 1, 2];
+    case "esriSLSShortDot":
+      return [1, 2];
+    case "esriSLSSolid":
+      return [];
+    default:
+      return [];
   }
 }
