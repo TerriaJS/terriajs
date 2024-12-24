@@ -106,8 +106,9 @@ export function tableStyleToProtomaps(
     }, []);
   }
 
-  const colorColumn = runInAction(
-    () => catalogItem.activeTableStyle.colorColumn
+  // NOTE: Make sure we don't access computed properties in style functions, as they will be re-computed for every feature
+  const colorValueFunction = runInAction(
+    () => catalogItem.activeTableStyle.colorColumn?.valueFunctionForType
   );
   const colorColumnName = runInAction(
     () => catalogItem.activeTableStyle.colorTraits.colorColumn
@@ -123,7 +124,7 @@ export function tableStyleToProtomaps(
         ? f?.props[FEATURE_ID_PROP]
         : -1;
 
-      value = colorColumn?.valueFunctionForType?.(rowId ?? -1);
+      value = colorValueFunction?.(rowId ?? -1);
     } else {
       value = colorColumnName ? f?.props[colorColumnName] : undefined;
     }
