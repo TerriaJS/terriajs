@@ -1,5 +1,4 @@
 import Point from "@mapbox/point-geometry";
-import i18next from "i18next";
 import { isEmpty } from "lodash-es";
 import { action, makeObservable } from "mobx";
 import {
@@ -16,7 +15,6 @@ import {
 } from "protomaps-leaflet";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -98,6 +96,8 @@ export default class ProtomapsImageryProvider
   readonly tileWidth: number;
   readonly tileHeight: number;
   readonly minimumLevel: number;
+  // This is used to fail requests for levels below softMinimumLevel
+  readonly softMinimumLevel?: number;
   readonly maximumLevel: number;
   readonly rectangle: Rectangle;
   readonly errorEvent = new CesiumEvent();
@@ -148,7 +148,9 @@ export default class ProtomapsImageryProvider
     this.tileWidth = PROTOMAPS_DEFAULT_TILE_SIZE;
     this.tileHeight = PROTOMAPS_DEFAULT_TILE_SIZE;
 
-    this.minimumLevel = defaultValue(options.minimumZoom, 0);
+    // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel
+    this.minimumLevel = 0;
+    this.softMinimumLevel = options.minimumZoom;
     this.maximumLevel = defaultValue(options.maximumZoom, 24);
     this.maximumNativeZoom = defaultValue(
       options.maximumNativeZoom,
@@ -161,27 +163,6 @@ export default class ProtomapsImageryProvider
           this.tilingScheme.rectangle
         ) || this.tilingScheme.rectangle
       : this.tilingScheme.rectangle;
-
-    // Check the number of tiles at the minimum level.  If it's more than four,
-    // throw an exception, because starting at the higher minimum
-    // level will cause too many tiles to be downloaded and rendered.
-    const swTile = this.tilingScheme.positionToTileXY(
-      Rectangle.southwest(this.rectangle),
-      this.minimumLevel
-    );
-    const neTile = this.tilingScheme.positionToTileXY(
-      Rectangle.northeast(this.rectangle),
-      this.minimumLevel
-    );
-    const tileCount =
-      (Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1);
-    if (tileCount > 4) {
-      throw new DeveloperError(
-        i18next.t("map.mapboxVectorTileImageryProvider.moreThanFourTiles", {
-          tileCount: tileCount
-        })
-      );
-    }
 
     this.errorEvent = new CesiumEvent();
     this.url = options.id;
@@ -266,6 +247,9 @@ export default class ProtomapsImageryProvider
     canvas: HTMLCanvasElement,
     request?: Request | undefined
   ) {
+    if (this.softMinimumLevel && level < this.softMinimumLevel)
+      throw TerriaError.from(`Level: ${level} is below softMinimumLevel`);
+
     const coords: Coords = { z: level, x, y };
 
     // Adapted from https://github.com/protomaps/protomaps.js/blob/master/src/frontends/leaflet.ts

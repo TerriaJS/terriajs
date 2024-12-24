@@ -101,6 +101,22 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
+    name: "Tile maximum scale",
+    description:
+      "Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer."
+  })
+  tileMaximumScale?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile minimum scale",
+    description:
+      "Gets or sets the denominator of the smallest scale (largest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale smaller than 1:1000 (i.e. numerically larger denominator, when zooming in closer) will not be requested."
+  })
+  tileMinimumScale?: number;
+
+  @primitiveTrait({
+    type: "number",
     name: "Features per request",
     description:
       "The number of features to be retrieved from the feature service in each request. This should be equal to the " +
@@ -139,4 +155,12 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling."
   })
   outFields: string[] = ["OBJECTID"];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show in ArcGIS Web Viewer",
+    description:
+      "Whether to show a button in the catalog item that opens this item in the ArcGIS Web Viewer."
+  })
+  showOpenInArcGisWebViewer: boolean = false;
 }

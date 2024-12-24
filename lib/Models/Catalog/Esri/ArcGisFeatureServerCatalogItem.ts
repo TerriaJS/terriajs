@@ -13,6 +13,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import { networkRequestError } from "../../../Core/TerriaError";
 import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
@@ -23,7 +24,10 @@ import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import {
+  InfoSectionTraits,
+  MetadataUrlTraits
+} from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
@@ -158,6 +162,7 @@ interface FeatureServer {
   copyrightText?: string;
   drawingInfo?: DrawingInfo;
   extent?: Extent;
+  minScale?: number;
   maxScale?: number;
   advancedQueryCapabilities?: {
     supportsPagination: boolean;
@@ -236,8 +241,12 @@ class FeatureServerStratum extends LoadableStratum(
     return undefined;
   }
 
-  @computed get maximumScale(): number | undefined {
+  @computed get tileMaximumScale(): number | undefined {
     return this._featureServer?.maxScale;
+  }
+
+  @computed get tileMinimumScale(): number | undefined {
+    return this._featureServer?.minScale;
   }
 
   @computed get name(): string | undefined {
@@ -507,16 +516,6 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   get outFields() {
-    console.log(
-      Array.from(
-        new Set([
-          this._item.objectIdField,
-          this._item.activeTableStyle.tableColorMap.colorTraits.colorColumn,
-          this._item.activeTableStyle.outlineStyleMap.traits?.column,
-          this._item.activeTableStyle.pointStyleMap.traits?.column
-        ])
-      ).filter((t): t is string => !!t)
-    );
     return Array.from(
       new Set([
         this._item.objectIdField,
@@ -525,6 +524,18 @@ class FeatureServerStratum extends LoadableStratum(
         this._item.activeTableStyle.pointStyleMap.traits?.column
       ])
     ).filter((t): t is string => !!t);
+  }
+
+  @computed get metadataUrls() {
+    if (this._item.showOpenInArcGisWebViewer)
+      return [
+        createStratumInstance(MetadataUrlTraits, {
+          title: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.openInArcGisWebViewer"
+          ),
+          url: `http://www.arcgis.com/apps/mapviewer/index.html?url=${this._item.url}`
+        })
+      ];
   }
 }
 
@@ -638,6 +649,8 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
     let provider = new ProtomapsImageryProvider({
+      maximumZoom: scaleDenominatorToLevel(this.tileMaximumScale, true, false),
+      minimumZoom: scaleDenominatorToLevel(this.tileMinimumScale, true, false),
       terria: this.terria,
       data: new ArcGisPbfSource({
         url: this.buildEsriJsonUrl().toString(),

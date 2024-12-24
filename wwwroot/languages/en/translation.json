@@ -865,7 +865,8 @@
       "invalidServiceTitle": "Invalid ArcGIS Feature Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service."
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service.",
+      "openInArcGisWebViewer": "Open in ArcGIS Web Viewer"
     },
     "arcGisFeatureServerCatalogItem": {
       "name": "Esri ArcGIS FeatureServer",
@@ -876,7 +877,8 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
-      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}})."
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}}).",
+      "openInArcGisWebViewer": "Open in ArcGIS Web Viewer"
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
