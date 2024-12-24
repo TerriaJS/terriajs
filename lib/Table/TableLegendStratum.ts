@@ -142,11 +142,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
   }
 
   @computed get legends(): StratumFromTraits<LegendTraits>[] {
-    if (
-      this._item.mapItems.length === 0 ||
-      (this._item.dataColumnMajor ?? []).length === 0
-    )
-      return [];
+    if (this._item.mapItems.length === 0) return [];
 
     if (this.mergedLegend) return [this.mergedLegend];
 
@@ -194,6 +190,7 @@ const getOutlineLegend: GetLegendForStyle<OutlineSymbolTraits> = (
   return {
     outlineWidth: outline.width,
     outlineColor: outline.color,
+    outlineStyle: outline.dash && outline.dash.length > 1 ? "dashed" : "solid",
     title: outline.legendTitle ?? defaultLabel
   };
 };

@@ -16,7 +16,7 @@ import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
-import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/ProtomapsGeojsonSource";
+import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import {
   FEATURE_ID_PROP,
   getColor

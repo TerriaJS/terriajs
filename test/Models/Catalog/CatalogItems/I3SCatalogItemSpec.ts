@@ -74,9 +74,7 @@ describe("I3SCatalogItemSpec", function () {
     beforeEach(async function () {
       try {
         await item.loadMapItems();
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       dispose = reaction(
         () => item.mapItems,
         () => {}
