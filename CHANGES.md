@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.7.11)
+#### next release (8.7.12)
+
+- [The next improvement]
+
+#### 8.7.11 - 2024-12-18
 
 - Explicitly set prettier tab-width
 - Move release guide from README.md to RELEASE_GUIDE.md
@@ -9,6 +13,8 @@
   - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
 - Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - [The next improvement]
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
 
 #### 8.7.10 - 2024-11-29
 
@@ -228,6 +234,11 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
+- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

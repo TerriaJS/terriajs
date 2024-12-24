@@ -431,9 +431,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       let errorMessage: string | undefined;
       try {
         errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
 
       const originalError = isDefined(errorMessage)
         ? new TerriaError({
