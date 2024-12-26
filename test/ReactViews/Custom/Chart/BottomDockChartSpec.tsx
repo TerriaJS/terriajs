@@ -56,8 +56,8 @@ describe("BottomDockChart", function () {
       testRenderer = TestRenderer.create(
         <BottomDockChart
           terria={terria}
-          initialHeight={100}
-          initialWidth={100}
+          height={100}
+          width={100}
           xAxis={{ scale: "time" }}
           chartItems={chartItems}
         />
