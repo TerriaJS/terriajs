@@ -11,28 +11,30 @@ var gulp = require("gulp");
 var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 
 gulp.task("build-specs", function (done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
+  const runRspack = require("./buildprocess/runRspack.js");
+  const rspack = require("@rspack/core");
+  const rspackConfig = require("./buildprocess/rspack.make.config.js")(true);
 
-  runWebpack(webpack, webpackConfig, done);
+  runRspack(rspack, rspackConfig, done);
 });
 
 gulp.task("release-specs", function (done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(false);
+  const runRspack = require("./buildprocess/runRspack.js");
+  const rspack = require("@rspack/core");
+  const rspackConfig = require("./buildprocess/rspack.make.config.js")(false);
 
-  runWebpack(webpack, webpackConfig, done);
+  runRspack(rspack, rspackConfig, done);
 });
 
+/*
 gulp.task("watch-specs", function (done) {
   var watchWebpack = require("./buildprocess/watchWebpack");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
+  var webpackConfig = require("./buildprocess/rspack.make.config.js")(true);
 
   watchWebpack(webpack, webpackConfig, done);
 });
+*/
 
 gulp.task("lint", function (done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
@@ -173,11 +175,13 @@ gulp.task("code-attribution", function userAttribution(done) {
 });
 
 gulp.task("build-for-doc-generation", function buildForDocGeneration(done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
+  /*
+  var runWebpack = require("./buildprocess/runRspack.js");
   var webpack = require("webpack");
   var webpackConfig = require("./buildprocess/webpack-tools.config.js")();
 
   runWebpack(webpack, webpackConfig, done);
+ */
 });
 
 gulp.task(
@@ -262,7 +266,7 @@ gulp.task(
 );
 gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
 gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
-gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));
-gulp.task("dev", gulp.parallel("terriajs-server", "watch"));
+// gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));
+// gulp.task("dev", gulp.parallel("terriajs-server", "watch"));
 gulp.task("post-npm-install", gulp.series("copy-cesium-assets"));
 gulp.task("default", gulp.series("lint", "build"));

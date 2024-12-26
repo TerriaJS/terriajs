@@ -1,24 +1,25 @@
+// @ts-check
+
+"use strict";
+
 const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const { TsCheckerRspackPlugin } = require("ts-checker-rspack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
-const webpack = require("webpack");
+const { rspack } = require("@rspack/core");
 
 /**
- * Supplements the given webpack config with options required to build TerriaJS
+ * Supplements the given Rspack config with options required to build TerriaJS
  *
  * @param [options.terriaJSBasePath] The TerriaJS source directory
  * @param [options.config] Base webpack configuration
  * @param [options.devMode] Set to `true` to generate for development build, default is `false`.
- * @param [options.MiniCssExtractPlugin]
- * @param [options.babelLoader] Optional babelLoader config, defaults to ./defaultBabelLoader.js
+ * @param [options.CssExtractRspackPlugin]
  */
-function configureWebpack({
+function configureRspack({
   terriaJSBasePath,
   config,
   devMode,
-  MiniCssExtractPlugin,
-  babelLoader
+  CssExtractRspackPlugin
 }) {
   const cesiumDir = path.dirname(
     require.resolve("terriajs-cesium/package.json")
@@ -57,19 +58,48 @@ function configureWebpack({
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  babelLoader = babelLoader || defaultBabelLoader(devMode);
-  // Use Babel to compile our JavaScript and TypeScript files.
+  // Use SWC to compile our JavaScript and TypeScript files.
   config.module.rules.push({
-    test: /\.(ts|js)x?$/,
+    test: /\.[jt]sx?$/,
     include: [
       path.resolve(terriaJSBasePath, "node_modules", "commander"),
       path.resolve(terriaJSBasePath, "lib"),
       path.resolve(terriaJSBasePath, "test"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateDocs.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
-      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts")
+      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts"),
+      path.resolve(cesiumDir, "Source")
     ],
-    use: [babelLoader]
+    exclude: [/[\\/]node_modules[\\/]/],
+    loader: "builtin:swc-loader",
+    /** @type {import('@rspack/core').SwcLoaderOptions} */
+    options: {
+      jsc: {
+        parser: {
+          syntax: "typescript",
+          decorators: true,
+          tsx: true
+        },
+        externalHelpers: true,
+        transform: {
+          // For MobX, see https://mobx.js.org/enabling-decorators.html
+          legacyDecorator: true,
+          react: {
+            runtime: "automatic",
+            development: devMode,
+            // FIXME: setting refresh to devMode fails the tests with:
+            // ReferenceError: $RefreshReg$ is not defined
+            refresh: false
+          }
+        }
+      },
+      env: {
+        coreJs: "3",
+        mode: "usage",
+        targets: ["since 2020-01-01 and not dead"]
+      }
+    },
+    type: "javascript/auto"
   });
 
   // Allow XML in the Models directory to be required-in as raw text.
@@ -81,14 +111,14 @@ function configureWebpack({
 
   // Allow .DAC file to be imported from MouseCoords.ts as URL
   config.module.rules.push({
-    test: /\.(DAC)$/i,
+    test: /\.DAC$/i,
     type: "asset/resource",
     include: [path.resolve(terriaJSBasePath, "wwwroot", "data")]
   });
 
   // Allow import of .css files from tinymce package
   config.module.rules.push({
-    test: /\.(css)$/i,
+    test: /\.css$/i,
     type: "asset/source",
     include: [path.dirname(require.resolve("tinymce/package.json"))]
   });
@@ -96,12 +126,14 @@ function configureWebpack({
   // Remove Cesium debug mode checks in production. This might slightly improve performance.
   // TODO: It will be good to have it enabled in devMode though, to discover issues with code
   // however doing so currently breaks a few specs.
+  /*
+  FIXME: enabling this makes all the Cesium tests fail on supportsWebGL.
   config.module.rules.push({
     test: /\.js$/,
     include: path.resolve(cesiumDir, "Source"),
-    use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
+    use: ["builtin:swc-loader", require.resolve("./removeCesiumDebugPragmas")]
   });
-
+ */
   // handle image imports
   config.module.rules.push({
     test: /\.(png|jpg|svg|gif)$/,
@@ -125,14 +157,17 @@ function configureWebpack({
   });
 
   config.devServer = config.devServer || {
-    stats: "minimal",
     port: 3003,
     open: true,
     contentBase: "wwwroot/",
     proxy: {
       "*": {
         target: "http://localhost:3001",
-        bypass: function (req, res, proxyOptions) {
+        bypass: function (
+          /** @type {any} */ req,
+          /** @type {any} */ res,
+          /** @type {any} */ proxyOptions
+        ) {
           if (
             req.url.indexOf("/proxy") < 0 &&
             req.url.indexOf("/proj4lookup") < 0 &&
@@ -154,7 +189,7 @@ function configureWebpack({
   // Do not import momentjs locale files
   // Saves ~500kb (unzipped)
   config.plugins.push(
-    new webpack.IgnorePlugin({
+    new rspack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/
     })
@@ -162,7 +197,7 @@ function configureWebpack({
 
   // Copy assimpjs.wasm file - this is used by AssImpCatalogItem (see AssImpCatalogItem.forceLoadMapItems())
   config.plugins.push(
-    new CopyPlugin({
+    new rspack.CopyRspackPlugin({
       patterns: [
         {
           from: require.resolve("assimpjs/dist/assimpjs.wasm"),
@@ -174,14 +209,14 @@ function configureWebpack({
 
   // Handle reference to Buffer in geojson-merge
   config.plugins.push(
-    new webpack.ProvidePlugin({
+    new rspack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"]
     })
   );
 
   // Define NODE_ENV from mode setting - used in a few places in Terria
   config.plugins.push(
-    new webpack.DefinePlugin({
+    new rspack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(
         devMode ? "development" : "production"
       )
@@ -190,7 +225,7 @@ function configureWebpack({
 
   // Fork TypeScript type checking to a separate thread
   config.plugins.push(
-    new ForkTsCheckerWebpackPlugin({
+    new TsCheckerRspackPlugin({
       typescript: {
         memoryLimit: 4096,
         configFile: path.resolve(__dirname, "..", "tsconfig.json"),
@@ -211,7 +246,7 @@ function configureWebpack({
   );
 
   // Sass settings
-  if (MiniCssExtractPlugin) {
+  if (CssExtractRspackPlugin) {
     config.module.rules.push({
       exclude: [
         path.resolve(terriaJSBasePath, "lib", "Sass", "common"),
@@ -221,7 +256,7 @@ function configureWebpack({
       test: /\.scss$/,
       use: [
         {
-          loader: MiniCssExtractPlugin.loader,
+          loader: CssExtractRspackPlugin.loader,
           options: { defaultExport: true }
         },
         { loader: "terriajs-typings-for-css-modules-loader" },
@@ -240,13 +275,18 @@ function configureWebpack({
         {
           loader: "sass-loader",
           options: {
+            // TODO: Should improve build performance:
+            // api: 'modern-compiler',
+            // implementation: require.resolve('sass-embedded'),
             api: "modern",
+            implementation: require.resolve("sass"),
             sassOptions: {
               sourceMap: true
             }
           }
         }
-      ]
+      ],
+      type: "javascript/auto"
     });
   }
 
@@ -265,30 +305,4 @@ function configureWebpack({
   return config;
 }
 
-const defaultBabelLoader = ({ devMode }) => ({
-  loader: "babel-loader",
-  options: {
-    cacheDirectory: true,
-    sourceMaps: !!devMode,
-    presets: [
-      [
-        "@babel/preset-env",
-        {
-          corejs: 3,
-          useBuiltIns: "usage"
-        }
-      ],
-      ["@babel/preset-react", { runtime: "automatic" }],
-      ["@babel/typescript", { allowNamespaces: true }]
-    ],
-    plugins: [
-      ["@babel/plugin-proposal-decorators", { legacy: true }],
-      "babel-plugin-styled-components"
-    ],
-    assumptions: {
-      setPublicClassFields: false
-    }
-  }
-});
-
-module.exports = configureWebpack;
+module.exports = configureRspack;
