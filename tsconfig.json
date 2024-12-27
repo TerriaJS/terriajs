@@ -28,10 +28,5 @@
     ],
     "types": ["terriajs-cesium", "@testing-library/jasmine-dom"]
   },
-  "include": [
-    "./lib/**/*",
-    "./test/**/*",
-    "./buildprocess/generateDocs.ts",
-    "./buildprocess/**/*"
-  ]
+  "include": ["./lib/**/*", "./test/**/*", "./buildprocess/**/*"]
 }
