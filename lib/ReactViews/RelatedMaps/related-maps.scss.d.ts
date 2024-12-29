@@ -3,8 +3,6 @@ declare namespace RelatedMapsScssNamespace {
     "dropdown-inner": string;
     dropdownInner: string;
     image: string;
-    link: string;
-    section: string;
   }
 }
 
