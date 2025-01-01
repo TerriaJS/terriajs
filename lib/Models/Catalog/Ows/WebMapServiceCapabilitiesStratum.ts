@@ -163,7 +163,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      let legendUri: uri.URI | undefined;
+      let legendUri: URI | undefined;
       let legendUrlMimeType: string | undefined;
       let legendScaling: number | undefined;
 
