@@ -95,10 +95,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     ) as this;
   }
 
-  static addFilterQuery(
-    uri: uri.URI,
-    filterQuery: JsonObject | string
-  ): uri.URI {
+  static addFilterQuery(uri: URI, filterQuery: JsonObject | string): URI {
     if (typeof filterQuery === "string") {
       // An encoded filterQuery may look like "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)".
       // An unencoded filterQuery may look like "fq=(res_format:wms OR res_format:WMS)".
