@@ -1,5 +1,5 @@
-import { TFunction } from "i18next";
 import React from "react";
+import type { TFunction } from "react-i18next";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 

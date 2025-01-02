@@ -1,7 +1,11 @@
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
-import { Translation, WithTranslation, withTranslation } from "react-i18next";
+import React, { type ReactNode } from "react";
+import {
+  Translation,
+  WithTranslation,
+  withTranslation,
+  TFunction
+} from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
   HelpContentItem,
@@ -72,7 +76,7 @@ const renderStep = (
   options: {
     renderDescription: boolean;
     comfortable: boolean;
-    footerComponent?: () => void;
+    footerComponent?: () => ReactNode;
   } = {
     renderDescription: true,
     comfortable: false,
