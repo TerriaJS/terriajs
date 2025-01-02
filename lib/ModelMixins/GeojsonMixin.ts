@@ -637,11 +637,13 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             ([styleKey, styleValue]) =>
               featurePropertiesEntires.find(([featKey, featValue]) => {
                 if (typeof styleValue === "string" && !style.caseSensitive) {
-                  featKey === styleKey &&
+                  return (
+                    featKey === styleKey &&
                     (typeof featValue === "string"
                       ? featValue
                       : featValue.toString()
-                    ).toLowerCase() === styleValue.toLowerCase();
+                    ).toLowerCase() === styleValue.toLowerCase()
+                  );
                 }
                 return featKey === styleKey && featValue === styleValue;
               }) !== undefined
