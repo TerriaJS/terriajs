@@ -144,7 +144,7 @@ export default class MagdaReference extends AccessControlMixin(
   }
 
   @computed
-  get registryUri(): uri.URI | undefined {
+  get registryUri(): URI | undefined {
     const uri = this.uri;
     if (uri === undefined) {
       return undefined;
@@ -258,7 +258,7 @@ export default class MagdaReference extends AccessControlMixin(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
-    magdaUri: uri.URI | undefined,
+    magdaUri: URI | undefined,
     id: string | undefined,
     record: JsonObject | undefined,
     override: JsonObject | undefined,
@@ -374,7 +374,7 @@ export default class MagdaReference extends AccessControlMixin(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
-    magdaUri: uri.URI | undefined,
+    magdaUri: URI | undefined,
     id: string | undefined,
     record: JsonObject,
     override: JsonObject | undefined,
@@ -559,7 +559,7 @@ export default class MagdaReference extends AccessControlMixin(
   private static createMemberFromTerriaAspect(
     terria: Terria,
     sourceReference: BaseModel | undefined,
-    _magdaUri: uri.URI | undefined,
+    _magdaUri: URI | undefined,
     id: string | undefined,
     record: JsonObject,
     terriaAspect: JsonObject,
@@ -634,7 +634,7 @@ export default class MagdaReference extends AccessControlMixin(
   private static createMemberFromDistributionFormat(
     terria: Terria,
     sourceReference: BaseModel | undefined,
-    _magdaUri: uri.URI | undefined,
+    _magdaUri: URI | undefined,
     id: string | undefined,
     datasetRecord: JsonObject,
     distributionRecord: JsonObject,
@@ -849,7 +849,7 @@ export default class MagdaReference extends AccessControlMixin(
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
 
-  protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
+  protected buildMagdaRecordUri(options: RecordOptions): URI | undefined {
     const registryUri = this.registryUri;
     if (options.id === undefined || registryUri === undefined) {
       return undefined;
