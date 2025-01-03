@@ -53,7 +53,7 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
       <Spacing bottom={2} />
       {uniqueChartDisclaimers.map((chartDisclaimer) => (
         <React.Fragment key={chartDisclaimer}>
-          <Text textLight>{parseCustomHtmlToReact(chartDisclaimer!)}</Text>
+          <Text textLight>{parseCustomHtmlToReact(chartDisclaimer)}</Text>
           <Spacing bottom={2} />
         </React.Fragment>
       ))}

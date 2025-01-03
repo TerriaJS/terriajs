@@ -66,7 +66,7 @@ describe("TileErrorHandlerMixin", function () {
     statusCode: number | undefined,
     timesRetried = 0
   ): TileProviderError => {
-    const httpError = new RequestErrorEvent(statusCode) as any as Error;
+    const httpError = new RequestErrorEvent(statusCode) as unknown as Error;
     return new TileProviderError(
       imageryProvider,
       "Something broke",

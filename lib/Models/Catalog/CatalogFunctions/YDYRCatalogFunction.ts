@@ -219,7 +219,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     }
     const layer = this.terria.workbench.items
       .filter(TableMixin.isMixedInto)
-      .filter((item) => item.uniqueId === this.inputLayers!.value)[0];
+      .filter((item) => item.uniqueId === this.inputLayers.value)[0];
 
     return layer;
   }

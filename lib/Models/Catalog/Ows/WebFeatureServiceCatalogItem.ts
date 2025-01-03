@@ -482,7 +482,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     // Show notice if reached
     if (
       this.readyData?.features !== undefined &&
-      this.readyData!.features.length >= this.maxFeatures
+      this.readyData.features.length >= this.maxFeatures
     ) {
       return i18next.t(
         "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",
