@@ -384,8 +384,10 @@ class StoryBuilder extends React.Component<
             column
             styledHeight="100%"
             css={`
-              ${(this.state.isRemoving || this.state.isSharing) &&
-              `opacity: 0.3`}
+              ${
+                (this.state.isRemoving || this.state.isSharing) &&
+                `opacity: 0.3`
+              }
             `}
           >
             <Box

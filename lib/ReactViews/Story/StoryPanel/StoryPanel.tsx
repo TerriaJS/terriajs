@@ -229,15 +229,19 @@ class StoryPanel extends React.Component<Props, State> {
             pointer-events: none;
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
-              ${this.props.viewState.isMapFullScreen &&
-              `
+              ${
+                this.props.viewState.isMapFullScreen &&
+                `
                 transition-delay: 0.5s;
-              `}
-              ${!this.props.viewState.isMapFullScreen &&
               `
+              }
+              ${
+                !this.props.viewState.isMapFullScreen &&
+                `
                 padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
                 padding-right: 50px;
-              `}
+              `
+              }
               bottom: 90px;
             }
           `}

@@ -28,10 +28,7 @@
   "snippet": "A road is a line feature dataset maintained within the Foundation Spatial data Framework Transport Theme.",
   "thumbnail": "thumbnail/thumbnail1581028005916.png",
   "documentation": null,
-  "extent": [
-    [140.9839, -37.5043],
-    [159.0979, -28.1555]
-  ],
+  "extent": [[140.9839, -37.5043], [159.0979, -28.1555]],
   "categories": ["/Categories/Transport"],
   "spatialReference": null,
   "accessInformation": null,

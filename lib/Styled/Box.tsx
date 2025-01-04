@@ -212,8 +212,8 @@ export const Box = styled.div<IBoxProps>`
       overflow-y: ${props.overflowY};
     `}
     ${(props) =>
-    props.overflowX &&
-    `
+      props.overflowX &&
+      `
         overflow-x: ${props.overflowX};
       `}
   ${(props) =>

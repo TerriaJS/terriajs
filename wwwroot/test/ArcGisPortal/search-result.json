@@ -35,10 +35,7 @@
       "snippet": "A road is a line feature dataset maintained within the Foundation Spatial data Framework Transport Theme.",
       "thumbnail": "thumbnail/thumbnail1581028005916.png",
       "documentation": null,
-      "extent": [
-        [140.9839, -37.5043],
-        [159.0979, -28.1555]
-      ],
+      "extent": [[140.9839, -37.5043], [159.0979, -28.1555]],
       "categories": ["/Categories/Transport"],
       "spatialReference": null,
       "accessInformation": null,
@@ -146,10 +143,7 @@
       "snippet": "Bush Fire Prone Land is mapped within a local government area, which becomes the trigger for planning for bush fire protection. BFPL mapping is intended to designate areas of NSW that are considered to be higher bush fire risk for development control",
       "thumbnail": "thumbnail/thumbnail1583993368746.jpeg",
       "documentation": null,
-      "extent": [
-        [140, -37],
-        [153, -28]
-      ],
+      "extent": [[140, -37], [153, -28]],
       "categories": [],
       "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
       "accessInformation": "NSW Rural Fires Service 2019",
@@ -197,10 +191,7 @@
       "snippet": "Historical Imagery 1970s",
       "thumbnail": "thumbnail/thumbnail.JPEG",
       "documentation": null,
-      "extent": [
-        [150, -33],
-        [151, -33]
-      ],
+      "extent": [[150, -33], [151, -33]],
       "categories": [],
       "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
       "accessInformation": null,

@@ -110,13 +110,17 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
                 justify-content: center;
                 width: 100%;
                 border: 1px solid
-                  ${side === currentSide
-                    ? `rgba(255, 255, 255, 0.5)`
-                    : `transparent`};
+                  ${
+                    side === currentSide
+                      ? `rgba(255, 255, 255, 0.5)`
+                      : `transparent`
+                  };
                 ${props.buttonProps && props.buttonProps.css}
-                ${props.activeColor &&
-                side === currentSide &&
-                `background-color: ${props.activeColor}`}
+                ${
+                  props.activeColor &&
+                  side === currentSide &&
+                  `background-color: ${props.activeColor}`
+                }
               `}
               {...props.buttonProps}
             >
