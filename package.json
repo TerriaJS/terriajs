@@ -188,6 +188,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@biomejs/biome": "1.9.4",
     "@types/node": "^18.15.11",
     "@types/proj4": "^2.5.5",
     "@types/webpack": "4.41.33",
@@ -224,8 +225,6 @@
     "minimist": "^1.2.8",
     "node-notifier": "^10.0.1",
     "plugin-error": "^1.0.1",
-    "prettier": "2.7.1",
-    "pretty-quick": "^4.0.0",
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
@@ -244,9 +243,8 @@
     "build-tools": "webpack --config buildprocess/webpack-tools.config.js",
     "watch-tools": "webpack --watch --config buildprocess/webpack-tools.config.js",
     "build-docs": "yarn build-tools && node build/generateDocs.js",
-    "prettier": "prettier --write .",
-    "pretty-quick": "pretty-quick",
-    "prettier-check": "prettier --check .",
+    "format": "biome format --write .",
+    "format-check": "biome format .",
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "yarn build-for-node && husky install"
   }

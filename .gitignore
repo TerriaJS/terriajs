@@ -1,4 +1,3 @@
-# Update .prettierignore whenever this file changes
 docs/
 node_modules/
 .idea/
