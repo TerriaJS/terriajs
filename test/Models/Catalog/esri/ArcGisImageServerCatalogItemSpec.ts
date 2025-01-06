@@ -387,9 +387,7 @@ describe("ArcGisImageServer", function () {
       // By observing mapItems, we can trigger a reload when the renderingRule changes
       const disposer = reaction(
         () => imageServerItem.mapItems,
-        () => {
-          console.log("woo");
-        }
+        () => 1
       );
 
       runInAction(() => {
