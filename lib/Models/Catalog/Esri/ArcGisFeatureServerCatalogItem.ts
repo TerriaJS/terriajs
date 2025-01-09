@@ -18,7 +18,7 @@ import { networkRequestError } from "../../../Core/TerriaError";
 import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
-import { ArcGisPbfSource } from "../../../Map/Vector/Protomaps/ArcGisPbfSource";
+import { ProtomapsArcGisPbfSource } from "../../../Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
 import { tableStyleToProtomaps } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
@@ -51,6 +51,7 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 
 interface DocumentInfo {
   Author?: string;
@@ -174,6 +175,35 @@ interface FeatureServer {
   supportsCoordinatesQuantization?: boolean;
   supportsTilesAndBasicQueriesMode?: boolean;
   objectIdField?: string;
+  fields?: Field[];
+}
+
+type FieldType =
+  | "esriFieldTypeSmallInteger"
+  | "esriFieldTypeInteger"
+  | "esriFieldTypeSingle"
+  | "esriFieldTypeDouble"
+  | "esriFieldTypeString"
+  | "esriFieldTypeDate"
+  | "esriFieldTypeOID"
+  | "esriFieldTypeGeometry"
+  | "esriFieldTypeBlob"
+  | "esriFieldTypeRaster"
+  | "esriFieldTypeGUID"
+  | "esriFieldTypeGlobalID"
+  | "esriFieldTypeXML"
+  | "esriFieldTypeBigInteger";
+
+interface Field {
+  name: string;
+  type: FieldType;
+  alias?: string;
+  domain?: unknown;
+  editable?: boolean;
+  nullable?: boolean;
+  length?: number;
+  defaultValue?: unknown;
+  modelName?: string;
 }
 
 interface SpatialReference {
@@ -537,6 +567,27 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
   }
+
+  // We have to provide our own featureInfoTemplate, as the TableMixin.tableColumns will be empty due to no table data being provided
+  @computed get featureInfoTemplate() {
+    let template = '<table class="cesium-infoBox-defaultTable">';
+
+    template += this._featureServer?.fields
+      ?.filter((col) => col.name !== this.objectIdField)
+      ?.map(
+        (field) =>
+          `<tr><td style="vertical-align: middle"><b>${
+            field.alias ?? field.name
+          }</b></td><td>{{${field.alias}}}</td></tr>`
+      )
+      .join("");
+
+    template += `</table>`;
+
+    return createStratumInstance(FeatureInfoTemplateTraits, {
+      template
+    });
+  }
 }
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
@@ -652,13 +703,15 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       maximumZoom: scaleDenominatorToLevel(this.tileMaximumScale, true, false),
       minimumZoom: scaleDenominatorToLevel(this.tileMinimumScale, true, false),
       terria: this.terria,
-      data: new ArcGisPbfSource({
+      data: new ProtomapsArcGisPbfSource({
         url: this.buildEsriJsonUrl().toString(),
         outFields: [...this.outFields],
         featuresPerTileRequest: this.featuresPerTileRequest,
         maxRecordCountFactor: this.maxRecordCountFactor,
         maxTiledFeatures: this.maxTiledFeatures,
-        tilingScheme: new WebMercatorTilingScheme()
+        tilingScheme: new WebMercatorTilingScheme(),
+        enablePickFeatures: this.allowFeaturePicking,
+        objectIdField: this.objectIdField
       }),
       id: this.uniqueId,
       paintRules,

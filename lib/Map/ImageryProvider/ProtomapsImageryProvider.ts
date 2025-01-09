@@ -31,7 +31,7 @@ import {
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-import { ArcGisPbfSource } from "../Vector/Protomaps/ArcGisPbfSource";
+import { ProtomapsArcGisPbfSource } from "../Vector/Protomaps/ProtomapsArcGisPbfSource";
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
@@ -78,7 +78,7 @@ type Source =
   | PmtilesSource
   | ZxySource
   | ProtomapsGeojsonSource
-  | ArcGisPbfSource;
+  | ProtomapsArcGisPbfSource;
 
 /** Tile size in pixels (for canvas and geojson-vt) */
 export const PROTOMAPS_DEFAULT_TILE_SIZE = 256;
@@ -202,7 +202,7 @@ export default class ProtomapsImageryProvider
       this.data instanceof ProtomapsGeojsonSource ||
       this.data instanceof PmtilesSource ||
       this.data instanceof ZxySource ||
-      this.data instanceof ArcGisPbfSource
+      this.data instanceof ProtomapsArcGisPbfSource
     ) {
       this.source = this.data;
     }
@@ -259,7 +259,7 @@ export default class ProtomapsImageryProvider
     // Here we need a little bit of extra logic for the ProtomapsGeojsonSource
     if (
       this.source instanceof ProtomapsGeojsonSource ||
-      this.source instanceof ArcGisPbfSource
+      this.source instanceof ProtomapsArcGisPbfSource
     ) {
       const data = await this.source.get(coords, this.tileHeight, request);
 
@@ -391,7 +391,7 @@ export default class ProtomapsImageryProvider
       // So we pick features manually
     } else if (
       this.source instanceof ProtomapsGeojsonSource ||
-      this.source instanceof ArcGisPbfSource
+      this.source instanceof ProtomapsArcGisPbfSource
     ) {
       featureInfos.push(
         ...(await this.source.pickFeatures(x, y, level, longitude, latitude))
@@ -414,7 +414,7 @@ export default class ProtomapsImageryProvider
       if (
         typeof this.data === "string" ||
         this.data instanceof PmtilesSource ||
-        this.data instanceof ArcGisPbfSource
+        this.data instanceof ProtomapsArcGisPbfSource
       ) {
         data = this.data;
         // We can't just clone ZxySource objects, so just pass in URL
@@ -466,6 +466,9 @@ export default class ProtomapsImageryProvider
 
     if (this.source instanceof ProtomapsGeojsonSource) {
       featureProp = GEOJSON_FEATURE_ID_PROP;
+      layerName = GEOJSON_SOURCE_LAYER_NAME;
+    } else if (this.source instanceof ProtomapsArcGisPbfSource) {
+      featureProp = this.source.objectIdField;
       layerName = GEOJSON_SOURCE_LAYER_NAME;
     } else {
       featureProp = this.idProperty;

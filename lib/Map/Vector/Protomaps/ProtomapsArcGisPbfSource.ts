@@ -1,5 +1,5 @@
 import Point from "@mapbox/point-geometry";
-import { Feature, Position } from "@turf/helpers";
+import { Feature, FeatureCollection, Position } from "@turf/helpers";
 import arcGisPbfDecode from "arcgis-pbf-parser";
 import {
   Feature as ProtomapsFeature,
@@ -23,33 +23,42 @@ import {
   GEOJSON_SOURCE_LAYER_NAME,
   geomTypeMap
 } from "./ProtomapsGeojsonSource";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 interface ArcGisPbfSourceOptions {
   url: string;
+  objectIdField: string;
   outFields: string[];
   maxRecordCountFactor: number;
   featuresPerTileRequest: number;
   maxTiledFeatures: number;
   tilingScheme: WebMercatorTilingScheme;
+  enablePickFeatures: boolean;
 }
 
-export class ArcGisPbfSource implements TileSource {
+export class ProtomapsArcGisPbfSource implements TileSource {
   private readonly baseResource: Resource;
   private readonly tilingScheme: WebMercatorTilingScheme;
+  readonly objectIdField: string;
   private readonly outFields: string[];
   private readonly maxRecordCountFactor: number;
   private readonly featuresPerTileRequest: number;
   private readonly maxTiledFeatures: number;
+  private readonly enablePickFeatures: boolean;
 
   constructor(options: ArcGisPbfSourceOptions) {
     this.baseResource = new Resource(options.url);
     this.baseResource.appendForwardSlash();
     this.tilingScheme = options.tilingScheme;
 
+    this.objectIdField = options.objectIdField;
     this.outFields = options.outFields;
     this.maxRecordCountFactor = options.maxRecordCountFactor;
     this.featuresPerTileRequest = options.featuresPerTileRequest;
     this.maxTiledFeatures = options.maxTiledFeatures;
+    this.enablePickFeatures = options.enablePickFeatures;
   }
 
   public async get(
@@ -170,7 +179,67 @@ export class ArcGisPbfSource implements TileSource {
     longitude: number,
     latitude: number
   ): Promise<ImageryLayerFeatureInfo[]> {
-    return [];
+    if (!this.enablePickFeatures) {
+      return [];
+    }
+
+    const features: ImageryLayerFeatureInfo[] = [];
+
+    const pickFeatureResource = this.baseResource.getDerivedResource({
+      url: "query"
+    });
+
+    // Get rough meters per pixel (at equator) for given zoom level
+    const zoomMeters = 156543 / Math.pow(2, level);
+
+    // query
+    pickFeatureResource.setQueryParameters({
+      f: "geojson",
+      sr: "4326",
+      geometryType: "esriGeometryPoint",
+      geometry: JSON.stringify({
+        x: CesiumMath.toDegrees(longitude),
+        y: CesiumMath.toDegrees(latitude),
+        spatialReference: { wkid: 4326 }
+      }),
+      outFields: "*",
+      outSR: "4326",
+      spatialRel: "esriSpatialRelIntersects",
+      units: "esriSRUnit_Meter",
+      distance: zoomMeters * 4 // 4 pixels wide (in meters)
+    });
+
+    const json = (await pickFeatureResource.fetchJson()) as FeatureCollection;
+
+    if (json.features) {
+      for (const f of json.features) {
+        const featureInfo = new ImageryLayerFeatureInfo();
+
+        // Add Layer name property
+        featureInfo.data = f;
+        featureInfo.properties = f.properties;
+
+        if (
+          f.geometry.type === "Point" &&
+          typeof f.geometry.coordinates[0] === "number" &&
+          typeof f.geometry.coordinates[1] === "number"
+        ) {
+          featureInfo.position = Cartographic.fromDegrees(
+            f.geometry.coordinates[0],
+            f.geometry.coordinates[1]
+          );
+        }
+
+        featureInfo.configureDescriptionFromProperties(f.properties);
+        featureInfo.configureNameFromProperties(f.properties);
+
+        features.push(featureInfo);
+      }
+    }
+
+    console.log(features);
+
+    return features;
   }
 }
 

@@ -3,6 +3,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
@@ -24,7 +25,8 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  GeoJsonTraits
+  GeoJsonTraits,
+  FeaturePickingTraits
 ) {
   @primitiveTrait({
     type: "boolean",

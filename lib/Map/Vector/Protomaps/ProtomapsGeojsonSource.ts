@@ -21,6 +21,7 @@ import {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import {
+  LAYER_NAME_PROP,
   PROTOMAPS_DEFAULT_TILE_SIZE,
   PROTOMAPS_TILE_BUFFER
 } from "../../ImageryProvider/ProtomapsImageryProvider";
@@ -187,7 +188,10 @@ export class ProtomapsGeojsonSource implements TileSource {
       const featureInfo = new ImageryLayerFeatureInfo();
 
       featureInfo.data = f;
-      featureInfo.properties = f.properties;
+      featureInfo.properties = Object.assign(
+        { [LAYER_NAME_PROP]: GEOJSON_SOURCE_LAYER_NAME },
+        f.properties ?? {}
+      );
 
       if (
         f.geometry.type === "Point" &&
