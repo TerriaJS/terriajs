@@ -139,7 +139,6 @@ const InnerPanel = createReactClass({
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
-          showDropdownAsModal={this.props.showDropdownAsModal}
           css={`
             svg {
               fill: ${(p) => p.theme.textLight};

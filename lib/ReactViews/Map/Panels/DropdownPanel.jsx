@@ -98,7 +98,6 @@ const DropdownPanel = createReactClass({
           ref={
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
-          isOpen={this.isOpen()}
           css={`
             ${(p) =>
               p.isOpen &&
