@@ -8,12 +8,6 @@
   padding-bottom: 5px;
   padding-right: 5px;
   font-family: $font-base;
-
-  // @media (max-width: $mobile) {
-  //   position: fixed;
-  //   bottom: 0px;
-  //   background: $dark;
-  // }
 }
 
 .text-row {
@@ -21,7 +15,7 @@
   color: #fff;
   font-size: $font-size-mid-small;
   position: absolute;
-  bottom: 44px;
+  bottom: 41px;
   left: 0px;
   // background: $dark;
   padding: 3px 5px;

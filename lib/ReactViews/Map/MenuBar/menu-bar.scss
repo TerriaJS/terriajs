@@ -4,7 +4,7 @@
   position: absolute;
   z-index: 108;
   top: $map-button-top;
-  left: 0;
+  left: $work-bench-width;
   right: $padding;
 
   // todo: find some non-layout-change animation technique for

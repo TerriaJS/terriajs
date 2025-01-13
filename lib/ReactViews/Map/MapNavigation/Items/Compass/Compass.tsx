@@ -32,7 +32,9 @@ import Icon, { StyledIcon } from "../../../../../Styled/Icon";
 import { GyroscopeGuidance } from "./GyroscopeGuidance";
 import { withTerriaRef } from "../../../../HOCs/withTerriaRef";
 import FadeIn from "../../../../Transitions/FadeIn/FadeIn";
-import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
+
+const CameraFlightPath =
+  require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
@@ -345,7 +347,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
               // if it's active, show a white circle only, as we need the base layer
               glyph={
                 active
-                  ? Icon.GLYPHS.compassOuterSkeleton
+                  ? null //Icon.GLYPHS.compassOuterSkeleton
                   : Icon.GLYPHS.compassOuter
               }
             />
