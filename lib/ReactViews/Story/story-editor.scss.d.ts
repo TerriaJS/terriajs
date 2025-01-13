@@ -3,7 +3,11 @@
 interface CssExports {
   'body': string;
   'cancelBtn': string;
+  'doneBtn': string;
+  'editor': string;
+  'editorHeader': string;
   'field': string;
+  'fieldBtn': string;
   'header': string;
   'inner': string;
   'is-mounted': string;
