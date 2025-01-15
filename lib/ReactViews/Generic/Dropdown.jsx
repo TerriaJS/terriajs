@@ -39,7 +39,6 @@ const Dropdown = createReactClass({
     };
   },
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     this.buttonElement = undefined;
