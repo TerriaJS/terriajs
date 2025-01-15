@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";

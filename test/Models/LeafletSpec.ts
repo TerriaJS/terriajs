@@ -49,9 +49,7 @@ describe("Leaflet Model", function () {
     // TODO: calling destroy on our mobx leaflet model results in a tile error
     try {
       leaflet.destroy();
-    } catch {
-      /* eslint-disable-line no-empty */
-    }
+    } catch {}
     document.body.removeChild(container);
   });
 

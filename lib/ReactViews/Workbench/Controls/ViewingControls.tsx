@@ -110,7 +110,6 @@ class ViewingControls extends React.Component<
     };
   }
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     window.addEventListener("click", this.hideMenu.bind(this));
   }
