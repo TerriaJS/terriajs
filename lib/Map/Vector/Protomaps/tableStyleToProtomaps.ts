@@ -31,7 +31,8 @@ function getStyleValueFn<
   tableStyleMap: TableStyleMap<T>,
   trait: Key,
   defaultValue: Value,
-  useRowId = true
+  useRowId = true,
+  fn?: (v: Value) => Value
 ): (z: number, f?: ProtomapsFeature) => Value {
   const styleMap = runInAction(() => tableStyleMap.styleMap);
 
@@ -41,7 +42,7 @@ function getStyleValueFn<
       if (value === undefined) {
         return defaultValue;
       }
-      return value as Value;
+      return fn ? fn(value as Value) : (value as Value);
     };
   }
 
@@ -54,7 +55,7 @@ function getStyleValueFn<
       if (value === undefined) {
         return defaultValue;
       }
-      return value as Value;
+      return fn ? fn(value as Value) : (value as Value);
     };
   }
 
@@ -65,7 +66,7 @@ function getStyleValueFn<
     if (value === undefined) {
       return defaultValue;
     }
-    return value as Value;
+    return fn ? fn(value as Value) : (value as Value);
   };
 }
 
@@ -154,6 +155,14 @@ export function tableStyleToProtomaps(
     useRowIds
   );
 
+  const getPointRadiusValue = getStyleValueFn(
+    catalogItem.activeTableStyle.pointStyleMap,
+    "height",
+    2,
+    useRowIds,
+    (v) => (3 * v) / 8 // Divide height by 2 to get radius, and then reduce by 25% to make it look better (most of the time protomaps image tiles are scaled up)
+  );
+
   // Filter features by time if applicable
   const showFeature = (_z: number, f?: ProtomapsFeature) =>
     !currentTimeRows ||
@@ -215,7 +224,7 @@ export function tableStyleToProtomaps(
                 fill: getColorValue,
                 stroke: getOutlineColorValue,
                 width: getOutlineWidthValue,
-                radius: 2
+                radius: getPointRadiusValue
               }),
               minzoom: 0,
               maxzoom: Infinity,
