@@ -8,6 +8,7 @@ interface CssExports {
   'compassWidth': string;
   'dark': string;
   'darkLighter': string;
+  'darkMid': string;
   'darkWithOverlay': string;
   'font': string;
   'fontBase': string;
