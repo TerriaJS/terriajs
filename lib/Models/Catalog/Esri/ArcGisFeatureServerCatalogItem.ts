@@ -13,7 +13,6 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import { networkRequestError } from "../../../Core/TerriaError";
 import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
@@ -23,6 +22,8 @@ import { tableStyleToProtomaps } from "../../../Map/Vector/Protomaps/tableStyleT
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
+import TableColumnType from "../../../Table/TableColumnType";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import {
   InfoSectionTraits,
@@ -32,6 +33,7 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
 } from "../../../Traits/TraitsClasses/Table/ColorStyleTraits";
+import TableColumnTraits from "../../../Traits/TraitsClasses/Table/ColumnTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits,
@@ -51,7 +53,6 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 
 interface DocumentInfo {
   Author?: string;
@@ -63,13 +64,12 @@ type EsriStyleTypes =
   | "esriSLS" // simple line style
   | "esriSFS"; // simple fill style
 
-//as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
-
+/** as defined https://developers.arcgis.com/web-map-specification/objects/esriSFS_symbol/ */
 type SupportedFillStyle =
   | "esriSFSSolid" // fill line with color
   | "esriSFSNull"; // no fill
 
-// as defined https://developers.arcgis.com/web-map-specification/objects/esriSMS_symbol/
+/** as defined https://developers.arcgis.com/web-map-specification/objects/esriSMS_symbol/ */
 type SupportedSimpleMarkerStyle =
   | "esriSMSCircle"
   | "esriSMSCross"
@@ -78,6 +78,7 @@ type SupportedSimpleMarkerStyle =
   | "esriSMSTriangle"
   | "esriSMSX";
 
+/** as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/ */
 export type SupportedLineStyle =
   | "esriSLSSolid" // solid line
   | "esriSLSDash" // dashes (-----)
@@ -92,7 +93,7 @@ export type SupportedLineStyle =
   | "esriSLSShortDot"
   | "esriSLSNull";
 
-// See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
+/** as defined https://developers.arcgis.com/web-map-specification/objects/symbol/ */
 interface ISymbol {
   contentType: string;
   color?: number[];
@@ -129,27 +130,46 @@ interface ClassBreaksRenderer extends Renderer {
   field: string;
   classBreakInfos: ClassBreakInfo[];
   defaultSymbol: ISymbol | null;
+
+  /** Note, value expressions are not supported */
+  valueExpression?: string;
+  valueExpressionTitle?: string;
+
+  /** Note, visual variables are not supported. See https://developers.arcgis.com/web-map-specification/objects/visualVariable/ */
+  visualVariables?: unknown[];
 }
 
 interface UniqueValueInfo extends SimpleRenderer {
   value: string;
 }
 
-/** Terria only supports `field1`, not multiple fields (`field2` or `field3`).
+/**
  * See https://developers.arcgis.com/web-map-specification/objects/uniqueValueRenderer/
  */
 interface UniqueValueRenderer extends Renderer {
+  /** Terria only supports `field1`, not multiple fields (`field2` or `field3`). */
   field1: string;
   field2?: string;
   field3?: string;
   fieldDelimiter?: string;
   uniqueValueInfos: UniqueValueInfo[];
   defaultSymbol: ISymbol | null;
+
+  /** Note, value expressions are not supported */
+  valueExpression?: string;
+  valueExpressionTitle?: string;
+
+  /** Note, visual variables are not supported. See https://developers.arcgis.com/web-map-specification/objects/visualVariable/ */
+  visualVariables?: unknown[];
 }
 
+// https://developers.arcgis.com/web-map-specification/objects/simpleRenderer/
 interface SimpleRenderer extends Renderer {
   label?: string;
   symbol: ISymbol | null;
+
+  /** Note, visual variables are not supported. See https://developers.arcgis.com/web-map-specification/objects/visualVariable/ */
+  visualVariables?: unknown[];
 }
 
 interface DrawingInfo {
@@ -193,6 +213,23 @@ type FieldType =
   | "esriFieldTypeGlobalID"
   | "esriFieldTypeXML"
   | "esriFieldTypeBigInteger";
+
+const fieldTypeToTableColumn: Record<FieldType, TableColumnType> = {
+  esriFieldTypeSmallInteger: TableColumnType.scalar,
+  esriFieldTypeInteger: TableColumnType.scalar,
+  esriFieldTypeSingle: TableColumnType.scalar,
+  esriFieldTypeDouble: TableColumnType.scalar,
+  esriFieldTypeString: TableColumnType.text,
+  esriFieldTypeDate: TableColumnType.time,
+  esriFieldTypeOID: TableColumnType.scalar,
+  esriFieldTypeGeometry: TableColumnType.hidden,
+  esriFieldTypeBlob: TableColumnType.hidden,
+  esriFieldTypeRaster: TableColumnType.hidden,
+  esriFieldTypeGUID: TableColumnType.hidden,
+  esriFieldTypeGlobalID: TableColumnType.hidden,
+  esriFieldTypeXML: TableColumnType.hidden,
+  esriFieldTypeBigInteger: TableColumnType.scalar
+};
 
 interface Field {
   name: string;
@@ -271,12 +308,12 @@ class FeatureServerStratum extends LoadableStratum(
     return undefined;
   }
 
-  @computed get tileMaximumScale(): number | undefined {
-    return this._featureServer?.maxScale;
+  @computed get maxScaleDenominator(): number | undefined {
+    return this._featureServer?.minScale;
   }
 
-  @computed get tileMinimumScale(): number | undefined {
-    return this._featureServer?.minScale;
+  @computed get minScaleDenominator(): number | undefined {
+    return this._featureServer?.maxScale;
   }
 
   @computed get name(): string | undefined {
@@ -368,9 +405,19 @@ class FeatureServerStratum extends LoadableStratum(
       const simpleRenderer = renderer as SimpleRenderer;
       const symbol = simpleRenderer.symbol;
 
+      if (simpleRenderer.visualVariables?.length) {
+        console.warn(
+          `WARNING: Terria does not support visual variables in ArcGisFeatureService SimpleRenderers`
+        );
+      }
+
       if (!symbol) return [];
 
-      const symbolStyle = esriSymbolToTableStyle(symbol, simpleRenderer.label);
+      const symbolStyle = esriSymbolToTableStyle(
+        symbol,
+        simpleRenderer.label,
+        this._item.tileRequests
+      );
       return [
         createStratumInstance(TableStyleTraits, {
           id: "ESRI",
@@ -391,11 +438,17 @@ class FeatureServerStratum extends LoadableStratum(
       const uniqueValueRenderer = renderer as UniqueValueRenderer;
 
       const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map((v) => {
-        return esriSymbolToTableStyle(v.symbol, v.label);
+        return esriSymbolToTableStyle(
+          v.symbol,
+          v.label,
+          this._item.tileRequests
+        );
       });
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
-        uniqueValueRenderer.defaultSymbol
+        uniqueValueRenderer.defaultSymbol,
+        undefined,
+        this._item.tileRequests
       );
 
       // Only include color if there are any styles which aren't esriPMS
@@ -404,9 +457,28 @@ class FeatureServerStratum extends LoadableStratum(
       );
 
       if (uniqueValueRenderer.field2 || uniqueValueRenderer.field3) {
-        console.log(
+        console.warn(
           `WARNING: Terria only supports ArcGisFeatureService UniqueValueRenderers with a single field (\`field1\`), not multiple fields (\`field2\` or \`field3\`)`
         );
+      }
+
+      if (uniqueValueRenderer.visualVariables?.length) {
+        console.warn(
+          `WARNING: Terria does not support visual variables in ArcGisFeatureService SimpleRenderers`
+        );
+      }
+
+      if (uniqueValueRenderer.valueExpression) {
+        console.warn(
+          `WARNING: Terria does not support value expressions in ArcGisFeatureService UniqueValueRenderers`
+        );
+      }
+
+      if (!uniqueValueRenderer.field1) {
+        console.warn(
+          `WARNING: Terria does not support empty field1 in UniqueValueRenderers, using default style`
+        );
+        return [];
       }
 
       return [
@@ -454,15 +526,29 @@ class FeatureServerStratum extends LoadableStratum(
           })
         })
       ];
-    } else {
+    } else if (rendererType === "classBreaks") {
       const classBreaksRenderer = renderer as ClassBreaksRenderer;
 
+      if (classBreaksRenderer.visualVariables?.length) {
+        console.warn(
+          `WARNING: Terria does not support visual variables in ArcGisFeatureService SimpleRenderers`
+        );
+      }
+
+      if (classBreaksRenderer.valueExpression) {
+        console.warn(
+          `WARNING: Terria does not support value expressions in ArcGisFeatureService UniqueValueRenderers`
+        );
+      }
+
       const symbolStyles = classBreaksRenderer.classBreakInfos.map((c) =>
-        esriSymbolToTableStyle(c.symbol, c.label)
+        esriSymbolToTableStyle(c.symbol, c.label, this._item.tileRequests)
       );
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
-        classBreaksRenderer.defaultSymbol
+        classBreaksRenderer.defaultSymbol,
+        undefined,
+        this._item.tileRequests
       );
 
       // Only include color if there are any styles which aren't esriPMS
@@ -512,7 +598,34 @@ class FeatureServerStratum extends LoadableStratum(
           })
         })
       ];
+    } else {
+      console.warn(
+        `WARNING: Terria does not support ArcGisFeatureService renderers of type ${rendererType}`
+      );
     }
+  }
+
+  @computed
+  get columns() {
+    return (
+      this._featureServer?.fields
+        ?.filter((field) => {
+          if (!fieldTypeToTableColumn[field.type]) {
+            console.warn(
+              `WARNING: Terria does not support ESRI field type ${field.type}`
+            );
+            return false;
+          }
+          return true;
+        })
+        .map((field) =>
+          createStratumInstance(TableColumnTraits, {
+            name: field.name,
+            title: field.alias,
+            type: fieldTypeToTableColumn[field.type]?.toString()
+          })
+        ) ?? []
+    );
   }
 
   get featuresPerRequest() {
@@ -531,14 +644,20 @@ class FeatureServerStratum extends LoadableStratum(
     return !!this._featureServer?.supportsCoordinatesQuantization;
   }
 
+  /** Enable tileRequests by default if supported */
   get tileRequests() {
-    return (
+    const supportsPbfTiles =
       this._featureServer?.supportsTilesAndBasicQueriesMode &&
       typeof this._featureServer?.supportedQueryFormats === "string" &&
       (this._featureServer.supportedQueryFormats as string)
         .toLowerCase()
-        .includes("pbf")
-    );
+        .includes("pbf");
+
+    if (supportsPbfTiles) {
+      return true;
+    }
+
+    return undefined;
   }
 
   get objectIdField() {
@@ -567,33 +686,12 @@ class FeatureServerStratum extends LoadableStratum(
         })
       ];
   }
-
-  // We have to provide our own featureInfoTemplate, as the TableMixin.tableColumns will be empty due to no table data being provided
-  @computed get featureInfoTemplate() {
-    let template = '<table class="cesium-infoBox-defaultTable">';
-
-    template += this._featureServer?.fields
-      ?.filter((col) => col.name !== this.objectIdField)
-      ?.map(
-        (field) =>
-          `<tr><td style="vertical-align: middle"><b>${
-            field.alias ?? field.name
-          }</b></td><td>{{${field.alias}}}</td></tr>`
-      )
-      .join("");
-
-    template += `</table>`;
-
-    return createStratumInstance(FeatureInfoTemplateTraits, {
-      template
-    });
-  }
 }
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
-  CreateModel(ArcGisFeatureServerCatalogItemTraits)
+export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
+  GeoJsonMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
 ) {
   static readonly type = "esri-featureServer";
 
@@ -700,8 +798,8 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
     let provider = new ProtomapsImageryProvider({
-      maximumZoom: scaleDenominatorToLevel(this.tileMaximumScale, true, false),
-      minimumZoom: scaleDenominatorToLevel(this.tileMinimumScale, true, false),
+      maximumZoom: this.getMaximumLevel(false),
+      minimumZoom: this.getMinimumLevel(false),
       terria: this.terria,
       data: new ProtomapsArcGisPbfSource({
         url: this.buildEsriJsonUrl().toString(),
@@ -719,13 +817,14 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     });
 
     provider = this.wrapImageryPickFeatures(provider);
+    provider = this.updateRequestImage(provider);
 
     return provider;
   }
 
   @override
   get mapItems() {
-    if (!this.tileRequests) return [];
+    if (!this.tileRequests) return super.mapItems;
 
     return [
       {
@@ -735,6 +834,16 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         clippingRectangle: undefined
       }
     ];
+  }
+
+  @override
+  get dataColumnMajor() {
+    if (super.dataColumnMajor.length > 0) {
+      return super.dataColumnMajor;
+    }
+    // If we are tiling requests, then we don't have geojson/tabular data
+    // We have to populate columns with empty strings, otherwise TableMixin.tableColumns will be empty
+    return this.columns.map((column) => [column.name ?? ""]);
   }
 
   @computed get featureServerData(): FeatureServer | undefined {
@@ -839,9 +948,22 @@ function cleanUrl(url: string): string {
 
 function esriSymbolToTableStyle(
   symbol?: ISymbol | null,
-  label?: string | undefined
+  label?: string | undefined,
+  tiled?: boolean
 ) {
   if (!symbol) return {};
+
+  let marker =
+    symbol.type === "esriPMS"
+      ? `data:${symbol.contentType};base64,${symbol.imageData}`
+      : convertEsriMarkerToMaki(symbol.style);
+
+  if (tiled && marker !== "circle" && marker !== "point") {
+    marker = "point";
+    console.warn(
+      `Custom makers are not supported in tiled requests, using default marker`
+    );
+  }
 
   return {
     // For esriPMS - just use white color

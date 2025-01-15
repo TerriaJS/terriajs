@@ -7,12 +7,15 @@ import FeaturePickingTraits from "./FeaturePickingTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
 
 @traitClass({
-  description: `Creates a single item in the catalog from one ESRI WFS layer.
+  description: `Creates a single item in the catalog from one ESRI Feature Server layer.
 
-  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>`,
+  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>
+
+  Some traits are only relevant when the service supports tiling (see \`tileRequests\` trait).`,
   example: {
     url: "https://services5.arcgis.com/OvOcYIrJnM97ABBA/arcgis/rest/services/Australian_Public_Hospitals_WFL1/FeatureServer/0",
     type: "esri-featureServer",
@@ -26,7 +29,8 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   CatalogMemberTraits,
   LegendOwnerTraits,
   GeoJsonTraits,
-  FeaturePickingTraits
+  FeaturePickingTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "boolean",
@@ -97,25 +101,9 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     type: "number",
     name: "Maximum features",
     description:
-      "For each tile, the maximum number of features to be retrieved from the feature service."
+      "For each tile, the maximum number of features to be retrieved from the feature service. This will limit the number of requests, each request uses featuresPerTileRequest trait."
   })
   maxTiledFeatures: number = 100000;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile maximum scale",
-    description:
-      "Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer."
-  })
-  tileMaximumScale?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile minimum scale",
-    description:
-      "Gets or sets the denominator of the smallest scale (largest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale smaller than 1:1000 (i.e. numerically larger denominator, when zooming in closer) will not be requested."
-  })
-  tileMinimumScale?: number;
 
   @primitiveTrait({
     type: "number",
@@ -130,7 +118,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     type: "number",
     name: "maxRecordCountFactor",
     description:
-      "When set, the maximum number of features returned by the query will equal the maxRecordCount of the service multiplied by this factor. This only applies to tiled requests"
+      "When set, the maximum number of features returned by the query will equal the maxRecordCount of the service multiplied by this factor. This only applies to tiled requests. This will use the server's default value."
   })
   maxRecordCountFactor: number = 1;
 
@@ -154,7 +142,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     type: "string",
     name: "Out Fields",
     description:
-      "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling."
+      "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling. Currently, this only applies to tiled requests."
   })
   outFields: string[] = ["OBJECTID"];
 
