@@ -6,6 +6,7 @@ import {
   TileSource,
   Zxy
 } from "protomaps-leaflet";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Request from "terriajs-cesium/Source/Core/Request";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -23,9 +24,6 @@ import {
   GEOJSON_SOURCE_LAYER_NAME,
   geomTypeMap
 } from "./ProtomapsGeojsonSource";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 interface ArcGisPbfSourceOptions {
   url: string;
@@ -92,7 +90,6 @@ export class ProtomapsArcGisPbfSource implements TileSource {
 
     while (fetching) {
       if (request && "cancelled" in request && request.cancelled) {
-        console.log("CANCELLED");
         fetching = false;
         continue;
       }
@@ -152,7 +149,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         fetching = false;
       }
 
-      if (offset > this.maxTiledFeatures) {
+      if (offset >= this.maxTiledFeatures) {
         console.warn(`ArcGisPbfSource: maxTiledFeatures exceeded`);
         fetching = false;
       }
@@ -192,7 +189,6 @@ export class ProtomapsArcGisPbfSource implements TileSource {
     // Get rough meters per pixel (at equator) for given zoom level
     const zoomMeters = 156543 / Math.pow(2, level);
 
-    // query
     pickFeatureResource.setQueryParameters({
       f: "geojson",
       sr: "4326",
@@ -203,6 +199,8 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         spatialReference: { wkid: 4326 }
       }),
       outFields: "*",
+      // We don't need geometry in response, as we will create a "highlight imagery provider" for the feature, that uses the same ArcGisPbfSource
+      returnGeometry: false,
       outSR: "4326",
       spatialRel: "esriSpatialRelIntersects",
       units: "esriSRUnit_Meter",
@@ -219,25 +217,12 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         featureInfo.data = f;
         featureInfo.properties = f.properties;
 
-        if (
-          f.geometry.type === "Point" &&
-          typeof f.geometry.coordinates[0] === "number" &&
-          typeof f.geometry.coordinates[1] === "number"
-        ) {
-          featureInfo.position = Cartographic.fromDegrees(
-            f.geometry.coordinates[0],
-            f.geometry.coordinates[1]
-          );
-        }
-
         featureInfo.configureDescriptionFromProperties(f.properties);
         featureInfo.configureNameFromProperties(f.properties);
 
         features.push(featureInfo);
       }
     }
-
-    console.log(features);
 
     return features;
   }
