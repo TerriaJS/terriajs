@@ -238,6 +238,13 @@ const getImageryLayerFeatureInfo = (
     feature.configureDescriptionFromProperties(featureData);
     feature.configureNameFromProperties(featureData);
 
+    // Set name of feature to region name if it exists
+    if (
+      isDefined(regionType.nameProp) &&
+      typeof featureData[regionType.nameProp] === "string"
+    )
+      feature.name = featureData[regionType.nameProp];
+
     return feature;
   }
 
