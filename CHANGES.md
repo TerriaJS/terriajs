@@ -1,11 +1,39 @@
 # Change Log
 
-#### next release (8.7.9)
+#### next release (8.7.12)
 
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
+- [The next improvement]
+
+#### 8.7.11 - 2024-12-18
+
+- Explicitly set prettier tab-width
+- Move release guide from README.md to RELEASE_GUIDE.md
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
+
+#### 8.7.10 - 2024-11-29
+
+- Add OpenStreetMap as a basemap option.
+- Update to node-notifier 10.0.1 to fix security vulnerabilities.
+- Remove unused ts-loader dependency.
+- Remove unused class-list dependency.
+- TSify `ConsoleAnalytics` module.
+- Update to gulp 5.0 to fix security vulnerabilities.
+  - Gulp 5 defaults to encoding copied files as utf-8, had turn off encoding by setting `encoding: false` to correctly copy binary assets from dependencies.
+- Update to dompurify 2.5.7 to fix security vulnerabilities.
+- Update to @mapbox/togeojson 0.16.2 to fix security vulnerabilities.
+- Remove unused simple-statistics dependency.
+- Update to pretty-quick 4.0.0 to fix security vulnerabilities.
+
+#### 8.7.9 - 2024-11-22
+
+- Add "searchBarConfig.showSearchInCatalog" to configParameters so that the link in location search results can be disabled.
 - Properly initialize react ref in functional components
 - Add NominatimSearchProvider.
-- [The next improvement]
+- Removed the basemaps - positron, darkmatter and black-marble - from the default settings. The Carto ones are no longer free and requires an [Enterprise or Grantee license](https://carto.com/basemaps). If you have the appropriate license you can add them via your [initialization file](https://docs.terria.io/guide/customizing/initialization-files/#basemaps). [Example configuration](https://gist.github.com/na9da/ef7871afee7cbe3d0a95e5b6351834c9).
+- Restrict mobx version to '< 6.13.0' to avoid tsc errors because mobx now uses iterator helper types introduced in TypeScript 5.6.
+- Remove unused ts-node dependency.
 
 #### 8.7.8 - 2024-11-01
 
@@ -202,6 +230,11 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
+- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

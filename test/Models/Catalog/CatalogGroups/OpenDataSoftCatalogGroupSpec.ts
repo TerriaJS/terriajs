@@ -42,7 +42,7 @@ describe("OpenDataSoftCatalogGroup", function () {
   });
 
   describe("loads facets", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       fetchMock.mock(
         "https://example.com/api/v2/catalog/datasets/?limit=100&offset=0&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
         { body: datasets }
@@ -74,7 +74,7 @@ describe("OpenDataSoftCatalogGroup", function () {
   });
 
   describe("loads over 100 datasets (in multiple requests)", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       // Note these two responses don't actually return over 100 datasest
       // Both JSON files have "total_count": 101 - and 6 different datasets each
       // So we expect total 12 datasets

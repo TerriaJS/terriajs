@@ -86,7 +86,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
                     : undefined
                 )
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = new PropertyBag();
               }
@@ -163,7 +163,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
                   ? catalogItem.showStringIfPropertyValueIsNull
                   : undefined
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = {};
               }

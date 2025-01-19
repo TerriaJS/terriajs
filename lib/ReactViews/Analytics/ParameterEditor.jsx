@@ -1,11 +1,6 @@
-"use strict";
-
 import React from "react";
-
 import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
-
 import PointParameterEditor from "./PointParameterEditor";
 import LineParameterEditor from "./LineParameterEditor";
 import PolygonParameterEditor from "./PolygonParameterEditor";
@@ -21,10 +16,8 @@ import GenericParameterEditor from "./GenericParameterEditor";
 import NumberParameterEditor from "./NumberParameterEditor";
 import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
-
 import Styles from "./parameter-editors.scss";
 import InfoParameterEditor from "./InfoParameterEditor";
-
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 const ParameterEditor = createReactClass({
@@ -400,4 +393,4 @@ ParameterEditor.parameterTypeConverters = [
   }
 ];
 
-module.exports = ParameterEditor;
+export default ParameterEditor;

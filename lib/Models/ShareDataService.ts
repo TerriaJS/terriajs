@@ -28,7 +28,7 @@ export default class ShareDataService {
     this.url = options.url;
   }
 
-  init(serverConfig: any) {
+  init(serverConfig: any): void {
     this.url = defaultValue(
       this.url,
       defaultValue(this.terria.configParameters.shareUrl, "share")

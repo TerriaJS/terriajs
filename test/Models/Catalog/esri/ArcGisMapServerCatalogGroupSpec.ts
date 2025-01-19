@@ -172,7 +172,7 @@ describe("ArcGisMapServerCatalogGroup", function () {
       (await group.loadMembers()).throwIfError();
     });
 
-    it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {
+    it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', function () {
       expect(group.memberModels.length).toBe(1);
       expect(
         group.memberModels[0] instanceof ArcGisMapServerCatalogItem

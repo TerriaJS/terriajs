@@ -24,7 +24,7 @@ const csv = require("raw-loader!../../../../wwwroot/test/csv_nongeo/x_height.csv
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     const terria = new Terria();
     const catalogItem = new CsvCatalogItem("test", terria, undefined);
     catalogItem.setTrait(
@@ -67,6 +67,7 @@ describe("FeatureInfoPanelChart", function () {
           context
         );
         await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -91,6 +92,7 @@ describe("FeatureInfoPanelChart", function () {
           context
         );
         await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const chart = renderer?.root.findByType(SpecChart)!;
         expect(chart).toBeDefined();
         expect(
@@ -106,6 +108,7 @@ describe("FeatureInfoPanelChart", function () {
       context
     );
     await runLater(() => {}); // yield so that the useEffect in FeatureInfoPanelChart gets a chance to load the chart
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const chart = renderer?.root.findByType(SpecChart)!;
     expect(chart).toBeDefined();
     expect(

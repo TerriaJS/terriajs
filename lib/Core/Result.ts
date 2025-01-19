@@ -93,7 +93,7 @@ export default class Result<T = undefined> {
   }
 
   /** Convenience constructor to return a Result with no value (and potentially an error) */
-  static none(error?: unknown, overrides?: TerriaErrorOverrides) {
+  static none(error?: unknown, overrides?: TerriaErrorOverrides): Result {
     return error ? Result.error(error, overrides) : new Result(undefined);
   }
 
@@ -147,7 +147,7 @@ export default class Result<T = undefined> {
    *
    * @param errorOverrides can be used to add error context
    */
-  logError(errorOverrides?: TerriaErrorOverrides) {
+  logError(errorOverrides?: TerriaErrorOverrides): T {
     if (this._error) TerriaError.from(this._error, errorOverrides).log();
     return this.value;
   }
@@ -193,7 +193,7 @@ export default class Result<T = undefined> {
         });
   }
 
-  pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides) {
+  pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides): T {
     if (this._error) errors.push(TerriaError.from(this._error, errorOverrides));
     return this.value;
   }

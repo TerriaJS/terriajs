@@ -1,22 +1,25 @@
-var glob = require("glob-all");
+"use strict";
+
+var glob = require("fast-glob");
 var configureWebpack = require("./configureWebpack");
 var path = require("path");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-//var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = [
+//const testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
+const testGlob = [
   "./test/SpecMain.ts",
   "./test/**/*Spec.ts",
   "./test/**/*Spec.tsx",
   "./test/Models/Experiment.ts"
 ];
 
-console.log(glob.sync(testGlob));
+const files = glob.sync(testGlob);
+console.log(files);
 module.exports = function (hot, dev) {
   const terriaJSBasePath = path.resolve(__dirname, "../");
-  var config = {
+  let config = {
     mode: dev ? "development" : "production",
-    entry: glob.sync(testGlob),
+    entry: files,
     output: {
       path: path.resolve(__dirname, "..", "wwwroot", "build"),
       filename: "TerriaJS-specs.js",

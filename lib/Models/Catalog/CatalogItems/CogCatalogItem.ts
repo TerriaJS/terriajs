@@ -7,11 +7,9 @@ import {
   onBecomeUnobserved,
   runInAction
 } from "mobx";
-import {
-  GeographicTilingScheme,
-  WebMercatorTilingScheme
-} from "terriajs-cesium";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import type TIFFImageryProvider from "terriajs-tiff-imagery-provider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -224,7 +222,7 @@ function reprojector(proj4: any) {
 /**
  * Returns true if the tilingScheme is custom
  */
-function isCustomTilingScheme(tilingScheme: Object) {
+function isCustomTilingScheme(tilingScheme: object) {
   // The upstream library defines a TIFFImageryTillingScheme but it is not
   // exported so we have to check if it is not one of the standard Cesium
   // tiling schemes. Also, because TIFFImageryTillingScheme derives from
@@ -236,7 +234,7 @@ function isCustomTilingScheme(tilingScheme: Object) {
   );
 }
 
-function omitUndefined(obj: Object) {
+function omitUndefined(obj: object) {
   return Object.fromEntries(
     Object.entries(obj).filter(([_, value]) => value !== undefined)
   );

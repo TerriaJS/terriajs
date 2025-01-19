@@ -1,5 +1,3 @@
-"use strict";
-
 import { observer } from "mobx-react";
 import React, { SyntheticEvent } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";

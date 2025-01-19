@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -73,7 +71,6 @@ const NotificationWindow = createReactClass({
       <div className={classNames(Styles.wrapper, `${type}`)}>
         <div
           className={Styles.notification}
-          /* eslint-disable-next-line react/no-unknown-property */
           isStory={isStory}
           css={`
             background: ${(p) =>
@@ -110,4 +107,4 @@ const NotificationWindow = createReactClass({
   }
 });
 
-module.exports.default = NotificationWindow;
+export default NotificationWindow;

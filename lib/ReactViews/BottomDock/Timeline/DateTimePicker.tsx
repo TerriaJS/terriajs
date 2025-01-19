@@ -21,9 +21,8 @@ import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
 import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
-
-const dateFormat = require("dateformat");
-const DatePicker = require("react-datepicker").default;
+import dateFormat from "dateformat";
+import DatePicker from "react-datepicker";
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();

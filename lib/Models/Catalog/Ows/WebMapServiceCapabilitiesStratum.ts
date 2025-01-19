@@ -44,8 +44,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-
-const dateFormat = require("dateformat");
+import dateFormat from "dateformat";
 
 /** Transforms WMS GetCapabilities XML into WebMapServiceCatalogItemTraits */
 export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
@@ -95,7 +94,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     Array.from(this.capabilitiesLayers.values()).forEach((layer) => {
       if (!layer?.MetadataURL) return;
       Array.isArray(layer?.MetadataURL)
-        ? metadataUrls.push(...layer?.MetadataURL)
+        ? // eslint-disable-next-line no-unsafe-optional-chaining
+          metadataUrls.push(...layer?.MetadataURL)
         : metadataUrls.push(layer?.MetadataURL as MetadataURL);
     });
 
@@ -163,7 +163,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      let legendUri: uri.URI | undefined;
+      let legendUri: URI | undefined;
       let legendUrlMimeType: string | undefined;
       let legendScaling: number | undefined;
 

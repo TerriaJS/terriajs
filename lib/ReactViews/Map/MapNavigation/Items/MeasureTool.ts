@@ -1,4 +1,3 @@
-"use strict";
 import i18next from "i18next";
 import React from "react";
 import ArcType from "terriajs-cesium/Source/Core/ArcType";
