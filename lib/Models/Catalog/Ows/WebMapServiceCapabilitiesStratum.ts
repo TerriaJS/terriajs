@@ -203,7 +203,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         legendUri = URI(
           proxyCatalogItemUrl(
             this.catalogItem,
-            this.catalogItem.url.split("?")[0]
+            this.catalogItem.getLegendBaseUrl()
           )
         );
         legendUri

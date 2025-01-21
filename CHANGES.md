@@ -2,6 +2,7 @@
 
 #### next release (8.7.12)
 
+- support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
