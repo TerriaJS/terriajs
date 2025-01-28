@@ -390,15 +390,17 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (this.isLoadingMapItems) {
         return [];
       }
-      this._dataSource ? (this._dataSource.show = this.show) : null;
-      let points = this.useTableStylingAndProtomaps
-        ? this.createPoints(this.activeTableStyle)
-        : undefined;
-
-      points = points?.entities.values.length === 0 ? undefined : points;
-
-      points ? (points.show = this.show) : null;
-
+      if (this._dataSource) {
+        this._dataSource.show = this.show;
+      }
+      let points = undefined;
+      if (this.useTableStylingAndProtomaps) {
+        const pts = this.createPoints(this.activeTableStyle);
+        if (pts && pts.entities.values.length !== 0) {
+          points = pts;
+          points.show = this.show;
+        }
+      }
       return filterOutUndefined([
         points,
         this._dataSource,

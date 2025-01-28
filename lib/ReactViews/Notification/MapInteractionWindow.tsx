@@ -48,7 +48,9 @@ class MapInteractionWindow extends React.Component<{
       this.currentInteractionMode.onEnable(this.props.viewState);
     }
 
-    this.disposeMapInteractionObserver && this.disposeMapInteractionObserver();
+    if (this.disposeMapInteractionObserver) {
+      this.disposeMapInteractionObserver();
+    }
   }
 
   componentDidMount() {

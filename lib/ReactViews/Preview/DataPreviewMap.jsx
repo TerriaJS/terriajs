@@ -108,7 +108,9 @@ class DataPreviewMap extends React.Component {
      * @param {HTMLElement | null} container
      */
     this.containerRef = action((container) => {
-      this.previewViewer.attached && this.previewViewer.detach();
+      if (this.previewViewer.attached) {
+        this.previewViewer.detach();
+      }
       if (container !== null) {
         this.initPreview(container);
       }
@@ -172,8 +174,9 @@ class DataPreviewMap extends React.Component {
   }
 
   componentWillUnmount() {
-    this._disposeZoomToExtentSubscription &&
+    if (this._disposeZoomToExtentSubscription) {
       this._disposeZoomToExtentSubscription();
+    }
     this.previewViewer.detach();
 
     if (this._unsubscribeErrorHandler) {

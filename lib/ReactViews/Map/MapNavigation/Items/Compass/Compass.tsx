@@ -213,10 +213,15 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
     if (this.orbitMouseUpFunction) {
       document.removeEventListener("mouseup", this.orbitMouseUpFunction, false);
     }
-    this._unsubscribeFromAnimationFrame &&
+    if (this._unsubscribeFromAnimationFrame) {
       this._unsubscribeFromAnimationFrame();
-    this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
-    this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
+    }
+    if (this._unsubscribeFromPostRender) {
+      this._unsubscribeFromPostRender();
+    }
+    if (this._unsubscribeFromViewerChange) {
+      this._unsubscribeFromViewerChange();
+    }
   }
 
   handleMouseDown(e: any) {
@@ -586,8 +591,9 @@ function orbit(
     );
   }
 
-  viewModel._unsubscribeFromAnimationFrame &&
+  if (viewModel._unsubscribeFromAnimationFrame) {
     viewModel._unsubscribeFromAnimationFrame();
+  }
   viewModel._unsubscribeFromAnimationFrame = undefined;
 
   viewModel.orbitMouseMoveFunction = undefined;
@@ -706,8 +712,9 @@ function orbit(
       );
     }
 
-    viewModel._unsubscribeFromAnimationFrame &&
+    if (viewModel._unsubscribeFromAnimationFrame) {
       viewModel._unsubscribeFromAnimationFrame();
+    }
     viewModel._unsubscribeFromAnimationFrame = undefined;
 
     viewModel.orbitMouseMoveFunction = undefined;

@@ -104,8 +104,12 @@ class DiffTool extends React.Component<PropsType> {
 
   @action
   removeSplitterItems() {
-    this.leftItem && removeSplitItem(this.leftItem);
-    this.rightItem && removeSplitItem(this.rightItem);
+    if (this.leftItem) {
+      removeSplitItem(this.leftItem);
+    }
+    if (this.rightItem) {
+      removeSplitItem(this.rightItem);
+    }
   }
 
   @action
@@ -315,14 +319,18 @@ class Main extends React.Component<MainPropsType> {
   showItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0.8);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0.8);
+    }
   }
 
   @action
   hideItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0);
+    }
   }
 
   @action.bound

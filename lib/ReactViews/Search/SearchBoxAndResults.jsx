@@ -26,7 +26,9 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         searchState.setCatalogSearchText(searchState.locationSearchText);
 
         viewState.searchInCatalog(searchState.locationSearchText);
-        handleClick && handleClick();
+        if (handleClick) {
+          handleClick();
+        }
       }}
     >
       <Box paddedRatio={2} rounded charcoalGreyBg>
