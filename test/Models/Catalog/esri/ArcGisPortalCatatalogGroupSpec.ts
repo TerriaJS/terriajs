@@ -128,12 +128,12 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          const group0 = portalServerStratum.groups[0] as CatalogGroup;
+          const group0 = portalServerStratum.groups[0];
           expect(group0.name).toBe("NSW Digital Twin");
           // Data read from group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json
           expect(group0.members.length).toBe(2);
 
-          const group1 = portalServerStratum.groups[1] as CatalogGroup;
+          const group1 = portalServerStratum.groups[1];
           expect(group1.name).toBe("Spatial Services Basemaps");
           // Data read from group-2dfa6cfea7774d9585700059e1fc8219-items-search.json
           expect(group1.members.length).toBe(3);
@@ -144,8 +144,8 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("a single item can be placed in two groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          const group0 = portalServerStratum.groups[0] as CatalogGroup;
-          const group1 = portalServerStratum.groups[1] as CatalogGroup;
+          const group0 = portalServerStratum.groups[0];
+          const group1 = portalServerStratum.groups[1];
           expect(group0.members[0]).toBe(group1.members[0]);
         }
       }
@@ -188,11 +188,11 @@ describe("ArcGisPortalCatalogGroup", function () {
     it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
-          const group0 = portalServerStratum.groups[0] as CatalogGroup;
+          const group0 = portalServerStratum.groups[0];
           expect(group0.name).toBe("Transport");
           expect(group0.members.length).toBe(1);
 
-          const group1 = portalServerStratum.groups[1] as CatalogGroup;
+          const group1 = portalServerStratum.groups[1];
           expect(group1.members.length).toBe(3);
         }
       }

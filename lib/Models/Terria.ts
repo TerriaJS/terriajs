@@ -873,7 +873,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(feature as TerriaFeature, model)) {
+        if (featureBelongsToCatalogItem(feature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1223,7 +1223,7 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    await this.mainViewer.setBaseMap(baseMap.item);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1592,7 +1592,7 @@ export default class Terria {
           replaceStratum
         ).pushErrorTo(
           errors,
-          `Failed to update model from JSON: ${loadedModel.target!.uniqueId}`
+          `Failed to update model from JSON: ${loadedModel.target.uniqueId}`
         );
       }
     } else if (dereferenced) {
@@ -1694,7 +1694,7 @@ export default class Terria {
 
     // Extract the list of CORS-ready domains.
     if (Array.isArray(initData.corsDomains)) {
-      this.corsProxy.corsDomains.push(...(initData.corsDomains as string[]));
+      this.corsProxy.corsDomains.push(...initData.corsDomains);
     }
 
     // Add catalog members
@@ -2103,7 +2103,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as TerriaFeature[]
+        vectorFeatures
       );
     }
 

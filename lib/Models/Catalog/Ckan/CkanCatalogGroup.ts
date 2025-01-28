@@ -104,7 +104,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       uri.query(uri.query() + "&" + filterQuery);
     } else {
       Object.keys(filterQuery).forEach((key: string) =>
-        uri.addQuery(key, (filterQuery as JsonObject)[key])
+        uri.addQuery(key, filterQuery[key])
       );
     }
     uri.normalize();
