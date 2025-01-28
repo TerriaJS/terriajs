@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import Guide from "./Guide.jsx";
-import satelliteGuideData from "./satelliteGuideData.js";
+import Guide from "./Guide";
+import satelliteGuideData from "./satelliteGuideData";
 import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 
