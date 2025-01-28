@@ -1,25 +1,18 @@
 "use strict";
 
-const CesiumEvent = require("terriajs-cesium/Source/Core/Event").default;
-const ImageryLayer =
-  require("terriajs-cesium/Source/Scene/ImageryLayer").default;
-const ImageryProvider =
-  require("terriajs-cesium/Source/Scene/ImageryProvider").default;
-const ImageryState =
-  require("terriajs-cesium/Source/Scene/ImageryState").default;
-const JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
-const pollToPromise = require("../../lib/Core/pollToPromise");
-const RequestErrorEvent =
-  require("terriajs-cesium/Source/Core/RequestErrorEvent").default;
-const Resource = require("terriajs-cesium/Source/Core/Resource").default;
-const runLater = require("../../../../lib/Core/runLater");
-const TimeIntervalCollection =
-  require("terriajs-cesium/Source/Core/TimeIntervalCollection").default;
-const TimeInterval =
-  require("terriajs-cesium/Source/Core/TimeInterval").default;
-
-const Terria = require("../../../../lib/Models/Terria");
-const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import ImageryState from "terriajs-cesium/Source/Scene/ImageryState";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import pollToPromise from "../../lib/Core/pollToPromise";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import runLater from "../../../../lib/Core/runLater";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import Terria from "../../../../lib/Models/Terria";
+import ImageryLayerCatalogItem from "../../lib/Models/ImageryLayerCatalogItem";
 
 describe("ImageryLayerCatalogItem", function () {
   describe("Time slider initial time as specified by initialTimeSource ", function () {

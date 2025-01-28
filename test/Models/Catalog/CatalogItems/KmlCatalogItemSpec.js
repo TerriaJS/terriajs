@@ -1,12 +1,11 @@
 "use strict";
 
-var KmlCatalogItem = require("../../../../lib/Models/Catalog/CatalogItems/KmlCatalogItem");
-var TerriaError = require("../../../../lib/Core/TerriaError").default;
-var Terria = require("../../../../lib/Models/Terria");
-
-var loadBlob = require("../../../../lib/Core/loadBlob");
-var loadText = require("../../../../lib/Core/loadText");
-var loadXML = require("../../../../lib/Core/loadXML");
+import KmlCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/KmlCatalogItem";
+import TerriaError from "../../../../lib/Core/TerriaError";
+import Terria from "../../../../lib/Models/Terria";
+import loadBlob from "../../../../lib/Core/loadBlob";
+import loadText from "../../../../lib/Core/loadText";
+import loadXML from "../../../../lib/Core/loadXML";
 
 // KML requires support for Blob.  See https://github.com/TerriaJS/terriajs/issues/508
 var describeIfSupported = typeof Blob !== "undefined" ? describe : xdescribe;

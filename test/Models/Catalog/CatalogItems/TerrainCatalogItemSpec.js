@@ -1,8 +1,8 @@
 "use strict";
 
-var CompositeCatalogItem = require("../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem");
-var TerrainCatalogItem = require("../../lib/Models/TerrainCatalogItem");
-var Terria = require("../../lib/Models/Terria");
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import TerrainCatalogItem from "../../lib/Models/TerrainCatalogItem";
+import Terria from "../../lib/Models/Terria";
 
 describe("TerrainCatalogItem", function () {
   var terria;
