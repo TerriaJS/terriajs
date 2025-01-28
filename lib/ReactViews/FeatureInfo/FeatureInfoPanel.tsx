@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { action, reaction, runInAction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import { withTranslation } from "react-i18next";
+import { withTranslation, TFunction } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
