@@ -40,7 +40,10 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-empty-object-type": [
+      "error",
+      { allowInterfaces: "with-single-extends" }
+    ],
     "@typescript-eslint/unified-signatures": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/jsx-boolean-value": ["error", "never", { always: [] }],
