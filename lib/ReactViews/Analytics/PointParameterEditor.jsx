@@ -71,11 +71,11 @@ const PointParameterEditor = createReactClass({
     const { t } = this.props;
     return (
       <div>
-        {showErrorMessage && (
+        {showErrorMessage ? (
           <div className={Styles.warningText}>
             {t("analytics.enterValidCoords")}
           </div>
-        )}
+        ) : null}
         <input
           className={style}
           type="text"

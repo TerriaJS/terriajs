@@ -81,20 +81,20 @@ class Description extends React.Component {
           }
         `}
       >
-        {catalogItem.isExperiencingIssues && (
+        {catalogItem.isExperiencingIssues ? (
           <WarningBox>{t("preview.mayBeExperiencingIssues")}</WarningBox>
-        )}
+        ) : null}
 
-        {catalogItem.description && catalogItem.description.length > 0 && (
+        {catalogItem.description && catalogItem.description.length > 0 ? (
           <div>
             <h4 className={Styles.h4}>{t("description.name")}</h4>
             {parseCustomMarkdownToReact(catalogItem.description, {
               catalogItem: catalogItem
             })}
           </div>
-        )}
+        ) : null}
 
-        {catalogItem.hasLocalData && <p>{t("description.dataLocal")}</p>}
+        {catalogItem.hasLocalData ? <p>{t("description.dataLocal")}</p> : null}
 
         {!catalogItem.hasLocalData &&
           !catalogItem.hasDescription &&
@@ -102,7 +102,7 @@ class Description extends React.Component {
             <p>{t("description.dataNotLocal")}</p>
           )}
 
-        {metadataUrls && metadataUrls.length > 0 && (
+        {metadataUrls && metadataUrls.length > 0 ? (
           <>
             <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
             {metadataUrls.map((metadataUrl, _i) => (
@@ -116,30 +116,30 @@ class Description extends React.Component {
                     color: ${(p) => p.theme.colorPrimary};
                   `}
                 >
-                  {metadataUrl.title && (
+                  {metadataUrl.title ? (
                     <Button primary>{metadataUrl.title}</Button>
-                  )}
+                  ) : null}
                   {!metadataUrl.title ? metadataUrl.url : null}
                 </a>
               </Box>
             ))}
           </>
-        )}
+        ) : null}
 
         <DataPreviewSections metadataItem={catalogItem} />
 
-        {catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0 && (
+        {catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0 ? (
           <div>
             <h4 className={Styles.h4}>{t("description.dataCustodian")}</h4>
             {parseCustomMarkdownToReact(catalogItem.dataCustodian, {
               catalogItem: catalogItem
             })}
           </div>
-        )}
+        ) : null}
 
         {!catalogItem.hideSource && (
           <>
-            {catalogItem.url && (
+            {catalogItem.url ? (
               <>
                 <h4 className={Styles.h4}>{catalogItem.typeName} URL</h4>
 
@@ -179,9 +179,9 @@ class Description extends React.Component {
                   </p>
                 )}
               </>
-            )}
+            ) : null}
 
-            {dataUrls && dataUrls.length > 0 && (
+            {dataUrls && dataUrls.length > 0 ? (
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
                 {dataUrls.map(
@@ -189,10 +189,10 @@ class Description extends React.Component {
                     (dataUrl.type?.startsWith("wfs") ||
                       dataUrl.type?.startsWith("wcs")) && (
                       <>
-                        {dataUrl.type?.startsWith("wfs") &&
-                          parseCustomMarkdownToReact(
-                            t("description.useLinkBelow", {
-                              link: `
+                        {dataUrl.type?.startsWith("wfs")
+                          ? parseCustomMarkdownToReact(
+                              t("description.useLinkBelow", {
+                                link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
                             target="_blank"
@@ -202,12 +202,13 @@ class Description extends React.Component {
                             Web Feature Service (WFS) documentation
                           </a>
                         `
-                            })
-                          )}
-                        {dataUrl.type?.startsWith("wcs") &&
-                          parseCustomMarkdownToReact(
-                            t("description.useLinkBelow", {
-                              link: `
+                              })
+                            )
+                          : null}
+                        {dataUrl.type?.startsWith("wcs")
+                          ? parseCustomMarkdownToReact(
+                              t("description.useLinkBelow", {
+                                link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
                             target="_blank"
@@ -217,8 +218,9 @@ class Description extends React.Component {
                             Web Coverage Service (WCS) documentation
                           </a>
                         `
-                            })
-                          )}
+                              })
+                            )
+                          : null}
                         <Box paddedVertically key={dataUrl.url}>
                           <a
                             href={dataUrl.url}
@@ -229,9 +231,9 @@ class Description extends React.Component {
                               color: ${(p) => p.theme.colorPrimary};
                             `}
                           >
-                            {dataUrl.title && (
+                            {dataUrl.title ? (
                               <Button primary>{dataUrl.title}</Button>
-                            )}
+                            ) : null}
                             {!dataUrl.title ? dataUrl.url : null}
                           </a>
                         </Box>{" "}
@@ -239,7 +241,7 @@ class Description extends React.Component {
                     )
                 )}
               </>
-            )}
+            ) : null}
 
             {!this.props.printView && defined(catalogItem.metadata) && (
               <>

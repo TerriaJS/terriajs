@@ -146,7 +146,7 @@ class DataPreview extends React.Component {
     return (
       <div className={Styles.preview}>
         <div className={Styles.previewInner}>
-          {isLoading && <Loader />}
+          {isLoading ? <Loader /> : null}
           {!isLoading && !hasTarget && (
             <>
               <div className={Styles.placeholder}>

@@ -11,8 +11,9 @@ export default class InfoParameterEditor extends React.Component<{
   render() {
     return (
       <div>
-        {this.props.parameter.value &&
-          parseCustomMarkdownToReact(this.props.parameter.value)}
+        {this.props.parameter.value
+          ? parseCustomMarkdownToReact(this.props.parameter.value)
+          : null}
       </div>
     );
   }

@@ -71,11 +71,11 @@ class FullScreenButton extends React.Component {
           [Styles.trainerBarVisible]: this.props.viewState.trainerBarVisible
         })}
       >
-        {this.props.minified && (
+        {this.props.minified ? (
           <label className={Styles.toggleWorkbench} htmlFor="toggle-workbench">
             {this.props.btnText}
           </label>
-        )}
+        ) : null}
         <button
           type="button"
           id="toggle-workbench"
