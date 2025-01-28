@@ -54,7 +54,7 @@ class WpsLoadableStratum extends LoadableStratum(
   }
 
   @action
-  static async load(item: WebProcessingServiceCatalogFunctionJob) {
+  static load(item: WebProcessingServiceCatalogFunctionJob) {
     return new WpsLoadableStratum(item);
   }
 
