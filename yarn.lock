@@ -2041,11 +2041,6 @@
     "@types/linkify-it" "^5"
     "@types/mdurl" "^2"
 
-"@types/math-expression-evaluator@^1.2.0":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@types/math-expression-evaluator/-/math-expression-evaluator-1.2.2.tgz#05970d669d8c27c43f97d1557fa2a67e79698100"
-  integrity sha512-eHy3f0C2mfFdHbK2zoKRXaM830dm2pSTUBWZ3aJCWxFsOxErWsXNPziFLliqBddGYreCM4Nyl1IZwFCt0jwRNg==
-
 "@types/mdurl@^2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/mdurl/-/mdurl-2.0.0.tgz#d43878b5b20222682163ae6f897b20447233bdfd"
@@ -8124,10 +8119,15 @@ material-colors@^1.2.1:
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
   integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
 
-math-expression-evaluator@^1.2.14, math-expression-evaluator@^1.3.7:
+math-expression-evaluator@^1.2.14:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.3.8.tgz#320da3b2bc1512f4f50fc3020b2b1cd5c8e9d577"
   integrity sha512-9FbRY3i6U+CbHgrdNbAUaisjWTozkm1ZfupYQJiZ87NtYHk2Zh9DvxMgp/fifxVhqTLpd5fCCLossUbpZxGeKw==
+
+math-expression-evaluator@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-2.0.6.tgz#a33028e4d55e7dcfcca17a696738e1a25b8e2c22"
+  integrity sha512-DRung1qNcKbgkhFeQ0fBPUFB6voRUMY7KyRyp1TRQ2v95Rp2egC823xLRooM1mDx1rmbkY7ym6ZWmpaE/VimOA==
 
 md5.js@^1.3.4:
   version "1.3.5"
