@@ -102,6 +102,12 @@ type CreditDisplayElement = {
   count: number;
 };
 
+Ion.defaultTokenMessage =
+  '<b> \
+        This application is using Cesium\'s default ion access token. Please set "cesiumIonAccessToken" in config.json \
+        with an access token from your ion account. \
+        You can sign up for a free ion account at <a href="https://cesium.com">https://cesium.com</a>.</b>';
+
 // Intermediary
 const cartesian3Scratch = new Cartesian3();
 const enuToFixedScratch = new Matrix4();
