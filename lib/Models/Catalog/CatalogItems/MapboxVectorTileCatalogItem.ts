@@ -146,8 +146,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     }
   }
 
-  @computed
-  /** Convert traits into paint rules:
+  @computed /** Convert traits into paint rules:
    * - `layer` and `fillColor`/`lineColor` into simple rules
    * - `parsedJsonStyle`
    */

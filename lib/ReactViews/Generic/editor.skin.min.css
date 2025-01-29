@@ -1,9 +1,9 @@
 /**
-* Copyright (c) Tiny Technologies, Inc. All rights reserved.
-* Licensed under the LGPL or a commercial license.
-* For LGPL see License.txt in the project root for license information.
-* For commercial licenses see https://www.tiny.cloud/
-*/
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
 .tox {
   box-shadow: none;
   box-sizing: content-box;
@@ -1282,8 +1282,8 @@ button::-moz-focus-inner {
   border-radius: 3px;
   border-style: solid;
   border-width: 1px;
-  box-shadow: 0 16px 16px -10px rgba(34, 47, 62, 0.15),
-    0 0 40px 1px rgba(34, 47, 62, 0.15);
+  box-shadow: 0 16px 16px -10px rgba(34, 47, 62, 0.15), 0 0 40px 1px
+    rgba(34, 47, 62, 0.15);
   display: flex;
   flex-direction: column;
   max-height: 100%;
@@ -1776,8 +1776,7 @@ body.tox-dialog__disable-scroll {
       45deg,
       rgba(0, 0, 0, 0.25) 25%,
       transparent 25%
-    ),
-    linear-gradient(-45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%),
+    ), linear-gradient(-45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%),
     linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.25) 75%);
   background-position: 0 0, 0 6px, 6px -6px, -6px 0;
@@ -3031,8 +3030,8 @@ body.tox-dialog__disable-scroll {
   transition: height 0.3s ease, opacity 0.2s linear 0.1s;
 }
 .tox .tox-toolbar__overflow--shrinking {
-  transition: opacity 0.3s ease, height 0.2s linear 0.1s,
-    visibility 0s linear 0.3s;
+  transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear
+    0.3s;
 }
 .tox .tox-menubar + .tox-toolbar,
 .tox .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {

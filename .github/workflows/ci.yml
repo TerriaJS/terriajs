@@ -24,8 +24,8 @@ jobs:
           node-version-file: ".nvmrc"
       - run: npm install -g yarn@^1.19.0 && yarn install
 
-      - name: Check formatting with prettier
-        run: yarn prettier-check
+      - name: Check formatting
+        run: yarn format-check
 
       - name: Build TerriaJS tests
         run: yarn gulp lint release --continue

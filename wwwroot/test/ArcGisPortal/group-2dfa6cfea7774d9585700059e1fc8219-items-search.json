@@ -33,10 +33,7 @@
       "snippet": "The NSW Topographic Map Cache Web Service provides rasterised topographic maps in a seamless mosaic view covering NSW. ",
       "thumbnail": "thumbnail/ago_downloaded.png",
       "documentation": null,
-      "extent": [
-        [140.9993, -37.5083],
-        [159.2567, -28.125]
-      ],
+      "extent": [[140.9993, -37.5083], [159.2567, -28.125]],
       "categories": [],
       "spatialReference": "102100",
       "accessInformation": "© Department of Finance, Services & Innovation 2018",
@@ -84,10 +81,7 @@
       "snippet": "Event imagery for NSW",
       "thumbnail": "thumbnail/ago_downloaded.png",
       "documentation": null,
-      "extent": [
-        [143.3335, -35.1516],
-        [153.3799, -29.0601]
-      ],
+      "extent": [[143.3335, -35.1516], [153.3799, -29.0601]],
       "categories": ["/Categories/Imagery"],
       "spatialReference": "102100",
       "accessInformation": "© Department of Finance, Services & Innovation 2018",
@@ -136,10 +130,7 @@
       "snippet": "Event imagery for NSW in colour infra red",
       "thumbnail": null,
       "documentation": null,
-      "extent": [
-        [143.3335, -35.1516],
-        [153.3799, -29.0601]
-      ],
+      "extent": [[143.3335, -35.1516], [153.3799, -29.0601]],
       "categories": ["/Categories/Imagery"],
       "spatialReference": "102100",
       "accessInformation": "© Department of Finance, Services & Innovation 2018",

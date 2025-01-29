@@ -87,17 +87,21 @@ const Checkbox = forwardRef(function Checkbox(
           //copy the global focus
           outline: 3px solid #c390f9;
         }
-        ${!isDisabled &&
-        `
+        ${
+          !isDisabled &&
+          `
             cursor: pointer;
             &:hover svg {
               opacity: 0.6;
             }
-          `}
-        ${isDisabled &&
-        `
+          `
+        }
+        ${
+          isDisabled &&
+          `
             cursor: not-allowed;
-          `}
+          `
+        }
       `}
       {...textProps}
     >

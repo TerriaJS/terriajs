@@ -44,7 +44,7 @@ export default class StyleTraits extends ModelTraits {
     name: "stroke",
     description: "Stroke color."
   })
-  "stroke"?: string;
+  stroke?: string;
 
   @primitiveTrait({
     type: "number",
@@ -113,7 +113,7 @@ export default class StyleTraits extends ModelTraits {
     name: "fill",
     description: "Fill color."
   })
-  "fill"?: string;
+  fill?: string;
 
   @primitiveTrait({
     type: "number",

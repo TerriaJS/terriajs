@@ -191,9 +191,9 @@ class MapNavigationBase extends React.Component<PropTypes> {
       this.orientation === Orientation.VERTICAL
         ? this.navigationRef.current.clientHeight
         : this.navigationRef.current.parentElement?.parentElement
-        ? this.navigationRef.current.parentElement?.parentElement?.clientWidth -
-          100
-        : this.navigationRef.current.clientWidth;
+          ? this.navigationRef.current.parentElement?.parentElement
+              ?.clientWidth - 100
+          : this.navigationRef.current.clientWidth;
 
     for (let i = 0; i < itemsToShow.length; i++) {
       size += this.itemSizeInBar.get(itemsToShow[i].id) || 0;
@@ -281,9 +281,11 @@ class MapNavigationBase extends React.Component<PropTypes> {
           <ControlWrapper
             column={this.orientation === Orientation.VERTICAL}
             css={`
-              ${this.orientation === Orientation.HORIZONTAL &&
-              `margin-bottom: 5px;
-                flex-wrap: wrap;`}
+              ${
+                this.orientation === Orientation.HORIZONTAL &&
+                `margin-bottom: 5px;
+                flex-wrap: wrap;`
+              }
             `}
           >
             {items.map((item) => {

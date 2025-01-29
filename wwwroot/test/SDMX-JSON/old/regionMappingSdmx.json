@@ -558,10 +558,7 @@
         "lga_name_2012",
         "lga_name_2010"
       ],
-      "serverReplacements": [
-        [" \\([a-z]+\\)$", ""],
-        ["-", " "]
-      ],
+      "serverReplacements": [[" \\([a-z]+\\)$", ""], ["-", " "]],
       "dataReplacements": [
         ["^The ", ""],
         ["^.*Council of (the )?", ""],

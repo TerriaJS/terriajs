@@ -367,12 +367,14 @@ class DateTimePicker extends React.Component<PropsType> {
             {monthNames.map((m, i) => (
               <GridRow
                 css={`
-                  ${!isDefined(datesObject[year][i])
-                    ? `:hover {
+                  ${
+                    !isDefined(datesObject[year][i])
+                      ? `:hover {
                   background: transparent;
                   cursor: default;
                 }`
-                    : ""}
+                      : ""
+                  }
                 `}
                 key={m}
                 onClick={() =>
@@ -664,12 +666,14 @@ class DateTimePicker extends React.Component<PropsType> {
                 left: 0;
                 z-index: 100;
 
-                ${this.props.openDirection === "down"
-                  ? `
+                ${
+                  this.props.openDirection === "down"
+                    ? `
                   top: 40px;
                   left: -190px;
                 `
-                  : ""}
+                    : ""
+                }
               `}
               className={"scrollbars"}
             >

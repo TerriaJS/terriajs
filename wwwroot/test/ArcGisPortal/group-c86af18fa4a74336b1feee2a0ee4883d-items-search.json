@@ -33,10 +33,7 @@
       "snippet": "The NSW Topographic Map Cache Web Service provides rasterised topographic maps in a seamless mosaic view covering NSW. ",
       "thumbnail": "thumbnail/ago_downloaded.png",
       "documentation": null,
-      "extent": [
-        [140.9993, -37.5083],
-        [159.2567, -28.125]
-      ],
+      "extent": [[140.9993, -37.5083], [159.2567, -28.125]],
       "categories": [],
       "spatialReference": "102100",
       "accessInformation": "© Department of Finance, Services & Innovation 2018",
@@ -84,10 +81,7 @@
       "snippet": "NSW Spot Imagery 2019 is first of a series of Bi Annual Satellite Image Mosaics covering NSW with an image resolution of 1.5 metres.",
       "thumbnail": "thumbnail/thumbnail1582242296196.png",
       "documentation": null,
-      "extent": [
-        [140.3414, -37.6035],
-        [159.2899, -28.1005]
-      ],
+      "extent": [[140.3414, -37.6035], [159.2899, -28.1005]],
       "categories": ["/Categories/Imagery"],
       "spatialReference": "102100",
       "accessInformation": null,

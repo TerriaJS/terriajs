@@ -31,20 +31,20 @@ export type Or<
 > = [A] extends [true]
   ? true
   : [B] extends [true]
-  ? true
-  : [C] extends [true]
-  ? true
-  : [D] extends [true]
-  ? true
-  : [E] extends [true]
-  ? true
-  : [F] extends [true]
-  ? true
-  : [G] extends [true]
-  ? true
-  : [H] extends [true]
-  ? true
-  : false;
+    ? true
+    : [C] extends [true]
+      ? true
+      : [D] extends [true]
+        ? true
+        : [E] extends [true]
+          ? true
+          : [F] extends [true]
+            ? true
+            : [G] extends [true]
+              ? true
+              : [H] extends [true]
+                ? true
+                : false;
 
 /**
  * Inverts a conditional, changing `true` to `false` and `false` to `true`.

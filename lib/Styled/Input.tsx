@@ -75,8 +75,8 @@ const commonStyles = css<InputProps | TextAreaProps>`
   };
 `}
 ${(props) =>
-    props.white &&
-    `
+  props.white &&
+  `
   color: ${props.theme.textDark};
   background: #FFFFFF;
 `}
@@ -89,8 +89,8 @@ ${(props) => props.large && `height: ${props.theme.inputHeightLarge};`}
 ${(props) => props.rounded && `border-radius: 30px;`}
 ${(props) => props.disabled && `opacity: 0.3;`}
 ${(props) =>
-    props.invalidValue &&
-    `
+  props.invalidValue &&
+  `
   border-color: #d60000;
   background-color: #fdf2f2;
 `}
