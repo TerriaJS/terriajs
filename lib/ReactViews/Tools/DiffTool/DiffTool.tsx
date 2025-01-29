@@ -127,7 +127,6 @@ class DiffTool extends React.Component<PropsType> {
       isMapFullScreen: viewState.isMapFullScreen
     };
     terria.showSplitter = true;
-    viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
     terria.mapNavigationModel.show(CLOSE_TOOL_ID);
     terria.elements.set("timeline", { visible: false });
@@ -505,7 +504,7 @@ class Main extends React.Component<MainPropsType> {
         <DiffAccordion viewState={viewState} t={t}>
           <MainPanel
             isMapFullScreen={viewState.isMapFullScreen}
-            styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
+            styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 230px)`}
           >
             {isShowingDiff && (
               <>
@@ -768,7 +767,7 @@ interface DiffAccordionProps {
 }
 
 const DiffAccordionToggle = styled(Box)`
-  ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
+  border-radius: ${({ theme }) => `${theme.radiusXL} ${theme.radiusXL} 0 0`};
 `;
 
 const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
@@ -830,23 +829,19 @@ const DiffAccordionWrapper = styled(Box).attrs({
   styledWidth: "340px"
   // charcoalGreyBg: true
 })<{ isMapFullScreen: boolean }>`
-  top: 70px;
+  top: 120px;
   left: 0px;
-  min-height: 220px;
-  // background: ${(p) => p.theme.dark};
-  margin-left: ${(props) =>
-    props.isMapFullScreen
-      ? 16
-      : parseInt(props.theme.workbenchWidth, 10) + 40}px;
+  margin-left: ${(props) => parseInt(props.theme.workbenchWidth, 10) + 40}px;
   transition: margin-left 0.25s;
 `;
 
 const MainPanel = styled(Box).attrs({
   column: true,
   overflowY: "auto",
+  scroll: true,
   paddedRatio: 2
 })<{ isMapFullScreen: boolean }>`
-  ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
+  border-radius: ${({ theme }) => `0 0 ${theme.radiusXL} ${theme.radiusXL}`};
   background-color: ${(p) => p.theme.darkWithOverlay};
 `;
 
