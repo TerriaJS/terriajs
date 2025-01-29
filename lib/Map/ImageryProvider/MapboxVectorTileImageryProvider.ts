@@ -16,7 +16,9 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
-import URITemplate from "urijs/src/URITemplate";
+import URITemplate, {
+  type URITemplate as URITemplateType
+} from "urijs/src/URITemplate";
 import isDefined from "../../Core/isDefined";
 import loadArrayBuffer from "../../Core/loadArrayBuffer";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
@@ -55,7 +57,8 @@ interface MapboxVectorTileImageryProviderOptions {
 export default class MapboxVectorTileImageryProvider
   implements ImageryProviderWithGridLayerSupport
 {
-  private readonly _uriTemplate: uri.URITemplate;
+  private readonly _uriTemplate: URITemplateType;
+  private readonly _url: string;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
   private readonly _styleFunc: (
@@ -78,6 +81,7 @@ export default class MapboxVectorTileImageryProvider
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
     this._uriTemplate = new URITemplate(options.url);
+    this._url = options.url;
     this._layerName = options.layerName;
 
     this._subdomains = defaultValue(options.subdomains, []);
@@ -134,7 +138,7 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get url() {
-    return this._uriTemplate.expression;
+    return this._url;
   }
 
   get tileWidth() {
@@ -530,7 +534,7 @@ export default class MapboxVectorTileImageryProvider
       return undefined;
     };
     const imageryProvider = new MapboxVectorTileImageryProvider({
-      url: this._uriTemplate.expression,
+      url: this.url,
       layerName: this._layerName,
       subdomains: this._subdomains,
       rectangle: this._rectangle,

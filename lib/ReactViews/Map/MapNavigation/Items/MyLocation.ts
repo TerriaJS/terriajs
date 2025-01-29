@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, observable, runInAction, makeObservable } from "mobx";
 import React from "react";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic";
+import URI from "urijs";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../../../../Core/isDefined";
