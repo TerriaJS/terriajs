@@ -191,7 +191,6 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "glob-all": "^3.0.1",
     "husky": "^8.0.3",
-    "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
     "jsdom": "^17.0.0",
