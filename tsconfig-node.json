@@ -9,7 +9,6 @@
       "mapbox__geojson-merge",
       "mapbox__point-geometry",
       "terriajs-html2canvas",
-      "urijs",
       "styled-components", // eventually it will be required anyway for SSR.
       "react"
     ]

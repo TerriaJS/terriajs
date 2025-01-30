@@ -63,7 +63,10 @@
     "myLocation": "My Location",
     "location": "Location",
     "originError": "Your browser can only provide your location when using HTTPS. You may be able to use {{secureUrl}} instead.",
-    "centreMap": "Centre map at your current location"
+    "centreMap": "Centre map at your current location",
+    "permissionDenied": "Permission denied to get your location. Please check your browser settings.",
+    "positionUnavailable": "Your location information is unavailable.",
+    "timeout": "Obtaining your location information took to long. Please try again later."
   },
   "splitterTool": {
     "errorTitle": "Failed to compare catalog item.",

@@ -26,6 +26,7 @@ nav:
       - Cross-Origin Resource Sharing: connecting-to-data/cross-origin-resource-sharing.md
       - Catalog Groups: connecting-to-data/catalog-groups.md
       - Catalog Items: connecting-to-data/catalog-items.md
+      - Item Search: connecting-to-data/item-search/indexed-item-search.md
       - Customizing Data Appearance:
           - Overview: connecting-to-data/customizing-data-appearance/overview.md
           - Imagery Data: connecting-to-data/customizing-data-appearance/imagery-data.md
