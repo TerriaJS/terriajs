@@ -1,6 +1,5 @@
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -56,9 +55,7 @@ class NoViewer extends GlobeOrMap {
   pauseMapInteraction(): void {}
   resumeMapInteraction(): void {}
   _addVectorTileHighlight(
-    _imageryProvider:
-      | MapboxVectorTileImageryProvider
-      | ProtomapsImageryProvider,
+    _imageryProvider: ProtomapsImageryProvider,
     _rectangle: Rectangle
   ) {
     return () => {};

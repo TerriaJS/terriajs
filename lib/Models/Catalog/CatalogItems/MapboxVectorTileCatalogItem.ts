@@ -1,20 +1,17 @@
-import bbox from "@turf/bbox";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable, override } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import {
   GeomType,
-  json_style,
   LabelRule,
   LineSymbolizer,
-  PolygonSymbolizer,
-  Rule as PaintRule
-} from "protomaps";
+  PaintRule,
+  PolygonSymbolizer
+} from "protomaps-leaflet";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
-import ProtomapsImageryProvider, {
-  GeojsonSource
-} from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
+import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
+import { mapboxStyleJsonToProtomaps } from "../../../Map/Vector/mapboxStyleJsonToProtomaps";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -22,13 +19,11 @@ import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
-import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
@@ -89,22 +84,6 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
       })
     ];
   }
-
-  @computed
-  get rectangle() {
-    if (
-      this.item.imageryProvider?.source instanceof GeojsonSource &&
-      this.item.imageryProvider.source.geojsonObject
-    ) {
-      const geojsonBbox = bbox(this.item.imageryProvider.source.geojsonObject);
-      return createStratumInstance(RectangleTraits, {
-        west: geojsonBbox[0],
-        south: geojsonBbox[1],
-        east: geojsonBbox[2],
-        north: geojsonBbox[3]
-      });
-    }
-  }
 }
 
 StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
@@ -127,11 +106,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     return i18next.t("models.mapboxVectorTile.name");
   }
 
-  @override
-  get forceProxy() {
-    return true;
-  }
-
   async forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);
     runInAction(() => {
@@ -142,8 +116,9 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   @computed
   get parsedJsonStyle() {
     if (this.style) {
-      return json_style(this.style, new Map());
+      return mapboxStyleJsonToProtomaps(this.style, {});
     }
+    return undefined;
   }
 
   @computed
@@ -176,9 +151,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     }
 
     if (this.parsedJsonStyle) {
-      rules.push(
-        ...(this.parsedJsonStyle.paint_rules as unknown as PaintRule[])
-      );
+      rules.push(...this.parsedJsonStyle.paintRules);
     }
 
     return rules;
@@ -187,7 +160,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   @computed
   get labelRules(): LabelRule[] {
     if (this.parsedJsonStyle) {
-      return this.parsedJsonStyle.label_rules as unknown as LabelRule[];
+      return this.parsedJsonStyle.labelRules;
     }
     return [];
   }
@@ -200,8 +173,9 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return new ProtomapsImageryProvider({
       terria: this.terria,
-      id: this.uniqueId,
-      data: this.url,
+      // Use the URL as the id, this is needed for backward compatibility with MapboxImageryProvider, for when picking features (as it uses the URL as the id)
+      id: this.url,
+      data: proxyCatalogItemUrl(this, this.url),
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
