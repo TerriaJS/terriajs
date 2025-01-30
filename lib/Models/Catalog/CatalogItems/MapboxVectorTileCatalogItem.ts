@@ -175,7 +175,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       terria: this.terria,
       // Use the URL as the id, this is needed for backward compatibility with MapboxImageryProvider, for when picking features (as it uses the URL as the id)
       id: this.url,
-      data: this.url,
+      data: proxyCatalogItemUrl(this, this.url),
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
