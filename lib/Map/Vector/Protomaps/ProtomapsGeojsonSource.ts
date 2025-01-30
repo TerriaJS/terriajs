@@ -281,5 +281,5 @@ export function geojsonVtTileToProtomapsFeatures(
 
       return feature;
     })
-    .filter((f) => f !== null);
+    .filter((f): f is ProtomapsFeature => f !== null);
 }
