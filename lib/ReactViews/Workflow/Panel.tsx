@@ -38,7 +38,12 @@ export const Panel: React.FC<PanelProps> = (props) => {
 
   return props.title && props.collapsible ? (
     <Wrapper className={props.className}>
-      <CollapsibleTitleBar onClick={toggleOpen} fullWidth isOpen={isOpen}>
+      <CollapsibleTitleBar
+        onClick={toggleOpen}
+        fullWidth
+        isOpen={isOpen}
+        css={{ paddingBottom: isOpen ? "15px" : "0px" }}
+      >
         {props.icon !== undefined ? (
           <Icon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
         ) : null}
@@ -76,6 +81,7 @@ export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
       fullWidth
       isOpen={false}
       activeStyles
+      css={{ paddingBottom: "0px" }}
     >
       <Title css={{ textAlign: "center" }}>{title}</Title>
     </CollapsibleTitleBar>
@@ -84,9 +90,9 @@ export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
 
 const Wrapper = styled.div`
   background-color: ${(p) => p.theme.darkWithOverlay};
-  margin: 10px 5px 0px 5px;
+  margin: 15px 15px 0px 15px;
+  padding: 15px;
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
 `;
 
 const TitleBar = styled.div`
@@ -96,7 +102,8 @@ const TitleBar = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid ${(p) => p.theme.darkLighter};
-  padding-left: 0.4em;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
 `;
 
 const CollapsibleTitleBar = styled(RawButton)<
@@ -108,17 +115,16 @@ const CollapsibleTitleBar = styled(RawButton)<
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
   ${(p) => (p.isOpen ? `border-bottom: 1px solid ${p.theme.darkLighter}` : "")};
-  padding-left: 0.4em;
-  padding-right: 0.4em;
 `;
 
 const Title = styled(Text).attrs({
   textLight: true,
-  bold: true
+  medium: true
 })`
   flex-grow: 1;
-  padding: 1em 0.4em;
 `;
 
 const Icon = styled(StyledIcon).attrs({
@@ -128,6 +134,5 @@ const Icon = styled(StyledIcon).attrs({
 })``;
 
 const Content = styled.div`
-  padding: 0.4em;
   color: ${(p) => p.theme.textLight};
 `;

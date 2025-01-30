@@ -4,7 +4,8 @@
 .panel {
   background: $feature-info-bg;
   color: $feature-info-color;
-  border-radius: $radius-small;
+  border-radius: $radius-xlarge;
+  overflow: hidden;
   display: none;
 
   a {

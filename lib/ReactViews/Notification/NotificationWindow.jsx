@@ -1,3 +1,5 @@
+"use strict";
+
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -5,6 +7,8 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./notification-window.scss";
+import Button from "../../Styled/Button";
+import { withTheme } from "styled-components";
 
 const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
@@ -25,7 +29,8 @@ const NotificationWindow = createReactClass({
     onDeny: PropTypes.func.isRequired,
     type: PropTypes.string,
     height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    theme: PropTypes.object
   },
 
   confirm(e) {
@@ -65,16 +70,13 @@ const NotificationWindow = createReactClass({
       height: defined(this.props.height) ? this.props.height : "auto",
       width: defined(this.props.width) ? this.props.width : "500px"
     };
-    const isStory = type === "story";
 
     return (
       <div className={classNames(Styles.wrapper, `${type}`)}>
         <div
           className={Styles.notification}
-          isStory={isStory}
           css={`
-            background: ${(p) =>
-              p.isStory ? p.theme.colorPrimary : p.theme.dark};
+            background: ${(p) => p.theme.dark};
             a,
             a:visited {
               color: ${(p) => p.theme.primary};
@@ -93,13 +95,30 @@ const NotificationWindow = createReactClass({
           </div>
           <div className={Styles.footer}>
             {denyText && (
-              <button type="button" className={Styles.btn} onClick={this.deny}>
+              <Button
+                css={{
+                  backgroundColor: this.props.theme.darkLighter,
+                  border: "none",
+                  color: "white"
+                }}
+                onClick={this.deny}
+                textProps={{
+                  medium: true
+                }}
+              >
                 {denyText}
-              </button>
+              </Button>
             )}
-            <button type="button" className={Styles.btn} onClick={this.confirm}>
+            <Button
+              primary
+              transparent
+              onClick={this.confirm}
+              textProps={{
+                medium: true
+              }}
+            >
               {confirmText}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -107,4 +126,4 @@ const NotificationWindow = createReactClass({
   }
 });
 
-export default NotificationWindow;
+export default withTheme(NotificationWindow);
