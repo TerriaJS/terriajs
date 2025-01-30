@@ -2,17 +2,18 @@
 
 #### next release (8.7.12)
 
+- Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
+- Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
+  - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
+- Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
+- support URL parameters in a GetLegendGraphic request for a layer without a style configured
+- Enhanced error processing for obtaining user location
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
 
 - Explicitly set prettier tab-width
 - Move release guide from README.md to RELEASE_GUIDE.md
-- Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
-- Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
-  - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
-- Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
-- [The next improvement]
 - Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
 - Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
 

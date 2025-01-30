@@ -362,6 +362,20 @@ class WebMapServiceCatalogItem
     this.setTrait(CommonStrata.user, "isShowingDiff", false);
   }
 
+  getLegendBaseUrl(): string {
+    // Remove problematic query parameters from URL
+    const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
+      (url, parameter) =>
+        url
+          .removeQuery(parameter)
+          .removeQuery(parameter.toUpperCase())
+          .removeQuery(parameter.toLowerCase()),
+      new URI(this.url)
+    );
+
+    return baseUrl.toString();
+  }
+
   getLegendUrlForStyle(
     styleId: string,
     firstDate?: JulianDate,

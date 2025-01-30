@@ -9,6 +9,7 @@ import {
   exp
 } from "protomaps-leaflet";
 import JsonValue from "../../../Core/Json";
+import TerriaError from "../../../Core/TerriaError";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -191,128 +192,136 @@ export function getFont(obj: any, fontSubMap: Record<string, FontSub>) {
   return (_: number) => "12px sans-serif";
 }
 
+/** Convert mapbox style json to Protomaps paint and label rules.
+ * This supports a very small subset of mapbox style spec:
+ */
 export function mapboxStyleJsonToProtomaps(
   obj: any,
   fontSubMap: Record<string, FontSub>
 ) {
+  if (!obj || !obj.layers) return undefined;
+
   const paintRules = [];
   const labelRules = [];
   const refs = new Map<string, any>();
+  try {
+    for (const layer of obj.layers) {
+      refs.set(layer.id, layer);
 
-  for (const layer of obj.layers) {
-    refs.set(layer.id, layer);
+      if (layer.layout && layer.layout.visibility === "none") {
+        continue;
+      }
 
-    if (layer.layout && layer.layout.visibility === "none") {
-      continue;
-    }
+      if (layer.ref) {
+        const referenced = refs.get(layer.ref);
+        layer.type = referenced.type;
+        layer.filter = referenced.filter;
+        layer.source = referenced.source;
+        layer["source-layer"] = referenced["source-layer"];
+      }
 
-    if (layer.ref) {
-      const referenced = refs.get(layer.ref);
-      layer.type = referenced.type;
-      layer.filter = referenced.filter;
-      layer.source = referenced.source;
-      layer["source-layer"] = referenced["source-layer"];
-    }
+      let filter = undefined;
+      if (layer.filter) {
+        filter = filterFn(layer.filter);
+      }
 
-    let filter = undefined;
-    if (layer.filter) {
-      filter = filterFn(layer.filter);
-    }
-
-    // ignore background-color?
-    if (layer.type === "fill") {
-      paintRules.push({
-        dataLayer: layer["source-layer"],
-        filter: filter,
-        symbolizer: new PolygonSymbolizer({
-          fill: layer.paint["fill-color"],
-          opacity: layer.paint["fill-opacity"]
-        })
-      });
-    } else if (layer.type === "fill-extrusion") {
-      // simulate fill-extrusion with plain fill
-      paintRules.push({
-        dataLayer: layer["source-layer"],
-        filter: filter,
-        symbolizer: new PolygonSymbolizer({
-          fill: layer.paint["fill-extrusion-color"],
-          opacity: layer.paint["fill-extrusion-opacity"]
-        })
-      });
-    } else if (layer.type === "line") {
-      // simulate gap-width
-      if (layer.paint["line-dasharray"]) {
+      // ignore background-color?
+      if (layer.type === "fill") {
         paintRules.push({
           dataLayer: layer["source-layer"],
           filter: filter,
-          symbolizer: new LineSymbolizer({
-            width: widthFn(
-              layer.paint["line-width"],
-              layer.paint["line-gap-width"]
-            ),
-            dash: layer.paint["line-dasharray"],
-            dashColor: layer.paint["line-color"]
+          symbolizer: new PolygonSymbolizer({
+            fill: layer.paint["fill-color"],
+            opacity: layer.paint["fill-opacity"]
           })
         });
-      } else {
+      } else if (layer.type === "fill-extrusion") {
+        // simulate fill-extrusion with plain fill
         paintRules.push({
           dataLayer: layer["source-layer"],
           filter: filter,
-          symbolizer: new LineSymbolizer({
-            color: layer.paint["line-color"],
-            width: widthFn(
-              layer.paint["line-width"],
-              layer.paint["line-gap-width"]
-            )
+          symbolizer: new PolygonSymbolizer({
+            fill: layer.paint["fill-extrusion-color"],
+            opacity: layer.paint["fill-extrusion-opacity"]
+          })
+        });
+      } else if (layer.type === "line") {
+        // simulate gap-width
+        if (layer.paint["line-dasharray"]) {
+          paintRules.push({
+            dataLayer: layer["source-layer"],
+            filter: filter,
+            symbolizer: new LineSymbolizer({
+              width: widthFn(
+                layer.paint["line-width"],
+                layer.paint["line-gap-width"]
+              ),
+              dash: layer.paint["line-dasharray"],
+              dashColor: layer.paint["line-color"]
+            })
+          });
+        } else {
+          paintRules.push({
+            dataLayer: layer["source-layer"],
+            filter: filter,
+            symbolizer: new LineSymbolizer({
+              color: layer.paint["line-color"],
+              width: widthFn(
+                layer.paint["line-width"],
+                layer.paint["line-gap-width"]
+              )
+            })
+          });
+        }
+      } else if (layer.type === "symbol") {
+        if (layer.layout["symbol-placement"] === "line") {
+          labelRules.push({
+            dataLayer: layer["source-layer"],
+            filter: filter,
+            symbolizer: new LineLabelSymbolizer({
+              font: getFont(layer.layout, fontSubMap),
+              fill: layer.paint["text-color"],
+              width: layer.paint["text-halo-width"],
+              stroke: layer.paint["text-halo-color"],
+              textTransform: layer.layout["text-transform"],
+              labelProps: layer.layout["text-field"]
+                ? [layer.layout["text-field"]]
+                : undefined
+            })
+          });
+        } else {
+          labelRules.push({
+            dataLayer: layer["source-layer"],
+            filter: filter,
+            symbolizer: new CenteredTextSymbolizer({
+              font: getFont(layer.layout, fontSubMap),
+              fill: layer.paint["text-color"],
+              stroke: layer.paint["text-halo-color"],
+              width: layer.paint["text-halo-width"],
+              textTransform: layer.layout["text-transform"],
+              labelProps: layer.layout["text-field"]
+                ? [layer.layout["text-field"]]
+                : undefined
+            })
+          });
+        }
+      } else if (layer.type === "circle") {
+        paintRules.push({
+          dataLayer: layer["source-layer"],
+          filter: filter,
+          symbolizer: new CircleSymbolizer({
+            radius: layer.paint["circle-radius"],
+            fill: layer.paint["circle-color"],
+            stroke: layer.paint["circle-stroke-color"],
+            width: layer.paint["circle-stroke-width"]
           })
         });
       }
-    } else if (layer.type === "symbol") {
-      if (layer.layout["symbol-placement"] === "line") {
-        labelRules.push({
-          dataLayer: layer["source-layer"],
-          filter: filter,
-          symbolizer: new LineLabelSymbolizer({
-            font: getFont(layer.layout, fontSubMap),
-            fill: layer.paint["text-color"],
-            width: layer.paint["text-halo-width"],
-            stroke: layer.paint["text-halo-color"],
-            textTransform: layer.layout["text-transform"],
-            labelProps: layer.layout["text-field"]
-              ? [layer.layout["text-field"]]
-              : undefined
-          })
-        });
-      } else {
-        labelRules.push({
-          dataLayer: layer["source-layer"],
-          filter: filter,
-          symbolizer: new CenteredTextSymbolizer({
-            font: getFont(layer.layout, fontSubMap),
-            fill: layer.paint["text-color"],
-            stroke: layer.paint["text-halo-color"],
-            width: layer.paint["text-halo-width"],
-            textTransform: layer.layout["text-transform"],
-            labelProps: layer.layout["text-field"]
-              ? [layer.layout["text-field"]]
-              : undefined
-          })
-        });
-      }
-    } else if (layer.type === "circle") {
-      paintRules.push({
-        dataLayer: layer["source-layer"],
-        filter: filter,
-        symbolizer: new CircleSymbolizer({
-          radius: layer.paint["circle-radius"],
-          fill: layer.paint["circle-color"],
-          stroke: layer.paint["circle-stroke-color"],
-          width: layer.paint["circle-stroke-width"]
-        })
-      });
     }
+
+    labelRules.reverse();
+  } catch (e) {
+    TerriaError.from(e, "Error parsing mapbox style").log();
   }
-
-  labelRules.reverse();
   return { paintRules, labelRules, tasks: [] };
 }
