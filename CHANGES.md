@@ -4,6 +4,7 @@
 
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Enhanced error processing for obtaining user location
+- Expose the `lightColor` setting for 3D Tilesets in Cesium3dTilesCatalogItem.
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
