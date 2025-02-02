@@ -159,6 +159,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
   @computed get featureProperties() {
     // Force computed to re-calculate when cesium feature properties change
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.featureChangedCounter;
 
     return getFeatureProperties(
