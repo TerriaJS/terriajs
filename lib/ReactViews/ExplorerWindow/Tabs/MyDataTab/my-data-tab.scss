@@ -136,9 +136,6 @@
 
 .btn--back-to-my-data {
   composes: btn from "../../../../Sass/common/_buttons.scss";
-  // TODO: fix?
-  // composes: btn-small from "../../../../Sass/common/_buttons.scss";
-  // composes: btn--left from "../../../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
   position: absolute;
   left: 40px;
