@@ -25,10 +25,7 @@ import GeoJsonMixin, {
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TableColumnType from "../../../Table/TableColumnType";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
-import {
-  InfoSectionTraits,
-  MetadataUrlTraits
-} from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
@@ -673,18 +670,6 @@ class FeatureServerStratum extends LoadableStratum(
         this._item.activeTableStyle.pointStyleMap.traits?.column
       ])
     ).filter((t): t is string => !!t);
-  }
-
-  @computed get metadataUrls() {
-    if (this._item.showOpenInArcGisWebViewer)
-      return [
-        createStratumInstance(MetadataUrlTraits, {
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.openInArcGisWebViewer"
-          ),
-          url: `http://www.arcgis.com/apps/mapviewer/index.html?url=${this._item.url}`
-        })
-      ];
   }
 }
 

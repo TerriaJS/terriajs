@@ -179,6 +179,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
+      rectangle: this.cesiumRectangle,
       credit: this.attribution,
       paintRules: this.paintRules,
       labelRules: this.labelRules,

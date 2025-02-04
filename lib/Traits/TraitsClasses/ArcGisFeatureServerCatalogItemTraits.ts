@@ -145,12 +145,4 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling. Currently, this only applies to tiled requests."
   })
   outFields: string[] = ["OBJECTID"];
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Show in ArcGIS Web Viewer",
-    description:
-      "Whether to show a button in the catalog item that opens this item in the ArcGIS Web Viewer."
-  })
-  showOpenInArcGisWebViewer: boolean = false;
 }

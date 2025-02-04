@@ -147,7 +147,6 @@ export default class ProtomapsImageryProvider
 
     this.tileWidth = PROTOMAPS_DEFAULT_TILE_SIZE;
     this.tileHeight = PROTOMAPS_DEFAULT_TILE_SIZE;
-
     // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel
     this.minimumLevel = 0;
     this.softMinimumLevel = options.minimumZoom;
@@ -442,7 +441,8 @@ export default class ProtomapsImageryProvider
       terria: options?.terria ?? this.terria,
       id: options?.id ?? this.url,
       data,
-      minimumZoom: options?.minimumZoom ?? this.minimumLevel,
+      // Note we use softMinimumLevel here, the imagery provider minimum level is always 0
+      minimumZoom: options?.minimumZoom ?? this.softMinimumLevel,
       maximumZoom: options?.maximumZoom ?? this.maximumLevel,
       maximumNativeZoom: options?.maximumNativeZoom ?? this.maximumNativeZoom,
       rectangle: options?.rectangle ?? this.rectangle,

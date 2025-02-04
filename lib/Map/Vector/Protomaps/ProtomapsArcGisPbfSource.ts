@@ -103,7 +103,9 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         inSR: "102100",
         geometry: JSON.stringify(tileExtentWithBuffer),
         geometryType: "esriGeometryEnvelope",
-        outFields: this.outFields.join(","),
+        outFields: Array.from(
+          new Set([this.objectIdField, ...this.outFields])
+        ).join(","),
         where: "1=1",
         maxRecordCountFactor: this.maxRecordCountFactor,
         resultRecordCount: this.featuresPerTileRequest,

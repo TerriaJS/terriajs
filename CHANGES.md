@@ -8,6 +8,11 @@
 - Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Enhanced error processing for obtaining user location
+- Add `request` parameter to ArcGisImageServerImageryProvider tiles (to support request cancellation)
+- Decrease protomaps tile buffer to 32 pixels (from 64)
+- Fix `FeatureInfoUrlTemplateMixin` reactivity warnings
+- Move `GeojsonMixin` protomaps paint/label rules to `tableStyleToProtomaps`.
+- Add `dash` to `OutlineStyleTraits`, and `outlineStyle` to `LegendTraits`
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
