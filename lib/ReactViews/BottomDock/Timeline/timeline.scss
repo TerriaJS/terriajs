@@ -7,6 +7,7 @@
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 5px;
+  margin-top: 30px;
   font-family: $font-base;
   background: $transparent-dark;
   backdrop-filter: $blur;
@@ -39,6 +40,7 @@
     overflow: hidden;
     white-space: nowrap;
   }
+
   @media (max-width: $mobile) {
     max-width: 52vw;
   }
