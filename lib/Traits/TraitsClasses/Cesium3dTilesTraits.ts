@@ -173,4 +173,12 @@ export default class Cesium3DTilesTraits extends mixTraits(
       "One or many properties of a feature that together identify it uniquely. This is useful for setting properties for individual features. eg: ['lat', 'lon'], ['buildingId'] etc."
   })
   featureIdProperties?: string[];
+
+  @primitiveArrayTrait({
+    name: "lightColor",
+    type: "number",
+    description:
+      "The light color when shading models. When undefined the scene's light color is used instead. eg: [255, 255, 255]."
+  })
+  lightColor?: number[];
 }
