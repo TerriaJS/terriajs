@@ -12,9 +12,8 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import TerriaError from "../Core/TerriaError";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
@@ -31,11 +30,10 @@ import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
-import TerriaError from "../Core/TerriaError";
 
-import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
-import hasTraits from "./Definition/hasTraits";
 import HighlightColorTraits from "../Traits/TraitsClasses/HighlightColorTraits";
+import hasTraits from "./Definition/hasTraits";
+import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
@@ -211,7 +209,7 @@ export default abstract class GlobeOrMap {
   }
 
   abstract _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void;
 
@@ -321,29 +319,9 @@ export default abstract class GlobeOrMap {
 
       if (!hasGeometry) {
         let vectorTileHighlightCreated = false;
-        // Feature from MapboxVectorTileImageryProvider
+
+        // Feature from ProtomapsImageryProvider
         if (
-          feature.imageryLayer?.imageryProvider instanceof
-          MapboxVectorTileImageryProvider
-        ) {
-          const featureId =
-            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
-            feature.properties?.id?.getValue?.();
-          if (isDefined(featureId)) {
-            const highlightImageryProvider =
-              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
-                featureId
-              );
-            this._removeHighlightCallback =
-              this.terria.currentViewer._addVectorTileHighlight(
-                highlightImageryProvider,
-                feature.imageryLayer.imageryProvider.rectangle
-              );
-          }
-          vectorTileHighlightCreated = true;
-        }
-        // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
-        else if (
           feature.imageryLayer?.imageryProvider instanceof
           ProtomapsImageryProvider
         ) {
