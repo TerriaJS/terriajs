@@ -141,6 +141,10 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     ]);
   }
 
+  @computed get hideLegendInWorkbench() {
+    return (this._item.dataColumnMajor ?? []).length === 0;
+  }
+
   @computed get legends(): StratumFromTraits<LegendTraits>[] {
     if (this._item.mapItems.length === 0) return [];
 

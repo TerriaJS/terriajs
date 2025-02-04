@@ -142,9 +142,10 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         continue;
       }
 
+      // If we have reached the max number of features per tile request, we need to fetch more
       if (
-        arcGisResponse.featureCollection.features.length <=
-        this.maxTiledFeatures
+        arcGisResponse.featureCollection.features.length >=
+        this.featuresPerTileRequest
       ) {
         offset = offset + this.featuresPerTileRequest;
       } else {

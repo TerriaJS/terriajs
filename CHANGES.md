@@ -8,11 +8,18 @@
 - Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Enhanced error processing for obtaining user location
-- Add `request` parameter to ArcGisImageServerImageryProvider tiles (to support request cancellation)
-- Decrease protomaps tile buffer to 32 pixels (from 64)
+
+- Add `request` parameter to ArcGisImageServerImageryProvider tiles
+- Decrease protomaps tile buffer to 32 pixels (from 64) to increase performance
+- Change `ProtomapsImageryProvider` to use a "soft" minimum level, so all tiles will be blank below the `minimumZoom` provided.
+- Move `ProtomapsImageryProvider.pickFeatures` GeoJSON logic to inside `ProtomapsGeojsonSource.pickFeatures`.
 - Fix `FeatureInfoUrlTemplateMixin` reactivity warnings
 - Move `GeojsonMixin` protomaps paint/label rules to `tableStyleToProtomaps`.
+  - Also create `getStyleReactiveDependencies` that can be used to track (and react to) table styling traits
 - Add `dash` to `OutlineStyleTraits`, and `outlineStyle` to `LegendTraits`
+- Add tiling support to `ArcGisFeatureServerCatalogItem` - this will be enabled by default, if the server supports tiling. See `ArcGisFeatureServerCatalogTraits` `tileRequests`
+- Add `MinMaxLevelMixin` to `ArcGisFeatureServerCatalogItem` - only applied when tiling reque
+- Tweaked `TableStyleMap` and `TableColorMap` conditions to handle empty `TableColumns` (to support styling `ArcGisFeatureServerCatalogItem` when tiling requests)
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18

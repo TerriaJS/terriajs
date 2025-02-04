@@ -120,7 +120,9 @@ export default class TableColorMap {
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
+   *
    * Will try to create most appropriate colorMap given colorColumn:
+   * (TODO: Move all of these default values/behaviours to TableAutomaticStylesStratum - ideally no use of colorColumn is needed here)
    *
    * - If column type is `scalar`
    *   - and we have binMaximums - use DiscreteColorMap
@@ -139,7 +141,9 @@ export default class TableColorMap {
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
     if (
-      !colorTraits.mapType ||
+      (colorColumn &&
+        !colorTraits.mapType &&
+        colorColumn.type === TableColumnType.scalar) ||
       colorTraits.mapType === "continuous" ||
       colorTraits.mapType === "bin"
     ) {

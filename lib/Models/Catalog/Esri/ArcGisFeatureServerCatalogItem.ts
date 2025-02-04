@@ -23,7 +23,6 @@ import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
-import TableColumnType from "../../../Table/TableColumnType";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
@@ -211,21 +210,21 @@ type FieldType =
   | "esriFieldTypeXML"
   | "esriFieldTypeBigInteger";
 
-const fieldTypeToTableColumn: Record<FieldType, TableColumnType> = {
-  esriFieldTypeSmallInteger: TableColumnType.scalar,
-  esriFieldTypeInteger: TableColumnType.scalar,
-  esriFieldTypeSingle: TableColumnType.scalar,
-  esriFieldTypeDouble: TableColumnType.scalar,
-  esriFieldTypeString: TableColumnType.text,
-  esriFieldTypeDate: TableColumnType.time,
-  esriFieldTypeOID: TableColumnType.scalar,
-  esriFieldTypeGeometry: TableColumnType.hidden,
-  esriFieldTypeBlob: TableColumnType.hidden,
-  esriFieldTypeRaster: TableColumnType.hidden,
-  esriFieldTypeGUID: TableColumnType.hidden,
-  esriFieldTypeGlobalID: TableColumnType.hidden,
-  esriFieldTypeXML: TableColumnType.hidden,
-  esriFieldTypeBigInteger: TableColumnType.scalar
+const fieldTypeToTableColumn: Record<FieldType, string> = {
+  esriFieldTypeSmallInteger: "scalar",
+  esriFieldTypeInteger: "scalar",
+  esriFieldTypeSingle: "scalar",
+  esriFieldTypeDouble: "scalar",
+  esriFieldTypeString: "text",
+  esriFieldTypeDate: "time",
+  esriFieldTypeOID: "scalar",
+  esriFieldTypeGeometry: "hidden",
+  esriFieldTypeBlob: "hidden",
+  esriFieldTypeRaster: "hidden",
+  esriFieldTypeGUID: "hidden",
+  esriFieldTypeGlobalID: "hidden",
+  esriFieldTypeXML: "hidden",
+  esriFieldTypeBigInteger: "scalar"
 };
 
 interface Field {
@@ -602,6 +601,7 @@ class FeatureServerStratum extends LoadableStratum(
     }
   }
 
+  // Map ESRI fields to Terria columns. This just sets the name, title and type of the column
   @computed
   get columns() {
     return (
@@ -623,6 +623,11 @@ class FeatureServerStratum extends LoadableStratum(
           })
         ) ?? []
     );
+  }
+
+  // Override legend hidden when columns are empty
+  @computed get hideLegendInWorkbench() {
+    return false;
   }
 
   get featuresPerRequest() {
@@ -661,6 +666,7 @@ class FeatureServerStratum extends LoadableStratum(
     return this._featureServer?.objectIdField;
   }
 
+  // Add properties/columns to outFields if they are needed for styling. Otherwise, these properties won't be in tile features
   get outFields() {
     return Array.from(
       new Set([
@@ -705,6 +711,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   protected async forceLoadGeojsonData(): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
+    // If we are tiling requests, then we use the ProtomapsImageryProvider - see mapItems
     if (this.tileRequests) return featureCollection([]);
 
     const getEsriLayerJson = async (resultOffset?: number) => {
@@ -809,6 +816,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
 
   @override
   get mapItems() {
+    // If we aren't tiling requests, then we use GeoJsonMixin forceLoadGeojsonData
     if (!this.tileRequests) return super.mapItems;
 
     return [
@@ -827,7 +835,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
       return super.dataColumnMajor;
     }
     // If we are tiling requests, then we don't have geojson/tabular data
-    // We have to populate columns with empty strings, otherwise TableMixin.tableColumns will be empty
+    // We have to populate columns with empty strings, otherwise TableMixin.tableColumns will be empty.
     return this.columns.map((column) => [column.name ?? ""]);
   }
 

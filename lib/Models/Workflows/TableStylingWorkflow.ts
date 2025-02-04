@@ -2212,6 +2212,7 @@ export default class TableStylingWorkflow
       this.tableStyle.pointStyleMap,
       (id, pointTraits, nullValues) =>
         filterOutUndefined([
+          // Only show marker selection if we have a Cesium data source
           this.hasCesiumDataSource
             ? {
                 type: "select",
@@ -2234,6 +2235,8 @@ export default class TableStylingWorkflow
                 }
               }
             : undefined,
+
+          // Only show rotation if we have a Cesium data source
           this.hasCesiumDataSource
             ? {
                 type: "numeric",

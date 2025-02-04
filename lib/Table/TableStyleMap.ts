@@ -128,7 +128,8 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
 
       return {
         type: "bin",
-        mapRowIdToStyle: (rowId) => mapValueToStyle(this.column?.values[rowId]),
+        mapRowIdToStyle: (rowId) =>
+          mapValueToStyle(this.column?.valuesForType[rowId]),
         mapValueToStyle
       };
     } else if (

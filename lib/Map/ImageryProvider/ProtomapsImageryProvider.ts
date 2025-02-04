@@ -96,7 +96,8 @@ export default class ProtomapsImageryProvider
   readonly tileWidth: number;
   readonly tileHeight: number;
   readonly minimumLevel: number;
-  // This is used to fail requests for levels below softMinimumLevel
+  /** This is used to fail requests for levels below softMinimumLevel, as setting minimumLevel to higher than 0 (with no rectangle provided), will result in many tiles being requested.
+   */
   readonly softMinimumLevel?: number;
   readonly maximumLevel: number;
   readonly rectangle: Rectangle;
@@ -147,7 +148,7 @@ export default class ProtomapsImageryProvider
 
     this.tileWidth = PROTOMAPS_DEFAULT_TILE_SIZE;
     this.tileHeight = PROTOMAPS_DEFAULT_TILE_SIZE;
-    // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel
+    // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel (see softMinimumLevel)
     this.minimumLevel = 0;
     this.softMinimumLevel = options.minimumZoom;
     this.maximumLevel = defaultValue(options.maximumZoom, 24);
