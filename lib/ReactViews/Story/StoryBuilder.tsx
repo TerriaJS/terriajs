@@ -22,7 +22,6 @@ import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
-import BadgeBar from "../BadgeBar";
 import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
