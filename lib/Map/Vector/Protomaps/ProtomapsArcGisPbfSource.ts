@@ -34,6 +34,7 @@ interface ArcGisPbfSourceOptions {
   maxTiledFeatures: number;
   tilingScheme: WebMercatorTilingScheme;
   enablePickFeatures: boolean;
+  supportsQuantization: boolean;
 }
 
 export class ProtomapsArcGisPbfSource implements TileSource {
@@ -45,6 +46,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
   private readonly featuresPerTileRequest: number;
   private readonly maxTiledFeatures: number;
   private readonly enablePickFeatures: boolean;
+  private readonly supportsQuantization: boolean;
 
   constructor(options: ArcGisPbfSourceOptions) {
     this.baseResource = new Resource(options.url);
@@ -57,6 +59,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
     this.featuresPerTileRequest = options.featuresPerTileRequest;
     this.maxTiledFeatures = options.maxTiledFeatures;
     this.enablePickFeatures = options.enablePickFeatures;
+    this.supportsQuantization = options.supportsQuantization;
   }
 
   public async get(
@@ -112,17 +115,22 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         outSR: "102100",
         spatialRel: "esriSpatialRelIntersects",
         maxAllowableOffset: nativePixelSize,
-        quantizationParameters: JSON.stringify({
-          extent: tileExtentWithBuffer,
-          spatialReference: { wkid: 102100, latestWkid: 3857 },
-          mode: "view",
-          originPosition: "upperLeft",
-          tolerance: nativePixelSize
-        }),
         outSpatialReference: "102100",
         precision: "8",
         resultOffset: offset
       });
+
+      if (this.supportsQuantization) {
+        tileResource.setQueryParameters({
+          quantizationParameters: JSON.stringify({
+            extent: tileExtentWithBuffer,
+            spatialReference: { wkid: 102100, latestWkid: 3857 },
+            mode: "view",
+            originPosition: "upperLeft",
+            tolerance: nativePixelSize
+          })
+        });
+      }
 
       const arrayBufferPromise = tileResource.fetchArrayBuffer();
 

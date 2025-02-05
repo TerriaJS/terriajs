@@ -1,9 +1,11 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import { GeomType } from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
+import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
 import ArcGisFeatureServerCatalogItem, {
   convertEsriPointSizeToPixels
@@ -59,7 +61,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
     // that once all feature data has been requested, the mock server below returns 0 features.
     xhrSpy = spyOn(loadWithXhr, "load").and.callFake((...args: any[]) => {
       let url = args[0];
-      const originalUrl = url;
+      const originalUrl = url as string;
       url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
       url = url.replace(
         /FeatureServer\/[0-9]+\/query\?f=json.*$/i,
@@ -75,7 +77,18 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       } else if (originalUrl.match("styles/FeatureServer")) {
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
         args[0] = "test/ArcGisFeatureServer/styles/" + url;
-      } else if (originalUrl.match("tiled/FeatureServer")) {
+      }
+      // Tiled feature server - pick feature request
+      else if (originalUrl.match("tiled/FeatureServer/0/query/query")) {
+        console.log("pick??");
+        args[0] = "test/ArcGisFeatureServer/Tiled/feature-pick.geojson";
+      }
+      // Tiled feature server - tile request
+      else if (originalUrl.match("tiled/FeatureServer/0/query")) {
+        args[0] = "test/ArcGisFeatureServer/Tiled/test-tile.pbf";
+      }
+      // Tiled feature server - metadata request
+      else if (originalUrl.match("tiled/FeatureServer")) {
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "act-veg-map.json");
         args[0] = "test/ArcGisFeatureServer/Tiled/" + url;
       } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
@@ -90,6 +103,8 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         }
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
+      } else {
+        throw new Error("Unexpected URL: " + originalUrl);
       }
 
       return realLoadWithXhr(...args);
@@ -294,30 +309,211 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       expect(item.activeTableStyle.tableColorMap.type).toEqual("enum");
     });
 
-    it("ProtomapsImageryProvider - ArcGisPbfSource", async function () {
-      runInAction(() => {
-        item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+    describe("ProtomapsImageryProvider - ArcGisPbfSource", function () {
+      it("fetch tile - with single request", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
+
+        await item.loadMapItems();
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          expect(
+            imageryProvider.source instanceof ProtomapsArcGisPbfSource
+          ).toBeTruthy();
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          // Fetch a tile - this tile will return a single polygon
+          const tileFeatures = await source.get(
+            { x: 241014, y: 157088, z: 18 },
+            256
+          );
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
+          );
+
+          const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
+
+          expect(features?.length).toEqual(1);
+          expect(features?.[0].props.OBJECTID).toEqual(1003937);
+          expect(features?.[0].geomType).toEqual(GeomType.Polygon);
+        }
       });
 
-      await item.loadMapItems();
+      it("fetch tile - with multiple requests", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          // set feature per tile request to 1 - this will trigger a second request
+          // Due to how XHR requests are mocked, still will load the same tile twice - so we will get 2 identical features
+          item.setTrait(CommonStrata.definition, "featuresPerTileRequest", 1);
+          item.setTrait(CommonStrata.definition, "maxTiledFeatures", 2);
+        });
 
-      const mapItem = item.mapItems[0];
+        await item.loadMapItems();
 
-      expect("imageryProvider" in mapItem).toBeTruthy();
-      if ("imageryProvider" in mapItem) {
-        const imageryProvider =
-          mapItem.imageryProvider as ProtomapsImageryProvider;
+        const mapItem = item.mapItems[0];
 
-        expect(
-          imageryProvider.source instanceof ProtomapsArcGisPbfSource
-        ).toBeTruthy();
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
 
-        // TODO
-        // Test get tile - with single request
-        // Test get tile - with multiple requests
-        // Test get tile - look at process features...
-        // Test pickFeautres
-      }
+          expect(
+            imageryProvider.source instanceof ProtomapsArcGisPbfSource
+          ).toBeTruthy();
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          // Fetch a tile - this tile will return a single polygon
+          const tileFeatures = await source.get(
+            { x: 241014, y: 157088, z: 18 },
+            256
+          );
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=1&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
+          );
+
+          expect(xhrSpy.calls.argsFor(2)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=1&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=1"
+          );
+
+          const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
+
+          expect(features?.length).toEqual(2);
+          expect(features?.[0].props.OBJECTID).toEqual(1003937);
+          expect(features?.[0].geomType).toEqual(GeomType.Polygon);
+
+          expect(features?.[1].props.OBJECTID).toEqual(1003937);
+          expect(features?.[1].geomType).toEqual(GeomType.Polygon);
+        }
+      });
+
+      it("pick feature", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
+
+        await item.loadMapItems();
+
+        expect(item.allowFeaturePicking).toBeTruthy();
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          expect(
+            imageryProvider.source instanceof ProtomapsArcGisPbfSource
+          ).toBeTruthy();
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          // Fetch a tile - this tile will return a single polygon
+          const pickedFeatures = await source.pickFeatures(
+            0,
+            0,
+            18,
+            2.635084429672604,
+            -0.5866868013895533
+          );
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query?f=geojson&sr=4326&geometryType=esriGeometryPoint&geometry={%22x%22%3A150.9792164808778%2C%22y%22%3A-33.61467761565137%2C%22spatialReference%22%3A{%22wkid%22%3A4326}}&outFields=*&returnGeometry=false&outSR=4326&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&distance=2.3886566162109375&where=1%3D1"
+          );
+
+          expect(pickedFeatures?.length).toEqual(1);
+
+          const feature = pickedFeatures?.[0];
+          expect(feature.description?.startsWith("<table")).toBeTruthy();
+          expect(feature.properties?.OBJECTID).toEqual(994364);
+          expect(feature.properties.shapeuuid).toEqual(
+            "0c28d4c1-5b56-3698-8a39-c7b02b238a55"
+          );
+        }
+      });
+
+      it("allowFeaturePicking=false", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(CommonStrata.definition, "allowFeaturePicking", false);
+        });
+
+        await item.loadMapItems();
+
+        expect(item.allowFeaturePicking).toEqual(false);
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          expect(
+            imageryProvider.source instanceof ProtomapsArcGisPbfSource
+          ).toBeTruthy();
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          const pickedFeatures = await source.pickFeatures(
+            0,
+            0,
+            18,
+            2.635084429672604,
+            -0.5866868013895533
+          );
+
+          expect(pickedFeatures?.length).toEqual(0);
+        }
+      });
+
+      it("sets parameters correctly", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(CommonStrata.definition, "supportsQuantization", false);
+          item.setTrait(CommonStrata.definition, "maxRecordCountFactor", 2);
+          item.setTrait(CommonStrata.definition, "outFields", ["testOutField"]);
+          item.setTrait(
+            CommonStrata.definition,
+            "objectIdField",
+            "testObjectId"
+          );
+        });
+
+        await item.loadMapItems();
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          expect(
+            imageryProvider.source instanceof ProtomapsArcGisPbfSource
+          ).toBeTruthy();
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          // Fetch a tile
+          await source.get({ x: 241014, y: 157088, z: 18 }, 256);
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=testObjectId%2CtestOutField&where=1%3D1&maxRecordCountFactor=2&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
+          );
+        }
+      });
     });
   });
 

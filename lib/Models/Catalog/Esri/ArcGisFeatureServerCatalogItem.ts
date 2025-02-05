@@ -801,7 +801,8 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         maxTiledFeatures: this.maxTiledFeatures,
         tilingScheme: new WebMercatorTilingScheme(),
         enablePickFeatures: this.allowFeaturePicking,
-        objectIdField: this.objectIdField
+        objectIdField: this.objectIdField,
+        supportsQuantization: this.supportsQuantization
       }),
       id: this.uniqueId,
       paintRules,
