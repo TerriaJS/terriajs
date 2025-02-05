@@ -29,7 +29,7 @@ export class OutlineSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveArrayTrait({
     name: "Dash Pattern",
     description:
-      "An Array of numbers that specify distances to alternately draw a line and a gap (in pixels). If undefined, then line is solid.",
+      "An Array of numbers that specify distances to alternately draw a line and a gap (in pixels). If undefined, then line is solid. Note: only supported by line features (through GeoJSON Mixin)",
     type: "number"
   })
   dash?: number[];

@@ -10,6 +10,7 @@ import proj4 from "proj4";
 import Color from "terriajs-cesium/Source/Core/Color";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
@@ -18,7 +19,10 @@ import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImag
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import { ProtomapsArcGisPbfSource } from "../../../Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
-import { tableStyleToProtomaps } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
+import {
+  hasUnsupportedStylesForProtomaps,
+  tableStyleToProtomaps
+} from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -49,6 +53,7 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import CommonStrata from "../../Definition/CommonStrata";
 
 interface DocumentInfo {
   Author?: string;
@@ -210,23 +215,6 @@ type FieldType =
   | "esriFieldTypeXML"
   | "esriFieldTypeBigInteger";
 
-const fieldTypeToTableColumn: Record<FieldType, string> = {
-  esriFieldTypeSmallInteger: "scalar",
-  esriFieldTypeInteger: "scalar",
-  esriFieldTypeSingle: "scalar",
-  esriFieldTypeDouble: "scalar",
-  esriFieldTypeString: "text",
-  esriFieldTypeDate: "time",
-  esriFieldTypeOID: "scalar",
-  esriFieldTypeGeometry: "hidden",
-  esriFieldTypeBlob: "hidden",
-  esriFieldTypeRaster: "hidden",
-  esriFieldTypeGUID: "hidden",
-  esriFieldTypeGlobalID: "hidden",
-  esriFieldTypeXML: "hidden",
-  esriFieldTypeBigInteger: "scalar"
-};
-
 interface Field {
   name: string;
   type: FieldType;
@@ -260,7 +248,7 @@ class FeatureServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
     private readonly _featureServer?: FeatureServer,
-    private _esriJson?: any | undefined
+    private _esriJson?: any
   ) {
     super();
     makeObservable(this);
@@ -409,11 +397,7 @@ class FeatureServerStratum extends LoadableStratum(
 
       if (!symbol) return [];
 
-      const symbolStyle = esriSymbolToTableStyle(
-        symbol,
-        simpleRenderer.label,
-        this._item.tileRequests
-      );
+      const symbolStyle = esriSymbolToTableStyle(symbol, simpleRenderer.label);
       return [
         createStratumInstance(TableStyleTraits, {
           id: "ESRI",
@@ -434,17 +418,12 @@ class FeatureServerStratum extends LoadableStratum(
       const uniqueValueRenderer = renderer as UniqueValueRenderer;
 
       const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map((v) => {
-        return esriSymbolToTableStyle(
-          v.symbol,
-          v.label,
-          this._item.tileRequests
-        );
+        return esriSymbolToTableStyle(v.symbol, v.label);
       });
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
         uniqueValueRenderer.defaultSymbol,
-        undefined,
-        this._item.tileRequests
+        undefined
       );
 
       // Only include color if there are any styles which aren't esriPMS
@@ -538,13 +517,12 @@ class FeatureServerStratum extends LoadableStratum(
       }
 
       const symbolStyles = classBreaksRenderer.classBreakInfos.map((c) =>
-        esriSymbolToTableStyle(c.symbol, c.label, this._item.tileRequests)
+        esriSymbolToTableStyle(c.symbol, c.label)
       );
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
         classBreaksRenderer.defaultSymbol,
-        undefined,
-        this._item.tileRequests
+        undefined
       );
 
       // Only include color if there are any styles which aren't esriPMS
@@ -605,29 +583,13 @@ class FeatureServerStratum extends LoadableStratum(
   @computed
   get columns() {
     return (
-      this._featureServer?.fields
-        ?.filter((field) => {
-          if (!fieldTypeToTableColumn[field.type]) {
-            console.warn(
-              `WARNING: Terria does not support ESRI field type ${field.type}`
-            );
-            return false;
-          }
-          return true;
+      this._featureServer?.fields?.map((field) =>
+        createStratumInstance(TableColumnTraits, {
+          name: field.name,
+          title: field.alias
         })
-        .map((field) =>
-          createStratumInstance(TableColumnTraits, {
-            name: field.name,
-            title: field.alias,
-            type: fieldTypeToTableColumn[field.type]?.toString()
-          })
-        ) ?? []
+      ) ?? []
     );
-  }
-
-  // Override legend hidden when columns are empty
-  @computed get hideLegendInWorkbench() {
-    return false;
   }
 
   get featuresPerRequest() {
@@ -646,7 +608,7 @@ class FeatureServerStratum extends LoadableStratum(
     return !!this._featureServer?.supportsCoordinatesQuantization;
   }
 
-  /** Enable tileRequests by default if supported */
+  /** Enable tileRequests by default if supported and no unsupported point/label styles are used */
   get tileRequests() {
     const supportsPbfTiles =
       this._featureServer?.supportsTilesAndBasicQueriesMode &&
@@ -656,7 +618,7 @@ class FeatureServerStratum extends LoadableStratum(
         .includes("pbf");
 
     if (supportsPbfTiles) {
-      return true;
+      return !hasUnsupportedStylesForProtomaps(this._item);
     }
 
     return undefined;
@@ -776,6 +738,10 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         newEsriLayerJson.features
       );
       exceededTransferLimit = newEsriLayerJson.exceededTransferLimit;
+
+      if (exceededTransferLimit) {
+        console.log("warning: exceeded transfer limit");
+      }
     }
 
     return (
@@ -942,22 +908,9 @@ function cleanUrl(url: string): string {
 
 function esriSymbolToTableStyle(
   symbol?: ISymbol | null,
-  label?: string | undefined,
-  tiled?: boolean
+  label?: string | undefined
 ) {
   if (!symbol) return {};
-
-  let marker =
-    symbol.type === "esriPMS"
-      ? `data:${symbol.contentType};base64,${symbol.imageData}`
-      : convertEsriMarkerToMaki(symbol.style);
-
-  if (tiled && marker !== "circle" && marker !== "point") {
-    marker = "point";
-    console.warn(
-      `Custom makers are not supported in tiled requests, using default marker`
-    );
-  }
 
   return {
     // For esriPMS - just use white color

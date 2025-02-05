@@ -141,12 +141,12 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     ]);
   }
 
-  @computed get hideLegendInWorkbench() {
-    return (this._item.dataColumnMajor ?? []).length === 0;
-  }
-
   @computed get legends(): StratumFromTraits<LegendTraits>[] {
-    if (this._item.mapItems.length === 0) return [];
+    if (
+      this._item.mapItems.length === 0 ||
+      (this._item.dataColumnMajor ?? []).length === 0
+    )
+      return [];
 
     if (this.mergedLegend) return [this.mergedLegend];
 
@@ -194,6 +194,7 @@ const getOutlineLegend: GetLegendForStyle<OutlineSymbolTraits> = (
   return {
     outlineWidth: outline.width,
     outlineColor: outline.color,
+    // If we have a dashed array, then show CSS outline-style as dashed, otherwise solid
     outlineStyle: outline.dash && outline.dash.length > 1 ? "dashed" : "solid",
     title: outline.legendTitle ?? defaultLabel
   };

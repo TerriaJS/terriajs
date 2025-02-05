@@ -23,6 +23,7 @@ import TableStyleMap, {
 import { TableStyleMapSymbolTraits } from "../../../Traits/TraitsClasses/Table/StyleMapTraits";
 import { GEOJSON_SOURCE_LAYER_NAME } from "./ProtomapsGeojsonSource";
 
+/** Helper function to create a function which can be used to generate styles for a given rowID. This ensures that nothing is read outside reactive context */
 function getStyleValueFn<
   T extends TableStyleMapSymbolTraits,
   Key extends keyof T,
@@ -32,7 +33,7 @@ function getStyleValueFn<
   trait: Key,
   defaultValue: Value,
   useRowId = true,
-  fn?: (v: Value) => Value
+  transformValue?: (v: Value) => Value
 ): (z: number, f?: ProtomapsFeature) => Value {
   const styleMap = runInAction(() => tableStyleMap.styleMap);
 
@@ -42,7 +43,7 @@ function getStyleValueFn<
       if (value === undefined) {
         return defaultValue;
       }
-      return fn ? fn(value as Value) : (value as Value);
+      return transformValue ? transformValue(value as Value) : (value as Value);
     };
   }
 
@@ -55,7 +56,7 @@ function getStyleValueFn<
       if (value === undefined) {
         return defaultValue;
       }
-      return fn ? fn(value as Value) : (value as Value);
+      return transformValue ? transformValue(value as Value) : (value as Value);
     };
   }
 
@@ -66,10 +67,16 @@ function getStyleValueFn<
     if (value === undefined) {
       return defaultValue;
     }
-    return fn ? fn(value as Value) : (value as Value);
+    return transformValue ? transformValue(value as Value) : (value as Value);
   };
 }
 
+/** Convert TableStyle to protomaps paint/label rules.
+ * It currently supports
+ * - ColorMap (for fill/stroke)
+ * - OutlineStyleMap (color, width and dash)
+ * - PointStyleMap (fill, stroke, radius - which uses height)
+ */
 export function tableStyleToProtomaps(
   catalogItem: GeoJsonMixin.Instance,
   useRowIds = true,
@@ -234,4 +241,22 @@ export function tableStyleToProtomaps(
         : [])
     ]
   };
+}
+
+/** Returns true if any styles have point (or label) styles that aren't supported by protomaps */
+export function hasUnsupportedStylesForProtomaps(
+  catalogItem: GeoJsonMixin.Instance
+): boolean {
+  return catalogItem.styles.some((style) => {
+    return (
+      [...style.point.enum, ...style.point.bin, style.point.null].some(
+        (pointStyle) =>
+          pointStyle.marker &&
+          pointStyle.marker !== "circle" &&
+          pointStyle.marker !== "point"
+      ) ||
+      style.label.enabled ||
+      style.trail.enabled
+    );
+  });
 }

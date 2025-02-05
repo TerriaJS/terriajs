@@ -65,6 +65,8 @@ export class ProtomapsArcGisPbfSource implements TileSource {
   public async get(
     c: Zxy,
     tileSizePixels: number,
+    // TODO add support for canceling requests (through cesium)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     request?: Request
   ): Promise<Map<string, ProtomapsFeature[]>> {
     const rect = this.tilingScheme.tileXYToNativeRectangle(c.x, c.y, c.z);
@@ -92,10 +94,6 @@ export class ProtomapsArcGisPbfSource implements TileSource {
     let fetching = true;
 
     while (fetching) {
-      if (request && "cancelled" in request && request.cancelled) {
-        fetching = false;
-        continue;
-      }
       const tileResource = this.baseResource.getDerivedResource({
         // Not sure how to handle request here - as we are making multiple requests
         // request: request
@@ -112,7 +110,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         where: "1=1",
         maxRecordCountFactor: this.maxRecordCountFactor,
         resultRecordCount: this.featuresPerTileRequest,
-        outSR: "102100",
+        outSR: "102100", // Fetch in Web Mercator
         spatialRel: "esriSpatialRelIntersects",
         maxAllowableOffset: nativePixelSize,
         outSpatialReference: "102100",
@@ -132,9 +130,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
         });
       }
 
-      const arrayBufferPromise = tileResource.fetchArrayBuffer();
-
-      const arrayBuffer = await arrayBufferPromise;
+      const arrayBuffer = await tileResource.fetchArrayBuffer();
 
       if (!arrayBuffer) {
         console.error("No data for URL: " + tileResource.url);
@@ -202,7 +198,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
 
     pickFeatureResource.setQueryParameters({
       f: "geojson",
-      sr: "4326",
+      sr: "4326", // Fetch in WGS84
       geometryType: "esriGeometryPoint",
       geometry: JSON.stringify({
         x: CesiumMath.toDegrees(longitude),
@@ -224,7 +220,6 @@ export class ProtomapsArcGisPbfSource implements TileSource {
       for (const f of json.features) {
         const featureInfo = new ImageryLayerFeatureInfo();
 
-        // Add Layer name property
         featureInfo.data = f;
         featureInfo.properties = f.properties;
 
@@ -239,6 +234,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
   }
 }
 
+/* Process GeoJSON (in Web Mercator) features into Protomaps features **/
 function processFeature(
   feature: Feature,
   tileExtentWithBuffer: {

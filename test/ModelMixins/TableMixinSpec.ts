@@ -1043,8 +1043,6 @@ describe("TableMixin", function () {
         }
       ];
 
-      console.log(item);
-
       styles.forEach((style, index) => {
         const feature = mapItem.entities.values[index];
         expect(

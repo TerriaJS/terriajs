@@ -93,7 +93,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     type: "boolean",
     name: "Tile requests",
     description:
-      "Whether this feature service supports tiled requests. By default, this will be inferred from the server's response."
+      "Whether this feature service supports tiled requests. This will be true by default, if the server supports tiling and no unsupported Point/Label/Trail styles are used (for example custom marker images)"
   })
   tileRequests: boolean = true;
 

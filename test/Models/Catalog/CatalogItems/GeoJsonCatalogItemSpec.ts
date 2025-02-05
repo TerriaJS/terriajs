@@ -959,7 +959,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeTruthy();
       expect(geojson.useTableStylingAndProtomaps).toBeFalsy();
 
-      expect(geojson.hideLegendInWorkbench).toBeTruthy();
+      expect(geojson.legends.length).toBe(0);
       expect(geojson.disableSplitter).toBeTruthy();
     });
 

@@ -232,7 +232,6 @@ export default class ProtomapsImageryProvider
     return [];
   }
 
-  // TODO: add support to cancel requests
   async requestImage(x: number, y: number, level: number, request: Request) {
     const canvas = document.createElement("canvas");
     canvas.width = this.tileWidth;
@@ -276,7 +275,6 @@ export default class ProtomapsImageryProvider
       };
     } else if (this.view) {
       tile = await this.view.getDisplayTile(coords);
-      console.log(tile);
     }
 
     if (!tile) throw TerriaError.from("Failed to get tile");

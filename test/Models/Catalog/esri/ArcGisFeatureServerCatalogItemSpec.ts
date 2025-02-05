@@ -12,8 +12,13 @@ import ArcGisFeatureServerCatalogItem, {
   convertEsriPointSizeToPixels
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
 import TableColumnType from "../../../../lib/Table/TableColumnType";
+import TablePointStyleTraits, {
+  PointSymbolTraits
+} from "../../../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../../../lib/Traits/TraitsClasses/Table/StyleTraits";
 
 configure({
   enforceActions: "observed",
@@ -536,6 +541,30 @@ describe("ArcGisFeatureServerCatalogItem", function () {
             "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=testObjectId%2CtestOutField&where=1%3D1&maxRecordCountFactor=2&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
           );
         }
+      });
+
+      it("disables tiling if unsupported styles are used", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
+
+        await item.loadMapItems();
+
+        expect(item.tileRequests).toEqual(true);
+
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "styles", [
+            createStratumInstance(TableStyleTraits, {
+              point: createStratumInstance(TablePointStyleTraits, {
+                null: createStratumInstance(PointSymbolTraits, {
+                  marker: "custom"
+                })
+              })
+            })
+          ]);
+        });
+
+        expect(item.tileRequests).toEqual(false);
       });
     });
   });
