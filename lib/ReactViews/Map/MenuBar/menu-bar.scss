@@ -17,10 +17,12 @@
   justify-content: space-between;
   flex-flow: wrap;
 }
+
 .menu-bar--workbenchClosed {
   // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
-  margin-left: 165px;
+  margin-left: 35px;
 }
+
 .menu {
   composes: list-reset from "../../../Sass/common/_base.scss";
   composes: clearfix from "../../../Sass/common/_base.scss";
@@ -59,12 +61,14 @@
   &:first-child > a {
     border-radius: $map-button-border-radius 0 0 $map-button-border-radius;
   }
+
   &:last-child > div > button,
   &:last-child > div > a,
   &:last-child > button,
   &:last-child > a {
     border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
   }
+
   &:only-child > div > button,
   &:only-child > div > a,
   &:only-child > button,
