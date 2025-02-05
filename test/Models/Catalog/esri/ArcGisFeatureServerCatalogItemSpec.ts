@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import { GeomType } from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Request from "terriajs-cesium/Source/Core/Request";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
@@ -80,7 +81,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       }
       // Tiled feature server - pick feature request
       else if (originalUrl.match("tiled/FeatureServer/0/query/query")) {
-        console.log("pick??");
         args[0] = "test/ArcGisFeatureServer/Tiled/feature-pick.geojson";
       }
       // Tiled feature server - tile request
@@ -103,8 +103,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         }
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
-      } else {
-        throw new Error("Unexpected URL: " + originalUrl);
       }
 
       return realLoadWithXhr(...args);
@@ -189,6 +187,31 @@ describe("ArcGisFeatureServerCatalogItem", function () {
     it("defines min/max scale denominator", function () {
       expect(item.minScaleDenominator).toEqual(36111);
       expect(item.maxScaleDenominator).toEqual(18489298);
+    });
+
+    it("for tiled services - limits imagery provider using MinMaxLevelMixin", async function () {
+      runInAction(() => {
+        item.setTrait("definition", "tileRequests", true);
+      });
+
+      expect("imageryProvider" in item.mapItems[0]).toBeTruthy();
+      if ("imageryProvider" in item.mapItems[0]) {
+        const imageryProvider = item.mapItems[0]
+          .imageryProvider as ProtomapsImageryProvider;
+
+        expect(
+          imageryProvider.source instanceof ProtomapsArcGisPbfSource
+        ).toBeTruthy();
+
+        expect(imageryProvider.minimumLevel).toEqual(0);
+        expect(imageryProvider.softMinimumLevel).toEqual(5);
+        expect(imageryProvider.maximumLevel).toEqual(14);
+
+        // Expect image to be empty
+        const test = await imageryProvider.requestImage(0, 0, 0, new Request());
+        expect(test.width).toEqual(1);
+        expect(test.height).toEqual(1);
+      }
     });
   });
 
