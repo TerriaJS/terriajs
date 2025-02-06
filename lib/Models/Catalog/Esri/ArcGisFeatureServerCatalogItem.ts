@@ -755,7 +755,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
     const url = this.buildEsriJsonUrl()
-      .raiseError(this.terria, "Failed to create valid FeatureServer URL")
+      .logError("Failed to create valid FeatureServer URL")
       ?.toString();
 
     if (!url) return;
@@ -833,12 +833,12 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     if (!isDefined(layerId)) {
       return Result.error(
         networkRequestError({
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
-          )
+          title: {
+            key: "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+          },
+          message: {
+            key: "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+          }
         })
       );
     }
