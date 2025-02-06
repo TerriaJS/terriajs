@@ -602,7 +602,7 @@ export default class OpenDataSoftCatalogItem
         new Array(Math.ceil(recordsToFetch / 100))
           .fill(0)
           .map(
-            async (v, index) =>
+            async (_v, index) =>
               (await this.apiClient.get(q.offset(index * 100))).records ?? []
           )
       )

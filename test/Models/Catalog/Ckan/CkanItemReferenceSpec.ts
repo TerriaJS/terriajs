@@ -15,7 +15,7 @@ describe("CkanItemReference", function () {
   let ckanItemReference: CkanItemReference;
   let ckanItemTarget: any;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -141,7 +141,7 @@ describe("CkanItemReference", function () {
   });
 
   describe("Can load an item by resourceId - ", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");

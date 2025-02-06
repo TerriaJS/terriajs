@@ -496,7 +496,7 @@ export default class TableStylingWorkflow
               id: item.uniqueId,
               name: getName(item)
             })),
-          setDimensionValue: (stratumId, value) => {
+          setDimensionValue: (_stratumId, value) => {
             const item = this.item.terria.workbench.items.find(
               (i) => i.uniqueId === value
             );
@@ -595,7 +595,7 @@ export default class TableStylingWorkflow
                 }
               : undefined
           ]),
-          setDimensionValue: (stratumId, value) => {
+          setDimensionValue: (_stratumId, value) => {
             if (
               value === "fill" ||
               value === "point-size" ||
@@ -1952,6 +1952,7 @@ export default class TableStylingWorkflow
             ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
+              // eslint-disable-next-line no-unsafe-optional-chaining
               ...traits.enum?.map((enumPoint, idx) => {
                 const dims: SelectableDimensionGroup = {
                   type: "group",
@@ -2549,7 +2550,7 @@ export default class TableStylingWorkflow
             }
           }
         ]),
-      (labelTraits, nullValue, label) => label
+      (_labelTraits, _nullValue, label) => label
     );
   }
 
@@ -2689,7 +2690,7 @@ export default class TableStylingWorkflow
                   }
                 ]) as FlatSelectableDimension[])
           ]),
-        (trail, nullValue, label) => label
+        (_trail, _nullValue, label) => label
       ),
       {
         type: "group",

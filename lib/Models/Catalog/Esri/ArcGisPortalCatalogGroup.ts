@@ -282,7 +282,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   @action
   addCatalogItemToCatalogGroup(
     catalogItem: any,
-    dataset: ArcGisItem,
+    _dataset: ArcGisItem,
     groupId: string
   ) {
     const group: CatalogGroup | undefined =

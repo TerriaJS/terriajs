@@ -82,7 +82,7 @@ describe("CatalogMemberMixin", function () {
     let terria: Terria;
     let wmsItem: WebMapServiceCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });

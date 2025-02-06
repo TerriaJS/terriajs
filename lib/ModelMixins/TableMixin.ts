@@ -141,7 +141,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
         if (rowsToRemove.size > 0) {
           return dataColumnMajor.map((col) =>
-            col.filter((cell, idx) => !rowsToRemove.has(idx))
+            col.filter((_cell, idx) => !rowsToRemove.has(idx))
           );
         }
       }
@@ -217,7 +217,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
         const csvString = this.dataColumnMajor[0]
-          .map((row, rowIndex) =>
+          .map((_row, rowIndex) =>
             this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
           )
           .join("\n");

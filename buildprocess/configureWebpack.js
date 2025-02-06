@@ -98,10 +98,7 @@ function configureWebpack({
   // however doing so currently breaks a few specs.
   config.module.rules.push({
     test: /\.js$/,
-    include: path.resolve(
-      path.dirname(require.resolve("terriajs-cesium/package.json")),
-      "Source"
-    ),
+    include: path.resolve(cesiumDir, "Source"),
     use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
@@ -264,6 +261,7 @@ function configureWebpack({
   // This saves close to ~600KB unzipped
   // Maybe we can remove this when lodash 5 comes out (?)
   config.resolve.alias["lodash"] = "lodash-es";
+
   return config;
 }
 

@@ -33,33 +33,30 @@ import StandardUserInterface from "terriajs/lib/ReactViews/StandardUserInterface
 import MenuItem from "terriajs/lib/ReactViews/StandardUserInterface/customizable/MenuItem";
 import RelatedMaps from "./RelatedMaps";
 import {
-    Menu,
-    Nav
+  Menu,
+  Nav
 } from "terriajs/lib/ReactViews/StandardUserInterface/customizable/Groups";
 import MeasureTool from "terriajs/lib/ReactViews/Map/Navigation/MeasureTool";
 
 import "./global.scss";
 
 export default function UserInterface(props) {
-    return (
-        <StandardUserInterface {...props} version={version}>
-            <Menu>
-                <RelatedMaps viewState={props.viewState} />
-                <MenuItem caption="About" href="about.html" key="about-link" />
-                <MenuItem
-                    caption="TerriaJS"
-                    href="http://terria.io"
-                    key="terria-link"
-                />
-            </Menu>
-            <Nav>
-                <MeasureTool
-                    terria={props.viewState.terria}
-                    key="measure-tool"
-                />
-            </Nav>
-        </StandardUserInterface>
-    );
+  return (
+    <StandardUserInterface {...props} version={version}>
+      <Menu>
+        <RelatedMaps viewState={props.viewState} />
+        <MenuItem caption="About" href="about.html" key="about-link" />
+        <MenuItem
+          caption="TerriaJS"
+          href="http://terria.io"
+          key="terria-link"
+        />
+      </Menu>
+      <Nav>
+        <MeasureTool terria={props.viewState.terria} key="measure-tool" />
+      </Nav>
+    </StandardUserInterface>
+  );
 }
 ```
 

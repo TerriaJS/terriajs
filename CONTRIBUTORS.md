@@ -66,3 +66,4 @@ The following people have contributed to TerriaJS:
 - [Peter A. Jonsson](https://github.com/pjonsson)
 - [Giovanni Lughi](https://github.com/glughi)
 - [Andrew Cleland](https://github.com/aclel)
+- [Sidney Gijzen](https://github.com/sidneygijzen)

@@ -32,7 +32,11 @@ export class AnyTrait extends Trait {
     return undefined;
   }
 
-  fromJson(model: BaseModel, stratumName: string, jsonValue: any): Result<any> {
+  fromJson(
+    _model: BaseModel,
+    _stratumName: string,
+    jsonValue: any
+  ): Result<any> {
     return new Result(jsonValue);
   }
 

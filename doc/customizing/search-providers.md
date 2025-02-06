@@ -28,35 +28,35 @@ The [flexsearch](https://github.com/nextapps-de/flexsearch) library is used to i
 
 To generate the catalog index:
 
--   `yarn build-tools`
--   `node ./build/generateCatalogIndex.js -c config-url -b base-url` where
+- `yarn build-tools`
+- `node ./build/generateCatalogIndex.js -c config-url -b base-url` where
 
-    -   `config-url` is URL to client-side-config file
-    -   `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
-    -   For example `node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/`
+  - `config-url` is URL to client-side-config file
+  - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
+  - For example `node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/`
 
--   This will output three files
-    -   `catalog-index.json`
-    -   `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-    -   `catalog-index-errors-stack.json` with errors stack
--   Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
+- This will output three files
+  - `catalog-index.json`
+  - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
+  - `catalog-index-errors-stack.json` with errors stack
+- Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
 
 This file will have to be re-generated manually every time the catalog structure changes - for example:
 
--   if items are renamed, or moved
--   dynamic groups are updated (for example, WMS server publishes new layers)
+- if items are renamed, or moved
+- dynamic groups are updated (for example, WMS server publishes new layers)
 
 For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
 
--   Run `node ./build/generateCatalogIndex.js --help` for argument documentation
+- Run `node ./build/generateCatalogIndex.js --help` for argument documentation
 
 ## Location search providers
 
 Location search providers are used to search for locations on the map. TerriaJS currently supports two implementations of search providers:
 
--   [`BingMapsSearchProvider`](#bingmapssearchprovider) - implementation which in background uses Bing Map search API
--   [`CesiumIonSearchProvider`](#cesiumionsearchprovider) - implementation which in background use CesiumIon geocoding API
--   [`AustralianGazetteerSearchProvider`](#australiangazetteersearchprovider) - uses `WebFeatureServiceSearchProvider`
+- [`BingMapsSearchProvider`](#bingmapssearchprovider) - implementation which in background uses Bing Map search API
+- [`CesiumIonSearchProvider`](#cesiumionsearchprovider) - implementation which in background use CesiumIon geocoding API
+- [`AustralianGazetteerSearchProvider`](#australiangazetteersearchprovider) - uses `WebFeatureServiceSearchProvider`
 
 Each `LocationSearchProvider support following confing options
 
@@ -138,16 +138,16 @@ It can be configured using following options
 
 ```json
 {
-    "id": "search-provider/australian-gazetteer",
-    "type": "australian-gazetteer-search-provider",
-    "name": "translate#viewModels.searchPlaceNames",
-    "url": "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
-    "searchPropertyName": "Australian_Gazetteer:NameU",
-    "searchPropertyTypeName": "Australian_Gazetteer:Gazetteer_of_Australia",
-    "flightDurationSeconds": 1.5,
-    "minCharacters": 3,
-    "recommendedListLength": 3,
-    "isOpen": false
+  "id": "search-provider/australian-gazetteer",
+  "type": "australian-gazetteer-search-provider",
+  "name": "translate#viewModels.searchPlaceNames",
+  "url": "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
+  "searchPropertyName": "Australian_Gazetteer:NameU",
+  "searchPropertyTypeName": "Australian_Gazetteer:Gazetteer_of_Australia",
+  "flightDurationSeconds": 1.5,
+  "minCharacters": 3,
+  "recommendedListLength": 3,
+  "isOpen": false
 }
 ```
 
@@ -167,11 +167,11 @@ It can be configured using following options
 
 ```json
 {
-    "id": "search-provider/nominatim",
-    "type": "nominatim-search-provider",
-    "name": "Nominatim",
-    "flightDurationSeconds": 2,
-    "minCharacters": 3
+  "id": "search-provider/nominatim",
+  "type": "nominatim-search-provider",
+  "name": "Nominatim",
+  "flightDurationSeconds": 2,
+  "minCharacters": 3
 }
 ```
 
@@ -179,7 +179,7 @@ It can be configured using following options
 
 Implementing new location search provider is similar to implementing new `CatalogItems` and `CatalogGroups`. Each of them should be based on the usage of one of the mixins
 
--   `LocationSearchProviderMixin` - should be used for API based location search providers. Example of such search provider is `BingMapSearchProvider`.
--   `WebFeatureServiceSearchProviderMixin` - should be used for location search providers that will rely on data provided by `WebFeatureService`. Example of such search provider is `AustralianGazetteerSearchProvider`.
+- `LocationSearchProviderMixin` - should be used for API based location search providers. Example of such search provider is `BingMapSearchProvider`.
+- `WebFeatureServiceSearchProviderMixin` - should be used for location search providers that will rely on data provided by `WebFeatureService`. Example of such search provider is `AustralianGazetteerSearchProvider`.
 
 Each new `SearchProvider` should be registered inside `registerSearchProvider` so they can be properly upserted from json definition provider in config file.

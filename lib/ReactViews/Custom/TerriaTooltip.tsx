@@ -21,7 +21,7 @@ export default class TerriaTooltipCustomComponent extends CustomComponent {
   }
 
   processNode(
-    context: ProcessNodeContext,
+    _context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[]
   ): ReactElement {

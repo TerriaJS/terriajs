@@ -1,4 +1,6 @@
-export const getUriWithoutPath = (anyUri: uri.URI) => {
+import type URI from "urijs";
+
+export const getUriWithoutPath = (anyUri: URI) => {
   if (!anyUri) {
     return undefined;
   }

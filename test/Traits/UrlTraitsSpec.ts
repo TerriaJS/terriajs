@@ -13,7 +13,7 @@ describe("UrlTraits", function () {
   let terria: Terria;
   let geoJsonCatalogItem: GeoJsonCatalogItem;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

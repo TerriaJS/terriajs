@@ -4,7 +4,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob-all");
+const glob = require("fast-glob");
 
 const cesiumDeclarationFile = require.resolve("terriajs-cesium/index.d.ts");
 const cesiumDirectory = path.dirname(cesiumDeclarationFile);

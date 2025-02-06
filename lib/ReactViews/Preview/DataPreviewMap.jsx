@@ -257,7 +257,7 @@ class DataPreviewMap extends React.Component {
   }
 
   @action.bound
-  clickMap(evt) {
+  clickMap(_evt) {
     this.isZoomedToExtent = !this.isZoomedToExtent;
   }
 

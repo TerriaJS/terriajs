@@ -18,7 +18,7 @@ function UrlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    get uri(): uri.URI | undefined {
+    get uri(): URI | undefined {
       if (this.url === undefined) {
         return undefined;
       }

@@ -103,7 +103,7 @@ export default class CameraView {
    * @param  {Object} [json.positionHeadingPitchRoll] If present, must include keys cameraLongitude, cameraLatitude, cameraHeight, heading, pitch, roll.
    * @return {CameraView} The camera view.
    */
-  static fromJson(json: JsonObject) {
+  static fromJson(json: JsonObject): CameraView {
     const lookAt = json.lookAt;
     const positionHeadingPitchRoll = json.positionHeadingPitchRoll;
 

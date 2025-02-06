@@ -68,7 +68,7 @@ describe("DateTimeSelectorSection", function () {
     expect(titleLabel.children[0].children[0]).toEqual("Some Label");
   });
 
-  it("A datetime selector can be formatted", async function () {
+  it("A datetime selector can be formatted", function () {
     wmsItem.setTrait("definition", "dateFormat", "yyyy");
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);

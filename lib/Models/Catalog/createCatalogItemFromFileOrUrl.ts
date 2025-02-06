@@ -13,7 +13,7 @@ import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFro
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
-  viewState: ViewState,
+  _viewState: ViewState,
   fileOrUrl: File | string,
   dataType?: string
 ): Promise<BaseModel | undefined> {

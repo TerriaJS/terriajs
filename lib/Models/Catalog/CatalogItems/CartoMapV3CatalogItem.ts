@@ -289,9 +289,7 @@ async function callCartoApi(url: string, auth?: string, body?: JsonObject) {
             )
           );
         }
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
     }
     return Result.error(e);
   }

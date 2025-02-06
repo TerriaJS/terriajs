@@ -164,7 +164,7 @@ function createProperty(type: Packable, interpolate: boolean) {
 }
 
 function createFeature(
-  featureId: string,
+  _featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
 ): TerriaFeature {

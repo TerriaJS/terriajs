@@ -47,8 +47,8 @@ export class PrimitiveTrait<T> extends Trait {
   }
 
   fromJson(
-    model: BaseModel,
-    stratumName: string,
+    _model: BaseModel,
+    _stratumName: string,
     jsonValue: any
   ): Result<T | undefined> {
     if (

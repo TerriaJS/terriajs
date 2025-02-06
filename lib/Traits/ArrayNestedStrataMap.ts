@@ -25,7 +25,7 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
   }
 
   clear(): void {
-    this.parentModel.strata.forEach((value: any, key: string) => {
+    this.parentModel.strata.forEach((_value: any, key: string) => {
       this.delete(key);
     });
   }

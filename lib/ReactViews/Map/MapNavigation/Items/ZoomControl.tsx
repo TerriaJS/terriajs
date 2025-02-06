@@ -1,6 +1,5 @@
-import { TFunction } from "i18next";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { withTranslation, WithTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";

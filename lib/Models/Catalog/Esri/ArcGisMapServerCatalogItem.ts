@@ -701,10 +701,8 @@ export function getRectangleFromLayer(
       return;
     }
 
-    // @ts-expect-error @types/proj4 doesn't define a constructor type
-    const source = new proj4.Proj(Proj4Definitions[wkid]);
-    // @ts-expect-error @types/proj4 doesn't define a constructor type
-    const dest = new proj4.Proj("EPSG:4326");
+    const source = Proj4Definitions[wkid];
+    const dest = "EPSG:4326";
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
 

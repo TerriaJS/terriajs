@@ -115,9 +115,7 @@ function DiscretelyTimeVaryingMixin<
               tag: dt.tag !== undefined ? dt.tag : dt.time
             });
           }
-        } catch {
-          /* eslint-disable-line no-empty */
-        }
+        } catch {}
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;

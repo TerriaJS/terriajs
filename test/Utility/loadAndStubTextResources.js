@@ -17,7 +17,7 @@ function loadAndStubTextResources(done, resources) {
   return loadTextResources(resources).then(function (loadedResources) {
     jasmine.Ajax.install();
 
-    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function (stub, xhr) {
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function (_stub, xhr) {
       done.fail("Unhandled request to URL: " + xhr.url);
     });
 

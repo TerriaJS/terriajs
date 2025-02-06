@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, observable, runInAction, makeObservable } from "mobx";
 import React from "react";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic";
+import URI from "urijs";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../../../../Core/isDefined";
@@ -153,7 +154,7 @@ export class MyLocation extends MapNavigationItemController {
     });
   }
 
-  handleLocationError(err: any) {
+  handleLocationError(err: GeolocationPositionError) {
     const t = i18next.t.bind(i18next);
     let message = err.message;
     if (message && message.indexOf("Only secure origins are allowed") === 0) {
@@ -162,12 +163,19 @@ export class MyLocation extends MapNavigationItemController {
       const uri = new URI(window.location);
       const secureUrl = uri.protocol("https").toString();
       message = t("location.originError", { secureUrl: secureUrl });
+    } else if (err.code === err.PERMISSION_DENIED) {
+      message = t("location.permissionDenied");
+    } else if (err.code === err.POSITION_UNAVAILABLE) {
+      message = t("location.positionUnavailable");
+    } else if (err.code === err.TIMEOUT) {
+      message = t("location.timeout");
     }
     this.terria.raiseErrorToUser(
       new TerriaError({
         sender: this,
         title: t("location.errorGettingLocation"),
-        message: message
+        message: message,
+        showDetails: false
       })
     );
   }

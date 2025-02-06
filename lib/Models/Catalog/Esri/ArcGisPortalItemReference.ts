@@ -405,7 +405,7 @@ async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
       proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
     );
     return response;
-  } catch (err) {
+  } catch (_err) {
     return undefined;
   }
 }

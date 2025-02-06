@@ -1,8 +1,7 @@
-import { TFunction } from "i18next";
 import { action, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { withTranslation, WithTranslation, TFunction } from "react-i18next";
 import getPath from "../../Core/getPath";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";

@@ -7,7 +7,7 @@ function equals(util, customEqualityTesters, a, b) {
 }
 
 module.exports = {
-  toEqualEpsilon: function (util, customEqualityTesters) {
+  toEqualEpsilon: function (util, _customEqualityTesters) {
     return {
       compare: function (actual, expected, epsilon) {
         function equalityTester(a, b) {

@@ -199,7 +199,7 @@ class Chart extends React.Component<ChartPropsType> {
             numTicks={4}
             stroke="#a0a0a0"
             tickStroke="#a0a0a0"
-            tickLabelProps={(value, i, ticks) => {
+            tickLabelProps={(_value, i, ticks) => {
               // To prevent the first and last values from getting clipped,
               // we position the first label text to start at the tick position
               // and the last label text to finish at the tick position. For all

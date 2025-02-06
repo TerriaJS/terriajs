@@ -28,7 +28,7 @@ describe("WebFeatureServiceCatalogGroup", function () {
   });
 
   describe("after loading capabilities", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         wfs.setTrait("definition", "url", "test/WFS/getCapabilities.xml");
       });
@@ -77,7 +77,7 @@ describe("WebFeatureServiceCatalogGroup", function () {
       (await wfs.loadMembers()).throwIfError();
     });
 
-    it("loads", async function () {
+    it("loads", function () {
       expect(wfs.members.length).toEqual(1);
       expect(wfs.memberModels.length).toEqual(1);
 

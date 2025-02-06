@@ -693,7 +693,7 @@ export default class TableColorMap {
   }
 
   // TODO: Make TableColorMap use Result to pass warnings up model layer
-  invalidColorPaletteWarning() {
+  invalidColorPaletteWarning(): void {
     if (
       this.colorColumn?.name &&
       this.colorColumn?.tableModel.activeStyle === this.colorColumn?.name

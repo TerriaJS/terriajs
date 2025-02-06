@@ -2,7 +2,7 @@
  * Webpack config for building specs
  */
 
-const glob = require("glob-all");
+const glob = require("fast-glob");
 const configureWebpack = require("./configureWebpack");
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -14,7 +14,8 @@ const testGlob = [
   "./test/Models/Experiment.ts"
 ];
 
-console.log(glob.sync(testGlob));
+const files = glob.sync(testGlob);
+console.log(files);
 
 module.exports = function (devMode) {
   const terriaJSBasePath = path.resolve(__dirname, "../");
@@ -22,7 +23,7 @@ module.exports = function (devMode) {
   // base config for specs
   const config = {
     mode: devMode ? "development" : "production",
-    entry: glob.sync(testGlob),
+    entry: files,
     output: {
       path: path.resolve(__dirname, "..", "wwwroot", "build"),
       filename: "TerriaJS-specs.js",

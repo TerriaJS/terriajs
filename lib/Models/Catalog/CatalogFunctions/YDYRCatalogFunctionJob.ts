@@ -104,9 +104,9 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       data.values.map((val, idx) => (val === null ? idx : undefined))
     );
 
-    data.ids = data.ids.filter((id, idx) => !invalidRows.includes(idx));
+    data.ids = data.ids.filter((_id, idx) => !invalidRows.includes(idx));
     data.values = data.values.filter(
-      (value, idx) => !invalidRows.includes(idx)
+      (_value, idx) => !invalidRows.includes(idx)
     );
 
     const params = {

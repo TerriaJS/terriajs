@@ -144,7 +144,7 @@ describe("ImageryLayerCatalogItem", function () {
         tileErrorThresholdBeforeDisabling: 5
       };
       imageryProvider = {
-        requestImage: function (x, y, level) {
+        requestImage: function (_x, _y, _level) {
           return ImageryProvider.loadImage(this, "images/blank.png");
         },
         errorEvent: new CesiumEvent()

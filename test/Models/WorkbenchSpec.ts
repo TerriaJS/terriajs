@@ -221,7 +221,7 @@ describe("Workbench", function () {
     expect(workbench.itemIds).toEqual(["A", "B", "C"]);
   });
 
-  it("remove item", async function () {
+  it("remove item", function () {
     workbench.items = [item1, item2, item3];
 
     workbench.remove(item2);

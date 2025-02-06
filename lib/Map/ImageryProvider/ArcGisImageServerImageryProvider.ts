@@ -171,9 +171,9 @@ export default class ArcGisImageServerImageryProvider {
   }
 
   async pickFeatures(
-    x: number,
-    y: number,
-    level: number,
+    _x: number,
+    _y: number,
+    _level: number,
     longitude: number,
     latitude: number
   ): Promise<ImageryLayerFeatureInfo[]> {

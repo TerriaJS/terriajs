@@ -155,7 +155,12 @@ export default class TableColumn {
    * @param rowIndex row number
    * @param value value to transform
    */
-  mexpColumnValuePairs(rowIndex: number, value: number) {
+  mexpColumnValuePairs(
+    rowIndex: number,
+    value: number
+  ): {
+    [key: string]: number | null;
+  } {
     return this.mexpColumnTokens.reduce<{ [key: string]: number | null }>(
       (pairs, token) => {
         if (token.token !== THIS_COLUMN_EXPRESSION_TOKEN)

@@ -8,7 +8,7 @@ import wmsGetCapabilitiesXml from "../../wwwroot/test/WMS/wms_crs.xml";
 describe("ExportWebCoverageServiceMixin", function () {
   let terria: Terria;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

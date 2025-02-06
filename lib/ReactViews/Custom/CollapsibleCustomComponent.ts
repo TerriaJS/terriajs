@@ -22,7 +22,7 @@ export default class CollapsibleCustomComponent extends CustomComponent {
   }
 
   processNode(
-    context: ProcessNodeContext,
+    _context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[]
   ): ReactElement {
