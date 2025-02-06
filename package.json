@@ -6,7 +6,6 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
