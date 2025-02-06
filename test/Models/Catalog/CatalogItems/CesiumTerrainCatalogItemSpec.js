@@ -25,14 +25,14 @@ describe("CesiumTerrainCatalogItem", function () {
   it("creates imagery provider with correct URL", function (done) {
     spyOn(loadWithXhr, "load").and.callFake(function (
       url,
-      responseType,
-      method,
-      data,
-      headers,
+      _responseType,
+      _method,
+      _data,
+      _headers,
       deferred,
-      overrideMimeType,
-      preferText,
-      timeout
+      _overrideMimeType,
+      _preferText,
+      _timeout
     ) {
       expect(url.indexOf("http://example.com/foo/bar")).toBe(0);
       deferred.resolve(

@@ -347,7 +347,7 @@ export default class BoxDrawing {
     return boxDrawing;
   }
 
-  public setTranslationRotationScale(trs: TranslationRotationScale) {
+  public setTranslationRotationScale(trs: TranslationRotationScale): void {
     Cartesian3.clone(trs.translation, this.trs.translation);
     Quaternion.clone(trs.rotation, this.trs.rotation);
     Cartesian3.clone(trs.scale, this.trs.scale);
@@ -357,7 +357,7 @@ export default class BoxDrawing {
   /**
    * A method to udpate the world transform.
    */
-  public setTransform(transform: Matrix4) {
+  public setTransform(transform: Matrix4): void {
     Matrix4.clone(transform, this.worldTransform);
     Matrix4.getTranslation(this.worldTransform, this.trs.translation);
     Matrix4.getScale(this.worldTransform, this.trs.scale);
@@ -445,7 +445,7 @@ export default class BoxDrawing {
   /**
    * Set the box position
    */
-  setPosition(position: Cartesian3) {
+  setPosition(position: Cartesian3): void {
     const moveStep = Cartesian3.subtract(
       position,
       this.trs.translation,

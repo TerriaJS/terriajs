@@ -16,9 +16,9 @@ The easiest way to deploy your TerriaMap is to use the included Node.js-based we
 
 Then, copy the following files and directories from your local system where you built TerriaMap onto the server:
 
--   `wwwroot`
--   `node_modules` (note: this can take a long time, be patient)
--   `devserverconfig.json` but rename this to `productionserverconfig.json` (and add any private access keys/passwords/secrets)
+- `wwwroot`
+- `node_modules` (note: this can take a long time, be patient)
+- `devserverconfig.json` but rename this to `productionserverconfig.json` (and add any private access keys/passwords/secrets)
 
 And on the server, change to the directory where you copied those files and directories and run:
 

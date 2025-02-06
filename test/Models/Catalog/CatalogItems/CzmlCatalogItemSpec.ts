@@ -133,7 +133,7 @@ describe("CzmlCatalogItem", function () {
     });
   });
 
-  describe("auto refreshing", async function () {
+  describe("auto refreshing", function () {
     it("reloads the datasource when refreshed", async function () {
       czml.setTrait(CommonStrata.user, "url", "test/CZML/Vehicle.czml");
       await czml.loadMapItems();

@@ -261,6 +261,10 @@ function configureWebpack({
   // This saves close to ~600KB unzipped
   // Maybe we can remove this when lodash 5 comes out (?)
   config.resolve.alias["lodash"] = "lodash-es";
+
+  // Fix issue with pmtiles TS import (through protomaps-leaflet)
+  config.resolve.alias["pmtiles"] = "pmtiles/dist/index.js";
+
   return config;
 }
 

@@ -234,7 +234,7 @@ describe("CatalogIndex - with shareKeys", function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("loads shareKeys", async function () {
+  it("loads shareKeys", function () {
     expect(
       Object.fromEntries(terria.catalogIndex!.shareKeysMap.toJSON())
     ).toEqual({

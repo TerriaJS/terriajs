@@ -8,7 +8,7 @@ describe("BingMapsSearchProvider", function () {
   let terria: Terria;
   let bingMapsSearchProvider: BingMapsSearchProvider;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

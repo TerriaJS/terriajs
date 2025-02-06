@@ -100,18 +100,18 @@ describe("TableMixin", function () {
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function () {
+    it("creates one entity per id", function () {
       expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
     });
 
-    it("sets showInChartPanel to false - as is mappable", async function () {
+    it("sets showInChartPanel to false - as is mappable", function () {
       expect(item.showInChartPanel).toBeFalsy();
     });
 
-    it("sets showInChartPanel to true - when lat/lon is disabled", async function () {
+    it("sets showInChartPanel to true - when lat/lon is disabled", function () {
       updateModelFromJson(item, CommonStrata.definition, {
         columns: [
           { name: "lat", type: "scalar" },
@@ -123,7 +123,7 @@ describe("TableMixin", function () {
 
     it("doesn't show regions - even if empty region column is detected", () => {});
 
-    it("calculates rectangle", async function () {
+    it("calculates rectangle", function () {
       expect(item.rectangle.north).toEqual(-20);
       expect(item.rectangle.south).toEqual(-37);
       expect(item.rectangle.east).toEqual(155);
@@ -154,7 +154,7 @@ describe("TableMixin", function () {
     });
 
     describe("when timeColumn is `null`", function () {
-      it("returns an empty `discreteTimes`", async function () {
+      it("returns an empty `discreteTimes`", function () {
         expect(item.discreteTimes?.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         expect(item.discreteTimes).toBe(undefined);
@@ -188,18 +188,18 @@ describe("TableMixin", function () {
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function () {
+    it("creates one entity per id", function () {
       expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
     });
 
-    it("sets showInChartPanel to false - as is mappable", async function () {
+    it("sets showInChartPanel to false - as is mappable", function () {
       expect(item.showInChartPanel).toBeFalsy();
     });
 
-    it("shows regions when lat/lon is disabled", async function () {
+    it("shows regions when lat/lon is disabled", function () {
       updateModelFromJson(item, CommonStrata.definition, {
         columns: [
           { name: "lat", type: "scalar" },
@@ -218,7 +218,7 @@ describe("TableMixin", function () {
       expect(item.showingRegions).toBeFalsy();
     });
 
-    it("calculates rectangle", async function () {
+    it("calculates rectangle", function () {
       expect(item.rectangle.north).toEqual(-20);
       expect(item.rectangle.south).toEqual(-37);
       expect(item.rectangle.east).toEqual(155);
@@ -249,7 +249,7 @@ describe("TableMixin", function () {
     });
 
     describe("when timeColumn is `null`", function () {
-      it("returns an empty `discreteTimes`", async function () {
+      it("returns an empty `discreteTimes`", function () {
         expect(item.discreteTimes?.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         expect(item.discreteTimes).toBe(undefined);
@@ -341,11 +341,11 @@ describe("TableMixin", function () {
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function () {
+    it("creates one entity per id", function () {
       expect(dataSource.entities.values.length).toBe(21);
     });
 
-    it("creates correct intervals", async function () {
+    it("creates correct intervals", function () {
       expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
       expect(item.disableDateTimeSelector).toBeFalsy();
       expect(
@@ -378,7 +378,7 @@ describe("TableMixin", function () {
       ]);
     });
 
-    it("creates correct intervals if spreadStartTime", async function () {
+    it("creates correct intervals if spreadStartTime", function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -422,7 +422,7 @@ describe("TableMixin", function () {
       ]);
     });
 
-    it("creates correct intervals if spreadStartTime and spreadFinishTime", async function () {
+    it("creates correct intervals if spreadStartTime and spreadFinishTime", function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -440,7 +440,7 @@ describe("TableMixin", function () {
       expect(item.activeTableStyle.moreThanOneTimeInterval).toBe(false);
     });
 
-    it("creates correct intervals if spreadFinishTime", async function () {
+    it("creates correct intervals if spreadFinishTime", function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -483,11 +483,11 @@ describe("TableMixin", function () {
       ]);
     });
 
-    it("creates disable time dimension by default for this dataset", async function () {
+    it("creates disable time dimension by default for this dataset", function () {
       expect(item.timeDisableDimension).toBeDefined();
     });
 
-    it("doesn't disable time dimension if `showDisableTimeOption = false`", async function () {
+    it("doesn't disable time dimension if `showDisableTimeOption = false`", function () {
       runInAction(() =>
         item.setTrait(CommonStrata.user, "showDisableTimeOption", false)
       );
@@ -763,11 +763,11 @@ describe("TableMixin", function () {
         ?.loadRegionIDs();
     });
 
-    it("creates imagery parts", async function () {
+    it("creates imagery parts", function () {
       expect(ImageryParts.is(item.mapItems[0])).toBeTruthy();
     });
 
-    it("with state", async function () {
+    it("with state", function () {
       updateModelFromJson(item, CommonStrata.user, {
         columns: [
           {
@@ -794,7 +794,7 @@ describe("TableMixin", function () {
       ).toBe(3);
     });
 
-    it("with lga_name", async function () {
+    it("with lga_name", function () {
       updateModelFromJson(item, CommonStrata.user, {
         columns: [
           {
@@ -839,7 +839,7 @@ describe("TableMixin", function () {
       );
     });
 
-    it("shows region shortReportSection", async function () {
+    it("shows region shortReportSection", function () {
       const regionCol = item.activeTableStyle.regionColumn;
 
       const regionType = regionCol?.regionType;
@@ -851,7 +851,7 @@ describe("TableMixin", function () {
       );
     });
 
-    it("doesn't show region shortReportSection if region is disabled", async function () {
+    it("doesn't show region shortReportSection if region is disabled", function () {
       updateModelFromJson(item, CommonStrata.user, {
         defaultStyle: {
           regionColumn: "Something else"

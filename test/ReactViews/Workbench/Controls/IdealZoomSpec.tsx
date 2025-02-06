@@ -20,7 +20,7 @@ describe("Ideal Zoom", function () {
   let theItem: Cesium3DTilesCatalogItem;
   let testRenderer: ReactTestRenderer;
   let viewState: ViewState;
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

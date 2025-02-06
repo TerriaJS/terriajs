@@ -31,11 +31,11 @@ import {
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer
-} from "protomaps";
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
+} from "protomaps-leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -77,10 +77,12 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GeojsonSource,
-  GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import {
+  GEOJSON_SOURCE_LAYER_NAME,
+  ProtomapsGeojsonSource
+} from "../Map/Vector/ProtomapsGeojsonSource";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -737,14 +739,14 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         this.useOutlineColorForLineFeatures;
 
       // Style function
-      const getColorValue = (z: number, f?: ProtomapsFeature) => {
+      const getColorValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return colorMap
           .mapValueToColor(isJsonNumber(rowId) ? rows?.[rowId] : null)
           .toCssColorString();
       };
 
-      const getOutlineWidthValue = (z: number, f?: ProtomapsFeature) => {
+      const getOutlineWidthValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return (
           (isConstantStyleMap(outlineStyleMap)
@@ -754,7 +756,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         );
       };
 
-      const getOutlineColorValue = (z: number, f?: ProtomapsFeature) => {
+      const getOutlineColorValue = (_z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
         return (
           (isConstantStyleMap(outlineStyleMap)
@@ -765,7 +767,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       };
 
       // Filter features by time if applicable
-      const showFeature = (z: number, f?: ProtomapsFeature) =>
+      const showFeature = (_z: number, f?: ProtomapsFeature) =>
         !currentTimeRows ||
         (isJsonNumber(f?.props[FEATURE_ID_PROP]) &&
           currentTimeRows.includes(f?.props[FEATURE_ID_PROP] as number));
@@ -778,7 +780,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // If so we can copy GeojsonSource over to save running geojson-vt again
       if (
         this._imageryProvider instanceof ProtomapsImageryProvider &&
-        this._imageryProvider.source instanceof GeojsonSource &&
+        this._imageryProvider.source instanceof ProtomapsGeojsonSource &&
         this._imageryProvider.source.geojsonObject === this.readyData
       ) {
         protomapsData = this._imageryProvider.source;

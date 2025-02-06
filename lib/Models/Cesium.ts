@@ -70,7 +70,6 @@ import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import PickedFeatures, {
   ProviderCoordsMap
@@ -509,7 +508,7 @@ export default class Cesium extends GlobeOrMap {
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
-      } catch (err) {
+      } catch (_err) {
         /* TODO: handle Error */
       }
     };
@@ -534,18 +533,18 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  getContainer() {
+  getContainer(): Element {
     return this.cesiumWidget.container;
   }
 
-  pauseMapInteraction() {
+  pauseMapInteraction(): void {
     ++this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 1) {
       this.scene.screenSpaceCameraController.enableInputs = false;
     }
   }
 
-  resumeMapInteraction() {
+  resumeMapInteraction(): void {
     --this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 0) {
       setTimeout(() => {
@@ -559,7 +558,7 @@ export default class Cesium extends GlobeOrMap {
   private previousRenderError: string | undefined;
 
   /** Show error message to user if Cesium stops rendering. */
-  private onRenderError(scene: Scene, error: unknown) {
+  private onRenderError(_scene: Scene, error: unknown) {
     // This function can be called many times with the same error
     // So we do a rudimentary check to only show the error message once
     // - by comparing error.toString() to this.previousRenderError
@@ -577,7 +576,7 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  destroy() {
+  destroy(): void {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
     this.scene.renderError.removeEventListener(this.onRenderError);
@@ -774,7 +773,7 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach((fn) => fn()); // Run the remover functions
-            } catch (error) {
+            } catch (_error) {
               /* TODO: handle error */
             }
 
@@ -820,7 +819,7 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  stopObserving() {
+  stopObserving(): void {
     if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
       this._disposeWorkbenchMapItemsSubscription();
     }
@@ -955,7 +954,7 @@ export default class Cesium extends GlobeOrMap {
     return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
-  notifyRepaintRequired() {
+  notifyRepaintRequired(): void {
     this.pauser.notifyRepaintRequired();
   }
 
@@ -1299,7 +1298,7 @@ export default class Cesium extends GlobeOrMap {
   async pickFromScreenPosition(
     screenPosition: Cartesian2,
     ignoreSplitter: boolean
-  ) {
+  ): Promise<void> {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
@@ -1343,7 +1342,7 @@ export default class Cesium extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {
+  ): void {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
         latLngHeight.longitude,
@@ -1704,7 +1703,7 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
-  _selectFeature() {
+  _selectFeature(): void {
     const feature = this.terria.selectedFeature;
 
     this._highlightFeature(feature);
@@ -1763,7 +1762,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
@@ -1806,7 +1805,7 @@ function zoomToDataSource(
             false,
             boundingSphereScratch
           );
-        } catch (e) {
+        } catch (_e) {
           /* TODO: handle error */
         }
 
