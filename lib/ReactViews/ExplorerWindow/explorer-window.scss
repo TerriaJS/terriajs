@@ -25,9 +25,8 @@
 
 .explorer-panel {
   position: relative;
-  background: $modal-bg;
   color: $modal-text;
-  border-radius: $radius-small;
+  border-radius: $radius-xlarge;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
   height: 100%;
@@ -42,6 +41,7 @@
     opacity: 1;
     @include transform(none);
   }
+
   a {
     @include link($modal-bg);
   }
@@ -65,11 +65,12 @@
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
   font-size: $font-size-mid-small;
   padding: 4px 10px;
-  margin: $padding-small * 1.5 $padding-small;
+  margin: 15px;
   font-weight: bold;
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 1;
 
   &,
   &:hover,

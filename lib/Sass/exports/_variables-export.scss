@@ -35,6 +35,7 @@
   radius40Button: 20;
   radiusLarge: $radius-large;
   radiusSmall: $radius-small;
+  radiusXL: $radius-xlarge;
 
   overlay: $overlay;
   overlayInvert: $overlay-invert;
@@ -49,8 +50,11 @@
   textDarker: $text-darker;
   textBlack: $text-black;
   turquoiseBlue: $turquoise-blue;
+  transparentDark: $transparent-dark;
+  blur: $blur;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
+  darkMid: $dark-mid;
   darkLighter: $dark-lighter;
   grey: $grey;
   greyLighter: $grey-lighter;
@@ -69,21 +73,26 @@
   modalText: $modal-text;
   modalHighlight: $modal-highlight;
 
+  scrollbarColor: $scrollbar-color;
+  scrollbarTrackColor: $scrollbar-track-color;
+
   // TODO: fix, these are stopgaps & should get merged in with something else(?)
   mapButtonColor: $map-button-color;
   mapButtonTop: 18;
   mapNavigationTop: 80;
 
   trainerHeight: 64;
+  workbenchMargin: 21;
   workbenchWidth: 350;
   workflowPanelWidth: 350;
+  panelRadius: $panel-radius;
 
   toolPrimaryColor: $tool-primary-color;
 
   // Branding
   logoHeight: $logo-height;
   logoPaddingVertical: 15px;
-  logoPaddingHorizontal: 5px;
+  logoPaddingHorizontal: 15px;
 
   logoSmallHeight: $input-height;
   logoSmallPaddingHorizontal: 0;

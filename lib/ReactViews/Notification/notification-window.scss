@@ -27,7 +27,7 @@
 }
 
 .notification {
-  border-radius: $radius-small;
+  border-radius: 6px;
   border: 1px solid color.adjust($dark, $lightness: -3%);
   // background: $dark;
   z-index: 300;
@@ -37,15 +37,17 @@
 
     &::-webkit-scrollbar {
       width: 5px; /* for vertical scrollbars */
-      height: 5px; /* for horizontal scrollbars */
+      height: 8px; /* for horizontal scrollbars */
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(#000, 0.1);
+      background: $scrollbar-track-color;
+      border-radius: $radius-large;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(#000, 0.3);
+      background: $scrollbar-color;
+      border-radius: $radius-large;
     }
   }
 }
@@ -56,7 +58,7 @@
 
 .inner {
   composes: scrollbars from "../../Sass/common/_base.scss";
-  padding: $padding $padding * 2;
+  padding: 15px;
   height: 100%;
   max-height: calc(100vh - #{$input-height * 3});
   overflow-y: auto;
@@ -65,20 +67,15 @@
 }
 
 .footer {
-  display: block;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  button {
+    flex: 1;
+  }
 }
 
 .body {
-  font-size: $font-size-small;
-}
-
-.btn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  padding: $padding;
-  background: rgba(#fff, 0.5);
-  text-align: center;
-  width: 100%;
-  font-size: $font-size-small;
-  color: $text-light;
-  border-radius: 0 0 $radius-small $radius-small;
+  font-size: 14px;
 }
