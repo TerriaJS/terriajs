@@ -25,6 +25,7 @@
 - Add `dash` to `OutlineStyleTraits` (only supported by line features), and `outlineStyle` to `LegendTraits`.
 - Add `MinMaxLevelMixin` to `ArcGisFeatureServerCatalogItem` - only applied when tiling requests
 - Tweaked `TableStyleMap` and `TableColorMap` conditions to handle empty `TableColumns` (to support styling `ArcGisFeatureServerCatalogItem` when tiling requests)
+- Fix bug with expanding "Developer Details" in the error modal
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18
