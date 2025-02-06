@@ -16,7 +16,10 @@ import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
-import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
+import {
+  GEOJSON_SOURCE_LAYER_NAME,
+  ProtomapsGeojsonSource
+} from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import {
   FEATURE_ID_PROP,
   getColor
@@ -1182,6 +1185,69 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(points).toBeDefined();
       expect(isDataSource(points)).toBeTruthy();
       expect(points.entities.values.length).toEqual(5);
+    });
+  });
+
+  describe("handling MultiPolygon features", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/multipolygon.geojson"
+      );
+    });
+
+    it("creates multi-polygon cesium primitives features", async function () {
+      runInAction(() =>
+        geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true)
+      );
+
+      await geojson.loadMapItems();
+      const features = geojson.mapItems[0] as CustomDataSource;
+      expect(features).toBeDefined();
+      expect(isDataSource(features)).toBeTruthy();
+      expect(features.entities.values.length).toEqual(5);
+
+      expect(features.entities.values[0].polygon).toBeDefined();
+      expect(features.entities.values[1].polygon).toBeDefined();
+      expect(features.entities.values[2].polygon).toBeDefined();
+      expect(features.entities.values[3].polyline).toBeDefined();
+      expect(features.entities.values[4].polyline).toBeDefined();
+    });
+
+    it("creates multi-polygon protomaps features", async function () {
+      await geojson.loadMapItems();
+
+      const imageryParts = geojson.mapItems[0] as ImageryParts;
+      expect(imageryParts).toBeDefined();
+      expect(ImageryParts.is(imageryParts)).toBeTruthy();
+
+      const imageryProvider =
+        imageryParts.imageryProvider as ProtomapsImageryProvider;
+      expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
+
+      const source = imageryProvider.source as ProtomapsGeojsonSource;
+      expect(source instanceof ProtomapsGeojsonSource).toBeTruthy();
+
+      const features = await source.get(
+        {
+          x: 23,
+          y: 35,
+          z: 6
+        },
+        256
+      );
+
+      expect(features.get(GEOJSON_SOURCE_LAYER_NAME)?.length).toEqual(1);
+      const feature = features.get(GEOJSON_SOURCE_LAYER_NAME)?.[0];
+      expect(feature?.geom.length).toEqual(4);
     });
   });
 

@@ -244,15 +244,17 @@ export default class ProtomapsImageryProvider
     y: number,
     level: number,
     canvas: HTMLCanvasElement,
-    request?: Request | undefined
+    request?: Request
   ) {
     if (this.softMinimumLevel && level < this.softMinimumLevel)
-      throw TerriaError.from(`Level: ${level} is below softMinimumLevel`);
+      throw TerriaError.from(
+        `Level: ${level} is below softMinimumLevel (=${this.softMinimumLevel})`
+      );
 
     const coords: Coords = { z: level, x, y };
 
     // Adapted from https://github.com/protomaps/protomaps.js/blob/master/src/frontends/leaflet.ts
-    let tile: PreparedTile | undefined = undefined;
+    let tile: PreparedTile;
 
     // Get PreparedTile from source or view
     // Here we need a little bit of extra logic for the ProtomapsGeojsonSource
@@ -275,9 +277,11 @@ export default class ProtomapsImageryProvider
       };
     } else if (this.view) {
       tile = await this.view.getDisplayTile(coords);
+    } else {
+      throw TerriaError.from(
+        `Failed to get tile - no view or appropriate source in ProtomapsImageryProvider`
+      );
     }
-
-    if (!tile) throw TerriaError.from("Failed to get tile");
 
     const tileMap = new Map<string, PreparedTile[]>().set("", [tile]);
 

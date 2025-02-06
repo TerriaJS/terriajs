@@ -26,6 +26,7 @@
 - Add `MinMaxLevelMixin` to `ArcGisFeatureServerCatalogItem` - only applied when tiling requests
 - Tweaked `TableStyleMap` and `TableColorMap` conditions to handle empty `TableColumns` (to support styling `ArcGisFeatureServerCatalogItem` when tiling requests)
 - Fix bug with expanding "Developer Details" in the error modal
+- Fix regression bug from "Update `protomaps` to `protomaps-leaflet`", GeoJson `MultiPolygon` features were being dropped
 - [The next improvement]
 
 #### 8.7.11 - 2024-12-18

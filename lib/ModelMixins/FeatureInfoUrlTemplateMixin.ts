@@ -109,7 +109,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
       const featureInfoUrlTemplate = this.featureInfoUrlTemplate;
       const proxiedFeatureInfoUrl = proxyCatalogItemUrl(
         this,
-        this.featureInfoUrlTemplate ?? "",
+        featureInfoUrlTemplate ?? "",
         "0d"
       );
       const showStringIfPropertyValueIsNull = MappableMixin.isMixedInto(this)

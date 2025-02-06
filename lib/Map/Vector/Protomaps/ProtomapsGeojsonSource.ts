@@ -3,7 +3,7 @@ import bbox from "@turf/bbox";
 import booleanIntersects from "@turf/boolean-intersects";
 import circle from "@turf/circle";
 import { Feature, featureCollection } from "@turf/helpers";
-import geojsonvt, { FeatureTypes } from "geojson-vt";
+import geojsonvt from "geojson-vt";
 import { cloneDeep } from "lodash";
 import { makeObservable, observable, runInAction } from "mobx";
 import {
@@ -203,17 +203,14 @@ export const geomTypeMap = (
 ): GeomType | null => {
   switch (type) {
     case "Point":
-      return GeomType.Point;
-    case "LineString":
-      return GeomType.Line;
-    case "Polygon":
-      return GeomType.Polygon;
     case "MultiPoint":
       return GeomType.Point;
+    case "LineString":
     case "MultiLineString":
       return GeomType.Line;
+    case "Polygon":
     case "MultiPolygon":
-      return GeomType.Line;
+      return GeomType.Polygon;
     default:
       return null;
   }
@@ -238,37 +235,74 @@ export function geojsonVtTileToProtomapsFeatures(
         maxY: -Infinity
       };
 
-      const geom = f.geometry;
-      transformedGeom = [
-        geom.map((g1) => {
-          g1 = [g1[0] * scale, g1[1] * scale];
+      // Multi-polygon
+      if (Array.isArray(f.geometry[0][0])) {
+        // Note: the type is incorrect here
+        const geom = f.geometry as any as [number, number][][];
+        transformedGeom = geom.map((g1) =>
+          g1.map((g2) => {
+            const x = g2[0];
+            const y = g2[1];
+            g2 = [x * scale, y * scale];
+            if (bbox.minX > x) {
+              bbox.minX = x;
+            }
 
-          if (bbox.minX > g1[0]) {
-            bbox.minX = g1[0];
-          }
+            if (bbox.maxX < x) {
+              bbox.maxX = x;
+            }
 
-          if (bbox.maxX < g1[0]) {
-            bbox.maxX = g1[0];
-          }
+            if (bbox.minY > y) {
+              bbox.minY = y;
+            }
 
-          if (bbox.minY > g1[1]) {
-            bbox.minY = g1[1];
-          }
+            if (bbox.maxY < y) {
+              bbox.maxY = y;
+            }
+            return new Point(x, y);
+          })
+        );
+        numVertices = transformedGeom.reduce<number>(
+          (count, current) => count + current.length,
+          0
+        );
+      }
+      // Other feature types
+      else {
+        const geom = f.geometry as [number, number][];
+        transformedGeom = [
+          geom.map((g1) => {
+            const x = g1[0];
+            const y = g1[1];
+            g1 = [x * scale, y * scale];
 
-          if (bbox.maxY < g1[1]) {
-            bbox.maxY = g1[1];
-          }
-          return new Point(g1[0], g1[1]);
-        })
-      ];
-      numVertices = transformedGeom.length;
+            if (bbox.minX > x) {
+              bbox.minX = x;
+            }
 
-      if (f.type === FeatureTypes.Unknown) return null;
+            if (bbox.maxX < x) {
+              bbox.maxX = x;
+            }
+
+            if (bbox.minY > y) {
+              bbox.minY = y;
+            }
+
+            if (bbox.maxY < y) {
+              bbox.maxY = y;
+            }
+            return new Point(x, y);
+          })
+        ];
+        numVertices = transformedGeom.length;
+      }
+
+      if (f.type === 0) return null;
 
       const geomType = {
-        [FeatureTypes.Point]: GeomType.Point,
-        [FeatureTypes.Linestring]: GeomType.Line,
-        [FeatureTypes.Polygon]: GeomType.Polygon
+        [1]: GeomType.Point,
+        [2]: GeomType.Line,
+        [3]: GeomType.Polygon
       }[f.type];
 
       const feature: ProtomapsFeature = {

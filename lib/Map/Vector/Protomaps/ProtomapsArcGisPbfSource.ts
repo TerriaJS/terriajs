@@ -66,8 +66,7 @@ export class ProtomapsArcGisPbfSource implements TileSource {
     c: Zxy,
     tileSizePixels: number,
     // TODO add support for canceling requests (through cesium)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    request?: Request
+    _request?: Request
   ): Promise<Map<string, ProtomapsFeature[]>> {
     const rect = this.tilingScheme.tileXYToNativeRectangle(c.x, c.y, c.z);
 
