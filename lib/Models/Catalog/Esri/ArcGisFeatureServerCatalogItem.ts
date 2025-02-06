@@ -10,10 +10,10 @@ import proj4 from "proj4";
 import Color from "terriajs-cesium/Source/Core/Color";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
+import Result from "../../../Core/Result";
 import { networkRequestError } from "../../../Core/TerriaError";
 import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
@@ -53,7 +53,6 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import CommonStrata from "../../Definition/CommonStrata";
 
 interface DocumentInfo {
   Author?: string;
@@ -679,7 +678,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     const getEsriLayerJson = async (resultOffset?: number) => {
       const url = proxyCatalogItemUrl(
         this,
-        this.buildEsriJsonUrl(resultOffset).toString()
+        this.buildEsriJsonUrl(resultOffset).throwIfUndefined().toString()
       );
       return await loadJson(url);
     };
@@ -755,12 +754,18 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   @computed get imageryProvider() {
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
+    const url = this.buildEsriJsonUrl()
+      .raiseError(this.terria, "Failed to create valid FeatureServer URL")
+      ?.toString();
+
+    if (!url) return;
+
     let provider = new ProtomapsImageryProvider({
       maximumZoom: this.getMaximumLevel(false),
       minimumZoom: this.getMinimumLevel(false),
       terria: this.terria,
       data: new ProtomapsArcGisPbfSource({
-        url: this.buildEsriJsonUrl().toString(),
+        url: url,
         outFields: [...this.outFields],
         featuresPerTileRequest: this.featuresPerTileRequest,
         maxRecordCountFactor: this.maxRecordCountFactor,
@@ -785,6 +790,8 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   get mapItems() {
     // If we aren't tiling requests, then we use GeoJsonMixin forceLoadGeojsonData
     if (!this.tileRequests) return super.mapItems;
+
+    if (!this.imageryProvider) return [];
 
     return [
       {
@@ -824,14 +831,16 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     const layerId = urlComponents.layerId;
 
     if (!isDefined(layerId)) {
-      throw networkRequestError({
-        title: i18next.t(
-          "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
-        ),
-        message: i18next.t(
-          "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
-        )
-      });
+      return Result.error(
+        networkRequestError({
+          title: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+          ),
+          message: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+          )
+        })
+      );
     }
 
     // We used to make a call to a different ArcGIS API endpoint
@@ -854,7 +863,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         .addQuery("resultOffset", resultOffset);
     }
 
-    return uri;
+    return new Result(uri);
   }
 }
 
