@@ -1248,6 +1248,13 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(features.get(GEOJSON_SOURCE_LAYER_NAME)?.length).toEqual(1);
       const feature = features.get(GEOJSON_SOURCE_LAYER_NAME)?.[0];
       expect(feature?.geom.length).toEqual(4);
+
+      expect(feature?.bbox).toEqual({
+        maxX: 288,
+        maxY: 204.3125,
+        minX: -32,
+        minY: -32
+      });
     });
   });
 

@@ -238,12 +238,12 @@ export function geojsonVtTileToProtomapsFeatures(
       // Multi-polygon
       if (Array.isArray(f.geometry[0][0])) {
         // Note: the type is incorrect here
-        const geom = f.geometry as any as [number, number][][];
+        const geom = f.geometry as unknown as [number, number][][];
         transformedGeom = geom.map((g1) =>
           g1.map((g2) => {
-            const x = g2[0];
-            const y = g2[1];
-            g2 = [x * scale, y * scale];
+            const x = g2[0] * scale;
+            const y = g2[1] * scale;
+
             if (bbox.minX > x) {
               bbox.minX = x;
             }
@@ -272,9 +272,8 @@ export function geojsonVtTileToProtomapsFeatures(
         const geom = f.geometry as [number, number][];
         transformedGeom = [
           geom.map((g1) => {
-            const x = g1[0];
-            const y = g1[1];
-            g1 = [x * scale, y * scale];
+            const x = g1[0] * scale;
+            const y = g1[1] * scale;
 
             if (bbox.minX > x) {
               bbox.minX = x;
