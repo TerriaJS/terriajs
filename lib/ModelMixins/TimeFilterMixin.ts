@@ -65,7 +65,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
             const coords = coordinatesFromTraits(this.timeFilterCoordinates);
             if (coords) {
-              this.setTimeFilterFromLocation(coords);
+              await this.setTimeFilterFromLocation(coords);
             }
             disposeListener();
           })

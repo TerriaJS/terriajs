@@ -89,7 +89,7 @@ export default async function addUserFiles(
     }
 
     tempCatalogItem.loadPromise = loadPromise;
-    terria.workbench.add(tempCatalogItem);
+    await terria.workbench.add(tempCatalogItem);
     tempCatalogItemList.push(tempCatalogItem);
   }
 

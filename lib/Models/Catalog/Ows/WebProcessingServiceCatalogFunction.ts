@@ -349,7 +349,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       return;
     }
 
-    const inputValue = await Promise.resolve(result.inputValue);
+    const inputValue = await result.inputValue;
     if (!isDefined(inputValue)) {
       return;
     }
