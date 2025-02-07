@@ -132,8 +132,8 @@
     "mustache": "^2.2.1",
     "node-fetch": "^2.6.1",
     "papaparse": "^5.2.0",
-    "pmtiles": "^3.0.7",
     "pbf": "^3.0.1",
+    "pmtiles": "^3.0.7",
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "proj4-fully-loaded": "^0.2.0",
@@ -171,7 +171,8 @@
     "urijs": "^1.18.12",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-server": "^5.1.0",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
