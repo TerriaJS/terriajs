@@ -63,7 +63,7 @@ const SearchResult: React.FC<SearchResultProps> = (
               centered
               justifySpaceBetween
             >
-              {props.icon && (
+              {props.icon ? (
                 <StyledIcon
                   // (You need light text on a dark theme, and vice versa)
                   fillColor={isLightTheme && theme.textDarker}
@@ -71,7 +71,7 @@ const SearchResult: React.FC<SearchResultProps> = (
                   styledWidth={"16px"}
                   glyph={Icon.GLYPHS[props.icon]}
                 />
-              )}
+              ) : null}
               <Spacing right={2} />
               <BoxSpan fullWidth>
                 <TextSpan noFontSize textAlignLeft>

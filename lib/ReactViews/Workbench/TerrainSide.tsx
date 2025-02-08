@@ -128,7 +128,7 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
         </Box>
         <Spacing bottom={1} />
 
-        {supportsDepthTestAgainstTerrain && (
+        {supportsDepthTestAgainstTerrain ? (
           <Checkbox
             id="depthTestAgainstTerrain"
             isChecked={depthTestAgainstTerrainEnabled}
@@ -137,7 +137,7 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
           >
             <TextSpan>{t("settingPanel.terrain.hideUnderground")}</TextSpan>
           </Checkbox>
-        )}
+        ) : null}
       </Box>
     );
   }

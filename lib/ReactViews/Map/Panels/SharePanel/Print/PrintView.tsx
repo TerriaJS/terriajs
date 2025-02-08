@@ -197,7 +197,7 @@ const PrintView = (props: Props) => {
           </div>
         </section>
         <section className="PrintView__source">
-          {shareLink && <PrintSource link={shareLink} />}
+          {shareLink ? <PrintSource link={shareLink} /> : null}
         </section>
         <section>
           <h2>Datasets</h2>

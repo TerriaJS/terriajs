@@ -96,7 +96,9 @@ const Select: React.FC<SelectProps> = (props) => {
   const theme: any = useTheme();
   return (
     <Box fullWidth {...boxProps}>
-      {leftIcon && <LeftIconPositioning>{leftIcon()}</LeftIconPositioning>}
+      {leftIcon ? (
+        <LeftIconPositioning>{leftIcon()}</LeftIconPositioning>
+      ) : null}
       <StyledSelect
         leftIcon={leftIcon}
         paddingForLeftIcon={paddingForLeftIcon}

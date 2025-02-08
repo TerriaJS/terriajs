@@ -118,7 +118,7 @@ class TooltipGroup extends React.PureComponent {
     const { name, items } = this.props;
     return (
       <div className={Styles.group}>
-        {name && <div className={Styles.groupName}>{name}</div>}
+        {name ? <div className={Styles.groupName}>{name}</div> : null}
         {items.map((item) => (
           <TooltipItem key={`tooltipitem-${item.chartItem.key}`} item={item} />
         ))}

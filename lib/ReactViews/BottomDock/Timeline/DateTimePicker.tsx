@@ -650,7 +650,7 @@ class DateTimePicker extends React.Component<PropsType> {
             event.stopPropagation();
           }}
         >
-          {this.props.isOpen && (
+          {this.props.isOpen ? (
             <div
               css={`
                 background: ${(p: any) => p.theme.dark};
@@ -722,7 +722,7 @@ class DateTimePicker extends React.Component<PropsType> {
                   datesObject[this.currentDateIndice.century!]
                 )}
             </div>
-          )}
+          ) : null}
         </div>
       );
     } else {

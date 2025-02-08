@@ -408,7 +408,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
         </StyledCompassRotationMarker>
 
         {/* Gyroscope guidance menu */}
-        {showGuidance && (
+        {showGuidance ? (
           <FadeIn isVisible={active}>
             <Box
               css={`
@@ -427,7 +427,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
               />
             </Box>
           </FadeIn>
-        )}
+        ) : null}
       </StyledCompass>
     );
   }

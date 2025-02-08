@@ -63,7 +63,7 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
         )}
       </RawButton>
 
-      {advancedOptions && (
+      {advancedOptions ? (
         <>
           <StyledHr />
           <Box column>
@@ -92,7 +92,7 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
             <EmbedSection shareUrl={shareUrl?.current} />
           </Box>
         </>
-      )}
+      ) : null}
     </Box>
   );
 };

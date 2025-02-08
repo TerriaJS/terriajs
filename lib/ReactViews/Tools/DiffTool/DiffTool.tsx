@@ -507,7 +507,7 @@ class Main extends React.Component<MainPropsType> {
             isMapFullScreen={viewState.isMapFullScreen}
             styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
           >
-            {isShowingDiff && (
+            {isShowingDiff ? (
               <>
                 <Box centered left>
                   <BackButton
@@ -535,7 +535,7 @@ class Main extends React.Component<MainPropsType> {
                 </Text>
                 <Spacing bottom={2} />
               </>
-            )}
+            ) : null}
             <Text textLight>{t("diffTool.instructions.paneDescription")}</Text>
             <Spacing bottom={3} />
             <LocationAndDatesDisplayBox>
@@ -561,7 +561,7 @@ class Main extends React.Component<MainPropsType> {
               <Box>
                 <Text medium>{t("diffTool.labels.dates")}:</Text>
                 <Box column alignItemsFlexStart>
-                  {this.leftDate && (
+                  {this.leftDate ? (
                     <Text large>
                       (A){" "}
                       {dateFormat(
@@ -569,7 +569,7 @@ class Main extends React.Component<MainPropsType> {
                         "dd/mm/yyyy"
                       )}
                     </Text>
-                  )}
+                  ) : null}
                   {!this.leftDate && (
                     <RawButton ref={this.openLeftDatePickerButton}>
                       <TextSpan isLink small>
@@ -578,7 +578,7 @@ class Main extends React.Component<MainPropsType> {
                     </RawButton>
                   )}
                   <Spacing bottom={1} />
-                  {this.rightDate && (
+                  {this.rightDate ? (
                     <Text large>
                       (B){" "}
                       {dateFormat(
@@ -586,7 +586,7 @@ class Main extends React.Component<MainPropsType> {
                         "dd/mm/yyyy"
                       )}
                     </Text>
-                  )}
+                  ) : null}
                   {!this.rightDate && (
                     <RawButton ref={this.openRightDatePickerButton}>
                       <TextSpan isLink small>
@@ -594,13 +594,15 @@ class Main extends React.Component<MainPropsType> {
                       </TextSpan>
                     </RawButton>
                   )}
-                  {isShowingDiff === false && this.leftDate && this.rightDate && (
+                  {isShowingDiff === false &&
+                  this.leftDate &&
+                  this.rightDate ? (
                     <RawButton onClick={this.unsetDates}>
                       <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
                       </TextSpan>
                     </RawButton>
-                  )}
+                  ) : null}
                 </Box>
               </Box>
             </LocationAndDatesDisplayBox>
@@ -643,12 +645,12 @@ class Main extends React.Component<MainPropsType> {
                     )
                   )}
                 </Selector>
-                {this.previewLegendUrl && (
+                {this.previewLegendUrl ? (
                   <>
                     <Spacing bottom={2} />
                     <LegendImage width="100%" src={this.previewLegendUrl} />
                   </>
-                )}
+                ) : null}
               </>
             )}
             <Spacing bottom={2} />
@@ -667,12 +669,12 @@ class Main extends React.Component<MainPropsType> {
                 </option>
               ))}
             </Selector>
-            {isShowingDiff && this.diffLegendUrl && (
+            {isShowingDiff && this.diffLegendUrl ? (
               <>
                 <LegendImage width="100%" src={this.diffLegendUrl} />
                 <Spacing bottom={4} />
               </>
-            )}
+            ) : null}
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
@@ -704,7 +706,7 @@ class Main extends React.Component<MainPropsType> {
             )}
           </MainPanel>
         </DiffAccordion>
-        {isShowingDiff && (
+        {isShowingDiff ? (
           <CloseDifferenceButton
             primary
             rounded
@@ -724,7 +726,7 @@ class Main extends React.Component<MainPropsType> {
           >
             Close
           </CloseDifferenceButton>
-        )}
+        ) : null}
         {!isShowingDiff && (
           <LocationPicker
             terria={terria}
@@ -819,7 +821,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
           </RawButton>
         </Box>
       </DiffAccordionToggle>
-      {showChildren && props.children}
+      {showChildren ? props.children : null}
     </DiffAccordionWrapper>
   );
 };
@@ -880,7 +882,7 @@ const Selector = (props: any) => (
       </Text>
       <Spacing bottom={1} />
       <Select {...props}>{props.children}</Select>
-      {props.spacingBottom && <Spacing bottom={2} />}
+      {props.spacingBottom ? <Spacing bottom={2} /> : null}
     </label>
   </Box>
 );
