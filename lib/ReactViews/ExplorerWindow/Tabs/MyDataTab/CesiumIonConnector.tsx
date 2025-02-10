@@ -692,7 +692,7 @@ function siteMatchesAllowedUrls(token: CesiumIonToken) {
 
     try {
       allowed = new URI(allowedUrl);
-    } catch (e) {
+    } catch (_e) {
       continue;
     }
 

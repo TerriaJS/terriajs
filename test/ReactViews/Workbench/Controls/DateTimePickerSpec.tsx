@@ -12,7 +12,7 @@ describe("DateTimePicker", function () {
   let wmsItem: WebMapServiceCatalogItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

@@ -1,8 +1,7 @@
-/* eslint-disable camelcase */
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import tinymce from "tinymce"; // must import despite being unused
 /* Required TinyMCE components */
 import "tinymce/icons/default";
@@ -29,7 +28,7 @@ export default function TinyEditor(props) {
 
   return (
     <Editor
-      onInit={(evt, editor) => (editorRef.current = editor)}
+      onInit={(_evt, editor) => (editorRef.current = editor)}
       value={props.html}
       onEditorChange={props.onChange}
       init={{

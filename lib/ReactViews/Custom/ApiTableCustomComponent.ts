@@ -69,7 +69,7 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<A
 
     try {
       parsed.apiTableCatalogItemJson = JSON.parse(jsonAttr);
-    } catch (e) {
+    } catch (_e) {
       console.error("Couldn't parse json for ApiTableChartCustomComponent");
     }
 

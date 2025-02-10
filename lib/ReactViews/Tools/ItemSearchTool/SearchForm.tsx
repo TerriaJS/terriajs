@@ -1,10 +1,10 @@
-import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
 import React, { useEffect, useState } from "react";
 import {
   useTranslation,
   WithTranslation,
-  withTranslation
+  withTranslation,
+  TFunction
 } from "react-i18next";
 import ReactSelect, {
   ActionMeta,
@@ -129,11 +129,12 @@ const SearchForm: React.FC<SearchFormProps> = (props) => {
   );
 };
 
-interface ParameterProps extends WithT {
+interface ParameterProps {
   parameter: ItemSearchParameter;
   onChange: (value: any) => void;
   value?: any;
   disabled: boolean;
+  t: TFunction;
 }
 
 const Parameter: React.FC<ParameterProps> = (props) => {
@@ -148,10 +149,11 @@ const Parameter: React.FC<ParameterProps> = (props) => {
   }
 };
 
-interface NumericParameterProps extends WithT {
+interface NumericParameterProps {
   parameter: NumericItemSearchParameter;
   onChange: (value: { start?: number; end?: number } | undefined) => void;
   value?: { start: number; end: number };
+  t: TFunction;
 }
 
 export const NumericParameter: React.FC<NumericParameterProps> = (props) => {

@@ -116,7 +116,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       }
     });
 
-    it("supports zooming to extent", async function () {
+    it("supports zooming to extent", function () {
       expect(item.disableZoomTo).toBeFalsy();
     });
 

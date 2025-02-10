@@ -34,7 +34,7 @@ export default class NotificationState {
   }
 
   @action
-  addNotificationToQueue(notification: Notification) {
+  addNotificationToQueue(notification: Notification): void {
     const alreadyQueued =
       this.notifications.filter(
         (item) =>

@@ -49,8 +49,8 @@ Please note this documentation is still being developed, and does not cover ever
 that is possible.
 The definitive source of what you can do with `tableStyle` is this pair:
 
--   [TableStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableStyle.js)
--   [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js)
+- [TableStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableStyle.js)
+- [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js)
 
 ## Referencing your data
 
@@ -132,9 +132,9 @@ If you want to change the appearance of individual columns, use `tableStyle`'s `
 
 This example shows a few possibilities:
 
--   A column called "original name" is displayed with the name "better name".
--   The legend for that column is shown without any decimal places (`maximumFractionDigits` 0).
--   A column in the original data called "bad" is hidden from the workbench.
+- A column called "original name" is displayed with the name "better name".
+- The legend for that column is shown without any decimal places (`maximumFractionDigits` 0).
+- A column in the original data called "bad" is hidden from the workbench.
 
 The full list of options is in [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js).
 

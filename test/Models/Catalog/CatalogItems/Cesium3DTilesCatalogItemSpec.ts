@@ -81,7 +81,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   describe("cesiumTileStyle", function () {
     let style: any;
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -144,9 +144,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
         spyOn(IonResource, "fromAssetId").and.callThrough();
         try {
           await item.loadMapItems();
-        } catch {
-          /* eslint-disable-line no-empty */
-        }
+        } catch {}
         expect(IonResource.fromAssetId).toHaveBeenCalledWith(4242, {
           accessToken: "fakeToken",
           server: "fakeServer"
@@ -164,9 +162,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       });
       try {
         await item.loadMapItems();
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       const tileset = item.mapItems[0] as Cesium3DTileset;
       expect(tileset.maximumScreenSpaceError).toBe(3);
     });
@@ -177,9 +173,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
     beforeEach(async function () {
       try {
         await item.loadMapItems();
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       // observe mapItems
       dispose = reaction(
         () => item.mapItems,
@@ -268,7 +262,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             ).toBeTruthy();
           });
 
-          it("computes a new model matrix from the given transformations", async function () {
+          it("computes a new model matrix from the given transformations", function () {
             item.setTrait(
               CommonStrata.user,
               "rotation",

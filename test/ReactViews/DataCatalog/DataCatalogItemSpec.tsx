@@ -20,7 +20,7 @@ describe("DataCatalogItem", () => {
   let wmsItem: WebMapServiceCatalogItem;
   let removable: boolean;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     terria = new Terria({
       baseUrl: "./"
     });

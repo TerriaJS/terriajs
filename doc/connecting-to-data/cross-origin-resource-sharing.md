@@ -6,7 +6,7 @@ Failing to do this may result in an error like this:
 
 Next, you should add servers that _do_ support Cross-Origin Resource Sharing (CORS) to the `corsDomains` list in your [initialization file](../customizing/initialization-files.md). Servers in this list are contacted directly instead of going through the proxy... except:
 
--   if an HTTPS web page is accessing an HTTP server (this way we avoid a mixed content warning from the browser).
+- if an HTTPS web page is accessing an HTTP server (this way we avoid a mixed content warning from the browser).
 
 If your server does _not_ support CORS, then you still need to add it to the `allowProxyFor` whitelist, but do not add it to the `corsDomains` list. It will then be proxied.
 
