@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Styles from "./measurable-panel.scss";
 import classNames from "classnames";
 import Icon, { StyledIcon } from "../../Styled/Icon";
@@ -17,6 +17,7 @@ import { useTheme } from "styled-components";
 import { MeasurableGeometry } from "../../ViewModels/MeasurableGeometryManager";
 import MeasurableDownload from "./MeasurableDownload";
 import i18next from "i18next";
+import MeasurablePanelManager from "../Custom/MeasurablePanelManager";
 
 const DragWrapper = require("../DragWrapper");
 
@@ -29,6 +30,12 @@ const MeasurablePanel = observer((props: Props) => {
   const { terria, viewState } = props;
 
   const theme = useTheme();
+
+  const [highlightedRow, setHighlightedRow] = React.useState<number | null>(
+    null
+  );
+
+  MeasurablePanelManager.initialize(terria);
 
   const [samplingPathStep, setSamplingPathStep] = React.useState(
     terria.measurableGeomSamplingStep
@@ -43,6 +50,7 @@ const MeasurablePanel = observer((props: Props) => {
   });
 
   const close = action(() => {
+    MeasurablePanelManager.removeAllMarkers();
     viewState.measurablePanelIsVisible = false;
   });
 
@@ -406,7 +414,92 @@ const MeasurablePanel = observer((props: Props) => {
     );
   };
 
+  useEffect(() => {
+    if (viewState.selectedStopPointIdx !== null) {
+      setHighlightedRow(viewState.selectedStopPointIdx);
+    } else {
+      setHighlightedRow(null);
+    }
+    terria.currentViewer.notifyRepaintRequired();
+  }, [terria.currentViewer, viewState.selectedStopPointIdx]);
+
+  useEffect(() => {
+    const rangeThreshold = 0.0001;
+
+    const handleMouseProximity = () => {
+      const mouseCoords = terria.currentViewer.mouseCoords.cartographic;
+      if (!mouseCoords || !terria.measurableGeom) return;
+
+      const findNearbyPoint = (
+        points: Cartographic[],
+        action: (point: Cartographic | null, idx: number | null) => void
+      ) => {
+        const nearbyPoint = points.find((point) => {
+          const latDiff = Math.abs(mouseCoords.latitude - point.latitude);
+          const lonDiff = Math.abs(mouseCoords.longitude - point.longitude);
+          return latDiff <= rangeThreshold && lonDiff <= rangeThreshold;
+        });
+
+        if (nearbyPoint) {
+          const idx = points.indexOf(nearbyPoint);
+          action(nearbyPoint, idx);
+        } else {
+          action(null, null);
+        }
+      };
+
+      if (terria.measurableGeom.sampledPoints) {
+        findNearbyPoint(terria.measurableGeom.sampledPoints, (point, idx) => {
+          if (point) {
+            MeasurablePanelManager.addMarker(point);
+            viewState.setSelectedSampledPointIdx(idx);
+          } else {
+            MeasurablePanelManager.removeAllMarkers();
+            viewState.setSelectedSampledPointIdx(null);
+          }
+        });
+      }
+
+      if (terria.measurableGeom.stopPoints) {
+        findNearbyPoint(terria.measurableGeom.stopPoints, (point, idx) => {
+          if (point) {
+            MeasurablePanelManager.addMarker(point);
+            setHighlightedRow(idx);
+            viewState.setSelectedStopPointIdx(idx);
+          } else {
+            setHighlightedRow(null);
+            viewState.setSelectedStopPointIdx(null);
+          }
+        });
+      }
+
+      terria.currentViewer.notifyRepaintRequired();
+    };
+
+    const disposer =
+      terria.currentViewer.mouseCoords.updateEvent.addEventListener(
+        handleMouseProximity
+      );
+
+    return () => disposer();
+  }, [terria.cesium, terria.currentViewer, terria.measurableGeom, viewState]);
+
   const renderStepDetails = () => {
+    const updateChartPoint = (idx: number) => {
+      setHighlightedRow(idx);
+      viewState.setSelectedStopPointIdx(idx);
+      const coords = terria?.measurableGeom?.stopPoints?.[idx];
+      if (!coords) return;
+      if (!terria.cesium) return;
+      MeasurablePanelManager.addMarker(coords);
+    };
+
+    const handleMouseLeave = () => {
+      setHighlightedRow(null);
+      viewState.setSelectedStopPointIdx(null);
+      MeasurablePanelManager.removeAllMarkers();
+    };
+
     return (
       <>
         <Text textLight style={{ marginLeft: 1 }} title="">
@@ -439,8 +532,18 @@ const MeasurablePanel = observer((props: Props) => {
               {terria?.measurableGeom?.stopPoints &&
                 terria.measurableGeom.stopPoints.length > 0 &&
                 terria.measurableGeom.stopPoints.map((point, idx, array) => {
+                  const isHighlighted = idx === highlightedRow;
                   return (
-                    <tr key={idx}>
+                    <tr
+                      key={idx}
+                      onMouseOver={() => updateChartPoint(idx)}
+                      onMouseLeave={() => handleMouseLeave()}
+                      style={{
+                        backgroundColor: isHighlighted
+                          ? theme.colorPrimary
+                          : "transparent"
+                      }}
+                    >
                       <td>{idx + 1}</td>
                       <td>{`${point.height.toFixed(0)} m`}</td>
                       <td>
