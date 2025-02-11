@@ -5,11 +5,11 @@
 - **Breaking changes:**
   - Upgrade Webpack to version 5
     Related changes:
-     - Converted remaining CJS style modules and `require()` calls to ESM and `import` statements.
-     - Removed babel transformation to CJS for default build (we still use it for nodejs).
-     - Removed several other babel transforms (for JS features that should now be widely supported).
-     - Refactor and clean up configureWebpack.js. `configureWebpack()` now accepts a single object parameter.
-     - Removed code for hot reloading
+    - Converted remaining CJS style modules and `require()` calls to ESM and `import` statements.
+    - Removed babel transformation to CJS for default build (we still use it for nodejs).
+    - Removed several other babel transforms (for JS features that should now be widely supported).
+    - Refactor and clean up configureWebpack.js. `configureWebpack()` now accepts a single object parameter.
+    - Removed code for hot reloading
   - Upgraded `sass` to version 1.80+
     - Migrated SASS files to use modern API (by running the `sass-migrator` script)
     - Replaced webpack aliases `~terriajs-variables` and `~terriajs-mixins` with respective relative path. This was necessary to run the migrator. It also results in simpler webpack configuration.
