@@ -160,7 +160,7 @@
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.9",
     "svg-sprite-loader": "^6.0.11",
-    "terriajs-cesium": "8.0.1",
+    "terriajs-cesium": "8.0.2",
     "terriajs-cesium-widgets": "5.0.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "terriajs-tiff-imagery-provider": "2.13.3-webpack5-3",
