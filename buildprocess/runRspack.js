@@ -1,10 +1,10 @@
 const PluginError = require("plugin-error");
 
 /**
- * Run webpack once and print out stats
+ * Run rspack once and print out stats
  */
-function runWebpack(webpack, config, doneCallback) {
-  const wp = webpack(config);
+function runRspack(rspack, config, doneCallback) {
+  const wp = rspack(config);
   wp.run(function (err, stats) {
     if (stats) {
       // Fairly verbose output. See https://webpack.github.io/docs/node.js-api.html#stats-tojson for options.
@@ -35,4 +35,4 @@ function runWebpack(webpack, config, doneCallback) {
   });
 }
 
-module.exports = runWebpack;
+module.exports = runRspack;

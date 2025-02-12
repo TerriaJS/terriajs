@@ -1,11 +1,15 @@
 /**
- * Webpack config for building specs
+ * Rspack config for building specs
  */
 
+// @ts-check
+
+"use strict";
+
 const glob = require("fast-glob");
-const configureWebpack = require("./configureWebpack");
+const { CssExtractRspackPlugin } = require("@rspack/core");
+const configureRspack = require("./configureRspack");
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const testGlob = [
   "./test/SpecMain.ts",
@@ -17,10 +21,11 @@ const testGlob = [
 const files = glob.sync(testGlob);
 console.log(files);
 
-module.exports = function (devMode) {
+module.exports = function (/** @type {boolean} */ devMode) {
   const terriaJSBasePath = path.resolve(__dirname, "../");
 
   // base config for specs
+  /** @type {import('@rspack/cli').Configuration} */
   const config = {
     mode: devMode ? "development" : "production",
     entry: files,
@@ -32,9 +37,8 @@ module.exports = function (devMode) {
     // Use eval cheap module source map for quicker incremental tests
     devtool: devMode ? "eval-cheap-module-source-map" : "source-map",
     devServer: {
-      stats: "minimal",
-      port: 3002,
-      contentBase: "wwwroot/"
+      port: 3002
+      // contentBase: "wwwroot/"
     },
     externals: {
       cheerio: "window",
@@ -47,7 +51,7 @@ module.exports = function (devMode) {
       modules: ["node_modules"]
     },
     plugins: [
-      new MiniCssExtractPlugin({
+      new CssExtractRspackPlugin({
         ignoreOrder: true
       })
     ],
@@ -62,11 +66,25 @@ module.exports = function (devMode) {
       ]
     }
   };
+  if (devMode) {
+    // Enable cache with devMode.
+    config.experiments = {
+      cache: {
+        type: "persistent",
+        buildDependencies: [
+          __filename,
+          path.join(__dirname, "configureRspack.js"),
+          path.join(__dirname, "..", "tsconfig.json"),
+          path.join(__dirname, "..", "tsconfig-node.json")
+        ]
+      }
+    };
+  }
 
-  return configureWebpack({
+  return configureRspack({
     terriaJSBasePath,
     config,
     devMode,
-    MiniCssExtractPlugin
+    CssExtractRspackPlugin
   });
 };

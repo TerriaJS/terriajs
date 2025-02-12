@@ -69,8 +69,8 @@ async function download(items: TableMixin.Instance[]) {
   const synthesized = synthesizeNameAndValueArrays(items);
 
   // Could implement this using TaskProcessor, but requires webpack magic.
-  const worker = await import("worker-loader!./downloadHrefWorker").then(
-    (labelLayoutWorker) => new labelLayoutWorker.default()
+  const worker = new Worker(
+    new URL("./downloadHrefWorker.js", import.meta.url)
   );
 
   // console.log('names and value arrays', synthesized.names, synthesized.values);
