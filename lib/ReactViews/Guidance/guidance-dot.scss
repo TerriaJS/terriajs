@@ -1,6 +1,6 @@
-@import "~terriajs-mixins";
+@use "../../Sass/common/_mixins";
 
-@include keyframes(fade-out) {
+@include mixins.keyframes(fade-out) {
   0% {
     height: 10px;
     width: 10px;
@@ -31,7 +31,7 @@
     opacity: 1;
   }
 }
-@include keyframes(fade-out-clone) {
+@include mixins.keyframes(fade-out-clone) {
   0% {
     opacity: 0;
   }
@@ -78,7 +78,7 @@
   width: 10px;
   transform: translate(-50%, -50%);
 
-  @include animation("fade-out");
+  @include mixins.animation("fade-out");
   // animation-timing-function: cubic-bezier(1, -0.56, 0.78, 0.95);
   // animation-timing-function: cubic-bezier(0.24, 1.02, 0.92, 0.91);
   // animation-timing-function: ease-out;
@@ -97,7 +97,7 @@
 
 .innerClone {
   composes: inner;
-  @include animation("fade-out-clone");
+  @include mixins.animation("fade-out-clone");
   animation-timing-function: cubic-bezier(0.98, 0.72, 0.44, 0.99);
   animation-duration: 3s;
   animation-iteration-count: infinite;

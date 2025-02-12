@@ -1,9 +1,12 @@
-var notifier = require("node-notifier");
+const notifier = require("node-notifier");
 
+/**
+ * Start webpack in watch mode
+ */
 function watchWebpack(webpack, config, doneCallback) {
   // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
   // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
-  var wp = webpack(config);
+  const wp = webpack(config);
   wp.hooks.watchRun.tap("NoteStart", function () {
     console.log("STARTING INCREMENTAL WEBPACK");
   });
@@ -23,7 +26,7 @@ function watchWebpack(webpack, config, doneCallback) {
       );
       console.log("DONE INCREMENTAL WEBPACK");
 
-      var jsonStats = stats.toJson();
+      const jsonStats = stats.toJson();
       if (err || (jsonStats.errors && jsonStats.errors.length > 0)) {
         notifier.notify({
           title: "Error building TerriaJS specs",

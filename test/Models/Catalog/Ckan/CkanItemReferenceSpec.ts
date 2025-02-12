@@ -5,10 +5,10 @@ import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapS
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 
-const taxationStatisticsPackage = require("../../../../wwwroot/test/CKAN/taxation-statistics-package.json");
-const taxationStatisticsWmsResource = require("../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json");
-const vicWmsLayerResource = require("../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json");
-const wmsNoLayerResource = require("../../../../wwwroot/test/CKAN/wms-no-layer-resource.json");
+import taxationStatisticsPackage from "../../../../wwwroot/test/CKAN/taxation-statistics-package.json";
+import taxationStatisticsWmsResource from "../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json";
+import vicWmsLayerResource from "../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json";
+import wmsNoLayerResource from "../../../../wwwroot/test/CKAN/wms-no-layer-resource.json";
 
 describe("CkanItemReference", function () {
   let terria: Terria;
@@ -30,24 +30,24 @@ describe("CkanItemReference", function () {
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/package_show?id=tax-stats-package"
-    ).andReturn({ responseText: JSON.stringify(taxationStatisticsPackage) });
+    ).andReturn({ responseJSON: taxationStatisticsPackage });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=tax-stats-wms-resource"
     ).andReturn({
-      responseText: JSON.stringify(taxationStatisticsWmsResource)
+      responseJSON: taxationStatisticsWmsResource
     });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=wms-no-layers-resource"
     ).andReturn({
-      responseText: JSON.stringify(wmsNoLayerResource)
+      responseJSON: wmsNoLayerResource
     });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=vic-wms-resource"
     ).andReturn({
-      responseText: JSON.stringify(vicWmsLayerResource)
+      responseJSON: vicWmsLayerResource
     });
   });
 

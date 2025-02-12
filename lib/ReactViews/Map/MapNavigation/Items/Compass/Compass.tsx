@@ -9,8 +9,8 @@
  * styles, and will be leaving it as is for now
  */
 //
-import { computed, runInAction, when } from "mobx";
 import debounce from "lodash-es/debounce";
+import { computed, runInAction, when } from "mobx";
 import React from "react";
 import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
@@ -18,21 +18,22 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
+import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
+import compassRotationMarker from "../../../../../../wwwroot/images/compass-rotation-marker.svg";
 import isDefined from "../../../../../Core/isDefined";
 import Terria from "../../../../../Models/Terria";
 import ViewState from "../../../../../ReactViewModels/ViewState";
 import Box from "../../../../../Styled/Box";
 import Icon, { StyledIcon } from "../../../../../Styled/Icon";
-import { GyroscopeGuidance } from "./GyroscopeGuidance";
 import { withTerriaRef } from "../../../../HOCs/withTerriaRef";
 import FadeIn from "../../../../Transitions/FadeIn/FadeIn";
-import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
+import { GyroscopeGuidance } from "./GyroscopeGuidance";
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
@@ -381,7 +382,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
         <StyledCompassRotationMarker
           title={description}
           style={{
-            backgroundImage: require("../../../../../../wwwroot/images/compass-rotation-marker.svg")
+            backgroundImage: compassRotationMarker
           }}
           onMouseOver={() => this.setState({ active: true })}
           onMouseOut={() => {

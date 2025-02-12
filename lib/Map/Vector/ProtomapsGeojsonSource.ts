@@ -1,5 +1,5 @@
 import Point from "@mapbox/point-geometry";
-import geojsonvt, { FeatureTypes } from "geojson-vt";
+import geojsonvt from "geojson-vt";
 import { makeObservable, observable, runInAction } from "mobx";
 import {
   Bbox,
@@ -127,12 +127,12 @@ export class ProtomapsGeojsonSource implements TileSource {
             ];
             numVertices = transformedGeom.length;
 
-            if (f.type === FeatureTypes.Unknown) return null;
+            if (f.type === geojsonvt.FeatureTypes.Unknown) return null;
 
             const geomType = {
-              [FeatureTypes.Point]: GeomType.Point,
-              [FeatureTypes.Linestring]: GeomType.Line,
-              [FeatureTypes.Polygon]: GeomType.Polygon
+              [geojsonvt.FeatureTypes.Point]: GeomType.Point,
+              [geojsonvt.FeatureTypes.Linestring]: GeomType.Line,
+              [geojsonvt.FeatureTypes.Polygon]: GeomType.Polygon
             }[f.type];
 
             const feature: ProtomapsFeature = {

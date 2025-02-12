@@ -1,16 +1,16 @@
-@import "../../Sass/common/mixins";
-@import "~terriajs-variables";
+@use "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
 
 .workBench {
   // position: relative;
 }
 .workbenchEmpty {
-  color: $text-light;
-  font-size: $font-size-mid-small;
-  padding: $padding;
-  background: $dark-with-overlay;
+  color: variables.$text-light;
+  font-size: variables.$font-size-mid-small;
+  padding: variables.$padding;
+  background: variables.$dark-with-overlay;
   border: dashed 1px rgba(255, 255, 255, 0.5);
-  margin: $padding-small;
+  margin: variables.$padding-small;
 
   svg {
     height: 25px;
@@ -21,8 +21,8 @@
   }
 }
 .header {
-  padding: 0 $padding-small;
-  background: $dark;
+  padding: 0 variables.$padding-small;
+  background: variables.$dark;
 }
 
 .body {
@@ -30,7 +30,7 @@
 }
 
 .addData {
-  margin: $padding-small 0;
+  margin: variables.$padding-small 0;
   display: flex;
   button {
     height: 42px;
@@ -52,7 +52,7 @@
     position: absolute;
     //sozza
     left: 27px;
-    fill: $text-light;
+    fill: variables.$text-light;
     width: 18px;
     height: 18px;
   }
@@ -63,8 +63,8 @@
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   position: relative;
 
-  line-height: $input-height;
-  font-size: $font-size-mid-small;
+  line-height: variables.$input-height;
+  font-size: variables.$font-size-mid-small;
   padding: 0;
   // sorry
   padding-left: 59px;

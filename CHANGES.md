@@ -2,6 +2,16 @@
 
 #### next release (8.7.12)
 
+- **Breaking changes:**
+  - Upgrade Webpack to version 5
+    - Converted remaining CJS style modules and `require()` calls to ESM and `import` statements.
+    - Removed babel transformation to CJS for default build (we still use it for nodejs).
+    - Removed several other babel transforms (for JS features that should now be widely supported).
+    - Refactor and clean up configureWebpack.js. `configureWebpack()` now accepts a single object parameter.
+    - Removed code for hot reloading
+  - Upgraded `sass` to version 1.80+
+    - Migrated SASS files to use `modern` API (by running the `sass-migrator` script)
+    - Replaced webpack aliases `~terriajs-variables` and `~terriajs-mixins` with respective relative path. This was necessary to run the migrator. It also results in simpler webpack configuration.
 - Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
 - Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
   - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
