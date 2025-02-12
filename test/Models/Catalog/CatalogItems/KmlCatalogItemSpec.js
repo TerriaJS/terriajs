@@ -96,6 +96,7 @@ describeIfSupported("KmlCatalogItem", function () {
   });
 
   it("can load a KMZ file by URL", function (done) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     kml.url = require("file-loader!../../../../wwwroot/test/KML/vic_police.kmz");
     kml
       .load()
