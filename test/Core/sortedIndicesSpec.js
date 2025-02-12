@@ -1,6 +1,6 @@
 "use strict";
 
-var sortedIndices = require("../../lib/Core/sortedIndices");
+import sortedIndices from "../../lib/Core/sortedIndices";
 
 describe("sortedIndices", function () {
   it("works", function () {

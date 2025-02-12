@@ -1,7 +1,7 @@
 "use strict";
 
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
-var EarthGravityModel1996 = require("../../lib/Map/Vector/EarthGravityModel1996");
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import EarthGravityModel1996 from "../../lib/Map/Vector/EarthGravityModel1996";
 
 var describeIfSupported = EarthGravityModel1996.isSupported()
   ? describe
