@@ -9,8 +9,11 @@ import { action } from "mobx";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Terria from "../../../Models/Terria";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import MeasurablePanelManager from "../MeasurablePanelManager";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import BillboardCollection from "terriajs-cesium/Source/Scene/BillboardCollection";
 
+import markerIcon from "./markerIcon.js";
 import i18next from "i18next";
 
 enum ChartKeys {
@@ -49,8 +52,7 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
   const [chartItems, setChartItems] = useState<ChartItem[]>();
 
   const chartPoint = useRef<ChartPoint>();
-
-  MeasurablePanelManager.initialize(terria);
+  const billboardCollection = useRef<BillboardCollection>();
 
   const closePanel = action(() => {
     viewState.measurableChartIsVisible = false;
@@ -94,21 +96,24 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
       const coords = terria?.measurableGeom?.sampledPoints?.[pointIndex];
       if (!coords) return;
 
-      const airPointIndex = chartItems
-        ?.find((item) => item.key === ChartKeys.AirChart)
-        ?.points.findIndex(
-          (elem) =>
-            Math.abs(elem.x - newPoint.x) <=
-            terria.measurableGeomSamplingStep + 5
-        );
-      viewState.setSelectedStopPointIdx(
-        airPointIndex && airPointIndex !== -1 ? airPointIndex : null
-      );
+      if (!billboardCollection.current) {
+        billboardCollection.current = new BillboardCollection({
+          scene: terria.cesium.scene
+        });
+        terria.cesium.scene.primitives.add(billboardCollection.current);
+      }
+      billboardCollection.current.removeAll();
+      billboardCollection.current.add({
+        position: Cartographic.toCartesian(coords),
+        image: markerIcon,
+        eyeOffset: new Cartesian3(0.0, 0.0, -50.0),
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        id: "chartPointPlaceholder"
+      });
 
-      MeasurablePanelManager.addMarker(coords);
-    } else if (newPoint === undefined) {
-      MeasurablePanelManager.removeAllMarkers();
       terria.currentViewer.notifyRepaintRequired();
+    } else if (newPoint === undefined && billboardCollection.current) {
+      billboardCollection.current.removeAll();
     }
   };
 
@@ -184,10 +189,8 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
                   units: "m"
                 }}
                 height={CHART_HEIGHT}
-                chartItemKeyForPointMouseNear={ChartKeys}
+                chartItemKeyForPointMouseNear={ChartKeys.GroundChart}
                 onPointMouseNear={updateChartPointNearMouse}
-                selectedStopPointIdx={viewState.selectedStopPointIdx}
-                selectedSampledPointIdx={viewState.selectedSampledPointIdx}
               />
             )}
           </div>
