@@ -1,11 +1,11 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .data-catalog {
   composes: list-reset from "../../Sass/common/_base.scss";
   composes: scrollbars from "../../Sass/common/_base.scss";
 
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -14,10 +14,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  top: $modal-header-height;
+  top: variables.$modal-header-height;
 
-  @media (min-width: $sm) {
-    padding-right: $padding-small;
+  @media (min-width: variables.$sm) {
+    padding-right: variables.$padding-small;
     height: 100%; // replace with this once the search bar is back: calc(100% - #{$input-height + $padding * 3});
     position: static;
   }
@@ -25,5 +25,5 @@
 
 .label {
   composes: label from "../../Sass/common/_labels.scss";
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
 }

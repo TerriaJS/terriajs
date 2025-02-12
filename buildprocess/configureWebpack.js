@@ -1,42 +1,47 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const StringReplacePlugin = require("string-replace-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const webpack = require("webpack");
 
-function configureWebpack(
+/**
+ * Supplements the given webpack config with options required to build TerriaJS
+ *
+ * @param [options.terriaJSBasePath] The TerriaJS source directory
+ * @param [options.config] Base webpack configuration
+ * @param [options.devMode] Set to `true` to generate for development build, default is `false`.
+ * @param [options.MiniCssExtractPlugin]
+ * @param [options.babelLoader] Optional babelLoader config, defaults to ./defaultBabelLoader.js
+ */
+function configureWebpack({
   terriaJSBasePath,
   config,
   devMode,
-  hot,
   MiniCssExtractPlugin,
-  disableStyleLoader
-) {
+  babelLoader
+}) {
   const cesiumDir = path.dirname(
     require.resolve("terriajs-cesium/package.json")
   );
-  // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
-  // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
-  // console.log(fontAwesomeDir);
-  // console.log(reactMdeDir);
 
   config.node = config.node || {};
-
-  // Resolve node module use of fs
-  config.node.fs = "empty";
-
   config.resolve = config.resolve || {};
+
+  // Use empty polyfills for nodejs modules
+  config.resolve.fallback = {
+    fs: false, // geojson-merge, assimp
+    stream: false, // geojson-merge -> geojson-stream
+    crypto: false, // assismp.js
+    path: false // assimp.js
+  };
+
   config.resolve.extensions = config.resolve.extensions || [
-    "*",
-    ".webpack.js",
-    ".web.js",
     ".js",
-    ".mjs",
     ".ts",
-    ".tsx"
+    ".tsx",
+    ".jsx"
   ];
-  config.resolve.extensions.push(".jsx");
+
   config.resolve.alias = {
     // @cesium/widgets will import from @cesium/engine. We need to make sure it ends up with
     // the terriajs-cesium fork instead of upstream cesium.
@@ -52,122 +57,8 @@ function configureWebpack(
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  config.module.rules.push({
-    test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium/README.md")),
-    exclude: [
-      // require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
-    ],
-    loader: StringReplacePlugin.replace({
-      replacements: [
-        // {
-        //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-        //   replacement: function (match, p1, offset, string) {
-        //     let p1_modified = p1.replace(/\\/g, "\\\\");
-        //     return (
-        //       "require(`" +
-        //       cesiumDir.replace(/\\/g, "\\\\") +
-        //       "/Source/" +
-        //       p1_modified +
-        //       "`)"
-        //     );
-        //   }
-        // },
-        {
-          pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
-          replacement: function () {
-            return 'Please set "cesiumIonAccessToken" in config.json';
-          }
-        },
-        {
-          pattern: / before making any Cesium API calls/g,
-          replacement: function () {
-            return "";
-          }
-        }
-      ]
-    })
-  });
-
-  // The sprintf module included by Cesium includes a license comment with a big
-  // pile of links, some of which are apparently dodgy and cause Websense to flag
-  // web workers that include the comment as malicious.  So here we munge URLs in
-  // comments so broken security software doesn't consider them links that a user
-  // might actually visit.
-  config.module.rules.push({
-    test: /\.js?$/,
-    include: path.resolve(cesiumDir, "Source", "ThirdParty"),
-    loader: StringReplacePlugin.replace({
-      replacements: [
-        {
-          pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
-          replacement: function (match) {
-            // replace http:// and https:// with a spelling-out of it.
-            return match.replace(/(https?):\/\//g, "$1-colon-slashslash ");
-          }
-        }
-      ]
-    })
-  });
-
-  // Some packages exports an .mjs file for ESM imports.
-  // This rule instructs webpack to import mjs modules correctly.
-  config.module.rules.push({
-    test: /\.mjs$/,
-    include: /node_modules/,
-    type: "javascript/auto"
-  });
-
-  const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
-
-  config.module.rules.push({
-    test: /\.js$/,
-    include: zipJsDir,
-    loader: require.resolve("@open-wc/webpack-import-meta-loader")
-  });
-
-  config.module.rules.push({
-    test: /buildModuleUrl.js$/,
-    include: path.resolve(cesiumDir, "Source", "Core"),
-    loader: require.resolve("@open-wc/webpack-import-meta-loader")
-  });
-
-  const babelLoader = {
-    loader: "babel-loader",
-    options: {
-      cacheDirectory: true,
-      sourceMaps: !!devMode,
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            corejs: 3,
-            useBuiltIns: "usage"
-          }
-        ],
-        ["@babel/preset-react", { runtime: "automatic" }],
-        ["@babel/typescript", { allowNamespaces: true }]
-      ],
-      plugins: [
-        "@babel/plugin-transform-modules-commonjs",
-        ["@babel/plugin-proposal-decorators", { legacy: true }],
-        "@babel/plugin-proposal-class-properties",
-        "@babel/proposal-object-rest-spread",
-        "@babel/plugin-proposal-optional-chaining",
-        "@babel/plugin-proposal-nullish-coalescing-operator",
-        "babel-plugin-styled-components",
-        require.resolve("@babel/plugin-syntax-dynamic-import"),
-        "babel-plugin-lodash"
-      ],
-      assumptions: {
-        setPublicClassFields: false
-      }
-    }
-  };
-
-  // Use Babel to compile our JavaScript files.
+  babelLoader = babelLoader || defaultBabelLoader(devMode);
+  // Use Babel to compile our JavaScript and TypeScript files.
   config.module.rules.push({
     test: /\.(ts|js)x?$/,
     include: [
@@ -181,94 +72,49 @@ function configureWebpack(
     use: [babelLoader]
   });
 
-  // Use the raw loader for our view HTML.  We don't use the html-loader because it
-  // will doing things with images that we don't (currently) want.
-  config.module.rules.push({
-    test: /\.html$/,
-    include: path.resolve(terriaJSBasePath, "lib", "Views"),
-    loader: require.resolve("raw-loader")
-  });
-
-  // Allow XML in the models directory to be required-in as a raw text.
+  // Allow XML in the Models directory to be required-in as raw text.
   config.module.rules.push({
     test: /\.xml$/,
     include: path.resolve(terriaJSBasePath, "lib", "Models"),
-    loader: require.resolve("raw-loader")
+    type: "asset/source" // inlines xml as raw text
   });
 
+  // Allow .DAC file to be imported from MouseCoords.ts as URL
   config.module.rules.push({
-    test: /\.json|\.xml$/,
-    include: path.resolve(cesiumDir, "Source", "Assets"),
-    loader: require.resolve("file-loader"),
-    type: "javascript/auto"
+    test: /\.(DAC)$/i,
+    type: "asset/resource",
+    include: [path.resolve(terriaJSBasePath, "wwwroot", "data")]
   });
 
+  // Allow import of .css files from tinymce package
   config.module.rules.push({
-    test: /\.wasm$/,
-    include: path.resolve(cesiumDir, "Source", "ThirdParty"),
-    loader: require.resolve("file-loader"),
-    type: "javascript/auto"
+    test: /\.(css)$/i,
+    type: "asset/source",
+    include: [path.dirname(require.resolve("tinymce/package.json"))]
   });
 
+  // Remove Cesium debug mode checks in production. This might slightly improve performance.
+  // TODO: It will be good to have it enabled in devMode though, to discover issues with code
+  // however doing so currently breaks a few specs.
   config.module.rules.push({
     test: /\.js$/,
-    include: path.resolve(
-      path.dirname(require.resolve("terriajs-cesium/package.json")),
-      "Source"
-    ),
+    include: path.resolve(cesiumDir, "Source"),
     use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
-  // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
-  config.module.rules.push({
-    test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-    loader: "imports-loader?require=>false"
-  });
-
-  // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
-  // config.module.rules.push({
-  //     test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
-  //     loader: 'imports-loader?require=>false'
-  // });
-
+  // handle image imports
   config.module.rules.push({
     test: /\.(png|jpg|svg|gif)$/,
     include: [
       path.resolve(terriaJSBasePath) + path.sep,
       path.resolve(cesiumDir)
     ],
-    exclude: [
-      path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
-      path.resolve(terriaJSBasePath, "wwwroot", "fonts")
-    ],
-    loader: require.resolve("url-loader"),
-    options: {
-      limit: 8192
-    }
+    exclude: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
+    type: "asset" // inlines if file size < 8KB
   });
 
-  config.module.rules.push({
-    test: /\.woff(2)?(\?.+)?$/,
-    include: path.resolve(terriaJSBasePath, "wwwroot", "fonts"),
-    loader: require.resolve("url-loader"),
-    options: {
-      limit: 10000,
-      mimetype: "application/font-woff"
-    }
-  });
-
-  config.module.rules.push({
-    test: /\.(ttf|eot|svg)(\?.+)?$/,
-    include: path.resolve(terriaJSBasePath, "wwwroot", "fonts"),
-    loader: require.resolve("file-loader")
-  });
-
-  // config.module.loaders.push({
-  //     test: /\.(ttf|eot|svg)(\?.+)?$/,
-  //     include: path.resolve(fontAwesomeDir, 'fonts'),
-  //     loader: require.resolve('file-loader')
-  // });
-
+  // Convert imported svg icons into a sprite
+  // TODO: svg-sprite-loader has several security warnings - we need to find an alternative
   config.module.rules.push({
     test: /\.svg$/,
     include: path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
@@ -303,29 +149,14 @@ function configureWebpack(
     }
   };
 
-  config.plugins = (config.plugins || []).concat([
-    new StringReplacePlugin(),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-  ]);
+  config.plugins = config.plugins || [];
 
-  // Fork type checking to a separate thread
+  // Do not import momentjs locale files
+  // Saves ~500kb (unzipped)
   config.plugins.push(
-    new ForkTsCheckerWebpackPlugin({
-      typescript: {
-        memoryLimit: 4096,
-        configFile: path.resolve(__dirname, "..", "tsconfig.json"),
-        diagnosticOptions: {
-          semantic: true,
-          syntactic: true
-        }
-      }
-    })
-  );
-  config.plugins.push(
-    new ForkTsCheckerNotifierWebpackPlugin({
-      excludeWarnings: true,
-      // probably don't need to know first check worked as well - disable it
-      skipFirstNotification: true
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/
     })
   );
 
@@ -341,27 +172,46 @@ function configureWebpack(
     })
   );
 
-  if (hot && !disableStyleLoader) {
-    config.module.rules.push({
-      include: path.resolve(terriaJSBasePath) + path.sep,
-      test: /\.scss$/,
-      use: [
-        require.resolve("style-loader"),
-        {
-          loader: require.resolve("css-loader"),
-          options: {
-            sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
-            importLoaders: 2
-          }
-        },
-        "resolve-url-loader?sourceMap",
-        "sass-loader?sourceMap"
-      ]
-    });
-  } else if (MiniCssExtractPlugin) {
+  // Handle reference to Buffer in geojson-merge
+  config.plugins.push(
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"]
+    })
+  );
+
+  // Define NODE_ENV from mode setting - used in a few places in Terria
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(
+        devMode ? "development" : "production"
+      )
+    })
+  );
+
+  // Fork TypeScript type checking to a separate thread
+  config.plugins.push(
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        memoryLimit: 4096,
+        configFile: path.resolve(__dirname, "..", "tsconfig.json"),
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true
+        }
+      }
+    })
+  );
+
+  config.plugins.push(
+    new ForkTsCheckerNotifierWebpackPlugin({
+      excludeWarnings: true,
+      // probably don't need to know first check worked as well - disable it
+      skipFirstNotification: true
+    })
+  );
+
+  // Sass settings
+  if (MiniCssExtractPlugin) {
     config.module.rules.push({
       exclude: [
         path.resolve(terriaJSBasePath, "lib", "Sass", "common"),
@@ -370,46 +220,35 @@ function configureWebpack(
       include: path.resolve(terriaJSBasePath, "lib"),
       test: /\.scss$/,
       use: [
-        MiniCssExtractPlugin.loader,
-        "css-modules-typescript-loader",
+        {
+          loader: MiniCssExtractPlugin.loader,
+          options: { defaultExport: true }
+        },
+        { loader: "terriajs-typings-for-css-modules-loader" },
         {
           loader: require.resolve("css-loader"),
           options: {
             sourceMap: true,
-            modules: true,
-            camelCase: true,
-            localIdentName: "tjs-[name]__[local]",
+            modules: {
+              localIdentName: "tjs-[name]__[local]",
+              exportLocalsConvention: "camelCase"
+            },
             importLoaders: 2
           }
         },
-        "resolve-url-loader?sourceMap",
-        "sass-loader?sourceMap"
+        { loader: "resolve-url-loader", options: { sourceMap: true } },
+        {
+          loader: "sass-loader",
+          options: {
+            api: "modern",
+            sassOptions: {
+              sourceMap: true
+            }
+          }
+        }
       ]
     });
-
-    // config.module.loaders.push({
-    //     include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
-    //     test: /\.css$/,
-    //     loaders: ['style-loader', 'css-loader']
-    // });
-
-    // config.module.loaders.push({
-    //     include: path.resolve(fontAwesomeDir, 'fonts'),
-    //     test: /\.woff2?/,
-    //     loader: require.resolve('file-loader')
-    // });
   }
-
-  config.resolve = config.resolve || {};
-  config.resolve.alias = config.resolve.alias || {};
-
-  // Make a terriajs-variables alias so it's really easy to override our sass variables by aliasing over the top of this.
-  config.resolve.alias["terriajs-variables"] =
-    config.resolve.alias["terriajs-variables"] ||
-    require.resolve("../lib/Sass/common/_variables.scss");
-  config.resolve.alias["terriajs-mixins"] =
-    config.resolve.alias["terriajs-mixins"] ||
-    require.resolve("../lib/Sass/common/_mixins.scss");
 
   // Alias react and react-dom to the one used by the building folder - apparently we can rely on the dir always being
   // called node_modules https://github.com/npm/npm/issues/2734
@@ -419,9 +258,37 @@ function configureWebpack(
   );
 
   // Alias all lodash imports (including from our dependencies) to lodash-es
+  // This saves close to ~600KB unzipped
+  // Maybe we can remove this when lodash 5 comes out (?)
   config.resolve.alias["lodash"] = "lodash-es";
 
   return config;
 }
+
+const defaultBabelLoader = ({ devMode }) => ({
+  loader: "babel-loader",
+  options: {
+    cacheDirectory: true,
+    sourceMaps: !!devMode,
+    presets: [
+      [
+        "@babel/preset-env",
+        {
+          corejs: 3,
+          useBuiltIns: "usage"
+        }
+      ],
+      ["@babel/preset-react", { runtime: "automatic" }],
+      ["@babel/typescript", { allowNamespaces: true }]
+    ],
+    plugins: [
+      ["@babel/plugin-proposal-decorators", { legacy: true }],
+      "babel-plugin-styled-components"
+    ],
+    assumptions: {
+      setPublicClassFields: false
+    }
+  }
+});
 
 module.exports = configureWebpack;

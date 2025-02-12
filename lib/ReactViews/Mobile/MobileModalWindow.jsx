@@ -78,7 +78,6 @@ class MobileModalWindow extends React.Component {
     });
   }
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps() {
     const numItems = this.props.terria.workbench.items.length;
     if (
@@ -142,4 +141,5 @@ class MobileModalWindow extends React.Component {
     );
   }
 }
-module.exports = withTranslation()(MobileModalWindow);
+
+export default withTranslation()(MobileModalWindow);

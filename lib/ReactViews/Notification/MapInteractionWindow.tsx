@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import { Lambda, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
@@ -50,7 +48,9 @@ class MapInteractionWindow extends React.Component<{
       this.currentInteractionMode.onEnable(this.props.viewState);
     }
 
-    this.disposeMapInteractionObserver && this.disposeMapInteractionObserver();
+    if (this.disposeMapInteractionObserver) {
+      this.disposeMapInteractionObserver();
+    }
   }
 
   componentDidMount() {

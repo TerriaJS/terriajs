@@ -12,37 +12,14 @@ import { SelectableDimensionEnum } from "../../../../lib/Models/SelectableDimens
 import Terria from "../../../../lib/Models/Terria";
 import { ArcGisImageServerRenderingRule } from "../../../../lib/Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
 
-const rasterFnImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/rasterFns/imageserver.json")
-);
-
-const rasterFnLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/rasterFns/legend.json")
-);
-
-const timeImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/imageserver.json")
-);
-
-const timeLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/legend.json")
-);
-
-const timeIdentify = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/identify.json")
-);
-
-const tileImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/imageserver.json")
-);
-
-const tileLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/legend.json")
-);
-
-const tileIdentify = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/identify.json")
-);
+import rasterFnImageServer from "../../../../wwwroot/test/ArcGisImageServer/rasterFns/imageserver.json";
+import rasterFnLegend from "../../../../wwwroot/test/ArcGisImageServer/rasterFns/legend.json";
+import timeImageServer from "../../../../wwwroot/test/ArcGisImageServer/time/imageserver.json";
+import timeLegend from "../../../../wwwroot/test/ArcGisImageServer/time/legend.json";
+import timeIdentify from "../../../../wwwroot/test/ArcGisImageServer/time/identify.json";
+import tileImageServer from "../../../../wwwroot/test/ArcGisImageServer/tile/imageserver.json";
+import tileLegend from "../../../../wwwroot/test/ArcGisImageServer/tile/legend.json";
+import tileIdentify from "../../../../wwwroot/test/ArcGisImageServer/tile/identify.json";
 
 let spyOnLoad: any;
 
@@ -50,7 +27,7 @@ describe("ArcGisImageServer", function () {
   let terria: Terria;
   let imageServerItem: ArcGisImageServerCatalogItem;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     spyOnLoad = spyOn(loadWithXhr as any, "load").and.callThrough();
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(/.*/).andCallFunction((r) => {
@@ -60,27 +37,27 @@ describe("ArcGisImageServer", function () {
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\?.+/
-    ).andReturn({ responseText: rasterFnImageServer });
+    ).andReturn({ responseJSON: rasterFnImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: rasterFnLegend });
+    ).andReturn({ responseJSON: rasterFnLegend });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\?.+/
-    ).andReturn({ responseText: timeImageServer });
+    ).andReturn({ responseJSON: timeImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: timeLegend });
+    ).andReturn({ responseJSON: timeLegend });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/tile\/ImageServer\?.+/
-    ).andReturn({ responseText: tileImageServer });
+    ).andReturn({ responseJSON: tileImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/tile\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: tileLegend });
+    ).andReturn({ responseJSON: tileLegend });
 
     jasmine.Ajax.stubRequest("http://example.com/token").andReturn({
       responseText: JSON.stringify({
@@ -219,7 +196,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       console.log(imageServerItem);
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
@@ -240,7 +217,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.wkid).toBe(102100);
     });
 
-    it("creates legend", async function () {
+    it("creates legend", function () {
       expect(imageServerItem.legends.length).toBe(1);
       expect(imageServerItem.legends[0].items.length).toBe(3);
       expect(imageServerItem.legends[0].items[0].imageUrl).toBe(
@@ -262,7 +239,7 @@ describe("ArcGisImageServer", function () {
       );
     });
 
-    it("creates time intervals", async function () {
+    it("creates time intervals", function () {
       expect(imageServerItem.startTime).toBe("1981-12-31T00:00:00.000000000Z");
       expect(imageServerItem.stopTime).toBe("2021-12-30T16:48:00.000000000Z");
       expect(imageServerItem.currentDiscreteTimeTag).toBe(
@@ -271,7 +248,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.discreteTimes?.length).toBe(482);
     });
 
-    it("Sets `time` parameter", async function () {
+    it("Sets `time` parameter", function () {
       let imageryProvider = imageServerItem.mapItems[0]
         .imageryProvider as ArcGisImageServerImageryProvider;
 
@@ -298,7 +275,7 @@ describe("ArcGisImageServer", function () {
       });
     });
 
-    it("creates next imagery provider", async function () {
+    it("creates next imagery provider", function () {
       const time = imageServerItem.discreteTimes?.[100]?.time ?? "";
       const nextTime = imageServerItem.discreteTimes?.[101]?.time ?? "";
 
@@ -334,7 +311,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
       expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
@@ -387,9 +364,7 @@ describe("ArcGisImageServer", function () {
       // By observing mapItems, we can trigger a reload when the renderingRule changes
       const disposer = reaction(
         () => imageServerItem.mapItems,
-        () => {
-          console.log("woo");
-        }
+        () => 1
       );
 
       runInAction(() => {
@@ -409,7 +384,7 @@ describe("ArcGisImageServer", function () {
       disposer();
     });
 
-    it("has raster functions", async function () {
+    it("has raster functions", function () {
       expect(imageServerItem.availableRasterFunctions.length).toBe(3);
       expect(imageServerItem.availableRasterFunctions[0].name).toBe(
         "RFTAspectColor"
@@ -489,7 +464,7 @@ describe("ArcGisImageServer", function () {
       await imageServerItem.loadMetadata();
     });
 
-    it("sets basic traits", async function () {
+    it("sets basic traits", function () {
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
       expect(imageServerItem.rectangle.east).toBe(-116.43027039325061);
@@ -509,7 +484,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.wkid).toBe(102100);
     });
 
-    it("disables tile if parameters", async function () {
+    it("disables tile if parameters", function () {
       runInAction(() =>
         imageServerItem.setTrait(CommonStrata.definition, "parameters", {
           foo: "bar"
@@ -518,7 +493,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.usePreCachedTiles).toBe(false);
     });
 
-    it("disables tile if renderRule", async function () {
+    it("disables tile if renderRule", function () {
       runInAction(() =>
         imageServerItem.setTrait(
           CommonStrata.user,
@@ -562,13 +537,13 @@ describe("ArcGisImageServerImageryProvider", function () {
     jasmine.Ajax.stubRequest(
       "http://example.com/agsimage/rest/services/time/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%2057.29577951308232%2C%20y%3A%2057.29577951308232%2C%20spatialReference%3A%20{wkid%3A%204326}}&returnCatalogItems=false&token=fakeToken&foo=bar"
     ).andReturn({
-      responseText: timeIdentify
+      responseJSON: timeIdentify
     });
 
     jasmine.Ajax.stubRequest(
       "http://example.com/agsimage/rest/services/tile/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%206378137%2C%20y%3A%207820815.276085484%2C%20spatialReference%3A%20{wkid%3A%203857}}&returnCatalogItems=false&token=fakeToken&foo=bar"
     ).andReturn({
-      responseText: tileIdentify
+      responseJSON: tileIdentify
     });
   });
 
@@ -577,7 +552,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("dynamic web mercator", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/time/ImageServer",
         token: "fakeToken",
@@ -639,7 +614,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("dynamic wgs84", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/time/ImageServer",
         token: "fakeToken",
@@ -709,7 +684,7 @@ describe("ArcGisImageServerImageryProvider", function () {
   });
 
   describe("tiled web mercator", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       imageryProvider = new ArcGisImageServerImageryProvider({
         url: "http://example.com/agsimage/rest/services/tile/ImageServer",
         token: "fakeToken",

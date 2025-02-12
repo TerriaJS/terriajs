@@ -35,7 +35,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     ) as this;
   }
 
-  static load(item: TableMixin.Instance) {
+  static load(item: TableMixin.Instance): TableAutomaticLegendStratum {
     return new TableAutomaticLegendStratum(item);
   }
 

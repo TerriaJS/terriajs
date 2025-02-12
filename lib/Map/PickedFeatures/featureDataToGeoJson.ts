@@ -1,5 +1,3 @@
-"use strict";
-
 import Point from "@mapbox/point-geometry";
 import {
   Feature as GeoJsonFeature,
@@ -26,8 +24,7 @@ import {
   toFeatureCollection
 } from "../../ModelMixins/GeojsonMixin";
 import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
-
-const pointInPolygon = require("point-in-polygon");
+import pointInPolygon from "point-in-polygon";
 
 /**
  * Converts feature data, such as from a WMS GetFeatureInfo or an Esri Identify, to
@@ -144,7 +141,9 @@ function getEsriFeature(
       // Most likely scenario is that someone messed up the winding order.
       // So let's treat all the holes as outer rings instead.
       holes.forEach((hole) => {
-        Array.isArray(hole) ? hole.reverse() : null;
+        if (Array.isArray(hole)) {
+          hole.reverse();
+        }
       });
       outerRings.push(...holes);
       holes.length = 0;

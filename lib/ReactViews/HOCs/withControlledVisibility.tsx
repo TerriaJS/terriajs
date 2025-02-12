@@ -13,7 +13,6 @@ interface WithControlledVisibilityProps {
  * as prop
  */
 export default <P extends object>(WrappedComponent: React.ComponentType<P>) => {
-  // eslint-disable-next-line require-jsdoc
   function WithControlledVisibility({
     elementConfig,
     ...props

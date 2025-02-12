@@ -8,7 +8,7 @@ import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
-import proj4definitions from "../../../Map/Vector/Proj4Definitions";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
@@ -38,8 +38,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-
-const proj4 = require("proj4").default;
+import proj4 from "proj4";
 
 interface DocumentInfo {
   Author?: string;
@@ -253,12 +252,12 @@ class FeatureServerStratum extends LoadableStratum(
 
     if (isDefined(extent) && isDefined(wkidCode)) {
       const wkid = "EPSG:" + wkidCode;
-      if (!isDefined((proj4definitions as any)[wkid])) {
+      if (!isDefined(Proj4Definitions[wkid])) {
         return undefined;
       }
 
-      const source = new proj4.Proj((proj4definitions as any)[wkid]);
-      const dest = new proj4.Proj("EPSG:4326");
+      const source = Proj4Definitions[wkid];
+      const dest = "EPSG:4326";
 
       let p = proj4(source, dest, [extent.xmin, extent.ymin]);
 

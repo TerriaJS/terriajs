@@ -5,20 +5,10 @@ import OpenDataSoftCatalogItem from "../../../../lib/Models/Catalog/CatalogItems
 import Terria from "../../../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
 
-const facets = JSON.stringify(
-  require("../../../../wwwroot/test/ods/facets.json")
-);
-
-const datasets = JSON.stringify(
-  require("../../../../wwwroot/test/ods/datasets.json")
-);
-
-const datasetsCount101Response1 = JSON.stringify(
-  require("../../../../wwwroot/test/ods/datasets-over-100-1.json")
-);
-const datasetsCount101Response2 = JSON.stringify(
-  require("../../../../wwwroot/test/ods/datasets-over-100-2.json")
-);
+import facets from "../../../../wwwroot/test/ods/facets.json";
+import datasets from "../../../../wwwroot/test/ods/datasets.json";
+import datasetsCount101Response1 from "../../../../wwwroot/test/ods/datasets-over-100-1.json";
+import datasetsCount101Response2 from "../../../../wwwroot/test/ods/datasets-over-100-2.json";
 
 describe("OpenDataSoftCatalogGroup", function () {
   let terria: Terria;
@@ -26,7 +16,7 @@ describe("OpenDataSoftCatalogGroup", function () {
 
   beforeEach(function () {
     fetchMock.mock("https://example.com/api/v2/catalog/facets/", {
-      body: facets
+      body: JSON.stringify(facets)
     });
 
     terria = new Terria();
@@ -42,10 +32,10 @@ describe("OpenDataSoftCatalogGroup", function () {
   });
 
   describe("loads facets", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       fetchMock.mock(
         "https://example.com/api/v2/catalog/datasets/?limit=100&offset=0&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
-        { body: datasets }
+        { body: JSON.stringify(datasets) }
       );
       runInAction(() => {
         odsGroup.setTrait("definition", "url", "https://example.com");
@@ -74,7 +64,7 @@ describe("OpenDataSoftCatalogGroup", function () {
   });
 
   describe("loads over 100 datasets (in multiple requests)", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       // Note these two responses don't actually return over 100 datasest
       // Both JSON files have "total_count": 101 - and 6 different datasets each
       // So we expect total 12 datasets
@@ -82,13 +72,13 @@ describe("OpenDataSoftCatalogGroup", function () {
       // Offset = 0
       fetchMock.mock(
         "https://example.com/api/v2/catalog/datasets/?limit=100&offset=0&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
-        { body: datasetsCount101Response1 }
+        { body: JSON.stringify(datasetsCount101Response1) }
       );
 
       // Offset = 100
       fetchMock.mock(
         "https://example.com/api/v2/catalog/datasets/?limit=100&offset=100&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
-        { body: datasetsCount101Response2 }
+        { body: JSON.stringify(datasetsCount101Response2) }
       );
       runInAction(() => {
         odsGroup.setTrait("definition", "url", "https://example.com");

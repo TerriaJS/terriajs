@@ -150,7 +150,7 @@ export default class AsyncLoader {
    * `load(true)`.
    */
   @action
-  dispose() {
+  dispose(): void {
     this._forceReloadCount = -1;
     this.load();
   }

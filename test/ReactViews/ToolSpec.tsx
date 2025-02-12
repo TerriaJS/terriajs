@@ -20,9 +20,9 @@ describe("Tool", function () {
 
   // The following specs are excluded as they will break in react version
   // 16.3.2, we can enable them after migrating to a newer version.
-  xit("renders the item returned by getToolComponent", async function () {
+  xit("renders the item returned by getToolComponent", function () {
     let rendered: any;
-    act(async () => {
+    act(() => {
       rendered = createWithContexts(
         viewState,
         <Tool
@@ -35,9 +35,9 @@ describe("Tool", function () {
     expect(testComponent).toBeDefined();
   });
 
-  xit("renders the promised item returned by getToolComponent", async function () {
+  xit("renders the promised item returned by getToolComponent", function () {
     let rendered: any;
-    await act(async () => {
+    act(() => {
       rendered = createWithContexts(
         viewState,
         <Tool

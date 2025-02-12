@@ -335,4 +335,4 @@ function buildExtensionsList(extensions) {
   return extensions.map((ext) => `.${ext}`).join(", ");
 }
 
-module.exports = withTranslation()(AddData);
+export default withTranslation()(AddData);

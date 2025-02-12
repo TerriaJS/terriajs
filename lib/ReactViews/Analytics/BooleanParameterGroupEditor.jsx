@@ -2,9 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import MoreOrLess from "../Generic/MoreOrLess.jsx";
-
 import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
-
 import Styles from "./parameter-editors.scss";
 
 const BooleanParameterGroupEditor = createReactClass({
@@ -78,10 +76,10 @@ const BooleanParameterGroupEditor = createReactClass({
   renderCheckboxGroup() {
     const whichIcon = true;
     const OneForAll = this.props.parameter.OneForAll;
-    let name;
-    this.props.parameter.name
-      ? (name = this.props.parameter.name + "_Group")
-      : (name = this.props.parameter.id + "_Group");
+    const name =
+      (this.props.parameter.name
+        ? this.props.parameter.name
+        : this.props.parameter.id) + "_Group";
     const OneForAllDivName = name + "_OneForAllDiv";
     const groupClick = this.toggleDiv.bind(this, name);
     const allClick = this.toggleAll.bind(this, {
@@ -122,4 +120,5 @@ const BooleanParameterGroupEditor = createReactClass({
     return <div>{this.renderCheckboxGroup()}</div>;
   }
 });
-module.exports = BooleanParameterGroupEditor;
+
+export default BooleanParameterGroupEditor;

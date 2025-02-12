@@ -139,7 +139,7 @@ const InnerPanel = createReactClass({
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
-          /* eslint-disable-next-line react/no-unknown-property */
+          // eslint-disable-next-line react/no-unknown-property
           showDropdownAsModal={this.props.showDropdownAsModal}
           css={`
             svg {

@@ -1,7 +1,11 @@
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
-import { Translation, WithTranslation, withTranslation } from "react-i18next";
+import React, { type ReactNode } from "react";
+import {
+  Translation,
+  WithTranslation,
+  withTranslation,
+  TFunction
+} from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
   HelpContentItem,
@@ -19,10 +23,8 @@ import Text, { TextSpan } from "../../../Styled/Text";
 import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { WithViewState, withViewState } from "../../Context";
 import { applyTranslationIfExists } from "../../../Language/languageHelpers";
-
-const StyledHtml: any =
-  require("../../Map/Panels/HelpPanel/StyledHtml").default;
-const CloseButton: any = require("../../Generic/CloseButton").default;
+import StyledHtml from "../../Map/Panels/HelpPanel/StyledHtml";
+import CloseButton from "../../Generic/CloseButton";
 
 const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
@@ -74,7 +76,7 @@ const renderStep = (
   options: {
     renderDescription: boolean;
     comfortable: boolean;
-    footerComponent?: () => void;
+    footerComponent?: () => ReactNode;
   } = {
     renderDescription: true,
     comfortable: false,

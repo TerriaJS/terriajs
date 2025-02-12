@@ -54,7 +54,7 @@ export class ObservableCesium3DTileset extends Cesium3DTileset {
     makeObservable(this);
   }
 
-  destroy() {
+  destroy(): void {
     super.destroy();
     // TODO: we are running later to prevent this
     // modification from happening in some computed up the call chain.

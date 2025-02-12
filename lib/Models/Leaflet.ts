@@ -3,6 +3,7 @@ import {
   action,
   autorun,
   computed,
+  IReactionDisposer,
   makeObservable,
   observable,
   reaction,
@@ -28,7 +29,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
@@ -219,8 +219,9 @@ export default class Leaflet extends GlobeOrMap {
         interactions.forEach((handler) => handler.disable());
         this.map.off("click", pickLocation);
         this.scene.featureClicked.removeEventListener(pickFeature);
-        this._disposeSelectedFeatureSubscription &&
+        if (this._disposeSelectedFeatureSubscription) {
           this._disposeSelectedFeatureSubscription();
+        }
       } else {
         interactions.forEach((handler) => handler.enable());
         this.map.on("click", pickLocation);
@@ -300,18 +301,18 @@ export default class Leaflet extends GlobeOrMap {
     // this._dragboxcompleted = false;
   }
 
-  getContainer() {
+  getContainer(): HTMLElement {
     return this.map.getContainer();
   }
 
-  pauseMapInteraction() {
+  pauseMapInteraction(): void {
     ++this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 1) {
       this.map.dragging.disable();
     }
   }
 
-  resumeMapInteraction() {
+  resumeMapInteraction(): void {
     --this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 0) {
       setTimeout(() => {
@@ -322,9 +323,10 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
-  destroy() {
-    this._disposeSelectedFeatureSubscription &&
+  destroy(): void {
+    if (this._disposeSelectedFeatureSubscription) {
       this._disposeSelectedFeatureSubscription();
+    }
     this._disposeSplitterReaction();
     this._disposeWorkbenchMapItemsSubscription();
     this._eventHelper.removeAll();
@@ -485,7 +487,9 @@ export default class Leaflet extends GlobeOrMap {
         // careful to raiseToTop() only if the DS already exists in the collection.
         // Relevant code:
         //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
-        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+        if (dataSources.contains(ds)) {
+          dataSources.raiseToTop(ds);
+        }
       })
     );
   }
@@ -558,7 +562,7 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  notifyRepaintRequired() {
+  notifyRepaintRequired(): void {
     // No action necessary.
   }
 
@@ -566,7 +570,7 @@ export default class Leaflet extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {
+  ): void {
     this._pickFeatures(
       L.latLng({
         lat: latLngHeight.latitude,
@@ -848,7 +852,7 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  _reactToSplitterChanges() {
+  _reactToSplitterChanges(): IReactionDisposer {
     return autorun(() => {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
@@ -1069,7 +1073,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const map = this.map;

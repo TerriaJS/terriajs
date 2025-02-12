@@ -1,8 +1,31 @@
 # Change Log
 
-#### next release (8.7.11)
+#### next release (8.7.12)
 
+- **Breaking changes:**
+  - Upgrade Webpack to version 5
+    - Converted remaining CJS style modules and `require()` calls to ESM and `import` statements.
+    - Removed babel transformation to CJS for default build (we still use it for nodejs).
+    - Removed several other babel transforms (for JS features that should now be widely supported).
+    - Refactor and clean up configureWebpack.js. `configureWebpack()` now accepts a single object parameter.
+    - Removed code for hot reloading
+  - Upgraded `sass` to version 1.80+
+    - Migrated SASS files to use `modern` API (by running the `sass-migrator` script)
+    - Replaced webpack aliases `~terriajs-variables` and `~terriajs-mixins` with respective relative path. This was necessary to run the migrator. It also results in simpler webpack configuration.
+- Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
+- Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
+  - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
+- Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
+- support URL parameters in a GetLegendGraphic request for a layer without a style configured
+- Enhanced error processing for obtaining user location
 - [The next improvement]
+
+#### 8.7.11 - 2024-12-18
+
+- Explicitly set prettier tab-width
+- Move release guide from README.md to RELEASE_GUIDE.md
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
 
 #### 8.7.10 - 2024-11-29
 
@@ -222,6 +245,11 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
+- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

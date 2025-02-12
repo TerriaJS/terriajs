@@ -1,10 +1,10 @@
-@import "~terriajs-variables";
-@import "../../../Sass/common/mixins";
+@use "../../../Sass/common/_variables";
+@use "../../../Sass/common/mixins";
 
 .tooltip {
   font-family: monospace;
-  color: $text-light !important;
-  background-color: $chart-darker !important;
+  color: variables.$text-light !important;
+  background-color: variables.$chart-darker !important;
   border-radius: 0px !important;
   padding: 5px 10px !important;
 

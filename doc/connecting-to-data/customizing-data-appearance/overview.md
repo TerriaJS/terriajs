@@ -12,7 +12,7 @@ and can be included there too.
 
 This section explains how you can use such a file to improve the look of your data:
 
--   [Customizing the Appearance of Tabular Data](./tabular-data.md)
--   [Customizing the Appearance of Imagery Data](./imagery-data.md)
--   [Customizing the Feature Info Template](./feature-info-template.md)
--   [Using Model Dimensions to customise the Workbench](./model-dimensions.md)
+- [Customizing the Appearance of Tabular Data](./tabular-data.md)
+- [Customizing the Appearance of Imagery Data](./imagery-data.md)
+- [Customizing the Feature Info Template](./feature-info-template.md)
+- [Using Model Dimensions to customise the Workbench](./model-dimensions.md)

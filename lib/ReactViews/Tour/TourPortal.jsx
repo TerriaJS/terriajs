@@ -32,10 +32,10 @@ import {
 } from "./tour-helpers.ts";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
-} from "./TourExplanationBox.jsx";
+} from "./TourExplanationBox";
 import TourIndicator from "./TourIndicator.jsx";
 import TourOverlay from "./TourOverlay.jsx";
-import TourPrefaceBox from "./TourPrefaceBox.jsx";
+import TourPrefaceBox from "./TourPrefaceBox";
 import TourProgressDot from "./TourProgressDot.jsx";
 
 /**

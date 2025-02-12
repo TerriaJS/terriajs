@@ -214,9 +214,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       .then(() => {
         runInAction(() => {
           const newTableData = this.apiResponseToTable();
-          this.shouldAppendNewData
-            ? this.append(newTableData)
-            : (this.dataColumnMajor = newTableData);
+          if (this.shouldAppendNewData) {
+            this.append(newTableData);
+          } else {
+            this.dataColumnMajor = newTableData;
+          }
           this.hasData = true;
         });
       })
@@ -227,9 +229,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     this.loadDataFromApis().then(() => {
       runInAction(() => {
         const newTableData = this.apiResponseToTable();
-        this.shouldAppendNewData
-          ? this.append(newTableData)
-          : (this.dataColumnMajor = newTableData);
+        if (this.shouldAppendNewData) {
+          this.append(newTableData);
+        } else {
+          this.dataColumnMajor = newTableData;
+        }
       });
     });
   }

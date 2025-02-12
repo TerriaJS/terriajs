@@ -1,6 +1,4 @@
-"use strict";
-
-import Styles from "!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss";
+import Styles from "./cesium-timeline.scss";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { autorun, runInAction } from "mobx";
@@ -79,7 +77,9 @@ const CesiumTimeline = createReactClass({
     });
 
     this.resizeListener = () => {
-      this.cesiumTimeline && this.cesiumTimeline.resize();
+      if (this.cesiumTimeline) {
+        this.cesiumTimeline.resize();
+      }
     };
     window.addEventListener("resize", this.resizeListener, false);
   },
@@ -105,4 +105,4 @@ const CesiumTimeline = createReactClass({
   }
 });
 
-module.exports = CesiumTimeline;
+export default CesiumTimeline;

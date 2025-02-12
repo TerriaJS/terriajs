@@ -588,7 +588,7 @@ function getBaseURI(item: ArcGisImageServerCatalogItem) {
   return uri;
 }
 
-async function getJson(item: ArcGisImageServerCatalogItem, uri: uri.URI) {
+async function getJson(item: ArcGisImageServerCatalogItem, uri: URI) {
   try {
     const response = await loadJson(
       proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())

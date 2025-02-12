@@ -33,7 +33,6 @@ class StoryEditor extends React.Component {
     this.escKeyListener = null;
   }
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const story = this.props.story;
     this.setState({

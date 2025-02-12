@@ -92,8 +92,9 @@ export default class RegionProviderList {
       variableNames.splice(index, 1);
       if (!isDefined(preferedRegionType)) {
         // If no type is provided, simply put this back in the front of the array, to prioritize it.
-        preferedRegionVariableName &&
+        if (preferedRegionVariableName) {
           variableNames.unshift(preferedRegionVariableName);
+        }
       } else {
         // If a type is provided, handle it specially.
         const regionProvider = this.getRegionProvider(preferedRegionType);

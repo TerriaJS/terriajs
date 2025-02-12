@@ -1,6 +1,6 @@
 import { reaction, runInAction } from "mobx";
-import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
-import { CustomDataSource } from "terriajs-cesium";
+import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -15,9 +15,8 @@ import StandardCssColors from "../../../../lib/Core/StandardCssColors";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
-import ProtomapsImageryProvider, {
-  GEOJSON_SOURCE_LAYER_NAME
-} from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/ProtomapsGeojsonSource";
 import {
   FEATURE_ID_PROP,
   getColor
@@ -698,7 +697,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -928,7 +927,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1105,7 +1104,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1135,7 +1134,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1190,7 +1189,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1237,7 +1236,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1408,7 +1407,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function () {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -1563,7 +1562,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       let terria: Terria;
       let geojson: GeoJsonCatalogItem;
 
-      beforeEach(async function () {
+      beforeEach(function () {
         terria = new Terria({
           baseUrl: "./"
         });

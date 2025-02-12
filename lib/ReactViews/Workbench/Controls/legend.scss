@@ -1,9 +1,9 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .legend {
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: list-reset from "../../../Sass/common/_base.scss";
-  font-family: $font-mono;
+  font-family: variables.$font-mono;
   // Small font size prevents the font from dictating the table row height.
   font-size: 5px;
 
@@ -12,18 +12,18 @@
   }
 
   .legendOpenExternally {
-    font-size: $font-size-small;
-    color: $text-light;
+    font-size: variables.$font-size-small;
+    color: variables.$text-light;
   }
 
   .legendTitle {
-    font-size: $font-size-small;
+    font-size: variables.$font-size-small;
     margin: 0px;
   }
 }
 
 .legend__inner {
-  padding: $padding 0 0 0;
+  padding: variables.$padding 0 0 0;
   a {
     // Only the actual legend should be clickable rather than the whole area
     display: inline-block;
@@ -56,7 +56,7 @@
 }
 
 .loader {
-  font-family: $font-base;
+  font-family: variables.$font-base;
   svg {
     fill: #fff;
   }
@@ -67,8 +67,8 @@
 }
 
 .generatedLegend {
-  padding-top: $legend-padding;
-  padding-bottom: $legend-padding;
+  padding-top: variables.$legend-padding;
+  padding-bottom: variables.$legend-padding;
 }
 
 .generatedLegend table {
@@ -78,13 +78,13 @@
 
 .legendTitles {
   font-size: 12px;
-  line-height: $legend-item-height;
+  line-height: variables.$legend-item-height;
   padding-left: 5px;
 }
 
 .legendTitleAbove {
   position: absolute;
-  margin-top: -$legend-item-height;
+  margin-top: -(variables.$legend-item-height);
 }
 
 .legendTitleAbove::before {
@@ -102,5 +102,5 @@
 }
 
 .legendSpacer {
-  height: $legend-spacer-height;
+  height: variables.$legend-spacer-height;
 }

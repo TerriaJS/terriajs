@@ -22,8 +22,7 @@ import Spacing from "../../../Styled/Spacing";
 import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
 import dateFormat from "dateformat";
-
-const DatePicker = require("react-datepicker").default;
+import DatePicker from "react-datepicker";
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();
@@ -252,7 +251,9 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   componentWillUnmount() {
-    this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
+    if (this.currentDateAutorunDisposer) {
+      this.currentDateAutorunDisposer();
+    }
     window.removeEventListener("click", this.closePickerEventHandler);
   }
 

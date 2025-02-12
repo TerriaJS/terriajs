@@ -3,13 +3,10 @@
  */
 import React, { useState } from "react";
 import { useTheme } from "styled-components";
-
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-const TourExplanationBox: any = require("../Tour/TourExplanationBox").default;
-const TourPrefaceBox: any = require("../Tour/TourPrefaceBox").default;
-
+import TourExplanationBox from "../Tour/TourExplanationBox";
+import TourPrefaceBox from "../Tour/TourPrefaceBox";
 import CloseButton from "../Generic/CloseButton";
 import ViewState from "../../ReactViewModels/ViewState";
 import Text from "../../Styled/Text";

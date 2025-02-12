@@ -66,24 +66,24 @@ expectTrue<
 
 const array = stratum.nestedArrayWithDefault;
 if (array) {
-  const first = array[0];
+  const _first = array[0];
 
   // Arrays may not _contain_ undefineds.
-  expectFalse<AllowsUndefined<typeof first>>();
+  expectFalse<AllowsUndefined<typeof _first>>();
 
   // Properties in traits in arrays allow undefined.
-  expectTrue<Equals<typeof first.withDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
+  expectTrue<Equals<typeof _first.withDefault, number | undefined>>();
+  expectTrue<Equals<typeof _first.withoutDefault, number | undefined>>();
+  expectTrue<Equals<typeof _first.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof first.unknownObjectWithDefault, JsonObject | undefined>
+    Equals<typeof _first.unknownObjectWithDefault, JsonObject | undefined>
   >();
-  expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
+  expectTrue<Equals<typeof _first.withNull, string | null | undefined>>();
 
   // Properties in traits in arrays can be modified.
-  expectTrue<IsWritable<typeof first, "withDefault">>();
-  expectTrue<IsWritable<typeof first, "withoutDefault">>();
-  expectTrue<IsWritable<typeof first, "unknownObject">>();
-  expectTrue<IsWritable<typeof first, "unknownObjectWithDefault">>();
-  expectTrue<IsWritable<typeof first, "withNull">>();
+  expectTrue<IsWritable<typeof _first, "withDefault">>();
+  expectTrue<IsWritable<typeof _first, "withoutDefault">>();
+  expectTrue<IsWritable<typeof _first, "unknownObject">>();
+  expectTrue<IsWritable<typeof _first, "unknownObjectWithDefault">>();
+  expectTrue<IsWritable<typeof _first, "withNull">>();
 }
