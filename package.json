@@ -175,7 +175,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
-    "@types/node": "^18.15.11",
+    "@types/node": "^22.13.1",
     "@types/proj4": "^2.5.5",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
