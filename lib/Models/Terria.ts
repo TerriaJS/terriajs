@@ -935,6 +935,7 @@ export default class Terria {
   addShareKey(id: string, shareKey: string): void {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
