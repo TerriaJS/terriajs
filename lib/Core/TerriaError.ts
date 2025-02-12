@@ -324,9 +324,11 @@ export default class TerriaError {
 
   /** Print error to console */
   log(): void {
-    this.resolvedSeverity === TerriaErrorSeverity.Warning
-      ? console.warn(this.toString())
-      : console.error(this.toString());
+    if (this.resolvedSeverity === TerriaErrorSeverity.Warning) {
+      console.warn(this.toString());
+    } else {
+      console.error(this.toString());
+    }
   }
 
   /** Convert `TerriaError` to `Notification` */

@@ -141,7 +141,9 @@ function getEsriFeature(
       // Most likely scenario is that someone messed up the winding order.
       // So let's treat all the holes as outer rings instead.
       holes.forEach((hole) => {
-        Array.isArray(hole) ? hole.reverse() : null;
+        if (Array.isArray(hole)) {
+          hole.reverse();
+        }
       });
       outerRings.push(...holes);
       holes.length = 0;

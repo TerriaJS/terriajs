@@ -312,7 +312,9 @@ export default class Cesium extends GlobeOrMap {
             document.removeEventListener("keyup", onKeyUp);
             runInAction(() => {
               this.terria.mapInteractionModeStack.pop();
-              zoomUserDrawing && zoomUserDrawing.cleanUp();
+              if (zoomUserDrawing) {
+                zoomUserDrawing.cleanUp();
+              }
             });
             this.resumeMapInteraction();
             zoomUserDrawing = undefined;
@@ -688,7 +690,9 @@ export default class Cesium extends GlobeOrMap {
         // careful to raiseToTop() only if the DS already exists in the collection.
         // Relevant code:
         //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
-        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+        if (dataSources.contains(ds)) {
+          dataSources.raiseToTop(ds);
+        }
       })
     );
   }
