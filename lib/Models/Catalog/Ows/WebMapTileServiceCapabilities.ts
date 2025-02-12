@@ -165,7 +165,7 @@ export default class WebMapTileServiceCapabilities {
     if (layerElements && Array.isArray(layerElements)) {
       this.layers.push(...layerElements);
     } else if (layerElements) {
-      this.layers.push(layerElements as WmtsLayer);
+      this.layers.push(layerElements);
     }
 
     const tileMatrixSetsElements = this.json.Contents?.TileMatrixSet as
@@ -174,7 +174,7 @@ export default class WebMapTileServiceCapabilities {
     if (tileMatrixSetsElements && Array.isArray(tileMatrixSetsElements)) {
       this.tileMatrixSets.push(...tileMatrixSetsElements);
     } else if (tileMatrixSetsElements) {
-      this.tileMatrixSets.push(tileMatrixSetsElements as TileMatrixSet);
+      this.tileMatrixSets.push(tileMatrixSetsElements);
     }
   }
 

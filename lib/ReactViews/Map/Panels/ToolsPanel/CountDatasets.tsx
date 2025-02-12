@@ -169,7 +169,7 @@ const CountDatasets: React.FC<CountDatasetsProps> = observer((props) => {
         className={Styles.submit}
         onClick={countDatasets}
         type="button"
-        value={t("countDatasets.btnCount") as string}
+        value={t("countDatasets.btnCount")}
       >
         {typeof btnStringOrComponent === "string"
           ? applyTranslationIfExists(btnStringOrComponent, i18n)
