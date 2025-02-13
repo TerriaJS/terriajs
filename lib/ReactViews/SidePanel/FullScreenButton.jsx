@@ -1,5 +1,5 @@
 "use strict";
-import React from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { observer } from "mobx-react";
@@ -14,7 +14,7 @@ import Branding from "./Branding";
 
 // The button to make the map full screen and hide the workbench.
 @observer
-class FullScreenButton extends React.Component {
+class FullScreenButton extends Component {
   static propTypes = {
     viewState: PropTypes.object.isRequired,
     btnText: PropTypes.string,

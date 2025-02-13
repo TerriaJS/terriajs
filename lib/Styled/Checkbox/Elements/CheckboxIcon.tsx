@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { GLYPHS, StyledIcon } from "../../Icon";
 import { CheckboxIconProps } from "../types";
@@ -27,9 +27,7 @@ const StyledCheckboxIcon = styled(StyledIcon).attrs({
   `}
 `;
 
-const CheckboxIcon: React.FC<CheckboxIconProps> = (
-  props: CheckboxIconProps
-) => {
+const CheckboxIcon: FC<CheckboxIconProps> = (props: CheckboxIconProps) => {
   const iconOn = props.isSwitch ? GLYPHS.switchOn : GLYPHS.checkboxOn;
   const iconOff = props.isSwitch ? GLYPHS.switchOff : GLYPHS.checkboxOff;
   if (props.isDisabled) {

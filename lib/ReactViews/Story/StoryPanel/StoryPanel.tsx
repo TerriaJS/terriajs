@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { RefObject, createRef, Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import { DefaultTheme, withTheme } from "styled-components";
@@ -82,9 +82,9 @@ interface State {
 }
 
 @observer
-class StoryPanel extends React.Component<Props, State> {
+class StoryPanel extends Component<Props, State> {
   keydownListener: EventListener | undefined;
-  slideRef: React.RefObject<HTMLElement>;
+  slideRef: RefObject<HTMLElement>;
 
   constructor(props: Props) {
     super(props);
@@ -92,7 +92,7 @@ class StoryPanel extends React.Component<Props, State> {
       isCollapsed: false,
       inView: false
     };
-    this.slideRef = React.createRef();
+    this.slideRef = createRef();
   }
 
   componentDidMount() {
@@ -257,7 +257,7 @@ class StoryPanel extends React.Component<Props, State> {
               [Styles.isMounted]: this.state.inView
             })}
             key={story.id}
-            ref={this.slideRef as React.RefObject<HTMLDivElement>}
+            ref={this.slideRef as RefObject<HTMLDivElement>}
             css={`
               @media (min-width: 992px) {
                 max-width: 36vw;
