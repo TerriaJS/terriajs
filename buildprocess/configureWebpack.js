@@ -90,7 +90,10 @@ function configureWebpack({
   config.module.rules.push({
     test: /\.(css)$/i,
     type: "asset/source",
-    include: [path.dirname(require.resolve("tinymce/package.json"))]
+    include: [
+      path.resolve(terriaJSBasePath, "lib"),
+      path.dirname(require.resolve("tinymce/package.json"))
+    ]
   });
 
   // Remove Cesium debug mode checks in production. This might slightly improve performance.
