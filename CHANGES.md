@@ -13,6 +13,7 @@
 - TSify `DragDropNotification` and convert to functional component and styled-components. #7563
 - TSify `DataCatalogTab` and convert it to functional component #7476
 - Update to shpjs 6.1.0.
+- Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
