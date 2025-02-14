@@ -448,7 +448,7 @@ function getSortProperty(model: BaseModel, prop: string) {
       hasTraits(model, model.TraitsClass, prop as any)) ||
     (ReferenceMixin.isMixedInto(model) &&
       hasTraits(model, model.TraitsClass, prop as any))
-    ? model[prop!]
+    ? model[prop]
     : undefined;
 }
 
