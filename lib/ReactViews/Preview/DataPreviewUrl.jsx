@@ -1,25 +1,25 @@
-import React from "react";
-
-import createReactClass from "create-react-class";
-
+import { Component } from "react";
+import { makeObservable } from "mobx";
 import PropTypes from "prop-types";
-
 import Styles from "./data-preview.scss";
 import { Trans } from "react-i18next";
 
 /**
  * URL section of the preview.
  */
-const DataPreviewUrl = createReactClass({
-  displayName: "DataPreviewUrl",
-
-  propTypes: {
+class DataPreviewUrl extends Component {
+  static propTypes = {
     metadataItem: PropTypes.object.isRequired
-  },
+  };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   selectUrl(e) {
     e.target.select();
-  },
+  }
 
   render() {
     return (
@@ -84,6 +84,6 @@ const DataPreviewUrl = createReactClass({
       </div>
     );
   }
-});
+}
 
 export default DataPreviewUrl;
