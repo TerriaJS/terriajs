@@ -22,3 +22,11 @@ ts-out/
 
 # Catalog index generation files
 catalog-index*.json
+# https://v3.yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

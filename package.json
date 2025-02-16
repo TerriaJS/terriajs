@@ -220,9 +220,8 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "prepublish": "gulp post-npm-install",
+    "prepack": "gulp post-npm-install",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
-    "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "start": "terriajs-server --port 3002",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
@@ -234,5 +233,6 @@
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "yarn build-for-node && husky install"
-  }
+  },
+  "packageManager": "yarn@4.6.0"
 }
