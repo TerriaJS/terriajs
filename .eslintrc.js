@@ -62,6 +62,7 @@ module.exports = {
     ],
     "react/no-danger": "warn",
     "react/no-did-update-set-state": "error",
+    "react/jsx-no-leaked-render": "error",
     "react/no-will-update-set-state": "error",
     "react/self-closing-comp": "error",
     "react/jsx-no-undef": ["error", { allowGlobals: true }],
