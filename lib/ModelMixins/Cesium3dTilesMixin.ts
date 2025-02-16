@@ -11,6 +11,7 @@ import {
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -271,6 +272,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (colorBlendMode !== undefined)
         this.tileset.colorBlendMode = colorBlendMode;
       this.tileset.colorBlendAmount = this.colorBlendAmount;
+      if (this.lightColor)
+        this.tileset.lightColor = Cartesian3.fromArray(this.lightColor.slice());
 
       // default is 16 (baseMaximumScreenSpaceError @ 2)
       // we want to reduce to 8 for higher levels of quality
