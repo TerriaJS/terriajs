@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.7.12)
+#### next release (8.8.1)
+
+- [The next improvement]
+
+#### 8.8.0 - 2025-02-18
 
 - **Breaking changes:**
   - Upgrade Webpack to version 5
@@ -18,7 +22,6 @@
 - Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Enhanced error processing for obtaining user location
-- [The next improvement]
 
 #### 8.7.11 - 2024-12-18
 
