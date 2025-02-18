@@ -2,6 +2,7 @@
 
 #### next release (8.8.1)
 
+- enforce the WMS layer limit
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18
@@ -16,7 +17,6 @@
   - Upgraded `sass` to version 1.80+
     - Migrated SASS files to use `modern` API (by running the `sass-migrator` script)
     - Replaced webpack aliases `~terriajs-variables` and `~terriajs-mixins` with respective relative path. This was necessary to run the migrator. It also results in simpler webpack configuration.
-- enforce the WMS layer limit
 - Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
 - Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
   - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
