@@ -650,9 +650,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       maxLevel = levels.reduce((currentMaximum, level) => {
         return level > currentMaximum ? level : currentMaximum;
       }, 0);
-      minLevel = levels.reduce((currentMaximum, level) => {
-        return level < currentMaximum ? level : currentMaximum;
-      }, 0);
+      minLevel = levels.reduce((currentMinimum, level) => {
+        return level < currentMinimum ? level : currentMinimum;
+      }, Infinity);
     }
 
     return {
