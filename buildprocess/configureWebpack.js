@@ -57,7 +57,7 @@ function configureWebpack({
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
 
-  babelLoader = babelLoader || defaultBabelLoader(devMode);
+  babelLoader = babelLoader || defaultBabelLoader({ devMode });
   // Use Babel to compile our JavaScript and TypeScript files.
   config.module.rules.push({
     test: /\.(ts|js)x?$/,
