@@ -261,10 +261,10 @@ class WebMapServiceCatalogItem
 
     let layers: string[];
 
-    if (!Array.isArray(this.layers)) {
-      layers = this.layers.split(",");
-    } else {
+    if (Array.isArray(this.layers)) {
       layers = this.layers;
+    } else {
+      layers = this.layers.split(",");
     }
 
     if (this.layerLimit) layers = layers.slice(0, this.layerLimit);

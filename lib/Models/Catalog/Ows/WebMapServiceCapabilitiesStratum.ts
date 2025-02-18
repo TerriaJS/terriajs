@@ -113,7 +113,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get layerLimit() {
     if (isDefined(this.capabilities?.Service?.LayerLimit)) {
-      return parseInt(this.capabilities?.Service?.LayerLimit);
+      return parseInt(this.capabilities.Service.LayerLimit, 10);
     }
   }
 
