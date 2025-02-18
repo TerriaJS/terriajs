@@ -3,6 +3,7 @@ interface PropsType {
   onEnter?: () => void;
   onExited?: () => void;
   transitionProps?: any;
+  children: React.ReactNode;
 }
 
 declare const SlideUpFadeIn: React.FC<PropsType>;

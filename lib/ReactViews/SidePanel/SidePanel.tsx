@@ -117,6 +117,7 @@ const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
 
 type SidePanelButtonProps = {
   btnText?: string;
+  children?: React.ReactNode;
 } & ComponentPropsWithoutRef<typeof Button>;
 
 const SidePanelButton = forwardRef<HTMLButtonElement, SidePanelButtonProps>(

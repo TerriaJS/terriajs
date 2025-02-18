@@ -22,6 +22,7 @@ const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
 };
 
 const WarningBox: FC<{
+  children?: React.ReactNode;
   error?: TerriaError;
   viewState?: ViewState;
 }> = (props) => {
