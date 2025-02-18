@@ -517,13 +517,20 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return;
     }
 
+    const minimumLevel = this.minimumLevel ?? tileMatrixSet.minLevel;
+    const labels: string[] = tileMatrixSet.labels.map((label) => {
+      const numberLevel = Number(label.substring(label.lastIndexOf(":") + 1));
+      const name = label.substring(0, label.lastIndexOf(":") + 1);
+      return `${name}${numberLevel - minimumLevel}`;
+    });
+
     const imageryProvider = new WebMapTileServiceImageryProvider({
       url: proxyCatalogItemUrl(this, baseUrl),
       layer: layerIdentifier,
       style: this.style,
       tileMatrixSetID: tileMatrixSet.id,
-      tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: this.minimumLevel ?? tileMatrixSet.minLevel,
+      tileMatrixLabels: labels,
+      minimumLevel: minimumLevel,
       maximumLevel: this.maximumLevel ?? tileMatrixSet.maxLevel,
       tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
       tileHeight:
