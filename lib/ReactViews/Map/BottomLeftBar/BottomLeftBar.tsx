@@ -9,19 +9,9 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Icon from "../../../Styled/Icon";
 import Text from "../../../Styled/Text";
-import MapDataCount from "../../BottomDock/MapDataCount";
 import { useViewState } from "../../Context";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-
-const BottomLeftContainer = styled(Box)`
-  position: absolute;
-  bottom: 40px;
-  @media (max-width: ${(props) => props.theme.mobile}px) {
-    bottom: 35px;
-  }
-  display: flex;
-`;
 
 // Use padding to avoid other UI elements
 const AttributionsContainer = styled(Text)`
@@ -63,12 +53,7 @@ const BottomLeftBar: FC = observer(() => {
       );
 
   return (
-    <BottomLeftContainer theme={theme}>
-      <MapDataCount
-        terria={viewState.terria}
-        viewState={viewState}
-        elementConfig={viewState.terria.elements.get("map-data-count")}
-      />
+    <Box theme={theme} padded>
       {shouldShowPlayStoryButton(viewState) ? (
         <Box paddedHorizontally={2}>
           <MapIconButton
@@ -106,7 +91,7 @@ const BottomLeftBar: FC = observer(() => {
             .slice(0, -1)}
         </AttributionsContainer>
       )}
-    </BottomLeftContainer>
+    </Box>
   );
 });
 

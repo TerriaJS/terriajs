@@ -75,7 +75,7 @@ export const useDragHook = (
       const minX = computeSplitFraction(
         mapRect.left,
         mapRect.right,
-        mapRect.left + 100,
+        mapRect.left + 100 + (viewState.isMapFullScreen === false ? 350 : 0),
         padding,
         thumbSize
       );
