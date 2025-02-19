@@ -28,6 +28,7 @@ import TableMixin from "../../ModelMixins/TableMixin";
 import TimeVarying from "../../ModelMixins/TimeVarying";
 import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
+import type ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import { TimeSeriesContext } from "../../Table/tableFeatureInfoContext";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
@@ -82,33 +83,43 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
   @observable
   private showRawData: boolean = false;
 
+  @observable observableFeature: TerriaFeature;
+  @observable observablePosition?: Cartesian3;
+  @observable observableCatalogItem: MappableMixin.Instance; // Note this may not be known (eg. WFS).
+  @observable observableViewState: ViewState;
+
   /** See `setFeatureChangedCounter` */
   @observable featureChangedCounter = 0;
 
   constructor(props: FeatureInfoProps) {
     super(props);
     makeObservable(this);
+
+    this.observableFeature = props.feature;
+    this.observablePosition = props.position;
+    this.observableCatalogItem = props.catalogItem;
+    this.observableViewState = props.viewState;
   }
 
   componentDidMount() {
     this.templateReactionDisposer = reaction(
       () => [
-        this.props.feature,
-        this.props.catalogItem.featureInfoTemplate.template,
-        this.props.catalogItem.featureInfoTemplate.partials,
+        this.observableFeature,
+        this.observableCatalogItem.featureInfoTemplate.template,
+        this.observableCatalogItem.featureInfoTemplate.partials,
         // Note `mustacheContextData` will trigger update when `currentTime` changes (through this.featureProperties)
         this.mustacheContextData
       ],
       () => {
         if (
-          this.props.catalogItem.featureInfoTemplate.template &&
+          this.observableCatalogItem.featureInfoTemplate.template &&
           this.mustacheContextData
         ) {
           this.templatedFeatureInfoReactNode = parseCustomMarkdownToReact(
             Mustache.render(
-              this.props.catalogItem.featureInfoTemplate.template,
+              this.observableCatalogItem.featureInfoTemplate.template,
               this.mustacheContextData,
-              this.props.catalogItem.featureInfoTemplate.partials
+              this.observableCatalogItem.featureInfoTemplate.partials
             ),
             this.parseMarkdownContextData
           );
@@ -119,10 +130,15 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
       { fireImmediately: true }
     );
 
-    this.setFeatureChangedCounter(this.props.feature);
+    this.setFeatureChangedCounter(this.observableFeature);
   }
 
   componentDidUpdate(prevProps: FeatureInfoProps) {
+    this.observableFeature = this.props.feature;
+    this.observablePosition = this.props.position;
+    this.observableCatalogItem = this.props.catalogItem;
+    this.observableViewState = this.props.viewState;
+
     if (prevProps.feature !== this.props.feature) {
       this.setFeatureChangedCounter(this.props.feature);
     }
@@ -152,8 +168,8 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
   }
 
   @computed get currentTimeIfAvailable() {
-    return TimeVarying.is(this.props.catalogItem)
-      ? this.props.catalogItem.currentTimeAsJulianDate
+    return TimeVarying.is(this.observableCatalogItem)
+      ? this.observableCatalogItem.currentTimeAsJulianDate
       : undefined;
   }
 
@@ -163,11 +179,11 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
     this.featureChangedCounter;
 
     return getFeatureProperties(
-      this.props.feature,
+      this.observableFeature,
       this.currentTimeIfAvailable ?? JulianDate.now(),
-      MappableMixin.isMixedInto(this.props.catalogItem) &&
-        this.props.catalogItem.featureInfoTemplate.formats
-        ? this.props.catalogItem.featureInfoTemplate.formats
+      MappableMixin.isMixedInto(this.observableCatalogItem) &&
+        this.observableCatalogItem.featureInfoTemplate.formats
+        ? this.observableCatalogItem.featureInfoTemplate.formats
         : undefined
     );
   }
@@ -201,7 +217,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
     const propertyData = {
       ...propertyValues,
       properties,
-      feature: this.props.feature
+      feature: this.observableFeature
     };
 
     const terria: {
@@ -220,7 +236,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
       activeStyle?: { id: string | undefined } | undefined;
     } = {
       partialByName: mustacheRenderPartialByName(
-        this.props.catalogItem.featureInfoTemplate?.partials ?? {},
+        this.observableCatalogItem.featureInfoTemplate?.partials ?? {},
         propertyData
       ),
       formatNumber: mustacheFormatNumberFunction,
@@ -230,9 +246,9 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
       rawDataTable: this.rawDataMarkdown
     };
 
-    if (this.props.position) {
+    if (this.observablePosition) {
       const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(
-        this.props.position
+        this.observablePosition
       );
       terria.coords = {
         latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
@@ -244,32 +260,33 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
     // if discrete - use current discrete time
     // otherwise - use current (continuous) time
     if (
-      DiscretelyTimeVaryingMixin.isMixedInto(this.props.catalogItem) &&
-      this.props.catalogItem.currentDiscreteJulianDate
+      DiscretelyTimeVaryingMixin.isMixedInto(this.observableCatalogItem) &&
+      this.observableCatalogItem.currentDiscreteJulianDate
     ) {
       terria.currentTime = JulianDate.toDate(
-        this.props.catalogItem.currentDiscreteJulianDate
+        this.observableCatalogItem.currentDiscreteJulianDate
       );
     } else if (
-      TimeVarying.is(this.props.catalogItem) &&
-      this.props.catalogItem.currentTimeAsJulianDate
+      TimeVarying.is(this.observableCatalogItem) &&
+      this.observableCatalogItem.currentTimeAsJulianDate
     ) {
       terria.currentTime = JulianDate.toDate(
-        this.props.catalogItem.currentTimeAsJulianDate
+        this.observableCatalogItem.currentTimeAsJulianDate
       );
     }
 
     // Add activeStyle property
-    if (TableMixin.isMixedInto(this.props.catalogItem)) {
-      terria.activeStyle = { id: this.props.catalogItem.activeStyle };
+    if (TableMixin.isMixedInto(this.observableCatalogItem)) {
+      terria.activeStyle = { id: this.observableCatalogItem.activeStyle };
     }
 
     // If catalog item has featureInfoContext function
     // Merge it into other properties
-    if (FeatureInfoContext.is(this.props.catalogItem)) {
+    if (FeatureInfoContext.is(this.observableCatalogItem)) {
       return merge(
         { ...propertyData, terria },
-        this.props.catalogItem.featureInfoContext(this.props.feature) ?? {}
+        this.observableCatalogItem.featureInfoContext(this.observableFeature) ??
+          {}
       );
     }
 
@@ -278,7 +295,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
 
   clickHeader() {
     if (isDefined(this.props.onClickHeader)) {
-      this.props.onClickHeader(this.props.feature);
+      this.props.onClickHeader(this.observableFeature);
     }
   }
 
@@ -287,9 +304,9 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
    */
   @computed get parseMarkdownContextData() {
     return {
-      terria: this.props.viewState.terria,
-      catalogItem: this.props.catalogItem,
-      feature: this.props.feature
+      terria: this.observableViewState.terria,
+      catalogItem: this.observableCatalogItem,
+      feature: this.observableFeature
     };
   }
 
@@ -299,7 +316,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
    * Otherwise, will generate cesium info HTML table from feature properties
    */
   @computed get rawDataMarkdown() {
-    const feature = this.props.feature;
+    const feature = this.observableFeature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
     const description: string | undefined =
@@ -311,8 +328,8 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
       return generateCesiumInfoHTMLFromProperties(
         feature.properties,
         currentTime,
-        MappableMixin.isMixedInto(this.props.catalogItem)
-          ? this.props.catalogItem.showStringIfPropertyValueIsNull
+        MappableMixin.isMixedInto(this.observableCatalogItem)
+          ? this.observableCatalogItem.showStringIfPropertyValueIsNull
           : undefined
       );
     }
@@ -337,12 +354,12 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
   }
 
   @computed get downloadableData() {
-    let fileName = getName(this.props.catalogItem);
+    let fileName = getName(this.observableCatalogItem);
 
     // Add the Lat, Lon to the baseFilename if it is possible and not already present.
-    if (this.props.position) {
+    if (this.observablePosition) {
       const position = Ellipsoid.WGS84.cartesianToCartographic(
-        this.props.position
+        this.observablePosition
       );
       const latitude = CesiumMath.toDegrees(position.latitude);
       const longitude = CesiumMath.toDegrees(position.longitude);
@@ -371,16 +388,20 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
 
   @computed
   get generatedButtons(): FeatureInfoPanelButtonModel[] {
-    const { feature, catalogItem } = this.props;
     const buttons = filterOutUndefined(
-      this.props.viewState.featureInfoPanelButtonGenerators.map((generator) => {
-        try {
-          const dim = generator({ feature, item: catalogItem });
-          return dim;
-        } catch (error) {
-          TerriaError.from(error).log();
+      this.observableViewState.featureInfoPanelButtonGenerators.map(
+        (generator) => {
+          try {
+            const dim = generator({
+              feature: this.observableFeature,
+              item: this.observableCatalogItem
+            });
+            return dim;
+          } catch (error) {
+            TerriaError.from(error).log();
+          }
         }
-      })
+      )
     );
     return buttons;
   }
@@ -412,17 +433,17 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
 
     let title: string;
 
-    if (this.props.catalogItem.featureInfoTemplate.name) {
+    if (this.observableCatalogItem.featureInfoTemplate.name) {
       title = Mustache.render(
-        this.props.catalogItem.featureInfoTemplate.name,
+        this.observableCatalogItem.featureInfoTemplate.name,
         this.mustacheContextData,
-        this.props.catalogItem.featureInfoTemplate.partials
+        this.observableCatalogItem.featureInfoTemplate.partials
       );
     } else
       title =
-        getName(this.props.catalogItem) +
+        getName(this.observableCatalogItem) +
         " - " +
-        (this.props.feature.name || this.props.t("featureInfo.siteData"));
+        (this.observableFeature.name || t("featureInfo.siteData"));
 
     /** Show feature info download if showing raw data - or showing template and `showFeatureInfoDownloadWithTemplate` is true
      */
@@ -430,7 +451,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
       this.showRawData ||
       !this.templatedFeatureInfoReactNode ||
       (this.templatedFeatureInfoReactNode &&
-        this.props.catalogItem.featureInfoTemplate
+        this.observableCatalogItem.featureInfoTemplate
           .showFeatureInfoDownloadWithTemplate);
 
     const titleElement = this.props.printView ? (
@@ -452,10 +473,10 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
 
     // If feature is unavailable (or not showing) - show no info message
     if (
-      !this.props.feature.isAvailable(
+      !this.observableFeature.isAvailable(
         this.currentTimeIfAvailable ?? JulianDate.now()
       ) ||
-      !this.props.feature.isShowing
+      !this.observableFeature.isShowing
     ) {
       return (
         <li className={classNames(Styles.section)}>
@@ -483,7 +504,7 @@ export class FeatureInfoSection extends Component<FeatureInfoProps> {
           <section className={Styles.content}>
             {this.renderButtons()}
             <div>
-              {this.props.feature.loadingFeatureInfoUrl ? (
+              {this.observableFeature.loadingFeatureInfoUrl ? (
                 "Loading"
               ) : this.showRawData || !this.templatedFeatureInfoReactNode ? (
                 this.rawFeatureInfoReactNode ? (
