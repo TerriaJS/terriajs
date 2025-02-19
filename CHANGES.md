@@ -14,6 +14,9 @@
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
 
+- TSify `SearchBoxAndResults` and convert to a functional component #7477
+- [The next improvement]
+
 #### 8.9.0 - 2025-03-17
 
 - **Breaking changes:**
