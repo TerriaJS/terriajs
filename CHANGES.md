@@ -2,6 +2,7 @@
 
 #### next release (8.8.1)
 
+- Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18
