@@ -146,7 +146,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       geojsonCatalogItem.setTrait(
         CommonStrata.definition,
         "geoJsonData",
-        fc as any as JsonObject
+        fc as unknown as JsonObject
       );
 
       geojsonCatalogItem.setTrait(

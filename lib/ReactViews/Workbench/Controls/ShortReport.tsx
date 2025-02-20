@@ -82,7 +82,7 @@ export default class ShortReport extends React.Component<{
                   isOpen={r.show}
                   onToggle={(show) => this.clickShortReport(item, r.name, show)}
                 >
-                  {parseCustomMarkdownToReact(r.content!, {
+                  {parseCustomMarkdownToReact(r.content, {
                     catalogItem: item
                   })}
                 </Collapsible>

@@ -145,7 +145,7 @@ class GeoJsonCatalogItem
       // FeatureCollection to JsonValue
       jsonData = mergeFeatureCollections(
         featureCollections
-      ) as any as JsonValue;
+      ) as unknown as JsonValue;
     }
     // GeojsonTraits.url
     else if (this.url) {

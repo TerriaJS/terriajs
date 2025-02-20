@@ -139,7 +139,7 @@ describe("SenapsLocationsCatalogItem", function () {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
@@ -190,7 +190,7 @@ describe("SenapsLocationsCatalogItem", function () {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
@@ -243,7 +243,7 @@ describe("SenapsLocationsCatalogItem", function () {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
@@ -288,7 +288,7 @@ describe("SenapsLocationsCatalogItem", function () {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 

@@ -97,7 +97,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
       (launcherElement as any).currentStyle ||
       window.getComputedStyle(launcherElement as Element);
 
-    const tooltipWidth = tooltipTextElement!.offsetWidth;
+    const tooltipWidth = tooltipTextElement.offsetWidth;
     const offset =
       (tooltipWidth +
         parseFloat(launcherElementStyle.marginLeft) +

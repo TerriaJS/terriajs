@@ -46,7 +46,7 @@ describe("CartoMapV1CatalogItem", function () {
       const imageryProvider = item.imageryProvider;
       expect(imageryProvider).toBeDefined();
       if (imageryProvider !== undefined) {
-        expect(imageryProvider.url).toEqual(stratum.tileUrl as string);
+        expect(imageryProvider.url).toEqual(stratum.tileUrl);
         expect(imageryProvider.credit.html).toEqual(item.attribution as string);
         expect(imageryProvider.minimumLevel).toEqual(0);
         expect(imageryProvider.maximumLevel).toEqual(25);

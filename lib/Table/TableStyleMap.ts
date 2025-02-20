@@ -135,7 +135,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
       return {
         type: "enum",
         mapValueToStyle: (rowId) => {
-          const style = this.traitValues.enum!.find(
+          const style = this.traitValues.enum.find(
             (enumStyle) =>
               enumStyle.value !== null &&
               enumStyle.value === this.column?.values[rowId]

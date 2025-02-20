@@ -554,7 +554,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
           // Add feature index to FEATURE_ID_PROP ("_id_") feature property
           // This is used to refer to each feature in TableMixin (as row ID)
-          const properties = feature.properties!;
+          const properties = feature.properties;
           properties[FEATURE_ID_PROP] = currentFeatureId;
 
           // Count features types
@@ -1306,13 +1306,13 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           if (
             feature.properties !== null &&
             feature.properties !== undefined &&
-            feature.properties[this.timeProperty!] !== undefined
+            feature.properties[this.timeProperty] !== undefined
           ) {
             const dt = {
               time: new Date(
-                `${feature.properties[this.timeProperty!]}`
+                `${feature.properties[this.timeProperty]}`
               ).toISOString(),
-              tag: feature.properties[this.timeProperty!]
+              tag: feature.properties[this.timeProperty]
             };
             discreteTimesMap.set(dt.tag, dt);
           }

@@ -161,7 +161,7 @@ describe("Workbench", function () {
   it("add item", async function () {
     workbench.items = [item1, item2, item3];
 
-    const wmsItem = item4 as WebMapServiceCatalogItem;
+    const wmsItem = item4;
 
     await workbench.add(item4);
 
@@ -177,8 +177,8 @@ describe("Workbench", function () {
   it("doesn't add item if Error occurs, but adds item in Warning occurs", async function () {
     workbench.items = [item1, item2];
 
-    const wmsItem3 = item3 as WebMapServiceCatalogItem;
-    const wmsItem4 = item4 as WebMapServiceCatalogItem;
+    const wmsItem3 = item3;
+    const wmsItem4 = item4;
 
     (wmsItem3 as any).loadMapItems = () =>
       Result.error(

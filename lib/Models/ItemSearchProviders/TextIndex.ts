@@ -36,10 +36,7 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
     const promise = loadText(joinUrl(indexRootUrl, this.url))
       .then((text: string) => JSON.parse(text))
       .then((json: any) =>
-        MiniSearch.loadJS(
-          json.index as any,
-          json.options as any as MiniSearchOptions
-        )
+        MiniSearch.loadJS(json.index, json.options as MiniSearchOptions)
       );
     this.miniSearchIndex = promise;
     return promise.then(() => {});

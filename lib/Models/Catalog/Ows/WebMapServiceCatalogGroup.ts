@@ -153,7 +153,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         if (subLayer && isReadOnlyArray(subLayer)) {
           rootLayers = subLayer;
         } else if (subLayer) {
-          rootLayers = [subLayer as CapabilitiesLayer];
+          rootLayers = [subLayer];
         } else {
           break;
         }
@@ -392,7 +392,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum !== undefined) {
-      await runLater(() => getCapabilitiesStratum!.createMembersFromLayers());
+      await runLater(() => getCapabilitiesStratum.createMembersFromLayers());
     }
   }
 
