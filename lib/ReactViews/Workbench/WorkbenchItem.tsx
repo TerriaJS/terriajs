@@ -147,11 +147,11 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           </Box>
           {CatalogMemberMixin.isMixedInto(item) ? (
             <Box centered paddedHorizontally>
-              {item.isPrivate && (
+              {item.isPrivate ? (
                 <BoxSpan paddedHorizontally>
                   <PrivateIndicator inWorkbench />
                 </BoxSpan>
-              )}
+              ) : null}
               <RawButton onClick={() => this.toggleDisplay()}>
                 <BoxSpan padded>
                   {this.isOpen ? (
@@ -172,7 +172,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
             </Box>
           ) : null}
         </Box>
-        {this.isOpen && (
+        {this.isOpen ? (
           <>
             <Spacing
               bottom={2}
@@ -193,7 +193,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
             </Box>
             <Spacing bottom={2} />
           </>
-        )}
+        ) : null}
       </StyledLi>
     );
   }

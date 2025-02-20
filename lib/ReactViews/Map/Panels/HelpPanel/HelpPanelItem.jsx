@@ -69,7 +69,7 @@ class HelpPanelItem extends React.Component {
             glyph={iconGlyph}
           />
         </MenuButton>
-        {opensInPanel && (
+        {opensInPanel ? (
           <HelpVideoPanel
             terria={this.props.terria}
             viewState={this.props.viewState}
@@ -92,7 +92,7 @@ class HelpPanelItem extends React.Component {
             }
             videoCoverImageOpacity={this.props.content.videoCoverImageOpacity}
           />
-        )}
+        ) : null}
       </div>
     );
   }

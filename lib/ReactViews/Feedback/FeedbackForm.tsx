@@ -394,16 +394,16 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
 
   return (
     <Box column>
-      {label && (
+      {label ? (
         <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
           {parseCustomMarkdownToReactWithOptions(`${label}:`, {
             injectTermsAsTooltips: true,
             tooltipTerms: viewState.terria.configParameters.helpContentTerms
           })}
         </Text>
-      )}
+      ) : null}
       {childrenWithId}
-      {props.spacingBottom && <Spacing bottom={2} />}
+      {props.spacingBottom ? <Spacing bottom={2} /> : null}
     </Box>
   );
 };

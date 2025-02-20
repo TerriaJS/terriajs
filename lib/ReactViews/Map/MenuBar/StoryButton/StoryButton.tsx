@@ -100,7 +100,9 @@ const StoryButton = (props: Props) => {
       <Prompt
         centered
         isVisible={
-          storyEnabled && props.viewState.featurePrompts.indexOf("story") >= 0
+          storyEnabled
+            ? props.viewState.featurePrompts.indexOf("story") >= 0
+            : false
         }
         content={promptHtml(props.terria.stories.length > 0)}
         displayDelay={delayTime}

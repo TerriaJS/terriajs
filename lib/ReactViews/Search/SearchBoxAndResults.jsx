@@ -167,7 +167,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
             />
           </PresentationBox>
           {/* Results */}
-          {shouldShowResults && (
+          {shouldShowResults ? (
             <Box
               position="absolute"
               fullWidth
@@ -184,16 +184,16 @@ export class SearchBoxAndResultsRaw extends React.Component {
               {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
               {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
               {this.props.terria.searchBarModel.showSearchInCatalog &&
-                searchState.catalogSearchProvider && (
-                  <Box column paddedRatio={2}>
-                    <SearchInDataCatalog
-                      viewState={viewState}
-                      handleClick={() => {
-                        this.toggleShowLocationSearchResults(false);
-                      }}
-                    />
-                  </Box>
-                )}
+              searchState.catalogSearchProvider ? (
+                <Box column paddedRatio={2}>
+                  <SearchInDataCatalog
+                    viewState={viewState}
+                    handleClick={() => {
+                      this.toggleShowLocationSearchResults(false);
+                    }}
+                  />
+                </Box>
+              ) : null}
               <Box
                 column
                 css={`
@@ -221,7 +221,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
                 ))}
               </Box>
             </Box>
-          )}
+          ) : null}
         </Box>
       </Text>
     );

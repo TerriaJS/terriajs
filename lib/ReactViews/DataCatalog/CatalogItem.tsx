@@ -69,7 +69,7 @@ function CatalogItem(props: Props) {
         </ItemTitleButton>
       </Text>
       <Box>
-        {props.isPrivate && <PrivateIndicator />}
+        {props.isPrivate ? <PrivateIndicator /> : null}
         <ActionButton
           type="button"
           onClick={props.onBtnClick}
@@ -77,7 +77,7 @@ function CatalogItem(props: Props) {
         >
           {STATE_TO_ICONS[props.btnState]}
         </ActionButton>
-        {props.trashable && (
+        {props.trashable ? (
           <ActionButton
             type="button"
             onClick={props.onTrashClick}
@@ -85,7 +85,7 @@ function CatalogItem(props: Props) {
           >
             {STATE_TO_ICONS[ButtonState.Trash]}
           </ActionButton>
-        )}
+        ) : null}
       </Box>
     </Root>
   );

@@ -84,13 +84,13 @@ const BottomLeftBar: FC = observer(() => {
       ) : null}
       {/* Google Logo. Needed for Google Photorealistic 3D Tiles
        */}
-      {isUsingGooglePhotorealistic3dTiles && (
+      {isUsingGooglePhotorealistic3dTiles ? (
         <img
           height="18px"
           style={{ paddingLeft: "8px" }}
           src="build/TerriaJS/images/google_on_non_white_hdpi.png"
         />
-      )}
+      ) : null}
       {/* On screen data attributions. At the moment, this supports only Cesium viewer.
           Needed for Google Photorealistic 3D Tiles
         */}

@@ -139,15 +139,16 @@ class HelpPanel extends React.Component {
         </Box>
         <Spacing bottom={10} />
         <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
-          {helpItems &&
-            helpItems.map((item, i) => (
-              <HelpPanelItem
-                key={i}
-                terria={this.props.viewState.terria}
-                viewState={this.props.viewState}
-                content={item}
-              />
-            ))}
+          {helpItems
+            ? helpItems.map((item, i) => (
+                <HelpPanelItem
+                  key={i}
+                  terria={this.props.viewState.terria}
+                  viewState={this.props.viewState}
+                  content={item}
+                />
+              ))
+            : null}
         </Box>
       </Box>
     );

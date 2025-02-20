@@ -193,7 +193,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     props.renderIcon && typeof props.renderIcon === "function"
       ? () => (
           <IconSpan
-            css={iconProps && iconProps.css}
+            css={iconProps ? iconProps.css : null}
             margin={
               // Apply left or right margin only when the button content is not empty
               props.children
@@ -220,7 +220,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     >
       <BoxSpan centered>
         {!props.rightIcon && IconComponent?.()}
-        {props.children && (
+        {props.children ? (
           <TextSpan
             white={primary || secondary || warning || textLight}
             medium={secondary}
@@ -228,8 +228,8 @@ export const Button: React.FC<ButtonProps> = (props) => {
           >
             {props.children}
           </TextSpan>
-        )}
-        {props.rightIcon && IconComponent?.()}
+        ) : null}
+        {props.rightIcon ? IconComponent?.() : null}
       </BoxSpan>
     </StyledButton>
   );

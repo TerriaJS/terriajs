@@ -109,7 +109,7 @@ const SidePanelButton = React.forwardRef<
     <Button
       primary
       ref={ref}
-      renderIcon={props.children && (() => props.children)}
+      renderIcon={props.children ? () => props.children : null}
       textProps={{
         large: true
       }}

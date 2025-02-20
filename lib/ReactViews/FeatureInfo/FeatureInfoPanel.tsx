@@ -358,7 +358,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             </div>
           )}
           <ul className={Styles.body}>
-            {this.props.printView && locationElements}
+            {this.props.printView ? locationElements : null}
 
             {
               // Is feature info visible

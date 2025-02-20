@@ -59,7 +59,9 @@ export const Guidance = ({ children }) => {
   return (
     <div className={Styles.guidance}>
       <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-      {showGuidance && <GuidanceContextModal>{children}</GuidanceContextModal>}
+      {showGuidance ? (
+        <GuidanceContextModal>{children}</GuidanceContextModal>
+      ) : null}
     </div>
   );
 };

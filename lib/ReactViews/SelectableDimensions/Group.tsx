@@ -60,9 +60,9 @@ export const SelectableDimensionGroup: React.FC<{
         btnRight={dim.type === "group"}
       >
         <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
-          {isCheckboxGroup(dim) && childDims.length === 0 && dim.emptyText && (
+          {isCheckboxGroup(dim) && childDims.length === 0 && dim.emptyText ? (
             <Text>{dim.emptyText}</Text>
-          )}
+          ) : null}
           {/* recursively render nested dimensions */}
           {childDims.map((nestedDim) => (
             <SelectableDimension

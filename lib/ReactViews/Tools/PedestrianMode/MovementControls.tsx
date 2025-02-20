@@ -46,14 +46,14 @@ const MovementControls: React.FC<MovementControlsProps> = (props) => {
           maximized={isMaximized}
         />
       </Title>
-      {isMaximized && (
+      {isMaximized ? (
         <Body>
           <img alt="Mouse controls" src={mouseControlsImage} />
           <img alt="Direction controls" src={wasdControlsImage} />
           <Spacing bottom={1} />
           <img alt="Height controls" src={heightControlsImage} />
         </Body>
-      )}
+      ) : null}
     </Container>
   );
 };

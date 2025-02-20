@@ -74,7 +74,7 @@ class HelpVideoPanel extends React.Component {
           >
             {helpItemType === "videoAndContent" && (
               <>
-                {this.props.videoUrl && this.props.placeholderImage && (
+                {this.props.videoUrl && this.props.placeholderImage ? (
                   <div key={"image"}>
                     <div
                       className={Styles.videoLink}
@@ -95,14 +95,14 @@ class HelpVideoPanel extends React.Component {
                     </div>
                     <Spacing bottom={5} />
                   </div>
-                )}
-                {this.props.markdownContent && (
+                ) : null}
+                {this.props.markdownContent ? (
                   <StyledHtml
                     key={"markdownContent"}
                     viewState={this.props.viewState}
                     markdown={this.props.markdownContent}
                   />
-                )}
+                ) : null}
               </>
             )}
             {helpItemType === "slider" && (

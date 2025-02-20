@@ -30,15 +30,15 @@ function WelcomeMessageButton(props) {
   return (
     <Button primary rounded fullWidth onClick={props.onClick}>
       <Box centered>
-        {props.buttonIcon && (
+        {props.buttonIcon ? (
           <StyledIcon light styledWidth={"22px"} glyph={props.buttonIcon} />
-        )}
+        ) : null}
         <Spacing right={2} />
-        {props.buttonText && (
+        {props.buttonText ? (
           <TextSpan textLight extraLarge>
             {props.buttonText}
           </TextSpan>
-        )}
+        ) : null}
       </Box>
     </Button>
   );
@@ -322,7 +322,7 @@ export const WelcomeMessagePure = (props) => {
                       setShouldExploreData(true);
                     }}
                   />
-                  {viewState.useSmallScreenInterface && (
+                  {viewState.useSmallScreenInterface ? (
                     <>
                       <Spacing bottom={4} />
                       <WelcomeMessageButton
@@ -334,7 +334,7 @@ export const WelcomeMessagePure = (props) => {
                         }}
                       />
                     </>
-                  )}
+                  ) : null}
                 </Box>
               </Box>
               {!viewState.useSmallScreenInterface && <Spacing bottom={13} />}

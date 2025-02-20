@@ -85,7 +85,7 @@ export const shareConvertNotification = (
           titleTextProps={{ large: true }}
           bodyBoxProps={{ padded: true }}
         >
-          {rootMessages && (
+          {rootMessages ? (
             <>
               <ul>
                 {rootMessages.map((message, i) => (
@@ -94,7 +94,7 @@ export const shareConvertNotification = (
               </ul>
               <Spacing bottom={1} />
             </>
-          )}
+          ) : null}
 
           {Object.entries(messagesForPath).map(([path, messages]) => (
             <>

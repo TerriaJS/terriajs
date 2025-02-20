@@ -64,16 +64,16 @@ const DataPreviewUrl = createReactClass({
           value={this.props.metadataItem.url}
           onClick={this.selectUrl}
         />
-        {(this.props.metadataItem.type === "wms" ||
-          (this.props.metadataItem.type === "esri-mapServer" &&
-            this.props.metadataItem.layers)) && (
+        {this.props.metadataItem.type === "wms" ||
+        (this.props.metadataItem.type === "esri-mapServer" &&
+          this.props.metadataItem.layers) ? (
           <p>
             Layer name
             {this.props.metadataItem.layers.split(",").length > 1
               ? "s"
               : ""}: {this.props.metadataItem.layers}
           </p>
-        )}
+        ) : null}
         {this.props.metadataItem.type === "wfs" && (
           <p>
             Type name

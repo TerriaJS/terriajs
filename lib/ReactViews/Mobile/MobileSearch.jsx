@@ -62,7 +62,7 @@ class MobileSearch extends React.Component {
     return (
       <div className={Styles.providerResult}>
         <ul className={Styles.btnList}>
-          {searchState.catalogSearchProvider && (
+          {searchState.catalogSearchProvider ? (
             <SearchResult
               clickAction={() => this.searchInDataCatalog()}
               icon={null}
@@ -72,7 +72,7 @@ class MobileSearch extends React.Component {
               })}
               searchResultTheme={theme}
             />
-          )}
+          ) : null}
         </ul>
       </div>
     );

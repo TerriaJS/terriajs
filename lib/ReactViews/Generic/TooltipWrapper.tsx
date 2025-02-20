@@ -154,35 +154,37 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
         `}
       >
         {/* Caution: if this is ever not the first element be sure to fix adjustOffset */}
-        {this.props.launcher &&
-          this.props.launcher({
-            state: this.state,
-            launch: () => this.forceSetState(true),
-            forceSetState: this.forceSetState
-          })}
-        {this.state.open &&
-          ReactDOM.createPortal(
-            <BoxSpan
-              paddedRatio={3}
-              position="absolute"
-              rounded
-              style={{
-                ...innerElementStyles
-              }}
-              css={`
-                // TODO: find offending z-index - likely still in scss
-                z-index: ${theme.frontComponentZIndex + 999999 + 2};
-                background-color: ${theme.textDark};
-                color: ${theme.textLight};
-                text-align: left;
-                top: ${this.getTooltipCoords().y}px;
-                left: ${this.getTooltipCoords().x}px;
-              `}
-            >
-              {this.props.children(true, this.dismiss)}
-            </BoxSpan>,
-            document.body
-          )}
+        {this.props.launcher
+          ? this.props.launcher({
+              state: this.state,
+              launch: () => this.forceSetState(true),
+              forceSetState: this.forceSetState
+            })
+          : null}
+        {this.state.open
+          ? ReactDOM.createPortal(
+              <BoxSpan
+                paddedRatio={3}
+                position="absolute"
+                rounded
+                style={{
+                  ...innerElementStyles
+                }}
+                css={`
+                  // TODO: find offending z-index - likely still in scss
+                  z-index: ${theme.frontComponentZIndex + 999999 + 2};
+                  background-color: ${theme.textDark};
+                  color: ${theme.textLight};
+                  text-align: left;
+                  top: ${this.getTooltipCoords().y}px;
+                  left: ${this.getTooltipCoords().x}px;
+                `}
+              >
+                {this.props.children(true, this.dismiss)}
+              </BoxSpan>,
+              document.body
+            )
+          : null}
         {/* Render this always so that the ref exists for calculations */}
         <BoxSpan
           paddedRatio={3}

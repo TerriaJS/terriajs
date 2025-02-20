@@ -36,8 +36,11 @@ export default class BooleanParameterEditor extends React.Component<{
           title={description}
           onClick={this.onClick.bind(this)}
         >
-          {value && <Icon glyph={Icon.GLYPHS.checkboxOn} />}
-          {!value && <Icon glyph={Icon.GLYPHS.checkboxOff} />}
+          {
+            <Icon
+              glyph={value ? Icon.GLYPHS.checkboxOn : Icon.GLYPHS.checkboxOff}
+            />
+          }
           {name}
         </button>
       </div>
@@ -67,8 +70,7 @@ export default class BooleanParameterEditor extends React.Component<{
           title={description}
           onClick={this.onClick.bind(this)}
         >
-          {value && <Icon glyph={Icon.GLYPHS.radioOn} />}
-          {!value && <Icon glyph={Icon.GLYPHS.radioOff} />}
+          {<Icon glyph={value ? Icon.GLYPHS.radioOn : Icon.GLYPHS.radioOff} />}
           {name}
         </button>
       </div>
@@ -79,12 +81,12 @@ export default class BooleanParameterEditor extends React.Component<{
     return (
       <div>
         {!this.props.parameter.hasNamedStates && this.renderCheckbox()}
-        {this.props.parameter.hasNamedStates && (
+        {this.props.parameter.hasNamedStates ? (
           <div>
             {this.renderRadio(true)}
             {this.renderRadio(false)}
           </div>
-        )}
+        ) : null}
       </div>
     );
   }

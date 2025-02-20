@@ -97,7 +97,7 @@ function CatalogGroup(props) {
           <Box justifySpaceBetween>
             <Box>{props.text}</Box>
             <Box centered>
-              {props.isPrivate && <PrivateIndicator />}
+              {props.isPrivate ? <PrivateIndicator /> : null}
               <span
                 className={classNames(Styles.caret, {
                   [Styles.offsetRight]: props.removable
@@ -110,7 +110,7 @@ function CatalogGroup(props) {
                 )}
               </span>
               {/* This next button is for user added data, and perhaps should be called 'trashable' instead of 'removable' */}
-              {props.removable && (
+              {props.removable ? (
                 <button
                   type="button"
                   className={Styles.trashGroup}
@@ -119,34 +119,36 @@ function CatalogGroup(props) {
                 >
                   <Icon glyph={Icon.GLYPHS.trashcan} />
                 </button>
-              )}
+              ) : null}
             </Box>
           </Box>
         </CatalogGroupButton>
       </Text>
-      {props.open && (
+      {props.open ? (
         <ul
           className={classNames(Styles.catalogGroup, {
             [Styles.catalogGroupLowerLevel]: !props.topLevel
           })}
         >
-          {props.loading && (
+          {props.loading ? (
             <li key="loader">
               <Loader />
             </li>
-          )}
-          {!props.loading && props.children.length === 0 && props.emptyMessage && (
+          ) : null}
+          {!props.loading &&
+          props.children.length === 0 &&
+          props.emptyMessage ? (
             <li
               className={classNames(Styles.label, Styles.labelNoResults)}
               key="empty"
             >
               {props.emptyMessage}
             </li>
-          )}
+          ) : null}
 
           {!props.loading ? props.children : null}
         </ul>
-      )}
+      ) : null}
     </li>
   );
 }

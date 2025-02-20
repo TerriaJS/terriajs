@@ -390,7 +390,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     return (
       <ButtonsContainer>
         {/* If we have templated feature info (and not in print mode) - render "show raw data" button */}
-        {!this.props.printView && this.templatedFeatureInfoReactNode && (
+        {!this.props.printView && this.templatedFeatureInfoReactNode ? (
           <FeatureInfoPanelButton
             onClick={this.toggleRawData.bind(this)}
             text={
@@ -399,7 +399,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 : t("featureInfo.showRawData")
             }
           />
-        )}
+        ) : null}
         {this.generatedButtons.map((button, i) => (
           <FeatureInfoPanelButton key={i} {...button} />
         ))}
