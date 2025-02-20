@@ -1,2 +1,4 @@
 CHANGES.md merge=union
 *.enc binary
+/.yarn/releases/** binary
+/.yarn/plugins/** binary
