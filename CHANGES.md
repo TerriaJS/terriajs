@@ -2,6 +2,7 @@
 
 #### next release (8.8.1)
 
+- Update ts-essentials to 10.0.4
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18
