@@ -251,7 +251,9 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   componentWillUnmount() {
-    this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
+    if (this.currentDateAutorunDisposer) {
+      this.currentDateAutorunDisposer();
+    }
     window.removeEventListener("click", this.closePickerEventHandler);
   }
 

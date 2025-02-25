@@ -31,11 +31,11 @@ import {
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
-  Feature as ProtomapsFeature,
   GeomType,
   LineSymbolizer,
-  PolygonSymbolizer
-} from "protomaps";
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
+} from "protomaps-leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -77,10 +77,12 @@ import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GeojsonSource,
-  GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import {
+  GEOJSON_SOURCE_LAYER_NAME,
+  ProtomapsGeojsonSource
+} from "../Map/Vector/ProtomapsGeojsonSource";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -390,15 +392,17 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (this.isLoadingMapItems) {
         return [];
       }
-      this._dataSource ? (this._dataSource.show = this.show) : null;
-      let points = this.useTableStylingAndProtomaps
-        ? this.createPoints(this.activeTableStyle)
-        : undefined;
-
-      points = points?.entities.values.length === 0 ? undefined : points;
-
-      points ? (points.show = this.show) : null;
-
+      if (this._dataSource) {
+        this._dataSource.show = this.show;
+      }
+      let points = undefined;
+      if (this.useTableStylingAndProtomaps) {
+        const pts = this.createPoints(this.activeTableStyle);
+        if (pts && pts.entities.values.length !== 0) {
+          points = pts;
+          points.show = this.show;
+        }
+      }
       return filterOutUndefined([
         points,
         this._dataSource,
@@ -637,11 +641,13 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             ([styleKey, styleValue]) =>
               featurePropertiesEntires.find(([featKey, featValue]) => {
                 if (typeof styleValue === "string" && !style.caseSensitive) {
-                  featKey === styleKey &&
+                  return (
+                    featKey === styleKey &&
                     (typeof featValue === "string"
                       ? featValue
                       : featValue.toString()
-                    ).toLowerCase() === styleValue.toLowerCase();
+                    ).toLowerCase() === styleValue.toLowerCase()
+                  );
                 }
                 return featKey === styleKey && featValue === styleValue;
               }) !== undefined
@@ -778,7 +784,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // If so we can copy GeojsonSource over to save running geojson-vt again
       if (
         this._imageryProvider instanceof ProtomapsImageryProvider &&
-        this._imageryProvider.source instanceof GeojsonSource &&
+        this._imageryProvider.source instanceof ProtomapsGeojsonSource &&
         this._imageryProvider.source.geojsonObject === this.readyData
       ) {
         protomapsData = this._imageryProvider.source;
@@ -1491,7 +1497,7 @@ export function toFeatureCollection(
   }
   if (Array.isArray(json) && json.every((item) => isGeometries(item))) {
     return featureCollection(
-      json.map((item) => feature(item, item.properties))
+      json.map((item) => feature(item))
     ) as FeatureCollectionWithCrs;
   }
 }

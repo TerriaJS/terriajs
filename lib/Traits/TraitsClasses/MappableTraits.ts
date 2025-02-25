@@ -230,7 +230,9 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
   })
-  disableZoomTo: boolean = false;
+  get disableZoomTo(): boolean {
+    return false;
+  }
 
   @primitiveTrait({
     type: "boolean",

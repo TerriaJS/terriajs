@@ -703,7 +703,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process.env.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be provided via the
@@ -935,6 +935,7 @@ export default class Terria {
   addShareKey(id: string, shareKey: string): void {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
@@ -2103,7 +2104,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as TerriaFeature[]
+        vectorFeatures
       );
     }
 

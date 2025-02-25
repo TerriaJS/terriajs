@@ -12,37 +12,14 @@ import { SelectableDimensionEnum } from "../../../../lib/Models/SelectableDimens
 import Terria from "../../../../lib/Models/Terria";
 import { ArcGisImageServerRenderingRule } from "../../../../lib/Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
 
-const rasterFnImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/rasterFns/imageserver.json")
-);
-
-const rasterFnLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/rasterFns/legend.json")
-);
-
-const timeImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/imageserver.json")
-);
-
-const timeLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/legend.json")
-);
-
-const timeIdentify = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/time/identify.json")
-);
-
-const tileImageServer = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/imageserver.json")
-);
-
-const tileLegend = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/legend.json")
-);
-
-const tileIdentify = JSON.stringify(
-  require("../../../../wwwroot/test/ArcGisImageServer/tile/identify.json")
-);
+import rasterFnImageServer from "../../../../wwwroot/test/ArcGisImageServer/rasterFns/imageserver.json";
+import rasterFnLegend from "../../../../wwwroot/test/ArcGisImageServer/rasterFns/legend.json";
+import timeImageServer from "../../../../wwwroot/test/ArcGisImageServer/time/imageserver.json";
+import timeLegend from "../../../../wwwroot/test/ArcGisImageServer/time/legend.json";
+import timeIdentify from "../../../../wwwroot/test/ArcGisImageServer/time/identify.json";
+import tileImageServer from "../../../../wwwroot/test/ArcGisImageServer/tile/imageserver.json";
+import tileLegend from "../../../../wwwroot/test/ArcGisImageServer/tile/legend.json";
+import tileIdentify from "../../../../wwwroot/test/ArcGisImageServer/tile/identify.json";
 
 let spyOnLoad: any;
 
@@ -60,27 +37,27 @@ describe("ArcGisImageServer", function () {
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\?.+/
-    ).andReturn({ responseText: rasterFnImageServer });
+    ).andReturn({ responseJSON: rasterFnImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/rasterfns\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: rasterFnLegend });
+    ).andReturn({ responseJSON: rasterFnLegend });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\?.+/
-    ).andReturn({ responseText: timeImageServer });
+    ).andReturn({ responseJSON: timeImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/time\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: timeLegend });
+    ).andReturn({ responseJSON: timeLegend });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/tile\/ImageServer\?.+/
-    ).andReturn({ responseText: tileImageServer });
+    ).andReturn({ responseJSON: tileImageServer });
 
     jasmine.Ajax.stubRequest(
       /http:\/\/example\.com\/agsimage\/rest\/services\/tile\/ImageServer\/legend\?.+/
-    ).andReturn({ responseText: tileLegend });
+    ).andReturn({ responseJSON: tileLegend });
 
     jasmine.Ajax.stubRequest("http://example.com/token").andReturn({
       responseText: JSON.stringify({
@@ -560,13 +537,13 @@ describe("ArcGisImageServerImageryProvider", function () {
     jasmine.Ajax.stubRequest(
       "http://example.com/agsimage/rest/services/time/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%2057.29577951308232%2C%20y%3A%2057.29577951308232%2C%20spatialReference%3A%20{wkid%3A%204326}}&returnCatalogItems=false&token=fakeToken&foo=bar"
     ).andReturn({
-      responseText: timeIdentify
+      responseJSON: timeIdentify
     });
 
     jasmine.Ajax.stubRequest(
       "http://example.com/agsimage/rest/services/tile/ImageServer/identify?f=json&geometryType=esriGeometryPoint&geometry={x%3A%206378137%2C%20y%3A%207820815.276085484%2C%20spatialReference%3A%20{wkid%3A%203857}}&returnCatalogItems=false&token=fakeToken&foo=bar"
     ).andReturn({
-      responseText: tileIdentify
+      responseJSON: tileIdentify
     });
   });
 

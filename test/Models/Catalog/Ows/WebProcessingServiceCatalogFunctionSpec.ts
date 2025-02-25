@@ -20,21 +20,17 @@ import StringParameter from "../../../../lib/Models/FunctionParameters/StringPar
 import Terria from "../../../../lib/Models/Terria";
 import "../../../SpecHelpers";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-const processDescriptionsXml = require("raw-loader!../../../../wwwroot/test/WPS/ProcessDescriptions.xml");
-
-const executeResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/ExecuteResponse.xml");
-
-const failedExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/FailedExecuteResponse.xml");
-
-const pendingExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/PendingExecuteResponse.xml");
+import processDescriptionsXml from "../../../../wwwroot/test/WPS/ProcessDescriptions.xml";
+import executeResponseXml from "../../../../wwwroot/test/WPS/ExecuteResponse.xml";
+import failedExecuteResponseXml from "../../../../wwwroot/test/WPS/FailedExecuteResponse.xml";
+import pendingExecuteResponseXml from "../../../../wwwroot/test/WPS/PendingExecuteResponse.xml";
 
 describe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;
@@ -64,7 +60,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
   });
 
   afterEach(function () {

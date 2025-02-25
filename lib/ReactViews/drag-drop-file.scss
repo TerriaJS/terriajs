@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../Sass/common/mixins";
+@use "../Sass/common/_variables";
+@use "../Sass/common/mixins";
 
 .drop-zone {
   composes: drop-zone from "../Sass/common/_drop_zone.scss";
@@ -22,12 +22,12 @@
 }
 
 .inner {
-  @include vertical-align();
+  @include mixins.vertical-align();
 
   color: #fff;
   color: rgba(#fff, 0.9);
   text-align: center;
-  font-family: $font-pop;
+  font-family: variables.$font-pop;
 
   &:before {
     content: "";

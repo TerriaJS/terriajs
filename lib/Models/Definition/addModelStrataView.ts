@@ -15,7 +15,7 @@ export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
 >(
   /* TODO: Use a more specific type than "Function". */
-  /* eslint-disable-next-line @typescript-eslint/ban-types */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   model: Stratified<InstanceType<T>> | Function,
   Traits: T
 ): ModelPropertiesFromTraits<InstanceType<T>>;

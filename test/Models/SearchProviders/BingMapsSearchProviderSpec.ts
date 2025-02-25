@@ -1,10 +1,7 @@
 import { runInAction } from "mobx";
-import Resource from "terriajs-cesium/Source/Core/Resource";
 import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
-
-import * as loadJsonp from "../../../lib/Core/loadJsonp";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 
 describe("BingMapsSearchProvider", function () {
@@ -16,6 +13,12 @@ describe("BingMapsSearchProvider", function () {
       baseUrl: "./"
     });
     bingMapsSearchProvider = new BingMapsSearchProvider("test", terria);
+
+    jasmine.Ajax.install();
+  });
+
+  afterEach(() => {
+    jasmine.Ajax.uninstall();
   });
 
   it(" - properly mixed", () => {
@@ -28,7 +31,7 @@ describe("BingMapsSearchProvider", function () {
     expect(bingMapsSearchProvider.url).toEqual("https://dev.virtualearth.net/");
   });
 
-  it(" - propperly sets query parameters", () => {
+  it(" - propperly sets query parameters", async () => {
     runInAction(() => {
       bingMapsSearchProvider.setTrait(
         CommonStrata.definition,
@@ -46,25 +49,16 @@ describe("BingMapsSearchProvider", function () {
         false
       );
     });
-    const test = spyOn(loadJsonp, "loadJsonp").and.returnValue(
-      Promise.resolve({
-        resourceSets: []
-      })
-    );
 
-    bingMapsSearchProvider.search("test");
+    jasmine.Ajax.stubRequest(/.*/).andReturn({
+      responseText: JSON.stringify({ resourceSets: [] })
+    });
+    const result = bingMapsSearchProvider.search("test");
+    await result.resultsCompletePromise;
 
-    expect(test).toHaveBeenCalledWith(
-      new Resource({
-        url: "https://dev.virtualearth.net/REST/v1/Locations",
-        queryParameters: {
-          culture: "en-au",
-          query: "test",
-          key: "test-key",
-          maxResults: 5
-        }
-      }),
-      "jsonp"
+    const req = jasmine.Ajax.requests.mostRecent();
+    expect(req.url).toBe(
+      "https://dev.virtualearth.net/REST/v1/Locations?culture=en-au&query=test&key=test-key&maxResults=5"
     );
   });
 
@@ -86,8 +80,11 @@ describe("BingMapsSearchProvider", function () {
         false
       );
     });
-    spyOn(loadJsonp, "loadJsonp").and.returnValue(
-      Promise.resolve({
+
+    jasmine.Ajax.stubRequest(
+      "https://dev.virtualearth.net/REST/v1/Locations?culture=en-au&query=test&key=test-key&maxResults=5"
+    ).andReturn({
+      responseText: JSON.stringify({
         resourceSets: [
           {
             resources: [
@@ -126,9 +123,10 @@ describe("BingMapsSearchProvider", function () {
           }
         ]
       })
-    );
+    });
 
-    const searchResult = await bingMapsSearchProvider.search("test");
+    const searchResult = bingMapsSearchProvider.search("test");
+    await searchResult.resultsCompletePromise;
 
     expect(searchResult.results.length).toEqual(2);
     expect(searchResult.message).toBeUndefined();

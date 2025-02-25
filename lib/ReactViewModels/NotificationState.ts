@@ -61,7 +61,9 @@ export default class NotificationState {
   @action
   dismissCurrentNotification(): Notification | undefined {
     const removed = this.notifications.shift();
-    removed?.onDismiss && removed.onDismiss();
+    if (removed?.onDismiss) {
+      removed.onDismiss();
+    }
     // Remove all ignored notifications
     // This is needed here as the action of dismissing the current notification may change "ignore" status of notifications in stack
     this.notifications = this.notifications.filter(

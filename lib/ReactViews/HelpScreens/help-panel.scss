@@ -1,22 +1,22 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/_mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/_mixins";
 
 .share-panel {
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .dropdown-inner {
-  width: $share-panel-width;
-  @include transform-origin(50%, top);
+  width: variables.$share-panel-width;
+  @include mixins.transform-origin(50%, top);
 }
 
 .heading-label {
 }
 
-@include empty-module("link-wrapper");
+@include mixins.empty-module("link-wrapper");
 
 .link {
-  @include link($overlay);
+  @include mixins.link(variables.$overlay);
 }
 
 .viewer-selector,
@@ -24,11 +24,11 @@
   composes: clearfix from "../../Sass/common/_base.scss";
   composes: list-reset from "../../Sass/common/_base.scss";
 
-  margin: 0 -$padding-mini;
+  margin: 0 - (variables.$padding-mini);
 }
 
 .list-item {
-  padding: $padding-mini;
+  padding: variables.$padding-mini;
 }
 
 .btn--viewer {
@@ -45,7 +45,7 @@
   padding-left: 4px !important;
   padding-right: 4px !important;
 
-  color: $text-light;
+  color: variables.$text-light;
 
   &.is-active {
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -53,7 +53,7 @@
 }
 
 .paragraph {
-  margin: $padding 0;
+  margin: variables.$padding 0;
   display: block;
 }
 
@@ -61,7 +61,7 @@
   composes: field from "../../Sass/common/_form.scss";
 
   color: #ddd;
-  background: $overlay;
+  background: variables.$overlay;
 }
 
 .shorten-url {

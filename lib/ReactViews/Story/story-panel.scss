@@ -1,39 +1,39 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .story-container {
-  @include transform(translateY(20%));
+  @include mixins.transform(translateY(20%));
   opacity: 0;
-  @include transition(all 0.3s);
+  @include mixins.transition(all 0.3s);
   pointer-events: auto;
   opacity: 0;
   width: 100%;
   min-height: 2em;
   max-width: 1200px;
   background-color: #ffffff;
-  color: $text-dark;
+  color: variables.$text-dark;
   text-align: left;
   box-sizing: border-box;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
 
   &.is-mounted {
     opacity: 1;
-    @include transform(none);
+    @include mixins.transform(none);
   }
 
   .left {
-    border-right: 1px solid $field-border;
+    border-right: 1px solid variables.$field-border;
   }
   .right {
-    border-left: 1px solid $field-border;
+    border-left: 1px solid variables.$field-border;
   }
 }
 
 // styling for the "this map contains a story" notification
 :global {
   .story.tjs-notification-window__wrapper {
-    @media (min-width: $md) {
-      left: $work-bench-width;
+    @media (min-width: variables.$md) {
+      left: variables.$work-bench-width;
     }
     .tjs-notification-window__notification {
       // background-color: $color-primary;

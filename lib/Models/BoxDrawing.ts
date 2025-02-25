@@ -296,7 +296,11 @@ export default class BoxDrawing {
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
-          value === true ? this.startInteractions() : this.stopInteractions();
+          if (value === true) {
+            this.startInteractions();
+          } else {
+            this.stopInteractions();
+          }
         }
         return Reflect.set(target, prop, value);
       }
@@ -1106,9 +1110,11 @@ export default class BoxDrawing {
 
     const onMouseOver = () => {
       highlightAllSides();
-      isTopOrBottomSide
-        ? setCanvasCursor(scene, "n-resize")
-        : setCustomCanvasCursor(scene, "grab", "ew-resize");
+      if (isTopOrBottomSide) {
+        setCanvasCursor(scene, "n-resize");
+      } else {
+        setCustomCanvasCursor(scene, "grab", "ew-resize");
+      }
     };
 
     const onMouseOut = () => {
@@ -1120,9 +1126,11 @@ export default class BoxDrawing {
       Cartesian2.clone(click.position, moveStartPos);
       dragStart = true;
       highlightAllSides();
-      isTopOrBottomSide
-        ? setCanvasCursor(scene, "n-resize")
-        : setCustomCanvasCursor(scene, "grabbing", "ew-resize");
+      if (isTopOrBottomSide) {
+        setCanvasCursor(scene, "n-resize");
+      } else {
+        setCustomCanvasCursor(scene, "grabbing", "ew-resize");
+      }
     };
 
     const onPickDisabled = () => {
