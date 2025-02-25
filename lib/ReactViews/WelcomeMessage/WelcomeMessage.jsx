@@ -10,7 +10,7 @@ import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
 import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
-import { useKeyPress } from "../Hooks/useKeyPress.js";
+import { useKeyPress } from "../Hooks/useKeyPress";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { withViewState } from "../Context";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
