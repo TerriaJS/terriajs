@@ -169,6 +169,7 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
+    "@types/d3-zoom": "^3.0.8",
     "@types/node": "^22.13.1",
     "@types/proj4": "^2.5.5",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
