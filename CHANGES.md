@@ -2,6 +2,7 @@
 
 #### next release (8.8.1)
 
+- Fix GeoJSON regression bug (from 8.8.0) - multi-polygons, polygons and line features weren't being rendered through `ProtomapsImageryProvider`.
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18

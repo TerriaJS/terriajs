@@ -1,6 +1,6 @@
 {
   "type": "Feature",
-  "bbox": [-10.0, -10.0, 10.0, 10.0],
+  "bbox": [100, -0, 101, 1],
   "properties": {
     "foo": "hi",
     "bar": "bye"
