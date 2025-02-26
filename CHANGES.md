@@ -19,6 +19,7 @@
 - Fix bug with expanding "Developer Details" in the error modal
 - Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon` features were being dropped
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
+- Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18

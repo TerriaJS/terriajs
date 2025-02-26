@@ -8,9 +8,8 @@ import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/Protom
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
 import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
-import ArcGisFeatureServerCatalogItem, {
-  convertEsriPointSizeToPixels
-} from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import { convertEsriPointSizeToPixels } from "../../../../lib/Models/Catalog/Esri/esriStyleToTableStyle";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
@@ -860,7 +859,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         },
         {
           color: "rgb(20,158,206)",
-          dash: [2, 4],
+          dash: [1, 3],
           legendTitle: "2",
           width: 2,
           value: "2"
@@ -874,21 +873,21 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         },
         {
           color: "rgb(158,85,156)",
-          dash: [6, 3, 1, 3],
+          dash: [4, 3, 1, 3],
           legendTitle: "4",
           width: 2,
           value: "4"
         },
         {
           color: "rgb(252,146,31)",
-          dash: [6, 3, 1, 3, 1, 3],
+          dash: [8, 3, 1, 3, 1, 3],
           legendTitle: "5",
           width: 2,
           value: "5"
         },
         {
           color: "rgb(255,222,62)",
-          dash: [8, 4],
+          dash: [8, 3],
           legendTitle: "6",
           width: 2,
           value: "6"
@@ -902,28 +901,28 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         },
         {
           color: "rgb(183,129,74)",
-          dash: [4, 4],
+          dash: [4, 1],
           legendTitle: "8",
           width: 2,
           value: "8"
         },
         {
           color: "rgb(60,175,153)",
-          dash: [1, 2],
+          dash: [1, 1],
           legendTitle: "9",
           width: 2,
           value: "9"
         },
         {
           color: "rgb(107,107,214)",
-          dash: [4, 2, 1, 2],
+          dash: [4, 1, 1, 1],
           legendTitle: "10",
           width: 2,
           value: "10"
         },
         {
           color: "rgb(181,71,121)",
-          dash: [4, 2, 1, 2, 1, 2],
+          dash: [4, 1, 1, 1, 1, 1],
           legendTitle: "11",
           width: 2,
           value: "11"
