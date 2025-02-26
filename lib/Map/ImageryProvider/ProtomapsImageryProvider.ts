@@ -22,12 +22,10 @@ import Request from "terriajs-cesium/Source/Core/Request";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { FeatureCollectionWithCrs } from "../../Core/GeoJson";
 import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
-import {
-  FeatureCollectionWithCrs,
-  FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP
-} from "../../ModelMixins/GeojsonMixin";
+import { FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP } from "../../ModelMixins/GeojsonMixin";
 import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";

@@ -122,7 +122,8 @@ export default class TableColorMap {
    * for this style.
    *
    * Will try to create most appropriate colorMap given colorColumn:
-   * (TODO: Move all of these default values/behaviours to TableAutomaticStylesStratum - ideally no use of colorColumn is needed here)
+   * TODO: Move all of these default values/behaviours to TableAutomaticStylesStratum - ideally no use of colorColumn is needed here
+   * - `TableAutomaticStylesStratum should also set default values for colorTraits.mapType, colors, etc
    *
    * - If column type is `scalar`
    *   - and we have binMaximums - use DiscreteColorMap

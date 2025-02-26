@@ -19,7 +19,7 @@ import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
 import { allIcons, getMakiIcon } from "../../Map/Icons/Maki/MakiIcons";
 import ProtomapsImageryProvider from "../../Map/ImageryProvider/ProtomapsImageryProvider";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
-import { isDataSource } from "../../ModelMixins/MappableMixin";
+import { ImageryParts, isDataSource } from "../../ModelMixins/MappableMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import {
   QualitativeColorSchemeOptionRenderer,
@@ -454,7 +454,7 @@ export default class TableStylingWorkflow
   @computed get hasProtomapsImageryProvider() {
     return !!this.item.mapItems.find(
       (d) =>
-        "imageryProvider" in d &&
+        ImageryParts.is(d) &&
         d.imageryProvider instanceof ProtomapsImageryProvider
     );
   }

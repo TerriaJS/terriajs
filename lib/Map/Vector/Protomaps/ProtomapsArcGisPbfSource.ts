@@ -18,7 +18,7 @@ import {
   isMultiPolygon,
   isPoint,
   isPolygon
-} from "../../../ModelMixins/GeojsonMixin";
+} from "../../../Core/GeoJson";
 import { PROTOMAPS_TILE_BUFFER } from "../../ImageryProvider/ProtomapsImageryProvider";
 import {
   GEOJSON_SOURCE_LAYER_NAME,

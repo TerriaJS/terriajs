@@ -10,6 +10,7 @@ import proj4 from "proj4";
 import Color from "terriajs-cesium/Source/Core/Color";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
+import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
@@ -23,9 +24,7 @@ import {
   hasUnsupportedStylesForProtomaps,
   tableStyleToProtomaps
 } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
-import GeoJsonMixin, {
-  FeatureCollectionWithCrs
-} from "../../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -214,6 +213,23 @@ type FieldType =
   | "esriFieldTypeXML"
   | "esriFieldTypeBigInteger";
 
+const fieldTypeToTableColumn: Record<FieldType, string> = {
+  esriFieldTypeSmallInteger: "scalar",
+  esriFieldTypeInteger: "scalar",
+  esriFieldTypeSingle: "scalar",
+  esriFieldTypeDouble: "scalar",
+  esriFieldTypeString: "text",
+  esriFieldTypeDate: "time",
+  esriFieldTypeOID: "scalar",
+  esriFieldTypeGeometry: "hidden",
+  esriFieldTypeBlob: "hidden",
+  esriFieldTypeRaster: "hidden",
+  esriFieldTypeGUID: "hidden",
+  esriFieldTypeGlobalID: "hidden",
+  esriFieldTypeXML: "hidden",
+  esriFieldTypeBigInteger: "scalar"
+};
+
 interface Field {
   name: string;
   type: FieldType;
@@ -246,8 +262,7 @@ class FeatureServerStratum extends LoadableStratum(
 
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
-    private readonly _featureServer?: FeatureServer,
-    private _esriJson?: any
+    private readonly _featureServer?: FeatureServer
   ) {
     super();
     makeObservable(this);
@@ -256,7 +271,7 @@ class FeatureServerStratum extends LoadableStratum(
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new FeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
-      this._esriJson
+      this._featureServer
     ) as this;
   }
 
@@ -269,11 +284,11 @@ class FeatureServerStratum extends LoadableStratum(
     item: ArcGisFeatureServerCatalogItem
   ): Promise<FeatureServerStratum> {
     if (item.url === undefined) {
-      return new FeatureServerStratum(item, undefined, undefined);
+      return new FeatureServerStratum(item, undefined);
     }
     const metaUrl = buildMetadataUrl(item);
     const featureServer = await loadJson(metaUrl);
-    return new FeatureServerStratum(item, featureServer, undefined);
+    return new FeatureServerStratum(item, featureServer);
   }
 
   @computed
@@ -438,7 +453,7 @@ class FeatureServerStratum extends LoadableStratum(
 
       if (uniqueValueRenderer.visualVariables?.length) {
         console.warn(
-          `WARNING: Terria does not support visual variables in ArcGisFeatureService SimpleRenderers`
+          `WARNING: Terria does not support visual variables in ArcGisFeatureService UniqueValueRenderers`
         );
       }
 
@@ -505,13 +520,13 @@ class FeatureServerStratum extends LoadableStratum(
 
       if (classBreaksRenderer.visualVariables?.length) {
         console.warn(
-          `WARNING: Terria does not support visual variables in ArcGisFeatureService SimpleRenderers`
+          `WARNING: Terria does not support visual variables in ArcGisFeatureService ClassBreakRenderers`
         );
       }
 
       if (classBreaksRenderer.valueExpression) {
         console.warn(
-          `WARNING: Terria does not support value expressions in ArcGisFeatureService UniqueValueRenderers`
+          `WARNING: Terria does not support value expressions in ArcGisFeatureService ClassBreakRenderers`
         );
       }
 
@@ -579,15 +594,25 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   // Map ESRI fields to Terria columns. This just sets the name, title and type of the column
-  @computed
   get columns() {
     return (
-      this._featureServer?.fields?.map((field) =>
-        createStratumInstance(TableColumnTraits, {
-          name: field.name,
-          title: field.alias
+      this._featureServer?.fields
+        ?.filter((field) => {
+          if (!fieldTypeToTableColumn[field.type]) {
+            console.warn(
+              `WARNING: Terria does not support ESRI field type ${field.type}`
+            );
+            return false;
+          }
+          return true;
         })
-      ) ?? []
+        .map((field) =>
+          createStratumInstance(TableColumnTraits, {
+            name: field.name,
+            title: field.alias,
+            type: fieldTypeToTableColumn[field.type]?.toString()
+          })
+        ) ?? []
     );
   }
 
@@ -609,6 +634,8 @@ class FeatureServerStratum extends LoadableStratum(
 
   /** Enable tileRequests by default if supported and no unsupported point/label styles are used */
   get tileRequests() {
+    if (this._item.forceCesiumPrimitives) return false;
+
     const supportsPbfTiles =
       this._featureServer?.supportsTilesAndBasicQueriesMode &&
       typeof this._featureServer?.supportedQueryFormats === "string" &&

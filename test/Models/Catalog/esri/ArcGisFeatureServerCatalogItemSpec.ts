@@ -566,6 +566,22 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
         expect(item.tileRequests).toEqual(false);
       });
+
+      it("disables tiling if forceCesiumPrimitives is true", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
+
+        await item.loadMapItems();
+
+        expect(item.tileRequests).toEqual(true);
+
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "forceCesiumPrimitives", true);
+        });
+
+        expect(item.tileRequests).toEqual(false);
+      });
     });
   });
 
