@@ -83,7 +83,7 @@ const LegendWrapper = styled.div`
   flex: 1;
   align-items: center;
   justify-content: center;
-  min-width: 0px;
+  margin: 0 10px;
 `;
 
 const LegendText = styled(TextSpan).attrs({

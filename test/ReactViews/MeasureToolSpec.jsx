@@ -5,7 +5,7 @@ import React from "react";
 import Terria from "../../lib/Models/Terria";
 import { getMountedInstance } from "./MoreShallowTools";
 
-import { MeasureTool } from "../../lib/ReactViews/Map/MapNavigation/MeasureTool";
+import { MeasureTool } from "../../lib/ReactViews/Map/MapNavigation/MeasureToolsController";
 const Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
 const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
 const ConstantPositionProperty =
@@ -17,7 +17,7 @@ const CustomDataSource =
   require("terriajs-cesium/Source/DataSources/CustomDataSource").default;
 const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 
-describe("MeasureTool-jsx", function () {
+describe("MeasureToolsController-jsx", function () {
   let terria;
 
   beforeEach(function () {

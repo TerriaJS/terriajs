@@ -21,6 +21,12 @@ export interface MeasurableGeometry {
   sampledDistances?: number[];
   geodeticArea?: number;
   airArea?: number;
+  onlyPoints?: boolean;
+  pointDescriptions?: string[];
+  showDistanceLabels?: boolean;
+  filename?: string;
+  pathNotes?: string;
+  isFileUploaded?: boolean;
 }
 
 export default class MeasurableGeometryManager {
@@ -31,19 +37,29 @@ export default class MeasurableGeometryManager {
   constructor(terria: Terria) {
     makeObservable(this);
     this.terria = terria;
-
     this.geoidModel = new EarthGravityModel1996(
       require("file-loader!../../wwwroot/data/WW15MGH.DAC")
     );
   }
 
   resample() {
-    this.sampleFromCartographics(this.terria.measurableGeom?.stopPoints ?? []);
+    this.sampleFromCartographics(
+      this.terria.measurableGeom?.stopPoints ?? [],
+      undefined,
+      undefined,
+      undefined,
+      this.terria.measurableGeom?.filename
+    );
   }
 
   sampleFromCustomDataSource(
     pointEntities: CustomDataSource,
-    closeLoop: boolean = false
+    closeLoop: boolean = false,
+    onlyPoints: boolean = false,
+    pointDescriptions?: string[],
+    filename?: string,
+    pathNotes?: string,
+    isFileUploaded?: boolean
   ) {
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
     if (!ellipsoid) {
@@ -73,14 +89,27 @@ export default class MeasurableGeometryManager {
         return Cartographic.fromCartesian(elem, ellipsoid);
       });
 
-    this.sampleFromCartographics(cartoPositions, closeLoop);
+    this.sampleFromCartographics(
+      cartoPositions,
+      closeLoop,
+      onlyPoints,
+      pointDescriptions,
+      filename,
+      pathNotes,
+      isFileUploaded
+    );
   }
 
   // sample the entire path (polyline) every "samplingStep" meters
   @action
   sampleFromCartographics(
     cartoPositions: Cartographic[],
-    closeLoop: boolean = false
+    closeLoop: boolean = false,
+    onlyPoints: boolean = false,
+    pointDescriptions: string[] = [],
+    filename?: string,
+    pathNotes?: string,
+    isFileUploaded?: boolean
   ) {
     const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
@@ -173,15 +202,37 @@ export default class MeasurableGeometryManager {
       }
 
       // update state of Terria
-      this.updatePath(
-        cartoPositions,
-        stopGeodeticDistances,
-        stopAirDistances,
-        distances3d,
-        sampledCartographics[0],
-        stepDistances,
-        closeLoop
-      );
+      const updatePathParams: Parameters<typeof this.updatePath> = onlyPoints
+        ? [
+            cartoPositions,
+            [],
+            [],
+            [],
+            sampledCartographics[0],
+            [],
+            closeLoop,
+            true,
+            pointDescriptions,
+            filename,
+            pathNotes,
+            isFileUploaded
+          ]
+        : [
+            cartoPositions,
+            stopGeodeticDistances,
+            stopAirDistances,
+            distances3d,
+            sampledCartographics[0],
+            stepDistances,
+            closeLoop,
+            false,
+            [],
+            filename,
+            pathNotes,
+            isFileUploaded
+          ];
+
+      this.updatePath(...updatePathParams);
     });
   }
 
@@ -193,7 +244,12 @@ export default class MeasurableGeometryManager {
     stopGroundDistances: number[],
     sampledPoints: Cartographic[],
     sampledDistances: number[],
-    isClosed: boolean
+    isClosed: boolean,
+    onlyPoints: boolean = false,
+    pointDescriptions: string[] = [],
+    filename?: string,
+    pathNotes?: string,
+    isFileUploaded?: boolean
   ) {
     this.terria.measurableGeom = {
       isClosed: isClosed,
@@ -212,7 +268,12 @@ export default class MeasurableGeometryManager {
         0
       ),
       sampledPoints: sampledPoints,
-      sampledDistances: sampledDistances
+      sampledDistances: sampledDistances,
+      onlyPoints: onlyPoints,
+      pointDescriptions: pointDescriptions,
+      filename: filename,
+      pathNotes: pathNotes,
+      isFileUploaded: isFileUploaded
     };
   }
 }

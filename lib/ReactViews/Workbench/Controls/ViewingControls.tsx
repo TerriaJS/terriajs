@@ -1,7 +1,7 @@
 import { sortBy, uniqBy } from "lodash";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useMemo } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -45,6 +45,11 @@ import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
 import MeasurableGeometryMixin from "../../../ModelMixins/MeasurableGeometryMixin";
+import CsvCatalogItem from "../../../Models/Catalog/CatalogItems/CsvCatalogItem";
+import GeoJsonCatalogItem from "../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import KmlCatalogItem from "../../../Models/Catalog/CatalogItems/KmlCatalogItem";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -384,6 +389,116 @@ class ViewingControls extends React.Component<
       }
     };
 
+    const VisualizePointsOption: React.FC<{
+      item: any;
+      t: (key: string) => string;
+    }> = ({ item, t }) => {
+      const sampleFn = useMemo(() => {
+        if (item?.uniqueId?.includes(".csv")) {
+          return async () => await (item as CsvCatalogItem).sampleFromCsvData();
+        }
+        if (item?.uniqueId?.includes(".kml")) {
+          return async () => await (item as KmlCatalogItem).sampleFromKmlData();
+        }
+        if (
+          item?.uniqueId?.includes(".json") &&
+          !(CatalogMemberMixin.isMixedInto(item) && item.disableAboutData)
+        ) {
+          return async () =>
+            await (item as GeoJsonCatalogItem).sampleFromGeojsonData();
+        }
+        if (
+          item?.uniqueId?.includes(".gpx") ||
+          item?.uniqueId?.includes(".geojson")
+        ) {
+          return async () => {
+            const fc = await (
+              item as GeoJsonCatalogItem
+            ).forceLoadGeojsonData();
+            if (!fc) return;
+
+            const positions: Cartographic[] = [];
+            const descriptions: string[] = [];
+
+            let fileName = "";
+            let pathNotes = "";
+            if (fc.features.length > 0 && fc.features[0].properties) {
+              fileName = fc.features[0].properties.name || "";
+              pathNotes = fc.features[0].properties.desc || "";
+              fc.features.shift();
+            }
+
+            fc.features.forEach((feature) => {
+              if (!feature.geometry) return;
+              switch (feature.geometry.type) {
+                case "Point": {
+                  const coords = feature.geometry.coordinates;
+                  const lon = coords[0];
+                  const lat = coords[1];
+                  const alt = coords.length > 2 ? coords[2] : 0;
+                  positions.push(
+                    Cartographic.fromDegrees(
+                      lon as number,
+                      lat as number,
+                      alt as number
+                    )
+                  );
+                  descriptions.push(feature.properties?.desc || "");
+                  break;
+                }
+                case "LineString": {
+                  const coordsArray = feature.geometry.coordinates;
+                  coordsArray.forEach((coords: any) => {
+                    const lon = coords[0];
+                    const lat = coords[1];
+                    const alt = coords.length > 2 ? coords[2] : 0;
+                    positions.push(Cartographic.fromDegrees(lon, lat, alt));
+                  });
+                  descriptions.push(feature.properties?.desc || "");
+                  break;
+                }
+                default:
+                  break;
+              }
+            });
+
+            if (positions.length === 0) return;
+
+            if (!(item as GeoJsonCatalogItem).terria?.cesium?.scene) return;
+            const terrainProvider = item.terria.cesium.scene.terrainProvider;
+            const resolvedPositions = positions.every((pos) => pos.height < 1)
+              ? await sampleTerrainMostDetailed(terrainProvider, positions)
+              : positions;
+
+            item.terria.measurableGeometryManager.sampleFromCartographics(
+              resolvedPositions,
+              false,
+              true,
+              descriptions,
+              fileName,
+              pathNotes
+            );
+          };
+        }
+        return undefined;
+      }, [item]);
+
+      if (!sampleFn) return null;
+
+      return (
+        <li key={`${item.uniqueId}-measureItem`}>
+          <ViewingControlMenuButton
+            onClick={() => runInAction(async () => await sampleFn())}
+          >
+            <BoxViewingControl>
+              <StyledIcon glyph={Icon.GLYPHS.lineChart} />
+              <span>{t("workbench.pointsItem")}</span>
+            </BoxViewingControl>
+          </ViewingControlMenuButton>
+        </li>
+      );
+    };
+
     return (
       <ul>
         {this.viewingControls.map((viewingControl) => (
@@ -466,10 +581,13 @@ class ViewingControls extends React.Component<
             >
               <BoxViewingControl>
                 <StyledIcon glyph={Icon.GLYPHS.lineChart} />
-                <span>Percorso</span>
+                <span>{t("workbench.pathItem")}</span>
               </BoxViewingControl>
             </ViewingControlMenuButton>
           </li>
+        )}
+        {(!MeasurableGeometryMixin.isMixedInto(item) || !item.canUseAsPath) && (
+          <VisualizePointsOption item={item} t={t} />
         )}
         <li key={"workbench.removeFromMap"}>
           <ViewingControlMenuButton

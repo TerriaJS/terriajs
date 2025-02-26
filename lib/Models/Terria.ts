@@ -685,7 +685,7 @@ export default class Terria {
   @observable pickedPosition: Cartographic | undefined;
 
   /**
-   * Gets or sets a value indicating whether the path line drawn by MeasureTool is clamped to ground.
+   * Gets or sets a value indicating whether the path line drawn by MeasureToolsController is clamped to ground.
    * @type {Boolean}
    */
   @observable clampMeasureLineToGround: boolean = true;
@@ -786,6 +786,8 @@ export default class Terria {
   @observable catalogReferencesLoaded: boolean = false;
 
   augmentedVirtuality?: any;
+
+  measureTools?: any;
 
   readonly notificationState: NotificationState = new NotificationState();
 

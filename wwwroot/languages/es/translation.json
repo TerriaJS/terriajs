@@ -780,7 +780,7 @@
     "title": "Funcionalidad Experimental: Realidad Aumentada",
     "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Zoom -",
     "zoomReset": "Restablecer zoom",
     "zoomIn": "Zoom +"

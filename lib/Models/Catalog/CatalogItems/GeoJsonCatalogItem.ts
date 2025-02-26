@@ -22,6 +22,8 @@ import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { featureCollection, FeatureCollection } from "@turf/helpers";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 
 class GeoJsonCatalogItem
   extends CesiumIonMixin(GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits)))
@@ -97,7 +99,7 @@ class GeoJsonCatalogItem
     await ionResourcePromise;
   }
 
-  protected async forceLoadGeojsonData() {
+  public async forceLoadGeojsonData() {
     let jsonData: JsonValue | undefined = undefined;
 
     // GeoJsonCatalogItemTraits.geoJsonData
@@ -199,6 +201,68 @@ class GeoJsonCatalogItem
       }
     }
     return jsonData;
+  }
+
+  public async sampleFromGeojsonData(): Promise<void> {
+    const fc = await this.forceLoadGeojsonData();
+    if (!fc) return;
+
+    const positions: Cartographic[] = [];
+    const descriptions: string[] = [];
+
+    fc.features.forEach((feature) => {
+      if (!feature.geometry) return;
+      switch (feature.geometry.type) {
+        case "Point": {
+          const coords = feature.geometry.coordinates;
+          const lon = coords[0];
+          const lat = coords[1];
+          const alt = coords.length > 2 ? coords[2] : 0;
+          positions.push(
+            Cartographic.fromDegrees(
+              lon as number,
+              lat as number,
+              alt as number
+            )
+          );
+          descriptions.push(feature.properties?.description || "");
+          break;
+        }
+        case "LineString": {
+          const coordsArray = feature.geometry.coordinates;
+          coordsArray.forEach((coords: any) => {
+            const lon = coords[0];
+            const lat = coords[1];
+            const alt = coords.length > 2 ? coords[2] : 0;
+            positions.push(Cartographic.fromDegrees(lon, lat, alt));
+          });
+          descriptions.push(feature.properties?.description || "");
+          break;
+        }
+        default:
+          break;
+      }
+    });
+    if (positions.length === 0) return;
+
+    if (!this.terria?.cesium?.scene) return;
+    const terrainProvider = this.terria.cesium.scene.terrainProvider;
+
+    const resolvedPositions = positions.every((pos) => pos.height < 1)
+      ? await sampleTerrainMostDetailed(terrainProvider, positions)
+      : positions;
+
+    let name = (fc as any).name || "";
+    let pathNotes = (fc as any).path_notes || "";
+
+    this.terria.measurableGeometryManager.sampleFromCartographics(
+      resolvedPositions,
+      false,
+      true,
+      descriptions,
+      name,
+      pathNotes
+    );
   }
 }
 

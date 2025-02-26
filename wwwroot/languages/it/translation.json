@@ -56,15 +56,23 @@
     "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br /><br />ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br /><br />La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
   },
   "measure": {
+    "measureTool": "Apri strumento di misura",
+    "measurePointTool": "Strumento di misura di punti",
     "measureLineTool": "Strumento di misura di linee",
     "measurePolygonTool": "Strumento di misura di aree",
+    "measureToolTitle": "Strumenti di misura",
+    "measureAngleTool": "Strumento di misura degli angoli",
+    "measurePointToolTitle": "Misuratore di punti",
     "measureLineToolTitle": "Misuratore lineare",
     "measurePolygonToolTitle": "Misuratore di area",
-    "measureDistance": "Misura la lunghezza di una lina",
+    "measureDistance": "Misura la lunghezza di una linea",
+    "measureAngleToolTitle": "Misuratore di angoli",
     "measureArea": "Misura l'area di un poligono",
+    "measureAngle": "Misura l'angolo tra due linee",
     "measureLineToolMessage": "dist. geodetica",
     "measurePolygonToolMessagePerimeter": "perimetro",
-    "measurePolygonToolMessageArea": "area"
+    "measurePolygonToolMessageArea": "area",
+    "measureAngleToolMessage": "angolo"
   },
   "measurableGeometry": {
     "header": "MISURE",
@@ -89,7 +97,9 @@
     "geometrySummaryPerimeterAir": "Perimetro in aria",
     "geometrySummaryAreaGeo": "Area geodetica",
     "geometrySummaryAreaAir": "Area in aria",
-    "geometrySummarySlope": "Pendenza %"
+    "geometrySummarySlope": "Pendenza %",
+    "textareaPlaceholder": "Inserisci le tue note...",
+    "filenamePlaceholder": "Nome file..."
   },
   "elevationChart": {
     "header": "Profilo altimetrico",
@@ -98,8 +108,10 @@
     "measureGround": "al suolo"
   },
   "downloadData": {
+    "formatPlaceholder": "Seleziona il formato",
     "lines": "Linee",
-    "points": "Punti"
+    "points": "Punti",
+    "polygon": "Poligono"
   },
   "pickInfo": {
     "toolName": "Info",
@@ -1394,6 +1406,8 @@
     "colorScaleRangeMin": "Il valore minimo deve essere un numero.",
     "searchItemTitle": "Cerca",
     "searchItem": "Cerca",
+    "pathItem": "Percorso",
+    "pointsItem": "Punti",
     "dimensionsSelector": {
       "undefinedLabel": "Non specificato"
     },

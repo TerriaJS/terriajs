@@ -196,7 +196,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
               <RawButton
                 type="button"
                 onClick={this.zoomIn.bind(this)}
-                title={t("zoomCotrol.zoomIn")}
+                title={t("zoomControl.zoomIn")}
               >
                 <Icon glyph={Icon.GLYPHS.zoomIn} />
               </RawButton>
@@ -206,7 +206,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomReset.bind(this)}
-              title={t("zoomCotrol.zoomReset")}
+              title={t("zoomControl.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
@@ -216,7 +216,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
               <RawButton
                 type="button"
                 onClick={this.zoomOut.bind(this)}
-                title={t("zoomCotrol.zoomOut")}
+                title={t("zoomControl.zoomOut")}
               >
                 <Icon glyph={GLYPHS.zoomOut} />
               </RawButton>
@@ -233,7 +233,7 @@ const StyledZoomControl = styled(Box).attrs((props) => ({
   centered: true,
   column: true,
   styledWidth: "32px",
-  styledMargin: "7px 0 0 0"
+  styledMargin: "7px 0 0 10px"
 }))`
   border-radius: 100px;
   svg {

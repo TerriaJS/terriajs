@@ -543,8 +543,19 @@ export default class ViewState {
     this._measurablePanelIsVisibleSubscription = reaction(
       () => this.terria.measurableGeom,
       (geom) => {
+        const wasVisible = this.measurablePanelIsVisible;
         this.measurablePanelIsVisible =
           !!geom && geom.stopPoints && geom.stopPoints.length > 0;
+        if (this.measurablePanelIsVisible && !wasVisible) {
+          if (
+            this.terria.measurableGeom &&
+            (!this.terria.measurableGeom.pointDescriptions ||
+              this.terria.measurableGeom.pointDescriptions.length == 0)
+          ) {
+            this.terria.measurableGeom.pointDescriptions = [];
+            this.terria.measurableGeom.pointDescriptions.push("");
+          }
+        }
       }
     );
 
@@ -917,6 +928,20 @@ export default class ViewState {
   @computed
   get isMapInteractionActive() {
     return this.terria.mapInteractionModeStack.length > 0;
+  }
+
+  @observable selectedSampledPointIdx: number | null = null;
+
+  @action
+  setSelectedSampledPointIdx(index: number | null) {
+    this.selectedSampledPointIdx = index;
+  }
+
+  @observable selectedStopPointIdx: number | null = null;
+
+  @action
+  setSelectedStopPointIdx(index: number | null) {
+    this.selectedStopPointIdx = index;
   }
 }
 

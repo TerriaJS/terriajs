@@ -53,15 +53,23 @@
     }
   },
   "measure": {
+    "measurePointTool": "Measure Point Tool",
+    "measureTool": "Open Measure Tool",
     "measureLineTool": "Measure Line Tool",
     "measurePolygonTool": "Measure Polygon Tool",
+    "measurePointToolTitle": "Point Measure",
+    "measureToolTitle": "Measure Tools",
+    "measureAngleTool": "Measure Angle Tool",
     "measureLineToolTitle": "Line Measure",
     "measurePolygonToolTitle": "Polygon Measure",
+    "measureAngleToolTitle": "Angle Measure",
     "measureDistance": "Measure distance between locations",
     "measureArea": "Measure the area of a polygon",
+    "measureAngle": "Measure the angle between two lines",
     "measureLineToolMessage": "geodetic dist.",
     "measurePolygonToolMessagePerimeter": "perimeter",
-    "measurePolygonToolMessageArea": "area"
+    "measurePolygonToolMessageArea": "area",
+    "measureAngleToolMessage": "angle"
   },
   "measurableGeometry": {
     "header": "MEASURABLE",
@@ -86,7 +94,9 @@
     "geometrySummaryPerimeterAir": "Air perimeter",
     "geometrySummaryAreaGeo": "Geodetic area",
     "geometrySummaryAreaAir": "Air area",
-    "geometrySummarySlope": "Slope %"
+    "geometrySummarySlope": "Slope %",
+    "textareaPlaceholder": "Enter your notes here...",
+    "filenamePlaceholder": "Filename..."
   },
   "elevationChart": {
     "header": "Elevation profile",
@@ -95,8 +105,10 @@
     "measureGround": "clamped to ground"
   },
   "downloadData": {
+    "formatPlaceholder": "Select format",
     "lines": "Lines",
-    "points": "Points"
+    "points": "Points",
+    "polygon": "Polygon"
   },
   "pickInfo": {
     "toolName": "Info",
@@ -628,7 +640,9 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
     "searchItem": "Search",
     "searchItemTitle": "Search",
-    "splitScreenMode": "SPLIT SCREEN MODE"
+    "splitScreenMode": "SPLIT SCREEN MODE",
+    "pathItem": "Path",
+    "pointsItem": "Points"
   },
   "dateTime": {
     "selectorLabel": "Time:",

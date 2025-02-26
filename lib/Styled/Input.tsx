@@ -101,6 +101,7 @@ export const StyledTextArea = styled.textarea<TextAreaProps>`
   line-height: ${(props) => props.lineHeight};
   padding-top: 5px;
   padding-bottom: 5px;
+  margin-bottom: 10px;
   cursor: auto;
   -webkit-overflow-scrolling: touch;
   min-width: 100%;
