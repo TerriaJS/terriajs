@@ -37,10 +37,14 @@ const SearchResults: React.FC<SearchResultsProps> = (props) => {
   const [t] = useTranslation();
 
   const toggleSelection = (newSelection: MapEffect) => {
-    currentMapEffect.is === newSelection.is &&
-    (currentMapEffect as any).result === (newSelection as any).result
-      ? setCurrentMapEffect({ is: "none" })
-      : setCurrentMapEffect(newSelection);
+    if (
+      currentMapEffect.is === newSelection.is &&
+      (currentMapEffect as any).result === (newSelection as any).result
+    ) {
+      setCurrentMapEffect({ is: "none" });
+    } else {
+      setCurrentMapEffect(newSelection);
+    }
   };
 
   return (

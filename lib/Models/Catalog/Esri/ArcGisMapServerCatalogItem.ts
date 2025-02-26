@@ -726,7 +726,9 @@ function getRectangleFromLayers(
   layers: Layer[]
 ) {
   layers.forEach(function (item) {
-    item.extent && getRectangleFromLayer(item.extent, rectangle);
+    if (item.extent) {
+      getRectangleFromLayer(item.extent, rectangle);
+    }
   });
 }
 

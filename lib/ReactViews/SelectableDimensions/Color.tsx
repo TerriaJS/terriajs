@@ -13,9 +13,9 @@ import { TextSpan } from "../../Styled/Text";
 const debounceSetColorDimensionValue = debounce(
   action((dim: SelectableDimensionColorModel, value: string) => {
     // Only update value if it has changed
-    dim.value !== value
-      ? dim.setDimensionValue(CommonStrata.user, value)
-      : null;
+    if (dim.value !== value) {
+      dim.setDimensionValue(CommonStrata.user, value);
+    }
   }),
   100
 );

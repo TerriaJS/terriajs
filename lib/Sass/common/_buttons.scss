@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "_variables";
 
 $btn-setting-size: 35px;
 
@@ -13,14 +13,14 @@ $btn-setting-size: 35px;
   border: 0;
   padding: 0;
   box-sizing: border-box;
-  font-weight: $font-weight-normal;
+  font-weight: variables.$font-weight-normal;
   box-shadow: none;
   text-align: left;
   cursor: pointer;
-  line-height: $btn-default-line-height;
+  line-height: variables.$btn-default-line-height;
   text-decoration: none;
-  font-size: $font-size-button;
-  font-family: $font-base;
+  font-size: variables.$font-size-button;
+  font-family: variables.$font-base;
 
   &:focus,
   &:hover {
@@ -36,37 +36,29 @@ $btn-setting-size: 35px;
   margin: 0;
 }
 
-.btn-small {
-  padding: 0;
-  &:hover,
-  &:focus {
-    color: $color-primary;
-  }
-}
-
 .btn-primary {
   display: block;
   // background: $color-primary;
-  font-family: $font-pop;
+  font-family: variables.$font-pop;
   // color: $text-light;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
-  border-radius: $radius-small;
-  padding: $padding;
+  border-radius: variables.$radius-small;
+  padding: variables.$padding;
 
   &:disabled {
-    background: $color-primary-disabled !important;
+    background: variables.$color-primary-disabled !important;
     cursor: not-allowed;
 
     &:hover,
     &--hover {
-      background: $color-primary-disabled !important;
+      background: variables.$color-primary-disabled !important;
     }
   }
   &:hover,
   &--hover {
-    background: get-hover-color($color-primary);
+    background: variables.get-hover-color(variables.$color-primary);
   }
 }
 
@@ -76,29 +68,29 @@ $btn-setting-size: 35px;
 
 .btn-grey {
   padding: 0;
-  font-size: $font-size-mini;
+  font-size: variables.$font-size-mini;
   text-align: center;
   width: 100%;
   line-height: 4;
   background: rgba(#fff, 0.15);
   border: 1px solid transparent;
   &:hover {
-    border: $border-style;
+    border: variables.$border-style;
   }
   &.is-active {
-    background: $color-primary;
-    border-color: $color-primary;
-    color: $text-light;
+    background: variables.$color-primary;
+    border-color: variables.$color-primary;
+    color: variables.$text-light;
   }
 }
 
 .btn--add-to-map {
-  color: $color-primary;
+  color: variables.$color-primary;
 }
 
 .btn--secondary {
   // color: $color-primary;
-  border: $color-primary;
+  border: variables.$color-primary;
   border-radius: 4px;
 
   &:hover,
@@ -123,67 +115,69 @@ $btn-setting-size: 35px;
 }
 
 .btn--tertiary-dark {
-  color: $text-light;
+  color: variables.$text-light;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 4px;
   padding: 8px 10px;
 
   &:hover,
   &:focus {
-    border: 1px solid $color-primary;
-    color: $color-primary;
+    border: 1px solid variables.$color-primary;
+    color: variables.$color-primary;
   }
 }
 
 .btn--remove-from-map {
-  color: $color-primary;
+  color: variables.$color-primary;
 }
 
 .btn--loading-on-map {
-  color: $color-primary;
+  color: variables.$color-primary;
 }
 
 .btn--close-modal {
   @extend .btn--secondary;
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
 }
 
 .btn--catalog {
-  padding: $padding 30px + $padding;
+  padding: variables.$padding 30px + variables.$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
-  @media (min-width: $sm) {
-    padding: $padding-small 30px + $padding;
+  @media (min-width: variables.$sm) {
+    padding: variables.$padding-small 30px + variables.$padding;
   }
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: $padding $padding * 2.2 $padding $padding * 1.5;
+    padding: variables.$padding variables.$padding * 2.2 variables.$padding
+      variables.$padding * 1.5;
     top: 0;
-    font-size: $font-size-mid-large;
+    font-size: variables.$font-size-mid-large;
     opacity: 0.5;
-    @media (min-width: $sm) {
-      padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
+    @media (min-width: variables.$sm) {
+      padding: variables.$padding-small variables.$padding * 2.2
+        variables.$padding-small variables.$padding * 1.5;
     }
   }
   &:before {
     position: absolute;
     right: 5px;
-    top: $padding;
-    @media (min-width: $sm) {
-      top: $padding-small;
+    top: variables.$padding;
+    @media (min-width: variables.$sm) {
+      top: variables.$padding-small;
     }
   }
   &:hover,
   &:focus {
-    background: $modal-highlight;
-    color: $text-light;
+    background: variables.$modal-highlight;
+    color: variables.$text-light;
     .btn--group-indicator {
-      color: $text-light;
+      color: variables.$text-light;
     }
   }
 }
@@ -191,49 +185,50 @@ $btn-setting-size: 35px;
 .btn--catalog-item {
   position: relative;
   width: 100%;
-  padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
+  padding: variables.$padding-small variables.$padding * 2.2
+    variables.$padding-small variables.$padding * 1.5;
 
   &:focus,
   &:hover {
-    color: $modal-highlight;
+    color: variables.$modal-highlight;
     &:before {
       opacity: 1;
     }
   }
   .is-previewed & {
-    color: $modal-highlight;
-    font-weight: $font-weight-bold;
+    color: variables.$modal-highlight;
+    font-weight: variables.$font-weight-bold;
     &:before {
       opacity: 1;
     }
   }
   &.is-active {
-    color: $modal-highlight;
+    color: variables.$modal-highlight;
   }
 }
 
 .btn.btn--tab {
-  border-right: 1px solid $modal-border;
-  font-family: $font-pop;
-  background: $modal-bg;
-  color: $modal-text;
-  font-size: $font-size-base;
-  padding: $padding $padding * 2;
+  border-right: 1px solid variables.$modal-border;
+  font-family: variables.$font-pop;
+  background: variables.$modal-bg;
+  color: variables.$modal-text;
+  font-size: variables.$font-size-base;
+  padding: variables.$padding variables.$padding * 2;
   border-bottom: 2px solid transparent;
   li[aria-selected="true"] & {
     background: #fff;
-    color: $modal-highlight;
+    color: variables.$modal-highlight;
   }
 }
 
 .btn--map {
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
   padding: 5px;
   // color: $text-light;
   display: block;
   // display: flex;
   min-height: 32px;
-  font-family: $font-pop;
+  font-family: variables.$font-pop;
   // opacity: 0.95; // new design has opaque map buttons?
   // background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
@@ -270,9 +265,9 @@ $btn-setting-size: 35px;
     vertical-align: middle;
     display: inline-block;
 
-    margin: auto $padding-small;
-    margin-left: $padding-small + 2px;
-    margin-right: $padding-small - 2px;
+    margin: auto variables.$padding-small;
+    margin-left: variables.$padding-small + 2px;
+    margin-right: variables.$padding-small - 2px;
 
     // fill: $text-light;
     // fill: #6487ae;
@@ -282,7 +277,7 @@ $btn-setting-size: 35px;
   span {
     // vertical-align: top;
     vertical-align: middle;
-    margin: auto $padding-small + 1px;
+    margin: auto variables.$padding-small + 1px;
   }
 }
 
@@ -295,11 +290,12 @@ $btn-setting-size: 35px;
 }
 
 .btn--radio {
-  padding: $padding-small;
+  padding: variables.$padding-small;
   &:before {
-    color: $color-primary;
+    color: variables.$color-primary;
     display: inline-block;
-    padding: $padding-small $padding-small $padding-small 0;
+    padding: variables.$padding-small variables.$padding-small
+      variables.$padding-small 0;
   }
 }
 
@@ -308,5 +304,5 @@ $btn-setting-size: 35px;
 ._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
-  font-size: $font-size-small;
+  font-size: variables.$font-size-small;
 }

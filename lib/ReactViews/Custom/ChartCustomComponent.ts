@@ -280,8 +280,9 @@ export default abstract class ChartCustomComponent<
               if (item) {
                 this.setTraitsFromParent(item, context.catalogItem!);
                 this.setTraitsFromAttrs(item, attrs, i);
-                body && this.setTraitsFromBody?.(item, body);
-
+                if (body) {
+                  this.setTraitsFromBody?.(item, body);
+                }
                 if (
                   featurePosition &&
                   hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
@@ -324,7 +325,9 @@ export default abstract class ChartCustomComponent<
       runInAction(() => {
         this.setTraitsFromParent(chartItem, context.catalogItem!);
         this.setTraitsFromAttrs(chartItem, attrs, 0);
-        body && this.setTraitsFromBody?.(chartItem, body);
+        if (body) {
+          this.setTraitsFromBody?.(chartItem, body);
+        }
       });
 
       chartElements.push(

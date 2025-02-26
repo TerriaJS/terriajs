@@ -59,21 +59,21 @@ expectFalse<
 
 const array = flattened.nestedArrayWithDefault;
 if (array) {
-  const first = array[0];
+  const _first = array[0];
 
   // Arrays may not _contain_ undefineds.
-  expectFalse<AllowsUndefined<typeof first>>();
+  expectFalse<AllowsUndefined<typeof _first>>();
 
   // Properties in traits in arrays allow undefined.
-  expectTrue<Equals<typeof first.withDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
+  expectTrue<Equals<typeof _first.withDefault, number | undefined>>();
+  expectTrue<Equals<typeof _first.withoutDefault, number | undefined>>();
+  expectTrue<Equals<typeof _first.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof first.unknownObjectWithDefault, JsonObject | undefined>
+    Equals<typeof _first.unknownObjectWithDefault, JsonObject | undefined>
   >();
-  expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
+  expectTrue<Equals<typeof _first.withNull, string | null | undefined>>();
 
   // Properties in traits in arrays can _not_ be modified.
-  expectFalse<IsWritable<typeof first, "withDefault">>();
-  expectFalse<IsWritable<typeof first, "withoutDefault">>();
+  expectFalse<IsWritable<typeof _first, "withDefault">>();
+  expectFalse<IsWritable<typeof _first, "withoutDefault">>();
 }

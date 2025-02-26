@@ -1,11 +1,11 @@
-@import "~terriajs-variables";
+@use "../../Sass/common/_variables";
 
 .dropdown-inner {
   padding: 10px;
   font-size: 0.9rem;
   width: 600px;
 
-  @media (max-width: $mobile) {
+  @media (max-width: variables.$mobile) {
     max-width: fit-content;
   }
 }

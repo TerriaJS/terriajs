@@ -17,7 +17,7 @@ class Prompt extends React.PureComponent {
           displayInlineBlock
           rounded
           position="absolute"
-          backgroundColor={this.props.theme.colorPrimary}
+          backgroundColor={this.props.theme?.colorPrimary}
           paddedRatio={3}
           styledWidth={`${this.props.promptWidth || 200}px`}
           css={`
@@ -32,7 +32,7 @@ class Prompt extends React.PureComponent {
               left: `${this.props.caretLeftOffset || 160}px`
             }}
             size={this.props.caretSize || 18}
-            background={this.props.theme.colorPrimary}
+            background={this.props.theme?.colorPrimary}
           />
           {this.props.content}
           <Spacing bottom={3} />

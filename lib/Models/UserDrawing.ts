@@ -501,7 +501,9 @@ export default class UserDrawing extends MappableMixin(
         // If it gets down to 2 points, it should stop acting like a polygon.
         if (this.pointEntities.entities.values.length < 2 && this.closeLoop) {
           this.closeLoop = false;
-          this.polygon && this.otherEntities.entities.remove(this.polygon);
+          if (this.polygon) {
+            this.otherEntities.entities.remove(this.polygon);
+          }
         }
         // Also let client of UserDrawing know if a point has been removed.
         if (typeof that.onPointClicked === "function") {

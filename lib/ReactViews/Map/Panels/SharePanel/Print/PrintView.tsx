@@ -154,23 +154,25 @@ const PrintView = (props: Props) => {
   }, [props.window]);
 
   useEffect(() => {
-    canShorten(viewState.terria)
-      ? buildShortShareLink(viewState.terria, viewState, {
-          includeStories: false
+    if (canShorten(viewState.terria)) {
+      buildShortShareLink(viewState.terria, viewState, {
+        includeStories: false
+      })
+        .then((url) => {
+          setShareLink(url);
         })
-          .then((url) => {
-            setShareLink(url);
-          })
-          .catch(() =>
-            buildShareLink(viewState.terria, viewState, {
-              includeStories: false
-            })
-          )
-      : setShareLink(
+        .catch(() =>
           buildShareLink(viewState.terria, viewState, {
             includeStories: false
           })
         );
+    } else {
+      setShareLink(
+        buildShareLink(viewState.terria, viewState, {
+          includeStories: false
+        })
+      );
+    }
   }, [viewState.terria, viewState]);
 
   return ReactDOM.createPortal(

@@ -27,7 +27,9 @@ export type PanelProps = {
 export const Panel: React.FC<PanelProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
-    isDefined(props.isOpen) ? setIsOpen(props.isOpen) : null;
+    if (isDefined(props.isOpen)) {
+      setIsOpen(props.isOpen);
+    }
   }, [props.isOpen]);
 
   const toggleOpen = () => {

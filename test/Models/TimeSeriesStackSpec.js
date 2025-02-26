@@ -1,8 +1,8 @@
 "use strict";
 
-var TimelineStack = require("../../lib/Models/TimelineStack");
-var CatalogItem = require("../../lib/Models/CatalogItem");
-var Terria = require("../../lib/Models/Terria");
+import TimelineStack from "../../lib/Models/TimelineStack";
+import CatalogItem from "../../lib/Models/CatalogItem";
+import Terria from "../../lib/Models/Terria";
 
 describe("TimeSeriesStack", function () {
   var clock, stack, terria;
