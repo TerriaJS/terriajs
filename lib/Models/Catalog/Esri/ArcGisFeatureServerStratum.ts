@@ -150,6 +150,7 @@ interface SimpleRenderer extends Renderer {
   visualVariables?: unknown[];
 }
 
+/** For JSON Schema for FeatureServer Layer response see https://developers.arcgis.com/rest/services-reference/enterprise/layer-feature-service/#json-response-syntax */
 interface FeatureServer {
   documentInfo?: {
     Author?: string;

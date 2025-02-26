@@ -116,9 +116,9 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
         ? this.showStringIfPropertyValueIsNull
         : undefined;
       const maxRequests = this.maxRequests;
-      const currentTime =
-        (TimeVarying.is(this) ? this.currentTimeAsJulianDate : undefined) ??
-        JulianDate.now();
+      const currentTime = TimeVarying.is(this)
+        ? this.currentTimeAsJulianDate
+        : undefined;
 
       imageryProvider.pickFeatures = async (
         x: number,
@@ -167,7 +167,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
               // feature info template url
               feature.description = generateCesiumInfoHTMLFromProperties(
                 feature.properties,
-                currentTime,
+                currentTime ?? JulianDate.now(),
                 showStringIfPropertyValueIsNull
               );
             } catch (_e) {

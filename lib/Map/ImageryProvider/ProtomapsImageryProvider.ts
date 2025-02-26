@@ -230,7 +230,7 @@ export default class ProtomapsImageryProvider
     return [];
   }
 
-  async requestImage(x: number, y: number, level: number, request: Request) {
+  async requestImage(x: number, y: number, level: number, request?: Request) {
     const canvas = document.createElement("canvas");
     canvas.width = this.tileWidth;
     canvas.height = this.tileHeight;
@@ -244,7 +244,7 @@ export default class ProtomapsImageryProvider
     canvas: HTMLCanvasElement,
     request?: Request
   ) {
-    if (this.softMinimumLevel && level < this.softMinimumLevel)
+    if (isDefined(this.softMinimumLevel) && level < this.softMinimumLevel)
       throw TerriaError.from(
         `Level: ${level} is below softMinimumLevel (=${this.softMinimumLevel})`
       );

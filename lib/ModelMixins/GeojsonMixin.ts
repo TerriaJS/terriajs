@@ -1,8 +1,5 @@
 import bbox from "@turf/bbox";
 import {
-  Feature,
-  feature,
-  featureCollection,
   LineString,
   MultiLineString,
   MultiPolygon,
@@ -55,9 +52,6 @@ import formatPropertyValue from "../Core/formatPropertyValue";
 import {
   explodeMultiPoint,
   FeatureCollectionWithCrs,
-  isFeature,
-  isFeatureCollection,
-  isGeometries,
   isPoint
 } from "../Core/GeoJson";
 import hashFromString from "../Core/hashFromString";
