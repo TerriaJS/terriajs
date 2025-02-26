@@ -45,6 +45,12 @@ const MeasurablePanel = observer((props: Props) => {
   );
   const [isValidSamplingPathStep, setIsValidSamplingPathStep] =
     React.useState(true);
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+
+  const initialWidth = windowWidth * 0.2;
+  const initialHeight = windowHeight * 0.6;
+  const maxWidth = windowWidth * 0.6;
+  const maxHeight = windowHeight * 0.8;
 
   // Initialize utils methods and variables
   MeasurablePanelManager.initialize(terria);
@@ -173,6 +179,27 @@ const MeasurablePanel = observer((props: Props) => {
   };
 
   // UseEffects Methods
+  function useWindowSize() {
+    const [windowSize, setWindowSize] = React.useState({
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return windowSize;
+  }
+
   useEffect(() => {
     if (viewState.selectedStopPointIdx !== null) {
       setHighlightedRow(viewState.selectedStopPointIdx);
@@ -912,9 +939,11 @@ const MeasurablePanel = observer((props: Props) => {
       default={{
         x: 100,
         y: 100,
-        width: "45%",
-        height: "60%"
+        width: initialWidth,
+        height: initialHeight
       }}
+      maxWidth={maxWidth}
+      maxHeight={maxHeight}
       dragHandleClassName="drag-handle"
       enableResizing={{
         right: true,

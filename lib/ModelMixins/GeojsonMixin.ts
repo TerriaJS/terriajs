@@ -117,7 +117,8 @@ enum PathTypes {
   featureCollectionMultiLineString = 2,
   lineString = 3,
   multiLineString = 4,
-  featureCollectionPolygon = 5
+  featureCollectionPolygon = 5,
+  featureCollectionMultiPolygon = 6
 }
 
 export const FEATURE_ID_PROP = "_id_";
@@ -1427,6 +1428,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed
     get canUseAsPath() {
+      console.log("test-geojsonmixin canUseAsPath");
       let pathType: PathTypes = PathTypes.noPath;
       if (
         this.readyData &&
@@ -1441,12 +1443,14 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           this.readyData.features.length === 1 &&
           isJsonObject(this.readyData.features[0])
         ) {
+          console.log("test-geojsonmixin this.readyData", this.readyData);
           const geometry = this.readyData.features[0].geometry;
-
+          console.log("test-geojsonmixin geometry", geometry);
           if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
             if (
               this.arePolylinesValid([geometry.coordinates]) ||
-              this.isPolygonValid([geometry.coordinates])
+              this.isPolygonValid([geometry.coordinates[0]]) ||
+              this.isPolygonValid(([geometry.coordinates[0]] as any)[0])
             ) {
               if (
                 geometry.type === "MultiLineString" &&
@@ -1463,17 +1467,25 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
                 geometry.coordinates.length > 0
               ) {
                 pathType = PathTypes.featureCollectionPolygon;
+              } else if (
+                geometry.type === "MultiPolygon" &&
+                geometry.coordinates.length > 0
+              ) {
+                pathType = PathTypes.featureCollectionMultiPolygon;
               }
             }
           }
         }
       }
       this._pathType = pathType;
+      console.log("test-geojsonmixin this._pathType", this._pathType);
       return pathType !== PathTypes.noPath;
     }
 
     // Validates if the coordinates of the polyline are correct by ensuring the first and last points are connected.
     private arePolylinesValid(coordinates: any[]): boolean {
+      console.log("test-geojsonmixin arePolylinesValid");
+
       const pointOccurrences: { point: number[]; count: number }[] = [];
 
       coordinates.forEach((line) => {
@@ -1492,6 +1504,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     // Validates if the coordinates of the polygon are correct by ensuring the first and last points are the same.
     private isPolygonValid(coordinates: any[]): boolean {
+      console.log("test-geojsonmixin isPolygonValid");
+
       const pointOccurrences: { point: number[]; count: number }[] = [];
 
       coordinates.forEach((ring) => {
@@ -1501,10 +1515,15 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         }
       });
 
+      console.log(
+        "test-geojsonmixin isPolygonValid pointOccurrences",
+        pointOccurrences
+      );
+
       const validPoints = pointOccurrences.filter(
         ({ count }) => count === 2
       ).length;
-      return validPoints === 1;
+      return validPoints >= 1;
     }
 
     // Updates the occurrences of a given point in the pointOccurrences array.
@@ -1546,6 +1565,10 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             jsonCoords = this.getLineStringCoordinates();
             break;
 
+          case PathTypes.featureCollectionMultiPolygon:
+            jsonCoords = this.getMultiPolygonCoordinates();
+            break;
+
           case PathTypes.featureCollectionPolygon:
             jsonCoords = this.getPolygonCoordinates();
             break;
@@ -1555,9 +1578,17 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           const geometry = feature.geometry ?? {};
 
           filename =
-            filename || properties.name || (geometry as any).name || "";
+            filename ||
+            (this.readyData as any).name ||
+            properties.name ||
+            (geometry as any).name ||
+            "";
           pathNotes =
-            pathNotes || properties.desc || (geometry as any).path_notes || "";
+            pathNotes ||
+            (this.readyData as any).path_notes ||
+            properties.desc ||
+            (geometry as any).path_notes ||
+            "";
         }
 
         if (!jsonCoords || jsonCoords.length === 0) {
@@ -1675,6 +1706,22 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         isJsonArray(this.readyData.features[0].geometry.coordinates)
       ) {
         return this.readyData.features[0].geometry.coordinates;
+      }
+    }
+
+    private getMultiPolygonCoordinates(): JsonArray | undefined {
+      if (
+        this.readyData &&
+        isJsonArray(this.readyData.features) &&
+        this.readyData.features.length > 0 &&
+        isJsonObject(this.readyData.features[0]) &&
+        isJsonObject(this.readyData.features[0].geometry) &&
+        isJsonArray(this.readyData.features[0].geometry.coordinates) &&
+        isJsonArray(this.readyData.features[0].geometry.coordinates[0])
+      ) {
+        return (
+          this.readyData.features[0].geometry.coordinates[0] as any
+        )[0] as JsonArray;
       }
     }
 

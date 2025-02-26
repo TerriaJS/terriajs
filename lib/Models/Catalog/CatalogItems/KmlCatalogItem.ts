@@ -212,6 +212,8 @@ class KmlCatalogItem
     const polygons = entities.filter((e) => e?.polygon);
     const polylines = entities.filter((e) => e?.polyline);
 
+    console.log("test-kmlcatalogitem canUseAsPath entities", entities);
+
     if (polygons.length > 0) {
       return this.isPolygonValid(polygons) || this.arePolylinesValid(polygons);
     } else if (polylines.length > 0) {
@@ -225,6 +227,7 @@ class KmlCatalogItem
 
   // Checks if the provided polygons are valid by ensuring only one point is connected exactly twice.
   private isPolygonValid(polygons: Entity[]): boolean {
+    console.log("test-kmlcatalogitem canUseAsPath isPolygonValid");
     const pointOccurrences: { point: Cartesian3; count: number }[] = [];
     polygons.forEach((polygon) => {
       const points = this.getPositions(polygon);
@@ -233,14 +236,20 @@ class KmlCatalogItem
       );
     });
 
+    console.log(
+      "test-kmlcatalogitem canUseAsPath isPolygonValid pointOccurrences",
+      pointOccurrences
+    );
+
     const validPoints = pointOccurrences.filter(
       ({ count }) => count === 2
     ).length;
-    return validPoints === 1;
+    return validPoints >= 1;
   }
 
   // Checks if the provided polylines are valid by ensuring exactly two points are connected only once.
   private arePolylinesValid(polylines: Entity[]): boolean {
+    console.log("test-kmlcatalogitem arePolylinesValid");
     const pointOccurrences: { point: Cartesian3; count: number }[] = [];
 
     polylines.forEach((polyline) => {
@@ -248,6 +257,11 @@ class KmlCatalogItem
       this.updatePointOccurrences(pointOccurrences, points[0]);
       this.updatePointOccurrences(pointOccurrences, points[points.length - 1]);
     });
+
+    console.log(
+      "test-kmlcatalogitem arePolylinesValid pointOccurences",
+      pointOccurrences
+    );
 
     const validPoints = pointOccurrences.filter(
       ({ count }) => count === 1

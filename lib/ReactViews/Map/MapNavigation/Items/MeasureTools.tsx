@@ -70,7 +70,7 @@ export class MeasureToolsController extends MapNavigationItemController {
   }
 
   get glyph(): any {
-    return GLYPHS.map;
+    return GLYPHS.measureTools;
   }
 
   get viewerMode(): ViewerMode | undefined {
@@ -257,7 +257,7 @@ export class MeasureLineTool extends MapNavigationItemController {
    */
   activate() {
     this.onOpen();
-    this.userDrawing.cleanUp();
+    this.userDrawing.cleanUp(true);
     this.userDrawing.enterDrawMode();
     super.activate();
   }
@@ -554,7 +554,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
    */
   activate() {
     this.onOpen();
-    this.userDrawing.cleanUp();
+    this.userDrawing.cleanUp(true);
     this.userDrawing.enterDrawMode();
     super.activate();
   }
@@ -642,7 +642,7 @@ export class MeasureAngleTool extends MapNavigationItemController {
 
   activate() {
     this.onOpen();
-    this.userDrawing.cleanUp();
+    this.userDrawing.cleanUp(true);
     this.userDrawing.enterDrawMode(MeasureAngleTool.id);
     super.activate();
   }
@@ -732,7 +732,7 @@ export class MeasurePointTool extends MapNavigationItemController {
    */
   activate() {
     this.onOpen();
-    this.userDrawing.cleanUp();
+    this.userDrawing.cleanUp(true);
     this.userDrawing.enterDrawMode(MeasurePointTool.id);
     super.activate();
   }

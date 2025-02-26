@@ -29,6 +29,7 @@ const MeasurableDownload = (props: Props) => {
   const theme = useTheme();
   const [selectedFormat, setSelectedFormat] = React.useState<string>("");
 
+  const [kmlPolygon, setKmlPolygon] = useState<string>();
   const [kmlLines, setKmlLines] = useState<string>();
   const [kmlPoints, setKmlPoints] = useState<string>();
 
@@ -49,10 +50,10 @@ const MeasurableDownload = (props: Props) => {
       },
       {
         key: "kmlPolygon",
-        href: kmlLines
+        href: kmlPolygon
           ? DataUri.make(
               "application/vnd.google-earth.kml+xml;charset=utf-8",
-              kmlLines
+              kmlPolygon
             )
           : false,
         download: `${name}_polygon.kml`,
@@ -82,7 +83,7 @@ const MeasurableDownload = (props: Props) => {
       },
       {
         key: "jsonPolygon",
-        href: DataUri.make("json", generateJsonLineStrings(geom)),
+        href: DataUri.make("json", generateGeoJsonPolygon(geom)),
         download: `${name}_polygon.json`,
         label: `${i18next.t("downloadData.polygon")} JSON`
       },
@@ -136,6 +137,53 @@ const MeasurableDownload = (props: Props) => {
           );
         }
       });
+  };
+
+  const generateKmlPolygon = (
+    geom: MeasurableGeometry
+  ): Promise<string | undefined> => {
+    const coords = geom.stopPoints.map((point) => {
+      const lon = CesiumMath.toDegrees(point.longitude);
+      const lat = CesiumMath.toDegrees(point.latitude);
+      return `${lon},${lat}`;
+    });
+
+    if (coords[0] !== coords[coords.length - 1]) {
+      coords.push(coords[0]);
+    }
+
+    const coordsString = coords.join(" ");
+
+    const kml = `<?xml version="1.0" encoding="utf-8"?>
+      <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document id="root_doc">
+          <Folder>
+          <Placemark id="0">
+              <name>${name}</name>
+              <description>${pathNotes}</description>
+              <Style>
+                <LineStyle>
+                  <color>ff0000ff</color>
+                </LineStyle>
+                <PolyStyle>
+                  <fill>0</fill>
+                </PolyStyle>
+              </Style>
+              <Polygon>
+                <altitudeMode>clampToGround</altitudeMode>
+                <outerBoundaryIs>
+                  <LinearRing>
+                    <altitudeMode>clampToGround</altitudeMode>
+                    <coordinates>${coordsString}</coordinates>
+                  </LinearRing>
+                </outerBoundaryIs>
+              </Polygon>
+            </Placemark>
+          </Folder>
+        </Document>
+      </kml>`;
+
+    return Promise.resolve(kml);
   };
 
   const generateKmlLines = async (geom: MeasurableGeometry) => {
@@ -195,6 +243,36 @@ const MeasurableDownload = (props: Props) => {
       )
       .replace(/<\/Document>/, "</Folder></Document>");
     return res.kml;
+  };
+
+  const generateGeoJsonPolygon = (geom: MeasurableGeometry) => {
+    const coordinates = geom.stopPoints.map((elem) => [
+      CesiumMath.toDegrees(elem.longitude),
+      CesiumMath.toDegrees(elem.latitude)
+    ]);
+
+    if (
+      coordinates.length &&
+      (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+        coordinates[0][1] !== coordinates[coordinates.length - 1][1])
+    ) {
+      coordinates.push(coordinates[0]);
+    }
+
+    return JSON.stringify({
+      type: "FeatureCollection",
+      name: name || "",
+      path_notes: pathNotes || "",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [coordinates]
+          }
+        }
+      ]
+    });
   };
 
   const generateJsonLineStrings = (geom: MeasurableGeometry) => {
@@ -314,6 +392,9 @@ const MeasurableDownload = (props: Props) => {
   );
 
   if (ellipsoid) {
+    generateKmlPolygon(geom).then((res) => {
+      setKmlPolygon(res);
+    });
     generateKmlLines(geom).then((res) => {
       setKmlLines(res);
     });

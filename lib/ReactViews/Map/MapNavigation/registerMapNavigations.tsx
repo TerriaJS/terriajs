@@ -126,28 +126,6 @@ export const registerMapNavigations = (viewState: ViewState) => {
           viewState.terria.mapNavigationModel.enable(id);
         });
       });
-    },
-    onOpen: () => {
-      runInAction(() => {
-        [
-          MeasureLineTool.id,
-          MeasurePolygonTool.id,
-          MeasurePointTool.id,
-          MeasureAngleTool.id
-        ].forEach((id) => {
-          const item =
-            viewState.terria.mapNavigationModel.findItem(id)?.controller;
-          if (item && item.active) {
-            item.deactivate();
-          }
-          viewState.terria.mapNavigationModel.enable(id);
-        });
-        if (viewState.terria.measurableGeom) {
-          viewState.terria.measurableGeom.filename = "";
-          viewState.terria.measurableGeom.pathNotes = "";
-          viewState.terria.measurableGeom.pointDescriptions = [];
-        }
-      });
     }
   });
   mapNavigationModel.addItem({
@@ -176,15 +154,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
     },
     onOpen: () => {
       runInAction(() => {
-        const item = viewState.terria.mapNavigationModel.findItem(
-          MeasureLineTool.id || MeasurePolygonTool.id || MeasurePointTool.id
-        )?.controller;
-        if (item && item.active) {
-          item.deactivate();
-        }
-        viewState.terria.mapNavigationModel.disable(MeasurePolygonTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasureLineTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasurePointTool.id);
+        [
+          MeasureLineTool.id,
+          MeasurePolygonTool.id,
+          MeasurePointTool.id
+        ].forEach((id) => {
+          const item =
+            viewState.terria.mapNavigationModel.findItem(id)?.controller;
+          if (item && item.active) {
+            item.deactivate();
+          }
+          viewState.terria.mapNavigationModel.disable(id);
+        });
       });
     }
   });
@@ -214,15 +195,16 @@ export const registerMapNavigations = (viewState: ViewState) => {
     },
     onOpen: () => {
       runInAction(() => {
-        const item = viewState.terria.mapNavigationModel.findItem(
-          MeasureLineTool.id || MeasureAngleTool.id || MeasurePointTool.id
-        )?.controller;
-        if (item && item.active) {
-          item.deactivate();
-        }
-        viewState.terria.mapNavigationModel.disable(MeasureAngleTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasureLineTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasurePointTool.id);
+        [MeasureLineTool.id, MeasureAngleTool.id, MeasurePointTool.id].forEach(
+          (id) => {
+            const item =
+              viewState.terria.mapNavigationModel.findItem(id)?.controller;
+            if (item && item.active) {
+              item.deactivate();
+            }
+            viewState.terria.mapNavigationModel.disable(id);
+          }
+        );
         if (viewState.terria.measurableGeom) {
           viewState.terria.measurableGeom.filename = "";
           viewState.terria.measurableGeom.pathNotes = "";
@@ -257,15 +239,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
     },
     onOpen: () => {
       runInAction(() => {
-        const item = viewState.terria.mapNavigationModel.findItem(
-          MeasureAngleTool.id || MeasurePolygonTool.id || MeasurePointTool.id
-        )?.controller;
-        if (item && item.active) {
-          item.deactivate();
-        }
-        viewState.terria.mapNavigationModel.disable(MeasureAngleTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasurePolygonTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasurePointTool.id);
+        [
+          MeasurePolygonTool.id,
+          MeasureAngleTool.id,
+          MeasurePointTool.id
+        ].forEach((id) => {
+          const item =
+            viewState.terria.mapNavigationModel.findItem(id)?.controller;
+          if (item && item.active) {
+            item.deactivate();
+          }
+          viewState.terria.mapNavigationModel.disable(id);
+        });
         if (viewState.terria.measurableGeom) {
           viewState.terria.measurableGeom.filename = "";
           viewState.terria.measurableGeom.pathNotes = "";
@@ -299,15 +284,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
     },
     onOpen: () => {
       runInAction(() => {
-        const item = viewState.terria.mapNavigationModel.findItem(
-          MeasureAngleTool.id || MeasurePolygonTool.id || MeasureLineTool.id
-        )?.controller;
-        if (item && item.active) {
-          item.deactivate();
-        }
-        viewState.terria.mapNavigationModel.disable(MeasureAngleTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasurePolygonTool.id);
-        viewState.terria.mapNavigationModel.disable(MeasureLineTool.id);
+        [
+          MeasureLineTool.id,
+          MeasureAngleTool.id,
+          MeasurePolygonTool.id
+        ].forEach((id) => {
+          const item =
+            viewState.terria.mapNavigationModel.findItem(id)?.controller;
+          if (item && item.active) {
+            item.deactivate();
+          }
+          viewState.terria.mapNavigationModel.disable(id);
+        });
         if (viewState.terria.measurableGeom) {
           viewState.terria.measurableGeom.filename = "";
           viewState.terria.measurableGeom.pathNotes = "";

@@ -952,7 +952,7 @@ export default class UserDrawing extends MappableMixin(
   /**
    * User has finished or cancelled; restore initial state.
    */
-  cleanUp() {
+  cleanUp(refresh?: boolean) {
     this.terria.overlays.remove(this);
     this.pointEntities.entities.removeAll();
     this.otherEntities.entities.removeAll();
@@ -982,7 +982,7 @@ export default class UserDrawing extends MappableMixin(
     }
 
     // Allow client to clean up too
-    if (typeof this.onCleanUp === "function") {
+    if (typeof this.onCleanUp === "function" && !refresh) {
       this.onCleanUp();
     }
     if (this.disposeShowDistanceLabelsReaction) {
