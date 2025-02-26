@@ -297,12 +297,12 @@ export function geojsonVtTileToProtomapsFeatures(
         numVertices = transformedGeom.length;
       }
 
-      if (f.type === geojsonvt.FeatureTypes.Unknown) return null;
+      if (f.type === 0) return null;
 
       const geomType = {
-        [geojsonvt.FeatureTypes.Point]: GeomType.Point,
-        [geojsonvt.FeatureTypes.Linestring]: GeomType.Line,
-        [geojsonvt.FeatureTypes.Polygon]: GeomType.Polygon
+        [1]: GeomType.Point,
+        [2]: GeomType.Line,
+        [3]: GeomType.Polygon
       }[f.type];
 
       const feature: ProtomapsFeature = {

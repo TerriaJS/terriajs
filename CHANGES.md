@@ -17,7 +17,7 @@
 - Add `MinMaxLevelMixin` to `ArcGisFeatureServerCatalogItem` - only applied when tiling requests
 - Tweaked `TableStyleMap` and `TableColorMap` conditions to handle empty `TableColumns` (to support styling `ArcGisFeatureServerCatalogItem` when tiling requests)
 - Fix bug with expanding "Developer Details" in the error modal
-- Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon` features were being dropped
+- Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon`, `Polygon` and `Line` features were being dropped
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
 - [The next improvement]
