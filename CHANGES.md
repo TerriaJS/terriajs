@@ -4,7 +4,7 @@
 
 - [The next improvement]
 
-#### 8.8.1 - 2025-02-25
+#### 8.8.1 - 2025-02-27
 
 - Expose the `lightColor` setting for 3D Tilesets in Cesium3dTilesCatalogItem.
 - Fix GeoJSON regression bug (from 8.8.0) - multi-polygons, polygons and line features weren't being rendered through `ProtomapsImageryProvider`.
