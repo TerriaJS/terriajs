@@ -3,15 +3,14 @@ import {
   action,
   computed,
   isObservableArray,
-  observable,
-  runInAction,
-  toJS,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction,
+  toJS
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -24,24 +23,24 @@ import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeatur
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
-import runLater from "../Core/runLater";
+import { JsonObject, isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
+import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
