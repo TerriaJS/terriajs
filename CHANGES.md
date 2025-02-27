@@ -1,7 +1,12 @@
 # Change Log
 
 #### next release (8.8.1)
+
 - Expose the `lightColor` setting for 3D Tilesets in Cesium3dTilesCatalogItem.
+- Fix GeoJSON regression bug (from 8.8.0) - multi-polygons, polygons and line features weren't being rendered through `ProtomapsImageryProvider`.
+- Remove unused klaw-sync dependency.
+- Remove unused hammerjs dependency.
+- Remove unused turf/meta dependency.
 - [The next improvement]
 
 #### 8.8.0 - 2025-02-18
