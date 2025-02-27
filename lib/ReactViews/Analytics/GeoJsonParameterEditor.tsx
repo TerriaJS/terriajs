@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import {
@@ -15,20 +14,31 @@ import {
   getDisplayValue as getExistingPolygonParameterDisplayValue
 } from "./SelectAPolygonParameterEditor";
 import { getDisplayValue as getRegionPickerDisplayValue } from "./RegionPicker";
-import GeoJsonParameter from "../../Models/FunctionParameters/GeoJsonParameter";
-import { withTranslation } from "react-i18next";
+import {
+  type TFunction,
+  WithTranslation,
+  withTranslation
+} from "react-i18next";
 import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { makeObservable, runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import { BaseModel } from "../../Models/Definition/Model";
+import GeoJsonParameter from "../../Models/FunctionParameters/GeoJsonParameter";
+import ViewState from "../../ReactViewModels/ViewState";
+
+interface GeoJsonParameterEditorProps extends WithTranslation {
+  previewed: BaseModel | undefined;
+  parameter: GeoJsonParameter;
+  viewState: ViewState;
+  t: TFunction;
+}
 
 @observer
-class GeoJsonParameterEditor extends React.Component {
-  static propTypes = {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
-  };
+class GeoJsonParameterEditor extends React.Component<GeoJsonParameterEditorProps> {
+  constructor(props: GeoJsonParameterEditorProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   onCleanUp() {
     this.props.viewState.openAddData();
@@ -36,38 +46,44 @@ class GeoJsonParameterEditor extends React.Component {
 
   selectPointOnMap() {
     runInAction(() => {
-      this.props.parameter.setValue(CommonStrata.user, undefined);
-      selectPointOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter,
-        this.props.t("analytics.selectLocation")
-      );
-      this.props.parameter.subtype = GeoJsonParameter.PointType;
+      if (this.props.previewed) {
+        this.props.parameter.setValue(CommonStrata.user, undefined);
+        selectPointOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter,
+          this.props.t("analytics.selectLocation")
+        );
+        this.props.parameter.subtype = GeoJsonParameter.PointType;
+      }
     });
   }
 
   selectPolygonOnMap() {
     runInAction(() => {
-      this.props.parameter.setValue(CommonStrata.user, undefined);
-      selectPolygonOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-      this.props.parameter.subtype = GeoJsonParameter.PolygonType;
+      if (this.props.previewed) {
+        this.props.parameter.setValue(CommonStrata.user, undefined);
+        selectPolygonOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter
+        );
+        this.props.parameter.subtype = GeoJsonParameter.PolygonType;
+      }
     });
   }
 
   selectExistingPolygonOnMap() {
     runInAction(() => {
-      this.props.parameter.setValue(CommonStrata.user, undefined);
-      selectExistingPolygonOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-      this.props.parameter.subtype = GeoJsonParameter.SelectAPolygonType;
+      if (this.props.previewed) {
+        this.props.parameter.setValue(CommonStrata.user, undefined);
+        selectExistingPolygonOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter
+        );
+        this.props.parameter.subtype = GeoJsonParameter.SelectAPolygonType;
+      }
     });
   }
 
@@ -126,7 +142,7 @@ class GeoJsonParameterEditor extends React.Component {
   }
 }
 
-function getDisplayValue(value, parameter) {
+export function getDisplayValue(value: any, parameter: GeoJsonParameter) {
   if (!defined(parameter.subtype)) {
     return "";
   }

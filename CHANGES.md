@@ -2,6 +2,8 @@
 
 #### next release (8.8.2)
 
+- TSify `GeoJsonParameterEditor` module.
+- TSify `RectangleParameterEditor` module.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
