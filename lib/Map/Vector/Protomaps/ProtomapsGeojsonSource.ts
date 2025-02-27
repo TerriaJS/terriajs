@@ -4,7 +4,7 @@ import booleanIntersects from "@turf/boolean-intersects";
 import circle from "@turf/circle";
 import { Feature, featureCollection } from "@turf/helpers";
 import geojsonvt from "geojson-vt";
-import { cloneDeep } from "lodash";
+import { cloneDeep } from "lodash-es";
 import { makeObservable, observable, runInAction } from "mobx";
 import {
   Bbox,

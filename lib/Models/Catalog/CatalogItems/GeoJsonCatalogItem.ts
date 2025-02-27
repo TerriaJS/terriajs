@@ -1,6 +1,6 @@
 import { featureCollection, FeatureCollection } from "@turf/helpers";
 import i18next from "i18next";
-import { get as _get, set as _set } from "lodash";
+import { get as _get, set as _set } from "lodash-es";
 import { computed, makeObservable, toJS } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import {
