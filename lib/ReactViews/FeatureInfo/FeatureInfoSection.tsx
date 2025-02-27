@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { isEmpty, merge } from "lodash-es";
 import {
   action,
@@ -13,7 +12,7 @@ import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
 import React from "react";
-import { withTranslation } from "react-i18next";
+import { withTranslation, TFunction } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -160,6 +159,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
   @computed get featureProperties() {
     // Force computed to re-calculate when cesium feature properties change
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.featureChangedCounter;
 
     return getFeatureProperties(

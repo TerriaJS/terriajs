@@ -7,24 +7,16 @@ import YDYRCatalogFunction from "../../../../lib/Models/Catalog/CatalogFunctions
 import YDYRCatalogFunctionJob from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
 import "../../../SpecHelpers";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
-
-const sa4regionCodes = JSON.stringify(
-  require("../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json")
-);
-
-const lga2011RegionCodes = JSON.stringify(
-  require("../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+import sa4regionCodes from "../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
+import lga2011RegionCodes from "../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-const lga11Csv = require("raw-loader!../../../../wwwroot/test/csv/lga_code_2011.csv");
+import lga11Csv from "../../../../wwwroot/test/csv/lga_code_2011.csv";
 
 describe("YDYRCatalogFunction", function () {
   let terria: Terria;
@@ -63,15 +55,15 @@ describe("YDYRCatalogFunction", function () {
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
-    ).andReturn({ responseText: sa4regionCodes });
+    ).andReturn({ responseJSON: sa4regionCodes });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
-    ).andReturn({ responseText: lga2011RegionCodes });
+    ).andReturn({ responseJSON: lga2011RegionCodes });
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
 
     terria = new Terria();
     csv = new CsvCatalogItem("test", terria, undefined);

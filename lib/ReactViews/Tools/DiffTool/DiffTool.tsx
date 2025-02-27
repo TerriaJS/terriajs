@@ -1,5 +1,4 @@
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction } from "i18next";
 import {
   action,
   computed,
@@ -12,7 +11,7 @@ import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -100,15 +99,17 @@ class DiffTool extends React.Component<PropsType> {
         this.leftItem = leftItem;
         this.rightItem = rightItem;
       });
-    } catch {
-      /* eslint-disable-line no-empty */
-    }
+    } catch {}
   }
 
   @action
   removeSplitterItems() {
-    this.leftItem && removeSplitItem(this.leftItem);
-    this.rightItem && removeSplitItem(this.rightItem);
+    if (this.leftItem) {
+      removeSplitItem(this.leftItem);
+    }
+    if (this.rightItem) {
+      removeSplitItem(this.rightItem);
+    }
   }
 
   @action
@@ -318,14 +319,18 @@ class Main extends React.Component<MainPropsType> {
   showItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0.8);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0.8);
+    }
   }
 
   @action
   hideItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0);
+    }
   }
 
   @action.bound

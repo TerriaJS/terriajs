@@ -93,9 +93,12 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     Array.from(this.capabilitiesLayers.values()).forEach((layer) => {
       if (!layer?.MetadataURL) return;
-      Array.isArray(layer?.MetadataURL)
-        ? metadataUrls.push(...layer?.MetadataURL)
-        : metadataUrls.push(layer?.MetadataURL as MetadataURL);
+      if (Array.isArray(layer?.MetadataURL)) {
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        metadataUrls.push(...layer?.MetadataURL);
+      } else {
+        metadataUrls.push(layer?.MetadataURL as MetadataURL);
+      }
     });
 
     return metadataUrls
@@ -162,7 +165,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      let legendUri: uri.URI | undefined;
+      let legendUri: URI | undefined;
       let legendUrlMimeType: string | undefined;
       let legendScaling: number | undefined;
 
@@ -202,7 +205,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         legendUri = URI(
           proxyCatalogItemUrl(
             this.catalogItem,
-            this.catalogItem.url.split("?")[0]
+            this.catalogItem.getLegendBaseUrl()
           )
         );
         legendUri

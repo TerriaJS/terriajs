@@ -1,9 +1,9 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .btn--about-link {
   composes: btn from "../../../Sass/common/_buttons.scss";
   composes: btn--map from "../../../Sass/common/_buttons.scss";
-  border-radius: $radius-small;
+  border-radius: variables.$radius-small;
   border: 0;
   svg {
     // fill: #6487ae;
@@ -19,7 +19,7 @@
   &:focus {
     border: 0;
     svg {
-      fill: $text-light;
+      fill: variables.$text-light;
     }
   }
 }

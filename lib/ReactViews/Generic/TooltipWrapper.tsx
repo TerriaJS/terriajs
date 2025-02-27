@@ -74,7 +74,9 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
   }
 
   dismiss = () => {
-    this.props.onDismiss && this.props.onDismiss();
+    if (this.props.onDismiss) {
+      this.props.onDismiss();
+    }
     this.setState({ open: false });
   };
 
@@ -236,7 +238,7 @@ type ButtonLauncherProps = {
   [spread: string]: any;
 };
 
-export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = (
+export const TooltipWithButtonLauncher: React.FC<ButtonLauncherProps> = (
   props
 ) => {
   const { launcherComponent, children, dismissOnLeave, orientation, ...rest } =

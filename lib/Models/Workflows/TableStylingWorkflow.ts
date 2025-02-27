@@ -1952,6 +1952,7 @@ export default class TableStylingWorkflow
             ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
+              // eslint-disable-next-line no-unsafe-optional-chaining
               ...traits.enum?.map((enumPoint, idx) => {
                 const dims: SelectableDimensionGroup = {
                   type: "group",

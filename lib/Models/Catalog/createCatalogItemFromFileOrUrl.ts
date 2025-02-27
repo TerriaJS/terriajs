@@ -2,7 +2,6 @@ import i18next from "i18next";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import ViewState from "../../ReactViewModels/ViewState";
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import upsertModelFromJson from "../Definition/upsertModelFromJson";
@@ -13,7 +12,6 @@ import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFro
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
-  _viewState: ViewState,
   fileOrUrl: File | string,
   dataType?: string
 ): Promise<BaseModel | undefined> {

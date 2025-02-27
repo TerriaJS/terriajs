@@ -31,7 +31,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
@@ -246,8 +245,9 @@ export default class Leaflet extends GlobeOrMap {
         interactions.forEach((handler) => handler.disable());
         this.map.off("click", pickLocation);
         this.scene.featureClicked.removeEventListener(pickFeature);
-        this._disposeSelectedFeatureSubscription &&
+        if (this._disposeSelectedFeatureSubscription) {
           this._disposeSelectedFeatureSubscription();
+        }
       } else {
         interactions.forEach((handler) => handler.enable());
         this.map.on("click", pickLocation);
@@ -425,8 +425,9 @@ export default class Leaflet extends GlobeOrMap {
 
   destroy(): void {
     console.log("**destroy leaflet**");
-    this._disposeSelectedFeatureSubscription &&
+    if (this._disposeSelectedFeatureSubscription) {
       this._disposeSelectedFeatureSubscription();
+    }
     this._disposeSplitterReaction();
     this._disposeWorkbenchMapItemsSubscription();
     this._eventHelper.removeAll();
@@ -587,7 +588,9 @@ export default class Leaflet extends GlobeOrMap {
         // careful to raiseToTop() only if the DS already exists in the collection.
         // Relevant code:
         //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
-        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+        if (dataSources.contains(ds)) {
+          dataSources.raiseToTop(ds);
+        }
       })
     );
   }
@@ -1192,7 +1195,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const map = this.map;

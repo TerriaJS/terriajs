@@ -13,10 +13,7 @@ var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 gulp.task("build-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    true
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   runWebpack(webpack, webpackConfig, done);
 });
@@ -24,10 +21,7 @@ gulp.task("build-specs", function (done) {
 gulp.task("release-specs", function (done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    false
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(false);
 
   runWebpack(webpack, webpackConfig, done);
 });
@@ -35,26 +29,25 @@ gulp.task("release-specs", function (done) {
 gulp.task("watch-specs", function (done) {
   var watchWebpack = require("./buildprocess/watchWebpack");
   var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(
-    false,
-    true
-  );
+  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   watchWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task("lint", function (done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
+  var path = require("path");
 
-  runExternalModule("eslint/bin/eslint.js", [
+  const eslintDir = path.dirname(require.resolve("eslint/package.json"));
+  const eslintExecutable = path.join(eslintDir, "bin", "eslint.js");
+  runExternalModule(eslintExecutable, [
     "lib",
     "test",
     "--ext",
     ".jsx,.js,.ts,.tsx",
-    "--ignore-pattern",
-    "lib/ThirdParty",
     "--max-warnings",
-    "0"
+    "0",
+    "--report-unused-disable-directives"
   ]);
 
   done();

@@ -703,7 +703,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process.env.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be provided via the
@@ -935,11 +935,12 @@ export default class Terria {
   addShareKey(id: string, shareKey: string): void {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
-  setupInitializationUrls(baseUri: uri.URI, config: any): void {
+  setupInitializationUrls(baseUri: URI, config: any): void {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map((url) => ({
       name: `Init URL from config ${url}`,
@@ -2005,7 +2006,7 @@ export default class Terria {
   async loadMagdaConfig(
     configUrl: string,
     config: any,
-    baseUri: uri.URI
+    baseUri: URI
   ): Promise<void> {
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
@@ -2106,7 +2107,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as TerriaFeature[]
+        vectorFeatures
       );
     }
 
@@ -2182,7 +2183,7 @@ export default class Terria {
 }
 
 function generateInitializationUrl(
-  baseUri: uri.URI,
+  baseUri: URI,
   initFragmentPaths: string[],
   url: string
 ): InitSource {
@@ -2208,7 +2209,7 @@ async function interpretHash(
   terria: Terria,
   hashProperties: any,
   userProperties: Map<string, any>,
-  baseUri: uri.URI
+  baseUri: URI
 ) {
   if (isDefined(hashProperties.clean)) {
     runInAction(() => {

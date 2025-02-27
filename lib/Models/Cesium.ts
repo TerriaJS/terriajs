@@ -12,6 +12,7 @@ import {
   toJS
 } from "mobx";
 import { computedFn, fromPromise, IPromiseBasedObservable } from "mobx-utils";
+import ionCreditLogo from "terriajs-cesium/Source/Assets/Images/ion-credit.png";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -38,6 +39,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
@@ -46,9 +48,11 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import getElement from "terriajs-cesium/Source/DataSources/getElement";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
+import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -57,7 +61,6 @@ import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
-import getElement from "terriajs-cesium/Source/DataSources/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -67,7 +70,6 @@ import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import PickedFeatures, {
   ProviderCoordsMap
@@ -91,8 +93,6 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
-import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
-import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -100,6 +100,12 @@ type CreditDisplayElement = {
   credit: Credit;
   count: number;
 };
+
+Ion.defaultTokenMessage =
+  '<b> \
+        This application is using Cesium\'s default ion access token. Please set "cesiumIonAccessToken" in config.json \
+        with an access token from your ion account. \
+        You can sign up for a free ion account at <a href="https://cesium.com">https://cesium.com</a>.</b>';
 
 // Intermediary
 const cartesian3Scratch = new Cartesian3();
@@ -306,7 +312,9 @@ export default class Cesium extends GlobeOrMap {
             document.removeEventListener("keyup", onKeyUp);
             runInAction(() => {
               this.terria.mapInteractionModeStack.pop();
-              zoomUserDrawing && zoomUserDrawing.cleanUp();
+              if (zoomUserDrawing) {
+                zoomUserDrawing.cleanUp();
+              }
             });
             this.resumeMapInteraction();
             zoomUserDrawing = undefined;
@@ -682,7 +690,9 @@ export default class Cesium extends GlobeOrMap {
         // careful to raiseToTop() only if the DS already exists in the collection.
         // Relevant code:
         //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
-        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+        if (dataSources.contains(ds)) {
+          dataSources.raiseToTop(ds);
+        }
       })
     );
   }
@@ -1195,7 +1205,7 @@ export default class Cesium extends GlobeOrMap {
       };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
       // Use Cesium ION world Terrain
-      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
+      const logo = ionCreditLogo;
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
           logo +
@@ -1756,7 +1766,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     _rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {

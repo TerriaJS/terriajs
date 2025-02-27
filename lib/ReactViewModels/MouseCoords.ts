@@ -16,6 +16,7 @@ import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
+import gridFileUrl from "../../wwwroot/data/WW15MGH.DAC";
 
 interface Cancelable {
   cancel: () => void;
@@ -63,9 +64,7 @@ export default class MouseCoords {
 
   constructor() {
     makeObservable(this);
-    this.geoidModel = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
-    );
+    this.geoidModel = new EarthGravityModel1996(gridFileUrl);
     this.proj4Projection = "+proj=utm +ellps=GRS80 +units=m +no_defs";
     this.projectionUnits = "m";
     this.proj4longlat =

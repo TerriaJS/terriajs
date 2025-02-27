@@ -31,38 +31,25 @@ import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
-
 import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
+import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
+import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv";
+import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv";
+import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
+import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv";
 
-const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
-const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
-const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
-const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
-const LatLonEnumDateIdWithRegionCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
-const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
-const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
-const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
-const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
-const regionMapping = JSON.stringify(
-  require("../../wwwroot/data/regionMapping.json")
-);
-const additionalRegionMapping = JSON.stringify(
-  require("../../wwwroot/test/regionMapping/additionalRegion.json")
-);
-const regionIdsSte = JSON.stringify(
-  require("../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json")
-);
-const regionIdsLgaName = JSON.stringify(
-  require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json")
-);
-const regionIdsLgaCode = JSON.stringify(
-  require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
-);
-const regionIdsLgaNameStates = JSON.stringify(
-  require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
-);
+import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv";
+import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv";
+import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv";
+import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv";
+import regionMapping from "../../wwwroot/data/regionMapping.json";
+import additionalRegionMapping from "../../wwwroot/test/regionMapping/additionalRegion.json";
+import regionIdsSte from "../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
+import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
+import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
 const NUMBER_OF_REGION_MAPPING_TYPES = 144;
 
@@ -81,23 +68,23 @@ describe("TableMixin", function () {
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
-    ).andReturn({ responseText: regionIdsSte });
+    ).andReturn({ responseJSON: regionIdsSte });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json"
-    ).andReturn({ responseText: regionIdsLgaName });
+    ).andReturn({ responseJSON: regionIdsLgaName });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
-    ).andReturn({ responseText: regionIdsLgaCode });
+    ).andReturn({ responseJSON: regionIdsLgaCode });
 
     jasmine.Ajax.stubRequest(
       "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
-    ).andReturn({ responseText: regionIdsLgaNameStates });
+    ).andReturn({ responseJSON: regionIdsLgaNameStates });
   });
 
   afterEach(function () {
@@ -604,7 +591,7 @@ describe("TableMixin", function () {
       // - "SOME_OTHER_REGION" - which is just another region type
       // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
       jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
-        responseText: additionalRegionMapping
+        responseJSON: additionalRegionMapping
       });
 
       terria.updateParameters({
@@ -640,7 +627,7 @@ describe("TableMixin", function () {
       // - "SOME_OTHER_REGION" - which is just another region type
       // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
       jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
-        responseText: additionalRegionMapping
+        responseJSON: additionalRegionMapping
       });
 
       terria.updateParameters({
@@ -1683,6 +1670,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           // If feature data doesn't contain current discrete time - we can safely continue
@@ -1837,6 +1825,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           // If feature data doesn't contain current discrete time - we can safely continue
@@ -1999,6 +1988,7 @@ describe("TableMixin", function () {
           ).timeIntervalCollection;
 
           if (!featureData)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             `Failed to find featureData for feature ID: ${feature.id}`;
 
           const featureIdColumnValue = featureData?.getValue(time)?.id;

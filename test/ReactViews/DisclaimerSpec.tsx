@@ -5,7 +5,7 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Box from "../../lib/Styled/Box";
 import { createWithContexts } from "./withContext";
-const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
+import Disclaimer from "../../lib/ReactViews/Disclaimer";
 
 describe("Disclaimer", function () {
   let terria: Terria;
@@ -35,10 +35,7 @@ describe("Disclaimer", function () {
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = createWithContexts(
-          viewState,
-          <Disclaimer viewState={viewState} />
-        );
+        testRenderer = createWithContexts(viewState, <Disclaimer />);
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
@@ -52,10 +49,7 @@ describe("Disclaimer", function () {
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = createWithContexts(
-          viewState,
-          <Disclaimer viewState={viewState} />
-        );
+        testRenderer = createWithContexts(viewState, <Disclaimer />);
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
@@ -69,10 +63,7 @@ describe("Disclaimer", function () {
         viewState.disclaimerVisible = false;
       });
       act(() => {
-        testRenderer = createWithContexts(
-          viewState,
-          <Disclaimer viewState={viewState} />
-        );
+        testRenderer = createWithContexts(viewState, <Disclaimer />);
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeFalsy();
