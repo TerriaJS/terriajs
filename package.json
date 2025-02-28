@@ -130,7 +130,6 @@
     "node-fetch": "^2.6.1",
     "papaparse": "^5.2.0",
     "pbf": "^3.0.1",
-    "pmtiles": "^3.0.7",
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "proj4-fully-loaded": "^0.2.0",
