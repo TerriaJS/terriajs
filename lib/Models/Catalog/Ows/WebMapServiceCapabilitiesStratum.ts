@@ -301,8 +301,14 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed get crs() {
+    const mapCrs = this.catalogItem.terria.currentViewer.crs?.code;
+
     // Note order is important here, the first one found will be used
-    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+    const supportedCrs = filterOutUndefined([
+      mapCrs,
+      ...SUPPORTED_CRS_3857,
+      ...SUPPORTED_CRS_4326
+    ]);
 
     // First check to see if URL has CRS or SRS
     const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
