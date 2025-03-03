@@ -110,19 +110,7 @@ export default class Leaflet extends GlobeOrMap {
   private _createImageryLayer: (
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined
-  ) => GridLayer = computedFn((ip, clippingRectangle) => {
-    // let b = clippingRectangle && rectangleToLatLngBounds(clippingRectangle);
-    // if (clippingRectangle && this.crs) {
-    //   b = L.bounds(
-    //     this.crs.project(
-    //       L.LatLng(clippingRectangle.south, clippingRectangle.west)
-    //     ),
-    //     this.crs.project(
-    //       L.LatLng(clippingRectangle.north, clippingRectangle.east)
-    //     )
-    //   );
-    // }
-    // console.log("bounds", b);
+  ) => GridLayer = computedFn((ip) => {
     const layerOptions = {
       maxZoom:
         this.terria.mainViewer.leafletViewerOptions?.maxZoom ??
@@ -1263,13 +1251,11 @@ function addDebugLayers(map: L.Map) {
   //     }
   //   )
   // );
-
   // map.addLayer(
   //   L.tileLayer.wms("https://geos.polarview.aq/geoserver/wms", {
   //     layers: "polarview:arg_icebergchart"
   //   })
   // );
-
   // map.addLayer(
   //   L.tileLayer.wms("https://maps.gns.cri.nz/geology/wms", {
   //     layers: "gns:ATA_SVL_GNS_250K_geological_units",
@@ -1281,7 +1267,6 @@ function addDebugLayers(map: L.Map) {
   //     foo: "foo"
   //   })
   // );
-
   // map.addLayer(
   //   L.tileLayer.wms("https://maps.gns.cri.nz/geology/wms", {
   //     layers: "gmnz:NZL_GNS_GM5_faults",
@@ -1293,14 +1278,12 @@ function addDebugLayers(map: L.Map) {
   //     foo: "foo"
   //   })
   // );
-
   // map.addLayer(
   //   L.esri.tiledMapLayer({
   //     url: "https://services.arcgisonline.com/arcgis/rest/services/Polar/Antarctic_Imagery/MapServer",
   //     layers: [0]
   //   })
   // );
-
   // this.map.addLayer(
   //   L.tileLayer.wms("https://maps.bas.ac.uk/antarctic/wms", {
   //     layers: "add:Antarctic_surface_dem_bathymetry"
@@ -1426,22 +1409,22 @@ function addDebugLayers(map: L.Map) {
   //   }
   // ).addTo(this.map);
   // Turn on to debug tiles
-  L.GridLayer.GridDebug = L.GridLayer.extend({
-    createTile: function (coords) {
-      const tile = document.createElement("div");
-      tile.style.outline = "2px solid green";
-      tile.style.fontWeight = "bold";
-      tile.style.fontSize = "14pt";
-      tile.style.display = "flex";
-      tile.style.justifyContent = "center";
-      tile.style.alignItems = "center";
-      tile.innerHTML = [coords.x, coords.y, coords.z].join("/");
-      return tile;
-    }
-  });
-  map.addLayer(
-    new L.GridLayer.GridDebug({
-      tileSize: 256
-    })
-  );
+  // L.GridLayer.GridDebug = L.GridLayer.extend({
+  //   createTile: function (coords) {
+  //     const tile = document.createElement("div");
+  //     tile.style.outline = "2px solid green";
+  //     tile.style.fontWeight = "bold";
+  //     tile.style.fontSize = "14pt";
+  //     tile.style.display = "flex";
+  //     tile.style.justifyContent = "center";
+  //     tile.style.alignItems = "center";
+  //     tile.innerHTML = [coords.x, coords.y, coords.z].join("/");
+  //     return tile;
+  //   }
+  // });
+  // map.addLayer(
+  //   new L.GridLayer.GridDebug({
+  //     tileSize: 256
+  //   })
+  // );
 }
