@@ -147,7 +147,7 @@ const getImageryLayerFilteredRow = action(
     if (!isDefined(rowNumbers)) return;
 
     if (!isDefined(currentTimeRows)) {
-      return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
+      return Array.isArray(rowNumbers) ? rowNumbers[0] : (rowNumbers as number);
     }
 
     if (
