@@ -20,6 +20,17 @@
 - Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon`, `Polygon` and `Line` features were being dropped
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
+- **Breaking changes:**
+- Major changes to UI
+
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+
+- Remove unused pmtiles dependency.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
