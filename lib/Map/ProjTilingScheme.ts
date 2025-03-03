@@ -150,14 +150,16 @@ class ProjTilingScheme implements TilingScheme {
     const seCrsPoint = crs.project(seLatLng);
     const bounds = L.bounds(nwCrsPoint, seCrsPoint);
 
+    crs.unproject;
+
     // Compute bounds
     const rectangle = result ?? new Rectangle();
     const min = bounds.getTopLeft();
     const max = bounds.getBottomRight();
-    rectangle.west = min.x;
-    rectangle.south = min.y;
-    rectangle.east = max.x;
-    rectangle.north = max.y;
+    rectangle.west = round8(min.x);
+    rectangle.south = round8(min.y);
+    rectangle.east = round8(max.x);
+    rectangle.north = round8(max.y);
 
     return rectangle;
   }
@@ -178,6 +180,10 @@ class ProjTilingScheme implements TilingScheme {
     result.y = Math.floor(crsCoord.y / this.tileSize.y);
     return result;
   }
+}
+
+function round8(value: number): number {
+  return Math.round(value * 100000000) / 100000000;
 }
 
 // class ProjTilingScheme extends WebMercatorTilingScheme {

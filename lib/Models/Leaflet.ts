@@ -111,11 +111,26 @@ export default class Leaflet extends GlobeOrMap {
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined
   ) => GridLayer = computedFn((ip, clippingRectangle) => {
+    // let b = clippingRectangle && rectangleToLatLngBounds(clippingRectangle);
+    // if (clippingRectangle && this.crs) {
+    //   b = L.bounds(
+    //     this.crs.project(
+    //       L.LatLng(clippingRectangle.south, clippingRectangle.west)
+    //     ),
+    //     this.crs.project(
+    //       L.LatLng(clippingRectangle.north, clippingRectangle.east)
+    //     )
+    //   );
+    // }
+    // console.log("bounds", b);
     const layerOptions = {
       maxZoom:
         this.terria.mainViewer.leafletViewerOptions?.maxZoom ??
-        this.terria.configParameters.leafletMaxZoom,
-      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+        this.terria.configParameters.leafletMaxZoom
+      // TODO: bounds checking might not work for non mercator
+      //projections.Ideally we should disable clippingRectangle instead when
+      //using non mercator projections.  bounds: clippingRectangle &&
+      //rectangleToLatLngBounds(clippingRectangle), noWrap: true
     };
     // We have two different kinds of ImageryProviderLeaflet layers
     // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
@@ -178,7 +193,7 @@ export default class Leaflet extends GlobeOrMap {
       worldCopyJump: false
     }).setView([-90, 0], 0);
 
-    addDebugLayers();
+    addDebugLayers(this.map);
 
     this.map.on("move", () => this.updateMapObservables());
     this.map.on("zoom", () => this.updateMapObservables());
@@ -1239,7 +1254,53 @@ function unprojectBounds(crsBounds: L.Bounds, crs: L.CRS) {
   );
 }
 
-function addDebugLayers() {
+function addDebugLayers(map: L.Map) {
+  // map.addLayer(
+  //   L.tileLayer.wms(
+  //     "https://nimbus.cr.usgs.gov/arcgis/services/Antarctica/USGS_EROS_Antarctica_Reference/MapServer/WmsServer",
+  //     {
+  //       layers: "McMurdo_Landsat_Images_5_7m_525"
+  //     }
+  //   )
+  // );
+
+  // map.addLayer(
+  //   L.tileLayer.wms("https://geos.polarview.aq/geoserver/wms", {
+  //     layers: "polarview:arg_icebergchart"
+  //   })
+  // );
+
+  // map.addLayer(
+  //   L.tileLayer.wms("https://maps.gns.cri.nz/geology/wms", {
+  //     layers: "gns:ATA_SVL_GNS_250K_geological_units",
+  //     format: "image/png",
+  //     transparent: "true",
+  //     version: "1.1.1",
+  //     noWrap: true,
+  //     continuousWorld: false,
+  //     foo: "foo"
+  //   })
+  // );
+
+  // map.addLayer(
+  //   L.tileLayer.wms("https://maps.gns.cri.nz/geology/wms", {
+  //     layers: "gmnz:NZL_GNS_GM5_faults",
+  //     format: "image/png",
+  //     transparent: "true",
+  //     version: "1.1.1",
+  //     noWrap: true,
+  //     continuousWorld: false,
+  //     foo: "foo"
+  //   })
+  // );
+
+  // map.addLayer(
+  //   L.esri.tiledMapLayer({
+  //     url: "https://services.arcgisonline.com/arcgis/rest/services/Polar/Antarctic_Imagery/MapServer",
+  //     layers: [0]
+  //   })
+  // );
+
   // this.map.addLayer(
   //   L.tileLayer.wms("https://maps.bas.ac.uk/antarctic/wms", {
   //     layers: "add:Antarctic_surface_dem_bathymetry"
@@ -1365,22 +1426,22 @@ function addDebugLayers() {
   //   }
   // ).addTo(this.map);
   // Turn on to debug tiles
-  // L.GridLayer.GridDebug = L.GridLayer.extend({
-  //   createTile: function (coords) {
-  //     const tile = document.createElement("div");
-  //     tile.style.outline = "2px solid green";
-  //     tile.style.fontWeight = "bold";
-  //     tile.style.fontSize = "14pt";
-  //     tile.style.display = "flex";
-  //     tile.style.justifyContent = "center";
-  //     tile.style.alignItems = "center";
-  //     tile.innerHTML = [coords.x, coords.y, coords.z].join("/");
-  //     return tile;
-  //   }
-  // });
-  // this.map.addLayer(
-  //   new L.GridLayer.GridDebug({
-  //     tileSize: 256
-  //   })
-  // );
+  L.GridLayer.GridDebug = L.GridLayer.extend({
+    createTile: function (coords) {
+      const tile = document.createElement("div");
+      tile.style.outline = "2px solid green";
+      tile.style.fontWeight = "bold";
+      tile.style.fontSize = "14pt";
+      tile.style.display = "flex";
+      tile.style.justifyContent = "center";
+      tile.style.alignItems = "center";
+      tile.innerHTML = [coords.x, coords.y, coords.z].join("/");
+      return tile;
+    }
+  });
+  map.addLayer(
+    new L.GridLayer.GridDebug({
+      tileSize: 256
+    })
+  );
 }
