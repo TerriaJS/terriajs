@@ -105,7 +105,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
       items.push(baseMap);
     } else {
       /* eslint-disable-line */ // @ts-ignore wth?
-      this.setTrait(stratumId, "items", [baseMap]); /* eslint-disable-line */
+      this.setTrait(stratumId, "items", [baseMap]);
     }
   }
 

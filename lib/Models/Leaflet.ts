@@ -1242,7 +1242,7 @@ function unprojectBounds(crsBounds: L.Bounds, crs: L.CRS) {
   );
 }
 
-function addDebugLayers(map: L.Map) {
+function addDebugLayers(/*map: L.Map*/) {
   // map.addLayer(
   //   L.tileLayer.wms(
   //     "https://nimbus.cr.usgs.gov/arcgis/services/Antarctica/USGS_EROS_Antarctica_Reference/MapServer/WmsServer",

@@ -150,8 +150,6 @@ class ProjTilingScheme implements TilingScheme {
     const seCrsPoint = crs.project(seLatLng);
     const bounds = L.bounds(nwCrsPoint, seCrsPoint);
 
-    crs.unproject;
-
     // Compute bounds
     const rectangle = result ?? new Rectangle();
     const min = bounds.getTopLeft();
