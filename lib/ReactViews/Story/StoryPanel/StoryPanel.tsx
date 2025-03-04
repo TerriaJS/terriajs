@@ -227,7 +227,6 @@ class StoryPanel extends React.Component<Props, State> {
           onClick={() => this.onClickContainer()}
           css={`
             transition: padding, 0.2s;
-            bottom: 80px;
             pointer-events: none;
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
@@ -240,7 +239,10 @@ class StoryPanel extends React.Component<Props, State> {
                 padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
                 padding-right: 50px;
               `}
-              bottom: 90px;
+              bottom: ${this.props.viewState.terria.timelineStack.top !==
+              undefined
+                ? "146px"
+                : "80px"};
             }
           `}
         >
@@ -274,10 +276,8 @@ class StoryPanel extends React.Component<Props, State> {
               />
             </Box>
             <Box
-              backgroundColor={this.props.theme.dark}
               css={{
-                backgroundColor: this.props.theme.transparentDark,
-                color: "white"
+                backgroundColor: "rgba(255, 255, 255, 0.85)"
               }}
             >
               <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
