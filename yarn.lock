@@ -2905,6 +2905,13 @@ append-transform@^1.0.0:
   dependencies:
     default-require-extensions "^2.0.0"
 
+arcgis-pbf-parser@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/arcgis-pbf-parser/-/arcgis-pbf-parser-0.0.4.tgz#0aa0cb5648e400cb20cb06911a649063c20993ea"
+  integrity sha512-ngieRsLNct1dPyH85DnASiierr+hYO+9ow3zC22lYvNcKtFxVrtd1jbfizwWs9Kp3NpKP4iNnPAONp3acCcceA==
+  dependencies:
+    pbf "^3.2.1"
+
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
@@ -8772,6 +8779,14 @@ pbf@^3.0.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.2.1.tgz#b4c1b9e72af966cd82c6531691115cc0409ffe2a"
   integrity sha512-ClrV7pNOn7rtmoQVF4TS1vyU0WhYRnP92fzbfF75jAIwpnzdJXf8iTd4CMEqO4yUenH6NDqLiwjqlh6QgZzgLQ==
+  dependencies:
+    ieee754 "^1.1.12"
+    resolve-protobuf-schema "^2.1.0"
+
+pbf@^3.2.1:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.3.0.tgz#1790f3d99118333cc7f498de816028a346ef367f"
+  integrity sha512-XDF38WCH3z5OV/OVa8GKUNtLAyneuzbCisx7QUCF8Q6Nutx0WnJrQe5O+kOtBlLfRNUws98Y58Lblp+NJG5T4Q==
   dependencies:
     ieee754 "^1.1.12"
     resolve-protobuf-schema "^2.1.0"
