@@ -1,12 +1,12 @@
 import { reaction, runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
@@ -19,7 +19,7 @@ import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/Protom
 import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
-} from "../../../../lib/Map/Vector/ProtomapsGeojsonSource";
+} from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import {
   FEATURE_ID_PROP,
   getColor
@@ -1188,6 +1188,41 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
+  describe("handling MultiPolygon features", function () {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/multipolygon.geojson"
+      );
+    });
+
+    it("creates multi-polygon cesium primitives features", async function () {
+      runInAction(() =>
+        geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true)
+      );
+
+      await geojson.loadMapItems();
+      const features = geojson.mapItems[0] as CustomDataSource;
+      expect(features).toBeDefined();
+      expect(isDataSource(features)).toBeTruthy();
+      expect(features.entities.values.length).toEqual(5);
+
+      expect(features.entities.values[0].polygon).toBeDefined();
+      expect(features.entities.values[1].polygon).toBeDefined();
+      expect(features.entities.values[2].polygon).toBeDefined();
+      expect(features.entities.values[3].polyline).toBeDefined();
+      expect(features.entities.values[4].polyline).toBeDefined();
+    });
+  });
+
   describe("ProtomapsGeojsonSource", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
@@ -1235,10 +1270,10 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(feature?.geom.length).toEqual(4);
 
       expect(feature?.bbox).toEqual({
-        maxX: 320,
-        maxY: 208.875,
-        minX: -44,
-        minY: -64
+        maxX: 288,
+        maxY: 204.3125,
+        minX: -32,
+        minY: -32
       });
     });
 
@@ -1278,10 +1313,10 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(feature?.geom?.[1].length).toEqual(5);
 
       expect(feature?.bbox).toEqual({
-        maxX: 320,
-        maxY: 320,
-        minX: -64,
-        minY: -64
+        maxX: 288,
+        maxY: 288,
+        minX: -32,
+        minY: -32
       });
 
       expect(feature?.props?.bar).toEqual("bye");
@@ -1323,10 +1358,10 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(feature?.geom?.[0].length).toEqual(2);
 
       expect(feature?.bbox).toEqual({
-        maxX: 177.75,
-        maxY: 177.75,
-        minX: -64,
-        minY: -64
+        maxX: 145.75,
+        maxY: 145.75,
+        minX: -32,
+        minY: -32
       });
     });
   });
