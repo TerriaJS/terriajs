@@ -178,7 +178,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
             gap={3}
             paddedRatio={3}
             css={{
-              borderTop: `1px solid ${this.props.theme.darkLighter}`,
+              borderTop: `1px solid ${this.props.theme.grey}`,
               color: this.props.theme.greyLighter
             }}
           >
@@ -205,7 +205,8 @@ const DraggableBox = styled(Box)`
 const StyledLi = styled(Li)`
   background: ${(p) => p.theme.darkWithOverlay};
   color: ${(p) => p.theme.textLight};
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid ${(p) => p.theme.grey};
   width: 100%;
 
   margin-bottom: 20px;
