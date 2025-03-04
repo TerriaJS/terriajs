@@ -45,6 +45,7 @@
 - Hide 'Story' button in mobile view if story panel is active.
 - Update empty workbench help text
 - Remove unused `arraysAreEqual`, `autoUpdate`, `flattenNested`, `freezeInDebug`, `isPromise`, `loadJsonp`, `OrUndefined`, and `superGet` files from lib/Core.
+- Remove unused babel/parser dependency.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
