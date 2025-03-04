@@ -20,7 +20,7 @@ const Container = styled.div`
   @media (min-width: ${(props) => props.theme.sm}px) {
     position: absolute;
     left: 45%; // on larger screens
-    bottom: 40px;
+    bottom: 60px;
   }
 
   display: flex;
