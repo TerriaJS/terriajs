@@ -21,6 +21,7 @@
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
 - Update data styling docs
+- Remove unused babel/eslint-parser dependency.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
