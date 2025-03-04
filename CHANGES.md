@@ -2,7 +2,7 @@
 
 #### next release (8.9.0)
 
-- **Breaking changes**
+- Remove unused pmtiles dependency.- **Breaking changes**
   - Add tiling support to `ArcGisFeatureServerCatalogItem` - this will be enabled by default if the server supports tiling and unsupported marker/point styles aren't used. See `ArcGisFeatureServerCatalogTraits` `tileRequests`. When enabled, `pbf` tiles will be fetched and drawn using `ProtomapsImageryProvider`
     - This can be disabled by setting `tileRequests` to `false`
     - For point features, only the following `PointSymbolTraits` are available - fill, stroke, height (which sets circle radius). Custom markers (markers other than `point` or `circle`) are not supported.
@@ -21,6 +21,14 @@
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
 - [The next improvement]
+
+#### 8.8.1 - 2025-02-27
+
+- Expose the `lightColor` setting for 3D Tilesets in Cesium3dTilesCatalogItem.
+- Fix GeoJSON regression bug (from 8.8.0) - multi-polygons, polygons and line features weren't being rendered through `ProtomapsImageryProvider`.
+- Remove unused klaw-sync dependency.
+- Remove unused hammerjs dependency.
+- Remove unused turf/meta dependency.
 
 #### 8.8.0 - 2025-02-18
 

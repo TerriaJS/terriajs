@@ -4,6 +4,7 @@ on: push
 
 jobs:
   deploy:
+    if: github.repository_owner == 'TerriaJS'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

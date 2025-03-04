@@ -135,6 +135,24 @@ describe("Cesium3dTilesMixin", function () {
     });
   });
 
+  describe("lightColor", function () {
+    it("sets the light color of the tileset", async function () {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      cesium3dTiles = new Cesium3DTilesCatalogItem("test", terria);
+      cesium3dTiles.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/Cesium3DTiles/tileset.json"
+      );
+      cesium3dTiles.setTrait(CommonStrata.user, "lightColor", [255, 0, 0]);
+      await cesium3dTiles.loadMapItems();
+      const tileset = cesium3dTiles.mapItems[0] as Cesium3DTileset;
+      expect(tileset.lightColor).toEqual(new Cartesian3(255, 0, 0));
+    });
+  });
+
   describe("getSelectorForFeature", function () {
     it("returns a style expression for selecting the given feature if it can be constructed", function () {
       const item = new Cesium3DTilesCatalogItem("test", terria);

@@ -1234,6 +1234,49 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
+    it("creates multi-polygon protomaps features", async function () {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/multipolygon.geojson"
+      );
+
+      geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", false);
+
+      await geojson.loadMapItems();
+
+      const imageryParts = geojson.mapItems[0] as ImageryParts;
+      expect(imageryParts).toBeDefined();
+      expect(ImageryParts.is(imageryParts)).toBeTruthy();
+
+      const imageryProvider =
+        imageryParts.imageryProvider as ProtomapsImageryProvider;
+      expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
+
+      const source = imageryProvider.source as ProtomapsGeojsonSource;
+      expect(source instanceof ProtomapsGeojsonSource).toBeTruthy();
+
+      const features = await source.get(
+        {
+          x: 23,
+          y: 35,
+          z: 6
+        },
+        256
+      );
+
+      expect(features.get(GEOJSON_SOURCE_LAYER_NAME)?.length).toEqual(1);
+      const feature = features.get(GEOJSON_SOURCE_LAYER_NAME)?.[0];
+      expect(feature?.geom.length).toEqual(4);
+
+      expect(feature?.bbox).toEqual({
+        maxX: 288,
+        maxY: 204.3125,
+        minX: -32,
+        minY: -32
+      });
+    });
+
     it("creates polygon protomaps features", async function () {
       geojson.setTrait(
         CommonStrata.user,
@@ -1317,47 +1360,6 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(feature?.bbox).toEqual({
         maxX: 145.75,
         maxY: 145.75,
-        minX: -32,
-        minY: -32
-      });
-    });
-
-    it("creates multi-polygon protomaps features", async function () {
-      geojson.setTrait(
-        CommonStrata.user,
-        "url",
-        "test/GeoJSON/multipolygon.geojson"
-      );
-
-      await geojson.loadMapItems();
-
-      const imageryParts = geojson.mapItems[0] as ImageryParts;
-      expect(imageryParts).toBeDefined();
-      expect(ImageryParts.is(imageryParts)).toBeTruthy();
-
-      const imageryProvider =
-        imageryParts.imageryProvider as ProtomapsImageryProvider;
-      expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
-
-      const source = imageryProvider.source as ProtomapsGeojsonSource;
-      expect(source instanceof ProtomapsGeojsonSource).toBeTruthy();
-
-      const features = await source.get(
-        {
-          x: 23,
-          y: 35,
-          z: 6
-        },
-        256
-      );
-
-      expect(features.get(GEOJSON_SOURCE_LAYER_NAME)?.length).toEqual(1);
-      const feature = features.get(GEOJSON_SOURCE_LAYER_NAME)?.[0];
-      expect(feature?.geom.length).toEqual(4);
-
-      expect(feature?.bbox).toEqual({
-        maxX: 288,
-        maxY: 204.3125,
         minX: -32,
         minY: -32
       });
