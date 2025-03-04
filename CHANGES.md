@@ -29,6 +29,15 @@
   - Increases logo size, redesign of collapsed workbench panel
   - Update help text for empty workbench
   - Decrease border radii
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+  - Introduce `blur`, `dark-transparent`, `dark-alpha`, `scrollbar-color` and `scrollbar-track-color` theme variables
+  - Add `keepCatalogOpen` config option
+  - Add enable / disable all button to workbench
 
 - Remove unused pmtiles dependency.
 - [The next improvement]
