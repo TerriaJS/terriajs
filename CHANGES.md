@@ -2,7 +2,6 @@
 
 #### next release (8.9.0)
 
-- Remove unused pmtiles dependency.
 
 - **Breaking changes:**
 - Major changes to UI
