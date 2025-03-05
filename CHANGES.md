@@ -2,10 +2,28 @@
 
 #### next release (8.9.0)
 
-- Remove unused pmtiles dependency.- **Breaking changes**
-  - Add tiling support to `ArcGisFeatureServerCatalogItem` - this will be enabled by default if the server supports tiling and unsupported marker/point styles aren't used. See `ArcGisFeatureServerCatalogTraits` `tileRequests`. When enabled, `pbf` tiles will be fetched and drawn using `ProtomapsImageryProvider`
-    - This can be disabled by setting `tileRequests` to `false`
-    - For point features, only the following `PointSymbolTraits` are available - fill, stroke, height (which sets circle radius). Custom markers (markers other than `point` or `circle`) are not supported.
+- **Breaking changes:**
+- Major changes to UI
+
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+  - Introduce `blur`, `dark-transparent`, `dark-alpha`, `scrollbar-color` and `scrollbar-track-color` theme variables
+  - Add `keepCatalogOpen` config option
+  - Add enable / disable all button to workbench
+
+- Add tiling support to `ArcGisFeatureServerCatalogItem` - this will be enabled by default if the server supports tiling and unsupported marker/point styles aren't used. See `ArcGisFeatureServerCatalogTraits` `tileRequests`. When enabled, `pbf` tiles will be fetched and drawn using `ProtomapsImageryProvider`
+  - This can be disabled by setting `tileRequests` to `false`
+  - For point features, only the following `PointSymbolTraits` are available - fill, stroke, height (which sets circle radius). Custom markers (markers other than `point` or `circle`) are not supported.
 - Add `request` parameter to `ArcGisImageServerImageryProvider.buildImageResource` - this enables Cesium to manage requests
 - Decrease protomaps tile buffer to 32 pixels (from 64) to increase performance
 - Change `ProtomapsImageryProvider` to use a "soft" minimum level, so no tiles will be created below the `minimumZoom` provided.
@@ -20,6 +38,8 @@
 - Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon`, `Polygon` and `Line` features were being dropped
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
+
+- Remove unused pmtiles dependency.
 - Update data styling docs
 - Remove unused babel/eslint-parser dependency.
 - [The next improvement]
