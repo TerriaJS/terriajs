@@ -2,7 +2,6 @@
 
 #### next release (8.9.0)
 
-
 - **Breaking changes:**
 - Major changes to UI
 
@@ -41,6 +40,8 @@
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
 
 - Remove unused pmtiles dependency.
+- Update data styling docs
+- Remove unused babel/eslint-parser dependency.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
