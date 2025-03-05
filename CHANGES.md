@@ -3,6 +3,7 @@
 #### next release (8.9.0)
 
 - **Breaking changes:**
+- DOMPurify updated to 3.2.4 to fix CVE-2025-26791. This drops support for MSIE 11.
 - Major changes to UI
 
   - Changed workbench and bottom dock to absolute positioned over map with transparent background
