@@ -42,6 +42,7 @@
 - Remove unused pmtiles dependency.
 - Update data styling docs
 - Remove unused babel/eslint-parser dependency.
+- Hide 'Story' button in mobile view if story panel is active.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
