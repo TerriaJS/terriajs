@@ -28,7 +28,9 @@ const shouldShowPlayStoryButton = (viewState: ViewState) =>
   viewState.terria.configParameters.storyEnabled &&
   defined(viewState.terria.stories) &&
   viewState.terria.stories.length > 0 &&
-  viewState.useSmallScreenInterface;
+  viewState.useSmallScreenInterface &&
+  // Don't show story button if story panel is visible
+  viewState.storyShown !== true;
 
 const BottomLeftBar: FC = observer(() => {
   const { t } = useTranslation();
