@@ -227,6 +227,7 @@ class StoryPanel extends React.Component<Props, State> {
           onClick={() => this.onClickContainer()}
           css={`
             transition: padding, 0.2s;
+            bottom: 80px;
             pointer-events: none;
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
@@ -277,7 +278,8 @@ class StoryPanel extends React.Component<Props, State> {
             </Box>
             <Box
               css={{
-                backgroundColor: "rgba(255, 255, 255, 0.85)"
+                backgroundColor: "rgba(255, 255, 255, 0.85)",
+                backdropFilter: this.props.theme.blur
               }}
             >
               <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
