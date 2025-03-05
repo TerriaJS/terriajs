@@ -42,6 +42,7 @@
 - Remove unused pmtiles dependency.
 - Update data styling docs
 - Remove unused babel/eslint-parser dependency.
+- Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
