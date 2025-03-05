@@ -135,6 +135,9 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   }
 
   @computed get imageryProvider() {
+    // Don't return an imagery provider if we haven't loaded metadata yet
+    if (!this.loadMetadataResult) return undefined;
+
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
     const url = this.buildEsriJsonUrl()
