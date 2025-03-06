@@ -4,6 +4,7 @@ import classNames from "classnames";
 import Styles from "./story-editor.scss";
 import { withTranslation } from "react-i18next";
 import tinymce from "tinymce";
+// eslint-disable-next-line no-redeclare
 import Text from "../../Styled/Text";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
