@@ -511,10 +511,7 @@ class Main extends React.Component<MainPropsType> {
             flex-direction: column;
             height: 100%;
             padding: 5px 10px;
-
-            > * {
-              margin: 10px 0;
-            }
+            gap: 20px;
           `}
         >
           {isShowingDiff && (
