@@ -7,7 +7,7 @@
       "start": "Začátek prohlídky"
     },
     "exploreMapDataButton": {
-      "content": "## Prozkoumat mapové podklady\n\nProhlédněte si katalog dostupných dat a přidejte je do mapy zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže v pracovní ploše."
+      "content": "## Prozkoumejte data digitálního dvojčete\n\nProhlédněte si katalog dostupných dat Terria a přidejte je do digitálního dvojčete zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže na panelu Data digitálního dvojčete."
     },
     "menuBarMapSettingsButton": {
       "content": "## Nastavení mapy\n\nPřizpůsobte si nastavení mapy, jako jsou základní mapy, 2D/3D terén a kvalita mapového obrazu pro lepší výkon."
@@ -328,7 +328,7 @@
       "denyText": "Možná později",
       "confirmText": "Ano"
     },
-    "showWorkbench": "Zobrazit pracovní plochu",
+    "showWorkbench": "Prozkoumat datové sady [{{count}}]",
     "hideWorkbench": "Skrýt pracovní plochu"
   },
   "featureInfo": {
@@ -389,7 +389,10 @@
       "cancelBtn": "Zrušit",
       "cancelEditing": "Zrušit",
       "saveBtn": "uložit",
-      "saveStory": "Uložit"
+      "saveStory": "Uložit",
+      "modalHeader": "Editor scén - zachycení scény",
+      "titleLabel": "Název (vyžadováno)",
+      "descriptionLabel": "Popis"
     },
     "locationBtn": "vystředit scénu",
     "exitBtn": "konec příběhu",
@@ -438,7 +441,7 @@
     "titleV": "Jak zobrazím falešně barevné snímky?"
   },
   "addData": {
-    "addDataBtnText": "Prozkoumejte mapové podklady",
+    "addDataBtnText": "Prozkoumat data",
     "btnHide": "Skrýt",
     "load": "Načtení místních/webových dat",
     "closeDataPanel": "Zavřít datový panel",
@@ -460,7 +463,9 @@
     "urlInputBtn": "Přidat",
     "back": "Zpět",
     "browse": "Procházet...",
-    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby"
+    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby",
+    "modalTitle": "Prozkoumat data",
+    "data": "Data"
   },
   "search": {
     "resultsLabel": "Výsledky hledání",
@@ -567,7 +572,9 @@
     "addItemErrorTitle": "Katalogovou položku nelze přidat do pracovního plochy.",
     "previewItem": "O datech",
     "expandAll": "Rozbalit vše",
-    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY"
+    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY",
+    "disableAll": "Vypnout vše",
+    "enableAll": "Zapnout vše"
   },
   "dateTime": {
     "selectorLabel": "Čas:",
@@ -628,10 +635,10 @@
     "loadingMessage": "Načítání"
   },
   "emptyWorkbench": {
-    "emptyArea": "Vaše pracovní plocha je prázdná",
+    "emptyArea": "<0>To jsou vaše data</0><1>Při přidání datové sady do mapy se zde zobrazí její legenda (klíč) a nastavení, takže můžete snadno ovládat její vzhled.</1>",
     "helpfulHints": "Užitečné rady",
-    "helpfulHintsOne": "Projděte si dostupná data výběrem možnosti \"Prozkoumat data mapy\" nebo klikněte na \"Nahrát\" a přidejte do mapy vlastní data.",
-    "helpfulHintsTwo": "Po přidání dat do mapy jsou zde na pracovním stole uvedeny vaše aktivní datové sady. Pracovní plocha vám pomůže s daty pracovat.",
+    "helpfulHintsOne": "Kliknutím na \"Prozkoumat data mapy\" zobrazíte dostupná data nebo kliknutím na \"Nahrát\" přidáte do mapy vlastní data.",
+    "helpfulHintsTwo": "Po přidání dat najdete na tomto panelu své aktivní datové sady.Zde můžete:<1></1><2>Zapnout nebo vypnout viditelnost dat</2><2>Nastavit průhlednost (aby byla průhlednější)</2><2>Použít rozdělenou obrazovku pro porovnání dat vedle sebe</2><2>Změnit styly (například barvy mapy nebo čáry)</2><2>Přesouvat se po různých datech a časech, pokud to data umožňují</2>",
     "helpfulHintsThree": "V pracovní ploše můžete zapínat a vypínat datové sady, měnit jejich průhlednost, aktivovat porovnání rozdělené obrazovky, měnit styly a procházet data a časy, pokud data tuto funkci podporují."
   },
   "dataCatalog": {
@@ -1008,7 +1015,7 @@
       "unsupportedFileTypeTitle": "Nepodporovaný typ souboru",
       "getConfirmationMessage": "Tento soubor není přímo podporován {{appName}}.\n\nChcete jej zkusit nahrát do konverzní služby {{appName}}? To může fungovat pro malé zazipované soubory Esri Shapefiles nebo MapInfo TAB.",
       "readyToUpload": "Jste připraveni nahrát svůj soubor do konverzní služby {{appName}}?",
-      "upload": "Nahrát",
+      "upload": "Nahrát data",
       "cancel": "Zrušit",
       "useConversion": "Používáte konverzní službu?",
       "convertErrorTitle": "Nelze aktualizovat katalog na verzi V8",
