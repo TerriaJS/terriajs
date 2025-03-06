@@ -893,7 +893,5 @@ interface Tool {
   getToolComponent: () =>
     | React.ComponentType<any>
     | Promise<React.ComponentType<any>>;
-
-  showCloseButton: boolean;
   params?: any;
 }

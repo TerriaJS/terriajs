@@ -30,8 +30,7 @@ const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
         viewState.openTool({
           toolName: TOOL_NAME,
           getToolComponent: () => RepositionClippingBox,
-          params: { viewState, item, cesium },
-          showCloseButton: false
+          params: { viewState, item, cesium }
         });
 
         return action(function cleanup() {

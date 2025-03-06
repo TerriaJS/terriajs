@@ -141,7 +141,6 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: 4em;
   ${(p) => scrollBars(p)}
 `;
 

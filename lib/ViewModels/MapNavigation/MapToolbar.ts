@@ -227,8 +227,7 @@ export class ToolController extends MapNavigationItemController {
           // Pass toolId as an extra prop to the component.
           // TODO: Maybe we should use react contexts to do this instead of a magic prop?
           toolId
-        },
-        showCloseButton: true
+        }
       });
     } catch (err) {
       this.viewState.terria.raiseErrorToUser(TerriaError.from(err));
