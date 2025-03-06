@@ -134,7 +134,7 @@
   },
   "diffTool": {
     "title": "Difference",
-    "exit": "Exit",
+    "close": "Close",
     "instructions": {
       "setDateA": "Set date A",
       "setDateB": "Set date B",
@@ -158,8 +158,8 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No location selected",
-        "description": "To filter image date picker by location, please select a point on the map"
+        "title": "No location selected!",
+        "description": "To filter image date picker by location, zoom in and select a point of interest on the map"
       },
       "locationSelected": {
         "title": "Location selected & dates filtered",
