@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { useTranslation, withTranslation, Trans } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
@@ -23,134 +23,85 @@ const BoxHelpfulHints = styled(Box)`
   color: ${(p) => p.theme.greyLighter};
 `;
 
-const HelpfulHintsIcon = () => {
-  return (
-    <StyledIcon
-      glyph={Icon.GLYPHS.bulb}
-      styledWidth={"14px"}
-      styledHeight={"14px"}
-      light
-      css={`
-        padding: 2px 1px;
-      `}
-    />
-  );
-};
-
 interface EmptyWorkbenchProps {
   theme: DefaultTheme;
 }
 
+type TransContent = {
+  heading?: string;
+  body?: string;
+  list?: string[];
+}[];
+
 const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = observer(() => {
   const { t } = useTranslation();
   const viewState = useViewState();
+  const transContent = t("emptyWorkbench", {
+    returnObjects: true
+  }) as TransContent;
+
   return (
     <Box overflowY="auto" scroll column fullWidth>
       {/*hacky margin fix for spacing */}
-      <Text large textLight>
-        <Box
-          styledMargin="70px 0 0 0"
-          centered
-          column
-          paddedRatio={3}
-          justifySpaceBetween
-          gap={3}
-        >
-          <Text textAlignCenter large color="#E5E7EB">
-            <div>
-              <img
-                css={`
-                  margin: 15px 0;
-                `}
-                src="build/TerriaJS/images/map-paperPin.svg"
-              />
-            </div>
-            <Trans i18nKey="emptyWorkbench.emptyArea">
-              <p
-                css={`
-                  font-weight: bold;
-                `}
-              >
-                This is Your Data
-              </p>
-              <p>
-                When you add a dataset to the map, you’ll see its legend (key)
-                and settings right here so you can easily control how it looks.
-              </p>
-            </Trans>
-          </Text>
-          <Button
-            textLight
-            transparentBg
-            onClick={() => {
-              viewState.terria.analytics?.logEvent(
-                Category.help,
-                HelpAction.takeTour
-              );
-              runInAction(() => {
-                viewState.setTourIndex(0);
-              });
-            }}
-            renderIcon={() => (
-              <StyledIcon light styledWidth={"18px"} glyph={Icon.GLYPHS.info} />
-            )}
-            textProps={{
-              large: true,
-              textLight: true
-            }}
-            css={``}
-          >
-            {t("helpPanel.takeTour")}
-          </Button>
-        </Box>
+      <Text medium light>
         <BoxHelpfulHints
           column
+          gap={4}
           paddedVertically={5}
           paddedRatio={3}
           overflowY="auto"
           scroll
         >
-          <Box left>
-            <Text extraLarge bold>
-              {t("emptyWorkbench.helpfulHints")}
-            </Text>
-          </Box>
-          <Spacing bottom={4} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              {t("emptyWorkbench.helpfulHintsOne")}
-            </Text>
-          </Box>
-          <Spacing bottom={3} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              <Trans
-                i18nKey="emptyWorkbench.helpfulHintsTwo"
-                components={{
-                  1: (
-                    <ul
-                      css={`
-                        padding-left: 10px;
-                      `}
-                    />
-                  ),
-                  2: <li />
-                }}
-              />
-            </Text>
-          </Box>
-
-          <Spacing bottom={3} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              {t("emptyWorkbench.helpfulHintsThree")}
-            </Text>
+          {transContent.map((content, idx) => (
+            <div key={idx}>
+              {content.heading && (
+                <Text
+                  css="margin-bottom: 5px; margin-top: 0"
+                  as="h5"
+                  medium
+                  bold
+                >
+                  {content.heading}{" "}
+                </Text>
+              )}
+              {content.body && <Text medium>{content.body}</Text>}
+              {content.list && (
+                <ul css="padding-inline-start: 25px; margin: 0">
+                  {content.list.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+          <Box centered css="margin-top: 25px">
+            <Button
+              textLight
+              transparentBg
+              onClick={() => {
+                viewState.terria.analytics?.logEvent(
+                  Category.help,
+                  HelpAction.takeTour
+                );
+                runInAction(() => {
+                  viewState.setTourIndex(0);
+                });
+              }}
+              renderIcon={() => (
+                <StyledIcon
+                  light
+                  styledWidth={"18px"}
+                  glyph={Icon.GLYPHS.info}
+                />
+              )}
+              textProps={{
+                large: true,
+                textLight: true
+              }}
+              css={``}
+            >
+              {t("helpPanel.takeTour")}
+            </Button>
           </Box>
         </BoxHelpfulHints>
       </Text>
