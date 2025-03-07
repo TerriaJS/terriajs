@@ -38,13 +38,13 @@
 - Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon`, `Polygon` and `Line` features were being dropped
 - Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
 - Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
-
 - Remove unused pmtiles dependency.
 - Update data styling docs
 - Remove unused babel/eslint-parser dependency.
 - Hide 'Story' button in mobile view if story panel is active.
 - Update empty workbench help text
 - Remove unused `arraysAreEqual`, `autoUpdate`, `flattenNested`, `freezeInDebug`, `isPromise`, `loadJsonp`, `OrUndefined`, and `superGet` files from lib/Core.
+- Fix basemaps order
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
