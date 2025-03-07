@@ -634,13 +634,33 @@
   "loader": {
     "loadingMessage": "Načítání"
   },
-  "emptyWorkbench": {
-    "emptyArea": "<0>To jsou vaše data</0><1>Při přidání datové sady do mapy se zde zobrazí její legenda (klíč) a nastavení, takže můžete snadno ovládat její vzhled.</1>",
-    "helpfulHints": "Užitečné rady",
-    "helpfulHintsOne": "Kliknutím na \"Prozkoumat data mapy\" zobrazíte dostupná data nebo kliknutím na \"Nahrát\" přidáte do mapy vlastní data.",
-    "helpfulHintsTwo": "Po přidání dat najdete na tomto panelu své aktivní datové sady.Zde můžete:<1></1><2>Zapnout nebo vypnout viditelnost dat</2><2>Nastavit průhlednost (aby byla průhlednější)</2><2>Použít rozdělenou obrazovku pro porovnání dat vedle sebe</2><2>Změnit styly (například barvy mapy nebo čáry)</2><2>Přesouvat se po různých datech a časech, pokud to data umožňují</2>",
-    "helpfulHintsThree": "V pracovní ploše můžete zapínat a vypínat datové sady, měnit jejich průhlednost, aktivovat porovnání rozdělené obrazovky, měnit styly a procházet data a časy, pokud data tuto funkci podporují."
-  },
+  "emptyWorkbench": [
+    {
+      "heading": "Zde přidejte datovou sadu",
+      "body": "Po přidání datové sady se zde zobrazí její legenda a nastavení."
+    },
+    {
+      "list": [
+        "Kliknutím na tlačítko Prozkoumat data zobrazíte dostupné datové sady",
+        "Nahrajte svá vlastní data prostřednictvím Nahrát data",
+        "Na tomto panelu najdete přidaná data"
+      ],
+      "heading": "Začněte"
+    },
+    {
+      "list": [
+        "Zobrazit nebo skrýt data",
+        "Úprava průhlednosti (krytí)",
+        "Porovnání vedle sebe",
+        "Změna stylů (barvy, čáry, symboly)",
+        "Zobrazení různých dat a časů (pokud jsou podporovány)"
+      ],
+      "heading": "Co můžete udělat"
+    },
+    {
+      "body": "Tento panel slouží k prozkoumávání dat, správě nastavení a vytváření mapové scény nebo příběhu."
+    }
+  ],
   "dataCatalog": {
     "groupRemove": "odebrat tuto skupinu",
     "groupEmpty": "Tato skupina je prázdná"
