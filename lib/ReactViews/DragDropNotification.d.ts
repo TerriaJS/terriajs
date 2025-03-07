@@ -1,5 +1,5 @@
-import React from "react";
+import type { Component } from "react";
 
-declare class DragDropNotification extends React.Component<object> {}
+declare class DragDropNotification extends Component<object> {}
 
 export default DragDropNotification;

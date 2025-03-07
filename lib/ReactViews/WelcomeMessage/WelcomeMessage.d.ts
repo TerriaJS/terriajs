@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 
 interface WelcomeMessagePurePropsType {
   showWelcomeMessage: boolean;
@@ -8,5 +8,5 @@ interface WelcomeMessagePurePropsType {
 
 export declare const WelcomeMessagePure: React.FC<WelcomeMessagePurePropsType>;
 
-declare class WelcomeMessage extends React.Component<object> {}
+declare class WelcomeMessage extends Component<object> {}
 export default WelcomeMessage;
