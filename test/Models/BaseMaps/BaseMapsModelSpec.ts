@@ -1,6 +1,7 @@
 import { BaseMapsModel } from "../../../lib/Models/BaseMaps/BaseMapsModel";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
+
 const baseMapPositron = {
   item: {
     id: "basemap-positron1",
@@ -31,6 +32,7 @@ describe("BaseMapModel", () => {
   let terria: Terria;
   let baseMapsModel: BaseMapsModel;
   let defaultBaseMapsLength: number;
+
   beforeEach(() => {
     terria = new Terria({
       baseUrl: "./"
@@ -115,5 +117,23 @@ describe("BaseMapModel", () => {
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps1);
     expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength + 2);
     expect(baseMapsModel.baseMapItems.length).toBe(2);
+  });
+
+  it("properly sorts baseMaps based on enabledBaseMaps array", () => {
+    const baseMaps: any = {
+      items: [baseMapPositron, baseMapDarkMatter],
+      enabledBaseMaps: ["basemap-darkmatter1", "basemap-positron1"]
+    };
+
+    baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
+
+    expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength + 2);
+    expect(baseMapsModel.baseMapItems.length).toBe(2);
+    expect(baseMapsModel.baseMapItems[0].item.uniqueId).toBe(
+      "basemap-darkmatter1"
+    );
+    expect(baseMapsModel.baseMapItems[1].item.uniqueId).toBe(
+      "basemap-positron1"
+    );
   });
 });
