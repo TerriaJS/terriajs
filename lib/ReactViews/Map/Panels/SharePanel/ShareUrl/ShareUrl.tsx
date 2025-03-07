@@ -123,7 +123,6 @@ export const ShareUrl = React.forwardRef<
             id="share-url"
           />
         }
-        id="share-url"
         rounded={rounded}
         onCopy={(text) =>
           terria.analytics?.logEvent(
