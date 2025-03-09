@@ -145,10 +145,10 @@ gulp.task("code-attribution", function userAttribution(done) {
     }
   );
   if (result.status !== 0) {
-    throw new Error(
+    throw new PluginError(
+      "code-attribution",
       "Generating code attribution exited with an error.\n" +
-        result.stderr.toString(),
-      { showStack: false }
+        result.stderr.toString()
     );
   }
   done();
