@@ -45,6 +45,7 @@
 - Hide 'Story' button in mobile view if story panel is active.
 - Update empty workbench help text
 - Remove unused `arraysAreEqual`, `autoUpdate`, `flattenNested`, `freezeInDebug`, `isPromise`, `loadJsonp`, `OrUndefined`, and `superGet` files from lib/Core.
+- Update to react-virtual 2.10.4.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
