@@ -77,7 +77,7 @@ export default class UserDrawing extends MappableMixin(
   private inDrawMode: boolean;
   closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
-  private drawRectangle: boolean;
+  private readonly drawRectangle: boolean;
 
   private mousePointEntity?: Entity;
 

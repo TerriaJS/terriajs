@@ -381,16 +381,16 @@ export default class ViewState {
 
   @observable panel: ReactNode;
 
-  private _pickedFeaturesSubscription: IReactionDisposer;
-  private _disclaimerVisibleSubscription: IReactionDisposer;
-  private _isMapFullScreenSubscription: IReactionDisposer;
-  private _showStoriesSubscription: IReactionDisposer;
-  private _mobileMenuSubscription: IReactionDisposer;
-  private _storyPromptSubscription: IReactionDisposer;
-  private _previewedItemIdSubscription: IReactionDisposer;
-  private _locationMarkerSubscription: IReactionDisposer;
-  private _workbenchHasTimeWMSSubscription: IReactionDisposer;
-  private _storyBeforeUnloadSubscription: IReactionDisposer;
+  private readonly _pickedFeaturesSubscription: IReactionDisposer;
+  private readonly _disclaimerVisibleSubscription: IReactionDisposer;
+  private readonly _isMapFullScreenSubscription: IReactionDisposer;
+  private readonly _showStoriesSubscription: IReactionDisposer;
+  private readonly _mobileMenuSubscription: IReactionDisposer;
+  private readonly _storyPromptSubscription: IReactionDisposer;
+  private readonly _previewedItemIdSubscription: IReactionDisposer;
+  private readonly _locationMarkerSubscription: IReactionDisposer;
+  private readonly _workbenchHasTimeWMSSubscription: IReactionDisposer;
+  private readonly _storyBeforeUnloadSubscription: IReactionDisposer;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
