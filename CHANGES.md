@@ -3,6 +3,7 @@
 #### next release (8.9.2)
 
 - Replace clipboardjs with native browser clipboard
+- Update react-swipeable to v7. #7542
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
