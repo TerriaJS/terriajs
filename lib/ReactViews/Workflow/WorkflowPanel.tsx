@@ -18,6 +18,7 @@ type PropsType = {
   icon: IconProps["glyph"];
   onClose: () => void;
   closeButtonText: string;
+  children: ReactNode;
   footer?: {
     onClick: () => void;
     buttonText: string;

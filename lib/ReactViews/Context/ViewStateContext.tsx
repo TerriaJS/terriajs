@@ -4,10 +4,10 @@ import TerriaError from "../../Core/TerriaError";
 
 export const ViewStateContext = createContext<ViewState | undefined>(undefined);
 
-export const ViewStateProvider: FC<{ viewState: ViewState }> = ({
-  viewState,
-  children
-}) => (
+export const ViewStateProvider: FC<{
+  viewState: ViewState;
+  children: React.ReactNode;
+}> = ({ viewState, children }) => (
   <ViewStateContext.Provider value={viewState}>
     {children}
   </ViewStateContext.Provider>

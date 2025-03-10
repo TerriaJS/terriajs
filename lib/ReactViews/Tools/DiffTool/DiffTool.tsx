@@ -777,6 +777,7 @@ class Main extends Component<MainPropsType> {
 interface DiffAccordionProps {
   viewState: ViewState;
   t: TFunction;
+  children: React.ReactNode;
 }
 
 const DiffAccordionToggle = styled(Box)`

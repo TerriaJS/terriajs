@@ -7,7 +7,8 @@ import {
   Component,
   Suspense,
   useEffect,
-  useState
+  useState,
+  type ReactNode
 } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
@@ -23,7 +24,9 @@ import { useViewState } from "../Context";
 
 interface ToolProps {
   toolName: string;
-  getToolComponent: () => ComponentType | Promise<ComponentType>;
+  getToolComponent: () =>
+    | ComponentType<unknown>
+    | Promise<ComponentType<unknown>>;
   params?: any;
 }
 
@@ -130,7 +133,7 @@ export class ToolButtonController extends MapNavigationItemController {
 interface ToolErrorBoundaryProps extends WithT {
   terria: Terria;
   toolName: string;
-  children: any;
+  children: ReactNode;
 }
 
 class ToolErrorBoundary extends Component<

@@ -30,7 +30,9 @@ describe("WorkflowPanel", function () {
           icon={{ id: "test-icon" }}
           closeButtonText="close"
           onClose={() => {}}
-        />
+        >
+          children
+        </WorkflowPanel>
       );
     });
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
@@ -45,7 +47,9 @@ describe("WorkflowPanel", function () {
           icon={{ id: "test-icon" }}
           closeButtonText="close"
           onClose={() => {}}
-        />
+        >
+          test
+        </WorkflowPanel>
       );
     });
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);

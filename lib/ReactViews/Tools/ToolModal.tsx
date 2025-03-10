@@ -13,6 +13,7 @@ import { scrollBars } from "../../Styled/mixins";
 export interface FrameProps {
   title: string;
   viewState: ViewState;
+  children: React.ReactNode;
 }
 
 export const Frame: FC<FrameProps> = observer((props) => {

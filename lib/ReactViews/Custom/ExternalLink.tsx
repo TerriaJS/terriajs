@@ -15,10 +15,7 @@ interface Props {
   children: ReactNode;
 }
 
-export const ExternalLinkWithWarning: FC<Props> = (props: {
-  attributes: AnchorHTMLAttributes<HTMLAnchorElement>;
-  children: ReactNode;
-}) => {
+export const ExternalLinkWithWarning: FC<Props> = (props: Props) => {
   const viewState = useViewState();
   const { t } = useTranslation();
 
