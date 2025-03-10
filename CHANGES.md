@@ -8,6 +8,7 @@
 - Remove interactjs dependency #7544
 - Rewrite drag-wrapper to use terriajs dragging implementation #7544
 - TSify `SearchBoxAndResults` and convert to a functional component #7477
+- TSify `DragDropNotification` and convert to functional component. #7543
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
