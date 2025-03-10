@@ -44,7 +44,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _zSubtract = 0;
   private _requestImageError: TileProviderError | undefined;
   private _previousCredits: Credit[] = [];
-  private _leafletUpdateInterval: number;
+  private readonly _leafletUpdateInterval: number;
 
   @observable splitDirection = SplitDirection.NONE;
   @observable splitPosition: number = 0.5;

@@ -94,7 +94,7 @@ class MapNavigationBase extends Component<PropTypes> {
   private itemSizeInBar: Map<string, number>;
   @observable private model: MapNavigationModel;
   @observable private overflows: boolean;
-  private viewerModeReactionDisposer: IReactionDisposer | undefined;
+  private readonly viewerModeReactionDisposer: IReactionDisposer | undefined;
 
   constructor(props: PropTypes) {
     super(props);

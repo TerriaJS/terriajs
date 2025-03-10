@@ -240,7 +240,7 @@ export default class BoxDrawing {
 
   private _keepBoxAboveGround = false;
 
-  private drawNonUniformScaleGrips: boolean;
+  private readonly drawNonUniformScaleGrips: boolean;
 
   public disableVerticalMovement: boolean;
 
@@ -257,7 +257,7 @@ export default class BoxDrawing {
   // A matrix representation of trs
   private readonly modelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
-  private scene: Scene;
+  private readonly scene: Scene;
 
   // A disposer function to destroy all event handlers
   private interactionsDisposer?: () => void;

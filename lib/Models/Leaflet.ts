@@ -84,7 +84,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeDisableInteractionSubscription: () => void;
   private _disposeSelectedFeatureSubscription?: () => void;
-  private _disposeSplitterReaction: () => void;
+  private readonly _disposeSplitterReaction: () => void;
 
   // These are used to split CesiumTileLayer and MapboxCanvasVectorTileLayer
   @observable size: L.Point | undefined;
