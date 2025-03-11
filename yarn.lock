@@ -1926,10 +1926,10 @@
   resolved "https://registry.yarnpkg.com/@types/file-saver/-/file-saver-1.3.1.tgz#55d76b3c78b5fcc8a7588ead428dce0822464120"
   integrity sha512-A+lNc0nnhtX3iTLEYd/DisKTZdNKTf1bN0aSfQD/fG8bQ6SfUe5u8Fm2ab8qQHaMY5GVZumAXLnYptwX+mmQgg==
 
-"@types/flexsearch@^0.7.1":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@types/flexsearch/-/flexsearch-0.7.2.tgz#05d982d292e70fcb9fc59347a4a4f98c4ecd9e56"
-  integrity sha512-Nq0CSpOCyUhaF7tAXSvMtoyBMPGlhNyF+uElhIrrgSiXDmX/bnn9jUX7Us3l81Hzowb9rcgNISke0Nj+3xhd3g==
+"@types/flexsearch@0.7.6":
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/@types/flexsearch/-/flexsearch-0.7.6.tgz#240c11d16825c56833ec0c66eb1de3ea0e162a49"
+  integrity sha512-H5IXcRn96/gaDmo+rDl2aJuIJsob8dgOXDqf8K0t8rWZd1AFNaaspmRsElESiU+EWE33qfbFPgI0OC/B1g9FCA==
 
 "@types/fs-extra@^7.0.0":
   version "7.0.0"
