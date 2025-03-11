@@ -2167,9 +2167,9 @@
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
 "@types/rbush@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rbush/-/rbush-3.0.0.tgz#b6887d99b159e87ae23cd14eceff34f139842aa6"
-  integrity sha512-W3ue/GYWXBOpkRm0VSoifrP3HV0Ni47aVJWvXyWMcbtpBy/l/K/smBRiJ+fI8f7shXRjZBiux+iJzYbh7VmcZg==
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/rbush/-/rbush-3.0.4.tgz#265d84ec76dc48e464e95ae4f58e085f28f0a227"
+  integrity sha512-knSt9cCW8jj1ZSFcFeBZaX++OucmfPxxHiRwTahZfJlnQsek7O0bazTJHWD2RVj9LEoejUYF2de3/stf+QXcXw==
 
 "@types/react-color@^3.0.6":
   version "3.0.6"
@@ -9090,14 +9090,15 @@ protocol-buffers-schema@^3.3.1:
   resolved "https://registry.yarnpkg.com/protocol-buffers-schema/-/protocol-buffers-schema-3.6.0.tgz#77bc75a48b2ff142c1ad5b5b90c94cd0fa2efd03"
   integrity sha512-TdDRD+/QNdrCGCE7v8340QyuXd4kIWIgapsE2+n/SaGiSSbomYl4TjHlvIoCWRpE7wFt02EpB35VVA2ImcBVqw==
 
-protomaps-leaflet@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/protomaps-leaflet/-/protomaps-leaflet-4.1.0.tgz#efb3e5cf540931f01d1fdb8329f3deffc9d24c86"
-  integrity sha512-i+NJVFQqIzShVccjn2jG2AZ4Gpa3capRrvxtMjCHHTPQVWnpW1yBi8PAHd8Ncx2UPc/y5kJoxQKgc99NP1IMKw==
+protomaps-leaflet@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/protomaps-leaflet/-/protomaps-leaflet-4.1.1.tgz#aaa6c8d1f06f3c82f14900da78dcb5d961958bde"
+  integrity sha512-gL5hlt5/ImtnYs6ZcG+jKPDia4W6H2jIJxh2ntNrXeVAXNeHWZY97iErTouVQahI42d5ZxXADKTJNrylaPZY+A==
   dependencies:
     "@mapbox/point-geometry" "^1.1.0"
     "@mapbox/vector-tile" "^2.0.2"
     "@types/css-font-loading-module" "^0.0.7"
+    "@types/rbush" "^3.0.0"
     color2k "^2.0.3"
     pbf "^4.0.1"
     pmtiles "^3.0.7"

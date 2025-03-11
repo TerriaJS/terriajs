@@ -40,6 +40,9 @@
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
 
+- Remove unused types/rbush dependency.
+- [The next improvement]
+
 #### 8.9.0 - 2025-03-17
 
 - **Breaking changes:**
