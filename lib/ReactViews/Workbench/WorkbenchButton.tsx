@@ -77,7 +77,7 @@ const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
 `;
 
 interface IProps {
-  children?: any;
+  children?: React.ReactNode;
   primary?: boolean;
   disabled?: boolean;
   inverted?: boolean;
