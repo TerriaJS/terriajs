@@ -46,6 +46,7 @@
 - Remove unused `arraysAreEqual`, `autoUpdate`, `flattenNested`, `freezeInDebug`, `isPromise`, `loadJsonp`, `OrUndefined`, and `superGet` files from lib/Core.
 - Update to react-virtual 2.10.4.
 - Update types/file-saver to 2.0.7.
+- Remove `request` dependency from CI scripts
 - Fix basemaps order to follow the order given by `enabledBaseMaps` setting. #7537
 - [The next improvement]
 
