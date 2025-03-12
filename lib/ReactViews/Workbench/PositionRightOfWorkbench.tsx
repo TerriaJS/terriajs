@@ -6,6 +6,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 type PositionRightOfWorkbenchProps = {
   viewState: ViewState;
   className?: string;
+  children: React.ReactNode;
 };
 
 /**
