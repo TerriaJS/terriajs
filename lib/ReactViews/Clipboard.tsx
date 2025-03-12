@@ -54,7 +54,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
   const canCopy = !!navigator.clipboard;
 
   return (
-    <ClipboardDiv>
+    <ClipboardDiv rounded={!!rounded}>
       <Box>
         {source}
         {canCopy && (
@@ -63,8 +63,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
             primary
             css={`
               width: 80px;
-              border-radius: 2px;
-              ${rounded && `border-radius:  0 32px 32px 0;`}
+              border-radius: 0px;
             `}
             textProps={{ large: true }}
           >
@@ -109,7 +108,10 @@ const Clipboard: FC<ClipboardProps> = (props) => {
 
 export default Clipboard;
 
-const ClipboardDiv = styled.div`
+const ClipboardDiv = styled.div<{ rounded: boolean }>`
+  border-radius: 2px;
+  overflow: hidden;
+  ${(props) => props.rounded && `border-radius: 32px; `};
   position: relative;
 `;
 
