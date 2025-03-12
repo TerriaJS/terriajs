@@ -194,6 +194,8 @@ function configureWebpack({
       typescript: {
         memoryLimit: 4096,
         configFile: path.resolve(__dirname, "..", "tsconfig.json"),
+        build: true,
+        mode: "write-references",
         diagnosticOptions: {
           semantic: true,
           syntactic: true
