@@ -225,8 +225,8 @@ export function geojsonVtTileToProtomapsFeatures(
 
   return features
     .map((f) => {
-      let transformedGeom: Point[][] = [];
-      let numVertices = 0;
+      let transformedGeom: Point[][];
+      let numVertices: number;
 
       // Calculate bbox
       const bbox: Bbox = {
