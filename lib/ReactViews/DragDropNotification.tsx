@@ -1,0 +1,88 @@
+import classNames from "classnames";
+import { reaction } from "mobx";
+import { observer } from "mobx-react";
+import { FC, useEffect, useRef, useState } from "react";
+import { Trans } from "react-i18next";
+import Icon from "../Styled/Icon";
+import { useViewState } from "./Context";
+import Styles from "./drag-drop-notification.scss";
+
+const DragDropNotification: FC = observer(() => {
+  const viewState = useViewState();
+  const [showNotification, setShowNotification] = useState(false);
+  const notificationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  useEffect(() => {
+    const disposer = reaction(
+      () => viewState.lastUploadedFiles,
+      () => {
+        if (notificationTimeoutRef.current) {
+          clearTimeout(notificationTimeoutRef.current);
+        }
+        // show notification, restart timer
+        setShowNotification(true);
+        // initialise new time out
+        notificationTimeoutRef.current = setTimeout(() => {
+          setShowNotification(false);
+        }, 5000);
+      }
+    );
+
+    return () => {
+      if (notificationTimeoutRef.current) {
+        clearTimeout(notificationTimeoutRef.current);
+      }
+      disposer();
+    };
+  }, [viewState.lastUploadedFiles]);
+
+  const handleHover = () => {
+    // reset timer on hover
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    notificationTimeoutRef.current = setTimeout(() => {
+      setShowNotification(false);
+    }, 4000);
+  };
+
+  const handleClick = () => {
+    viewState.openUserData();
+  };
+
+  const fileNames = viewState.lastUploadedFiles.join(",");
+
+  return (
+    <button
+      className={classNames(Styles.notification, {
+        [Styles.isActive]: showNotification && fileNames.length > 0
+      })}
+      onMouseEnter={handleHover}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+    >
+      <div className={Styles.icon}>
+        <Icon glyph={Icon.GLYPHS.upload} />
+      </div>
+      <div className={Styles.info}>
+        <Trans
+          i18nKey="dragDrop.notification"
+          count={viewState.lastUploadedFiles.length}
+        >
+          <span className={Styles.filename}>&quot;{{ fileNames }}&quot;</span>
+          {{ count: viewState.lastUploadedFiles.length }} been added to{" "}
+          <span className={Styles.action}>My data</span>
+        </Trans>
+      </div>
+    </button>
+  );
+});
+
+DragDropNotification.displayName = "DragDropNotification";
+
+export default DragDropNotification;
