@@ -118,12 +118,11 @@ export const ShareUrl = React.forwardRef<
             readOnly
             onClick={(e) => e.currentTarget.select()}
             css={`
-              ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
+              border-radius: 0px;
             `}
             id="share-url"
           />
         }
-        id="share-url"
         rounded={rounded}
         onCopy={(text) =>
           terria.analytics?.logEvent(
