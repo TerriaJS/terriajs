@@ -8,7 +8,7 @@ $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
-$color-primary: #519ac2;
+$color-primary: #35a7c4;
 $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
   @return color.adjust($base-color, $lightness: 10%);
@@ -17,7 +17,7 @@ $color-secondary: #ff6f00;
 
 $animation-fast: 0.1s;
 
-$dark: #3f4854;
+$dark: #111827;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
 $grey: #888888;

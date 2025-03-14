@@ -98,7 +98,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
               <Box
                 position="absolute"
                 fullWidth
-                css={{ bottom: "0", left: "0" }}
+                css={{ bottom: "1%", left: "0", justifyContent: "center" }}
               >
                 <BottomBar />
               </Box>

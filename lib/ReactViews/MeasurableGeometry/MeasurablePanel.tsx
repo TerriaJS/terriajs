@@ -284,7 +284,12 @@ const MeasurablePanel = observer((props: Props) => {
   // Render Methods
   const renderHeader = () => {
     return (
-      <div className={Styles.header}>
+      <div
+        className={Styles.header}
+        css={`
+          background: ${theme.darkTranslucent};
+        `}
+      >
         <div className={classNames("drag-handle", Styles.btnPanelHeading)}>
           <span style={{ display: "flex", justifyContent: "center" }}>
             <b>{i18next.t("measurableGeometry.header")}</b>
@@ -958,6 +963,9 @@ const MeasurablePanel = observer((props: Props) => {
       }}
     >
       <div
+        css={`
+          background: ${theme.darkTranslucent};
+        `}
         className={panelClassName}
         style={{ pointerEvents: "auto" }}
         aria-hidden={!viewState.measurablePanelIsVisible}

@@ -43,7 +43,6 @@ import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
 import MeasurablePanel from "../MeasurableGeometry/MeasurablePanel";
-
 export const animationDuration = 250;
 
 interface StandardUserInterfaceProps {
@@ -182,10 +181,9 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer
-                          tabIndex={0}
                           show={
-                            props.viewState.isMapFullScreen === false &&
-                            props.terria.isWorkflowPanelActive === false
+                            !props.viewState.isMapFullScreen &&
+                            !props.terria.isWorkflowPanelActive
                           }
                         >
                           <FullScreenButton

@@ -4,18 +4,21 @@ import { useViewState } from "../../Context";
 import { MapCredits } from "./Credits";
 import { DistanceLegend } from "./DistanceLegend";
 import { LocationBar } from "./LocationBar";
+import { useTheme } from "styled-components";
 import React from "react";
 
 export const BottomBar: VFC = () => {
   const viewState = useViewState();
   return (
     <Box
-      fullWidth
       justifySpaceBetween
       css={`
-        background: linear-gradient(180deg, #000000 0%, #000000 100%);
+        border-radius: 8px 8px 8px 8px;
         font-size: 0.7rem;
-        opacity: 0.75;
+        width: 96%;
+        background: ${useTheme().darkTranslucent};
+        backdrop-filter: blur(5px);
+        margin-top: 2px;
       `}
     >
       <MapCredits
