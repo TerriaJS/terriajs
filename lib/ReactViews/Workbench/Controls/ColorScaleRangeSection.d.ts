@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 
 interface PropsType {
@@ -7,5 +7,5 @@ interface PropsType {
   maxValue: number;
 }
 
-declare class ColorScaleRangeSection extends React.Component<PropsType> {}
+declare class ColorScaleRangeSection extends Component<PropsType> {}
 export default ColorScaleRangeSection;

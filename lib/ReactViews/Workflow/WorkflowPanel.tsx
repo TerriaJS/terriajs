@@ -1,6 +1,6 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { FC, ReactNode, Component, useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Button from "../../Styled/Button";
@@ -22,10 +22,11 @@ type PropsType = {
     onClick: () => void;
     buttonText: string;
   };
+  children?: ReactNode;
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
-const WorkflowPanel: React.FC<PropsType> = observer((props) => {
+const WorkflowPanel: FC<PropsType> = observer((props) => {
   const viewState = props.viewState;
 
   useEffect(function hideTerriaSidePanelOnMount() {
@@ -79,10 +80,10 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
 
 type ErrorBoundaryProps = {
   viewState: ViewState;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundary extends Component<ErrorBoundaryProps> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {

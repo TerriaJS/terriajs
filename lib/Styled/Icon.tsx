@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 
 // Import icon SVGs
@@ -300,7 +300,7 @@ export interface IconProps {
   className?: string;
   rotation?: number;
 }
-export const Icon: React.FC<IconProps> = (props: IconProps) => {
+export const Icon: FC<IconProps> = (props: IconProps) => {
   return (
     <svg
       viewBox="0 0 100 100"

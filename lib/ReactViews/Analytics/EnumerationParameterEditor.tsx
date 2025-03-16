@@ -1,14 +1,13 @@
-import React from "react";
 import { observer } from "mobx-react";
-
-import Styles from "./parameter-editors.scss";
 import { action, makeObservable } from "mobx";
-import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
-import CommonStrata from "../../Models/Definition/CommonStrata";
+import { Component } from "react";
 import isDefined from "../../Core/isDefined";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
+import Styles from "./parameter-editors.scss";
 
 @observer
-export default class EnumerationParameterEditor extends React.Component<{
+export default class EnumerationParameterEditor extends Component<{
   parameter: EnumerationParameter;
 }> {
   constructor(props: { parameter: EnumerationParameter }) {

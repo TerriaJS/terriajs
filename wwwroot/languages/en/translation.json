@@ -620,13 +620,33 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbench": {
-    "emptyArea": "<0>This is your Data</0><1>When you add a dataset to the map, you’ll see its legend (key) and settings right here so you can easily control how it looks.</1>",
-    "helpfulHints": "Helpful Hints",
-    "helpfulHintsOne": "Click 'Explore map data' to see available data or 'Upload' to add your own data to the map.",
-    "helpfulHintsTwo": "After adding data, you’ll find your active datasets in this panel. Here, you can:<1></1><2>Turn data visibility on or off</2><2>Adjust transparency (make it more see-through)</2><2>Use split-screen to compare data side-by-side</2><2>Change styles (like map colours or lines)</2><2>Move through different dates and times if the data allows it</2>",
-    "helpfulHintsThree": "In the workbench you can toggle data sets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
-  },
+  "emptyWorkbench": [
+    {
+      "heading": "Add a dataset here",
+      "body": "When you add a dataset, its legend and settings appear here."
+    },
+    {
+      "heading": "Get started",
+      "list": [
+        "Click Explore data to view available datasets",
+        "Upload your own via Upload data",
+        "Find your added data in this panel"
+      ]
+    },
+    {
+      "heading": "What you can do",
+      "list": [
+        "Show or hide data",
+        "Adjust transparency (opacity)",
+        "Compare side-by-side",
+        "Change styles (colours, lines, symbols)",
+        "View different dates and times (if supported)"
+      ]
+    },
+    {
+      "body": "Use this panel to explore data, manage settings, and build your map scene or story."
+    }
+  ],
   "dataCatalog": {
     "groupRemove": "remove this group",
     "groupEmpty": "This group is empty"

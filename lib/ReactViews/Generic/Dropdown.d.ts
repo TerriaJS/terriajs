@@ -1,4 +1,4 @@
-import React from "react";
+import { type Component } from "react";
 
 interface DropdownProps {
   theme?: any;
@@ -11,6 +11,6 @@ interface DropdownProps {
   disabled?: boolean;
 }
 
-declare class Dropdown extends React.Component<DropdownProps> {}
+declare class Dropdown extends Component<DropdownProps> {}
 
 export default Dropdown;
