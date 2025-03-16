@@ -713,7 +713,7 @@ class Main extends Component<MainPropsType> {
                     styledWidth="16px"
                     glyph={GLYPHS.arrowDown}
                   />
-                  <TextSpan noFontSize>{t("general.back")}</TextSpan>
+                  <TextSpan medium>{t("general.back")}</TextSpan>
                 </BoxSpan>
               </BackButton>
               <Button
@@ -724,7 +724,7 @@ class Main extends Component<MainPropsType> {
                   margin-left: 10px;
                 `}
               >
-                <TextSpan noFontSize>
+                <TextSpan medium>
                   {t("diffTool.labels.saveToWorkbench")}
                 </TextSpan>
               </Button>
