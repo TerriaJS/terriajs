@@ -48,6 +48,7 @@
 - Update types/file-saver to 2.0.7.
 - Remove `request` dependency from CI scripts
 - Fix basemaps order to follow the order given by `enabledBaseMaps` setting. #7537
+- Modified DiffTool UI to use `WorkflowPanel` instead of floating side panel.
 - [The next improvement]
 
 #### 8.8.1 - 2025-02-27
