@@ -154,7 +154,8 @@
       "differenceOutput": "Difference output",
       "generateDiffButtonText": "Generate change detection",
       "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection",
-      "areaFilterSelection": "Area filter selection"
+      "areaFilterSelection": "Area filter selection",
+      "saveToWorkbench": "Save to workbench"
     },
     "locationDisplay": {
       "noLocationSelected": {

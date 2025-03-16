@@ -487,6 +487,10 @@ class Main extends React.Component<MainPropsType> {
     });
   }
 
+  closePanel() {
+    this.props.viewState.closeTool();
+  }
+
   // i want to restructure the render so that there's 2 distinct "showing diff"
   // or not states, right now intertwining them means way too many conditionals
   // that confuse the required spacing etc.
@@ -502,8 +506,10 @@ class Main extends React.Component<MainPropsType> {
         viewState={viewState}
         title={t("diffTool.title")}
         icon={GLYPHS.difference}
-        onClose={() => viewState.closeTool()}
-        closeButtonText={t("diffTool.close")}
+        onClose={action(() => {
+          this.resetTool();
+          this.closePanel();
+        })}
       >
         <div
           css={`
@@ -515,31 +521,9 @@ class Main extends React.Component<MainPropsType> {
           `}
         >
           {isShowingDiff && (
-            <>
-              <Box centered left>
-                <BackButton
-                  css={`
-                    color: ${theme.textLight};
-                    border-color: ${theme.textLight};
-                  `}
-                  transparentBg
-                  onClick={this.resetTool}
-                >
-                  <BoxSpan centered>
-                    <StyledIcon
-                      css="transform:rotate(90deg);"
-                      light
-                      styledWidth="16px"
-                      glyph={GLYPHS.arrowDown}
-                    />
-                    <TextSpan noFontSize>{t("general.back")}</TextSpan>
-                  </BoxSpan>
-                </BackButton>
-              </Box>
-              <Text medium textLight>
-                {t("diffTool.differenceResultsTitle")}
-              </Text>
-            </>
+            <Text medium textLight>
+              {t("diffTool.differenceResultsTitle")}
+            </Text>
           )}
           <Text textLight>{t("diffTool.instructions.paneDescription")}</Text>
           <Group>
@@ -672,11 +656,7 @@ class Main extends React.Component<MainPropsType> {
             )}
           </Group>
           {!isShowingDiff && (
-            <div
-              css={`
-                margin-top: auto;
-              `}
-            >
+            <div>
               <GenerateButton
                 onClick={this.generateDiff}
                 disabled={!isReadyToGenerateDiff}
@@ -717,6 +697,40 @@ class Main extends React.Component<MainPropsType> {
                 </div>
               )}
             </div>
+          )}
+          {isShowingDiff && (
+            <Box centered left>
+              <BackButton
+                css={`
+                  color: ${theme.textLight};
+                  border-color: ${theme.textLight};
+                `}
+                transparentBg
+                onClick={this.resetTool}
+              >
+                <BoxSpan centered>
+                  <StyledIcon
+                    css="transform:rotate(90deg);"
+                    light
+                    styledWidth="16px"
+                    glyph={GLYPHS.arrowDown}
+                  />
+                  <TextSpan noFontSize>{t("general.back")}</TextSpan>
+                </BoxSpan>
+              </BackButton>
+              <Button
+                primary
+                onClick={() => this.closePanel()}
+                css={`
+                  flex-grow: 1;
+                  margin-left: 10px;
+                `}
+              >
+                <TextSpan noFontSize>
+                  {t("diffTool.labels.saveToWorkbench")}
+                </TextSpan>
+              </Button>
+            </Box>
           )}
           {!isShowingDiff && (
             <LocationPicker
