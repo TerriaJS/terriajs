@@ -272,7 +272,6 @@ class ViewingControls extends Component<
       toolName: "Difference",
       getToolComponent: () =>
         import("../../Tools/DiffTool/DiffTool").then((m) => m.default),
-      showCloseButton: true,
       params: {
         sourceItem: this.props.item
       }
@@ -294,7 +293,6 @@ class ViewingControls extends Component<
       this.props.viewState.openTool({
         toolName: "Search Item",
         getToolComponent: () => LazyItemSearchTool,
-        showCloseButton: false,
         params: {
           item,
           itemSearchProvider,

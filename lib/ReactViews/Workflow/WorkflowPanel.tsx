@@ -4,7 +4,7 @@ import { FC, ReactNode, Component, useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Button from "../../Styled/Button";
-import { IconProps, StyledIcon } from "../../Styled/Icon";
+import Icon, { IconProps, StyledIcon } from "../../Styled/Icon";
 import { scrollBars } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
 import { PortalChild } from "../StandardUserInterface/Portal";
@@ -17,12 +17,12 @@ type PropsType = {
   title: string;
   icon: IconProps["glyph"];
   onClose: () => void;
-  closeButtonText: string;
-  children: ReactNode;
+  closeButtonText?: string;
   footer?: {
     onClick: () => void;
     buttonText: string;
   };
+  children?: ReactNode;
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
@@ -52,11 +52,16 @@ const WorkflowPanel: FC<PropsType> = observer((props) => {
         })}
       >
         <TitleBar>
-          <Icon glyph={props.icon} />
+          <TitleIcon glyph={props.icon} />
           <Title>{props.title}</Title>
-          <CloseButton onClick={props.onClose}>
-            {props.closeButtonText}
-          </CloseButton>
+          {!props.closeButtonText && (
+            <CloseIconButton onClick={props.onClose} />
+          )}
+          {props.closeButtonText && (
+            <CloseTextButton onClick={props.onClose}>
+              {props.closeButtonText}
+            </CloseTextButton>
+          )}
         </TitleBar>
         <Content>
           <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
@@ -130,7 +135,7 @@ const Title = styled(Text).attrs({
   padding: 0 1em;
 `;
 
-const Icon = styled(StyledIcon).attrs({
+const TitleIcon = styled(StyledIcon).attrs({
   styledWidth: "24px",
   styledHeight: "24px",
   light: true
@@ -142,11 +147,24 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: 4em;
   ${(p) => scrollBars(p)}
 `;
 
-const CloseButton = styled(Button).attrs({
+const CloseIconButton = styled(Button).attrs({
+  renderIcon: () => (
+    <StyledIcon
+      light
+      styledWidth="20px"
+      styledHeight="20px"
+      glyph={Icon.GLYPHS.closeLight}
+    />
+  )
+})`
+  background: none;
+  border: none;
+`;
+
+const CloseTextButton = styled(Button).attrs({
   primary: true
 })`
   font-size: 14px;

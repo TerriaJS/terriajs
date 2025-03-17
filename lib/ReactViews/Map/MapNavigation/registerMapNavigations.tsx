@@ -18,7 +18,6 @@ import {
   AugmentedVirtualityHoverController,
   AugmentedVirtualityRealign,
   AugmentedVirtualityRealignController,
-  CloseToolButton,
   Compass,
   COMPASS_TOOL_ID,
   MeasureTool,
@@ -27,8 +26,6 @@ import {
   ZoomControl,
   ZOOM_CONTROL_ID
 } from "./Items";
-
-export const CLOSE_TOOL_ID = "close-tool";
 
 export const registerMapNavigations = (viewState: ViewState) => {
   const terria = viewState.terria;
@@ -123,23 +120,6 @@ export const registerMapNavigations = (viewState: ViewState) => {
     controller: pedestrianModeToolController,
     order: 5
   });
-
-  const closeToolButtonController = new GenericMapNavigationItemController({
-    handleClick: () => {
-      viewState.closeTool();
-    },
-    icon: GLYPHS.closeLight
-  });
-  mapNavigationModel.addItem({
-    id: CLOSE_TOOL_ID,
-    name: "translate#close",
-    location: "TOP",
-    screenSize: undefined,
-    controller: closeToolButtonController,
-    render: <CloseToolButton />,
-    order: 7
-  });
-  closeToolButtonController.setVisible(false);
 
   const augmentedVirtuality = new AugmentedVirtuality(terria);
   const arController = new AugmentedVirtualityController({

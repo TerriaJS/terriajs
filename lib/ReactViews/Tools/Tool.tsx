@@ -33,7 +33,6 @@ interface ToolProps {
 /**
  * Loads the given tool component.
  *
- * Has an associated {@link CloseToolButton} displayed in the map menu.
  * The prop toolComponent can be an immediate React Component or a promise to
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
@@ -118,8 +117,7 @@ export class ToolButtonController extends MapNavigationItemController {
     this.props.viewState.openTool({
       toolName: this.props.toolName,
       getToolComponent: this.props.getToolComponent,
-      params: this.props.params,
-      showCloseButton: false
+      params: this.props.params
     });
     super.activate();
   }

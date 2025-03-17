@@ -891,7 +891,5 @@ export default class ViewState {
 interface Tool {
   toolName: string;
   getToolComponent: () => ComponentType<any> | Promise<ComponentType<any>>;
-
-  showCloseButton: boolean;
   params?: any;
 }
