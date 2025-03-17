@@ -1,7 +1,12 @@
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
-import { Translation, WithTranslation, withTranslation } from "react-i18next";
+import type { ReactNode } from "react";
+import { ChangeEvent, Component, Fragment } from "react";
+import {
+  Translation,
+  WithTranslation,
+  withTranslation,
+  TFunction
+} from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
   HelpContentItem,
@@ -19,14 +24,15 @@ import Text, { TextSpan } from "../../../Styled/Text";
 import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { WithViewState, withViewState } from "../../Context";
 import { applyTranslationIfExists } from "../../../Language/languageHelpers";
-
-const StyledHtml: any =
-  require("../../Map/Panels/HelpPanel/StyledHtml").default;
-const CloseButton: any = require("../../Generic/CloseButton").default;
+import StyledHtml from "../../Map/Panels/HelpPanel/StyledHtml";
+import CloseButton from "../../Generic/CloseButton";
 
 const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
-  left: ${(p) => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
+  left: ${(p) =>
+    p.isMapFullScreen
+      ? 0
+      : Number(p.theme.workbenchWidth) + Number(p.theme.workbenchMargin) * 2}px;
   z-index: ${(p) => Number(p.theme.frontComponentZIndex) + 100};
 `;
 
@@ -74,7 +80,7 @@ const renderStep = (
   options: {
     renderDescription: boolean;
     comfortable: boolean;
-    footerComponent?: () => void;
+    footerComponent?: () => ReactNode;
   } = {
     renderDescription: true,
     comfortable: false,
@@ -91,7 +97,7 @@ const renderStep = (
       </Box>
       <Box column>
         <Translation>
-          {(t, { i18n }) => (
+          {(_t, { i18n }) => (
             <Text textLight extraExtraLarge semiBold>
               {applyTranslationIfExists(step.title, i18n)}
             </Text>
@@ -121,10 +127,10 @@ const renderOrderedStepList = function (
   viewState: ViewState
 ) {
   return steps.map((step: StepItem, index: number) => (
-    <React.Fragment key={index}>
+    <Fragment key={index}>
       {renderStep(step, index + 1, viewState)}
       {index + 1 !== steps.length && <Spacing bottom={3} />}
-    </React.Fragment>
+    </Fragment>
   ));
 };
 
@@ -143,7 +149,7 @@ interface StepAccordionState {
 }
 
 // Originally written as a SFC but measureElement only supports class components at the moment
-class StepAccordionRaw extends React.Component<
+class StepAccordionRaw extends Component<
   StepAccordionProps & MeasureElementProps & WithTranslation & WithViewState,
   StepAccordionState
 > {
@@ -203,7 +209,7 @@ class StepAccordionRaw extends React.Component<
               // the relative width in its clone
               padding-right: 60px;
             `}
-            backgroundColor={theme.textBlack}
+            backgroundColor={theme.darkMid}
             ref={(component: any) => (this.refToMeasure = component)}
           >
             {renderStep(
@@ -263,7 +269,7 @@ class StepAccordionRaw extends React.Component<
           <BoxTrainerExpandedSteps
             column
             position="absolute"
-            backgroundColor={theme.textBlack}
+            backgroundColor={theme.darkMid}
             fullWidth
             paddedRatio={4}
             overflowY={"auto"}
@@ -344,7 +350,9 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
       styledWidth={
         isMapFullScreen
           ? "100%"
-          : `calc(100% - ${Number(theme.workbenchWidth)}px)`
+          : `calc(100% - ${Number(
+              Number(theme.workbenchWidth) + Number(theme.workbenchMargin) * 2
+            )}px)`
       }
       isMapFullScreen={isMapFullScreen}
       onClick={() => viewState.setTopElement("TrainerBar")}
@@ -354,7 +362,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
         fullHeight
         centered
         justifySpaceBetween
-        backgroundColor={theme.textBlack}
+        backgroundColor={theme.darkMid}
       >
         {/* Trainer Items Dropdown */}
         <Box css={"min-height: 64px;"}>
@@ -380,7 +388,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
                 glyph={GLYPHS.oneTwoThree}
               />
             )}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               viewState.setCurrentTrainerItemIndex(Number(e.target.value))
             }
             value={viewState.currentTrainerItemIndex}

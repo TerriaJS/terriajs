@@ -1,14 +1,15 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .panel {
-  background: $feature-info-bg;
-  color: $feature-info-color;
-  border-radius: $radius-small;
+  background: variables.$feature-info-bg;
+  color: variables.$feature-info-color;
+  border-radius: variables.$radius-xlarge;
+  overflow: hidden;
   display: none;
 
   a {
-    @include link($feature-info-bg);
+    @include mixins.link(variables.$feature-info-bg);
   }
 }
 
@@ -27,14 +28,14 @@
 }
 
 .header {
-  background: $feature-info-header-bg;
-  padding-right: $input-height;
-  line-height: $modal-header-height;
+  background: variables.$feature-info-header-bg;
+  padding-right: variables.$input-height;
+  line-height: variables.$modal-header-height;
 }
 
 .btnPanelHeading {
   padding: 0px 8px;
-  color: $feature-info-btn-color;
+  color: variables.$feature-info-btn-color;
   width: 100%;
 }
 
@@ -48,17 +49,19 @@
 .btnToggleFeature {
   composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: middle;
+
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      fill: variables.$color-primary;
     }
   }
+
   svg {
     height: 10px;
     width: 10px;
     display: block;
-    fill: $feature-info-btn-color;
+    fill: variables.$feature-info-btn-color;
   }
 }
 
@@ -66,6 +69,7 @@
   position: absolute;
   right: 8px;
   top: 8px;
+
   svg {
     width: 15px;
     height: 26px;
@@ -73,7 +77,7 @@
 }
 
 .btnToggleFeature {
-  padding: $padding;
+  padding: variables.$padding;
 }
 
 .no-results {
@@ -86,8 +90,10 @@
 
   overflow-y: auto;
   overflow-x: auto;
-  max-height: calc(80vh - #{$padding * 2 + $btn-default-line-height});
-  font-size: $font-size-feature-info;
+  max-height: calc(
+    80vh - #{variables.$padding * 2 + variables.$btn-default-line-height}
+  );
+  font-size: variables.$font-size-feature-info;
 }
 
 .location {
@@ -104,13 +110,14 @@
 
   &:hover {
     svg {
-      fill: $color-primary;
+      fill: variables.$color-primary;
     }
   }
+
   svg {
     height: 18px;
     width: 18px;
-    fill: $feature-info-btn-color;
+    fill: variables.$feature-info-btn-color;
   }
 }
 
@@ -118,7 +125,7 @@
   composes: btn-location;
 
   svg {
-    fill: $color-primary;
+    fill: variables.$color-primary;
   }
 }
 

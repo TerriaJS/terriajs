@@ -1,4 +1,4 @@
-import i18next, { ReactOptions } from "i18next";
+import i18next, { ReactOptions, TFunction } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
@@ -75,7 +75,7 @@ class Internationalization {
      */
     i18StartOptions: I18nStartOptions | undefined,
     terriajsResourcesBaseUrl: string
-  ) {
+  ): Promise<TFunction> {
     const languageConfig = Object.assign(
       defaultLanguageConfiguration,
       languageConfiguration
@@ -164,7 +164,7 @@ class Internationalization {
 
         detection: {
           // order and from where user language should be detected
-          order: languageConfig.changeLanguageOnStartWhen, 
+          order: languageConfig.changeLanguageOnStartWhen,
 
           // keys or params to lookup language from
           lookupQuerystring: "lng",

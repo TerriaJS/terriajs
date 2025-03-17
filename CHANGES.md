@@ -1,6 +1,116 @@
 # Change Log
 
-#### next release (8.7.8)
+#### next release (8.9.1)
+
+#### 8.9.0 - 2025-03-17
+
+- **Breaking changes:**
+- Major changes to UI
+
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+  - Changed workbench and bottom dock to absolute positioned over map with transparent background
+  - Generally increase padding and font sizes to improve readability
+  - Generally use a darker default theme
+  - Increases logo size, redesign of collapsed workbench panel
+  - Update help text for empty workbench
+  - Decrease border radii
+  - Introduce `blur`, `dark-transparent`, `dark-alpha`, `scrollbar-color` and `scrollbar-track-color` theme variables
+  - Add `keepCatalogOpen` config option
+  - Add enable / disable all button to workbench
+
+- Add tiling support to `ArcGisFeatureServerCatalogItem` - this will be enabled by default if the server supports tiling and unsupported marker/point styles aren't used. See `ArcGisFeatureServerCatalogTraits` `tileRequests`. When enabled, `pbf` tiles will be fetched and drawn using `ProtomapsImageryProvider`
+  - This can be disabled by setting `tileRequests` to `false`
+  - For point features, only the following `PointSymbolTraits` are available - fill, stroke, height (which sets circle radius). Custom markers (markers other than `point` or `circle`) are not supported.
+- Add `request` parameter to `ArcGisImageServerImageryProvider.buildImageResource` - this enables Cesium to manage requests
+- Decrease protomaps tile buffer to 32 pixels (from 64) to increase performance
+- Change `ProtomapsImageryProvider` to use a "soft" minimum level, so no tiles will be created below the `minimumZoom` provided.
+- Move `ProtomapsImageryProvider.pickFeatures` GeoJSON logic to inside `ProtomapsGeojsonSource.pickFeatures`.
+- Fix `FeatureInfoUrlTemplateMixin` reactivity warnings
+- Move `GeojsonMixin` protomaps paint/label rules to `tableStyleToProtomaps`.
+  - Also create `getStyleReactiveDependencies` that can be used to track (and react to) table styling traits
+- Add `dash` to `OutlineStyleTraits` (only supported by line features), and `outlineStyle` to `LegendTraits`.
+- Add `MinMaxLevelMixin` to `ArcGisFeatureServerCatalogItem` - only applied when tiling requests
+- Tweaked `TableStyleMap` and `TableColorMap` conditions to handle empty `TableColumns` (to support styling `ArcGisFeatureServerCatalogItem` when tiling requests)
+- Fix bug with expanding "Developer Details" in the error modal
+- Fix regression bug from https://github.com/TerriaJS/terriajs/pull/7144, GeoJson `MultiPolygon`, `Polygon` and `Line` features were being dropped
+- Move GeoJSON helper functions (`isFeatureCollection` etc) to `lib/Core/GeoJson.ts`
+- Split up `ArcGisFeatureServerCatalogItem` into `ArcGisFeatureServerStratum` and `esriStyleToTableStyle`
+- Remove unused pmtiles dependency.
+- Update data styling docs
+- Remove unused babel/eslint-parser dependency.
+- Hide 'Story' button in mobile view if story panel is active.
+- Update empty workbench help text
+- Remove unused `arraysAreEqual`, `autoUpdate`, `flattenNested`, `freezeInDebug`, `isPromise`, `loadJsonp`, `OrUndefined`, and `superGet` files from lib/Core.
+- Update to react-virtual 2.10.4.
+- Update types/file-saver to 2.0.7.
+- Remove `request` dependency from CI scripts
+- Fix basemaps order to follow the order given by `enabledBaseMaps` setting. #7537
+- Modified DiffTool UI to use `WorkflowPanel` instead of floating side panel.
+- [The next improvement]
+
+#### 8.8.1 - 2025-02-27
+
+- Expose the `lightColor` setting for 3D Tilesets in Cesium3dTilesCatalogItem.
+- Fix GeoJSON regression bug (from 8.8.0) - multi-polygons, polygons and line features weren't being rendered through `ProtomapsImageryProvider`.
+- Remove unused klaw-sync dependency.
+- Remove unused hammerjs dependency.
+- Remove unused turf/meta dependency.
+
+#### 8.8.0 - 2025-02-18
+
+- **Breaking changes:**
+  - Upgrade Webpack to version 5
+    - Converted remaining CJS style modules and `require()` calls to ESM and `import` statements.
+    - Removed babel transformation to CJS for default build (we still use it for nodejs).
+    - Removed several other babel transforms (for JS features that should now be widely supported).
+    - Refactor and clean up configureWebpack.js. `configureWebpack()` now accepts a single object parameter.
+    - Removed code for hot reloading
+  - Upgraded `sass` to version 1.80+
+    - Migrated SASS files to use `modern` API (by running the `sass-migrator` script)
+    - Replaced webpack aliases `~terriajs-variables` and `~terriajs-mixins` with respective relative path. This was necessary to run the migrator. It also results in simpler webpack configuration.
+- Remove `MapboxImageryProvider`, `createRegionMappedImageryProvider` now uses `ProtomapsImageryProvider`.
+- Update `protomaps` to `protomaps-leaflet`. This fixes the 5400 vertex limit in a single tile.
+  - The very basic support of mvt style spec is now handled by Terria in [`lib/Map/Vector/mapboxStyleJsonToProtomaps.ts`](lib/Map/Vector/mapboxStyleJsonToProtomaps.ts)
+- Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
+- support URL parameters in a GetLegendGraphic request for a layer without a style configured
+- Enhanced error processing for obtaining user location
+
+#### 8.7.11 - 2024-12-18
+
+- Explicitly set prettier tab-width
+- Move release guide from README.md to RELEASE_GUIDE.md
+- Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
+- Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
+
+#### 8.7.10 - 2024-11-29
+
+- Add OpenStreetMap as a basemap option.
+- Update to node-notifier 10.0.1 to fix security vulnerabilities.
+- Remove unused ts-loader dependency.
+- Remove unused class-list dependency.
+- TSify `ConsoleAnalytics` module.
+- Update to gulp 5.0 to fix security vulnerabilities.
+  - Gulp 5 defaults to encoding copied files as utf-8, had turn off encoding by setting `encoding: false` to correctly copy binary assets from dependencies.
+- Update to dompurify 2.5.7 to fix security vulnerabilities.
+- Update to @mapbox/togeojson 0.16.2 to fix security vulnerabilities.
+- Remove unused simple-statistics dependency.
+- Update to pretty-quick 4.0.0 to fix security vulnerabilities.
+
+#### 8.7.9 - 2024-11-22
+
+- Add "searchBarConfig.showSearchInCatalog" to configParameters so that the link in location search results can be disabled.
+- Properly initialize react ref in functional components
+- Add NominatimSearchProvider.
+- Removed the basemaps - positron, darkmatter and black-marble - from the default settings. The Carto ones are no longer free and requires an [Enterprise or Grantee license](https://carto.com/basemaps). If you have the appropriate license you can add them via your [initialization file](https://docs.terria.io/guide/customizing/initialization-files/#basemaps). [Example configuration](https://gist.github.com/na9da/ef7871afee7cbe3d0a95e5b6351834c9).
+- Restrict mobx version to '< 6.13.0' to avoid tsc errors because mobx now uses iterator helper types introduced in TypeScript 5.6.
+- Remove unused ts-node dependency.
+
+#### 8.7.8 - 2024-11-01
 
 - Fix the layout of the story builder and the item search tool.
 - Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
@@ -8,6 +118,8 @@
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
 - Allow to modify `lookupCookie` for i18next
 - [The next improvement]
+- Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
+- Restrict `sass` version to `< 1.80`- to avoid deprecations.
 
 #### 8.7.7 - 2024-10-01
 
@@ -195,6 +307,11 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
+- Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
+- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

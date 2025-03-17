@@ -2,17 +2,17 @@ import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
+import Styles from "./tabs.scss";
 
 @observer
-class Tabs extends React.Component {
+class Tabs extends Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
@@ -66,7 +66,7 @@ class Tabs extends React.Component {
           .filter(
             (member) => member !== this.props.terria.catalog.userAddedDataGroup
           )
-          .map((member, i) => ({
+          .map((member) => ({
             name: member.nameInCatalog,
             title: `data-catalog-${member.name}`,
             category: "data-catalog",
@@ -85,7 +85,7 @@ class Tabs extends React.Component {
     } else {
       return [
         {
-          name: t("addData.dataCatalogue"),
+          name: t("addData.data"),
           title: "data-catalog",
           category: "data-catalog",
           panel: (
@@ -139,9 +139,7 @@ class Tabs extends React.Component {
         <ul
           className={Styles.tabList}
           role="tablist"
-          css={`
-            background-color: ${(p) => p.theme.colorPrimary};
-          `}
+          style={{ padding: "10px 24px", background: "#fff" }}
         >
           {tabs.map((item, i) => (
             <li
@@ -187,18 +185,23 @@ class Tabs extends React.Component {
 
 const ButtonTab = styled.button`
   ${(props) => `
+    /* overrides padding and margin in scss */
+    padding: 10px 12px;
+    margin: 0;
+
     background: transparent;
-    color: ${props.theme.textLight};
+    color: ${props.theme.dark};
+    border: 1px solid transparent;
     &:hover,
     &:focus {
       background: ${props.theme.textLight};
-      color: ${props.theme.colorPrimary};
+      ${props.isCurrent && `border: 1px solid ${props.theme.greyLighter};`}
     }
     ${
       props.isCurrent &&
       `
       background: ${props.theme.textLight};
-      color: ${props.theme.colorPrimary};
+      border: 1px solid ${props.theme.greyLighter};
     `
     }
 

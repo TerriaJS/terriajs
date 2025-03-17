@@ -1,14 +1,14 @@
-@import "~terriajs-variables";
+@use "_variables";
 
 .label {
   vertical-align: middle;
-  padding: $padding;
+  padding: variables.$padding;
   display: block;
-  line-height: $btn-default-line-height;
-  font-family: $font-base;
+  line-height: variables.$btn-default-line-height;
+  font-family: variables.$font-base;
 }
 
 .no-results {
-  padding: $padding !important;
-  margin-bottom: $padding;
+  padding: variables.$padding !important;
+  margin-bottom: variables.$padding;
 }

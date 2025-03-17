@@ -1,7 +1,7 @@
 import { debounce } from "lodash-es";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import { ChromePicker } from "react-color";
 import { useTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
@@ -13,14 +13,14 @@ import { TextSpan } from "../../Styled/Text";
 const debounceSetColorDimensionValue = debounce(
   action((dim: SelectableDimensionColorModel, value: string) => {
     // Only update value if it has changed
-    dim.value !== value
-      ? dim.setDimensionValue(CommonStrata.user, value)
-      : null;
+    if (dim.value !== value) {
+      dim.setDimensionValue(CommonStrata.user, value);
+    }
   }),
   100
 );
 
-export const SelectableDimensionColor: React.FC<{
+export const SelectableDimensionColor: FC<{
   id: string;
   dim: SelectableDimensionColorModel;
 }> = observer(({ dim }) => {

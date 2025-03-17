@@ -1,8 +1,8 @@
-import React from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import interact from "interactjs";
 
-class DragWrapper extends React.Component {
+class DragWrapper extends Component {
   constructor(props) {
     super(props);
     this.resizeListener = null;
@@ -63,4 +63,4 @@ DragWrapper.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-module.exports = DragWrapper;
+export default DragWrapper;

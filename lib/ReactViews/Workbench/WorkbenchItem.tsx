@@ -1,9 +1,8 @@
-import { TFunction } from "i18next";
 import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { sortable } from "react-anything-sortable";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin, {
@@ -19,7 +18,6 @@ import { RawButton } from "../../Styled/Button";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { Li } from "../../Styled/List";
-import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
@@ -38,7 +36,7 @@ interface IProps extends WithTranslation {
 }
 
 @observer
-class WorkbenchItemRaw extends React.Component<IProps> {
+class WorkbenchItemRaw extends Component<IProps> {
   static displayName = "WorkbenchItem";
   constructor(props: IProps) {
     super(props);
@@ -83,9 +81,14 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
-        <Box fullWidth justifySpaceBetween padded styledMinHeight="38px">
+        <Box
+          fullWidth
+          justifySpaceBetween
+          paddedRatio={3}
+          styledMinHeight="38px"
+        >
           <Box fullWidth>
-            <Box left fullWidth paddedHorizontally centered>
+            <Box left fullWidth centered>
               <DraggableBox
                 onMouseDown={this.props.onMouseDown}
                 onTouchStart={this.props.onTouchStart}
@@ -104,20 +107,16 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                   </BoxSpan>
                 )}
                 {MappableMixin.isMixedInto(item) ? (
-                  <Box
-                    left
-                    verticalCenter
-                    css={`
-                      padding-left: 5px;
-                    `}
-                  >
+                  <Box left verticalCenter>
                     <Checkbox
                       id="workbenchtoggleVisibility"
                       isChecked={item.show}
+                      isSwitch
                       title={t("workbench.toggleVisibility")}
                       onChange={() => this.toggleVisibility()}
                       css={`
                         overflow-wrap: anywhere;
+                        margin-right: 5px;
                       `}
                       textProps={{ medium: true, fullWidth: true }}
                     >
@@ -174,26 +173,25 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           ) : null}
         </Box>
         {this.isOpen && (
-          <>
-            <Spacing
-              bottom={2}
-              css={`
-                border-top: 1px solid ${this.props.theme.dark};
-              `}
+          <Box
+            column
+            gap={3}
+            paddedRatio={3}
+            css={{
+              borderTop: `1px solid ${this.props.theme.grey}`,
+              color: this.props.theme.greyLighter
+            }}
+          >
+            <WorkbenchItemControls
+              item={this.props.item}
+              viewState={this.props.viewState}
             />
-            <Box column paddedHorizontally={2}>
-              <WorkbenchItemControls
-                item={this.props.item}
-                viewState={this.props.viewState}
-              />
-              {isLoading ? (
-                <Box paddedVertically>
-                  <Loader light />
-                </Box>
-              ) : null}
-            </Box>
-            <Spacing bottom={2} />
-          </>
+            {isLoading ? (
+              <Box paddedVertically>
+                <Loader light />
+              </Box>
+            ) : null}
+          </Box>
         )}
       </StyledLi>
     );
@@ -207,9 +205,14 @@ const DraggableBox = styled(Box)`
 const StyledLi = styled(Li)`
   background: ${(p) => p.theme.darkWithOverlay};
   color: ${(p) => p.theme.textLight};
-  border-radius: 4px;
-  margin-bottom: 5px;
+  border-radius: 8px;
+  border: 1px solid ${(p) => p.theme.grey};
   width: 100%;
+
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
 `;
 
 export default sortable(withTranslation()(withTheme(WorkbenchItemRaw)));

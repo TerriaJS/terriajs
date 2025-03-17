@@ -59,7 +59,7 @@ export default class TerriaViewer {
     return this._baseMap;
   }
 
-  async setBaseMap(baseMap?: MappableMixin.Instance) {
+  async setBaseMap(baseMap?: MappableMixin.Instance): Promise<void> {
     if (!baseMap) return;
 
     const result = await baseMap.loadMapItems();
@@ -228,18 +228,18 @@ export default class TerriaViewer {
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
   // before its UI element is mounted in React to set basemap, items, viewermode
   @action
-  attach(mapContainer?: string | HTMLElement) {
+  attach(mapContainer?: string | HTMLElement): void {
     this.mapContainer = mapContainer;
   }
 
   @action
-  detach() {
+  detach(): void {
     // Detach from a container
     this.mapContainer = undefined;
     this.destroyCurrentViewer();
   }
 
-  destroy() {
+  destroy(): void {
     this.detach();
   }
 

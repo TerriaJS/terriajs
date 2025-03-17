@@ -1,24 +1,25 @@
 @use "sass:color";
 
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .wrapper {
   composes: flex from "../../Sass/common/_base.scss";
-  color: $text-light;
-  font-family: $font-base;
+  color: variables.$text-light;
+  font-family: variables.$font-base;
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: $notification-window-z-index;
+  z-index: variables.$notification-window-z-index;
   align-items: center;
   justify-content: center;
 
   a {
-    @include link($dark);
+    @include mixins.link(variables.$dark);
   }
+
   pre {
     display: block;
     line-height: 2;
@@ -27,25 +28,30 @@
 }
 
 .notification {
-  border-radius: $radius-small;
-  border: 1px solid color.adjust($dark, $lightness: -3%);
+  border-radius: 6px;
+  border: 1px solid color.adjust(variables.$dark, $lightness: -3%);
   // background: $dark;
   z-index: 300;
+
   pre {
     // copy over scrollbar css because I can't compose within
     -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
-      width: 5px; /* for vertical scrollbars */
-      height: 5px; /* for horizontal scrollbars */
+      width: 5px;
+      /* for vertical scrollbars */
+      height: 8px;
+      /* for horizontal scrollbars */
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(#000, 0.1);
+      background: variables.$scrollbar-track-color;
+      border-radius: variables.$radius-large;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(#000, 0.3);
+      background: variables.$scrollbar-color;
+      border-radius: variables.$radius-large;
     }
   }
 }
@@ -56,29 +62,25 @@
 
 .inner {
   composes: scrollbars from "../../Sass/common/_base.scss";
-  padding: $padding $padding * 2;
+  padding: 15px;
   height: 100%;
-  max-height: calc(100vh - #{$input-height * 3});
+  max-height: calc(100vh - #{variables.$input-height * 3});
   overflow-y: auto;
   max-width: calc(100vw - 20px);
   box-sizing: border-box;
 }
 
 .footer {
-  display: block;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+
+  button {
+    flex: 1;
+  }
 }
 
 .body {
-  font-size: $font-size-small;
-}
-
-.btn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  padding: $padding;
-  background: rgba(#fff, 0.5);
-  text-align: center;
-  width: 100%;
-  font-size: $font-size-small;
-  color: $text-light;
-  border-radius: 0 0 $radius-small $radius-small;
+  font-size: 14px;
 }

@@ -1,4 +1,3 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import ChartableMixin, {
@@ -65,7 +64,7 @@ describe("ChartItemSelector", function () {
   let item: SomeChartableItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

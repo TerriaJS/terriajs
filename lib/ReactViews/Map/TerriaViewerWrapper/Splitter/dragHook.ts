@@ -23,9 +23,7 @@ try {
 
   window.addEventListener("test", callback, options);
   window.removeEventListener("test", callback, options);
-} catch (err) {
-  /* eslint-disable-line no-empty */
-}
+} catch (_err) {}
 
 const notPassive = passiveSupported ? { passive: false } : false;
 
@@ -74,10 +72,16 @@ export const useDragHook = (
       // Y, but always apply the constraint as a percentage).
       // We use absolute pixel values for horizontal restriction because of the fixed UI elements which occupy an
       // absolute amount of screen relestate and 100 px seems like a fine amount for the current UI.
+
+      // Because the workbench is floating over the map we need to account for it when calculating minX
+      const workbenchVisible =
+        viewState.isMapFullScreen === false &&
+        viewState.useSmallScreenInterface === false;
+
       const minX = computeSplitFraction(
         mapRect.left,
         mapRect.right,
-        mapRect.left + 100,
+        mapRect.left + 100 + (workbenchVisible ? 350 : 0),
         padding,
         thumbSize
       );

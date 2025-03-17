@@ -1,60 +1,58 @@
+import dateFormat from "dateformat";
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction } from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
-import React, { useState } from "react";
+import { ChangeEvent, Component, RefObject, createRef } from "react";
 import ReactDOM from "react-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
+import { TFunction, WithTranslation, withTranslation } from "react-i18next";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import LatLonHeight from "../../../Core/LatLonHeight";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import prettifyCoordinates from "../../../Map/Vector/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import TerriaFeature from "../../../Models/Feature/Feature";
 import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
+import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
+import TerriaFeature from "../../../Models/Feature/Feature";
 import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import { EnumDimensionOption } from "../../../Models/SelectableDimensions/SelectableDimensions";
-import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import ImageryProviderTraits from "../../../Traits/TraitsClasses/ImageryProviderTraits";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
+import WorkflowPanel from "../../Workflow/WorkflowPanel";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
-import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
-import updateModelFromJson from "../../../Models/Definition/updateModelFromJson";
-
-const dateFormat = require("dateformat");
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -65,7 +63,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class DiffTool extends React.Component<PropsType> {
+class DiffTool extends Component<PropsType> {
   static readonly toolName = "Image Difference";
 
   @observable private leftItem?: DiffableItem;
@@ -101,15 +99,17 @@ class DiffTool extends React.Component<PropsType> {
         this.leftItem = leftItem;
         this.rightItem = rightItem;
       });
-    } catch {
-      /* eslint-disable-line no-empty */
-    }
+    } catch {}
   }
 
   @action
   removeSplitterItems() {
-    this.leftItem && removeSplitItem(this.leftItem);
-    this.rightItem && removeSplitItem(this.rightItem);
+    if (this.leftItem) {
+      removeSplitItem(this.leftItem);
+    }
+    if (this.rightItem) {
+      removeSplitItem(this.rightItem);
+    }
   }
 
   @action
@@ -131,14 +131,8 @@ class DiffTool extends React.Component<PropsType> {
       isMapFullScreen: viewState.isMapFullScreen
     };
     terria.showSplitter = true;
-    viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
-    terria.mapNavigationModel.show(CLOSE_TOOL_ID);
     terria.elements.set("timeline", { visible: false });
-    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
-    if (closeTool) {
-      closeTool.controller.activate();
-    }
   }
 
   @action
@@ -151,12 +145,7 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = originalSettings.showSplitter;
     viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
-    terria.mapNavigationModel.hide(CLOSE_TOOL_ID);
     terria.elements.set("timeline", { visible: true });
-    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
-    if (closeTool) {
-      closeTool.controller.deactivate();
-    }
   }
 
   componentDidMount() {
@@ -192,15 +181,13 @@ interface MainPropsType extends PropsType {
 }
 
 @observer
-class Main extends React.Component<MainPropsType> {
+class Main extends Component<MainPropsType> {
   @observable private location?: LatLonHeight;
   @observable private _locationPickError = false;
   @observable private _isPickingNewLocation = false;
 
-  private openLeftDatePickerButton: React.RefObject<HTMLButtonElement> =
-    React.createRef();
-  private openRightDatePickerButton: React.RefObject<HTMLButtonElement> =
-    React.createRef();
+  private openLeftDatePickerButton: RefObject<HTMLButtonElement> = createRef();
+  private openRightDatePickerButton: RefObject<HTMLButtonElement> = createRef();
 
   constructor(props: MainPropsType) {
     super(props);
@@ -250,8 +237,8 @@ class Main extends React.Component<MainPropsType> {
     if (!firstDate || !secondDate) {
       return name;
     } else {
-      const d1 = dateFormat(firstDate, format);
-      const d2 = dateFormat(secondDate, format);
+      const d1 = dateFormat(JulianDate.toDate(firstDate), format);
+      const d2 = dateFormat(JulianDate.toDate(secondDate), format);
       return `${name} - difference for dates ${d1}, ${d2}`;
     }
   }
@@ -319,18 +306,22 @@ class Main extends React.Component<MainPropsType> {
   showItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0.8);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0.8);
+    }
   }
 
   @action
   hideItem(model: DiffableItem) {
     // We change the opacity instead of setting `show` to true/false, because
     // we want the item to be on the map for date selection to work
-    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0);
+    if (hasOpacity(model)) {
+      model.setTrait(CommonStrata.user, "opacity", 0);
+    }
   }
 
   @action.bound
-  changeSourceItem(e: React.ChangeEvent<HTMLSelectElement>) {
+  changeSourceItem(e: ChangeEvent<HTMLSelectElement>) {
     const newSourceItem = this.diffableItemsInWorkbench.find(
       (item) => item.uniqueId === e.target.value
     );
@@ -338,7 +329,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
+  changePreviewStyle(e: ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
     this.props.leftItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
@@ -351,7 +342,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  changeDiffStyle(e: React.ChangeEvent<HTMLSelectElement>) {
+  changeDiffStyle(e: ChangeEvent<HTMLSelectElement>) {
     this.diffItem.setTrait(CommonStrata.user, "diffStyleId", e.target.value);
   }
 
@@ -494,6 +485,10 @@ class Main extends React.Component<MainPropsType> {
     });
   }
 
+  closePanel() {
+    this.props.viewState.closeTool();
+  }
+
   // i want to restructure the render so that there's 2 distinct "showing diff"
   // or not states, right now intertwining them means way too many conditionals
   // that confuse the required spacing etc.
@@ -505,48 +500,36 @@ class Main extends React.Component<MainPropsType> {
       this.location && datesSelected && this.diffStyle !== undefined;
 
     return (
-      <Text large>
-        <DiffAccordion viewState={viewState} t={t}>
-          <MainPanel
-            isMapFullScreen={viewState.isMapFullScreen}
-            styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
-          >
-            {isShowingDiff && (
-              <>
-                <Box centered left>
-                  <BackButton
-                    css={`
-                      color: ${theme.textLight};
-                      border-color: ${theme.textLight};
-                    `}
-                    transparentBg
-                    onClick={this.resetTool}
-                  >
-                    <BoxSpan centered>
-                      <StyledIcon
-                        css="transform:rotate(90deg);"
-                        light
-                        styledWidth="16px"
-                        glyph={GLYPHS.arrowDown}
-                      />
-                      <TextSpan noFontSize>{t("general.back")}</TextSpan>
-                    </BoxSpan>
-                  </BackButton>
-                </Box>
-                <Spacing bottom={3} />
-                <Text medium textLight>
-                  {t("diffTool.differenceResultsTitle")}
-                </Text>
-                <Spacing bottom={2} />
-              </>
-            )}
-            <Text textLight>{t("diffTool.instructions.paneDescription")}</Text>
-            <Spacing bottom={3} />
+      <WorkflowPanel
+        viewState={viewState}
+        title={t("diffTool.title")}
+        icon={GLYPHS.difference}
+        onClose={action(() => {
+          this.resetTool();
+          this.closePanel();
+        })}
+      >
+        <div
+          css={`
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 15px;
+            gap: 20px;
+          `}
+        >
+          {isShowingDiff && (
+            <Text medium textLight>
+              {t("diffTool.differenceResultsTitle")}
+            </Text>
+          )}
+          <Text textLight>{t("diffTool.instructions.paneDescription")}</Text>
+          <Group>
             <LocationAndDatesDisplayBox>
               <Box>
                 <Text medium>{t("diffTool.labels.area")}:</Text>
                 <div>
-                  <Text medium textLightDimmed={!this.location}>
+                  <Text bold textLight>
                     {this.location
                       ? t("diffTool.locationDisplay.locationSelected.title")
                       : t("diffTool.locationDisplay.noLocationSelected.title")}
@@ -567,25 +550,32 @@ class Main extends React.Component<MainPropsType> {
                 <Box column alignItemsFlexStart>
                   {this.leftDate && (
                     <Text large>
-                      (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
+                      (A){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.leftDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.leftDate && (
                     <RawButton ref={this.openLeftDatePickerButton}>
-                      <TextSpan isLink small>
+                      <TextSpan isLink small bold>
                         {t("diffTool.instructions.setDateA")}
                       </TextSpan>
                     </RawButton>
                   )}
-                  <Spacing bottom={1} />
                   {this.rightDate && (
                     <Text large>
-                      (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
+                      (B){" "}
+                      {dateFormat(
+                        JulianDate.toDate(this.rightDate),
+                        "dd/mm/yyyy"
+                      )}
                     </Text>
                   )}
                   {!this.rightDate && (
                     <RawButton ref={this.openRightDatePickerButton}>
-                      <TextSpan isLink small>
+                      <TextSpan isLink small bold>
                         {t("diffTool.instructions.setDateB")}
                       </TextSpan>
                     </RawButton>
@@ -600,54 +590,50 @@ class Main extends React.Component<MainPropsType> {
                 </Box>
               </Box>
             </LocationAndDatesDisplayBox>
-            {!isShowingDiff && (
-              <>
-                <Spacing bottom={4} />
-                <Selector
-                  viewState={viewState}
-                  value={sourceItem.uniqueId}
-                  onChange={this.changeSourceItem}
-                  label={t("diffTool.labels.sourceDataset")}
-                >
-                  <option disabled>Select source item</option>
-                  {this.diffableItemsInWorkbench.map((item) => (
-                    <option key={item.uniqueId} value={item.uniqueId}>
-                      {item.name}
-                    </option>
-                  ))}
-                </Selector>
-              </>
-            )}
-            {!isShowingDiff && (
-              <>
-                <Spacing bottom={4} />
-                <Selector
-                  viewState={viewState}
-                  spacingBottom
-                  value={this.previewStyle}
-                  onChange={this.changePreviewStyle}
-                  label={t("diffTool.labels.previewStyle")}
-                >
-                  <option disabled value="">
-                    {t("diffTool.choosePreview")}
+          </Group>
+          {!isShowingDiff && (
+            <Group>
+              <Selector
+                viewState={viewState}
+                value={sourceItem.uniqueId}
+                onChange={this.changeSourceItem}
+                label={t("diffTool.labels.sourceDataset")}
+              >
+                <option disabled>Select source item</option>
+                {this.diffableItemsInWorkbench.map((item) => (
+                  <option key={item.uniqueId} value={item.uniqueId}>
+                    {item.name}
                   </option>
-                  {this.diffItem.styleSelectableDimensions?.[0]?.options?.map(
-                    (style) => (
-                      <option key={style.id} value={style.id}>
-                        {style.name}
-                      </option>
-                    )
-                  )}
-                </Selector>
-                {this.previewLegendUrl && (
-                  <>
-                    <Spacing bottom={2} />
-                    <LegendImage width="100%" src={this.previewLegendUrl} />
-                  </>
+                ))}
+              </Selector>
+            </Group>
+          )}
+          {!isShowingDiff && (
+            <Group>
+              <Selector
+                viewState={viewState}
+                spacingBottom
+                value={this.previewStyle}
+                onChange={this.changePreviewStyle}
+                label={t("diffTool.labels.previewStyle")}
+              >
+                <option disabled value="">
+                  {t("diffTool.choosePreview")}
+                </option>
+                {this.diffItem.styleSelectableDimensions?.[0]?.options?.map(
+                  (style) => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  )
                 )}
-              </>
-            )}
-            <Spacing bottom={2} />
+              </Selector>
+              {this.previewLegendUrl && (
+                <LegendImage width="100%" src={this.previewLegendUrl} />
+              )}
+            </Group>
+          )}
+          <Group>
             <Selector
               viewState={viewState}
               value={this.diffStyle || ""}
@@ -664,203 +650,130 @@ class Main extends React.Component<MainPropsType> {
               ))}
             </Selector>
             {isShowingDiff && this.diffLegendUrl && (
-              <>
-                <LegendImage width="100%" src={this.diffLegendUrl} />
-                <Spacing bottom={4} />
-              </>
+              <LegendImage width="100%" src={this.diffLegendUrl} />
             )}
-            {!isShowingDiff && (
-              <>
-                <Spacing bottom={4} />
-                <GenerateButton
-                  onClick={this.generateDiff}
-                  disabled={!isReadyToGenerateDiff}
-                  aria-describedby="TJSDifferenceDisabledButtonPrompt"
+          </Group>
+          {!isShowingDiff && (
+            <div>
+              <GenerateButton
+                onClick={this.generateDiff}
+                disabled={!isReadyToGenerateDiff}
+                aria-describedby="TJSDifferenceDisabledButtonPrompt"
+              >
+                <TextSpan large>
+                  {t("diffTool.labels.generateDiffButtonText")}
+                </TextSpan>
+              </GenerateButton>
+              {!isReadyToGenerateDiff && (
+                <div
+                  css={`
+                    display: flex;
+                    flex-direction: row;
+                    padding: 5px;
+                  `}
                 >
-                  <TextSpan large>
-                    {t("diffTool.labels.generateDiffButtonText")}
-                  </TextSpan>
-                </GenerateButton>
-
-                {!isReadyToGenerateDiff && (
-                  <>
-                    <Spacing bottom={3} />
-                    <Text
-                      small
-                      light
-                      textLight
-                      id="TJSDifferenceDisabledButtonPrompt"
-                    >
-                      {t("diffTool.labels.disabledButtonPrompt")}
-                    </Text>
-                    <Spacing bottom={4} />
-                  </>
-                )}
-              </>
-            )}
-          </MainPanel>
-        </DiffAccordion>
-        {isShowingDiff && (
-          <CloseDifferenceButton
-            primary
-            rounded
-            textProps={{
-              semiBold: true,
-              extraLarge: true
-            }}
-            theme={theme}
-            activeStyles
-            onClick={this.resetTool}
-            renderIcon={() => (
-              <StyledIcon light styledWidth="13px" glyph={GLYPHS.closeLight} />
-            )}
-            iconProps={{
-              css: `margin-right: 10px;`
-            }}
-          >
-            Close
-          </CloseDifferenceButton>
-        )}
-        {!isShowingDiff && (
-          <LocationPicker
-            terria={terria}
-            location={this.location}
-            onPicking={this.onUserPickingLocation}
-            onPicked={this.onUserPickLocation}
-          />
-        )}
-        {!isShowingDiff &&
-          ReactDOM.createPortal(
-            // Bottom Panel
-            <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
-              <DatePicker
-                heading={t("diffTool.labels.dateComparisonA")}
-                item={this.props.leftItem}
-                externalOpenButton={this.openLeftDatePickerButton}
-                onDateSet={() => this.showItem(this.props.leftItem)}
-              />
-              <AreaFilterSelection
-                t={t}
-                location={this.location}
-                isPickingNewLocation={this._isPickingNewLocation}
-              />
-              <DatePicker
-                heading={t("diffTool.labels.dateComparisonB")}
-                item={this.props.rightItem}
-                externalOpenButton={this.openRightDatePickerButton}
-                onDateSet={() => this.showItem(this.props.rightItem)}
-              />
-            </Box>,
-            document.getElementById("TJS-BottomDockLastPortal")!
+                  <div
+                    css={`
+                      margin-right: 10px;
+                    `}
+                  >
+                    <StyledIcon
+                      fillColor="#ccc"
+                      styledWidth="16px"
+                      styledHeight="16px"
+                      glyph={GLYPHS.info}
+                    />
+                  </div>
+                  <Text
+                    small
+                    light
+                    textLight
+                    id="TJSDifferenceDisabledButtonPrompt"
+                  >
+                    {t("diffTool.labels.disabledButtonPrompt")}
+                  </Text>
+                </div>
+              )}
+            </div>
           )}
-      </Text>
+          {isShowingDiff && (
+            <Box centered left>
+              <BackButton
+                css={`
+                  color: ${theme.textLight};
+                  border-color: ${theme.textLight};
+                `}
+                transparentBg
+                onClick={this.resetTool}
+              >
+                <BoxSpan centered>
+                  <StyledIcon
+                    css="transform:rotate(90deg);"
+                    light
+                    styledWidth="16px"
+                    glyph={GLYPHS.arrowDown}
+                  />
+                  <TextSpan medium>{t("general.back")}</TextSpan>
+                </BoxSpan>
+              </BackButton>
+              <Button
+                primary
+                onClick={() => this.closePanel()}
+                css={`
+                  flex-grow: 1;
+                  margin-left: 10px;
+                `}
+              >
+                <TextSpan medium>
+                  {t("diffTool.labels.saveToWorkbench")}
+                </TextSpan>
+              </Button>
+            </Box>
+          )}
+          {!isShowingDiff && (
+            <LocationPicker
+              terria={terria}
+              location={this.location}
+              onPicking={this.onUserPickingLocation}
+              onPicked={this.onUserPickLocation}
+            />
+          )}
+          {!isShowingDiff &&
+            ReactDOM.createPortal(
+              // Bottom Panel
+              <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
+                <DatePicker
+                  heading={t("diffTool.labels.dateComparisonA")}
+                  item={this.props.leftItem}
+                  externalOpenButton={this.openLeftDatePickerButton}
+                  onDateSet={() => this.showItem(this.props.leftItem)}
+                />
+                <AreaFilterSelection
+                  t={t}
+                  location={this.location}
+                  isPickingNewLocation={this._isPickingNewLocation}
+                />
+                <DatePicker
+                  heading={t("diffTool.labels.dateComparisonB")}
+                  item={this.props.rightItem}
+                  externalOpenButton={this.openRightDatePickerButton}
+                  onDateSet={() => this.showItem(this.props.rightItem)}
+                />
+              </Box>,
+              document.getElementById("TJS-BottomDockLastPortal")!
+            )}
+        </div>
+      </WorkflowPanel>
     );
   }
 }
-
-interface DiffAccordionProps {
-  viewState: ViewState;
-  t: TFunction;
-}
-
-const DiffAccordionToggle = styled(Box)`
-  ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
-`;
-
-const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
-  const [showChildren, setShowChildren] = useState(true);
-  const { t, viewState } = props;
-  const theme = useTheme();
-  return (
-    <DiffAccordionWrapper isMapFullScreen={viewState.isMapFullScreen} column>
-      {/* Diff header */}
-      <DiffAccordionToggle
-        paddedVertically
-        paddedHorizontally={2}
-        centered
-        justifySpaceBetween
-        backgroundColor={theme.colorSecondary}
-      >
-        <Box centered>
-          <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
-          <Spacing right={1} />
-          <Text
-            textLight
-            semiBold
-            // font-size is non standard with what we have so far in terria,
-            // lineheight as well to hit nonstandard paddings
-            styledFontSize="17px"
-            styledLineHeight="30px"
-          >
-            {t("diffTool.title")}
-          </Text>
-        </Box>
-        {/* margin-right 5px for the padded button offset - larger click area
-            but visible should be inline with rest of box */}
-        <Box centered css={"margin-right:-5px;"}>
-          <RawButton onClick={() => viewState.closeTool()}>
-            <TextSpan textLight small semiBold uppercase>
-              {t("diffTool.exit")}
-            </TextSpan>
-          </RawButton>
-          <Spacing right={4} />
-          <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <BoxSpan paddedRatio={1} centered>
-              <StyledIcon
-                styledWidth="12px"
-                light
-                glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
-              />
-            </BoxSpan>
-          </RawButton>
-        </Box>
-      </DiffAccordionToggle>
-      {showChildren && props.children}
-    </DiffAccordionWrapper>
-  );
-};
-
-const DiffAccordionWrapper = styled(Box).attrs({
-  column: true,
-  position: "absolute",
-  styledWidth: "340px"
-  // charcoalGreyBg: true
-})<{ isMapFullScreen: boolean }>`
-  top: 70px;
-  left: 0px;
-  min-height: 220px;
-  // background: ${(p) => p.theme.dark};
-  margin-left: ${(props) =>
-    props.isMapFullScreen
-      ? 16
-      : parseInt(props.theme.workbenchWidth, 10) + 40}px;
-  transition: margin-left 0.25s;
-`;
-
-const MainPanel = styled(Box).attrs({
-  column: true,
-  overflowY: "auto",
-  paddedRatio: 2
-})<{ isMapFullScreen: boolean }>`
-  ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
-  background-color: ${(p) => p.theme.darkWithOverlay};
-`;
 
 const BackButton = styled(Button).attrs({
   secondary: true
 })``;
 
-const CloseDifferenceButton = styled(Button)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 18px;
-  padding: 0 20px;
-`;
-
 const GenerateButton = styled(Button).attrs({
   primary: true,
-  splitter: true,
   fullWidth: true
 })``;
 
@@ -946,9 +859,14 @@ const AreaFilterSelection = (props: {
   );
 };
 
+const Group = styled.div`
+  background-color: ${(p) => p.theme.darkWithOverlay};
+  padding: 15px;
+  border-radius: 5px;
+`;
+
 const LocationAndDatesDisplayBox = styled(Box).attrs({
-  column: true,
-  charcoalGreyBg: true
+  column: true
 })`
   color: ${(p) => p.theme.textLight};
   padding: 15px;
@@ -967,7 +885,7 @@ const LegendImage = function (props: any) {
     <img
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
-      style={{ display: "none", marginTop: "4px" }}
+      style={{ display: "none", marginTop: "10px" }}
       onLoad={(e) => (e.currentTarget.style.display = "block")}
       onError={(e) => (e.currentTarget.style.display = "none")}
     />

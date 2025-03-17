@@ -1,7 +1,7 @@
-import { sortBy, uniqBy } from "lodash";
+import { sortBy, uniqBy } from "lodash-es";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -73,7 +73,7 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 
   border-radius: 0;
 
-  width: 114px;
+  width: 124px;
   // ensure we support long strings
   min-height: 32px;
   display: block;
@@ -94,7 +94,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class ViewingControls extends React.Component<
+class ViewingControls extends Component<
   PropsType,
   { isMapZoomingToCatalogItem: boolean }
 > {
@@ -110,7 +110,6 @@ class ViewingControls extends React.Component<
     };
   }
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     window.addEventListener("click", this.hideMenu.bind(this));
   }
@@ -273,7 +272,6 @@ class ViewingControls extends React.Component<
       toolName: "Difference",
       getToolComponent: () =>
         import("../../Tools/DiffTool/DiffTool").then((m) => m.default),
-      showCloseButton: true,
       params: {
         sourceItem: this.props.item
       }
@@ -295,7 +293,6 @@ class ViewingControls extends React.Component<
       this.props.viewState.openTool({
         toolName: "Search Item",
         getToolComponent: () => LazyItemSearchTool,
-        showCloseButton: false,
         params: {
           item,
           itemSearchProvider,

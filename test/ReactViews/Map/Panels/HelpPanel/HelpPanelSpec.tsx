@@ -1,5 +1,4 @@
 import { runInAction } from "mobx";
-import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
@@ -8,8 +7,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import Text from "../../../../../lib/Styled/Text";
 import { createWithContexts } from "../../../withContext";
-const HelpPanel: any =
-  require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel").default;
+import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
 
 describe("HelpPanel", function () {
   let terria: Terria;

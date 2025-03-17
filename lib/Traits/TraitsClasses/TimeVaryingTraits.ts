@@ -16,7 +16,9 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     type: "string",
     isNullable: true
   })
-  currentTime?: string | null;
+  get currentTime(): string | null | undefined {
+    return;
+  }
 
   @primitiveTrait({
     name: "Initial Time Source",
@@ -37,7 +39,9 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       "The earliest time for which this dataset is available. This will be the start of the range shown on the timeline control.",
     type: "string"
   })
-  startTime?: string;
+  get startTime(): string | undefined {
+    return;
+  }
 
   @primitiveTrait({
     name: "Stop Time",
@@ -45,7 +49,9 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       "The latest time for which this dataset is available. This will be the end of the range shown on the timeline control.",
     type: "string"
   })
-  stopTime?: string;
+  get stopTime(): string | undefined {
+    return;
+  }
 
   @primitiveTrait({
     name: "Time Multiplier",
@@ -53,7 +59,9 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       "The multiplier to use in progressing time for this dataset. For example, `5.0` means that five seconds of dataset time will pass for each one second of real time.",
     type: "number"
   })
-  multiplier?: number;
+  get multiplier(): number | undefined {
+    return;
+  }
 
   @primitiveTrait({
     name: "Is Paused",

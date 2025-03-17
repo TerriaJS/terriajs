@@ -35,18 +35,18 @@ expectFalse<IsWritable<typeof modelProperties, "withoutDefault">>();
 expectFalse<AllowsUndefined<typeof modelProperties.nestedWithDefault>>();
 expectFalse<AllowsUndefined<typeof modelProperties.nestedWithoutDefault>>();
 
-const nested = modelProperties.nestedWithDefault;
+const _nested = modelProperties.nestedWithDefault;
 
 // Nested properties allow undefined only if they do not have a default.
-expectTrue<Equals<typeof nested.withDefault, number>>();
-expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
-expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
-expectTrue<Equals<typeof nested.unknownObjectWithDefault, JsonObject>>();
-expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
+expectTrue<Equals<typeof _nested.withDefault, number>>();
+expectTrue<Equals<typeof _nested.withoutDefault, number | undefined>>();
+expectTrue<Equals<typeof _nested.unknownObject, JsonObject | undefined>>();
+expectTrue<Equals<typeof _nested.unknownObjectWithDefault, JsonObject>>();
+expectTrue<Equals<typeof _nested.withNull, string | null | undefined>>();
 
 // Nested properties may not be modified.
-expectFalse<IsWritable<typeof nested, "withDefault">>();
-expectFalse<IsWritable<typeof nested, "withoutDefault">>();
+expectFalse<IsWritable<typeof _nested, "withDefault">>();
+expectFalse<IsWritable<typeof _nested, "withoutDefault">>();
 
 // Properties that are arrays of traits allow undefined only if they do not have a default.
 expectFalse<AllowsUndefined<typeof modelProperties.nestedArrayWithDefault>>();
@@ -64,19 +64,19 @@ expectFalse<
 
 const array = modelProperties.nestedArrayWithDefault;
 if (array) {
-  const first = array[0];
+  const _first = array[0];
 
   // Arrays may not _contain_ undefineds.
-  expectFalse<AllowsUndefined<typeof first>>();
+  expectFalse<AllowsUndefined<typeof _first>>();
 
   // Properties in traits in arrays allow undefined only if they do not have a default.
-  expectTrue<Equals<typeof first.withDefault, number>>();
-  expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
-  expectTrue<Equals<typeof first.unknownObjectWithDefault, JsonObject>>();
-  expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
+  expectTrue<Equals<typeof _first.withDefault, number>>();
+  expectTrue<Equals<typeof _first.withoutDefault, number | undefined>>();
+  expectTrue<Equals<typeof _first.unknownObject, JsonObject | undefined>>();
+  expectTrue<Equals<typeof _first.unknownObjectWithDefault, JsonObject>>();
+  expectTrue<Equals<typeof _first.withNull, string | null | undefined>>();
 
   // Properties in traits in arrays can not be modified.
-  expectFalse<IsWritable<typeof first, "withDefault">>();
-  expectFalse<IsWritable<typeof first, "withoutDefault">>();
+  expectFalse<IsWritable<typeof _first, "withDefault">>();
+  expectFalse<IsWritable<typeof _first, "withoutDefault">>();
 }

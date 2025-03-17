@@ -1,10 +1,13 @@
 import DOMPurify from "dompurify";
-import React, {
+
+import {
   AnchorHTMLAttributes,
   createElement,
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
+
+import * as React from "react";
 import combine from "terriajs-cesium/Source/Core/combine";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CustomComponent, {
@@ -12,9 +15,8 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
-
-const HtmlToReact = require("html-to-react");
-const utils = require("html-to-react/lib/utils");
+import HtmlToReact from "html-to-react";
+import utils from "html-to-react/lib/utils";
 
 const htmlToReactParser = new HtmlToReact.Parser({
   decodeEntities: true
@@ -79,7 +81,6 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
     shouldProcessNode: (node: DomElement) => node.name === "a",
     processNode: function (node: DomElement, children, index) {
       // Make sure any <a href> tags open in a new window
-      // eslint-disable-line react/display-name
       const elementProps = {
         key: "anchor-" + keyIndex++,
         target: "_blank",

@@ -1,8 +1,11 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { Component } from "react";
+import {
+  WithTranslation,
+  withTranslation,
+  type TFunction
+} from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
@@ -12,10 +15,8 @@ import { canShorten } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
-
-const MenuPanel =
-  require("../../../StandardUserInterface/customizable/MenuPanel").default;
-const StorySharePanel = require("./StorySharePanel").default;
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import StorySharePanel from "./StorySharePanel";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
@@ -34,7 +35,7 @@ interface SharePanelState {
 }
 
 @observer
-class SharePanel extends React.Component<PropTypes, SharePanelState> {
+class SharePanel extends Component<PropTypes, SharePanelState> {
   static displayName = "SharePanel";
 
   constructor(props: PropTypes) {
@@ -144,6 +145,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       : t("share.btnMapShareTitle");
 
     return !storyShare ? (
+      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnText={catalogShareWithoutText ? null : btnText}
@@ -168,6 +170,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         viewState={this.props.viewState}
         btnTitle={btnTitle}
         isOpen={this.state.isOpen}
+        //@ts-expect-error - not yet ready to tackle tsfying StorySharePanel
         onOpenChanged={this.changeOpenState}
         showDropdownAsModal={storyShare}
         modalWidth={modalWidth}

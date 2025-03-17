@@ -1,3 +1,4 @@
+@use "sass:meta";
 :global {
-  @import "~react-anything-sortable/sortable";
+  @include meta.load-css("~react-anything-sortable/sortable");
 }

@@ -11,20 +11,12 @@ import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/Arc
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
-import ViewState from "../../../lib/ReactViewModels/ViewState";
 
-const Water_Network = {
-  layer: JSON.stringify(
-    require("../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json")
-  ),
-  layer2: JSON.stringify(
-    require("../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json")
-  )
-};
+import waterNetworkLayer from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json";
+import waterNetworkLayer2 from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json";
 
 describe("createUrlReferenceFromUrl", function () {
   let terria: Terria;
-  let viewState: ViewState;
 
   beforeEach(function () {
     terria = new Terria({
@@ -61,7 +53,7 @@ describe("createUrlReferenceFromUrl", function () {
   it("should create an catalog item (CSVCatalogItem) from Url without specifying a dataType", async function () {
     const url = "test/csv/lat_lon_val.csv";
 
-    const item = await createCatalogItemFromFileOrUrl(terria, viewState, url);
+    const item = await createCatalogItemFromFileOrUrl(terria, url);
     expect(item).toBeDefined();
     if (item !== undefined) {
       expect(item instanceof CsvCatalogItem).toBe(true);
@@ -76,7 +68,7 @@ describe("createUrlReferenceFromUrl", function () {
       lastModified: 0,
       name: "lat_lon_val.csv"
     }) as File;
-    const item = await createCatalogItemFromFileOrUrl(terria, viewState, file);
+    const item = await createCatalogItemFromFileOrUrl(terria, file);
     expect(item).toBeDefined();
     if (item !== undefined) {
       expect(item instanceof CsvCatalogItem).toBe(true);
@@ -103,10 +95,10 @@ describe("createUrlReferenceFromUrl", function () {
       jasmine.Ajax.stubRequest(/.*/).andError({});
       jasmine.Ajax.stubRequest(
         /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/[0-9]+\/query\?f=json.*$/i
-      ).andReturn({ responseText: Water_Network.layer });
+      ).andReturn({ responseJSON: waterNetworkLayer });
       jasmine.Ajax.stubRequest(
         /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/2\/?\?.*/i
-      ).andReturn({ responseText: Water_Network.layer2 });
+      ).andReturn({ responseJSON: waterNetworkLayer2 });
 
       const tempReference = await createUrlReferenceFromUrl(
         featureServerUrl,

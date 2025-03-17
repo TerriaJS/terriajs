@@ -22,7 +22,7 @@ describe("SearchResults", function () {
   });
 });
 
-async function render(
+function render(
   props: Omit<SearchResultsProps, "i18n" | "t" | "tReady">
 ): Promise<ReactTestRenderer> {
   let rendered: ReactTestRenderer;
