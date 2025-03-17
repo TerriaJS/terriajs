@@ -1,9 +1,10 @@
-import { FC, useEffect, useState, type ReactNode } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../Styled/Box";
 import Button from "../Styled/Button";
 import Icon, { StyledIcon } from "../Styled/Icon";
+import Input from "../Styled/Input";
 import { verticalAlign } from "../Styled/mixins";
 import Spacing from "../Styled/Spacing";
 
@@ -14,15 +15,16 @@ enum CopyStatus {
 }
 
 interface ClipboardProps {
-  source: ReactNode;
   theme: "dark" | "light";
   rounded?: boolean;
   text?: string;
+  inputTheme?: "light" | "dark";
+  inputPlaceholder?: string;
   onCopy?: (contents: string) => void;
 }
 
 const Clipboard: FC<ClipboardProps> = (props) => {
-  const { source, theme, rounded, text, onCopy } = props;
+  const { theme, rounded, text, inputTheme, inputPlaceholder, onCopy } = props;
   const { t } = useTranslation();
   const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
 
@@ -56,14 +58,27 @@ const Clipboard: FC<ClipboardProps> = (props) => {
   return (
     <ClipboardDiv>
       <Box>
-        {source}
+        <Input
+          light={inputTheme === "light"}
+          dark={inputTheme === "dark"}
+          large
+          type="text"
+          value={text}
+          placeholder={inputPlaceholder ?? t("share.shortLinkShortening")}
+          readOnly
+          onClick={(e) => e.currentTarget.select()}
+          css={`
+            ${rounded && canCopy && "border-radius: 32px 0 0 32px;"}
+            ${rounded && !canCopy && "border-radius: 32px;"}
+          `}
+        />
         {canCopy && (
           <Button
             onClick={handleCopy}
             primary
             css={`
               width: 80px;
-              border-radius: 2px;
+              border-radius: 0 2px 2px 0;
               ${rounded && `border-radius:  0 32px 32px 0;`}
             `}
             textProps={{ large: true }}
