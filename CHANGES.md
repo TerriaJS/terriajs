@@ -1,6 +1,8 @@
 # Change Log
 
-#### next release (8.9.0)
+#### next release (8.9.1)
+
+#### 8.9.0 - 2025-03-17
 
 - **Breaking changes:**
 - Major changes to UI
