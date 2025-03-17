@@ -514,7 +514,7 @@ class Main extends Component<MainPropsType> {
             display: flex;
             flex-direction: column;
             height: 100%;
-            padding: 5px 10px;
+            padding: 15px;
             gap: 20px;
           `}
         >
