@@ -4,7 +4,6 @@ import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
 import Clipboard from "../../lib/ReactViews/Clipboard";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
-import Input from "../../lib/Styled/Input";
 
 describe("Clipboard", function () {
   beforeAll(() => {
@@ -20,7 +19,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard source={<Input />} theme="dark" text="test" />
+        <Clipboard theme="dark" text="test" />
       </ThemeProvider>
     );
 
@@ -52,7 +51,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard source={<Input />} theme="dark" text="test" />
+        <Clipboard theme="dark" text="test" />
       </ThemeProvider>
     );
 
@@ -65,7 +64,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard source={<Input />} theme="dark" />
+        <Clipboard theme="dark" />
       </ThemeProvider>
     );
 
