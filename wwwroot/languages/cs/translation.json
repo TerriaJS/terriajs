@@ -149,12 +149,13 @@
       "differenceOutput": "Rozdílový výstup",
       "generateDiffButtonText": "Generování detekce změn",
       "disabledButtonPrompt": "Upozornění: Aby bylo možné provést detekci změn, musí být vybráno místo a datum",
-      "areaFilterSelection": "Výběr filtru oblasti"
+      "areaFilterSelection": "Výběr filtru oblasti",
+      "saveToWorkbench": "Uložit na pracovní plochu"
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "Nebylo vybráno žádné místo",
-        "description": "Chcete-li filtrovat výběr data snímku podle místa, vyberte bod na mapě"
+        "title": "Nevybráno žádné místo!",
+        "description": "Chcete-li filtrovat výběr data snímku podle místa, přiblížíte si mapu a vyberete bod zájmu na mapě"
       },
       "locationSelected": {
         "title": "Vybraná lokalita a filtrovaná data",
