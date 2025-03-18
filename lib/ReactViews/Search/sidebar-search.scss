@@ -1,5 +1,5 @@
 @use "../../Sass/common/mixins";
-@use "../../Sass/common/_variables";
+@use "~terriajs-variables" as variables;
 
 .results {
   @include mixins.transition(all 0.5s ease-in-out);

@@ -1,4 +1,4 @@
-@use "../../../Sass/common/_variables";
+@use "~terriajs-variables" as variables;
 
 .legend {
   composes: clearfix from "../../../Sass/common/_base.scss";

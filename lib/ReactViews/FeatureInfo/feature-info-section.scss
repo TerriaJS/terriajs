@@ -1,5 +1,5 @@
 @use "sass:meta";
-@use "../../Sass/common/_variables";
+@use "~terriajs-variables" as variables;
 @use "../../Sass/common/mixins";
 @include mixins.empty-module("time-series-chart");
 

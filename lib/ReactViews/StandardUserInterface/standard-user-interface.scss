@@ -1,4 +1,4 @@
-@use "../../Sass/common/_variables";
+@use "~terriajs-variables" as variables;
 @use "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
