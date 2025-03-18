@@ -185,7 +185,8 @@
       "dateButtonTitle": "Vyberte datum",
       "dateOutOfRange": "Momentálně mimo rozsah"
     },
-    "title": "Rozdíl"
+    "title": "Rozdíl",
+    "close": "Zavřít"
   },
   "legend": {
     "lat": "Lat",
