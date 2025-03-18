@@ -257,6 +257,11 @@ function configureWebpack({
     require.resolve("react-dom")
   );
 
+  // Make a terriajs-variables alias so it's really easy to override our sass variables by aliasing over the top of this.
+  config.resolve.alias["terriajs-variables"] =
+    config.resolve.alias["terriajs-variables"] ||
+    require.resolve("../lib/Sass/common/_default_variables.scss");
+
   // Alias all lodash imports (including from our dependencies) to lodash-es
   // This saves close to ~600KB unzipped
   // Maybe we can remove this when lodash 5 comes out (?)
