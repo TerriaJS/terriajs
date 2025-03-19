@@ -172,7 +172,7 @@
     // bug, if anything goes wrong revert this back
     // overflow: hidden;
     flex-grow: 1;
-    flex-basis: calc(100% - #{variables.$work-bench-width});
+    flex-basis: calc(100% - variables.$work-bench-width);
   }
 }
 

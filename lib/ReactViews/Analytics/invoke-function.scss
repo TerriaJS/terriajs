@@ -4,7 +4,7 @@
 .invoke-function {
   padding: variables.$padding-small;
   position: relative;
-  height: calc(100% - #{variables.$padding-small} * 2);
+  height: calc(100% - variables.$padding-small * 2);
   a {
     color: variables.$color-primary;
   }

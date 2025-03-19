@@ -9,7 +9,7 @@
   font-size: variables.$font-size-mid-small;
 
   @media (max-width: variables.$sm) {
-    height: calc(100% - #{variables.$mobile-modal-top-height});
+    height: calc(100% - variables.$mobile-modal-top-height);
     composes: scrollbars from "../../Sass/common/_base.scss";
     overflow: auto;
   }

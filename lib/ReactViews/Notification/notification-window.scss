@@ -64,7 +64,7 @@
   composes: scrollbars from "../../Sass/common/_base.scss";
   padding: 15px;
   height: 100%;
-  max-height: calc(100vh - #{variables.$input-height} * 3);
+  max-height: calc(100vh - variables.$input-height * 3);
   overflow-y: auto;
   max-width: calc(100vw - 20px);
   box-sizing: border-box;

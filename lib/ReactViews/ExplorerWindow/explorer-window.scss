@@ -8,12 +8,12 @@
   padding-right: 80px;
   padding-top: calc(
     (
-        100vh - #{variables.$modal-content-height} - #{variables.$modal-header-height}
+        100vh - variables.$modal-content-height - variables.$modal-header-height
       ) / 2
   );
   padding-bottom: calc(
     (
-        100vh - #{variables.$modal-content-height} - #{variables.$modal-header-height}
+        100vh - variables.$modal-content-height - variables.$modal-header-height
       ) / 2
   );
   top: 0;

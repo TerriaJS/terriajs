@@ -24,7 +24,7 @@
   @media (min-width: variables.$sm) {
     padding-right: variables.$padding;
     margin-top: variables.$padding;
-    height: calc(100% - #{variables.$input-height});
+    height: calc(100% - variables.$input-height);
   }
 }
 
