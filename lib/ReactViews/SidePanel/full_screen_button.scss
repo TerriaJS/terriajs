@@ -28,7 +28,7 @@
 }
 
 .trainerBarVisible {
-  top: variables.$map-button-top + variables.$trainer-height;
+  top: calc(variables.$map-button-top + variables.$trainer-height);
 }
 
 .btn {

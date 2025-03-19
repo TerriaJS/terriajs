@@ -20,8 +20,8 @@
     height: 10px;
     width: 10px;
     position: absolute;
-    right: variables.$padding + variables.$padding-small;
-    top: variables.$padding + variables.$padding-small;
+    right: calc(variables.$padding + variables.$padding-small);
+    top: calc(variables.$padding + variables.$padding-small);
   }
 }
 

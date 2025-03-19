@@ -3,8 +3,8 @@
 
 .modal-wrapper {
   position: fixed;
-  z-index: variables.$front-component-z-index - 1;
-  padding-left: variables.$padding * 2;
+  z-index: calc(variables.$front-component-z-index - 1);
+  padding-left: calc(variables.$padding * 2);
   padding-right: 80px;
   padding-top: calc(
     (
@@ -22,7 +22,7 @@
   left: 0;
 
   @media (min-width: variables.$md) {
-    padding-left: 30px + variables.$work-bench-width;
+    padding-left: calc(30px + variables.$work-bench-width);
     padding-right: 30px;
   }
 }
@@ -32,7 +32,7 @@
   color: variables.$modal-text;
   border-radius: variables.$radius-xlarge;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
-  z-index: variables.$front-component-z-index - 1;
+  z-index: calc(variables.$front-component-z-index - 1);
   height: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -58,7 +58,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  z-index: variables.$front-component-z-index - 10;
+  z-index: calc(variables.$front-component-z-index - 10);
   opacity: 1;
   visibility: visible;
 }

@@ -30,7 +30,7 @@
   }
 
   .top-element {
-    z-index: variables.$notification-window-z-index - 10 !important;
+    z-index: calc(variables.$notification-window-z-index - 10) !important;
     &:focus {
       outline: none;
     }
@@ -72,7 +72,7 @@
 
 .feedback {
   position: absolute;
-  z-index: variables.$front-component-z-index - 10;
+  z-index: calc(variables.$front-component-z-index - 10);
 }
 
 .featureInfo {
@@ -87,7 +87,7 @@
     $feature-info-medium-max-size * 100 / 40
   );
 
-  z-index: variables.$front-component-z-index - 20;
+  z-index: calc(variables.$front-component-z-index - 20);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -96,7 +96,7 @@
   left: 0;
 
   @media (min-width: variables.$md) {
-    left: variables.$work-bench-width + 22px;
+    left: calc(variables.$work-bench-width + 22px);
     top: 62px;
     right: 96px;
     bottom: 0;
@@ -105,7 +105,7 @@
   & > div {
     pointer-events: auto;
     position: absolute;
-    top: variables.$mobile-header-height + 10px;
+    top: calc(variables.$mobile-header-height + 10px);
     right: 10px;
     max-width: 95%;
     min-width: 150px;

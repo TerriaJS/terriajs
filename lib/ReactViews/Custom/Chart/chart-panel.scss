@@ -80,7 +80,7 @@
 }
 
 .loader {
-  padding: 0px 0px 0px variables.$padding * 3 !important;
+  padding: 0px 0px 0px calc(variables.$padding * 3) !important;
 
   &:before {
     top: 0px;

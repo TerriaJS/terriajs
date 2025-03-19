@@ -24,7 +24,7 @@
   composes: clearfix from "../../Sass/common/_base.scss";
   composes: list-reset from "../../Sass/common/_base.scss";
 
-  margin: 0 - (variables.$padding-mini);
+  margin: calc(0 - (variables.$padding-mini));
 }
 
 .list-item {

@@ -34,7 +34,7 @@
   composes: scrollbars from "../../Sass/common/_base.scss";
 
   margin: 0 variables.$padding-small;
-  padding: variables.$padding * 2;
+  padding: calc(variables.$padding * 2);
   position: relative;
   box-sizing: border-box;
 

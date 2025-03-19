@@ -45,7 +45,7 @@
 
   box-sizing: border-box;
   // background-color: $modal-bg;
-  padding: variables.$padding-small * 5;
+  padding: calc(variables.$padding-small * 5);
   color: variables.$text-darker;
 
   // IE HACK!@!@!@!!@!@
@@ -81,8 +81,8 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: variables.$padding-small * 3;
-  right: variables.$padding-small * 3;
+  top: calc(variables.$padding-small * 3);
+  right: calc(variables.$padding-small * 3);
 
   padding: 7px;
 

@@ -4,7 +4,7 @@
 .invoke-function {
   padding: variables.$padding-small;
   position: relative;
-  height: calc(100% - #{variables.$padding-small * 2});
+  height: calc(100% - #{variables.$padding-small} * 2);
   a {
     color: variables.$color-primary;
   }
@@ -23,7 +23,7 @@
 .content {
   composes: scrollbars from "../../Sass/common/_base.scss";
   overflow-y: auto;
-  height: calc(100% - #{variables.$input-height});
+  height: calc(100% - variables.$input-height);
   padding-right: variables.$padding;
   padding-left: variables.$padding;
   h3 {

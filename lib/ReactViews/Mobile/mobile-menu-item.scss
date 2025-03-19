@@ -1,7 +1,7 @@
 @use "../../Sass/common/_variables";
 
 .root {
-  padding: 0 variables.$padding-small * 3;
+  padding: 0 calc(variables.$padding-small * 3);
 }
 
 .link {
@@ -10,7 +10,7 @@
   font-size: 1rem;
   width: 100%;
   text-align: left;
-  padding: variables.$padding-small * 3 0;
+  padding: calc(variables.$padding-small * 3) 0;
   color: variables.$text-dark;
   display: block;
   border-bottom: 1px solid variables.$grey-lighter;

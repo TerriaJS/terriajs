@@ -61,9 +61,9 @@
   composes: btn from "../../../../Sass/common/_buttons.scss";
   // color: $text-light;
   font-size: variables.$font-size-button;
-  padding: variables.$padding variables.$padding * 2;
+  padding: calc(variables.$padding variables.$padding * 2);
   // background-color: #519ac2;
-  border-radius: variables.$padding * 2;
+  border-radius: calc(variables.$padding * 2);
 
   min-width: 240px;
   text-align: center;

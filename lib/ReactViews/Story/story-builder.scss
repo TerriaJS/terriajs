@@ -32,8 +32,8 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   align-items: baseline;
-  padding-left: variables.$padding-small + variables.$padding;
-  padding-right: variables.$padding-small + variables.$padding;
+  padding-left: calc(variables.$padding-small + variables.$padding);
+  padding-right: calc(variables.$padding-small + variables.$padding);
   padding-top: variables.$padding-small;
   padding-bottom: variables.$padding-small;
   color: variables.$text-light;
@@ -58,8 +58,8 @@
   // color: $text-light;
   font-size: variables.$font-size-mid-small;
   text-transform: uppercase;
-  padding: variables.$padding variables.$padding variables.$padding 5 *
-    variables.$padding;
+  padding: variables.$padding variables.$padding variables.$padding
+    calc(5 * variables.$padding);
   border: 0;
 
   svg {
@@ -205,9 +205,9 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   color: variables.$text-light;
   font-size: variables.$font-size-button;
-  padding: variables.$padding variables.$padding * 2;
+  padding: variables.$padding calc(variables.$padding * 2);
   background: variables.$overlay;
-  border-radius: variables.$padding * 2;
+  border-radius: calc(variables.$padding * 2);
   margin-top: variables.$padding;
 
   svg {

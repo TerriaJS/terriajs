@@ -15,13 +15,13 @@
     display: inline-block;
     width: inherit;
     position: absolute;
-    top: variables.$padding * 2;
-    right: variables.$padding * 2;
+    top: calc(variables.$padding * 2);
+    right: calc(variables.$padding * 2);
   }
 }
 
 .previewed--info {
-  margin: 2 * variables.$padding 0;
+  margin: calc(2 * variables.$padding) 0;
 }
 
 .field {

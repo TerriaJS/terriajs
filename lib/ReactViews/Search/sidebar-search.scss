@@ -10,7 +10,7 @@
 .results-content {
   composes: scrollbars from "../../Sass/common/_base.scss";
 
-  // height: calc(100vh - #{$workbench-header + $logo-height});
+  // height: calc(100vh - #{variables.$workbench-header + variables.$logo-height});
 
   // todo: quick saerch fix
   height: 100%;

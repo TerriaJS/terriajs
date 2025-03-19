@@ -33,7 +33,7 @@
 
   text-align: left;
   font-size: variables.$font-size-small;
-  padding: 10px 30px + variables.$padding;
+  padding: 10px calc(30px + variables.$padding);
   padding-right: 0;
   min-height: 35px;
   position: relative;

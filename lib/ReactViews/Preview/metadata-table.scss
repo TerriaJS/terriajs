@@ -8,7 +8,7 @@
 }
 
 .root table tr:nth-child(odd) {
-  background-color: color.adjust(variables.$faint-bg, $lightness: -8%);
+  background-color: color-mix(in srgb, var(--tjs-faint-bg) 92%, black);
 }
 .root table tr:nth-child(even) {
   background-color: variables.$faint-bg;

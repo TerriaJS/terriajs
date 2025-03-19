@@ -1,51 +1,353 @@
 @use "sass:meta";
 @use "sass:color";
+@use "sass:string";
 
 @import url("https://fonts.googleapis.com/css?family=Inter:300,400,500,400italic,600,700&display=swap");
 
-$font-pop: "Inter", sans-serif;
-$font-base: "Inter", sans-serif;
-$font-mono: monospace;
-$font-feature-info: $font-mono;
-$font: $font-base;
+:root {
+  --tjs-font-pop: "Inter", sans-serif;
+  --tjs-font-base: "Inter", sans-serif;
+  --tjs-font-mono: monospace;
+  --tjs-font-feature-info: var(--tjs-font-mono);
+  --tjs-font: var(--tjs-font-base);
 
-$color-primary: #35a7c4;
-$color-primary-disabled: #595b60;
+  --tjs-color-primary: #35a7c4;
+  --tjs-color-primary-disabled: #595b60;
 
-@function get-hover-color($base-color) {
-  @return color.adjust($base-color, $lightness: 10%);
+  --tjs-color-secondary: #f59e0b;
+
+  --tjs-animation-fast: 0.1s;
+
+  --tjs-blur: blur(5px);
+
+  --tjs-dark: #111827;
+  --tjs-dark-with-overlay: #111827;
+  --tjs-dark-mid: #1f2937;
+  --tjs-dark-lighter: #374151;
+  --tjs-dark-alpha: 0.75;
+  --tjs-transparent-dark: rgb(
+    from var(--tjs-dark) r g b / var(--tjs-dark-alpha)
+  );
+
+  --tjs-grey: #9ca3af;
+  --tjs-grey-lighter: #d1d5db;
+  --tjs-grey-lighter2: #e6e6e6;
+  --tjs-grey-lightest: #f2f2f2;
+  --tjs-field-border: #ddd;
+  --tjs-overlay: rgba(255, 255, 255, 0.15);
+  --tjs-overlay-invert: rgba(255, 255, 255, 0.85);
+
+  --tjs-text-black: #000;
+  --tjs-text-dark: #595b60;
+  --tjs-text-dark2: #606d80;
+  --tjs-text-darker: #4d5766;
+  --tjs-text-light: #ffffff;
+  --tjs-text-light-dimmed: #bbbbbb;
+
+  --tjs-faint-bg: #f5f5f5;
+  --tjs-warning: #ff5b6f;
+  --tjs-info-color: #fed17f;
+  --tjs-link-text-decoration: none;
+
+  --tjs-padding: 10px;
+  --tjs-padding-small: 4px;
+  --tjs-padding-mini: 3px;
+  --tjs-padding-tiny: 1px;
+
+  --tjs-btn-default-line-height: 20px;
+  --tjs-input-height: 40px;
+  --tjs-input-height-large: 48px;
+  --tjs-input-glyph-height: 24px;
+  --tjs-input-glyph-margin: 8px;
+
+  --tjs-sm-logo-height: var(--tjs-input-height);
+  --tjs-logo-height: 100px;
+  --tjs-mobile-header-height: 50px;
+
+  --tjs-modal-bg: #fff;
+  --tjs-modal-tab-bg: var(--tjs-modal-bg);
+  --tjs-modal-selected-tab-bg: var(--tjs-modal-tab-bg);
+  --tjs-modal-text: #000;
+  --tjs-modal-secondary-bg: #f6f6f7;
+  --tjs-modal-overlay: rgba(#000, 0.7);
+  --tjs-modal-highlight: var(--tjs-color-primary);
+  --tjs-modal-border: var(--tjs-grey-lighter);
+  --tjs-modal-content-height: 70vh;
+  --tjs-modal-header-height: calc(
+    var(--tjs-btn-default-line-height) + var(--tjs-padding) * 2
+  );
+  --tjs-dropdown-hover-color: orange;
+
+  --tjs-data-catalog-color: var(--tjs-text-black);
+
+  --tjs-feature-info-bg: rgba(var(--tjs-dark), 0.95);
+  --tjs-feature-info-section-bg: var(--tjs-overlay);
+  --tjs-feature-info-color: var(--tjs-text-light);
+  --tjs-feature-info-header-bg: var(--tjs-dark);
+  --tjs-feature-info-btn-color: var(--tjs-text-light);
+  --tjs-feature-info-table-border-style: 1px solid var(--tjs-dark);
+  --tjs-feature-info-right-margin: 105px;
+
+  --tjs-mobile-main-bg: #ffffff;
+  --tjs-mobile-text: #000;
+
+  --tjs-mobile-modal-top-height: 40px;
+  --tjs-mobile-bottom-timeline: 70px;
+
+  --tjs-font-size-large: 1.3rem;
+  --tjs-font-size-mid-large: 1.1rem;
+  --tjs-font-size-base: 1rem;
+  --tjs-font-size-mid-small: 0.9rem;
+  --tjs-font-size-feature-info: 0.9rem;
+  --tjs-font-size-data-preview: 0.875rem;
+  --tjs-font-size-button: 0.9375rem;
+  --tjs-font-size-small: 0.8125rem;
+  --tjs-font-size-mid-mini: 0.7rem;
+  --tjs-font-size-mini: 0.625rem;
+  --tjs-font-size-credits: 0.7rem;
+
+  --tjs-font-weight-bold: 600;
+  --tjs-font-weight-medium: 500;
+  --tjs-font-weight-normal: 400;
+  --tjs-font-weight-light: 100;
+
+  --tjs-map-button-color: #9ca1aa;
+  --tjs-map-button-top: 21px;
+  --tjs-trainer-height: 64px;
+  --tjs-map-button-border-radius: 4px;
+  --tjs-work-bench-width: 350px;
+  --tjs-setting-panel: 300px;
+  --tjs-share-panel-width: 450px;
+  --tjs-share-panel-caret-left: 215px;
+  --tjs-feature-info-panel-width: 500px;
+  --tjs-panel-radius: 8px;
+
+  --tjs-badge-height: var(--tjs-input-height);
+  --tjs-story-title-height: var(--tjs-input-height);
+  --tjs-workbench-header: calc(
+    var(--tjs-input-height) * 2 + var(--tjs-padding-small) * 2 +
+      var(--tjs-badge-height) + 1px
+  );
+  --tjs-chart-height: 250px;
+
+  --tjs-border-color: rgba(#fff, 0.15);
+  --tjs-border-style: 1px solid var(--tjs-border-color);
+  --tjs-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12),
+    0 2px 2px 0 rgba(0, 0, 0, 0.24);
+
+  --tjs-radius-xlarge: 8px;
+  --tjs-radius-large: 4px;
+  --tjs-radius-medium: 3px;
+  --tjs-radius-small: 2px;
+
+  --tjs-ring-width: 10px;
+  --tjs-compass-width: 55px;
+
+  --tjs-front-component-z-index: 99;
+  --tjs-notification-window-z-index: 99999;
+
+  --tjs-chart-area-color: rgba(#fff, 0.075);
+  --tjs-chart-axis-color: #fff;
+  --tjs-chart-grid-color: rgba(#fff, 0.085);
+  --tjs-chart-text-color: #fff;
+  --tjs-chart-line-color: #ccc;
+  --tjs-chart-preview-line-color: var(--tjs-chart-line-color);
+  --tjs-chart-darker: color-mix(in srgb, var(--tjs-dark) 92%, black);
+  --tjs-chart-panel-background: var(--tjs-dark);
+  --tjs-chart-panel-header: var(--tjs-dark-with-overlay);
+
+  --tjs-charcoal-grey: #3f4854;
+  --tjs-turquoise-blue: #08abd5;
+
+  --tjs-splitter-thumb-width: 40px;
+
+  --tjs-legend-item-width: 30px;
+  --tjs-legend-item-height: 16px;
+  --tjs-legend-padding: calc(var(--tjs-legend-item-height) / 2);
+  --tjs-legend-spacer-height: calc(var(--tjs-legend-padding) / 2);
+
+  --tjs-tool-primary-color: var(--tjs-color-primary);
+
+  --tjs-scrollbar-color: var(--tjs-color-primary);
+  --tjs-scrollbar-track-color: transparent;
 }
 
-$color-secondary: #f59e0b;
+$font-pop: var(--tjs-font-pop);
+$font-base: var(--tjs-font-base);
+$font-mono: var(--tjs-font-mono);
+$font-feature-info: var(--tjs-font-feature-info);
+$font: var(--tjs-font);
 
-$animation-fast: 0.1s;
+$color-primary: var(--tjs-color-primary);
+$color-primary-disabled: var(--tjs-color-primary-disabled);
 
-$blur: blur(5px);
+$color-secondary: var(--tjs-color-secondary);
 
-$dark: #111827;
-$dark-with-overlay: #111827;
-$dark-mid: #1f2937;
-$dark-lighter: #374151;
-// See GobalTerriaStyles.ts on how these are derived
-$dark-alpha: 0.75;
-$transparent-dark: var(--theme-transparent-dark);
+$animation-fast: var(--tjs-animation-fast);
 
-$grey: #9ca3af;
-$grey-lighter: #d1d5db;
-// todo: Fix during overhaul
-$grey-lighter2: #e6e6e6;
-$grey-lightest: #f2f2f2;
-$field-border: #ddd;
-$overlay: rgba(255, 255, 255, 0.15);
-$overlay-invert: rgba(255, 255, 255, 0.85);
+$blur: var(--tjs-blur);
 
-$text-black: #000;
-$text-dark: #595b60;
-// todo: Fix during overhaul
-$text-dark2: #606d80;
-$text-darker: #4d5766;
-$text-light: #ffffff;
-$text-light-dimmed: #bbbbbb;
+$dark: var(--tjs-dark);
+$dark-with-overlay: var(--tjs-dark-with-overlay);
+$dark-mid: var(--tjs-dark-mid);
+$dark-lighter: var(--tjs-dark-lighter);
+$dark-alpha: var(--tjs-dark-alpha);
+$transparent-dark: var(--tjs-transparent-dark);
+
+$grey: var(--tjs-grey);
+$grey-lighter: var(--tjs-grey-lighter);
+$grey-lighter2: var(--tjs-grey-lighter2);
+$grey-lightest: var(--tjs-grey-lightest);
+$field-border: var(--tjs-field-border);
+$overlay: var(--tjs-overlay);
+$overlay-invert: var(--tjs-overlay-invert);
+
+$text-black: var(--tjs-text-black);
+$text-dark: var(--tjs-text-dark);
+$text-dark2: var(--tjs-text-dark2);
+$text-darker: var(--tjs-text-darker);
+$text-light: var(--tjs-text-light);
+$text-light-dimmed: var(--tjs-text-light-dimmed);
+
+$faint-bg: var(--tjs-faint-bg);
+$warning: var(--tjs-warning);
+$info-color: var(--tjs-info-color);
+$link-text-decoration: var(--tjs-link-text-decoration);
+
+$padding: var(--tjs-padding);
+$padding-small: var(--tjs-padding-small);
+$padding-mini: var(--tjs-padding-mini);
+$padding-tiny: var(--tjs-padding-tiny);
+
+$btn-default-line-height: var(--tjs-btn-default-line-height);
+$input-height: var(--tjs-input-height);
+$input-height-large: var(--tjs-input-height-large);
+$input-glyph-height: var(--tjs-input-glyph-height);
+$input-glyph-margin: var(--tjs-input-glyph-margin);
+
+$sm-logo-height: var(--tjs-sm-logo-height);
+$logo-height: var(--tjs-logo-height);
+$mobile-header-height: var(--tjs-mobile-header-height);
+
+$modal-bg: var(--tjs-modal-bg);
+$modal-tab-bg: var(--tjs-modal-tab-bg);
+$modal-selected-tab-bg: var(--tjs-modal-selected-tab-bg);
+$modal-text: var(--tjs-modal-text);
+$modal-secondary-bg: var(--tjs-modal-secondary-bg);
+$modal-overlay: var(--tjs-modal-overlay);
+$modal-highlight: var(--tjs-modal-highlight);
+$modal-border: var(--tjs-modal-border);
+$modal-content-height: var(--tjs-modal-content-height);
+$modal-header-height: var(--tjs-modal-header-height);
+$dropdown-hover-color: var(--tjs-dropdown-hover-color);
+
+$data-catalog-color: var(--tjs-data-catalog-color);
+
+$feature-info-bg: var(--tjs-feature-info-bg);
+$feature-info-section-bg: var(--tjs-feature-info-section-bg);
+$feature-info-color: var(--tjs-feature-info-color);
+$feature-info-header-bg: var(--tjs-feature-info-header-bg);
+$feature-info-btn-color: var(--tjs-feature-info-btn-color);
+$feature-info-table-border-style: var(--tjs-feature-info-table-border-style);
+$feature-info-right-margin: var(--tjs-feature-info-right-margin);
+
+$mobile-main-bg: var(--tjs-mobile-main-bg);
+$mobile-text: var(--tjs-mobile-text);
+
+$mobile-modal-top-height: var(--tjs-mobile-modal-top-height);
+$mobile-bottom-timeline: var(--tjs-mobile-bottom-timeline);
+
+$font-size-large: var(--tjs-font-size-large);
+$font-size-mid-large: var(--tjs-font-size-mid-large);
+$font-size-base: var(--tjs-font-size-base);
+$font-size-mid-small: var(--tjs-font-size-mid-small);
+$font-size-feature-info: var(--tjs-font-size-feature-info);
+$font-size-data-preview: var(--tjs-font-size-data-preview);
+$font-size-button: var(--tjs-font-size-button);
+$font-size-small: var(--tjs-font-size-small);
+$font-size-mid-mini: var(--tjs-font-size-mid-mini);
+$font-size-mini: var(--tjs-font-size-mini);
+$font-size-credits: var(--tjs-font-size-credits);
+
+$font-weight-bold: var(--tjs-font-weight-bold);
+$font-weight-medium: var(--tjs-font-weight-medium);
+$font-weight-normal: var(--tjs-font-weight-normal);
+$font-weight-light: var(--tjs-font-weight-light);
+
+$map-button-color: var(--tjs-map-button-color);
+$map-button-top: var(--tjs-map-button-top);
+$trainer-height: var(--tjs-trainer-height);
+$map-button-border-radius: var(--tjs-map-button-border-radius);
+$work-bench-width: var(--tjs-work-bench-width);
+$setting-panel: var(--tjs-setting-panel);
+$share-panel-width: var(--tjs-share-panel-width);
+$share-panel-caret-left: var(--tjs-share-panel-caret-left);
+$feature-info-panel-width: var(--tjs-feature-info-panel-width);
+$panel-radius: var(--tjs-panel-radius);
+
+$badge-height: var(--tjs-badge-height);
+$story-title-height: var(--tjs-story-title-height);
+$workbench-header: var(--tjs-workbench-header);
+$chart-height: var(--tjs-chart-height);
+
+$border-color: var(--tjs-border-color);
+$border-style: var(--tjs-border-style);
+$box-shadow: var(--tjs-box-shadow);
+
+$radius-xlarge: var(--tjs-radius-xlarge);
+$radius-large: var(--tjs-radius-large);
+$radius-medium: var(--tjs-radius-medium);
+$radius-small: var(--tjs-radius-small);
+
+$ring-width: var(--tjs-ring-width);
+$compass-width: var(--tjs-compass-width);
+
+$mobile: 767px;
+$sm: 768px;
+$md: 992px;
+$lg: 1300px;
+
+$front-component-z-index: var(--tjs-front-component-z-index);
+$notification-window-z-index: var(--tjs-notification-window-z-index);
+
+$chart-area-color: var(--tjs-chart-area-color);
+$chart-axis-color: var(--tjs-chart-axis-color);
+$chart-grid-color: var(--tjs-chart-grid-color);
+$chart-text-color: var(--tjs-chart-text-color);
+$chart-line-color: var(--tjs-chart-line-color);
+$chart-preview-line-color: var(--tjs-chart-preview-line-color);
+$chart-darker: var(--tjs-chart-darker);
+$chart-panel-background: var(--tjs-chart-panel-background);
+$chart-panel-header: var(--tjs-chart-panel-header);
+
+$charcoal-grey: var(--tjs-charcoal-grey);
+$turquoise-blue: var(--tjs-turquoise-blue);
+
+$splitter-thumb-width: var(--tjs-splitter-thumb-width);
+
+$legend-item-width: var(--tjs-legend-item-width);
+$legend-item-height: var(--tjs-legend-item-height);
+$legend-padding: var(--tjs-legend-padding);
+$legend-spacer-height: var(--tjs-legend-spacer-height);
+
+$tool-primary-color: var(--tjs-tool-primary-color);
+
+$scrollbar-color: var(--tjs-scrollbar-color);
+$scrollbar-track-color: var(--tjs-scrollbar-track-color);
+
+@function get-hover-color($base-color) {
+  @if meta.type-of($base-color) ==
+    "string" and
+    string.slice($base-color, 1, 6) ==
+    "var(--"
+  {
+    // If it's a CSS variable, use color-mix
+    @return color-mix(in srgb, #{$base-color} 90%, white);
+  } @else {
+    // For regular Sass colors, continue using color.adjust
+    @return color.adjust($base-color, $lightness: 10%);
+  }
+}
 
 // You can override these functions to change the link color depending on the background, eg.
 // @function get-link-color($bg-color) {
@@ -71,138 +373,3 @@ $text-light-dimmed: #bbbbbb;
 
   @return get-link-color($bg-color);
 }
-
-$faint-bg: #f5f5f5;
-$warning: #ff5b6f;
-$info-color: #fed17f;
-$link-text-decoration: none;
-
-$padding: 10px;
-$padding-small: 4px;
-$padding-mini: 3px;
-$padding-tiny: 1px;
-
-$btn-default-line-height: 20px;
-$input-height: 40px;
-$input-height-large: 48px;
-$input-glyph-height: 24px; // This value should be $input-height * 0.6
-$input-glyph-margin: 8px; // This value should be $input-height * 0.2
-
-$sm-logo-height: $input-height;
-$logo-height: 100px;
-$mobile-header-height: 50px;
-
-$modal-bg: #fff;
-$modal-tab-bg: $modal-bg;
-$modal-selected-tab-bg: $modal-tab-bg;
-$modal-text: #000;
-$modal-secondary-bg: #f6f6f7;
-$modal-secondary-bg: #f6f6f7;
-$modal-overlay: rgba(#000, 0.7);
-$modal-highlight: $color-primary;
-// $modal-selected: $color-primary;  // Optionally define this to override $modal-highlight on the selected tab.
-$modal-border: $grey-lighter;
-$modal-content-height: 70vh;
-$modal-header-height: $btn-default-line-height + $padding * 2;
-$dropdown-hover-color: orange;
-
-$data-catalog-color: $text-black;
-
-$feature-info-bg: rgba($dark, 0.95);
-$feature-info-section-bg: $overlay;
-$feature-info-color: $text-light;
-$feature-info-header-bg: $dark;
-$feature-info-btn-color: $text-light;
-// $feature-info-table-odd-row-bg: lighten($feature-info-bg, 5%); // Optionally define for stripy tables.
-$feature-info-table-border-style: 1px solid $dark;
-// $feature-info-table-width: 100%; // Optionally define to force tables to the full width of the feature info panel.
-$feature-info-right-margin: 105px;
-
-$mobile-main-bg: #ffffff;
-$mobile-text: #000;
-
-$mobile-modal-top-height: 40px;
-$mobile-bottom-timeline: 70px;
-
-$font-size-large: 1.3rem;
-$font-size-mid-large: 1.1rem;
-$font-size-base: 1rem;
-$font-size-mid-small: 0.9rem;
-$font-size-feature-info: 0.9rem;
-// todo: update during overhaul
-$font-size-data-preview: 0.875rem;
-$font-size-button: 0.9375rem;
-// $font-size-button: 0.85rem;
-$font-size-small: 0.8125rem;
-$font-size-mid-mini: 0.7rem;
-$font-size-mini: 0.625rem;
-$font-size-credits: 0.7rem;
-
-$font-weight-bold: 600;
-$font-weight-medium: 500;
-$font-weight-normal: 400;
-$font-weight-light: 100;
-
-$map-button-color: #9ca1aa;
-$map-button-top: 21px;
-$trainer-height: 64px;
-$map-button-border-radius: 4px;
-$work-bench-width: 350px;
-$setting-panel: 300px;
-$share-panel-width: 450px;
-$share-panel-caret-left: 215px;
-$feature-info-panel-width: 500px;
-$panel-radius: 8px;
-
-$badge-height: $input-height;
-$story-title-height: $input-height;
-$workbench-header: $input-height * 2 + $padding-small * 2 + $badge-height + 1px;
-$chart-height: 250px;
-
-$border-color: rgba(#fff, 0.15);
-$border-style: 1px solid $border-color;
-$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
-
-$radius-xlarge: 8px;
-$radius-large: 4px;
-$radius-medium: 3px;
-$radius-small: 2px;
-
-$ring-width: 10px;
-$compass-width: 55px;
-
-//screen sizes
-$mobile: 767px;
-$sm: 768px;
-$md: 992px;
-$lg: 1300px;
-
-$front-component-z-index: 99;
-$notification-window-z-index: 99999;
-
-$chart-area-color: rgba(#fff, 0.075);
-$chart-axis-color: #fff;
-$chart-grid-color: rgba(#fff, 0.085);
-$chart-text-color: #fff;
-$chart-line-color: #ccc;
-$chart-preview-line-color: $chart-line-color;
-$chart-darker: color.adjust($dark, $lightness: -8%);
-$chart-panel-background: $dark;
-$chart-panel-header: $dark-with-overlay;
-
-$charcoal-grey: #3f4854;
-$turquoise-blue: #08abd5;
-
-// Splitter
-$splitter-thumb-width: 40px;
-
-// Generated legends
-$legend-item-width: 30px;
-$legend-item-height: 16px;
-$legend-padding: calc($legend-item-height / 2);
-$legend-spacer-height: calc($legend-padding / 2);
-
-$tool-primary-color: $color-primary;
-
-$scrollbar-color: $color-primary;
-$scrollbar-track-color: transparent;

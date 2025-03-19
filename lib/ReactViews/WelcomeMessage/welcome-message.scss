@@ -31,7 +31,7 @@
 
   margin: 0;
   width: 480px;
-  padding: variables.$padding * 4;
+  padding: calc(variables.$padding * 4);
   @media (max-width: variables.$sm), (max-height: 299px) {
     width: 100%;
     transform: none;
@@ -52,7 +52,7 @@
     font-family: "Montserrat", "Open Sans";
     font-size: 32px;
     margin-top: 0;
-    margin-bottom: variables.$padding-small * 3;
+    margin-bottom: calc(variables.$padding-small * 3);
   }
 }
 .highlight {

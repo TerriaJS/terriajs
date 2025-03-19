@@ -144,24 +144,24 @@ $btn-setting-size: 35px;
 }
 
 .btn--catalog {
-  padding: variables.$padding 30px + variables.$padding;
+  padding: variables.$padding calc(30px + variables.$padding);
   position: relative;
   width: 100%;
   font-weight: bold;
   @media (min-width: variables.$sm) {
-    padding: variables.$padding-small 30px + variables.$padding;
+    padding: variables.$padding-small calc(30px + variables.$padding);
   }
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: variables.$padding variables.$padding * 2.2 variables.$padding
-      variables.$padding * 1.5;
+    padding: variables.$padding calc(variables.$padding * 2.2)
+      variables.$padding calc(variables.$padding * 1.5);
     top: 0;
     font-size: variables.$font-size-mid-large;
     opacity: 0.5;
     @media (min-width: variables.$sm) {
-      padding: variables.$padding-small variables.$padding * 2.2
-        variables.$padding-small variables.$padding * 1.5;
+      padding: variables.$padding-small calc(variables.$padding * 2.2)
+        variables.$padding-small calc(variables.$padding * 1.5);
     }
   }
   &:before {
@@ -185,8 +185,8 @@ $btn-setting-size: 35px;
 .btn--catalog-item {
   position: relative;
   width: 100%;
-  padding: variables.$padding-small variables.$padding * 2.2
-    variables.$padding-small variables.$padding * 1.5;
+  padding: variables.$padding-small calc(variables.$padding * 2.2)
+    variables.$padding-small calc(variables.$padding * 1.5);
 
   &:focus,
   &:hover {
@@ -213,7 +213,7 @@ $btn-setting-size: 35px;
   background: variables.$modal-bg;
   color: variables.$modal-text;
   font-size: variables.$font-size-base;
-  padding: variables.$padding variables.$padding * 2;
+  padding: variables.$padding calc(variables.$padding * 2);
   border-bottom: 2px solid transparent;
   li[aria-selected="true"] & {
     background: #fff;
@@ -266,8 +266,8 @@ $btn-setting-size: 35px;
     display: inline-block;
 
     margin: auto variables.$padding-small;
-    margin-left: variables.$padding-small + 2px;
-    margin-right: variables.$padding-small - 2px;
+    margin-left: calc(variables.$padding-small + 2px);
+    margin-right: calc(variables.$padding-small - 2px);
 
     // fill: $text-light;
     // fill: #6487ae;
@@ -277,7 +277,7 @@ $btn-setting-size: 35px;
   span {
     // vertical-align: top;
     vertical-align: middle;
-    margin: auto variables.$padding-small + 1px;
+    margin: auto calc(variables.$padding-small + 1px);
   }
 }
 

@@ -34,7 +34,7 @@
 
   @media (min-width: variables.$sm) {
     position: absolute;
-    right: variables.$padding * 2;
+    right: calc(variables.$padding * 2);
     top: auto;
     bottom: auto;
     left: auto;

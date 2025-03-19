@@ -87,10 +87,4 @@ button {
 // Global theme variables 
 :root {
 
-  // Derive transparent dark from dark theme color and alpha
-  --theme-transparent-dark: ${(p) =>
-    Color.fromCssColorString(p.theme.dark)
-      ?.withAlpha(parseFloat(p.theme.darkAlpha))
-      .toCssHexString() ?? p.theme.dark}
-}
 `;
