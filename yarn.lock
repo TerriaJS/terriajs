@@ -1241,11 +1241,6 @@
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
   integrity sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
 
-"@interactjs/types@1.10.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.10.1.tgz#1b676079579f5f619c24af95951248ad92de5e35"
-  integrity sha512-qJs3o2MrfLu62wnKNLfMZECa1mQY78hSAq9Ld0qJovV+j8qFk96ZI/3L6oXqyepNH3FaIyYPpWNBTlVUC7goPw==
-
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz#7e02e6eb5df901aaedb08514203b096614024098"
@@ -6782,13 +6777,6 @@ inobounce@^0.1.2:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/inobounce/-/inobounce-0.1.6.tgz#b3912e63cdb2eacbcbfcdce6a0681a105b49a8d2"
   integrity sha512-526BdpKOby/5Ft9AvihHC948w5VBzIkI76yBWclkj9zVEK9JRNcuybm4HztB7O9VkM4sp6E4WqnhtRRhgGNt+A==
-
-interactjs@1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.10.1.tgz#0224cf3fe8f85dcebef439b1068f516730efe01b"
-  integrity sha512-h/VEGTaBv8ch7m52Y7uAHzOs2v6nNc+AVH2sE+T/q7T8liDLfHF+6G3RRP+l+/K3tZAQcHElvMn0EOkX6wni/g==
-  dependencies:
-    "@interactjs/types" "1.10.1"
 
 internal-slot@^1.0.3:
   version "1.0.3"
