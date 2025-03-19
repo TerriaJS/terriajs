@@ -4,12 +4,12 @@
 .mobileModal {
   composes: scrollbars from "../../Sass/common/_base.scss";
   position: fixed;
-  top: variables.$mobile-header-height;
+  top: var(--tjs-mobile-header-height);
   bottom: 0;
   background: rgba(#fff, 0.9);
   left: 0;
   right: 0;
-  color: variables.$modal-text;
+  color: var(--tjs-modal-text);
   display: none;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -29,9 +29,9 @@
 }
 
 .modal-top {
-  height: variables.$mobile-modal-top-height;
+  height: var(--tjs-mobile-modal-top-height);
   width: 100%;
-  background: variables.$color-primary;
+  background: var(--tjs-color-primary);
   box-shadow: 2px 0 2px rgba(100, 100, 100, 0.5);
 }
 
@@ -46,7 +46,7 @@
   composes: button;
 
   float: right;
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
 }
 
 .back-button {

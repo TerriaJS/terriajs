@@ -30,7 +30,7 @@
   }
 
   .top-element {
-    z-index: calc(variables.$notification-window-z-index - 10) !important;
+    z-index: calc(var(--tjs-notification-window-z-index) - 10) !important;
     &:focus {
       outline: none;
     }
@@ -62,17 +62,17 @@
 }
 
 .map {
-  @include mixins.transition(left variables.$animation-fast ease-in);
+  @include mixins.transition(left var(--tjs-animation-fast) ease-in);
   position: absolute;
   left: 0;
   right: 0;
-  top: variables.$mobile-header-height;
+  top: var(--tjs-mobile-header-height);
   bottom: 0;
 }
 
 .feedback {
   position: absolute;
-  z-index: calc(variables.$front-component-z-index - 10);
+  z-index: calc(var(--tjs-front-component-z-index) - 10);
 }
 
 .featureInfo {
@@ -81,13 +81,13 @@
   // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
   // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
   $feature-info-medium-max-size: calc(
-    variables.$sm * 0.9 - variables.$feature-info-right-margin * 0.5
+    variables.$sm * 0.9 - var(--tjs-feature-info-right-margin) * 0.5
   );
   $feature-info-forty-percent-size: calc(
     $feature-info-medium-max-size * 100 / 40
   );
 
-  z-index: calc(variables.$front-component-z-index - 20);
+  z-index: calc(var(--tjs-front-component-z-index) - 20);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -96,7 +96,7 @@
   left: 0;
 
   @media (min-width: variables.$md) {
-    left: calc(variables.$work-bench-width + 22px);
+    left: calc(var(--tjs-work-bench-width) + 22px);
     top: 62px;
     right: 96px;
     bottom: 0;
@@ -105,13 +105,13 @@
   & > div {
     pointer-events: auto;
     position: absolute;
-    top: calc(variables.$mobile-header-height + 10px);
+    top: calc(var(--tjs-mobile-header-height) + 10px);
     right: 10px;
     max-width: 95%;
     min-width: 150px;
     max-height: 80vh;
     z-index: 99;
-    font-family: variables.$font-base;
+    font-family: var(--tjs-font-base);
 
     @media (min-width: variables.$sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
@@ -172,7 +172,7 @@
     // bug, if anything goes wrong revert this back
     // overflow: hidden;
     flex-grow: 1;
-    flex-basis: calc(100% - variables.$work-bench-width);
+    flex-basis: calc(100% - var(--tjs-work-bench-width));
   }
 }
 

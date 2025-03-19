@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: variables.$mobile-header-height;
+  height: var(--tjs-mobile-header-height);
   z-index: 102;
   @media (min-width: variables.$sm) {
     left: -99999px;
@@ -17,10 +17,10 @@
   composes: sm-hide from "../../Sass/common/_base.scss";
   composes: clearfix from "../../Sass/common/_base.scss";
   justify-content: space-between;
-  font-family: variables.$font-pop;
+  font-family: var(--tjs-font-pop);
   width: 100%;
-  background: variables.$dark;
-  padding: variables.$padding-small;
+  background: var(--tjs-dark);
+  padding: var(--tjs-padding-small);
   height: 100%;
   box-sizing: border-box;
 }
@@ -37,9 +37,9 @@
   composes: btn;
 
   position: relative;
-  margin: 0 variables.$padding-small;
-  padding: variables.$padding variables.$padding variables.$padding
-    calc(variables.$padding * 3);
+  margin: 0 var(--tjs-padding-small);
+  padding: var(--tjs-padding) var(--tjs-padding) var(--tjs-padding)
+    calc(var(--tjs-padding) * 3);
   width: auto;
   text-align: right;
   font-size: 0.95rem;
@@ -47,16 +47,16 @@
 
   svg {
     position: absolute;
-    top: variables.$padding;
-    left: calc(variables.$padding / 2);
+    top: var(--tjs-padding);
+    left: calc(var(--tjs-padding) / 2);
     fill: #ffffff;
   }
 }
 
 .btn-search {
   composes: btn;
-  margin: 0 variables.$padding-small;
-  padding: variables.$padding-small;
+  margin: 0 var(--tjs-padding-small);
+  padding: var(--tjs-padding-small);
   position: relative;
   width: 40px;
   border-radius: 4px;
@@ -69,9 +69,9 @@
 
 .btn-now-viewing {
   composes: btn;
-  margin: 0 variables.$padding-small;
-  padding: variables.$padding-small;
-  padding-right: variables.$padding;
+  margin: 0 var(--tjs-padding-small);
+  padding: var(--tjs-padding-small);
+  padding-right: var(--tjs-padding);
   position: relative;
   width: 50px;
   svg {
@@ -81,8 +81,8 @@
   }
   .nowViewingCount {
     position: absolute;
-    top: variables.$padding-small;
-    right: variables.$padding-small;
+    top: var(--tjs-padding-small);
+    right: var(--tjs-padding-small);
   }
   .doubleDigit {
     font-size: 0.8rem;

@@ -8,15 +8,15 @@
   padding-bottom: 5px;
   padding-right: 5px;
   margin-top: 33px;
-  font-family: variables.$font-base;
-  background: variables.$dark;
-  backdrop-filter: variables.$blur;
+  font-family: var(--tjs-font-base);
+  background: var(--tjs-dark);
+  backdrop-filter: var(--tjs-blur);
 }
 
 .text-row {
   display: block;
   color: #fff;
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   position: absolute;
   bottom: 40px;
   left: 0px;
@@ -34,7 +34,7 @@
 }
 
 .layer-name-truncated {
-  padding-right: variables.$padding-small;
+  padding-right: var(--tjs-padding-small);
 
   @media (max-width: variables.$mobile),
     (min-width: variables.$sm) and (max-width: variables.$lg) {

@@ -24,17 +24,17 @@
   .inner {
     max-width: 800px;
     width: 80vw;
-    background: variables.$dark;
+    background: var(--tjs-dark);
     z-index: 9999;
     margin: 0 auto;
-    color: variables.$text-dark;
-    border: 1px solid variables.$dark-lighter;
+    color: var(--tjs-text-dark);
+    border: 1px solid var(--tjs-dark-lighter);
     border-radius: 6px;
     padding: 15px;
   }
 
   .header {
-    border-bottom: 1px solid variables.$dark-lighter;
+    border-bottom: 1px solid var(--tjs-dark-lighter);
     margin-bottom: 15px;
     padding-bottom: 15px;
   }
@@ -53,12 +53,12 @@
 .field {
   composes: field from "../../Sass/common/_form.scss";
   border: 0;
-  margin-right: variables.$padding;
+  margin-right: var(--tjs-padding);
   padding-left: 15px !important;
   margin-bottom: 15px;
   border-radius: 6px;
-  background: variables.$dark-mid;
-  border: 1px solid variables.$dark-lighter;
+  background: var(--tjs-dark-mid);
+  border: 1px solid var(--tjs-dark-lighter);
   color: white;
 }
 
@@ -73,6 +73,6 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
   border: none;
-  background: variables.$dark-mid;
+  background: var(--tjs-dark-mid);
   padding: 15px;
 }

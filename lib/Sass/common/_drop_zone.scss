@@ -14,19 +14,19 @@
     background: -moz-radial-gradient(
       center,
       ellipse cover,
-      rgba(variables.$dark-lighter, 0.7) 0%,
-      rgba(variables.$dark, 1) 100%
+      rgba(var(--tjs-dark-lighter), 0.7) 0%,
+      rgba(var(--tjs-dark), 1) 100%
     );
     background: -webkit-radial-gradient(
       center,
       ellipse cover,
-      rgba(variables.$dark-lighter, 0.7) 0%,
-      rgba(variables.$dark, 1) 100%
+      rgba(var(--tjs-dark-lighter), 0.7) 0%,
+      rgba(var(--tjs-dark), 1) 100%
     );
     background: radial-gradient(
       ellipse at center,
-      rgba(variables.$dark-lighter, 0.7) 0%,
-      rgba(variables.$dark, 1) 100%
+      rgba(var(--tjs-dark-lighter), 0.7) 0%,
+      rgba(var(--tjs-dark), 1) 100%
     );
     opacity: 1;
     display: block;

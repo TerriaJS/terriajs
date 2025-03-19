@@ -7,7 +7,7 @@
   padding: 10px;
   color: #fff;
   float: right;
-  margin-right: variables.$input-height;
+  margin-right: var(--tjs-input-height);
   svg {
     height: 20px;
     width: 20px;
@@ -19,7 +19,7 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
   }
 
   &:before {

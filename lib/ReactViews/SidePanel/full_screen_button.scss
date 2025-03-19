@@ -15,20 +15,20 @@
   flex-direction: column;
   align-items: center;
   align-content: space-around;
-  background-color: variables.$transparent-dark;
-  backdrop-filter: variables.$blur;
-  width: variables.$work-bench-width;
-  border-radius: variables.$radius-xlarge;
+  background-color: var(--tjs-transparent-dark);
+  backdrop-filter: var(--tjs-blur);
+  width: var(--tjs-work-bench-width);
+  border-radius: var(--tjs-radius-xlarge);
   overflow: hidden;
 }
 
 .minifiedFullscreenBtnWrapper {
-  left: variables.$work-bench-width;
+  left: var(--tjs-work-bench-width);
   top: 32px;
 }
 
 .trainerBarVisible {
-  top: calc(variables.$map-button-top + variables.$trainer-height);
+  top: calc(var(--tjs-map-button-top) + var(--tjs-trainer-height));
 }
 
 .btn {
@@ -52,12 +52,12 @@
   &:hover,
   &:focus {
     padding: 0;
-    padding-right: variables.$padding-small;
+    padding-right: var(--tjs-padding-small);
     box-shadow: none;
   }
 
   svg:not(:root) {
-    margin: auto variables.$padding-small;
+    margin: auto var(--tjs-padding-small);
   }
 }
 

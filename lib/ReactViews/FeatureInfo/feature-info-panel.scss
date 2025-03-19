@@ -2,14 +2,14 @@
 @use "../../Sass/common/mixins";
 
 .panel {
-  background: variables.$feature-info-bg;
-  color: variables.$feature-info-color;
-  border-radius: variables.$radius-xlarge;
+  background: var(--tjs-feature-info-bg);
+  color: var(--tjs-feature-info-color);
+  border-radius: var(--tjs-radius-xlarge);
   overflow: hidden;
   display: none;
 
   a {
-    @include mixins.link(variables.$feature-info-bg);
+    @include mixins.link(var(--tjs-feature-info-bg));
   }
 }
 
@@ -28,14 +28,14 @@
 }
 
 .header {
-  background: variables.$feature-info-header-bg;
-  padding-right: variables.$input-height;
-  line-height: variables.$modal-header-height;
+  background: var(--tjs-feature-info-header-bg);
+  padding-right: var(--tjs-input-height);
+  line-height: var(--tjs-modal-header-height);
 }
 
 .btnPanelHeading {
   padding: 0px 8px;
-  color: variables.$feature-info-btn-color;
+  color: var(--tjs-feature-info-btn-color);
   width: 100%;
 }
 
@@ -53,7 +53,7 @@
   &:hover,
   &:focus {
     svg {
-      fill: variables.$color-primary;
+      fill: var(--tjs-color-primary);
     }
   }
 
@@ -61,7 +61,7 @@
     height: 10px;
     width: 10px;
     display: block;
-    fill: variables.$feature-info-btn-color;
+    fill: var(--tjs-feature-info-btn-color);
   }
 }
 
@@ -77,7 +77,7 @@
 }
 
 .btnToggleFeature {
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
 }
 
 .no-results {
@@ -91,9 +91,9 @@
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(
-    80vh - variables.$padding * 2 + variables.$btn-default-line-height
+    80vh - var(--tjs-padding) * 2 + var(--tjs-btn-default-line-height)
   );
-  font-size: variables.$font-size-feature-info;
+  font-size: var(--tjs-font-size-feature-info);
 }
 
 .location {
@@ -110,14 +110,14 @@
 
   &:hover {
     svg {
-      fill: variables.$color-primary;
+      fill: var(--tjs-color-primary);
     }
   }
 
   svg {
     height: 18px;
     width: 18px;
-    fill: variables.$feature-info-btn-color;
+    fill: var(--tjs-feature-info-btn-color);
   }
 }
 
@@ -125,7 +125,7 @@
   composes: btn-location;
 
   svg {
-    fill: variables.$color-primary;
+    fill: var(--tjs-color-primary);
   }
 }
 

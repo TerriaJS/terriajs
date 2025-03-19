@@ -1,7 +1,7 @@
 @use "../../Sass/common/_variables";
 
 .root {
-  padding: 0 calc(variables.$padding-small * 3);
+  padding: 0 calc(var(--tjs-padding-small) * 3);
 }
 
 .link {
@@ -10,30 +10,30 @@
   font-size: 1rem;
   width: 100%;
   text-align: left;
-  padding: calc(variables.$padding-small * 3) 0;
-  color: variables.$text-dark;
+  padding: calc(var(--tjs-padding-small) * 3) 0;
+  color: var(--tjs-text-dark);
   display: block;
-  border-bottom: 1px solid variables.$grey-lighter;
+  border-bottom: 1px solid var(--tjs-grey-lighter);
   font-weight: 400;
   display: flex;
   justify-content: space-between;
   svg {
-    fill: variables.$text-dark;
+    fill: var(--tjs-text-dark);
     width: 14px;
     height: 14px;
     padding: 3px;
   }
   &:hover,
   &:focus {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
     text-decoration: underline;
-    border-bottom: 1px solid variables.$grey-lighter;
+    border-bottom: 1px solid var(--tjs-grey-lighter);
     svg {
-      fill: variables.$color-primary;
+      fill: var(--tjs-color-primary);
     }
   }
 }
 
 .icon {
-  margin-right: variables.$padding-small;
+  margin-right: var(--tjs-padding-small);
 }

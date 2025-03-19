@@ -13,24 +13,24 @@
   composes: list-reset from "../../../Sass/common/_base.scss";
   composes: scrollbars from "../../../Sass/common/_base.scss";
 
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
 
-  background: variables.$modal-secondary-bg;
+  background: var(--tjs-modal-secondary-bg);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
 
   @media (min-width: variables.$sm) {
-    padding-right: variables.$padding;
-    margin-top: variables.$padding;
-    height: calc(100% - variables.$input-height);
+    padding-right: var(--tjs-padding);
+    margin-top: var(--tjs-padding);
+    height: calc(100% - var(--tjs-input-height));
   }
 }
 
 .data--catalog-group {
   composes: list-reset from "../../../Sass/common/_base.scss";
-  padding-left: variables.$padding-small;
+  padding-left: var(--tjs-padding-small);
 }
 
 .label {

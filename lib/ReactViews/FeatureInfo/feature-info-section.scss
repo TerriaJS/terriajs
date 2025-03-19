@@ -5,18 +5,18 @@
 
 .section {
   composes: clearfix from "../../Sass/common/_base.scss";
-  background: variables.$feature-info-section-bg;
-  border-top: 1px solid variables.$dark-lighter;
+  background: var(--tjs-feature-info-section-bg);
+  border-top: 1px solid var(--tjs-dark-lighter);
 }
 
 .title {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: variables.$feature-info-btn-color;
+  color: var(--tjs-feature-info-btn-color);
   position: relative;
   padding: 4px 30px 4px 8px;
   margin-right: 30px;
   width: 100%;
-  background: variables.$feature-info-header-bg;
+  background: var(--tjs-feature-info-header-bg);
   min-height: 40px;
   margin: 0;
   border: none;
@@ -24,7 +24,7 @@
   span {
     display: block;
     font-weight: 300;
-    font-size: variables.$font-size-mid-small;
+    font-size: var(--tjs-font-size-mid-small);
   }
   svg {
     height: 10px;
@@ -38,13 +38,13 @@
 }
 
 .content {
-  padding: variables.$padding-small;
+  padding: var(--tjs-padding-small);
   position: relative;
 
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
     @extend %clearfix;
-    font-family: variables.$font-feature-info;
+    font-family: var(--tjs-font-feature-info);
     max-width: 100%;
     @if meta.variable-exists(feature-info-table-width) {
       width: $feature-info-table-width;
@@ -55,7 +55,7 @@
   td {
     position: relative;
     border-collapse: collapse;
-    border: variables.$feature-info-table-border-style;
+    border: var(--tjs-feature-info-table-border-style);
     padding: 5px;
   }
 

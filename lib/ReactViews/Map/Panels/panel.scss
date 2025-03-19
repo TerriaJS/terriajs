@@ -3,7 +3,7 @@
 
 .panel {
   width: auto;
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
 }
 
 .content {
@@ -19,22 +19,22 @@
   @include mixins.transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
   @include mixins.transform-origin(50%, top);
 
-  box-shadow: variables.$box-shadow;
+  box-shadow: var(--tjs-box-shadow);
   z-index: 20;
-  border-radius: variables.$radius-small;
+  border-radius: var(--tjs-radius-small);
   // background: $dark;
-  color: variables.$text-light;
-  border: variables.$border-style;
+  color: var(--tjs-text-light);
+  border: var(--tjs-border-style);
   max-width: calc(100vw - 10px);
 
   position: fixed;
-  top: variables.$mobile-header-height;
+  top: var(--tjs-mobile-header-height);
   left: 0;
   margin: 14px 5px 5px 5px;
 
   @media (min-width: variables.$sm) {
     position: absolute;
-    right: calc(variables.$padding * 2);
+    right: calc(var(--tjs-padding) * 2);
     top: auto;
     bottom: auto;
     left: auto;
@@ -62,15 +62,15 @@
   }
 
   button {
-    color: variables.$text-light;
+    color: var(--tjs-text-light);
   }
 }
 .inner-close-btn {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: variables.$padding-small;
-  right: variables.$padding-small;
+  top: var(--tjs-padding-small);
+  right: var(--tjs-padding-small);
 
   // &:hover,
   // &:focus {
@@ -108,23 +108,23 @@
 }
 
 .label {
-  padding: variables.$padding-small 0;
+  padding: var(--tjs-padding-small) 0;
   display: block;
 }
 
 .heading {
   composes: label;
-  padding: variables.$padding-small 0;
-  font-size: variables.$font-size-small;
+  padding: var(--tjs-padding-small) 0;
+  font-size: var(--tjs-font-size-small);
 }
 
 .sub-heading {
   composes: label;
-  font-size: variables.$font-size-mini;
+  font-size: var(--tjs-font-size-mini);
 }
 
 .section {
-  padding: variables.$padding-small;
+  padding: var(--tjs-padding-small);
   display: block;
 }
 
@@ -164,7 +164,7 @@
 }
 .button-for-modal-dropdown {
   svg {
-    fill: variables.$color-primary;
+    fill: var(--tjs-color-primary);
   }
 }
 
@@ -177,5 +177,5 @@
 }
 
 .link {
-  @include mixins.link(variables.$dark);
+  @include mixins.link(var(--tjs-dark));
 }

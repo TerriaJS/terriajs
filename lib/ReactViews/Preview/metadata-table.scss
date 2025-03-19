@@ -11,7 +11,7 @@
   background-color: color-mix(in srgb, var(--tjs-faint-bg) 92%, black);
 }
 .root table tr:nth-child(even) {
-  background-color: variables.$faint-bg;
+  background-color: var(--tjs-faint-bg);
 }
 
 .root th {

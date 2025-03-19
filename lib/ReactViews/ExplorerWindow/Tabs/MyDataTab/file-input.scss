@@ -18,7 +18,7 @@
   width: 100%;
   opacity: 0;
   position: absolute;
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
   cursor: pointer;
 }
 

@@ -10,7 +10,7 @@
 
   @include mixins.transform(scaleY(0));
   @include mixins.transition(
-    transform variables.$animation-fast cubic-bezier(0.19, 1, 0.22, 1)
+    transform var(--tjs-animation-fast) cubic-bezier(0.19, 1, 0.22, 1)
   );
   @include mixins.transform-origin(center, top);
   position: absolute;
@@ -19,9 +19,9 @@
   z-index: 9999;
   box-sizing: border-box;
   background: #fff;
-  border-radius: variables.$radius-small;
-  border: 1px solid rgba(variables.$grey, 0.4);
-  box-shadow: 0px 3px 15px rgba(variables.$dark, 0.15);
+  border-radius: var(--tjs-radius-small);
+  border: 1px solid rgba(var(--tjs-grey), 0.4);
+  box-shadow: 0px 3px 15px rgba(var(--tjs-dark), 0.15);
   &.is-open {
     transform: scaleY(1);
     overflow-y: auto;
@@ -32,17 +32,17 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   text-align: left;
-  background: variables.$text-light;
-  color: variables.$text-dark;
-  border: 1px solid variables.$field-border;
+  background: var(--tjs-text-light);
+  color: var(--tjs-text-dark);
+  border: 1px solid var(--tjs-field-border);
   position: relative;
   &:hover,
   &:focus {
-    background: variables.$text-light;
-    color: variables.$text-dark;
-    border: 1px solid variables.$color-primary;
+    background: var(--tjs-text-light);
+    color: var(--tjs-text-dark);
+    border: 1px solid var(--tjs-color-primary);
   }
   svg {
     width: 30px;
@@ -54,11 +54,11 @@
     position: absolute;
     right: 10px;
     top: 15px;
-    fill: variables.$dark-lighter;
+    fill: var(--tjs-dark-lighter);
   }
   &:disabled {
-    background: variables.$text-light !important;
-    color: variables.$text-dark;
+    background: var(--tjs-text-light) !important;
+    color: var(--tjs-text-dark);
     opacity: 0.3;
   }
 }
@@ -69,15 +69,15 @@
   composes: btn--small from "../../Sass/common/_buttons.scss";
 
   width: 100%;
-  color: variables.$text-dark;
+  color: var(--tjs-text-dark);
 
   &:hover,
   &:focus {
-    color: variables.$dropdown-hover-color;
+    color: var(--tjs-dropdown-hover-color);
   }
 
   &.is-selected {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
   }
 }
 

@@ -4,10 +4,10 @@
 .chart-disclaimer-panel {
   background: #9a4b4b;
   color: white;
-  padding: 1px variables.$padding;
+  padding: 1px var(--tjs-padding);
   font-size: 0.8rem;
   p {
-    margin: variables.$padding 0px;
+    margin: var(--tjs-padding) 0px;
     a,
     a:visited {
       color: white;

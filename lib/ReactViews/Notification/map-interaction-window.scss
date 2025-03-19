@@ -12,7 +12,7 @@
   top: 50px;
   z-index: 999;
   color: #000;
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
 }
 
 .isActive {
@@ -20,7 +20,7 @@
 }
 
 .content {
-  margin-bottom: variables.$padding;
+  margin-bottom: var(--tjs-padding);
 }
 
 .btn {

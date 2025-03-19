@@ -17,11 +17,11 @@
   &__btn--option {
     width: 100%;
     float: left;
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
 
     &:hover,
     &:focus {
-      background: variables.$color-primary;
+      background: var(--tjs-color-primary);
       color: orange;
       text-decoration: none;
     }
@@ -33,7 +33,7 @@
   // It would be better to add a class to the Add Data dropdown instead.
   z-index: 999;
   color: white; // TODO
-  font-family: variables.$font-pop;
+  font-family: var(--tjs-font-pop);
   border: none;
   padding: 1px 8px;
   margin-right: 3px;

@@ -2,11 +2,11 @@
 @use "../../Sass/common/_mixins";
 
 .share-panel {
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
 }
 
 .dropdown-inner {
-  width: variables.$share-panel-width;
+  width: var(--tjs-share-panel-width);
   @include mixins.transform-origin(50%, top);
 }
 
@@ -16,7 +16,7 @@
 @include mixins.empty-module("link-wrapper");
 
 .link {
-  @include mixins.link(variables.$overlay);
+  @include mixins.link(var(--tjs-overlay));
 }
 
 .viewer-selector,
@@ -24,11 +24,11 @@
   composes: clearfix from "../../Sass/common/_base.scss";
   composes: list-reset from "../../Sass/common/_base.scss";
 
-  margin: calc(0 - (variables.$padding-mini));
+  margin: calc(0 - (var(--tjs-padding-mini)));
 }
 
 .list-item {
-  padding: variables.$padding-mini;
+  padding: var(--tjs-padding-mini);
 }
 
 .btn--viewer {
@@ -45,7 +45,7 @@
   padding-left: 4px !important;
   padding-right: 4px !important;
 
-  color: variables.$text-light;
+  color: var(--tjs-text-light);
 
   &.is-active {
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -53,7 +53,7 @@
 }
 
 .paragraph {
-  margin: variables.$padding 0;
+  margin: var(--tjs-padding) 0;
   display: block;
 }
 
@@ -61,7 +61,7 @@
   composes: field from "../../Sass/common/_form.scss";
 
   color: #ddd;
-  background: variables.$overlay;
+  background: var(--tjs-overlay);
 }
 
 .shorten-url {

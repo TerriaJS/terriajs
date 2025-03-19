@@ -10,7 +10,7 @@
   width: 100%;
   min-height: 2em;
   max-width: 1200px;
-  color: variables.$text-dark;
+  color: var(--tjs-text-dark);
   text-align: left;
   box-sizing: border-box;
   box-shadow: 0px 1px 0px 0px #1f2937 inset;
@@ -19,7 +19,7 @@
   a,
   a:visited,
   a:focus {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
   }
 
   &.is-mounted {
@@ -28,11 +28,11 @@
   }
 
   .left {
-    border-right: 1px solid variables.$field-border;
+    border-right: 1px solid var(--tjs-field-border);
   }
 
   .right {
-    border-left: 1px solid variables.$field-border;
+    border-left: 1px solid var(--tjs-field-border);
   }
 }
 
@@ -40,7 +40,7 @@
 :global {
   .story.tjs-notification-window__wrapper {
     @media (min-width: variables.$md) {
-      left: variables.$work-bench-width;
+      left: var(--tjs-work-bench-width);
     }
 
     .tjs-notification-window__notification {

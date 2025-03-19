@@ -39,7 +39,7 @@
     width: 100%;
 
     @if meta.variable-exists(text-link) {
-      color: variables.$text-link;
+      color: var(--tjs-text-link);
     }
 
     // Outside of a dropdown menu, links are normally shown with the same color on hover.
@@ -50,8 +50,8 @@
         meta.variable-exists(text-link) and
         ($text-visited-link !=$text-link)
       {
-        color: variables.$text-visited-link;
-        text-decoration: variables.$link-text-decoration;
+        color: var(--tjs-text-visited-link);
+        text-decoration: var(--tjs-link-text-decoration);
       }
     }
   }

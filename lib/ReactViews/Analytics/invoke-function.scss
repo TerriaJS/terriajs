@@ -2,11 +2,11 @@
 @use "../../Sass/common/mixins";
 
 .invoke-function {
-  padding: variables.$padding-small;
+  padding: var(--tjs-padding-small);
   position: relative;
-  height: calc(100% - variables.$padding-small * 2);
+  height: calc(100% - var(--tjs-padding-small) * 2);
   a {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
   }
 }
 
@@ -16,16 +16,16 @@
   bottom: 0;
   right: 0;
   z-index: 1000;
-  background: variables.$modal-bg;
-  padding: variables.$padding-small;
+  background: var(--tjs-modal-bg);
+  padding: var(--tjs-padding-small);
 }
 
 .content {
   composes: scrollbars from "../../Sass/common/_base.scss";
   overflow-y: auto;
-  height: calc(100% - variables.$input-height);
-  padding-right: variables.$padding;
-  padding-left: variables.$padding;
+  height: calc(100% - var(--tjs-input-height));
+  padding-right: var(--tjs-padding);
+  padding-left: var(--tjs-padding);
   h3 {
     margin-top: 0;
   }

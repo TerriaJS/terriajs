@@ -13,14 +13,14 @@ $btn-setting-size: 35px;
   border: 0;
   padding: 0;
   box-sizing: border-box;
-  font-weight: variables.$font-weight-normal;
+  font-weight: var(--tjs-font-weight-normal);
   box-shadow: none;
   text-align: left;
   cursor: pointer;
-  line-height: variables.$btn-default-line-height;
+  line-height: var(--tjs-btn-default-line-height);
   text-decoration: none;
-  font-size: variables.$font-size-button;
-  font-family: variables.$font-base;
+  font-size: var(--tjs-font-size-button);
+  font-family: var(--tjs-font-base);
 
   &:focus,
   &:hover {
@@ -39,26 +39,26 @@ $btn-setting-size: 35px;
 .btn-primary {
   display: block;
   // background: $color-primary;
-  font-family: variables.$font-pop;
+  font-family: var(--tjs-font-pop);
   // color: $text-light;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
-  border-radius: variables.$radius-small;
-  padding: variables.$padding;
+  border-radius: var(--tjs-radius-small);
+  padding: var(--tjs-padding);
 
   &:disabled {
-    background: variables.$color-primary-disabled !important;
+    background: var(--tjs-color-primary-disabled) !important;
     cursor: not-allowed;
 
     &:hover,
     &--hover {
-      background: variables.$color-primary-disabled !important;
+      background: var(--tjs-color-primary-disabled) !important;
     }
   }
   &:hover,
   &--hover {
-    background: variables.get-hover-color(variables.$color-primary);
+    background: variables.get-hover-color(var(--tjs-color-primary));
   }
 }
 
@@ -68,29 +68,29 @@ $btn-setting-size: 35px;
 
 .btn-grey {
   padding: 0;
-  font-size: variables.$font-size-mini;
+  font-size: var(--tjs-font-size-mini);
   text-align: center;
   width: 100%;
   line-height: 4;
   background: rgba(#fff, 0.15);
   border: 1px solid transparent;
   &:hover {
-    border: variables.$border-style;
+    border: var(--tjs-border-style);
   }
   &.is-active {
-    background: variables.$color-primary;
-    border-color: variables.$color-primary;
-    color: variables.$text-light;
+    background: var(--tjs-color-primary);
+    border-color: var(--tjs-color-primary);
+    color: var(--tjs-text-light);
   }
 }
 
 .btn--add-to-map {
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
 }
 
 .btn--secondary {
   // color: $color-primary;
-  border: variables.$color-primary;
+  border: var(--tjs-color-primary);
   border-radius: 4px;
 
   &:hover,
@@ -115,69 +115,69 @@ $btn-setting-size: 35px;
 }
 
 .btn--tertiary-dark {
-  color: variables.$text-light;
+  color: var(--tjs-text-light);
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 4px;
   padding: 8px 10px;
 
   &:hover,
   &:focus {
-    border: 1px solid variables.$color-primary;
-    color: variables.$color-primary;
+    border: 1px solid var(--tjs-color-primary);
+    color: var(--tjs-color-primary);
   }
 }
 
 .btn--remove-from-map {
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
 }
 
 .btn--loading-on-map {
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
 }
 
 .btn--close-modal {
   @extend .btn--secondary;
-  font-size: variables.$font-size-small;
+  font-size: var(--tjs-font-size-small);
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
 }
 
 .btn--catalog {
-  padding: variables.$padding calc(30px + variables.$padding);
+  padding: var(--tjs-padding) calc(30px + var(--tjs-padding));
   position: relative;
   width: 100%;
   font-weight: bold;
   @media (min-width: variables.$sm) {
-    padding: variables.$padding-small calc(30px + variables.$padding);
+    padding: var(--tjs-padding-small) calc(30px + var(--tjs-padding));
   }
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: variables.$padding calc(variables.$padding * 2.2)
-      variables.$padding calc(variables.$padding * 1.5);
+    padding: var(--tjs-padding) calc(var(--tjs-padding) * 2.2)
+      var(--tjs-padding) calc(var(--tjs-padding) * 1.5);
     top: 0;
-    font-size: variables.$font-size-mid-large;
+    font-size: var(--tjs-font-size-mid-large);
     opacity: 0.5;
     @media (min-width: variables.$sm) {
-      padding: variables.$padding-small calc(variables.$padding * 2.2)
-        variables.$padding-small calc(variables.$padding * 1.5);
+      padding: var(--tjs-padding-small) calc(var(--tjs-padding) * 2.2)
+        var(--tjs-padding-small) calc(var(--tjs-padding) * 1.5);
     }
   }
   &:before {
     position: absolute;
     right: 5px;
-    top: variables.$padding;
+    top: var(--tjs-padding);
     @media (min-width: variables.$sm) {
-      top: variables.$padding-small;
+      top: var(--tjs-padding-small);
     }
   }
   &:hover,
   &:focus {
-    background: variables.$modal-highlight;
-    color: variables.$text-light;
+    background: var(--tjs-modal-highlight);
+    color: var(--tjs-text-light);
     .btn--group-indicator {
-      color: variables.$text-light;
+      color: var(--tjs-text-light);
     }
   }
 }
@@ -185,50 +185,50 @@ $btn-setting-size: 35px;
 .btn--catalog-item {
   position: relative;
   width: 100%;
-  padding: variables.$padding-small calc(variables.$padding * 2.2)
-    variables.$padding-small calc(variables.$padding * 1.5);
+  padding: var(--tjs-padding-small) calc(var(--tjs-padding) * 2.2)
+    var(--tjs-padding-small) calc(var(--tjs-padding) * 1.5);
 
   &:focus,
   &:hover {
-    color: variables.$modal-highlight;
+    color: var(--tjs-modal-highlight);
     &:before {
       opacity: 1;
     }
   }
   .is-previewed & {
-    color: variables.$modal-highlight;
-    font-weight: variables.$font-weight-bold;
+    color: var(--tjs-modal-highlight);
+    font-weight: var(--tjs-font-weight-bold);
     &:before {
       opacity: 1;
     }
   }
   &.is-active {
-    color: variables.$modal-highlight;
+    color: var(--tjs-modal-highlight);
   }
 }
 
 .btn.btn--tab {
-  border-right: 1px solid variables.$modal-border;
-  font-family: variables.$font-pop;
-  background: variables.$modal-bg;
-  color: variables.$modal-text;
-  font-size: variables.$font-size-base;
-  padding: variables.$padding calc(variables.$padding * 2);
+  border-right: 1px solid var(--tjs-modal-border);
+  font-family: var(--tjs-font-pop);
+  background: var(--tjs-modal-bg);
+  color: var(--tjs-modal-text);
+  font-size: var(--tjs-font-size-base);
+  padding: var(--tjs-padding) calc(var(--tjs-padding) * 2);
   border-bottom: 2px solid transparent;
   li[aria-selected="true"] & {
     background: #fff;
-    color: variables.$modal-highlight;
+    color: var(--tjs-modal-highlight);
   }
 }
 
 .btn--map {
-  font-size: variables.$font-size-small;
+  font-size: var(--tjs-font-size-small);
   padding: 5px;
   // color: $text-light;
   display: block;
   // display: flex;
   min-height: 32px;
-  font-family: variables.$font-pop;
+  font-family: var(--tjs-font-pop);
   // opacity: 0.95; // new design has opaque map buttons?
   // background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
@@ -265,9 +265,9 @@ $btn-setting-size: 35px;
     vertical-align: middle;
     display: inline-block;
 
-    margin: auto variables.$padding-small;
-    margin-left: calc(variables.$padding-small + 2px);
-    margin-right: calc(variables.$padding-small - 2px);
+    margin: auto var(--tjs-padding-small);
+    margin-left: calc(var(--tjs-padding-small) + 2px);
+    margin-right: calc(var(--tjs-padding-small) - 2px);
 
     // fill: $text-light;
     // fill: #6487ae;
@@ -277,7 +277,7 @@ $btn-setting-size: 35px;
   span {
     // vertical-align: top;
     vertical-align: middle;
-    margin: auto calc(variables.$padding-small + 1px);
+    margin: auto calc(var(--tjs-padding-small) + 1px);
   }
 }
 
@@ -290,12 +290,12 @@ $btn-setting-size: 35px;
 }
 
 .btn--radio {
-  padding: variables.$padding-small;
+  padding: var(--tjs-padding-small);
   &:before {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
     display: inline-block;
-    padding: variables.$padding-small variables.$padding-small
-      variables.$padding-small 0;
+    padding: var(--tjs-padding-small) var(--tjs-padding-small)
+      var(--tjs-padding-small) 0;
   }
 }
 
@@ -304,5 +304,5 @@ $btn-setting-size: 35px;
 ._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
-  font-size: variables.$font-size-small;
+  font-size: var(--tjs-font-size-small);
 }

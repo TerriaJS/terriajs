@@ -18,7 +18,7 @@
 
   &.is-active {
     svg {
-      fill: variables.$color-primary;
+      fill: var(--tjs-color-primary);
     }
   }
 }

@@ -6,12 +6,12 @@
 }
 
 .workbenchEmpty {
-  color: variables.$text-light;
-  font-size: variables.$font-size-mid-small;
-  padding: variables.$padding;
-  background: variables.$dark-with-overlay;
+  color: var(--tjs-text-light);
+  font-size: var(--tjs-font-size-mid-small);
+  padding: var(--tjs-padding);
+  background: var(--tjs-dark-with-overlay);
   border: dashed 1px rgba(255, 255, 255, 0.5);
-  margin: variables.$padding-small;
+  margin: var(--tjs-padding-small);
 
   svg {
     height: 25px;
@@ -23,8 +23,8 @@
 }
 
 .header {
-  padding: 0 variables.$padding-small;
-  background: variables.$dark;
+  padding: 0 var(--tjs-padding-small);
+  background: var(--tjs-dark);
 }
 
 .body {
@@ -32,7 +32,7 @@
 }
 
 .addData {
-  margin: variables.$padding-small 0;
+  margin: var(--tjs-padding-small) 0;
   display: flex;
 
   button {
@@ -55,7 +55,7 @@
     position: absolute;
     //sozza
     left: 27px;
-    fill: variables.$text-light;
+    fill: var(--tjs-text-light);
     width: 18px;
     height: 18px;
   }
@@ -66,8 +66,8 @@
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   position: relative;
 
-  line-height: variables.$input-height;
-  font-size: variables.$font-size-mid-small;
+  line-height: var(--tjs-input-height);
+  font-size: var(--tjs-font-size-mid-small);
   padding: 0;
   // sorry
   padding-left: 59px;

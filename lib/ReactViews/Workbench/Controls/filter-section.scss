@@ -1,11 +1,11 @@
 @use "../../../Sass/common/_variables";
 .filters {
   composes: clearfix from "../../../Sass/common/_base.scss";
-  padding: variables.$padding 0;
-  border-bottom: 1px solid variables.$border-color;
-  font-size: variables.$font-size-mini;
+  padding: var(--tjs-padding) 0;
+  border-bottom: 1px solid var(--tjs-border-color);
+  font-size: var(--tjs-font-size-mini);
   label {
-    margin-right: variables.$padding-small;
+    margin-right: var(--tjs-padding-small);
     float: left;
     width: 80px;
   }

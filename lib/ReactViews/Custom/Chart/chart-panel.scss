@@ -7,8 +7,8 @@
 .holder {
   left: 0;
   right: 0;
-  background: variables.$transparent-dark;
-  backdrop-filter: variables.$blur;
+  background: var(--tjs-transparent-dark);
+  backdrop-filter: var(--tjs-blur);
   padding-bottom: 40px; //hack to allow timeline visible
   margin-bottom: 6px;
   border-radius: 8px 8px 0 0;
@@ -18,22 +18,22 @@
   height: 41px;
   box-sizing: border-box;
   position: relative;
-  background-color: variables.$chart-panel-header;
-  font-size: variables.$font-size-mid-small;
+  background-color: var(--tjs-chart-panel-header);
+  font-size: var(--tjs-font-size-mid-small);
   fill: #fff;
   border-radius: 8px 8px 0 0;
 }
 
 .chart {
-  color: variables.$text-light;
+  color: var(--tjs-text-light);
 
   :global {
     .base-chart .axis path.domain {
-      stroke: variables.$chart-axis-color;
+      stroke: var(--tjs-chart-axis-color);
     }
 
     .base-chart .axis .tick line {
-      stroke: variables.$chart-grid-color;
+      stroke: var(--tjs-chart-grid-color);
     }
 
     .base-chart .axis .colors line {
@@ -41,24 +41,24 @@
     }
 
     .base-chart .plot-area {
-      fill: variables.$chart-area-color;
+      fill: var(--tjs-chart-area-color);
     }
 
     .units-label-shadow {
-      stroke: variables.$chart-darker;
+      stroke: var(--tjs-chart-darker);
       stroke-width: 2.5px;
       opacity: 0.9;
     }
 
     .base-chart text {
-      fill: variables.$chart-text-color;
+      fill: var(--tjs-chart-text-color);
       font-family: monospace;
       font-size: 110%;
     }
 
     .base-chart .line {
       fill: none;
-      stroke: variables.$chart-line-color;
+      stroke: var(--tjs-chart-line-color);
       stroke-width: 1;
     }
   }
@@ -70,7 +70,7 @@
 
 .section-label,
 .btn {
-  color: variables.$text-light;
+  color: var(--tjs-text-light);
   display: inline-block;
   vertical-align: top;
 }
@@ -80,7 +80,7 @@
 }
 
 .loader {
-  padding: 0px 0px 0px calc(variables.$padding * 3) !important;
+  padding: 0px 0px 0px calc(var(--tjs-padding) * 3) !important;
 
   &:before {
     top: 0px;
@@ -103,7 +103,7 @@
   &:hover,
   &:focus {
     svg {
-      fill: variables.$color-primary;
+      fill: var(--tjs-color-primary);
     }
   }
 }

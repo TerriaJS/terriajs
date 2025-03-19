@@ -8,7 +8,7 @@
 }
 
 .message-item {
-  background: variables.$info-color;
-  color: variables.$dark;
+  background: var(--tjs-info-color);
+  color: var(--tjs-dark);
   padding: 5px 8px;
 }

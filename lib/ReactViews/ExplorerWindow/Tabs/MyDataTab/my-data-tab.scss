@@ -3,13 +3,13 @@
 
 .root {
   height: 100%;
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
 }
 
 .data-catalog {
   composes: list-reset from "../../../../Sass/common/_base.scss";
-  border-top: 1px solid variables.$grey-lighter;
-  border-bottom: 1px solid variables.$grey-lighter;
+  border-top: 1px solid var(--tjs-grey-lighter);
+  border-bottom: 1px solid var(--tjs-grey-lighter);
 }
 
 .left-col {
@@ -17,11 +17,11 @@
   composes: scrollbars from "../../../../Sass/common/_base.scss";
   overflow-y: auto;
   background: #ffffff;
-  border-right: 1px solid variables.$grey-lighter;
+  border-right: 1px solid var(--tjs-grey-lighter);
   padding-right: 0;
 
   .dataTypeTab {
-    margin-right: variables.$padding-small;
+    margin-right: var(--tjs-padding-small);
   }
 }
 
@@ -31,7 +31,7 @@
   width: calc(100% - 30px);
   overflow: auto;
   text-align: center;
-  color: variables.$dark-lighter;
+  color: var(--tjs-dark-lighter);
   line-height: 2;
   padding: 3vh 6vh;
   text-align: center;
@@ -40,13 +40,13 @@
 
 .tabCenter {
   text-align: center;
-  margin: variables.$padding 0;
+  margin: var(--tjs-padding) 0;
 }
 
 .tabLeft {
   text-align: left;
-  padding: 0 variables.$padding;
-  border-top: 1px solid variables.$grey-lighter;
+  padding: 0 var(--tjs-padding);
+  border-top: 1px solid var(--tjs-grey-lighter);
 }
 
 .tab-list {
@@ -62,8 +62,8 @@
       display: inline;
       width: 15px;
       height: 15px;
-      fill: variables.$color-primary;
-      padding-right: variables.$padding-small;
+      fill: var(--tjs-color-primary);
+      padding-right: var(--tjs-padding-small);
       vertical-align: middle;
     }
   }
@@ -72,10 +72,10 @@
     composes: btn from "../../../../Sass/common/_buttons.scss";
     composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
 
-    font-size: variables.$font-size-small;
-    font-weight: variables.$font-weight-medium;
+    font-size: var(--tjs-font-size-small);
+    font-weight: var(--tjs-font-weight-medium);
     width: 100%;
-    padding: variables.$padding 0;
+    padding: var(--tjs-padding) 0;
 
     // color: variables.$color-primary;
     &:hover,
@@ -101,14 +101,14 @@
   background: #f6f6f7;
   width: 100%;
   margin: 6px 0;
-  color: variables.$dark-lighter;
+  color: var(--tjs-dark-lighter);
 
   div {
     margin-top: 5%;
   }
 
   svg {
-    fill: variables.$grey-lighter;
+    fill: var(--tjs-grey-lighter);
     height: 15%;
     width: 15%;
     margin: 5% auto;
@@ -127,14 +127,14 @@
   align-items: center;
   height: 100%;
   min-height: 300px;
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
   box-sizing: border-box;
 }
 
 .explanation {
-  font-family: variables.$font-base;
-  font-size: variables.$font-size-mid-small;
-  margin: variables.$padding;
+  font-family: var(--tjs-font-base);
+  font-size: var(--tjs-font-size-mid-small);
+  margin: var(--tjs-padding);
 }
 
 .btn--back-to-my-data {
@@ -168,10 +168,10 @@
   composes: btn from "../../../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../../../Sass/common/_buttons.scss";
-  margin-top: variables.$padding;
+  margin-top: var(--tjs-padding);
 }
 
 .h3 {
   composes: h3 from "../../../../Sass/common/_base.scss";
-  font-size: variables.$font-size-mid-large;
+  font-size: var(--tjs-font-size-mid-large);
 }

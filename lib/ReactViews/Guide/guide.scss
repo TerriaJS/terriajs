@@ -2,7 +2,7 @@
 
 .guide {
   position: relative;
-  background-color: variables.$modal-bg;
+  background-color: var(--tjs-modal-bg);
   // shadow from design
   // box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
   // box-shadow: $box-shadow;
@@ -28,7 +28,7 @@
 
 .image {
   height: 216px;
-  background-color: variables.$faint-bg;
+  background-color: var(--tjs-faint-bg);
 }
 .image-wrapper {
   width: 384px;
@@ -45,8 +45,8 @@
 
   box-sizing: border-box;
   // background-color: $modal-bg;
-  padding: calc(variables.$padding-small * 5);
-  color: variables.$text-darker;
+  padding: calc(var(--tjs-padding-small) * 5);
+  color: var(--tjs-text-darker);
 
   // IE HACK!@!@!@!!@!@
   height: 243px;
@@ -71,35 +71,35 @@
 }
 .btn--tertiary {
   composes: btn--tertiary from "../../Sass/common/_buttons.scss";
-  font-size: variables.$font-size-button;
+  font-size: var(--tjs-font-size-button);
 }
 .btn-next {
-  margin-left: variables.$padding-small;
+  margin-left: var(--tjs-padding-small);
 }
 
 .inner-close-btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: calc(variables.$padding-small * 3);
-  right: calc(variables.$padding-small * 3);
+  top: calc(var(--tjs-padding-small) * 3);
+  right: calc(var(--tjs-padding-small) * 3);
 
   padding: 7px;
 
-  background-color: variables.$modal-bg;
+  background-color: var(--tjs-modal-bg);
   border-radius: 50%;
 
   &:hover,
   &:focus {
     svg {
-      fill: variables.$color-secondary;
+      fill: var(--tjs-color-secondary);
     }
   }
 
   svg {
-    fill: variables.$color-primary;
-    height: variables.$padding;
-    width: variables.$padding;
+    fill: var(--tjs-color-primary);
+    height: var(--tjs-padding);
+    width: var(--tjs-padding);
   }
 }
 
@@ -115,13 +115,13 @@
   height: 7px;
   width: 7px;
 
-  background-color: variables.$modal-bg;
-  border: 1px solid variables.$color-primary;
+  background-color: var(--tjs-modal-bg);
+  border: 1px solid var(--tjs-color-primary);
 
   margin-right: 7px;
   border-radius: 50%;
 }
 
 .indicatorEnabled {
-  background-color: variables.$color-primary;
+  background-color: var(--tjs-color-primary);
 }

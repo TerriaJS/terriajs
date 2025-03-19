@@ -18,15 +18,15 @@
   }
 
   .react-datepicker .react-datepicker__day:hover {
-    background: variables.$color-primary;
+    background: var(--tjs-color-primary);
     color: #fff;
   }
 
   .react-datepicker .react-datepicker__day--disabled,
   .react-datepicker .react-datepicker__day--disabled:hover {
-    background: variables.$overlay;
-    color: variables.$dark;
-    border: 1px solid variables.$overlay;
+    background: var(--tjs-overlay);
+    color: var(--tjs-dark);
+    border: 1px solid var(--tjs-overlay);
   }
 
   .react-datepicker__navigation {
@@ -39,7 +39,7 @@
 
   .terria .react-datepicker__header,
   .terria .react-datepicker {
-    background: variables.$dark;
+    background: var(--tjs-dark);
     padding-top: 0;
   }
 

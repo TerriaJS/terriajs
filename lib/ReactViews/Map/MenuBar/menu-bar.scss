@@ -3,9 +3,9 @@
 .menu-bar {
   position: absolute;
   z-index: 108;
-  top: variables.$map-button-top;
-  left: variables.$work-bench-width;
-  right: calc(variables.$padding * 2);
+  top: var(--tjs-map-button-top);
+  left: var(--tjs-work-bench-width);
+  right: calc(var(--tjs-padding) * 2);
 
   // todo: find some non-layout-change animation technique for
   // this flex-menu-bar-workbench problem
@@ -28,8 +28,8 @@
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: sm-show from "../../../Sass/common/_base.scss";
 
-  margin: 0 variables.$padding-small variables.$padding-small
-    variables.$padding-small;
+  margin: 0 var(--tjs-padding-small) var(--tjs-padding-small)
+    var(--tjs-padding-small);
 
   /* Align About button with compass */
   // margin-right: 7px;
@@ -47,7 +47,7 @@
   flex-direction: row;
   align-items: center;
 
-  margin-right: variables.$padding-tiny;
+  margin-right: var(--tjs-padding-tiny);
 
   &:last-child {
     margin-right: 0;
@@ -60,25 +60,25 @@
   &:first-child > div > a,
   &:first-child > button,
   &:first-child > a {
-    border-radius: variables.$map-button-border-radius 0 0
-      variables.$map-button-border-radius;
+    border-radius: var(--tjs-map-button-border-radius) 0 0
+      var(--tjs-map-button-border-radius);
   }
 
   &:last-child > div > button,
   &:last-child > div > a,
   &:last-child > button,
   &:last-child > a {
-    border-radius: 0 variables.$map-button-border-radius
-      variables.$map-button-border-radius 0;
+    border-radius: 0 var(--tjs-map-button-border-radius)
+      var(--tjs-map-button-border-radius) 0;
   }
 
   &:only-child > div > button,
   &:only-child > div > a,
   &:only-child > button,
   &:only-child > a {
-    border-radius: variables.$map-button-border-radius
-      variables.$map-button-border-radius variables.$map-button-border-radius
-      variables.$map-button-border-radius;
+    border-radius: var(--tjs-map-button-border-radius)
+      var(--tjs-map-button-border-radius) var(--tjs-map-button-border-radius)
+      var(--tjs-map-button-border-radius);
   }
 }
 

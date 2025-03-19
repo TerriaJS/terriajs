@@ -2,11 +2,11 @@
 @use "../../Sass/common/mixins";
 
 .story-panel {
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
   flex-basis: 400px;
   max-width: 400px;
-  color: variables.$text-light;
-  font-size: variables.$font-size-mid-small;
+  color: var(--tjs-text-light);
+  font-size: var(--tjs-font-size-mid-small);
   // background: $dark;
   display: block;
   transition: all 0.25s;
@@ -23,7 +23,7 @@
   }
 
   & .actions {
-    padding: variables.$padding;
+    padding: var(--tjs-padding);
   }
 }
 
@@ -32,20 +32,20 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   align-items: baseline;
-  padding-left: calc(variables.$padding-small + variables.$padding);
-  padding-right: calc(variables.$padding-small + variables.$padding);
-  padding-top: variables.$padding-small;
-  padding-bottom: variables.$padding-small;
-  color: variables.$text-light;
-  height: variables.$story-title-height;
-  line-height: variables.$story-title-height;
-  border-bottom: 1px solid variables.$overlay;
+  padding-left: calc(var(--tjs-padding-small) + var(--tjs-padding));
+  padding-right: calc(var(--tjs-padding-small) + var(--tjs-padding));
+  padding-top: var(--tjs-padding-small);
+  padding-bottom: var(--tjs-padding-small);
+  color: var(--tjs-text-light);
+  height: var(--tjs-story-title-height);
+  line-height: var(--tjs-story-title-height);
+  border-bottom: 1px solid var(--tjs-overlay);
 
   li {
     display: inline-block;
     float: left;
-    font-size: variables.$font-size-mid-small;
-    font-weight: variables.$font-weight-bold;
+    font-size: var(--tjs-font-size-mid-small);
+    font-weight: var(--tjs-font-weight-bold);
 
     &:last-child {
       float: right;
@@ -56,15 +56,15 @@
 .hide-button {
   composes: btn from "../../Sass/common/_buttons.scss";
   // color: $text-light;
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   text-transform: uppercase;
-  padding: variables.$padding variables.$padding variables.$padding
-    calc(5 * variables.$padding);
+  padding: var(--tjs-padding) var(--tjs-padding) var(--tjs-padding)
+    calc(5 * var(--tjs-padding));
   border: 0;
 
   svg {
-    height: variables.$font-size-mid-small;
-    width: variables.$font-size-mid-small;
+    height: var(--tjs-font-size-mid-small);
+    width: var(--tjs-font-size-mid-small);
     // fill: $text-light;
     vertical-align: middle;
     display: inline-block;
@@ -84,7 +84,7 @@
 
 .header {
   & .actions {
-    border-bottom: 1px solid variables.$overlay;
+    border-bottom: 1px solid var(--tjs-overlay);
   }
 
   & .stories-actions {
@@ -104,11 +104,11 @@
 }
 
 .story {
-  padding: variables.$padding-small;
-  margin: variables.$padding-small;
-  background: variables.$dark;
+  padding: var(--tjs-padding-small);
+  margin: var(--tjs-padding-small);
+  background: var(--tjs-dark);
   color: #ffffff;
-  margin: variables.$padding;
+  margin: var(--tjs-padding);
   border: 1px solid rgba(255, 255, 255, 0.15);
 
   h3 {
@@ -121,10 +121,10 @@
 .removeBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  margin-right: variables.$padding;
+  margin-right: var(--tjs-padding);
   background: #9ca1aa;
   border-radius: 4px;
-  padding: variables.$padding-small variables.$padding;
+  padding: var(--tjs-padding-small) var(--tjs-padding);
 
   svg {
     height: 25px;
@@ -134,7 +134,7 @@
 }
 
 .footer {
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
 }
 
 .previewBtn {
@@ -154,20 +154,20 @@
     height: 25px;
     fill: #ffffff;
     position: absolute;
-    left: variables.$padding;
+    left: var(--tjs-padding);
     top: 8px;
   }
 }
 
 .story:hover {
-  background-color: variables.$dark-with-overlay;
+  background-color: var(--tjs-dark-with-overlay);
 }
 
 .intro {
   // background: $dark-with-overlay;
   // color: $text-light;
-  font-family: variables.$font-pop;
-  margin: variables.$padding variables.$padding 0 variables.$padding;
+  font-family: var(--tjs-font-pop);
+  margin: var(--tjs-padding) var(--tjs-padding) 0 var(--tjs-padding);
   border-radius: 4px;
   text-align: center;
   padding: 30px 10px;
@@ -187,8 +187,8 @@
 
 .remove-button {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: variables.$text-light;
-  font-size: variables.$font-size-mid-mini;
+  color: var(--tjs-text-light);
+  font-size: var(--tjs-font-size-mid-mini);
   padding: 0;
 
   svg {
@@ -203,18 +203,18 @@
 
 .tutBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: variables.$text-light;
-  font-size: variables.$font-size-button;
-  padding: variables.$padding calc(variables.$padding * 2);
-  background: variables.$overlay;
-  border-radius: calc(variables.$padding * 2);
-  margin-top: variables.$padding;
+  color: var(--tjs-text-light);
+  font-size: var(--tjs-font-size-button);
+  padding: var(--tjs-padding) calc(var(--tjs-padding) * 2);
+  background: var(--tjs-overlay);
+  border-radius: calc(var(--tjs-padding) * 2);
+  margin-top: var(--tjs-padding);
 
   svg {
     height: 20px;
     width: 20px;
     margin: 0 4px;
-    fill: variables.$faint-bg;
+    fill: var(--tjs-faint-bg);
     vertical-align: bottom;
     display: inline-block;
   }
@@ -267,7 +267,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(variables.$dark-with-overlay, 0.8);
+  background: rgba(var(--tjs-dark-with-overlay), 0.8);
   opacity: 1;
   @include mixins.animation("story-fade-in 0.3s");
 }
@@ -281,7 +281,7 @@
 }
 
 .videoGuide {
-  box-shadow: variables.$box-shadow;
+  box-shadow: var(--tjs-box-shadow);
   margin: 0;
   width: 40%;
   min-height: 31.5%;

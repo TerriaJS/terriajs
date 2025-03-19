@@ -8,7 +8,7 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   &.results {
-    padding: 0 variables.$padding variables.$padding variables.$padding;
+    padding: 0 var(--tjs-padding) var(--tjs-padding) var(--tjs-padding);
   }
 
   li {
@@ -19,22 +19,22 @@
 .label {
   color: #3f4854;
   font-size: 12px;
-  padding: variables.$padding-small variables.$padding;
+  padding: var(--tjs-padding-small) var(--tjs-padding);
   display: block;
 }
 
 .location {
-  height: calc(100vh - variables.$workbench-header - variables.$logo-height);
+  height: calc(100vh - var(--tjs-workbench-header) - var(--tjs-logo-height));
 
   @media (max-width: variables.$sm) {
     height: calc(
-      100vh - variables.$mobile-header-height - variables.$modal-header-height
+      100vh - var(--tjs-mobile-header-height) - var(--tjs-modal-header-height)
     );
   }
 }
 
 .provider-result {
-  margin-top: variables.$padding-small;
+  margin-top: var(--tjs-padding-small);
   .items {
     display: none;
   }

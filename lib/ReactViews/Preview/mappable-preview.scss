@@ -15,13 +15,13 @@
     display: inline-block;
     width: inherit;
     position: absolute;
-    top: calc(variables.$padding * 2);
-    right: calc(variables.$padding * 2);
+    top: calc(var(--tjs-padding) * 2);
+    right: calc(var(--tjs-padding) * 2);
   }
 }
 
 .previewed--info {
-  margin: calc(2 * variables.$padding) 0;
+  margin: calc(2 * var(--tjs-padding)) 0;
 }
 
 .field {
@@ -51,7 +51,7 @@
 }
 
 .share-link--wrapper {
-  margin-top: variables.$padding;
+  margin-top: var(--tjs-padding);
   min-width: 118px;
   float: right;
 }
@@ -59,19 +59,19 @@
 .h3 {
   composes: h3 from "../../Sass/common/_base.scss";
   margin-top: 0;
-  padding-right: variables.$padding-small;
+  padding-right: var(--tjs-padding-small);
   float: left;
   width: 80%;
-  font-size: variables.$font-size-mid-large;
+  font-size: var(--tjs-font-size-mid-large);
 }
 .h4 {
   composes: h4 from "../../Sass/common/_base.scss";
 
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
 }
 
 .error {
-  color: variables.$grey;
+  color: var(--tjs-grey);
 }
 
 .metadata {

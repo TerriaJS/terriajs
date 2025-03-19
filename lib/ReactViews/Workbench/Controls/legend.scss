@@ -3,7 +3,7 @@
 .legend {
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: list-reset from "../../../Sass/common/_base.scss";
-  font-family: variables.$font-mono;
+  font-family: var(--tjs-font-mono);
   // Small font size prevents the font from dictating the table row height.
   font-size: 5px;
 
@@ -12,12 +12,12 @@
   }
 
   .legendOpenExternally {
-    font-size: variables.$font-size-small;
-    color: variables.$text-light;
+    font-size: var(--tjs-font-size-small);
+    color: var(--tjs-text-light);
   }
 
   .legendTitle {
-    font-size: variables.$font-size-small;
+    font-size: var(--tjs-font-size-small);
     margin: 0px;
   }
 }
@@ -60,7 +60,7 @@
 }
 
 .loader {
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
 
   svg {
     fill: #fff;
@@ -72,8 +72,8 @@
 }
 
 .generatedLegend {
-  padding-top: variables.$legend-padding;
-  padding-bottom: variables.$legend-padding;
+  padding-top: var(--tjs-legend-padding);
+  padding-bottom: var(--tjs-legend-padding);
 }
 
 .generatedLegend table {
@@ -83,13 +83,13 @@
 
 .legendTitles {
   font-size: 14px;
-  line-height: variables.$legend-item-height;
+  line-height: var(--tjs-legend-item-height);
   padding-left: 5px;
 }
 
 .legendTitleAbove {
   position: absolute;
-  margin-top: -(variables.$legend-item-height);
+  margin-top: -(var(--tjs-legend-item-height));
 }
 
 .legendTitleAbove::before {
@@ -107,5 +107,5 @@
 }
 
 .legendSpacer {
-  height: variables.$legend-spacer-height;
+  height: var(--tjs-legend-spacer-height);
 }

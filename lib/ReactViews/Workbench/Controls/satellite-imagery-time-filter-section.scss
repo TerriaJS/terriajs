@@ -16,7 +16,7 @@
 .btn {
   composes: btn-primary from "../../../Sass/common/_buttons.scss";
   composes: btn from "../../../Sass/common/_buttons.scss";
-  padding: variables.$padding 4px;
+  padding: var(--tjs-padding) 4px;
 }
 
 .btnGroup {

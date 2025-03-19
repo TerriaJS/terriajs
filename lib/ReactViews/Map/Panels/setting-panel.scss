@@ -2,5 +2,5 @@
 @use "../../../Sass/common/mixins";
 
 .dropdown-inner {
-  width: variables.$setting-panel;
+  width: var(--tjs-setting-panel);
 }

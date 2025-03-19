@@ -28,59 +28,57 @@
 
   spacing: 5;
 
-  frontComponentZIndex: variables.$front-component-z-index;
-  notificationWindowZIndex: variables.$notification-window-z-index;
+  frontComponentZIndex: var(--tjs-front-component-z-index);
+  notificationWindowZIndex: var(--tjs-notification-window-z-index);
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radius40Button: 20;
-  radiusLarge: variables.$radius-large;
-  radiusSmall: variables.$radius-small;
-  radiusLarge: variables.$radius-large;
-  radiusSmall: variables.$radius-small;
-  radiusXL: variables.$radius-xlarge;
+  radiusLarge: var(--tjs-radius-large);
+  radiusSmall: var(--tjs-radius-small);
+  radiusXL: var(--tjs-radius-xlarge);
 
-  overlay: variables.$overlay;
-  overlayInvert: variables.$overlay-invert;
+  overlay: var(--tjs-overlay);
+  overlayInvert: var(--tjs-overlay-invert);
 
   // Colours
-  colorPrimary: variables.$color-primary;
-  colorSecondary: variables.$color-secondary;
-  textLight: variables.$text-light; // essentially #fff until we sort out the colour palette from vic
-  textLightTranslucent: rgba(variables.$text-light, 0.3);
-  textLightDimmed: variables.$text-light-dimmed;
-  textDark: variables.$text-dark;
-  textDarker: variables.$text-darker;
-  textBlack: variables.$text-black;
-  turquoiseBlue: variables.$turquoise-blue;
-  darkAlpha: variables.$dark-alpha;
-  transparentDark: variables.$transparent-dark;
-  blur: variables.$blur;
-  dark: variables.$dark;
-  darkWithOverlay: variables.$dark-with-overlay;
-  darkMid: variables.$dark-mid;
-  darkLighter: variables.$dark-lighter;
-  grey: variables.$grey;
-  greyLighter: variables.$grey-lighter;
-  greyLighter2: variables.$grey-lighter2;
-  greyLightest: variables.$grey-lightest;
-  charcoalGrey: variables.$charcoal-grey;
+  colorPrimary: var(--tjs-color-primary);
+  colorSecondary: var(--tjs-color-secondary);
+  textLight: var(--tjs-text-light); // essentially #fff until we sort out the colour palette from vic
+  textLightTranslucent: rgba(255, 255, 255, 0.3);
+  textLightDimmed: var(--tjs-text-light-dimmed);
+  textDark: var(--tjs-text-dark);
+  textDarker: var(--tjs-text-darker);
+  textBlack: var(--tjs-text-black);
+  turquoiseBlue: var(--tjs-turquoise-blue);
+  darkAlpha: var(--tjs-dark-alpha);
+  transparentDark: var(--tjs-transparent-dark);
+  blur: var(--tjs-blur);
+  dark: var(--tjs-dark);
+  darkWithOverlay: var(--tjs-dark-with-overlay);
+  darkMid: var(--tjs-dark-mid);
+  darkLighter: var(--tjs-dark-lighter);
+  grey: var(--tjs-grey);
+  greyLighter: var(--tjs-grey-lighter);
+  greyLighter2: var(--tjs-grey-lighter2);
+  greyLightest: var(--tjs-grey-lightest);
+  charcoalGrey: var(--tjs-charcoal-grey);
 
   // Fonts
-  fontPop: variables.$font-pop;
-  fontBase: variables.$font-base;
-  fontMono: variables.$font-mono;
-  fontFeatureInfo: variables.$font-feature-info;
-  font: variables.$font;
+  fontPop: var(--tjs-font-pop);
+  fontBase: var(--tjs-font-base);
+  fontMono: var(--tjs-font-mono);
+  fontFeatureInfo: var(--tjs-font-feature-info);
+  font: var(--tjs-font);
 
-  modalBg: variables.$modal-bg;
-  modalText: variables.$modal-text;
-  modalHighlight: variables.$modal-highlight;
+  modalBg: var(--tjs-modal-bg);
+  modalText: var(--tjs-modal-text);
+  modalHighlight: var(--tjs-modal-highlight);
 
-  scrollbarColor: variables.$scrollbar-color;
-  scrollbarTrackColor: variables.$scrollbar-track-color;
+  scrollbarColor: var(--tjs-scrollbar-color);
+  scrollbarTrackColor: var(--tjs-scrollbar-track-color);
 
   // TODO: fix, these are stopgaps & should get merged in with something else(?)
-  mapButtonColor: variables.$map-button-color;
+  mapButtonColor: var(--tjs-map-button-color);
   mapButtonTop: 18;
   mapNavigationTop: 80;
 
@@ -88,19 +86,19 @@
   workbenchMargin: 21;
   workbenchWidth: 350;
   workflowPanelWidth: 350;
-  panelRadius: variables.$panel-radius;
+  panelRadius: var(--tjs-panel-radius);
 
-  toolPrimaryColor: variables.$tool-primary-color;
+  toolPrimaryColor: var(--tjs-tool-primary-color);
 
   // Branding
-  logoHeight: variables.$logo-height;
+  logoHeight: var(--tjs-logo-height);
   logoPaddingVertical: 15px;
   logoPaddingHorizontal: 15px;
 
-  logoSmallHeight: variables.$input-height;
+  logoSmallHeight: var(--tjs-input-height);
   logoSmallPaddingHorizontal: 0;
   logoSmallPaddingVertical: 5px;
 
-  inputHeight: variables.$input-height;
-  inputHeightLarge: variables.$input-height-large;
+  inputHeight: var(--tjs-input-height);
+  inputHeightLarge: var(--tjs-input-height-large);
 }

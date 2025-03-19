@@ -9,8 +9,8 @@
 }
 
 .token-warning {
-  color: variables.$warning;
-  font-family: variables.$font-base;
+  color: var(--tjs-warning);
+  font-family: var(--tjs-font-base);
   font-size: 0.9em;
 }
 

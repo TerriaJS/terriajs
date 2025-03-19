@@ -3,17 +3,17 @@
 
 .modal-wrapper {
   position: fixed;
-  z-index: calc(variables.$front-component-z-index - 1);
-  padding-left: calc(variables.$padding * 2);
+  z-index: calc(var(--tjs-front-component-z-index) - 1);
+  padding-left: calc(var(--tjs-padding) * 2);
   padding-right: 80px;
   padding-top: calc(
     (
-        100vh - variables.$modal-content-height - variables.$modal-header-height
+        100vh - var(--tjs-modal-content-height) - var(--tjs-modal-header-height)
       ) / 2
   );
   padding-bottom: calc(
     (
-        100vh - variables.$modal-content-height - variables.$modal-header-height
+        100vh - var(--tjs-modal-content-height) - var(--tjs-modal-header-height)
       ) / 2
   );
   top: 0;
@@ -22,17 +22,17 @@
   left: 0;
 
   @media (min-width: variables.$md) {
-    padding-left: calc(30px + variables.$work-bench-width);
+    padding-left: calc(30px + var(--tjs-work-bench-width));
     padding-right: 30px;
   }
 }
 
 .explorer-panel {
   position: relative;
-  color: variables.$modal-text;
-  border-radius: variables.$radius-xlarge;
+  color: var(--tjs-modal-text);
+  border-radius: var(--tjs-radius-xlarge);
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
-  z-index: calc(variables.$front-component-z-index - 1);
+  z-index: calc(var(--tjs-front-component-z-index) - 1);
   height: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -47,7 +47,7 @@
   }
 
   a {
-    @include mixins.link(variables.$modal-bg);
+    @include mixins.link(var(--tjs-modal-bg));
   }
 }
 
@@ -58,7 +58,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  z-index: calc(variables.$front-component-z-index - 10);
+  z-index: calc(var(--tjs-front-component-z-index) - 10);
   opacity: 1;
   visibility: visible;
 }
@@ -67,7 +67,7 @@
   composes: sm-show from "../../Sass/common/_base.scss";
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   padding: 4px 10px;
   margin: 15px;
   font-weight: bold;
@@ -79,7 +79,7 @@
   &,
   &:hover,
   &:focus {
-    color: variables.$text-light;
+    color: var(--tjs-text-light);
     border: 2px solid rgba(#ffffff, 0.7);
     border-radius: 3px;
   }

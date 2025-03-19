@@ -3,20 +3,20 @@
 
 .input {
   font-family: inherit;
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
   border-style: solid;
   border-width: 1px;
-  border-color: variables.$field-border;
-  border-radius: variables.$radius-small;
+  border-color: var(--tjs-field-border);
+  border-radius: var(--tjs-radius-small);
   width: 100%;
 }
 
 .input {
-  height: variables.$input-height;
-  color: variables.$text-dark;
+  height: var(--tjs-input-height);
+  color: var(--tjs-text-dark);
   display: block;
   padding: 0.5rem 0.5rem;
   vertical-align: middle;
@@ -31,15 +31,15 @@
   composes: input;
   border-style: solid;
   border-width: 1px;
-  border-color: variables.$field-border;
-  border-radius: variables.$radius-small;
+  border-color: var(--tjs-field-border);
+  border-radius: var(--tjs-radius-small);
   width: 100%;
 }
 
 .field:focus,
 .field.is-focused {
   // outline: none;
-  border-color: rgba(variables.$color-primary, 0.5);
+  border-color: rgba(var(--tjs-color-primary), 0.5);
   box-shadow: none;
 }
 

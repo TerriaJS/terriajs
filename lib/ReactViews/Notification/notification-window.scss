@@ -5,19 +5,19 @@
 
 .wrapper {
   composes: flex from "../../Sass/common/_base.scss";
-  color: variables.$text-light;
-  font-family: variables.$font-base;
+  color: var(--tjs-text-light);
+  font-family: var(--tjs-font-base);
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: variables.$notification-window-z-index;
+  z-index: var(--tjs-notification-window-z-index);
   align-items: center;
   justify-content: center;
 
   a {
-    @include mixins.link(variables.$dark);
+    @include mixins.link(var(--tjs-dark));
   }
 
   pre {
@@ -45,13 +45,13 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: variables.$scrollbar-track-color;
-      border-radius: variables.$radius-large;
+      background: var(--tjs-scrollbar-track-color);
+      border-radius: var(--tjs-radius-large);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: variables.$scrollbar-color;
-      border-radius: variables.$radius-large;
+      background: var(--tjs-scrollbar-color);
+      border-radius: var(--tjs-radius-large);
     }
   }
 }
@@ -64,7 +64,7 @@
   composes: scrollbars from "../../Sass/common/_base.scss";
   padding: 15px;
   height: 100%;
-  max-height: calc(100vh - variables.$input-height * 3);
+  max-height: calc(100vh - var(--tjs-input-height) * 3);
   overflow-y: auto;
   max-width: calc(100vw - 20px);
   box-sizing: border-box;

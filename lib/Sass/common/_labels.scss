@@ -2,13 +2,13 @@
 
 .label {
   vertical-align: middle;
-  padding: variables.$padding;
+  padding: var(--tjs-padding);
   display: block;
-  line-height: variables.$btn-default-line-height;
-  font-family: variables.$font-base;
+  line-height: var(--tjs-btn-default-line-height);
+  font-family: var(--tjs-font-base);
 }
 
 .no-results {
-  padding: variables.$padding !important;
-  margin-bottom: variables.$padding;
+  padding: var(--tjs-padding) !important;
+  margin-bottom: var(--tjs-padding);
 }

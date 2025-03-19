@@ -2,8 +2,8 @@
 @use "../../Sass/common/mixins";
 
 .root {
-  font-family: variables.$font-base;
-  color: variables.$data-catalog-color;
+  font-family: var(--tjs-font-base);
+  color: var(--tjs-data-catalog-color);
   position: relative;
 }
 
@@ -12,7 +12,7 @@
   // position: absolute;
   // right: 2px;
   // top: 5px;
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
   margin-right: 3px;
 
   @media (max-width: variables.$sm) {
@@ -23,7 +23,7 @@
     height: 18px;
     width: 18px;
     margin: 3px;
-    fill: variables.$grey;
+    fill: var(--tjs-grey);
   }
 }
 
@@ -32,8 +32,8 @@
   @extend %wrap;
 
   text-align: left;
-  font-size: variables.$font-size-small;
-  padding: 10px calc(30px + variables.$padding);
+  font-size: var(--tjs-font-size-small);
+  padding: 10px calc(30px + var(--tjs-padding));
   padding-right: 0;
   min-height: 35px;
   position: relative;
@@ -49,7 +49,7 @@
   @media (max-width: variables.$sm) {
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid variables.$grey-lighter;
+    border-bottom: 1px solid var(--tjs-grey-lighter);
   }
 
   &:hover,
@@ -61,8 +61,8 @@
 
 .btnCatalogTopLevel {
   font-weight: 600;
-  border-bottom: 1px solid variables.$grey-lighter;
-  padding-left: variables.$padding;
+  border-bottom: 1px solid var(--tjs-grey-lighter);
+  padding-left: var(--tjs-padding);
 }
 
 .isPreviewed {
@@ -96,7 +96,7 @@
   margin: 0 5px 0 5px;
 
   svg {
-    fill: variables.$grey;
+    fill: var(--tjs-grey);
   }
 
   @media (min-width: variables.$sm) {
@@ -113,18 +113,18 @@
 
 .catalog-group {
   composes: list-reset from "../../Sass/common/_base.scss";
-  padding-left: variables.$padding;
-  padding-top: calc(variables.$padding / 2);
+  padding-left: var(--tjs-padding);
+  padding-top: calc(var(--tjs-padding) / 2);
 
   &--lower-level {
     margin-left: 20px;
-    border-left: 1px solid variables.$grey-lighter;
+    border-left: 1px solid var(--tjs-grey-lighter);
   }
 }
 
 .label {
   composes: label from "../../Sass/common/_labels.scss";
-  font-size: variables.$font-size-small;
+  font-size: var(--tjs-font-size-small);
 }
 
 .label--no-results {
@@ -137,7 +137,7 @@
   z-index: 9;
   right: 35px;
   top: 5px;
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
   margin-right: 3px;
 
   @media (max-width: variables.$sm) {
@@ -148,6 +148,6 @@
     height: 18px;
     width: 18px;
     margin: 3px;
-    fill: variables.$grey;
+    fill: var(--tjs-grey);
   }
 }

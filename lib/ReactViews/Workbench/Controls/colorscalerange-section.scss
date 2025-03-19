@@ -1,9 +1,9 @@
 @use "../../../Sass/common/_variables";
 
 .colorscalerange {
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   label {
-    margin-right: variables.$padding-small;
+    margin-right: var(--tjs-padding-small);
   }
 }
 

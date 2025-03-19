@@ -3,18 +3,18 @@
 
 .prompt {
   position: absolute;
-  background: variables.$color-primary;
+  background: var(--tjs-color-primary);
   padding: 16px;
   width: 200px;
   top: 40px;
   left: -80px;
   text-align: center;
   color: #ffffff;
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
   font-size: 0.9rem;
-  border-radius: variables.$radius-small;
+  border-radius: var(--tjs-radius-small);
   opacity: 0;
-  @include mixins.transition(left variables.$animation-fast ease-in);
+  @include mixins.transition(left var(--tjs-animation-fast) ease-in);
   &.isVisible {
     opacity: 1;
   }
@@ -39,7 +39,7 @@
 }
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
-  margin-top: variables.$padding;
+  margin-top: var(--tjs-padding);
   border-bottom: 1px solid #ffffff;
   &:hover,
   &:focus {

@@ -2,14 +2,14 @@
 @use "../../../../Sass/common/mixins";
 @import url("https://fonts.googleapis.com/css?family=Nunito:600,800&display=swap");
 .help-panel {
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
   width: 320px;
   height: 100%;
   color: #000;
   background-color: #fff;
   position: fixed;
   z-index: 110;
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -26,7 +26,7 @@
 }
 
 .video-panel {
-  font-family: variables.$font-base;
+  font-family: var(--tjs-font-base);
   width: 490px;
   height: 100%;
   color: #000;
@@ -36,7 +36,7 @@
   // right: 0px;
   top: 0px;
   z-index: 110;
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   &.isVisible {
@@ -60,10 +60,10 @@
 .tourBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   // color: $text-light;
-  font-size: variables.$font-size-button;
-  padding: calc(variables.$padding variables.$padding * 2);
+  font-size: var(--tjs-font-size-button);
+  padding: calc(var(--tjs-padding) var(--tjs-padding) * 2);
   // background-color: #519ac2;
-  border-radius: calc(variables.$padding * 2);
+  border-radius: calc(var(--tjs-padding) * 2);
 
   min-width: 240px;
   text-align: center;
@@ -113,7 +113,7 @@
 }
 
 .link {
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
 }
 
 .videoLink {
@@ -148,7 +148,7 @@
 }
 
 .videoGuide {
-  box-shadow: variables.$box-shadow;
+  box-shadow: var(--tjs-box-shadow);
   margin: 0;
   width: 90%;
   height: 90%;

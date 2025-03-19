@@ -14,9 +14,9 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: variables.$mobile-header-height;
-  background: variables.$mobile-main-bg;
-  color: variables.$mobile-text;
+  top: var(--tjs-mobile-header-height);
+  background: var(--tjs-mobile-main-bg);
+  color: var(--tjs-mobile-text);
   text-align: left;
 
   &--hidden {

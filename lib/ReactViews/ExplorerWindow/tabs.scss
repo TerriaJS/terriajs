@@ -18,7 +18,7 @@
 .tab-panel {
   width: 100%;
   // subtract height of new modal title
-  height: calc(variables.$modal-content-height - 64px);
+  height: calc(var(--tjs-modal-content-height) - 64px);
 
   &:focus {
     outline: none;
@@ -28,13 +28,13 @@
 .panel-content {
   composes: clearfix from "../../Sass/common/_base.scss";
   position: relative;
-  background: variables.$modal-bg;
-  color: variables.$modal-text;
-  border-top: 1px solid variables.$grey-lighter;
+  background: var(--tjs-modal-bg);
+  color: var(--tjs-modal-text);
+  border-top: 1px solid var(--tjs-grey-lighter);
   height: 100%;
   overflow: hidden;
-  border-bottom-left-radius: variables.$radius-xlarge;
-  border-bottom-right-radius: variables.$radius-xlarge;
+  border-bottom-left-radius: var(--tjs-radius-xlarge);
+  border-bottom-right-radius: var(--tjs-radius-xlarge);
 }
 
 .tab-left-col {
@@ -42,13 +42,13 @@
     width: 40%;
     float: left;
     height: 100%;
-    padding: 0 variables.$padding-small;
-    background: variables.$modal-secondary-bg;
+    padding: 0 var(--tjs-padding-small);
+    background: var(--tjs-modal-secondary-bg);
     display: flex;
     flex-direction: column;
 
     form {
-      margin: variables.$padding 0;
+      margin: var(--tjs-padding) 0;
     }
   }
 }
@@ -70,9 +70,9 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   // background: transparent;
   // color: $text-light;
-  font-size: variables.$font-size-mid-small;
-  padding: variables.$padding-small;
-  margin: variables.$padding;
+  font-size: var(--tjs-font-size-mid-small);
+  padding: var(--tjs-padding-small);
+  margin: var(--tjs-padding);
   border-radius: 3px;
 
   &:hover,

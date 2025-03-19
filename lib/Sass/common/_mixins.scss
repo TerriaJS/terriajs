@@ -137,20 +137,20 @@
   @if meta.variable-exists(text-link) {
     color: $text-link;
   } @else {
-    color: variables.$color-primary; // for backwards compatibility
+    color: var(--tjs-color-primary); // for backwards compatibility
   }
-  text-decoration: variables.$link-text-decoration;
+  text-decoration: var(--tjs-link-text-decoration);
   &:visited {
     @if meta.variable-exists(text-visited-link) {
       color: $text-visited-link;
     } @else {
-      color: variables.$color-primary;
+      color: var(--tjs-color-primary);
     }
   }
 }
 
 @mixin link($bg-color) {
-  text-decoration: variables.$link-text-decoration;
+  text-decoration: var(--tjs-link-text-decoration);
   color: variables.get-link-color($bg-color);
   &:visited {
     color: variables.get-visited-link-color($bg-color);

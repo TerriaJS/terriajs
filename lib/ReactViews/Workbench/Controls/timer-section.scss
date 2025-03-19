@@ -1,15 +1,15 @@
 @use "../../../Sass/common/_variables";
 
 .section {
-  background: variables.$dark;
+  background: var(--tjs-dark);
   margin-top: 10px;
   display: flex;
-  padding: 0 variables.$padding;
+  padding: 0 var(--tjs-padding);
   // align-items: center;
   align-content: flex-start;
 
-  font-weight: variables.$font-weight-light;
-  font-size: variables.$font-size-mid-small;
+  font-weight: var(--tjs-font-weight-light);
+  font-size: var(--tjs-font-size-mid-small);
 }
 
 .timer-container {

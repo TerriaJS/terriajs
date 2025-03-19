@@ -3,7 +3,7 @@
 .btn--about-link {
   composes: btn from "../../../Sass/common/_buttons.scss";
   composes: btn--map from "../../../Sass/common/_buttons.scss";
-  border-radius: variables.$radius-small;
+  border-radius: var(--tjs-radius-small);
   border: 0;
   svg {
     // fill: #6487ae;
@@ -19,7 +19,7 @@
   &:focus {
     border: 0;
     svg {
-      fill: variables.$text-light;
+      fill: var(--tjs-text-light);
     }
   }
 }

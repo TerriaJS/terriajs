@@ -2,7 +2,7 @@
 @use "../../../../Sass/common/mixins";
 
 .share-panel {
-  font-size: variables.$font-size-mid-small;
+  font-size: var(--tjs-font-size-mid-small);
 }
 
 .catalog-share {
@@ -13,47 +13,47 @@
   position: relative;
   text-align: center;
   width: 50%;
-  margin-left: variables.$padding-small;
+  margin-left: var(--tjs-padding-small);
 }
 
 .catalog-share-inner {
-  background: variables.$grey-lightest;
-  color: variables.$text-darker;
+  background: var(--tjs-grey-lightest);
+  color: var(--tjs-text-darker);
 }
 
 .story-share-inner {
-  background: variables.$grey-lightest;
-  color: variables.$text-darker;
+  background: var(--tjs-grey-lightest);
+  color: var(--tjs-text-darker);
   right: 0;
   text-align: left;
 }
 
 .dropdown-inner {
-  width: variables.$share-panel-width;
+  width: var(--tjs-share-panel-width);
   @include mixins.transform-origin(50%, top);
 }
 
 .btn--catalogShare {
-  font-size: variables.$font-size-data-preview;
+  font-size: var(--tjs-font-size-data-preview);
   background: transparent;
-  color: variables.$color-primary;
+  color: var(--tjs-color-primary);
   box-shadow: none;
   svg {
-    fill: variables.$color-primary;
+    fill: var(--tjs-color-primary);
   }
   &:hover,
   &:focus {
-    color: variables.$text-light;
+    color: var(--tjs-text-light);
   }
 }
 
 .btn--withoutText {
   svg {
-    fill: variables.$text-darker;
+    fill: var(--tjs-text-darker);
   }
   // not in design but should give life to the button?
   &:hover,
   &:focus {
-    color: variables.$color-primary;
+    color: var(--tjs-color-primary);
   }
 }
