@@ -2,6 +2,9 @@
 
 #### next release (8.9.1)
 
+- Replace clipboardjs with native browser clipboard
+- [The next improvement]
+
 #### 8.9.0 - 2025-03-17
 
 - **Breaking changes:**
@@ -51,7 +54,6 @@
 - Remove `request` dependency from CI scripts
 - Fix basemaps order to follow the order given by `enabledBaseMaps` setting. #7537
 - Modified DiffTool UI to use `WorkflowPanel` instead of floating side panel.
-- [The next improvement]
 
 #### 8.8.1 - 2025-02-27
 
@@ -309,7 +311,6 @@
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
-- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

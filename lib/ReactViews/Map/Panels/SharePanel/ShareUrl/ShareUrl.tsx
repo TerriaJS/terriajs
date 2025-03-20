@@ -1,10 +1,10 @@
 import {
+  PropsWithChildren,
+  forwardRef,
   useEffect,
   useImperativeHandle,
-  useState,
-  PropsWithChildren
+  useState
 } from "react";
-import * as React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
@@ -14,14 +14,13 @@ import ViewState from "../../../../../ReactViewModels/ViewState";
 import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
 
-import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
-import { ShareUrlWarning } from "./ShareUrlWarning";
-import Clipboard from "../../../../Clipboard";
-import Input from "../../../../../Styled/Input";
 import {
   Category,
   ShareAction
 } from "../../../../../Core/AnalyticEvents/analyticEvents";
+import Clipboard from "../../../../Clipboard";
+import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
+import { ShareUrlWarning } from "./ShareUrlWarning";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -39,7 +38,7 @@ export interface IShareUrlRef {
   shorteningInProgress: boolean;
 }
 
-export const ShareUrl = React.forwardRef<
+export const ShareUrl = forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(
@@ -107,23 +106,8 @@ export const ShareUrl = React.forwardRef<
       <Clipboard
         theme={theme}
         text={shareUrl}
-        source={
-          <Input
-            light={inputTheme === "light"}
-            dark={inputTheme === "dark"}
-            large
-            type="text"
-            value={shareUrl}
-            placeholder={placeholder ?? t("share.shortLinkShortening")}
-            readOnly
-            onClick={(e) => e.currentTarget.select()}
-            css={`
-              ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
-            `}
-            id="share-url"
-          />
-        }
-        id="share-url"
+        inputPlaceholder={placeholder}
+        inputTheme={inputTheme}
         rounded={rounded}
         onCopy={(text) =>
           terria.analytics?.logEvent(
