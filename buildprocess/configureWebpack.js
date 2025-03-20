@@ -256,6 +256,9 @@ function configureWebpack({
   config.resolve.alias["react-dom"] = path.dirname(
     require.resolve("react-dom")
   );
+  config.resolve.alias["terriajs-variables"] =
+    config.resolve.alias["terriajs-variables"] ||
+    require.resolve("../lib/Sass/common/_variables.scss");
 
   // Alias all lodash imports (including from our dependencies) to lodash-es
   // This saves close to ~600KB unzipped
