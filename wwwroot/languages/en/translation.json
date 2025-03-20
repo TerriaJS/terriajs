@@ -615,7 +615,8 @@
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
-    "not": "<0>bbbb</0>"
+    "notification": "<0>\"{{fileNames}}\"</0> has been added to <4>My Data</4>.",
+    "notification_plural": "<0>\"{{fileNames}}\"</0> have been added to <4>My Data</4>."
   },
   "loader": {
     "loadingMessage": "Loading"
