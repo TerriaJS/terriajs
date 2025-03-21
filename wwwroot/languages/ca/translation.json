@@ -185,7 +185,8 @@
     },
     "differenceResultsTitle": "Canvia els resultats de la detecció",
     "choosePreview": "Trieu un estil de vista prèvia",
-    "chooseDifference": "Trieu una sortida de diferència"
+    "chooseDifference": "Trieu una sortida de diferència",
+    "close": "Tancar"
   },
   "legend": {
     "lat": "Lat",
