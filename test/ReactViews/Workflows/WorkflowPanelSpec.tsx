@@ -1,4 +1,3 @@
-import React from "react";
 import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
@@ -31,7 +30,9 @@ describe("WorkflowPanel", function () {
           icon={{ id: "test-icon" }}
           closeButtonText="close"
           onClose={() => {}}
-        />
+        >
+          children
+        </WorkflowPanel>
       );
     });
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
@@ -46,7 +47,9 @@ describe("WorkflowPanel", function () {
           icon={{ id: "test-icon" }}
           closeButtonText="close"
           onClose={() => {}}
-        />
+        >
+          test
+        </WorkflowPanel>
       );
     });
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);

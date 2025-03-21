@@ -7,7 +7,7 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
-import React, { Ref } from "react";
+import { ReactNode, MouseEvent, ComponentType, Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../Core/addedByUser";
 import {
@@ -279,10 +279,18 @@ export default class ViewState {
   }
   @action
   setShowTour(bool: boolean): void {
-    this.showTour = bool;
     // If we're enabling the tour, make sure the trainer is collapsed
     if (bool) {
       this.setTrainerBarExpanded(false);
+      // Ensure workbench is shown
+      this.setIsMapFullScreen(false);
+      setTimeout(() => {
+        runInAction(() => {
+          this.showTour = bool;
+        });
+      }, animationDuration || 1);
+    } else {
+      this.showTour = bool;
     }
   }
   @action
@@ -371,7 +379,7 @@ export default class ViewState {
    */
   @observable currentTool?: Tool;
 
-  @observable panel: React.ReactNode;
+  @observable panel: ReactNode;
 
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
@@ -711,7 +719,7 @@ export default class ViewState {
 
   @action
   openHelpPanelItemFromSharePanel(
-    evt: React.MouseEvent<HTMLDivElement>,
+    evt: MouseEvent<HTMLDivElement>,
     itemName: string
   ): void {
     evt.preventDefault();
@@ -882,10 +890,6 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () =>
-    | React.ComponentType<any>
-    | Promise<React.ComponentType<any>>;
-
-  showCloseButton: boolean;
+  getToolComponent: () => ComponentType<any> | Promise<ComponentType<any>>;
   params?: any;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import type { TFunction } from "react-i18next";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -17,6 +17,6 @@ interface PropsType {
   placeholder?: string;
 }
 
-declare class SearchBoxAndResults extends React.Component<PropsType> {}
+declare class SearchBoxAndResults extends Component<PropsType> {}
 
 export default SearchBoxAndResults;

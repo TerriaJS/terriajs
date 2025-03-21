@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -27,7 +27,7 @@ interface PropTypes extends WithTranslation {
 
 export const ZOOM_CONTROL_ID = "zoom";
 
-class ZoomControlBase extends React.Component<PropTypes> {
+class ZoomControlBase extends Component<PropTypes> {
   static displayName = "ZoomControl";
 
   flyToPosition(
@@ -218,17 +218,18 @@ class ZoomControlBase extends React.Component<PropTypes> {
 }
 
 const StyledZoomControl = styled(Box).attrs((props) => ({
-  backgroundColor: props.theme.textLight,
+  backgroundColor: props.theme.dark,
   centered: true,
   column: true,
   styledWidth: "32px",
   styledMargin: "7px 0 0 0"
 }))`
   border-radius: 100px;
+  border: 1px solid ${(props) => props.theme.darkLighter};
   svg {
     height: 20px;
     width: 20px;
-    fill: ${(props) => props.theme.darkWithOverlay};
+    fill: ${(props) => props.theme.grey};
   }
   ${Li} {
     margin: 5px 0;

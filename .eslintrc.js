@@ -66,6 +66,13 @@ module.exports = {
     "react/self-closing-comp": "error",
     "react/jsx-no-undef": ["error", { allowGlobals: true }],
 
+    "no-restricted-imports": [
+      "error",
+      {
+        name: "lodash",
+        message: "Please use 'lodash-es' instead."
+      }
+    ],
     /*Possible Errors */
     "no-console": "off",
     "no-inner-declarations": [1, "functions"],

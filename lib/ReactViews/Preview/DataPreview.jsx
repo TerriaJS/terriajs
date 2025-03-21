@@ -1,12 +1,12 @@
+"use strict";
 // import Chart from "../Custom/Chart/Chart";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { Trans, withTranslation } from "react-i18next";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import { Icon } from "../../Styled/Icon";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import Loader from "../Loader";
 import Description from "./Description";
@@ -14,12 +14,13 @@ import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
 import WarningBox from "./WarningBox";
 import Styles from "./data-preview.scss";
+import Icon from "../../Styled/Icon";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
 @observer
-class DataPreview extends React.Component {
+class DataPreview extends Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object,
@@ -102,6 +103,8 @@ class DataPreview extends React.Component {
           />
         </div>
       );
+    } else if (this.props.terria.configParameters.keepCatalogOpen) {
+      return null;
     } else {
       return (
         <div className={Styles.placeholder}>

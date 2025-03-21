@@ -1,5 +1,5 @@
-import PropTypes, { InferProps } from "prop-types";
-import React from "react";
+import PropTypes from "prop-types";
+import type { ReactNode } from "react";
 import MediaQuery from "react-responsive";
 
 // This should come from some config some where
@@ -11,7 +11,9 @@ const large = 1300;
 const BreakpointPropTypes = {
   children: PropTypes.node
 };
-type BreakpointProps = InferProps<typeof BreakpointPropTypes>;
+type BreakpointProps = {
+  children: ReactNode;
+};
 
 export function ExtraSmall(props: BreakpointProps) {
   return <MediaQuery maxWidth={small}>{props.children}</MediaQuery>;

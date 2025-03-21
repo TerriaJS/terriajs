@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 // if we must use a placeholder image,
 // do not bundle in the full res `wwwroot/images/bing-aerial-labels-wide.png`
@@ -42,7 +42,7 @@ const DisclaimerButton = styled(Button).attrs({
 `;
 
 @observer
-class Disclaimer extends React.Component {
+class Disclaimer extends Component {
   static displayName = "Disclaimer";
 
   static propTypes = {
@@ -112,16 +112,14 @@ class Disclaimer extends React.Component {
             <Text
               styledLineHeight={"18px"}
               textLight
-              css={(props) =>
-                `
+              css={`
                 // not sure of the ideal way to deal with this
                 a {
                   font-weight: 600;
-                  color: ${props.theme.colorPrimary};
+                  color: ${this.props.theme.colorPrimary};
                   text-decoration: none;
                 }
-              `
-              }
+              `}
             >
               {parseCustomMarkdownToReact(disclaimerMessage)}
             </Text>

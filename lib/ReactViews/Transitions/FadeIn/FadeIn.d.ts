@@ -1,6 +1,5 @@
-import React from "react";
-
 interface PropsType {
+  children: React.ReactNode;
   isVisible?: boolean;
   onEnter?: () => void;
   onExited?: () => void;

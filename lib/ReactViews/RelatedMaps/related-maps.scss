@@ -10,20 +10,10 @@
   }
 }
 
-.section {
-  composes: clearfix from "~terriajs/lib/Sass/common/_base.scss";
-  margin-bottom: 10px;
-  padding: 0;
-}
-
 .image {
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
   width: 200px;
   height: 150px;
-}
-
-.link {
-  composes: link from "~terriajs/lib/Sass/common/_base.scss";
 }

@@ -1,4 +1,4 @@
-import React, { Ref } from "react";
+import { ElementType, Ref } from "react";
 import styled from "styled-components";
 import { Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
@@ -65,7 +65,7 @@ export interface IBoxPropsBase {
   scroll?: boolean;
   style?: any;
   gap?: number | boolean;
-  as?: React.ElementType | keyof JSX.IntrinsicElements;
+  as?: ElementType | keyof JSX.IntrinsicElements;
 }
 
 export type IBoxProps = IBoxPropsBase & Column;
@@ -228,22 +228,24 @@ export const Box = styled.div<IBoxProps>`
     -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
-      width: 10px; /* for vertical scrollbars */
+      width: 5px; /* for vertical scrollbars */
       height: 8px; /* for horizontal scrollbars */
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(136,136,136,0.1);
+      background: ${props.theme.scrollbarTrackColor};
+      border-radius: ${props.theme.radiusLarge};
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(136,136,136,0.6);
+      background: ${props.theme.scrollbarColor};
+      border-radius: ${props.theme.radiusLarge}
     }
   `}
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (_props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+  (_props: { as?: ElementType | keyof JSX.IntrinsicElements }) => ({
     as: "span"
   })
 )``;

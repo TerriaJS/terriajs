@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 
-declare class HelpPanel extends React.Component<object> {}
+declare class HelpPanel extends Component<object> {}
 export default HelpPanel;

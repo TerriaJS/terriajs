@@ -1,4 +1,7 @@
-import React, {
+import {
+  Children,
+  isValidElement,
+  cloneElement,
   ChangeEvent,
   forwardRef,
   memo,
@@ -21,6 +24,7 @@ const Checkbox = forwardRef(function Checkbox(
   const {
     isChecked: isCheckedProp,
     isDisabled = false,
+    isSwitch = false,
     defaultChecked = false,
     isIndeterminate = false,
     onChange: onChangeProps,
@@ -53,11 +57,11 @@ const Checkbox = forwardRef(function Checkbox(
   const id = useUID();
 
   // Add props to children
-  const childrenWithProps = React.Children.map(children, (child) => {
+  const childrenWithProps = Children.map(children, (child) => {
     // Checking isValidElement is the safe way and avoids a typescript
     // error too.
-    if (React.isValidElement(child)) {
-      return React.cloneElement(
+    if (isValidElement(child)) {
+      return cloneElement(
         child as ReactElement<{
           isDisabled: boolean;
           isChecked: boolean;
@@ -82,6 +86,7 @@ const Checkbox = forwardRef(function Checkbox(
       css={`
         display: flex;
         flex-shrink: 0;
+        ${isSwitch && `gap: 5px;`}
         align-items: center;
         &:focus-within {
           //copy the global focus
@@ -111,6 +116,7 @@ const Checkbox = forwardRef(function Checkbox(
         ref={ref}
       />
       <CheckboxIcon
+        isSwitch={isSwitch}
         isIndeterminate={isIndeterminate}
         isChecked={isChecked}
         isDisabled={isDisabled}

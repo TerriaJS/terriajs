@@ -1,6 +1,14 @@
 import { action, makeObservable, toJS } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import {
+  RefObject,
+  ComponentPropsWithoutRef,
+  FC,
+  ReactNode,
+  ReactElement,
+  createRef,
+  Component
+} from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
@@ -23,7 +31,6 @@ import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
-import BadgeBar from "../BadgeBar";
 import { WithViewState, withViewState } from "../Context";
 import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
@@ -57,11 +64,11 @@ interface IState {
 }
 
 @observer
-class StoryBuilder extends React.Component<
+class StoryBuilder extends Component<
   IProps & MeasureElementProps & WithTranslation & WithViewState,
   IState
 > {
-  storiesWrapperRef = React.createRef<HTMLElement>();
+  storiesWrapperRef = createRef<HTMLElement>();
 
   refToMeasure: any;
 
@@ -339,10 +346,19 @@ class StoryBuilder extends React.Component<
       : "";
     return (
       <>
-        <BadgeBar
-          label={t("story.badgeBarLabel")}
-          badge={this.props.viewState.terria.stories.length}
+        <Box
+          justifySpaceBetween
+          verticalCenter
+          paddedRatio={2}
+          css={`
+            border-top: 1px solid ${this.props.theme.darkLighter};
+            border-bottom: 1px solid ${this.props.theme.darkLighter};
+          `}
         >
+          <TextSpan textLight uppercase overflowHide overflowEllipsis>
+            {t("story.badgeBarLabel")}{" "}
+            {`(${this.props.viewState.terria.stories.length})`}
+          </TextSpan>
           <RawButton
             type="button"
             onClick={this.toggleRemoveDialog}
@@ -351,7 +367,7 @@ class StoryBuilder extends React.Component<
           >
             <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
           </RawButton>
-        </BadgeBar>
+        </Box>
         <Spacing bottom={2} />
         <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (
@@ -393,8 +409,9 @@ class StoryBuilder extends React.Component<
               scroll
               overflowY={"auto"}
               styledMaxHeight="100%"
-              ref={this.storiesWrapperRef as React.RefObject<HTMLDivElement>}
+              ref={this.storiesWrapperRef as RefObject<HTMLDivElement>}
               css={`
+                min-height: 130px;
                 margin-right: -10px;
               `}
             >
@@ -422,6 +439,7 @@ class StoryBuilder extends React.Component<
                     closeMenu={() => this.openMenu(undefined)}
                     editStory={() => this.editStory(story)}
                     parentRef={this.storiesWrapperRef}
+                    index={index}
                   />
                 ))}
               </Sortable>
@@ -463,7 +481,9 @@ class StoryBuilder extends React.Component<
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
         isVisible={this.props.isVisible}
         isHidden={!this.props.isVisible}
-        charcoalGreyBg
+        styledWidth={"320px"}
+        styledMinWidth={"320px"}
+        backgroundColor={this.props.theme.dark}
         column
       >
         <Box right>
@@ -509,7 +529,7 @@ class StoryBuilder extends React.Component<
   }
 }
 
-type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
+type PanelProps = ComponentPropsWithoutRef<typeof Box> & {
   isVisible?: boolean;
   isHidden?: boolean;
 };
@@ -539,7 +559,7 @@ interface CaptureSceneProps {
   disabled?: boolean;
 }
 
-const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
+const CaptureScene: FC<CaptureSceneProps> = (props) => {
   const { t } = useTranslation();
   return (
     <StoryButton
@@ -554,12 +574,12 @@ const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
   );
 };
 
-type StoryButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
+type StoryButtonProps = ComponentPropsWithoutRef<typeof Button> & {
   btnText: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-export const StoryButton: React.FC<StoryButtonProps> = (props) => {
+export const StoryButton: FC<StoryButtonProps> = (props) => {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -577,16 +597,16 @@ export const StoryButton: React.FC<StoryButtonProps> = (props) => {
 
 interface RemoveDialogProps {
   theme: DefaultTheme;
-  text: React.ReactElement;
+  text: ReactElement;
   onConfirm: () => void;
   closeDialog: () => void;
 }
 
-const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
+const RemoveDialog: FC<RemoveDialogProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Box
-      backgroundColor={props.theme.darkWithOverlay}
+      backgroundColor={props.theme.darkLighter}
       position="absolute"
       rounded
       paddedVertically={3}
@@ -601,7 +621,6 @@ const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
       <Box>
         <Button
           denyButton
-          rounded
           fullWidth
           textProps={{
             large: true,

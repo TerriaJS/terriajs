@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { RefObject, createRef, Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import { DefaultTheme, withTheme } from "styled-components";
@@ -14,7 +14,6 @@ import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import Terria from "../../../Models/Terria";
 import Box from "../../../Styled/Box";
-import Hr from "../../../Styled/Hr";
 import { onStoryButtonClick } from "../../Map/MenuBar/StoryButton/StoryButton";
 import { WithViewState, withViewState } from "../../Context";
 import { Story } from "../Story";
@@ -83,9 +82,9 @@ interface State {
 }
 
 @observer
-class StoryPanel extends React.Component<Props, State> {
+class StoryPanel extends Component<Props, State> {
   keydownListener: EventListener | undefined;
-  slideRef: React.RefObject<HTMLElement>;
+  slideRef: RefObject<HTMLElement>;
 
   constructor(props: Props) {
     super(props);
@@ -93,7 +92,7 @@ class StoryPanel extends React.Component<Props, State> {
       isCollapsed: false,
       inView: false
     };
-    this.slideRef = React.createRef();
+    this.slideRef = createRef();
   }
 
   componentDidMount() {
@@ -228,7 +227,10 @@ class StoryPanel extends React.Component<Props, State> {
           onClick={() => this.onClickContainer()}
           css={`
             transition: padding, 0.2s;
-            bottom: 80px;
+            bottom: ${this.props.viewState.terria.timelineStack.top !==
+            undefined
+              ? "146px"
+              : "80px"};
             pointer-events: none;
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
@@ -241,7 +243,10 @@ class StoryPanel extends React.Component<Props, State> {
                 padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
                 padding-right: 50px;
               `}
-              bottom: 90px;
+              bottom: ${this.props.viewState.terria.timelineStack.top !==
+              undefined
+                ? "146px"
+                : "80px"};
             }
           `}
         >
@@ -252,28 +257,42 @@ class StoryPanel extends React.Component<Props, State> {
               [Styles.isMounted]: this.state.inView
             })}
             key={story.id}
-            ref={this.slideRef as React.RefObject<HTMLDivElement>}
+            ref={this.slideRef as RefObject<HTMLDivElement>}
             css={`
               @media (min-width: 992px) {
-                max-width: 60vw;
+                max-width: 36vw;
               }
+              border-radius: 6px;
+              overflow: hidden;
             `}
           >
-            <Box paddedHorizontally={3} paddedVertically={2.4} column>
+            <Box
+              backgroundColor={this.props.theme.dark}
+              css={{ color: "white" }}
+              paddedRatio={3}
+              column
+            >
               <TitleBar
                 title={story.title}
                 isCollapsed={this.state.isCollapsed}
                 collapseHandler={() => this.toggleCollapse()}
                 closeHandler={() => this.exitStory()}
               />
+            </Box>
+            <Box
+              css={{
+                backgroundColor: "rgba(255, 255, 255, 0.85)",
+                backdropFilter: this.props.theme.blur
+              }}
+            >
               <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
             </Box>
-            <Hr
+            <Box
+              backgroundColor={this.props.theme.dark}
+              css={{ color: "white" }}
+              paddedHorizontally={3}
               fullWidth
-              size={1}
-              borderBottomColor={this.props.theme.greyLighter}
-            />
-            <Box paddedHorizontally={3} fullWidth>
+            >
               <FooterBar
                 goPrev={() => this.goToPrevStory()}
                 goNext={() => this.goToNextStory()}

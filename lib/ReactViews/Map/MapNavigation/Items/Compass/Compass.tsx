@@ -11,7 +11,7 @@
 //
 import debounce from "lodash-es/debounce";
 import { computed, runInAction, when } from "mobx";
-import React from "react";
+import { Ref, PureComponent } from "react";
 import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -136,7 +136,7 @@ const StyledCompassRotationMarker = styled.div`
 type PropTypes = WithTranslation & {
   terria: Terria;
   viewState: ViewState;
-  refFromHOC?: React.Ref<HTMLDivElement>;
+  refFromHOC?: Ref<HTMLDivElement>;
   theme: DefaultTheme;
   t: TFunction;
 };
@@ -150,7 +150,7 @@ type IStateTypes = {
 };
 
 // the compass on map
-class Compass extends React.PureComponent<PropTypes, IStateTypes> {
+class Compass extends PureComponent<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;
@@ -348,12 +348,8 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
           <div style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.darkWithOverlay}
-              // if it's active, show a white circle only, as we need the base layer
-              glyph={
-                active
-                  ? Icon.GLYPHS.compassOuterSkeleton
-                  : Icon.GLYPHS.compassOuter
-              }
+              // if it's active hide outer ring
+              glyph={active ? null : Icon.GLYPHS.compassOuter}
             />
           </div>
         </StyledCompassOuterRing>
