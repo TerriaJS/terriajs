@@ -151,7 +151,7 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No s'ha seleccionat cap ubicació",
+        "title": "No s'ha seleccionat cap ubicació!",
         "description": "Per filtrar el selector de dates de la imatge per ubicació, seleccioneu un punt del mapa"
       },
       "locationSelected": {
@@ -371,7 +371,8 @@
       "placeholder": "Introduïu un títol",
       "saveBtn": "desar",
       "cancelBtn": "cancel·lar",
-      "saveStory": "Desar"
+      "saveStory": "Desar",
+      "descriptionLabel": "Descripció"
     },
     "exitBtn": "sortir de l'història",
     "promptHtml2": "<0><0>PRESENTACIÓ</0><1>Històries de dades</1><2>Creeu i compartiu històries interactives directament des del vostre mapa.</2></0>",
@@ -431,7 +432,8 @@
     "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
     "addDataBtnText": "Explora les dades del mapa",
     "webTitle": "Afegir dades web",
-    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web"
+    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web",
+    "data": "Dades"
   },
   "search": {
     "resultsLabel": "Resultats de la cerca",
@@ -857,7 +859,7 @@
       "confirmText": "Si",
       "denyText": "Potser després"
     },
-    "showWorkbench": "Mostra el Banc de Treball",
+    "showWorkbench": "Explora els conjunts de dades [{{count}}]",
     "hideWorkbench": "Amaga el Banc de Treball"
   },
   "models": {
