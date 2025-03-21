@@ -59,7 +59,10 @@
     "myLocation": "La meva posició",
     "location": "Posició",
     "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir HTTPS. És possible que pugueu utilitzar {{secureUrl}}.",
-    "centreMap": "Centreu el mapa a la vostra ubicació actual"
+    "centreMap": "Centreu el mapa a la vostra ubicació actual",
+    "permissionDenied": "S'ha denegat el permís per obtenir la vostra ubicació. Comproveu la configuració del vostre navegador.",
+    "positionUnavailable": "La vostra informació d'ubicació no està disponible.",
+    "timeout": "L'obtenció de la informació d'ubicació triga massa temps. Si us plau, torneu-ho a provar més tard."
   },
   "splitterTool": {
     "toggleSplitterToolTitle": "Comparar",
@@ -148,7 +151,7 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No s'ha seleccionat cap ubicació",
+        "title": "No s'ha seleccionat cap ubicació!",
         "description": "Per filtrar el selector de dates de la imatge per ubicació, seleccioneu un punt del mapa"
       },
       "locationSelected": {
@@ -182,7 +185,8 @@
     },
     "differenceResultsTitle": "Canvia els resultats de la detecció",
     "choosePreview": "Trieu un estil de vista prèvia",
-    "chooseDifference": "Trieu una sortida de diferència"
+    "chooseDifference": "Trieu una sortida de diferència",
+    "close": "Tancar"
   },
   "legend": {
     "lat": "Lat",
@@ -368,7 +372,8 @@
       "placeholder": "Introduïu un títol",
       "saveBtn": "desar",
       "cancelBtn": "cancel·lar",
-      "saveStory": "Desar"
+      "saveStory": "Desar",
+      "descriptionLabel": "Descripció"
     },
     "exitBtn": "sortir de l'història",
     "promptHtml2": "<0><0>PRESENTACIÓ</0><1>Històries de dades</1><2>Creeu i compartiu històries interactives directament des del vostre mapa.</2></0>",
@@ -428,7 +433,8 @@
     "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
     "addDataBtnText": "Explora les dades del mapa",
     "webTitle": "Afegir dades web",
-    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web"
+    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web",
+    "data": "Dades"
   },
   "search": {
     "resultsLabel": "Resultats de la cerca",
@@ -854,7 +860,7 @@
       "confirmText": "Si",
       "denyText": "Potser després"
     },
-    "showWorkbench": "Mostra el Banc de Treball",
+    "showWorkbench": "Explora els conjunts de dades [{{count}}]",
     "hideWorkbench": "Amaga el Banc de Treball"
   },
   "models": {
