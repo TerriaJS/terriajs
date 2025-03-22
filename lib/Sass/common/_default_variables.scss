@@ -1,0 +1,226 @@
+/**
+ * Default variables for TerriaJS styles.
+ *
+ * These variables are default theme values used throughout TerriaJS.
+ * All variables use the !default flag to allow for overriding.
+ *
+ * USING VARIABLES:
+ * These variables are made available to the rest of codebase as webpack `terriajs-variables`
+ * alias, and can be used by importing the ./_variables.scss file (i.e. `@use "../Sass/common/_variables";`)
+ *
+ * OVERRIDING VARIABLES:
+ * To override variables values in your application:
+ * 1. Create a custom variables file in your app
+ * 2. Configure the `terriajs-variables` webpack alias to point to your custom variables file
+ * 3. In your custom variables file, override specific variables values using the `@use ... with` syntax
+ * 
+ * For a complete example, see the `variables.scss` file in the TerriaMap repository.
+ */
+
+@use "sass:meta";
+@use "sass:color";
+
+@import url("https://fonts.googleapis.com/css?family=Inter:300,400,500,400italic,600,700&display=swap");
+
+$font-pop: "Inter", sans-serif !default;
+$font-base: "Inter", sans-serif !default;
+$font-mono: monospace !default;
+$font-feature-info: $font-mono !default;
+$font: $font-base !default;
+
+$color-primary: #35a7c4 !default;
+$color-primary-disabled: #595b60 !default;
+
+@function get-hover-color($base-color) {
+  @return color.adjust($base-color, $lightness: 10%);
+}
+
+$color-secondary: #f59e0b !default;
+
+$animation-fast: 0.1s !default;
+
+$blur: blur(5px) !default;
+
+$dark: #111827 !default;
+$dark-with-overlay: #111827 !default;
+$dark-mid: #1f2937 !default;
+$dark-lighter: #374151 !default;
+// See GobalTerriaStyles.ts on how these are derived
+$dark-alpha: 0.75 !default;
+$transparent-dark: var(--theme-transparent-dark) !default;
+
+$grey: #9ca3af !default;
+$grey-lighter: #d1d5db !default;
+// todo: Fix during overhaul
+$grey-lighter2: #e6e6e6 !default;
+$grey-lightest: #f2f2f2 !default;
+$field-border: #ddd !default;
+$overlay: rgba(255, 255, 255, 0.15) !default;
+$overlay-invert: rgba(255, 255, 255, 0.85) !default;
+
+$text-black: #000 !default;
+$text-dark: #595b60 !default;
+// todo: Fix during overhaul
+$text-dark2: #606d80 !default;
+$text-darker: #4d5766 !default;
+$text-light: #ffffff !default;
+$text-light-dimmed: #bbbbbb !default;
+
+// You can override these functions to change the link color depending on the background, eg.
+// @function get-link-color($bg-color) {
+//   @if (lightness($bg-color) > 50) {
+//     @return $text-dark; // Dark color needed on a light background
+//   } @else {
+//     @return $text-light; // Light color needed on a dark background
+//   }
+// }
+// It would make sense to extend this approach to all text and button coloring.
+@function get-link-color($bg-color) {
+  @if meta.variable-exists(text-link) {
+    @return $text-link;
+  }
+
+  @return $color-primary;
+}
+
+@function get-visited-link-color($bg-color) {
+  @if meta.variable-exists(text-visited-link) {
+    @return $text-visited-link;
+  }
+
+  @return get-link-color($bg-color);
+}
+
+$faint-bg: #f5f5f5 !default;
+$warning: #ff5b6f !default;
+$info-color: #fed17f !default;
+$link-text-decoration: none !default;
+
+$padding: 10px !default;
+$padding-small: 4px !default;
+$padding-mini: 3px !default;
+$padding-tiny: 1px !default;
+
+$btn-default-line-height: 20px !default;
+$input-height: 40px !default;
+$input-height-large: 48px !default;
+$input-glyph-height: 24px !default; // This value should be $input-height * 0.6
+$input-glyph-margin: 8px !default; // This value should be $input-height * 0.2
+
+$sm-logo-height: $input-height !default;
+$logo-height: 100px !default;
+$mobile-header-height: 50px !default;
+
+$modal-bg: #fff !default;
+$modal-tab-bg: $modal-bg !default;
+$modal-selected-tab-bg: $modal-tab-bg !default;
+$modal-text: #000 !default;
+$modal-secondary-bg: #f6f6f7 !default;
+$modal-overlay: rgba(#000, 0.7) !default;
+$modal-highlight: $color-primary !default;
+// $modal-selected: $color-primary  !default;  // Optionally define this to override $modal-highlight on the selected tab.
+$modal-border: $grey-lighter !default;
+$modal-content-height: 70vh !default;
+$modal-header-height: $btn-default-line-height + $padding * 2 !default;
+$dropdown-hover-color: orange !default;
+
+$data-catalog-color: $text-black !default;
+
+$feature-info-bg: rgba($dark, 0.95) !default;
+$feature-info-section-bg: $overlay !default;
+$feature-info-color: $text-light !default;
+$feature-info-header-bg: $dark !default;
+$feature-info-btn-color: $text-light !default;
+// $feature-info-table-odd-row-bg: lighten($feature-info-bg, 5%) !default; // Optionally define for stripy tables.
+$feature-info-table-border-style: 1px solid $dark !default;
+// $feature-info-table-width: 100% !default; // Optionally define to force tables to the full width of the feature info panel.
+$feature-info-right-margin: 105px !default;
+
+$mobile-main-bg: #ffffff !default;
+$mobile-text: #000 !default;
+
+$mobile-modal-top-height: 40px !default;
+$mobile-bottom-timeline: 70px !default;
+
+$font-size-large: 1.3rem !default;
+$font-size-mid-large: 1.1rem !default;
+$font-size-base: 1rem !default;
+$font-size-mid-small: 0.9rem !default;
+$font-size-feature-info: 0.9rem !default;
+// todo: update during overhaul
+$font-size-data-preview: 0.875rem !default;
+$font-size-button: 0.9375rem !default;
+// $font-size-button: 0.85rem !default;
+$font-size-small: 0.8125rem !default;
+$font-size-mid-mini: 0.7rem !default;
+$font-size-mini: 0.625rem !default;
+$font-size-credits: 0.7rem !default;
+
+$font-weight-bold: 600 !default;
+$font-weight-medium: 500 !default;
+$font-weight-normal: 400 !default;
+$font-weight-light: 100 !default;
+
+$map-button-color: #9ca1aa !default;
+$map-button-top: 21px !default;
+$trainer-height: 64px !default;
+$map-button-border-radius: 4px !default;
+$work-bench-width: 350px !default;
+$setting-panel: 300px !default;
+$share-panel-width: 450px !default;
+$share-panel-caret-left: 215px !default;
+$feature-info-panel-width: 500px !default;
+$panel-radius: 8px !default;
+
+$badge-height: $input-height !default;
+$story-title-height: $input-height !default;
+$workbench-header: $input-height * 2 + $padding-small * 2 + $badge-height + 1px !default;
+$chart-height: 250px !default;
+
+$border-color: rgba(#fff, 0.15) !default;
+$border-style: 1px solid $border-color !default;
+$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24) !default;
+
+$radius-xlarge: 8px !default;
+$radius-large: 4px !default;
+$radius-medium: 3px !default;
+$radius-small: 2px !default;
+
+$ring-width: 10px !default;
+$compass-width: 55px !default;
+
+//screen sizes
+$mobile: 767px !default;
+$sm: 768px !default;
+$md: 992px !default;
+$lg: 1300px !default;
+
+$front-component-z-index: 99 !default;
+$notification-window-z-index: 99999 !default;
+
+$chart-area-color: rgba(#fff, 0.075) !default;
+$chart-axis-color: #fff !default;
+$chart-grid-color: rgba(#fff, 0.085) !default;
+$chart-text-color: #fff !default;
+$chart-line-color: #ccc !default;
+$chart-preview-line-color: $chart-line-color !default;
+$chart-darker: color.adjust($dark, $lightness: -8%) !default;
+$chart-panel-background: $dark !default;
+$chart-panel-header: $dark-with-overlay !default;
+
+$charcoal-grey: #3f4854 !default;
+$turquoise-blue: #08abd5 !default;
+
+// Splitter
+$splitter-thumb-width: 40px !default;
+
+// Generated legends
+$legend-item-width: 30px !default;
+$legend-item-height: 16px !default;
+$legend-padding: calc($legend-item-height / 2) !default;
+$legend-spacer-height: calc($legend-padding / 2) !default;
+
+$tool-primary-color: $color-primary !default;
+
+$scrollbar-color: $color-primary !default;
+$scrollbar-track-color: transparent !default;
