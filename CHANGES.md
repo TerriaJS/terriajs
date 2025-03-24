@@ -2,6 +2,7 @@
 
 #### next release (8.9.2)
 
+- Replace clipboardjs with native browser clipboard
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
@@ -315,7 +316,6 @@
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
-- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 
