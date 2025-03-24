@@ -1,9 +1,13 @@
 # Change Log
 
-#### next release (8.9.1)
+#### next release (8.9.2)
+
+- [The next improvement]
+
+#### 8.9.1 - 2025-03-24
 
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
-- [The next improvement]
+- Fix scss theming regression by restoring webpack alias
 
 #### 8.9.0 - 2025-03-17
 
