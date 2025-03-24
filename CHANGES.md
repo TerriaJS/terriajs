@@ -2,6 +2,7 @@
 
 #### next release (8.9.2)
 
+- Fix sharing when using initfile.
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
@@ -131,7 +132,7 @@
 
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
-
+- [The next improvement]
 - Fix remaining lint warnings
 - Augment cesium types and start using import instead of require in ts files
 - Update to sass 1.79.1
