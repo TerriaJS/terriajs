@@ -8,6 +8,7 @@ const webpack = require("webpack");
  * Supplements the given webpack config with options required to build TerriaJS
  *
  * @param [options.terriaJSBasePath] The TerriaJS source directory
+ * @param [options.jsExtraPaths] Additional include paths for js/ts files.
  * @param [options.config] Base webpack configuration
  * @param [options.devMode] Set to `true` to generate for development build, default is `false`.
  * @param [options.MiniCssExtractPlugin]
@@ -15,6 +16,7 @@ const webpack = require("webpack");
  */
 function configureWebpack({
   terriaJSBasePath,
+  jsExtraPaths,
   config,
   devMode,
   MiniCssExtractPlugin,
@@ -64,10 +66,10 @@ function configureWebpack({
     include: [
       path.resolve(terriaJSBasePath, "node_modules", "commander"),
       path.resolve(terriaJSBasePath, "lib"),
-      path.resolve(terriaJSBasePath, "test"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateDocs.ts"),
       path.resolve(terriaJSBasePath, "buildprocess", "generateCatalogIndex.ts"),
-      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts")
+      path.resolve(terriaJSBasePath, "buildprocess", "patchNetworkRequests.ts"),
+      ...jsExtraPaths
     ],
     use: [babelLoader]
   });
