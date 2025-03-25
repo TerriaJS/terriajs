@@ -302,7 +302,7 @@ class ViewingControls extends Component<
     });
   }
 
-  async previewItem() {
+  previewItem() {
     const item = this.props.item;
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
     getAncestors(this.props.item)
