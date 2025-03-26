@@ -15,7 +15,6 @@ const DragWrapper: FC<DragWrapperProps> = ({
   style,
   css
 }) => {
-  console.log(handleSelector);
   const [ref] = useDraggable({
     handleSelector
   });
