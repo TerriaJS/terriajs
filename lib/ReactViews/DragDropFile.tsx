@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { DragEvent, FC, MouseEvent, useRef } from "react";
+import { DragEvent, FC, MouseEvent, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import {
   Category,
@@ -12,14 +12,18 @@ import Result from "../Core/Result";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/Catalog/addUserFiles";
-import type { BaseModel } from "../Models/Definition/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 import { useViewState } from "./Context";
 import Styles from "./drag-drop-file.scss";
+import DragDropNotification from "./DragDropNotification";
 
 const DragDropFile: FC = observer(() => {
   const viewState = useViewState();
   const targetRef = useRef<EventTarget>();
+  const [lastUploadedFiles, setLastUploadedFiles] = useState<readonly string[]>(
+    []
+  );
 
   const handleDrop = async (e: DragEvent) => {
     e.persist();
@@ -55,11 +59,13 @@ const DragDropFile: FC = observer(() => {
           viewState.openUserData();
         } else {
           // update last batch of uploaded files
-          runInAction(
-            () =>
-              (viewState.lastUploadedFiles = addedCatalogItems.map((item) =>
-                CatalogMemberMixin.isMixedInto(item) ? item.name : item.uniqueId
-              ))
+          setLastUploadedFiles(
+            addedCatalogItems.map(
+              (item) =>
+                (CatalogMemberMixin.isMixedInto(item)
+                  ? item.name
+                  : item.uniqueId) as string
+            )
           );
         }
 
@@ -122,27 +128,30 @@ const DragDropFile: FC = observer(() => {
   });
 
   return (
-    <div
-      onDrop={handleDrop}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onMouseLeave={handleMouseLeave}
-      className={classNames(Styles.dropZone, {
-        [Styles.isActive]: viewState.isDraggingDroppingFile
-      })}
-    >
-      {viewState.isDraggingDroppingFile ? (
-        <div className={Styles.inner}>
-          <Trans i18nKey="dragDrop.text">
-            <h3 className={Styles.heading}>Drag & Drop</h3>
-            <div className={Styles.caption}>
-              Your data anywhere to view on the map
-            </div>
-          </Trans>
-        </div>
-      ) : null}
-    </div>
+    <>
+      <div
+        onDrop={handleDrop}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onMouseLeave={handleMouseLeave}
+        className={classNames(Styles.dropZone, {
+          [Styles.isActive]: viewState.isDraggingDroppingFile
+        })}
+      >
+        {viewState.isDraggingDroppingFile ? (
+          <div className={Styles.inner}>
+            <Trans i18nKey="dragDrop.text">
+              <h3 className={Styles.heading}>Drag & Drop</h3>
+              <div className={Styles.caption}>
+                Your data anywhere to view on the map
+              </div>
+            </Trans>
+          </div>
+        ) : null}
+      </div>
+      <DragDropNotification uploadedFiles={lastUploadedFiles} />
+    </>
   );
 });
 
