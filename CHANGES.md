@@ -7,15 +7,13 @@
 - Use theme.dark for bottomBar background
 - Remove interactjs dependency #7544
 - Rewrite drag-wrapper to use terriajs dragging implementation #7544
+- TSify `SearchBoxAndResults` and convert to a functional component #7477
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
 
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
-
-- TSify `SearchBoxAndResults` and convert to a functional component #7477
-- [The next improvement]
 
 #### 8.9.0 - 2025-03-17
 
