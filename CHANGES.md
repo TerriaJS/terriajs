@@ -4,6 +4,7 @@
 
 - Replace clipboardjs with native browser clipboard
 - Update react-swipeable to v7. #7542
+- Use theme.dark for bottomBar background
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
