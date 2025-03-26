@@ -21,11 +21,6 @@ export interface AsJulian {
   tag: string;
 }
 
-export interface DiscreteTimeAsJS {
-  time: string;
-  tag: string | undefined;
-}
-
 function DiscretelyTimeVaryingMixin<
   T extends AbstractConstructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
@@ -41,7 +36,6 @@ function DiscretelyTimeVaryingMixin<
     get hasDiscreteTimes() {
       return true;
     }
-    abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
     @override
     get currentTime(): string | undefined {
@@ -100,19 +94,20 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
       const discreteTimes = this.discreteTimes;
-      if (discreteTimes === undefined) {
+      if (discreteTimes === undefined || discreteTimes.times === undefined) {
         return undefined;
       }
 
       const asJulian: AsJulian[] = [];
-      for (let i = 0; i < discreteTimes.length; i++) {
-        const dt = discreteTimes[i];
+      for (let i = 0; i < discreteTimes.times.length; i++) {
+        const timeString = this.discreteTimes.times[i];
+        const tag = this.discreteTimes.tags?.[i];
         try {
-          if (dt.time !== undefined) {
-            const time = JulianDate.fromIso8601(dt.time);
+          if (timeString !== undefined) {
+            const time = JulianDate.fromIso8601(timeString);
             asJulian.push({
               time,
-              tag: dt.tag !== undefined ? dt.tag : dt.time
+              tag: tag ?? timeString
             });
           }
         } catch {}

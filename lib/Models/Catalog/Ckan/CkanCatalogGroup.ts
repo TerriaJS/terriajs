@@ -24,7 +24,9 @@ import CkanCatalogGroupTraits from "../../../Traits/TraitsClasses/CkanCatalogGro
 import CkanSharedTraits from "../../../Traits/TraitsClasses/CkanSharedTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -69,15 +71,18 @@ createInheritedCkanSharedTraitsStratum.stratumName =
 // CkanServerStratum.createMemberFromDataset will use `definition`
 StratumOrder.addLoadStratum(createInheritedCkanSharedTraitsStratum.stratumName);
 
-export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
+export class CkanServerStratum
+  extends LoadableStratum(CkanCatalogGroupTraits)
+  implements LockedDownStratum<CkanCatalogGroupTraits, CkanServerStratum>
+{
   static stratumName = "ckanServer";
-  groups: CatalogGroup[] = [];
-  filteredGroups: CatalogGroup[] = [];
-  datasets: CkanDataset[] = [];
-  filteredDatasets: CkanDataset[] = [];
+  private groups: CatalogGroup[] = [];
+  private filteredGroups: CatalogGroup[] = [];
+  private datasets: CkanDataset[] = [];
+  private filteredDatasets: CkanDataset[] = [];
 
   constructor(
-    readonly _catalogGroup: CkanCatalogGroup,
+    private readonly _catalogGroup: CkanCatalogGroup,
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
@@ -138,7 +143,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @computed
-  get preparedSupportedFormats(): PreparedSupportedFormat[] {
+  private get preparedSupportedFormats(): PreparedSupportedFormat[] {
     return this._catalogGroup.supportedResourceFormats
       ? this._catalogGroup.supportedResourceFormats.map(prepareSupportedFormat)
       : [];
@@ -168,12 +173,12 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     );
   }
 
-  protected getDatasets(): CkanDataset[] {
+  private getDatasets(): CkanDataset[] {
     return this._ckanResponse.result.results;
   }
 
   @action
-  protected getFilteredDatasets(): CkanDataset[] {
+  private getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
       const bl = this._catalogGroup.excludeMembers;
@@ -182,17 +187,78 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this.datasets;
   }
 
+  private createUngroupedGroup() {
+    const groupId = this._catalogGroup.uniqueId + "/ungrouped";
+    let existingGroup = this._catalogGroup.terria.getModelById(
+      CatalogGroup,
+      groupId
+    );
+    if (existingGroup === undefined) {
+      existingGroup = createGroup(
+        groupId,
+        this._catalogGroup.terria,
+        this._catalogGroup.ungroupedTitle
+      );
+    }
+    return existingGroup;
+  }
+
+  private createGroupsByOrganisations(groups: CatalogGroup[]) {
+    this.filteredDatasets.forEach((ds) => {
+      if (ds.organization !== null) {
+        const groupId = this._catalogGroup.uniqueId + "/" + ds.organization.id;
+        let existingGroup = this._catalogGroup.terria.getModelById(
+          CatalogGroup,
+          groupId
+        );
+        if (existingGroup === undefined) {
+          existingGroup = createGroup(
+            groupId,
+            this._catalogGroup.terria,
+            ds.organization.title
+          );
+        }
+        groups.push(existingGroup);
+      }
+    });
+  }
+
+  private createGroupsByCkanGroups(groups: CatalogGroup[]) {
+    this.filteredDatasets.forEach((ds) => {
+      ds.groups.forEach((g) => {
+        const groupId = this._catalogGroup.uniqueId + "/" + g.id;
+        let existingGroup = this._catalogGroup.terria.getModelById(
+          CatalogGroup,
+          groupId
+        );
+        if (existingGroup === undefined) {
+          existingGroup = createGroup(
+            groupId,
+            this._catalogGroup.terria,
+            g.display_name
+          );
+          existingGroup.setTrait(
+            CommonStrata.definition,
+            "description",
+            g.description
+          );
+        }
+        groups.push(existingGroup);
+      });
+    });
+  }
+
   @action
-  protected getGroups(): CatalogGroup[] {
+  private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
     let groups: CatalogGroup[] = [];
 
     if (this._catalogGroup.groupBy === "organization")
-      createGroupsByOrganisations(this, groups);
+      this.createGroupsByOrganisations(groups);
     if (this._catalogGroup.groupBy === "group")
-      createGroupsByCkanGroups(this, groups);
+      this.createGroupsByCkanGroups(groups);
 
-    const ungroupedGroup = createUngroupedGroup(this);
+    const ungroupedGroup = this.createUngroupedGroup();
 
     groups = [...new Set(groups)];
 
@@ -212,7 +278,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @action
-  protected getFilteredGroups(): CatalogGroup[] {
+  private getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
       const bl = this._catalogGroup.excludeMembers;
@@ -225,14 +291,14 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @action
-  createMembersFromDatasets() {
+  createMembers() {
     this.filteredDatasets.forEach((dataset) => {
       this.createMemberFromDataset(dataset);
     });
   }
 
   @action
-  addCatalogItemToCatalogGroup(
+  private addCatalogItemToCatalogGroup(
     catalogItem: any,
     _dataset: CkanDataset,
     groupId: string
@@ -245,7 +311,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @action
-  addCatalogItemByCkanGroupsToCatalogGroup(
+  private addCatalogItemByCkanGroupsToCatalogGroup(
     catalogItem: any,
     dataset: CkanDataset
   ) {
@@ -261,7 +327,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @action
-  createMemberFromDataset(ckanDataset: CkanDataset) {
+  private createMemberFromDataset(ckanDataset: CkanDataset) {
     if (!isDefined(ckanDataset.id)) {
       return;
     }
@@ -377,7 +443,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         }
 
         item.setDataset(ckanDataset);
-        item.setCkanCatalog(this._catalogGroup);
         item.setSharedStratum(inheritedPropertiesStratum);
 
         item.setResource(resource);
@@ -412,7 +477,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @action
-  getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
+  private getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
     const resourceId = this.buildResourceId(ckanDataset, resource);
     return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resourceId}`;
   }
@@ -516,7 +581,7 @@ export default class CkanCatalogGroup extends UrlMixin(
       | CkanServerStratum
       | undefined;
     if (ckanServerStratum) {
-      await runLater(() => ckanServerStratum.createMembersFromDatasets());
+      await runLater(() => ckanServerStratum.createMembers());
     }
   }
 }
@@ -526,74 +591,6 @@ function createGroup(groupId: string, terria: Terria, groupName: string) {
   g.setTrait(CommonStrata.definition, "name", groupName);
   terria.addModel(g);
   return g;
-}
-
-function createUngroupedGroup(ckanServer: CkanServerStratum) {
-  const groupId = ckanServer._catalogGroup.uniqueId + "/ungrouped";
-  let existingGroup = ckanServer._catalogGroup.terria.getModelById(
-    CatalogGroup,
-    groupId
-  );
-  if (existingGroup === undefined) {
-    existingGroup = createGroup(
-      groupId,
-      ckanServer._catalogGroup.terria,
-      ckanServer._catalogGroup.ungroupedTitle
-    );
-  }
-  return existingGroup;
-}
-
-function createGroupsByOrganisations(
-  ckanServer: CkanServerStratum,
-  groups: CatalogGroup[]
-) {
-  ckanServer.filteredDatasets.forEach((ds) => {
-    if (ds.organization !== null) {
-      const groupId =
-        ckanServer._catalogGroup.uniqueId + "/" + ds.organization.id;
-      let existingGroup = ckanServer._catalogGroup.terria.getModelById(
-        CatalogGroup,
-        groupId
-      );
-      if (existingGroup === undefined) {
-        existingGroup = createGroup(
-          groupId,
-          ckanServer._catalogGroup.terria,
-          ds.organization.title
-        );
-      }
-      groups.push(existingGroup);
-    }
-  });
-}
-
-function createGroupsByCkanGroups(
-  ckanServer: CkanServerStratum,
-  groups: CatalogGroup[]
-) {
-  ckanServer.filteredDatasets.forEach((ds) => {
-    ds.groups.forEach((g) => {
-      const groupId = ckanServer._catalogGroup.uniqueId + "/" + g.id;
-      let existingGroup = ckanServer._catalogGroup.terria.getModelById(
-        CatalogGroup,
-        groupId
-      );
-      if (existingGroup === undefined) {
-        existingGroup = createGroup(
-          groupId,
-          ckanServer._catalogGroup.terria,
-          g.display_name
-        );
-        existingGroup.setTrait(
-          CommonStrata.definition,
-          "description",
-          g.description
-        );
-      }
-      groups.push(existingGroup);
-    });
-  });
 }
 
 async function paginateThroughResults(

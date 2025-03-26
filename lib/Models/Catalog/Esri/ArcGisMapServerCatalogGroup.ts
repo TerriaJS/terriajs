@@ -16,7 +16,9 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -27,9 +29,11 @@ import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 /** The ID we add to our "All layers" ArcGisMapServerCatalogItem if MapServer.singleFusedMapCache is true */
 const SINGLE_FUSED_MAP_CACHE_ID = "all-layers";
 
-export class MapServerStratum extends LoadableStratum(
-  ArcGisMapServerCatalogGroupTraits
-) {
+export class MapServerStratum
+  extends LoadableStratum(ArcGisMapServerCatalogGroupTraits)
+  implements
+    LockedDownStratum<ArcGisMapServerCatalogGroupTraits, MapServerStratum>
+{
   static stratumName = "mapServer";
 
   constructor(
@@ -50,7 +54,7 @@ export class MapServerStratum extends LoadableStratum(
   }
 
   /** returns an array of the parent layers id's */
-  findParentLayers(layerId: number): number[] {
+  private findParentLayers(layerId: number): number[] {
     const parentLayerIds: number[] = [];
     const layer = this.layers.find((l) => l.id === layerId);
     if (layer !== undefined) {
@@ -125,7 +129,7 @@ export class MapServerStratum extends LoadableStratum(
     return stratum;
   }
 
-  @computed get tilesOnly() {
+  @computed private get tilesOnly() {
     return (
       this._mapServer.singleFusedMapCache &&
       this._mapServer.capabilities?.includes("TilesOnly")
@@ -166,7 +170,7 @@ export class MapServerStratum extends LoadableStratum(
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     if (this.tilesOnly) this.createMemberForSingleFusedMapCache();
     else this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
@@ -301,7 +305,7 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
       | MapServerStratum
       | undefined;
     if (mapServerStratum) {
-      await runLater(() => mapServerStratum.createMembersFromLayers());
+      await runLater(() => mapServerStratum.createMembers());
     }
   }
 }

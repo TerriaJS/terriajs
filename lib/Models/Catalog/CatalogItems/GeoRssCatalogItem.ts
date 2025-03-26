@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../../../Core/isDefined";
@@ -17,11 +17,12 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import GeoRssCatalogItemTraits from "../../../Traits/TraitsClasses/GeoRssCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 enum GeoRssFormat {
@@ -49,7 +50,10 @@ interface Feed {
   subtitle?: string;
 }
 
-class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
+class GeoRssStratum
+  extends LoadableStratum(GeoRssCatalogItemTraits)
+  implements LockedDownStratum<GeoRssCatalogItemTraits, GeoRssStratum>
+{
   static stratumName = "georss";
   constructor(
     private readonly _item: GeoRssCatalogItem,

@@ -1,13 +1,16 @@
 import CkanResourceFormatTraits from "../../../Traits/TraitsClasses/CkanResourceFormatTraits";
 import CkanSharedTraits from "../../../Traits/TraitsClasses/CkanSharedTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 
-export default class CkanDefaultFormatsStratum extends LoadableStratum(
-  CkanSharedTraits
-) {
+export default class CkanDefaultFormatsStratum
+  extends LoadableStratum(CkanSharedTraits)
+  implements LockedDownStratum<CkanSharedTraits, CkanDefaultFormatsStratum>
+{
   static stratumName = "ckanDefaultFormats";
 
   duplicateLoadableStratum(_newModel: BaseModel): this {

@@ -16,7 +16,9 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
@@ -26,9 +28,7 @@ import CatalogMemberFactory from "../CatalogMemberFactory";
 import WebMapServiceCatalogGroup from "../Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import CkanCatalogGroup, {
-  createInheritedCkanSharedTraitsStratum
-} from "./CkanCatalogGroup";
+import { createInheritedCkanSharedTraitsStratum } from "./CkanCatalogGroup";
 import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 import {
   CkanDataset,
@@ -37,30 +37,22 @@ import {
   CkanResourceServerResponse
 } from "./CkanDefinitions";
 
-export class CkanDatasetStratum extends LoadableStratum(
-  CkanItemReferenceTraits
-) {
+export class CkanDatasetStratum
+  extends LoadableStratum(CkanItemReferenceTraits)
+  implements LockedDownStratum<CkanItemReferenceTraits, CkanDatasetStratum>
+{
   static stratumName = "ckanDataset";
 
-  constructor(
-    private readonly ckanItemReference: CkanItemReference,
-    private readonly ckanCatalogGroup: CkanCatalogGroup | undefined
-  ) {
+  constructor(private readonly ckanItemReference: CkanItemReference) {
     super();
     makeObservable(this);
   }
 
   duplicateLoadableStratum(_newModel: BaseModel): this {
-    return new CkanDatasetStratum(
-      this.ckanItemReference,
-      this.ckanCatalogGroup
-    ) as this;
+    return new CkanDatasetStratum(this.ckanItemReference) as this;
   }
 
-  static async load(
-    ckanItemReference: CkanItemReference,
-    ckanCatalogGroup: CkanCatalogGroup | undefined
-  ) {
+  static async load(ckanItemReference: CkanItemReference) {
     if (ckanItemReference._ckanDataset === undefined) {
       // If we've got a dataset and no defined resource
       if (
@@ -104,15 +96,11 @@ export class CkanDatasetStratum extends LoadableStratum(
         );
       }
     }
-    return new CkanDatasetStratum(ckanItemReference, ckanCatalogGroup);
+    return new CkanDatasetStratum(ckanItemReference);
   }
 
-  @computed get ckanDataset(): CkanDataset | undefined {
+  @computed private get ckanDataset(): CkanDataset | undefined {
     return this.ckanItemReference._ckanDataset;
-  }
-
-  @computed get ckanResource(): CkanResource | undefined {
-    return this.ckanItemReference._ckanResource;
   }
 
   @computed get url() {
@@ -283,7 +271,6 @@ export default class CkanItemReference extends UrlMixin(
 
   _ckanDataset: CkanDataset | undefined = undefined;
   _ckanResource: CkanResource | undefined = undefined;
-  _ckanCatalogGroup: CkanCatalogGroup | undefined = undefined;
   _supportedFormat: PreparedSupportedFormat | undefined = undefined;
 
   @computed
@@ -299,10 +286,6 @@ export default class CkanItemReference extends UrlMixin(
 
   setResource(ckanResource: CkanResource) {
     this._ckanResource = ckanResource;
-  }
-
-  setCkanCatalog(ckanCatalogGroup: CkanCatalogGroup) {
-    this._ckanCatalogGroup = ckanCatalogGroup;
   }
 
   setSupportedFormat(format: PreparedSupportedFormat | undefined) {
@@ -328,7 +311,7 @@ export default class CkanItemReference extends UrlMixin(
   // and then we'll attach it to the target model
   // I wonder if it needs to be on both?
   async setCkanStrata(model: BaseModel) {
-    const stratum = await CkanDatasetStratum.load(this, this._ckanCatalogGroup);
+    const stratum = await CkanDatasetStratum.load(this);
     if (stratum === undefined) return;
     runInAction(() => {
       model.strata.set(CkanDatasetStratum.stratumName, stratum);

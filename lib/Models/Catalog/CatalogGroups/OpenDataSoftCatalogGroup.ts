@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset, Facet } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import runLater from "../../../Core/runLater";
@@ -16,7 +16,9 @@ import OpenDataSoftCatalogGroupTraits, {
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import OpenDataSoftCatalogItem from "../CatalogItems/OpenDataSoftCatalogItem";
@@ -25,9 +27,14 @@ import OpenDataSoftCatalogItem from "../CatalogItems/OpenDataSoftCatalogItem";
 export type ValidDataset = Dataset & { dataset_id: string };
 export type ValidFacet = Facet & { name: string; facets?: ValidFacet[] };
 
-export class OpenDataSoftCatalogStratum extends LoadableStratum(
-  OpenDataSoftCatalogGroupTraits
-) {
+export class OpenDataSoftCatalogStratum
+  extends LoadableStratum(OpenDataSoftCatalogGroupTraits)
+  implements
+    LockedDownStratum<
+      OpenDataSoftCatalogGroupTraits,
+      OpenDataSoftCatalogStratum
+    >
+{
   static stratumName = "openDataSoftCatalog";
 
   static async load(
@@ -109,9 +116,9 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
   }
   constructor(
     private readonly catalogGroup: OpenDataSoftCatalogGroup,
-    readonly facetName: string | undefined,
-    readonly facets: ValidFacet[],
-    readonly datasets: ValidDataset[]
+    private readonly facetName: string | undefined,
+    private readonly facets: ValidFacet[],
+    private readonly datasets: ValidDataset[]
   ) {
     super();
     makeObservable(this);
@@ -132,7 +139,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
 
   /** Turn facet into OpenDataSoftCatalogGroup */
   @action
-  createGroupFromFacet(facet: ValidFacet) {
+  private createGroupFromFacet(facet: ValidFacet) {
     const layerId = this.getFacetId(facet);
 
     if (!layerId) {
@@ -191,7 +198,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
 
   /** Turn dataset into OpenDataSoftCatalogItem */
   @action
-  createMemberFromDataset(dataset: ValidDataset) {
+  private createMemberFromDataset(dataset: ValidDataset) {
     const layerId = this.getDatasetId(dataset);
 
     if (!layerId) {
@@ -247,7 +254,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     ]);
   }
 
-  getDatasetId(dataset: ValidDataset) {
+  private getDatasetId(dataset: ValidDataset) {
     // Use OpenDataSoft server hostname for datasets, so we don't create multiple across facets
     return `${
       this.catalogGroup.url
@@ -256,7 +263,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     }/${dataset.dataset_id}`;
   }
 
-  getFacetId(facet: ValidFacet) {
+  private getFacetId(facet: ValidFacet) {
     return `${this.catalogGroup.uniqueId}/${facet.name}`;
   }
 }

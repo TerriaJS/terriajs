@@ -124,4 +124,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images."
   })
   parameters?: JsonObject;
+
+  // @primitiveTrait({
+  //   type: "string",
+  //   name: "Image Format",
+  //   description:
+  //     "Image format to use for WMTS requests (eg image/png or image/jpeg)."
+  // })
+  // outputFormat?: string;
 }

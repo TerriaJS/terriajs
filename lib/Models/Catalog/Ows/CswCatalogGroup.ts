@@ -19,7 +19,9 @@ import CswCatalogGroupTraits, {
 } from "../../../Traits/TraitsClasses/CswCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructor } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import CatalogGroup from "../CatalogGroup";
@@ -151,7 +153,10 @@ export interface MetadataGroup {
   records: Records;
 }
 
-class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
+class CswStratum
+  extends LoadableStratum(CswCatalogGroupTraits)
+  implements LockedDownStratum<CswCatalogGroupTraits, CswStratum>
+{
   static stratumName = "CswStratum";
   static async load(catalogGroup: CswCatalogGroup): Promise<CswStratum> {
     if (catalogGroup.url === undefined) {
@@ -333,9 +338,9 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   }
 
   constructor(
-    readonly catalogGroup: CswCatalogGroup,
-    readonly metadataGroups: MetadataGroup[],
-    readonly records: Records
+    private readonly catalogGroup: CswCatalogGroup,
+    private readonly metadataGroups: MetadataGroup[],
+    private readonly records: Records
   ) {
     super();
     makeObservable(this);
@@ -363,7 +368,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     // If no metadata groups -> just create all records
     if (this.metadataGroups.length === 0) {
       this.records.forEach((record) =>
@@ -379,7 +384,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   }
 
   @action
-  createMetadataGroup(
+  private createMetadataGroup(
     parentId: string | undefined,
     metadataGroup: MetadataGroup
   ): CatalogGroup {
@@ -416,7 +421,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   }
 
   @action
-  createRecord(
+  private createRecord(
     parentId: string | undefined,
     record: Record
   ): BaseModel | undefined {
@@ -570,7 +575,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   /**
    * These are used to match URLs to model constructors
    */
-  @computed get resourceFormats(): {
+  @computed private get resourceFormats(): {
     enabled: boolean;
     regex: RegExp;
     contructor: ModelConstructor<BaseModel>;
@@ -709,7 +714,7 @@ export default class CswCatalogGroup extends UrlMixin(
       | CswStratum
       | undefined;
     if (cswStratum) {
-      await runLater(() => cswStratum.createMembersFromLayers());
+      await runLater(() => cswStratum.createMembers());
     }
   }
 }

@@ -1,7 +1,9 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
@@ -26,6 +28,22 @@ export const SUPPORTED_CRS_3857 = [
   "urn:x-ogc:def:crs:EPSG:900913"
 ];
 
+export class WebFeatureServiceAvailableFeatureTypesTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Layer Name",
+    description: "The name of the feature type which is available for use."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "The title of the feature type which is available for use."
+  })
+  title?: string;
+}
+
 @traitClass({
   description: `Creates a single item in the catalog from url that points to a WFS service.
   <strong>Note:</strong> <i>Must specify property <b>typeNames</b>.</i>`,
@@ -43,10 +61,18 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
-    name: "Type Name(s)",
-    description: "The type name or names to display."
+    name: "Feature Type Name(s)",
+    description: "The feature type name or names to display."
   })
   typeNames?: string;
+
+  @objectArrayTrait({
+    type: WebFeatureServiceAvailableFeatureTypesTraits,
+    name: "Available Type Names",
+    description: "The available type names to display.",
+    idProperty: "name"
+  })
+  availableFeatureTypes?: WebFeatureServiceAvailableFeatureTypesTraits[];
 
   @primitiveTrait({
     type: "number",

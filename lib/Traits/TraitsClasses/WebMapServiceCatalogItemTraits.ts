@@ -69,6 +69,22 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+export class WebMapServiceAvailableLayersTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Layer Name",
+    description: "The name of the layer which is available for use."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "The title of the layer which is available for use."
+  })
+  title?: string;
+}
+
 export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -207,6 +223,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Dimension parameters used to request a particular layer along one or more dimensional axes (including elevation, excluding time). Do not include `_dim` prefx for parameter keys. These dimensions will be applied to all layers (if applicable)"
   })
   dimensions?: { [key: string]: string };
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableLayersTraits,
+    name: "Available Layers",
+    description: "The available layers.",
+    idProperty: "name"
+  })
+  availableLayers?: WebMapServiceAvailableLayersTraits[];
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerStylesTraits,

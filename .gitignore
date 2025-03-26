@@ -19,6 +19,7 @@ package-lock.json
 dist
 .history/
 ts-out/
+project.inlang/
 
 # Catalog index generation files
 catalog-index*.json

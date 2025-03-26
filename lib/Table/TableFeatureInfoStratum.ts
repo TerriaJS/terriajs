@@ -1,18 +1,21 @@
 import { computed, makeObservable } from "mobx";
 import { FEATURE_ID_PROP } from "../ModelMixins/GeojsonMixin";
 import TableMixin from "../ModelMixins/TableMixin";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 
-export default class TableFeatureInfoStratum extends LoadableStratum(
-  TableTraits
-) {
+export default class TableFeatureInfoStratum
+  extends LoadableStratum(TableTraits)
+  implements LockedDownStratum<TableTraits, TableFeatureInfoStratum>
+{
   static stratumName = "tableFeatureInfo";
-  constructor(readonly catalogItem: TableMixin.Instance) {
+  constructor(private readonly catalogItem: TableMixin.Instance) {
     super();
     makeObservable(this);
   }

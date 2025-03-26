@@ -13,7 +13,9 @@ import ModelReference from "../../../Traits/ModelReference";
 import ArcGisPortalCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
@@ -27,19 +29,24 @@ import {
 } from "./ArcGisPortalDefinitions";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
 
-export class ArcGisPortalStratum extends LoadableStratum(
-  ArcGisPortalCatalogGroupTraits
-) {
+export class ArcGisPortalStratum
+  extends LoadableStratum(ArcGisPortalCatalogGroupTraits)
+  implements
+    LockedDownStratum<ArcGisPortalCatalogGroupTraits, ArcGisPortalStratum>
+{
   static stratumName = "arcgisPortal";
-  groups: CatalogGroup[] = [];
-  filteredGroups: CatalogGroup[] = [];
-  datasets: ArcGisItem[] = [];
-  filteredDatasets: ArcGisItem[] = [];
+
+  private groups: CatalogGroup[] = [];
+  private filteredGroups: CatalogGroup[] = [];
+  private datasets: ArcGisItem[] = [];
+  private filteredDatasets: ArcGisItem[] = [];
 
   constructor(
-    readonly _catalogGroup: ArcGisPortalCatalogGroup,
-    readonly _arcgisResponse: ArcGisPortalSearchResponse,
-    readonly _arcgisGroupResponse: ArcGisPortalGroupSearchResponse | undefined
+    private readonly _catalogGroup: ArcGisPortalCatalogGroup,
+    private readonly _arcgisResponse: ArcGisPortalSearchResponse,
+    private readonly _arcgisGroupResponse:
+      | ArcGisPortalGroupSearchResponse
+      | undefined
   ) {
     super();
     makeObservable(this);
@@ -239,12 +246,63 @@ export class ArcGisPortalStratum extends LoadableStratum(
     return this.datasets;
   }
 
+  private createUngroupedGroup() {
+    const groupId = this._catalogGroup.uniqueId + "/ungrouped";
+    let existingGroup = this._catalogGroup.terria.getModelById(
+      CatalogGroup,
+      groupId
+    );
+    if (existingGroup === undefined) {
+      existingGroup = createGroup(
+        groupId,
+        this._catalogGroup.terria,
+        this._catalogGroup.ungroupedTitle
+      );
+    }
+    return [existingGroup];
+  }
+
+  private createGroupsByPortalGroups() {
+    if (this._arcgisGroupResponse === undefined) return [];
+    const out: CatalogGroup[] = [];
+    this._arcgisGroupResponse.results.forEach((group: ArcGisPortalGroup) => {
+      const groupId = this._catalogGroup.uniqueId + "/" + group.id;
+      let existingGroup = this._catalogGroup.terria.getModelById(
+        CatalogGroup,
+        groupId
+      );
+      if (existingGroup === undefined) {
+        existingGroup = createGroup(
+          groupId,
+          this._catalogGroup.terria,
+          group.title
+        );
+        if (group.description) {
+          existingGroup.setTrait(
+            CommonStrata.definition,
+            "description",
+            group.description
+          );
+        }
+      }
+
+      if (
+        AccessControlMixin.isMixedInto(existingGroup) &&
+        group.access !== undefined
+      ) {
+        existingGroup.setAccessType(group.access);
+      }
+      out.push(existingGroup);
+    });
+    return out;
+  }
+
   private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
 
     const groups: CatalogGroup[] = [
-      ...createUngroupedGroup(this),
-      ...createGroupsByPortalGroups(this)
+      ...this.createUngroupedGroup(),
+      ...this.createGroupsByPortalGroups()
     ];
     groups.sort(function (a, b) {
       if (a.nameInCatalog === undefined || b.nameInCatalog === undefined)
@@ -273,14 +331,14 @@ export class ArcGisPortalStratum extends LoadableStratum(
   }
 
   @action
-  createMembersFromDatasets() {
+  createMembers() {
     this.filteredDatasets.forEach((dataset) => {
       this.createMemberFromDataset(dataset);
     });
   }
 
   @action
-  addCatalogItemToCatalogGroup(
+  private addCatalogItemToCatalogGroup(
     catalogItem: any,
     _dataset: ArcGisItem,
     groupId: string
@@ -293,7 +351,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   }
 
   @action
-  addCatalogItemByPortalGroupsToCatalogGroup(
+  private addCatalogItemByPortalGroupsToCatalogGroup(
     catalogItem: any,
     dataset: ArcGisItem
   ) {
@@ -307,7 +365,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   }
 
   @action
-  createMemberFromDataset(arcgisDataset: ArcGisItem) {
+  private createMemberFromDataset(arcgisDataset: ArcGisItem) {
     if (!isDefined(arcgisDataset.id)) {
       return;
     }
@@ -320,7 +378,6 @@ export class ArcGisPortalStratum extends LoadableStratum(
     if (item === undefined) {
       item = new ArcGisPortalItemReference(itemId, this._catalogGroup.terria);
       item.setDataset(arcgisDataset);
-      item.setArcgisPortalCatalog(this._catalogGroup);
       item.setSupportedFormatFromItem(arcgisDataset);
       item.setArcgisStrata(item);
       item.terria.addModel(item);
@@ -370,16 +427,15 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return "0d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected async forceLoadMetadata(): Promise<void> {
     const portalStratum = this.strata.get(ArcGisPortalStratum.stratumName) as
       | ArcGisPortalStratum
       | undefined;
     if (!portalStratum) {
-      return ArcGisPortalStratum.load(this).then((stratum) => {
-        if (stratum === undefined) return;
-        runInAction(() => {
-          this.strata.set(ArcGisPortalStratum.stratumName, stratum);
-        });
+      const stratum = await ArcGisPortalStratum.load(this);
+      if (stratum === undefined) return;
+      runInAction(() => {
+        this.strata.set(ArcGisPortalStratum.stratumName, stratum);
       });
     } else {
       return Promise.resolve();
@@ -391,7 +447,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
       | ArcGisPortalStratum
       | undefined;
     if (portalStratum) {
-      await runLater(() => portalStratum.createMembersFromDatasets());
+      await runLater(() => portalStratum.createMembers());
     }
   }
 }
@@ -401,59 +457,6 @@ function createGroup(groupId: string, terria: Terria, groupName: string) {
   g.setTrait(CommonStrata.definition, "name", groupName);
   terria.addModel(g);
   return g;
-}
-
-function createUngroupedGroup(arcgisPortal: ArcGisPortalStratum) {
-  const groupId = arcgisPortal._catalogGroup.uniqueId + "/ungrouped";
-  let existingGroup = arcgisPortal._catalogGroup.terria.getModelById(
-    CatalogGroup,
-    groupId
-  );
-  if (existingGroup === undefined) {
-    existingGroup = createGroup(
-      groupId,
-      arcgisPortal._catalogGroup.terria,
-      arcgisPortal._catalogGroup.ungroupedTitle
-    );
-  }
-  return [existingGroup];
-}
-
-function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
-  if (arcgisPortal._arcgisGroupResponse === undefined) return [];
-  const out: CatalogGroup[] = [];
-  arcgisPortal._arcgisGroupResponse.results.forEach(
-    (group: ArcGisPortalGroup) => {
-      const groupId = arcgisPortal._catalogGroup.uniqueId + "/" + group.id;
-      let existingGroup = arcgisPortal._catalogGroup.terria.getModelById(
-        CatalogGroup,
-        groupId
-      );
-      if (existingGroup === undefined) {
-        existingGroup = createGroup(
-          groupId,
-          arcgisPortal._catalogGroup.terria,
-          group.title
-        );
-        if (group.description) {
-          existingGroup.setTrait(
-            CommonStrata.definition,
-            "description",
-            group.description
-          );
-        }
-      }
-
-      if (
-        AccessControlMixin.isMixedInto(existingGroup) &&
-        group.access !== undefined
-      ) {
-        existingGroup.setAccessType(group.access);
-      }
-      out.push(existingGroup);
-    }
-  );
-  return out;
 }
 
 async function paginateThroughResults(
