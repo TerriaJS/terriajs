@@ -33,6 +33,7 @@ export interface ITextPropsBase {
   displayBlock?: boolean;
   isLink?: boolean;
   mono?: boolean;
+  pop?: boolean;
   openSans?: boolean;
   breakWord?: boolean;
   uppercase?: boolean;
@@ -69,6 +70,7 @@ export const Text = styled.div<ITextProps>`
   font-family: ${(props) => props.theme.fontBase};
 
   ${(props) => props.mono && `font-family: ${props.theme.fontMono};`}
+  ${(props) => props.pop && `font-family: ${props.theme.fontPop};`}
 
   ${(props) =>
     props.breakWord &&

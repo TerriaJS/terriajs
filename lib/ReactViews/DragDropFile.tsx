@@ -1,8 +1,8 @@
-import classNames from "classnames";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { DragEvent, FC, MouseEvent, useRef, useState } from "react";
 import { Trans } from "react-i18next";
+import styled, { useTheme } from "styled-components";
 import {
   Category,
   DataSourceAction
@@ -13,13 +13,48 @@ import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/Catalog/addUserFiles";
 import { BaseModel } from "../Models/Definition/Model";
+import Box from "../Styled/Box";
+import Icon, { StyledIcon } from "../Styled/Icon";
+import Text from "../Styled/Text";
 import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 import { useViewState } from "./Context";
-import Styles from "./drag-drop-file.scss";
 import DragDropNotification from "./DragDropNotification";
+
+const DropZone = styled.div<{ isActive: boolean }>`
+  position: absolute;
+  background: transparent;
+  opacity: 0;
+  z-index: -1;
+  transition: height 0.25s ease-in-out;
+
+  ${({ isActive, theme }) =>
+    isActive &&
+    `
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+
+    transition: opacity, 0.2s;
+
+    opacity: 1;
+    display: block;
+    border: 0;
+
+    background: radial-gradient(
+      ellipse at center,
+      ${theme.transparentDark} 0%,
+      ${theme.dark} 100%
+    );
+  `}
+`;
 
 const DragDropFile: FC = observer(() => {
   const viewState = useViewState();
+  const theme = useTheme();
   const targetRef = useRef<EventTarget>();
   const [lastUploadedFiles, setLastUploadedFiles] = useState<readonly string[]>(
     []
@@ -129,30 +164,41 @@ const DragDropFile: FC = observer(() => {
 
   return (
     <>
-      <div
+      <DropZone
+        isActive={viewState.isDraggingDroppingFile}
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onMouseLeave={handleMouseLeave}
-        className={classNames(Styles.dropZone, {
-          [Styles.isActive]: viewState.isDraggingDroppingFile
-        })}
       >
         {viewState.isDraggingDroppingFile ? (
-          <div className={Styles.inner}>
+          <Box centered fullWidth fullHeight column>
+            <StyledIcon glyph={Icon.GLYPHS.dragDrop} styledHeight="80px" />
             <Trans i18nKey="dragDrop.text">
-              <h3 className={Styles.heading}>Drag & Drop</h3>
-              <div className={Styles.caption}>
+              <Text
+                textLight
+                textAlignCenter
+                pop
+                as="h3"
+                css={`
+                  margin-top: ${theme.spacing}px;
+                  font-weight: 700;
+                `}
+              >
+                Drag & Drop
+              </Text>
+              <Text textLight pop textAlignCenter styledFontSize="24px">
                 Your data anywhere to view on the map
-              </div>
+              </Text>
             </Trans>
-          </div>
+          </Box>
         ) : null}
-      </div>
+      </DropZone>
       <DragDropNotification uploadedFiles={lastUploadedFiles} />
     </>
   );
 });
+DragDropFile.displayName = "DragDropFile";
 
 export default DragDropFile;
