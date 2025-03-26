@@ -6778,11 +6778,6 @@ inobounce@^0.1.2:
   resolved "https://registry.yarnpkg.com/inobounce/-/inobounce-0.1.6.tgz#b3912e63cdb2eacbcbfcdce6a0681a105b49a8d2"
   integrity sha512-526BdpKOby/5Ft9AvihHC948w5VBzIkI76yBWclkj9zVEK9JRNcuybm4HztB7O9VkM4sp6E4WqnhtRRhgGNt+A==
 
-interactjs@1.4.0-alpha.17:
-  version "1.4.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.4.0-alpha.17.tgz#07181adbeed32c6267aa6e4e54cabb3140e967e3"
-  integrity sha512-EBTe0lL/Lpya18hBg9RlxcfcPYu7XUspP64fD0pUAhE2CSY8smYFGeIumMzO64ail9ifKEFebnXsVNN+NDc9Bw==
-
 internal-slot@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/internal-slot/-/internal-slot-1.0.3.tgz#7347e307deeea2faac2ac6205d4bc7d34967f59c"

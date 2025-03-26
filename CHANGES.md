@@ -5,6 +5,8 @@
 - Replace clipboardjs with native browser clipboard
 - Update react-swipeable to v7. #7542
 - Use theme.dark for bottomBar background
+- Remove interactjs dependency #7544
+- Rewrite drag-wrapper to use terriajs dragging implementation #7544
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
