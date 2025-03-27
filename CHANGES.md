@@ -11,6 +11,7 @@
 - Convert `DragDropFile` to functional component and styled-components. #7563
 - Remove `viewState.lastUploadedFiles` and replace with `DragDropFile` local state. #7563
 - TSify `DragDropNotification` and convert to functional component and styled-components. #7563
+- TSify `DataCatalogTab` and convert it to functional component #7476
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
