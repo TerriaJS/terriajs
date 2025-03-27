@@ -81,7 +81,6 @@ describe("CkanItemReference", function () {
 
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBeDefined();
-      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
 
       expect(ckanItemTarget).toBeDefined();
       expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
@@ -159,7 +158,6 @@ describe("CkanItemReference", function () {
 
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBe(undefined);
-      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
       // when creating a single item directly name is retained from the definition stratum
       expect(ckanItemTarget.name).toBe("Taxation Statistics");
 
@@ -186,7 +184,6 @@ describe("CkanItemReference", function () {
 
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBe(undefined);
-      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
       // when creating a single item directly name is retained from the definition stratum
       expect(ckanItemTarget.name).toBe("Taxation Statistics");
 
@@ -222,7 +219,6 @@ describe("CkanItemReference", function () {
     it("uses LAYERS from url query string for WMS item", function () {
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBe(undefined);
-      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
       // when creating a single item directly name is retained from the definition stratum
       expect(ckanItemTarget.name).toBe(
         "EPA Victoria Environmental Audit Reports"

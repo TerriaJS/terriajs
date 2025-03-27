@@ -1,7 +1,9 @@
 import { computed, makeObservable, override } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { SelectableDimensionEnum } from "../Models/SelectableDimensions/SelectableDimensions";
@@ -10,9 +12,12 @@ import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import MappableMixin from "./MappableMixin";
 import TimeFilterMixin from "./TimeFilterMixin";
 
-export class DiffStratum extends LoadableStratum(DiffableTraits) {
+export class DiffStratum
+  extends LoadableStratum(DiffableTraits)
+  implements LockedDownStratum<DiffableTraits, DiffStratum>
+{
   static stratumName = "diffStratum";
-  constructor(readonly catalogItem: DiffableMixin.Instance) {
+  constructor(private readonly catalogItem: DiffableMixin.Instance) {
     super();
     makeObservable(this);
   }
@@ -37,7 +42,7 @@ export class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 
   @computed
-  get diffLegendUrl() {
+  private get diffLegendUrl() {
     const diffStyleId = this.catalogItem.diffStyleId;
     const firstDate = this.catalogItem.firstDiffDate;
     const secondDate = this.catalogItem.secondDiffDate;
