@@ -8,6 +8,9 @@
 - Remove interactjs dependency #7544
 - Rewrite drag-wrapper to use terriajs dragging implementation #7544
 - TSify `SearchBoxAndResults` and convert to a functional component #7477
+- Convert `DragDropFile` to functional component and styled-components. #7563
+- Remove `viewState.lastUploadedFiles` and replace with `DragDropFile` local state. #7563
+- TSify `DragDropNotification` and convert to functional component and styled-components. #7563
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
