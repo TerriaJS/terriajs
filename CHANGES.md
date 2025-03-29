@@ -14,6 +14,7 @@
 - TSify `DataCatalogTab` and convert it to functional component #7476
 - Update to shpjs 6.1.0.
 - Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
+- Return lat/lon as numbers from `geoJsonGeometryFromGeoRssSimpleGeometry` and `geoJsonGeometryFromW3cGeometry`.
 - Remove unused babel/parser dependency.
 - Remove unused d3-array dependency.
 - [The next improvement]
