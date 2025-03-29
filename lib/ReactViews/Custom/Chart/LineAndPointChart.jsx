@@ -16,8 +16,8 @@ export default class LineAndPointChart extends PureComponent {
     glyph: PropTypes.string
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.lineRef = createRef();
     this.pointRef = createRef();
   }
