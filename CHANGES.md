@@ -25,6 +25,9 @@
 - Remove unused babel/parser dependency.
 - [The next improvement]
 
+- Remove unused types/rbush dependency.
+- [The next improvement]
+
 #### 8.9.0 - 2025-03-17
 
 - **Breaking changes:**
