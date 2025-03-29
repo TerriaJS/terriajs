@@ -25,6 +25,8 @@
 - DOMPurify updated to 3.2.5 to fix CVE-2025-26791.
 - Fix pmtiles rendering issue. #7607
 - Remove unused types/rbush dependency.
+- Convert `Chart` component of `FeatureInfoPanelChart` to functional component.
+- [The next improvement]
 
 #### 8.9.2 - 2025-03-31
 
