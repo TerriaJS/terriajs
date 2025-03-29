@@ -15,6 +15,7 @@
 - Update to shpjs 6.1.0.
 - Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
 - Return lat/lon as numbers from `geoJsonGeometryFromGeoRssSimpleGeometry` and `geoJsonGeometryFromW3cGeometry`.
+- TSify `ChartPanel` and convert to a functional component #7581
 - [The next improvement]
 
 #### 8.9.1 - 2025-03-24
