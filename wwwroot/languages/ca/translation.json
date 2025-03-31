@@ -602,7 +602,10 @@
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
-    "not": "<0>bbbb</0>"
+    "not": "<0>bbbb</0>",
+    "notification_0": "<0>\"{{fileNames}}\"</0> s'ha afegit a <4>Les meves dades</4>.",
+    "notification_1": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>.",
+    "notification_2": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>."
   },
   "loader": {
     "loadingMessage": "Carregant"
