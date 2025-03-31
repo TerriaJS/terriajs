@@ -66,7 +66,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import JsonValue, {
+import {
   isJsonArray,
   isJsonNumber,
   isJsonObject,
@@ -1428,7 +1428,6 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed
     get canUseAsPath() {
-      console.log("test-geojsonmixin canUseAsPath");
       let pathType: PathTypes = PathTypes.noPath;
       if (
         this.readyData &&
@@ -1443,9 +1442,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           this.readyData.features.length === 1 &&
           isJsonObject(this.readyData.features[0])
         ) {
-          console.log("test-geojsonmixin this.readyData", this.readyData);
           const geometry = this.readyData.features[0].geometry;
-          console.log("test-geojsonmixin geometry", geometry);
+
           if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
             if (
               this.arePolylinesValid([geometry.coordinates]) ||
@@ -1475,17 +1473,42 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               }
             }
           }
+        } else if (
+          this.readyData.type === "FeatureCollection" &&
+          isJsonArray(this.readyData.features) &&
+          this.readyData.features.length > 1
+        ) {
+          let allMultiLineString = true;
+          for (let i = 0; i < this.readyData.features.length; i++) {
+            const feature = this.readyData.features[i];
+            if (feature.geometry.type !== "MultiLineString") {
+              allMultiLineString = false;
+              break;
+            }
+          }
+          if (allMultiLineString) {
+            pathType = PathTypes.featureCollectionMultiLineString;
+          } else {
+            let allMultiPolygon = true;
+            for (let i = 0; i < this.readyData.features.length; i++) {
+              const feature = this.readyData.features[i];
+              if (feature.geometry.type !== "MultiPolygon") {
+                allMultiPolygon = false;
+                break;
+              }
+            }
+            if (allMultiPolygon) {
+              pathType = PathTypes.featureCollectionMultiPolygon;
+            }
+          }
         }
       }
       this._pathType = pathType;
-      console.log("test-geojsonmixin this._pathType", this._pathType);
       return pathType !== PathTypes.noPath;
     }
 
     // Validates if the coordinates of the polyline are correct by ensuring the first and last points are connected.
     private arePolylinesValid(coordinates: any[]): boolean {
-      console.log("test-geojsonmixin arePolylinesValid");
-
       const pointOccurrences: { point: number[]; count: number }[] = [];
 
       coordinates.forEach((line) => {
@@ -1504,8 +1527,6 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     // Validates if the coordinates of the polygon are correct by ensuring the first and last points are the same.
     private isPolygonValid(coordinates: any[]): boolean {
-      console.log("test-geojsonmixin isPolygonValid");
-
       const pointOccurrences: { point: number[]; count: number }[] = [];
 
       coordinates.forEach((ring) => {
@@ -1514,11 +1535,6 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           this.updatePointOccurrences(pointOccurrences, point);
         }
       });
-
-      console.log(
-        "test-geojsonmixin isPolygonValid pointOccurrences",
-        pointOccurrences
-      );
 
       const validPoints = pointOccurrences.filter(
         ({ count }) => count === 2
@@ -1546,97 +1562,82 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return pointA[0] === pointB[0] && pointA[1] === pointB[1];
     }
 
+    private convertJsonCoords(jsonCoords: JsonArray): Cartographic[] {
+      return jsonCoords.map((elem) => {
+        if (
+          elem &&
+          isJsonArray(elem) &&
+          isJsonNumber(elem[0]) &&
+          isJsonNumber(elem[1])
+        ) {
+          const height =
+            elem.length === 3 && isJsonNumber(elem[2])
+              ? Math.round(elem[2])
+              : 0;
+          return Cartographic.fromDegrees(elem[0], elem[1], height);
+        }
+        return Cartographic.fromDegrees(0, 0, 0);
+      });
+    }
+
     computePath() {
-      let jsonCoords: JsonArray | undefined;
-      let filename: string | undefined;
-      let pathNotes: string | undefined;
-      if (
-        this.readyData &&
-        isJsonArray(this.readyData.features) &&
-        this.readyData.features.length > 0
-      ) {
-        const feature = this.readyData.features[0];
+      if (!this.readyData || !isJsonArray(this.readyData.features)) return;
+
+      const processFeature = (feature: any, index?: number) => {
+        let jsonCoords: JsonArray | undefined;
         switch (this._pathType) {
           case PathTypes.featureCollectionMultiLineString:
-            jsonCoords = this.getOrderedSegments();
+            jsonCoords = this.getOrderedSegments(index);
             break;
-
           case PathTypes.featureCollectionLineString:
             jsonCoords = this.getLineStringCoordinates();
             break;
-
           case PathTypes.featureCollectionMultiPolygon:
-            jsonCoords = this.getMultiPolygonCoordinates();
+            jsonCoords = this.getMultiPolygonCoordinates(index);
             break;
-
           case PathTypes.featureCollectionPolygon:
             jsonCoords = this.getPolygonCoordinates();
             break;
         }
-        if (jsonCoords !== undefined) {
-          const properties = feature.properties ?? {};
-          const geometry = feature.geometry ?? {};
+        if (!jsonCoords || jsonCoords.length === 0) return;
 
-          filename =
-            filename ||
-            (this.readyData as any).name ||
-            properties.name ||
-            (geometry as any).name ||
-            "";
-          pathNotes =
-            pathNotes ||
-            (this.readyData as any).path_notes ||
-            properties.desc ||
-            (geometry as any).path_notes ||
-            "";
+        const properties = feature.properties ?? {};
+        const pathNotes = properties.desc || properties.path_notes || "";
+        const coordinates = this.convertJsonCoords(jsonCoords);
+        this.asPath(coordinates, pathNotes, index);
+      };
+
+      if (this.readyData.features.length === 1) {
+        processFeature(this.readyData.features[0]);
+      } else {
+        for (let i = 0; i < this.readyData.features.length; i++) {
+          processFeature(this.readyData.features[i], i);
         }
-
-        if (!jsonCoords || jsonCoords.length === 0) {
-          return;
-        }
-
-        const coordinates = jsonCoords.map((elem) => {
-          if (
-            elem &&
-            isJsonArray(elem) &&
-            isJsonNumber(elem[0]) &&
-            isJsonNumber(elem[1])
-          ) {
-            if (elem.length === 3 && isJsonNumber(elem[2])) {
-              return Cartographic.fromDegrees(
-                elem[0],
-                elem[1],
-                Math.round(elem[2])
-              );
-            } else {
-              return Cartographic.fromDegrees(elem[0], elem[1], 0);
-            }
-          } else {
-            return Cartographic.fromDegrees(0, 0, 0);
-          }
-        });
-        this.asPath(coordinates, filename, pathNotes);
       }
     }
 
     // Get the ordered segments
-    private getOrderedSegments(): JsonArray | undefined {
+    private getOrderedSegments(index: number = 0): JsonArray | undefined {
       if (
         this.readyData &&
         isJsonArray(this.readyData.features) &&
         this.readyData.features.length > 0 &&
-        isJsonObject(this.readyData.features[0]) &&
-        isJsonObject(this.readyData.features[0].geometry) &&
-        isJsonArray(this.readyData.features[0].geometry.coordinates) &&
-        this.readyData.features[0].geometry.coordinates.length > 0
+        isJsonObject(this.readyData.features[index]) &&
+        isJsonObject(this.readyData.features[index].geometry as any) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates
+        ) &&
+        (this.readyData.features[index].geometry as any).coordinates.length > 0
       ) {
-        const segments = this.readyData.features[0].geometry.coordinates;
+        const segments = (this.readyData.features[index].geometry as any)
+          .coordinates;
+        const localSegments = segments.slice();
 
         const startingSegmentIndex = this.findStartingSegmentIndex(
-          segments as JsonArray[]
+          localSegments as JsonArray[]
         );
         const orderedSegments = this.orderSegments(
-          segments as JsonArray[],
+          localSegments as JsonArray[],
           startingSegmentIndex
         );
 
@@ -1709,18 +1710,24 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
     }
 
-    private getMultiPolygonCoordinates(): JsonArray | undefined {
+    private getMultiPolygonCoordinates(
+      index: number = 0
+    ): JsonArray | undefined {
       if (
         this.readyData &&
         isJsonArray(this.readyData.features) &&
         this.readyData.features.length > 0 &&
         isJsonObject(this.readyData.features[0]) &&
-        isJsonObject(this.readyData.features[0].geometry) &&
-        isJsonArray(this.readyData.features[0].geometry.coordinates) &&
-        isJsonArray(this.readyData.features[0].geometry.coordinates[0])
+        isJsonObject(this.readyData.features[index].geometry as any) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates
+        ) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates[0]
+        )
       ) {
         return (
-          this.readyData.features[0].geometry.coordinates[0] as any
+          (this.readyData.features[index].geometry as any).coordinates[0] as any
         )[0] as JsonArray;
       }
     }
@@ -1854,7 +1861,7 @@ export function toFeatureCollection(
   }
   if (Array.isArray(json) && json.every((item) => isGeometries(item))) {
     return featureCollection(
-      json.map((item) => feature(item, item.properties))
+      json.map((item) => feature(item, (item as any).properties))
     ) as FeatureCollectionWithCrs;
   }
 }

@@ -50,6 +50,13 @@ import GeoJsonCatalogItem from "../../../Models/Catalog/CatalogItems/GeoJsonCata
 import KmlCatalogItem from "../../../Models/Catalog/CatalogItems/KmlCatalogItem";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
+import {
+  MeasureAngleTool,
+  MeasureLineTool,
+  MeasurePointTool,
+  MeasurePolygonTool
+} from "../../Map/MapNavigation/Items";
+import { MeasureToolsController } from "../../Map/MapNavigation/Items/MeasureTools";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -420,10 +427,8 @@ class ViewingControls extends React.Component<
             const positions: Cartographic[] = [];
             const descriptions: string[] = [];
 
-            let fileName = "";
             let pathNotes = "";
             if (fc.features.length > 0 && fc.features[0].properties) {
-              fileName = fc.features[0].properties.name || "";
               pathNotes = fc.features[0].properties.desc || "";
               fc.features.shift();
             }
@@ -470,12 +475,13 @@ class ViewingControls extends React.Component<
               ? await sampleTerrainMostDetailed(terrainProvider, positions)
               : positions;
 
-            item.terria.measurableGeometryManager.sampleFromCartographics(
+            item.terria.measurableGeometryManager[
+              item.terria.measurableGeometryIndex
+            ].sampleFromCartographics(
               resolvedPositions,
               false,
               true,
               descriptions,
-              fileName,
               pathNotes
             );
           };
@@ -576,7 +582,26 @@ class ViewingControls extends React.Component<
         {MeasurableGeometryMixin.isMixedInto(item) && item.canUseAsPath && (
           <li key={"workbench.measureItem"}>
             <ViewingControlMenuButton
-              onClick={() => runInAction(() => item.computePath())}
+              disabled={
+                this.props.viewState.measurablePanelIsVisible &&
+                !this.props.viewState.terria.measurableGeomList[
+                  this.props.viewState.terria.measurableGeometryIndex
+                ].isFileUploaded
+              }
+              onClick={() =>
+                runInAction(() => {
+                  item.computePath();
+                  [
+                    MeasureToolsController.id,
+                    MeasureLineTool.id,
+                    MeasurePolygonTool.id,
+                    MeasurePointTool.id,
+                    MeasureAngleTool.id
+                  ].forEach((id) =>
+                    viewState.terria.mapNavigationModel.disable(id)
+                  );
+                })
+              }
               title="Usa il dato del layer come percorso di cui misurare altitudine e statistiche"
             >
               <BoxViewingControl>

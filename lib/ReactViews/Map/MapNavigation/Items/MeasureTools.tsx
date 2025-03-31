@@ -74,7 +74,7 @@ export class MeasureToolsController extends MapNavigationItemController {
   }
 
   get viewerMode(): ViewerMode | undefined {
-    return ViewerMode.Cesium;
+    return undefined;
   }
 
   @action.bound
@@ -220,13 +220,16 @@ export class MeasureLineTool extends MapNavigationItemController {
   onPointClicked(pointEntities: CustomDataSource) {
     this.updateDistance(pointEntities);
     // compute sampled path
-    this.terria.measurableGeometryManager.sampleFromCustomDataSource(
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCustomDataSource(
       pointEntities,
       this.userDrawing.closeLoop,
       false,
-      this.terria.measurableGeom?.pointDescriptions,
-      this.terria.measurableGeom?.filename,
-      this.terria.measurableGeom?.pathNotes
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pointDescriptions,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pathNotes
     );
   }
 
@@ -299,7 +302,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   }
 
   get viewerMode(): ViewerMode | undefined {
-    return ViewerMode.Cesium;
+    return undefined;
   }
 
   @computed
@@ -487,13 +490,16 @@ export class MeasurePolygonTool extends MapNavigationItemController {
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
     // compute sampled path
-    this.terria.measurableGeometryManager.sampleFromCustomDataSource(
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCustomDataSource(
       pointEntities,
       this.userDrawing.closeLoop,
       false,
-      this.terria.measurableGeom?.pointDescriptions,
-      this.terria.measurableGeom?.filename,
-      this.terria.measurableGeom?.pathNotes
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pointDescriptions,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pathNotes
     );
   }
 
@@ -700,13 +706,16 @@ export class MeasurePointTool extends MapNavigationItemController {
   }
 
   onPointClicked(pointEntities: CustomDataSource) {
-    this.terria.measurableGeometryManager.sampleFromCustomDataSource(
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCustomDataSource(
       pointEntities,
       this.userDrawing.closeLoop,
       true,
-      this.terria.measurableGeom?.pointDescriptions,
-      this.terria.measurableGeom?.filename,
-      this.terria.measurableGeom?.pathNotes
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pointDescriptions,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pathNotes
     );
   }
 

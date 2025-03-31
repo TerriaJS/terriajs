@@ -6,6 +6,7 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import MeasurableGeometryManager from "../ViewModels/MeasurableGeometryManager";
 
 type MixinModel = Model<MappableTraits>;
 
@@ -23,19 +24,26 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
     abstract computePath(): void;
 
     @action
-    update(stopPoints: Cartographic[], filename?: any, pathNotes?: any) {
-      this.terria.measurableGeometryManager.sampleFromCartographics(
+    update(stopPoints: Cartographic[], pathNotes?: any, indexPath?: number) {
+      if (indexPath && !this.terria.measurableGeometryManager[indexPath]) {
+        this.terria.measurableGeometryManager.push(
+          Object.freeze(new MeasurableGeometryManager(this.terria))
+        );
+      }
+      this.terria.measurableGeometryManager[
+        this.terria.measurableGeometryIndex
+      ].sampleFromCartographics(
         stopPoints,
         false,
         false,
         [],
-        filename,
         pathNotes,
-        true
+        true,
+        indexPath
       );
     }
 
-    asPath(positions: Cartographic[], filename?: any, pathNotes?: any) {
+    asPath(positions: Cartographic[], pathNotes?: any, indexPath?: number) {
       if (!this?.terria?.cesium?.scene) {
         return;
       }
@@ -48,9 +56,8 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
           sampleTerrainMostDetailed(terrainProvider, pos)
         );
       }
-
       prom.then((newPositions: Cartographic[]) => {
-        this.update(newPositions, filename, pathNotes);
+        this.update(newPositions, pathNotes, indexPath);
       });
     }
   }

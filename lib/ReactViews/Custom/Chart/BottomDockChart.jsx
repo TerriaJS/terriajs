@@ -298,11 +298,17 @@ class Chart extends React.Component {
           const isStopPointSelected = this.props.selectedStopPointIdx !== null;
 
           const points = isStopPointSelected
-            ? this.props.terria.measurableGeom.stopPoints
-            : this.props.terria.measurableGeom.sampledPoints;
+            ? this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].stopPoints
+            : this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].sampledPoints;
 
           const sumDistances = isStopPointSelected
-            ? this.props.terria.measurableGeom.stopAirDistances
+            ? this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].stopAirDistances
                 .slice(0, idx + 1)
                 .reverse()
                 .reduce((acc, distance) => acc + distance, 0)

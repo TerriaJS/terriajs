@@ -24,9 +24,9 @@ export interface MeasurableGeometry {
   onlyPoints?: boolean;
   pointDescriptions?: string[];
   showDistanceLabels?: boolean;
-  filename?: string;
   pathNotes?: string;
   isFileUploaded?: boolean;
+  isPointAdding?: boolean;
 }
 
 export default class MeasurableGeometryManager {
@@ -44,11 +44,18 @@ export default class MeasurableGeometryManager {
 
   resample() {
     this.sampleFromCartographics(
-      this.terria.measurableGeom?.stopPoints ?? [],
-      undefined,
-      undefined,
-      undefined,
-      this.terria.measurableGeom?.filename
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.stopPoints ?? [],
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.isClosed,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.onlyPoints,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pointDescriptions,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pathNotes,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.isFileUploaded
     );
   }
 
@@ -57,7 +64,6 @@ export default class MeasurableGeometryManager {
     closeLoop: boolean = false,
     onlyPoints: boolean = false,
     pointDescriptions?: string[],
-    filename?: string,
     pathNotes?: string,
     isFileUploaded?: boolean
   ) {
@@ -94,7 +100,6 @@ export default class MeasurableGeometryManager {
       closeLoop,
       onlyPoints,
       pointDescriptions,
-      filename,
       pathNotes,
       isFileUploaded
     );
@@ -107,9 +112,9 @@ export default class MeasurableGeometryManager {
     closeLoop: boolean = false,
     onlyPoints: boolean = false,
     pointDescriptions: string[] = [],
-    filename?: string,
     pathNotes?: string,
-    isFileUploaded?: boolean
+    isFileUploaded?: boolean,
+    indexPath?: number
   ) {
     const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
@@ -213,9 +218,9 @@ export default class MeasurableGeometryManager {
             closeLoop,
             true,
             pointDescriptions,
-            filename,
             pathNotes,
-            isFileUploaded
+            isFileUploaded,
+            indexPath
           ]
         : [
             cartoPositions,
@@ -227,9 +232,9 @@ export default class MeasurableGeometryManager {
             closeLoop,
             false,
             [],
-            filename,
             pathNotes,
-            isFileUploaded
+            isFileUploaded,
+            indexPath
           ];
 
       this.updatePath(...updatePathParams);
@@ -247,11 +252,11 @@ export default class MeasurableGeometryManager {
     isClosed: boolean,
     onlyPoints: boolean = false,
     pointDescriptions: string[] = [],
-    filename?: string,
     pathNotes?: string,
-    isFileUploaded?: boolean
+    isFileUploaded?: boolean,
+    indexPath?: number
   ) {
-    this.terria.measurableGeom = {
+    const newGeometry = {
       isClosed: isClosed,
       hasArea: false,
       stopPoints: stopPoints,
@@ -264,16 +269,30 @@ export default class MeasurableGeometryManager {
       ),
       airDistance: stopAirDistances.reduce((sum, current) => sum + current, 0),
       groundDistance: stopGroundDistances.reduce(
-        (sum, current) => sum + current,
+        (sum: number, current: number) => sum + current,
         0
       ),
       sampledPoints: sampledPoints,
       sampledDistances: sampledDistances,
       onlyPoints: onlyPoints,
       pointDescriptions: pointDescriptions,
-      filename: filename,
       pathNotes: pathNotes,
-      isFileUploaded: isFileUploaded
+      isFileUploaded: isFileUploaded,
+      indexPath: indexPath
     };
+
+    if (indexPath !== undefined) {
+      while (this.terria.measurableGeomList.length < indexPath) {
+        this.terria.measurableGeomList.push(newGeometry);
+      }
+      this.terria.measurableGeomList[indexPath] = newGeometry;
+    } else if (
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+    ) {
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex] =
+        newGeometry;
+    } else {
+      this.terria.measurableGeomList.push(newGeometry);
+    }
   }
 }

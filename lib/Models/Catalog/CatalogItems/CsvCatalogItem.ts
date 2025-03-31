@@ -186,7 +186,6 @@ export default class CsvCatalogItem
       return acc;
     }, {} as { [key: string]: any[] });
 
-    const filename = columns["name"]?.[0] || "";
     const path_notes = columns["path_notes"]?.[0] || "";
     const longitudes = columns["longitude"] || [];
     const latitudes = columns["latitude"] || [];
@@ -206,12 +205,13 @@ export default class CsvCatalogItem
       ? await sampleTerrainMostDetailed(terrainProvider, positions)
       : positions;
 
-    this.terria.measurableGeometryManager.sampleFromCartographics(
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCartographics(
       resolvedPositions,
       false,
       true,
       descriptions,
-      filename,
       path_notes
     );
   }

@@ -93,7 +93,6 @@ export default class UserDrawing extends MappableMixin(
   private drawRectangle: boolean;
 
   private mousePointEntity?: Entity;
-  private disposeStopPointsReaction?: IReactionDisposer;
   private disposeShowDistanceLabelsReaction?: IReactionDisposer;
   private disposeClampMeasureLineToGround?: IReactionDisposer;
 
@@ -244,7 +243,10 @@ export default class UserDrawing extends MappableMixin(
   }
 
   private updateSegmentLabels() {
-    if (!this.terria.measurableGeom?.showDistanceLabels) {
+    if (
+      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.showDistanceLabels
+    ) {
       const toRemove: Entity[] = [];
       for (const entity of this.otherEntities.entities.values) {
         if (entity.name && entity.name.startsWith("SegmentLabel-")) {
@@ -254,7 +256,10 @@ export default class UserDrawing extends MappableMixin(
       toRemove.forEach((e) => this.otherEntities.entities.remove(e));
       return;
     }
-    if (!this.terria.measurableGeom.onlyPoints) {
+    if (
+      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        .onlyPoints
+    ) {
       const toRemove: Entity[] = [];
       for (const entity of this.otherEntities.entities.values) {
         if (entity.name && entity.name.startsWith("SegmentLabel-")) {
@@ -419,6 +424,29 @@ export default class UserDrawing extends MappableMixin(
     this.terria.currentViewer.notifyRepaintRequired();
   }
 
+  private refreshPoints() {
+    this.pointEntities.entities.removeAll();
+    const idx = this.terria.measurableGeometryIndex;
+    const stopPoints = this.terria.measurableGeomList[idx]?.stopPoints;
+    if (stopPoints) {
+      for (let i = 0; i < stopPoints.length; ++i) {
+        const pointEntity = new Entity({
+          position: new ConstantPositionProperty(
+            Cartographic.toCartesian(stopPoints[i])
+          ),
+          billboard: {
+            image: this.svgPoint,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
+          }
+        });
+        this.pointEntities.entities.add(pointEntity);
+      }
+    }
+    this.updateSegmentLabels();
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
   enterDrawMode(sender?: any) {
     this.isAngleMeasuring = sender === MeasureAngleTool.id;
     this.isPointMeasuring = sender === MeasurePointTool.id;
@@ -444,38 +472,44 @@ export default class UserDrawing extends MappableMixin(
       this.inDrawMode = true;
     });
 
-    this.disposeStopPointsReaction = reaction(
-      () => this.terria.measurableGeom?.stopPoints,
+    // disposeStopPointsReaction
+    reaction(
+      () =>
+        this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+          ?.stopPoints,
       (stopPoints, previousStopPoints) => {
         if (stopPoints) {
           const previousSize = previousStopPoints?.length || 0;
           const newSize = stopPoints.length;
           if (previousSize === newSize) {
             runInAction(() => {
-              this.pointEntities.entities.removeAll();
-              for (let i = 0; i < stopPoints.length; ++i) {
-                const pointEntity = new Entity({
-                  position: new ConstantPositionProperty(
-                    Cartographic.toCartesian(stopPoints[i])
-                  ),
-                  billboard: {
-                    image: this.svgPoint,
-                    heightReference: HeightReference.CLAMP_TO_GROUND,
-                    eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
-                  }
-                });
-                this.pointEntities.entities.add(pointEntity);
-              }
+              this.refreshPoints();
             });
-            this.updateSegmentLabels();
-            this.terria.currentViewer.notifyRepaintRequired();
+          } else {
+            runInAction(() => {
+              this.terria.measurableGeomList[
+                this.terria.measurableGeometryIndex
+              ].isPointAdding = false;
+            });
           }
         }
       }
     );
 
+    // disposeChangePathReaction
+    reaction(
+      () => this.terria.measurableGeometryIndex,
+      () => {
+        runInAction(() => {
+          this.refreshPoints();
+        });
+      }
+    );
+
     this.disposeShowDistanceLabelsReaction = reaction(
-      () => this.terria.measurableGeom?.showDistanceLabels!!,
+      () =>
+        this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+          ?.showDistanceLabels!!,
       (showLabels: boolean) => {
         if (!showLabels) {
           const labelsToRemove: Entity[] = [];
@@ -487,6 +521,15 @@ export default class UserDrawing extends MappableMixin(
           labelsToRemove.forEach((e) => this.otherEntities.entities.remove(e));
         } else {
           this.updateSegmentLabels();
+        }
+      }
+    );
+
+    reaction(
+      () => this.terria.measurableGeomList.length,
+      (newLength, oldLength) => {
+        if (newLength < oldLength) {
+          this.refreshPoints();
         }
       }
     );
@@ -715,6 +758,15 @@ export default class UserDrawing extends MappableMixin(
       buttonText: this.getButtonText(),
       onCancel: () => {
         runInAction(() => {
+          this.terria.measurableGeometryIndex = 0;
+          this.terria.measurableGeomList.splice(
+            1,
+            this.terria.measurableGeomList.length - 1
+          );
+          this.terria.measurableGeometryManager.splice(
+            1,
+            this.terria.measurableGeometryManager.length - 1
+          );
           if (this.onDrawingComplete) {
             const isDrawingComplete =
               this.pointEntities.entities.values.length >= 2;
@@ -761,8 +813,15 @@ export default class UserDrawing extends MappableMixin(
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
   private prepareToAddNewPoint() {
-    if (this.terria.measurableGeom) {
-      this.terria.measurableGeom.pointDescriptions?.push("");
+    if (this.terria.measurableGeomList[this.terria.measurableGeometryIndex]) {
+      this.terria.measurableGeomList[
+        this.terria.measurableGeometryIndex
+      ].pointDescriptions?.push("");
+      runInAction(() => {
+        this.terria.measurableGeomList[
+          this.terria.measurableGeometryIndex
+        ].isPointAdding = true;
+      });
     }
     runInAction(() => {
       this.terria.mapInteractionModeStack.pop();
@@ -834,7 +893,9 @@ export default class UserDrawing extends MappableMixin(
                 if (
                   !this.isAngleMeasuring &&
                   !this.isPointMeasuring &&
-                  this.terria.measurableGeom?.showDistanceLabels
+                  this.terria.measurableGeomList[
+                    this.terria.measurableGeometryIndex
+                  ]?.showDistanceLabels
                 ) {
                   this.updateSegmentLabels();
                 }

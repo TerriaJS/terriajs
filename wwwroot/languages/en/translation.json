@@ -96,7 +96,10 @@
     "geometrySummaryAreaAir": "Air area",
     "geometrySummarySlope": "Slope %",
     "textareaPlaceholder": "Enter your notes here...",
-    "filenamePlaceholder": "Filename..."
+    "elementPlaceholder": "Element No.",
+    "changePath": "Change the current path",
+    "addPath": "Add a new path",
+    "removePath": "Delete the current path"
   },
   "elevationChart": {
     "header": "Elevation profile",
@@ -105,10 +108,14 @@
     "measureGround": "clamped to ground"
   },
   "downloadData": {
+    "downloadPanel": "Export",
+    "filenamePlaceholder": "Enter the filename...",
     "formatPlaceholder": "Select format",
     "lines": "Lines",
     "points": "Points",
-    "polygon": "Polygon"
+    "polygon": "Polygon",
+    "singlepath": "Single Path",
+    "downloadCurrent": "only current element"
   },
   "pickInfo": {
     "toolName": "Info",

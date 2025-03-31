@@ -99,7 +99,10 @@
     "geometrySummaryAreaAir": "Area in aria",
     "geometrySummarySlope": "Pendenza %",
     "textareaPlaceholder": "Inserisci le tue note...",
-    "filenamePlaceholder": "Nome file..."
+    "elementPlaceholder": "Elemento num.",
+    "changePath": "Cambia il percorso",
+    "addPath": "Aggiungi un nuovo percorso",
+    "removePath": "Rimuovi il percorso attuale"
   },
   "elevationChart": {
     "header": "Profilo altimetrico",
@@ -108,10 +111,14 @@
     "measureGround": "al suolo"
   },
   "downloadData": {
+    "downloadPanel": "Esporta",
+    "filenamePlaceholder": "Inserisci il nome del file...",
     "formatPlaceholder": "Seleziona il formato",
     "lines": "Linee",
     "points": "Punti",
-    "polygon": "Poligono"
+    "polygon": "Poligono",
+    "singlepath": "Percorso singolo",
+    "downloadCurrent": "solo elemento corrente"
   },
   "pickInfo": {
     "toolName": "Info",

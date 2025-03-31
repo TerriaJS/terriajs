@@ -212,14 +212,16 @@ class KmlCatalogItem
     const polygons = entities.filter((e) => e?.polygon);
     const polylines = entities.filter((e) => e?.polyline);
 
-    console.log("test-kmlcatalogitem canUseAsPath entities", entities);
-
-    if (polygons.length > 0) {
+    if (polygons.length === 1) {
       return this.isPolygonValid(polygons) || this.arePolylinesValid(polygons);
-    } else if (polylines.length > 0) {
+    } else if (polylines.length === 1) {
       return (
         this.isPolygonValid(polylines) || this.arePolylinesValid(polylines)
       );
+    } else if (polylines.length > 1) {
+      return polylines.every((polyline) => this.arePolylinesValid([polyline]));
+    } else if (polygons.length > 1) {
+      return polygons.every((polygon) => this.isPolygonValid([polygon]));
     } else {
       return false;
     }
@@ -227,7 +229,6 @@ class KmlCatalogItem
 
   // Checks if the provided polygons are valid by ensuring only one point is connected exactly twice.
   private isPolygonValid(polygons: Entity[]): boolean {
-    console.log("test-kmlcatalogitem canUseAsPath isPolygonValid");
     const pointOccurrences: { point: Cartesian3; count: number }[] = [];
     polygons.forEach((polygon) => {
       const points = this.getPositions(polygon);
@@ -235,11 +236,6 @@ class KmlCatalogItem
         this.updatePointOccurrences(pointOccurrences, point)
       );
     });
-
-    console.log(
-      "test-kmlcatalogitem canUseAsPath isPolygonValid pointOccurrences",
-      pointOccurrences
-    );
 
     const validPoints = pointOccurrences.filter(
       ({ count }) => count === 2
@@ -249,7 +245,6 @@ class KmlCatalogItem
 
   // Checks if the provided polylines are valid by ensuring exactly two points are connected only once.
   private arePolylinesValid(polylines: Entity[]): boolean {
-    console.log("test-kmlcatalogitem arePolylinesValid");
     const pointOccurrences: { point: Cartesian3; count: number }[] = [];
 
     polylines.forEach((polyline) => {
@@ -257,11 +252,6 @@ class KmlCatalogItem
       this.updatePointOccurrences(pointOccurrences, points[0]);
       this.updatePointOccurrences(pointOccurrences, points[points.length - 1]);
     });
-
-    console.log(
-      "test-kmlcatalogitem arePolylinesValid pointOccurences",
-      pointOccurrences
-    );
 
     const validPoints = pointOccurrences.filter(
       ({ count }) => count === 1
@@ -287,39 +277,24 @@ class KmlCatalogItem
 
   computePath() {
     const entities = this._dataSource?.entities?.values ?? [];
-    const polygons = entities.filter((e) => e && e.polygon);
-    const polylines = entities.filter((e) => e && e.polyline);
-    const items = [...polygons, ...polylines];
+    const items = entities.filter((e) => e && (e.polygon || e.polyline));
     if (items.length === 0) return;
 
-    const firstItem = items[0];
-    const description = firstItem.description?.getValue(JulianDate.now());
-
-    let name = "";
-    let pathNotes = "";
-
-    if (description) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(description, "text/html");
-      name = firstItem.name || "";
-      pathNotes = doc.body.textContent || "";
-    }
-
-    const allCoordinates =
-      items.length === 1
-        ? this.getPositions(firstItem)
-        : this.orderEntities(items).flatMap(this.getPositions);
-
-    const allCartographics = allCoordinates.map((elem) =>
-      Cartographic.fromCartesian(elem)
-    );
-
-    /*const positions =
-      polylines.length > 0
-        ? this.getUniqueCartographics(allCartographics)
-        : allCartographics;*/
-    const positions = allCartographics;
-    this.asPath(positions, name, pathNotes);
+    items.forEach((element, i) => {
+      const description = element.description?.getValue(JulianDate.now());
+      let pathNotes = "";
+      if (description) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(description, "text/html");
+        pathNotes = doc.body.textContent || "";
+      }
+      const allCoordinates = this.getPositions(element);
+      const allCartographics = allCoordinates.map((elem) =>
+        Cartographic.fromCartesian(elem)
+      );
+      const positions = allCartographics;
+      this.asPath(positions, pathNotes, i);
+    });
   }
 
   // Retrieves the positions of an entity, either from a polyline or polygon.
@@ -363,7 +338,6 @@ class KmlCatalogItem
   public async sampleFromKmlData(): Promise<void> {
     const entities = this._dataSource?.entities?.values ?? [];
     if (entities.length === 0) return;
-    let name = "";
     let pathNotes = "";
     let pointDescriptions: string[] = [];
     const folder = entities[0];
@@ -372,23 +346,20 @@ class KmlCatalogItem
     if (descriptionValue) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(descriptionValue, "text/html");
-      name = folder.name || "";
       pathNotes = doc.body.textContent || "";
     }
 
-    pointDescriptions = (folder as any)._children.map(
-      (entity: any, index: number) => {
-        const descriptionValue = entity.description?.getValue(JulianDate.now());
-        if (descriptionValue) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(descriptionValue, "text/html");
-          return doc.body.textContent || "";
-        }
-        return "";
+    pointDescriptions = (folder as any)._children.map((entity: any) => {
+      const descriptionValue = entity.description?.getValue(JulianDate.now());
+      if (descriptionValue) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(descriptionValue, "text/html");
+        return doc.body.textContent || "";
       }
-    );
+      return "";
+    });
 
-    let cartesianPositions: Cartesian3[] = entities.flatMap(
+    const cartesianPositions: Cartesian3[] = entities.flatMap(
       (entity) => entity.position?.getValue(JulianDate.now())?.clone() ?? []
     );
     const cartographicPositions = cartesianPositions.map((pos) =>
@@ -404,12 +375,13 @@ class KmlCatalogItem
       ? await sampleTerrainMostDetailed(terrainProvider, cartographicPositions)
       : cartographicPositions;
 
-    this.terria.measurableGeometryManager.sampleFromCartographics(
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCartographics(
       resolvedPositions,
       false,
       true,
       pointDescriptions,
-      name,
       pathNotes
     );
   }

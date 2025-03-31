@@ -125,6 +125,15 @@ export const registerMapNavigations = (viewState: ViewState) => {
           }
           viewState.terria.mapNavigationModel.enable(id);
         });
+        terria.measurableGeometryIndex = 0;
+        terria.measurableGeomList.splice(
+          1,
+          terria.measurableGeomList.length - 1
+        );
+        terria.measurableGeometryManager.splice(
+          1,
+          terria.measurableGeometryManager.length - 1
+        );
       });
     }
   });
@@ -150,6 +159,15 @@ export const registerMapNavigations = (viewState: ViewState) => {
         viewState.panel = undefined;
         viewState.measurablePanelIsVisible = false;
         viewState.measurableChartIsVisible = false;
+        terria.measurableGeometryIndex = 0;
+        terria.measurableGeomList.splice(
+          1,
+          terria.measurableGeomList.length - 1
+        );
+        terria.measurableGeometryManager.splice(
+          1,
+          terria.measurableGeometryManager.length - 1
+        );
       });
     },
     onOpen: () => {
@@ -191,6 +209,15 @@ export const registerMapNavigations = (viewState: ViewState) => {
         viewState.panel = undefined;
         viewState.measurablePanelIsVisible = false;
         viewState.measurableChartIsVisible = false;
+        terria.measurableGeometryIndex = 0;
+        terria.measurableGeomList.splice(
+          1,
+          terria.measurableGeomList.length - 1
+        );
+        terria.measurableGeometryManager.splice(
+          1,
+          terria.measurableGeometryManager.length - 1
+        );
       });
     },
     onOpen: () => {
@@ -205,10 +232,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
             viewState.terria.mapNavigationModel.disable(id);
           }
         );
-        if (viewState.terria.measurableGeom) {
-          viewState.terria.measurableGeom.filename = "";
-          viewState.terria.measurableGeom.pathNotes = "";
-          viewState.terria.measurableGeom.pointDescriptions = [];
+        if (
+          viewState.terria.measurableGeomList &&
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ]
+        ) {
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pathNotes = "";
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pointDescriptions = [];
         }
       });
     }
@@ -233,8 +268,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
         viewState.terria.mapNavigationModel.enable(MeasurePolygonTool.id);
         viewState.terria.mapNavigationModel.enable(MeasurePointTool.id);
         viewState.panel = undefined;
+        viewState.terria.measurableGeomList;
         viewState.measurablePanelIsVisible = false;
         viewState.measurableChartIsVisible = false;
+        terria.measurableGeometryIndex = 0;
+        terria.measurableGeomList.splice(
+          1,
+          terria.measurableGeomList.length - 1
+        );
+        terria.measurableGeometryManager.splice(
+          1,
+          terria.measurableGeometryManager.length - 1
+        );
       });
     },
     onOpen: () => {
@@ -251,10 +296,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
           }
           viewState.terria.mapNavigationModel.disable(id);
         });
-        if (viewState.terria.measurableGeom) {
-          viewState.terria.measurableGeom.filename = "";
-          viewState.terria.measurableGeom.pathNotes = "";
-          viewState.terria.measurableGeom.pointDescriptions = [];
+        if (
+          viewState.terria.measurableGeomList &&
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ]
+        ) {
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pathNotes = "";
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pointDescriptions = [];
         }
       });
     }
@@ -280,6 +333,15 @@ export const registerMapNavigations = (viewState: ViewState) => {
         viewState.terria.mapNavigationModel.enable(MeasureLineTool.id);
         viewState.panel = undefined;
         viewState.measurablePanelIsVisible = false;
+        terria.measurableGeometryIndex = 0;
+        terria.measurableGeomList.splice(
+          1,
+          terria.measurableGeomList.length - 1
+        );
+        terria.measurableGeometryManager.splice(
+          1,
+          terria.measurableGeometryManager.length - 1
+        );
       });
     },
     onOpen: () => {
@@ -296,10 +358,18 @@ export const registerMapNavigations = (viewState: ViewState) => {
           }
           viewState.terria.mapNavigationModel.disable(id);
         });
-        if (viewState.terria.measurableGeom) {
-          viewState.terria.measurableGeom.filename = "";
-          viewState.terria.measurableGeom.pathNotes = "";
-          viewState.terria.measurableGeom.pointDescriptions = [];
+        if (
+          viewState.terria.measurableGeomList &&
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ]
+        ) {
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pathNotes = "";
+          viewState.terria.measurableGeomList[
+            viewState.terria.measurableGeometryIndex
+          ].pointDescriptions = [];
         }
       });
     }
