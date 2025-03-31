@@ -2,6 +2,7 @@
 
 #### next release (8.9.3)
 
+- Update html-to-react to 1.7.0
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
