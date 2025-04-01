@@ -1,6 +1,12 @@
 # Change Log
 
-#### next release (8.9.2)
+#### next release (8.9.3)
+
+- Remove unused d3-array dependency.
+- Update to plugin-error 2.0.1
+- [The next improvement]
+
+#### 8.9.2 - 2025-03-31
 
 - Replace clipboardjs with native browser clipboard
 - Update react-swipeable to v7. #7542
@@ -14,16 +20,13 @@
 - TSify `DataCatalogTab` and convert it to functional component #7476
 - Update to shpjs 6.1.0.
 - Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
-- Update to plugin-error 2.0.1
-- [The next improvement]
+- Return lat/lon as numbers from `geoJsonGeometryFromGeoRssSimpleGeometry` and `geoJsonGeometryFromW3cGeometry`.
+- Remove unused babel/parser dependency.
 
 #### 8.9.1 - 2025-03-24
 
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
-
-- Remove unused babel/parser dependency.
-- [The next improvement]
 
 #### 8.9.0 - 2025-03-17
 
