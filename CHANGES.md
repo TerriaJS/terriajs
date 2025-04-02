@@ -4,6 +4,7 @@
 
 - Remove unused d3-array dependency.
 - Update to plugin-error 2.0.1
+- TSify `MenuButton` and convert it to functional component. #7576
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
