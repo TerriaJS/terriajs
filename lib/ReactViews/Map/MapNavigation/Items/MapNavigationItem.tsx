@@ -26,15 +26,16 @@ class MapNavigationItemBase extends React.Component<PropTypes> {
 
   render() {
     const { closeTool = true, item, expandInPlace, i18n } = this.props;
+
     if (item.render)
       return (
         <Control key={item.id} ref={item.controller.itemRef}>
           {item.render}
         </Control>
       );
+
     return (
       <Control ref={item.controller.itemRef}>
-        {/* in small screens, do not expand in place to avoid overlapping buttons */}
         <MapIconButton
           expandInPlace={expandInPlace === undefined ? true : expandInPlace}
           noExpand={item.noExpand}
@@ -61,14 +62,17 @@ export const Control = styled(Box).attrs({
   column: true
 })`
   pointer-events: auto;
+
   @media (min-width: ${(props) => props.theme.sm}px) {
     margin: 0;
     padding-top: 10px;
     height: auto;
   }
+
   @media (max-width: ${(props) => props.theme.mobile}px) {
     padding-right: 10px;
-    margin-bottom: 5px;
+    padding-top: 15px;
+    margin-bottom: 10px;
   }
   text-align: center;
 `;

@@ -39,7 +39,7 @@ const MapDataCount = observer(function (props: Props) {
     : t("countDatasets.noMapDataEnabled");
 
   return (
-    <Box css={"flex-shrink 0.5;"}>
+    <Box css={"flex-shrink: 0.5;"}>
       <ButtonAsLabel light={hasMapData}>
         <Spacing right={1} />
         <StyledIcon

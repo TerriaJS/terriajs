@@ -113,6 +113,7 @@ const InnerPanel = createReactClass({
         )}
         css={`
           background: ${(p) => p.theme.dark};
+          opacity: 0.95;
         `}
         ref={this.props.innerRef}
         onClick={(e) => e.stopPropagation()}

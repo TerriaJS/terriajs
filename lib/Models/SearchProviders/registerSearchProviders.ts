@@ -1,6 +1,8 @@
 import AustralianGazetteerSearchProvider from "./AustralianGazetteerSearchProvider";
 import BingMapsSearchProvider from "./BingMapsSearchProvider";
 import CesiumIonSearchProvider from "./CesiumIonSearchProvider";
+import RerSearchProvider from "./RerSearchProvider";
+import NominatimSearchProvider from "./NominatimSearchProvider";
 import SearchProviderFactory from "./SearchProviderFactory";
 
 export default function registerSearchProviders() {
@@ -9,9 +11,16 @@ export default function registerSearchProviders() {
     BingMapsSearchProvider
   );
 
+  SearchProviderFactory.register(RerSearchProvider.type, RerSearchProvider);
+
   SearchProviderFactory.register(
     CesiumIonSearchProvider.type,
     CesiumIonSearchProvider
+  );
+
+  SearchProviderFactory.register(
+    NominatimSearchProvider.type,
+    NominatimSearchProvider
   );
 
   SearchProviderFactory.register(

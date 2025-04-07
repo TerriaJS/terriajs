@@ -19,7 +19,15 @@
     "showRawData": "Mostra i dati grezzi",
     "satelliteSuggestionBtn": "Mostra {{catalogItemName}} in questa posizione",
     "clickToAddData": "Clicca su '$t(addData.addDataBtnText)' per aggiungere dati alla mappa.",
-    "clickMap": "Clicca sulla mappa per saperne di più su una posizione"
+    "clickMap": "Clicca sulla mappa per saperne di più su una posizione",
+    "heightAboveSea": "m s.l.m.",
+    "elevation": "Altitudine",
+    "copyButtonTooltip": "Copia le coordinate negli appunti",
+    "pinButtonTooltip": "Mostra il punto sulla mappa",
+    "downloadButtonTooltip": "Scarica le coordinate come GPX",
+    "whereAmI": "Dove sono?",
+    "positionDetails": "dettagli della posizione",
+    "details": "Dettagli"
   },
   "countDatasets": {
     "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>",
@@ -48,9 +56,73 @@
     "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br /><br />ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br /><br />La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
   },
   "measure": {
-    "measureDistance": "Misura la distanza fra punti",
-    "measureTool": "Strumento di misura",
-    "measureToolTitle": "Misuratore lineare"
+    "measureTool": "Apri strumento di misura",
+    "measurePointTool": "Strumento di misura di punti",
+    "measureLineTool": "Strumento di misura di linee",
+    "measurePolygonTool": "Strumento di misura di aree",
+    "measureToolTitle": "Strumenti di misura",
+    "measureAngleTool": "Strumento di misura degli angoli",
+    "measurePointToolTitle": "Misuratore di punti",
+    "measureLineToolTitle": "Misuratore lineare",
+    "measurePolygonToolTitle": "Misuratore di area",
+    "measureDistance": "Misura la lunghezza di una linea",
+    "measureAngleToolTitle": "Misuratore di angoli",
+    "measureArea": "Misura l'area di un poligono",
+    "measureAngle": "Misura l'angolo tra due linee",
+    "measureLineToolMessage": "dist. geodetica",
+    "measurePolygonToolMessagePerimeter": "perimetro",
+    "measurePolygonToolMessageArea": "area",
+    "measureAngleToolMessage": "angolo"
+  },
+  "measurableGeometry": {
+    "header": "MISURE",
+    "clampLineToGround": "ancorato al terreno",
+    "dontClampLineToGround": "non ancorato",
+    "clampLineButtonTitle": "cambia la modalità di disegno delle geometrie sulla mappa, da ancorato a libero e viceversa",
+    "samplingStepHeader": "Passo di campionamento del terreno (m)",
+    "samplingStepButtonText": "Cambia",
+    "samplingStepButtonTitle": "Cambia passo di campionamento",
+    "showElevationChart": "Mostra/nascondi il grafico altimetrico",
+    "geometrySummaryHeader": "Dettaglio",
+    "geometrySummaryElevationMin": "Alt. min",
+    "geometrySummaryElevationMax": "Alt. max",
+    "geometrySummaryElevationDiff": "Disl.",
+    "geometrySummaryElevationBear": "Rotta",
+    "geometrySummaryElevation": "Alt.",
+    "geometrySummaryStopSummary": "Dettaglio tappe",
+    "geometrySummaryDistGeo": "Dist. geodetica",
+    "geometrySummaryDistAir": "Dist. in aria",
+    "geometrySummaryDistGround": "Dist. al suolo",
+    "geometrySummaryPerimeterGeo": "Perimetro geodetica",
+    "geometrySummaryPerimeterAir": "Perimetro in aria",
+    "geometrySummaryAreaGeo": "Area geodetica",
+    "geometrySummaryAreaAir": "Area in aria",
+    "geometrySummarySlope": "Pendenza %",
+    "textareaPlaceholder": "Inserisci le tue note...",
+    "elementPlaceholder": "Elemento num.",
+    "changePath": "Cambia il percorso",
+    "addPath": "Aggiungi un nuovo percorso",
+    "removePath": "Rimuovi il percorso attuale"
+  },
+  "elevationChart": {
+    "header": "Profilo altimetrico",
+    "measure": "Misura",
+    "measureAir": "in aria",
+    "measureGround": "al suolo"
+  },
+  "downloadData": {
+    "downloadPanel": "Esporta",
+    "filenamePlaceholder": "Inserisci il nome del file...",
+    "formatPlaceholder": "Seleziona il formato",
+    "lines": "Linee",
+    "points": "Punti",
+    "polygon": "Poligono",
+    "singlepath": "Percorso singolo",
+    "downloadCurrent": "solo elemento corrente"
+  },
+  "pickInfo": {
+    "toolName": "Info",
+    "title": "Attiva la funzione Info quando si clicca in un punto della mappa"
   },
   "general": {
     "cancel": "Annulla",
@@ -97,6 +169,32 @@
     "captionText": "Questo ci aiuta a risolvere i problemi permettendoci di vedere quello che stai vedendo",
     "email": "Indirizzo email (opzionale)<br/><em>Non possiamo proseguire senza!</em>",
     "feedbackPreamble": "Ci piacerebbe sentire la tua opinione!"
+  },
+  "coordsPanel": {
+    "header": "Coordinate",
+    "btnConvert": "Converti",
+    "btnConvertTitle": "Converti coordinate",
+    "btnReset": "Reset",
+    "btnResetTitle": "Pulisci i campi",
+    "coordsInputMessage": "Lat, Lon (in gradi decimali) oppure X, Y oppure Est, Nord",
+    "coordsInputTooltip": "Se la finestra 'Informazioni' è aperta le coordinate sono lette da lì e non sono modificabili",
+    "srsSelectionTooltip": "Clicca per scegliere la conversione da utilizzare (se le coordinate sono geografiche l'elenco delle conversioni è filtrato con solo quelle ammissibili)",
+    "coordsResultMessage": "Lat, Lon (in gradi decimali) oppure X, Y oppure Est, Nord",
+    "copyTooltip": "Copia le coordinate negli Appunti",
+    "centerMaptooltip": "Centra la mappa alle coordinate indicate (attivo solo se sono cartografiche)"
+  },
+  "colorPanel": {
+    "header": "Colora",
+    "headerTitle": "Colora il terreno in base all'altitudine",
+    "title": "Range di altitudine da colorare",
+    "explanation": "range min - max (in metri)",
+    "warning": "Dopo aver premuto il bottone Applica, clicca sulla mappa per aggiornarla.",
+    "transparency": "Trasparenza",
+    "addButtonTitle": "Aggiungi un nuovo range",
+    "removeButtonTitle": "Rimuovi il range",
+    "fromPlaceholder": "Da",
+    "toPlaceholder": "A",
+    "applyButton": "Applica"
   },
   "settingPanel": {
     "performanceLabel": "Prestazioni",
@@ -170,7 +268,11 @@
     "convertNotificationFeedback": "Per domande o feedback, clicca qui.",
     "convertNotificationHelp": "Se hai creato il link di condivisione, controlla il menu Aiuto per vedere i suggerimenti su come aggiornare il link di condivisione.",
     "embedDescription": "Per incorporare, copia questo codice per incorporare questa mappa in una pagina HTML:",
-    "downloadMap": "Scarica mappa (png)"
+    "downloadMap": "Scarica mappa (png)",
+    "importExportMapTitle": "Salva/Carica da file",
+    "importExportMapExplanation": "Permette di esportare e importare la vista corrente della mappa in un file",
+    "importMapButton": "Carica",
+    "exportMapButton": "Salva"
   },
   "zoomCotrol": {
     "zoomReset": "Ripristina lo zoom",
@@ -239,8 +341,8 @@
       "devError": "È necessaria un'istanza di Terria.",
       "otherEntities": "Linee e poligoni",
       "messageHeader": "Disegnare sulla mappa",
-      "clickToAddAnotherPoint": "Clicca per aggiungere un altro punto",
-      "clickToAddFirstPoint": "Clicca per aggiungere un punto"
+      "clickToAddAnotherPoint": "Clicca per aggiungere un altro punto, clicca su un punto esistente per rimuoverlo, trascina un punto per spostarlo.",
+      "clickToAddFirstPoint": "Clicca per aggiungere il primo punto"
     },
     "terriaJSONcatalog": {
       "disclaimer": "Scarico di responsabilità",
@@ -528,6 +630,19 @@
         "cast": "Solo cast"
       },
       "name": "Ombre"
+    },
+    "clippingBox": {
+      "groupName": "Box di taglio",
+      "clipModel": "Taglia il modello",
+      "showClippingBox": "Mostra il box di taglio",
+      "keepBoxAboveGround": "Solo sopra il terreno",
+      "clipDirection": {
+        "name": "Direzione di taglio",
+        "options": {
+          "inside": "Taglia l'interno del box",
+          "outside": "Taglia l'esterno del box"
+        }
+      }
     },
     "webMapTileServiceCatalogItem": {
       "noUsableTileMatrixTitle": "Avvertimento",
@@ -938,7 +1053,8 @@
     "extraCreditLinks": {
       "disclaimer": "Scarico di responsabilità",
       "dataAttribution": "Attribuzione dei dati",
-      "basemap": "Mappa di base"
+      "basemap": "Attribuzione mappa di base",
+      "dataProvider": "Dati forniti da:"
     },
     "drawExtentHelper": {
       "drawExtent": "Disegnare l'estensione",
@@ -957,6 +1073,8 @@
       "devError": "cesium è richiesto.",
       "unusalTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché utilizza uno schema di tile insolito che non è supportato.",
       "notWebMercatorTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché non supporta la proiezione Web Mercator (EPSG:3857).",
+      "terrainServerErrorMessage": "Il server del Terreno al momento non risponde. Si può comunque usare le funzionalità di {{appName}} ma non in modalità 3D.",
+      "stoppedRenderingMessage": "L'errore potrebbe essere stato causato dall'aggiunta di un layer. Prova a rimuoverlo, se il problema rimane prova a ricaricare l'applicazione {{appName}}.",
       "failedToObtain": "Impossibile ottenere la tile dell'immagine X: {{x}} Y: {{y}} Livello: {{level}}.",
       "stoppedRenderingTitle": "Rendering della mappa 3D fallito",
       "terrainServerErrorTitle": "Server Terreno Non Risponde"
@@ -994,6 +1112,7 @@
       "json": "JSON",
       "gpx": "GPX",
       "csv": "CSV",
+      "ifc": "IFC",
       "opendatasoft-group": "Portale Opendatasoft",
       "shp": "Shapefile (zip)",
       "3d-tiles": "Tile 3D",
@@ -1001,6 +1120,7 @@
       "sdmx-group": "SDMX-JSON",
       "gltf": "GLTF",
       "carto": "Carto",
+      "carto-v3": "Carto V3",
       "czml": "CZML",
       "geoRss": "GeoRSS",
       "other": "Altro (usare il servizio di conversione)",
@@ -1008,13 +1128,17 @@
       "kml": "KML o KMZ",
       "esri-group": "Esri ArcGIS Server",
       "geojson": "GeoJSON",
+      "socrata-group": "Socrata Server",
       "esri-featureServer": "Esri ArcGIS FeatureServer (singolo livello)",
       "esri-mapServer": "Esri ArcGIS MapServer (singolo livello)",
       "wps-getCapabilities": "Server Web Processing Service (WPS)",
       "wfs-group": "Server Web Feature Service (WFS)",
       "wms-group": "Server Web Map Service (WMS)",
       "wmts-group": "Server Web Map Tile Service (WMTS)",
-      "assimp-local": "Convertitore file 3D (zip) (sperimentale)"
+      "assimp-local": "Convertitore file 3D (zip) (sperimentale)",
+      "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",
+      "assimp-remote": "3D file converter (experimental)",
+      "assimp-remote-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nZip files are also supported"
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
@@ -1063,6 +1187,7 @@
     "unverifiedExternalLink": {
       "title": "Attenzione: link non verificato",
       "denyText": "Annulla",
+      "message": "Stai per aprire: \n\n`{{url}}`  \n\nQuesto link non è verificato e potrebbe non essere sicuro.",
       "confirmText": "Apri in una nuova pagina"
     }
   },
@@ -1128,7 +1253,7 @@
     "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
     "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
-    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima",
+    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima <br><i>(premi CTRL per selezionare più layers)</i>",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vai alla mappa",
     "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali.",
@@ -1157,6 +1282,7 @@
     "toggleSplitterToolDisabled": "Si prega di disabilitare le altre funzionalità di confronto fianco a fianco per abilitare il confronto standard",
     "toggleSplitterTool": "Abilita il confronto affiancato tra due diversi set di dati",
     "errorTitle": "Impossibile comparare l'elemento del catalogo.",
+    "duplicateModelErrorMessage": "Errore nel confronto del layer `\"{{name}}\"`. Questo layer potrebbe non supportare la funzionalità di \"confronto\"",
     "modelNotFoundErrorMessage": "Modello ID `\"{{id}}\"`non è stato trovato"
   },
   "deltaTool": {
@@ -1202,6 +1328,7 @@
     "sectionLabel": "Grafici",
     "closePanel": "Chiudi pannello",
     "loading": "Caricamento dei dati del grafico...",
+    "showItemInChart": "Mostra il grafico di {{value}}",
     "noData": "Non sono stati trovati dati cartografici."
   },
   "catalogItem": {
@@ -1236,6 +1363,9 @@
       "addFirstText": "Aggiungi una nuova condizione",
       "addMoreText": "Aggiungi una condizione"
     }
+  },
+  "printView": {
+    "loading": "Creazione della vista di stampa in corso…"
   },
   "satellite": {
     "newLocation": "Nuova posizione",
@@ -1283,6 +1413,8 @@
     "colorScaleRangeMin": "Il valore minimo deve essere un numero.",
     "searchItemTitle": "Cerca",
     "searchItem": "Cerca",
+    "pathItem": "Percorso",
+    "pointsItem": "Punti",
     "dimensionsSelector": {
       "undefinedLabel": "Non specificato"
     },
@@ -1317,7 +1449,7 @@
     "viewMore": "Visualizza più risultati {{name}}",
     "viewLess": "Visualizza meno risultati {{name}}",
     "search": "Cerca '{{searchText}}' nel catalogo dei dati",
-    "searchInDataCatalog": "Cerca <1>'{{locationSearchText}}'</1> nel catalogo dei dati"
+    "searchInDataCatalog": "Cerca '{{locationSearchText}}' nel catalogo dei dati"
   },
   "addData": {
     "back": "Indietro",
@@ -1336,7 +1468,7 @@
     "closeDataPanel": "Chiudi pannello dati",
     "load": "Carica dati locali/web",
     "browse": "Sfoglia...",
-    "addDataBtnText": "Esplora i dati della mappa",
+    "addDataBtnText": "Esplora i dati",
     "localFile": "<0>Passo 2:</0> Selezionare il file",
     "note": "<0>Nota: </0>I dati aggiunti in questo modo non vengono salvati o resi visibili agli altri.",
     "infoText": "<0>Trascina un file qui per visualizzarlo localmente sulla mappa</0><1>(non sarà salvato o caricato su internet)</1>",
@@ -1447,6 +1579,10 @@
     "toolButtonTitle": "Modalità pedonale",
     "dropPedestrianTooltipMessage": "<b>Clic sinistro</b> per selezionare la posizione della goccia<br /><b>Clic destro / Esc</b> per annullare"
   },
+  "keyboardControls": {
+    "toolButtonTitle": "Navigazione da tastiera",
+    "header": "Controlli mappa da tastiera"
+  },
   "itemSearchTool": {
     "resetBtnText": "Cancella input",
     "searchBtnText": "Cerca",
@@ -1542,6 +1678,43 @@
       "title": "Errore nel caricamento dello strumento {{toolName}}"
     },
     "closeButtonTitle": "Chiudere lo strumento {{toolName}}"
+  },
+  "compare": {
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Seleziona"
+    },
+    "dateButton": {
+      "left": "Sinistra",
+      "right": "Destra",
+      "select": "Seleziona una data"
+    },
+    "dateLocationFilter": {
+      "cancel": "Cancella",
+      "filter": "Filtra per posizione",
+      "loading": "Caricamento...",
+      "location": "Ora mostra i dati disponibili in {{latitude}}, {{longitude}}",
+      "mouseTooltipMessage": "Click del tasto detro per cancellare",
+      "mouseTooltipTitle": "Seleziona una posizione"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Non specificato"
+    },
+    "done": "Fatto",
+    "entireMap": {
+      "emptyText": "Add new data to show across the entire map via the dotted menu above.",
+      "title": "Mappa intera"
+    },
+    "entireMapMenu": {
+      "browse": "Browse map data",
+      "hideAll": "Nascondi tutto",
+      "sendAllToBack": "Porta dietro",
+      "sendAllToFront": "Porta in primo piano"
+    },
+    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "leftPanel": "Pannello di sinistra",
+    "rightPanel": "Pannello di destra",
+    "title": "Compara"
   },
   "compass": {
     "guidance": {

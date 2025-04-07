@@ -53,9 +53,73 @@
     }
   },
   "measure": {
-    "measureTool": "Measure Tool",
-    "measureToolTitle": "Line Measure",
-    "measureDistance": "Measure distance between locations"
+    "measurePointTool": "Measure Point Tool",
+    "measureTool": "Open Measure Tool",
+    "measureLineTool": "Measure Line Tool",
+    "measurePolygonTool": "Measure Polygon Tool",
+    "measurePointToolTitle": "Point Measure",
+    "measureToolTitle": "Measure Tools",
+    "measureAngleTool": "Measure Angle Tool",
+    "measureLineToolTitle": "Line Measure",
+    "measurePolygonToolTitle": "Polygon Measure",
+    "measureAngleToolTitle": "Angle Measure",
+    "measureDistance": "Measure distance between locations",
+    "measureArea": "Measure the area of a polygon",
+    "measureAngle": "Measure the angle between two lines",
+    "measureLineToolMessage": "geodetic dist.",
+    "measurePolygonToolMessagePerimeter": "perimeter",
+    "measurePolygonToolMessageArea": "area",
+    "measureAngleToolMessage": "angle"
+  },
+  "measurableGeometry": {
+    "header": "MEASURABLE",
+    "clampLineToGround": "clamp lines to the ground",
+    "dontClampLineToGround": "free lines",
+    "clampLineButtonTitle": "turn on/off line clamping",
+    "samplingStepHeader": "Terrain sampling step (m)",
+    "samplingStepButtonText": "Change",
+    "samplingStepButtonTitle": "Change sampling step",
+    "showElevationChart": "Show/hide elevation chart",
+    "geometrySummaryHeader": "Summary",
+    "geometrySummaryElevationMin": "Alt. min",
+    "geometrySummaryElevationMax": "Alt. max",
+    "geometrySummaryElevationDiff": "Alt. diff.",
+    "geometrySummaryElevationBear": "Bearing",
+    "geometrySummaryElevation": "Alt.",
+    "geometrySummaryStopSummary": "Stop summary",
+    "geometrySummaryDistGeo": "Geodetic distance",
+    "geometrySummaryDistAir": "Air distance",
+    "geometrySummaryDistGround": "Ground distance",
+    "geometrySummaryPerimeterGeo": "Geodetic perimeter",
+    "geometrySummaryPerimeterAir": "Air perimeter",
+    "geometrySummaryAreaGeo": "Geodetic area",
+    "geometrySummaryAreaAir": "Air area",
+    "geometrySummarySlope": "Slope %",
+    "textareaPlaceholder": "Enter your notes here...",
+    "elementPlaceholder": "Element No.",
+    "changePath": "Change the current path",
+    "addPath": "Add a new path",
+    "removePath": "Delete the current path"
+  },
+  "elevationChart": {
+    "header": "Elevation profile",
+    "measure": "Measure",
+    "measureAir": "free",
+    "measureGround": "clamped to ground"
+  },
+  "downloadData": {
+    "downloadPanel": "Export",
+    "filenamePlaceholder": "Enter the filename...",
+    "formatPlaceholder": "Select format",
+    "lines": "Lines",
+    "points": "Points",
+    "polygon": "Polygon",
+    "singlepath": "Single Path",
+    "downloadCurrent": "only current element"
+  },
+  "pickInfo": {
+    "toolName": "Info",
+    "title": "Info on mouse click"
   },
   "location": {
     "errorGettingLocation": "Error getting location",
@@ -225,7 +289,11 @@
     "convertNotificationWarningsTitle": "Technical details",
     "convertErrorTitle": "Could not upgrade share link to V8",
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
-    "getShareSaveHelpMessage": "How to Bookmark Sharelinks"
+    "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
+    "importExportMapTitle": "Save/Load from file",
+    "importExportMapExplanation": "Import or export current map view and layers to a file",
+    "importMapButton": "Load",
+    "exportMapButton": "Save"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -297,6 +365,31 @@
     "feedbackBtnText": "Give Feedback",
     "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
+  "coordsPanel": {
+    "header": "Coordinate converter",
+    "btnConvert": "Convert",
+    "btnConvertTitle": "Convert coordinate",
+    "btnReset": "Reset",
+    "btnResetTitle": "Clean fields",
+    "coordsInputMessage": "Lat, Lon or X, Y or East, North",
+    "coordsInputTooltip": "If 'Info' panel is open, coords are getted from there and are readonly",
+    "srsSelectionTooltip": "Click to select conversion (if coordinates are geographic, only allowed conversions are showed)",
+    "copyTooltip": "Copy to clipboard",
+    "centerMaptooltip": "Move to coordinates (only with cartographic coordinates)"
+  },
+  "colorPanel": {
+    "header": "Color",
+    "headerTitle": "Color terreno by elevation",
+    "title": "Range of elevation",
+    "explanation": "range min - max (in meters)",
+    "warning": "Click on the map to update it after clicking Apply.",
+    "transparency": "Transparency",
+    "addButtonTitle": "Add a color range",
+    "removeButtonTitle": "Remove the color range",
+    "fromPlaceholder": "From",
+    "toPlaceholder": "To",
+    "applyButton": "Apply"
+  },
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
@@ -336,7 +429,15 @@
     "siteData": "Site Data",
     "latLon": "Lat / Lon ",
     "showRawData": "Show Raw Data",
-    "showCuratedData": "Show Curated Data"
+    "showCuratedData": "Show Curated Data",
+    "heightAboveSea": "m a.t.s.",
+    "elevation": "Elevation",
+    "copyButtonTooltip": "Copy coordinates to the clipboard",
+    "pinButtonTooltip": "Show the pin on the map",
+    "downloadButtonTooltip": "Dowload point as GPX",
+    "whereAmI": "Where am I?",
+    "positionDetails": "position details",
+    "details": "Details"
   },
   "welcomeMessage": {
     "title": "Let's get you started",
@@ -546,7 +647,9 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
     "searchItem": "Search",
     "searchItemTitle": "Search",
-    "splitScreenMode": "SPLIT SCREEN MODE"
+    "splitScreenMode": "SPLIT SCREEN MODE",
+    "pathItem": "Path",
+    "pointsItem": "Points"
   },
   "dateTime": {
     "selectorLabel": "Time:",
@@ -831,7 +934,7 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "disclaimer": "Disclaimer",
-      "basemap": "Basemap",
+      "basemap": "Basemap attribution",
       "dataProvider": "Data provided by:"
     }
   },
@@ -1378,8 +1481,8 @@
       "firstPoint": "First Point",
       "btnCancel": "Cancel",
       "btnDone": "Done",
-      "clickToAddFirstPoint": "Click to add a point",
-      "clickToAddAnotherPoint": "Click to add another point",
+      "clickToAddFirstPoint": "Click to add the first point",
+      "clickToAddAnotherPoint": "Click to add another new point, click an existing to remove or drag it to move",
       "clickToRedrawRectangle": "Click another point to redraw the rectangle",
       "anotherPoint": "Another Point",
       "userPolygon": "User polygon"
@@ -2115,6 +2218,10 @@
     "controls": {
       "title": "Controls"
     }
+  },
+  "keyboardControls": {
+    "toolButtonTitle": "Keyboard navigation",
+    "header": "Keyboard map controls"
   },
   "notification": {
     "title": "Message"

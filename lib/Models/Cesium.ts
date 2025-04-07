@@ -90,9 +90,13 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import { setViewerMode } from "./ViewerMode";
+import ViewerMode, { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
+import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
+import Color from "terriajs-cesium/Source/Core/Color";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -190,7 +194,15 @@ export default class Cesium extends GlobeOrMap {
         SingleTileImageryProvider.fromUrl(img),
         {}
       ),
-      scene3DOnly: true,
+      scene3DOnly: false,
+      sceneMode:
+        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
+          ? SceneMode.SCENE3D
+          : SceneMode.SCENE2D,
+      mapProjection:
+        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
+          ? new GeographicProjection()
+          : new WebMercatorProjection(),
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
@@ -250,6 +262,12 @@ export default class Cesium extends GlobeOrMap {
     this.scene.imageryLayers.removeAll();
 
     this.updateCredits(container);
+
+    if (this.terria.configParameters.cesiumGlobeColor) {
+      this.scene.globe.baseColor = Color.fromCssColorString(
+        this.terria.configParameters.cesiumGlobeColor
+      );
+    }
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
@@ -373,34 +391,36 @@ export default class Cesium extends GlobeOrMap {
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
       // Post render, update selection indicator position
-      const feature = this.terria.selectedFeature;
+      if (this.terria.isPickInfoEnabled) {
+        const feature = this.terria.selectedFeature;
 
-      // If the feature has an associated primitive and that primitive has
-      // a clamped position, use that instead, because the regular
-      // position doesn't take terrain clamping into account.
-      if (isDefined(feature)) {
-        if (
-          isDefined(feature.cesiumPrimitive) &&
-          isDefined(feature.cesiumPrimitive._clampedPosition)
-        ) {
-          this._selectionIndicator.position =
-            feature.cesiumPrimitive._clampedPosition;
-        } else if (
-          isDefined(feature.cesiumPrimitive) &&
-          isDefined(feature.cesiumPrimitive._clampedModelMatrix)
-        ) {
-          this._selectionIndicator.position = Matrix4.getTranslation(
-            feature.cesiumPrimitive._clampedModelMatrix,
-            this._selectionIndicator.position || new Cartesian3()
-          );
-        } else if (isDefined(feature.position)) {
-          this._selectionIndicator.position = feature.position.getValue(
-            this.terria.timelineClock.currentTime
-          );
+        // If the feature has an associated primitive and that primitive has
+        // a clamped position, use that instead, because the regular
+        // position doesn't take terrain clamping into account.
+        if (isDefined(feature)) {
+          if (
+            isDefined(feature.cesiumPrimitive) &&
+            isDefined(feature.cesiumPrimitive._clampedPosition)
+          ) {
+            this._selectionIndicator.position =
+              feature.cesiumPrimitive._clampedPosition;
+          } else if (
+            isDefined(feature.cesiumPrimitive) &&
+            isDefined(feature.cesiumPrimitive._clampedModelMatrix)
+          ) {
+            this._selectionIndicator.position = Matrix4.getTranslation(
+              feature.cesiumPrimitive._clampedModelMatrix,
+              this._selectionIndicator.position || new Cartesian3()
+            );
+          } else if (isDefined(feature.position)) {
+            this._selectionIndicator.position = feature.position.getValue(
+              this.terria.timelineClock.currentTime
+            );
+          }
         }
-      }
 
-      this._selectionIndicator.update();
+        this._selectionIndicator.update();
+      }
     });
 
     this._disposeSelectedFeatureSubscription = autorun(() => {
@@ -1009,6 +1029,13 @@ export default class Cesium extends GlobeOrMap {
     const scene = this.scene;
     const camera = scene.camera;
 
+    if (scene.mode === SceneMode.SCENE2D) {
+      const rect = camera.computeViewRectangle();
+      if (rect) {
+        return new CameraView(rect);
+      }
+    }
+
     const width = scene.canvas.clientWidth;
     const height = scene.canvas.clientHeight;
 
@@ -1421,7 +1448,12 @@ export default class Cesium extends GlobeOrMap {
   private async pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
-    const pickedList = this.scene.drillPick(screenPosition);
+    const pickedList = this.scene.drillPick(
+      screenPosition,
+      undefined,
+      this.terria.configParameters.pickSize,
+      this.terria.configParameters.pickSize
+    );
     for (let i = 0; i < pickedList.length; ++i) {
       const picked = pickedList[i];
       let id = picked.id;
@@ -1702,12 +1734,16 @@ export default class Cesium extends GlobeOrMap {
 
     this._highlightFeature(feature);
 
-    if (isDefined(feature) && isDefined(feature.position)) {
+    if (
+      isDefined(feature) &&
+      isDefined(feature.position) &&
+      this.terria.isPickInfoEnabled
+    ) {
       this._selectionIndicator.position = feature.position.getValue(
         this.terria.timelineClock.currentTime
       );
       this._selectionIndicator.animateAppear();
-    } else {
+    } else if (!(isDefined(feature) && isDefined(feature.position))) {
       this._selectionIndicator.animateDepart();
     }
 

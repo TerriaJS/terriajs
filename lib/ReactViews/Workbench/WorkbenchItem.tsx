@@ -82,7 +82,10 @@ class WorkbenchItemRaw extends React.Component<IProps> {
       (ReferenceMixin.isMixedInto(item) && item.isLoadingReference);
 
     return (
-      <StyledLi style={this.props.style} className={this.props.className}>
+      <StyledLi
+        style={this.props.style}
+        className={`${this.props.className} no-drag`}
+      >
         <Box fullWidth justifySpaceBetween padded styledMinHeight="38px">
           <Box fullWidth>
             <Box left fullWidth paddedHorizontally centered>
@@ -154,7 +157,10 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                 </BoxSpan>
               )}
               <RawButton onClick={() => this.toggleDisplay()}>
-                <BoxSpan padded>
+                <BoxSpan
+                  padded
+                  title={this.isOpen ? t("general.close") : t("general.open")}
+                >
                   {this.isOpen ? (
                     <StyledIcon
                       styledHeight={"8px"}
@@ -205,7 +211,7 @@ const DraggableBox = styled(Box)`
 `;
 
 const StyledLi = styled(Li)`
-  background: ${(p) => p.theme.darkWithOverlay};
+  background: ${(p) => p.theme.dark};
   color: ${(p) => p.theme.textLight};
   border-radius: 4px;
   margin-bottom: 5px;

@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import {
   computed,
+  IReactionDisposer,
   makeObservable,
   observable,
   override,
@@ -31,6 +32,16 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "./Definition/CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import { clone } from "terriajs-cesium";
+import * as turf from "@turf/turf";
+import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
+import { MeasureAngleTool } from "../ReactViews/Map/MapNavigation/Items/MeasureTools";
+import { MeasurePointTool } from "../ReactViews/Map/MapNavigation/Items/MeasureTools";
 
 interface OnDrawingCompleteParams {
   points: Cartesian3[];
@@ -41,6 +52,7 @@ interface Options {
   terria: Terria;
   messageHeader?: string | (() => string);
   allowPolygon?: boolean;
+  autoClosePolygon?: boolean;
   drawRectangle?: boolean;
   onMakeDialogMessage?: () => string;
   buttonText?: string;
@@ -56,6 +68,7 @@ export default class UserDrawing extends MappableMixin(
 ) {
   private readonly messageHeader: string | (() => string);
   private readonly allowPolygon: boolean;
+  private readonly autoClosePolygon: boolean;
   private readonly onMakeDialogMessage?: () => string;
   private readonly buttonText?: string;
   private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
@@ -80,6 +93,11 @@ export default class UserDrawing extends MappableMixin(
   private drawRectangle: boolean;
 
   private mousePointEntity?: Entity;
+  private disposeShowDistanceLabelsReaction?: IReactionDisposer;
+  private disposeClampMeasureLineToGround?: IReactionDisposer;
+
+  private isAngleMeasuring: boolean = false;
+  private isPointMeasuring: boolean = false;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -98,6 +116,11 @@ export default class UserDrawing extends MappableMixin(
      * If true, user can click on first point to close the line, turning it into a polygon.
      */
     this.allowPolygon = defaultValue(options.allowPolygon, true);
+
+    /**
+     * If true, always close polygon adding the first point also as last point.
+     */
+    this.autoClosePolygon = defaultValue(options.autoClosePolygon, false);
 
     /**
      * Callback that occurs when the dialog is redrawn, to add additional information to dialog.
@@ -188,11 +211,252 @@ export default class UserDrawing extends MappableMixin(
     return this.getRectangleForShape();
   }
 
-  enterDrawMode() {
+  private createSegmentLabel(
+    name: string,
+    entityA: Entity,
+    entityB: Entity
+  ): Entity {
+    return new Entity({
+      name,
+      position: new CallbackProperty((time: JulianDate) => {
+        const posA = entityA.position?.getValue(time);
+        const posB = entityB.position?.getValue(time);
+        if (!posA || !posB) return undefined;
+        return Cartesian3.midpoint(posA, posB, new Cartesian3());
+      }, false) as any,
+      label: {
+        text: new CallbackProperty((time: JulianDate) => {
+          const posA = entityA.position?.getValue(time);
+          const posB = entityB.position?.getValue(time);
+          if (!posA || !posB) return "";
+          return (Cartesian3.distance(posA, posB) / 1000).toFixed(2) + " km";
+        }, false),
+        font: "16px sans-serif",
+        style: LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Color.BLACK,
+        outlineColor: Color.WHITE,
+        outlineWidth: 2,
+        pixelOffset: new Cartesian2(0, -10),
+        verticalOrigin: VerticalOrigin.BOTTOM
+      }
+    });
+  }
+
+  private updateSegmentLabels() {
+    if (
+      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.showDistanceLabels
+    ) {
+      const toRemove: Entity[] = [];
+      for (const entity of this.otherEntities.entities.values) {
+        if (entity.name && entity.name.startsWith("SegmentLabel-")) {
+          toRemove.push(entity);
+        }
+      }
+      toRemove.forEach((e) => this.otherEntities.entities.remove(e));
+      return;
+    }
+    if (
+      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        .onlyPoints
+    ) {
+      const toRemove: Entity[] = [];
+      for (const entity of this.otherEntities.entities.values) {
+        if (entity.name && entity.name.startsWith("SegmentLabel-")) {
+          toRemove.push(entity);
+        }
+      }
+      toRemove.forEach((e) => this.otherEntities.entities.remove(e));
+
+      const numPoints = this.pointEntities.entities.values.length;
+      for (let i = 0; i < numPoints - 1; i++) {
+        const entityA = this.pointEntities.entities.values[i];
+        const entityB = this.pointEntities.entities.values[i + 1];
+        if (entityA && entityB) {
+          const labelEntity = this.createSegmentLabel(
+            `SegmentLabel-${i}`,
+            entityA,
+            entityB
+          );
+          this.otherEntities.entities.add(labelEntity);
+        }
+      }
+
+      if (this.closeLoop && numPoints > 1) {
+        const lastIndex = numPoints - 1;
+        const entityA = this.pointEntities.entities.values[lastIndex];
+        const entityB = this.pointEntities.entities.values[0];
+        if (entityA && entityB) {
+          const labelEntity = this.createSegmentLabel(
+            "SegmentLabel-close",
+            entityA,
+            entityB
+          );
+          this.otherEntities.entities.add(labelEntity);
+        }
+      }
+    }
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  private generateArcPositions(
+    center: Cartesian3,
+    p1: Cartesian3,
+    p3: Cartesian3,
+    segments: number = 30
+  ): Cartesian3[] {
+    const v1 = Cartesian3.subtract(p1, center, new Cartesian3());
+    const v2 = Cartesian3.subtract(p3, center, new Cartesian3());
+    const len1 = Cartesian3.magnitude(v1);
+    const len2 = Cartesian3.magnitude(v2);
+
+    if (len1 === 0 || len2 === 0) {
+      return [];
+    }
+
+    const radius = Math.min(len1, len2) * 0.6;
+    const u = Cartesian3.normalize(v1, new Cartesian3());
+    const v = Cartesian3.normalize(v2, new Cartesian3());
+
+    let angle = Math.acos(Cartesian3.dot(u, v));
+    if (isNaN(angle)) {
+      angle = 0;
+    }
+
+    const axis = Cartesian3.normalize(
+      Cartesian3.cross(u, v, new Cartesian3()),
+      new Cartesian3()
+    );
+    const w = Cartesian3.cross(axis, u, new Cartesian3());
+
+    const positions: Cartesian3[] = [];
+    for (let i = 0; i <= segments; i++) {
+      const t = (angle * i) / segments;
+      const part1 = Cartesian3.multiplyByScalar(
+        u,
+        Math.cos(t),
+        new Cartesian3()
+      );
+      const part2 = Cartesian3.multiplyByScalar(
+        w,
+        Math.sin(t),
+        new Cartesian3()
+      );
+      const direction = Cartesian3.add(part1, part2, new Cartesian3());
+      const position = Cartesian3.add(
+        center,
+        Cartesian3.multiplyByScalar(direction, radius * 0.6, new Cartesian3()),
+        new Cartesian3()
+      );
+      positions.push(position);
+    }
+    return positions;
+  }
+
+  public computeAngleDegrees(pA: Cartesian3, pB: Cartesian3, pC: Cartesian3) {
+    const v1 = Cartesian3.subtract(pA, pB, new Cartesian3());
+    const v2 = Cartesian3.subtract(pC, pB, new Cartesian3());
+    Cartesian3.normalize(v1, v1);
+    Cartesian3.normalize(v2, v2);
+    const dot = Cartesian3.dot(v1, v2);
+    const angleRad = Math.acos(dot);
+    const angleDeg = (angleRad * 180) / Math.PI;
+    return Math.round(angleDeg * 100) / 100;
+  }
+
+  private updateAngle() {
+    this.otherEntities.entities.removeById("Angle");
+    this.otherEntities.entities.removeById("Angle Label");
+
+    const positions = this.getPointsForShape();
+    if (!positions || positions.length < 3) return;
+
+    const arcPositions = new CallbackProperty(() => {
+      const updatedPositions = this.getPointsForShape();
+      if (!updatedPositions || updatedPositions.length < 3) return [];
+      const [pA, pB, pC] = updatedPositions;
+      return this.generateArcPositions(pB, pC, pA, 30);
+    }, false);
+
+    const labelPosition = new CallbackProperty(() => {
+      const updatedPositions = this.getPointsForShape();
+      return updatedPositions?.[1] || Cartesian3.ZERO;
+    }, false) as any;
+
+    const labelText = new CallbackProperty(() => {
+      const updatedPositions = this.getPointsForShape();
+      if (!updatedPositions || updatedPositions.length < 3) return "";
+      const [pA, pB, pC] = updatedPositions;
+      return `${this.computeAngleDegrees(pA, pB, pC)}°`;
+    }, false);
+
+    this.otherEntities.entities.add({
+      id: "Angle",
+      name: "Angle",
+      polyline: {
+        positions: arcPositions,
+        width: 20,
+        clampToGround: !!this.terria?.clampMeasureLineToGround,
+        material: new PolylineGlowMaterialProperty({
+          color: new Color(0.0, 0.0, 0.0, 0.1),
+          glowPower: 0.15
+        } as any)
+      }
+    });
+
+    this.otherEntities.entities.add({
+      id: "Angle Label",
+      name: "Angle Label",
+      position: labelPosition,
+      label: {
+        text: labelText,
+        font: "16px sans-serif",
+        style: LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Color.BLACK,
+        outlineColor: Color.WHITE,
+        outlineWidth: 2,
+        pixelOffset: new Cartesian2(0, -10),
+        verticalOrigin: VerticalOrigin.BOTTOM,
+        horizontalOrigin: HorizontalOrigin.CENTER
+      }
+    });
+
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  private refreshPoints() {
+    this.pointEntities.entities.removeAll();
+    const idx = this.terria.measurableGeometryIndex;
+    const stopPoints = this.terria.measurableGeomList[idx]?.stopPoints;
+    if (stopPoints) {
+      for (let i = 0; i < stopPoints.length; ++i) {
+        const pointEntity = new Entity({
+          position: new ConstantPositionProperty(
+            Cartographic.toCartesian(stopPoints[i])
+          ),
+          billboard: {
+            image: this.svgPoint,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
+          }
+        });
+        this.pointEntities.entities.add(pointEntity);
+      }
+    }
+    this.updateSegmentLabels();
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  enterDrawMode(sender?: any) {
+    this.isAngleMeasuring = sender === MeasureAngleTool.id;
+    this.isPointMeasuring = sender === MeasurePointTool.id;
     // Create and setup a new dragHelper
     this.dragHelper = new DragPoints(this.terria, (customDataSource) => {
       if (typeof this.onPointMoved === "function") {
         this.onPointMoved(customDataSource);
+        if (this.isAngleMeasuring) {
+          this.updateAngle();
+        }
       }
       this.prepareToAddNewPoint();
     });
@@ -207,6 +471,82 @@ export default class UserDrawing extends MappableMixin(
     runInAction(() => {
       this.inDrawMode = true;
     });
+
+    // disposeStopPointsReaction
+    reaction(
+      () =>
+        this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+          ?.stopPoints,
+      (stopPoints, previousStopPoints) => {
+        if (stopPoints) {
+          const previousSize = previousStopPoints?.length || 0;
+          const newSize = stopPoints.length;
+          if (previousSize === newSize) {
+            runInAction(() => {
+              this.refreshPoints();
+            });
+          } else {
+            runInAction(() => {
+              this.terria.measurableGeomList[
+                this.terria.measurableGeometryIndex
+              ].isPointAdding = false;
+            });
+          }
+        }
+      }
+    );
+
+    // disposeChangePathReaction
+    reaction(
+      () => this.terria.measurableGeometryIndex,
+      () => {
+        runInAction(() => {
+          this.refreshPoints();
+        });
+      }
+    );
+
+    this.disposeShowDistanceLabelsReaction = reaction(
+      () =>
+        this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+          ?.showDistanceLabels!!,
+      (showLabels: boolean) => {
+        if (!showLabels) {
+          const labelsToRemove: Entity[] = [];
+          for (const entity of this.otherEntities.entities.values) {
+            if (entity.name && entity.name.startsWith("SegmentLabel-")) {
+              labelsToRemove.push(entity);
+            }
+          }
+          labelsToRemove.forEach((e) => this.otherEntities.entities.remove(e));
+        } else {
+          this.updateSegmentLabels();
+        }
+      }
+    );
+
+    reaction(
+      () => this.terria.measurableGeomList.length,
+      (newLength, oldLength) => {
+        if (newLength < oldLength) {
+          this.refreshPoints();
+        }
+      }
+    );
+
+    this.disposeClampMeasureLineToGround = reaction(
+      () => this.terria?.clampMeasureLineToGround,
+      (clampMeasureLineToGround) => {
+        if (
+          this.otherEntities.entities.values.length > 0 &&
+          this.otherEntities.entities.values[0]?.polyline
+        ) {
+          this.otherEntities.entities.values[0].polyline.clampToGround =
+            new ConstantProperty(clampMeasureLineToGround);
+          this.terria.currentViewer.notifyRepaintRequired();
+        }
+      }
+    );
 
     if (isDefined(this.terria.cesium)) {
       this.terria.cesium.cesiumWidget.canvas.setAttribute(
@@ -277,7 +617,7 @@ export default class UserDrawing extends MappableMixin(
       };
 
       this.otherEntities.entities.add(rectangle as any);
-    } else {
+    } else if (sender !== MeasurePointTool.id) {
       // Line will show up once user has drawn some points. Vertices of line are user points.
       this.otherEntities.entities.add({
         name: "Line",
@@ -290,6 +630,8 @@ export default class UserDrawing extends MappableMixin(
             return pos;
           }, false),
 
+          // Clamp to ground lines of Measure Tool
+          clampToGround: !!this.terria?.clampMeasureLineToGround,
           material: new PolylineGlowMaterialProperty({
             color: new Color(0.0, 0.0, 0.0, 0.1),
             glowPower: 0.25
@@ -313,6 +655,9 @@ export default class UserDrawing extends MappableMixin(
           if (isDefined(pickedFeatures.pickPosition)) {
             const pickedPoint = pickedFeatures.pickPosition;
             this.addPointToPointEntities("First Point", pickedPoint);
+            if (this.autoClosePolygon) {
+              this.clickedExistingPoint(this.pointEntities.entities.values);
+            }
             reaction.dispose();
             this.prepareToAddNewPoint();
           }
@@ -325,11 +670,20 @@ export default class UserDrawing extends MappableMixin(
    * Add new point to list of pointEntities
    */
   private addPointToPointEntities(name: string, position: Cartesian3) {
+    if (
+      this.isAngleMeasuring &&
+      this.pointEntities.entities.values.length >= 3
+    ) {
+      const lastPoint = this.pointEntities.entities.values[2];
+      this.pointEntities.entities.remove(lastPoint);
+    }
+
     const pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
       billboard: {
         image: this.svgPoint,
+        heightReference: HeightReference.CLAMP_TO_GROUND,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
       } as any
     });
@@ -340,6 +694,44 @@ export default class UserDrawing extends MappableMixin(
       this.pointEntities.entities.removeAll();
     }
     this.pointEntities.entities.add(pointEntity);
+    this.dragHelper?.updateDraggableObjects(this.pointEntities);
+    if (this.isAngleMeasuring) {
+      this.updateAngle();
+    }
+    if (isDefined(this.onPointClicked)) {
+      this.onPointClicked(this.pointEntities);
+    }
+  }
+
+  private insertPointToPointEntities(
+    name: string,
+    position: Cartesian3,
+    index: number
+  ) {
+    const pointEntity = new Entity({
+      name: name,
+      position: new ConstantPositionProperty(position),
+      billboard: {
+        image: this.svgPoint,
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
+      } as any
+    });
+    this.pointEntities.entities.suspendEvents();
+    const points: Entity[] = clone(this.pointEntities.entities.values, false);
+
+    this.pointEntities.entities.removeAll();
+    for (let i = 0; i < index && i < points.length; ++i) {
+      this.pointEntities.entities.add(points[i]);
+    }
+    this.pointEntities.entities.add(pointEntity);
+    if (this.isAngleMeasuring) {
+      this.updateAngle();
+    }
+    for (let i = index; i < points.length; ++i) {
+      this.pointEntities.entities.add(points[i]);
+    }
+    this.pointEntities.entities.resumeEvents();
     this.dragHelper?.updateDraggableObjects(this.pointEntities);
     if (isDefined(this.onPointClicked)) {
       this.onPointClicked(this.pointEntities);
@@ -366,6 +758,15 @@ export default class UserDrawing extends MappableMixin(
       buttonText: this.getButtonText(),
       onCancel: () => {
         runInAction(() => {
+          this.terria.measurableGeometryIndex = 0;
+          this.terria.measurableGeomList.splice(
+            1,
+            this.terria.measurableGeomList.length - 1
+          );
+          this.terria.measurableGeometryManager.splice(
+            1,
+            this.terria.measurableGeometryManager.length - 1
+          );
           if (this.onDrawingComplete) {
             const isDrawingComplete =
               this.pointEntities.entities.values.length >= 2;
@@ -412,6 +813,16 @@ export default class UserDrawing extends MappableMixin(
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
   private prepareToAddNewPoint() {
+    if (this.terria.measurableGeomList[this.terria.measurableGeometryIndex]) {
+      this.terria.measurableGeomList[
+        this.terria.measurableGeometryIndex
+      ].pointDescriptions?.push("");
+      runInAction(() => {
+        this.terria.measurableGeomList[
+          this.terria.measurableGeometryIndex
+        ].isPointAdding = true;
+      });
+    }
     runInAction(() => {
       this.terria.mapInteractionModeStack.pop();
     });
@@ -426,6 +837,41 @@ export default class UserDrawing extends MappableMixin(
           }
           if (isDefined(pickedFeatures.pickPosition)) {
             const pickedPoint = pickedFeatures.pickPosition;
+            const pickedCarto = Cartographic.fromCartesian(pickedPoint);
+
+            let changeOrder: number = -1;
+            for (
+              let i: number = 1;
+              i < this.pointEntities.entities.values.length;
+              ++i
+            ) {
+              const pos0 = this.pointEntities.entities.values[
+                i - 1
+              ].position?.getValue(this.terria.timelineClock.currentTime);
+              const pos1 = this.pointEntities.entities.values[
+                i
+              ].position?.getValue(this.terria.timelineClock.currentTime);
+              if (pos0 && pos1) {
+                const carto0 = Cartographic.fromCartesian(pos0);
+                const carto1 = Cartographic.fromCartesian(pos1);
+                const pt = turf.point([
+                  pickedCarto.longitude,
+                  pickedCarto.latitude
+                ]);
+                const line = turf.lineString([
+                  [carto1.longitude, carto1.latitude],
+                  [carto0.longitude, carto0.latitude]
+                ]);
+                const distance = turf.pointToLineDistance(pt, line, {
+                  units: "meters"
+                });
+                if (distance < Cartesian3.distance(pos1, pos0) * 0.001) {
+                  changeOrder = i;
+                  break;
+                }
+              }
+            }
+
             // If existing point was picked, _clickedExistingPoint handles that, and returns true.
             // getDragCount helps us determine if the point was actually dragged rather than clicked. If it was
             // dragged, we shouldn't treat it as a clicked-existing-point scenario.
@@ -435,7 +881,25 @@ export default class UserDrawing extends MappableMixin(
               !this.clickedExistingPoint(pickedFeatures.features)
             ) {
               // No existing point was picked, so add a new point
-              this.addPointToPointEntities("Another Point", pickedPoint);
+              if (changeOrder >= 0) {
+                // Add the new point between 2 existing points
+                this.insertPointToPointEntities(
+                  "Another Point",
+                  pickedPoint,
+                  changeOrder
+                );
+              } else {
+                this.addPointToPointEntities("Another Point", pickedPoint);
+                if (
+                  !this.isAngleMeasuring &&
+                  !this.isPointMeasuring &&
+                  this.terria.measurableGeomList[
+                    this.terria.measurableGeometryIndex
+                  ]?.showDistanceLabels
+                ) {
+                  this.updateSegmentLabels();
+                }
+              }
             } else {
               this.dragHelper?.resetDragCount();
             }
@@ -445,6 +909,15 @@ export default class UserDrawing extends MappableMixin(
               this.prepareToAddNewPoint();
             }
           }
+        }
+        if (
+          this.isAngleMeasuring &&
+          this.pointEntities.entities.values.length > 3
+        ) {
+          const points = this.pointEntities.entities.values;
+          const firstTwoPoints = points.slice(0, 2);
+          this.pointEntities.entities.removeAll();
+          firstTwoPoints.forEach((p) => this.pointEntities.entities.add(p));
         }
       }
     );
@@ -483,9 +956,15 @@ export default class UserDrawing extends MappableMixin(
             hierarchy: new CallbackProperty(function () {
               return new PolygonHierarchy(that.getPointsForShape());
             }, false),
-            material: new Color(0.0, 0.666, 0.843, 0.25),
+            material: this.autoClosePolygon
+              ? new Color(0.0, 0.666, 0.843, 0.25)
+              : new Color(0.0, 0.666, 0.843, 0),
             outlineColor: new Color(1.0, 1.0, 1.0, 1.0),
-            perPositionHeight: true as any
+            // Clamp to ground polygons of Measure Tool
+            heightReference: new ConstantProperty(
+              HeightReference.CLAMP_TO_GROUND
+            ),
+            perPositionHeight: false as any
           } as any
         } as any) as Entity;
         this.closeLoop = true;
@@ -495,9 +974,26 @@ export default class UserDrawing extends MappableMixin(
         }
         userClickedExistingPoint = true;
         return;
+      } else if (
+        index === 0 &&
+        this.closeLoop &&
+        this.allowPolygon &&
+        !this.autoClosePolygon
+      ) {
+        this.closeLoop = false;
+        this.polygon = undefined;
+
+        // Also let client of UserDrawing know if a point has been removed.
+        if (typeof that.onPointClicked === "function") {
+          that.onPointClicked(that.pointEntities);
+        }
+        userClickedExistingPoint = true;
       } else {
         // User clicked on a point that's not the end of the loop. Remove it.
         this.pointEntities.entities.removeById(feature.id);
+        if (this.isAngleMeasuring) {
+          this.updateAngle();
+        }
         // If it gets down to 2 points, it should stop acting like a polygon.
         if (this.pointEntities.entities.values.length < 2 && this.closeLoop) {
           this.closeLoop = false;
@@ -517,10 +1013,10 @@ export default class UserDrawing extends MappableMixin(
   /**
    * User has finished or cancelled; restore initial state.
    */
-  cleanUp() {
+  cleanUp(refresh?: boolean) {
     this.terria.overlays.remove(this);
-    this.pointEntities = new CustomDataSource("Points");
-    this.otherEntities = new CustomDataSource("Lines and polygons");
+    this.pointEntities.entities.removeAll();
+    this.otherEntities.entities.removeAll();
 
     this.terria.allowFeatureInfoRequests = true;
 
@@ -542,9 +1038,16 @@ export default class UserDrawing extends MappableMixin(
       }
     }
 
+    if (isDefined(this.disposeClampMeasureLineToGround)) {
+      this.disposeClampMeasureLineToGround();
+    }
+
     // Allow client to clean up too
-    if (typeof this.onCleanUp === "function") {
+    if (typeof this.onCleanUp === "function" && !refresh) {
       this.onCleanUp();
+    }
+    if (this.disposeShowDistanceLabelsReaction) {
+      this.disposeShowDistanceLabelsReaction();
     }
   }
 
@@ -574,13 +1077,13 @@ export default class UserDrawing extends MappableMixin(
     if (this.drawRectangle && this.pointEntities.entities.values.length >= 2) {
       message +=
         "<i>" + i18next.t("models.userDrawing.clickToRedrawRectangle") + "</i>";
-    } else if (this.pointEntities.entities.values.length > 0) {
+    } /*else if (this.pointEntities.entities.values.length > 0) {
       message +=
         "<i>" + i18next.t("models.userDrawing.clickToAddAnotherPoint") + "</i>";
     } else {
       message +=
         "<i>" + i18next.t("models.userDrawing.clickToAddFirstPoint") + "</i>";
-    }
+    }*/
     // htmlToReactParser will fail if html doesn't have only one root element.
     return "<div>" + message + "</div>";
   }

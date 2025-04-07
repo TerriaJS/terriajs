@@ -36,7 +36,7 @@ import {
     Menu,
     Nav
 } from "terriajs/lib/ReactViews/StandardUserInterface/customizable/Groups";
-import MeasureTool from "terriajs/lib/ReactViews/Map/Navigation/MeasureTool";
+import MeasureToolsController from "terriajs/lib/ReactViews/Map/Navigation/MeasureToolsController";
 
 import "./global.scss";
 
@@ -53,7 +53,7 @@ export default function UserInterface(props) {
                 />
             </Menu>
             <Nav>
-                <MeasureTool
+                <MeasureToolsController
                     terria={props.viewState.terria}
                     key="measure-tool"
                 />

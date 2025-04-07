@@ -1,7 +1,6 @@
 @import "~terriajs-variables";
 @import "~terriajs-mixins";
-// @import url("https://fonts.googleapis.com/css?family=Montserrat:700&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Nunito:600,600i&display=swap");
+@import url("https://wwwservizitest.regione.emilia-romagna.it/includes/TemplatesER/-cdn/fonts/fonts.googleapis.titillium.css?family=Titillium:600,600i&display=swap");
 
 .WelcomeModalWrapper {
   color: $dark;
@@ -21,7 +20,7 @@
 
 .WelcomeModal {
   position: relative;
-  font-family: "Nunito", "Open Sans";
+  font-family: "Titillium", "Open Sans";
   text-align: left;
   box-shadow: $box-shadow;
   box-sizing: border-box;

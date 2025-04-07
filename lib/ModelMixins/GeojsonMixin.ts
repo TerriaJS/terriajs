@@ -71,6 +71,7 @@ import {
   isJsonNumber,
   isJsonObject,
   isJsonString,
+  JsonArray,
   JsonObject
 } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
@@ -105,6 +106,20 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
+import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
+import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+
+enum PathTypes {
+  noPath = 0,
+  featureCollectionLineString = 1,
+  featureCollectionMultiLineString = 2,
+  lineString = 3,
+  multiLineString = 4,
+  featureCollectionPolygon = 5,
+  featureCollectionMultiPolygon = 6
+}
 
 export const FEATURE_ID_PROP = "_id_";
 
@@ -228,8 +243,8 @@ interface FeatureCounts {
 type BaseType = Model<GeoJsonTraits>;
 
 function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
-  abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(Base))
+  abstract class GeoJsonMixin extends MeasurableGeometryMixin(
+    TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
   ) {
     @observable
     private _dataSource:
@@ -602,6 +617,33 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           });
         } else {
           const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+
+          if (this.clustering.enabled) {
+            const pinBackgroundColor = this.clustering.pinBackgroundColor;
+            const pinSize = this.clustering.pinSize;
+
+            const pinBuilder = new PinBuilder();
+            dataSource.clustering.enabled = true;
+            dataSource.clustering.pixelRange = this.clustering.pixelRange;
+            dataSource.clustering.minimumClusterSize =
+              this.clustering.minimumClusterSize;
+            dataSource.clustering.clusterEvent.addEventListener(function (
+              entities,
+              cluster
+            ) {
+              cluster.label.show = false;
+              cluster.billboard.verticalOrigin = VerticalOrigin.BOTTOM;
+              cluster.billboard.image = pinBuilder
+                .fromText(
+                  entities.length.toLocaleString(),
+                  Color.fromCssColorString(pinBackgroundColor),
+                  pinSize
+                )
+                .toDataURL();
+              cluster.billboard.show = true;
+            });
+          }
+
           runInAction(() => {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
@@ -817,7 +859,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               color: useOutlineColorForLineFeatures
                 ? getOutlineColorValue
                 : getColorValue,
-              width: getOutlineWidthValue
+              width:
+                this.terria.configParameters.polylineWidth ??
+                getOutlineWidthValue
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -1036,7 +1080,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         polygonStroke: getColor(this.terria.baseMapContrastColor),
         polylineStroke: getRandomCssColor(this.name ?? ""),
         markerStrokeWidth: 1,
-        polylineStrokeWidth: 2,
+        polylineStrokeWidth: this.terria.configParameters.polylineWidth ?? 2,
         polygonStrokeWidth: 1,
         fill: getRandomCssColor((this.name ?? "") + " fill"),
         fillAlpha: 0.75
@@ -1214,7 +1258,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               styles.clampToGround
                 ? HeightReference.RELATIVE_TO_GROUND
                 : undefined
-            )
+            ),
+            disableDepthTestDistance:
+              this.name === i18next.t("location.myLocation")
+                ? new ConstantProperty(Number.POSITIVE_INFINITY)
+                : undefined
           });
           if (
             properties &&
@@ -1376,6 +1424,328 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return undefined;
     }
 
+    protected _pathType: PathTypes = PathTypes.noPath;
+
+    @computed
+    get canUseAsPath() {
+      let pathType: PathTypes = PathTypes.noPath;
+      if (
+        this.readyData &&
+        isJsonObject(this.readyData.crs) &&
+        this.readyData.crs.type === "EPSG" &&
+        isJsonObject(this.readyData.crs.properties) &&
+        this.readyData.crs.properties.code === "4326"
+      ) {
+        if (
+          this.readyData.type === "FeatureCollection" &&
+          isJsonArray(this.readyData.features) &&
+          this.readyData.features.length === 1 &&
+          isJsonObject(this.readyData.features[0])
+        ) {
+          const geometry = this.readyData.features[0].geometry;
+
+          if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
+            if (
+              this.arePolylinesValid([geometry.coordinates]) ||
+              this.isPolygonValid([geometry.coordinates[0]]) ||
+              this.isPolygonValid(([geometry.coordinates[0]] as any)[0])
+            ) {
+              if (
+                geometry.type === "MultiLineString" &&
+                geometry.coordinates.length >= 1
+              ) {
+                pathType = PathTypes.featureCollectionMultiLineString;
+              } else if (
+                geometry.type === "LineString" &&
+                geometry.coordinates.length > 1
+              ) {
+                pathType = PathTypes.featureCollectionLineString;
+              } else if (
+                geometry.type === "Polygon" &&
+                geometry.coordinates.length > 0
+              ) {
+                pathType = PathTypes.featureCollectionPolygon;
+              } else if (
+                geometry.type === "MultiPolygon" &&
+                geometry.coordinates.length > 0
+              ) {
+                pathType = PathTypes.featureCollectionMultiPolygon;
+              }
+            }
+          }
+        } else if (
+          this.readyData.type === "FeatureCollection" &&
+          isJsonArray(this.readyData.features) &&
+          this.readyData.features.length > 1
+        ) {
+          let allMultiLineString = true;
+          for (let i = 0; i < this.readyData.features.length; i++) {
+            const feature = this.readyData.features[i];
+            if (feature.geometry.type !== "MultiLineString") {
+              allMultiLineString = false;
+              break;
+            }
+          }
+          if (allMultiLineString) {
+            pathType = PathTypes.featureCollectionMultiLineString;
+          } else {
+            let allMultiPolygon = true;
+            for (let i = 0; i < this.readyData.features.length; i++) {
+              const feature = this.readyData.features[i];
+              if (feature.geometry.type !== "MultiPolygon") {
+                allMultiPolygon = false;
+                break;
+              }
+            }
+            if (allMultiPolygon) {
+              pathType = PathTypes.featureCollectionMultiPolygon;
+            }
+          }
+        }
+      }
+      this._pathType = pathType;
+      return pathType !== PathTypes.noPath;
+    }
+
+    // Validates if the coordinates of the polyline are correct by ensuring the first and last points are connected.
+    private arePolylinesValid(coordinates: any[]): boolean {
+      const pointOccurrences: { point: number[]; count: number }[] = [];
+
+      coordinates.forEach((line) => {
+        const firstPoint = line[0]; // First point of the line
+        const lastPoint = line[line.length - 1]; // Last point of the line
+
+        this.updatePointOccurrences(pointOccurrences, firstPoint);
+        this.updatePointOccurrences(pointOccurrences, lastPoint);
+      });
+
+      const validPoints = pointOccurrences.filter(
+        ({ count }) => count === 1
+      ).length;
+      return validPoints === 2;
+    }
+
+    // Validates if the coordinates of the polygon are correct by ensuring the first and last points are the same.
+    private isPolygonValid(coordinates: any[]): boolean {
+      const pointOccurrences: { point: number[]; count: number }[] = [];
+
+      coordinates.forEach((ring) => {
+        for (let i = 0; i < ring.length; i++) {
+          const point = ring[i];
+          this.updatePointOccurrences(pointOccurrences, point);
+        }
+      });
+
+      const validPoints = pointOccurrences.filter(
+        ({ count }) => count === 2
+      ).length;
+      return validPoints >= 1;
+    }
+
+    // Updates the occurrences of a given point in the pointOccurrences array.
+    private updatePointOccurrences(
+      pointOccurrences: { point: number[]; count: number }[],
+      point: number[]
+    ) {
+      const occurrence = pointOccurrences.find((item) =>
+        this.arePointsEqual(item.point, point)
+      );
+      if (occurrence) {
+        occurrence.count++;
+      } else {
+        pointOccurrences.push({ point, count: 1 });
+      }
+    }
+
+    // Compares two points to check if they are equal.
+    private arePointsEqual(pointA: number[], pointB: number[]): boolean {
+      return pointA[0] === pointB[0] && pointA[1] === pointB[1];
+    }
+
+    private convertJsonCoords(jsonCoords: JsonArray): Cartographic[] {
+      return jsonCoords.map((elem) => {
+        if (
+          elem &&
+          isJsonArray(elem) &&
+          isJsonNumber(elem[0]) &&
+          isJsonNumber(elem[1])
+        ) {
+          const height =
+            elem.length === 3 && isJsonNumber(elem[2])
+              ? Math.round(elem[2])
+              : 0;
+          return Cartographic.fromDegrees(elem[0], elem[1], height);
+        }
+        return Cartographic.fromDegrees(0, 0, 0);
+      });
+    }
+
+    computePath() {
+      if (!this.readyData || !isJsonArray(this.readyData.features)) return;
+
+      const processFeature = (feature: any, index?: number) => {
+        let jsonCoords: JsonArray | undefined;
+        switch (this._pathType) {
+          case PathTypes.featureCollectionMultiLineString:
+            jsonCoords = this.getOrderedSegments(index);
+            break;
+          case PathTypes.featureCollectionLineString:
+            jsonCoords = this.getLineStringCoordinates();
+            break;
+          case PathTypes.featureCollectionMultiPolygon:
+            jsonCoords = this.getMultiPolygonCoordinates(index);
+            break;
+          case PathTypes.featureCollectionPolygon:
+            jsonCoords = this.getPolygonCoordinates();
+            break;
+        }
+        if (!jsonCoords || jsonCoords.length === 0) return;
+
+        const properties = feature.properties ?? {};
+        const pathNotes = properties.desc || properties.path_notes || "";
+        const coordinates = this.convertJsonCoords(jsonCoords);
+        this.asPath(coordinates, pathNotes, index);
+      };
+
+      if (this.readyData.features.length === 1) {
+        processFeature(this.readyData.features[0]);
+      } else {
+        for (let i = 0; i < this.readyData.features.length; i++) {
+          processFeature(this.readyData.features[i], i);
+        }
+      }
+    }
+
+    // Get the ordered segments
+    private getOrderedSegments(index: number = 0): JsonArray | undefined {
+      if (
+        this.readyData &&
+        isJsonArray(this.readyData.features) &&
+        this.readyData.features.length > 0 &&
+        isJsonObject(this.readyData.features[index]) &&
+        isJsonObject(this.readyData.features[index].geometry as any) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates
+        ) &&
+        (this.readyData.features[index].geometry as any).coordinates.length > 0
+      ) {
+        const segments = (this.readyData.features[index].geometry as any)
+          .coordinates;
+        const localSegments = segments.slice();
+
+        const startingSegmentIndex = this.findStartingSegmentIndex(
+          localSegments as JsonArray[]
+        );
+        const orderedSegments = this.orderSegments(
+          localSegments as JsonArray[],
+          startingSegmentIndex
+        );
+
+        return Array.from(
+          new Set(orderedSegments.flat().map((coord) => JSON.stringify(coord)))
+        ).map((coord) => JSON.parse(coord));
+      }
+    }
+
+    // Find the starting segment index by locating the segment that has no other segment ending at its starting point
+    private findStartingSegmentIndex(segments: JsonArray[]): number {
+      const endPoints = new Set<string>(
+        segments.map((segment) => JSON.stringify(segment[1]))
+      );
+
+      for (let i = 0; i < segments.length; i++) {
+        const startPoint = JSON.stringify(segments[i][0]);
+        if (!endPoints.has(startPoint)) {
+          return i;
+        }
+      }
+
+      throw new Error("No valid starting segment found");
+    }
+
+    // Order the segments based on the matching points
+    private orderSegments(
+      segments: JsonArray[],
+      startingSegmentIndex: number
+    ): JsonArray[] {
+      const orderedSegments: JsonArray[] = [
+        segments[startingSegmentIndex] as JsonArray
+      ];
+      segments.splice(startingSegmentIndex, 1);
+
+      const segmentMap = new Map<string, JsonArray>();
+      segments.forEach((segment) => {
+        const key = JSON.stringify(segment[0]);
+        segmentMap.set(key, segment as JsonArray);
+      });
+
+      while (segmentMap.size > 0) {
+        const lastPoint = JSON.stringify(
+          orderedSegments[orderedSegments.length - 1][1]
+        );
+        const nextSegment = segmentMap.get(lastPoint);
+
+        if (nextSegment) {
+          orderedSegments.push(nextSegment);
+          segmentMap.delete(lastPoint);
+        } else {
+          break;
+        }
+      }
+
+      return orderedSegments;
+    }
+
+    // Get coordinates from the LineString feature
+    private getLineStringCoordinates(): JsonArray | undefined {
+      if (
+        this.readyData &&
+        isJsonArray(this.readyData.features) &&
+        this.readyData.features.length > 0 &&
+        isJsonObject(this.readyData.features[0]) &&
+        isJsonObject(this.readyData.features[0].geometry) &&
+        isJsonArray(this.readyData.features[0].geometry.coordinates)
+      ) {
+        return this.readyData.features[0].geometry.coordinates;
+      }
+    }
+
+    private getMultiPolygonCoordinates(
+      index: number = 0
+    ): JsonArray | undefined {
+      if (
+        this.readyData &&
+        isJsonArray(this.readyData.features) &&
+        this.readyData.features.length > 0 &&
+        isJsonObject(this.readyData.features[0]) &&
+        isJsonObject(this.readyData.features[index].geometry as any) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates
+        ) &&
+        isJsonArray(
+          (this.readyData.features[index].geometry as any).coordinates[0]
+        )
+      ) {
+        return (
+          (this.readyData.features[index].geometry as any).coordinates[0] as any
+        )[0] as JsonArray;
+      }
+    }
+
+    // Get coordinates from the Polygon feature
+    private getPolygonCoordinates(): JsonArray | undefined {
+      if (
+        this.readyData &&
+        isJsonArray(this.readyData.features) &&
+        this.readyData.features.length > 0 &&
+        isJsonObject(this.readyData.features[0]) &&
+        isJsonObject(this.readyData.features[0].geometry) &&
+        isJsonArray(this.readyData.features[0].geometry.coordinates)
+      ) {
+        return this.readyData.features[0].geometry.coordinates[0] as JsonArray;
+      }
+    }
+
     @override
     get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
@@ -1491,7 +1861,7 @@ export function toFeatureCollection(
   }
   if (Array.isArray(json) && json.every((item) => isGeometries(item))) {
     return featureCollection(
-      json.map((item) => feature(item, item.properties))
+      json.map((item) => feature(item, (item as any).properties))
     ) as FeatureCollectionWithCrs;
   }
 }

@@ -63,7 +63,7 @@ const BottomLeftBar: FC = observer(() => {
       );
 
   return (
-    <BottomLeftContainer theme={theme}>
+    <BottomLeftContainer theme={theme} css={"left: 2%; margin-bottom: 1%"}>
       <MapDataCount
         terria={viewState.terria}
         viewState={viewState}

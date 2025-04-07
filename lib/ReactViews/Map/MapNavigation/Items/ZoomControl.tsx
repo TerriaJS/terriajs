@@ -19,9 +19,11 @@ import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "../../../../Models/Terria";
 import Tween from "@tweenjs/tween.js";
+import ViewState from "../../../../ReactViewModels/ViewState";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
+  viewState: ViewState;
   theme: DefaultTheme;
   t: TFunction;
 }
@@ -189,33 +191,37 @@ class ZoomControlBase extends React.Component<PropTypes> {
             padding: 0;
           `}
         >
-          <Li>
-            <RawButton
-              type="button"
-              onClick={this.zoomIn.bind(this)}
-              title={t("zoomCotrol.zoomIn")}
-            >
-              <Icon glyph={Icon.GLYPHS.zoomIn} />
-            </RawButton>
-          </Li>
+          {!this.props.viewState.useSmallScreenInterface && (
+            <Li>
+              <RawButton
+                type="button"
+                onClick={this.zoomIn.bind(this)}
+                title={t("zoomControl.zoomIn")}
+              >
+                <Icon glyph={Icon.GLYPHS.zoomIn} />
+              </RawButton>
+            </Li>
+          )}
           <Li>
             <RawButton
               type="button"
               onClick={this.zoomReset.bind(this)}
-              title={t("zoomCotrol.zoomReset")}
+              title={t("zoomControl.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
           </Li>
-          <Li>
-            <RawButton
-              type="button"
-              onClick={this.zoomOut.bind(this)}
-              title={t("zoomCotrol.zoomOut")}
-            >
-              <Icon glyph={GLYPHS.zoomOut} />
-            </RawButton>
-          </Li>
+          {!this.props.viewState.useSmallScreenInterface && (
+            <Li>
+              <RawButton
+                type="button"
+                onClick={this.zoomOut.bind(this)}
+                title={t("zoomControl.zoomOut")}
+              >
+                <Icon glyph={GLYPHS.zoomOut} />
+              </RawButton>
+            </Li>
+          )}
         </Ul>
       </StyledZoomControl>
     );
@@ -226,8 +232,7 @@ const StyledZoomControl = styled(Box).attrs((props) => ({
   backgroundColor: props.theme.textLight,
   centered: true,
   column: true,
-  styledWidth: "32px",
-  styledMargin: "7px 0 0 0"
+  styledWidth: "32px"
 }))`
   border-radius: 100px;
   svg {

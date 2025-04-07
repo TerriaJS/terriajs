@@ -1,6 +1,12 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, reaction, runInAction, makeObservable } from "mobx";
+import {
+  action,
+  reaction,
+  runInAction,
+  makeObservable,
+  observable
+} from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
@@ -25,11 +31,17 @@ import {
 import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
-import Icon from "../../Styled/Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Loader from "../Loader";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import DataUri from "../../Core/DataUri";
+import Button from "../../Styled/Button";
+import { StyledHr } from "../Map/Panels/SharePanel/StyledHr";
+import { TextSpan } from "../../Styled/Text";
+import clipboard from "clipboard";
 
 const DragWrapper = require("../DragWrapper");
 
@@ -41,6 +53,9 @@ interface Props {
 
 @observer
 class FeatureInfoPanel extends React.Component<Props> {
+  @observable whereAmI?: string = "";
+  @observable whereAmIDetailed?: string = "";
+
   constructor(props: Props) {
     super(props);
     makeObservable(this);
@@ -49,6 +64,9 @@ class FeatureInfoPanel extends React.Component<Props> {
   componentDidMount() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const clipboardBtn = new clipboard(`.btn-copy-featureinfopanel`);
 
     disposeOnUnmount(
       this,
@@ -64,6 +82,7 @@ class FeatureInfoPanel extends React.Component<Props> {
                 position: pickedFeatures.pickPosition
               })
             );
+            this.setPicked(terria, pickedFeatures.pickPosition);
             if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
               pickedFeatures.allFeaturesAvailablePromise.then(() => {
                 if (this.props.viewState.featureInfoPanelIsVisible === false) {
@@ -223,28 +242,62 @@ class FeatureInfoPanel extends React.Component<Props> {
     }
   }
 
+  generateGpxWaypoints(location: Cartographic): string {
+    return `<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="runtracker">
+      <metadata/>
+      <wpt name="Location"
+        lat="${CesiumMath.toDegrees(location.latitude)}"
+        lon="${CesiumMath.toDegrees(location.longitude)}"
+        ele="${location.height.toFixed(2)}">
+      </wpt>
+    </gpx>`;
+  }
+
+  downloadLocationAsGpx(locationGpx: string): void {
+    const a = document.createElement("a");
+    a.href = DataUri.make("xml", locationGpx) ?? "";
+    a.download = "location.gpx";
+    a.click();
+  }
+
   renderLocationItem(cartesianPosition: Cartesian3) {
+    const { t } = this.props;
     const cartographic =
+      this.props.viewState.terria.pickedPosition ??
       Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
       return null;
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);
-    const pretty = prettifyCoordinates(longitude, latitude);
+    const pretty = prettifyCoordinates(longitude, latitude, {
+      errorBar: undefined,
+      digits: 6
+    });
     // this.locationUpdated(longitude, latitude);
+
+    const prettyHeight = this.props.viewState.terria.cesium
+      ? this.props.viewState.terria.pickedPosition?.height
+        ? `${this.props.viewState.terria.pickedPosition?.height.toFixed(1)}${t(
+            "featureInfo.heightAboveSea"
+          )}`
+        : ""
+      : "2D";
 
     const that = this;
     const pinClicked = function () {
       that.pinClicked(longitude, latitude);
     };
 
-    const locationButtonStyle = isMarkerVisible(this.props.viewState.terria)
+    /*const locationButtonStyle = isMarkerVisible(this.props.viewState.terria)
       ? Styles.btnLocationSelected
-      : Styles.btnLocation;
+      : Styles.btnLocation;*/
+    const downloadLocationAsGpx = () => {
+      that.downloadLocationAsGpx(that.generateGpxWaypoints(cartographic));
+    };
 
     return (
-      <div className={Styles.location}>
+      /*<div className={Styles.location}>
         <span>Lat / Lon&nbsp;</span>
         <span>
           {pretty.latitude + ", " + pretty.longitude}
@@ -258,8 +311,118 @@ class FeatureInfoPanel extends React.Component<Props> {
             </button>
           )}
         </span>
+      </div>*/
+      <div>
+        {!!cartographic &&
+          this.props.viewState.terria.configParameters.whereAmIParams &&
+          this.whereAmI && (
+            <WhereAmITranslated
+              whereAmI={this.whereAmI}
+              whereAmIDetailed={this.whereAmIDetailed}
+              viewState={this.props.viewState}
+            />
+          )}
+        {!!cartographic && (
+          <div className={Styles.location}>
+            <span>{t("featureInfo.elevation")}</span>
+            <span>{prettyHeight}</span>
+          </div>
+        )}
+        <div className={Styles.location}>
+          Lat / Lon
+          <span id="featureinfopanel">
+            {pretty.latitude + ", " + pretty.longitude}
+          </span>
+        </div>
+        <div className={Styles.location}>
+          <span />
+          {!this.props.printView && (
+            <span>
+              <Button
+                primary
+                title={t("featureInfo.copyButtonTooltip")}
+                css={`
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                `}
+                className={`btn-copy-featureinfopanel`}
+                data-clipboard-target={`#featureinfopanel`}
+              >
+                <StyledIcon
+                  light
+                  realDark={false}
+                  glyph={Icon.GLYPHS.copy}
+                  styledWidth="16px"
+                />
+              </Button>
+              <Button
+                primary
+                title={t("featureInfo.pinButtonTooltip")}
+                onClick={pinClicked}
+                css={`
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                  border-width: ${isMarkerVisible(this.props.viewState.terria)
+                    ? "2px"
+                    : "0px"};
+                  border-color: red;
+                `}
+              >
+                <StyledIcon
+                  light
+                  realDark={false}
+                  glyph={Icon.GLYPHS.location}
+                  styledWidth="16px"
+                />
+              </Button>
+              <Button
+                primary
+                title={t("featureInfo.downloadButtonTooltip")}
+                onClick={downloadLocationAsGpx}
+                css={`
+                  width: 14px;
+                  border-radius: 2px;
+                  margin: 2px;
+                `}
+              >
+                <StyledIcon
+                  light
+                  realDark={false}
+                  glyph={Icon.GLYPHS.downloadNew}
+                  styledWidth="16px"
+                />
+              </Button>
+            </span>
+          )}
+        </div>
+        <StyledHr />
       </div>
     );
+  }
+
+  @action
+  setWhereAmI = (
+    whereAmI: string | undefined,
+    whereAmIDetailed: string | undefined
+  ) => {
+    this.whereAmI = whereAmI;
+    this.whereAmIDetailed = whereAmIDetailed;
+  };
+
+  @action
+  setPicked(terria: Terria, position: Cartesian3 | undefined) {
+    if (!position) return;
+    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+    if (!Cartographic.equals(terria.pickedPosition, cartographic)) {
+      terria.currentViewer.mouseCoords.debounceAskWhereAmI(
+        terria,
+        cartographic,
+        this.setWhereAmI
+      );
+      terria.pickedPosition = cartographic.clone();
+    }
   }
 
   render() {
@@ -360,7 +523,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             </div>
           )}
           <ul className={Styles.body}>
-            {this.props.printView && locationElements}
+            {/*this.props.printView &&*/ locationElements}
 
             {
               // Is feature info visible
@@ -385,7 +548,7 @@ class FeatureInfoPanel extends React.Component<Props> {
               ) : null
             }
 
-            {!this.props.printView && locationElements}
+            {/*!this.props.printView && locationElements*/}
             {
               // Add "filter by location" buttons if supported
               filterableCatalogItems.map((pair) =>
@@ -414,6 +577,55 @@ class FeatureInfoPanel extends React.Component<Props> {
     );
   }
 }
+
+interface IWhereAmIProps {
+  whereAmI?: string;
+  whereAmIDetailed?: string;
+  viewState: ViewState;
+  t: TFunction;
+}
+
+const WhereAmI: React.VoidFunctionComponent<IWhereAmIProps> = ({
+  whereAmI,
+  whereAmIDetailed,
+  viewState,
+  t
+}) => {
+  return (
+    <>
+      <div className={Styles.location}>
+        <span>{t("featureInfo.whereAmI")}</span>
+        <TextSpan small>{whereAmI}</TextSpan>
+      </div>
+      {whereAmIDetailed && (
+        <div
+          className={Styles.location}
+          style={{ flexDirection: "row-reverse" }}
+        >
+          <Button
+            primary
+            onClick={() => {
+              viewState.terria.notificationState.addNotificationToQueue({
+                title: t("featureInfo.positionDetails"),
+                message: whereAmIDetailed ?? ""
+              });
+            }}
+            css={`
+              display: flex;
+              align-items: center;
+              border-radius: 2px;
+            `}
+          >
+            {t("featureInfo.details")}
+          </Button>
+        </div>
+      )}
+      <StyledHr />
+    </>
+  );
+};
+
+const WhereAmITranslated = withTranslation()(WhereAmI);
 
 function getFeatureMapByCatalogItems(terria: Terria) {
   const featureMap = new Map<string, TerriaFeature[]>();

@@ -151,6 +151,30 @@ It can be configured using following options
 }
 ```
 
+### NominatimSearchProvider
+
+`type: nominatim-search-provider`
+
+Nominatim uses OpenStreetMap data to find locations on Earth.
+It can be configured using following options
+
+| Name           | Required | Type       | Default     | Description                                                                                 |
+| -------------- | -------- | ---------- | ----------- | ------------------------------------------------------------------------------------------- |
+| `countryCodes` | no       | **string** | `undefined` | A comma-separated list of country codes (ISO 3166-1alpha2) to prioritize the search results |
+| `maxResults`   | no       | **number** | 5           | The maximum number of results to return                                                     |
+
+**Example**
+
+```json
+{
+    "id": "search-provider/nominatim",
+    "type": "nominatim-search-provider",
+    "name": "Nominatim",
+    "flightDurationSeconds": 2,
+    "minCharacters": 3
+}
+```
+
 ### Implementing new location search provider
 
 Implementing new location search provider is similar to implementing new `CatalogItems` and `CatalogGroups`. Each of them should be based on the usage of one of the mixins

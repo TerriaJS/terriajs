@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="120.24953"
+   height="82.991188"
+   viewBox="0 0 120.24952 82.991187"
+   version="1.1"
+   id="svg838"
+   sodipodi:docname="keyboard_controls.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs842" />
+  <sodipodi:namedview
+     id="namedview840"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.6152039"
+     inkscape:cx="64.548275"
+     inkscape:cy="42.251154"
+     inkscape:window-width="2560"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     lock-margins="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <title
+     id="title834">graphic/keyboard_controls</title>
+  <metadata
+     id="metadata924">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>graphic/keyboard_controls</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1"
+     style="display:inline"
+     transform="translate(7.4537377,-0.66987346)">
+    <g
+       id="g20787">
+      <path
+         d="m 44.345446,0.66987348 c 1.656854,0 3,1.34314502 3,2.99999902 V 23.669873 c 0,1.656854 -1.343146,3 -3,3 h -20 c -1.656854,0 -3,-1.343146 -3,-3 V 3.6698725 c 0,-1.656854 1.343146,-2.99999902 3,-2.99999902 z m 0,1.99999902 h -20 c -0.512836,0 -0.935507,0.386041 -0.993272,0.883379 l -0.0067,0.116621 V 23.669873 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935507,-0.38604 0.993272,-0.883379 l 0.0067,-0.116621 V 3.6698725 c 0,-0.512835 -0.38604,-0.935507 -0.883379,-0.993272 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+         x="27.102356"
+         y="18.724562"
+         id="text23084"><tspan
+           sodipodi:role="line"
+           id="tspan23082"
+           x="27.102356"
+           y="18.724562"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">W</tspan></text>
+    </g>
+    <g
+       id="g20855">
+      <path
+         d="m 80.996595,29.118216 c 1.65685,0 3,1.343146 3,2.999998 v 20.000002 c 0,1.656854 -1.34315,3 -3,3 h -20 c -1.65686,0 -3,-1.343146 -3,-3 V 32.118214 c 0,-1.656852 1.34314,-2.999998 3,-2.999998 z m 0,2 h -20 c -0.51284,0 -0.93551,0.38604 -0.99327,0.883378 l -0.007,0.11662 v 20.000002 c 0,0.512836 0.38604,0.935507 0.88338,0.993272 l 0.11662,0.0067 h 20 c 0.51283,0 0.93551,-0.38604 0.99327,-0.883379 l 0.007,-0.116621 V 32.118214 c 0,-0.512833 -0.38604,-0.935506 -0.88338,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-7-2"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="65.695816"
+         y="47.172905"
+         id="text23084-8"><tspan
+           sodipodi:role="line"
+           id="tspan23082-96"
+           x="65.695816"
+           y="47.172905"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">D</tspan></text>
+    </g>
+    <g
+       id="g20850">
+      <path
+         d="m 52.197417,29.118216 c 1.656856,0 2.999996,1.343146 2.999996,3 v 20 c 0,1.656854 -1.34314,3 -2.999996,3 h -20 c -1.656854,0 -3,-1.343146 -3,-3 v -20 c 0,-1.656854 1.343146,-3 3,-3 z m 0,2 h -20 c -0.512836,0 -0.935507,0.38604 -0.993272,0.883379 l -0.0067,0.116621 v 20 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935506,-0.38604 0.993276,-0.883379 l 0.007,-0.116621 V 32.118216 c 0,-0.512835 -0.386044,-0.935508 -0.883383,-0.993273 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-5"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="38.404446"
+         y="47.172905"
+         id="text23084-4"><tspan
+           sodipodi:role="line"
+           id="tspan23082-8"
+           x="38.404446"
+           y="47.172905"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">S</tspan></text>
+    </g>
+    <g
+       id="g20802">
+      <path
+         d="m 23.398229,29.118216 c 1.656854,0 3,1.343146 3,2.999998 v 20.000002 c 0,1.656854 -1.343146,3 -3,3 H 3.3982288 c -1.656854,0 -2.99999996,-1.343146 -2.99999996,-3 V 32.118214 c 0,-1.656852 1.34314596,-2.999998 2.99999996,-2.999998 z m 0,1.999998 H 3.3982288 c -0.512836,0 -0.935507,0.386042 -0.993272,0.883381 l -0.0067,0.116619 v 20.000002 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 H 23.398259 c 0.512836,0 0.935507,-0.38604 0.993272,-0.883379 l 0.0067,-0.116621 V 32.118214 c 0,-0.512833 -0.38604,-0.935506 -0.883379,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-8-8"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="8.5468597"
+         y="47.172905"
+         id="text23084-7"><tspan
+           sodipodi:role="line"
+           id="tspan23082-3"
+           x="8.5468597"
+           y="47.172905"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">A</tspan></text>
+    </g>
+    <g
+       id="g20865"
+       transform="translate(2)">
+      <path
+         d="m 65.905643,57.661062 c 1.656856,0 2.999996,1.343146 2.999996,3 v 20 c 0,1.656854 -1.34314,3 -2.999996,3 h -20 c -1.656854,0 -3,-1.343146 -3,-3 v -20 c 0,-1.656854 1.343146,-3 3,-3 z m 0,2 h -20 c -0.512836,0 -0.935507,0.38604 -0.993272,0.883379 l -0.0067,0.116621 v 20 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935506,-0.38604 0.993276,-0.883379 l 0.007,-0.116621 V 60.661062 c 0,-0.512835 -0.386044,-0.935508 -0.883383,-0.993273 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-5-1"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="51.512085"
+         y="75.715752"
+         id="text23084-4-6"><tspan
+           sodipodi:role="line"
+           id="tspan23082-8-9"
+           x="51.512085"
+           y="75.715752"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">X</tspan></text>
+    </g>
+    <g
+       id="g20870"
+       transform="translate(2)">
+      <path
+         d="m 37.106455,57.661062 c 1.656854,0 3,1.343146 3,2.999998 v 20.000002 c 0,1.656854 -1.343146,3 -3,3 h -20 c -1.656854,0 -3,-1.343146 -3,-3 V 60.66106 c 0,-1.656852 1.343146,-2.999998 3,-2.999998 z m 0,1.999998 h -20 c -0.512836,0 -0.935507,0.386042 -0.993272,0.883381 l -0.0067,0.116619 v 20.000002 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935507,-0.38604 0.993272,-0.883379 l 0.0067,-0.116621 V 60.66106 c 0,-0.512833 -0.38604,-0.935506 -0.883379,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-8-8-0"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="23.250986"
+         y="75.715752"
+         id="text23084-7-6"><tspan
+           sodipodi:role="line"
+           id="tspan23082-3-3"
+           x="23.250986"
+           y="75.715752"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Z</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+       x="7.4973025"
+       y="13.972245"
+       id="text28890"><tspan
+         sodipodi:role="line"
+         id="tspan28888"
+         x="7.4973025"
+         y="13.972245" /></text>
+    <g
+       id="g20792">
+      <path
+         d="m 73.144627,0.66987348 c 1.656854,0 3,1.34314502 3,2.99999802 V 23.669873 c 0,1.656854 -1.343146,3 -3,3 h -20 c -1.656854,0 -3,-1.343146 -3,-3 V 3.6698715 c 0,-1.656853 1.343146,-2.99999802 3,-2.99999802 z m 0,1.99999902 h -20 c -0.512836,0 -0.935507,0.38604 -0.993272,0.883378 l -0.0067,0.116621 V 23.669873 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935507,-0.38604 0.993272,-0.883379 l 0.0067,-0.116621 V 3.6698715 c 0,-0.512834 -0.38604,-0.935507 -0.883379,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-7"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="59.046974"
+         y="18.724562"
+         id="text23084-3"><tspan
+           sodipodi:role="line"
+           id="tspan23082-0"
+           x="59.046974"
+           y="18.724562"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">E</tspan></text>
+    </g>
+    <g
+       id="g20782">
+      <path
+         d="m 15.546262,0.66987348 c 1.656854,0 3,1.34314502 3,2.99999802 V 23.669873 c 0,1.656854 -1.343146,3 -3,3 h -20 c -1.6568537,0 -2.9999997,-1.343146 -2.9999997,-3 V 3.6698715 c 0,-1.656853 1.343146,-2.99999802 2.9999997,-2.99999802 z m 0,1.99999802 h -20 c -0.5128357,0 -0.9355067,0.386042 -0.9932717,0.88338 l -0.0067,0.11662 V 23.669873 c 0,0.512836 0.38604,0.935507 0.8833787,0.993272 l 0.116621,0.0067 h 20.000002 c 0.512836,0 0.935507,-0.38604 0.993272,-0.883379 l 0.0067,-0.116621 V 3.6698715 c 0,-0.512834 -0.38604,-0.935506 -0.883379,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-8"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="-0.3404566"
+         y="17.900343"
+         id="text23084-9"><tspan
+           sodipodi:role="line"
+           id="tspan23082-9"
+           x="-0.3404566"
+           y="17.900343"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Q</tspan></text>
+    </g>
+    <g
+       id="g20797">
+      <path
+         d="m 101.94382,0.66987346 c 1.65685,0 3,1.34314594 3,2.99999894 V 23.669873 c 0,1.656854 -1.34315,3 -3,3 H 81.943817 c -1.656854,0 -3,-1.343146 -3,-3 V 3.6698724 c 0,-1.656853 1.343146,-2.99999894 3,-2.99999894 z m 0,1.99999894 H 81.943817 c -0.512836,0 -0.935507,0.386041 -0.993272,0.883379 l -0.0067,0.116621 V 23.669873 c 0,0.512836 0.38604,0.935507 0.883379,0.993272 l 0.116621,0.0067 h 20.000005 c 0.51284,0 0.93551,-0.38604 0.99327,-0.883379 l 0.007,-0.116621 V 3.6698724 c 0,-0.512835 -0.38604,-0.935507 -0.88338,-0.993272 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-7-0"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="87.092255"
+         y="18.701122"
+         id="text23084-3-7"><tspan
+           sodipodi:role="line"
+           id="tspan23082-0-2"
+           x="87.092255"
+           y="18.701122"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">R</tspan></text>
+    </g>
+    <g
+       id="g20860">
+      <path
+         d="m 109.79579,29.118216 c 1.65685,0 3,1.343146 3,2.999998 v 20.000002 c 0,1.656854 -1.34315,3 -3,3 H 89.795785 c -1.65686,0 -3,-1.343146 -3,-3 V 32.118214 c 0,-1.656852 1.34314,-2.999998 3,-2.999998 z m 0,2 H 89.795785 c -0.51284,0 -0.93551,0.38604 -0.99327,0.883378 l -0.007,0.11662 v 20.000002 c 0,0.512836 0.38604,0.935507 0.88338,0.993272 l 0.11662,0.0067 h 20.000005 c 0.51283,0 0.93551,-0.38604 0.99327,-0.883379 l 0.007,-0.116621 V 32.118214 c 0,-0.512833 -0.38604,-0.935506 -0.88338,-0.993271 z"
+         style="display:inline;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1"
+         id="path19709-7-2-3"
+         sodipodi:nodetypes="ssssssssscsccsccsccscc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+         x="95.858284"
+         y="47.149467"
+         id="text23084-8-1"><tspan
+           sodipodi:role="line"
+           id="tspan23082-96-6"
+           x="95.858284"
+           y="47.149467"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;font-family:Calibri;-inkscape-font-specification:'Calibri, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">F</tspan></text>
+    </g>
+  </g>
+</svg>

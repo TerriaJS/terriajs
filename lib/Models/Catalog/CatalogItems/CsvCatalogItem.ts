@@ -14,6 +14,8 @@ import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -145,7 +147,7 @@ export default class CsvCatalogItem
     });
   }
 
-  protected forceLoadTableData(): Promise<string[][]> {
+  public forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(
         this.csvString,
@@ -173,6 +175,45 @@ export default class CsvCatalogItem
         })
       );
     }
+  }
+
+  public async sampleFromCsvData(): Promise<void> {
+    const data = await this.forceLoadTableData();
+
+    const columns = data.reduce((acc, row) => {
+      const [columnName, ...values] = row;
+      acc[columnName] = values;
+      return acc;
+    }, {} as { [key: string]: any[] });
+
+    const path_notes = columns["path_notes"]?.[0] || "";
+    const longitudes = columns["longitude"] || [];
+    const latitudes = columns["latitude"] || [];
+    const heights = columns["height"] || [];
+    const descriptions = columns["description"] || [];
+
+    const positions = longitudes.map((longitude: number, i: number) =>
+      Cartographic.fromDegrees(longitude, latitudes[i], heights[i])
+    );
+
+    if (!this.terria?.cesium?.scene) {
+      return;
+    }
+    const terrainProvider = this.terria.cesium.scene.terrainProvider;
+
+    const resolvedPositions = positions.every((pos) => pos.height < 1)
+      ? await sampleTerrainMostDetailed(terrainProvider, positions)
+      : positions;
+
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].sampleFromCartographics(
+      resolvedPositions,
+      false,
+      true,
+      descriptions,
+      path_notes
+    );
   }
 }
 

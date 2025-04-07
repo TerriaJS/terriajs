@@ -1,6 +1,13 @@
 import { observer } from "mobx-react";
-import { action, computed, observable, makeObservable } from "mobx";
-import { AxisLeft, AxisBottom } from "@visx/axis";
+import {
+  action,
+  autorun,
+  computed,
+  makeObservable,
+  observable,
+  reaction
+} from "mobx";
+import { AxisBottom, AxisLeft } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
 import { GridRows } from "@visx/grid";
@@ -21,6 +28,9 @@ import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
 import LineAndPointChart from "./LineAndPointChart";
 import PointOnMap from "./PointOnMap";
+import { Cartographic } from "terriajs-cesium";
+import { terriaTheme } from "../../StandardUserInterface";
+import html2canvas from "html2canvas";
 
 const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
@@ -35,7 +45,11 @@ class BottomDockChart extends React.Component {
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired,
-    margin: PropTypes.object
+    margin: PropTypes.object,
+    chartItemKeyForPointMouseNear: PropTypes.object,
+    onPointMouseNear: PropTypes.func,
+    selectedStopPointIdx: PropTypes.number,
+    selectedSampledPointIdx: PropTypes.number
   };
 
   static defaultProps = {
@@ -50,6 +64,10 @@ class BottomDockChart extends React.Component {
           chartMinWidth,
           this.props.width || this.props.parentWidth
         )}
+        chartItemKeyForPointMouseNear={this.props.chartItemKeyForPointMouseNear}
+        onPointMouseNear={this.props.onPointMouseNear}
+        selectedStopPointIdx={this.props.selectedStopPointIdx}
+        selectedSampledPointIdx={this.props.selectedSampledPointIdx}
       />
     );
   }
@@ -65,7 +83,11 @@ class Chart extends React.Component {
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired,
-    margin: PropTypes.object
+    margin: PropTypes.object,
+    chartItemKeyForPointMouseNear: PropTypes.object,
+    onPointMouseNear: PropTypes.func,
+    selectedStopPointIdx: PropTypes.number,
+    selectedSampledPointIdx: PropTypes.number
   };
 
   static defaultProps = {
@@ -236,95 +258,259 @@ class Chart extends React.Component {
     });
   }
 
+  componentDidMount() {
+    function cartesianDistance(x1, y1, z1, x2, y2, z2) {
+      return Math.sqrt(
+        Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)
+      );
+    }
+
+    function calculateTotalCartesianDistance(points) {
+      let totalDistance = 0;
+
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+
+        const prevCartesian = Cartographic.toCartesian(prev);
+        const currCartesian = Cartographic.toCartesian(curr);
+
+        if (prevCartesian && currCartesian) {
+          totalDistance += cartesianDistance(
+            prevCartesian.x,
+            prevCartesian.y,
+            prevCartesian.z,
+            currCartesian.x,
+            currCartesian.y,
+            currCartesian.z
+          );
+        }
+      }
+
+      return totalDistance;
+    }
+
+    this.disposeReaction = reaction(
+      () =>
+        this.props.selectedStopPointIdx || this.props.selectedSampledPointIdx,
+      (idx) => {
+        if (typeof idx === "number" && this.props.chartItems) {
+          const isStopPointSelected = this.props.selectedStopPointIdx !== null;
+
+          const points = isStopPointSelected
+            ? this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].stopPoints
+            : this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].sampledPoints;
+
+          const sumDistances = isStopPointSelected
+            ? this.props.terria.measurableGeomList[
+                this.props.terria.measurableGeometryIndex
+              ].stopAirDistances
+                .slice(0, idx + 1)
+                .reverse()
+                .reduce((acc, distance) => acc + distance, 0)
+            : calculateTotalCartesianDistance(
+                points.slice(0, idx + 1).reverse()
+              );
+
+          const selectedPoint = {
+            x: sumDistances,
+            y: points[idx].height
+          };
+
+          // Simulate the mouse coords from the selected point coords in the chart.
+          const xCoord = this.xScale(selectedPoint.x);
+          const yCoord = this.yAxes[0].scale(selectedPoint.y);
+
+          this.setMouseCoords({
+            x: xCoord,
+            y: yCoord
+          });
+        } else {
+          this.setMouseCoords(undefined);
+        }
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    if (this.disposeReaction) {
+      this.disposeReaction();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // Unset zoom scale if any chartItems are added or removed
     if (prevProps.chartItems.length !== this.props.chartItems.length) {
       this.setZoomedXScale(undefined);
     }
+
+    // When pointsNearMouse changes, call onPointMouseNear callback to create the placeholder
+    autorun(() => {
+      if (
+        this.pointsNearMouse &&
+        this.pointsNearMouse.length > 0 &&
+        this.props.onPointMouseNear
+      ) {
+        const pointNearMouse = this.pointsNearMouse.find(
+          (elem) =>
+            elem.chartItem.key ===
+              this.props.chartItemKeyForPointMouseNear.AirChart ||
+            elem.chartItem.key ===
+              this.props.chartItemKeyForPointMouseNear.GroundChart
+        );
+        if (pointNearMouse) {
+          this.props.onPointMouseNear(pointNearMouse.point);
+        }
+      }
+    });
   }
+
+  @observable isDownloading;
+  chartRef = React.createRef();
+
+  @action
+  setIsDownloading(isDownloading) {
+    this.isDownloading = isDownloading;
+  }
+
+  downloadChart = () => {
+    this.setIsDownloading(true);
+    setTimeout(() => {
+      if (this.chartRef.current) {
+        html2canvas(this.chartRef.current)
+          .then((canvas) => {
+            const dataURL = canvas.toDataURL("image/jpeg");
+            const link = document.createElement("a");
+            link.href = dataURL;
+            link.download = "chart-screenshot.jpeg";
+            link.click();
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            this.setIsDownloading(false);
+          });
+      } else {
+        this.setIsDownloading(false);
+      }
+    }, 0);
+  };
 
   render() {
     const { height, xAxis, terria } = this.props;
     if (this.chartItems.length === 0)
       return <div className={Styles.empty}>No data available</div>;
-
     return (
-      <ZoomX
-        surface="#zoomSurface"
-        initialScale={this.initialXScale}
-        scaleExtent={[1, Infinity]}
-        translateExtent={[
-          [0, 0],
-          [Infinity, Infinity]
-        ]}
-        onZoom={(zoomedScale) => this.setZoomedXScale(zoomedScale)}
+      <div
+        className={Styles.chart}
+        ref={this.chartRef}
+        style={{ background: terriaTheme.charcoalGrey }}
       >
-        <Legends width={this.plotWidth} chartItems={this.chartItems} />
-        <div style={{ position: "relative" }}>
-          <svg
-            width="100%"
-            height={height}
-            onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
-            onMouseLeave={() => this.setMouseCoords(undefined)}
-          >
-            <Group
-              left={this.adjustedMargin.left}
-              top={this.adjustedMargin.top}
+        <ZoomX
+          surface="#zoomSurface"
+          initialScale={this.initialXScale}
+          scaleExtent={[1, Infinity]}
+          translateExtent={[
+            [0, 0],
+            [Infinity, Infinity]
+          ]}
+          onZoom={(zoomedScale) => this.setZoomedXScale(zoomedScale)}
+        >
+          <div style={{ display: "flex", alignItems: "center", marginTop: 8 }}>
+            <button
+              type="button"
+              className={Styles.btn}
+              style={{
+                marginTop: "auto",
+                marginBottom: "auto",
+                color: "#ffffff",
+                background: "#519ac2",
+                border: "1px solid #ffffff",
+                borderRadius: 4,
+                display: this.isDownloading ? "none" : "inline-block"
+              }}
+              onClick={this.downloadChart}
+              disabled={this.isDownloading}
             >
-              <RectClipPath
-                id="plotClip"
-                width={this.plotWidth}
-                height={this.plotHeight}
-              />
-              <XAxis
-                top={this.plotHeight + 1}
-                scale={this.xScale}
-                label={xAxis.units || (xAxis.scale === "time" && "Date")}
-              />
-              {this.yAxes.map((y, i) => (
-                <YAxis
-                  {...y}
-                  key={`y-axis-${y.units}`}
-                  color={this.yAxes.length > 1 ? y.color : defaultGridColor}
-                  offset={i * 50}
-                />
-              ))}
-              {this.yAxes.map((y, i) => (
-                <GridRows
-                  key={`grid-${y.units}`}
-                  width={this.plotWidth}
-                  height={this.plotHeight}
-                  scale={y.scale}
-                  numTicks={4}
-                  stroke={this.yAxes.length > 1 ? y.color : defaultGridColor}
-                  lineStyle={{ opacity: 0.3 }}
-                />
-              ))}
-              <svg
-                id="zoomSurface"
-                clipPath="url(#plotClip)"
-                pointerEvents="all"
+              Download
+            </button>
+            <Legends width={this.plotWidth} chartItems={this.chartItems} />
+          </div>
+          <div style={{ position: "relative" }}>
+            <svg
+              width="100%"
+              height={height}
+              onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
+              onMouseLeave={() => {
+                this.setMouseCoords(undefined);
+                // On mouseLeave event remove position placeholder
+                this.props.onPointMouseNear(undefined);
+              }}
+            >
+              <Group
+                left={this.adjustedMargin.left}
+                top={this.adjustedMargin.top}
               >
-                <rect
+                <RectClipPath
+                  id="plotClip"
                   width={this.plotWidth}
                   height={this.plotHeight}
-                  fill="transparent"
                 />
-                {this.cursorX && (
-                  <Cursor x={this.cursorX} stroke={defaultGridColor} />
-                )}
-                <Plot
-                  chartItems={this.chartItems}
-                  initialScales={this.initialScales}
-                  zoomedScales={this.zoomedScales}
+                <XAxis
+                  top={this.plotHeight + 1}
+                  scale={this.xScale}
+                  label={xAxis.units || (xAxis.scale === "time" && "Date")}
                 />
-              </svg>
-            </Group>
-          </svg>
-          <Tooltip {...this.tooltip} />
-          <PointsOnMap terria={terria} chartItems={this.chartItems} />
-        </div>
-      </ZoomX>
+                {this.yAxes.map((y, i) => (
+                  <YAxis
+                    {...y}
+                    key={`y-axis-${y.units}`}
+                    color={this.yAxes.length > 1 ? y.color : defaultGridColor}
+                    offset={i * 50}
+                  />
+                ))}
+                {this.yAxes.map((y, i) => (
+                  <GridRows
+                    key={`grid-${y.units}`}
+                    width={this.plotWidth}
+                    height={this.plotHeight}
+                    scale={y.scale}
+                    numTicks={4}
+                    stroke={this.yAxes.length > 1 ? y.color : defaultGridColor}
+                    lineStyle={{ opacity: 0.3 }}
+                  />
+                ))}
+                <svg
+                  id="zoomSurface"
+                  clipPath="url(#plotClip)"
+                  pointerEvents="all"
+                >
+                  <rect
+                    width={this.plotWidth}
+                    height={this.plotHeight}
+                    fill="transparent"
+                  />
+                  {this.cursorX && (
+                    <Cursor x={this.cursorX} stroke={defaultGridColor} />
+                  )}
+                  <Plot
+                    chartItems={this.chartItems}
+                    initialScales={this.initialScales}
+                    zoomedScales={this.zoomedScales}
+                  />
+                </svg>
+              </Group>
+            </svg>
+            <Tooltip {...this.tooltip} />
+            <PointsOnMap terria={terria} chartItems={this.chartItems} />
+          </div>
+        </ZoomX>
+      </div>
     );
   }
 }

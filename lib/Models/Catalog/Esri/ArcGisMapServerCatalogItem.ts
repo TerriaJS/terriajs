@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import uniqWith from "lodash-es/uniqWith";
+//import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import moment from "moment";
@@ -41,6 +41,15 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, Legends, MapServer } from "./ArcGisInterfaces";
+import CommonStrata from "../../Definition/CommonStrata";
+import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 const proj4 = require("proj4").default;
 
@@ -277,7 +286,7 @@ class MapServerStratum extends LoadableStratum(
     const noDataRegex = /^No[\s_-]?Data$/i;
     const labelsRegex = /_Labels$/;
 
-    let items: StratumFromTraits<LegendItemTraits>[] = [];
+    const items: StratumFromTraits<LegendItemTraits>[] = [];
 
     (this._legends?.layers || []).forEach((l) => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
@@ -308,7 +317,8 @@ class MapServerStratum extends LoadableStratum(
       });
     });
 
-    items = uniqWith(items, (a, b) => a.imageUrl === b.imageUrl);
+    // Comment, otherwise the legend may be truncated when the same symbol is used multiple times
+    //items = uniqWith(items, (a, b) => a.imageUrl === b.imageUrl);
 
     return [createStratumInstance(LegendTraits, { items })];
   }
@@ -370,6 +380,17 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
+
+      if (
+        isDefined(this.maximumScale) &&
+        !isDefined(this.minScaleDenominator)
+      ) {
+        this.setTrait(
+          CommonStrata.user,
+          "minScaleDenominator",
+          this.maximumScale
+        );
+      }
     });
   }
 
@@ -576,12 +597,122 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         false
       );
 
+      const pickSize: number = this.terria.configParameters.pickSize ?? 2;
+      ArcGisMapServerImageryProvider.prototype.pickFeatures = function (
+        x,
+        y,
+        level,
+        longitude,
+        latitude
+      ) {
+        if (!this.enablePickFeatures) {
+          return undefined;
+        }
+
+        const rectangle = this.tilingScheme.tileXYToNativeRectangle(
+          x,
+          y,
+          level
+        );
+
+        let horizontal;
+        let vertical;
+        let sr;
+        if (this.tilingScheme.projection instanceof GeographicProjection) {
+          horizontal = CesiumMath.toDegrees(longitude);
+          vertical = CesiumMath.toDegrees(latitude);
+          sr = "4326";
+        } else {
+          const projected = this.tilingScheme.projection.project(
+            new Cartographic(longitude, latitude, 0.0)
+          );
+          horizontal = projected.x;
+          vertical = projected.y;
+          sr = "3857";
+        }
+
+        let layers = "visible";
+        if (defined(this.layers)) {
+          layers += `:${this.layers}`;
+        }
+
+        const query = {
+          f: "json",
+          tolerance: pickSize,
+          geometryType: "esriGeometryPoint",
+          geometry: `${horizontal},${vertical}`,
+          mapExtent: `${rectangle.west},${rectangle.south},${rectangle.east},${rectangle.north}`,
+          imageDisplay: `${this.tileWidth},${this.tileHeight},96`,
+          sr: sr,
+          layers: layers
+        };
+
+        const resource = new Resource({ url: this.url });
+        const newResource = resource.getDerivedResource({
+          url: "identify",
+          queryParameters: query
+        });
+        return newResource.fetchJson()?.then(function (json: any) {
+          const result: ImageryLayerFeatureInfo[] = [];
+
+          const features = json.results;
+          if (!defined(features)) {
+            return result;
+          }
+
+          for (let i = 0; i < features.length; ++i) {
+            const feature = features[i];
+
+            const featureInfo = new ImageryLayerFeatureInfo();
+            featureInfo.data = feature;
+            featureInfo.name = feature.value;
+            featureInfo.properties = feature.attributes;
+            featureInfo.configureDescriptionFromProperties(feature.attributes);
+
+            // If this is a point feature, use the coordinates of the point.
+            if (
+              feature.geometryType === "esriGeometryPoint" &&
+              feature.geometry
+            ) {
+              const wkid =
+                feature.geometry.spatialReference &&
+                feature.geometry.spatialReference.wkid
+                  ? feature.geometry.spatialReference.wkid
+                  : 4326;
+              if (wkid === 4326 || wkid === 4283) {
+                featureInfo.position = Cartographic.fromDegrees(
+                  feature.geometry.x,
+                  feature.geometry.y,
+                  feature.geometry.z
+                );
+              } else if (wkid === 102100 || wkid === 900913 || wkid === 3857) {
+                const projection = new WebMercatorProjection();
+                featureInfo.position = projection.unproject(
+                  new Cartesian3(
+                    feature.geometry.x,
+                    feature.geometry.y,
+                    feature.geometry.z
+                  )
+                );
+              }
+            }
+
+            result.push(featureInfo);
+          }
+
+          return result;
+        });
+      };
+
       const imageryProviderPromise = ArcGisMapServerImageryProvider.fromUrl(
         cleanAndProxyUrl(this, getBaseURI(this).toString()),
         {
           layers: this.layersArray.map((l) => l.id).join(","),
           tilingScheme: new WebMercatorTilingScheme(),
-          maximumLevel: maximumLevel,
+          maximumLevel:
+            !!maximumLevel && this.hideLayerAfterMinScaleDenominator
+              ? maximumLevel + 1
+              : maximumLevel,
           tileHeight: this.tileHeight,
           tileWidth: this.tileWidth,
           parameters: params,
