@@ -232,8 +232,7 @@ const StyledZoomControl = styled(Box).attrs((props) => ({
   backgroundColor: props.theme.textLight,
   centered: true,
   column: true,
-  styledWidth: "32px",
-  styledMargin: "7px 0 0 10px"
+  styledWidth: "32px"
 }))`
   border-radius: 100px;
   svg {

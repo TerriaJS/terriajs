@@ -14,6 +14,7 @@ import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import { withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
+import { Ul } from "../../Styled/List";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -47,52 +48,70 @@ interface EmptyWorkbenchProps {
   theme: DefaultTheme;
 }
 
+const StyledUl = styled(Ul)`
+  margin-top: 5px;
+  li {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+`;
+
 const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = (props) => {
   const { t } = useTranslation();
   return (
-    <Text large textLight>
-      <Box column fullWidth justifySpaceBetween>
-        <Box centered column>
-          <ResponsiveSpacing />
-          <Text large color={props.theme.textLightDimmed}>
-            {t("emptyWorkbench.emptyArea")}
-          </Text>
-          <ResponsiveSpacing />
+    <StyledUl
+      overflowY="auto"
+      overflowX="hidden"
+      scroll
+      fullWidth
+      fullHeight
+      column
+    >
+      <Text large textLight>
+        <Box column fullWidth justifySpaceBetween>
+          <Box centered column>
+            <ResponsiveSpacing />
+            <Text large color={props.theme.textLightDimmed}>
+              {t("emptyWorkbench.emptyArea")}
+            </Text>
+            <ResponsiveSpacing />
+          </Box>
+          <BoxHelpfulHints column paddedRatio={3} overflowY="auto" scroll>
+            <Box left>
+              <Text extraLarge bold>
+                {t("emptyWorkbench.helpfulHints")}
+              </Text>
+            </Box>
+            <Spacing bottom={4} />
+            <Box>
+              <HelpfulHintsIcon />
+              <Spacing right={1} />
+              <Text medium light>
+                {t("emptyWorkbench.helpfulHintsOne")}
+              </Text>
+            </Box>
+            <Spacing bottom={3} />
+            <Box>
+              <HelpfulHintsIcon />
+              <Spacing right={1} />
+              <Text medium light>
+                {t("emptyWorkbench.helpfulHintsTwo")}
+              </Text>
+            </Box>
+            <Spacing bottom={3} />
+            <Box>
+              <HelpfulHintsIcon />
+              <Spacing right={1} />
+              <Text medium light>
+                {t("emptyWorkbench.helpfulHintsThree")}
+              </Text>
+            </Box>
+            <ResponsiveSpacing />
+          </BoxHelpfulHints>
         </Box>
-        <BoxHelpfulHints column paddedRatio={3} overflowY="auto" scroll>
-          <Box left>
-            <Text extraLarge bold>
-              {t("emptyWorkbench.helpfulHints")}
-            </Text>
-          </Box>
-          <Spacing bottom={4} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              {t("emptyWorkbench.helpfulHintsOne")}
-            </Text>
-          </Box>
-          <Spacing bottom={3} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              {t("emptyWorkbench.helpfulHintsTwo")}
-            </Text>
-          </Box>
-          <Spacing bottom={3} />
-          <Box>
-            <HelpfulHintsIcon />
-            <Spacing right={1} />
-            <Text medium light>
-              {t("emptyWorkbench.helpfulHintsThree")}
-            </Text>
-          </Box>
-          <ResponsiveSpacing />
-        </BoxHelpfulHints>
-      </Box>
-    </Text>
+      </Text>
+    </StyledUl>
   );
 };
 

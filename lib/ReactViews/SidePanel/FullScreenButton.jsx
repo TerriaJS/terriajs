@@ -94,7 +94,8 @@ class FullScreenButton extends React.Component {
           }
           style={{
             backgroundColor: "#111827",
-            opacity: 0.75
+            opacity: 0.75,
+            marginLeft: "5px"
           }}
         >
           {this.renderButtonText()}
