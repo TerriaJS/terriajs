@@ -1,6 +1,36 @@
 # Change Log
 
-#### next release (8.9.1)
+#### next release (8.9.3)
+
+- Remove unused d3-array dependency.
+- Update to plugin-error 2.0.1
+- TSify `MenuButton` and convert it to functional component. #7576
+- Convert `WorkbenchItem` to functional component #7564
+- Remove BrowserStack and SauceLabs gulp tasks.
+- Remove `test-travis` gulp task.
+- [The next improvement]
+
+#### 8.9.2 - 2025-03-31
+
+- Replace clipboardjs with native browser clipboard
+- Update react-swipeable to v7. #7542
+- Use theme.dark for bottomBar background
+- Remove interactjs dependency #7544
+- Rewrite drag-wrapper to use terriajs dragging implementation #7544
+- TSify `SearchBoxAndResults` and convert to a functional component #7477
+- Convert `DragDropFile` to functional component and styled-components. #7563
+- Remove `viewState.lastUploadedFiles` and replace with `DragDropFile` local state. #7563
+- TSify `DragDropNotification` and convert to functional component and styled-components. #7563
+- TSify `DataCatalogTab` and convert it to functional component #7476
+- Update to shpjs 6.1.0.
+- Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
+- Return lat/lon as numbers from `geoJsonGeometryFromGeoRssSimpleGeometry` and `geoJsonGeometryFromW3cGeometry`.
+- Remove unused babel/parser dependency.
+
+#### 8.9.1 - 2025-03-24
+
+- Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
+- Fix scss theming regression by restoring webpack alias
 
 #### 8.9.0 - 2025-03-17
 
@@ -51,7 +81,6 @@
 - Remove `request` dependency from CI scripts
 - Fix basemaps order to follow the order given by `enabledBaseMaps` setting. #7537
 - Modified DiffTool UI to use `WorkflowPanel` instead of floating side panel.
-- [The next improvement]
 
 #### 8.8.1 - 2025-02-27
 
@@ -311,7 +340,6 @@
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - Add `clampPolygonsToGround` to `KmlCatalogItemTraits` (defaults to true`)
-- [The next improvement]
 - Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 

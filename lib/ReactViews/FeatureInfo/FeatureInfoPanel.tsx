@@ -29,7 +29,7 @@ import Loader from "../Loader";
 import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-import DragWrapper from "../DragWrapper";
+import DragWrapper from "../Drag/DragWrapper";
 
 interface Props {
   viewState: ViewState;
@@ -324,7 +324,7 @@ class FeatureInfoPanel extends Component<Props> {
     ) : null;
 
     return (
-      <DragWrapper>
+      <DragWrapper handleSelector=".drag-handle">
         <div
           className={panelClassName}
           aria-hidden={!viewState.featureInfoPanelIsVisible}

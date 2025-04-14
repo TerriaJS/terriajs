@@ -87,7 +87,6 @@ export default class ViewState {
   @observable topElement: string = "FeatureInfo";
   // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
-  @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
 
   // Flesh out later

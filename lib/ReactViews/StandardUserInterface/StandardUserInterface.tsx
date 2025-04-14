@@ -9,7 +9,6 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
-import DragDropNotification from "../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
@@ -280,7 +279,6 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
               <FeatureInfoPanel />
             </div>
             <DragDropFile />
-            <DragDropNotification />
             {showStoryPanel && <StoryPanel />}
           </div>
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
