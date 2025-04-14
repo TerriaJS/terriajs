@@ -8,6 +8,7 @@
 - Convert `WorkbenchItem` to functional component #7564
 - Remove BrowserStack and SauceLabs gulp tasks.
 - Remove `test-travis` gulp task.
+- Allow to modify `lookupCookie` for i18next
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
