@@ -43,10 +43,13 @@ function buildBaseShareUrl(
 
   const usefulSubs = new URL(document.URL).hash
     .split(/[#&]/)
-    .filter((elem) =>
-      elem !== "" && !elem.includes("share=") && !elem.includes("start=")
+    .filter(
+      (elem) =>
+        elem !== "" && !elem.includes("share=") && !elem.includes("start=")
     );
-  usefulSubs.forEach(sub => { uri.addSearch(sub) });
+  usefulSubs.forEach((sub) => {
+    uri.addSearch(sub);
+  });
 
   if (terria.developmentEnv) {
     uri.addSearch(toJS(terria.userProperties));
