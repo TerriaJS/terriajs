@@ -1,12 +1,8 @@
 import { observer } from "mobx-react";
 import type { ReactNode } from "react";
 import { ChangeEvent, Component, Fragment } from "react";
-import {
-  Translation,
-  WithTranslation,
-  withTranslation,
-  TFunction
-} from "react-i18next";
+import { TFunction } from "i18next";
+import { Translation, WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
   HelpContentItem,

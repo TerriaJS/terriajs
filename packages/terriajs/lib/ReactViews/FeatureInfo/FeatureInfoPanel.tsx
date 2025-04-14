@@ -1,14 +1,15 @@
 import classNames from "classnames";
+import { TFunction } from "i18next";
 import {
   action,
+  makeObservable,
   reaction,
   runInAction,
-  makeObservable,
   type IReactionDisposer
 } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
-import { withTranslation, TFunction } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -31,11 +32,11 @@ import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import Loader from "../Loader";
 import { withViewState } from "../Context";
+import DragWrapper from "../Drag/DragWrapper";
+import Loader from "../Loader";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-import DragWrapper from "../Drag/DragWrapper";
 
 interface Props {
   viewState: ViewState;

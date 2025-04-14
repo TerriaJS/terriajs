@@ -1,8 +1,9 @@
 import classNames from "classnames";
+import { TFunction } from "i18next";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
-import { WithTranslation, withTranslation, TFunction } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
@@ -11,8 +12,8 @@ import Terria from "../../../Models/Terria";
 import { Button, StyledButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
-import Styles from "./chart-expand-and-download-buttons.scss";
 import Dropdown from "../../Generic/Dropdown";
+import Styles from "./chart-expand-and-download-buttons.scss";
 
 interface PropsType extends WithTranslation {
   terria: Terria;
