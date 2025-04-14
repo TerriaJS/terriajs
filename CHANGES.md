@@ -8,6 +8,7 @@
 - Convert `WorkbenchItem` to functional component #7564
 - Remove BrowserStack and SauceLabs gulp tasks.
 - Remove `test-travis` gulp task.
+- Allow to modify `lookupCookie` for i18next
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
@@ -145,8 +146,6 @@
 - Add support for Cloud Optimised Geotiff (cog) in Cesium mode. Currently supports EPSG 4326 and 3857. There is experimental support for other projections but performance might suffer and there could be other issues.
 - Fix `Workbench.collapseAll()` and `Workbench.expandAll()` for References.
 - Add to the "doZoomTo" function the case of an imagery layer with imageryProvider.rectangle
-- Allow to modify `lookupCookie` for i18next
-- [The next improvement]
 - Add "leafletMaxZoom" to configParameters so that the maxZoom of the Leaflet viewer can be changed.
 - Restrict `sass` version to `< 1.80`- to avoid deprecations.
 
