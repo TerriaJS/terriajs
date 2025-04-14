@@ -1,6 +1,6 @@
 import { makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-//import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import { Category } from "../../Core/AnalyticEvents/analyticEvents";
 import loadJson from "../../Core/loadJson";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
@@ -27,11 +27,11 @@ export default class RerSearchProvider extends LocationSearchProviderMixin(
   }
 
   get urlHandle() {
-    return "https://servizigis.regione.emilia-romagna.it/normalizzatore/eGeoCoding?serviceType=DBServices&serviceName=Normalizzatore&message=GetHandle";
+    return `${this.url}?serviceType=DBServices&serviceName=Normalizzatore&message=GetHandle`;
   }
 
   get urlAddress() {
-    return "https://servizigis.regione.emilia-romagna.it/normalizzatore/eGeoCoding?serviceType=DBServices&serviceName=Normalizzatore&message=Norm_Indirizzo_Unico";
+    return `${this.url}?serviceType=DBServices&serviceName=Normalizzatore&message=Norm_Indirizzo_Unico_Area`;
   }
 
   constructor(uniqueId: string | undefined, terria: Terria) {
@@ -143,89 +143,41 @@ export default class RerSearchProvider extends LocationSearchProviderMixin(
       this.handle = await this.getHandle(searchResults);
     }
 
-    const searchPromises = [
-      loadJson(
-        this.urlAddress,
-        {
-          soapAction: this.urlAddress
-        },
-        {
-          Norm_Indirizzo_UnicoInputParams: {
-            p_Indirizzo: searchText,
-            p_Tipo_Coord: "WGS84",
-            p_Rif_Geo_Civ: "ECIV",
-            p_Handle: this.handle
-          }
-        }
-      )
-    ];
+    const rect = this.terria.currentViewer.getCurrentCameraView().rectangle;
 
-    /*const rect = this.terria.currentViewer.getCurrentCameraView().rectangle;
-
-    if (
-      rect &&
-      (rect.width < 2 * CesiumMath.RADIANS_PER_DEGREE ||
-        rect.height < 2 * CesiumMath.RADIANS_PER_DEGREE)
-    ) {
-      searchPromises.unshift(
-        loadJson(
-          this.urlAddress,
-          {
-            soapAction: this.urlAddress
-          },
-          {
-            Norm_Indirizzo_UnicoInputParams: {
-              p_Indirizzo: searchText,
-              p_Tipo_Coord: "WGS84",
-              p_Rif_Geo_Civ: "ECIV",
-              p_Handle: this.handle,
-              p_minx: `${CesiumMath.toDegrees(rect.west)}`,
-              p_miny: `${CesiumMath.toDegrees(rect.south)}`,
-              p_maxx: `${CesiumMath.toDegrees(rect.east)}`,
-              p_maxy: `${CesiumMath.toDegrees(rect.north)}`
-            }
-          }
-        )
-      );
-    }*/
-
-    return Promise.all(searchPromises).then((results) => {
-      let resultsArray: any[] = [];
-
-      for (const obj of results) {
-        if (
-          obj?.norm_Indirizzo_Unico_AreaOutput
-            ?.norm_Indirizzo_Unico_AreaOutputRecordsetArray
-        ) {
-          resultsArray = [
-            ...resultsArray,
-            ...obj.norm_Indirizzo_Unico_AreaOutput
-              .norm_Indirizzo_Unico_AreaOutputRecordsetArray
-          ];
-        } else if (
-          obj?.norm_Indirizzo_UnicoOutput
-            ?.norm_Indirizzo_UnicoOutputRecordsetArray
-        ) {
-          resultsArray = [
-            ...resultsArray,
-            ...obj.norm_Indirizzo_UnicoOutput
-              .norm_Indirizzo_UnicoOutputRecordsetArray
-          ];
+    const results = await loadJson(
+      this.urlAddress,
+      {
+        soapAction: this.urlAddress
+      },
+      {
+        Norm_Indirizzo_Unico_AreaInputParams: {
+          p_Indirizzo: searchText,
+          p_Tipo_Coord: "WGS84",
+          p_Rif_Geo_Civ: "ECIV",
+          p_Handle: this.handle,
+          p_minx: `${CesiumMath.toDegrees(rect.west)}`,
+          p_miny: `${CesiumMath.toDegrees(rect.south)}`,
+          p_maxx: `${CesiumMath.toDegrees(rect.east)}`,
+          p_maxy: `${CesiumMath.toDegrees(rect.north)}`
         }
       }
+    );
 
-      const locations = this.parseResults(resultsArray);
+    const locations = this.parseResults(
+      results.norm_Indirizzo_Unico_AreaOutput
+        .norm_Indirizzo_Unico_AreaOutputRecordsetArray
+    );
 
-      runInAction(() => {
-        searchResults.results.push(...locations);
-      });
-
-      if (searchResults.results.length === 0) {
-        searchResults.message = {
-          content: "translate#viewModels.searchNoLocations"
-        };
-      }
+    runInAction(() => {
+      searchResults.results.push(...locations);
     });
+
+    if (searchResults.results.length === 0) {
+      searchResults.message = {
+        content: "translate#viewModels.searchNoLocations"
+      };
+    }
   }
 }
 
