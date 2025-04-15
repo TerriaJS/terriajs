@@ -7,7 +7,7 @@
       "start": "Začátek prohlídky"
     },
     "exploreMapDataButton": {
-      "content": "## Prozkoumejte data digitálního dvojčete\n\nProhlédněte si katalog dostupných dat Terria a přidejte je do digitálního dvojčete zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže na panelu Data digitálního dvojčete."
+      "content": "## Prozkoumat mapové podklady\n\nProhlédněte si katalog dostupných dat a přidejte je do mapy zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže v pracovní ploše."
     },
     "menuBarMapSettingsButton": {
       "content": "## Nastavení mapy\n\nPřizpůsobte si nastavení mapy, jako jsou základní mapy, 2D/3D terén a kvalita mapového obrazu pro lepší výkon."
@@ -70,10 +70,7 @@
     "errorGettingLocation": "Chyba při zjišťování polohy",
     "myLocation": "Moje poloha",
     "location": "Poloha",
-    "centreMap": "Vystředit mapu v místě, kde se právě nacházíte",
-    "positionUnavailable": "Informace o vaší poloze jsou nedostupné.",
-    "timeout": "Získání informací o vaší poloze trvalo příliš dlouho.Zkuste to prosím později.",
-    "permissionDenied": "Povolení k získání vaší polohy bylo odepřeno. Zkontrolujte prosím nastavení prohlížeče."
+    "centreMap": "Vystředit mapu v místě, kde se právě nacházíte"
   },
   "splitterTool": {
     "title": "Přetažením doleva nebo doprava upravíte zobrazení",
@@ -149,13 +146,12 @@
       "differenceOutput": "Rozdílový výstup",
       "generateDiffButtonText": "Generování detekce změn",
       "disabledButtonPrompt": "Upozornění: Aby bylo možné provést detekci změn, musí být vybráno místo a datum",
-      "areaFilterSelection": "Výběr filtru oblasti",
-      "saveToWorkbench": "Uložit na pracovní plochu"
+      "areaFilterSelection": "Výběr filtru oblasti"
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "Nevybráno žádné místo!",
-        "description": "Chcete-li filtrovat výběr data snímku podle místa, přiblížíte si mapu a vyberete bod zájmu na mapě"
+        "title": "Nebylo vybráno žádné místo",
+        "description": "Chcete-li filtrovat výběr data snímku podle místa, vyberte bod na mapě"
       },
       "locationSelected": {
         "title": "Vybraná lokalita a filtrovaná data",
@@ -186,8 +182,7 @@
       "dateButtonTitle": "Vyberte datum",
       "dateOutOfRange": "Momentálně mimo rozsah"
     },
-    "title": "Rozdíl",
-    "close": "Zavřít"
+    "title": "Rozdíl"
   },
   "legend": {
     "lat": "Lat",
@@ -330,7 +325,7 @@
       "denyText": "Možná později",
       "confirmText": "Ano"
     },
-    "showWorkbench": "Prozkoumat datové sady [{{count}}]",
+    "showWorkbench": "Zobrazit pracovní plochu",
     "hideWorkbench": "Skrýt pracovní plochu"
   },
   "featureInfo": {
@@ -391,10 +386,7 @@
       "cancelBtn": "Zrušit",
       "cancelEditing": "Zrušit",
       "saveBtn": "uložit",
-      "saveStory": "Uložit",
-      "modalHeader": "Editor scén - zachycení scény",
-      "titleLabel": "Název (vyžadováno)",
-      "descriptionLabel": "Popis"
+      "saveStory": "Uložit"
     },
     "locationBtn": "vystředit scénu",
     "exitBtn": "konec příběhu",
@@ -443,7 +435,7 @@
     "titleV": "Jak zobrazím falešně barevné snímky?"
   },
   "addData": {
-    "addDataBtnText": "Prozkoumat data",
+    "addDataBtnText": "Prozkoumejte mapové podklady",
     "btnHide": "Skrýt",
     "load": "Načtení místních/webových dat",
     "closeDataPanel": "Zavřít datový panel",
@@ -465,9 +457,7 @@
     "urlInputBtn": "Přidat",
     "back": "Zpět",
     "browse": "Procházet...",
-    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby",
-    "modalTitle": "Prozkoumat data",
-    "data": "Data"
+    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby"
   },
   "search": {
     "resultsLabel": "Výsledky hledání",
@@ -574,9 +564,7 @@
     "addItemErrorTitle": "Katalogovou položku nelze přidat do pracovního plochy.",
     "previewItem": "O datech",
     "expandAll": "Rozbalit vše",
-    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY",
-    "disableAll": "Vypnout vše",
-    "enableAll": "Zapnout vše"
+    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY"
   },
   "dateTime": {
     "selectorLabel": "Čas:",
@@ -636,33 +624,13 @@
   "loader": {
     "loadingMessage": "Načítání"
   },
-  "emptyWorkbench": [
-    {
-      "heading": "Zde přidejte datovou sadu",
-      "body": "Po přidání datové sady se zde zobrazí její legenda a nastavení."
-    },
-    {
-      "list": [
-        "Kliknutím na tlačítko Prozkoumat data zobrazíte dostupné datové sady",
-        "Nahrajte svá vlastní data prostřednictvím Nahrát data",
-        "Na tomto panelu najdete přidaná data"
-      ],
-      "heading": "Začněte"
-    },
-    {
-      "list": [
-        "Zobrazit nebo skrýt data",
-        "Úprava průhlednosti (krytí)",
-        "Porovnání vedle sebe",
-        "Změna stylů (barvy, čáry, symboly)",
-        "Zobrazení různých dat a časů (pokud jsou podporovány)"
-      ],
-      "heading": "Co můžete udělat"
-    },
-    {
-      "body": "Tento panel slouží k prozkoumávání dat, správě nastavení a vytváření mapové scény nebo příběhu."
-    }
-  ],
+  "emptyWorkbench": {
+    "emptyArea": "Vaše pracovní plocha je prázdná",
+    "helpfulHints": "Užitečné rady",
+    "helpfulHintsOne": "Projděte si dostupná data výběrem možnosti \"Prozkoumat data mapy\" nebo klikněte na \"Nahrát\" a přidejte do mapy vlastní data.",
+    "helpfulHintsTwo": "Po přidání dat do mapy jsou zde na pracovním stole uvedeny vaše aktivní datové sady. Pracovní plocha vám pomůže s daty pracovat.",
+    "helpfulHintsThree": "V pracovní ploše můžete zapínat a vypínat datové sady, měnit jejich průhlednost, aktivovat porovnání rozdělené obrazovky, měnit styly a procházet data a časy, pokud data tuto funkci podporují."
+  },
   "dataCatalog": {
     "groupRemove": "odebrat tuto skupinu",
     "groupEmpty": "Tato skupina je prázdná"
@@ -1037,7 +1005,7 @@
       "unsupportedFileTypeTitle": "Nepodporovaný typ souboru",
       "getConfirmationMessage": "Tento soubor není přímo podporován {{appName}}.\n\nChcete jej zkusit nahrát do konverzní služby {{appName}}? To může fungovat pro malé zazipované soubory Esri Shapefiles nebo MapInfo TAB.",
       "readyToUpload": "Jste připraveni nahrát svůj soubor do konverzní služby {{appName}}?",
-      "upload": "Nahrát data",
+      "upload": "Nahrát",
       "cancel": "Zrušit",
       "useConversion": "Používáte konverzní službu?",
       "convertErrorTitle": "Nelze aktualizovat katalog na verzi V8",
@@ -1433,11 +1401,11 @@
       "serviceContact": "Kontakt služby",
       "getCapabilitiesUrl": "URL GetCapabilities",
       "missingDataTitle": "Chybějící data",
-      "missingDataMessage": "Datová sada WFS '{{name}}' nevrátila žádná data. Buď byl katalogový soubor nastaven nesprávně, nebo se změnila adresa serveru.",
+      "missingDataMessage": "Datová sada WFS '{{name}}' nevrátila žádná data.{{line}}{{line}}Buď byl katalogový soubor nesprávně nastaven, nebo se změnila adresa serveru.",
       "missingUrlTitle": "Nelze načíst GetCapabilities",
       "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WFS (Web Feature Service), protože položka katalogu nemá `url`.",
       "noLayerFoundTitle": "Nenalezena žádná vrstva",
-      "noLayerFoundMessage": "Datová sada WFS '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WFS.",
+      "noLayerFoundMessage": "Datová sada WFS '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WFS.",
       "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}})"
     },
     "webMapServiceCatalogGroup": {
@@ -1466,7 +1434,7 @@
       "getCapabilitiesUrl": "URL GetCapabilities",
       "metadataUrls": "Odkazy metadat",
       "wms": "Web Map Service (WMS)",
-      "noLayerFoundMessage": "Datová sada WMS '{{name}}' nemá žádné vrstvy odpovídající '{{layers}}'. Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WMS.",
+      "noLayerFoundMessage": "Datová sada WMS '{{name}}' nemá žádné vrstvy odpovídající '{{layers}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WMS.",
       "missingUrlTitle": "Nelze načíst GetCapabilities",
       "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities Web Map Service (WMS), protože položka katalogu nemá `url`."
     },
