@@ -9,6 +9,8 @@
 - Remove BrowserStack and SauceLabs gulp tasks.
 - Remove `test-travis` gulp task.
 - Allow to modify `lookupCookie` for i18next
+- TSify dropdown and convert it to a functional component. #7577
+- Convert SettingPanel to a functional component. #7589
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
