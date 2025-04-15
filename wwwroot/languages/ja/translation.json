@@ -251,13 +251,6 @@
     "groupEmpty": "このグループは空です",
     "groupRemove": "グループを削除"
   },
-  "emptyWorkbench": {
-    "emptyArea": "「データを追加」ボタンから、表示するデータを追加できます",
-    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、不透明度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
-    "helpfulHintsTwo": "データを地図に追加すると、データセットがここにリストされます。",
-    "helpfulHintsOne": "「データを追加」 を選択して登録済みのデータを探すか、「ローカルデータ」 で手元のデータを地図に追加します。",
-    "helpfulHints": "使い方"
-  },
   "loader": {
     "loadingMessage": "読み込み中"
   },
@@ -728,7 +721,6 @@
     "noData": "チャート化できるデータがありません。",
     "showItemInChart": "チャートで {{value}} を表示"
   },
-  "emptyWorkbenchMessage": "<0><0>「データを追加」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログを開き、</0><1>データを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
     "summary": {
       "addFirstText": "新しい条件を追加",

@@ -625,13 +625,6 @@
     "unsuccessful": "Falha ao copiar ...",
     "copy": "Copiar"
   },
-  "emptyWorkbench": {
-    "helpfulHintsThree": "No painel você pode ativar e desativar os conjuntos de dados, alterar opacidade, ativar a comparação em tela dividida, alterar estilos e navegar por datas e horas, se os dados suportarem essa funcionalidade.",
-    "helpfulHintsOne": "Navegue pelos dados disponíveis selecionando 'Explorar dados' ou clique em 'Carregar' para adicionar seus próprios dados ao mapa.",
-    "helpfulHintsTwo": "Após adicionar dados ao mapa, seus conjuntos de dados ativos são listados aqui em seu painel. O painel o ajudará a interagir com os dados.",
-    "emptyArea": "Seu painel está vazio",
-    "helpfulHints": "Dicas úteis"
-  },
   "catalogItem": {
     "removeFromMap": "Remover do mapa",
     "privateIndicatorTitle": "Conjunto de dados privado",
@@ -770,7 +763,6 @@
   "loader": {
     "loadingMessage": "Carregando"
   },
-  "emptyWorkbenchMessage": "<0> <0> Seu painel está vazio </0> <1> <strong> Clique em '$t(addData.addDataBtnText)' acima para </strong> </1> <2> <0> Navegar no Catálogo </0> <1> Carregue seus próprios dados no mapa </1> </2> <3> <0> </0> <strong> DICA. </strong> <2> Todos os seus conjuntos ativos serão listados aqui < / 2> </3> </0>",
   "dataCatalog": {
     "groupRemove": "remover este grupo",
     "groupEmpty": "Este grupo está vazio"

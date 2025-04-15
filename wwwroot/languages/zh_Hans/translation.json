@@ -958,14 +958,6 @@
   "loader": {
     "loadingMessage": "加载中"
   },
-  "emptyWorkbench": {
-    "emptyArea": "你的工作台是空的",
-    "helpfulHints": "有帮助的提示",
-    "helpfulHintsOne": "通过选择“探索地图数据”浏览可用数据或单击“上传”将您自己的数据添加到地图中。",
-    "helpfulHintsThree": "在工作台中，如果数据支持此功能，您可以打开和关闭数据集、更改其不透明度、激活分屏比较、更改样式以及浏览日期和时间。",
-    "helpfulHintsTwo": "将数据添加到地图后，您的活动数据集将在工作台中列出。 工作台将帮助您与数据进行交互。"
-  },
-  "emptyWorkbenchMessage": "<0><0>你的工作台是空的</0><1><strong>点击上面的'$t(addData.addDataBtnText)' </strong></1><2><0>浏览数据目录 </0><1>将您自己的数据加载到地图上</1></2><3><0></0><strong>提示</strong><2>您所有的活动数据集都会 在此处列出</2></3></0>",
   "browsers": {
     "chrome": "谷歌Chrome浏览器",
     "safari": "苹果Safari浏览器",
