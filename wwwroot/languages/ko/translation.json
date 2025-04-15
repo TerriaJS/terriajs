@@ -717,13 +717,6 @@
     "loading": "차트 데이터 로딩중...",
     "showItemInChart": "차트에 {{value}} 표시"
   },
-  "emptyWorkbench": {
-    "helpfulHintsTwo": "맵에 데이터를 추가하면 활성 데이터 세트가 작업대에 나열됩니다. 작업대에서 데이터와 상호 작용할 수 있습니다.",
-    "helpfulHintsOne": "'지도 데이터 탐색'을 선택하여 사용 가능한 데이터를 찾아보거나 '업로드'를 클릭하여 직접 만든 데이터를 지도에 추가할 수 있습니다.",
-    "helpfulHints": "유용한 힌트",
-    "emptyArea": "작업대가 비어 있습니다",
-    "helpfulHintsThree": "데이터에서 이 기능을 지원하는 경우 작업대에서 데이터 세트를 켜고 끄고, 불투명도를 변경하고, 분할 화면 비교를 활성화하고, 스타일을 변경하고, 날짜 및 시간을 탐색할 수 있습니다."
-  },
   "timer": {
     "nextScheduledUpdateCountdown": "다음 데이터 업데이트까지 남은 시간 {{timeCountdown}}",
     "nextScheduledUpdateTime": "다음 데이터 업데이트는 {{scheduledUpdateTime}}입니다"

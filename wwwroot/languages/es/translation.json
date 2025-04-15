@@ -1007,17 +1007,9 @@
     "welcomeMessageOnMobile": "¿Le interesa el descubrimiento y la exploración de datos?",
     "tourBtnText": "Haz el recorrido"
   },
-  "emptyWorkbenchMessage": "<0><0>Tu bandeja de trabajo esta vacía</0><1><strong>Click '$t(addData.addDataBtnText)' arriba de</strong></1><2><0>Buscar en el catálogo de datos</0><1>Carga tu propia información en el mapa</1></2><3><0></0><strong>TIP.</strong><2> Todos sus conjuntos de datos activos aparecerán aquí</2></3></0>",
   "dragDrop": {
     "not": "<0>bbbb</0>",
     "text": "<0>Arrastrar y soltar</0><1>Sus datos en cualquier lugar para verlos en el mapa<1>"
-  },
-  "emptyWorkbench": {
-    "helpfulHints": "Consejos útiles",
-    "emptyArea": "Su banco de trabajo está vacío",
-    "helpfulHintsOne": "Busque los datos disponibles seleccionando \"Explorar los datos del mapa\" o haga clic en \"Subir\" para añadir sus propios datos al mapa.",
-    "helpfulHintsTwo": "Una vez que hayas añadido datos al mapa, tus conjuntos de datos activos aparecerán aquí en tu banco de trabajo. El banco de trabajo le ayudará a interactuar con los datos.",
-    "helpfulHintsThree": "En el banco de trabajo puede activar y desactivar conjuntos de datos, cambiar su opacidad, activar la comparación en pantalla dividida, cambiar estilos y navegar por fechas y horas, si los datos admiten esta funcionalidad."
   },
   "timer": {
     "nextScheduledUpdateTime": "Próxima actualización de datos a {{scheduledUpdateTime}}",

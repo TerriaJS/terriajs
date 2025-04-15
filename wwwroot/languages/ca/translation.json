@@ -610,8 +610,7 @@
   "loader": {
     "loadingMessage": "Carregant"
   },
-  "emptyWorkbenchMessage": "<0><0>El vostre banc de treball està buit</0><1><strong>Feu clic a \"$t(addData.addDataBtnText)\" a dalt per </strong></1><2><0>Navegar pel catàleg de dades </0><1>Carrega les teves pròpies dades al mapa</1></2><3><0></0><strong>CONSELL.</strong><2>Tots els teus conjunts de dades actius apareixeran aquí</2></3></0>",
-  "emptyWorkbench": [
+  "emptyWorkbenchInfo": [
     {
       "heading": "Afegiu un conjunt de dades aquí",
       "body": "Quan afegiu un conjunt de dades, la seva llegenda i la seva configuració apareixen aquí."
