@@ -7,7 +7,7 @@ import {
   Category,
   DatatabAction
 } from "../../../../Core/Analytics/analyticEvents";
-import getDataType from "../../../../Core/getDataType";
+import getDataTypes from "../../../../Core/getDataType";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
 import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
 import addUserFiles from "../../../../Models/Catalog/addUserFiles";
@@ -46,13 +46,14 @@ class AddData extends Component {
 
   constructor(props) {
     super(props);
+    const dataTypes = getDataTypes();
 
     const remoteDataTypes =
-      this.props.remoteDataTypes ?? getDataType().remoteDataType;
+      this.props.remoteDataTypes ?? dataTypes.remoteDataType;
 
     // Automatically suffix supported extension types to localDataType names
     const localDataTypes = (
-      this.props.localDataTypes ?? getDataType().localDataType
+      this.props.localDataTypes ?? dataTypes.localDataType
     ).map((dataType) => {
       const extensions = dataType.extensions?.length
         ? ` (${buildExtensionsList(dataType.extensions)})`

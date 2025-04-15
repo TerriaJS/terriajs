@@ -156,10 +156,9 @@ export default class SdmxJsonCatalogItem
       if (!isDefined(csvString)) {
         throw new TerriaError({
           title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle"),
-          message: i18next.t(
-            "models.sdmxCatalogItem.loadDataErrorMessage",
-            this
-          )
+          message: i18next.t("models.sdmxCatalogItem.loadDataErrorMessage", {
+            csvUrl: this.url
+          })
         });
       }
 
@@ -193,7 +192,9 @@ export default class SdmxJsonCatalogItem
                   .join("\n")
               }
             ),
-            title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this),
+            title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
+              name: this.name
+            }),
             severity: TerriaErrorSeverity.Warning,
             importance: 1,
             overrideRaiseToUser: true
@@ -203,11 +204,15 @@ export default class SdmxJsonCatalogItem
           message: sdmxErrorString.has(error.statusCode)
             ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
             : `${error.response}`,
-          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
+          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
+            name: this.name
+          })
         });
       } else {
         throw TerriaError.from(error, {
-          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
+          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
+            name: this.name
+          })
         });
       }
     }

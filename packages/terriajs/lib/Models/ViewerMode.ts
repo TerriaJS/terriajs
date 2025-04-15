@@ -10,19 +10,19 @@ export const MapViewers = Object.seal({
   "3d": {
     viewerMode: ViewerMode.Cesium,
     terrain: true,
-    label: "settingPanel.viewerModeLabels.CesiumTerrain",
+    label: "settingPanel.viewerModeLabels.CesiumTerrain" as const,
     available: true
   },
   "3dsmooth": {
     viewerMode: ViewerMode.Cesium,
     terrain: false,
-    label: "settingPanel.viewerModeLabels.CesiumEllipsoid",
+    label: "settingPanel.viewerModeLabels.CesiumEllipsoid" as const,
     available: true
   },
   "2d": {
     viewerMode: ViewerMode.Leaflet,
     terrain: false,
-    label: "settingPanel.viewerModeLabels.Leaflet",
+    label: "settingPanel.viewerModeLabels.Leaflet" as const,
     available: true
   }
 });

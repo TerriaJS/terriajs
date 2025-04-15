@@ -51,6 +51,9 @@ beforeAll(async function () {
       en: {
         translation: english
       }
+    },
+    interpolation: {
+      escapeValue: false // not needed for react!!
     }
   });
 });

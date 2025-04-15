@@ -309,9 +309,7 @@ function CesiumIonConnector() {
   return (
     <>
       <label className={AddDataStyles.label}>
-        <Trans i18nKey="addData.cesiumIon">
-          <strong>Step 2:</strong>
-        </Trans>
+        <strong>{t("addData.cesiumIonStep2")}</strong>
       </label>
       {error && <WarningBox error={error} viewState={viewState} />}
       {loginToken.length > 0

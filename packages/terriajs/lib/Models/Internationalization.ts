@@ -96,8 +96,6 @@ class Internationalization {
       .use(LanguageDetector)
       .use(initReactI18next)
       .init({
-        // use i18next-json-v3 as weblate still doesn't support v4
-        compatibilityJSON: "v3",
         debug: languageConfig.debug,
         react: languageConfig.react,
         fallbackLng: languageConfig.fallbackLanguage,

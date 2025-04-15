@@ -33,7 +33,9 @@ describe("WelcomeMessage", function () {
     expect(viewState.showWelcomeMessage).toEqual(true);
     expect(localScreen.getByText("welcomeMessage.title")).toBeVisible();
     expect(
-      localScreen.getByText("welcomeMessage.welcomeMessage")
+      localScreen.getByText(
+        /Interested in data discovery and exploration?.*Dive right in and get started or check the following help guide options./
+      )
     ).toBeVisible();
 
     expect(localScreen.getByText("Getting started with the map")).toBeVisible();

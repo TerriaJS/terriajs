@@ -377,7 +377,7 @@ class StoryBuilder extends Component<
   renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
-    const storyName = this.state.storyToRemove
+    const storyName: string = this.state.storyToRemove
       ? this.state.storyToRemove.title.length
         ? this.state.storyToRemove.title
         : t("story.untitledScene")
@@ -450,6 +450,8 @@ class StoryBuilder extends Component<
                 ) : (
                   <Text textLight large>
                     {t("story.removeAllStoriesDialog", {
+                      defaultValue:
+                        "Are you sure you wish to delete {{ count }} scene?",
                       count: this.props.viewState.terria.stories.length
                     })}
                   </Text>

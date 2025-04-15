@@ -268,9 +268,11 @@ function translateDataType<T extends DataType>(dataType: T): T {
   return {
     ...dataType,
     value: dataType.value,
-    name: i18next.t(dataType.name),
+    name: i18next.t(dataType.name, { defaultValue: dataType.name }),
     description: dataType.description
-      ? i18next.t(dataType.description)
+      ? i18next.t(dataType.description, {
+          defaultValue: dataType.description
+        })
       : undefined,
     customComponent: dataType.customComponent
   };

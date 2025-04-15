@@ -37,8 +37,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           "models.webMapTileServiceCatalogGroup.invalidWMTSServerTitle"
         ),
         message: i18next.t(
-          "models.webMapTileServiceCatalogGroup.invalidWMTSServerMessage",
-          this
+          "models.webMapTileServiceCatalogGroup.invalidWMTSServerMessage"
         )
       });
     }

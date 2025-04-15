@@ -663,7 +663,7 @@ async function loadSoapBody(
 
   const json = xml2json(responseXml);
   if (json.Exception) {
-    let errorMessage = i18next.t(
+    let errorMessage: string = i18next.t(
       "models.sensorObservationService.unknownError"
     );
     if (json.Exception.ExceptionText) {

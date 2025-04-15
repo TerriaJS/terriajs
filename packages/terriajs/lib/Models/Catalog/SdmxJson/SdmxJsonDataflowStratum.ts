@@ -104,7 +104,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow",
-          this
+          {
+            catalogItem: catalogItem
+          }
         )
       });
     }
@@ -116,7 +118,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDatastructure",
-          this
+          {
+            catalogItem: catalogItem
+          }
         )
       });
     }

@@ -95,7 +95,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -113,7 +113,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -152,7 +152,7 @@ describe("FeatureInfoSection", function () {
         isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -170,7 +170,7 @@ describe("FeatureInfoSection", function () {
         isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />
     );
 
@@ -189,7 +189,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -210,7 +210,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -234,7 +234,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -254,7 +254,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -277,7 +277,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -297,7 +297,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={(s: string) => s}
+        t={i18next.t}
       />,
       viewState
     );
@@ -320,7 +320,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -346,7 +346,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -372,7 +372,7 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
+        t={i18next.t}
       />,
       viewState
     );
@@ -394,7 +394,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -437,7 +437,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -460,7 +460,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -481,7 +481,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -505,7 +505,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -535,7 +535,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -565,7 +565,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -592,7 +592,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -615,7 +615,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -639,7 +639,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -661,7 +661,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -697,7 +697,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -744,7 +744,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -780,7 +780,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -802,7 +802,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -824,7 +824,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -847,7 +847,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -867,7 +867,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -889,7 +889,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -912,7 +912,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -938,7 +938,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -962,7 +962,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen={false}
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -989,7 +989,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           viewState={viewState}
           position={position}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1018,7 +1018,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1033,7 +1033,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1063,7 +1063,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1093,7 +1093,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1124,7 +1124,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           viewState={viewState}
           catalogItem={catalogItem}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1171,7 +1171,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1260,7 +1260,7 @@ describe("FeatureInfoSection", function () {
           feature={czmlFeature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1296,7 +1296,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1311,7 +1311,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1326,7 +1326,7 @@ describe("FeatureInfoSection", function () {
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );
@@ -1359,7 +1359,7 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           isOpen
           viewState={viewState}
-          t={() => {}}
+          t={i18next.t}
         />,
         viewState
       );

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import CatalogGroup from "../../../lib/ReactViews/DataCatalog/CatalogGroup";
+import i18next from "i18next";
 import { ThemeProvider } from "styled-components";
+import CatalogGroup from "../../../lib/ReactViews/DataCatalog/CatalogGroup";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
 describe("CatalogGroup React", () => {
@@ -8,7 +9,12 @@ describe("CatalogGroup React", () => {
     it("Shows loader", () => {
       render(
         <ThemeProvider theme={terriaTheme}>
-          <CatalogGroup open t={() => {}} loading emptyMessage="nothing here" />
+          <CatalogGroup
+            open
+            t={i18next.t}
+            loading
+            emptyMessage="nothing here"
+          />
         </ThemeProvider>
       );
       // Loader renders a spinning element
@@ -19,7 +25,7 @@ describe("CatalogGroup React", () => {
     it("Doesn't show children when loading", () => {
       render(
         <ThemeProvider theme={terriaTheme}>
-          <CatalogGroup open t={() => {}} loading>
+          <CatalogGroup open t={i18next.t} loading>
             <span>some child</span>
           </CatalogGroup>
         </ThemeProvider>
@@ -31,7 +37,7 @@ describe("CatalogGroup React", () => {
     it("Shows children when not loading", () => {
       render(
         <ThemeProvider theme={terriaTheme}>
-          <CatalogGroup open t={() => {}} loading={false}>
+          <CatalogGroup open t={i18next.t} loading={false}>
             <span>some child</span>
           </CatalogGroup>
         </ThemeProvider>
@@ -46,7 +52,7 @@ describe("CatalogGroup React", () => {
     it("Shows empty message", () => {
       render(
         <CatalogGroup
-          t={() => {}}
+          t={i18next.t}
           open
           emptyMessage="nothing here"
           loading={false}

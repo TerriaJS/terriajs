@@ -21,7 +21,9 @@ function resolveI18n(i: I18nTranslateString | string): string {
 
   // When i18next isn't initialized (e.g. Node environment), t() may return
   // the key object or a non-string value. Fall back to the raw key.
-  const result = i18next.isInitialized ? i18next.t(i.key, i.parameters) : i.key;
+  const result = i18next.isInitialized
+    ? i18next.t(i.key as never, i.parameters)
+    : i.key;
   return typeof result === "string" ? result : i.key;
 }
 

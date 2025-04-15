@@ -18,7 +18,7 @@ export const Credit: FC<{
         rel="noopener noreferrer"
         href={credit.url}
       >
-        {t(credit.text)} <ExternalLinkIcon />
+        {t(credit.text as never)} <ExternalLinkIcon />
       </a>
       {!lastElement ? <Spacer /> : null}
     </>
