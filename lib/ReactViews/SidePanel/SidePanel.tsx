@@ -42,7 +42,7 @@ type TransContent = {
 const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
   const { t } = useTranslation();
   const viewState = useViewState();
-  const transContent = t("emptyWorkbenchInfo", {
+  const transContent = t("emptyWorkbench", {
     returnObjects: true
   }) as TransContent;
 

@@ -621,7 +621,7 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbenchInfo": [
+  "emptyWorkbench": [
     {
       "heading": "Add a dataset here",
       "body": "When you add a dataset, its legend and settings appear here."

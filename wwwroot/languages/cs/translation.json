@@ -636,7 +636,7 @@
   "loader": {
     "loadingMessage": "Načítání"
   },
-  "emptyWorkbenchInfo": [
+  "emptyWorkbench": [
     {
       "heading": "Zde přidejte datovou sadu",
       "body": "Po přidání datové sady se zde zobrazí její legenda a nastavení."
@@ -2199,6 +2199,7 @@
   "toast": {
     "mapIsZooming": "Načítání ideálního zvětšení..."
   },
+  "emptyWorkbenchMessage": "<0><0>Vaše pracovní plocha je prázdná</0><1><strong>Kliknutím na '$t(addData.addDataBtnText) výše můžete </strong></1><2><0>Procházet katalog dat </0><1>Nahrát vlastní data do mapy</1></2><3><0></0><strong>TIP.</strong><2>Všechny vaše aktivní datové sady budou uvedeny zde</2></3></0>",
   "browsers": {
     "chrome": "Google Chrome",
     "firefox": "Mozilla Firefox",
