@@ -3,7 +3,9 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
@@ -12,17 +14,18 @@ import LegendTraits, {
 import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/Table/StyleMapTraits";
 import TableStyleMap from "./TableStyleMap";
 
-export class StyleMapLegend<
-  T extends TableStyleMapSymbolTraits
-> extends LoadableStratum(LegendTraits) {
+export class StyleMapLegend<T extends TableStyleMapSymbolTraits>
+  extends LoadableStratum(LegendTraits)
+  implements LockedDownStratum<LegendTraits, StyleMapLegend<T>>
+{
   constructor(
-    readonly catalogItem: TableMixin.Instance,
-    readonly styleMap: TableStyleMap<T>,
-    readonly getPreview: (
+    private readonly catalogItem: TableMixin.Instance,
+    private readonly styleMap: TableStyleMap<T>,
+    private readonly getPreview: (
       style: T,
       title?: string
     ) => Partial<LegendItemTraits>,
-    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
+    private readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
     makeObservable(this);
@@ -37,7 +40,7 @@ export class StyleMapLegend<
     ) as this;
   }
 
-  @computed get tableStyle() {
+  @computed private get tableStyle() {
     return this.catalogItem.activeTableStyle;
   }
 

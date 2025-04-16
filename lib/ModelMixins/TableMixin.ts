@@ -445,7 +445,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
-        this.activeTableStyle.isRegions() && this.discreteTimes?.length
+        this.activeTableStyle.isRegions() && this.discreteTimes?.times?.length
           ? this.momentChart
           : undefined,
         ...this.tableChartItems
@@ -691,33 +691,6 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     get isSampled(): boolean {
       return this.activeTableStyle.isSampled;
-    }
-
-    @computed
-    get discreteTimes():
-      | { time: string; tag: string | undefined }[]
-      | undefined {
-      if (!this.activeTableStyle.moreThanOneTimeInterval) return;
-      const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
-      if (dates === undefined) {
-        return;
-      }
-
-      // is it correct for discrete times to remove duplicates?
-      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
-      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
-      // will eliminate duplicates on the UI front, so given the datepicker
-      // expects uniques, return uniques here
-      const times = new Set<string>();
-
-      for (let i = 0; i < dates.length; i++) {
-        const d = dates[i];
-        if (d) {
-          times.add(d.toISOString());
-        }
-      }
-
-      return Array.from(times).map((time) => ({ time, tag: undefined }));
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */

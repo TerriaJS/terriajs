@@ -41,7 +41,9 @@ import WebMapServiceCatalogItemTraits, {
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import TerriaFeature from "../../Feature/Feature";
@@ -53,7 +55,6 @@ import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
-import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 // Remove problematic query parameters from URLs (GetCapabilities, GetMap, ...) - these are handled separately
 const QUERY_PARAMETERS_TO_REMOVE = [
@@ -73,11 +74,13 @@ const QUERY_PARAMETERS_TO_REMOVE = [
 ];
 
 /** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
-export class WebMapServiceUrlStratum extends LoadableStratum(
-  WebMapServiceCatalogItemTraits
-) {
+export class WebMapServiceUrlStratum
+  extends LoadableStratum(WebMapServiceCatalogItemTraits)
+  implements
+    LockedDownStratum<WebMapServiceCatalogItemTraits, WebMapServiceUrlStratum>
+{
   static stratumName = "wms-url-stratum";
-  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+  constructor(private readonly catalogItem: WebMapServiceCatalogItem) {
     super();
     makeObservable(this);
   }
@@ -131,8 +134,6 @@ class WebMapServiceCatalogItem
   _sourceInfoItemNames = [
     i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
   ];
-
-  _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
 
   /** Default WMS parameters for version=1.3.0 */
   static defaultParameters130 = {
@@ -260,48 +261,28 @@ class WebMapServiceCatalogItem
    * These can be fetched from the server (eg GetMap request)
    */
   @computed get validLayers() {
-    const gcStratum: WebMapServiceCapabilitiesStratum | undefined =
-      this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
-
-    if (gcStratum)
-      return this.layersArray
-        .map((layer) => gcStratum.capabilities.findLayer(layer)?.Name)
-        .filter(isDefined);
-
-    return [];
+    return this.layersArray.map((layer) =>
+      this.availableLayers.find(
+        (l) =>
+          l.name === layer ||
+          l.title === layer ||
+          l.name === layer.split(":").pop()
+      )
+    );
   }
 
   /** LAYERS which are **INVALID** - they do **not** exist in GetCapabilities
    * These layers can **not** be fetched the server (eg GetMap request)
    */
   @computed get invalidLayers() {
-    const gcStratum: WebMapServiceCapabilitiesStratum | undefined =
-      this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
-
-    if (gcStratum)
-      return this.layersArray.filter(
-        (layer) => !isDefined(gcStratum.capabilities.findLayer(layer)?.Name)
-      );
-
-    return [];
+    return this.layersArray.filter(
+      (layer) => !this.validLayers.find((l) => l?.name === layer)
+    );
   }
 
   @computed
   get stylesArray(): ReadonlyArray<string> {
     return this.styles?.split(",") ?? [];
-  }
-
-  @computed
-  get discreteTimes() {
-    const getCapabilitiesStratum: WebMapServiceCapabilitiesStratum | undefined =
-      this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
-    return getCapabilitiesStratum?.discreteTimes;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -646,18 +627,7 @@ class WebMapServiceCatalogItem
 
       // If multiple layers -> prepend layer name to name
       if (this.availableStyles.length > 1) {
-        // Attempt to get layer title from GetCapabilitiesStratum
-        const layerTitle =
-          layer.layerName &&
-          (
-            this.strata.get(
-              GetCapabilitiesMixin.getCapabilitiesStratumName
-            ) as WebMapServiceCapabilitiesStratum
-          ).capabilitiesLayers.get(layer.layerName)?.Title;
-
-        name = `${
-          layerTitle || layer.layerName || `Layer ${layerIndex + 1}`
-        } styles`;
+        name = `${layer.layerName || `Layer ${layerIndex + 1}`} styles`;
       }
 
       const options = filterOutUndefined(

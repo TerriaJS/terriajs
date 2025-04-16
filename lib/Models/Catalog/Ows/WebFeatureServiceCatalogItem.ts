@@ -19,10 +19,13 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebFeatureServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326
+  SUPPORTED_CRS_4326,
+  WebFeatureServiceAvailableFeatureTypesTraits
 } from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
@@ -32,9 +35,14 @@ import WebFeatureServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
 
-export class GetCapabilitiesStratum extends LoadableStratum(
-  WebFeatureServiceCatalogItemTraits
-) {
+export class GetCapabilitiesStratum
+  extends LoadableStratum(WebFeatureServiceCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      WebFeatureServiceCatalogItemTraits,
+      GetCapabilitiesStratum
+    >
+{
   static async load(
     catalogItem: WebFeatureServiceCatalogItem,
     capabilities?: WebFeatureServiceCapabilities
@@ -61,8 +69,8 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogItem: WebFeatureServiceCatalogItem,
-    readonly capabilities: WebFeatureServiceCapabilities
+    private readonly catalogItem: WebFeatureServiceCatalogItem,
+    private readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -76,7 +84,10 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get capabilitiesFeatureTypes(): ReadonlyMap<string, FeatureType | undefined> {
+  private get capabilitiesFeatureTypes(): ReadonlyMap<
+    string,
+    FeatureType | undefined
+  > {
     const lookup: (name: string) => [string, FeatureType | undefined] = (
       name
     ) => [name, this.capabilities && this.capabilities.findLayer(name)];
@@ -209,6 +220,15 @@ export class GetCapabilitiesStratum extends LoadableStratum(
     ];
   }
 
+  get availableFeatureTypes() {
+    return this.capabilities.featureTypes.map((featureType) =>
+      createStratumInstance(WebFeatureServiceAvailableFeatureTypesTraits, {
+        name: featureType.Name,
+        title: featureType.Title
+      })
+    );
+  }
+
   @computed
   get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layers: FeatureType[] = [
@@ -220,7 +240,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get isGeoServer(): boolean | undefined {
+  private get isGeoServer(): boolean | undefined {
     if (!this.capabilities) {
       return undefined;
     }
@@ -242,7 +262,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   // Helper function to check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-  hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
+  private hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
     return isDefined(
       outputFormats?.find((format) =>
         ["json", "JSON", "application/json"].includes(format)
@@ -370,11 +390,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
-    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
-      this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as GetCapabilitiesStratum;
-
     if (!this.uri) {
       throw new TerriaError({
         sender: this,
@@ -389,7 +404,12 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     // Check if layers exist
     const missingLayers = this.typeNamesArray.filter(
       (layer) =>
-        !isDefined(getCapabilitiesStratum.capabilitiesFeatureTypes.get(layer))
+        !this.availableFeatureTypes.find(
+          (f) =>
+            f.name === layer ||
+            f.title === layer ||
+            f.name === layer.split(":").pop()
+        )
     );
     if (missingLayers.length > 0) {
       throw new TerriaError({

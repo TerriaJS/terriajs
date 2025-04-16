@@ -5,7 +5,9 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
@@ -19,17 +21,19 @@ import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits"
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import TableColumnType from "./TableColumnType";
 import { ImageryParts } from "../ModelMixins/MappableMixin";
+import { tags } from "mustache";
 
 const DEFAULT_ID_COLUMN = "id";
 
 interface TableCatalogItem
   extends InstanceType<ReturnType<typeof TableMixin>> {}
 
-export default class TableAutomaticStylesStratum extends LoadableStratum(
-  TableTraits
-) {
+export default class TableAutomaticStylesStratum
+  extends LoadableStratum(TableTraits)
+  implements LockedDownStratum<TableTraits, TableAutomaticStylesStratum>
+{
   static stratumName = "automaticTableStyles";
-  constructor(readonly catalogItem: TableCatalogItem) {
+  constructor(protected readonly catalogItem: TableCatalogItem) {
     super();
     makeObservable(this);
   }
@@ -143,7 +147,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get defaultChartStyle(): StratumFromTraits<TableStyleTraits> | undefined {
+  protected get defaultChartStyle():
+    | StratumFromTraits<TableStyleTraits>
+    | undefined {
     const timeColumns = this.catalogItem.tableColumns.filter(
       (column) => column.type === TableColumnType.time
     );
@@ -262,6 +268,32 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     if (this.catalogItem.activeTableStyle.timeColumn) {
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
+  }
+
+  @computed
+  get discreteTimes() {
+    if (!this.catalogItem.activeTableStyle.moreThanOneTimeInterval) return;
+    const dates =
+      this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates.values;
+    if (dates === undefined) {
+      return;
+    }
+
+    // is it correct for discrete times to remove duplicates?
+    // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+    // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+    // will eliminate duplicates on the UI front, so given the datepicker
+    // expects uniques, return uniques here
+    const times = new Set<string>();
+
+    for (let i = 0; i < dates.length; i++) {
+      const d = dates[i];
+      if (d) {
+        times.add(d.toISOString());
+      }
+    }
+
+    return { times: Array.from(times), tags: [] };
   }
 
   @computed
