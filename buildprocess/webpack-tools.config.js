@@ -59,8 +59,11 @@ module.exports = function () {
     }
   };
 
+  const terriaJSBasePath = path.dirname(require.resolve("../package.json"));
+  const jsExtraPaths = [path.resolve(terriaJSBasePath, "test")];
   return configureWebpackForTerriaJS({
-    terriaJSBasePath: path.dirname(require.resolve("../package.json")),
+    terriaJSBasePath,
+    jsExtraPaths,
     config,
     devMode,
     MiniCssExtractPlugin,
