@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
 
 import {
   AnchorHTMLAttributes,
@@ -147,7 +147,7 @@ function parseCustomHtmlToReact(
   html: string,
   context?: ParseCustomHtmlToReactContext,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: object = {}
+  domPurifyOptions: DomPurifyConfig = {}
 ) {
   if (!defined(html) || html.length === 0) {
     return html;
