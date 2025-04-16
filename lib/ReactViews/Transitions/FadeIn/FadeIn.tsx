@@ -1,18 +1,28 @@
-import PropTypes from "prop-types";
-
 import { CSSTransition } from "react-transition-group";
 
+import type { CSSTransitionProps } from "react-transition-group/CSSTransition";
 import Styles from "./fade-in.scss";
 
-export function SlideUpFadeIn({
+interface Props {
+  nodeRef?: React.RefObject<HTMLElement>;
+  children: React.ReactNode;
+  isVisible: boolean;
+  onEnter?: () => void;
+  onExited?: () => void;
+  transitionProps?: Partial<CSSTransitionProps>;
+}
+
+export function FadeIn({
+  nodeRef,
   isVisible,
   children,
   onEnter = () => {},
   onExited = () => {},
   transitionProps
-}) {
+}: Props) {
   return (
     <CSSTransition
+      nodeRef={nodeRef}
       in={isVisible}
       timeout={300}
       classNames={{ ...Styles }}
@@ -26,12 +36,4 @@ export function SlideUpFadeIn({
   );
 }
 
-SlideUpFadeIn.propTypes = {
-  children: PropTypes.node.isRequired,
-  isVisible: PropTypes.bool.isRequired,
-  onEnter: PropTypes.func,
-  onExited: PropTypes.func,
-  transitionProps: PropTypes.object
-};
-
-export default SlideUpFadeIn;
+export default FadeIn;
