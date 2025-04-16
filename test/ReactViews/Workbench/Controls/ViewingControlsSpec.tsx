@@ -1,11 +1,12 @@
-import { create } from "react-test-renderer";
 import ViewingControls from "../../../../lib/ReactViews/Workbench/Controls/ViewingControls";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import * as ViewingControlsMenu from "../../../../lib/ViewModels/ViewingControlsMenu";
 import Icon from "../../../../lib/Styled/Icon";
-import { runInAction } from "mobx";
+
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 describe("ViewingControls", function () {
   let terria: Terria;
@@ -19,24 +20,66 @@ describe("ViewingControls", function () {
     });
   });
 
-  it("shows viewing controls added through `viewState.globalViewingControls`", function () {
+  it("renders the viewing controls buttons", () => {
     const simpleItem = new SimpleCatalogItem("simple", terria);
-    runInAction(() => {
-      // Open the ViewingControls menu for this item
-      viewState.workbenchItemWithOpenControls = simpleItem.uniqueId;
-    });
+    render(<ViewingControls viewState={viewState} item={simpleItem} />);
+
+    expect(
+      screen.getByRole("button", { name: "workbench.zoomTo" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "workbench.previewItem" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "workbench.showMoreActionsTitle" })
+    ).toBeVisible();
+  });
+
+  it("shows viewing controls added through `viewState.globalViewingControls`", async () => {
+    const simpleItem = new SimpleCatalogItem("simple", terria);
+
     ViewingControlsMenu.addMenuItem(viewState, () => ({
       name: "View details",
       icon: Icon.GLYPHS.eye,
       iconTitle: "View more details",
       onClick: () => {}
     }));
-    const render = create(
-      <ViewingControls viewState={viewState} item={simpleItem} />
+    render(<ViewingControls viewState={viewState} item={simpleItem} />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "workbench.showMoreActionsTitle" })
     );
-    const viewMoreDetailsMenuItem = render.root.findByProps({
-      title: "View more details"
-    });
-    expect(viewMoreDetailsMenuItem).toBeDefined();
+
+    expect(screen.getByText("View details")).toBeVisible();
+    expect(screen.getByTitle("View more details")).toBeVisible();
+  });
+
+  it("should close menu on click outside", async () => {
+    const simpleItem = new SimpleCatalogItem("simple", terria);
+
+    ViewingControlsMenu.addMenuItem(viewState, () => ({
+      name: "View details",
+      icon: Icon.GLYPHS.eye,
+      iconTitle: "View more details",
+      onClick: () => {}
+    }));
+
+    render(<ViewingControls viewState={viewState} item={simpleItem} />);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "workbench.showMoreActionsTitle"
+      })
+    );
+
+    expect(screen.getByText("View details")).toBeVisible();
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "workbench.previewItem"
+      })
+    );
+
+    expect(screen.queryByText("View details")).not.toBeInTheDocument();
   });
 });

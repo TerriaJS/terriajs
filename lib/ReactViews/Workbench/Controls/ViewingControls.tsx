@@ -1,7 +1,7 @@
 import { sortBy, uniqBy } from "lodash-es";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -96,14 +96,13 @@ interface PropsType {
 const ViewingControls: React.FC<PropsType> = observer((props) => {
   const { viewState, item } = props;
   const { t } = useTranslation();
+  const [isMenuOpen, setIsOpen] = useState(false);
   const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
     useState(false);
 
   useEffect(() => {
     const hideMenu = () => {
-      runInAction(() => {
-        viewState.workbenchItemWithOpenControls = undefined;
-      });
+      setIsOpen(false);
     };
 
     window.addEventListener("click", hideMenu);
@@ -438,8 +437,6 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
     );
   };
 
-  const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
-
   return (
     <Box>
       <Ul
@@ -495,20 +492,18 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
           css="flex-grow:0;"
           onClick={(e) => {
             e.stopPropagation();
-            runInAction(() => {
-              if (viewState.workbenchItemWithOpenControls === item.uniqueId) {
-                viewState.workbenchItemWithOpenControls = undefined;
-              } else {
-                viewState.workbenchItemWithOpenControls = item.uniqueId;
-              }
-            });
+            if (isMenuOpen) {
+              setIsOpen(false);
+            } else {
+              setIsOpen(true);
+            }
           }}
           title={t("workbench.showMoreActionsTitle")}
           iconOnly
           iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
         />
       </Ul>
-      {showMenu && (
+      {isMenuOpen && (
         <Box
           css={`
             position: absolute;
