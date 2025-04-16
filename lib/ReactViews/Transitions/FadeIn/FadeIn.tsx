@@ -12,7 +12,7 @@ interface Props {
   transitionProps?: Partial<CSSTransitionProps>;
 }
 
-export function SlideUpFadeIn({
+export function FadeIn({
   nodeRef,
   isVisible,
   children,
@@ -36,4 +36,4 @@ export function SlideUpFadeIn({
   );
 }
 
-export default SlideUpFadeIn;
+export default FadeIn;
