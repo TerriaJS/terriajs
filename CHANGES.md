@@ -12,6 +12,8 @@
 - TSify dropdown and convert it to a functional component. #7577
 - Convert SettingPanel to a functional component. #7589
 - Update html-to-react to 1.7.0
+- Pass explicit refs to css transition component to avoid findDomNode usage. #7590
+- TSify FadeIn component. #7590
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
