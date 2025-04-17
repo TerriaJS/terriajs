@@ -79,6 +79,7 @@ const ChartItemSelector: FC<IChartItemSelector> = observer(
         rounded
         backgroundColor={theme?.overlay}
         css={`
+          padding-left: ${theme.spacing}px;
           margin: 10px 5px;
         `}
       >
