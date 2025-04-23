@@ -255,7 +255,7 @@ export default class ProtomapsImageryProvider
     const coords: Coords = { z: level, x, y };
 
     // Adapted from https://github.com/protomaps/protomaps.js/blob/master/src/frontends/leaflet.ts
-    let tile: PreparedTile;
+    let tile!: PreparedTile;
 
     // Get PreparedTile from source or view
     // Here we need a little bit of extra logic for the ProtomapsGeojsonSource
@@ -277,13 +277,20 @@ export default class ProtomapsImageryProvider
         dim: this.tileWidth
       };
     } else if (this.view) {
-      tile = await this.view.getDisplayTile(coords);
+      try {
+        tile = await this.view.getDisplayTile(coords);
+      } catch (e) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(e);
+        }
+      }
     } else {
       throw TerriaError.from(
         `Failed to get tile - no view or appropriate source in ProtomapsImageryProvider`
       );
     }
 
+    if (!tile) return canvas;
     const tileMap = new Map<string, PreparedTile[]>().set("", [tile]);
 
     this.labelers.add(coords.z, tileMap);
