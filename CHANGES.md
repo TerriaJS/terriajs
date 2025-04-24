@@ -1,5 +1,8 @@
 # Change Log
 
+#### next release (8.9.4)
+- Fix pmtiles rendering issue.
+
 #### next release (8.9.3)
 
 - Remove unused d3-array dependency.
