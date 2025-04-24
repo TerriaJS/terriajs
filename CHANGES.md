@@ -1,7 +1,7 @@
 # Change Log
 
 #### next release (8.9.4)
-- Fix pmtiles rendering issue.
+- Fix pmtiles rendering issue. #7606
 
 #### next release (8.9.3)
 
