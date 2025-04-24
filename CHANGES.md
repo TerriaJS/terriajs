@@ -1,9 +1,5 @@
 # Change Log
 
-#### next release (8.9.4)
-
-- Fix pmtiles rendering issue. #7607
-
 #### next release (8.9.3)
 
 - Remove unused d3-array dependency.
@@ -20,6 +16,7 @@
 - TSify FadeIn component. #7590
 - Convert `ViewingControls` to a functional component. #7574
 - DOMPurify updated to 3.2.5 to fix CVE-2025-26791.
+- Fix pmtiles rendering issue. #7607
 - [The next improvement]
 
 #### 8.9.2 - 2025-03-31
