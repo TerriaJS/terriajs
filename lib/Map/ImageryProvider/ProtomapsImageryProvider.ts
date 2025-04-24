@@ -84,6 +84,9 @@ export const PROTOMAPS_DEFAULT_TILE_SIZE = 256;
 /** Buffer (in pixels) used when rendering (and generating - through geojson-vt) vector tiles */
 export const PROTOMAPS_TILE_BUFFER = 32;
 
+/** Tile cache tile size for protomaps-leaflet */
+const TILE_CACHE_TILE_SIZE = 1024;
+
 export default class ProtomapsImageryProvider
   implements ImageryProviderWithGridLayerSupport
 {
@@ -182,7 +185,7 @@ export default class ProtomapsImageryProvider
     if (typeof this.data === "string") {
       if (this.data.endsWith(".pmtiles")) {
         this.source = new PmtilesSource(this.data, false);
-        const cache = new TileCache(this.source, PROTOMAPS_DEFAULT_TILE_SIZE);
+        const cache = new TileCache(this.source, TILE_CACHE_TILE_SIZE);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       } else if (
         this.data.endsWith(".json") ||
@@ -191,7 +194,7 @@ export default class ProtomapsImageryProvider
         this.source = new ProtomapsGeojsonSource(this.data);
       } else {
         this.source = new ZxySource(this.data, false);
-        const cache = new TileCache(this.source, PROTOMAPS_DEFAULT_TILE_SIZE);
+        const cache = new TileCache(this.source, TILE_CACHE_TILE_SIZE);
         this.view = new View(cache, this.maximumNativeZoom, 2);
       }
     }
