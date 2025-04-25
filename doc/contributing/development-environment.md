@@ -6,27 +6,13 @@ What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terri
 
 In the process described in [Cloning and Building](../customizing/cloning-and-building.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `yarn install`. Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `yarn install`.
 
-Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build. Traditionally, `npm link` is the way to do this. However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems. Instead, we recommend [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature. `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
+Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build. Traditionally, `npm link` is the way to do this. However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems. Instead, we recommend and use [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature. `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
 
-First, install `yarn` globally:
+To use `yarn` workspaces you need to have `yarn` installed globally, recommended version is 1.18.0, and you can install it by running
 
 ```
-npm install -g yarn
+npm install -g yarn@^1.19.0
 ```
-
-If you already have yarn installed, make sure it is at least v1.0 (we recommend using the latest version). Older versions do not support the workspace feature.
-
-Then, enable workspaces by editing the TerriaMap `package.json` file, adding these lines to the top, just after the opening `{`:
-
-```json
-  "private": true,
-  "workspaces": {
-    "packages": ["packages/*"],
-    "nohoist": ["**/husky"]
-  },
-```
-
-Do _not_ commit this change.
 
 Now, you can clone any package (such as `terriajs` or `terriajs-cesium`) into the `packages` directory:
 
