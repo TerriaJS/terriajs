@@ -2,6 +2,8 @@
 
 #### next release (8.9.4)
 
+- TSify `CoyprightModule` module.
+- TSify `updateApplicationOnMessageFromParentWindow` module.
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
