@@ -12,7 +12,8 @@ import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import { ChartPanelDownloadButton } from "./ChartPanelDownloadButton";
 
-const height = 300;
+const CHART_PANEL_HEIGHT = 300;
+const CHART_LEGEND_HEIGHT = 34;
 
 interface ChartPanelProps {
   onHeightChange?: () => void;
@@ -78,7 +79,7 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
         terria={viewState.terria}
         chartItems={chartItems}
         xAxis={xAxis}
-        height={height - 34}
+        height={CHART_PANEL_HEIGHT - CHART_LEGEND_HEIGHT}
       />
     );
   }, [chartItems, xAxis, viewState.terria]);
@@ -90,15 +91,14 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
   return (
     <div className={Styles.holder}>
       <div className={Styles.inner}>
-        <div className={Styles.chartPanel} style={{ height: height }}>
+        <div
+          className={Styles.chartPanel}
+          style={{ height: CHART_PANEL_HEIGHT }}
+        >
           <div>
             <div className={Styles.header}>
               <label className={Styles.sectionLabel}>
-                {isLoading ? (
-                  <Loader className={Styles.loader} />
-                ) : (
-                  t("chart.sectionLabel")
-                )}
+                {isLoading ? <Loader /> : t("chart.sectionLabel")}
               </label>
               <ChartPanelDownloadButton
                 chartableItems={chartableCatalogItems}
