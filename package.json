@@ -39,6 +39,7 @@
     "@types/d3-scale-chromatic": "^3.0.3",
     "@types/d3-selection": "^3.0.10",
     "@types/d3-transition": "^3.0.8",
+    "@types/d3-zoom": "^3.0.8",
     "@types/dateformat": "^5.0.1",
     "@types/file-saver": "^2.0.7",
     "@types/flexsearch": "0.7.6",
@@ -169,7 +170,6 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
-    "@types/d3-zoom": "^3.0.8",
     "@types/node": "^22.13.1",
     "@types/proj4": "^2.5.5",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
