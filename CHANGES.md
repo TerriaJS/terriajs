@@ -2,6 +2,8 @@
 
 #### next release (8.9.4)
 
+- Remove regenerator-runtime polyfill as generators are now widely supported. #7615
+- Remove direct usage of core-js polyfills. #7615
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
