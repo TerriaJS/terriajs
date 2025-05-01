@@ -5,6 +5,7 @@
 - Remove regenerator-runtime polyfill as generators are now widely supported. #7615
 - Remove direct usage of core-js polyfills. #7615
 - TSify `ChartPanel` and convert to a functional component #7581
+- Convert `Chart` component of `FeatureInfoPanelChart` to functional component. #7598
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
@@ -25,8 +26,6 @@
 - DOMPurify updated to 3.2.5 to fix CVE-2025-26791.
 - Fix pmtiles rendering issue. #7607
 - Remove unused types/rbush dependency.
-- Convert `Chart` component of `FeatureInfoPanelChart` to functional component.
-- [The next improvement]
 
 #### 8.9.2 - 2025-03-31
 
