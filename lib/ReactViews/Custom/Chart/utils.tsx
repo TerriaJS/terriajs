@@ -63,6 +63,7 @@ export const Plot = memo(
                   (item.type === "line" || item.type === "lineAndPoint") &&
                   item.xAxis.scale === "time"
               );
+
               return (
                 <MomentPointsChart
                   key={chartItem.key}

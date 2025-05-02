@@ -344,12 +344,16 @@ const findNearestPoint = (
   let left = 0;
   let right = points.length;
   let mid = 0;
-  for (;;) {
-    if (left === right) break;
+  while (left !== right) {
     mid = left + Math.floor((right - left) / 2);
-    if (distance(coords, points[mid]) === 0) break;
-    else if (distance(coords, points[mid]) < 0) right = mid;
-    else left = mid + 1;
+    const dist = distance(coords, points[mid]);
+    if (dist === 0) {
+      break;
+    } else if (dist < 0) {
+      right = mid;
+    } else {
+      left = mid + 1;
+    }
   }
 
   const leftPoint = points[mid - 1];

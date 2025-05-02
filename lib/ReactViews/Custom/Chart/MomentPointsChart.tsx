@@ -152,13 +152,19 @@ function interpolate(
 }
 
 function closestPointIndex(x: Date, sortedPoints: ChartPoint[]) {
-  for (let i = 0; i < sortedPoints.length; i++) {
-    if ((sortedPoints[i].x as Date).getTime() >= x.getTime()) {
-      if (i === 0) return 0;
-      return i - 1;
-    }
+  const xTime = x.getTime();
+
+  const index = sortedPoints.findIndex((p) => (p.x as Date).getTime() >= xTime);
+
+  if (index === -1) {
+    return undefined;
   }
-  return;
+
+  if (index === 0) {
+    return 0;
+  }
+
+  return index - 1;
 }
 
 export default observer(forwardRef(_MomentPointsChart));
