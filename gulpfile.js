@@ -8,6 +8,7 @@
 // the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require("gulp");
+const PluginError = require("plugin-error");
 var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 
 gulp.task("build-specs", function (done) {
@@ -144,10 +145,10 @@ gulp.task("code-attribution", function userAttribution(done) {
     }
   );
   if (result.status !== 0) {
-    throw new Error(
+    throw new PluginError(
+      "code-attribution",
       "Generating code attribution exited with an error.\n" +
-        result.stderr.toString(),
-      { showStack: false }
+        result.stderr.toString()
     );
   }
   done();
@@ -171,7 +172,6 @@ gulp.task(
     },
     function generateMemberPages(done) {
       const fse = require("fs-extra");
-      const PluginError = require("plugin-error");
       const spawnSync = require("child_process").spawnSync;
 
       fse.mkdirpSync("build/doc/connecting-to-data/catalog-type-details");
@@ -185,14 +185,12 @@ gulp.task(
       if (result.status !== 0) {
         throw new PluginError(
           "user-doc",
-          "Generating catalog members pages exited with an error.",
-          { showStack: false }
+          "Generating catalog members pages exited with an error."
         );
       }
       done();
     },
     function mkdocs(done) {
-      const PluginError = require("plugin-error");
       const spawnSync = require("child_process").spawnSync;
 
       const result = spawnSync(
@@ -207,10 +205,9 @@ gulp.task(
       if (result.status !== 0) {
         throw new PluginError(
           "user-doc",
-          `Mkdocs exited with an error. Maybe you didn't install mkdocs and other python dependencies in requirements.txt - see https://docs.terria.io/guide/contributing/development-environment/#documentation?`,
-          {
-            showStack: false
-          }
+          "Mkdocs exited with an error. Maybe you didn't install mkdocs and " +
+            "other python dependencies in requirements.txt - see " +
+            "https://docs.terria.io/guide/contributing/development-environment/#documentation"
         );
       }
       done();
