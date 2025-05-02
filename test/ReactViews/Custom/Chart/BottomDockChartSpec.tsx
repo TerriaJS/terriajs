@@ -21,7 +21,7 @@ describe("BottomDockChart", function () {
     });
     chartItems = [
       {
-        item: {} as any,
+        item: {} as never,
         id: "zzz",
         name: "zzz",
         categoryName: "ZZZ",
@@ -38,7 +38,7 @@ describe("BottomDockChart", function () {
         pointOnMap: { latitude: -33.8688, longitude: 151.2093 }
       },
       {
-        item: {} as any,
+        item: {} as never,
         id: "aaa",
         name: "aaa",
         categoryName: "AAA",

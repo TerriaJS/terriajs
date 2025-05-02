@@ -73,7 +73,7 @@ const Chart: React.FC<ChartProps> = observer(
     height,
     margin = DEFAULT_MARGIN
   }) => {
-    const [zoomedXScale, setZoomedXScale] = useState<any | undefined>(
+    const [zoomedXScale, setZoomedXScale] = useState<XScale | undefined>(
       undefined
     );
     const [mouseCoords, setMouseCoords] = useState<
@@ -130,7 +130,7 @@ const Chart: React.FC<ChartProps> = observer(
       [estimatedYAxesWidth, margin]
     );
 
-    const initialXScale = useMemo(() => {
+    const initialXScale: XScale = useMemo(() => {
       const params = {
         domain: calculateDomainX(processedChartItems),
         range: [0, plotWidth]

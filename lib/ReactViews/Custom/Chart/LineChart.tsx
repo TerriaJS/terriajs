@@ -21,10 +21,10 @@ const _LineChart = forwardRef<ChartZoomHandle, Props>(
         doZoom(scales) {
           const el = document.querySelector(`#${id} path`);
           if (!el) return;
-          const path = (line() as any)
+          const path = line<ChartPoint>()
             .x((p: ChartPoint) => scales.x(p.x))
             .y((p: ChartPoint) => scales.y(p.y));
-          el.setAttribute("d", path(chartItem.points));
+          el.setAttribute("d", path(chartItem.points) as string);
         }
       }),
       [id, chartItem]

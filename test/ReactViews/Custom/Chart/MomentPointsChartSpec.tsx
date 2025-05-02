@@ -8,7 +8,7 @@ import MomentPointsChart from "../../../../lib/ReactViews/Custom/Chart/MomentPoi
 describe("MomentPointsChart", function () {
   const chartItem = {
     id: "chartitem",
-    item: {} as any,
+    item: {} as never,
     categoryName: "Points chart",
     key: "key-chartitem",
     name: "chartitem",

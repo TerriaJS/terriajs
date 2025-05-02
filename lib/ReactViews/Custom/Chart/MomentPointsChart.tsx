@@ -6,13 +6,14 @@ import { Ref, forwardRef, useImperativeHandle, useMemo } from "react";
 import { ChartPoint } from "../../../Charts/ChartData";
 import { ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Glyphs from "./Glyphs";
+import type { XScale, YScale } from "./types";
 
-interface Props {
+interface MomentPointsChartProps {
   id: string;
   chartItem: ChartItem;
   basisItem?: ChartItem;
-  basisItemScales?: { x: any; y: any };
-  scales: { x: any; y: any };
+  basisItemScales?: { x: XScale; y: YScale };
+  scales: { x: XScale; y: YScale };
   glyph?: string;
 }
 
@@ -22,7 +23,7 @@ export type ChartZoomFunction = (scales: {
 }) => void;
 
 const _MomentPointsChart = function MomentPointsChart(
-  props: Props,
+  props: MomentPointsChartProps,
   ref: Ref<{ doZoom: ChartZoomFunction }>
 ) {
   const {
