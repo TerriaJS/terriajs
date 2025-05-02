@@ -8,10 +8,10 @@ In the process described in [Cloning and Building](../customizing/cloning-and-bu
 
 Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build. Traditionally, `npm link` is the way to do this. However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems. Instead, we recommend and use [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature. `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
 
-To use `yarn` workspaces you need to have `yarn` installed globally, recommended version is 1.18.0, and you can install it by running
+To use `yarn` workspaces you need to have `yarn` installed globally, and you can install it by running
 
 ```
-npm install -g yarn@^1.19.0
+npm install -g yarn
 ```
 
 Now, you can clone any package (such as `terriajs` or `terriajs-cesium`) into the `packages` directory:

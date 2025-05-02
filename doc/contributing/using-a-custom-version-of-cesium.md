@@ -14,6 +14,18 @@ cd packages
 git clone https://github.com/TerriaJS/cesium.git terriajs-cesium
 ```
 
+After cloning the repository, navigate to the `terriajs-cesium` directory and run the following commands to build the Cesium packages and generate TypeScript definitions:
+
+```sh
+npm run release
+
+# OR
+
+npm install
+npm run build
+npm run build-ts
+```
+
 Make sure that the `terriamap/package.json` workspaces list contains the following packages:
 
 - "packages/terriajs-cesium/packages/engine",
@@ -29,10 +41,15 @@ yarn install
 
 ## Making the changes in cesium
 
-Cesium uses npm so you should use it instead of yarn when installing dependencies and running commands inside cesium repo. After making the changes you will need to run
+Cesium uses npm so you should use it instead of yarn when installing dependencies and running commands inside cesium repo. After making the changes you will need to run:
 
 ```sh
 npm run release
+
+# OR
+
+npm run build
+npm run build-ts
 ```
 
 to build the code and generate Typescript types definitions required for Terria to work correctly. For more details on building the cesium and coding guidelines consult the [cesium documentation](https://github.com/CesiumGS/cesium/tree/main/Documentation)
