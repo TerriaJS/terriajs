@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, toJS, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, toJS } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import DataSourceClock from "terriajs-cesium/Source/DataSources/DataSourceClock";
@@ -8,27 +8,31 @@ import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../../../Traits/TraitsClasses/CzmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 
 /**
  * A loadable stratum for CzmlCatalogItemTraits that derives TimeVaryingTraits
  * from the CzmlDataSource
  */
-class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
+class CzmlTimeVaryingStratum
+  extends LoadableStratum(CzmlCatalogItemTraits)
+  implements LockedDownStratum<CzmlCatalogItemTraits, CzmlTimeVaryingStratum>
+{
   static stratumName = "czmlLoadableStratum";
 
-  constructor(readonly catalogItem: CzmlCatalogItem) {
+  constructor(private readonly catalogItem: CzmlCatalogItem) {
     super();
     makeObservable(this);
   }

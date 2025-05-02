@@ -1157,7 +1157,10 @@ describe("FeatureInfoSection", function () {
         template
       );
 
-      catalogItem._discreteTimes = ["2017-11-23", "2018-01-03"];
+      catalogItem.discreteTimes.setTrait(CommonStrata.definition, "times", [
+        "2017-11-23",
+        "2018-01-03"
+      ]);
 
       // const timeInterval = new TimeInterval({
       //   start: JulianDate.fromIso8601("2017-11-23T19:47:53+11:00"),
@@ -1195,7 +1198,7 @@ describe("FeatureInfoSection", function () {
       expect(
         findWithText(
           result,
-          "Time: " + new Date(catalogItem._discreteTimes[0]).toString()
+          "Time: " + new Date(catalogItem.discreteTimes.times[0]).toString()
         ).length
       ).toEqual(1);
     });
@@ -1469,10 +1472,5 @@ class TestModel extends MappableMixin(
   }
   protected forceLoadMapItems(): Promise<void> {
     throw new Error("Method not implemented.");
-  }
-
-  @observable _discreteTimes: string[] = [];
-  get discreteTimes() {
-    return this._discreteTimes.map((t) => ({ time: t, tag: undefined }));
   }
 }

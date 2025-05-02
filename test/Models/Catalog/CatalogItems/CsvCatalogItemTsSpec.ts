@@ -31,6 +31,6 @@ describe("CsvCatalogItem", function () {
     });
 
     await csv.loadMapItems();
-    expect(csv.discreteTimes?.length).toEqual(3);
+    expect(csv.discreteTimes.times?.length).toEqual(3);
   });
 });

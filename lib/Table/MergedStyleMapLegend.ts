@@ -1,7 +1,9 @@
 import { computed, makeObservable } from "mobx";
 import isDefined from "../Core/isDefined";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
@@ -9,10 +11,13 @@ import LegendTraits, {
 } from "../Traits/TraitsClasses/LegendTraits";
 
 /** Merge all legend items in legends - by legend.title */
-export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
+export class MergedStyleMapLegend
+  extends LoadableStratum(LegendTraits)
+  implements LockedDownStratum<LegendTraits, MergedStyleMapLegend>
+{
   constructor(
-    readonly legends: StratumFromTraits<LegendTraits>[],
-    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
+    private readonly legends: StratumFromTraits<LegendTraits>[],
+    private readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
     makeObservable(this);
