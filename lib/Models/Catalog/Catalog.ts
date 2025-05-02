@@ -14,7 +14,7 @@ export default class Catalog {
 
   readonly terria: Terria;
 
-  private _disposeCreateUserAddedGroup: () => void;
+  private readonly _disposeCreateUserAddedGroup: () => void;
 
   constructor(terria: Terria) {
     makeObservable(this);
