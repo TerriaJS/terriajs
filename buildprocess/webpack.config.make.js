@@ -63,8 +63,10 @@ module.exports = function (devMode) {
     }
   };
 
+  const jsExtraPaths = [path.resolve(terriaJSBasePath, "test")];
   return configureWebpack({
     terriaJSBasePath,
+    jsExtraPaths,
     config,
     devMode,
     MiniCssExtractPlugin
