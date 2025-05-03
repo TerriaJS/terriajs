@@ -132,12 +132,27 @@ function runKarma(configFile, done) {
   server.start();
 }
 
+const attributionTemplate = `"---
+search:
+  exclude: true
+---
+
+# Attributions"`;
+
 gulp.task("code-attribution", function userAttribution(done) {
   var spawnSync = require("child_process").spawnSync;
+  spawnSync(
+    "echo",
+    [`${attributionTemplate} > doc/acknowledgements/attributions.md`],
+    {
+      stdio: "inherit",
+      shell: true
+    }
+  );
 
   var result = spawnSync(
     "yarn",
-    ["licenses generate-disclaimer > doc/acknowledgements/attributions.md"],
+    ["licenses generate-disclaimer >> doc/acknowledgements/attributions.md"],
     {
       stdio: "inherit",
       shell: true
