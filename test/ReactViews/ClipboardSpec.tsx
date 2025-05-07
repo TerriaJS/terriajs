@@ -1,25 +1,23 @@
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
 import Clipboard from "../../lib/ReactViews/Clipboard";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 
+// Ideally those test would use a jasmine clock mock but it interferes with promise execution
+// which needs the time to advance but it doesn't work with jasmine clock.
+// We resolve it by setting the timeout to small value
 describe("Clipboard", function () {
-  beforeAll(() => {
-    jasmine.clock().install();
-  });
-
-  afterAll(() => {
-    jasmine.clock().uninstall();
-  });
-
   it("should copy text to clipboard and show checkmark", async () => {
     const user = userEvent.setup({ delay: null });
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard theme="dark" text="test" />
+        <Clipboard theme="dark" text="test" timeout={100} />
       </ThemeProvider>
     );
 
@@ -33,11 +31,9 @@ describe("Clipboard", function () {
       screen.queryByText("clipboard.unsuccessful")
     ).not.toBeInTheDocument();
 
-    act(() => {
-      jasmine.clock().tick(3000);
-    });
-
+    await waitForElementToBeRemoved(screen.queryByText("clipboard.success"));
     expect(screen.queryByText("clipboard.success")).not.toBeInTheDocument();
+
     expect(
       screen.queryByText("clipboard.unsuccessful")
     ).not.toBeInTheDocument();
@@ -64,7 +60,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard theme="dark" />
+        <Clipboard theme="dark" timeout={100} />
       </ThemeProvider>
     );
 
@@ -74,10 +70,9 @@ describe("Clipboard", function () {
     expect(screen.getByText("clipboard.unsuccessful")).toBeVisible();
     expect(screen.queryByText("clipboard.success")).not.toBeInTheDocument();
 
-    // act(() => {
-    jasmine.clock().tick(3000);
-    // });
-
+    await waitForElementToBeRemoved(
+      screen.queryByText("clipboard.unsuccessful")
+    );
     expect(screen.queryByText("clipboard.success")).not.toBeInTheDocument();
     expect(
       screen.queryByText("clipboard.unsuccessful")
