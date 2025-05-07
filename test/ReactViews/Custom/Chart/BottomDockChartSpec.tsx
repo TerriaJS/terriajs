@@ -1,21 +1,27 @@
-import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
+import { act } from "react-test-renderer";
 import { ChartItem } from "../../../../lib/ModelMixins/ChartableMixin";
+import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
-import BottomDockChart from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
-import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
+import ViewState from "../../../../lib/ReactViewModels/ViewState";
+import { BottomDockChart } from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
+import { createWithContexts } from "../../withContext";
 
 describe("BottomDockChart", function () {
   let terria: Terria;
-  let testRenderer: ReactTestRenderer;
+  let viewState: ViewState;
   let chartItems: ChartItem[];
 
   beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
+    viewState = new ViewState({
+      terria,
+      catalogSearchProvider: undefined
+    });
     chartItems = [
       {
-        item: {} as any,
+        item: {} as never,
         id: "zzz",
         name: "zzz",
         categoryName: "ZZZ",
@@ -30,9 +36,9 @@ describe("BottomDockChart", function () {
         updateIsSelectedInWorkbench: () => {},
         getColor: () => "#fff",
         pointOnMap: { latitude: -33.8688, longitude: 151.2093 }
-      } as ChartItem,
+      },
       {
-        item: {} as any,
+        item: {} as never,
         id: "aaa",
         name: "aaa",
         categoryName: "AAA",
@@ -47,23 +53,27 @@ describe("BottomDockChart", function () {
         updateIsSelectedInWorkbench: () => {},
         getColor: () => "#fff",
         pointOnMap: { latitude: -37.814, longitude: 144.96332 }
-      } as ChartItem
+      }
     ];
   });
 
-  it("renders all points on map for active chart items", function () {
+  it("renders all points on map for active chart items", async function () {
     act(() => {
-      testRenderer = TestRenderer.create(
+      createWithContexts(
+        viewState,
         <BottomDockChart
-          terria={terria}
+          height={100}
           initialHeight={100}
           initialWidth={100}
-          xAxis={{ scale: "time" }}
+          xAxis={{ scale: "time" } as never}
           chartItems={chartItems}
         />
       );
     });
-    const pointsOnMap = testRenderer.root.findAllByType(PointOnMap);
+
+    const pointsOnMap = terria.overlays.items.filter(
+      (item) => item instanceof GeoJsonCatalogItem
+    );
     expect(pointsOnMap.length).toBe(2);
   });
 });

@@ -8,7 +8,7 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Icon from "../../../Styled/Icon";
 import { useViewState } from "../../Context";
 import Loader from "../../Loader";
-import Chart from "./BottomDockChart";
+import { BottomDockChart } from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import { ChartPanelDownloadButton } from "./ChartPanelDownloadButton";
 
@@ -75,8 +75,7 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
     );
 
     return (
-      <Chart
-        terria={viewState.terria}
+      <BottomDockChart
         chartItems={chartItems}
         xAxis={xAxis}
         height={CHART_PANEL_HEIGHT - CHART_LEGEND_HEIGHT}
