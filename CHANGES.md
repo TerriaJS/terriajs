@@ -6,6 +6,7 @@
 - Remove direct usage of core-js polyfills. #7615
 - TSify `ChartPanel` and convert to a functional component #7581
 - Convert `Chart` component of `FeatureInfoPanelChart` to functional component. #7598
+- TSify `DataCatalogGroup` and convert to a functional component. #7575
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
