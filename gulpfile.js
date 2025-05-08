@@ -132,23 +132,19 @@ function runKarma(configFile, done) {
   server.start();
 }
 
-const attributionTemplate = `"---
+const attributionTemplate = `---
 search:
   exclude: true
 ---
 
-# Attributions"`;
+# Attributions
+`;
 
 gulp.task("code-attribution", function userAttribution(done) {
   var spawnSync = require("child_process").spawnSync;
-  spawnSync(
-    "echo",
-    [`${attributionTemplate} > doc/acknowledgements/attributions.md`],
-    {
-      stdio: "inherit",
-      shell: true
-    }
-  );
+  const { writeFileSync } = require("node:fs");
+
+  writeFileSync("doc/acknowledgements/attributions.md", attributionTemplate);
 
   var result = spawnSync(
     "yarn",
