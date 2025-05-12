@@ -164,7 +164,7 @@ export default class ViewState {
    * Do not rely on this; marked as private as it can change.
    */
   @observable
-  _customMapViewOptions?: ComponentType<{}>;
+  _customMapViewOptions?: ComponentType<unknown>;
 
   @action
   setSelectedTrainerItem(trainerItem: string): void {

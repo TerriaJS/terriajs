@@ -701,9 +701,9 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       { minx: number; miny: number; maxx: number; maxy: number }
     > = {};
 
-    for (let layer of layers) {
+    for (const layer of layers) {
       const layerBoxes = getLayerBoundingBoxes(layer);
-      for (let { crs, minx, miny, maxx, maxy } of layerBoxes) {
+      for (const { crs, minx, miny, maxx, maxy } of layerBoxes) {
         if (crsBoxes[crs]) {
           const current = crsBoxes[crs];
           crsBoxes[crs] = {

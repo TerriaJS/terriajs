@@ -4,7 +4,6 @@ import Slider from "rc-slider";
 import {
   ChangeEvent,
   ComponentProps,
-  ComponentType,
   FC,
   MouseEvent,
   Ref,
@@ -27,10 +26,10 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { useViewState } from "../../Context";
+import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
-import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 
 const sides = {
   left: "settingPanel.terrain.left",
