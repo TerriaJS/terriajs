@@ -1,3 +1,4 @@
+import dateFormat from "dateformat";
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -15,6 +16,7 @@ import {
   InfoSectionTraits,
   MetadataUrlTraits
 } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import { ProjectedBoundingBoxTraits } from "../../../Traits/TraitsClasses/CrsTraits";
 import {
   KeyValueTraits,
   WebCoverageServiceParameterTraits
@@ -41,10 +43,10 @@ import WebMapServiceCapabilities, {
   CapabilitiesDimension,
   CapabilitiesLayer,
   MetadataURL,
+  getLayerBoundingBoxes,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import dateFormat from "dateformat";
 
 /** Transforms WMS GetCapabilities XML into WebMapServiceCatalogItemTraits */
 export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
@@ -680,6 +682,54 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         north: CesiumMath.toDegrees(allLayersRectangle.north)
       };
     }
+  }
+
+  /**
+   * Combined bounding boxes for active layers
+   *
+   * There is usually one bounding box for each supported CRS.
+   */
+  @computed
+  get boundingBoxes() {
+    const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
+      .filter((layer) => layer !== undefined)
+      .map((l) => l!);
+    // Get union of bounding rectangles for all layers
+
+    const crsBoxes: Record<
+      string,
+      { minx: number; miny: number; maxx: number; maxy: number }
+    > = {};
+
+    for (let layer of layers) {
+      const layerBoxes = getLayerBoundingBoxes(layer);
+      for (let { crs, minx, miny, maxx, maxy } of layerBoxes) {
+        if (crsBoxes[crs]) {
+          const current = crsBoxes[crs];
+          crsBoxes[crs] = {
+            minx: Math.min(current.minx, minx),
+            miny: Math.min(current.miny, miny),
+            maxx: Math.max(current.maxx, maxx),
+            maxy: Math.max(current.maxy, maxy)
+          };
+        } else {
+          crsBoxes[crs] = {
+            minx,
+            miny,
+            maxx,
+            maxy
+          };
+        }
+      }
+    }
+
+    return Object.entries(crsBoxes).map(([crs, box]) =>
+      createStratumInstance(ProjectedBoundingBoxTraits, {
+        crs,
+        min: { x: box.minx, y: box.miny },
+        max: { x: box.maxx, y: box.maxy }
+      })
+    );
   }
 
   @computed
