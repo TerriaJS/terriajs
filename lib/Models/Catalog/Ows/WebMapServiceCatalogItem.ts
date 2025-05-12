@@ -452,7 +452,11 @@ class WebMapServiceCatalogItem
       imageryProvider,
       alpha: this.opacity,
       show: this.show,
-      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+      clippingRectangle: this.clipToRectangle
+        ? this.cesiumRectangle
+        : undefined,
+      previewImageryProvider: (crs: string) =>
+        this._createImageryProviderForCrs(this.currentDiscreteTimeTag, crs)
     };
   }
 
@@ -528,13 +532,29 @@ class WebMapServiceCatalogItem
       : undefined;
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
+  /**
+   * A memoized function that creates an ImageryProvider for the given time tag
+   * and CRS.
+   */
+  private _createImageryProviderForCrs = computedFn(
+    (
+      time: string | undefined,
+      crsCode: string | undefined
+    ): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
       }
       if (this.url === undefined) {
+        return undefined;
+      }
+
+      // Return if the CRS is not supported by this model
+      //
+      // TODO: this check might be too strict and could break the current
+      // behaviour where terria might use one of the supported CRS variants or
+      // fallback to EPSG:3857.
+      if (crsCode && !this.availableCrs?.includes(crsCode)) {
         return undefined;
       }
 
@@ -597,8 +617,8 @@ class WebMapServiceCatalogItem
 
       // Set CRS for WMS 1.3.0
       // Set SRS for WMS 1.1.1
-      const crs = this.useWmsVersion130 ? this.crs : undefined;
-      const srs = this.useWmsVersion130 ? undefined : this.crs;
+      const crs = this.useWmsVersion130 ? crsCode : undefined;
+      const srs = this.useWmsVersion130 ? undefined : crsCode;
 
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
@@ -638,6 +658,10 @@ class WebMapServiceCatalogItem
       return this.updateRequestImage(imageryProvider);
     }
   );
+
+  private _createImageryProvider(time: string | undefined) {
+    return this._createImageryProviderForCrs(time, this.crs);
+  }
 
   @computed
   get styleSelectableDimensions(): SelectableDimensionEnum[] {
