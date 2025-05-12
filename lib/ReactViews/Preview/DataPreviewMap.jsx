@@ -4,51 +4,17 @@ import {
   action,
   autorun,
   computed,
-  observable,
+  makeObservable,
   runInAction,
-  makeObservable
+  trace
 } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Component } from "react";
 import { withTranslation } from "react-i18next";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import filterOutUndefined from "../../Core/filterOutUndefined";
-import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
-import CommonStrata from "../../Models/Definition/CommonStrata";
-import CreateModel from "../../Models/Definition/CreateModel";
-import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import ViewerMode from "../../Models/ViewerMode";
-import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
-import TerriaViewer from "../../ViewModels/TerriaViewer";
+import PreviewViewer from "../../ViewModels/PreviewViewer";
 import Styles from "./data-preview-map.scss";
-
-class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
-  previewed;
-
-  constructor(...args) {
-    super(...args);
-    makeObservable(this);
-  }
-
-  async forceLoadMapItems() {}
-
-  // Make all imagery 0 or 100% opacity
-  @computed
-  get mapItems() {
-    return (
-      this.previewed?.mapItems.map((m) =>
-        ImageryParts.is(m)
-          ? {
-              ...m,
-              alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
-              show: true
-            }
-          : m
-      ) ?? []
-    );
-  }
-}
 
 /**
  * Leaflet-based preview map that sits within the preview.
@@ -69,9 +35,6 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
  */
 @observer
 class DataPreviewMap extends Component {
-  @observable
-  isZoomedToExtent = false;
-
   /**
    * @type {TerriaViewer}
    * @readonly
@@ -115,23 +78,19 @@ class DataPreviewMap extends Component {
         this.initPreview(container);
       }
     });
-    this.previewViewer = new TerriaViewer(
+    this.previewViewer = new PreviewViewer(
       this.props.terria,
-      computed(() => {
-        const previewItem = new AdaptForPreviewMap();
-        previewItem.previewed = this.props.previewed;
-        // Can previewed be undefined?
-        return filterOutUndefined([
-          previewItem,
-          this.boundingRectangleCatalogItem
-        ]);
-      })
+      // pass in computed so that the prop changes are propogated
+      computed(() => this.props.previewed)
     );
+
     runInAction(() => {
       this.previewViewer.viewerMode = ViewerMode.Leaflet;
       this.previewViewer.disableInteraction = true;
       this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
+
+    window.previewViewer = this.previewViewer;
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
     // previewViewer.homeView = terria.homeView;
@@ -146,7 +105,7 @@ class DataPreviewMap extends Component {
     console.log(
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
-    this.isZoomedToExtent = false;
+    this.previewViewer.isZoomedToExtent = false;
     const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
     // Find preview basemap using `terria.previewBaseMapId`
     const initPreviewBaseMap = baseMapItems.find(
@@ -165,7 +124,7 @@ class DataPreviewMap extends Component {
     this.previewViewer.attach(container);
 
     this._disposeZoomToExtentSubscription = autorun(() => {
-      if (this.isZoomedToExtent) {
+      if (this.previewViewer.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
       } else {
         this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
@@ -185,86 +144,13 @@ class DataPreviewMap extends Component {
     }
   }
 
-  @computed
-  get boundingRectangleCatalogItem() {
-    const rectangle = this.props.previewed.rectangle;
-    if (rectangle === undefined) {
-      return undefined;
-    }
-
-    let west = rectangle.west;
-    let south = rectangle.south;
-    let east = rectangle.east;
-    let north = rectangle.north;
-
-    if (
-      west === undefined ||
-      south === undefined ||
-      east === undefined ||
-      north === undefined
-    ) {
-      return undefined;
-    }
-
-    if (!this.isZoomedToExtent) {
-      // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
-      // the home view, so that it is actually visible.
-      const minimumFraction = 0.05;
-      const homeView = this.previewViewer.homeCamera;
-      const minimumWidth =
-        CesiumMath.toDegrees(homeView.rectangle.width) * minimumFraction;
-      if (east - west < minimumWidth) {
-        const center = (east + west) * 0.5;
-        west = center - minimumWidth * 0.5;
-        east = center + minimumWidth * 0.5;
-      }
-
-      const minimumHeight =
-        CesiumMath.toDegrees(homeView.rectangle.height) * minimumFraction;
-      if (north - south < minimumHeight) {
-        const center = (north + south) * 0.5;
-        south = center - minimumHeight * 0.5;
-        north = center + minimumHeight * 0.5;
-      }
-    }
-
-    const rectangleCatalogItem = new GeoJsonCatalogItem(
-      "__preview-data-extent",
-      this.props.terria
-    );
-    rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: {
-            stroke: "#08ABD5",
-            "stroke-width": 2,
-            "stroke-opacity": 1
-          },
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [west, south],
-              [west, north],
-              [east, north],
-              [east, south],
-              [west, south]
-            ]
-          }
-        }
-      ]
-    });
-    rectangleCatalogItem.loadMapItems();
-    return rectangleCatalogItem;
-  }
-
   @action.bound
   clickMap(_evt) {
-    this.isZoomedToExtent = !this.isZoomedToExtent;
+    this.previewViewer.isZoomedToExtent = !this.previewViewer.isZoomedToExtent;
   }
 
   render() {
+    trace();
     const { t } = this.props;
     const previewBadgeLabels = {
       loading: t("preview.loading"),
