@@ -119,7 +119,13 @@ export default class Leaflet extends GlobeOrMap {
     }
   });
 
-  private _makeImageryLayerFromParts(
+  /**
+   * Make leaflet layer for ImageryParts
+   *
+   * Alternate implementations my override this method, so it is marked as
+   * `protected` method (eg terriajs-plugin-proj4leaflet)
+   */
+  protected _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
