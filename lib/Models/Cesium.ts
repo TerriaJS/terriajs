@@ -1671,6 +1671,16 @@ export default class Cesium extends GlobeOrMap {
   ): ImageryLayer | undefined {
     if (parts.imageryProvider === undefined) return undefined;
 
+    if (
+      TilingSchemeGenerator.isCustomTilingScheme(
+        parts.imageryProvider.tilingScheme
+      )
+    ) {
+      // Ignore layers using custom tiling schemes. Without testing, these may
+      // result in unexpected errors when rendered with Cesium.
+      return;
+    }
+
     const layer = this._createImageryLayer(
       parts.imageryProvider,
       parts.clippingRectangle

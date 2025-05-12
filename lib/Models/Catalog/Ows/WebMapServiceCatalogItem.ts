@@ -7,18 +7,19 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import { computedFn } from "mobx-utils";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import TilingScheme from "terriajs-cesium/Source/Core/TilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
-import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
+import TilingSchemeGenerator from "../../../Map/ImageryProvider/TilingSchemeGenerator";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -35,10 +36,7 @@ import {
   TimeSeriesFeatureInfoContext,
   csvFeatureInfoContext
 } from "../../../Table/tableFeatureInfoContext";
-import WebMapServiceCatalogItemTraits, {
-  SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326
-} from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
+import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -423,16 +421,18 @@ class WebMapServiceCatalogItem
     return result;
   }
 
-  @computed
-  get tilingScheme() {
-    if (this.crs) {
-      if (SUPPORTED_CRS_3857.includes(this.crs))
-        return new WebMercatorTilingScheme();
-      if (SUPPORTED_CRS_4326.includes(this.crs))
-        return new GeographicTilingScheme();
-    }
+  private createTilingSchemeForCrs(crs: string | undefined): TilingScheme {
+    const generatorName = this.tilingSchemeGenerator;
+    return (
+      (generatorName
+        ? TilingSchemeGenerator.get(generatorName)?.(crs)
+        : undefined) ?? TilingSchemeGenerator.default(crs)
+    );
+  }
 
-    return new WebMercatorTilingScheme();
+  @computed
+  get tilingScheme(): TilingScheme {
+    return this.createTilingSchemeForCrs(this.crs);
   }
 
   @computed
@@ -610,7 +610,7 @@ class WebMapServiceCatalogItem
         getFeatureInfoUrl: this.getFeatureInfoUrl,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
-        tilingScheme: this.tilingScheme,
+        tilingScheme: this.createTilingSchemeForCrs(crs),
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
         credit: this.attribution
