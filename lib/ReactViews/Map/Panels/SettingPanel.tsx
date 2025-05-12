@@ -4,6 +4,7 @@ import Slider from "rc-slider";
 import {
   ChangeEvent,
   ComponentProps,
+  ComponentType,
   FC,
   MouseEvent,
   Ref,
@@ -29,6 +30,7 @@ import { useViewState } from "../../Context";
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
+import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 
 const sides = {
   left: "settingPanel.terrain.left",
@@ -203,6 +205,8 @@ const SettingPanel: FC = observer(() => {
     ? t("settingPanel.timeline.alwaysShowLabel")
     : t("settingPanel.timeline.hideLabel");
 
+  const CustomMapViewOptions = viewState._customMapViewOptions;
+
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
@@ -228,6 +232,11 @@ const SettingPanel: FC = observer(() => {
             </SettingsButton>
           ))}
         </FlexGrid>
+        {CustomMapViewOptions && (
+          <RaiseToUserErrorBoundary viewState={viewState}>
+            <CustomMapViewOptions />
+          </RaiseToUserErrorBoundary>
+        )}
         {!!supportsSide && (
           <>
             <Spacing bottom={2} />

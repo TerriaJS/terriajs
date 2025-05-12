@@ -157,6 +157,15 @@ export default class ViewState {
   readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
     [];
 
+  /**
+   * @private
+   *
+   * Hook used by proj4leaflet plugin to extend the SettingsPanel UI.
+   * Do not rely on this; marked as private as it can change.
+   */
+  @observable
+  _customMapViewOptions?: ComponentType<{}>;
+
   @action
   setSelectedTrainerItem(trainerItem: string): void {
     this.selectedTrainerItem = trainerItem;
