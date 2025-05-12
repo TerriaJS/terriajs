@@ -16,6 +16,7 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 /**
  * Holds a camera's view parameters, expressed as a rectangular extent and/or as a camera position, direction,
@@ -29,6 +30,13 @@ export default class CameraView {
    * these parameters (e.g. Leaflet).
    */
   readonly rectangle: Readonly<Rectangle>;
+
+  /**
+   * Points describing a bounding box. This is for example useful to describe
+   * extent that crosses the poles. We need at least 4 lat lon points to
+   * accurately describe them.
+   */
+  readonly extent: Readonly<Cartographic[]> | undefined;
 
   /**
    * Gets the position of the camera in the Earth-centered Fixed frame.
@@ -49,7 +57,8 @@ export default class CameraView {
     rectangle: Rectangle,
     position?: Cartesian3,
     direction?: Cartesian3,
-    up?: Cartesian3
+    up?: Cartesian3,
+    extent?: Cartographic[]
   ) {
     this.rectangle = Rectangle.clone(rectangle);
 
@@ -68,6 +77,7 @@ export default class CameraView {
       this.direction = Cartesian3.clone(direction);
       this.up = Cartesian3.clone(up);
     }
+    this.extent = extent;
   }
 
   toJson(): JsonObject {
@@ -90,6 +100,14 @@ export default class CameraView {
       result.position = vectorToJson(this.position);
       result.direction = vectorToJson(this.direction);
       result.up = vectorToJson(this.up);
+    }
+
+    if (this.extent) {
+      // TODO: if extent is given, derive south,west,east,north from extent?
+      result.extent = this.extent.map((c) => ({
+        latitude: CesiumMath.toDegrees(c.latitude),
+        longitude: CesiumMath.toDegrees(c.longitude)
+      }));
     }
 
     return result;
@@ -192,20 +210,39 @@ export default class CameraView {
         json.north
       );
 
+      let extent: Cartographic[] | undefined;
+      if (Array.isArray(json.extent)) {
+        extent = filterOutUndefined(
+          json.extent.map((ll) =>
+            isJsonObject(ll) &&
+            typeof ll.longitude === "number" &&
+            typeof ll.latitude === "number"
+              ? Cartographic.fromDegrees(ll.longitude, ll.latitude)
+              : undefined
+          )
+        );
+      }
+
+      let position, direction, up;
       if (
         isVector(json.position) &&
         isVector(json.direction) &&
         isVector(json.up)
       ) {
-        return new CameraView(
-          rectangle,
-          new Cartesian3(json.position.x, json.position.y, json.position.z),
-          new Cartesian3(json.direction.x, json.direction.y, json.direction.z),
-          new Cartesian3(json.up.x, json.up.y, json.up.z)
+        position = new Cartesian3(
+          json.position.x,
+          json.position.y,
+          json.position.z
         );
-      } else {
-        return new CameraView(rectangle);
+        direction = new Cartesian3(
+          json.direction.x,
+          json.direction.y,
+          json.direction.z
+        );
+        up = new Cartesian3(json.up.x, json.up.y, json.up.z);
       }
+
+      return new CameraView(rectangle, position, direction, up, extent);
     }
   }
 
@@ -347,6 +384,21 @@ export default class CameraView {
     );
 
     return new CameraView(extent, positionECF, directionECF, upECF);
+  }
+
+  /**
+   * Create a camera view from polygon extent
+   */
+  static fromExtent(extent: Cartographic[]) {
+    const positions = extent.map((c) => Cartographic.toCartesian(c));
+    const cameraView = new CameraView(
+      Rectangle.fromCartesianArray(positions),
+      undefined,
+      undefined,
+      undefined,
+      extent
+    );
+    return cameraView;
   }
 }
 
