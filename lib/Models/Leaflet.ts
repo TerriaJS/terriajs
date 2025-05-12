@@ -143,7 +143,11 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
+  constructor(
+    terriaViewer: TerriaViewer,
+    container: string | HTMLElement,
+    initOptions?: { mapOptions?: L.MapOptions }
+  ) {
     super();
     makeObservable(this);
     this.terria = terriaViewer.terria;
@@ -153,8 +157,11 @@ export default class Leaflet extends GlobeOrMap {
       attributionControl: false,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
-      worldCopyJump: false
-    }).setView([-28.5, 135], 5);
+      worldCopyJump: false,
+      center: [-28.5, 135],
+      zoom: 5,
+      ...initOptions?.mapOptions
+    });
 
     this.map.on("move", () => this.updateMapObservables());
     this.map.on("zoom", () => this.updateMapObservables());
