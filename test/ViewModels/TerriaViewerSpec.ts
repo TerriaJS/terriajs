@@ -1,6 +1,8 @@
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode, { setViewerMode } from "../../lib/Models/ViewerMode";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 const mockBeforeViewerChanges = jasmine.createSpy("", () => {});
 const mockAfterViewerChanges = jasmine.createSpy("", () => {});
@@ -68,6 +70,25 @@ describe("TerriaViewer", function () {
       expect(mockBeforeViewerChanges).toHaveBeenCalledTimes(2);
       expect(mockAfterViewerChanges).toHaveBeenCalledTimes(2);
       expect(terriaViewer.viewerMode).toBe(ViewerMode.Cesium);
+    });
+  });
+
+  describe("currentViewer", function () {
+    let rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+      west: CesiumMath.toDegrees(west),
+      south: CesiumMath.toDegrees(south),
+      east: CesiumMath.toDegrees(east),
+      north: CesiumMath.toDegrees(north)
+    });
+
+    it("should return the home camera view", function () {
+      const r = rectangleDegrees(
+        terriaViewer.currentViewer.getCurrentCameraView().rectangle
+      );
+      expect(r.west).toBe(45);
+      expect(r.south).toBe(-20);
+      expect(r.east).toBe(55);
+      expect(r.north).toBe(-10);
     });
   });
 });
