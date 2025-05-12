@@ -93,6 +93,7 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
+import TilingSchemeGenerator from "../Map/ImageryProvider/TilingSchemeGenerator";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -170,6 +171,12 @@ export default class Cesium extends GlobeOrMap {
   });
 
   private _terrainMessageViewed: boolean = false;
+
+  /**
+   * Save last view set using setView
+   */
+  private _initialView: CameraView | undefined;
+
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
 
@@ -958,6 +965,15 @@ export default class Cesium extends GlobeOrMap {
     return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
+  setInitialView(view: CameraView) {
+    this.doZoomTo(view, 0);
+    this._initialView = view;
+    const removeListener = this.scene.camera.changed.addEventListener(() => {
+      this._initialView = undefined;
+      removeListener();
+    });
+  }
+
   notifyRepaintRequired(): void {
     this.pauser.notifyRepaintRequired();
   }
@@ -1016,6 +1032,13 @@ export default class Cesium extends GlobeOrMap {
   }
 
   getCurrentCameraView(): CameraView {
+    // Return the initial view if the camera hasn't changed since setting it.
+    // This ensures that the view remains constant when switching between
+    // viewer modes.
+    if (this._initialView) {
+      return this._initialView;
+    }
+
     const scene = this.scene;
     const camera = scene.camera;
 

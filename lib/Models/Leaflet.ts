@@ -91,6 +91,8 @@ export default class Leaflet extends GlobeOrMap {
   @observable nw: L.Point | undefined;
   @observable se: L.Point | undefined;
 
+  private _initialView: CameraView | undefined;
+
   @action
   private updateMapObservables() {
     this.size = this.map.getSize();
@@ -340,6 +342,7 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
     this.map.off("move");
     this.map.off("zoom");
+    this.map.off("zoomlevelschange");
     this.map.remove();
   }
 
@@ -502,7 +505,6 @@ export default class Leaflet extends GlobeOrMap {
       return Promise.resolve();
     }
     let bounds;
-
     if (isDefined(target.entities)) {
       if (isDefined(this.dataSourceDisplay)) {
         bounds = this.dataSourceDisplay.getLatLngBounds(target);
@@ -550,7 +552,30 @@ export default class Leaflet extends GlobeOrMap {
     return Promise.resolve();
   }
 
+  setInitialView(view: CameraView) {
+    this.doZoomTo(view, 0);
+    this._initialView = view;
+    this.map.addOneTimeEventListener("move", () => {
+      this._initialView = undefined;
+    });
+  }
+
+  /**
+   * Return the initial view if it hasn't changed. Otherwise return undefined.
+   */
+  getInitialView(): CameraView | undefined {
+    return this._initialView;
+  }
+
   getCurrentCameraView(): CameraView {
+    // Return the initial view if the camera hasn't changed since setting it.
+    // This ensures that the view remains constant when switching between
+    // viewer modes.
+    const initialView = this.getInitialView();
+    if (initialView) {
+      return initialView;
+    }
+
     const bounds = this.map.getBounds();
     return new CameraView(
       Rectangle.fromDegrees(
