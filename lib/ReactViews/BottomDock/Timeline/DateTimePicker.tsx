@@ -17,7 +17,7 @@ import { HourView } from "./DatePicker/HourView";
 import { MonthView } from "./DatePicker/MonthView";
 import { TimeListView } from "./DatePicker/TimeListView";
 import { YearView } from "./DatePicker/YearView";
-import { BackButton } from "./DatePicker/DateTimePicker.styles";
+import { BackButton } from "./DatePicker/DateTimePickerStyles";
 
 interface PropsType {
   dates: ObjectifiedDates;

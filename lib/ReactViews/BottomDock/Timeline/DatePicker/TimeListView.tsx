@@ -1,7 +1,7 @@
 import dateFormat from "dateformat";
 import isDefined from "../../../../Core/isDefined";
 import { formatDateTime } from "../DateFormats";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 
 interface TimeListViewProps {
   items: Date[];

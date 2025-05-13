@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import isDefined from "../../../../Core/isDefined";
 import type { ObjectifiedMonths } from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 import { daysInMonth, monthNames } from "./utils";
 
 interface MonthViewProps {

@@ -1,6 +1,6 @@
 import type { ObjectifiedHours } from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import { formatDateTime } from "../DateFormats";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 import { monthNames } from "./utils";
 
 interface HourViewProps {

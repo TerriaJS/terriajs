@@ -1,6 +1,6 @@
 import isDefined from "../../../../Core/isDefined";
 import type { ObjectifiedYears } from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 
 interface YearViewProps {
   datesObject: ObjectifiedYears;

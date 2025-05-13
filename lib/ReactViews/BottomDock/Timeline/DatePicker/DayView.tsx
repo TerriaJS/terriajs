@@ -2,7 +2,7 @@ import DatePicker from "react-datepicker";
 import { useTranslation } from "react-i18next";
 import type { ObjectifiedDays } from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import Spacing from "../../../../Styled/Spacing";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 import { monthNames } from "./utils";
 import moment from "moment";
 import isDefined from "../../../../Core/isDefined";

@@ -1,5 +1,5 @@
 import type { ObjectifiedDates } from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import * as DTP from "./DateTimePicker.styles";
+import * as DTP from "./DateTimePickerStyles";
 
 interface CenturyGridProps {
   datesObject: ObjectifiedDates;

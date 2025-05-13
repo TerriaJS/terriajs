@@ -4,7 +4,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
-import { GridRow } from "../../../../lib/ReactViews/BottomDock/Timeline/DatePicker/DateTimePicker.styles";
+import { GridRow } from "../../../../lib/ReactViews/BottomDock/Timeline/DatePicker/DateTimePickerStyles";
 
 describe("DateTimePicker", function () {
   let terria: Terria;
