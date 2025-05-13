@@ -7,6 +7,8 @@
 - TSify `ChartPanel` and convert to a functional component #7581
 - Convert `Chart` component of `FeatureInfoPanelChart` to functional component. #7598
 - TSify `DataCatalogGroup` and convert to a functional component. #7575
+- TSify `BottomDockChart`, `ChartPanel`, `LineAndPointChart`, `LineChart`, `MomentLinesChart`, `MomentPointsChart`, `Chart Tooltip` to typescript and convert to functional components. #7617
+- Upgrade mkdocs to 1.6.1
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
