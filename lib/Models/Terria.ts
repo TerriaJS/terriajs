@@ -118,7 +118,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { RelatedMap, defaultRelatedMaps } from "./RelatedMaps";
+import { RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -587,15 +587,18 @@ export default class Terria {
       // Default credit links (shown at the bottom of the Cesium map)
       {
         text: "map.extraCreditLinks.dataAttribution",
-        url: "about.html#data-attribution"
+        url: "https://terria.io/attributions"
       },
-      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+      {
+        text: "map.extraCreditLinks.termsOfUse",
+        url: "https://terria.io/demo-terms"
+      }
     ],
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
-    relatedMaps: defaultRelatedMaps,
+    relatedMaps: [],
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
