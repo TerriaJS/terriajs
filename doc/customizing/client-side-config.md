@@ -242,11 +242,11 @@ Credits/Attribution shown at the bottom of the map. Supports internationalizatio
 [
   {
     "text": "map.extraCreditLinks.dataAttribution",
-    "url": "about.html#data-attribution"
+    "url": "https://terria.io/attributions"
   },
   {
-    "text": "map.extraCreditLinks.disclaimer",
-    "url": "about.html#disclaimer"
+    "text": "map.extraCreditLinks.termsOfUse",
+    "url": "https://terria.io/demo-terms"
   }
 ]
 ```
