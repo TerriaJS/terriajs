@@ -171,20 +171,10 @@ class GeoJsonCatalogItem
       if (typeof FileReader === "undefined") {
         throw fileApiNotSupportedError(this.terria);
       }
-      const body = source.requestData ? toJS(source.requestData) : undefined;
-      const blob = await loadBlob(
-        proxyCatalogItemUrl(this, url),
-        undefined,
-        body
-      );
+      const blob = await loadBlob(proxyCatalogItemUrl(this, url));
       jsonData = await parseZipJsonBlob(blob);
     } else {
-      jsonData = await loadJson(
-        proxyCatalogItemUrl(this, url),
-        undefined,
-        source.requestData ? toJS(source.requestData) : undefined,
-        source.postRequestDataAsFormData
-      );
+      jsonData = await loadJson(proxyCatalogItemUrl(this, url));
       if (source.responseDataPath) {
         jsonData = _get(jsonData, source.responseDataPath);
       }

@@ -645,46 +645,51 @@ async function loadSoapBody(
   requestTemplate: string,
   templateContext: TemplateContext
 ): Promise<any> {
-  const requestXml = Mustache.render(requestTemplate, templateContext);
-
-  const responseXml = await loadWithXhr({
-    url: proxyCatalogItemUrl(item, url),
-    responseType: "document",
-    method: "POST",
-    overrideMimeType: "text/xml",
-    data: requestXml,
-    headers: { "Content-Type": "application/soap+xml" }
+  throw new TerriaError({
+    title: "Sensor Observation Service API not supported",
+    message: "Sensor Observation Service API is not supported in Terria Product"
   });
 
-  if (responseXml === undefined) {
-    return;
-  }
+  // const requestXml = Mustache.render(requestTemplate, templateContext);
 
-  const json = xml2json(responseXml);
-  if (json.Exception) {
-    let errorMessage = i18next.t(
-      "models.sensorObservationService.unknownError"
-    );
-    if (json.Exception.ExceptionText) {
-      errorMessage = i18next.t(
-        "models.sensorObservationService.exceptionMessage",
-        { exceptionText: json.Exception.ExceptionText }
-      );
-    }
-    throw new TerriaError({
-      sender: item,
-      title: runInAction(() => item.name || ""),
-      message: errorMessage
-    });
-  }
-  if (json.Body === undefined) {
-    throw new TerriaError({
-      sender: item,
-      title: runInAction(() => item.name || ""),
-      message: i18next.t("models.sensorObservationService.missingBody")
-    });
-  }
-  return json.Body;
+  // const responseXml = await loadWithXhr({
+  //   url: proxyCatalogItemUrl(item, url),
+  //   responseType: "document",
+  //   method: "POST",
+  //   overrideMimeType: "text/xml",
+  //   data: requestXml,
+  //   headers: { "Content-Type": "application/soap+xml" }
+  // });
+
+  // if (responseXml === undefined) {
+  //   return;
+  // }
+
+  // const json = xml2json(responseXml);
+  // if (json.Exception) {
+  //   let errorMessage = i18next.t(
+  //     "models.sensorObservationService.unknownError"
+  //   );
+  //   if (json.Exception.ExceptionText) {
+  //     errorMessage = i18next.t(
+  //       "models.sensorObservationService.exceptionMessage",
+  //       { exceptionText: json.Exception.ExceptionText }
+  //     );
+  //   }
+  //   throw new TerriaError({
+  //     sender: item,
+  //     title: runInAction(() => item.name || ""),
+  //     message: errorMessage
+  //   });
+  // }
+  // if (json.Body === undefined) {
+  //   throw new TerriaError({
+  //     sender: item,
+  //     title: runInAction(() => item.name || ""),
+  //     message: i18next.t("models.sensorObservationService.missingBody")
+  //   });
+  // }
+  // return json.Body;
 }
 
 /**

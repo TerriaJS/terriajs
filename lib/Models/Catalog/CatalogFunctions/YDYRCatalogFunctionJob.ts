@@ -12,6 +12,7 @@ import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
+import TerriaError from "../../../Core/TerriaError";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
@@ -31,7 +32,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   }
 
   @action
-  async _invoke() {
+  async _invoke(): Promise<boolean> {
     if (!isDefined(this.parameters)) {
       throw "Parameters have not been set";
     }
@@ -109,84 +110,89 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       (value, idx) => !invalidRows.includes(idx)
     );
 
-    const params = {
-      data,
-      data_column: dataColumnName,
-      geom_column: regionColumnName,
-      side_data: DATASETS.find((d) => d.title === outputGeographyName)
-        ?.sideData,
-      dst_geom: DATASETS.find((d) => d.title === outputGeographyName)
-        ?.geographyName,
-      src_geom:
-        tableCatalogItem?.activeTableStyle.regionColumn?.regionType?.regionType,
-      averaged_counts: false,
-      algorithms: ALGORITHMS.filter((alg) => this.parameters![alg[0]]).map(
-        (alg) => alg[0]
-      )
-    };
+    // const params = {
+    //   data,
+    //   data_column: dataColumnName,
+    //   geom_column: regionColumnName,
+    //   side_data: DATASETS.find((d) => d.title === outputGeographyName)
+    //     ?.sideData,
+    //   dst_geom: DATASETS.find((d) => d.title === outputGeographyName)
+    //     ?.geographyName,
+    //   src_geom:
+    //     tableCatalogItem?.activeTableStyle.regionColumn?.regionType?.regionType,
+    //   averaged_counts: false,
+    //   algorithms: ALGORITHMS.filter((alg) => this.parameters![alg[0]]).map(
+    //     (alg) => alg[0]
+    //   )
+    // };
 
-    const jobId = await loadWithXhr({
-      url: proxyCatalogItemUrl(
-        this,
-        `${this.parameters["apiUrl"]}disaggregate.json`
-      ),
-      method: "POST",
-      data: JSON.stringify(params),
-      headers: {
-        "Content-Type": "application/json"
-      },
-      responseType: "json"
+    throw new TerriaError({
+      title: "YDYR disaggregate API not supported",
+      message: "YDYR disaggregate API is not supported in Terria Product"
     });
 
-    if (typeof jobId !== "string") {
-      // TODO: improve error messaging
+    // const jobId = await loadWithXhr({
+    //   url: proxyCatalogItemUrl(
+    //     this,
+    //     `${this.parameters["apiUrl"]}disaggregate.json`
+    //   ),
+    //   method: "POST",
+    //   data: JSON.stringify(params),
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   responseType: "json"
+    // });
 
-      // This is from previous YDYR web-app
+    // if (typeof jobId !== "string") {
+    //   // TODO: improve error messaging
 
-      //   switch(createJobReponse.status) {
-      //     case 202:
-      //       createJobReponse.response
-      //       break
-      //     case 500:
-      //       break
-      //     default:
-      //       break
-      //   }
+    //   // This is from previous YDYR web-app
 
-      //   if(r.status === 202) {
-      //     // then the request was accepted
-      //     r.json().then(j => poller(j));
-      // } else if(r.status === 500) {
-      //     // server error
-      //     r.json().then(e => error({
-      //         title: (e && e.title) || 'Server Error',
-      //         detail: 'Job failed to submit' +
-      //             ((e && e.detail) ? (': ' + e.detail) : '')}));
-      // } else {
-      //     const subber = s => {
-      //         if(s.includes('is not valid under any of the given schemas')) {
-      //             return 'invalid JSON data';
-      //         }
-      //         return s.length < 100 ? s : (s.substring(0, 100) + '...');
-      //     }
+    //   //   switch(createJobReponse.status) {
+    //   //     case 202:
+    //   //       createJobReponse.response
+    //   //       break
+    //   //     case 500:
+    //   //       break
+    //   //     default:
+    //   //       break
+    //   //   }
 
-      //     r.json()
-      //       .then(e => error({
-      //         title: (e && e.title) || 'Server Error',
-      //         detail: 'Unexpected status (' + r.status.toString() + ') ' +
-      //             'when submitting job' +
-      //                 ((e && e.detail) ? (': ' + subber(e.detail)) : '')}))
-      //       .catch(e => error({
-      //         title: (e && e.title) || 'Error parsing JSON response',
-      //         detail: `Received ${r.status} response code and failed to parse response as JSON`
-      //       }));
-      // }
-      throw `The YDYR server didn't provide a valid job id.`;
-    }
+    //   //   if(r.status === 202) {
+    //   //     // then the request was accepted
+    //   //     r.json().then(j => poller(j));
+    //   // } else if(r.status === 500) {
+    //   //     // server error
+    //   //     r.json().then(e => error({
+    //   //         title: (e && e.title) || 'Server Error',
+    //   //         detail: 'Job failed to submit' +
+    //   //             ((e && e.detail) ? (': ' + e.detail) : '')}));
+    //   // } else {
+    //   //     const subber = s => {
+    //   //         if(s.includes('is not valid under any of the given schemas')) {
+    //   //             return 'invalid JSON data';
+    //   //         }
+    //   //         return s.length < 100 ? s : (s.substring(0, 100) + '...');
+    //   //     }
 
-    this.setTrait(CommonStrata.user, "jobId", jobId);
+    //   //     r.json()
+    //   //       .then(e => error({
+    //   //         title: (e && e.title) || 'Server Error',
+    //   //         detail: 'Unexpected status (' + r.status.toString() + ') ' +
+    //   //             'when submitting job' +
+    //   //                 ((e && e.detail) ? (': ' + subber(e.detail)) : '')}))
+    //   //       .catch(e => error({
+    //   //         title: (e && e.title) || 'Error parsing JSON response',
+    //   //         detail: `Received ${r.status} response code and failed to parse response as JSON`
+    //   //       }));
+    //   // }
+    //   throw `The YDYR server didn't provide a valid job id.`;
+    // }
 
-    return false;
+    // this.setTrait(CommonStrata.user, "jobId", jobId);
+
+    // return false;
   }
 
   async pollForResults() {

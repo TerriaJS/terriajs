@@ -216,8 +216,12 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         ).join(";")
       });
     } else {
-      const executeXml = Mustache.render(executeWpsTemplate, parameters);
-      promise = this.postXml(executeUrl, executeXml);
+      // const executeXml = Mustache.render(executeWpsTemplate, parameters);
+      // promise = this.postXml(executeUrl, executeXml);
+      throw new TerriaError({
+        title: "WPS Execute API not supported",
+        message: "WPS Execute API is not supported in Terria Product"
+      });
     }
 
     const executeResponseXml = await promise;
