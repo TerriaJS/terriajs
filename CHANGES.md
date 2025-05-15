@@ -9,6 +9,7 @@
 - TSify `DataCatalogGroup` and convert to a functional component. #7575
 - TSify `BottomDockChart`, `ChartPanel`, `LineAndPointChart`, `LineChart`, `MomentLinesChart`, `MomentPointsChart`, `Chart Tooltip` to typescript and convert to functional components. #7617
 - Upgrade mkdocs to 1.6.1
+- Refactor the `DateTimePicker` component and split it into multiple components. #7585
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
