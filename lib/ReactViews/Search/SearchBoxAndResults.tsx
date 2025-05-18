@@ -176,7 +176,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               >
                 {searchState.locationSearchResults.map((search) => (
                   <LocationSearchResults
-                    theme={theme}
                     key={search.searchProvider.uniqueId}
                     terria={viewState.terria}
                     viewState={viewState}
