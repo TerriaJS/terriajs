@@ -10,6 +10,8 @@
 - TSify `BottomDockChart`, `ChartPanel`, `LineAndPointChart`, `LineChart`, `MomentLinesChart`, `MomentPointsChart`, `Chart Tooltip` to typescript and convert to functional components. #7617
 - Upgrade mkdocs to 1.6.1
 - Refactor the `DateTimePicker` component and split it into multiple components. #7585
+- Update data-attribution and terms of conditions links to point to terria.io. #7627
+- Hide the related maps button. #7627
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
