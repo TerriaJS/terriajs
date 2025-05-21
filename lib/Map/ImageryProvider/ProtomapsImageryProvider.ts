@@ -139,6 +139,7 @@ export class GeojsonSource implements TileSource {
   private async fetchData() {
     let result: FeatureCollectionWithCrs | undefined;
     if (typeof this.data === "string") {
+      // TODO: use cesium request here?
       result = toFeatureCollection(await (await fetch(this.data)).json());
     } else {
       result = this.data;
