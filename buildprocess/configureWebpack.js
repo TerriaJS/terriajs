@@ -3,6 +3,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const webpack = require("webpack");
+const SvgSpriteWebpackPlugin = require("./svgs/SvgSpriteWebpackPlugin.js");
 
 /**
  * Supplements the given webpack config with options required to build TerriaJS
@@ -102,7 +103,17 @@ function configureWebpack({
     use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
-  // handle image imports
+  // Handle SVG icons with sprite loader
+  config.module.rules.push({
+    test: /\.svg$/,
+    include: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
+    loader: path.resolve(__dirname, "svgs", "svg-sprite-loader.js"),
+    options: {
+      namespace: "terriajs"
+    }
+  });
+
+  // handle other image imports
   config.module.rules.push({
     test: /\.(png|jpg|svg|gif)$/,
     include: [
@@ -111,17 +122,6 @@ function configureWebpack({
     ],
     exclude: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
     type: "asset" // inlines if file size < 8KB
-  });
-
-  // Convert imported svg icons into a sprite
-  // TODO: svg-sprite-loader has several security warnings - we need to find an alternative
-  config.module.rules.push({
-    test: /\.svg$/,
-    include: path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
-    loader: require.resolve("svg-sprite-loader"),
-    options: {
-      esModule: false
-    }
   });
 
   config.devServer = config.devServer || {
@@ -150,6 +150,9 @@ function configureWebpack({
   };
 
   config.plugins = config.plugins || [];
+
+  // Add SVG Sprite Webpack Plugin
+  config.plugins.push(new SvgSpriteWebpackPlugin());
 
   // Do not import momentjs locale files
   // Saves ~500kb (unzipped)
