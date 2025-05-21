@@ -12,9 +12,8 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import TerriaError from "../Core/TerriaError";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
@@ -27,12 +26,13 @@ import TableOutlineStyleTraits, {
 } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import CameraView from "./CameraView";
-import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
+import HighlightColorTraits from "../Traits/TraitsClasses/HighlightColorTraits";
+import hasTraits from "./Definition/hasTraits";
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
@@ -140,7 +140,7 @@ export default abstract class GlobeOrMap {
    */
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
-  ) {
+  ): TerriaFeature {
     const feature = new TerriaFeature({
       id: imageryFeature.name
     });
@@ -209,11 +209,11 @@ export default abstract class GlobeOrMap {
   }
 
   abstract _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: TerriaFeature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined): Promise<void> {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
@@ -234,17 +234,16 @@ export default abstract class GlobeOrMap {
 
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
-        let highlightColor;
-        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
-          highlightColor =
-            Color.fromCssColorString(
-              runInAction(() => catalogItem.highlightColor)
-            ) ?? defaultColor;
+        let highlightColorString;
+        if (hasTraits(catalogItem, HighlightColorTraits, "highlightColor")) {
+          highlightColorString = runInAction(() => catalogItem.highlightColor);
+          runInAction(() => catalogItem.highlightColor);
         } else {
-          highlightColor =
-            Color.fromCssColorString(this.terria.baseMapContrastColor) ??
-            defaultColor;
+          highlightColorString = this.terria.baseMapContrastColor;
         }
+        const highlightColor: Color = isDefined(highlightColorString)
+          ? Color.fromCssColorString(highlightColorString)
+          : defaultColor;
 
         // highlighting doesn't work if the highlight colour is full white
         // so in this case use something close to white instead
@@ -258,9 +257,13 @@ export default abstract class GlobeOrMap {
         this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
-            !feature._cesium3DTileFeature.tileset.isDestroyed()
+            feature._cesium3DTileFeature.tileset.isDestroyed() === false
           ) {
-            feature._cesium3DTileFeature.color = originalColor;
+            try {
+              feature._cesium3DTileFeature.color = originalColor;
+            } catch (err) {
+              TerriaError.from(err).log();
+            }
           }
         };
       } else if (isDefined(feature.polygon)) {
@@ -316,29 +319,9 @@ export default abstract class GlobeOrMap {
 
       if (!hasGeometry) {
         let vectorTileHighlightCreated = false;
-        // Feature from MapboxVectorTileImageryProvider
+
+        // Feature from ProtomapsImageryProvider
         if (
-          feature.imageryLayer?.imageryProvider instanceof
-          MapboxVectorTileImageryProvider
-        ) {
-          const featureId =
-            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
-            feature.properties?.id?.getValue?.();
-          if (isDefined(featureId)) {
-            const highlightImageryProvider =
-              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
-                featureId
-              );
-            this._removeHighlightCallback =
-              this.terria.currentViewer._addVectorTileHighlight(
-                highlightImageryProvider,
-                feature.imageryLayer.imageryProvider.rectangle
-              );
-          }
-          vectorTileHighlightCreated = true;
-        }
-        // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
-        else if (
           feature.imageryLayer?.imageryProvider instanceof
           ProtomapsImageryProvider
         ) {

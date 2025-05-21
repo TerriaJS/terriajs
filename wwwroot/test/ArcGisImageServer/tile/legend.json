@@ -1,0 +1,38 @@
+{
+  "layers": [
+    {
+      "layerId": 0,
+      "layerName": "Some tiled layer",
+      "layerType": "Raster Layer",
+      "minScale": 0,
+      "maxScale": 0,
+      "legendType": "RGB Composite",
+      "legend": [
+        {
+          "label": "Red:    Band_1",
+          "url": "2929cfae2efac980ef6c9ea09223463e",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAANUlEQVQ4jWPMy8v7z0BFwMLAwMAwcdIkqhiWn5fHwEQVk5DAqIGjBo4aOGrgqIEQwEjtKgAATl0Hu6JrzFUAAAAASUVORK5CYII=",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Band_2",
+          "url": "49f1c6a1be24c5484bbf3e629796273e",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAANUlEQVQ4jWPMy8v7z0BFwMLAwMAwaeIkqhiWl5/HwEQVk5DAqIGjBo4aOGrgqIEQwEjtKgAATl0Hu6sKxboAAAAASUVORK5CYII=",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:   Band_3",
+          "url": "ea7072b100ba7bef3760e98b91c4313f",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAAAAAAAAAHqZRakAAAANUlEQVQ4jWPMy8v7z0BFwMLAwMAwadJEqhiWl5fPwEQVk5DAqIGjBo4aOGrgqIEQwEjtKgAATl0Hu75+IUcAAAAASUVORK5CYII=",
+          "contentType": "image/png",
+          "height": 20,
+          "width": 20
+        }
+      ]
+    }
+  ]
+}

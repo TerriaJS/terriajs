@@ -1,4 +1,3 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import isDefined from "../../../Core/isDefined";
@@ -23,14 +22,13 @@ const ColorScaleRangeSection = createReactClass({
     };
   },
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     this.setState({
       minRange: this.props.minValue,
       maxRange: this.props.maxValue
     });
   },
-  /* eslint-disable-next-line camelcase */
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       minRange: nextProps.minValue,

@@ -1,18 +1,17 @@
-import { action, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, runInAction } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
-import loadWithXhr from "../../../Core/loadWithXhr";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import YDYRCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/YDYRCatalogFunctionJobTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
-import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
-import TerriaError from "../../../Core/TerriaError";
+import { DATASETS } from "./YDYRCatalogFunction";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
@@ -105,9 +104,9 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       data.values.map((val, idx) => (val === null ? idx : undefined))
     );
 
-    data.ids = data.ids.filter((id, idx) => !invalidRows.includes(idx));
+    data.ids = data.ids.filter((_id, idx) => !invalidRows.includes(idx));
     data.values = data.values.filter(
-      (value, idx) => !invalidRows.includes(idx)
+      (_value, idx) => !invalidRows.includes(idx)
     );
 
     // const params = {
@@ -250,15 +249,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       this.terria,
       undefined
     );
-
-    const regionColumnSplit = DATASETS.find(
-      (d) => d.title === this.parameters?.["Output Geography"]
-    )?.geographyName.split("_");
-    let regionColumn = "";
-
-    if (isDefined(regionColumnSplit) && regionColumnSplit!.length === 2) {
-      regionColumn = `${regionColumnSplit![0]}_code_${regionColumnSplit![1]}`;
-    }
 
     runInAction(() => {
       csvResult.setTrait(CommonStrata.user, "name", `${this.name} Results`);

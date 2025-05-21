@@ -87,7 +87,7 @@ export function mustacheRenderPartialByName(
   templateData: object
 ): MustacheFunction {
   return () => {
-    return mustacheJsonSubOptions((value, options) => {
+    return mustacheJsonSubOptions((value, _options) => {
       if (!isJsonString(value)) return `${value}`;
       if (partials && typeof partials[value] === "string") {
         return Mustache.render(partials[value], templateData);

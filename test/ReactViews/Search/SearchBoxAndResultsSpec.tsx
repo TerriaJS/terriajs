@@ -1,15 +1,15 @@
-const create: any = require("react-test-renderer").create;
-import React from "react";
-import { act } from "react-dom/test-utils";
 import { runInAction } from "mobx";
+import { act } from "react-dom/test-utils";
+import { ThemeProvider } from "styled-components";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
-import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
-import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
+import { createWithContexts } from "../withContext";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
@@ -35,13 +35,10 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchResults = [];
     });
     act(() => {
-      testRenderer = create(
+      testRenderer = createWithContexts(
+        viewState,
         <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
+          <SearchBoxAndResults placeholder="Search" />
         </ThemeProvider>
       );
     });
@@ -62,13 +59,10 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchResults = [];
     });
     act(() => {
-      testRenderer = create(
+      testRenderer = createWithContexts(
+        viewState,
         <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
+          <SearchBoxAndResults placeholder="Search" />
         </ThemeProvider>
       );
     });
@@ -88,13 +82,40 @@ describe("SearchBoxAndResults", function () {
       viewState.terria.searchBarModel.catalogSearchProvider = undefined;
     });
     act(() => {
-      testRenderer = create(
+      testRenderer = createWithContexts(
+        viewState,
         <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
+          <SearchBoxAndResults placeholder="Search" />
+        </ThemeProvider>
+      );
+    });
+
+    const searchBox = testRenderer.root.findByType("input");
+    expect(searchBox).toBeDefined();
+    expect(() => {
+      testRenderer.root.findByType(SearchInDataCatalog);
+    }).toThrow();
+    expect(searchBox.props.value).toEqual(searchText);
+  });
+
+  it("renders with an input & no SearchInDataCatalog when showSearchInCatalog is false", function () {
+    const searchText = "timmynook";
+    runInAction(() => {
+      viewState.searchState.locationSearchText = searchText;
+      viewState.searchState.showLocationSearchResults = true;
+      viewState.searchState.locationSearchResults = [];
+
+      viewState.terria.searchBarModel.setTrait(
+        CommonStrata.user,
+        "showSearchInCatalog",
+        false
+      );
+    });
+    act(() => {
+      testRenderer = createWithContexts(
+        viewState,
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search" />
         </ThemeProvider>
       );
     });

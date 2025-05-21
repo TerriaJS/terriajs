@@ -92,7 +92,7 @@ export default class SearchState {
     );
   }
 
-  dispose() {
+  dispose(): void {
     this._catalogSearchDisposer();
     this._locationSearchDisposer();
     this._unifiedSearchDisposer();
@@ -117,7 +117,7 @@ export default class SearchState {
   }
 
   @action
-  searchCatalog() {
+  searchCatalog(): void {
     if (this.isWaitingToStartCatalogSearch) {
       this.isWaitingToStartCatalogSearch = false;
       if (this.catalogSearchResults) {
@@ -132,12 +132,12 @@ export default class SearchState {
   }
 
   @action
-  setCatalogSearchText(newText: string) {
+  setCatalogSearchText(newText: string): void {
     this.catalogSearchText = newText;
   }
 
   @action
-  searchLocations() {
+  searchLocations(): void {
     if (this.isWaitingToStartLocationSearch) {
       this.isWaitingToStartLocationSearch = false;
       this.locationSearchResults.forEach((results) => {
@@ -150,7 +150,7 @@ export default class SearchState {
   }
 
   @action
-  searchUnified() {
+  searchUnified(): void {
     if (this.isWaitingToStartUnifiedSearch) {
       this.isWaitingToStartUnifiedSearch = false;
       this.unifiedSearchResults.forEach((results) => {

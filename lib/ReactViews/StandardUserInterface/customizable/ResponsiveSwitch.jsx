@@ -1,5 +1,3 @@
-import React from "react";
-
 import PropTypes from "prop-types";
 
 /**
@@ -7,7 +5,6 @@ import PropTypes from "prop-types";
  * passed to it is true or false.
  */
 export default (LargeScreenComponent, SmallScreenComponent) => {
-  // eslint-disable-next-line require-jsdoc
   function ResponsiveSwitch(props) {
     return props.smallScreen ? (
       <SmallScreenComponent {...props} />

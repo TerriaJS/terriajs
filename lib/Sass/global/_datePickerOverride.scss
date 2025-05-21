@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "../common/_variables";
 // added
 :global {
   .terria .react-datepicker {
@@ -18,15 +18,15 @@
   }
 
   .react-datepicker .react-datepicker__day:hover {
-    background: $color-primary;
+    background: variables.$color-primary;
     color: #fff;
   }
 
   .react-datepicker .react-datepicker__day--disabled,
   .react-datepicker .react-datepicker__day--disabled:hover {
-    background: $overlay;
-    color: $dark;
-    border: 1px solid $overlay;
+    background: variables.$overlay;
+    color: variables.$dark;
+    border: 1px solid variables.$overlay;
   }
 
   .react-datepicker__navigation {
@@ -39,7 +39,7 @@
 
   .terria .react-datepicker__header,
   .terria .react-datepicker {
-    background: $dark;
+    background: variables.$dark;
     padding-top: 0;
   }
 

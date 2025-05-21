@@ -1,4 +1,3 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Icon from "../../Styled/Icon";
@@ -31,4 +30,5 @@ const MoreOrLess = createReactClass({
     );
   }
 });
-module.exports = MoreOrLess;
+
+export default MoreOrLess;

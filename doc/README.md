@@ -1,10 +1,10 @@
 [TerriaJS](http://terria.io) is an open-source framework for web-based geospatial catalog explorers.
 
--   [Getting Started](getting-started.md): Quick start guide to building your first TerriaJS application.
--   [Customizing](customizing/README.md): Configure and tweak a TerriaJS application, including skinning and setting up the catalog.
--   [Connecting to Data](connecting-to-data/README.md): Connect TerriaJS to your servers and data.
--   [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios.
--   [Contributing](contributing/README.md): Add new features to TerriaJS, be part of the TerriaJS development team, set up a development environment, write tests, and perform code reviews.
+- [Getting Started](getting-started.md): Quick start guide to building your first TerriaJS application.
+- [Customizing](customizing/README.md): Configure and tweak a TerriaJS application, including skinning and setting up the catalog.
+- [Connecting to Data](connecting-to-data/README.md): Connect TerriaJS to your servers and data.
+- [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios.
+- [Contributing](contributing/README.md): Add new features to TerriaJS, be part of the TerriaJS development team, set up a development environment, write tests, and perform code reviews.
 
 !!! note
 

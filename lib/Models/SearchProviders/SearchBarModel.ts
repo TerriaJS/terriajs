@@ -5,9 +5,9 @@ import {
   makeObservable,
   observable
 } from "mobx";
-import { JsonObject } from "protomaps";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import { JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";

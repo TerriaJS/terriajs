@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -39,7 +38,7 @@ const CatalogGroupButton = styled.button`
  *
  * @constructor
  */
-function CatalogGroup(props) {
+const CatalogGroup = observer((props) => {
   const { t } = useTranslation();
   return (
     <li className={Styles.root}>
@@ -96,7 +95,7 @@ function CatalogGroup(props) {
           )}
           <Box justifySpaceBetween>
             <Box>{props.text}</Box>
-            <Box centered>
+            <Box alignItemsFlexStart>
               {props.isPrivate && <PrivateIndicator />}
               <span
                 className={classNames(Styles.caret, {
@@ -149,7 +148,7 @@ function CatalogGroup(props) {
       )}
     </li>
   );
-}
+});
 
 CatalogGroup.propTypes = {
   text: PropTypes.string,
@@ -172,4 +171,4 @@ CatalogGroup.propTypes = {
   addRemoveButtonFunction: PropTypes.func
 };
 
-export default observer(CatalogGroup);
+export default CatalogGroup;

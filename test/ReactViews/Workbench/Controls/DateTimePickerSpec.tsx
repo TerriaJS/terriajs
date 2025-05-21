@@ -1,20 +1,17 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
-
-const GridRow =
-  require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker").GridRow;
+import { GridRow } from "../../../../lib/ReactViews/BottomDock/Timeline/DatePicker/DateTimePickerStyles";
 
 describe("DateTimePicker", function () {
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -37,7 +34,6 @@ describe("DateTimePicker", function () {
           onChange={() => {}}
           openDirection="down"
           isOpen
-          onOpen={() => {}}
           onClose={() => {}}
         />
       );

@@ -1,13 +1,12 @@
-import React from "react";
-
-import Styles from "./parameter-editors.scss";
-import FunctionParameter from "../../Models/FunctionParameters/FunctionParameter";
 import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
+import { Component } from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import FunctionParameter from "../../Models/FunctionParameters/FunctionParameter";
+import Styles from "./parameter-editors.scss";
 
 @observer
-export default class GenericParameterEditor extends React.Component<{
+export default class GenericParameterEditor extends Component<{
   parameter: FunctionParameter;
 }> {
   constructor(props: { parameter: FunctionParameter }) {

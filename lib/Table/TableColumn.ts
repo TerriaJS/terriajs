@@ -13,8 +13,6 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-const naturalSort = require("javascript-natural-sort");
-naturalSort.insensitive = true;
 
 type TypeHintSet = {
   /** RegEx to match column name */
@@ -157,7 +155,12 @@ export default class TableColumn {
    * @param rowIndex row number
    * @param value value to transform
    */
-  mexpColumnValuePairs(rowIndex: number, value: number) {
+  mexpColumnValuePairs(
+    rowIndex: number,
+    value: number
+  ): {
+    [key: string]: number | null;
+  } {
     return this.mexpColumnTokens.reduce<{ [key: string]: number | null }>(
       (pairs, token) => {
         if (token.token !== THIS_COLUMN_EXPRESSION_TOKEN)
@@ -786,35 +789,6 @@ export default class TableColumn {
     return this.values;
   }
 
-  @computed
-  get scaledValueFunctionForType(): (rowIndex: number) => number | null {
-    if (this.type === TableColumnType.scalar) {
-      const valuesAsNumbers = this.valuesAsNumbers;
-      const minimum = valuesAsNumbers.minimum;
-      const maximum = valuesAsNumbers.maximum;
-
-      if (minimum === undefined || maximum === undefined) {
-        return nullFunction;
-      }
-
-      const delta = maximum - minimum;
-      if (delta === 0.0) {
-        return nullFunction;
-      }
-
-      const values = valuesAsNumbers.values;
-      return function (rowIndex: number) {
-        const value = values[rowIndex];
-        if (value === null) {
-          return null;
-        }
-        return (value - minimum) / delta;
-      };
-    }
-
-    return nullFunction;
-  }
-
   private guessColumnTypeFromValues(): TableColumnType {
     let type: TableColumnType | undefined;
 
@@ -917,9 +891,5 @@ function toNumber(value: string): number | null {
   if (!Number.isNaN(asNumber)) {
     return asNumber;
   }
-  return null;
-}
-
-function nullFunction(rowIndex: number) {
   return null;
 }

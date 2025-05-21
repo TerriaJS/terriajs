@@ -1,8 +1,9 @@
 import dateFormat from "dateformat";
-import { get as _get, map as _map } from "lodash";
-import { computed, observable, runInAction, makeObservable } from "mobx";
+import { get as _get, map as _map } from "lodash-es";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import JsonValue from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
@@ -17,11 +18,9 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
-import saveModelToJson from "../../Definition/saveModelToJson";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import JsonValue from "../../../Core/Json";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -207,9 +206,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       .then(() => {
         runInAction(() => {
           const newTableData = this.apiResponseToTable();
-          this.shouldAppendNewData
-            ? this.append(newTableData)
-            : (this.dataColumnMajor = newTableData);
+          if (this.shouldAppendNewData) {
+            this.append(newTableData);
+          } else {
+            this.dataColumnMajor = newTableData;
+          }
           this.hasData = true;
         });
       })
@@ -220,9 +221,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     this.loadDataFromApis().then(() => {
       runInAction(() => {
         const newTableData = this.apiResponseToTable();
-        this.shouldAppendNewData
-          ? this.append(newTableData)
-          : (this.dataColumnMajor = newTableData);
+        if (this.shouldAppendNewData) {
+          this.append(newTableData);
+        } else {
+          this.dataColumnMajor = newTableData;
+        }
       });
     });
   }

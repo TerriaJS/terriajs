@@ -3,6 +3,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import styled, { useTheme } from "styled-components";
+import PropTypes from "prop-types";
 import { useViewState } from "../../Context";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import LangPanel from "../Panels/LangPanel/LangPanel";
@@ -62,7 +63,9 @@ const MenuBar = observer((props: PropsType) => {
         <ul className={classNames(Styles.menu)}>
           {enableTools && (
             <li className={Styles.menuItem}>
-              <ToolsPanel elementConfig={terria.elements.get("menu-bar-tools")}/>
+              <ToolsPanel
+                elementConfig={terria.elements.get("menu-bar-tools")}
+              />
             </li>
           )}
           {!viewState.useSmallScreenInterface &&
@@ -83,7 +86,7 @@ const MenuBar = observer((props: PropsType) => {
             />
           </li>
           <li className={Styles.menuItem}>
-            <HelpButton elementConfig={terria.elements.get("menu-bar-help")}/>
+            <HelpButton elementConfig={terria.elements.get("menu-bar-help")} />
           </li>
 
           {terria.configParameters?.languageConfiguration?.enabled ? (
@@ -110,7 +113,11 @@ const MenuBar = observer((props: PropsType) => {
         )}
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
-            <SharePanel terria={terria} viewState={viewState} elementConfig={terria.elements.get("menu-bar-share")} />
+            <SharePanel
+              terria={terria}
+              viewState={viewState}
+              elementConfig={terria.elements.get("menu-bar-share")}
+            />
           </li>
         </ul>
         {!viewState.useSmallScreenInterface &&

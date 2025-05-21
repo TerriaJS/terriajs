@@ -1,11 +1,11 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { FC, ReactNode, Component, useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Button from "../../Styled/Button";
-import { IconProps, StyledIcon } from "../../Styled/Icon";
-import { addTerriaScrollbarStyles } from "../../Styled/mixins";
+import Icon, { IconProps, StyledIcon } from "../../Styled/Icon";
+import { scrollBars } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
 import { PortalChild } from "../StandardUserInterface/Portal";
 import { PanelButton } from "./Panel";
@@ -17,15 +17,16 @@ type PropsType = {
   title: string;
   icon: IconProps["glyph"];
   onClose: () => void;
-  closeButtonText: string;
+  closeButtonText?: string;
   footer?: {
     onClick: () => void;
     buttonText: string;
   };
+  children?: ReactNode;
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
-const WorkflowPanel: React.FC<PropsType> = observer((props) => {
+const WorkflowPanel: FC<PropsType> = observer((props) => {
   const viewState = props.viewState;
 
   useEffect(function hideTerriaSidePanelOnMount() {
@@ -37,6 +38,7 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
         viewState.terria.isWorkflowPanelActive = false;
       });
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (
@@ -50,17 +52,23 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
         })}
       >
         <TitleBar>
-          <Icon glyph={props.icon} />
+          <TitleIcon glyph={props.icon} />
           <Title>{props.title}</Title>
-          <CloseButton onClick={props.onClose}>
-            {props.closeButtonText}
-          </CloseButton>
+          {!props.closeButtonText && (
+            <CloseIconButton onClick={props.onClose} />
+          )}
+          {props.closeButtonText && (
+            <CloseTextButton onClick={props.onClose}>
+              {props.closeButtonText}
+            </CloseTextButton>
+          )}
         </TitleBar>
         <Content>
           <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
         </Content>
         {props.footer ? (
           <PanelButton
+            css={{ marginBottom: "15px" }}
             onClick={props.footer.onClick}
             title={props.footer.buttonText}
           />
@@ -72,9 +80,10 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
 
 type ErrorBoundaryProps = {
   viewState: ViewState;
+  children: ReactNode;
 };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundary extends Component<ErrorBoundaryProps> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {
@@ -103,7 +112,7 @@ const Container = styled.div`
   flex-direction: column;
   font-family: ${(p) => p.theme.fontPop}px;
   width: ${(p) => p.theme.workflowPanelWidth}px;
-  height: 100vh;
+  height: calc(100vh - 2 * ${(p) => p.theme.workbenchMargin}px);
   max-width: ${(p) => p.theme.workflowPanelWidth}px;
   box-sizing: border-box;
   padding: 0 0 5px;
@@ -118,19 +127,15 @@ const TitleBar = styled.div`
   border-bottom: 1px solid ${(p) => p.theme.darkLighter};
 `;
 
-const FooterBar = styled(TitleBar)`
-  border: none;
-`;
-
 const Title = styled(Text).attrs({
   textLight: true,
-  bold: true
+  extraExtraLarge: true
 })`
   flex-grow: 1;
   padding: 0 1em;
 `;
 
-const Icon = styled(StyledIcon).attrs({
+const TitleIcon = styled(StyledIcon).attrs({
   styledWidth: "24px",
   styledHeight: "24px",
   light: true
@@ -142,17 +147,27 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: 4em;
-  ${addTerriaScrollbarStyles()}
+  ${(p) => scrollBars(p)}
 `;
 
-const CloseButton = styled(Button).attrs({
-  secondary: true
+const CloseIconButton = styled(Button).attrs({
+  renderIcon: () => (
+    <StyledIcon
+      light
+      styledWidth="20px"
+      styledHeight="20px"
+      glyph={Icon.GLYPHS.closeLight}
+    />
+  )
 })`
-  border: 0px;
-  border-radius: 3px;
-  min-height: 0;
-  padding: 3px 12px;
+  background: none;
+  border: none;
+`;
+
+const CloseTextButton = styled(Button).attrs({
+  primary: true
+})`
+  font-size: 14px;
 `;
 
 const Error = styled.div`

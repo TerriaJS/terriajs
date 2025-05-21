@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .mobileSearch {
 }
@@ -8,7 +8,7 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 
   &.results {
-    padding: 0 $padding $padding $padding;
+    padding: 0 variables.$padding variables.$padding variables.$padding;
   }
 
   li {
@@ -19,20 +19,22 @@
 .label {
   color: #3f4854;
   font-size: 12px;
-  padding: $padding-small $padding;
+  padding: variables.$padding-small variables.$padding;
   display: block;
 }
 
 .location {
-  height: calc(100vh - #{$workbench-header + $logo-height});
+  height: calc(100vh - #{variables.$workbench-header + variables.$logo-height});
 
-  @media (max-width: $sm) {
-    height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+  @media (max-width: variables.$sm) {
+    height: calc(
+      100vh - #{variables.$mobile-header-height + variables.$modal-header-height}
+    );
   }
 }
 
 .provider-result {
-  margin-top: $padding-small;
+  margin-top: variables.$padding-small;
   .items {
     display: none;
   }
@@ -43,4 +45,4 @@
   composes: list-reset from "../../Sass/common/_base.scss";
 }
 
-@include empty-module("data");
+@include mixins.empty-module("data");

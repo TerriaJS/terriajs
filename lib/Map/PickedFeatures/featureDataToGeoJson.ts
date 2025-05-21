@@ -1,5 +1,3 @@
-"use strict";
-
 import Point from "@mapbox/point-geometry";
 import {
   Feature as GeoJsonFeature,
@@ -7,27 +5,26 @@ import {
   Position
 } from "@turf/helpers";
 import {
-  esriGeometryType,
   Feature as ArcGisFeature,
-  FeatureSet,
   Point as ArcGisPoint,
   Polygon as ArcGisPolygon,
   Polyline as ArcGisPolyline,
   Position as ArcGisPosition,
+  esriGeometryType,
+  FeatureSet,
   SpatialReference
 } from "arcgis-rest-api";
+import pointInPolygon from "point-in-polygon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import JsonValue, { isJsonObject, isJsonValue } from "../../Core/Json";
 import {
   FeatureCollectionWithCrs,
   GeoJsonCrs,
   toFeatureCollection
-} from "../../ModelMixins/GeojsonMixin";
+} from "../../Core/GeoJson";
+import JsonValue, { isJsonObject, isJsonValue } from "../../Core/Json";
 import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
-
-const pointInPolygon = require("point-in-polygon");
 
 /**
  * Converts feature data, such as from a WMS GetFeatureInfo or an Esri Identify, to
@@ -144,7 +141,9 @@ function getEsriFeature(
       // Most likely scenario is that someone messed up the winding order.
       // So let's treat all the holes as outer rings instead.
       holes.forEach((hole) => {
-        Array.isArray(hole) ? hole.reverse() : null;
+        if (Array.isArray(hole)) {
+          hole.reverse();
+        }
       });
       outerRings.push(...holes);
       holes.length = 0;

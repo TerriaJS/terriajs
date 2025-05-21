@@ -16,23 +16,23 @@ E.g.
 
 ```yaml
 global:
-    rollingUpdate:
-        maxUnavailable: 1
-    image:
-        tag: "0.0.6"
+  rollingUpdate:
+    maxUnavailable: 1
+  image:
+    tag: "0.0.6"
 terriamap:
-    clientConfig:
-        parameters:
-            disclaimer:
-            text: "This is a disclaimer"
-    serverConfig:
-        port: 8080
-    initConfig:
-        camera:
-            north: "1"
-            east: "2"
-            south: "3"
-            west: "4"
+  clientConfig:
+    parameters:
+      disclaimer:
+      text: "This is a disclaimer"
+  serverConfig:
+    port: 8080
+  initConfig:
+    camera:
+      north: "1"
+      east: "2"
+      south: "3"
+      west: "4"
 ```
 
 # Building Your Own Image
@@ -47,8 +47,8 @@ docker build -t app-name:tag .
 
 If you want to run a local version of TerriaMap using Kubernetes then you can try one of these applications:
 
--   [Docker Desktop](https://www.docker.com/products/docker-desktop/): Application with embedded Kubernetes setup for fast and easy app development, [requiring a subscription licence](https://docs.docker.com/subscription/desktop-license/) in most cases for commercial use
--   [Rancher Desktop](https://rancherdesktop.io/): Apache-2.0 alternative to Docker Desktop
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/): Application with embedded Kubernetes setup for fast and easy app development, [requiring a subscription licence](https://docs.docker.com/subscription/desktop-license/) in most cases for commercial use
+- [Rancher Desktop](https://rancherdesktop.io/): Apache-2.0 alternative to Docker Desktop
 
 Or try a tool recommended in the [official Kuberntes setup documentation](https://kubernetes.io/docs/setup/).
 
