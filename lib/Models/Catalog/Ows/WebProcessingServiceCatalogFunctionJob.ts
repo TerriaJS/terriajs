@@ -9,7 +9,6 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import Mustache from "mustache";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
@@ -34,7 +33,6 @@ import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import executeWpsTemplate from "./ExecuteWpsTemplate.xml";
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits

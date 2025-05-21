@@ -1,18 +1,17 @@
-import { action, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, runInAction } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
-import loadWithXhr from "../../../Core/loadWithXhr";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import YDYRCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/YDYRCatalogFunctionJobTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
-import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
-import TerriaError from "../../../Core/TerriaError";
+import { DATASETS } from "./YDYRCatalogFunction";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)

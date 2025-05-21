@@ -1,16 +1,13 @@
 import i18next from "i18next";
 import { action, computed, makeObservable, override, runInAction } from "mobx";
-import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import loadWithXhr from "../../../Core/loadWithXhr";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
-import xml2json from "../../../ThirdParty/xml2json";
 import SensorObservationServiceCatalogItemTraits from "../../../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
@@ -25,7 +22,6 @@ import StratumOrder from "../../Definition/StratumOrder";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import defaultRequestTemplate from "./SensorObservationServiceRequestTemplate.xml";
 
 interface GetFeatureOfInterestResponse {
@@ -641,10 +637,10 @@ function createChartColumn(
 }
 
 async function loadSoapBody(
-  item: SensorObservationServiceCatalogItem,
-  url: string,
-  requestTemplate: string,
-  templateContext: TemplateContext
+  _item: SensorObservationServiceCatalogItem,
+  _url: string,
+  _requestTemplate: string,
+  _templateContext: TemplateContext
 ): Promise<any> {
   throw new TerriaError({
     title: "Sensor Observation Service API not supported",

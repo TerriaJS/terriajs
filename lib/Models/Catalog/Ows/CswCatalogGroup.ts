@@ -5,7 +5,6 @@ import URI from "urijs";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import loadWithXhr from "../../../Core/loadWithXhr";
 import loadXML from "../../../Core/loadXML";
 import runLater from "../../../Core/runLater";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -27,7 +26,6 @@ import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import KmlCatalogItem from "../CatalogItems/KmlCatalogItem";
 import ArcGisMapServerCatalogItem from "../Esri/ArcGisMapServerCatalogItem";
-import defaultGetRecordsTemplate from "../Ows/CswGetRecordsTemplate.xml";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { BoundingBox } from "./OwsInterfaces";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
@@ -657,6 +655,7 @@ function addMetadataGroups(
 }
 
 // find groups that the record belongs to
+/* eslint-disable @typescript-eslint/no-unused-vars */
 function findGroup(
   metadataGroups: MetadataGroup[],
   record: Record

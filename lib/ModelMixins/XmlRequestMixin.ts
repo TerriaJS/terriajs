@@ -1,7 +1,6 @@
 import URI from "urijs";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
-import loadWithXhr from "../Core/loadWithXhr";
 import loadXML from "../Core/loadXML";
 
 export default function XmlRequestMixin<T extends AbstractConstructor<any>>(

@@ -1,36 +1,35 @@
-import { action } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
-import {
-  ChangeEvent,
-  ComponentProps,
-  FC,
-  MouseEvent,
-  Ref,
-  useState
-} from "react";
-import { useTranslation, withTranslation } from "react-i18next";
-import styled, { withTheme } from "styled-components";
+import { Ref, Component, ChangeEvent, ComponentProps, MouseEvent } from "react";
+import { withTranslation, WithTranslation, TFunction } from "react-i18next";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Cesium from "../../../Models/Cesium";
 import { BaseModel } from "../../../Models/Definition/Model";
+import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
   setViewerMode
 } from "../../../Models/ViewerMode";
+import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
 import Checkbox from "../../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import { useViewState } from "../../Context";
-import { useRefForTerria } from "../../Hooks/useRefForTerria";
+import withTerriaRef from "../../HOCs/withTerriaRef";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
-import withTerriaRef from "../../HOCs/withTerriaRef";
 
 const sides = {
   left: "settingPanel.terrain.left",
@@ -38,346 +37,383 @@ const sides = {
   right: "settingPanel.terrain.right"
 };
 
-const SettingPanel: FC = observer(() => {
-  const { t } = useTranslation();
-  const viewState = useViewState();
-  const { terria } = viewState;
-  const settingButtonRef: Ref<HTMLButtonElement> = useRefForTerria(
-    SETTING_PANEL_NAME,
-    viewState
-  );
-  const [hoverBaseMap, setHoverBaseMap] = useState<string | null>(null);
+type PropTypes = WithTranslation & {
+  terria: Terria;
+  viewState: ViewState;
+  refFromHOC?: Ref<HTMLDivElement>;
+  theme: DefaultTheme;
+  t: TFunction;
+};
 
-  const activeMapName = hoverBaseMap
-    ? hoverBaseMap
-    : terria.mainViewer.baseMap
-    ? (terria.mainViewer.baseMap as any).name
-    : "(None)";
+@observer
+class SettingPanel extends Component<PropTypes> {
+  /**
+   * @param {Props} props
+   */
+  constructor(props: PropTypes) {
+    super(props);
+    makeObservable(this);
+  }
 
-  const selectBaseMap = (
-    baseMap: BaseModel,
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
+  @observable _hoverBaseMap = null;
+
+  @computed
+  get activeMapName() {
+    return this._hoverBaseMap
+      ? this._hoverBaseMap
+      : this.props.terria.mainViewer.baseMap
+      ? (this.props.terria.mainViewer.baseMap as any).name
+      : "(None)";
+  }
+
+  selectBaseMap(baseMap: BaseModel, event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
     if (!MappableMixin.isMixedInto(baseMap)) return;
 
-    terria.mainViewer.setBaseMap(baseMap);
+    this.props.terria.mainViewer.setBaseMap(baseMap);
+    // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
     if (baseMap) {
       const baseMapId = baseMap.uniqueId;
       if (baseMapId) {
-        terria.setLocalProperty("basemap", baseMapId);
+        this.props.terria.setLocalProperty("basemap", baseMapId);
       }
     }
-  };
+  }
 
-  const mouseEnterBaseMap = (baseMap: any) => {
-    setHoverBaseMap(baseMap.item?.name);
-  };
+  mouseEnterBaseMap(baseMap: any) {
+    runInAction(() => {
+      this._hoverBaseMap = baseMap.item?.name;
+    });
+  }
 
-  const mouseLeaveBaseMap = () => {
-    setHoverBaseMap(null);
-  };
+  mouseLeaveBaseMap() {
+    runInAction(() => {
+      this._hoverBaseMap = null;
+    });
+  }
 
-  const selectViewer = action(
-    (viewer: keyof typeof MapViewers, event: MouseEvent<HTMLButtonElement>) => {
-      const mainViewer = terria.mainViewer;
-      event.stopPropagation();
-      showTerrainOnSide(sides.both, undefined);
-      setViewerMode(viewer, mainViewer);
-      // We store the user's chosen viewer mode for future use.
-      terria.setLocalProperty("viewermode", viewer);
-      terria.currentViewer.notifyRepaintRequired();
-    }
-  );
-
-  const showTerrainOnSide = action(
-    (side: any, event?: MouseEvent<HTMLButtonElement>) => {
-      event?.stopPropagation();
-
-      switch (side) {
-        case sides.left:
-          terria.terrainSplitDirection = SplitDirection.LEFT;
-          terria.showSplitter = true;
-          break;
-        case sides.right:
-          terria.terrainSplitDirection = SplitDirection.RIGHT;
-          terria.showSplitter = true;
-          break;
-        case sides.both:
-          terria.terrainSplitDirection = SplitDirection.NONE;
-          break;
-      }
-
-      terria.currentViewer.notifyRepaintRequired();
-    }
-  );
-
-  const toggleDepthTestAgainstTerrainEnabled = action(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      event.stopPropagation();
-      terria.depthTestAgainstTerrainEnabled =
-        !terria.depthTestAgainstTerrainEnabled;
-      terria.currentViewer.notifyRepaintRequired();
-    }
-  );
-
-  const onBaseMaximumScreenSpaceErrorChange = (bmsse: number) => {
-    terria.setBaseMaximumScreenSpaceError(bmsse);
-    terria.setLocalProperty("baseMaximumScreenSpaceError", bmsse.toString());
-  };
-
-  const toggleUseNativeResolution = () => {
-    terria.setUseNativeResolution(!terria.useNativeResolution);
-    terria.setLocalProperty("useNativeResolution", terria.useNativeResolution);
-  };
-
-  const qualityLabels = {
-    0: t("settingPanel.qualityLabels.maximumPerformance"),
-    1: t("settingPanel.qualityLabels.balancedPerformance"),
-    2: t("settingPanel.qualityLabels.lowerPerformance")
-  };
-
-  const currentViewer =
-    terria.mainViewer.viewerMode === ViewerMode.Cesium
-      ? terria.mainViewer.viewerOptions.useTerrain
-        ? "3d"
-        : "3dsmooth"
-      : "2d";
-
-  const useNativeResolution = terria.useNativeResolution;
-  const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
-    resolution1: useNativeResolution
-      ? t("settingPanel.native")
-      : t("settingPanel.screen"),
-    resolution2: useNativeResolution
-      ? t("settingPanel.screen")
-      : t("settingPanel.native")
-  });
-
-  const dropdownTheme = {
-    inner: Styles.dropdownInner,
-    icon: "map"
-  };
-
-  const isCesiumWithTerrain =
-    terria.mainViewer.viewerMode === ViewerMode.Cesium &&
-    terria.mainViewer.viewerOptions.useTerrain &&
-    terria.currentViewer &&
-    terria.currentViewer instanceof Cesium &&
-    terria.currentViewer.scene &&
-    terria.currentViewer.scene.globe;
-
-  const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
-  const depthTestAgainstTerrainEnabled =
-    supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
-
-  const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
-    ? t("settingPanel.terrain.showUndergroundFeatures")
-    : t("settingPanel.terrain.hideUndergroundFeatures");
-
-  if (
-    terria.configParameters.useCesiumIonTerrain ||
-    terria.configParameters.cesiumTerrainUrl
+  @action
+  selectViewer(
+    viewer: keyof typeof MapViewers,
+    event: MouseEvent<HTMLButtonElement>
   ) {
-    MapViewers["3d"].available = true;
+    const mainViewer = this.props.terria.mainViewer;
+    event.stopPropagation();
+    this.showTerrainOnSide(sides.both, undefined);
+    setViewerMode(viewer, mainViewer);
+    // We store the user's chosen viewer mode for future use.
+    this.props.terria.setLocalProperty("viewermode", viewer);
+    this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
-  const supportsSide = isCesiumWithTerrain;
+  @action
+  showTerrainOnSide(side: any, event?: MouseEvent<HTMLButtonElement>) {
+    event?.stopPropagation();
 
-  let currentSide = sides.both;
-  if (supportsSide) {
-    switch (terria.terrainSplitDirection) {
-      case SplitDirection.LEFT:
-        currentSide = sides.left;
+    switch (side) {
+      case sides.left:
+        this.props.terria.terrainSplitDirection = SplitDirection.LEFT;
+        this.props.terria.showSplitter = true;
         break;
-      case SplitDirection.RIGHT:
-        currentSide = sides.right;
+      case sides.right:
+        this.props.terria.terrainSplitDirection = SplitDirection.RIGHT;
+        this.props.terria.showSplitter = true;
+        break;
+      case sides.both:
+        this.props.terria.terrainSplitDirection = SplitDirection.NONE;
         break;
     }
+
+    this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
-  const timelineStack = terria.timelineStack;
+  @action
+  toggleDepthTestAgainstTerrainEnabled(event: ChangeEvent<HTMLInputElement>) {
+    event.stopPropagation();
+    this.props.terria.depthTestAgainstTerrainEnabled =
+      !this.props.terria.depthTestAgainstTerrainEnabled;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
 
-  const alwaysShowTimelineLabel = timelineStack.alwaysShowingTimeline
-    ? t("settingPanel.timeline.alwaysShowLabel")
-    : t("settingPanel.timeline.hideLabel");
+  onBaseMaximumScreenSpaceErrorChange(bmsse: number) {
+    this.props.terria.setBaseMaximumScreenSpaceError(bmsse);
+    this.props.terria.setLocalProperty(
+      "baseMaximumScreenSpaceError",
+      bmsse.toString()
+    );
+  }
 
-  return (
-    //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
-    <MenuPanel
-      theme={dropdownTheme}
-      btnRef={settingButtonRef}
-      btnTitle={t("settingPanel.btnTitle")}
-      btnText={t("settingPanel.btnText")}
-      viewState={viewState}
-      smallScreen={viewState.useSmallScreenInterface}
-    >
-      <Box padded column>
-        <Box paddedVertically={1}>
-          <Text as="label">{t("settingPanel.mapView")}</Text>
-        </Box>
-        <FlexGrid gap={1} elementsNo={3}>
-          {Object.entries(MapViewers).map(([key, viewerMode]) => (
-            <SettingsButton
-              key={key}
-              isActive={key === currentViewer}
-              onClick={(event: any) => selectViewer(key as any, event)}
-            >
-              <Text mini>{t(viewerMode.label)}</Text>
-            </SettingsButton>
-          ))}
-        </FlexGrid>
-        {!!supportsSide && (
+  toggleUseNativeResolution() {
+    this.props.terria.setUseNativeResolution(
+      !this.props.terria.useNativeResolution
+    );
+    this.props.terria.setLocalProperty(
+      "useNativeResolution",
+      this.props.terria.useNativeResolution
+    );
+  }
+
+  render() {
+    if (!this.props.terria.mainViewer) {
+      return null;
+    }
+    const { t } = this.props;
+
+    const qualityLabels = {
+      0: t("settingPanel.qualityLabels.maximumPerformance"),
+      1: t("settingPanel.qualityLabels.balancedPerformance"),
+      2: t("settingPanel.qualityLabels.lowerPerformance")
+    };
+    const currentViewer =
+      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
+        ? this.props.terria.mainViewer.viewerOptions.useTerrain
+          ? "3d"
+          : "3dsmooth"
+        : "2d";
+
+    const useNativeResolution = this.props.terria.useNativeResolution;
+    const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
+      resolution1: useNativeResolution
+        ? t("settingPanel.native")
+        : t("settingPanel.screen"),
+      resolution2: useNativeResolution
+        ? t("settingPanel.screen")
+        : t("settingPanel.native")
+    });
+    const dropdownTheme = {
+      inner: Styles.dropdownInner,
+      icon: "map"
+    };
+
+    const isCesiumWithTerrain =
+      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium &&
+      this.props.terria.mainViewer.viewerOptions.useTerrain &&
+      this.props.terria.currentViewer &&
+      this.props.terria.currentViewer instanceof Cesium &&
+      this.props.terria.currentViewer.scene &&
+      this.props.terria.currentViewer.scene.globe;
+
+    const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
+    const depthTestAgainstTerrainEnabled =
+      supportsDepthTestAgainstTerrain &&
+      this.props.terria.depthTestAgainstTerrainEnabled;
+
+    const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
+      ? t("settingPanel.terrain.showUndergroundFeatures")
+      : t("settingPanel.terrain.hideUndergroundFeatures");
+
+    if (
+      this.props.terria.configParameters.useCesiumIonTerrain ||
+      this.props.terria.configParameters.cesiumTerrainUrl
+    ) {
+      MapViewers["3d"].available = true;
+    }
+
+    const supportsSide = isCesiumWithTerrain;
+
+    let currentSide = sides.both;
+    if (supportsSide) {
+      switch (this.props.terria.terrainSplitDirection) {
+        case SplitDirection.LEFT:
+          currentSide = sides.left;
+          break;
+        case SplitDirection.RIGHT:
+          currentSide = sides.right;
+          break;
+      }
+    }
+
+    const timelineStack = this.props.terria.timelineStack;
+
+    const alwaysShowTimelineLabel = timelineStack.alwaysShowingTimeline
+      ? t("settingPanel.timeline.alwaysShowLabel")
+      : t("settingPanel.timeline.hideLabel");
+
+    return (
+      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
+      <MenuPanel
+        theme={dropdownTheme}
+        btnRef={this.props.refFromHOC}
+        btnTitle={t("settingPanel.btnTitle")}
+        btnText={t("settingPanel.btnText")}
+        viewState={this.props.viewState}
+        smallScreen={this.props.viewState.useSmallScreenInterface}
+      >
+        <Box padded column>
+          <Box paddedVertically={1}>
+            <Text as="label">{t("settingPanel.mapView")}</Text>
+          </Box>
+          <FlexGrid gap={1} elementsNo={3}>
+            {Object.entries(MapViewers).map(([key, viewerMode]) => (
+              <SettingsButton
+                key={key}
+                isActive={key === currentViewer}
+                onClick={(event: any) => this.selectViewer(key as any, event)}
+              >
+                <Text mini>{t(viewerMode.label)}</Text>
+              </SettingsButton>
+            ))}
+          </FlexGrid>
+          {!!supportsSide && (
+            <>
+              <Spacing bottom={2} />
+              <Box column>
+                <Box paddedVertically={1}>
+                  <Text as="label">{t("settingPanel.terrain.sideLabel")}</Text>
+                </Box>
+                <FlexGrid gap={1} elementsNo={3}>
+                  {Object.values(sides).map((side: any) => (
+                    <SettingsButton
+                      key={side}
+                      isActive={side === currentSide}
+                      onClick={(event: any) =>
+                        this.showTerrainOnSide(side, event)
+                      }
+                    >
+                      <Text mini>{t(side)}</Text>
+                    </SettingsButton>
+                  ))}
+                </FlexGrid>
+              </Box>
+              {!!supportsDepthTestAgainstTerrain && (
+                <>
+                  <Spacing bottom={2} />
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="depthTestAgainstTerrain"
+                    title={depthTestAgainstTerrainLabel}
+                    isChecked={depthTestAgainstTerrainEnabled}
+                    onChange={this.toggleDepthTestAgainstTerrainEnabled.bind(
+                      this
+                    )}
+                  >
+                    <TextSpan>
+                      {t("settingPanel.terrain.hideUnderground")}
+                    </TextSpan>
+                  </Checkbox>
+                </>
+              )}
+            </>
+          )}
           <>
             <Spacing bottom={2} />
             <Box column>
               <Box paddedVertically={1}>
-                <Text as="label">{t("settingPanel.terrain.sideLabel")}</Text>
+                <Text as="label">{t("settingPanel.baseMap")}</Text>
               </Box>
-              <FlexGrid gap={1} elementsNo={3}>
-                {Object.values(sides).map((side: any) => (
-                  <SettingsButton
-                    key={side}
-                    isActive={side === currentSide}
-                    onClick={(event: any) => showTerrainOnSide(side, event)}
+              <Box paddedVertically={1}>
+                <Text as="label" mini>
+                  {this.activeMapName}
+                </Text>
+              </Box>
+              <FlexGrid gap={1} elementsNo={4}>
+                {this.props.terria.baseMapsModel.baseMapItems.map((baseMap) => (
+                  <StyledBasemapButton
+                    key={baseMap.item?.uniqueId}
+                    isActive={
+                      baseMap.item === this.props.terria.mainViewer.baseMap
+                    }
+                    onClick={(event) => this.selectBaseMap(baseMap.item, event)}
+                    onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
+                    onMouseLeave={this.mouseLeaveBaseMap.bind(this)}
+                    onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                   >
-                    <Text mini>{t(side)}</Text>
-                  </SettingsButton>
+                    {baseMap.item === this.props.terria.mainViewer.baseMap ? (
+                      <Box position="absolute" topRight>
+                        <StyledIcon
+                          light
+                          glyph={GLYPHS.selected}
+                          styledWidth={"22px"}
+                        />
+                      </Box>
+                    ) : null}
+                    <StyledImage
+                      fullWidth
+                      alt={baseMap.item ? (baseMap.item as any).name : ""}
+                      src={baseMap.image}
+                    />
+                  </StyledBasemapButton>
                 ))}
               </FlexGrid>
             </Box>
-            {!!supportsDepthTestAgainstTerrain && (
-              <>
-                <Spacing bottom={2} />
-                <Checkbox
-                  textProps={{ small: true }}
-                  id="depthTestAgainstTerrain"
-                  title={depthTestAgainstTerrainLabel}
-                  isChecked={depthTestAgainstTerrainEnabled}
-                  onChange={toggleDepthTestAgainstTerrainEnabled}
-                >
-                  <TextSpan>
-                    {t("settingPanel.terrain.hideUnderground")}
-                  </TextSpan>
-                </Checkbox>
-              </>
-            )}
           </>
-        )}
-        <>
-          <Spacing bottom={2} />
-          <Box column>
-            <Box paddedVertically={1}>
-              <Text as="label">{t("settingPanel.baseMap")}</Text>
-            </Box>
-            <Box paddedVertically={1}>
-              <Text as="label" mini>
-                {activeMapName}
-              </Text>
-            </Box>
-            <FlexGrid gap={1} elementsNo={4}>
-              {terria.baseMapsModel.baseMapItems.map((baseMap) => (
-                <StyledBasemapButton
-                  key={baseMap.item?.uniqueId}
-                  isActive={baseMap.item === terria.mainViewer.baseMap}
-                  onClick={(event) => selectBaseMap(baseMap.item, event)}
-                  onMouseEnter={() => mouseEnterBaseMap(baseMap)}
-                  onMouseLeave={mouseLeaveBaseMap}
-                  onFocus={() => mouseEnterBaseMap(baseMap)}
-                >
-                  {baseMap.item === terria.mainViewer.baseMap ? (
-                    <Box position="absolute" topRight>
-                      <StyledIcon
-                        light
-                        glyph={GLYPHS.selected}
-                        styledWidth={"22px"}
-                      />
-                    </Box>
-                  ) : null}
-                  <StyledImage
-                    fullWidth
-                    alt={baseMap.item ? (baseMap.item as any).name : ""}
-                    src={baseMap.image}
-                  />
-                </StyledBasemapButton>
-              ))}
-            </FlexGrid>
-          </Box>
-        </>
-        <>
-          <Spacing bottom={2} />
-          <Box column>
-            <Box paddedVertically={1}>
-              <Text as="label">{t("settingPanel.timeline.title")}</Text>
-            </Box>
-            <Checkbox
-              textProps={{ small: true }}
-              id="alwaysShowTimeline"
-              isChecked={timelineStack.alwaysShowingTimeline}
-              title={alwaysShowTimelineLabel}
-              onChange={() => {
-                timelineStack.setAlwaysShowTimeline(
-                  !timelineStack.alwaysShowingTimeline
-                );
-              }}
-            >
-              <TextSpan>{t("settingPanel.timeline.alwaysShow")}</TextSpan>
-            </Checkbox>
-          </Box>
-        </>
-        {terria.mainViewer.viewerMode !== ViewerMode.Leaflet && (
           <>
             <Spacing bottom={2} />
             <Box column>
               <Box paddedVertically={1}>
-                <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
+                <Text as="label">{t("settingPanel.timeline.title")}</Text>
               </Box>
               <Checkbox
                 textProps={{ small: true }}
-                id="mapUseNativeResolution"
-                isChecked={useNativeResolution}
-                title={nativeResolutionLabel}
-                onChange={() => toggleUseNativeResolution()}
+                id="alwaysShowTimeline"
+                isChecked={timelineStack.alwaysShowingTimeline}
+                title={alwaysShowTimelineLabel}
+                onChange={() => {
+                  timelineStack.setAlwaysShowTimeline(
+                    !timelineStack.alwaysShowingTimeline
+                  );
+                }}
               >
-                <TextSpan>{t("settingPanel.nativeResolutionHeader")}</TextSpan>
+                <TextSpan>{t("settingPanel.timeline.alwaysShow")}</TextSpan>
               </Checkbox>
-              <Spacing bottom={2} />
-              <Box paddedVertically={1}>
-                <Text as="label">{t("settingPanel.mapQuality")}</Text>
-              </Box>
-              <Box verticalCenter>
-                <Text mini>{t("settingPanel.qualityLabel")}</Text>
-                <Slider
-                  min={1}
-                  max={3}
-                  step={0.1}
-                  value={terria.baseMaximumScreenSpaceError}
-                  onChange={(val) => onBaseMaximumScreenSpaceErrorChange(val)}
-                  marks={{ 2: "" }}
-                  aria-valuetext={qualityLabels}
-                  css={`
-                    margin: 0 10px;
-                    margin-top: 5px;
-                  `}
-                />
-                <Text mini>{t("settingPanel.performanceLabel")}</Text>
-              </Box>
             </Box>
           </>
-        )}
-      </Box>
-    </MenuPanel>
-  );
-});
+          {this.props.terria.mainViewer.viewerMode !== ViewerMode.Leaflet && (
+            <>
+              <Spacing bottom={2} />
+              <Box column>
+                <Box paddedVertically={1}>
+                  <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
+                </Box>
+                <Checkbox
+                  textProps={{ small: true }}
+                  id="mapUseNativeResolution"
+                  isChecked={useNativeResolution}
+                  title={nativeResolutionLabel}
+                  onChange={() => this.toggleUseNativeResolution()}
+                >
+                  <TextSpan>
+                    {t("settingPanel.nativeResolutionHeader")}
+                  </TextSpan>
+                </Checkbox>
+                <Spacing bottom={2} />
+                <Box paddedVertically={1}>
+                  <Text as="label">{t("settingPanel.mapQuality")}</Text>
+                </Box>
+                <Box verticalCenter>
+                  <Text mini>{t("settingPanel.qualityLabel")}</Text>
+                  <Slider
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    value={this.props.terria.baseMaximumScreenSpaceError}
+                    onChange={(val) =>
+                      this.onBaseMaximumScreenSpaceErrorChange(val)
+                    }
+                    marks={{ 2: "" }}
+                    aria-valuetext={qualityLabels}
+                    css={`
+                      margin: 0 10px;
+                      margin-top: 5px;
+                    `}
+                  />
+                  <Text mini>{t("settingPanel.performanceLabel")}</Text>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      </MenuPanel>
+    );
+  }
+}
 
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
-
 export default withTranslation()(
   withTheme(
-    // @ts-ignore
     withTerriaRef(withControlledVisibility(SettingPanel), SETTING_PANEL_NAME)
   )
 );

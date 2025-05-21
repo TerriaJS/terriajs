@@ -1,4 +1,4 @@
-import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
+import DOMPurify from "dompurify";
 
 import {
   AnchorHTMLAttributes,
@@ -15,7 +15,8 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
-import { createElement as htmlCreateElement } from "html-to-react/lib/utils";
+import { Parser, ProcessNodeDefinitions } from "html-to-react";
+import utils from "html-to-react/lib/utils";
 
 const htmlToReactParser = Parser({
   decodeEntities: true
@@ -98,7 +99,7 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
       }
 
       // Create new Anchor element
-      const aElement = htmlCreateElement(
+      const aElement = utils.createElement(
         node,
         index,
         node.data,
@@ -146,7 +147,7 @@ function parseCustomHtmlToReact(
   html: string,
   context?: ParseCustomHtmlToReactContext,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: DomPurifyConfig = {}
+  domPurifyOptions: object = {}
 ) {
   if (!defined(html) || html.length === 0) {
     return html;
