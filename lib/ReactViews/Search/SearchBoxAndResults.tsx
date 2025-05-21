@@ -88,14 +88,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       viewState.updateAppRef(LOCATION_SEARCH_INPUT_NAME, locationSearchRef);
     }, [viewState]);
 
-    useEffect(() => {
-      // TODO(wing): why is this a reaction here and not in viewState itself?
-      // Close the search results when the Now Viewing changes (so that it's visible).
-      runInAction(() => {
-        viewState.searchState.showLocationSearchResults = false;
-      });
-    }, [viewState.searchState, viewState.terria.workbench.items]);
-
     const toggleShowLocationSearchResults = action((bool: boolean) => {
       viewState.searchState.showLocationSearchResults = bool;
     });
@@ -184,7 +176,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               >
                 {searchState.locationSearchResults.map((search) => (
                   <LocationSearchResults
-                    theme={theme}
                     key={search.searchProvider.uniqueId}
                     terria={viewState.terria}
                     viewState={viewState}
