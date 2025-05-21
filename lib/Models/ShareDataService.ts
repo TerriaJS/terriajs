@@ -52,16 +52,19 @@ export default class ShareDataService {
    * @return A promise for the token (which can later be resolved at /share/TOKEN).
    */
   async getShareToken(shareData: any): Promise<string> {
-    if (!this.isUsable) {
+    if (!this.isUsable || !this.url) {
       throw TerriaError.from("`ShareDataService` is not usable");
     }
 
     try {
       const result = await loadWithXhr({
-        url: this.url!,
+        url: this.url,
         method: "POST",
         data: JSON.stringify(shareData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(await this.terria.configParameters.shareRequestHeaders?.())
+        },
         responseType: "json"
       });
       const json = typeof result === "string" ? JSON.parse(result) : result;
