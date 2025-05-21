@@ -17,16 +17,17 @@ import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import StorySharePanel from "./StorySharePanel";
+import withControlledVisibility from "../../../HOCs/withControlledVisibility";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
-  storyShare: boolean;
+  storyShare?: boolean;
   catalogShare?: boolean;
   catalogShareWithoutText?: boolean;
-  modalWidth: number;
+  modalWidth?: number;
   viewState: ViewState;
-  onUserClick: () => void;
-  btnDisabled: boolean;
+  onUserClick?: () => void;
+  btnDisabled?: boolean;
   t: TFunction;
 }
 
@@ -187,7 +188,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
   }
 }
 
-export default withTranslation()(SharePanel);
+export default withControlledVisibility(withTranslation()(SharePanel));
 
 export function shouldShorten(terria: Terria) {
   return (

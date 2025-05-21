@@ -16,19 +16,9 @@ interface ZipEntries {
 
 export default function loadBlob(
   urlOrResource: string,
-  headers?: any,
-  body?: any
+  headers?: any
 ): Promise<Blob> {
-  if (body !== undefined) {
-    return Resource.post({
-      url: urlOrResource,
-      headers: headers,
-      data: JSON.stringify(body),
-      responseType: "blob"
-    })!;
-  } else {
-    return Resource.fetchBlob({ url: urlOrResource, headers: headers })!;
-  }
+  return Resource.fetchBlob({ url: urlOrResource, headers: headers })!;
 }
 
 export function isJson(uri: string) {

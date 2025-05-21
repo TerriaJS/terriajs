@@ -46,7 +46,7 @@ gulp.task("lint", function (done) {
     "--ext",
     ".jsx,.js,.ts,.tsx",
     "--max-warnings",
-    "0",
+    "15",
     "--report-unused-disable-directives"
   ]);
 

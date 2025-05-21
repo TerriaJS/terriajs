@@ -2,6 +2,9 @@
 
 #### next release (8.9.4)
 
+- Set default value for date and datetime WPS fields only when the field is marked as required.
+- TSify MenuBar and Groups
+- Add elements config for MenuBar
 - [The next improvement]
 
 #### 8.9.3 - 2025-04-24
