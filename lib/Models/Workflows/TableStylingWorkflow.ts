@@ -111,7 +111,7 @@ export default class TableStylingWorkflow
     number | undefined
   >();
 
-  private activeStyleDisposer: IReactionDisposer;
+  private readonly activeStyleDisposer: IReactionDisposer;
 
   constructor(readonly item: TableMixin.Instance) {
     makeObservable(this);
