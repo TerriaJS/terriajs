@@ -5,7 +5,9 @@ import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
 import SocrataMapViewCatalogItemTraits from "../../../Traits/TraitsClasses/SocrataMapViewCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -78,9 +80,11 @@ export interface View {
 /** This will fetch `views` for a given Socrata `resourceId`.
  * From the JSON response we get `childViews` - which can be used to generate a URL to fetch GeoJSON
  */
-export class SocrataMapViewStratum extends LoadableStratum(
-  SocrataMapViewCatalogItemTraits
-) {
+export class SocrataMapViewStratum
+  extends LoadableStratum(SocrataMapViewCatalogItemTraits)
+  implements
+    LockedDownStratum<SocrataMapViewCatalogItemTraits, SocrataMapViewStratum>
+{
   static stratumName = "socrataMapView";
 
   static async load(

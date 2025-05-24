@@ -80,8 +80,10 @@ interface MeasurementTimeValuePair {
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
-  constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
-    super(catalogItem);
+  constructor(
+    protected readonly _catalogItem: SensorObservationServiceCatalogItem
+  ) {
+    super(_catalogItem);
     makeObservable(this);
   }
 
@@ -93,12 +95,12 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
 
   @override
   get activeStyle() {
-    return this.catalogItem.procedures[0]?.identifier;
+    return this._catalogItem.procedures[0]?.identifier;
   }
 
   @override
   get styles(): StratumFromTraits<TableStyleTraits>[] {
-    return this.catalogItem.procedures.map((p) => {
+    return this._catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
         id: p.identifier,
         title: p.title,
@@ -114,12 +116,12 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   }
 
   @override
-  get defaultChartStyle() {
-    const timeColumn = this.catalogItem.tableColumns.find(
+  protected get defaultChartStyle() {
+    const timeColumn = this._catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.time
     );
 
-    const valueColumn = this.catalogItem.tableColumns.find(
+    const valueColumn = this._catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.scalar
     );
 

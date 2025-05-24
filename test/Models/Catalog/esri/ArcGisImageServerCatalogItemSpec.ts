@@ -246,7 +246,7 @@ describe("ArcGisImageServer", function () {
       expect(imageServerItem.currentDiscreteTimeTag).toBe(
         "2021-12-30T16:48:00Z"
       );
-      expect(imageServerItem.discreteTimes?.length).toBe(482);
+      expect(imageServerItem.discreteTimes?.times?.length).toBe(482);
     });
 
     it("Sets `time` parameter", function () {
@@ -262,7 +262,7 @@ describe("ArcGisImageServer", function () {
         ).getTime()
       });
 
-      const time = imageServerItem.discreteTimes?.[100]?.time ?? "";
+      const time = imageServerItem.discreteTimes?.times?.[100] ?? "";
 
       runInAction(() => {
         imageServerItem.setTrait(CommonStrata.definition, "currentTime", time);
@@ -277,8 +277,8 @@ describe("ArcGisImageServer", function () {
     });
 
     it("creates next imagery provider", function () {
-      const time = imageServerItem.discreteTimes?.[100]?.time ?? "";
-      const nextTime = imageServerItem.discreteTimes?.[101]?.time ?? "";
+      const time = imageServerItem.discreteTimes?.times?.[100] ?? "";
+      const nextTime = imageServerItem.discreteTimes?.times?.[101] ?? "";
 
       runInAction(() => {
         imageServerItem.setTrait(CommonStrata.definition, "currentTime", time);

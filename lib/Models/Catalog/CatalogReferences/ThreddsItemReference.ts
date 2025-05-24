@@ -3,19 +3,23 @@ import { runInAction } from "mobx";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ThreddsItemReferenceTraits from "../../../Traits/TraitsClasses/ThreddsItemReferenceTraits";
+import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
 import ThreddsCatalogGroup, {
   ThreddsDataset
 } from "../CatalogGroups/ThreddsCatalogGroup";
 import CatalogMemberFactory from "../CatalogMemberFactory";
-import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import StratumOrder from "../../Definition/StratumOrder";
 import WebMapServiceCatalogGroup from "../Ows/WebMapServiceCatalogGroup";
 
-export class ThreddsDatasetStratum extends LoadableStratum(
-  ThreddsItemReferenceTraits
-) {
+export class ThreddsDatasetStratum
+  extends LoadableStratum(ThreddsItemReferenceTraits)
+  implements
+    LockedDownStratum<ThreddsItemReferenceTraits, ThreddsDatasetStratum>
+{
   static stratumName = "threddsDataset";
 
   constructor(
