@@ -7,18 +7,19 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import { computedFn } from "mobx-utils";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import TilingScheme from "terriajs-cesium/Source/Core/TilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
-import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
+import TilingSchemeGenerator from "../../../Map/ImageryProvider/TilingSchemeGenerator";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -35,10 +36,7 @@ import {
   TimeSeriesFeatureInfoContext,
   csvFeatureInfoContext
 } from "../../../Table/tableFeatureInfoContext";
-import WebMapServiceCatalogItemTraits, {
-  SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326
-} from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
+import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -423,16 +421,18 @@ class WebMapServiceCatalogItem
     return result;
   }
 
-  @computed
-  get tilingScheme() {
-    if (this.crs) {
-      if (SUPPORTED_CRS_3857.includes(this.crs))
-        return new WebMercatorTilingScheme();
-      if (SUPPORTED_CRS_4326.includes(this.crs))
-        return new GeographicTilingScheme();
-    }
+  private createTilingSchemeForCrs(crs: string | undefined): TilingScheme {
+    const generatorName = this.tilingSchemeGenerator;
+    return (
+      (generatorName
+        ? TilingSchemeGenerator.get(generatorName)?.(crs)
+        : undefined) ?? TilingSchemeGenerator.default(crs)
+    );
+  }
 
-    return new WebMercatorTilingScheme();
+  @computed
+  get tilingScheme(): TilingScheme {
+    return this.createTilingSchemeForCrs(this.crs);
   }
 
   @computed
@@ -452,7 +452,11 @@ class WebMapServiceCatalogItem
       imageryProvider,
       alpha: this.opacity,
       show: this.show,
-      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+      clippingRectangle: this.clipToRectangle
+        ? this.cesiumRectangle
+        : undefined,
+      previewImageryProvider: (crs: string) =>
+        this._createImageryProviderForCrs(this.currentDiscreteTimeTag, crs)
     };
   }
 
@@ -528,13 +532,29 @@ class WebMapServiceCatalogItem
       : undefined;
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
+  /**
+   * A memoized function that creates an ImageryProvider for the given time tag
+   * and CRS.
+   */
+  private _createImageryProviderForCrs = computedFn(
+    (
+      time: string | undefined,
+      crsCode: string | undefined
+    ): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
       }
       if (this.url === undefined) {
+        return undefined;
+      }
+
+      // Return if the CRS is not supported by this model
+      //
+      // TODO: this check might be too strict and could break the current
+      // behaviour where terria might use one of the supported CRS variants or
+      // fallback to EPSG:3857.
+      if (crsCode && !this.availableCrs?.includes(crsCode)) {
         return undefined;
       }
 
@@ -597,8 +617,8 @@ class WebMapServiceCatalogItem
 
       // Set CRS for WMS 1.3.0
       // Set SRS for WMS 1.1.1
-      const crs = this.useWmsVersion130 ? this.crs : undefined;
-      const srs = this.useWmsVersion130 ? undefined : this.crs;
+      const crs = this.useWmsVersion130 ? crsCode : undefined;
+      const srs = this.useWmsVersion130 ? undefined : crsCode;
 
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
@@ -610,7 +630,7 @@ class WebMapServiceCatalogItem
         getFeatureInfoUrl: this.getFeatureInfoUrl,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
-        tilingScheme: this.tilingScheme,
+        tilingScheme: this.createTilingSchemeForCrs(crs),
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
         credit: this.attribution
@@ -638,6 +658,10 @@ class WebMapServiceCatalogItem
       return this.updateRequestImage(imageryProvider);
     }
   );
+
+  private _createImageryProvider(time: string | undefined) {
+    return this._createImageryProviderForCrs(time, this.crs);
+  }
 
   @computed
   get styleSelectableDimensions(): SelectableDimensionEnum[] {
