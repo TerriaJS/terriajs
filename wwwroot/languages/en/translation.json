@@ -406,6 +406,7 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
+    "storiesTooLong": "This story exceeds the maximum size allowed. Try reducing the number of visible datasets, or capture fewer scenes.",
     "hideStoryPanel": "hide story builder",
     "loadSceneErrorTitle": "Error loading Story Scene",
     "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."

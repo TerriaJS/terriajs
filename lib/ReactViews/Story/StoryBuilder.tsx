@@ -36,6 +36,7 @@ import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
+import { DEFAULT_MAX_SHARE_SIZE } from "../../../lib/Models/ShareDataService";
 import Story from "./Story";
 import StoryEditor from "./StoryEditor";
 import Styles from "./story-builder.scss";
@@ -258,6 +259,21 @@ class StoryBuilder extends Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
+  @action
+  updateShareDataStringSize() {
+    const shareData = getShareData(this.props.viewState.terria);
+    const shareDataString = JSON.stringify(shareData);
+    this.props.viewState.setShareDataStringSize(shareDataString.length);
+  }
+
+  componentDidMount(): void {
+    this.updateShareDataStringSize();
+  }
+
+  componentDidUpdate(): void {
+    this.updateShareDataStringSize();
+  }
+
   componentWillUnmount() {
     this.clearRecaptureSuccessTimeout?.();
   }
@@ -476,6 +492,11 @@ class StoryBuilder extends Component<
   render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
+    const shareDataSize = this.props.viewState.shareDataStringSize;
+    const maxShareSize =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSize ||
+      DEFAULT_MAX_SHARE_SIZE;
+    const shareDataTooLong = shareDataSize > maxShareSize;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -514,6 +535,13 @@ class StoryBuilder extends Component<
           {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
+        {shareDataTooLong && (
+          <Box paddedHorizontally={2}>
+            <Text small color={this.props.theme.textWarning} highlightLinks>
+              {t("story.storiesTooLong")}
+            </Text>
+          </Box>
+        )}
         {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor

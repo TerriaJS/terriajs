@@ -3,8 +3,11 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
+import parseStringSize from "../Core/parseStringSize";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
+
+export const DEFAULT_MAX_SHARE_SIZE = 200 * 1024; // 200 KB
 
 interface ShareDataServiceOptions {
   terria: Terria;
@@ -43,6 +46,14 @@ export default class ShareDataService {
         typeof this._serverConfig === "object" &&
         typeof this._serverConfig.newShareUrlPrefix === "string") ||
       this.url !== "share"
+    );
+  }
+
+  // readonly shareMaxRequestSize: number = this._serverConfig.maxRequestSize || DEFAULT_MAX_SHARE_SIZE;
+  get shareMaxRequestSize(): number {
+    return defaultValue(
+      parseStringSize(this._serverConfig.shareMaxRequestSize),
+      DEFAULT_MAX_SHARE_SIZE
     );
   }
 
