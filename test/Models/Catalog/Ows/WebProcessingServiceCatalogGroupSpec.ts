@@ -5,7 +5,7 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 import "../../../SpecMain";
 
-const GetCapabilitiesXml = require("raw-loader!../../../../wwwroot/test/WPS/GetCapabilities.xml");
+import GetCapabilitiesXml from "../../../../wwwroot/test/WPS/GetCapabilities.xml";
 
 describe("WebProcessingServiceCatalogGroup", function () {
   let terria: Terria;
@@ -31,7 +31,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
     );
   });
 
-  describe("loadMembers", async function () {
+  describe("loadMembers", function () {
     it("fetches the getCapabilities XML", async function () {
       wpsGroup.setTrait(CommonStrata.user, "url", "http://test/wps");
       jasmine.Ajax.stubRequest(
@@ -116,7 +116,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
       await wpsGroup.loadMembers();
     });
 
-    it("creates a member for every process", async function () {
+    it("creates a member for every process", function () {
       expect(wpsGroup.members.length).toEqual(12);
     });
 

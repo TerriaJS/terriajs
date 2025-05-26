@@ -25,11 +25,6 @@ import ArcGisMapServerCatalogGroup, {
   MapServerStratum
 } from "./ArcGisMapServerCatalogGroup";
 
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
 interface Service {
   name: string;
   type: string;

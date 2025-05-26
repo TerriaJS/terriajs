@@ -1,6 +1,6 @@
 import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -13,7 +13,7 @@ import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
-const dateFormat = require("dateformat");
+import dateFormat from "dateformat";
 
 interface PropsType extends WithTranslation {
   heading: string;

@@ -13,12 +13,12 @@ Follow the instructions in the CKAN documentation [here](http://docs.ckan.org/en
 Install a local instance of CKAN per http://docs.ckan.org/en/ckan-2.0/install-from-source.html
 Follow all the steps :
 
--   In step 1 install openjdk-7-jdk instead of openjdk-6-jdk
--   in step 2c use requirements.txt instead of pip-requirements.txt
--   In step 3 making 'pass' your password will makes things simpler
--   Set up the optional Solr install as per step 5 (Single Solr instance)
--   Step 6 can take a long time. If it does fail drop the ckan_default database and redo step 3 and try again
--   You do no need to set up the optional DataStore install as per step 7
+- In step 1 install openjdk-7-jdk instead of openjdk-6-jdk
+- in step 2c use requirements.txt instead of pip-requirements.txt
+- In step 3 making 'pass' your password will makes things simpler
+- Set up the optional Solr install as per step 5 (Single Solr instance)
+- Step 6 can take a long time. If it does fail drop the ckan_default database and redo step 3 and try again
+- You do no need to set up the optional DataStore install as per step 7
 
 To add local storage of files
 

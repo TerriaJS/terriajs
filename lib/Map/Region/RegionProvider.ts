@@ -282,7 +282,7 @@ export default class RegionProvider {
         ];
       }
       await Promise.all(this._loadRegionIDsPromises);
-    } catch (e) {
+    } catch (_e) {
       console.log(`Failed to load region IDS for ${this.regionType}`);
     } finally {
       runInAction(() => (this._loaded = true));
@@ -447,8 +447,8 @@ export default class RegionProvider {
       if (!isDefined(disambigCode)) {
         // we have an ambiguous value, but nothing with which to disambiguate. We pick the first, warn.
         console.warn(
-          "Ambiguous value found in region mapping: " + codeAfterReplacement ??
-            code
+          "Ambiguous value found in region mapping: " +
+            (codeAfterReplacement || code)
         );
         return ids[0];
       }

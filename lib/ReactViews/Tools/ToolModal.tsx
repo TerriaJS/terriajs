@@ -1,7 +1,6 @@
-import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { FC, useState } from "react";
+import { useTranslation, TFunction } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
@@ -9,13 +8,15 @@ import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
+import { scrollBars } from "../../Styled/mixins";
 
 export interface FrameProps {
   title: string;
   viewState: ViewState;
+  children: React.ReactNode;
 }
 
-export const Frame: React.FC<FrameProps> = observer((props) => {
+export const Frame: FC<FrameProps> = observer((props) => {
   const theme = useTheme();
   const [t] = useTranslation();
   const [showChildren, setShowChildren] = useState(true);
@@ -52,12 +53,16 @@ export const Frame: React.FC<FrameProps> = observer((props) => {
   );
 });
 
+const TOP_MARGIN = 70;
+const BOTTOM_MARGIN = 100;
+
 export const Main = styled(Text)`
   display: flex;
   flex-direction: column;
   padding: 15px;
   overflow-y: auto;
-  ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
+  ${({ theme }) => scrollBars({ theme })}
+  border-radius: ${({ theme }) => `0 0 ${theme.radiusXL} ${theme.radiusXL}`};
   background-color: ${(p) => p.theme.darkWithOverlay};
   min-height: 350px;
 `;
@@ -68,9 +73,10 @@ const Wrapper = styled(Box).attrs({
   styledWidth: "340px"
   // charcoalGreyBg: true
 })<{ isMapFullScreen: boolean }>`
-  top: 70px;
+  top: ${TOP_MARGIN}px;
   left: 0px;
   min-height: 220px;
+  max-height: calc(100vh - ${TOP_MARGIN + BOTTOM_MARGIN}px);
   // background: ${(p) => p.theme.dark};
   margin-left: ${(props) =>
     props.isMapFullScreen
@@ -80,7 +86,7 @@ const Wrapper = styled(Box).attrs({
 `;
 
 const Toggle = styled(Box)`
-  ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
+  border-radius: ${({ theme }) => `${theme.radiusXL} ${theme.radiusXL} 0 0`};
 `;
 
 interface ToolCloseButtonProps {
@@ -88,7 +94,7 @@ interface ToolCloseButtonProps {
   t: TFunction;
 }
 
-const ToolCloseButton: React.FC<ToolCloseButtonProps> = (props) => {
+const ToolCloseButton: FC<ToolCloseButtonProps> = (props) => {
   return (
     <RawButton onClick={() => props.viewState.closeTool()}>
       <Text textLight small semiBold uppercase>
@@ -103,7 +109,7 @@ interface TitleProps {
   icon?: { id: string };
 }
 
-const Title: React.FC<TitleProps> = (props) => {
+const Title: FC<TitleProps> = (props) => {
   return (
     <Box centered>
       <Box>

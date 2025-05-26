@@ -7,7 +7,6 @@ import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalo
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
 import SplitItemReference from "../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
@@ -74,7 +73,6 @@ describe("CatalogGroup", function () {
 
     const item = terria.getModelById(CatalogGroup, "mama") as CatalogGroup;
     const child1 = terria.getModelById(CatalogGroup, "child1") as CatalogGroup;
-    const child2 = terria.getModelById(CatalogGroup, "child2") as CatalogGroup;
     expect(item).toBeDefined();
     expect(item.type).toBe("group");
     expect(item.members).toEqual(["child1", "child2", "child3"]);
@@ -138,7 +136,6 @@ describe("CatalogGroup", function () {
     expect(invalidType).toBeDefined();
     expect(noType).toBeDefined();
     expect(nothingness).toBeDefined();
-    const stubName = getUniqueStubName(terria);
     if (
       member0 !== undefined &&
       member1 !== undefined &&

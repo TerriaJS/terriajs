@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
@@ -62,4 +61,4 @@ const LangPanel = (props: Props) => {
     </MenuPanel>
   );
 };
-export default withControlledVisibility (LangPanel);
+export default withControlledVisibility(LangPanel);

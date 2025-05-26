@@ -1,7 +1,7 @@
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
 import PropTypes from "prop-types";
-import React from "react";
+import { forwardRef } from "react";
 import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -13,7 +13,7 @@ const SearchInput = styled.input`
   margin-top: 0;
   margin-bottom: 0;
   border: none;
-  border-radius: 20px;
+  border-radius: 4px;
   height: 40px;
   width: 100%;
   display: block;
@@ -61,7 +61,6 @@ export const SearchBox = createReactClass({
     };
   },
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
   },
@@ -135,7 +134,7 @@ export const SearchBox = createReactClass({
               glyph={Icon.GLYPHS.close}
               styledWidth={"15px"}
               fillColor={this.props.theme.charcoalGrey}
-              opacity={"0.5"}
+              opacity={0.5}
             />
           </BoxSpan>
         </RawButton>
@@ -167,7 +166,7 @@ export const SearchBox = createReactClass({
               glyph={Icon.GLYPHS.search}
               styledWidth={"20px"}
               fillColor={this.props.theme.charcoalGrey}
-              opacity={"0.5"}
+              opacity={0.5}
               css={`
                 position: absolute;
               `}
@@ -200,4 +199,4 @@ const SearchBoxWithRef = (props, ref) => (
   <SearchBox {...props} inputBoxRef={ref} />
 );
 
-export default withTheme(React.forwardRef(SearchBoxWithRef));
+export default withTheme(forwardRef(SearchBoxWithRef));

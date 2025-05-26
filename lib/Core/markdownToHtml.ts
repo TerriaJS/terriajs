@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
 import MarkdownIt from "markdown-it";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { Term } from "../ReactViewModels/defaultTerms";
@@ -33,7 +33,7 @@ export interface MarkdownOptions {
 function markdownToHtml(
   markdownString: string,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: object = {},
+  domPurifyOptions: DomPurifyConfig = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import defined from "terriajs-cesium/Source/Core/defined";
 import loadWithXhr from "../Core/loadWithXhr";

@@ -65,7 +65,7 @@ export default class CorsProxy {
     serverConfig: any,
     baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
     proxyDomains: string[] = []
-  ) {
+  ): void {
     if (serverConfig !== null && serverConfig !== undefined) {
       this.isOpenProxy = !!serverConfig.proxyAllDomains;
       // ignore client list of allowed proxies in favour of definitive server list.
@@ -110,11 +110,11 @@ export default class CorsProxy {
    *       the cache headers with. E.g. '2d' for 2 days.
    * @returns The proxied URL
    */
-  getURL(resource: string, proxyFlag?: string) {
+  getURL(resource: string, proxyFlag?: string): string {
     return this.getProxyBaseURL(proxyFlag) + resource;
   }
 
-  getProxyBaseURL(proxyFlag: string | undefined) {
+  getProxyBaseURL(proxyFlag: string | undefined): string {
     const flag = proxyFlag === undefined ? "" : "_" + proxyFlag + "/";
     return this.baseProxyUrl + flag;
   }
@@ -132,7 +132,7 @@ export default class CorsProxy {
    *       the cache headers with. E.g. '2d' for 2 days.
    * @returns Either the URL passed in or a proxied URL if it should be proxied.
    */
-  getURLProxyIfNecessary(resource: string, proxyFlag?: string) {
+  getURLProxyIfNecessary(resource: string, proxyFlag?: string): string {
     if (this.shouldUseProxy(resource)) {
       return this.getURL(resource, proxyFlag);
     }

@@ -8,7 +8,7 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
 import isDefined from "../../../Core/isDefined";
@@ -21,9 +21,8 @@ import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
 import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
-
-const dateFormat = require("dateformat");
-const DatePicker = require("react-datepicker").default;
+import dateFormat from "dateformat";
+import DatePicker from "react-datepicker";
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();
@@ -110,7 +109,7 @@ const GridLabel = styled.span`
 const GridBody = styled.div`
   height: calc(100% - 30px);
   overflow: auto;
-  ${scrollBars()}
+  ${(p) => scrollBars(p)}
 `;
 
 const BackButton = styled(RawButton)`
@@ -155,7 +154,7 @@ interface PropsType extends WithTranslation {
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
 
 @observer
-class DateTimePicker extends React.Component<PropsType> {
+class DateTimePicker extends Component<PropsType> {
   public static defaultProps = {
     openDirection: "down"
   };
@@ -252,7 +251,9 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   componentWillUnmount() {
-    this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
+    if (this.currentDateAutorunDisposer) {
+      this.currentDateAutorunDisposer();
+    }
     window.removeEventListener("click", this.closePickerEventHandler);
   }
 

@@ -20,7 +20,11 @@ export function Nav({ children }: { children: ReactElement | null }) {
   return children;
 }
 /** No-op grouping element for elements that should be added to the experimental features*/
-export function ExperimentalMenu({ children }: { children: ReactElement | null }) {
+export function ExperimentalMenu({
+  children
+}: {
+  children: ReactElement | null;
+}) {
   return children;
 }
 /** No-op grouping element for elements that should be added to the Feedback*/

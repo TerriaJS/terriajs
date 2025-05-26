@@ -115,9 +115,7 @@ function DiscretelyTimeVaryingMixin<
               tag: dt.tag !== undefined ? dt.tag : dt.time
             });
           }
-        } catch {
-          /* eslint-disable-line no-empty */
-        }
+        } catch {}
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;
@@ -202,6 +200,14 @@ function DiscretelyTimeVaryingMixin<
     @computed({ equals: JulianDate.equals })
     get currentDiscreteJulianDate() {
       const index = this.currentDiscreteTimeIndex;
+      return index === undefined
+        ? undefined
+        : this.discreteTimesAsSortedJulianDates![index].time;
+    }
+
+    @computed({ equals: JulianDate.equals })
+    get nextDiscreteJulianDate() {
+      const index = this.nextDiscreteTimeIndex;
       return index === undefined
         ? undefined
         : this.discreteTimesAsSortedJulianDates![index].time;

@@ -81,7 +81,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   describe("cesiumTileStyle", function () {
     let style: any;
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -144,9 +144,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
         spyOn(IonResource, "fromAssetId").and.callThrough();
         try {
           await item.loadMapItems();
-        } catch {
-          /* eslint-disable-line no-empty */
-        }
+        } catch {}
         expect(IonResource.fromAssetId).toHaveBeenCalledWith(4242, {
           accessToken: "fakeToken",
           server: "fakeServer"
@@ -164,9 +162,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       });
       try {
         await item.loadMapItems();
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       const tileset = item.mapItems[0] as Cesium3DTileset;
       expect(tileset.maximumScreenSpaceError).toBe(3);
     });
@@ -177,9 +173,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
     beforeEach(async function () {
       try {
         await item.loadMapItems();
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       // observe mapItems
       dispose = reaction(
         () => item.mapItems,
@@ -268,7 +262,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             ).toBeTruthy();
           });
 
-          it("computes a new model matrix from the given transformations", async function () {
+          it("computes a new model matrix from the given transformations", function () {
             item.setTrait(
               CommonStrata.user,
               "rotation",
@@ -316,10 +310,13 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
     });
   });
 
-  it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
+  it("correctly builds `Feature` from picked Cesium3DTileFeature", async function () {
     const picked = new Cesium3DTileFeature();
     spyOn(picked, "getPropertyIds").and.returnValue([]);
-    const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
+    const feature = await item.buildFeatureFromPickResult(
+      Cartesian2.ZERO,
+      picked
+    );
     expect(feature).toBeDefined();
     if (feature) {
       expect(feature._cesium3DTileFeature).toBe(picked);
@@ -337,7 +334,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       "color"
     ]);
     item.setFeatureVisibility(feature, false);
-    // @ts-expect-error
+    // @ts-expect-error JsonValue
     expect(item.style.show.conditions).toEqual([
       ['${color} === "red" && ${doorNumber} === 10', false],
       ["true", true] // fallback rule

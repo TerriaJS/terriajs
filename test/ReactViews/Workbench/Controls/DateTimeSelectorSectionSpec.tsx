@@ -1,10 +1,10 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
+import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 
 describe("DateTimeSelectorSection", function () {
   let terria: Terria;
@@ -24,7 +24,7 @@ describe("DateTimeSelectorSection", function () {
     await wmsItem.loadMapItems();
     act(() => {
       testRenderer = TestRenderer.create(
-        <DateTimeSelectorSection item={wmsItem} />
+        <DateTimeSelectorSection theme={terriaTheme} item={wmsItem} />
       );
     });
     buttons = testRenderer.root.findAllByType("button");
@@ -68,7 +68,7 @@ describe("DateTimeSelectorSection", function () {
     expect(titleLabel.children[0].children[0]).toEqual("Some Label");
   });
 
-  it("A datetime selector can be formatted", async function () {
+  it("A datetime selector can be formatted", function () {
     wmsItem.setTrait("definition", "dateFormat", "yyyy");
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);

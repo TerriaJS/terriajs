@@ -1,11 +1,8 @@
-"use strict";
-
-import Styles from "!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss";
+import Styles from "./cesium-timeline.scss";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { autorun, runInAction } from "mobx";
 import PropTypes from "prop-types";
-import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WrappedTimeline from "terriajs-cesium-widgets/Source/Timeline/Timeline";
@@ -79,7 +76,9 @@ const CesiumTimeline = createReactClass({
     });
 
     this.resizeListener = () => {
-      this.cesiumTimeline && this.cesiumTimeline.resize();
+      if (this.cesiumTimeline) {
+        this.cesiumTimeline.resize();
+      }
     };
     window.addEventListener("resize", this.resizeListener, false);
   },
@@ -105,4 +104,4 @@ const CesiumTimeline = createReactClass({
   }
 });
 
-module.exports = CesiumTimeline;
+export default CesiumTimeline;

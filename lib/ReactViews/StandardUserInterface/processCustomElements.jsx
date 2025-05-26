@@ -1,4 +1,4 @@
-import React from "react";
+import { Children, Fragment, cloneElement } from "react";
 import {
   Nav,
   Menu,
@@ -29,7 +29,7 @@ const groupElementKeys = Object.keys(GROUP_ELEMENT_TO_KEY_MAPPING);
  *      for "menu", an array for "nav" etc.
  */
 export default function processCustomElements(isSmallScreen, customUI) {
-  const groupElements = React.Children.toArray(customUI);
+  const groupElements = Children.toArray(customUI);
 
   return groupElements.reduce((soFar, groupElement) => {
     const key = findKeyForGroupElement(groupElement);
@@ -64,16 +64,16 @@ function processChildren(child, isSmallScreen) {
     child.type.propTypes &&
     child.type.propTypes.smallScreen
   ) {
-    return React.cloneElement(child, {
+    return cloneElement(child, {
       smallScreen: isSmallScreen
     });
   }
   // IF child is react fragment, then unpack
-  else if (child && child.type === React.Fragment) {
-    return React.Children.map(child.props.children, (child) => processChildren(child, isSmallScreen));
-  }
-
-  else {
+  else if (child && child.type === Fragment) {
+    return Children.map(child.props.children, (child) =>
+      processChildren(child, isSmallScreen)
+    );
+  } else {
     return child;
   }
 }
@@ -87,5 +87,7 @@ function processChildren(child, isSmallScreen) {
  * @returns {Array<Element>} a collection of processed children.
  */
 function getGroupChildren(isSmallScreen, groupElement) {
-  return React.Children.map(groupElement.props.children, (child) => processChildren(child, isSmallScreen));
+  return Children.map(groupElement.props.children, (child) =>
+    processChildren(child, isSmallScreen)
+  );
 }

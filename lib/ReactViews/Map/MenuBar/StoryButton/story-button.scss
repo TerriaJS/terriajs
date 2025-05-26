@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "../../../../Sass/common/_variables";
 
 .storyBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";

@@ -17,7 +17,7 @@ export default class TableFeatureInfoStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  static load(item: TableMixin.Instance) {
+  static load(item: TableMixin.Instance): TableFeatureInfoStratum {
     return new TableFeatureInfoStratum(item);
   }
 
