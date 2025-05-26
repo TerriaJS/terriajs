@@ -1,7 +1,5 @@
-"use strict";
-
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState, type ReactNode } from "react";
 import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
@@ -33,9 +31,11 @@ interface CollapsibleProps extends CollapsibleIconProps {
   titleTextProps?: any;
   bodyBoxProps?: IBoxProps;
   bodyTextProps?: any;
+
+  children?: ReactNode;
 }
 
-export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {
+export const CollapseIcon: FC<CollapsibleIconProps> = (props) => {
   let glyph = GLYPHS.opened;
   let glyphWidth = 8;
   let glyphRotation = 0;
@@ -64,7 +64,7 @@ export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {
   );
 };
 
-const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
+const Collapsible: FC<CollapsibleProps> = observer((props) => {
   const [isOpen, setIsOpen] = useState<boolean | undefined>();
 
   useEffect(() => setIsOpen(props.isOpen), [props.isOpen]);

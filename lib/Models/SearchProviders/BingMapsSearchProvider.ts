@@ -7,7 +7,7 @@ import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import { loadJsonp } from "../../Core/loadJsonp";
+import loadJson from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
   getMapCenter
@@ -88,8 +88,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    const promise: Promise<any> = loadJsonp(searchQuery, "jsonp");
-
+    const promise: Promise<any> = loadJson(searchQuery);
     return promise
       .then((result) => {
         if (searchResults.isCanceled) {

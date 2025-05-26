@@ -1,18 +1,5 @@
 const childProcess = require("child_process");
 const fs = require("fs");
-const request = require("request");
-
-function requestPromise(options) {
-  return new Promise((resolve, reject) => {
-    request(options, (error, response, body) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(response);
-      }
-    });
-  });
-}
 
 function getAllBranches(repo) {
   const baseUrl = "https://api.github.com/repos/" + repo + "/branches";
@@ -24,24 +11,24 @@ function getAllBranches(repo) {
     ++page;
 
     let url = baseUrl + "?page=" + page;
-    return requestPromise({
-      url: url,
+    return fetch(url, {
       headers: {
         "User-Agent": "TerriaJS CI",
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
       }
-    }).then((pageResponse) => {
-      const pageOfBranches = JSON.parse(pageResponse.body);
-      result.push(
-        ...pageOfBranches.filter(
-          (branch) => branch.name.indexOf("greenkeeper/") !== 0
-        )
-      );
+    })
+      .then((response) => response.json())
+      .then((pageOfBranches) => {
+        result.push(
+          ...pageOfBranches.filter(
+            (branch) => branch.name.indexOf("greenkeeper/") !== 0
+          )
+        );
 
-      if (pageOfBranches.length > 0) {
-        return getNextPage();
-      }
-    });
+        if (pageOfBranches.length > 0) {
+          return getNextPage();
+        }
+      });
   }
 
   return getNextPage().then(() => result);

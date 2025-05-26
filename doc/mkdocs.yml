@@ -26,10 +26,11 @@ nav:
       - Cross-Origin Resource Sharing: connecting-to-data/cross-origin-resource-sharing.md
       - Catalog Groups: connecting-to-data/catalog-groups.md
       - Catalog Items: connecting-to-data/catalog-items.md
+      - Item Search: connecting-to-data/item-search/indexed-item-search.md
       - Customizing Data Appearance:
           - Overview: connecting-to-data/customizing-data-appearance/overview.md
           - Imagery Data: connecting-to-data/customizing-data-appearance/imagery-data.md
-          - Tabular Data: connecting-to-data/customizing-data-appearance/tabular-data.md
+          - Tabular and Vector Data: connecting-to-data/customizing-data-appearance/tabular-vector-data.md
           - Feature Information Template: connecting-to-data/customizing-data-appearance/feature-info-template.md
           - Model Dimensions: connecting-to-data/customizing-data-appearance/model-dimensions.md
       - Catalog Functions: connecting-to-data/catalog-functions.md
@@ -49,7 +50,6 @@ nav:
       - Development Environment: contributing/development-environment.md
       - Architecture: contributing/architecture.md
       - Using a Custom Version of Cesium: contributing/using-a-custom-version-of-cesium.md
-      - Setting up Saucelabs: contributing/setting-up-saucelabs.md
       - Problems and Solutions: contributing/problems-and-solutions.md
       - New model layer documentation: contributing/model-layer.md
       - Traits in depth: contributing/traits-in-depth.md

@@ -5,6 +5,7 @@ import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import CesiumIonTraits from "./CesiumIonTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
@@ -12,7 +13,7 @@ import UrlTraits from "./UrlTraits";
 
 @traitClass({
   description: `Creates one catalog item from url that points to a czml file.
-  
+
   <strong>Note:</strong> If the model is not visible, try to disable the terrain by unchecking the box "Terrain hides underground features".`,
   example: {
     type: "czml",
@@ -27,7 +28,8 @@ export default class CzmlCatalogItemTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  MappableTraits
+  MappableTraits,
+  CesiumIonTraits
 ) {
   @anyTrait({
     name: "CZML Data",

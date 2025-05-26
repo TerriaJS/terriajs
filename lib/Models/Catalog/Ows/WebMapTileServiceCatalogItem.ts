@@ -583,6 +583,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let tileMatrixSetLinks: TileMatrixSetLink[] = [];
     if (layer?.TileMatrixSetLink) {
       if (Array.isArray(layer?.TileMatrixSetLink)) {
+        // eslint-disable-next-line no-unsafe-optional-chaining
         tileMatrixSetLinks = [...layer?.TileMatrixSetLink];
       } else {
         tileMatrixSetLinks = [layer.TileMatrixSetLink];

@@ -22,10 +22,6 @@ export default function anyTrait(options: TraitOptions) {
 export class AnyTrait extends Trait {
   readonly decoratorForFlattened = computed.struct;
 
-  constructor(id: string, options: AnyTraitOptions, parent: any) {
-    super(id, options, parent);
-  }
-
   getValue(model: BaseModel): any {
     for (const stratum of model.strataTopToBottom.values()) {
       const stratumAny: any = stratum;
@@ -36,7 +32,11 @@ export class AnyTrait extends Trait {
     return undefined;
   }
 
-  fromJson(model: BaseModel, stratumName: string, jsonValue: any): Result<any> {
+  fromJson(
+    _model: BaseModel,
+    _stratumName: string,
+    jsonValue: any
+  ): Result<any> {
     return new Result(jsonValue);
   }
 

@@ -1,11 +1,9 @@
-const create: any = require("react-test-renderer").create;
-import React from "react";
+import { create } from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
-const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import Prompt from "../../../lib/ReactViews/Generic/Prompt";
 import Caret from "../../../lib/ReactViews/Generic/Caret";
 
 describe("HelpPrompt", function () {
@@ -36,7 +34,10 @@ describe("HelpPrompt", function () {
               terria.configParameters.showWelcomeMessage &&
               !viewState.showWelcomeMessage
             }
-            theme={terriaTheme}
+            displayDelay={0}
+            dismissText={""}
+            dismissAction={() => {}}
+            content={<>foo</>}
           />
         );
       });
@@ -53,10 +54,13 @@ describe("HelpPrompt", function () {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
+              (terria.configParameters.showWelcomeMessage ?? false) &&
               !viewState.showWelcomeMessage
             }
-            theme={terriaTheme}
+            displayDelay={0}
+            dismissText={""}
+            dismissAction={() => {}}
+            content={<>foo</>}
           />
         );
       });
@@ -74,10 +78,13 @@ describe("HelpPrompt", function () {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
+              (terria.configParameters.showWelcomeMessage ?? false) &&
               !viewState.showWelcomeMessage
             }
-            theme={terriaTheme}
+            displayDelay={0}
+            dismissText={""}
+            dismissAction={() => {}}
+            content={<>foo</>}
           />
         );
       });

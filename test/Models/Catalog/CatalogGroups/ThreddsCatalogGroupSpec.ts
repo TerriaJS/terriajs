@@ -1,8 +1,6 @@
 import { configure } from "mobx";
 import Terria from "../../../../lib/Models/Terria";
-import ThreddsCatalogGroup, {
-  ThreddsStratum
-} from "../../../../lib/Models/Catalog/CatalogGroups/ThreddsCatalogGroup";
+import ThreddsCatalogGroup from "../../../../lib/Models/Catalog/CatalogGroups/ThreddsCatalogGroup";
 import i18next from "i18next";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
@@ -15,7 +13,6 @@ configure({
 describe("ThreddsCatalogGroup", function () {
   let terria: Terria;
   let threddsCatalogGroup: ThreddsCatalogGroup;
-  let threddsStratum: ThreddsStratum;
 
   beforeEach(async function () {
     terria = new Terria({
@@ -26,9 +23,6 @@ describe("ThreddsCatalogGroup", function () {
     threddsCatalogGroup.setTrait("definition", "url", url);
 
     await threddsCatalogGroup.loadMembers();
-    threddsStratum = threddsCatalogGroup.strata.get(
-      ThreddsStratum.stratumName
-    ) as ThreddsStratum;
   });
 
   it("has a type and typeName", function () {

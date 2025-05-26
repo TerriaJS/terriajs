@@ -1,12 +1,12 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .invoke-function {
-  padding: $padding-small;
+  padding: variables.$padding-small;
   position: relative;
-  height: calc(100% - #{$padding-small * 2});
+  height: calc(100% - #{variables.$padding-small * 2});
   a {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }
 
@@ -16,22 +16,22 @@
   bottom: 0;
   right: 0;
   z-index: 1000;
-  background: $modal-bg;
-  padding: $padding-small;
+  background: variables.$modal-bg;
+  padding: variables.$padding-small;
 }
 
 .content {
   composes: scrollbars from "../../Sass/common/_base.scss";
   overflow-y: auto;
-  height: calc(100% - #{$input-height});
-  padding-right: $padding;
-  padding-left: $padding;
+  height: calc(100% - #{variables.$input-height});
+  padding-right: variables.$padding;
+  padding-left: variables.$padding;
   h3 {
     margin-top: 0;
   }
 }
 
-@include empty-module("description");
+@include mixins.empty-module("description");
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";

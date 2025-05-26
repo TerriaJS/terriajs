@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import { PureComponent } from "react";
 import { scaleOrdinal } from "@visx/scale";
 import { LegendOrdinal } from "@visx/legend";
 import Glyphs from "./Glyphs";
@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { observer } from "mobx-react";
 
 @observer
-class Legends extends React.PureComponent {
+class Legends extends PureComponent {
   static propTypes = {
     chartItems: PropTypes.array.isRequired,
     width: PropTypes.number.isRequired
@@ -44,7 +44,7 @@ class Legends extends React.PureComponent {
 
 export default Legends;
 
-class Legend extends React.PureComponent {
+class Legend extends PureComponent {
   static propTypes = {
     label: PropTypes.object.isRequired,
     glyph: PropTypes.string
@@ -55,7 +55,7 @@ class Legend extends React.PureComponent {
     const squareSize = 20;
     const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
-      <LegendWrapper title={label.text} ariaLabel={label.text}>
+      <LegendWrapper title={label.text} aria-label={label.text}>
         <svg
           width={`${squareSize}px`}
           height={`${squareSize}px`}

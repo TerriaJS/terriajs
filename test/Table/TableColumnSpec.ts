@@ -6,9 +6,7 @@ import TableColumn from "../../lib/Table/TableColumn";
 import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType from "../../lib/Table/TableColumnType";
 
-const regionMapping = JSON.stringify(
-  require("../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../wwwroot/data/regionMapping.json";
 
 describe("TableColumn", function () {
   let tableModel: CsvCatalogItem;
@@ -354,7 +352,7 @@ describe("TableColumn", function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(
         "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseText: regionMapping });
+      ).andReturn({ responseJSON: regionMapping });
     });
 
     afterEach(function () {
@@ -460,7 +458,7 @@ describe("TableColumn", function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(
         "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseText: regionMapping });
+      ).andReturn({ responseJSON: regionMapping });
     });
 
     afterEach(function () {

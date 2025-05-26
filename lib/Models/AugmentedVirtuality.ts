@@ -1,21 +1,19 @@
 import {
   action,
   computed,
+  makeObservable,
   observable,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import CesiumMatrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Terria from "./Terria";
-
-const sampleTerrainMostDetailed =
-  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface EventLoopState {
   intervalId?: any;
@@ -72,7 +70,7 @@ export default class AugmentedVirtuality {
     makeObservable(this);
   }
 
-  toggleEnabled() {
+  toggleEnabled(): void {
     if (this.active) {
       this.deactivate();
     } else {
@@ -96,13 +94,13 @@ export default class AugmentedVirtuality {
   }
 
   @action
-  activate() {
+  activate(): void {
     this.manualAlignment = false;
     this.startEventLoop(true);
   }
 
   @action
-  deactivate() {
+  deactivate(): void {
     this.resetAlignment();
     this.manualAlignment = false;
     this.startEventLoop(false);
@@ -112,7 +110,7 @@ export default class AugmentedVirtuality {
    * Toggles whether manual alignement is enabled or disabled.
    */
   @action
-  toggleManualAlignment() {
+  toggleManualAlignment(): void {
     this.setManualAlignment(!this.manualAlignment);
   }
 
@@ -131,7 +129,7 @@ export default class AugmentedVirtuality {
    * cameras orientation so that it matches the * correct orientation.
    */
   @action
-  toggleHoverHeight() {
+  toggleHoverHeight(): void {
     this.hoverLevel =
       (this.hoverLevel + 1) % AugmentedVirtuality.PRESET_HEIGHTS.length;
     this.hover(AugmentedVirtuality.PRESET_HEIGHTS[this.hoverLevel]);
@@ -224,7 +222,7 @@ export default class AugmentedVirtuality {
    *
    * When the manual alignment is enabled this function has no effect.
    */
-  moveTo(position: Cartographic, maximumHeight: number, flyTo: boolean) {
+  moveTo(position: Cartographic, maximumHeight: number, flyTo: boolean): void {
     // If we are in manual alignment mode we don't allow the viewer to move
     // (since this would create a jaring UX for most use cases).
     if (this.manualAlignment) return;
@@ -311,7 +309,7 @@ export default class AugmentedVirtuality {
   /**
    * Resets the alignment so that the alignement matches the devices absolute alignment.
    */
-  resetAlignment() {
+  resetAlignment(): void {
     this.orientationUpdated = true;
     this.realignAlpha = 0;
     this.realignHeading = 0;
@@ -356,7 +354,7 @@ export default class AugmentedVirtuality {
    *
    * @param  event Contains the updated device orientation (in .alpha, .beta, .gamma).
    */
-  storeOrientation(event: DeviceOrientationEvent) {
+  storeOrientation(event: DeviceOrientationEvent): void {
     const { alpha, beta, gamma } = event;
     if (alpha !== null && beta !== null && gamma !== null) {
       this.alpha = alpha;

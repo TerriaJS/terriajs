@@ -22,9 +22,9 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
   }
 
   protected constructCatalogItem(
-    id: string | undefined,
+    _id: string | undefined,
     context: ProcessNodeContext,
-    sourceReference: BaseModel | undefined
+    _sourceReference: BaseModel | undefined
   ) {
     return context.catalogItem?.duplicateModel(createGuid()) as
       | SensorObservationServiceCatalogItem
@@ -32,9 +32,9 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
   }
 
   constructShareableCatalogItem = async (
-    id: string | undefined,
+    _id: string | undefined,
     context: ProcessNodeContext,
-    sourceReference: BaseModel | undefined
+    _sourceReference: BaseModel | undefined
   ) =>
     this.createItemReference(
       context.catalogItem as SensorObservationServiceCatalogItem
@@ -43,7 +43,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
   protected setTraitsFromAttrs(
     item: SensorObservationServiceCatalogItem,
     attrs: SOSChartCustomComponentAttributes,
-    sourceIndex: number
+    _sourceIndex: number
   ): void {
     const featureOfInterestId = attrs.identifier;
     const featureName = attrs.name;

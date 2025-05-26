@@ -1,6 +1,15 @@
 import i18next, { WithT } from "i18next";
 import { computed, makeObservable } from "mobx";
-import React, { Suspense, useEffect, useState } from "react";
+import {
+  ComponentType,
+  FC,
+  lazy,
+  Component,
+  Suspense,
+  useEffect,
+  useState,
+  type ReactNode
+} from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
 import {
@@ -15,19 +24,20 @@ import { useViewState } from "../Context";
 
 interface ToolProps {
   toolName: string;
-  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+  getToolComponent: () =>
+    | ComponentType<unknown>
+    | Promise<ComponentType<unknown>>;
   params?: any;
 }
 
 /**
  * Loads the given tool component.
  *
- * Has an associated {@link CloseToolButton} displayed in the map menu.
  * The prop toolComponent can be an immediate React Component or a promise to
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-const Tool: React.FC<ToolProps> = (props) => {
+const Tool: FC<ToolProps> = (props) => {
   const { getToolComponent, params, toolName } = props;
   const viewState = useViewState();
   const [t] = useTranslation();
@@ -37,7 +47,7 @@ const Tool: React.FC<ToolProps> = (props) => {
   const [toolAndProps, setToolAndProps] = useState<any>(undefined);
   useEffect(() => {
     setToolAndProps([
-      React.lazy(() =>
+      lazy(() =>
         Promise.resolve(getToolComponent()).then((c) => ({ default: c }))
       ),
       params
@@ -107,8 +117,7 @@ export class ToolButtonController extends MapNavigationItemController {
     this.props.viewState.openTool({
       toolName: this.props.toolName,
       getToolComponent: this.props.getToolComponent,
-      params: this.props.params,
-      showCloseButton: false
+      params: this.props.params
     });
     super.activate();
   }
@@ -122,10 +131,10 @@ export class ToolButtonController extends MapNavigationItemController {
 interface ToolErrorBoundaryProps extends WithT {
   terria: Terria;
   toolName: string;
-  children: any;
+  children: ReactNode;
 }
 
-class ToolErrorBoundary extends React.Component<
+class ToolErrorBoundary extends Component<
   ToolErrorBoundaryProps,
   { hasError: boolean }
 > {

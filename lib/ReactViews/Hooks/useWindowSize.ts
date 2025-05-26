@@ -31,6 +31,7 @@ export function useWindowSize({ debounceOverride }: UseWindowSizeOptions) {
     return () => {
       window.removeEventListener("resize", resizeListener);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return width;

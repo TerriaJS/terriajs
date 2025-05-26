@@ -1,18 +1,18 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .tree {
   composes: list-reset from "../../Sass/common/_base.scss";
 }
 
-@include empty-module("parameter-editor-important-note");
+@include mixins.empty-module("parameter-editor-important-note");
 
 .data {
   background: #fff;
 }
 
 .parameter-editor {
-  margin-bottom: $padding;
+  margin-bottom: variables.$padding;
   position: relative;
   clear: both;
   input[type="date"] {
@@ -26,42 +26,42 @@
 
 .field {
   composes: field from "../../Sass/common/_form.scss";
-  margin-bottom: $padding;
+  margin-bottom: variables.$padding;
   clear: both;
-  color: $text-black !important;
+  color: variables.$text-black !important;
 
   &::-webkit-input-placeholder {
-    color: $grey !important;
+    color: variables.$grey !important;
   }
   &::-moz-placeholder {
-    color: $grey !important;
+    color: variables.$grey !important;
   }
   &:-ms-input-placeholder {
-    color: $grey !important;
+    color: variables.$grey !important;
   }
   &:-moz-placeholder {
-    color: $grey !important;
+    color: variables.$grey !important;
   }
 }
 
 .field-date-placeholder {
   composes: field;
 
-  color: $grey !important;
+  color: variables.$grey !important;
 }
 
 .field-invalid {
   composes: field;
 
-  border-color: $warning;
+  border-color: variables.$warning;
 }
 
 .warning-text {
-  color: $warning;
+  color: variables.$warning;
 }
 
 .field--parameter-editor {
-  margin-bottom: $padding;
+  margin-bottom: variables.$padding;
   position: relative;
   clear: both;
 
@@ -91,7 +91,7 @@
 }
 
 .btn-catalog {
-  padding-left: $padding;
+  padding-left: variables.$padding;
 }
 
 .btn-selector {
@@ -105,7 +105,7 @@
   position: relative;
   background: #d5d5d5;
   cursor: auto;
-  margin: $padding 0;
+  margin: variables.$padding 0;
 
   :global {
     .leaflet-control-attribution {
@@ -122,7 +122,8 @@
 }
 
 .is-hidden {
-  composes: is-hidden from "../../Sass/common/_form.scss";
+  // TODO: is this still valid?
+  // composes: is-hidden from "../../Sass/common/_form.scss";
 }
 
 .autocomplete {
@@ -132,8 +133,8 @@
   max-height: 200px;
   overflow-y: auto;
   background: #fff;
-  padding: $padding;
-  box-shadow: $box-shadow;
+  padding: variables.$padding;
+  box-shadow: variables.$box-shadow;
   position: absolute;
   z-index: 99;
   right: 0;
@@ -149,7 +150,7 @@
 
   &:hover,
   &:focus {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }
 
@@ -158,7 +159,7 @@
   height: 200px;
 }
 
-@include empty-module("radio");
+@include mixins.empty-module("radio");
 
 .btn-radio {
   composes: btn from "../../Sass/common/_buttons.scss";

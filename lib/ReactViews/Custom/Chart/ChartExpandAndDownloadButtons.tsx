@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { Component } from "react";
+import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
@@ -13,8 +12,7 @@ import { Button, StyledButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
 import Styles from "./chart-expand-and-download-buttons.scss";
-
-const Dropdown = require("../../Generic/Dropdown");
+import Dropdown from "../../Generic/Dropdown";
 
 interface PropsType extends WithTranslation {
   terria: Terria;
@@ -28,7 +26,7 @@ interface PropsType extends WithTranslation {
 }
 
 @observer
-class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
+class ChartExpandAndDownloadButtons extends Component<PropsType> {
   @observable sourceItems: ChartableMixin.Instance[] = [];
 
   constructor(props: PropsType) {
@@ -75,9 +73,7 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
 
       try {
         terria.addModel(itemToExpand);
-      } catch {
-        /* eslint-disable-line no-empty */
-      }
+      } catch {}
       (await workbench.add(itemToExpand)).raiseError(terria, undefined, true);
     });
   }

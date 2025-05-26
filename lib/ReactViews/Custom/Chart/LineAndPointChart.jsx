@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import { createRef, PureComponent } from "react";
 import LineChart from "./LineChart";
 import MomentPointsChart from "./MomentPointsChart";
 
@@ -7,7 +7,7 @@ import MomentPointsChart from "./MomentPointsChart";
  * A line chart, where each data point is represented by a circle, and a line is
  * drawn between each point.
  */
-export default class LineAndPointChart extends React.PureComponent {
+export default class LineAndPointChart extends PureComponent {
   static propTypes = {
     id: PropTypes.string.isRequired,
     chartItem: PropTypes.object.isRequired,
@@ -16,10 +16,10 @@ export default class LineAndPointChart extends React.PureComponent {
     glyph: PropTypes.string
   };
 
-  constructor() {
-    super();
-    this.lineRef = React.createRef();
-    this.pointRef = React.createRef();
+  constructor(props) {
+    super(props);
+    this.lineRef = createRef();
+    this.pointRef = createRef();
   }
 
   doZoom(scales) {

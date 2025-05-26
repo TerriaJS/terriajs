@@ -1,17 +1,16 @@
 import { computed, makeObservable, override } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
-import StratumOrder from "../Models/Definition/StratumOrder";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { SelectableDimensionEnum } from "../Models/SelectableDimensions/SelectableDimensions";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import MappableMixin from "./MappableMixin";
 import TimeFilterMixin from "./TimeFilterMixin";
 
-class DiffStratum extends LoadableStratum(DiffableTraits) {
+export class DiffStratum extends LoadableStratum(DiffableTraits) {
   static stratumName = "diffStratum";
   constructor(readonly catalogItem: DiffableMixin.Instance) {
     super();
@@ -54,6 +53,22 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
 
   @computed
   get disableDateTimeSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+
+  @computed
+  get disableExport() {
+    // disable export if showing diff
+    // currently there is no way to generate export for the difference layer as
+    // it requires 2 time parameters which is not supported in standard WCS
+    return this.catalogItem.isShowingDiff;
+  }
+
+  @computed
+  get disableSplitter() {
+    // disable splitter if showing diff
+    // currently there is no use splitting the difference layer because
+    // most comparable features like style, datetime etc are disabled.
     return this.catalogItem.isShowingDiff;
   }
 }
@@ -113,8 +128,6 @@ namespace DiffableMixin {
   export function isMixedInto(model: any): model is Instance {
     return model?.hasDiffableMixin;
   }
-
-  StratumOrder.addLoadStratum(DiffStratum.stratumName);
 }
 
 export default DiffableMixin;

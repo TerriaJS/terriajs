@@ -12,7 +12,7 @@ export interface ModelTraitOptions extends TraitOptions {
   factory?: ModelFactory;
 }
 
-export default function modelReferenceTrait<T>(options: ModelTraitOptions) {
+export default function modelReferenceTrait<_T>(options: ModelTraitOptions) {
   return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {

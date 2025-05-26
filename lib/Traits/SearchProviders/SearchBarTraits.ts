@@ -35,6 +35,13 @@ export class SearchBarTraits extends ModelTraits {
   })
   minCharacters: number = 3;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show 'Search In Catalog'",
+    description: "Whether to show 'Search In Catalog' in search results"
+  })
+  showSearchInCatalog: boolean = true;
+
   @objectTrait({
     type: RectangleTraits,
     name: "Bounding box limit",

@@ -1,4 +1,4 @@
-import React from "react";
+import { PureComponent } from "react";
 import PropTypes from "prop-types";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import Box from "../../Styled/Box";
@@ -8,7 +8,7 @@ import { RawButton } from "../../Styled/Button";
 import { withTheme } from "styled-components";
 import Caret from "../Generic/Caret";
 
-class Prompt extends React.PureComponent {
+class Prompt extends PureComponent {
   // Tried to keep/make use of the original story prompt css properties
   render() {
     return (
@@ -17,7 +17,7 @@ class Prompt extends React.PureComponent {
           displayInlineBlock
           rounded
           position="absolute"
-          backgroundColor={this.props.theme.colorPrimary}
+          backgroundColor={this.props.theme?.colorPrimary}
           paddedRatio={3}
           styledWidth={`${this.props.promptWidth || 200}px`}
           css={`
@@ -32,7 +32,7 @@ class Prompt extends React.PureComponent {
               left: `${this.props.caretLeftOffset || 160}px`
             }}
             size={this.props.caretSize || 18}
-            background={this.props.theme.colorPrimary}
+            background={this.props.theme?.colorPrimary}
           />
           {this.props.content}
           <Spacing bottom={3} />

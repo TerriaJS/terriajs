@@ -8,7 +8,7 @@ type SingleTrait<TTrait> = If<
   TTrait extends ModelTraits ? StratumFromTraits<TTrait> : never
 >;
 
-type ArrayTrait<TTrait, TElement> = Array<SingleTrait<TElement>>;
+type ArrayTrait<_TTrait, TElement> = Array<SingleTrait<TElement>>;
 
 /**
  * Transforms a {@link ModelTraits} class into a type usable as a stratum.

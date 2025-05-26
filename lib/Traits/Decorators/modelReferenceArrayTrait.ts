@@ -13,7 +13,7 @@ export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;
 }
 
-export default function modelReferenceArrayTrait<T>(
+export default function modelReferenceArrayTrait<_T>(
   options: ModelArrayTraitOptions
 ) {
   return function (target: any, propertyKey: string) {

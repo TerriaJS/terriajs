@@ -5,7 +5,7 @@ import Trait, { TraitOptions } from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
 
-export interface PrimitiveArrayTraitOptions<T> extends TraitOptions {
+export interface PrimitiveArrayTraitOptions<_T> extends TraitOptions {
   type: PrimitiveType;
   isNullable?: boolean;
 }
@@ -49,8 +49,8 @@ export class PrimitiveArrayTrait<T> extends Trait {
   }
 
   fromJson(
-    model: BaseModel,
-    stratumName: string,
+    _model: BaseModel,
+    _stratumName: string,
     jsonValue: any
   ): Result<T[] | undefined> {
     if (!this.isValidJson(jsonValue)) {

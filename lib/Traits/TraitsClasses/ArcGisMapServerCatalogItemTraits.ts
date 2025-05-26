@@ -67,7 +67,7 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "The maximum number of discrete times that can be created by a single " +
       "date range when layer in time-enabled."
   })
-  maxRefreshIntervals: number = 1000;
+  maxRefreshIntervals: number = 10000;
 
   @primitiveTrait({
     name: "Time Window Duration",
@@ -94,7 +94,7 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   isForwardTimeWindow: boolean = true;
 
   @primitiveTrait({
-    name: "Is Forward Time Window",
+    name: "Use Pre-Cached Tiles If Available",
     description:
       "If true, the server's pre-cached tiles are used if they are available. If false, then the MapServer export endpoint will be used. This will default to true if no specific layers are fetched (i.e. all layers are fetched). Otherwise, it will default to false. This will also default to false if parameters have been specified",
     type: "boolean"

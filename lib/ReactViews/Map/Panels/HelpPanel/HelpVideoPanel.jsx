@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon from "../../../../Styled/Icon";
@@ -16,7 +16,7 @@ import SatelliteGuide from "../../../Guide/SatelliteGuide";
 const HELP_VIDEO_NAME = "helpVideo";
 
 @observer
-class HelpVideoPanel extends React.Component {
+class HelpVideoPanel extends Component {
   static displayName = "HelpVideoPanel";
 
   static propTypes = {
@@ -33,10 +33,6 @@ class HelpVideoPanel extends React.Component {
     t: PropTypes.func.isRequired,
     i18n: PropTypes.object.isRequired
   };
-
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel

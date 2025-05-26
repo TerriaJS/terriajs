@@ -1350,13 +1350,6 @@
     "unsuccessful": "Kopieren nicht erfolgreich...",
     "shareExplanation": "Jeder, der diese URL hat, kann auf diese Karte zugreifen."
   },
-  "emptyWorkbench": {
-    "emptyArea": "Ihre Arbeitsbereich ist leer",
-    "helpfulHintsOne": "Durchsuchen Sie die verfügbaren Daten, indem Sie den \"Datenkatalog\" auswählen, oder klicken Sie auf \"Upload\", um der Karte Ihre eigenen Daten hinzuzufügen.",
-    "helpfulHintsTwo": "Sobald Sie der Karte Daten hinzugefügt haben, werden Ihre aktiven Datensätze hier in Ihrem Arbeitsbereich aufgeführt. Der Arbeitsbereich hilft Ihnen bei der Interaktion mit den Daten.",
-    "helpfulHintsThree": "Im Arbeitsbereich können Sie Datensätze ein- und ausschalten, ihre Deckkraft ändern, den Vergleich im Splitscreen-Modus aktivieren, Stile ändern und durch Datums- und Zeitangaben navigieren, sofern die Daten diese Funktion unterstützen.",
-    "helpfulHints": "Nützliche Hinweise"
-  },
   "map": {
     "drawExtentHelper": {
       "extent": "Ausdehnung",
@@ -1540,7 +1533,6 @@
     "noData": "Keine geeigneten Daten gefunden.",
     "showItemInChart": "Zeige {{value}} im Diagramm"
   },
-  "emptyWorkbenchMessage": "<0><0>Ihr Arbeitsbereich ist leer</0><1><strong>Klicken Sie oben auf '$t(addData.addDataBtnText)'</strong></1><2><0>Durchsuchen Sie den Datenkatalog</0><1>Laden Sie Ihre eigenen Daten in die Karte</1></2><3><0></0><strong>Hinweis.</strong><2>Alle Ihre aktiven Datensätze werden hier aufgelistet</2></3></0>",
   "welcomeMessage": {
     "exploreDataBtnText": "Datenkatalog",
     "searchBtnText": "Nach einem Ort suchen",

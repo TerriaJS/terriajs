@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import { FC } from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionButton as SelectableDimensionButtonModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import { StyledIcon } from "../../Styled/Icon";
@@ -8,10 +8,10 @@ import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMark
 import Button from "../../Styled/Button";
 import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 
-export const SelectableDimensionButton: React.FC<{
+export const SelectableDimensionButton: FC<{
   id: string;
   dim: SelectableDimensionButtonModel;
-}> = ({ id, dim }) => {
+}> = ({ dim }) => {
   const iconGlyph = dim.icon;
   const iconProps = { light: true, styledWidth: "16px", styledHeight: "16px" };
   return (

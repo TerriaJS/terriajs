@@ -35,7 +35,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     ) as this;
   }
 
-  static load(item: TableMixin.Instance) {
+  static load(item: TableMixin.Instance): TableAutomaticLegendStratum {
     return new TableAutomaticLegendStratum(item);
   }
 
@@ -194,6 +194,8 @@ const getOutlineLegend: GetLegendForStyle<OutlineSymbolTraits> = (
   return {
     outlineWidth: outline.width,
     outlineColor: outline.color,
+    // If we have a dashed array, then show CSS outline-style as dashed, otherwise solid
+    outlineStyle: outline.dash && outline.dash.length > 1 ? "dashed" : "solid",
     title: outline.legendTitle ?? defaultLabel
   };
 };

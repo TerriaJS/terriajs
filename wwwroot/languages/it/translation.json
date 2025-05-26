@@ -1613,13 +1613,6 @@
   "term": {
     "missingContent": "contenuto mancante"
   },
-  "emptyWorkbench": {
-    "helpfulHints": "Suggerimenti utili",
-    "emptyArea": "La tua workbench è vuota",
-    "helpfulHintsOne": "Sfoglia i dati disponibili selezionando 'Esplora i dati della mappa' o clicca su 'Carica' per aggiungere i tuoi dati alla mappa.",
-    "helpfulHintsThree": "Nella workbench puoi attivare e disattivare i set di dati, cambiare la loro opacità, attivare il confronto a schermo diviso, cambiare gli stili e navigare attraverso date e orari, se i dati supportano questa funzionalità.",
-    "helpfulHintsTwo": "Una volta aggiunti i dati alla mappa, i tuoi set di dati attivi sono elencati qui nella tua workbench. La workbench ti aiuterà a interagire con i dati."
-  },
   "trainer": {
     "collapseTrainer": "Nascondi i dettagli del passaggio",
     "expandTrainer": "Mostra altri dettagli del passaggio",
@@ -1633,7 +1626,6 @@
   "toast": {
     "mapIsZooming": "Caricamento dello zoom ideale..."
   },
-  "emptyWorkbenchMessage": "<0><0>Il tuo workbench è vuoto</0><1><strong>Fai clic su \"$t(addData.addDataBtnText)\" sopra per </strong></1><2><0>Sfogliare il Catalogo dati</0> <1>Caricare i tuoi dati sulla mappa</1></2><3><0></0><strong>SUGGERIMENTO.</strong><2>Tutti i tuoi set di dati attivi verranno elencati qui< /2></3></0>",
   "timer": {
     "nextScheduledUpdateCountdown": "Prossimo aggiornamento dati tra {{timeCountdown}}",
     "nextScheduledUpdateTime": "Prossimo aggiornamento dei dati a {{scheduledUpdateTime}}"

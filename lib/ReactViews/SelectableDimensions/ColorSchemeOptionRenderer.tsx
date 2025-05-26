@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { lab, rgb } from "d3-color";
+import { rgb } from "d3-color";
 import * as d3Scale from "d3-scale-chromatic";
-import React from "react";
+import { VFC, ReactChild } from "react";
 import StandardCssColors from "../../Core/StandardCssColors";
 import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDimensions";
 
-const Invalid: React.VFC<object> = () => {
+const Invalid: VFC<object> = () => {
   const { t } = useTranslation();
   return <span>{t("selectableDimensions.invalid")}</span>;
 };
@@ -30,29 +30,23 @@ const Invalid: React.VFC<object> = () => {
 const interpolateWidth = 300;
 const height = 20;
 
-function ramp(
-  name: string | undefined,
-  n: number | undefined
-): React.ReactChild {
+function ramp(name: string | undefined, n: number | undefined): ReactChild {
   if (!name) return <Invalid />;
   let colors: string[];
 
   /** This could be used to draw text on top of swatches/ramps */
-  let dark;
   if (
     n &&
     (d3Scale as any)[`scheme${name}`] &&
     (d3Scale as any)[`scheme${name}`][n]
   ) {
     colors = (d3Scale as any)[`scheme${name}`][n];
-    dark = lab(colors[0]).l < 50;
   } else {
     const interpolate = (d3Scale as any)[`interpolate${name}`];
     if (!interpolate) {
       return <Invalid />;
     }
     colors = [];
-    dark = lab(interpolate(0)).l < 50;
     for (let i = 0; i < interpolateWidth; ++i) {
       colors.push(rgb(interpolate(i / (interpolateWidth - 1))).hex());
     }
@@ -111,7 +105,6 @@ function swatches(name: string | undefined) {
   }
   if (!colors) return <Invalid />;
   const n = colors.length;
-  const dark = lab(colors[0]).l < 50;
   return (
     <svg
       viewBox={`0 0 ${n} 1`}

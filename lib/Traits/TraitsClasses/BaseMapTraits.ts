@@ -53,7 +53,7 @@ export class BaseMapsTraits extends ModelTraits {
     description:
       "The id of the baseMap to be used as the base map in data preview. "
   })
-  previewBaseMapId?: string = "basemap-positron";
+  previewBaseMapId?: string = "basemap-natural-earth-II";
 
   @objectArrayTrait<BaseMapTraits>({
     type: BaseMapTraits,

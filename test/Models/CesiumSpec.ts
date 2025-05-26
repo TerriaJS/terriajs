@@ -24,8 +24,7 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-
-const supportsWebGL = require("../../lib/Core/supportsWebGL");
+import supportsWebGL from "../../lib/Core/supportsWebGL";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 

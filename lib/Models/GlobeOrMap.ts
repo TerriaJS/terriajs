@@ -2,37 +2,41 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
-import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import TerriaError from "../Core/TerriaError";
+import isDefined from "../Core/isDefined";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
-import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
+import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import HighlightColorTraits from "../Traits/TraitsClasses/HighlightColorTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   OutlineSymbolTraits
 } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import CameraView from "./CameraView";
-import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
+import hasTraits from "./Definition/hasTraits";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
+import MappableTraits, {
+  VectorTraits
+} from "../Traits/TraitsClasses/MappableTraits";
+import Model from "./Definition/Model";
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
@@ -86,6 +90,22 @@ export default abstract class GlobeOrMap {
     this.isMapZooming = true;
     const zoomId = createGuid();
     this._currentZoomId = zoomId;
+
+    // Use camera view from model if specified
+    target = getModelCameraView(target) ?? target;
+
+    if (MappableMixin.isMixedInto(target)) {
+      // If model rectangle is outside world bounds, zoom to homecamera
+      if (
+        target.rectangle?.east !== undefined &&
+        target.rectangle?.west !== undefined &&
+        target.rectangle.east - target.rectangle.west >= 360
+      ) {
+        target = this.terria.mainViewer.homeCamera;
+        console.log("Extent is wider than world so using homeCamera.");
+      }
+    }
+
     return this.doZoomTo(target, flightDurationSeconds).finally(
       action(() => {
         // Unset isMapZooming only if the local zoomId matches _currentZoomId.
@@ -140,7 +160,7 @@ export default abstract class GlobeOrMap {
    */
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
-  ) {
+  ): TerriaFeature {
     const feature = new TerriaFeature({
       id: imageryFeature.name
     });
@@ -209,11 +229,11 @@ export default abstract class GlobeOrMap {
   }
 
   abstract _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: TerriaFeature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined): Promise<void> {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
@@ -234,17 +254,16 @@ export default abstract class GlobeOrMap {
 
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
-        let highlightColor;
-        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
-          highlightColor =
-            Color.fromCssColorString(
-              runInAction(() => catalogItem.highlightColor)
-            ) ?? defaultColor;
+        let highlightColorString;
+        if (hasTraits(catalogItem, HighlightColorTraits, "highlightColor")) {
+          highlightColorString = runInAction(() => catalogItem.highlightColor);
+          runInAction(() => catalogItem.highlightColor);
         } else {
-          highlightColor =
-            Color.fromCssColorString(this.terria.baseMapContrastColor) ??
-            defaultColor;
+          highlightColorString = this.terria.baseMapContrastColor;
         }
+        const highlightColor: Color = isDefined(highlightColorString)
+          ? Color.fromCssColorString(highlightColorString)
+          : defaultColor;
 
         // highlighting doesn't work if the highlight colour is full white
         // so in this case use something close to white instead
@@ -258,9 +277,13 @@ export default abstract class GlobeOrMap {
         this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
-            !feature._cesium3DTileFeature.tileset.isDestroyed()
+            feature._cesium3DTileFeature.tileset.isDestroyed() === false
           ) {
-            feature._cesium3DTileFeature.color = originalColor;
+            try {
+              feature._cesium3DTileFeature.color = originalColor;
+            } catch (err) {
+              TerriaError.from(err).log();
+            }
           }
         };
       } else if (isDefined(feature.polygon)) {
@@ -316,29 +339,9 @@ export default abstract class GlobeOrMap {
 
       if (!hasGeometry) {
         let vectorTileHighlightCreated = false;
-        // Feature from MapboxVectorTileImageryProvider
+
+        // Feature from ProtomapsImageryProvider
         if (
-          feature.imageryLayer?.imageryProvider instanceof
-          MapboxVectorTileImageryProvider
-        ) {
-          const featureId =
-            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
-            feature.properties?.id?.getValue?.();
-          if (isDefined(featureId)) {
-            const highlightImageryProvider =
-              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
-                featureId
-              );
-            this._removeHighlightCallback =
-              this.terria.currentViewer._addVectorTileHighlight(
-                highlightImageryProvider,
-                feature.imageryLayer.imageryProvider.rectangle
-              );
-          }
-          vectorTileHighlightCreated = true;
-        }
-        // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
-        else if (
           feature.imageryLayer?.imageryProvider instanceof
           ProtomapsImageryProvider
         ) {
@@ -459,4 +462,80 @@ export default abstract class GlobeOrMap {
       "captureScreenshot must be implemented in the derived class."
     );
   }
+}
+
+/**
+ * Return camera view from a Model's ideal zoom traits
+ *
+ * @param model A Model object
+ * @returns CameraView if the model defines a valid camera view
+ */
+function getModelCameraView(model: any): CameraView | undefined {
+  const idealZoom = hasTraits(model, MappableTraits, "idealZoom")
+    ? model.idealZoom
+    : undefined;
+
+  if (!idealZoom) {
+    return;
+  }
+
+  function vectorToJson(vector: Model<VectorTraits>) {
+    if (
+      typeof vector?.x === "number" &&
+      typeof vector?.y === "number" &&
+      typeof vector?.z === "number"
+    ) {
+      return {
+        x: vector.x,
+        y: vector.y,
+        z: vector.z
+      };
+    } else {
+      return undefined;
+    }
+  }
+
+  // camera is likely used more often than lookAt.
+  const theWest = idealZoom.camera?.west;
+  const theEast = idealZoom.camera?.east;
+  const theNorth = idealZoom.camera?.north;
+  const theSouth = idealZoom.camera?.south;
+
+  if (
+    idealZoom.lookAt?.targetLongitude !== undefined &&
+    idealZoom.lookAt?.targetLatitude !== undefined &&
+    (idealZoom.lookAt?.range ?? 0) >= 0
+  ) {
+    // No value checking here. Improper values can lead to unexpected results.
+    const lookAt = {
+      targetLongitude: idealZoom.lookAt.targetLongitude,
+      targetLatitude: idealZoom.lookAt.targetLatitude,
+      targetHeight: idealZoom.lookAt.targetHeight,
+      heading: idealZoom.lookAt.heading,
+      pitch: idealZoom.lookAt.pitch,
+      range: idealZoom.lookAt.range
+    };
+
+    // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
+    return CameraView.fromJson({ lookAt: lookAt });
+  } else if (theWest && theEast && theNorth && theSouth) {
+    const thePosition = vectorToJson(idealZoom?.camera?.position);
+    const theDirection = vectorToJson(idealZoom?.camera?.direction);
+    const theUp = vectorToJson(idealZoom?.camera?.up);
+
+    // No value checking here. Improper values can lead to unexpected results.
+    const camera = {
+      west: theWest,
+      east: theEast,
+      north: theNorth,
+      south: theSouth,
+      position: thePosition,
+      direction: theDirection,
+      up: theUp
+    };
+
+    return CameraView.fromJson(camera);
+  }
+
+  return;
 }

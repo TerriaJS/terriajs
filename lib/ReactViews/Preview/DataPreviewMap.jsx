@@ -10,7 +10,7 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
@@ -68,7 +68,7 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
  * @extends {React.Component<Props>}
  */
 @observer
-class DataPreviewMap extends React.Component {
+class DataPreviewMap extends Component {
   @observable
   isZoomedToExtent = false;
 
@@ -108,7 +108,9 @@ class DataPreviewMap extends React.Component {
      * @param {HTMLElement | null} container
      */
     this.containerRef = action((container) => {
-      this.previewViewer.attached && this.previewViewer.detach();
+      if (this.previewViewer.attached) {
+        this.previewViewer.detach();
+      }
       if (container !== null) {
         this.initPreview(container);
       }
@@ -172,8 +174,9 @@ class DataPreviewMap extends React.Component {
   }
 
   componentWillUnmount() {
-    this._disposeZoomToExtentSubscription &&
+    if (this._disposeZoomToExtentSubscription) {
       this._disposeZoomToExtentSubscription();
+    }
     this.previewViewer.detach();
 
     if (this._unsubscribeErrorHandler) {
@@ -257,7 +260,7 @@ class DataPreviewMap extends React.Component {
   }
 
   @action.bound
-  clickMap(evt) {
+  clickMap(_evt) {
     this.isZoomedToExtent = !this.isZoomedToExtent;
   }
 

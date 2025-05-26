@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import { BaseModel } from "../../Models/Definition/Model";
 
 interface PropsType {
@@ -6,6 +6,6 @@ interface PropsType {
   printView?: boolean;
 }
 
-declare class Description extends React.Component<PropsType> {}
+declare class Description extends Component<PropsType> {}
 
 export default Description;

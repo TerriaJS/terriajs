@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import IElementConfig from "../../../Models/IElementConfig";
 import Terria from "../../../Models/Terria";
 
@@ -8,6 +8,6 @@ interface PropsType {
   elementConfig?: IElementConfig;
 }
 
-declare class Timeline extends React.Component<PropsType> {}
+declare class Timeline extends Component<PropsType> {}
 
 export default Timeline;

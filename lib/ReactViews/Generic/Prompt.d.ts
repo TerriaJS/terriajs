@@ -1,8 +1,8 @@
-import React from "react";
+import type { PureComponent } from "react";
 
 interface PropsType {
   content: React.ReactNode;
-  isVisible: boolean;
+  isVisible?: boolean;
   displayDelay: number;
   dismissText: string;
   dismissAction: () => void;
@@ -15,6 +15,6 @@ interface PropsType {
   promptLeftOffset?: number;
 }
 
-declare class Prompt extends React.PureComponent<PropsType> {}
+declare class Prompt extends PureComponent<PropsType> {}
 
 export default Prompt;

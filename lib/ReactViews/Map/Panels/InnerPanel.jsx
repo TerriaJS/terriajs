@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
@@ -139,7 +138,7 @@ const InnerPanel = createReactClass({
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
-          /* eslint-disable-next-line react/no-unknown-property */
+          // eslint-disable-next-line react/no-unknown-property
           showDropdownAsModal={this.props.showDropdownAsModal}
           css={`
             svg {

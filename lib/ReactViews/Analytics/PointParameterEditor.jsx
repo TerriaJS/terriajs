@@ -1,7 +1,5 @@
 "use strict";
 
-import React from "react";
-
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
@@ -36,7 +34,7 @@ const PointParameterEditor = createReactClass({
       PointParameterEditor.setValueFromText(e, this.props.parameter);
   },
 
-  inputOnBlur(e) {
+  inputOnBlur(_e) {
     const isCurrentlyInvalid = !this.props.parameterViewModel.isValueValid;
     this.props.parameterViewModel.wasEverBlurredWhileInvalid =
       this.props.parameterViewModel.wasEverBlurredWhileInvalid ||

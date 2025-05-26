@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import { FC } from "react";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
@@ -21,7 +21,8 @@ const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
   viewState.terria.raiseErrorToUser(error, undefined, true);
 };
 
-const WarningBox: React.FC<{
+const WarningBox: FC<{
+  children?: React.ReactNode;
   error?: TerriaError;
   viewState?: ViewState;
 }> = (props) => {

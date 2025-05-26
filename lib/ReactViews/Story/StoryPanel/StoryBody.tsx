@@ -1,4 +1,3 @@
-import React from "react";
 import { Story } from "../Story";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import styled from "styled-components";
@@ -9,13 +8,13 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   paddedVertically: props.isCollapsed ? 0 : 2,
   scroll: true
 }))<{ isCollapsed: boolean }>`
+  background-color: ${(props) => props.theme.transparentDark}
+  backdrop-filter: ${(props) => props.theme.blur}
   padding-top: 0;
+  padding: ${(props) => (props.isCollapsed ? 0 : 15)}px; 
   max-height: ${(props) => (props.isCollapsed ? 0 : "100px")};
   @media (min-height: 700px) {
     max-height: ${(props) => (props.isCollapsed ? 0 : "200px")};
-  }
-  @media (min-height: 900px) {
-    max-height: ${(props) => (props.isCollapsed ? 0 : "400px")};
   }
 
   overflow-y: auto;

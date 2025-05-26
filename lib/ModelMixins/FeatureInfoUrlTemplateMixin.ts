@@ -36,19 +36,19 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
     abstract buildFeatureFromPickResult(
       screenPosition: Cartesian2 | undefined,
       pickResult: any
-    ): TerriaFeature | undefined;
+    ): Promise<TerriaFeature> | TerriaFeature | undefined;
 
     /**
      * Returns a {@link Feature} for the pick result. If `featureInfoUrlTemplate` is set,
      * it asynchronously loads additional info from the url.
      */
     @action
-    getFeaturesFromPickResult(
+    async getFeaturesFromPickResult(
       screenPosition: Cartesian2 | undefined,
       pickResult: any,
       loadExternal = true
-    ): TerriaFeature | undefined {
-      const feature = this.buildFeatureFromPickResult(
+    ): Promise<TerriaFeature | undefined> {
+      const feature = await this.buildFeatureFromPickResult(
         screenPosition,
         pickResult
       );
@@ -86,7 +86,7 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
                     : undefined
                 )
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = new PropertyBag();
               }
@@ -104,7 +104,22 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
 
     wrapImageryPickFeatures<T extends ImageryProvider>(imageryProvider: T) {
       const realPickFeatures = imageryProvider.pickFeatures;
-      const catalogItem = this;
+
+      // Get CatalogItem properties, so we aren't reading them outside of a reaction
+      const featureInfoUrlTemplate = this.featureInfoUrlTemplate;
+      const proxiedFeatureInfoUrl = proxyCatalogItemUrl(
+        this,
+        featureInfoUrlTemplate ?? "",
+        "0d"
+      );
+      const showStringIfPropertyValueIsNull = MappableMixin.isMixedInto(this)
+        ? this.showStringIfPropertyValueIsNull
+        : undefined;
+      const maxRequests = this.maxRequests;
+      const currentTime = TimeVarying.is(this)
+        ? this.currentTimeAsJulianDate
+        : undefined;
+
       imageryProvider.pickFeatures = async (
         x: number,
         y: number,
@@ -121,18 +136,14 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
           latitude
         );
         if (
-          isDefined(catalogItem.featureInfoUrlTemplate) &&
+          isDefined(featureInfoUrlTemplate) &&
           isDefined(features) &&
-          features.length < catalogItem.maxRequests
+          features.length < maxRequests
         ) {
           for (let i = 0; i < features.length; i++) {
             const feature = features[i];
             const resource = new Resource({
-              url: proxyCatalogItemUrl(
-                catalogItem,
-                catalogItem.featureInfoUrlTemplate,
-                "0d"
-              ),
+              url: proxiedFeatureInfoUrl,
               templateValues: feature.properties
                 ? feature.properties
                 : undefined
@@ -156,14 +167,10 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
               // feature info template url
               feature.description = generateCesiumInfoHTMLFromProperties(
                 feature.properties,
-                (TimeVarying.is(catalogItem)
-                  ? catalogItem.currentTimeAsJulianDate
-                  : undefined) ?? JulianDate.now(),
-                MappableMixin.isMixedInto(catalogItem)
-                  ? catalogItem.showStringIfPropertyValueIsNull
-                  : undefined
+                currentTime ?? JulianDate.now(),
+                showStringIfPropertyValueIsNull
               );
-            } catch (e) {
+            } catch (_e) {
               if (!feature.properties) {
                 feature.properties = {};
               }

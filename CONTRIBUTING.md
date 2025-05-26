@@ -40,7 +40,7 @@ Please get involved in code review. It's a great way to expand your knowledge of
 - Verify the code builds successfully and there are no lint warnings (run `gulp`).
 - Check basic functionality of the map, such as enabling data sources in both 2D and 3D.
 - Verify that all specs pass. If anything you did might be browser-dependent, you should run the specs in all the major supported browsers.
-- Review the code itself for quality of implementation and consistency with coding conventions. Until we have our own coding conventions, we can [use Cesium's](https://github.com/AnalyticalGraphicsInc/cesium/wiki/JavaScript-Coding-Conventions).
+- Review the code itself for quality of implementation and consistency with coding conventions. Until we have our own coding conventions, we use [Cesium's](https://github.com/CesiumGS/cesium/blob/master/Documentation/Contributors/CodingGuide/README.md).
 
 Reviewers are welcome to make minor edits to a pull request (e.g. fixing typos) before merging it. If a reviewer makes larger changes, someone else - maybe the original author of the pull request - should take a look at the changes before the entire pull request is merged.
 

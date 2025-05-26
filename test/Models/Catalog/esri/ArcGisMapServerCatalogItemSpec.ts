@@ -6,6 +6,7 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
+import mapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json";
 
 configure({
   enforceActions: "observed",
@@ -515,7 +516,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with duplicate legends", async function () {
+    it("defines legends - with single layer specified - with duplicate legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "61");
 
       expect(item.legends).toBeDefined();
@@ -530,7 +531,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with unique legends", async function () {
+    it("defines legends - with single layer specified - with unique legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "67");
 
       expect(item.legends).toBeDefined();
@@ -545,7 +546,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with multiple layers specified", async function () {
+    it("defines legends - with multiple layers specified", function () {
       item.setTrait(
         CommonStrata.definition,
         "layers",
@@ -731,17 +732,17 @@ describe("ArcGisMapServerCatalogItem", function () {
       (await item.loadMapItems()).throwIfError();
     });
 
-    it("doesn't request specific layers", async function () {
+    it("doesn't request specific layers", function () {
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
     });
 
-    it("defines legends", async function () {
+    it("defines legends", function () {
       expect(item.legends.length).toBe(1);
       expect(item.legends[0].items.length).toBe(3);
     });
 
-    it("defines name", async function () {
+    it("defines name", function () {
       expect(item.name).toBe("Layers");
     });
 
@@ -782,11 +783,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("can generate rectangle from an extent in CRS EPSG:7844", async function () {
-      const mapServerJson = require("../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json");
       mapServerJson.fullExtent.spatialReference.wkid = 7844;
 
       jasmine.Ajax.stubRequest(/.*?\/foo\/MapServer.*/).andReturn({
-        responseText: JSON.stringify(mapServerJson)
+        responseJSON: mapServerJson
       });
 
       runInAction(() => {

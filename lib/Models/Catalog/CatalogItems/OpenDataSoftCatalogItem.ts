@@ -394,7 +394,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     // Group all time intervals for each row group (each Point feature)
     // This calculates the start/stop dates for each row group
     const groupIntervals = this.catalogItem.activeTableStyle.rowGroups.map(
-      ([id, rows]) => {
+      ([_id, rows]) => {
         let start: JulianDate | undefined;
         let stop: JulianDate | undefined;
 
@@ -602,7 +602,7 @@ export default class OpenDataSoftCatalogItem
         new Array(Math.ceil(recordsToFetch / 100))
           .fill(0)
           .map(
-            async (v, index) =>
+            async (_v, index) =>
               (await this.apiClient.get(q.offset(index * 100))).records ?? []
           )
       )
@@ -631,8 +631,8 @@ export default class OpenDataSoftCatalogItem
           ([field, value]) => {
             // geoPoint2dFieldName will return a JSON object - spilt lat/lon columns
             if (field === this.geoPoint2dFieldName && isJsonObject(value)) {
-              cols.lat[index] = `${value.lat}` ?? "";
-              cols.lon[index] = `${value.lon}` ?? "";
+              cols.lat[index] = `${value.lat}`;
+              cols.lon[index] = `${value.lon}`;
             } else {
               // Copy current field into columns object
               if (!Array.isArray(cols[field])) {

@@ -1,16 +1,19 @@
-import React from "react";
+import { forwardRef, ReactNode } from "react";
 import styled from "styled-components";
 
 export type ToastProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 /**
  * A toast component that positions its children bottom center of the map
  */
-const Toast: React.FC<ToastProps> = ({ children }) => {
-  return <Container>{children}</Container>;
-};
+const Toast = forwardRef<HTMLDivElement, ToastProps>(
+  ({ children }, forwardRef) => {
+    return <Container ref={forwardRef}>{children}</Container>;
+  }
+);
+Toast.displayName = "Toast";
 
 const Container = styled.div`
   position: fixed;
@@ -20,7 +23,7 @@ const Container = styled.div`
   @media (min-width: ${(props) => props.theme.sm}px) {
     position: absolute;
     left: 45%; // on larger screens
-    bottom: 40px;
+    bottom: 60px;
   }
 
   display: flex;

@@ -3,6 +3,7 @@ import {
   action,
   autorun,
   computed,
+  IReactionDisposer,
   makeObservable,
   observable,
   reaction,
@@ -28,7 +29,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
@@ -59,12 +59,6 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import Terria from "./Terria";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -109,6 +103,7 @@ export default class Leaflet extends GlobeOrMap {
     clippingRectangle: Rectangle | undefined
   ) => GridLayer = computedFn((ip, clippingRectangle) => {
     const layerOptions = {
+      maxZoom: this.terria.configParameters.leafletMaxZoom,
       bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
     };
     // We have two different kinds of ImageryProviderLeaflet layers
@@ -173,7 +168,7 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: this._leafletVisualizer.visualizersCallback as any // TODO: fix type error
+      visualizersCallback: this._leafletVisualizer.visualizersCallback
     });
 
     this._eventHelper = new EventHelper();
@@ -204,7 +199,7 @@ export default class Leaflet extends GlobeOrMap {
         map.boxZoom,
         map.keyboard,
         map.dragging,
-        map.tap
+        map.tapHold
       ]);
       const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
@@ -224,8 +219,9 @@ export default class Leaflet extends GlobeOrMap {
         interactions.forEach((handler) => handler.disable());
         this.map.off("click", pickLocation);
         this.scene.featureClicked.removeEventListener(pickFeature);
-        this._disposeSelectedFeatureSubscription &&
+        if (this._disposeSelectedFeatureSubscription) {
           this._disposeSelectedFeatureSubscription();
+        }
       } else {
         interactions.forEach((handler) => handler.enable());
         this.map.on("click", pickLocation);
@@ -305,18 +301,18 @@ export default class Leaflet extends GlobeOrMap {
     // this._dragboxcompleted = false;
   }
 
-  getContainer() {
+  getContainer(): HTMLElement {
     return this.map.getContainer();
   }
 
-  pauseMapInteraction() {
+  pauseMapInteraction(): void {
     ++this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 1) {
       this.map.dragging.disable();
     }
   }
 
-  resumeMapInteraction() {
+  resumeMapInteraction(): void {
     --this._pauseMapInteractionCount;
     if (this._pauseMapInteractionCount === 0) {
       setTimeout(() => {
@@ -327,9 +323,10 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
-  destroy() {
-    this._disposeSelectedFeatureSubscription &&
+  destroy(): void {
+    if (this._disposeSelectedFeatureSubscription) {
       this._disposeSelectedFeatureSubscription();
+    }
     this._disposeSplitterReaction();
     this._disposeWorkbenchMapItemsSubscription();
     this._eventHelper.removeAll();
@@ -490,7 +487,9 @@ export default class Leaflet extends GlobeOrMap {
         // careful to raiseToTop() only if the DS already exists in the collection.
         // Relevant code:
         //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
-        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+        if (dataSources.contains(ds)) {
+          dataSources.raiseToTop(ds);
+        }
       })
     );
   }
@@ -501,11 +500,9 @@ export default class Leaflet extends GlobeOrMap {
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
-      //throw new DeveloperError("target is required.");
     }
     let bounds;
 
-    // Target is a KML data source
     if (isDefined(target.entities)) {
       if (isDefined(this.dataSourceDisplay)) {
         bounds = this.dataSourceDisplay.getLatLngBounds(target);
@@ -522,19 +519,25 @@ export default class Leaflet extends GlobeOrMap {
           extent = target.cesiumRectangle;
         }
         if (!isDefined(extent)) {
-          // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
         extent = target.rectangle;
       }
 
-      // Account for a bounding box crossing the date line.
-      if (extent.east < extent.west) {
-        extent = Rectangle.clone(extent);
-        extent.east += CesiumMath.TWO_PI;
+      // Ensure extent is defined before accessing its properties
+      if (isDefined(extent)) {
+        // Account for a bounding box crossing the date line.
+        if (extent.east < extent.west) {
+          extent = Rectangle.clone(extent);
+          extent.east += CesiumMath.TWO_PI;
+        }
+        bounds = rectangleToLatLngBounds(extent);
+      } else {
+        // Handle the case where extent is undefined
+        console.error("Unable to determine bounds for zooming.");
+        return Promise.resolve();
       }
-      bounds = rectangleToLatLngBounds(extent);
     }
 
     if (isDefined(bounds)) {
@@ -559,7 +562,7 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  notifyRepaintRequired() {
+  notifyRepaintRequired(): void {
     // No action necessary.
   }
 
@@ -567,7 +570,7 @@ export default class Leaflet extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {
+  ): void {
     this._pickFeatures(
       L.latLng({
         lat: latLngHeight.latitude,
@@ -598,7 +601,7 @@ export default class Leaflet extends GlobeOrMap {
    */
 
   @action
-  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
+  private async _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
@@ -621,7 +624,9 @@ export default class Leaflet extends GlobeOrMap {
       typeof catalogItem.getFeaturesFromPickResult === "function" &&
       this.terria.allowFeatureInfoRequests
     ) {
-      const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+      const result = await catalogItem.getFeaturesFromPickResult.bind(
+        catalogItem
+      )(
         undefined,
         entity,
         (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
@@ -847,7 +852,7 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  _reactToSplitterChanges() {
+  _reactToSplitterChanges(): IReactionDisposer {
     return autorun(() => {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
@@ -1068,7 +1073,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
+    imageryProvider: ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const map = this.map;

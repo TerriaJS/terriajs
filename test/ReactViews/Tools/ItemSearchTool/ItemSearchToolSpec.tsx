@@ -1,5 +1,4 @@
 import "../../../SpecMain";
-import React from "react";
 import {
   act,
   create,
@@ -30,19 +29,19 @@ class TestItemSearchProvider extends ItemSearchProvider {
     return;
   }
 
-  async describeParameters(): Promise<ItemSearchParameter[]> {
-    return [
+  describeParameters(): Promise<ItemSearchParameter[]> {
+    return Promise.resolve([
       {
         type: "numeric",
         id: "height",
         name: "Height",
         range: { min: 1, max: 200 }
       }
-    ];
+    ]);
   }
 
-  async search(): Promise<ItemSearchResult[]> {
-    return [];
+  search(): Promise<ItemSearchResult[]> {
+    return Promise.resolve([]);
   }
 }
 
@@ -190,9 +189,9 @@ function renderAndLoad(
   });
 }
 
-async function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
+function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
   const searchForm = root.findByType("form");
   expect(searchForm).toBeDefined();
   act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
-  return searchForm;
+  return Promise.resolve(searchForm);
 }

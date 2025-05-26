@@ -1,12 +1,10 @@
 "use strict";
-
 // Ref now needs to be passed in via refForCaret as there is no longer a button
 // in CleanDropdownPanel
 
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
-import React from "react";
 import createReactClass from "create-react-class";
 // import Icon from "../../Icon";
 import InnerPanel from "../Map/Panels/InnerPanel";
@@ -65,7 +63,6 @@ const CleanDropdownPanel = createReactClass({
     }
   },
 
-  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.forceClosed) {
       this.onDismissed();

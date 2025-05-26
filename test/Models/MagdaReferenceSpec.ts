@@ -135,7 +135,7 @@ describe("MagdaReference", function () {
       .catch(done.fail);
   });
 
-  it("changes to override trait affect members of a dereferenced group", async function (done) {
+  it("changes to override trait affect members of a dereferenced group", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -181,7 +181,7 @@ describe("MagdaReference", function () {
       .catch(done.fail);
   });
 
-  it("changes to Magda record affect members of a dereferenced group", async function (done) {
+  it("changes to Magda record affect members of a dereferenced group", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);

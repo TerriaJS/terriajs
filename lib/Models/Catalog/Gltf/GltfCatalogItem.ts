@@ -6,9 +6,12 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 
 export default class GltfCatalogItem
-  extends UrlMixin(GltfMixin(CreateModel(GltfCatalogItemTraits)))
+  extends UrlMixin(
+    CesiumIonMixin(GltfMixin(CreateModel(GltfCatalogItemTraits)))
+  )
   implements HasLocalData
 {
   static readonly type = "gltf";
@@ -24,7 +27,15 @@ export default class GltfCatalogItem
 
   @computed
   get gltfModelUrl() {
-    return this.url;
+    if (this.ionResource) {
+      return this.ionResource;
+    } else {
+      return this.url;
+    }
+  }
+
+  protected override forceLoadMetadata(): Promise<void> {
+    return this.loadIonResource();
   }
 
   @observable hasLocalData = false;

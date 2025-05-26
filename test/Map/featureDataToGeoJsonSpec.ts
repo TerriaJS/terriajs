@@ -1,5 +1,3 @@
-"use strict";
-
 import featureDataToGeoJson from "../../lib/Map/PickedFeatures/featureDataToGeoJson";
 
 describe("featureDataToGeoJson", function () {

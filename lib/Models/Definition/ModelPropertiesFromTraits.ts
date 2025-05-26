@@ -8,7 +8,7 @@ type SingleTrait<TTrait> = If<
   TTrait,
   TTrait extends ModelTraits ? Model<TTrait> : never
 >;
-type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
+type ArrayTrait<_TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 
 /**
  * Transforms a {@link ModelTraits} class into a type representative of the traits properties exposed on

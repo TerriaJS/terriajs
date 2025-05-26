@@ -1,4 +1,4 @@
-const proj4 = require("proj4/lib/index.js").default;
+import proj4 from "proj4";
 
 /**
  * Turns the longitude / latitude in degrees into a human readable pretty UTM zone representation.

@@ -2,6 +2,7 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";
+import { ReactNode } from "react";
 
 export enum UIMode {
   Difference
@@ -10,7 +11,7 @@ export enum UIMode {
 interface Options {
   onCancel?: () => void;
   message: string;
-  messageAsNode?: React.ReactNode;
+  messageAsNode?: ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
   uiMode?: UIMode; // diff tool hack for now
@@ -36,7 +37,7 @@ export default class MapInteractionMode {
   message: () => string;
 
   @observable
-  messageAsNode: () => React.ReactNode;
+  messageAsNode: () => ReactNode;
 
   @observable
   pickedFeatures?: PickedFeatures;

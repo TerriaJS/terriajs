@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import styled, { useTheme } from "styled-components";
 import { Li } from "../../Styled/List";
 import Icon, { StyledIcon } from "../../Styled/Icon";
@@ -28,12 +28,10 @@ interface SearchResultProps {
   clickAction(): void;
   isLastResult: boolean;
   locationSearchText: string;
-  icon: string;
+  icon: keyof typeof Icon.GLYPHS;
 }
 
-const SearchResult: React.FC<SearchResultProps> = (
-  props: SearchResultProps
-) => {
+const SearchResult: FC<SearchResultProps> = (props: SearchResultProps) => {
   const theme = useTheme();
   const highlightedResultName = highlightKeyword(
     props.name,
@@ -69,7 +67,6 @@ const SearchResult: React.FC<SearchResultProps> = (
                   fillColor={isLightTheme && theme.textDarker}
                   light={isDarkTheme}
                   styledWidth={"16px"}
-                  // @ts-expect-error
                   glyph={Icon.GLYPHS[props.icon]}
                 />
               )}

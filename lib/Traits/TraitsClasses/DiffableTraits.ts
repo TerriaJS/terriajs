@@ -1,3 +1,5 @@
+import { JsonObject } from "../../Core/Json";
+import anyTrait from "../Decorators/anyTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
@@ -39,4 +41,10 @@ export default class DiffableTraits extends mixTraits(TimeFilterTraits) {
     description: "The ID of the style used to compute the difference image"
   })
   diffStyleId?: string;
+
+  @anyTrait({
+    name: "Difference item properties",
+    description: "Additional properties to set on the difference output item."
+  })
+  diffItemProperties?: JsonObject;
 }

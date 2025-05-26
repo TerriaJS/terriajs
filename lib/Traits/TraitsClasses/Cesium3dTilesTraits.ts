@@ -18,6 +18,7 @@ import SplitterTraits from "./SplitterTraits";
 import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
 import FeaturePickingTraits from "./FeaturePickingTraits";
+import CesiumIonTraits from "./CesiumIonTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -123,29 +124,9 @@ export default class Cesium3DTilesTraits extends mixTraits(
   LegendOwnerTraits,
   ShadowTraits,
   ClippingPlanesTraits,
-  SplitterTraits
+  SplitterTraits,
+  CesiumIonTraits
 ) {
-  @primitiveTrait({
-    type: "number",
-    name: "Ion asset ID",
-    description: "The Cesium Ion asset id."
-  })
-  ionAssetId?: number;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Ion access token",
-    description: "Cesium Ion access token id."
-  })
-  ionAccessToken?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Ion server",
-    description: "URL of the Cesium Ion API server."
-  })
-  ionServer?: string;
-
   @objectTrait({
     type: OptionsTraits,
     name: "options",
@@ -192,4 +173,12 @@ export default class Cesium3DTilesTraits extends mixTraits(
       "One or many properties of a feature that together identify it uniquely. This is useful for setting properties for individual features. eg: ['lat', 'lon'], ['buildingId'] etc."
   })
   featureIdProperties?: string[];
+
+  @primitiveArrayTrait({
+    name: "lightColor",
+    type: "number",
+    description:
+      "The light color when shading models. When undefined the scene's light color is used instead. eg: [255, 255, 255]."
+  })
+  lightColor?: number[];
 }

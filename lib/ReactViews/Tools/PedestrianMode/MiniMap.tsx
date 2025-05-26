@@ -1,16 +1,15 @@
 import { action, autorun, computed } from "mobx";
-import React, { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import minimapNavIcon from "../../../../wwwroot/images/minimap-nav.svg";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 import TerriaViewer from "../../../ViewModels/TerriaViewer";
 import Marker from "./Marker";
-
-const minimapNavIcon = require("../../../../wwwroot/images/minimap-nav.svg");
 
 type MiniMapProps = {
   terria: Terria;
@@ -27,7 +26,7 @@ export type MiniMapView = {
   rotation: number;
 };
 
-const MiniMap: React.FC<MiniMapProps> = (props) => {
+const MiniMap: FC<MiniMapProps> = (props) => {
   const { terria, baseMap, view } = props;
   const container = useRef<HTMLDivElement>(null);
   const [miniMapViewer, setMiniMapViewer] = useState<
@@ -35,6 +34,7 @@ const MiniMap: React.FC<MiniMapProps> = (props) => {
   >();
   const [locationMarker, setLocationMarker] = useState<Marker | undefined>();
 
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   useEffect(
     action(() => {
       const marker = new Marker(

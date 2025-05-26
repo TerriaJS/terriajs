@@ -1,5 +1,5 @@
-import React from "react";
+import type { Component } from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 
-declare class TimerSection extends React.Component<{ item: BaseModel }> {}
+declare class TimerSection extends Component<{ item: BaseModel }> {}
 export default TimerSection;

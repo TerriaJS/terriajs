@@ -4,13 +4,8 @@ import SocrataCatalogGroup from "../../../../lib/Models/Catalog/CatalogGroups/So
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import SocrataMapViewCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/SocrataMapViewCatalogItem";
 
-const facets = JSON.stringify(
-  require("../../../../wwwroot/test/Socrata/facets.json")
-);
-
-const search = JSON.stringify(
-  require("../../../../wwwroot/test/Socrata/search.json")
-);
+import facets from "../../../../wwwroot/test/Socrata/facets.json";
+import search from "../../../../wwwroot/test/Socrata/search.json";
 
 describe("SocrataCatalogGroup", function () {
   let terria: Terria;
@@ -21,12 +16,12 @@ describe("SocrataCatalogGroup", function () {
     jasmine.Ajax.stubRequest(
       "http://example.com/api/catalog/v1/domains/example.com/facets?only=dataset%2Cmap"
     ).andReturn({
-      responseText: facets
+      responseJSON: facets
     });
 
     jasmine.Ajax.stubRequest(
       "http://example.com/api/catalog/v1?search_context=example.com&only=dataset%2Cmap&categories=Environment"
-    ).andReturn({ responseText: search });
+    ).andReturn({ responseJSON: search });
 
     terria = new Terria();
     socrataGroup = new SocrataCatalogGroup("test", terria);

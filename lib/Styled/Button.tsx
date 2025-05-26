@@ -1,4 +1,11 @@
-import React from "react";
+import {
+  ReactChild,
+  ReactChildren,
+  Ref,
+  ComponentPropsWithoutRef,
+  FC,
+  forwardRef
+} from "react";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
@@ -75,7 +82,7 @@ export const StyledButton = styled.button<IStyledButtonProps>`
     color: #fff;
     background-color: ${props.theme.colorPrimary};
     border: none;
-    border-radius:20px;
+    border-radius:4px;
   `}
   ${(props) => props.rounded && ` border-radius: 32px; `}
   ${(props) => props.roundLeft && `border-radius: 32px 0 0 32px;`}
@@ -87,7 +94,7 @@ export const StyledButton = styled.button<IStyledButtonProps>`
     // background-color: #4d5766;
     background-color: ${props.theme.textLight};
     color: ${props.theme.darkWithOverlay};
-    border-radius: 20px;
+    border-radius: 4px;
     border: 2px solid ${props.theme.darkWithOverlay};
   `}
   ${(props) =>
@@ -163,17 +170,21 @@ export const RawButton = styled.button<IButtonProps>`
 `;
 
 export type ButtonProps = {
-  renderIcon?: () => React.ReactChild;
+  renderIcon?: () => ReactChild;
   iconProps?: any;
+  primary?: boolean;
+  secondary?: boolean;
+  warning?: boolean;
+  textLight?: boolean;
   rightIcon?: boolean;
   textProps?: any;
-  children?: React.ReactChildren;
-  buttonRef?: React.Ref<HTMLButtonElement>;
+  children?: ReactChildren;
+  buttonRef?: Ref<HTMLButtonElement>;
   title?: string;
-} & React.ComponentPropsWithoutRef<typeof StyledButton>;
+} & ComponentPropsWithoutRef<typeof StyledButton>;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button: React.FC<ButtonProps> = (props) => {
+export const Button: FC<ButtonProps> = (props) => {
   const {
     primary,
     secondary,
@@ -231,6 +242,9 @@ export const Button: React.FC<ButtonProps> = (props) => {
   );
 };
 
-export default React.forwardRef<HTMLButtonElement, ButtonProps>(
+const ButtonWithRef = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => <Button {...props} buttonRef={ref} />
 );
+ButtonWithRef.displayName = "Button";
+
+export default ButtonWithRef;

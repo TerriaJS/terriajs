@@ -1,5 +1,4 @@
-"use strict";
-import React, { useRef, useState } from "react";
+import { ReactNode, RefObject, useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -30,8 +29,9 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
   ${(props) => props.roundLeft && `border-radius: 16px 0 0 16px;`}
   ${(props) => props.roundRight && `border-radius: 0 16px 16px 0;`}
 
-  background: #fff;
-  color: ${(props) => props.theme.textDarker};
+  background:  ${(props) => props.theme.dark};
+  color: ${(props) => props.theme.textLight};
+  border: 1px solid ${(props) => props.theme.darkLighter};
 
   height: 32px;
   min-width: 32px;
@@ -42,13 +42,14 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
     width: 20px;
     margin: 0 auto;
     vertical-align: middle;
-    fill: ${(props) => props.theme.textDarker};
+    fill: ${(props) => props.theme.grey};
   }
 
   ${(props) =>
     props.primary &&
     `
     background: ${props.theme.colorPrimary};
+    border: 1px solid ${props.theme.colorPrimary};
     color: ${props.theme.textLight};
     svg {
       fill: ${props.theme.textLight};
@@ -96,9 +97,9 @@ interface IMapIconButtonProps extends IStyledMapIconButtonProps {
   iconElement: () => JSX.Element;
   closeIconElement?: () => JSX.Element;
   onClick?: () => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
-  buttonRef?: React.RefObject<any>;
+  buttonRef?: RefObject<any>;
   noExpand?: boolean;
 }
 

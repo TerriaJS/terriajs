@@ -1,15 +1,9 @@
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
 import markdownToHtml from "../../lib/Core/markdownToHtml";
-import Terria from "../../lib/Models/Terria";
 import CustomComponent from "../../lib/ReactViews/Custom/CustomComponent";
 
 describe("markdownToHtml", function () {
-  let terria: Terria;
-
   beforeEach(function () {
-    terria = new Terria({
-      baseUrl: "./"
-    });
     registerCustomComponentTypes();
   });
   it("correctly injects terria's custom tooltips", function () {

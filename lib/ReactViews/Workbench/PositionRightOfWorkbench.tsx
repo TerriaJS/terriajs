@@ -1,11 +1,12 @@
 import { observer } from "mobx-react";
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 
 type PositionRightOfWorkbenchProps = {
   viewState: ViewState;
   className?: string;
+  children: React.ReactNode;
 };
 
 /**
@@ -21,8 +22,8 @@ type PositionRightOfWorkbenchProps = {
  *    `;
  *
  */
-const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> =
-  observer((props) => {
+const PositionRightOfWorkbench: FC<PositionRightOfWorkbenchProps> = observer(
+  (props) => {
     return (
       <Container
         className={props.className}
@@ -31,18 +32,19 @@ const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> =
         {props.children}
       </Container>
     );
-  });
+  }
+);
 
 const Container = styled.div<{ isMapFullScreen: boolean }>`
   position: absolute;
-  top: 120px;
+  top: 110px;
   left: 0;
   right: unset;
   bottom: unset;
   margin-left: ${(props) =>
     props.isMapFullScreen
-      ? 16
-      : parseInt(props.theme.workbenchWidth, 10) + 16}px};
+      ? 15
+      : parseInt(props.theme.workbenchWidth, 10) + 42}px};
   transition: margin-left 0.25s;
 `;
 

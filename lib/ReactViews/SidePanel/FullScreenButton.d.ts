@@ -1,5 +1,5 @@
-import React from "react";
-import IElementConfig from "../../Models/IElementConfig";
+import type { Component } from "react";
+import type IElementConfig from "../../Models/IElementConfig";
 
 interface PropsType {
   btnText: string;
@@ -8,6 +8,6 @@ interface PropsType {
   elementConfig?: IElementConfig;
 }
 
-declare class FullScreenButton extends React.Component<PropsType> {}
+declare class FullScreenButton extends Component<PropsType> {}
 
 export default FullScreenButton;

@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../../Sass/common/mixins";
+@use "../../../Sass/common/_variables";
+@use "../../../Sass/common/mixins";
 
 // These remaining SCSS styles can be removed when we refactor Dropdown.jsx to use styled-components.
 
@@ -17,11 +17,11 @@
   &__btn--option {
     width: 100%;
     float: left;
-    color: $color-primary;
+    color: variables.$color-primary;
 
     &:hover,
     &:focus {
-      background: $color-primary;
+      background: variables.$color-primary;
       color: orange;
       text-decoration: none;
     }
@@ -33,7 +33,7 @@
   // It would be better to add a class to the Add Data dropdown instead.
   z-index: 999;
   color: white; // TODO
-  font-family: $font-pop;
+  font-family: variables.$font-pop;
   border: none;
   padding: 1px 8px;
   margin-right: 3px;

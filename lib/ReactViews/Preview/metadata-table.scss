@@ -1,15 +1,17 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "sass:color";
+
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .root table {
   overflow-x: auto;
 }
 
 .root table tr:nth-child(odd) {
-  background-color: darken($faint-bg, 8%);
+  background-color: color.adjust(variables.$faint-bg, $lightness: -8%);
 }
 .root table tr:nth-child(even) {
-  background-color: $faint-bg;
+  background-color: variables.$faint-bg;
 }
 
 .root th {

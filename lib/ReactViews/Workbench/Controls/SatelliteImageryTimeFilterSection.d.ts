@@ -1,9 +1,9 @@
-import React from "react";
+import type { Component } from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 
 interface PropsType {
   item: BaseModel;
 }
 
-declare class SatelliteImageryTimeFilterSection extends React.Component<PropsType> {}
+declare class SatelliteImageryTimeFilterSection extends Component<PropsType> {}
 export default SatelliteImageryTimeFilterSection;

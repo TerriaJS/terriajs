@@ -1,10 +1,7 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import MoreOrLess from "../Generic/MoreOrLess.jsx";
-
 import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
-
 import Styles from "./parameter-editors.scss";
 
 const BooleanParameterGroupEditor = createReactClass({
@@ -13,7 +10,7 @@ const BooleanParameterGroupEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object
   },
-  toggleDiv: function (divID, ev) {
+  toggleDiv: function (divID, _ev) {
     const thisDiv = document.getElementById(divID);
     if (thisDiv.style.display === "none") {
       thisDiv.style.display = "block";
@@ -21,7 +18,7 @@ const BooleanParameterGroupEditor = createReactClass({
       thisDiv.style.display = "none";
     }
   },
-  toggleAll: function (inputArgs, ev) {
+  toggleAll: function (inputArgs, _ev) {
     // if OneForAll selected, set the value of all BooleanParameters in
     // ParameterList to true, disable them,
     // else set the value of all BooleanParameters in ParameterList to
@@ -78,10 +75,10 @@ const BooleanParameterGroupEditor = createReactClass({
   renderCheckboxGroup() {
     const whichIcon = true;
     const OneForAll = this.props.parameter.OneForAll;
-    let name;
-    this.props.parameter.name
-      ? (name = this.props.parameter.name + "_Group")
-      : (name = this.props.parameter.id + "_Group");
+    const name =
+      (this.props.parameter.name
+        ? this.props.parameter.name
+        : this.props.parameter.id) + "_Group";
     const OneForAllDivName = name + "_OneForAllDiv";
     const groupClick = this.toggleDiv.bind(this, name);
     const allClick = this.toggleAll.bind(this, {
@@ -122,4 +119,5 @@ const BooleanParameterGroupEditor = createReactClass({
     return <div>{this.renderCheckboxGroup()}</div>;
   }
 });
-module.exports = BooleanParameterGroupEditor;
+
+export default BooleanParameterGroupEditor;

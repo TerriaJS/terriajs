@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { Portal } from "../StandardUserInterface/Portal";
 
@@ -16,7 +16,7 @@ interface PropsType {
 /**
  * A Portal to show ActionBar UI.
  */
-const ActionBarPortal: React.FC<PropsType> = ({ show }) => {
+const ActionBarPortal: FC<PropsType> = ({ show }) => {
   return <StyledPortal id={ActionBarPortalId} show={show} />;
 };
 
@@ -26,8 +26,8 @@ const StyledPortal = styled(Portal)<{ show: boolean }>`
   height: 56px;
   visibility: ${(p) => (p.show ? "visible" : "hidden")};
   max-width: 60%;
-  bottom: ${(p) => (p.show ? "80px" : "-56px")};
-  left: 0;
+  bottom: ${(p) => (p.show ? "130px" : "-56px")};
+  left: ${(p) => p.theme.workbenchWidth}px;
   right: 0;
   margin: auto;
 

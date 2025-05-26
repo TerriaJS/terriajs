@@ -10,7 +10,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
 ) {
   static stratumName = "ckanDefaultFormats";
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new CkanDefaultFormatsStratum() as this;
   }
 

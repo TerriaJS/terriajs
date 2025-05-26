@@ -16,6 +16,7 @@ import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
+import gridFileUrl from "../../wwwroot/data/WW15MGH.DAC";
 
 interface Cancelable {
   cancel: () => void;
@@ -63,9 +64,7 @@ export default class MouseCoords {
 
   constructor() {
     makeObservable(this);
-    this.geoidModel = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
-    );
+    this.geoidModel = new EarthGravityModel1996(gridFileUrl);
     this.proj4Projection = "+proj=utm +ellps=GRS80 +units=m +no_defs";
     this.projectionUnits = "m";
     this.proj4longlat =
@@ -81,13 +80,13 @@ export default class MouseCoords {
   }
 
   @action.bound
-  toggleUseProjection() {
+  toggleUseProjection(): void {
     this.useProjection = !this.useProjection;
     this.updateEvent.raiseEvent();
   }
 
   @action
-  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
+  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2): void {
     if (!terria.cesium) {
       return;
     }
@@ -190,7 +189,10 @@ export default class MouseCoords {
   }
 
   @action
-  updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
+  updateCoordinatesFromLeaflet(
+    terria: Terria,
+    mouseMoveEvent: MouseEvent
+  ): void {
     if (!terria.leaflet) {
       return;
     }
@@ -206,7 +208,7 @@ export default class MouseCoords {
   }
 
   @action
-  cartographicToFields(coordinates: Cartographic, errorBar?: number) {
+  cartographicToFields(coordinates: Cartographic, errorBar?: number): void {
     this.cartographic = Cartographic.clone(coordinates, scratchCartographic);
 
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
@@ -238,7 +240,7 @@ export default class MouseCoords {
   sampleAccurateHeight(
     terrainProvider: TerrainProvider,
     position: Cartographic
-  ) {
+  ): void {
     if (this.tileRequestInFlight) {
       // A tile request is already in flight, so reschedule for later.
       this.debounceSampleAccurateHeight.cancel();

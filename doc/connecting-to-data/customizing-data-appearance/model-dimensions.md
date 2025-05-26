@@ -8,80 +8,80 @@ For example - this renders a new drop down called "Color" that changes the `colo
 
 ```json
 {
-    "type": "csv",
-    "url": "test/NSW_LGA_NEXIS_201212.csv",
-    "name": "NSW LGA NEXIS 2012",
-    "modelDimensions": [
+  "type": "csv",
+  "url": "test/NSW_LGA_NEXIS_201212.csv",
+  "name": "NSW LGA NEXIS 2012",
+  "modelDimensions": [
+    {
+      "id": "cols",
+      "name": "Color",
+      "selectedId": "Red",
+      "options": [
         {
-            "id": "cols",
-            "name": "Color",
-            "selectedId": "Red",
-            "options": [
-                {
-                    "id": "Red",
-                    "value": {
-                        "defaultStyle": {
-                            "color": {
-                                "colorPalette": "Reds"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "Blue",
-                    "value": {
-                        "defaultStyle": {
-                            "color": {
-                                "colorPalette": "Blues"
-                            }
-                        }
-                    }
-                }
-            ]
+          "id": "Red",
+          "value": {
+            "defaultStyle": {
+              "color": {
+                "colorPalette": "Reds"
+              }
+            }
+          }
+        },
+        {
+          "id": "Blue",
+          "value": {
+            "defaultStyle": {
+              "color": {
+                "colorPalette": "Blues"
+              }
+            }
+          }
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 
-<img src="../img/model-dim.jpeg">
+![Model dimensions](./img/model-dim.jpeg)
 
 ## Example with Mustache template
 
-Model dimensions also supports the use of [Mustache templates](https://mustache.github.io/) - this means you can refer to other parts of the model JSON in the value of the model dimension. For example, this changes the `colorPalette` trait based on the value of another trait `colorPalette2`:
+Model dimensions also supports the use of [Mustache templates](https://mustache.github.io/) - this means you can refer to other parts of the model JSON in the value of the model dimension. For example, this changes the `colorPalette` trait:
 
 ```json
 {
-    "type": "csv",
-    "url": "test/NSW_LGA_NEXIS_201212.csv",
-    "name": "NSW LGA NEXIS 2012",
-    "modelDimensions": [
+  "type": "csv",
+  "url": "test/NSW_LGA_NEXIS_201212.csv",
+  "name": "NSW LGA NEXIS 2012",
+  "modelDimensions": [
+    {
+      "id": "Cols",
+      "selectedId": "Red",
+      "options": [
         {
-            "id": "Cols",
-            "selectedId": "Red",
-            "options": [
-                {
-                    "id": "Red",
-                    "value": {
-                        "defaultStyle": {
-                            "color": {
-                                "colorPalette": "{{modelDimensions.0.selectedId}}"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "Blue",
-                    "value": {
-                        "defaultStyle": {
-                            "color": {
-                                "colorPalette": "{{modelDimensions.0.selectedId}}"
-                            }
-                        }
-                    }
-                }
-            ]
+          "id": "Red",
+          "value": {
+            "defaultStyle": {
+              "color": {
+                "colorPalette": "{{modelDimensions.0.selectedId}}"
+              }
+            }
+          }
+        },
+        {
+          "id": "Blue",
+          "value": {
+            "defaultStyle": {
+              "color": {
+                "colorPalette": "{{modelDimensions.0.selectedId}}"
+              }
+            }
+          }
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 

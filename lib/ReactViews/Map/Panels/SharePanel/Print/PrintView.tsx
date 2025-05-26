@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../StandardUserInterface";
@@ -145,30 +145,34 @@ const PrintView = (props: Props) => {
     props.window.document.head.appendChild(mkStyle(styles));
     props.window.document.body.appendChild(rootNode.current);
     props.window.addEventListener("beforeunload", props.closeCallback);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.window]);
 
   useEffect(() => {
     setScreenshot(viewState.terria.currentViewer.captureScreenshot());
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [props.window]);
 
   useEffect(() => {
-    canShorten(viewState.terria)
-      ? buildShortShareLink(viewState.terria, viewState, {
-          includeStories: false
+    if (canShorten(viewState.terria)) {
+      buildShortShareLink(viewState.terria, viewState, {
+        includeStories: false
+      })
+        .then((url) => {
+          setShareLink(url);
         })
-          .then((url) => {
-            setShareLink(url);
-          })
-          .catch(() =>
-            buildShareLink(viewState.terria, viewState, {
-              includeStories: false
-            })
-          )
-      : setShareLink(
+        .catch(() =>
           buildShareLink(viewState.terria, viewState, {
             includeStories: false
           })
         );
+    } else {
+      setShareLink(
+        buildShareLink(viewState.terria, viewState, {
+          includeStories: false
+        })
+      );
+    }
   }, [viewState.terria, viewState]);
 
   return ReactDOM.createPortal(

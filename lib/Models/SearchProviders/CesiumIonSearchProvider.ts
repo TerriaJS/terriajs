@@ -81,7 +81,7 @@ export default class CesiumIonSearchProvider extends LocationSearchProviderMixin
       response = await loadJson<CesiumIonGeocodeResult>(
         `${this.url}?text=${searchText}&access_token=${this.key}`
       );
-    } catch (e) {
+    } catch (_e) {
       searchResults.message = {
         content: "translate#viewModels.searchErrorOccurred"
       };

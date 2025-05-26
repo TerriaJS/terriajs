@@ -43,8 +43,8 @@ are encapsulated in an action, e.g. rather than:
 
 ```ts
 runInAction(() => {
-    this.props.viewState.selectedHelpMenuItem = this.props.content.itemName;
-    this.props.viewState.helpPanelExpanded = true;
+  this.props.viewState.selectedHelpMenuItem = this.props.content.itemName;
+  this.props.viewState.helpPanelExpanded = true;
 });
 ```
 
@@ -147,8 +147,8 @@ For the most part, simple strings should go through fine by calling
 TypeScript should be the default choice when writing components. Lean towards
 `tsx` when writing React components, with the following caveats:
 
--   The majority of the `lib/Styled` components are not yet `tsx`, these will need
-    to be (tsx-ified!) or imported via CommonJS to consume them, e.g.
+- The majority of the `lib/Styled` components are not yet `tsx`, these will need
+  to be (tsx-ified!) or imported via CommonJS to consume them, e.g.
 
 ```ts
 const Box: any = require("../../../Styled/Box").default;
@@ -160,10 +160,10 @@ or
 const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
 ```
 
--   When rapididly prototyping a UI, you may find it quicker to do this in jsx
-    then tsxifying when you know what the final look is. You may want to consider
-    still having some typed benefits by using logic in TypeScript (either through
-    a wrapper `tsx`, or some `ts` helpers) to aid in the process.
+- When rapididly prototyping a UI, you may find it quicker to do this in jsx
+  then tsxifying when you know what the final look is. You may want to consider
+  still having some typed benefits by using logic in TypeScript (either through
+  a wrapper `tsx`, or some `ts` helpers) to aid in the process.
 
 Components written in TypeScript will not need `PropTypes` defined on them, as
 type errors on props will be caught at compilation rather than a runtime check.

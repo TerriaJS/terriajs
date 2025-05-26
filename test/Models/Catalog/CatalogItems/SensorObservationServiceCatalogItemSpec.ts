@@ -6,14 +6,12 @@ import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
 import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 
-const GetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
-const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
-const GetObservationResponseDaily = require("raw-loader!../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml");
-const GetObservationResponseYearly = require("raw-loader!../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml");
+import GetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml";
+import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml";
+import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml";
+import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml";
 
-const regionMapping = JSON.stringify(
-  require("../../../../wwwroot/data/regionMapping.json")
-);
+import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
@@ -21,13 +19,13 @@ describe("SensorObservationServiceCatalogItem", function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.addCustomParamParser({
-      // @ts-expect-error
+      // @ts-expect-error mock xhr object
       test: (xhr) => /^application\/soap\+xml/.test(xhr.contentType()),
       parse: (paramString) => paramString
     });
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+    ).andReturn({ responseJSON: regionMapping });
 
     item = new SensorObservationServiceCatalogItem("test", new Terria());
     item.setTrait(CommonStrata.user, "url", "https://sos.example.com");

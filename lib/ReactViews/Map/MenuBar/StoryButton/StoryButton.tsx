@@ -1,4 +1,4 @@
-import React, { Ref } from "react";
+import { Ref } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 
@@ -13,7 +13,7 @@ import { useRefForTerria } from "../../../Hooks/useRefForTerria";
 import Styles from "./story-button.scss";
 import withControlledVisibility from "../../../HOCs/withControlledVisibility";
 
-interface Props  {
+interface Props {
   terria: Terria;
   theme: DefaultTheme;
   viewState: ViewState;

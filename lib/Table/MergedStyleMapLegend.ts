@@ -18,7 +18,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(_newModel: BaseModel): this {
     return new MergedStyleMapLegend(this.legends) as this;
   }
 

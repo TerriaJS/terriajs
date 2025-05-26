@@ -2,7 +2,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
@@ -285,7 +284,7 @@ export default class CesiumRenderLoopPauser {
     this.renderingIsPaused = false;
   }
 
-  private postRender(date: JulianDate) {
+  private postRender() {
     // We can safely stop rendering when:
     //  - the camera position hasn't changed in over a second,
     //  - there are no tiles waiting to load, and

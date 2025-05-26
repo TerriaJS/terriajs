@@ -62,17 +62,17 @@ class TestDiffableItem extends DiffableMixin(
   }
 
   showDiffImage(
-    firstDate: JulianDate,
-    secondDate: JulianDate,
-    diffStyleId: string
+    _firstDate: JulianDate,
+    _secondDate: JulianDate,
+    _diffStyleId: string
   ) {}
 
   clearDiffImage() {}
 
   getLegendUrlForStyle(
-    diffStyleId: string,
-    firstDate: JulianDate,
-    secondDate: JulianDate
+    _diffStyleId: string,
+    _firstDate: JulianDate,
+    _secondDate: JulianDate
   ) {
     return "test-legend-url";
   }

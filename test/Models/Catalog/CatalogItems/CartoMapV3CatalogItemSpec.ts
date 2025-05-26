@@ -4,6 +4,11 @@ import CartoMapV3CatalogItem from "../../../../lib/Models/Catalog/CatalogItems/C
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 
+import tableResponse from "../../../../wwwroot/test/CartoMapV3/table-response.json";
+import tableGeoJsonResponse from "../../../../wwwroot/test/CartoMapV3/table-geojson-response.json";
+import queryResponse from "../../../../wwwroot/test/CartoMapV3/query-response.json";
+import queryGeoJsonResponse from "../../../../wwwroot/test/CartoMapV3/query-geojson-response.json";
+
 describe("CartoMapV3CatalogItemSpec", function () {
   let item: CartoMapV3CatalogItem;
 
@@ -41,12 +46,12 @@ describe("CartoMapV3CatalogItemSpec", function () {
       jasmine.Ajax.stubRequest(
         "https://BASE_URL/v3/maps/CONNECTION_NAME/table?name=TABLE_NAME&columns=COLUMN_1&geo_column=GEO_COLUMN_NAME"
       ).andReturn({
-        responseJSON: require("../../../../wwwroot/test/CartoMapV3/table-response.json")
+        responseJSON: tableResponse
       });
       jasmine.Ajax.stubRequest(
         "https://example.com/table/geojson.json"
       ).andReturn({
-        responseJSON: require("../../../../wwwroot/test/CartoMapV3/table-geojson-response.json")
+        responseJSON: tableGeoJsonResponse
       });
     });
 
@@ -96,7 +101,7 @@ describe("CartoMapV3CatalogItemSpec", function () {
           body.geo_column === "GEO_COLUMN_NAME"
         ) {
           req.respondWith({
-            responseJSON: require("../../../../wwwroot/test/CartoMapV3/query-response.json")
+            responseJSON: queryResponse
           });
         } else {
           req.responseError();
@@ -106,7 +111,7 @@ describe("CartoMapV3CatalogItemSpec", function () {
       jasmine.Ajax.stubRequest(
         "https://example.com/query/geojson.json"
       ).andReturn({
-        responseJSON: require("../../../../wwwroot/test/CartoMapV3/query-geojson-response.json")
+        responseJSON: queryGeoJsonResponse
       });
     });
 

@@ -19,10 +19,10 @@ Stratums are how Terria determines which value a Trait should resolve to.
 
 There are 4 strata types
 
--   Defaults
--   Loadable
--   Definition
--   User
+- Defaults
+- Loadable
+- Definition
+- User
 
 Each type can have multiple strata - see [`StratumOrder.ts`](/lib/Models/Definition/StratumOrder.ts)
 
@@ -30,14 +30,14 @@ Each type can have multiple strata - see [`StratumOrder.ts`](/lib/Models/Definit
 
 There are 5 common strata - these exist for every model
 
--   Defaults
-    -   `default`
--   Definition
-    -   `underride`
-    -   `definition`
-    -   `override`
--   User
-    -   `user`
+- Defaults
+  - `default`
+- Definition
+  - `underride`
+  - `definition`
+  - `override`
+- User
+  - `user`
 
 ### Defaults `defaults`
 
@@ -60,8 +60,8 @@ These should only be used in Trait definitions.
 
 Some example usages of `underride`
 
--   Copying `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested reference - they will get the parent `itemProperties*` set in their `underride` stratum
--   Setting `isExperiencingIssues = true` for models which have configuration issues
+- Copying `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested reference - they will get the parent `itemProperties*` set in their `underride` stratum
+- Setting `isExperiencingIssues = true` for models which have configuration issues
 
 ### Definition `definition`
 
@@ -96,8 +96,8 @@ Values for models created programmatically by dynamic groups - for example `WebM
 
 Some use cases:
 
--   To override invalid `definition` values
--   Apply `itemProperties` to a model
+- To override invalid `definition` values
+- Apply `itemProperties` to a model
 
 ### User `user`
 

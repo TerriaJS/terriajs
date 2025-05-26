@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../../../Styled/Box";
@@ -11,10 +10,11 @@ const TitleContainer = styled(Box).attrs({
   verticalCenter: true
 })``;
 
-const ClampedTitle = styled(Text).attrs({ as: "h3", bold: true })`
+const ClampedTitle = styled(Text).attrs({ as: "h3" })`
   /* clamp fallback */
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: 500;
 
   overflow: hidden;
   padding: 0;

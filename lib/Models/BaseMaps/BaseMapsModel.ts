@@ -4,6 +4,7 @@ import isDefined from "../../Core/isDefined";
 import { isJsonObject, JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import ModelReference from "../../Traits/ModelReference";
 import {
   BaseMapsTraits,
@@ -12,13 +13,11 @@ import {
 import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
-import { BaseModel } from "../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import { defaultBaseMaps } from "./defaultBaseMaps";
-import { ModelConstructorParameters } from "../Definition/Model";
-import MappableMixin from "../../ModelMixins/MappableMixin";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
@@ -52,20 +51,23 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   get baseMapItems(): BaseMapItem[] {
     const enabledBaseMaps: BaseMapItem[] = [];
 
-    this.items.forEach((baseMapItem) => {
-      if (
-        baseMapItem.item &&
-        !ModelReference.isRemoved(baseMapItem.item) &&
-        (!this.enabledBaseMaps ||
-          this.enabledBaseMaps.includes(baseMapItem.item))
-      ) {
+    const baseMapItems =
+      this.enabledBaseMaps
+        ?.map((enabledBaseMapId) => {
+          return this.items.find((item) => item.item === enabledBaseMapId);
+        })
+        .filter(isDefined) ?? this.items;
+
+    baseMapItems.forEach((baseMapItem) => {
+      if (baseMapItem.item && !ModelReference.isRemoved(baseMapItem.item)) {
         const itemModel = this.terria.getModelById(BaseModel, baseMapItem.item);
-        if (MappableMixin.isMixedInto(itemModel))
+        if (MappableMixin.isMixedInto(itemModel)) {
           enabledBaseMaps.push({
             image: baseMapItem.image,
             contrastColor: baseMapItem.contrastColor,
             item: itemModel
           });
+        }
       }
     });
 

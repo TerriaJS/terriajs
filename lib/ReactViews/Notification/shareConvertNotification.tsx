@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import React from "react";
 import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import Collapsible from "../Custom/Collapsible/Collapsible";
@@ -18,9 +17,11 @@ export const shareConvertNotification = (
       let pathString = message.path?.join(": ");
       if (!pathString || pathString === null || pathString === "")
         pathString = "root";
-      isDefined(messagesForPath[pathString])
-        ? messagesForPath[pathString].push(message.message)
-        : (messagesForPath[pathString] = [message.message]);
+      if (isDefined(messagesForPath[pathString])) {
+        messagesForPath[pathString].push(message.message);
+      } else {
+        messagesForPath[pathString] = [message.message];
+      }
     });
 
     const rootMessages = messagesForPath["root"];

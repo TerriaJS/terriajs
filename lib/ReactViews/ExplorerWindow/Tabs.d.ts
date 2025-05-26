@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -8,6 +8,6 @@ interface PropsType {
   tabs?: unknown[];
 }
 
-declare class Tabs extends React.Component<PropsType> {}
+declare class Tabs extends Component<PropsType> {}
 
 export default Tabs;

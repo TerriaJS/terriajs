@@ -1,5 +1,3 @@
-"use strict";
-
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -23,6 +21,8 @@ import {
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
+import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
+import ViewerMode from "../../../../Models/ViewerMode";
 
 /** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
  * If in Dev, we add all user properties.
@@ -259,11 +259,22 @@ export function isShareable(terria: Terria) {
   return function (modelId: string) {
     const model = terria.getModelById(BaseModel, modelId);
 
+    if (CatalogMemberMixin.isMixedInto(model) && !model.shareable) {
+      return false;
+    }
+
     // If this is a Reference, then use the model.target, otherwise use the model
     const dereferenced =
-      typeof model === undefined
+      typeof model === "undefined"
         ? model
         : getDereferencedIfExists(terria.getModelById(BaseModel, modelId)!);
+
+    if (
+      CatalogMemberMixin.isMixedInto(dereferenced) &&
+      !dereferenced.shareable
+    ) {
+      return false;
+    }
 
     return (
       model &&
@@ -299,7 +310,7 @@ function addViewSettings(
   // };
 
   let viewerMode: ViewModeJson;
-  if (terria.mainViewer.viewerMode === "cesium") {
+  if (terria.mainViewer.viewerMode === ViewerMode.Cesium) {
     if (terria.mainViewer.viewerOptions.useTerrain) {
       viewerMode = "3d";
     } else {

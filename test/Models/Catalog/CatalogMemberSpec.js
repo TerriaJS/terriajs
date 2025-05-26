@@ -1,7 +1,7 @@
 "use strict";
 
-var CatalogMember = require("../../lib/Models/CatalogMember");
-var Terria = require("../../../lib/Models/Terria");
+import CatalogMember from "../../lib/Models/CatalogMember";
+import Terria from "../../../lib/Models/Terria";
 
 describe("CatalogMember", function () {
   var terria;

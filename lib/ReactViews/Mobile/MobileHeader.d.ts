@@ -1,5 +1,5 @@
 import { i18n } from "i18next";
-import React from "react";
+import { type Component } from "react";
 
 interface PropsType {
   version?: string;
@@ -8,5 +8,5 @@ interface PropsType {
   i18n?: i18n;
 }
 
-declare class MobileHeader extends React.Component<PropsType> {}
+declare class MobileHeader extends Component<PropsType> {}
 export default MobileHeader;

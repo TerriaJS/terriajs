@@ -1,10 +1,10 @@
-"use strict";
 import { observer } from "mobx-react";
-import React from "react";
+import { Fragment } from "react";
 import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { withViewState } from "../Context";
+import { useViewState, withViewState } from "../Context";
+import { useTheme } from "styled-components";
 
 const DEFAULT_BRANDING =
   '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>';
@@ -33,17 +33,24 @@ export default withViewState(
         ];
     }
 
+    const theme = useTheme();
+    const viewState = useViewState();
+
+    const logoHeight = viewState.useSmallScreenInterface
+      ? theme.logoSmallHeight
+      : theme.logoHeight;
+
     const version = props.version ?? "Unknown";
     return (
       <div
         css={`
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
 
           box-sizing: border-box;
 
           width: 100%;
-          height: ${(p: any) => p.theme.logoHeight};
+          min-height: ${logoHeight};
 
           overflow: hidden;
 
@@ -81,12 +88,12 @@ export default withViewState(
         `}
       >
         {brandingHtmlElements.map((element, idx) => (
-          <React.Fragment key={idx}>
+          <Fragment key={idx}>
             {parseCustomHtmlToReact(
               element.replace(/\{\{\s*version\s*\}\}/g, version),
               { disableExternalLinkIcon: true }
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
     );

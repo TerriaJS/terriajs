@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import ReactGA from "react-ga4";
 import { Analytics, ConfigParameters } from "../Models/Terria";
@@ -14,7 +12,7 @@ export default class GoogleAnalytics implements Analytics {
   key: string | undefined = undefined;
   options: any = undefined;
 
-  start(configParameters: GoogleAnalyticsConfigParameters) {
+  start(configParameters: GoogleAnalyticsConfigParameters): void {
     this.key = configParameters.googleAnalyticsKey;
     this.options = configParameters.googleAnalyticsOptions;
 
@@ -24,7 +22,12 @@ export default class GoogleAnalytics implements Analytics {
     initializeGoogleAnalytics(this);
   }
 
-  logEvent(category: string, action: string, label?: string, value?: number) {
+  logEvent(
+    category: string,
+    action: string,
+    label?: string,
+    value?: number
+  ): void {
     const fieldObject: any = {
       hitType: "event",
       eventCategory: category,
