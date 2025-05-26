@@ -50,6 +50,19 @@ export function runWorkflow(
   });
 }
 
+/**
+ * Close any open workflow
+ */
+export function closeWorkflow(viewStateOrTerria: ViewState | Terria) {
+  runInAction(() => {
+    const terria =
+      viewStateOrTerria instanceof Terria
+        ? viewStateOrTerria
+        : viewStateOrTerria.terria;
+    terria.selectableDimensionWorkflow = undefined;
+  });
+}
+
 /** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
 export interface SelectableDimensionWorkflowGroup
   extends Omit<SelectableDimensionGroup, "selectableDimensions" | "placement"> {
