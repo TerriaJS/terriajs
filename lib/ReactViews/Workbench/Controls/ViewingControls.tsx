@@ -1,22 +1,20 @@
 import { sortBy, uniqBy } from "lodash";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -25,21 +23,19 @@ import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
-import CameraView from "../../../Models/CameraView";
-import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
+import { BaseModel } from "../../../Models/Definition/Model";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import Model, { BaseModel } from "../../../Models/Definition/Model";
-import getAncestors from "../../../Models/getAncestors";
 import { ViewingControl } from "../../../Models/ViewingControls";
+import getAncestors from "../../../Models/getAncestors";
 import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import Ul from "../../../Styled/List";
-import { VectorTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
@@ -145,74 +141,8 @@ class ViewingControls extends React.Component<
 
     if (!MappableMixin.isMixedInto(item)) return;
 
-    let zoomToView: CameraView | Rectangle | MappableMixin.Instance = item;
-    function vectorToJson(vector: Model<VectorTraits>) {
-      if (
-        typeof vector?.x === "number" &&
-        typeof vector?.y === "number" &&
-        typeof vector?.z === "number"
-      ) {
-        return {
-          x: vector.x,
-          y: vector.y,
-          z: vector.z
-        };
-      } else {
-        return undefined;
-      }
-    }
-
-    // camera is likely used more often than lookAt.
-    const theWest = item?.idealZoom?.camera?.west;
-    const theEast = item?.idealZoom?.camera?.east;
-    const theNorth = item?.idealZoom?.camera?.north;
-    const theSouth = item?.idealZoom?.camera?.south;
-
-    if (
-      isDefined(item.idealZoom?.lookAt?.targetLongitude) &&
-      isDefined(item.idealZoom?.lookAt?.targetLatitude) &&
-      (item.idealZoom?.lookAt?.range ?? 0) >= 0
-    ) {
-      // No value checking here. Improper values can lead to unexpected results.
-      const lookAt = {
-        targetLongitude: item.idealZoom.lookAt.targetLongitude,
-        targetLatitude: item.idealZoom.lookAt.targetLatitude,
-        targetHeight: item.idealZoom.lookAt.targetHeight,
-        heading: item.idealZoom.lookAt.heading,
-        pitch: item.idealZoom.lookAt.pitch,
-        range: item.idealZoom.lookAt.range
-      };
-
-      // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
-      zoomToView = CameraView.fromJson({ lookAt: lookAt });
-    } else if (theWest && theEast && theNorth && theSouth) {
-      const thePosition = vectorToJson(item?.idealZoom?.camera?.position);
-      const theDirection = vectorToJson(item?.idealZoom?.camera?.direction);
-      const theUp = vectorToJson(item?.idealZoom?.camera?.up);
-
-      // No value checking here. Improper values can lead to unexpected results.
-      const camera = {
-        west: theWest,
-        east: theEast,
-        north: theNorth,
-        south: theSouth,
-        position: thePosition,
-        direction: theDirection,
-        up: theUp
-      };
-
-      zoomToView = CameraView.fromJson(camera);
-    } else if (
-      item.rectangle?.east !== undefined &&
-      item.rectangle?.west !== undefined &&
-      item.rectangle.east - item.rectangle.west >= 360
-    ) {
-      zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
-      console.log("Extent is wider than world so using homeCamera.");
-    }
-
     this.setState({ isMapZoomingToCatalogItem: true });
-    viewer.zoomTo(zoomToView).finally(() => {
+    viewer.zoomTo(item).finally(() => {
       this.setState({ isMapZoomingToCatalogItem: false });
     });
   }
