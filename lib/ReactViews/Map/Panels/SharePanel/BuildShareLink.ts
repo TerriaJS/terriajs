@@ -5,7 +5,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
-import TerriaError from "../../../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
@@ -87,11 +87,21 @@ export async function buildShortShareLink(
       "Could not generate share token - `shareDataService` is `undefined`"
     );
 
-  const token = await terria.shareDataService?.getShareToken(
-    getShareData(terria, viewState, options)
-  );
+  let token: string | null = null;
 
-  if (typeof token === "string") {
+  try {
+    token = await terria.shareDataService?.getShareToken(
+      getShareData(terria, viewState, options)
+    );
+  } catch (e) {
+    terria.raiseErrorToUser(e, {
+      title: "Error generating share token",
+      severity: TerriaErrorSeverity.Error
+    });
+    return "Error: Unable to generate share link";
+  }
+
+  if (token) {
     return buildBaseShareUrl(terria, {
       share: token
     });
