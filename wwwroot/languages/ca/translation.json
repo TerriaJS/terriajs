@@ -859,7 +859,8 @@
       "dataAttribution": "Atribució de dades",
       "disclaimer": "Exempció de responsabilitat",
       "basemap": "Mapa base",
-      "dataProvider": "Dades proporciondes per:"
+      "dataProvider": "Dades proporciondes per:",
+      "termsOfUse": "Condicions d'ús"
     }
   },
   "helpPanel": {
