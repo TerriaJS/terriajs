@@ -6,7 +6,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, makeObservable, override, runInAction } from "mobx";
+import { computed, makeObservable, override, runInAction, trace } from "mobx";
 import { computedFn } from "mobx-utils";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -549,12 +549,12 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
-      // Return if the CRS is not supported by this model
-      //
-      // TODO: this check might be too strict and could break the current
-      // behaviour where terria might use one of the supported CRS variants or
-      // fallback to EPSG:3857.
-      if (crsCode && !this.availableCrs?.includes(crsCode)) {
+      // Return undefined if the selected CRS is not supported by this model
+      if (
+        crsCode &&
+        this.availableCrs &&
+        !this.availableCrs.includes(crsCode)
+      ) {
         return undefined;
       }
 
@@ -660,6 +660,7 @@ class WebMapServiceCatalogItem
   );
 
   private _createImageryProvider(time: string | undefined) {
+    trace();
     return this._createImageryProviderForCrs(time, this.crs);
   }
 

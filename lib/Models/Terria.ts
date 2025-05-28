@@ -1807,10 +1807,11 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
+        const baseMapId = initData.settings.baseMapId;
         this._loadPersistedSettings.baseMapPromise = this.mainViewer
           .setBaseMap(
             this.baseMapsModel.baseMapItems.find(
-              (item) => item.item.uniqueId === initData.settings!.baseMapId
+              (item) => item.item.uniqueId === baseMapId
             )?.item
           )
           .finally(() => {
