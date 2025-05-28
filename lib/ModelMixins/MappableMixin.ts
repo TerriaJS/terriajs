@@ -32,6 +32,16 @@ export class ImageryParts {
   clippingRectangle: Rectangle | undefined = undefined;
   show: boolean = true;
 
+  /*
+   * An optional method that returns an ImageryProvider instance for the
+   *  preview map which may use a CRS and tiling scheme different to the
+   *  default imageryprovider used for the main map.
+   *
+   * This is currently only used by plugins to customize preview map behaviour.
+   * (eg terriajs-plugin-proj4leaflet)
+   */
+  previewImageryProvider?: (crs: string) => ImageryProvider | undefined;
+
   static fromAsync(options: {
     imageryProviderPromise: Promise<ImageryProvider | undefined>;
     alpha?: number;
