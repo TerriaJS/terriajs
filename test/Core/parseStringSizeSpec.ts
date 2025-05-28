@@ -1,12 +1,25 @@
 import parseStringSize from "../../lib/Core/parseStringSize";
 
 describe("parseStringSize", function () {
-  it("Can parse size string without unit", function () {
+  it("Throws error for non-string input", function () {
+    // @ts-expect-error Testing runtime error for non-string input
+    expect(() => parseStringSize(1234)).toThrowError("Input must be a string");
+  });
+
+  it("Throws error for undefined input", function () {
+    // @ts-expect-error Testing runtime error for undefined input
+    expect(() => parseStringSize(undefined)).toThrowError(
+      "Input must be a string"
+    );
+  });
+
+  it("Parses size string without unit as bytes", function () {
     const value = parseStringSize("1024");
     expect(value).toBe(1024);
   });
 
   it("Can parse size string with KB unit", function () {
+    // Assumes 1KB equals 1024 bytes
     const value = parseStringSize("1KB");
     expect(value).toBe(1024);
   });
@@ -26,16 +39,16 @@ describe("parseStringSize", function () {
     expect(value).toBe(1099511627776); // 1024^4
   });
 
-  it("Throws error for invalid size format", function () {
+  it("Throws error for non-numeric size string", function () {
     try {
       parseStringSize("abc");
     } catch (error: any) {
-      expect(error.message).toBe(`Invalid share size format: abc`);
+      expect(error.message).toBe(`Invalid size format: abc`);
     }
   });
 
   it("Handles edge case where unit is not specified but value is in bytes", function () {
-    const value = parseStringSize("1024"); // assuming this is a valid size string
+    const value = parseStringSize("1024");
     expect(value).toBe(1024);
   });
 });

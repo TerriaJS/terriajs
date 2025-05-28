@@ -51,10 +51,14 @@ export default class ShareDataService {
 
   // readonly shareMaxRequestSize: number = this._serverConfig.maxRequestSize || DEFAULT_MAX_SHARE_SIZE;
   get shareMaxRequestSize(): number {
-    return defaultValue(
-      parseStringSize(this._serverConfig.shareMaxRequestSize),
-      DEFAULT_MAX_SHARE_SIZE
-    );
+    try {
+      return defaultValue(
+        parseStringSize(this._serverConfig.shareMaxRequestSize),
+        DEFAULT_MAX_SHARE_SIZE
+      );
+    } catch {
+      return DEFAULT_MAX_SHARE_SIZE;
+    }
   }
 
   /**
