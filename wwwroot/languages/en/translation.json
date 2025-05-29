@@ -354,7 +354,7 @@
   },
   "story": {
     "panelTitle": "Story editor",
-    "panelBody": "Create and share interactive stories directly from your map",
+    "panelBody": "Create and share interactive stories directly from your map. Each story is capped at 2 MB - split large data or many scenes into multiple stories to stay under the limit.",
     "gettingStarted": "Getting started",
     "gettingStartedTitle": "Getting started",
     "badgeBarLabel": "Scenes",
@@ -406,6 +406,7 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
+    "storiesTooLong": "This story exceeds the maximum size allowed. Try reducing the number of visible datasets, or capture fewer scenes.",
     "hideStoryPanel": "hide story builder",
     "loadSceneErrorTitle": "Error loading Story Scene",
     "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."

@@ -89,6 +89,8 @@ export default class ViewState {
   @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable storyBuilderShown: boolean = false;
 
+  @observable shareDataStringSize: number = 0;
+
   // Flesh out later
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
@@ -579,6 +581,11 @@ export default class ViewState {
   @action
   toggleStoryBuilder(): void {
     this.storyBuilderShown = !this.storyBuilderShown;
+  }
+
+  @action
+  setShareDataStringSize(size: number): void {
+    this.shareDataStringSize = size;
   }
 
   @action
