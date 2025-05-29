@@ -879,7 +879,8 @@
       "dataAttribution": "Připsání dat",
       "disclaimer": "Odmítnutí odpovědnosti",
       "basemap": "Základní mapa",
-      "dataProvider": "Data poskytl:"
+      "dataProvider": "Data poskytl:",
+      "termsOfUse": "Podmínky použití"
     },
     "computeRingWindingOrder": {
       "devError": "Očekávané body typu {x:number, y:number}"
