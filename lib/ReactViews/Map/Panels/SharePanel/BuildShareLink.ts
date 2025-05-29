@@ -98,7 +98,7 @@ export async function buildShortShareLink(
       title: "Error generating share token",
       severity: TerriaErrorSeverity.Error
     });
-    return "Error: Unable to generate share link";
+    return "Error: Share data exceeds limit";
   }
 
   if (token) {
