@@ -39,6 +39,7 @@ export default class MapboxStyleCatalogItem extends MappableMixin(
       styleId,
       accessToken,
       tilesize: this.tilesize,
+      //Cesium only checks if scaleFactor is definied or not.
       scaleFactor: this.scaleFactor ? this.scaleFactor : undefined,
       minimumLevel: this.minimumLevel,
       maximumLevel: this.maximumLevel,
