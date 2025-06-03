@@ -2,21 +2,57 @@
 
 What if you need to make changes to [Cesium](https://github.com/AnalyticalGraphicsInc/cesium) while working on TerriaJS?
 
+TerriaJS is using a fork of Cesium monorepo located at https://github.com/terriajs/cesium, and similar to the upstream repo it consists of two packages:
+
+- [terriajs-cesium](https://www.npmjs.com/package/terriajs-cesium) corresponds to the upstream [@cesium/engine](https://www.npmjs.com/package/@cesium/engine/)
+- [terriajs-cesium-widgets](https://www.npmjs.com/package/terriajs-cesium-widgets) corresponds to the upstream [@cesium/widgets](https://www.npmjs.com/package/@cesium/widgets/)
+
 The process of using a custom version of Cesium is much the same as using a custom version of TerriaJS. See the [Development Environment](development-environment.md#building-a-terriamap-against-a-modified-terriajs) for information on setting up and using `yarn`. To clone Cesium, do:
 
-```
+```sh
 cd packages
-git clone -b terriajs https://github.com/TerriaJS/cesium.git
-cd ..
+git clone https://github.com/TerriaJS/cesium.git terriajs-cesium
 ```
 
-It is important that you use the `terriajs` branch of [TerriaJS/cesium](https://github.com/TerriaJS/cesium) because it contains important changes to Cesium that are necessary for it to work with TerriaJS. If you need to use a different branch of Cesium, you will need to merge that branch with the changes in the `terriajs` branch.
+After cloning the repository, navigate to the `terriajs-cesium` directory and run the following commands to build the Cesium packages and generate TypeScript definitions:
 
-And then run:
+```sh
+npm run release
+
+# OR
+
+npm install
+npm run build
+npm run build-ts
+```
+
+Make sure that the `terriamap/package.json` workspaces list contains the following packages:
+
+- "packages/terriajs-cesium/packages/engine",
+- "packages/terriajs-cesium/packages/widgets"
+
+Check the versions of `terriajs-cesium` and `terriajs-cesium-widgets` in `terriamap/package.json` and `terriamap/packages/terriajs/package.json` and make sure they are the same so yarn can properly create symlinks.
+
+Then run:
 
 ```
 yarn install
 ```
+
+## Making the changes in cesium
+
+Cesium uses npm so you should use it instead of yarn when installing dependencies and running commands inside cesium repo. After making the changes you will need to run:
+
+```sh
+npm run release
+
+# OR
+
+npm run build
+npm run build-ts
+```
+
+to build the code and generate Typescript types definitions required for Terria to work correctly. For more details on building the cesium and coding guidelines consult the [cesium documentation](https://github.com/CesiumGS/cesium/tree/main/Documentation)
 
 ## Committing modifications
 
@@ -38,4 +74,4 @@ Replace `branchName` with the name of the Cesium branch you want to use. You may
 
 Once your Cesium pull request has been merged and a new version of the `terriajs-cesium` npm module has been published, please remember to update `package.json` to point to an official `terriajs-cesium` version instead of a branch in a GitHub repo.
 
-The `package.json` in the `master` branch should always point to official releases of `terriajs-cesium` on npm, NOT GitHub branches.
+The `package.json` in the `main` branch should always point to official releases of `terriajs-cesium` on npm, NOT GitHub branches.
