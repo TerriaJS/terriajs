@@ -25,6 +25,7 @@ import MapIconButton from "../../MapIconButton/MapIconButton";
 import { filterViewerAndScreenSize } from "./filterViewerAndScreenSize";
 import { Control, MapNavigationItem } from "./Items";
 import { registerMapNavigations } from "./registerMapNavigations";
+import { MeasureToolsController } from "./Items/MeasureTools";
 
 const OVERFLOW_ACTION_SIZE = 42;
 
@@ -116,6 +117,16 @@ class MapNavigationBase extends React.Component<PropTypes> {
         equals: (a, b) => {
           return a === b;
         }
+      }
+    );
+    reaction(
+      () =>
+        this.viewState.terria.mapNavigationModel.findItem(
+          MeasureToolsController.id
+        )?.controller.active,
+      () => {
+        this.computeSizes();
+        this.updateNavigation();
       }
     );
   }

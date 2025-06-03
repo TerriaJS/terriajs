@@ -142,7 +142,7 @@ export const CollapsedNavigation: React.FC = observer(() => {
   );
 
   let items = viewState.terria.mapNavigationModel.items.filter(
-    (item) => item.controller.collapsed
+    (item) => item.controller.collapsed && item.controller.visible
   );
   items = items.filter((item) => filterViewerAndScreenSize(item, viewState));
 

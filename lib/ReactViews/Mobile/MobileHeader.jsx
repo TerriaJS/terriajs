@@ -69,7 +69,7 @@ class MobileHeader extends React.Component {
     this.toggleView(this.props.viewState.mobileViewOptions.addData);
   }
 
-  onMobileSwitchViewClicked() {
+  onMobileSwitchViewClicked = () => {
     runInAction(() => {
       const viewState = this.props.viewState;
       const mainViewer = viewState.terria.mainViewer;
@@ -78,13 +78,14 @@ class MobileHeader extends React.Component {
         mainViewer.viewerMode === ViewerMode.Preview
       ) {
         setViewerMode("3d", mainViewer);
-        viewState.terria.setLocalProperty("viewermode", ViewerMode.Cesium);
+        viewState.terria.setLocalProperty("viewermode", "2d");
       } else {
         setViewerMode("2d", mainViewer);
-        viewState.terria.setLocalProperty("viewermode", ViewerMode.Leaflet);
+        viewState.terria.setLocalProperty("viewermode", "3d");
       }
+      viewState.terria.currentViewer.notifyRepaintRequired();
     });
-  }
+  };
 
   changeLocationSearchText(newText) {
     runInAction(() => {
@@ -234,10 +235,28 @@ class MobileHeader extends React.Component {
                   background-color: ${(p) => p.theme.dark};
                 `}
               >
+                {this.props.viewState.mobileMeasureToolsButtonVisible && (
+                  <button
+                    type="button"
+                    className={Styles.btnAdd}
+                    onClick={() => {
+                      runInAction(() => {
+                        this.props.viewState.measurablePanelIsVisible =
+                          !this.props.viewState.measurablePanelIsVisible;
+                      });
+                    }}
+                  >
+                    <StyledIcon
+                      glyph={Icon.GLYPHS.measureTools}
+                      styledWidth="20px"
+                      styledHeight="20px"
+                    />
+                  </button>
+                )}
                 <button
                   type="button"
                   className={Styles.btnViewMode}
-                  onClick={this.onMobileSwitchViewClicked}
+                  onClick={this.onMobileSwitchViewClicked.bind(this)}
                 >
                   {this.props.viewState.terria.mainViewer.viewerMode ===
                   ViewerMode.Leaflet

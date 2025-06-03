@@ -84,6 +84,7 @@ export default class ViewState {
   @observable isMapFullScreen: boolean = false;
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
+  @observable mobileMeasureToolsButtonVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
   // Map for storing react portal containers created by <Portal> component.
@@ -551,6 +552,7 @@ export default class ViewState {
       (geom) => {
         const wasVisible = this.measurablePanelIsVisible;
         this.measurablePanelIsVisible = !!geom;
+        this.mobileMeasureToolsButtonVisible = !!geom;
         if (!wasVisible) {
           this.measurableDownloadPanelIsVisible = false;
           if (

@@ -69,6 +69,11 @@ export class MeasureToolsController extends MapNavigationItemController {
     return this.props.measureTools.active;
   }
 
+  @computed
+  get visible(): boolean {
+    return !this.props.viewState.useSmallScreenInterface;
+  }
+
   get glyph(): any {
     return GLYPHS.measureTools;
   }
@@ -144,7 +149,11 @@ export class MeasureLineTool extends MapNavigationItemController {
 
   @computed
   get visible(): boolean {
-    return this.props.measureTools.active && super.visible;
+    return (
+      (this.props.measureTools.active ||
+        this.props.viewState.useSmallScreenInterface) &&
+      super.visible
+    );
   }
 
   prettifyNumber(number: number) {
@@ -307,7 +316,11 @@ export class MeasurePolygonTool extends MapNavigationItemController {
 
   @computed
   get visible(): boolean {
-    return this.props.measureTools.active && super.visible;
+    return (
+      (this.props.measureTools.active ||
+        this.props.viewState.useSmallScreenInterface) &&
+      super.visible
+    );
   }
 
   prettifyNumber(number: number, squared: boolean) {
@@ -609,7 +622,11 @@ export class MeasureAngleTool extends MapNavigationItemController {
 
   @computed
   get visible(): boolean {
-    return this.props.measureTools.active && super.visible;
+    return (
+      (this.props.measureTools.active ||
+        this.props.viewState.useSmallScreenInterface) &&
+      super.visible
+    );
   }
 
   onPointUpdated(pointEntities: CustomDataSource) {
@@ -697,7 +714,11 @@ export class MeasurePointTool extends MapNavigationItemController {
 
   @computed
   get visible(): boolean {
-    return this.props.measureTools.active && super.visible;
+    return (
+      (this.props.measureTools.active ||
+        this.props.viewState.useSmallScreenInterface) &&
+      super.visible
+    );
   }
 
   onCleanUp() {

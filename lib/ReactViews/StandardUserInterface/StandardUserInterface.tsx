@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import "inobounce";
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -43,6 +43,7 @@ import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
 import MeasurablePanel from "../MeasurableGeometry/MeasurablePanel";
+import MeasurableDownloadPanel from "../MeasurableGeometry/MeasurableDownloadPanel";
 export const animationDuration = 250;
 
 interface StandardUserInterfaceProps {
@@ -279,6 +280,19 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 terria={props.terria}
                 viewState={props.viewState}
               />
+              {props.viewState.measurableDownloadPanelIsVisible && (
+                <MeasurableDownloadPanel
+                  terria={props.terria}
+                  viewState={props.viewState}
+                  initialWidth={"20%"}
+                  maxWidth={"40%"}
+                  onClose={() => {
+                    runInAction(() => {
+                      props.viewState.measurableDownloadPanelIsVisible = false;
+                    });
+                  }}
+                />
+              )}
             </div>
             <DragDropFile />
             <DragDropNotification />
