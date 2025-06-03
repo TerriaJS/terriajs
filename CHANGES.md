@@ -1,8 +1,12 @@
 # Change Log
 
-#### next release (8.9.5)
+#### next release (8.9.6)
 
 - [The next improvement]
+
+#### 8.9.5 - 2025-06-03
+
+- Upgrade terriajs-server to version 4.0.2
 
 #### 8.9.4 - 2025-06-03
 
