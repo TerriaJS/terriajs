@@ -38,9 +38,9 @@ export default class SearchState {
   @observable catalogSearchResults: SearchProviderResults | undefined;
   @observable unifiedSearchResults: SearchProviderResults[] = [];
 
-  private _catalogSearchDisposer: IReactionDisposer;
-  private _locationSearchDisposer: IReactionDisposer;
-  private _unifiedSearchDisposer: IReactionDisposer;
+  private readonly _catalogSearchDisposer: IReactionDisposer;
+  private readonly _locationSearchDisposer: IReactionDisposer;
+  private readonly _unifiedSearchDisposer: IReactionDisposer;
 
   private readonly terria: Terria;
 

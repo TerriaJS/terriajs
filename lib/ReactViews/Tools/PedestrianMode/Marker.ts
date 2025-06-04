@@ -9,7 +9,7 @@ import Terria from "../../../Models/Terria";
 import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
 
 export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
-  private dataSource: CustomDataSource;
+  private readonly dataSource: CustomDataSource;
   private icon: RotatableIcon;
 
   private currentRotation = 0;
@@ -71,8 +71,8 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
  * or other entities drawn by Cesium/Leaflet instances.
  */
 class RotatableIcon {
-  private image: HTMLImageElement;
-  private ctx: CanvasRenderingContext2D | undefined;
+  private readonly image: HTMLImageElement;
+  private readonly ctx: CanvasRenderingContext2D | undefined;
 
   // The canvas on which the icon is drawn and transformed
   public canvas: HTMLCanvasElement;

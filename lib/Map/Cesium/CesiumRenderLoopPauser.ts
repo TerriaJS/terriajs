@@ -25,14 +25,16 @@ export default class CesiumRenderLoopPauser {
     this.cesiumWidget.useDefaultRenderLoop = !value;
   }
 
-  private _boundNotifyRepaintRequired: (() => void) | undefined;
-  private _wheelEvent: string | undefined;
-  private _removePostRenderListener: CesiumEvent.RemoveCallback | undefined;
+  private readonly _boundNotifyRepaintRequired: (() => void) | undefined;
+  private readonly _wheelEvent: string | undefined;
+  private readonly _removePostRenderListener:
+    | CesiumEvent.RemoveCallback
+    | undefined;
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 
-  private _originalLoadWithXhr: any;
-  private _originalScheduleTask: any;
+  private readonly _originalLoadWithXhr: any;
+  private readonly _originalScheduleTask: any;
 
   constructor(
     readonly cesiumWidget: CesiumWidget,

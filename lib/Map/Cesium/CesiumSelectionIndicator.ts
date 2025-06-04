@@ -64,7 +64,7 @@ export default class CesiumSelectionIndicator {
   private _tweens: any;
   private _selectionIndicatorTween: any;
   private _selectionIndicatorIsAppearing: boolean = false;
-  private _disposeAutorun: IReactionDisposer;
+  private readonly _disposeAutorun: IReactionDisposer;
 
   constructor(cesium: import("../../Models/Cesium").default) {
     makeObservable(this);
