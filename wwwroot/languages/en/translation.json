@@ -99,13 +99,19 @@
     "elementPlaceholder": "Element No.",
     "changePath": "Change the current path",
     "addPath": "Add a new path",
-    "removePath": "Delete the current path"
+    "removePath": "Delete the current path",
+    "showDistanceCheckbox": "Show distaces labels",
+    "tempLayerName": "Insert the temporary layer name"
   },
   "elevationChart": {
     "header": "Elevation profile",
     "measure": "Measure",
     "measureAir": "free",
     "measureGround": "clamped to ground"
+  },
+  "transformLayer": {
+    "transform": "Transform into a temporary layer",
+    "transformation": "Transformation to a temporary layer"
   },
   "downloadData": {
     "downloadPanel": "Export",

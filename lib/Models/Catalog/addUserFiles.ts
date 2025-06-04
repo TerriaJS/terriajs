@@ -19,7 +19,8 @@ export default async function addUserFiles(
   files: FileList,
   terria: Terria,
   viewState: ViewState,
-  fileType?: FileType | undefined
+  fileType?: FileType | undefined,
+  skipOpenCatalog?: boolean | false
 ) {
   const dataType = fileType || getDataType().localDataType[0];
   const tempCatalogItemList: ResultPendingCatalogItem[] = [];
@@ -97,7 +98,9 @@ export default async function addUserFiles(
   // if addedItem has only undefined item, means init files
   // have been uploaded
   if (addedItems.every((item) => item === undefined)) {
-    viewState.openAddData();
+    if (!skipOpenCatalog) {
+      viewState.openAddData();
+    }
   } else {
     const items = addedItems.filter(
       (item) => isDefined(item) && !(item instanceof TerriaError)

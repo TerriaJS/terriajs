@@ -1585,6 +1585,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       const processFeature = (feature: any, index?: number) => {
         let jsonCoords: JsonArray | undefined;
+        let closeLoop = false;
         switch (this._pathType) {
           case PathTypes.featureCollectionMultiLineString:
             jsonCoords = this.getOrderedSegments(index);
@@ -1594,9 +1595,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             break;
           case PathTypes.featureCollectionMultiPolygon:
             jsonCoords = this.getMultiPolygonCoordinates(index);
+            closeLoop = true;
             break;
           case PathTypes.featureCollectionPolygon:
             jsonCoords = this.getPolygonCoordinates();
+            closeLoop = true;
             break;
         }
         if (!jsonCoords || jsonCoords.length === 0) return;
@@ -1604,7 +1607,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const properties = feature.properties ?? {};
         const pathNotes = properties.desc || properties.path_notes || "";
         const coordinates = this.convertJsonCoords(jsonCoords);
-        this.asPath(coordinates, pathNotes, index);
+        this.asPath(coordinates, pathNotes, index, closeLoop);
       };
 
       if (this.readyData.features.length === 1) {

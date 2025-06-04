@@ -554,6 +554,10 @@ export default class ViewState {
         this.measurablePanelIsVisible = !!geom;
         this.mobileMeasureToolsButtonVisible = !!geom;
         if (!wasVisible) {
+          if (this.measurableDownloadPanelIsVisible) {
+            this.measurablePanelIsVisible = false;
+            return;
+          }
           this.measurableDownloadPanelIsVisible = false;
           if (
             this.terria.measurableGeomList &&

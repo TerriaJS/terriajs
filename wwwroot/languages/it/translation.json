@@ -102,13 +102,19 @@
     "elementPlaceholder": "Elemento num.",
     "changePath": "Cambia il percorso",
     "addPath": "Aggiungi un nuovo percorso",
-    "removePath": "Rimuovi il percorso attuale"
+    "removePath": "Rimuovi il percorso attuale",
+    "showDistanceCheckbox": "Mostra etichette distanze",
+    "tempLayerName": "Inserisci il nome del layer temporaneo"
   },
   "elevationChart": {
     "header": "Profilo altimetrico",
     "measure": "Misura",
     "measureAir": "in aria",
     "measureGround": "al suolo"
+  },
+  "transformLayer": {
+    "transform": "Trasforma in un layer temporaneo",
+    "transformation": "Trasformazione a un layer temporaneo"
   },
   "downloadData": {
     "downloadPanel": "Esporta",

@@ -31,6 +31,7 @@ import isDefined from "../../Core/isDefined";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Checkbox from "../../Styled/Checkbox";
 import { MeasureToolsController } from "../Map/MapNavigation/Items/MeasureTools";
+import MeasurableTransform from "./MeasurableTransform";
 
 interface Props {
   viewState: ViewState;
@@ -48,6 +49,7 @@ const MeasurablePanel = observer((props: Props) => {
   const [samplingPathStep, setSamplingPathStep] = React.useState(
     terria.measurableGeomSamplingStep
   );
+  const [layerName, setLayerName] = React.useState("temp_layer");
   const [isValidSamplingPathStep, setIsValidSamplingPathStep] =
     React.useState(true);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -108,6 +110,7 @@ const MeasurablePanel = observer((props: Props) => {
   });
 
   const toggleCollapsed = action(() => {
+    console.log("toggleCollapsed");
     viewState.measurablePanelIsCollapsed =
       !viewState.measurablePanelIsCollapsed;
   });
@@ -499,7 +502,7 @@ const MeasurablePanel = observer((props: Props) => {
   };
 
   const renderToggleDistanceLabels = () => (
-    <label style={{ display: "flex", alignItems: "center", margin: "0 10px" }}>
+    <label style={{ display: "flex", alignItems: "center", margin: "10px" }}>
       <Checkbox
         isChecked={showDistances}
         isDisabled={
@@ -515,7 +518,7 @@ const MeasurablePanel = observer((props: Props) => {
           });
         }}
       />
-      {i18next.t("Mostra etichette distanze")}
+      {i18next.t("measurableGeometry.showDistanceCheckbox")}
     </label>
   );
 
@@ -758,7 +761,6 @@ const MeasurablePanel = observer((props: Props) => {
                   css={`
                     background: #519ac2;
                     margin-left: 5px;
-                    margin-bottom: 20px;
                   `}
                   onClick={toggleChart}
                   disabled={
@@ -798,6 +800,8 @@ const MeasurablePanel = observer((props: Props) => {
               {!terria.measurableGeomList[terria.measurableGeometryIndex]
                 ?.isFileUploaded && renderToggleDistanceLabels()}
             </Box>
+            {!terria.measurableGeomList[terria.measurableGeometryIndex]
+              ?.isFileUploaded && renderToggleDistanceLabels()}
           </div>
         )}
 
@@ -807,31 +811,30 @@ const MeasurablePanel = observer((props: Props) => {
             <div
               css={`
                 display: flex;
-                margin-left: 5px;
-                margin-top: 5px;
-                margin-bottom: 5px;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                margin-top: 10px;
+                margin-bottom: 16px;
               `}
             >
-              <Box>
-                <Button
-                  css={`
-                    color: ${theme.textLight};
-                    background: ${theme.colorPrimary};
-                    width: 100%;
-                  `}
-                  disabled={
-                    !terria.measurableGeomList[terria.measurableGeometryIndex]
-                      ?.stopPoints.length
-                  }
-                  onClick={() =>
-                    runInAction(() => {
-                      viewState.measurableDownloadPanelIsVisible = true;
-                    })
-                  }
-                >
-                  {i18next.t("downloadData.downloadPanel")}
-                </Button>
-              </Box>
+              <Input
+                type="text"
+                value={layerName}
+                onChange={(e) => setLayerName(e.target.value)}
+                style={{
+                  flex: "1",
+                  padding: "8px"
+                }}
+                placeholder={i18next.t("measurableGeometry.tempLayerName")}
+              />
+              <MeasurableTransform
+                terria={terria}
+                viewState={viewState}
+                pathNotes={currentGeom.pathNotes ?? ""}
+                layerName={layerName}
+                onClick={close}
+              />
             </div>
           )}
         {!terria?.measurableGeomList[terria.measurableGeometryIndex]?.hasArea &&
@@ -848,13 +851,7 @@ const MeasurablePanel = observer((props: Props) => {
   };
 
   const renderSummaryTable = (headers: string[], data: string[]) => (
-    <table
-      className={Styles.elevation}
-      css={`
-        width: 300px;
-        border-collapse: collapse;
-      `}
-    >
+    <table className={Styles.elevation}>
       <thead>
         <tr>
           {headers.map((header, index) => (

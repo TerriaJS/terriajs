@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import "inobounce";
-import { action, runInAction } from "mobx";
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -284,13 +284,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 <MeasurableDownloadPanel
                   terria={props.terria}
                   viewState={props.viewState}
-                  initialWidth={"20%"}
-                  maxWidth={"40%"}
-                  onClose={() => {
-                    runInAction(() => {
-                      props.viewState.measurableDownloadPanelIsVisible = false;
-                    });
-                  }}
                 />
               )}
             </div>

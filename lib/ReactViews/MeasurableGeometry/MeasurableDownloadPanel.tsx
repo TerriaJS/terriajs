@@ -1,4 +1,5 @@
 import { Rnd } from "react-rnd";
+import { runInAction } from "mobx";
 import MeasurableDownload from "./MeasurableDownload";
 import Terria from "../../Models/Terria";
 import Styles from "./measurable-panel.scss";
@@ -10,9 +11,9 @@ import classNames from "classnames";
 interface Props {
   terria: Terria;
   viewState: ViewState;
-  initialWidth: number | string;
-  maxWidth: number | string;
-  onClose: () => void;
+  initialWidth?: number;
+  maxWidth?: number;
+  onClose?: () => void;
 }
 
 const MeasurableDownloadPanel = (props: Props) => {
@@ -21,7 +22,8 @@ const MeasurableDownloadPanel = (props: Props) => {
 
   const panelClassName = classNames(Styles.panel, {
     [Styles.isCollapsed]: downloadProps.viewState.measurablePanelIsCollapsed,
-    [Styles.isVisible]: downloadProps.viewState.measurablePanelIsVisible,
+    [Styles.isVisible]:
+      downloadProps.viewState.measurableDownloadPanelIsVisible,
     [Styles.isTranslucent]: downloadProps.viewState.explorerPanelIsVisible
   });
 
@@ -35,7 +37,12 @@ const MeasurableDownloadPanel = (props: Props) => {
         </div>
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            if (onClose) onClose();
+            runInAction(() => {
+              downloadProps.viewState.measurableDownloadPanelIsVisible = false;
+            });
+          }}
           className={Styles.btnCloseFeature}
           title={i18next.t("general.close")}
         >
@@ -92,10 +99,10 @@ const MeasurableDownloadPanel = (props: Props) => {
       default={{
         x: 50,
         y: 50,
-        width: downloadProps.initialWidth,
+        width: downloadProps.initialWidth ?? window.innerWidth * 0.2,
         height: "auto"
       }}
-      maxWidth={downloadProps.maxWidth}
+      maxWidth={downloadProps.maxWidth ?? window.innerWidth * 0.6}
       enableResizing={{
         right: true,
         left: true
