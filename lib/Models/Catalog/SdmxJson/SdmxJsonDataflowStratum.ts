@@ -28,7 +28,9 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import createCombinedModel from "../../Definition/createCombinedModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -59,9 +61,10 @@ export interface SdmxJsonDataflow {
   /** contentConstraints: describe allowed values for enumerated dimensions/attributes */
   contentConstraints?: ContentConstraints;
 }
-export class SdmxJsonDataflowStratum extends LoadableStratum(
-  SdmxCatalogItemTraits
-) {
+export class SdmxJsonDataflowStratum
+  extends LoadableStratum(SdmxCatalogItemTraits)
+  implements LockedDownStratum<SdmxCatalogItemTraits, SdmxJsonDataflowStratum>
+{
   static stratumName = "sdmxJsonDataflow";
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -161,28 +164,28 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
   }
 
-  get sdmxAttributes() {
+  private get sdmxAttributes() {
     return (
       this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList
         ?.attributes ?? []
     );
   }
 
-  get sdmxDimensions() {
+  private get sdmxDimensions() {
     return (
       this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList
         ?.dimensions ?? []
     );
   }
 
-  get sdmxTimeDimensions() {
+  private get sdmxTimeDimensions() {
     return (
       this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList
         .timeDimensions ?? []
     );
   }
 
-  get sdmxPrimaryMeasure() {
+  private get sdmxPrimaryMeasure() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
       ?.measureList.primaryMeasure;
   }
@@ -217,7 +220,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   // ------------- START SDMX TRAITS STRATUM -------------
 
   /** Merge codelist and concept model overrides (codelist takes priority) */
-  getMergedModelOverride(
+  private getMergedModelOverride(
     dim: Attribute | Dimension
   ): Model<ModelOverrideTraits> | undefined {
     const conceptOverride = this.catalogItem.modelOverrides.find(
@@ -441,7 +444,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `transformation` if unit multiplier attribute has been found (which will apply `x*(10^unitMultiplier)` to all observation values)
    */
   @computed
-  get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> | undefined {
+  private get primaryMeasureColumn():
+    | StratumFromTraits<TableColumnTraits>
+    | undefined {
     if (!this.sdmxPrimaryMeasure) return;
 
     const primaryMeasureConcept = this.getConceptByUrn(
@@ -489,7 +494,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
 
   @computed
-  get dimensionColumns(): StratumFromTraits<TableColumnTraits>[] {
+  private get dimensionColumns(): StratumFromTraits<TableColumnTraits>[] {
     // Get columns for all dimensions (excluding time dimensions)
     return (
       this.sdmxDimensions
@@ -580,7 +585,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `title` to concept name (if it exists)
    */
   @computed
-  get timeColumns(): StratumFromTraits<TableColumnTraits>[] {
+  private get timeColumns(): StratumFromTraits<TableColumnTraits>[] {
     return (
       this.sdmxTimeDimensions.map((dim) => {
         const concept = this.getConceptByUrn(dim.conceptIdentity);
@@ -599,7 +604,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `type = hidden`
    */
   @computed
-  get attributeColumns(): StratumFromTraits<TableColumnTraits>[] {
+  private get attributeColumns(): StratumFromTraits<TableColumnTraits>[] {
     return (
       this.sdmxAttributes.map((attr) => {
         return createStratumInstance(TableColumnTraits, {
@@ -627,7 +632,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * NOTE: this is searching through catalogItem.tableColumns to find the completely resolved regionColumn
    * This can only be used in computed/fns outside of ColumnTraits - or you will get infinite recursion
    */
-  @computed get resolvedRegionColumn() {
+  @computed private get resolvedRegionColumn() {
     return this.catalogItem.tableColumns.find(
       (tableCol) =>
         tableCol.name ===
@@ -640,7 +645,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - disable the region column so we get a chart instead - see `get styles()`
    * - get region name for chart title (if single region) - see `get chartTitle()`
    **/
-  @computed get disableRegion() {
+  @computed private get disableRegion() {
     return (
       !this.catalogItem.isLoading &&
       this.resolvedRegionColumn?.ready &&
@@ -652,7 +657,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   /** Get nice title to use for chart
    * If we have a region column with a single region, it will append the region name to the title
    */
-  @computed get chartTitle() {
+  @computed private get chartTitle() {
     if (this.disableRegion) {
       const regionValues = this.resolvedRegionColumn?.uniqueValues.values;
       if (regionValues && regionValues.length === 1) {
@@ -798,8 +803,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     // Add timeSeries chart if more than one time observation
     if (
-      this.catalogItem.discreteTimes &&
-      this.catalogItem.discreteTimes.length > 1
+      this.catalogItem.discreteTimes.times &&
+      this.catalogItem.discreteTimes.times.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${regionType.nameProp}}}`;
       template += `</table>{{#terria.timeSeries.data}}<chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.primaryMeasureColumn?.title}" >{{terria.timeSeries.data}}</chart>{{/terria.timeSeries.data}}`;
@@ -809,12 +814,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   // ------------- START SDMX STRUCTURE HELPER FUNCTIONS -------------
-  getConceptScheme(id: string) {
+  private getConceptScheme(id: string) {
     if (!isDefined(id)) return;
     return this.sdmxJsonDataflow.conceptSchemes?.find((c) => c.id === id);
   }
 
-  getConceptByUrn(urn?: string) {
+  private getConceptByUrn(urn?: string) {
     if (!urn) return;
     const conceptUrn = parseSdmxUrn(urn);
     const conceptSchemeId = conceptUrn?.resourceId;
@@ -829,7 +834,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return resolvedConceptScheme?.concepts?.find((d) => d.id === conceptId);
   }
 
-  getCodelistByUrn(urn?: string) {
+  private getCodelistByUrn(urn?: string) {
     if (!urn) return;
     const codelistUrn = parseSdmxUrn(urn);
     const id = codelistUrn?.resourceId;
@@ -841,7 +846,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * Find modelOverrides with type 'region-type' to try to extract regionType from another dimension
    * For example, ABS have a regionType dimension which may have values (SA1, SA2, ...), which could be used to determine regionType
    */
-  getDimensionsWithOverrideType(type: ModelOverrideType) {
+  private getDimensionsWithOverrideType(type: ModelOverrideType) {
     return filterOutUndefined(
       this.catalogItem.modelOverrides
         ?.filter((override) => override.type === type && override.id)
@@ -855,7 +860,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
   }
 
-  getDimensionWithConceptOrCodelist(id: string) {
+  private getDimensionWithConceptOrCodelist(id: string) {
     return this.sdmxDimensions.find(
       (dim) =>
         dim.conceptIdentity === id ||
@@ -863,7 +868,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
   }
 
-  getAttributionWithConceptOrCodelist(id: string) {
+  private getAttributionWithConceptOrCodelist(id: string) {
     return this.sdmxAttributes.find(
       (attr) =>
         attr.conceptIdentity === id ||

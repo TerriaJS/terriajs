@@ -1,11 +1,12 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable, override } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
+import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
@@ -17,15 +18,15 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
   WebMapTileServiceAvailableLayerStylesTraits
 } from "../../../Traits/TraitsClasses/WebMapTileServiceCatalogItemTraits";
-import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import { ServiceProvider } from "./OwsInterfaces";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
-import { ModelConstructorParameters } from "../../Definition/Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
@@ -40,9 +41,14 @@ interface UsableTileMatrixSets {
   tileHeight: number;
 }
 
-class GetCapabilitiesStratum extends LoadableStratum(
-  WebMapTileServiceCatalogItemTraits
-) {
+class GetCapabilitiesStratum
+  extends LoadableStratum(WebMapTileServiceCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      WebMapTileServiceCatalogItemTraits,
+      GetCapabilitiesStratum
+    >
+{
   static stratumName = "wmtsServer";
 
   static async load(
@@ -71,8 +77,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogItem: WebMapTileServiceCatalogItem,
-    readonly capabilities: WebMapTileServiceCapabilities
+    private readonly catalogItem: WebMapTileServiceCatalogItem,
+    private readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -261,7 +267,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get capabilitiesLayer(): Readonly<WmtsLayer | undefined> {
+  private get capabilitiesLayer(): Readonly<WmtsLayer | undefined> {
     const result = this.catalogItem.layer
       ? this.capabilities.findLayer(this.catalogItem.layer)
       : undefined;
@@ -315,7 +321,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get usableTileMatrixSets() {
+  private get usableTileMatrixSets() {
     const usableTileMatrixSets: { [key: string]: UsableTileMatrixSets } = {
       "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible": {
         identifiers: ["0"],
@@ -477,6 +483,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get imageryProvider() {
+    // TODO: Fix incorrect use of stratum here
+    // Stratum should only be used to set trait values - you shouldn't use the stratum object directly
     const stratum = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum;
@@ -490,7 +498,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return;
     }
 
-    const layer = stratum.capabilitiesLayer;
     const layerIdentifier = layer?.Identifier;
     if (!isDefined(layer) || !isDefined(layerIdentifier)) {
       return;
@@ -567,6 +574,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tileHeight: number;
       }
     | undefined {
+    // TODO: Fix incorrect use of stratum here
+    // Stratum should only be used to set trait values - you shouldn't use the stratum object directly
     const stratum = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum;

@@ -1,58 +1,50 @@
 import DOMPurify from "dompurify";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable, override } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
-import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import ArcGisPortalItemFormatTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemFormatTraits";
 import ArcGisPortalItemTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelTraits from "../../../Traits/ModelTraits";
-import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
-import { ArcGisItem } from "./ArcGisPortalDefinitions";
-import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import CatalogMemberFactory from "../CatalogMemberFactory";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ArcGisItem } from "./ArcGisPortalDefinitions";
 
-export class ArcGisPortalItemStratum extends LoadableStratum(
-  ArcGisPortalItemTraits
-) {
+export class ArcGisPortalItemStratum
+  extends LoadableStratum(ArcGisPortalItemTraits)
+  implements LockedDownStratum<ArcGisPortalItemTraits, ArcGisPortalItemStratum>
+{
   static stratumName = "arcGisPortalDataset";
 
   constructor(
-    private readonly arcgisPortalItemReference: ArcGisPortalItemReference,
-    private readonly arcgisPortalCatalogGroup:
-      | ArcGisPortalCatalogGroup
-      | undefined
+    private readonly arcgisPortalItemReference: ArcGisPortalItemReference
   ) {
     super();
     makeObservable(this);
   }
 
   duplicateLoadableStratum(_newModel: BaseModel): this {
-    return new ArcGisPortalItemStratum(
-      this.arcgisPortalItemReference,
-      this.arcgisPortalCatalogGroup
-    ) as this;
+    return new ArcGisPortalItemStratum(this.arcgisPortalItemReference) as this;
   }
 
-  static async load(
-    arcgisPortalItemReference: ArcGisPortalItemReference,
-    arcgisPortalCatalogGroup: ArcGisPortalCatalogGroup | undefined
-  ) {
+  static async load(arcgisPortalItemReference: ArcGisPortalItemReference) {
     if (arcgisPortalItemReference._arcgisItem === undefined) {
       if (arcgisPortalItemReference.uniqueId !== undefined) {
         arcgisPortalItemReference._portalRootUrl =
@@ -64,22 +56,17 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
           arcgisPortalItemReference._arcgisItem
         );
       }
-    } else if (arcgisPortalCatalogGroup !== undefined) {
-      arcgisPortalItemReference._portalRootUrl = arcgisPortalCatalogGroup.url;
     }
-    return new ArcGisPortalItemStratum(
-      arcgisPortalItemReference,
-      arcgisPortalCatalogGroup
-    );
+    return new ArcGisPortalItemStratum(arcgisPortalItemReference);
   }
 
-  @computed get arcgisPortalItem(): ArcGisItem | undefined {
+  @computed private get arcgisPortalItem(): ArcGisItem | undefined {
     if (this.arcgisPortalItemReference._arcgisItem === undefined)
       return undefined;
     return this.arcgisPortalItemReference._arcgisItem;
   }
 
-  @computed get portalItemUrl(): string | undefined {
+  @computed private get portalItemUrl(): string | undefined {
     if (
       this.arcgisPortalItem === undefined ||
       this.arcgisPortalItemReference._portalRootUrl === undefined
@@ -110,6 +97,10 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
       FORBID_ATTR: ["style"],
       FORBID_TAGS: ["font"]
     });
+  }
+
+  @computed get cacheDuration() {
+    return "0d";
   }
 
   @computed get info() {
@@ -223,7 +214,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
   }
 
   _arcgisItem: ArcGisItem | undefined = undefined;
-  _arcgisPortalCatalogGroup: ArcGisPortalCatalogGroup | undefined = undefined;
   _supportedFormat: PreparedSupportedFormat | undefined = undefined;
   _portalRootUrl: string | undefined = undefined;
 
@@ -240,16 +230,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
       "supportedFormats",
       ArcGisPortalItemReference.defaultSupportedFormats
     );
-  }
-
-  @override
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
-      return this._arcgisPortalCatalogGroup.cacheDuration;
-    }
-    return "0d";
   }
 
   @computed
@@ -289,19 +269,12 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     this._arcgisItem = item;
   }
 
-  setArcgisPortalCatalog(arcgisCatalogGroup: ArcGisPortalCatalogGroup) {
-    this._arcgisPortalCatalogGroup = arcgisCatalogGroup;
-  }
-
   setSupportedFormatFromItem(item: ArcGisItem | undefined) {
     this._supportedFormat = this.isItemInSupportedFormats(item);
   }
 
   async setArcgisStrata(model: BaseModel) {
-    const stratum = await ArcGisPortalItemStratum.load(
-      this,
-      this._arcgisPortalCatalogGroup
-    );
+    const stratum = await ArcGisPortalItemStratum.load(this);
     if (stratum === undefined) return;
     runInAction(() => {
       model.strata.set(ArcGisPortalItemStratum.stratumName, stratum);

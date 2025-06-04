@@ -1,3 +1,4 @@
+import dateFormat from "dateformat";
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -15,6 +16,7 @@ import {
   InfoSectionTraits,
   MetadataUrlTraits
 } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import { DiscreteTimesTraits } from "../../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import {
   KeyValueTraits,
   WebCoverageServiceParameterTraits
@@ -27,10 +29,13 @@ import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
+  WebMapServiceAvailableLayersTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
@@ -44,12 +49,16 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import dateFormat from "dateformat";
 
 /** Transforms WMS GetCapabilities XML into WebMapServiceCatalogItemTraits */
-export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
-  WebMapServiceCatalogItemTraits
-) {
+export default class WebMapServiceCapabilitiesStratum
+  extends LoadableStratum(WebMapServiceCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      WebMapServiceCatalogItemTraits,
+      WebMapServiceCapabilitiesStratum
+    >
+{
   static async load(
     catalogItem: WebMapServiceCatalogItem,
     capabilities?: WebMapServiceCapabilities
@@ -74,8 +83,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogItem: WebMapServiceCatalogItem,
-    readonly capabilities: WebMapServiceCapabilities
+    private readonly catalogItem: WebMapServiceCatalogItem,
+    private readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -276,14 +285,26 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer | undefined> {
+  private get capabilitiesLayers(): ReadonlyMap<
+    string,
+    CapabilitiesLayer | undefined
+  > {
     const lookup: (name: string) => [string, CapabilitiesLayer | undefined] = (
       name
     ) => [name, this.capabilities && this.capabilities.findLayer(name)];
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
-  @computed get availableCrs() {
+  get availableLayers() {
+    return this.capabilities.allLayers.map((layer) =>
+      createStratumInstance(WebMapServiceAvailableLayersTraits, {
+        name: layer.Name,
+        title: layer.Title
+      })
+    );
+  }
+
+  @computed private get availableCrs() {
     // Get set of supported CRS from layer hierarchy
     const layerCrs = new Set<string>();
     this.capabilitiesLayers.forEach((layer) => {
@@ -370,13 +391,17 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     const capabilitiesLayers = this.capabilitiesLayers;
     for (const layerTuple of capabilitiesLayers) {
       const layerName = layerTuple[0];
+
+      // Use layer title if it exists
+      const layerTitle = this.capabilitiesLayers.get(layerName)?.Title;
+
       const layer = layerTuple[1];
 
       const styles: ReadonlyArray<CapabilitiesStyle> = layer
         ? this.capabilities.getInheritedValues(layer, "Style")
         : [];
       result.push({
-        layerName: layerName,
+        layerName: layerTitle ?? layerName,
         styles: styles.map((style) => {
           const wmsLegendUrl = isReadOnlyArray(style.LegendURL)
             ? style.LegendURL[0]
@@ -740,7 +765,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get supportsGetTimeseries() {
     // Don't use GetTimeseries if there is only one timeslice
-    if ((this.catalogItem.discreteTimes?.length ?? 0) <= 1) return false;
+    if ((this.catalogItem.discreteTimes?.times?.length ?? 0) <= 1) return false;
 
     const capabilities = this.capabilities?.json?.Capability;
 
@@ -759,8 +784,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
-    const result = [];
+  get discreteTimes() {
+    const result: { times: string[]; tags: string[] } = {
+      times: [],
+      tags: []
+    };
 
     for (const layer of this.capabilitiesLayers.values()) {
       if (!layer) {
@@ -801,10 +829,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         const value = values[i];
         const isoSegments = value.split("/");
         if (isoSegments.length === 1) {
-          result.push({
-            time: values[i],
-            tag: undefined
-          });
+          result.times.push(value);
+          result.tags.push("");
         } else {
           createDiscreteTimesFromIsoSegments(
             result,
@@ -817,7 +843,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       }
     }
 
-    return result;
+    return createStratumInstance(DiscreteTimesTraits, result);
   }
 
   @computed get initialTimeSource() {

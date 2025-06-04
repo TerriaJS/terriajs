@@ -23,7 +23,9 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
@@ -46,9 +48,14 @@ type PointTimeSeries = {
 // Column name to use for OpenDataSoft Record IDs
 const RECORD_ID_COL = "record_id";
 
-export class OpenDataSoftDatasetStratum extends LoadableStratum(
-  OpenDataSoftCatalogItemTraits
-) {
+export class OpenDataSoftDatasetStratum
+  extends LoadableStratum(OpenDataSoftCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      OpenDataSoftCatalogItemTraits,
+      OpenDataSoftDatasetStratum
+    >
+{
   static stratumName = "openDataSoftDataset";
 
   static async load(
@@ -170,9 +177,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    */
   @computed get colorFieldName() {
     return (
-      this.usefulFields.find((f) => f.type === "double") ??
-      this.usefulFields.find((f) => f.type === "int") ??
-      this.usefulFields.find((f) => f.type === "text")
+      this._usefulFields.find((f) => f.type === "double") ??
+      this._usefulFields.find((f) => f.type === "int") ??
+      this._usefulFields.find((f) => f.type === "text")
     )?.name;
   }
 
@@ -198,12 +205,12 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   /** Number of features in timeseries */
-  @computed get pointsCount() {
+  @computed private get pointsCount() {
     return this.pointTimeSeries?.length;
   }
 
   /** Get the maximum number of samples for a given point (or sensor) */
-  @computed get maxPointSamples() {
+  @computed private get maxPointSamples() {
     if (!this.pointTimeSeries) return;
     return Math.max(...this.pointTimeSeries.map((p) => p.samples ?? 0));
   }
@@ -215,10 +222,11 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    * - There is no geoPoint and no time field
    *
    */
-  @computed get selectAllFields() {
+  @computed private get selectAllFields() {
     return (
       (this.dataset.fields?.length ?? 0) <= 10 ||
-      (isDefined(this.recordsCount) && this.recordsCount < 10000) ||
+      (isDefined(this.catalogItem.recordsCount) &&
+        this.catalogItem.recordsCount < 10000) ||
       !this.catalogItem.colorFieldName ||
       !(this.catalogItem.geoPoint2dFieldName || this.catalogItem.timeFieldName)
     );
@@ -243,7 +251,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return filterOutUndefined([
       this.catalogItem.timeFieldName,
       // If aggregating time - average color field
-      this.aggregateTime
+      this.catalogItem.aggregateTime
         ? `avg(${this.catalogItem.colorFieldName}) as ${this.catalogItem.colorFieldName}`
         : this.catalogItem.colorFieldName,
       // Otherwise use region field or geopoint field (in that order)
@@ -255,13 +263,17 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get groupByFields() {
     // If aggregating time - use RANGE group by clause to average values over a date range (eg `aggregateTime = "1 day"`)
     // See https://help.opendatasoft.com/apis/ods-search-v2/#group-by-clause
-    if (this.aggregateTime && this.timeFieldName && this.geoPoint2dFieldName) {
-      return `${this.geoPoint2dFieldName},RANGE(${this.timeFieldName}, ${this.aggregateTime}) as ${this.timeFieldName}`;
+    if (
+      this.catalogItem.aggregateTime &&
+      this.timeFieldName &&
+      this.geoPoint2dFieldName
+    ) {
+      return `${this.geoPoint2dFieldName},RANGE(${this.timeFieldName}, ${this.catalogItem.aggregateTime}) as ${this.timeFieldName}`;
     }
   }
 
   // Hide geopoint column
-  @computed get geoPoint2dColumn() {
+  @computed private get geoPoint2dColumn() {
     if (this.catalogItem.geoPoint2dFieldName) {
       return createStratumInstance(TableColumnTraits, {
         name: this.catalogItem.geoPoint2dFieldName,
@@ -271,7 +283,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   // Set region column type
-  @computed get regionColumn() {
+  @computed private get regionColumn() {
     if (this.catalogItem.regionFieldName) {
       return createStratumInstance(TableColumnTraits, {
         name: this.catalogItem.regionFieldName,
@@ -281,7 +293,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   // Set colour column type and title
-  @computed get colorColumn() {
+  @computed private get colorColumn() {
     if (!this.catalogItem.colorFieldName) return;
 
     const f = this.dataset.fields?.find(
@@ -297,7 +309,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   // Set time column type and title
-  @computed get timeColumn() {
+  @computed private get timeColumn() {
     if (!this.catalogItem.timeFieldName) return;
 
     const f = this.dataset.fields?.find(
@@ -313,7 +325,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   // Set all other column types and title
-  @computed get otherColumns() {
+  @computed private get otherColumns() {
     return (
       this.dataset.fields
         ?.filter(
@@ -470,7 +482,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   /** Get fields with useful information (for visualisation). Eg numbers, text, not IDs, not region... */
-  @computed get usefulFields() {
+  @computed private get _usefulFields() {
     return (
       this.dataset.fields?.filter(
         (f) =>
@@ -496,7 +508,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
-        options: this.usefulFields.map((f) => ({
+        options: this._usefulFields.map((f) => ({
           id: f.name,
           name: f.label,
           value: undefined
@@ -590,11 +602,8 @@ export default class OpenDataSoftCatalogItem
       q = q.groupBy(this.groupByFields);
     }
 
-    const stratum = this.strata.get(OpenDataSoftDatasetStratum.stratumName) as
-      | OpenDataSoftDatasetStratum
-      | undefined;
     // Fetch maximum of 1000 records
-    const recordsToFetch = Math.min(1000, stratum?.recordsCount ?? 1000);
+    const recordsToFetch = Math.min(1000, this.recordsCount ?? 1000);
 
     // Get 1000 records (in chunks of 100)
     const records = flatten(
