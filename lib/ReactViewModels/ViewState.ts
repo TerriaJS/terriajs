@@ -368,6 +368,12 @@ export default class ViewState {
   @observable measurableDownloadPanelIsVisible: boolean = false;
 
   /**
+   * Gets or sets a value indicating whether the PlayPathPanel is visible.
+   * @type {Boolean}
+   */
+  @observable playPathPanelIsVisible: boolean = false;
+
+  /**
    * True if this is (or will be) the first time the user has added data to the map.
    * @type {Boolean}
    */
@@ -559,6 +565,7 @@ export default class ViewState {
             return;
           }
           this.measurableDownloadPanelIsVisible = false;
+          this.playPathPanelIsVisible = false;
           if (
             this.terria.measurableGeomList &&
             this.terria.measurableGeomList[

@@ -8,6 +8,9 @@ import { observer } from "mobx-react";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import Button from "../../Styled/Button";
 import Text from "../../Styled/Text";
 import Box from "../../Styled/Box";
@@ -22,15 +25,13 @@ import {
   MeasureAngleTool,
   MeasurePointTool
 } from "../Map/MapNavigation/Items";
-import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import MeasurablePanelManager from "../Custom/MeasurablePanelManager";
 import Select from "../../Styled/Select";
 import MeasurableGeometryManager from "../../ViewModels/MeasurableGeometryManager";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import isDefined from "../../Core/isDefined";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Checkbox from "../../Styled/Checkbox";
 import { MeasureToolsController } from "../Map/MapNavigation/Items/MeasureTools";
+import PlayPathPanel from "./PlayPathPanel";
 import MeasurableTransform from "./MeasurableTransform";
 
 interface Props {
@@ -421,10 +422,10 @@ const MeasurablePanel = observer((props: Props) => {
         </div>
         <button
           type="button"
-          onClick={() => {
+          onClick={action(() => {
             terria.measurableGeometryIndex = 0;
             close();
-          }}
+          })}
           className={Styles.btnCloseFeature}
           title={i18next.t("general.close")}
           disabled={
@@ -1242,6 +1243,17 @@ const MeasurablePanel = observer((props: Props) => {
     >
       {renderHeader()}
       {renderBody()}
+      {viewState.playPathPanelIsVisible && (
+        <PlayPathPanel
+          terria={terria}
+          viewState={viewState}
+          onClose={() =>
+            runInAction(() => {
+              viewState.playPathPanelIsVisible = false;
+            })
+          }
+        />
+      )}
     </div>
   );
 

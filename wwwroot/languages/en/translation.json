@@ -123,6 +123,18 @@
     "singlepath": "Single Path",
     "downloadCurrent": "only current element"
   },
+  "playPath": {
+    "title": "Play Path",
+    "speed": "Speed",
+    "tooltip": {
+      "play": "Play path",
+      "pause": "Pause path",
+      "stop": "Stop and reset",
+      "speedLabel": "Speed label",
+      "speedSlider": "Adjust playback speed",
+      "currentSpeed": "Current speed"
+    }
+  },
   "pickInfo": {
     "toolName": "Info",
     "title": "Info on mouse click"

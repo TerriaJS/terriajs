@@ -30,7 +30,7 @@ interface IProps {
   onClose?(): void;
 }
 
-async function requestDeviceMotionPermission(): Promise<"granted" | "denied"> {
+/*async function requestDeviceMotionPermission(): Promise<"granted" | "denied"> {
   const requestPermission: () => Promise<"granted" | "denied"> =
     window.DeviceMotionEvent &&
     typeof (DeviceMotionEvent as any).requestPermission === "function"
@@ -48,7 +48,7 @@ async function requestDeviceOrientationPermission(): Promise<
       ? (DeviceOrientationEvent as any).requestPermission
       : () => Promise.resolve("granted");
   return requestPermission();
-}
+}*/
 
 export class MeasureToolsController extends MapNavigationItemController {
   static id = "measure-tool";
@@ -86,7 +86,8 @@ export class MeasureToolsController extends MapNavigationItemController {
   activate() {
     this.onOpen();
     this.props.terria.measureTools = this.props.measureTools;
-    requestDeviceMotionPermission()
+
+    /*requestDeviceMotionPermission()
       .then((permissionState) => {
         if (permissionState !== "granted") {
           console.error("couldn't get access for motion events");
@@ -100,7 +101,7 @@ export class MeasureToolsController extends MapNavigationItemController {
           console.error("couldn't get access for orientation events");
         }
       })
-      .catch(console.error);
+      .catch(console.error);*/
 
     this.props.measureTools.activate();
   }
@@ -133,7 +134,8 @@ export class MeasureLineTool extends MapNavigationItemController {
       onPointClicked: this.onPointClicked.bind(this),
       onPointMoved: this.onPointMoved.bind(this),
       onCleanUp: this.onCleanUp.bind(this),
-      onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this),
+      invisible: true
     });
     this.onOpen = props.onOpen || (() => {});
     this.onClose = props.onClose || (() => {});
@@ -248,10 +250,6 @@ export class MeasureLineTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    /*const distance = this.prettifyNumber(this.totalDistanceMetres);
-    return distance.length === 0
-      ? ""
-      : `${i18next.t("measure.measureLineToolMessage")}: ${distance}`;*/
     return "";
   };
 
@@ -300,7 +298,8 @@ export class MeasurePolygonTool extends MapNavigationItemController {
       onPointClicked: this.onPointClicked.bind(this),
       onPointMoved: this.onPointMoved.bind(this),
       onCleanUp: this.onCleanUp.bind(this),
-      onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this),
+      invisible: true
     });
     this.onOpen = props.onOpen || (() => {});
     this.onClose = props.onClose || (() => {});
@@ -522,40 +521,6 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    /*return this.totalDistanceMetres === 0
-      ? ""
-      : `
-      <table>
-        <tbody>
-          <tr>
-            <td>${i18next.t(
-              "measure.measurePolygonToolMessagePerimeter"
-            )}: </td>
-            <td>${
-              this.totalDistanceMetres
-                ? this.prettifyNumber(this.totalDistanceMetres, false)
-                : ""
-            }</td>
-          </tr>
-          <tr>
-            <td>${i18next.t("measure.measurePolygonToolMessageArea")}:</td>
-            <td>${
-              this.totalAreaMetresSquared
-                ? this.prettifyNumber(this.totalAreaMetresSquared, true)
-                : ""
-            }</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>${
-              this.totalAreaMetresSquared
-                ? (this.totalAreaMetresSquared * 0.0001).toFixed(2) + " ha"
-                : ""
-            }</td>
-          </tr>
-        </tbody>
-      </table>
-    `;*/
     return "";
   };
 
@@ -605,7 +570,8 @@ export class MeasureAngleTool extends MapNavigationItemController {
       onPointClicked: this.onPointUpdated.bind(this),
       onPointMoved: this.onPointUpdated.bind(this),
       onCleanUp: this.onCleanUp.bind(this),
-      onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this),
+      invisible: true
     });
 
     this.onOpen = props.onOpen || (() => {});
@@ -648,12 +614,6 @@ export class MeasureAngleTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    /*if (this.currentAngle <= 0) {
-      return "";
-    }
-    return `${i18next.t(
-      "measure.measureAngleToolMessage"
-    )}: ${this.currentAngle.toFixed(2)}°`;*/
     return "";
   };
 
@@ -698,7 +658,8 @@ export class MeasurePointTool extends MapNavigationItemController {
       onPointClicked: this.onPointClicked.bind(this),
       onPointMoved: this.onPointMoved.bind(this),
       onCleanUp: this.onCleanUp.bind(this),
-      onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this),
+      invisible: true
     });
     this.onOpen = props.onOpen || (() => {});
     this.onClose = props.onClose || (() => {});
@@ -745,7 +706,7 @@ export class MeasurePointTool extends MapNavigationItemController {
   }
 
   onMakeDialogMessage = () => {
-    return ""; //i18next.t("measure.measurePointToolTitle");
+    return "";
   };
 
   /**
