@@ -1,14 +1,16 @@
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+import { ThemeProvider } from "styled-components";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import Terria from "../../../../lib/Models/Terria";
+import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 import ChartItemSelector from "../../../../lib/ReactViews/Workbench/Controls/ChartItemSelector";
-import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 
 class SomeChartableItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
@@ -72,7 +74,11 @@ describe("ChartItemSelector", function () {
     terria.addModel(item);
     terria.workbench.add(item);
     act(() => {
-      testRenderer = TestRenderer.create(<ChartItemSelector item={item} />);
+      testRenderer = TestRenderer.create(
+        <ThemeProvider theme={terriaTheme}>
+          <ChartItemSelector item={item} />
+        </ThemeProvider>
+      );
     });
   });
 

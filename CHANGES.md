@@ -1,11 +1,31 @@
 # Change Log
 
-#### next release (8.9.4)
+#### next release (8.9.6)
 
 - Set default value for date and datetime WPS fields only when the field is marked as required.
 - TSify MenuBar and Groups
 - Add elements config for MenuBar
+- Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - [The next improvement]
+
+#### 8.9.5 - 2025-06-03
+
+- Upgrade terriajs-server to version 4.0.2
+
+#### 8.9.4 - 2025-06-03
+
+- Remove regenerator-runtime polyfill as generators are now widely supported. #7615
+- Remove direct usage of core-js polyfills. #7615
+- TSify `ChartPanel` and convert to a functional component #7581
+- Convert `Chart` component of `FeatureInfoPanelChart` to functional component. #7598
+- TSify `DataCatalogGroup` and convert to a functional component. #7575
+- TSify `BottomDockChart`, `ChartPanel`, `LineAndPointChart`, `LineChart`, `MomentLinesChart`, `MomentPointsChart`, `Chart Tooltip` to typescript and convert to functional components. #7617
+- Upgrade mkdocs to 1.6.1
+- Refactor the `DateTimePicker` component and split it into multiple components. #7585
+- Update data-attribution and terms of conditions links to point to terria.io. #7627
+- Hide the related maps button. #7627
+- Change `BingMapSearchProvider` to correctly logs bing search action. #7601
+- fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
 
@@ -24,6 +44,7 @@
 - Convert `ViewingControls` to a functional component. #7574
 - DOMPurify updated to 3.2.5 to fix CVE-2025-26791.
 - Fix pmtiles rendering issue. #7607
+- Remove unused types/rbush dependency.
 
 #### 8.9.2 - 2025-03-31
 
@@ -46,9 +67,6 @@
 
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
-
-- Remove unused types/rbush dependency.
-- [The next improvement]
 
 #### 8.9.0 - 2025-03-17
 

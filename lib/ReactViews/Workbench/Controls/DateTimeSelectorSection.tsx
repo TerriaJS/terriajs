@@ -227,7 +227,6 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
                 onChange={this.changeDateTime}
                 openDirection="down"
                 isOpen={this.state.isOpen}
-                onOpen={this.onOpen}
                 onClose={this.onClose}
                 dateFormat={format}
               />

@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.9.3-saas-next",
+  "version": "8.9.5-saas-next",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -39,6 +39,7 @@
     "@types/d3-scale-chromatic": "^3.0.3",
     "@types/d3-selection": "^3.0.10",
     "@types/d3-transition": "^3.0.8",
+    "@types/d3-zoom": "^3.0.8",
     "@types/dateformat": "^5.0.1",
     "@types/file-saver": "^2.0.7",
     "@types/flexsearch": "0.7.6",
@@ -78,6 +79,7 @@
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
     "@visx/tooltip": "^3.3.0",
+    "@zip.js/zip.js": "2.7.40",
     "arcgis-pbf-parser": "^0.0.4",
     "assimpjs": "^0.0.7",
     "babel-loader": "^9.2.1",
@@ -86,7 +88,7 @@
     "classnames": "^2.3.1",
     "commander": "^12.1.0 ",
     "copy-webpack-plugin": "^12.0.2",
-    "core-js": "^3.1.4",
+    "core-js": "^3.42.0",
     "create-react-class": "^15.7.0",
     "css-loader": "^7.1.2",
     "d3-color": "^3.1.0",
@@ -205,9 +207,8 @@
     "pretty-quick": "^4.0.0",
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
-    "regenerator-runtime": "^0.13.2",
     "sass": "^1.81.0",
-    "terriajs-server": "^4.0.0",
+    "terriajs-server": "^4.0.2",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
   },
