@@ -524,7 +524,9 @@
     "colorScaleRangeMax": "El valor mínimo debe ser un número.",
     "addItemErrorTitle": "No se ha podido añadir el artículo del catálogo al banco de trabajo.",
     "addItemErrorMessage": "Se ha producido un error al cargar el elemento del catálogo.",
-    "splitScreenMode": "MODO DE PANTALLA DIVIDIDA"
+    "splitScreenMode": "MODO DE PANTALLA DIVIDIDA",
+    "disableAll": "Deshabilitar Todos",
+    "enableAll": "Habilitar Todos"
   },
   "search": {
     "data": "Datos",
@@ -1218,5 +1220,32 @@
     "controls": {
       "title": "Controles"
     }
-  }
+  },
+  "emptyWorkbenchInfo": [
+    {
+      "heading": "Agrega un conjunto de datos aquí",
+      "body": "Cuando agregues un conjunto de datos, su leyenda y configuraciones aparecerán aquí."
+    },
+    {
+      "heading": "Comienza",
+      "list": [
+        "Haz clic en Explorar los datos del mapa para ver los conjuntos de datos disponibles",
+        "Carga tus propios conjuntos de datos mediante el botón Subir",
+        "Encuentra tus datos agregados en este panel"
+      ]
+    },
+    {
+      "heading": "Lo que puedes hacer",
+      "list": [
+        "Mostrar u ocultar datos",
+        "Ajustar la transparencia (opacidad)",
+        "Comparar lado a lado",
+        "Cambiar estilos (colores, líneas, símbolos)",
+        "Ver diferentes fechas y horas (si los datos lo soportan)"
+      ]
+    },
+    {
+      "body": "Usa este panel para explorar datos, gestionar configuraciones y construir tu escena o historia en el mapa."
+    }
+  ]
 }
