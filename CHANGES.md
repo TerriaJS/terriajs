@@ -2,6 +2,7 @@
 
 #### next release (8.9.6)
 
+- Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - [The next improvement]
 
 #### 8.9.5 - 2025-06-03
