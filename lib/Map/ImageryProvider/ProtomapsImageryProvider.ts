@@ -183,14 +183,15 @@ export default class ProtomapsImageryProvider
     // Generate protomaps source based on this.data
     // - URL of pmtiles, geojson or pbf files
     if (typeof this.data === "string") {
-      if (this.data.endsWith(".pmtiles")) {
+      // Note: the `base` passed to URL is not relevant as we only use the
+      // parsed path. It still needs to be passed so that URL won't throw an
+      // error when passing relative URLs like /proxy/something.
+      const path = new URL(this.data, "http://example").pathname;
+      if (path.endsWith(".pmtiles")) {
         this.source = new PmtilesSource(this.data, false);
         const cache = new TileCache(this.source, TILE_CACHE_TILE_SIZE);
         this.view = new View(cache, this.maximumNativeZoom, 2);
-      } else if (
-        this.data.endsWith(".json") ||
-        this.data.endsWith(".geojson")
-      ) {
+      } else if (path.endsWith(".json") || path.endsWith(".geojson")) {
         this.source = new ProtomapsGeojsonSource(this.data);
       } else {
         this.source = new ZxySource(this.data, false);
