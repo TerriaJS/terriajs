@@ -2,6 +2,7 @@
 
 #### next release (8.9.6)
 
+- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - [The next improvement]
 
 #### 8.9.5 - 2025-06-03
@@ -21,7 +22,6 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
-- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize` #7636
 - [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
