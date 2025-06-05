@@ -354,7 +354,8 @@
   },
   "story": {
     "panelTitle": "Story editor",
-    "panelBody": "Create and share interactive stories directly from your map. Each story is capped at 2 MB - split large data or many scenes into multiple stories to stay under the limit.",
+    "panelBody": "Create and share interactive stories directly from your map.",
+    "panelBodyCapped": "Each story is capped at {{ shareMaxRequestSize }} - split large data or many scenes into multiple stories to stay under the limit.",
     "gettingStarted": "Getting started",
     "gettingStartedTitle": "Getting started",
     "badgeBarLabel": "Scenes",

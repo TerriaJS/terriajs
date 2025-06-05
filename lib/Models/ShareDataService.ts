@@ -3,7 +3,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
-import parseStringSize from "../Core/parseStringSize";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
 
@@ -49,16 +48,14 @@ export default class ShareDataService {
     );
   }
 
-  // readonly shareMaxRequestSize: number = this._serverConfig.maxRequestSize || DEFAULT_MAX_SHARE_SIZE;
-  get shareMaxRequestSize(): number {
-    try {
-      return defaultValue(
-        parseStringSize(this._serverConfig.shareMaxRequestSize),
-        DEFAULT_MAX_SHARE_SIZE
-      );
-    } catch {
-      return DEFAULT_MAX_SHARE_SIZE;
-    }
+  // get the raw string from serverConfig.shareMaxRequestSize
+  get shareMaxRequestSize(): string | undefined {
+    return this._serverConfig.shareMaxRequestSize;
+  }
+
+  // get the parsed value in bytes from the server
+  get shareMaxRequestSizeBytes(): number | undefined {
+    return this._serverConfig.shareMaxRequestSizeBytes;
   }
 
   /**

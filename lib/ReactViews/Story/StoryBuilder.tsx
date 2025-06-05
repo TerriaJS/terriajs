@@ -36,7 +36,6 @@ import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import { DEFAULT_MAX_SHARE_SIZE } from "../../../lib/Models/ShareDataService";
 import Story from "./Story";
 import StoryEditor from "./StoryEditor";
 import Styles from "./story-builder.scss";
@@ -493,10 +492,14 @@ class StoryBuilder extends Component<
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
     const shareDataSize = this.props.viewState.shareDataStringSize;
-    const maxShareSize =
-      this.props.viewState.terria.shareDataService?.shareMaxRequestSize ||
-      DEFAULT_MAX_SHARE_SIZE;
-    const shareDataTooLong = shareDataSize > maxShareSize;
+    const shareMaxRequestSize =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
+    const shareMaxRequestSizeBytes =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
+    // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
+    const shareDataTooLong = shareMaxRequestSizeBytes
+      ? shareDataSize > shareMaxRequestSizeBytes
+      : false;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -528,7 +531,10 @@ class StoryBuilder extends Component<
           </Text>
           <Spacing bottom={2} />
           <Text medium color={this.props.theme.textLightDimmed} highlightLinks>
-            {t("story.panelBody")}
+            {t("story.panelBody") +
+              (shareMaxRequestSize
+                ? " " + t("story.panelBodyCapped", { shareMaxRequestSize })
+                : "")}
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
