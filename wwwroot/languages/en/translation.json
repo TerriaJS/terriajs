@@ -667,7 +667,8 @@
     "searchItemTitle": "Search",
     "splitScreenMode": "SPLIT SCREEN MODE",
     "pathItem": "Path",
-    "pointsItem": "Points"
+    "pointsItem": "Points",
+    "playPath": "Play Path"
   },
   "dateTime": {
     "selectorLabel": "Time:",

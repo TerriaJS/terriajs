@@ -587,36 +587,55 @@ class ViewingControls extends React.Component<
           </li>
         ) : null}
         {MeasurableGeometryMixin.isMixedInto(item) && item.canUseAsPath && (
-          <li key={"workbench.measureItem"}>
-            <ViewingControlMenuButton
-              disabled={
-                this.props.viewState.measurablePanelIsVisible &&
-                !this.props.viewState.terria.measurableGeomList[
-                  this.props.viewState.terria.measurableGeometryIndex
-                ].isFileUploaded
-              }
-              onClick={() =>
-                runInAction(() => {
-                  item.computePath();
-                  [
-                    MeasureToolsController.id,
-                    MeasureLineTool.id,
-                    MeasurePolygonTool.id,
-                    MeasurePointTool.id,
-                    MeasureAngleTool.id
-                  ].forEach((id) =>
-                    viewState.terria.mapNavigationModel.disable(id)
-                  );
-                })
-              }
-              title="Usa il dato del layer come percorso di cui misurare altitudine e statistiche"
-            >
-              <BoxViewingControl>
-                <StyledIcon glyph={Icon.GLYPHS.lineChart} />
-                <span>{t("workbench.pathItem")}</span>
-              </BoxViewingControl>
-            </ViewingControlMenuButton>
-          </li>
+          <>
+            <li key={"workbench.measureItem"}>
+              <ViewingControlMenuButton
+                disabled={
+                  this.props.viewState.measurablePanelIsVisible &&
+                  !this.props.viewState.terria.measurableGeomList[
+                    this.props.viewState.terria.measurableGeometryIndex
+                  ].isFileUploaded
+                }
+                onClick={() =>
+                  runInAction(() => {
+                    item.computePath();
+                    [
+                      MeasureToolsController.id,
+                      MeasureLineTool.id,
+                      MeasurePolygonTool.id,
+                      MeasurePointTool.id,
+                      MeasureAngleTool.id
+                    ].forEach((id) =>
+                      viewState.terria.mapNavigationModel.disable(id)
+                    );
+                  })
+                }
+                title="Usa il dato del layer come percorso di cui misurare altitudine e statistiche"
+              >
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.lineChart} />
+                  <span>{t("workbench.pathItem")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+            <li>
+              <ViewingControlMenuButton
+                onClick={() => {
+                  if (MeasurableGeometryMixin.isMixedInto(item)) {
+                    runInAction(() => {
+                      item.computePath();
+                      viewState.playPathPanelIsVisible = true;
+                    });
+                  }
+                }}
+              >
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.play} />
+                  <span>{t("workbench.playPath")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </>
         )}
         {(!MeasurableGeometryMixin.isMixedInto(item) || !item.canUseAsPath) && (
           <VisualizePointsOption item={item} t={t} />

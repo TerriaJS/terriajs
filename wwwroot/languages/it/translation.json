@@ -1433,6 +1433,7 @@
     "searchItem": "Cerca",
     "pathItem": "Percorso",
     "pointsItem": "Punti",
+    "playPath": "Avvia percorso",
     "dimensionsSelector": {
       "undefinedLabel": "Non specificato"
     },

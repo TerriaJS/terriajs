@@ -10,14 +10,16 @@ import Button from "../../Styled/Button";
 import { useTheme } from "styled-components";
 import Slider from "rc-slider";
 import usePlayPath from "../Custom/PlayPath";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 
 interface Props {
   terria: Terria;
   viewState: ViewState;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
+const PlayPathPanel = observer((props: Props) => {
   const theme = useTheme();
   const {
     playSpeed,
@@ -29,11 +31,11 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
     onPlay,
     onPause,
     onStop
-  } = usePlayPath(terria);
+  } = usePlayPath(props.terria, props.viewState);
 
   const panelClassName = classNames(Styles.panel, {
-    [Styles.isVisible]: viewState.playPathPanelIsVisible,
-    [Styles.isTranslucent]: viewState.explorerPanelIsVisible
+    [Styles.isVisible]: props.viewState.playPathPanelIsVisible,
+    [Styles.isTranslucent]: props.viewState.explorerPanelIsVisible
   });
 
   const renderHeader = () => {
@@ -50,7 +52,10 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
         <button
           type="button"
           onClick={() => {
-            onClose();
+            props.onClose?.();
+            runInAction(() => {
+              props.viewState.playPathPanelIsVisible = false;
+            });
           }}
           className={Styles.btnCloseFeature}
           title={i18next.t("general.close")}
@@ -122,7 +127,7 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
             display: "flex",
             alignItems: "center",
             width: "100%",
-            maxWidth: "120px",
+            maxWidth: "130%",
             gap: 8
           }}
         >
@@ -143,7 +148,7 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
             )}: ${playSpeed}x`}
             css={`
               flex: 1;
-              width: 120px;
+              width: 100%;
             `}
           />
           <span style={{ minWidth: 32, textAlign: "right", fontSize: "0.9em" }}>
@@ -157,14 +162,20 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
   return (
     <Rnd
       bounds="window"
-      default={{ x: 50, y: 50, width: "auto", height: "auto" }}
+      default={{
+        x: 50,
+        y: 50,
+        width: window.innerWidth * 0.1,
+        height: "auto"
+      }}
+      maxWidth={window.innerWidth * 0.4}
       enableResizing={{ right: false, left: false }}
       cancel=".no-drag"
     >
       <div
         className={panelClassName}
         style={{ pointerEvents: "auto" }}
-        aria-hidden={!viewState.playPathPanelIsVisible}
+        aria-hidden={!props.viewState.playPathPanelIsVisible}
       >
         {renderHeader()}
         {countdown !== null ? (
@@ -187,6 +198,6 @@ const PlayPathPanel: React.FC<Props> = ({ terria, viewState, onClose }) => {
       </div>
     </Rnd>
   );
-};
+});
 
 export default PlayPathPanel;
