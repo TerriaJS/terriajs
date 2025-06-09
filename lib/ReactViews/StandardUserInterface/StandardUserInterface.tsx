@@ -79,7 +79,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
     };
 
     const shouldUseMobileInterface = () =>
-      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
+      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 1100);
 
     const resizeListener = action(() => {
       props.viewState.useSmallScreenInterface = shouldUseMobileInterface();

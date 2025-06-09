@@ -3,9 +3,9 @@ import React from "react";
 const MediaQuery = require("react-responsive").default;
 
 // This should come from some config some where
-const small = 768;
-const medium = 992;
-const large = 1300;
+const small = 1100;
+const medium = 1300;
+const large = 1500;
 
 // Use PropTypes and Typescript because this is widely used from JSX and TSX files
 const BreakpointPropTypes = {

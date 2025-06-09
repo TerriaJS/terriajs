@@ -146,7 +146,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: undefined,
     controller: measureToolsController,
     order: 5,
-    noExpand: window.innerWidth < 768
+    noExpand: window.innerWidth < 1100
   });
 
   const measureAngleToolController = new MeasureAngleTool({
@@ -199,7 +199,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: undefined,
     controller: measureAngleToolController,
     order: 6,
-    noExpand: window.innerWidth < 768
+    noExpand: window.innerWidth < 1100
   });
 
   const measurePolygonToolController = new MeasurePolygonTool({
@@ -263,7 +263,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: undefined,
     controller: measurePolygonToolController,
     order: 6,
-    noExpand: window.innerWidth < 768
+    noExpand: window.innerWidth < 1100
   });
 
   const measureLineToolController = new MeasureLineTool({
@@ -330,7 +330,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: undefined,
     controller: measureLineToolController,
     order: 6,
-    noExpand: window.innerWidth < 768
+    noExpand: window.innerWidth < 1100
   });
 
   const measurePointTool = new MeasurePointTool({
@@ -395,7 +395,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     controller: measurePointTool,
     screenSize: undefined,
     order: 6,
-    noExpand: window.innerWidth < 768
+    noExpand: window.innerWidth < 1100
   });
 
   const toggleInfoController = new TogglePickInfoController(viewState);
