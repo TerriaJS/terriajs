@@ -19,7 +19,6 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -125,8 +124,6 @@ export default class Cesium extends GlobeOrMap {
   readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
   readonly scene: Scene;
-  readonly dataSources: DataSourceCollection = new DataSourceCollection();
-  readonly dataSourceDisplay: DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
@@ -190,7 +187,6 @@ export default class Cesium extends GlobeOrMap {
     9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
     const options = {
-      dataSources: this.dataSources,
       clock: this.terria.timelineClock,
       baseLayer: ImageryLayer.fromProviderAsync(
         SingleTileImageryProvider.fromUrl(img),
@@ -228,20 +224,11 @@ export default class Cesium extends GlobeOrMap {
 
     //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
-    this.dataSourceDisplay = new DataSourceDisplay({
-      scene: this.scene,
-      dataSourceCollection: this.dataSources
-    });
-
     this._selectionIndicator = new CesiumSelectionIndicator(this);
 
     this.supportsPolylinesOnTerrain = (this.scene as any).context.depthTexture;
 
     this._eventHelper = new EventHelper();
-
-    this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
-      this.dataSourceDisplay.update(clock.currentTime);
-    }) as any);
 
     // Progress
     this._eventHelper.add(
@@ -438,6 +425,14 @@ export default class Cesium extends GlobeOrMap {
     });
   }
 
+  get dataSources(): DataSourceCollection {
+    return this.cesiumWidget.dataSources;
+  }
+
+  get dataSourceDisplay(): DataSourceDisplay {
+    return this.cesiumWidget.dataSourceDisplay;
+  }
+
   /** Add an event listener to a TerrainProvider.
    * If we get an error when trying to load the terrain, then switch to smooth mode, and notify the user.
    * Finally, remove the listener, so failed tiles do not trigger the error as these can be common and are not a problem. */
@@ -615,7 +610,6 @@ export default class Cesium extends GlobeOrMap {
     this.stopObserving();
     this._eventHelper.removeAll();
     this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
-    this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
     this._disposeResolutionReaction();
