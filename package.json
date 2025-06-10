@@ -134,7 +134,7 @@
     "proj4": "^2.4.4",
     "proj4-fully-loaded": "^0.2.0",
     "prop-types": "^15.6.0",
-    "protomaps-leaflet": "^4.1.1",
+    "protomaps-leaflet": "^5.0.1",
     "rc-slider": "^9.7.2",
     "react": "^16.14.0",
     "react-anything-sortable": "^1.5.2",
