@@ -1061,8 +1061,8 @@ export default class Cesium extends GlobeOrMap {
 
     const frustrum = scene.camera.frustum as PerspectiveFrustum;
 
-    const fovy = frustrum.fovy * 0.5;
-    const fovx = Math.atan(Math.tan(fovy) * frustrum.aspectRatio);
+    const fovy = (frustrum.fovy ?? 0) * 0.5;
+    const fovx = Math.atan(Math.tan(fovy) * (frustrum.aspectRatio ?? 0));
 
     const cameraOffset = Cartesian3.subtract(
       camera.positionWC,
@@ -1614,6 +1614,7 @@ export default class Cesium extends GlobeOrMap {
                   result.pickPosition
                 );
                 const pickedSide =
+                  screenPosition &&
                   this._getSplitterSideForScreenPosition(screenPosition);
 
                 features = features.filter((feature) => {
