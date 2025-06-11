@@ -556,7 +556,7 @@
     "webFileType": "<0>Step 1:</0> Seleccione el tipo de archivo o servicio web",
     "infoText": "<0>Arrastra y suelta un archivo aquí para verlo localmente en el mapa</0><1>(no se guardará ni se subirá a Internet)</1>",
     "note": "<0>Nota: </0>Los datos añadidos de esta manera no se guardan ni se hacen visibles para los demás.",
-    "addDataBtnText": "Explorar los datos del mapa",
+    "addDataBtnText": "Explorar datos",
     "load": "Cargar datos locales/web",
     "closeDataPanel": "Cerrar el panel de datos",
     "localFile": "<0>Step 2:</0> Seleccionar archivo",
