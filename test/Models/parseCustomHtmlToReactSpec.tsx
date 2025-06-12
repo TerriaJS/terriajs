@@ -1,5 +1,3 @@
-"use strict";
-
 // import Chart from "../../lib/ReactViews/Custom/Chart";
 import { render, screen } from "@testing-library/react";
 import parseCustomHtmlToReact from "../../lib/ReactViews/Custom/parseCustomHtmlToReact";
