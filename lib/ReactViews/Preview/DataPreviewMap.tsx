@@ -214,10 +214,6 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
   ]);
 
   useEffect(() => {
-    console.log(
-      "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
-    );
-
     const container = mapContainerRef.current;
 
     const baseMapItems = terria.baseMapsModel.baseMapItems;
@@ -237,7 +233,6 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
     previewViewer.attach(container!);
 
     return () => {
-      console.log("Cleaning up preview map.");
       if (previewViewer.attached) {
         previewViewer.detach();
       }
