@@ -1298,6 +1298,7 @@
     "shareData": {
       "generateErrorTitle": "Couldn't generate short URL.",
       "generateErrorMessage": "Something went wrong when trying to use the share data service to generate a short URL.",
+      "generateErrorDataExceedsLimitMessage": "Error: Share data exceeds limit",
       "expandErrorTitle": "Couldn't expand URL",
       "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time."
     },

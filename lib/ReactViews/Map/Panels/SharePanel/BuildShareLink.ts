@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -93,12 +94,27 @@ export async function buildShortShareLink(
     token = await terria.shareDataService?.getShareToken(
       getShareData(terria, viewState, options)
     );
-  } catch (e) {
-    terria.raiseErrorToUser(e, {
-      title: "Error generating share token",
-      severity: TerriaErrorSeverity.Error
-    });
-    return "Error: Share data exceeds limit";
+  } catch (error) {
+    let userMessage = i18next.t("models.shareData.generateErrorMessage");
+    if (error instanceof TerriaError) {
+      const highestImportanceError = error.highestImportanceError;
+      const highestImportanceOriginalErrorMessage =
+        highestImportanceError.originalError?.[0].message;
+      if (highestImportanceOriginalErrorMessage?.includes("413")) {
+        userMessage = i18next.t(
+          "models.shareData.generateErrorDataExceedsLimitMessage"
+        );
+        terria.raiseErrorToUser(
+          TerriaError.from(error, {
+            message: userMessage
+          }),
+          {
+            severity: TerriaErrorSeverity.Error
+          }
+        );
+      }
+    }
+    return userMessage;
   }
 
   if (token) {
