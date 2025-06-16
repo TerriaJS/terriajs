@@ -532,10 +532,11 @@ class StoryBuilder extends Component<
           </Text>
           <Spacing bottom={2} />
           <Text medium color={this.props.theme.textLightDimmed} highlightLinks>
-            {t("story.panelBody") +
-              (shareMaxRequestSize
-                ? " " + t("story.panelBodyCapped", { shareMaxRequestSize })
-                : "")}
+            {`${t("story.panelBody")}${
+              shareMaxRequestSize
+                ? ` ${t("story.panelBodyCapped", { shareMaxRequestSize })}`
+                : ""
+            }`}
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
