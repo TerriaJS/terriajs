@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -5,7 +6,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
-import TerriaError from "../../../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
@@ -87,11 +88,36 @@ export async function buildShortShareLink(
       "Could not generate share token - `shareDataService` is `undefined`"
     );
 
-  const token = await terria.shareDataService?.getShareToken(
-    getShareData(terria, viewState, options)
-  );
+  let token: string | null = null;
 
-  if (typeof token === "string") {
+  try {
+    token = await terria.shareDataService?.getShareToken(
+      getShareData(terria, viewState, options)
+    );
+  } catch (error) {
+    let userMessage = i18next.t("models.shareData.generateErrorMessage");
+    if (error instanceof TerriaError) {
+      const highestImportanceError = error.highestImportanceError;
+      const highestImportanceOriginalErrorMessage =
+        highestImportanceError.originalError?.[0].message;
+      if (highestImportanceOriginalErrorMessage?.includes("413")) {
+        userMessage = i18next.t(
+          "models.shareData.generateErrorDataExceedsLimitMessage"
+        );
+        terria.raiseErrorToUser(
+          TerriaError.from(error, {
+            message: userMessage
+          }),
+          {
+            severity: TerriaErrorSeverity.Error
+          }
+        );
+      }
+    }
+    return userMessage;
+  }
+
+  if (token) {
     return buildBaseShareUrl(terria, {
       share: token
     });

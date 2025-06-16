@@ -1,4 +1,4 @@
-import { action, makeObservable, toJS } from "mobx";
+import { action, computed, makeObservable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import {
   RefObject,
@@ -258,6 +258,22 @@ class StoryBuilder extends Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
+  @computed
+  get shareDataStringSize() {
+    const terria = this.props.viewState.terria;
+    const stories = terria.stories;
+
+    const validStories = stories.filter(
+      (story) => story.shareData.initSources.length > 0
+    ).length;
+
+    return JSON.stringify(
+      getShareData(terria, this.props.viewState, {
+        includeStories: validStories > 0
+      })
+    ).length;
+  }
+
   componentWillUnmount() {
     this.clearRecaptureSuccessTimeout?.();
   }
@@ -476,6 +492,15 @@ class StoryBuilder extends Component<
   render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
+    const shareDataSize = this.shareDataStringSize;
+    const shareMaxRequestSize =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
+    const shareMaxRequestSizeBytes =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
+    // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
+    const shareDataTooLong = shareMaxRequestSizeBytes
+      ? shareDataSize > shareMaxRequestSizeBytes
+      : false;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -507,13 +532,24 @@ class StoryBuilder extends Component<
           </Text>
           <Spacing bottom={2} />
           <Text medium color={this.props.theme.textLightDimmed} highlightLinks>
-            {t("story.panelBody")}
+            {`${t("story.panelBody")}${
+              shareMaxRequestSize
+                ? ` ${t("story.panelBodyCapped", { shareMaxRequestSize })}`
+                : ""
+            }`}
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
           {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
+        {shareDataTooLong && (
+          <Box paddedHorizontally={2}>
+            <Text small color={this.props.theme.textWarning} highlightLinks>
+              {t("story.storiesTooLong")}
+            </Text>
+          </Box>
+        )}
         {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
