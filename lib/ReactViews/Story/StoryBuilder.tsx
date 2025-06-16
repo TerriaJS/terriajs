@@ -1,4 +1,4 @@
-import { action, makeObservable, toJS } from "mobx";
+import { action, computed, makeObservable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import {
   RefObject,
@@ -258,19 +258,20 @@ class StoryBuilder extends Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
-  @action
-  updateShareDataStringSize() {
-    const shareData = getShareData(this.props.viewState.terria);
-    const shareDataString = JSON.stringify(shareData);
-    this.props.viewState.setShareDataStringSize(shareDataString.length);
-  }
+  @computed
+  get shareDataStringSize() {
+    const terria = this.props.viewState.terria;
+    const stories = terria.stories;
 
-  componentDidMount(): void {
-    this.updateShareDataStringSize();
-  }
+    const validStories = stories.filter(
+      (story) => story.shareData.initSources.length > 0
+    ).length;
 
-  componentDidUpdate(): void {
-    this.updateShareDataStringSize();
+    return JSON.stringify(
+      getShareData(terria, this.props.viewState, {
+        includeStories: validStories > 0
+      })
+    ).length;
   }
 
   componentWillUnmount() {
@@ -491,7 +492,7 @@ class StoryBuilder extends Component<
   render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
-    const shareDataSize = this.props.viewState.shareDataStringSize;
+    const shareDataSize = this.shareDataStringSize;
     const shareMaxRequestSize =
       this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
     const shareMaxRequestSizeBytes =
