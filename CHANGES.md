@@ -2,6 +2,11 @@
 
 #### next release (8.9.6)
 
+- **Breaking changes:**
+
+  - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
+    - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
+
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - [The next improvement]
 
