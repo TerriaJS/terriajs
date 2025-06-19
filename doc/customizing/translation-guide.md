@@ -48,7 +48,7 @@ Note the base URL to overrides language files can be changed by setting `Languag
 
 ### TinyMCE translations
 
-The TinyMCE translations is used to internationalize story editor which uses external library with its own internationalization support. Those files are located at `wwwroot/languages/tinymce/{abbreviation}.js` inside the root folder of TerriaMap (where the abbreviation is a short name of the language specified in the config and it should be the same under language is registered in tinymce `tinymce.addI18n("{abbreviation}",...`).
+The TinyMCE translations is used to internationalize story editor which uses external library with its own internationalization support. Those files are located at `wwwroot/languages/tinymce/{abbreviation}.js` inside the root folder of TerriaMap (where the abbreviation is a short name of the language specified in the config and it should be the same under language is registered in tinymce `tinymce.addI18n("{abbreviation}",...`). You can get them from https://www.tiny.cloud/get-tiny/language-packages/.
 
 ## Best practice
 
