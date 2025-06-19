@@ -1,12 +1,13 @@
 import { Rnd } from "react-rnd";
 import { runInAction } from "mobx";
-import MeasurableDownload from "./MeasurableDownload";
+import MeasurableDownloadContent from "./MeasurableDownloadContent";
 import Terria from "../../Models/Terria";
 import Styles from "./measurable-panel.scss";
 import Icon from "../../Styled/Icon";
 import i18next from "i18next";
 import ViewState from "../../ReactViewModels/ViewState";
 import classNames from "classnames";
+import { observer } from "mobx-react";
 
 interface Props {
   terria: Terria;
@@ -16,9 +17,13 @@ interface Props {
   onClose?: () => void;
 }
 
-const MeasurableDownloadPanel = (props: Props) => {
+const MeasurableDownloadPanel = observer((props: Props) => {
   const { onClose, ...downloadProps } = props;
   const isMobile = downloadProps.viewState.useSmallScreenInterface;
+  const currentGeom =
+    downloadProps.terria.measurableGeomList[
+      downloadProps.terria.measurableGeometryIndex
+    ];
 
   const panelClassName = classNames(Styles.panel, {
     [Styles.isCollapsed]: downloadProps.viewState.measurablePanelIsCollapsed,
@@ -26,6 +31,10 @@ const MeasurableDownloadPanel = (props: Props) => {
       downloadProps.viewState.measurableDownloadPanelIsVisible,
     [Styles.isTranslucent]: downloadProps.viewState.explorerPanelIsVisible
   });
+
+  if (!currentGeom) {
+    return null;
+  }
 
   const renderHeader = () => {
     return (
@@ -42,6 +51,14 @@ const MeasurableDownloadPanel = (props: Props) => {
             runInAction(() => {
               downloadProps.viewState.measurableDownloadPanelIsVisible = false;
             });
+            downloadProps.terria.measurableGeomList.splice(
+              1,
+              downloadProps.terria.measurableGeomList.length - 1
+            );
+            downloadProps.terria.measurableGeometryManager.splice(
+              1,
+              downloadProps.terria.measurableGeometryManager.length - 1
+            );
           }}
           className={Styles.btnCloseFeature}
           title={i18next.t("general.close")}
@@ -61,13 +78,10 @@ const MeasurableDownloadPanel = (props: Props) => {
     >
       {renderHeader()}
       <div className={Styles.body} style={{ padding: "20px" }}>
-        <MeasurableDownload
+        <MeasurableDownloadContent
           terria={downloadProps.terria}
-          pathNotes={
-            downloadProps.terria.measurableGeomList[
-              downloadProps.terria.measurableGeometryIndex
-            ].pathNotes ?? ""
-          }
+          viewState={downloadProps.viewState}
+          pathNotes={currentGeom.pathNotes ?? ""}
           ellipsoid={downloadProps.terria?.cesium?.scene?.globe?.ellipsoid!!}
         />
       </div>
@@ -108,9 +122,19 @@ const MeasurableDownloadPanel = (props: Props) => {
         left: true
       }}
     >
-      {panelContent}
+      <div className={panelClassName} style={{ pointerEvents: "auto" }}>
+        {renderHeader()}
+        <div className={Styles.body} style={{ padding: "20px" }}>
+          <MeasurableDownloadContent
+            terria={downloadProps.terria}
+            viewState={downloadProps.viewState}
+            pathNotes={currentGeom.pathNotes ?? ""}
+            ellipsoid={downloadProps.terria?.cesium?.scene?.globe?.ellipsoid!!}
+          />
+        </div>
+      </div>
     </Rnd>
   );
-};
+});
 
 export default MeasurableDownloadPanel;

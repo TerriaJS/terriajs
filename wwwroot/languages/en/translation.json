@@ -121,6 +121,7 @@
     "points": "Points",
     "polygon": "Polygon",
     "singlepath": "Single Path",
+    "selectAll": "Select All",
     "downloadCurrent": "only current element"
   },
   "playPath": {

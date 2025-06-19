@@ -1,12 +1,13 @@
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import DataUri from "../../Core/DataUri";
-import { MeasurableGeometry } from "../../ViewModels/MeasurableGeometryManager";
+import { MeasurableGeometry } from "../../ViewModels/Measure/MeasurableGeometryManager";
 import i18next from "i18next";
 import { useTheme } from "styled-components";
 import { Button } from "../../Styled/Button";
 import Terria from "../../Models/Terria";
 import addUserFiles from "../../Models/Catalog/addUserFiles";
 import ViewState from "../../ReactViewModels/ViewState";
+import { observer } from "mobx-react";
 
 interface Props {
   terria: Terria;
@@ -16,7 +17,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const MeasurableTransform = (props: Props) => {
+const MeasurableTransform = observer((props: Props) => {
   const { terria, viewState, pathNotes, layerName, onClick } = props;
   const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
   const theme = useTheme();
@@ -25,7 +26,7 @@ const MeasurableTransform = (props: Props) => {
     const baseDownloads = [
       {
         key: "jsonPolygon",
-        href: DataUri.make("json", generateGeoJsonPolygon(geom)),
+        href: DataUri.make("json", generateJsonPolygon(geom)),
         download: `${layerName}_polygon.json`,
         label: `${i18next.t("downloadData.polygon")} JSON`
       },
@@ -48,9 +49,9 @@ const MeasurableTransform = (props: Props) => {
         key: "jsonMultiPathPolygon",
         href: DataUri.make(
           "json",
-          generateMultiPathGeoJsonPolygon(terria.measurableGeomList)
+          generateMultiPathJsonPolygon(terria.measurableGeomList)
         ),
-        download: `${name}_polygon_multipath.json`,
+        download: `${layerName}_polygon_multipath.json`,
         label: `${i18next.t("downloadData.polygon")} JSON`
       },
       {
@@ -59,7 +60,7 @@ const MeasurableTransform = (props: Props) => {
           "json",
           generateMultiPathJsonLineStrings(terria.measurableGeomList)
         ),
-        download: `${name}_lines_multipath.json`,
+        download: `${layerName}_lines_multipath.json`,
         label: `${i18next.t("downloadData.lines")} JSON`
       }
     ];
@@ -88,7 +89,7 @@ const MeasurableTransform = (props: Props) => {
       });
   };
 
-  const generateGeoJsonPolygon = (geom: MeasurableGeometry) => {
+  const generateJsonPolygon = (geom: MeasurableGeometry) => {
     const coordinates = geom.stopPoints.map((elem) => [
       CesiumMath.toDegrees(elem.longitude),
       CesiumMath.toDegrees(elem.latitude)
@@ -157,7 +158,7 @@ const MeasurableTransform = (props: Props) => {
     });
   };
 
-  const generateMultiPathGeoJsonPolygon = (
+  const generateMultiPathJsonPolygon = (
     geomList: MeasurableGeometry[]
   ): string => {
     return JSON.stringify({
@@ -244,21 +245,31 @@ const MeasurableTransform = (props: Props) => {
   };
 
   const handleTransform = () => {
-    const links = getDownloadLinks(geom, terria.measurableGeomList.length > 1);
+    const validPaths = terria.measurableGeomList.filter(
+      (geom) => geom.stopPoints && geom.stopPoints.length > 0
+    );
+
+    const isMultiPath = validPaths.length > 1;
+    const links = getDownloadLinks(geom, isMultiPath);
+
     let format = "";
     if (geom.onlyPoints) {
       format = "jsonPoints";
     } else if (geom.isClosed) {
-      format = "jsonPolygon";
+      format = isMultiPath ? "jsonMultiPathPolygon" : "jsonPolygon";
     } else {
-      format = "jsonLines";
+      format = isMultiPath ? "jsonMultiPathLines" : "jsonLines";
     }
+
     const linkObj = links.find((l) => l.key === format);
-    if (!linkObj?.href) return;
+    if (!linkObj?.href) {
+      return;
+    }
 
     try {
       const file = dataURItoFile(linkObj.href as string, linkObj.download!);
       handleUploadFile({ target: { files: [file] } });
+      onClick?.();
     } catch (e) {
       console.error("Unable to create File from Data URI:", e);
     }
@@ -272,7 +283,6 @@ const MeasurableTransform = (props: Props) => {
           background: ${theme.colorPrimary};
         `}
         onClick={() => {
-          onClick?.();
           handleTransform();
         }}
         disabled={!layerName}
@@ -281,5 +291,5 @@ const MeasurableTransform = (props: Props) => {
       </Button>
     </div>
   );
-};
+});
 export default MeasurableTransform;

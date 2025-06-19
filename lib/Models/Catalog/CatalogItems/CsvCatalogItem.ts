@@ -16,6 +16,11 @@ import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
+import ExportableFormat from "../../../ViewModels/Measure/ExportableFormat";
+import { MeasurableGeometry } from "../../../ViewModels/Measure/MeasurableGeometryManager";
+import { DownloadLink } from "../../../ViewModels/Measure/MeasurableDownload";
+import DataUri from "../../../Core/DataUri";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -31,7 +36,7 @@ export default class CsvCatalogItem
   extends AutoRefreshingMixin(
     TableMixin(UrlMixin(CreateModel(CsvCatalogItemTraits)))
   )
-  implements HasLocalData
+  implements HasLocalData, ExportableFormat
 {
   static get type() {
     return "csv";
@@ -66,17 +71,76 @@ export default class CsvCatalogItem
   }
 
   @override
+  get cacheDuration() {
+    return super.cacheDuration || "1d";
+  }
+
+  private generateCsvData(geom: MeasurableGeometry, name: string): string {
+    const headers = [
+      "name",
+      "path_notes",
+      ...Object.keys(geom.stopPoints[0]),
+      "description"
+    ].join(",");
+
+    const rows = [headers];
+
+    rows.push(
+      ...geom.stopPoints.map((elem, index) =>
+        [
+          name,
+          geom.pathNotes,
+          CesiumMath.toDegrees(elem.longitude),
+          CesiumMath.toDegrees(elem.latitude),
+          Math.round(elem.height),
+          geom.pointDescriptions?.[index] || ""
+        ].join(",")
+      )
+    );
+
+    return rows.join("\n");
+  }
+
+  async generateDownloadLinks(
+    geom: MeasurableGeometry,
+    name: string
+  ): Promise<DownloadLink[]> {
+    const downloads: DownloadLink[] = [
+      {
+        key: "csv",
+        href: DataUri.make("csv", this.generateCsvData(geom, name)),
+        download: `${name}_points.csv`,
+        label: "CSV"
+      }
+    ];
+
+    return downloads.filter((download) => {
+      if (geom.onlyPoints) {
+        return (
+          !download.download?.includes("_lines") &&
+          !download.download?.includes("_polygon")
+        );
+      } else if (geom.isClosed) {
+        return (
+          !download.download?.includes("_points") &&
+          !download.download?.includes("_lines")
+        );
+      } else {
+        return (
+          !download.download?.includes("_points") &&
+          !download.download?.includes("_polygon")
+        );
+      }
+    });
+  }
+
+  @override
   get _canExportData() {
     return (
       isDefined(this._csvFile) ||
       isDefined(this.csvString) ||
       isDefined(this.url)
     );
-  }
-
-  @override
-  get cacheDuration() {
-    return super.cacheDuration || "1d";
   }
 
   protected async _exportData() {

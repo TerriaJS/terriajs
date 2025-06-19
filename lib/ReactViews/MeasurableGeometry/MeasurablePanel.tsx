@@ -27,7 +27,7 @@ import {
 } from "../Map/MapNavigation/Items";
 import MeasurablePanelManager from "../Custom/MeasurablePanelManager";
 import Select from "../../Styled/Select";
-import MeasurableGeometryManager from "../../ViewModels/MeasurableGeometryManager";
+import MeasurableGeometryManager from "../../ViewModels/Measure/MeasurableGeometryManager";
 import isDefined from "../../Core/isDefined";
 import Checkbox from "../../Styled/Checkbox";
 import { MeasureToolsController } from "../Map/MapNavigation/Items/MeasureTools";
@@ -85,6 +85,7 @@ const MeasurablePanel = observer((props: Props) => {
   });
 
   const close = action(() => {
+    const isMultiPath = terria.measurableGeomList.length > 1;
     MeasurablePanelManager.removeAllMarkers();
     terria.measurableGeomList.splice(1, terria.measurableGeomList.length - 1);
     terria.measurableGeometryManager.splice(
@@ -93,7 +94,6 @@ const MeasurablePanel = observer((props: Props) => {
     );
     viewState.measurablePanelIsVisible = false;
     viewState.mobileMeasureToolsButtonVisible = false;
-    viewState.measurableDownloadPanelIsVisible = false;
     [
       MeasureToolsController.id,
       MeasureLineTool.id,
@@ -107,10 +107,15 @@ const MeasurablePanel = observer((props: Props) => {
       }
       viewState.terria.mapNavigationModel.enable(id);
     });
+
+    if (isMultiPath) {
+      setTimeout(() => {
+        close();
+      }, 5);
+    }
   });
 
   const toggleCollapsed = action(() => {
-    console.log("toggleCollapsed");
     viewState.measurablePanelIsCollapsed =
       !viewState.measurablePanelIsCollapsed;
   });

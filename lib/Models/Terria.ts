@@ -130,7 +130,7 @@ import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import MeasurableGeometryManager, {
   MeasurableGeometry
-} from "../ViewModels/MeasurableGeometryManager";
+} from "../ViewModels/Measure/MeasurableGeometryManager";
 
 // import overrides from "../Overrides/defaults.jsx";
 

@@ -4,6 +4,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import CesiumIonTraits from "./CesiumIonTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class KmlCatalogItemTraits extends mixTraits(
@@ -11,7 +12,8 @@ export default class KmlCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  CesiumIonTraits
+  CesiumIonTraits,
+  TableTraits
 ) {
   @primitiveTrait({
     type: "string",

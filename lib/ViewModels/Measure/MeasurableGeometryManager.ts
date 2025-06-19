@@ -1,11 +1,11 @@
-import Terria from "../Models/Terria";
+import Terria from "../../Models/Terria";
 import { action, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
+import EarthGravityModel1996 from "../../Map/Vector/EarthGravityModel1996";
 
 export interface MeasurableGeometry {
   isClosed: boolean;
@@ -38,7 +38,7 @@ export default class MeasurableGeometryManager {
     makeObservable(this);
     this.terria = terria;
     this.geoidModel = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
+      require("file-loader!../../../wwwroot/data/WW15MGH.DAC")
     );
   }
 

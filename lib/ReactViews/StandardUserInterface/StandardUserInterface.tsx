@@ -281,12 +281,10 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 terria={props.terria}
                 viewState={props.viewState}
               />
-              {props.viewState.measurableDownloadPanelIsVisible && (
-                <MeasurableDownloadPanel
-                  terria={props.terria}
-                  viewState={props.viewState}
-                />
-              )}
+              <MeasurableDownloadPanel
+                terria={props.terria}
+                viewState={props.viewState}
+              />
               <PlayPathPanel
                 terria={props.terria}
                 viewState={props.viewState}
