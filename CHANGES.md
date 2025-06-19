@@ -8,6 +8,7 @@
     - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
+- Add internationalization support to tinymce editor used in story editor
 - [The next improvement]
 
 #### 8.9.5 - 2025-06-03
@@ -146,8 +147,6 @@
 - Move `GeojsonSource` to new file `lib/Map/Vector/ProtomapsGeojsonSource.ts`.
 - support URL parameters in a GetLegendGraphic request for a layer without a style configured
 - Enhanced error processing for obtaining user location
-- Add internationalization support to tinymce editor used in story editor
-- [The next improvement]
 
 #### 8.7.11 - 2024-12-18
 
