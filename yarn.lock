@@ -2202,11 +2202,6 @@
   resolved "https://registry.yarnpkg.com/@types/pbf/-/pbf-3.0.5.tgz#a9495a58d8c75be4ffe9a0bd749a307715c07404"
   integrity sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==
 
-"@types/proj4@^2.5.5":
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/@types/proj4/-/proj4-2.5.5.tgz#044d53782dc75f20335577ca3af2643962a56980"
-  integrity sha512-y4tHUVVoMEOm2nxRLQ2/ET8upj/pBmoutGxFw2LZJTQWPgWXI+cbxVEUFFmIzr/bpFR83hGDOTSXX6HBeObvZA==
-
 "@types/prop-types@*":
   version "15.7.14"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.14.tgz#1433419d73b2a7ebfc6918dcefd2ec0d5cd698f2"
@@ -8386,13 +8381,21 @@ proj4-fully-loaded@^0.2.0:
     proj4 "^2.8.0"
     proj4js-definitions "^0.1.0"
 
-proj4@^2.1.4, proj4@^2.3.12, proj4@^2.4.4, proj4@^2.8.0:
+proj4@^2.1.4, proj4@^2.3.12, proj4@^2.8.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.15.0.tgz#d77c9956861c8ed516071c4208d576cebe800eb5"
   integrity sha512-LqCNEcPdI03BrCHxPLj29vsd5afsm+0sV1H/O3nTDKrv8/LA01ea1z4QADDMjUqxSXWnrmmQDjqFm1J/uZ5RLw==
   dependencies:
     mgrs "1.0.0"
     wkt-parser "^1.4.0"
+
+proj4@^2.19.2:
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.19.2.tgz#49f898d8aa97cc11ac2743f33e70214bbe46f7ef"
+  integrity sha512-vOAdQoyY2nCGml2dpCsg4MHwDZudMltGxtV0Kj6ImeVe6KLxFXE59L7F8ikOXS2cyoiaR75cLIeIcj+fVpq+sA==
+  dependencies:
+    mgrs "1.0.0"
+    wkt-parser "^1.5.1"
 
 proj4js-definitions@^0.1.0:
   version "0.1.0"
@@ -11064,6 +11067,11 @@ wkt-parser@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.4.0.tgz#7cca07a6ee5b4baf059b723e62d7fe95bc923bf5"
   integrity sha512-qpwO7Ihds/YYDTi1aADFTI1Sm9YC/tTe3SHD24EeIlZxy7Ik6a1b4HOz7jAi0xdUAw487duqpo8OGu+Tf4nwlQ==
+
+wkt-parser@^1.5.1:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.5.2.tgz#a8eaf86ac2cc1d0a2e6a8082a930f5c7ebdb5771"
+  integrity sha512-1ZUiV1FTwSiSrgWzV9KXJuOF2BVW91KY/mau04BhnmgOdroRQea7Q0s5TVqwGLm0D2tZwObd/tBYXW49sSxp3Q==
 
 word-wrap@^1.2.5:
   version "1.2.5"
