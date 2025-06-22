@@ -26,6 +26,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { useViewState } from "../../Context";
+import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
@@ -203,6 +204,8 @@ const SettingPanel: FC = observer(() => {
     ? t("settingPanel.timeline.alwaysShowLabel")
     : t("settingPanel.timeline.hideLabel");
 
+  const CustomMapViewOptions = viewState._customMapViewOptions;
+
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
@@ -228,6 +231,11 @@ const SettingPanel: FC = observer(() => {
             </SettingsButton>
           ))}
         </FlexGrid>
+        {CustomMapViewOptions && (
+          <RaiseToUserErrorBoundary viewState={viewState}>
+            <CustomMapViewOptions />
+          </RaiseToUserErrorBoundary>
+        )}
         {!!supportsSide && (
           <>
             <Spacing bottom={2} />
