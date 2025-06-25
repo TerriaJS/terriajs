@@ -58,7 +58,7 @@ Location search providers are used to search for locations on the map. TerriaJS 
 - [`CesiumIonSearchProvider`](#cesiumionsearchprovider) - implementation which in background use CesiumIon geocoding API
 - [`AustralianGazetteerSearchProvider`](#australiangazetteersearchprovider) - uses `WebFeatureServiceSearchProvider`
 - [`NominatimSearchProvider`](#NominatimSearchProvider) - implementation which in background use Nominatim geocoding API
-- [`MapboxSearchProvider](#mapboxsearchprovider) - implementation which in background use Mapbox geocoding API
+- [`MapboxSearchProvider`](#mapboxsearchprovider) - implementation which in background use Mapbox geocoding API
 
 Each `LocationSearchProvider support following confing options
 
