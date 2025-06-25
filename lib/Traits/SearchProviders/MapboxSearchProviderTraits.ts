@@ -88,13 +88,4 @@ export default class MapboxSearchProviderTraits extends mixTraits(
     the default is true, which is familar with most users from other platforms.`
   })
   latLonSearchOrder?: boolean = true;
-
-
-
-  /**
-    navigation parameters not exposed:
-      - eta_type
-      - navigation_profile
-      - origin
-   */
 }
