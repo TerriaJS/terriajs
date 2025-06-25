@@ -98,14 +98,14 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     };
 
     //check if geocoder should be reverse and set up.
-    if (searchDirection == MapboxGeocodeDirection.Reverse) {
+    if (searchDirection === MapboxGeocodeDirection.Reverse) {
       let lonLat = searchText.split(/\s+/).join("").split(",");
       // need to reverse the coord order if true.
       if (this.latLonSearchOrder) {
         lonLat = lonLat.reverse();
       }
       if (
-        lonLat.length == 2 &&
+        lonLat.length === 2 &&
         isCoordinate.test(lonLat[0]) &&
         isCoordinate.test(lonLat[1])
       ) {
@@ -128,7 +128,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
       queryParameters: queryParams
     });
 
-    if (searchDirection == MapboxGeocodeDirection.Forward) {
+    if (searchDirection === MapboxGeocodeDirection.Forward) {
       searchQuery.appendQueryParameters({
         q: searchText,
         limit: this.limit
