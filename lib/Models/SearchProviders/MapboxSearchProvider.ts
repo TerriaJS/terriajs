@@ -161,11 +161,11 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         const promise: Promise<any> = loadJson(searchQuery);
         return promise
             .then((result) => {
-                console.log(result);
                 if (searchResults.isCanceled) {
                     // A new search has superseded this one, so ignore the result.
                     return;
                 }
+                
                 if (result.features.length === 0) {
                     searchResults.message = {
                         content: "translate#viewModels.searchNoLocations"
@@ -181,13 +181,11 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
                     return;
                 }
 
-
                 const locations: SearchResult[] = (result.features as Feature<Point>[])
                     .filter(
                         (feat) =>
                             feat.properties && feat.geometry && feat.properties.full_address
                     )
-                    // .sort((a, b) => b.properties!.importance - a.properties!.importance)
                     .map((feat) => {
                         return new SearchResult({
                             name: feat.properties!.full_address,
