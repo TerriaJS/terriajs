@@ -17,7 +17,7 @@ export default class MapboxSearchProviderTraits extends mixTraits(
   })
   accessToken?: string;
 
-@primitiveTrait({
+  @primitiveTrait({
     type: "boolean",
     name: "Autocomplete",
     description: `Specify whether to return autocomplete results (true, default) 
@@ -27,7 +27,7 @@ export default class MapboxSearchProviderTraits extends mixTraits(
     autocomplete enabled, but only India if it’s disabled.`
   })
   autocomplete?: boolean = true;
-  
+
   @primitiveTrait({
     type: "string",
     name: "BBox",
@@ -38,7 +38,7 @@ export default class MapboxSearchProviderTraits extends mixTraits(
   })
   bbox?: string;
 
-    @primitiveTrait({
+  @primitiveTrait({
     type: "string",
     name: "Country",
     description: "A comma-separated list of ISO 3166 alpha 2 country codes."
@@ -48,7 +48,8 @@ export default class MapboxSearchProviderTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Language",
-    description: "The ISO language code to be returned. If not provided, the default is English."
+    description:
+      "The ISO language code to be returned. If not provided, the default is English."
   })
   language: string = "en";
 
@@ -81,7 +82,7 @@ export default class MapboxSearchProviderTraits extends mixTraits(
   })
   worldview?: string;
 
-    @primitiveTrait({
+  @primitiveTrait({
     type: "boolean",
     name: "latLonSearchOrder",
     description: `When the user searches using coordinates, should the order be 'latitude, longitude'
