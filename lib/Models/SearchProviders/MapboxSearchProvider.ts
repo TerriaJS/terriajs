@@ -18,6 +18,7 @@ import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
+import { i18n } from "dateformat";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",
@@ -93,7 +94,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
     let queryParams = {
       access_token: this.accessToken,
-      autocomplete: this.autocomplete,
+      autocomplete: this.partialMatch,
       language: this.language
     };
 
@@ -135,7 +136,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    if (this.mapCenter) {
+    if (searchDirection === MapboxGeocodeDirection.Forward && this.mapCenter) {
       const mapCenter = getMapCenter(this.terria);
 
       searchQuery.appendQueryParameters({
@@ -143,7 +144,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    if (this.bbox) {
+    if (searchDirection === MapboxGeocodeDirection.Forward && this.bbox) {
       searchQuery.appendQueryParameters({
         bbox: this.bbox
       });
@@ -176,14 +177,6 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         }
 
         if (result.features.length === 0) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
-          return;
-        }
-
-        const resourceSet = result.features[0];
-        if (resourceSet.properties.length === 0) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
           };

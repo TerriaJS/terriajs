@@ -19,14 +19,12 @@ export default class MapboxSearchProviderTraits extends mixTraits(
 
   @primitiveTrait({
     type: "boolean",
-    name: "Autocomplete",
-    description: `Specify whether to return autocomplete results (true, default) 
-    or not (false). When autocomplete is enabled, results will be included that 
-    start with the requested string, rather than responses that match it exactly. 
-    For example, a query for India might return both India and Indiana with 
-    autocomplete enabled, but only India if it’s disabled.`
+    name: "partialMatch",
+    description: `Specify whether to return partial match results. 
+    When partialMatch is enabled, results will be included that 
+    start with the requested string, rather than responses that match it exactly.`
   })
-  autocomplete?: boolean = true;
+  partialMatch?: boolean = true;
 
   @primitiveTrait({
     type: "string",
