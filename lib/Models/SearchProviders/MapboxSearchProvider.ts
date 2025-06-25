@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import defined from "terriajs-cesium/Source/Core/defined";
 import {
     Category,
     SearchAction
@@ -18,8 +17,12 @@ import Terria from "../Terria";
 import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import { regexMatches } from "../../Core/regexMatches";
 import { Feature, Point } from "@turf/helpers";
+
+enum MapboxGeocodeDirection {
+    Forward = "forward",
+    Reverse = "reverse"
+}
 
 export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     CreateModel(MapboxSearchProviderTraits)
@@ -47,7 +50,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
                 this.setTrait(
                     CommonStrata.defaults,
                     "bbox",
-                    this.terria.configParameters.locationSearchBoundingBox.join(", ") //TODO check this
+                    this.terria.configParameters.locationSearchBoundingBox.join(", ")
                 );
             }
         });
@@ -77,20 +80,48 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     ): Promise<void> {
         searchResults.results.length = 0;
         searchResults.message = undefined;
-        const searchDirection = regexMatches(
-            /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/,
-            searchText) ? "reverse" : "forward";
+        const isCoordinate = RegExp(/^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})$/);
+        const isCSCoordinatePair = RegExp(/([+-]?\d+\.?\d+)\s*,\s*([+-]?\d+\.?\d+)/);
+        let searchDirection = isCSCoordinatePair.test(searchText)
+            ? MapboxGeocodeDirection.Reverse : MapboxGeocodeDirection.Forward;
+
+        let queryParams = {
+            access_token: this.accessToken,
+            autocomplete: this.autocomplete,
+            language: this.language
+        }
+
+        //check if geocoder should be reverse or forward.
+        if (searchDirection == MapboxGeocodeDirection.Reverse) {
+            let lonLat = searchText.split(/\s+/).join('').split(",")
+            if (this.latLonSearchOrder) {
+                lonLat = lonLat.reverse();
+            }
+            if (lonLat.length == 2 && lonLat.map(v => isCoordinate.test(v))) {
+                queryParams = {
+                    ...queryParams, ...{
+                        longitude: lonLat[0],
+                        latitude: lonLat[1],
+                        limit: 1, //limit for reverse geocoder is per type
+                    }
+                };
+            } else {
+                //if lonLat fails to parse, then assume is forward geocode
+                searchDirection = MapboxGeocodeDirection.Forward
+            }
+        }
 
         const searchQuery = new Resource({
             url: new URL(searchDirection, this.url).toString(),
-            queryParameters: {
-                q: searchText,
-                access_token: this.accessToken,
-                autocomplete: this.autocomplete,
-                language: this.language,
-                limit: this.limit,
-            }
+            queryParameters: queryParams
         });
+
+        if (searchDirection == MapboxGeocodeDirection.Forward) {
+            searchQuery.appendQueryParameters({
+                q: searchText,
+                limit: this.limit,
+            });
+        }
 
         if (this.mapCenter) {
             const mapCenter = getMapCenter(this.terria);
@@ -100,22 +131,47 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
             });
         }
 
+        if (this.bbox) {
+            searchQuery.appendQueryParameters({
+                bbox: this.bbox
+            })
+        }
+
+        if (this.country) {
+            searchQuery.appendQueryParameters({
+                country: this.country
+            })
+        }
+
+        if (this.types) {
+            searchQuery.appendQueryParameters({
+                types: this.types
+            })
+        }
+
+        if (this.worldview) {
+            searchQuery.appendQueryParameters({
+                worldview: this.worldview
+            })
+        }
+
         const promise: Promise<any> = loadJson(searchQuery);
         return promise
             .then((result) => {
+                console.log(result);
                 if (searchResults.isCanceled) {
                     // A new search has superseded this one, so ignore the result.
                     return;
                 }
-                if (result.resourceSets.length === 0) {
+                if (result.features.length === 0) {
                     searchResults.message = {
                         content: "translate#viewModels.searchNoLocations"
                     };
                     return;
                 }
 
-                const resourceSet = result.resourceSets[0];
-                if (resourceSet.resources.length === 0) {
+                const resourceSet = result.features[0];
+                if (resourceSet.properties.length === 0) {
                     searchResults.message = {
                         content: "translate#viewModels.searchNoLocations"
                     };
@@ -161,63 +217,15 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
                 };
             });
     }
-
-//     protected sortByPriority(resources: any[]) {
-//         const primaryCountryLocations: any[] = [];
-//         const otherLocations: any[] = [];
-
-//         // Locations in the primary country go on top, locations elsewhere go undernearth and we add
-//         // the country name to them.
-//         for (let i = 0; i < resources.length; ++i) {
-//             const resource = resources[i];
-
-//             // let name = resource.name;
-//             // if (!defined(name)) {
-//             //     continue;
-//             // }
-
-//             // let list = primaryCountryLocations;
-//             // let isImportant = true;
-
-//             // const country = resource.address
-//             //     ? resource.address.countryRegion
-//             //     : undefined;
-//             // if (defined(this.) && country !== this.primaryCountry) {
-//             //     // Add this location to the list of other locations.
-//             //     list = otherLocations;
-//             //     isImportant = false;
-
-//             //     // Add the country to the name, if it's not already there.
-//             //     if (
-//             //         defined(country) &&
-//             //         name.lastIndexOf(country) !== name.length - country.length
-//             //     ) {
-//             //         name += ", " + country;
-//             //     }
-//             // }
-
-//             // list.push(
-//             //     new SearchResult({
-//             //         name: name,
-//             //         isImportant: isImportant,
-//             //         clickAction: createZoomToFunction(this, resource),
-//             //         location: {
-//             //             latitude: resource.point.coordinates[0],
-//             //             longitude: resource.point.coordinates[1]
-//             //         }
-//             //     })
-//             // );
-//         }
-
-//         return {
-//             primaryCountry: primaryCountryLocations,
-//             other: otherLocations
-//         };
-//     }
 }
 
 function createZoomToFunction(model: MapboxSearchProvider, resource: any) {
-    const [south, west, north, east] = resource.bbox;
+    const [west, north, east, south] = resource.properties.bbox ??
+        [
+            resource.geometry.coordinates[0] - .01,
+            resource.geometry.coordinates[1] - .01,
+            resource.geometry.coordinates[0] + .01,
+            resource.geometry.coordinates[1] + .01];
     const rectangle = Rectangle.fromDegrees(west, south, east, north);
 
     return function () {
