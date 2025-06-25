@@ -100,15 +100,15 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     //check if geocoder should be reverse and set up.
     if (searchDirection === MapboxGeocodeDirection.Reverse) {
       let lonLat = searchText.split(/\s+/).join("").split(",");
-      // need to reverse the coord order if true.
-      if (this.latLonSearchOrder) {
-        lonLat = lonLat.reverse();
-      }
       if (
         lonLat.length === 2 &&
         isCoordinate.test(lonLat[0]) &&
         isCoordinate.test(lonLat[1])
       ) {
+        // need to reverse the coord order if true.
+        if (this.latLonSearchOrder) {
+          lonLat = lonLat.reverse();
+        }
         queryParams = {
           ...queryParams,
           ...{
@@ -230,6 +230,8 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 }
 
 function createZoomToFunction(model: MapboxSearchProvider, resource: any) {
+  // mapbox doesn't return a bbox for street names etc, so we
+  // need to create it ourselves.
   const [west, north, east, south] = resource.properties.bbox ?? [
     resource.geometry.coordinates[0] - 0.01,
     resource.geometry.coordinates[1] - 0.01,
