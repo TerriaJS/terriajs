@@ -28,16 +28,6 @@ export default class MapboxSearchProviderTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
-    name: "BBox",
-    description: `Limit results to only those contained within the supplied 
-  bounding box. Bounding boxes should be supplied as four numbers separated by 
-  commas, in minimum longitude,minimum latitude,maximum longitude,maximum latitude order. 
-  The bounding box cannot cross the 180th meridian.`
-  })
-  bbox?: string;
-
-  @primitiveTrait({
-    type: "string",
     name: "Country",
     description: "A comma-separated list of ISO 3166 alpha 2 country codes."
   })

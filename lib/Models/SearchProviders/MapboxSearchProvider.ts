@@ -14,11 +14,9 @@ import LocationSearchProviderMixin, {
 import MapboxSearchProviderTraits from "../../Traits/SearchProviders/MapboxSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
-import { i18n } from "dateformat";
 import isDefined from "../../Core/isDefined";
 
 enum MapboxGeocodeDirection {
