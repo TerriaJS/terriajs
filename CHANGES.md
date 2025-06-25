@@ -3,6 +3,7 @@
 #### next release (8.9.6)
 
 - [The next improvement]
+- Add `MapboxSearchProvider` for geocoding using Mapbox.
 
 #### 8.9.5 - 2025-06-03
 
