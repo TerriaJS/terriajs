@@ -61,7 +61,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         if (!this.accessToken || this.accessToken === "") {
             console.warn(
                 `The ${applyTranslationIfExists(this.name, i18next)}(${this.type
-                }) geocoder will always return no results because a Mapbox token has not been provided. Please get a token from bingmapsportal.com and add it to parameters.bingMapsKey in config.json.`
+                }) geocoder will always return no results because a Mapbox token has not been provided. Please get a token from mapbox.com and add it to parameters.mapboxSearchProviderAccessToken in config.json.`
             );
         }
     }
@@ -80,7 +80,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     ): Promise<void> {
         searchResults.results.length = 0;
         searchResults.message = undefined;
-        const isCoordinate = RegExp(/^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})$/);
+        const isCoordinate = RegExp(/^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,17})$/);
         const isCSCoordinatePair = RegExp(/([+-]?\d+\.?\d+)\s*,\s*([+-]?\d+\.?\d+)/);
         let searchDirection = isCSCoordinatePair.test(searchText)
             ? MapboxGeocodeDirection.Reverse : MapboxGeocodeDirection.Forward;
@@ -91,13 +91,16 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
             language: this.language
         }
 
-        //check if geocoder should be reverse or forward.
+        //check if geocoder should be reverse and set up.
         if (searchDirection == MapboxGeocodeDirection.Reverse) {
             let lonLat = searchText.split(/\s+/).join('').split(",")
+            // need to reverse the coord order if true.
             if (this.latLonSearchOrder) {
                 lonLat = lonLat.reverse();
             }
-            if (lonLat.length == 2 && lonLat.map(v => isCoordinate.test(v))) {
+            if (lonLat.length == 2 && 
+                isCoordinate.test(lonLat[0]) && 
+                isCoordinate.test(lonLat[1])) {
                 queryParams = {
                     ...queryParams, ...{
                         longitude: lonLat[0],
