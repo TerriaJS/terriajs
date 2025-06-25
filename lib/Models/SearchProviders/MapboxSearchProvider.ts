@@ -19,6 +19,7 @@ import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
 import { i18n } from "dateformat";
+import isDefined from "../../Core/isDefined";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",
@@ -38,23 +39,6 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     super(uniqueId, terria);
 
     makeObservable(this);
-
-    runInAction(() => {
-      if (this.terria.configParameters.mapboxSearchProviderAccessToken) {
-        this.setTrait(
-          CommonStrata.defaults,
-          "accessToken",
-          this.terria.configParameters.mapboxSearchProviderAccessToken
-        );
-      }
-      if (this.terria.configParameters.locationSearchBoundingBox) {
-        this.setTrait(
-          CommonStrata.defaults,
-          "bbox",
-          this.terria.configParameters.locationSearchBoundingBox.join(", ")
-        );
-      }
-    });
   }
 
   @override
@@ -144,10 +128,21 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    if (searchDirection === MapboxGeocodeDirection.Forward && this.bbox) {
-      searchQuery.appendQueryParameters({
-        bbox: this.bbox
-      });
+    if (
+      searchDirection === MapboxGeocodeDirection.Forward &&
+      this.terria.searchBarModel.boundingBoxLimit
+    ) {
+      const bbox = this.terria.searchBarModel.boundingBoxLimit;
+      if (
+        isDefined(bbox.west) &&
+        isDefined(bbox.north) &&
+        isDefined(bbox.east) &&
+        isDefined(bbox.south)
+      ) {
+        searchQuery.appendQueryParameters({
+          bbox: [bbox.west, bbox.north, bbox.east, bbox.south].join(",")
+        });
+      }
     }
 
     if (this.country) {
