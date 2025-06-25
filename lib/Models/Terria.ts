@@ -231,6 +231,7 @@ export interface ConfigParameters {
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
+  mapboxSearchProviderAccessToken?: string;
   hideTerriaLogo?: boolean;
   /**
    * An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).
@@ -546,6 +547,7 @@ export default class Terria {
     cesiumIonLoginTokenPersistence: "page",
     cesiumIonAllowSharingAddedAssets: false,
     bingMapsKey: undefined,
+    mapboxSearchProviderAccessToken: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
     brandBarSmallElements: undefined,

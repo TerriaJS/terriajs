@@ -8,7 +8,7 @@ export default class MapboxSearchProviderTraits extends mixTraits(
   LocationSearchProviderTraits,
   SearchProviderMapCenterTraits
 ) {
-  url: string = "https://api.mapbox.com/search/geocode/v6";
+  url: string = "https://api.mapbox.com/search/geocode/v6/";
 
   @primitiveTrait({
     type: "string",
@@ -43,14 +43,14 @@ export default class MapboxSearchProviderTraits extends mixTraits(
     name: "Country",
     description: "A comma-separated list of ISO 3166 alpha 2 country codes."
   })
-  contry?: string;
+  country?: string;
 
   @primitiveTrait({
     type: "string",
     name: "Language",
     description: "The ISO language code to be returned. If not provided, the default is English."
   })
-  language: string = "eng";
+  language: string = "en";
 
   @primitiveTrait({
     type: "number",
@@ -80,6 +80,14 @@ export default class MapboxSearchProviderTraits extends mixTraits(
      parameter, see the [worldviews section](https://docs.mapbox.com/api/search/geocoding/#worldviews).`
   })
   worldview?: string;
+
+    @primitiveTrait({
+    type: "boolean",
+    name: "latLonSearchOrder",
+    description: `When the user searches using coordinates, should the order be 'latitude, longitude'
+    the default is true, which is familar with most users from other platforms.`
+  })
+  latLonSearchOrder?: boolean = true;
 
 
 
