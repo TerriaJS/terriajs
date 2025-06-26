@@ -1,5 +1,11 @@
 import classNames from "classnames";
-import { Lambda, observable, reaction, makeObservable } from "mobx";
+import {
+  Lambda,
+  observable,
+  reaction,
+  makeObservable,
+  runInAction
+} from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
 import styled from "styled-components";
@@ -80,7 +86,9 @@ class MapInteractionWindow extends Component<{
   }
 
   componentDidUpdate(): void {
-    this.observableViewState = this.props.viewState;
+    runInAction(() => {
+      this.observableViewState = this.props.viewState;
+    });
   }
 
   // /* eslint-disable-next-line camelcase */
