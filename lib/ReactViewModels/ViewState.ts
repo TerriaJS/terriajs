@@ -384,7 +384,6 @@ export default class ViewState {
   private _locationMarkerSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _storyBeforeUnloadSubscription: IReactionDisposer;
-  private _workbenchItemsSubscription: IReactionDisposer;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
@@ -537,13 +536,6 @@ export default class ViewState {
         }
       }
     );
-
-    this._workbenchItemsSubscription = reaction(
-      () => this.terria.workbench.items,
-      () => {
-        this.searchState.showLocationSearchResults = false;
-      }
-    );
   }
 
   dispose(): void {
@@ -557,7 +549,6 @@ export default class ViewState {
     this._workbenchHasTimeWMSSubscription();
     this._locationMarkerSubscription();
     this._storyBeforeUnloadSubscription();
-    this._workbenchItemsSubscription();
     this.searchState.dispose();
   }
 
