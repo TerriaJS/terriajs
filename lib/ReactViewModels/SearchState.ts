@@ -41,6 +41,7 @@ export default class SearchState {
   private _catalogSearchDisposer: IReactionDisposer;
   private _locationSearchDisposer: IReactionDisposer;
   private _unifiedSearchDisposer: IReactionDisposer;
+  private _workbenchItemsSubscription: IReactionDisposer;
 
   private readonly terria: Terria;
 
@@ -90,12 +91,20 @@ export default class SearchState {
         );
       }
     );
+
+    this._workbenchItemsSubscription = reaction(
+      () => this.terria.workbench.items,
+      () => {
+        this.showLocationSearchResults = false;
+      }
+    );
   }
 
   dispose(): void {
     this._catalogSearchDisposer();
     this._locationSearchDisposer();
     this._unifiedSearchDisposer();
+    this._workbenchItemsSubscription();
   }
 
   @computed
