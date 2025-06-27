@@ -45,7 +45,13 @@ interface LocationSearchResultsProps {
 }
 
 const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
-  (props: LocationSearchResultsProps) => {
+  ({
+    search,
+    terria,
+    isWaitingForSearchToStart,
+    locationSearchText,
+    onLocationClick
+  }: LocationSearchResultsProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = () => {
@@ -53,7 +59,6 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
     };
 
     const validResults = useMemo(() => {
-      const { search, terria } = props;
       const locationSearchBoundingBox = terria.searchBarModel.boundingBoxLimit;
       let filterResults = false;
       let west: number | undefined,
@@ -81,9 +86,8 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
           })
         : search.results;
       return validResults;
-    }, [props]);
+    }, [search.results, terria]);
 
-    const { search } = props;
     const searchProvider: LocationSearchProviderMixin.Instance =
       search.searchProvider as unknown as LocationSearchProviderMixin.Instance;
 
@@ -114,7 +118,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
               length={validResults?.length}
               isOpen={isOpen}
               search={search}
-              isWaitingForSearchToStart={props.isWaitingForSearchToStart}
+              isWaitingForSearchToStart={isWaitingForSearchToStart}
             />
             <StyledIcon
               styledWidth={"9px"}
@@ -127,16 +131,16 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
             <>
               <SearchHeader
                 searchResults={search}
-                isWaitingForSearchToStart={props.isWaitingForSearchToStart}
+                isWaitingForSearchToStart={isWaitingForSearchToStart}
               />
               <Ul column fullWidth>
                 {results.map((result: SearchResultModel, i: number) => (
                   <SearchResult
                     key={i}
-                    clickAction={props.onLocationClick.bind(null, result)}
+                    clickAction={onLocationClick.bind(null, result)}
                     name={result.name}
                     icon="location2"
-                    locationSearchText={props.locationSearchText}
+                    locationSearchText={locationSearchText}
                     isLastResult={results.length === i + 1}
                   />
                 ))}

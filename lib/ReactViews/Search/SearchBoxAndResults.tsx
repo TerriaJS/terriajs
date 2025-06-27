@@ -150,7 +150,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               css={`
                 top: 100%;
                 background-color: ${theme.greyLightest};
-                max-height: calc(100vh - 120px);
+                max-height: calc(100vh - 200px);
                 border-radius: 0 0 ${theme.radiusLarge} ${theme.radiusLarge};
               `}
             >
