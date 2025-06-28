@@ -9,7 +9,7 @@ import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 
 // Lazy load the Editor component as the tinyMCE library is large
-const Editor = lazy(() => import("../Generic/Editor.jsx"));
+const Editor = lazy(() => import("../Generic/Editor.tsx"));
 class StoryEditor extends Component {
   constructor(props) {
     super(props);
@@ -183,6 +183,7 @@ class StoryEditor extends Component {
             </Text>
             <Suspense fallback={<div>Loading...</div>}>
               <Editor
+                language={this.props.i18n.language}
                 html={this.state.text}
                 onChange={(_newValue, editor) => {
                   // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
@@ -193,7 +194,6 @@ class StoryEditor extends Component {
                   const text = editor.getBody().innerHTML;
                   this.setState({ text });
                 }}
-                terria={this.props.terria}
               />
             </Suspense>
           </div>
@@ -237,6 +237,7 @@ StoryEditor.propTypes = {
   saveStory: PropTypes.func,
   exitEditingMode: PropTypes.func,
   t: PropTypes.func.isRequired,
+  i18n: PropTypes.object,
   terria: PropTypes.object
 };
 
