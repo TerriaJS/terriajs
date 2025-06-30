@@ -11,8 +11,9 @@
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
-- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
+- Upgrade yarn to 1.22.22
+- [The next improvement]
 
 #### 8.9.5 - 2025-06-03
 
