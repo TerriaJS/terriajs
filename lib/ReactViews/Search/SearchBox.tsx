@@ -115,22 +115,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   const hasValue = searchText.length > 0;
 
-  const clearButton = (
-    <Box position="absolute" topRight fullHeight styledWidth={"40px"}>
-      {/* The type="button" here stops the browser from assuming the close button is the submit button */}
-      <RawButton type="button" onClick={clearSearch} fullWidth fullHeight>
-        <BoxSpan centered>
-          <StyledIcon
-            glyph={Icon.GLYPHS.close}
-            styledWidth={"15px"}
-            fillColor={theme.charcoalGrey}
-            opacity={0.5}
-          />
-        </BoxSpan>
-      </RawButton>
-    </Box>
-  );
-
   return (
     <form
       autoComplete="off"
@@ -179,7 +163,27 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           rounded
         />
       </Text>
-      {(alwaysShowClear || hasValue) && clearButton}
+      {(alwaysShowClear || hasValue) && (
+        <Box position="absolute" topRight fullHeight styledWidth={"40px"}>
+          {/* The type="button" here stops the browser from assuming the close button is the submit button */}
+          <RawButton
+            type="button"
+            onClick={clearSearch}
+            fullWidth
+            fullHeight
+            aria-label="Clear search"
+          >
+            <BoxSpan centered>
+              <StyledIcon
+                glyph={Icon.GLYPHS.close}
+                styledWidth={"15px"}
+                fillColor={theme.charcoalGrey}
+                opacity={0.5}
+              />
+            </BoxSpan>
+          </RawButton>
+        </Box>
+      )}
     </form>
   );
 };
