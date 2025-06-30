@@ -12,6 +12,7 @@
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - [The next improvement]
+- Add `MapboxSearchProvider` for geocoding using Mapbox.
 
 #### 8.9.5 - 2025-06-03
 
