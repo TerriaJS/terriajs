@@ -1,9 +1,8 @@
-import { create } from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { SearchBox } from "../../../lib/ReactViews/Search/SearchBox";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import { createWithContexts } from "../withContext";
 
 describe("SearchBox", function () {
   let terria: Terria;
@@ -30,9 +29,6 @@ describe("SearchBox", function () {
     });
     const searchBoxWithProps = (
       <SearchBox
-        t={() => {}}
-        terria={terria}
-        viewState={viewState}
         onSearchTextChanged={(newVal: any) => {
           searchBoxValue = newVal;
         }}
@@ -40,13 +36,12 @@ describe("SearchBox", function () {
         onFocus={() => {}}
         searchText={searchText}
         placeholder="placeholder"
-        theme={terriaTheme}
       />
     );
 
     it("renders", function () {
       act(() => {
-        testRenderer = create(searchBoxWithProps);
+        testRenderer = createWithContexts(viewState, searchBoxWithProps);
       });
 
       const searchBoxInput = testRenderer.root.findByType("input");
@@ -55,7 +50,7 @@ describe("SearchBox", function () {
     });
     it("renders and clearSearch triggers onSearchTextChanged callback", function () {
       act(() => {
-        testRenderer = create(searchBoxWithProps);
+        testRenderer = createWithContexts(viewState, searchBoxWithProps);
       });
 
       const searchBoxInstance = testRenderer.root.instance;

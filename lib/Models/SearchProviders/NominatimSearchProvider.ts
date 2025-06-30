@@ -27,6 +27,12 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
 
+    console.warn(
+      "%c" +
+        "This map is using the Nominatim search provider. It is not recommended for production use, consider using a different search provider instead.",
+      "color: white; font-size: 24px; font-weight: bold; font-family: Helvetica, sans-serif;"
+    );
+
     makeObservable(this);
   }
 
@@ -123,6 +129,10 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
           content: "translate#viewModels.searchErrorOccurred"
         };
       });
+  }
+
+  supportsAutocomplete(): boolean {
+    return false;
   }
 }
 
