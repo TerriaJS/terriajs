@@ -23,7 +23,7 @@ describe("ApiTableCatalogItem", function () {
     jasmine.Ajax.uninstall();
   });
 
-  fdescribe("query parameters", function () {
+  describe("query parameters", function () {
     beforeEach(function () {
       updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
         idKey: "id",
