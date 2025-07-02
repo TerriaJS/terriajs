@@ -208,8 +208,8 @@ class GeoJsonCatalogItem
             "json",
             this.generateMultiPathJsonPolygon(geomList, name)
           ),
-          download: `${name}_polygon_multipath.json`,
-          label: `Multi ${i18next.t("downloadData.polygon")} JSON`
+          download: `${name}_polygon_multipath.geojson`,
+          label: `Multi ${i18next.t("downloadData.polygon")} GEOJSON`
         },
         {
           key: "jsonMultiPathLines",
@@ -217,8 +217,8 @@ class GeoJsonCatalogItem
             "json",
             this.generateMultiPathJsonLineStrings(geomList, name)
           ),
-          download: `${name}_lines_multipath.json`,
-          label: `Multi ${i18next.t("downloadData.lines")} JSON`
+          download: `${name}_lines_multipath.geojson`,
+          label: `Multi ${i18next.t("downloadData.lines")} GEOJSON`
         }
       );
     } else {
@@ -226,20 +226,20 @@ class GeoJsonCatalogItem
         {
           key: "jsonPolygon",
           href: DataUri.make("json", this.generateJsonPolygon(geom, name)),
-          download: `${name}_polygon.json`,
-          label: `${i18next.t("downloadData.polygon")} JSON`
+          download: `${name}_polygon.geojson`,
+          label: `${i18next.t("downloadData.polygon")} GEOJSON`
         },
         {
           key: "jsonLines",
           href: DataUri.make("json", this.generateJsonLineStrings(geom, name)),
-          download: `${name}_lines.json`,
-          label: `${i18next.t("downloadData.lines")} JSON`
+          download: `${name}_lines.geojson`,
+          label: `${i18next.t("downloadData.lines")} GEOJSON`
         },
         {
           key: "jsonPoints",
           href: DataUri.make("json", this.generateJsonPoints(geom, name)),
-          download: `${name}_points.json`,
-          label: `${i18next.t("downloadData.points")} JSON`
+          download: `${name}_points.geojson`,
+          label: `${i18next.t("downloadData.points")} GEOJSON`
         }
       );
     }

@@ -27,20 +27,20 @@ const MeasurableTransform = observer((props: Props) => {
       {
         key: "jsonPolygon",
         href: DataUri.make("json", generateJsonPolygon(geom)),
-        download: `${layerName}_polygon.json`,
-        label: `${i18next.t("downloadData.polygon")} JSON`
+        download: `${layerName}_polygon.geojson`,
+        label: `${i18next.t("downloadData.polygon")} GEOJSON`
       },
       {
         key: "jsonLines",
         href: DataUri.make("json", generateJsonLineStrings(geom)),
-        download: `${layerName}_lines.json`,
-        label: `${i18next.t("downloadData.lines")} JSON`
+        download: `${layerName}_lines.geojson`,
+        label: `${i18next.t("downloadData.lines")} GEOJSON`
       },
       {
         key: "jsonPoints",
         href: DataUri.make("json", generateJsonPoints(geom)),
-        download: `${layerName}_points.json`,
-        label: `${i18next.t("downloadData.points")} JSON`
+        download: `${layerName}_points.geojson`,
+        label: `${i18next.t("downloadData.points")} GEOJSON`
       }
     ];
 
@@ -51,8 +51,8 @@ const MeasurableTransform = observer((props: Props) => {
           "json",
           generateMultiPathJsonPolygon(terria.measurableGeomList)
         ),
-        download: `${layerName}_polygon_multipath.json`,
-        label: `${i18next.t("downloadData.polygon")} JSON`
+        download: `${layerName}_polygon_multipath.geojson`,
+        label: `${i18next.t("downloadData.polygon")} GEOJSON`
       },
       {
         key: "jsonMultiPathLines",
@@ -60,8 +60,8 @@ const MeasurableTransform = observer((props: Props) => {
           "json",
           generateMultiPathJsonLineStrings(terria.measurableGeomList)
         ),
-        download: `${layerName}_lines_multipath.json`,
-        label: `${i18next.t("downloadData.lines")} JSON`
+        download: `${layerName}_lines_multipath.geojson`,
+        label: `${i18next.t("downloadData.lines")} GEOJSON`
       }
     ];
 
