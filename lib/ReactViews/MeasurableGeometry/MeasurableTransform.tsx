@@ -278,6 +278,7 @@ const MeasurableTransform = observer((props: Props) => {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <Button
+        title={i18next.t("transformLayer.transformation")}
         css={`
           color: ${theme.textLight};
           background: ${theme.colorPrimary};

@@ -509,6 +509,7 @@ const MeasurablePanel = observer((props: Props) => {
   const renderToggleDistanceLabels = () => (
     <label style={{ display: "flex", alignItems: "center", margin: "10px" }}>
       <Checkbox
+        title={i18next.t("measurableGeometry.showDistanceCheckboxTitle")}
         isChecked={showDistances}
         isDisabled={
           !terria.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints
@@ -575,6 +576,7 @@ const MeasurablePanel = observer((props: Props) => {
       <>
         {!isMobile && (
           <StyledTextArea
+            title={i18next.t("measurableGeometry.pathNotesTitle")}
             placeholder={i18next.t("measurableGeometry.textareaPlaceholder")}
             dark
             value={currentGeom.pathNotes}
@@ -1169,6 +1171,7 @@ const MeasurablePanel = observer((props: Props) => {
           <td>
             <StyledTextArea
               placeholder="Note..."
+              title={i18next.t("measurableGeometry.pointNotesTitle")}
               value={localText}
               dark
               onChange={(e) => setLocalText(e.target.value)}

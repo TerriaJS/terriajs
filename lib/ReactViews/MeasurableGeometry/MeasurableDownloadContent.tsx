@@ -169,6 +169,7 @@ const MeasurableDownloadContent = observer((props: Props) => {
         <Input
           dark
           type="text"
+          title={i18next.t("downloadData.filenamePlaceholderTitle")}
           placeholder={i18next.t("downloadData.filenamePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -197,6 +198,7 @@ const MeasurableDownloadContent = observer((props: Props) => {
           ))}
         </Select>
         <Button
+          title={i18next.t("downloadData.downloadButtonTitle")}
           css={`
             color: ${theme.textLight};
             background: ${theme.colorPrimary};

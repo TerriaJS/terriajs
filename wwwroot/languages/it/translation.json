@@ -99,11 +99,14 @@
     "geometrySummaryAreaAir": "Area in aria",
     "geometrySummarySlope": "Pendenza %",
     "textareaPlaceholder": "Inserisci le tue note...",
+    "pathNotesTitle": "Aggiungi una descrizione del percorso",
+    "pointNotesTitle": "Aggiungi una descrizione del punto",
     "elementPlaceholder": "Elemento num.",
     "changePath": "Cambia il percorso",
     "addPath": "Aggiungi un nuovo percorso",
     "removePath": "Rimuovi il percorso attuale",
     "showDistanceCheckbox": "Mostra etichette distanze",
+    "showDistanceCheckboxTitle": "Attiva/disattiva etichette distanze nella mappa",
     "tempLayerName": "Inserisci il nome del layer temporaneo"
   },
   "elevationChart": {
@@ -119,13 +122,15 @@
   "downloadData": {
     "downloadPanel": "Esporta",
     "filenamePlaceholder": "Inserisci il nome del file...",
+    "filenamePlaceholderTitle": "Inserisci il nome del file da scaricare",
     "formatPlaceholder": "Seleziona il formato",
     "lines": "Linee",
     "points": "Punti",
     "polygon": "Poligono",
     "singlepath": "Percorso singolo",
     "selectAll": "Seleziona tutti",
-    "downloadCurrent": "solo elemento corrente"
+    "downloadCurrent": "solo elemento corrente",
+    "downloadButtonTitle": "Salva il file utilizzando questo nome e formato"
   },
   "playPath": {
     "title": "Play Path",
@@ -136,6 +141,7 @@
       "stop": "Arresta e reimposta",
       "speedLabel": "Etichetta velocità",
       "speedSlider": "Regola velocità di riproduzione",
+      "speedSliderTitle": "Modifica la velocità di riproduzione del percorso",
       "currentSpeed": "Velocità corrente"
     }
   },

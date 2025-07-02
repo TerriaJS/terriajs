@@ -96,11 +96,14 @@
     "geometrySummaryAreaAir": "Air area",
     "geometrySummarySlope": "Slope %",
     "textareaPlaceholder": "Enter your notes here...",
+    "pathNotesTitle": "Provide a description of the path",
+    "pointNotesTitle": "Provide a description of the point",
     "elementPlaceholder": "Element No.",
     "changePath": "Change the current path",
     "addPath": "Add a new path",
     "removePath": "Delete the current path",
-    "showDistanceCheckbox": "Show distaces labels",
+    "showDistanceCheckbox": "Show distances labels",
+    "showDistanceCheckboxTitle": "Toggle distance labels",
     "tempLayerName": "Insert the temporary layer name"
   },
   "elevationChart": {
@@ -116,13 +119,15 @@
   "downloadData": {
     "downloadPanel": "Export",
     "filenamePlaceholder": "Enter the filename...",
+    "filenamePlaceholderTitle": "Enter the filename to save the data as",
     "formatPlaceholder": "Select format",
     "lines": "Lines",
     "points": "Points",
     "polygon": "Polygon",
     "singlepath": "Single Path",
     "selectAll": "Select All",
-    "downloadCurrent": "only current element"
+    "downloadCurrent": "only current element",
+    "downloadButtonTitle": "Save the file using the specified name and format"
   },
   "playPath": {
     "title": "Play Path",
@@ -133,6 +138,7 @@
       "stop": "Stop and reset",
       "speedLabel": "Speed label",
       "speedSlider": "Adjust playback speed",
+      "speedSliderTitle": "Modify playback speed",
       "currentSpeed": "Current speed"
     }
   },

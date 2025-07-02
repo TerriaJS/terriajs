@@ -122,6 +122,7 @@ const PlayPathPanel = observer((props: Props) => {
           )}
         </div>
         <div
+          title={`${i18next.t("playPath.tooltip.speedSliderTitle")}`}
           className="no-drag"
           style={{
             display: "flex",
