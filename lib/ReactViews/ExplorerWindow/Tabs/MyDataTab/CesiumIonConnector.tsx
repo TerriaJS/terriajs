@@ -1,23 +1,27 @@
-import { MouseEvent, useState, useEffect } from "react";
+import classNames from "classnames";
 import { observer } from "mobx-react";
-import URI from "urijs";
 import { string } from "prop-types";
+import { MouseEvent, useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import AddDataStyles from "./add-data.scss";
-import Styles from "./cesium-ion-connector.scss";
-import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
+import styled from "styled-components";
+import { Cesium3dTilesMixin } from "terriajs-plugin-api";
+import URI from "urijs";
+import isDefined from "../../../../Core/isDefined";
+import CesiumIonMixin from "../../../../ModelMixins/CesiumIonMixin";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
+import CesiumTerrainCatalogItem from "../../../../Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
+import IonImageryCatalogItem from "../../../../Models/Catalog/CatalogItems/IonImageryCatalogItem";
 import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
-import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
-import Dropdown from "../../../Generic/Dropdown";
-import Icon from "../../../../Styled/Icon";
-import classNames from "classnames";
-import { RawButton } from "../../../../Styled/Button";
-import styled from "styled-components";
-import { useViewState } from "../../../Context";
-import TimeVarying from "../../../../ModelMixins/TimeVarying";
-import isDefined from "../../../../Core/isDefined";
+import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
 import Terria from "../../../../Models/Terria";
+import { RawButton } from "../../../../Styled/Button";
+import Icon from "../../../../Styled/Icon";
+import { useViewState } from "../../../Context";
+import Dropdown from "../../../Generic/Dropdown";
+import AddDataStyles from "./add-data.scss";
+import Styles from "./cesium-ion-connector.scss";
 
 interface CesiumIonToken {
   id?: string;
@@ -491,15 +495,36 @@ function CesiumIonConnector() {
   }
 
   function renderAssetRow(asset: CesiumIonAsset) {
+    const existingItem =
+      viewState.terria.catalog.userAddedDataGroup.memberModels.find(
+        (item) =>
+          (CesiumIonMixin.isMixedInto(item) ||
+            Cesium3dTilesMixin.isMixedInto(item) ||
+            item instanceof CesiumTerrainCatalogItem ||
+            item instanceof IonImageryCatalogItem) &&
+          item.ionAssetId === asset.id
+      );
+
     return (
       <tr key={asset.id}>
         <td>
           <ActionButton
             type="button"
-            onClick={addToMap.bind(undefined, viewState.terria, asset)}
+            onClick={
+              existingItem
+                ? () => viewState.terria.removeModelReferences(existingItem)
+                : addToMap.bind(undefined, viewState.terria, asset)
+            }
             title={t("catalogItem.add")}
           >
-            <Icon glyph={Icon.GLYPHS.add} className={Styles.addAssetButton} />
+            {existingItem ? (
+              <Icon
+                glyph={Icon.GLYPHS.minus}
+                className={Styles.addAssetButton}
+              />
+            ) : (
+              <Icon glyph={Icon.GLYPHS.add} className={Styles.addAssetButton} />
+            )}
           </ActionButton>
         </td>
         <td>{asset.name}</td>
