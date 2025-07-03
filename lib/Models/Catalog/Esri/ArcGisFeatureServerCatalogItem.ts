@@ -140,11 +140,13 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
 
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
-    const url = this.buildEsriJsonUrl()
-      .logError("Failed to create valid FeatureServer URL")
-      ?.toString();
+    const uri = this.buildEsriJsonUrl().logError(
+      "Failed to create valid FeatureServer URL"
+    );
 
-    if (!url) return;
+    if (!uri) return;
+
+    const url = proxyCatalogItemUrl(this, uri.toString());
 
     let provider = new ProtomapsImageryProvider({
       maximumZoom: this.getMaximumLevel(false),
