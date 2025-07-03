@@ -92,6 +92,7 @@
     "geometrySummaryDistGround": "Ground distance",
     "geometrySummaryPerimeterGeo": "Geodetic perimeter",
     "geometrySummaryPerimeterAir": "Air perimeter",
+    "geometrySummaryPerimeterGround": "Ground perimeter",
     "geometrySummaryAreaGeo": "Geodetic area",
     "geometrySummaryAreaAir": "Air area",
     "geometrySummarySlope": "Slope %",

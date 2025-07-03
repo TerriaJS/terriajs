@@ -533,25 +533,97 @@ const MeasurablePanel = observer((props: Props) => {
       terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!currentGeom) return null;
 
-    if (currentGeom.hasArea) {
+    const activeToolIsPolygon = () => {
+      const polygonTool = terria.mapNavigationModel.findItem(
+        MeasurePolygonTool.id
+      );
+      return polygonTool?.controller?.active === true;
+    };
+
+    if (activeToolIsPolygon() || currentGeom.hasArea || currentGeom.isClosed) {
       return (
         <>
           <Text textLight style={{ marginLeft: 1 }} title="">
             {i18next.t("measurableGeometry.geometrySummaryHeader")}
           </Text>
           <small>
+            <table className={Styles.elevation}>
+              <thead>
+                <tr>
+                  <th
+                    colSpan={2}
+                    css={`
+                      padding: 8px;
+                      text-align: center;
+                      border-bottom: 1px solid ${theme.textLight}44;
+                    `}
+                  >
+                    {i18next.t("measurableGeometry.geometrySummaryAreaGeo")}
+                  </th>
+                  <th
+                    colSpan={2}
+                    css={`
+                      padding: 8px;
+                      text-align: center;
+                      border-bottom: 1px solid ${theme.textLight}44;
+                    `}
+                  >
+                    {i18next.t("measurableGeometry.geometrySummaryAreaAir")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    css={`
+                      padding: 8px;
+                    `}
+                  >
+                    {prettifyNumber(currentGeom.geodeticArea ?? 0, true)}
+                  </td>
+                  <td
+                    css={`
+                      padding: 8px;
+                    `}
+                  >
+                    {(currentGeom.geodeticArea ?? 0) > 0
+                      ? `${((currentGeom.geodeticArea ?? 0) * 0.0001).toFixed(
+                          4
+                        )} ha`
+                      : ""}
+                  </td>
+                  <td
+                    css={`
+                      padding: 8px;
+                    `}
+                  >
+                    {prettifyNumber(currentGeom.airArea ?? 0, true)}
+                  </td>
+                  <td
+                    css={`
+                      padding: 8px;
+                    `}
+                  >
+                    {(currentGeom.airArea ?? 0) > 0
+                      ? `${((currentGeom.airArea ?? 0) * 0.0001).toFixed(4)} ha`
+                      : ""}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style={{ marginTop: "15px", marginBottom: "10px" }} />
+
             {renderSummaryTable(
               [
                 "measurableGeometry.geometrySummaryPerimeterGeo",
                 "measurableGeometry.geometrySummaryPerimeterAir",
-                "measurableGeometry.geometrySummaryAreaGeo",
-                "measurableGeometry.geometrySummaryAreaAir"
+                "measurableGeometry.geometrySummaryPerimeterGround"
               ],
               [
                 prettifyNumber(currentGeom.geodeticDistance ?? 0),
                 prettifyNumber(currentGeom.airDistance ?? 0),
-                prettifyNumber(currentGeom.geodeticArea ?? 0, true),
-                prettifyNumber(currentGeom.airArea ?? 0, true)
+                prettifyNumber(currentGeom.groundDistance ?? 0)
               ]
             )}
           </small>

@@ -256,6 +256,14 @@ export default class MeasurableGeometryManager {
     isFileUploaded?: boolean,
     indexPath?: number
   ) {
+    let geodeticArea = 0;
+    let airArea = 0;
+
+    if (isClosed && stopPoints.length >= 3 && !onlyPoints) {
+      geodeticArea = this.calculateGeodeticArea(stopPoints);
+      airArea = this.calculateAirArea(stopPoints);
+    }
+
     const newGeometry = {
       isClosed: isClosed,
       hasArea: false,
@@ -274,6 +282,8 @@ export default class MeasurableGeometryManager {
       ),
       sampledPoints: sampledPoints,
       sampledDistances: sampledDistances,
+      airArea: airArea,
+      geodeticArea: geodeticArea,
       onlyPoints: onlyPoints,
       pointDescriptions: pointDescriptions,
       pathNotes: pathNotes,
@@ -294,5 +304,69 @@ export default class MeasurableGeometryManager {
     } else {
       this.terria.measurableGeomList.push(newGeometry);
     }
+  }
+
+  private calculateGeodeticArea(stopPoints: Cartographic[]): number {
+    if (stopPoints.length < 3) return 0;
+
+    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
+    if (!ellipsoid) return 0;
+
+    let totalArea = 0;
+
+    for (let i = 1; i < stopPoints.length - 1; i++) {
+      const p1 = stopPoints[0];
+      const p2 = stopPoints[i];
+      const p3 = stopPoints[i + 1];
+
+      const geo12 = new EllipsoidGeodesic(p1, p2, ellipsoid);
+      const geo23 = new EllipsoidGeodesic(p2, p3, ellipsoid);
+      const geo31 = new EllipsoidGeodesic(p3, p1, ellipsoid);
+
+      const a = geo12.surfaceDistance;
+      const b = geo23.surfaceDistance;
+      const c = geo31.surfaceDistance;
+
+      const s = (a + b + c) / 2.0;
+      const triangleArea = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+
+      if (!isNaN(triangleArea)) {
+        totalArea += triangleArea;
+      }
+    }
+
+    return totalArea;
+  }
+
+  private calculateAirArea(stopPoints: Cartographic[]): number {
+    if (stopPoints.length < 3) return 0;
+
+    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
+    if (!ellipsoid) return 0;
+
+    const cartesianPoints = stopPoints.map((point) =>
+      Cartographic.toCartesian(point, ellipsoid)
+    );
+
+    let totalArea = 0;
+
+    for (let i = 1; i < cartesianPoints.length - 1; i++) {
+      const p1 = cartesianPoints[0];
+      const p2 = cartesianPoints[i];
+      const p3 = cartesianPoints[i + 1];
+
+      const a = Cartesian3.distance(p1, p2);
+      const b = Cartesian3.distance(p2, p3);
+      const c = Cartesian3.distance(p3, p1);
+
+      const s = (a + b + c) / 2.0;
+      const triangleArea = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+
+      if (!isNaN(triangleArea)) {
+        totalArea += triangleArea;
+      }
+    }
+
+    return totalArea;
   }
 }
