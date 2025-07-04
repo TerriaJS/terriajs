@@ -139,6 +139,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               onFocus={startLocationSearch}
               searchText={searchState.locationSearchText}
               placeholder={placeholder}
+              supportsAutocomplete={searchState.supportsAutocomplete}
             />
           </PresentationBox>
           {/* Results */}
@@ -152,6 +153,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                 background-color: ${theme.greyLightest};
                 max-height: calc(100vh - 200px);
                 border-radius: 0 0 ${theme.radiusLarge} ${theme.radiusLarge};
+                overflow: hidden;
               `}
             >
               {/* search {searchterm} in data catalog */}
@@ -174,29 +176,30 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                   overflow-y: auto;
                 `}
               >
-                {searchState.locationSearchResults.map((search) => (
-                  <LocationSearchResults
-                    key={search.searchProvider.uniqueId}
-                    terria={viewState.terria}
-                    viewState={viewState}
-                    search={search}
-                    locationSearchText={locationSearchText}
-                    onLocationClick={(result) => {
-                      if (!result.location) return;
-                      addMarker(viewState.terria, {
-                        name: result.name,
-                        location: result.location
-                      });
-                      result.clickAction?.();
-                      runInAction(() => {
-                        searchState.showLocationSearchResults = false;
-                      });
-                    }}
-                    isWaitingForSearchToStart={
-                      searchState.isWaitingToStartLocationSearch
-                    }
-                  />
-                ))}
+                {!searchState.isWaitingToStartLocationSearch &&
+                  searchState.locationSearchResults.map((search) => (
+                    <LocationSearchResults
+                      key={search.searchProvider.uniqueId}
+                      terria={viewState.terria}
+                      viewState={viewState}
+                      search={search}
+                      locationSearchText={locationSearchText}
+                      onLocationClick={(result) => {
+                        if (!result.location) return;
+                        addMarker(viewState.terria, {
+                          name: result.name,
+                          location: result.location
+                        });
+                        result.clickAction?.();
+                        runInAction(() => {
+                          searchState.showLocationSearchResults = false;
+                        });
+                      }}
+                      isWaitingForSearchToStart={
+                        searchState.isWaitingToStartLocationSearch
+                      }
+                    />
+                  ))}
               </Box>
             </Box>
           )}
