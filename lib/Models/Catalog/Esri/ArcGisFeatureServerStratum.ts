@@ -569,7 +569,7 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   }
 
   // Map ESRI fields to Terria columns. This just sets the name, title and type of the column
-  get columns() {
+  @computed get columns() {
     return (
       this._featureServer?.fields
         ?.filter((field) => {
@@ -608,7 +608,7 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   }
 
   /** Enable tileRequests by default if supported and no unsupported point/label styles are used */
-  get tileRequests() {
+  @computed get tileRequests() {
     if (this._item.forceCesiumPrimitives) return false;
 
     const supportsPbfTiles =
@@ -630,7 +630,7 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   }
 
   // Add properties/columns to outFields if they are needed for styling. Otherwise, these properties won't be in tile features
-  get outFields() {
+  @computed get outFields() {
     return Array.from(
       new Set([
         this._item.objectIdField,
