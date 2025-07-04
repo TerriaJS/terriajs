@@ -165,7 +165,8 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
       }),
       id: this.uniqueId,
       paintRules,
-      labelRules
+      labelRules,
+      rectangle: this.cesiumRectangle
     });
 
     provider = this.wrapImageryPickFeatures(provider);
