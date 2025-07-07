@@ -24,7 +24,6 @@ import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ArcGisFeatureServerStratum } from "./ArcGisFeatureServerStratum";
-import { ImageryParts } from "../../../ModelMixins/MappableMixin";
 
 export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   GeoJsonMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
