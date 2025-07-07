@@ -270,6 +270,11 @@ export interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
+  /**
+   * True to disable the share panel.
+   */
+  disableSharePanel?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -613,6 +618,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disableSharePanel: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
