@@ -589,6 +589,9 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
     describe("clipToRectangle", function () {
       it("when true sets the clipping rectangle for the imagery part", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
         expect(item.clipToRectangle).toBe(true);
         await item.loadMapItems();
         const imageryParts = item.mapItems[0] as ImageryParts;
@@ -599,7 +602,10 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       });
 
       it("when false does not set the clipping rectangle for the imagery part", async function () {
-        expect(item.clipToRectangle).toBe(true);
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(CommonStrata.definition, "clipToRectangle", false);
+        });
         await item.loadMapItems();
         const imageryParts = item.mapItems[0] as ImageryParts;
         expect(imageryParts.clippingRectangle).toBeUndefined();
