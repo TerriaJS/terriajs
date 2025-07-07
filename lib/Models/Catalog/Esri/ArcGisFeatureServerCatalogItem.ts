@@ -24,6 +24,7 @@ import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ArcGisFeatureServerStratum } from "./ArcGisFeatureServerStratum";
+import { ImageryParts } from "../../../ModelMixins/MappableMixin";
 
 export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   GeoJsonMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
@@ -167,8 +168,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
       }),
       id: this.uniqueId,
       paintRules,
-      labelRules,
-      rectangle: this.cesiumRectangle
+      labelRules
     });
 
     provider = this.wrapImageryPickFeatures(provider);
@@ -189,7 +189,9 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         imageryProvider: this.imageryProvider,
         show: this.show,
         alpha: this.opacity,
-        clippingRectangle: undefined
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       }
     ];
   }
