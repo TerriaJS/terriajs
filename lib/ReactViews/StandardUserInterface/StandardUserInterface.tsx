@@ -76,6 +76,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
     };
 
     const shouldUseMobileInterface = () =>
+      !props.terria.configParameters.disableMobileInterface &&
       document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
 
     const resizeListener = action(() => {
