@@ -256,6 +256,10 @@ export interface ConfigParameters {
    */
   displayOneBrand?: number;
   /**
+   * True to disable the mobile interface.
+   */
+  disableMobileInterface?: boolean;
+  /**
    * True to disable the "Centre map at your current location" button.
    */
   disableMyLocation?: boolean;
@@ -569,6 +573,7 @@ export default class Terria {
     brandBarElements: undefined,
     brandBarSmallElements: undefined,
     displayOneBrand: 0,
+    disableMobileInterface: false,
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
