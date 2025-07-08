@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.9.6)
+#### next release (8.10.1)
+
+- [The next improvement]
+
+#### 8.10.0 - 2025-07-08
 
 - **Breaking changes:**
 
@@ -15,7 +19,6 @@
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
 - Apply clipping rectangle for `ArcGisFeatureServerCatalogItem` reducing the number of requests made to server in tiled mode.
-- [The next improvement]
 
 #### 8.9.5 - 2025-06-03
 
