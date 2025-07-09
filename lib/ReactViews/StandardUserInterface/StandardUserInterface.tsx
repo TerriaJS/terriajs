@@ -168,13 +168,15 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
               <div className={Styles.uiInner}>
                 {!props.viewState.hideMapUi && (
                   <>
-                    <Small>
-                      <MobileHeader
-                        menuItems={customElements.menu}
-                        menuLeftItems={customElements.menuLeft}
-                        version={props.version}
-                      />
-                    </Small>
+                    {!props.terria.configParameters.disableMobileInterface && (
+                      <Small>
+                        <MobileHeader
+                          menuItems={customElements.menu}
+                          menuLeftItems={customElements.menuLeft}
+                          version={props.version}
+                        />
+                      </Small>
+                    )}
                     <Medium>
                       <>
                         <WorkflowPanelPortal
@@ -223,7 +225,12 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                   </div>
                 </Medium>
 
-                <section className={Styles.map}>
+                <section
+                  className={classNames(Styles.map, {
+                    [Styles.disableMobileInterface]:
+                      props.terria.configParameters.disableMobileInterface
+                  })}
+                >
                   <MapColumn
                     customElements={customElements}
                     animationDuration={animationDuration}
