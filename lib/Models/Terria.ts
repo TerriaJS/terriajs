@@ -1466,12 +1466,7 @@ export default class Terria {
     }
 
     // Load basemap
-    runInAction(() => {
-      if (!this.mainViewer.baseMap) {
-        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-        this.loadPersistedOrInitBaseMap();
-      }
-    });
+    await this.loadPersistedOrInitBaseMap();
 
     // Zoom to workbench items if any of the init sources specifically requested it
     if (this.focusWorkbenchItemsAfterLoadingInitSources) {
