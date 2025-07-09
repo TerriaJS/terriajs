@@ -1,5 +1,6 @@
 declare namespace StandardUserInterfaceScssNamespace {
   export interface IStandardUserInterfaceScss {
+    disableMobileInterface: string;
     explorerPanelIsVisible: string;
     featureInfo: string;
     featureInfoFullScreen: string;
