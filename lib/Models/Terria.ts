@@ -78,7 +78,7 @@ import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
+import { BaseMapItem, BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
@@ -1229,7 +1229,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0];
+    let baseMap = baseMapItems[0] as BaseMapItem | undefined;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
@@ -1256,7 +1256,9 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    if (baseMap) {
+      await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    }
   }
 
   get isLoadingInitSources(): boolean {
@@ -1466,7 +1468,12 @@ export default class Terria {
     }
 
     // Load basemap
-    await this.loadPersistedOrInitBaseMap();
+    runInAction(() => {
+      if (!this.mainViewer.baseMap) {
+        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+        this.loadPersistedOrInitBaseMap();
+      }
+    });
 
     // Zoom to workbench items if any of the init sources specifically requested it
     if (this.focusWorkbenchItemsAfterLoadingInitSources) {
