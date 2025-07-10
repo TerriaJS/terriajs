@@ -1,4 +1,11 @@
-import { action, computed, makeObservable, toJS } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import { observer } from "mobx-react";
 import {
   RefObject,
@@ -258,9 +265,13 @@ class StoryBuilder extends Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
+  @observable
+  viewState: ViewState | undefined;
+
   @computed
   get shareDataStringSize() {
-    const terria = this.props.viewState.terria;
+    if (!this.viewState) return undefined;
+    const terria = this.viewState.terria;
     const stories = terria.stories;
 
     const validStories = stories.filter(
@@ -268,10 +279,24 @@ class StoryBuilder extends Component<
     ).length;
 
     return JSON.stringify(
-      getShareData(terria, this.props.viewState, {
+      getShareData(terria, this.viewState, {
         includeStories: validStories > 0
       })
     ).length;
+  }
+
+  componentDidMount() {
+    runInAction(() => {
+      this.viewState = this.props.viewState;
+    });
+  }
+
+  componentDidUpdate(prevProps: { viewState: ViewState }) {
+    if (prevProps.viewState !== this.props.viewState) {
+      runInAction(() => {
+        this.viewState = this.props.viewState;
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -499,9 +524,10 @@ class StoryBuilder extends Component<
     const shareMaxRequestSizeBytes =
       this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
     // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
-    const shareDataTooLong = shareMaxRequestSizeBytes
-      ? shareDataSize > shareMaxRequestSizeBytes
-      : false;
+    const shareDataTooLong =
+      shareDataSize && shareMaxRequestSizeBytes
+        ? shareDataSize > shareMaxRequestSizeBytes
+        : false;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
