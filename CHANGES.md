@@ -2,6 +2,7 @@
 
 #### next release (8.10.1)
 
+- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
@@ -14,7 +15,6 @@
   - Update mobx-react to version 9
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
-- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
