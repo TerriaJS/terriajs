@@ -91,7 +91,7 @@ export async function buildShortShareLink(
     getShareData(terria, viewState, options)
   );
 
-  if (token) {
+  if (typeof token === "string") {
     return buildBaseShareUrl(terria, {
       share: token
     });
