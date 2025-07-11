@@ -7,7 +7,7 @@ import { useViewState } from "../../Context";
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
 import Breadcrumbs from "../../Search/Breadcrumbs";
-import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
+import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox";
 import Styles from "./data-catalog-tab.scss";
 import CatalogSearchProvider from "../../../Models/SearchProviders/CatalogSearchProvider";
 

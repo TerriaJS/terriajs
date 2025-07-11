@@ -18,10 +18,17 @@ import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
 import isDefined from "../../Core/isDefined";
+import CommonStrata from "../Definition/CommonStrata";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",
   Reverse = "reverse"
+}
+
+interface MapboxGeocodingResponse {
+  features: Feature<Point>[];
+  type: string;
+  attribution?: string;
 }
 
 export default class MapboxSearchProvider extends LocationSearchProviderMixin(
@@ -163,7 +170,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
     const promise: Promise<any> = loadJson(searchQuery);
     return promise
-      .then((result) => {
+      .then((result: MapboxGeocodingResponse) => {
         if (searchResults.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
@@ -176,7 +183,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        const locations: SearchResult[] = (result.features as Feature<Point>[])
+        const locations: SearchResult[] = result.features
           .filter(
             (feat) =>
               feat.properties && feat.geometry && feat.properties.full_address
@@ -200,6 +207,14 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
           };
+        }
+        const attribution = result.attribution;
+        if (attribution) {
+          runInAction(() => {
+            this.setTrait(CommonStrata.underride, "attributions", [
+              attribution
+            ]);
+          });
         }
       })
       .catch(() => {

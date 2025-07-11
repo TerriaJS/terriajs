@@ -23,6 +23,7 @@ export const BottomBar: VFC = () => {
         hideTerriaLogo={!!viewState.terria.configParameters.hideTerriaLogo}
         credits={viewState.terria.configParameters.extraCreditLinks?.slice()}
         currentViewer={viewState.terria.mainViewer.currentViewer}
+        searchBarModel={viewState.terria.searchBarModel}
       />
       <Box paddedHorizontally={4} gap={2}>
         <LocationBar mouseCoords={viewState.terria.currentViewer.mouseCoords} />
