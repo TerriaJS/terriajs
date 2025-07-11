@@ -20,6 +20,7 @@ interface ITextColor {
   textDark?: boolean;
   textDarker?: boolean;
   textGreyLighter?: boolean;
+  textWarning?: boolean;
 }
 
 interface ITextWeight {
@@ -115,11 +116,19 @@ export const Text = styled.div<ITextProps>`
     `
     color: ${props.theme.textDark};
   `}
+
   ${(props) =>
     props.textDarker &&
     `
     color: ${props.theme.textDarker};
   `}
+
+  ${(props) =>
+    props.textWarning &&
+    `
+    color: ${props.theme.textWarning};
+  `}
+
   ${(props) =>
     props.color &&
     `

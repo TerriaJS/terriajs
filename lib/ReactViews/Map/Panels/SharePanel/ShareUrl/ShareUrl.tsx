@@ -21,6 +21,9 @@ import {
 import Clipboard from "../../../../Clipboard";
 import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
 import { ShareUrlWarning } from "./ShareUrlWarning";
+import TerriaError, {
+  TerriaErrorSeverity
+} from "../../../../../Core/TerriaError";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -72,21 +75,41 @@ export const ShareUrl = forwardRef<
   );
 
   useEffect(() => {
+    let cancelled = false;
     if (shouldShorten) {
       setPlaceholder(t("share.shortLinkShortening"));
       setShorteningInProgress(true);
-      buildShortShareLink(terria, viewState, {
-        includeStories
-      })
-        .then((shareUrl) => setShareUrl(shareUrl))
-        .catch(() => {
-          setShareUrl(
-            buildShareLink(terria, viewState, {
-              includeStories
-            })
-          );
+      buildShortShareLink(terria, viewState, { includeStories })
+        .then((shareUrl) => {
+          if (!cancelled) setShareUrl(shareUrl);
         })
-        .finally(() => setShorteningInProgress(false));
+        .catch((error) => {
+          let userMessage = t("models.shareData.generateErrorMessage");
+          if (error instanceof TerriaError) {
+            const highestImportanceError = error.highestImportanceError;
+            const highestImportanceOriginalErrorMessage =
+              highestImportanceError.originalError?.[0].message;
+            if (highestImportanceOriginalErrorMessage?.includes("413")) {
+              userMessage = t(
+                "models.shareData.generateErrorDataExceedsLimitMessage"
+              );
+              terria.raiseErrorToUser(
+                TerriaError.from(error, {
+                  message: userMessage
+                }),
+                {
+                  severity: TerriaErrorSeverity.Error
+                }
+              );
+            }
+          }
+          if (!cancelled) {
+            setShareUrl(userMessage);
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setShorteningInProgress(false);
+        });
     } else {
       setShareUrl(
         buildShareLink(terria, viewState, {
@@ -94,6 +117,9 @@ export const ShareUrl = forwardRef<
         })
       );
     }
+    return () => {
+      cancelled = true;
+    };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
