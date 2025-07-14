@@ -271,6 +271,10 @@ export interface ConfigParameters {
    * True to disable the share panel.
    */
   disableSharePanel?: boolean;
+  /**
+   * True to disable the share embed panel.
+   */
+  disableShareEmbed?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -578,6 +582,7 @@ export default class Terria {
     disableSplitter: undefined,
     disablePedestrianMode: false,
     disableSharePanel: false,
+    disableShareEmbed: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
