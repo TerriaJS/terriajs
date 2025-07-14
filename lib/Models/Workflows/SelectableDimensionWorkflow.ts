@@ -23,7 +23,7 @@ export default interface SelectableDimensionWorkflow {
   /** Human readable name - used as title */
   name: string;
   icon: IconProps["glyph"];
-  options: SelectableDimensionWorkflowOptions;
+  options?: SelectableDimensionWorkflowOptions;
 
   /** Item to which this workflow belongs **/
   item: BaseModel;
