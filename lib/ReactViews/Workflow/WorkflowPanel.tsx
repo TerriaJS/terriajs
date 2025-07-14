@@ -23,7 +23,7 @@ type PropsType = {
     onClick: () => void;
     buttonText: string;
   };
-  options: SelectableDimensionWorkflowOptions;
+  options?: SelectableDimensionWorkflowOptions;
   children?: ReactNode;
 };
 
@@ -56,7 +56,7 @@ const WorkflowPanel: FC<PropsType> = observer((props) => {
         <TitleBar>
           <TitleIcon glyph={props.icon} />
           <Title>{props.title}</Title>
-          {!props.options.hideCloseButton && (
+          {!props.options?.hideCloseButton && (
             <>
               {!props.closeButtonText && (
                 <CloseIconButton onClick={props.onClose} />
