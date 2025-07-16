@@ -5,7 +5,7 @@ import Terria from "../../../../lib/Models/Terria";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 
-fdescribe("TileMapServiceCatalogItem", function () {
+describe("TileMapServiceCatalogItem", function () {
   let item: TileMapServiceCatalogItem;
 
   beforeEach(function () {
