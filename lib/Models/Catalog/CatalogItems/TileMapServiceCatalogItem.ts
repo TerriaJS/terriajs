@@ -1,12 +1,11 @@
-import { computed, makeObservable, observable, runInAction, trace } from "mobx";
-import { fromPromise } from "mobx-utils";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import TileMapServiceImageryProvider from "terriajs-cesium/Source/Scene/TileMapServiceImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import TileMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/TileMapServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
  * A catalog item that loads a Tile Map Service imagery tileset created using
