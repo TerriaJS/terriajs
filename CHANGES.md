@@ -3,6 +3,7 @@
 #### next release (8.10.1)
 
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
+- Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
