@@ -1,6 +1,9 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -10,6 +13,103 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
+
+export class ArcGisSpatialReferenceTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "WKID",
+    description: "The well-known ID of the spatial reference."
+  })
+  wkid?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Latest WKID",
+    description: "The latest well-known ID of the spatial reference."
+  })
+  latestWkid?: number;
+}
+
+export class ArcGisExtentTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Minimum X",
+    description: "The minimum X value."
+  })
+  xmin?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Minimum Y",
+    description: "The minimum Y value."
+  })
+  ymin?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum X",
+    description: "The maximum X value."
+  })
+  xmax?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Y",
+    description: "The maximum Y value."
+  })
+  ymax?: number;
+
+  @objectTrait({
+    type: ArcGisSpatialReferenceTraits,
+    name: "Spatial Reference",
+    description: "The spatial reference of the extent."
+  })
+  spatialReference?: ArcGisSpatialReferenceTraits;
+}
+
+export class ArcGisMapServerAvailableLayerTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "ID",
+    description: "The ID of the layer."
+  })
+  id?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "The name of the layer."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Description",
+    description: "The description of the layer."
+  })
+  description?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Copyright Text",
+    description: "The copyright text of the layer."
+  })
+  copyrightText?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Scale",
+    description: "The maximum scale of the layer."
+  })
+  maxScale?: number;
+
+  @objectTrait({
+    type: ArcGisExtentTraits,
+    name: "Extent",
+    description: "The extent of the layer."
+  })
+  extent?: ArcGisExtentTraits;
+}
 
 @traitClass({
   description: `Creates a single item in the catalog from one or many ESRI WMS layers.
@@ -38,6 +138,15 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   })
   layers?: string;
 
+  @objectArrayTrait({
+    name: "Available MapServer Layers",
+    description:
+      "The available layers in the MapServer. This is a list of layer IDs and names.",
+    type: ArcGisMapServerAvailableLayerTraits,
+    idProperty: "id"
+  })
+  availableLayers?: ArcGisMapServerAvailableLayerTraits[];
+
   @primitiveTrait({
     type: "number",
     name: "Maximum scale",
@@ -59,6 +168,14 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "string"
   })
   tokenUrl?: string;
+
+  @primitiveTrait({
+    name: "Token",
+    description:
+      "Token to use for fetching request tokens (if not using tokenUrl)",
+    type: "string"
+  })
+  token?: string;
 
   @primitiveTrait({
     type: "number",

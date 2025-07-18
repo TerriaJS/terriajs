@@ -19,7 +19,9 @@ import SocrataCatalogGroupTraits, {
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import CatalogGroup from "../CatalogGroup";
@@ -117,9 +119,11 @@ export interface SocrataError {
   message?: string;
 }
 
-export class SocrataCatalogStratum extends LoadableStratum(
-  SocrataCatalogGroupTraits
-) {
+export class SocrataCatalogStratum
+  extends LoadableStratum(SocrataCatalogGroupTraits)
+  implements
+    LockedDownStratum<SocrataCatalogGroupTraits, SocrataCatalogStratum>
+{
   static stratumName = "socrataCatalog";
 
   static async load(
@@ -233,7 +237,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
   /** Turn facet into SocrataCatalogGroup */
   @action
-  createGroupFromFacet(facet: Facet) {
+  private createGroupFromFacet(facet: Facet) {
     const facetGroupId = this.getFacetId(facet);
 
     // Create group for Facet
@@ -308,7 +312,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
    * - Then the Socrata `views` API will be used to fetch data (this mimics how Socrata portal map visualisation works - it isn't an official API)
    */
   @action
-  createItemFromResult(result: Result) {
+  private createItemFromResult(result: Result) {
     const resultId = this.getResultId(result);
 
     // Add share key for old ID which included parents ID
@@ -454,11 +458,11 @@ export class SocrataCatalogStratum extends LoadableStratum(
     }
   }
 
-  getFacetId(facet: Facet) {
+  private getFacetId(facet: Facet) {
     return `${this.catalogGroup.uniqueId}/${facet.facet}`;
   }
 
-  getResultId(result: Result) {
+  private getResultId(result: Result) {
     // Use Socrata server hostname for datasets, so we don't create multiple across facets
     return `${
       this.catalogGroup.url

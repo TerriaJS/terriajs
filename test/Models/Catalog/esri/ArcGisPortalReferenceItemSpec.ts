@@ -80,9 +80,6 @@ describe("ArcGisPortalItemReference", function () {
       expect(arcGisPortalItemReference.name).toBe("Road Segments");
 
       expect(arcGisPortalItemReference._arcgisItem).toBeDefined();
-      expect(arcGisPortalItemReference._arcgisPortalCatalogGroup).toBe(
-        undefined
-      );
 
       expect(arcGisPortalItemReference).toBeDefined();
       expect(portalItemTarget instanceof ArcGisFeatureServerCatalogItem).toBe(

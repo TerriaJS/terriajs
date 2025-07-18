@@ -11,7 +11,9 @@ import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/TraitsClasses/CatalogFunctionJobTraits";
@@ -21,8 +23,13 @@ import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin, { MapItem } from "./MappableMixin";
 
-class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
-  constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
+class FunctionJobStratum
+  extends LoadableStratum(CatalogFunctionJobTraits)
+  implements LockedDownStratum<CatalogFunctionJobTraits, FunctionJobStratum>
+{
+  constructor(
+    private readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance
+  ) {
     super();
     makeObservable(this);
   }
