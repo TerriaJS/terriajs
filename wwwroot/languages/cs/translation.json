@@ -424,7 +424,9 @@
     "collapse": "Sbalit",
     "prev": "Předchozí",
     "next": "Další",
-    "restart": "Restartovat"
+    "restart": "Restartovat",
+    "panelBodyCapped": "Každý příběh má maximální velikost {{ shareMaxRequestSize }} - rozdělte velká data nebo mnoho scén do více příběhů, abyste nepřekročili limit.",
+    "storiesTooLong": "Tento příběh překračuje maximální povolenou velikost. Zkuste snížit počet viditelných datových sad nebo zachytit méně scén."
   },
   "satelliteGuidance": {
     "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
@@ -1302,7 +1304,8 @@
       "generateErrorMessage": "Při pokusu o použití služby sdílení dat k vygenerování krátké adresy URL se něco pokazilo.",
       "expandErrorTitle": "Nelze rozbalit adresu URL",
       "generateErrorTitle": "Nepodařilo se vygenerovat krátkou adresu URL.",
-      "expandErrorMessage": "Služba sdílení dat použitá ke spuštění {{appName}} nebyla nalezena. To může znamenat chybu v odkazu nebo to, že služba je v tuto chvíli nedostupná."
+      "expandErrorMessage": "Služba sdílení dat použitá ke spuštění {{appName}} nebyla nalezena. To může znamenat chybu v odkazu nebo to, že služba je v tuto chvíli nedostupná.",
+      "generateErrorDataExceedsLimitMessage": "Chyba: Sdílená data překračují limit"
     },
     "socrataServer": {
       "description": "Popis",
