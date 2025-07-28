@@ -40,6 +40,10 @@ declare namespace VariablesExportScssNamespace {
     notificationWindowZIndex: string;
     overlay: string;
     overlayInvert: string;
+    padding: string;
+    paddingMini: string;
+    paddingSmall: string;
+    paddingTiny: string;
     panelRadius: string;
     radius40Button: string;
     radiusLarge: string;
