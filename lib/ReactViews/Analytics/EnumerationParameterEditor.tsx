@@ -1,53 +1,60 @@
 import { observer } from "mobx-react";
-import { action, makeObservable } from "mobx";
-import { Component } from "react";
-import isDefined from "../../Core/isDefined";
+import ReactSelect from "react-select";
+import { useTheme } from "styled-components";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
-import Styles from "./parameter-editors.scss";
 
-@observer
-export default class EnumerationParameterEditor extends Component<{
+export const EnumerationParameterEditor: React.FC<{
   parameter: EnumerationParameter;
-}> {
-  constructor(props: { parameter: EnumerationParameter }) {
-    super(props);
-    makeObservable(this);
-  }
+}> = observer(({ parameter }) => {
+  const theme = useTheme();
 
-  @action
-  onChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    this.props.parameter.setValue(CommonStrata.user, e.target.value);
-  }
+  const options = parameter.options.map((opt) => ({
+    value: opt.id,
+    label: opt.name ?? opt.id
+  }));
 
-  render() {
-    const value = this.props.parameter.value;
-    return (
-      <select
-        className={Styles.field}
-        onChange={this.onChange.bind(this)}
-        value={value}
-      >
-        {(!isDefined(value) || !this.props.parameter.isRequired) && (
-          <option key="__undefined__" value="">
-            Not specified
-          </option>
-        )}
-        {/* Create option if value is invalid (not in possibleValues) */}
-        {isDefined(value) &&
-          !this.props.parameter.options.find(
-            (option) => option.id === value
-          ) && (
-            <option key="__invalid__" value={value}>
-              Invalid value ({value})
-            </option>
-          )}
-        {this.props.parameter.options.map((v, i) => (
-          <option value={v.id} key={i}>
-            {v.name ?? v.id}
-          </option>
-        ))}
-      </select>
-    );
-  }
-}
+  const values =
+    parameter.value === undefined
+      ? []
+      : Array.isArray(parameter.value)
+      ? parameter.value
+      : [parameter.value];
+
+  const selectedOptions = values.map((value) =>
+    options.find((opt) => opt.value === value)
+  );
+
+  const maxOccurs = parameter.maxOccurs;
+  const isMultiSelect = maxOccurs !== undefined && maxOccurs > 1;
+
+  return (
+    <ReactSelect
+      css={`
+        color: ${theme.dark};
+      `}
+      options={options}
+      value={selectedOptions}
+      onChange={(options) => {
+        const value = Array.isArray(options)
+          ? options.map((opt) => opt.value)
+          : (options as any)?.value ?? (isMultiSelect ? [] : undefined);
+        parameter.setValue(CommonStrata.user, value);
+      }}
+      isClearable={parameter.isRequired === false}
+      theme={(selectTheme) => ({
+        ...selectTheme,
+        colors: {
+          ...selectTheme.colors,
+          primary25: theme.greyLighter,
+          primary50: theme.colorPrimary,
+          primary75: theme.colorPrimary,
+          primary: theme.colorPrimary
+        }
+      })}
+      isMulti={isMultiSelect}
+    />
+  );
+});
+
+export default EnumerationParameterEditor;

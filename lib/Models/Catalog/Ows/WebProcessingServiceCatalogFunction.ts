@@ -4,14 +4,14 @@ import {
   action,
   computed,
   isObservableArray,
-  runInAction,
   makeObservable,
-  override
+  override,
+  runInAction
 } from "mobx";
 import URI from "urijs";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Reproject from "../../../Map/Vector/Reproject";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
@@ -20,7 +20,7 @@ import WebProcessingServiceCatalogFunctionTraits from "../../../Traits/TraitsCla
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
@@ -34,6 +34,7 @@ import GeoJsonParameter, {
   isGeoJsonFunctionParameter
 } from "../../FunctionParameters/GeoJsonParameter";
 import LineParameter from "../../FunctionParameters/LineParameter";
+import NumberParameter from "../../FunctionParameters/NumberParameter";
 import PointParameter from "../../FunctionParameters/PointParameter";
 import PolygonParameter from "../../FunctionParameters/PolygonParameter";
 import RectangleParameter from "../../FunctionParameters/RectangleParameter";
@@ -41,10 +42,7 @@ import RegionParameter from "../../FunctionParameters/RegionParameter";
 import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
-
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import NumberParameter from "../../FunctionParameters/NumberParameter";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -85,7 +83,8 @@ type Input = {
   LiteralData?: LiteralData;
   ComplexData?: ComplexData;
   BoundingBoxData?: BoundingBoxData;
-  minOccurs?: number;
+  minOccurs?: string;
+  maxOccurs?: string;
 };
 
 type ProcessDescription = {
@@ -106,7 +105,9 @@ type ParameterConverter = {
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
 
-  parameterToInput: (parameter: FunctionParameter) => WpsInputData | undefined;
+  parameterToInput: (
+    parameter: FunctionParameter
+  ) => WpsInputData | WpsInputData[] | undefined;
 };
 
 class WpsLoadableStratum extends LoadableStratum(
@@ -288,7 +289,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
           .filter((p) => isDefined(p.value) && p.value !== null)
           .map((p) => this.convertParameterToInput(p))
       )
-    );
+    ).flat();
 
     runInAction(() =>
       updateModelFromJson(job, CommonStrata.user, {
@@ -325,7 +326,11 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       return;
     }
 
-    const isRequired = isDefined(input.minOccurs) && input.minOccurs > 0;
+    const maxOccurs =
+      input.maxOccurs === undefined ? undefined : parseInt(input.maxOccurs, 10);
+    const minOccurs =
+      input.minOccurs === undefined ? undefined : parseInt(input.minOccurs, 10);
+    const isRequired = isDefined(minOccurs) && minOccurs > 0;
 
     for (let i = 0; i < parameterConverters.length; i++) {
       const converter = parameterConverters[i];
@@ -333,7 +338,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         id: input.Identifier,
         name: input.Title,
         description: input.Abstract,
-        isRequired
+        isRequired,
+        maxOccurs
       });
       if (isDefined(parameter)) {
         return parameter;
@@ -349,16 +355,21 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       return;
     }
 
-    const inputValue = await Promise.resolve(result.inputValue);
-    if (!isDefined(inputValue)) {
-      return;
-    }
+    const results = Array.isArray(result) ? result : [result];
+    const inputs = await Promise.all(
+      results.map(async (r) => {
+        const inputValue = await r.inputValue;
+        return inputValue === undefined
+          ? undefined
+          : {
+              inputValue,
+              inputIdentifier: parameter.id,
+              inputType: r.inputType
+            };
+      })
+    );
 
-    return {
-      inputIdentifier: parameter.id,
-      inputValue: inputValue,
-      inputType: result.inputType
-    };
+    return filterOutUndefined(inputs);
   }
 }
 
@@ -450,10 +461,15 @@ const LiteralDataConverter = {
     }
   },
   parameterToInput: function (parameter: FunctionParameter) {
-    return {
-      inputValue: parameter.value as string | undefined,
-      inputType: "LiteralData"
-    };
+    return Array.isArray(parameter.value)
+      ? parameter.value.map((value) => ({
+          inputValue: value as string | undefined,
+          inputType: "LiteralData"
+        }))
+      : {
+          inputValue: parameter.value as string | undefined,
+          inputType: "LiteralData"
+        };
   }
 };
 
