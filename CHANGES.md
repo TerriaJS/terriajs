@@ -1,6 +1,12 @@
 # Change Log
 
-#### next release (8.9.6)
+#### next release (8.10.1)
+
+- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
+- Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
+- [The next improvement]
+
+#### 8.10.0 - 2025-07-08
 
 - **Breaking changes:**
 
@@ -11,8 +17,10 @@
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
-- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
+- Upgrade yarn to 1.22.22
+- Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
+- Apply clipping rectangle for `ArcGisFeatureServerCatalogItem` reducing the number of requests made to server in tiled mode.
 
 #### 8.9.5 - 2025-06-03
 
@@ -31,6 +39,7 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
+- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
