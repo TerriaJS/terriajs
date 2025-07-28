@@ -10,7 +10,7 @@ describe("TileMapServiceCatalogItem", function () {
 
   beforeEach(function () {
     item = new TileMapServiceCatalogItem("test", new Terria());
-    item.setTrait(CommonStrata.user, "url", "some-url");
+    item.setTrait(CommonStrata.user, "url", "test/TMS");
   });
 
   it("can be loaded", async function () {
