@@ -157,7 +157,7 @@ It can be configured using following options
 
 `type: nominatim-search-provider`
 
-Nominatim uses OpenStreetMap data to find locations on Earth.
+Nominatim uses OpenStreetMap data to find locations on Earth. If the nominatim search provider is used the autocompletion of search results is disabled for all search providers as per [Nominatim's usage policy](https://operations.osmfoundation.org/policies/nominatim/), and user will have to manually trigger the search by pressing enter.
 It can be configured using following options
 
 | Name           | Required | Type       | Default     | Description                                                                                 |
