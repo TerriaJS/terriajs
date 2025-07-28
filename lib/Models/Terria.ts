@@ -410,6 +410,12 @@ export interface ConfigParameters {
   useElevationMeanSeaLevel: boolean;
 
   /**
+   * If useElevationMeanSeaLevel is true, set an approximate elevation difference the models in your area.
+   * It is used when it is not possible to use a more precise (point) calculation.
+   */
+  wgs84vsMeanSeaLevelRoughDiff?: number;
+
+  /**
    * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
    */
   mapViewers: string[];
@@ -668,6 +674,7 @@ export default class Terria {
     searchProviders: [],
     coordsConverterUrl: undefined,
     useElevationMeanSeaLevel: false,
+    wgs84vsMeanSeaLevelRoughDiff: undefined,
     mapViewers: ["3d", "3dsmooth", "2d"],
     pickSize: undefined,
     cesiumGlobeColor: undefined,

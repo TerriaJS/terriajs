@@ -64,19 +64,24 @@ class ColorPanel extends React.Component<PropTypes, ColorPanelState> {
   apply() {
     const scene = this.props.terria.cesium?.scene;
     if (scene) {
+      const heightCorrection =
+        (this.props.terria.cesium &&
+        this.props.terria.configParameters.useElevationMeanSeaLevel
+          ? this.props.terria.configParameters.wgs84vsMeanSeaLevelRoughDiff
+          : 0) ?? 0;
       const material = createElevationBandMaterial({
         scene: scene,
         layers: this.layers.map((layer) => {
           return {
             entries: [
               {
-                height: layer.fromHeight,
+                height: layer.fromHeight + heightCorrection,
                 color: Color.fromCssColorString(layer.fromColor).withAlpha(
                   this.bandTransparency
                 )
               },
               {
-                height: layer.toHeight,
+                height: layer.toHeight + heightCorrection,
                 color: Color.fromCssColorString(layer.toColor).withAlpha(
                   this.bandTransparency
                 )

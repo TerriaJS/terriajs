@@ -42,6 +42,7 @@ import Button from "../../Styled/Button";
 import { StyledHr } from "../Map/Panels/SharePanel/StyledHr";
 import { TextSpan } from "../../Styled/Text";
 import clipboard from "clipboard";
+import EarthGravityModel1996 from "../../Map/Vector/EarthGravityModel1996";
 
 const DragWrapper = require("../DragWrapper");
 
@@ -56,9 +57,14 @@ class FeatureInfoPanel extends React.Component<Props> {
   @observable whereAmI?: string = "";
   @observable whereAmIDetailed?: string = "";
 
+  readonly geoidModel: EarthGravityModel1996;
+
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+    this.geoidModel = new EarthGravityModel1996(
+      require("file-loader!../../../wwwroot/data/WW15MGH.DAC")
+    );
   }
 
   componentDidMount() {
@@ -411,8 +417,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     this.whereAmIDetailed = whereAmIDetailed;
   };
 
-  @action
-  setPicked(terria: Terria, position: Cartesian3 | undefined) {
+  async setPicked(terria: Terria, position: Cartesian3 | undefined) {
     if (!position) return;
     const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
     if (!Cartographic.equals(terria.pickedPosition, cartographic)) {
@@ -421,7 +426,17 @@ class FeatureInfoPanel extends React.Component<Props> {
         cartographic,
         this.setWhereAmI
       );
-      terria.pickedPosition = cartographic.clone();
+      const newCarto = cartographic.clone();
+      if (terria.cesium && terria.configParameters.useElevationMeanSeaLevel) {
+        const heightCorrection = await this.geoidModel.getHeight(
+          cartographic.longitude,
+          cartographic.latitude
+        );
+        newCarto.height = newCarto.height - heightCorrection;
+      }
+      runInAction(() => {
+        terria.pickedPosition = newCarto;
+      });
     }
   }
 
