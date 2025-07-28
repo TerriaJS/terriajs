@@ -76,6 +76,7 @@ const InvokeFunction: FC<PropsType> = observer(({ previewed }) => {
   try {
     functionParameters = previewed.functionParameters;
   } catch (e) {
+    // .functionParameters might throw an error. Handle it here.
     parametersError = TerriaError.from(e);
   }
 
