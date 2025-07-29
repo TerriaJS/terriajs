@@ -104,4 +104,3 @@ export default class FileParameter extends FunctionParameter<FileValue> {
 }
 
 const bytesToMegabytes = (bytes: number) => bytes / 1000000;
-
