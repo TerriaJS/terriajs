@@ -2,6 +2,7 @@
 
 #### next release (8.10.1)
 
+- Add support for file upload input to WPS.
 - Implement multi-select for WPS `LiteralData` input type.
 - Fix app crash when encountering unsupported WPS input types.
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636

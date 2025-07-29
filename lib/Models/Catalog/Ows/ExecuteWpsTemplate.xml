@@ -6,7 +6,7 @@
     <wps:Input>
       <ows:Identifier>{{inputIdentifier}}</ows:Identifier>
       <wps:Data>
-        <wps:{{inputType}}>{{inputValue}}</wps:{{inputType}}>
+        <wps:{{inputType}}{{#inputAttributes}} {{name}}="{{value}}"{{/inputAttributes}}>{{inputValue}}</wps:{{inputType}}>
       </wps:Data>
     </wps:Input>
 {{/DataInputs}}
