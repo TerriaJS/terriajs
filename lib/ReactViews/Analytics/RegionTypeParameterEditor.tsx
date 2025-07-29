@@ -50,4 +50,3 @@ const RegionTypeParameterEditor: React.FC<PropsType> = observer(
 );
 
 export default RegionTypeParameterEditor;
-
