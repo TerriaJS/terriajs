@@ -27,6 +27,9 @@ import BooleanParameter from "../../FunctionParameters/BooleanParameter";
 import DateParameter from "../../FunctionParameters/DateParameter";
 import DateTimeParameter from "../../FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../FunctionParameters/EnumerationParameter";
+import FileParameter, {
+  SupportedFormat
+} from "../../FunctionParameters/FileParameter";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "../../FunctionParameters/FunctionParameter";
@@ -68,7 +71,15 @@ type LiteralData = {
 };
 
 type ComplexData = {
-  Default?: { Format?: { Schema?: string } };
+  maximumMegabytes?: string;
+  Default?: { Format?: Format };
+  Supported?: { Format?: Format | Format[] };
+};
+
+type Format = {
+  MimeType?: string;
+  Schema?: string;
+  Encoding?: string;
 };
 
 type BoundingBoxData = {
@@ -96,6 +107,7 @@ type ProcessDescription = {
 export type WpsInputData = {
   inputValue: Promise<string | undefined> | string | undefined;
   inputType: string;
+  inputAttributes?: { name: string; value: string }[];
 };
 
 type ParameterConverter = {
@@ -364,7 +376,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
           : {
               inputValue,
               inputIdentifier: parameter.id,
-              inputType: r.inputType
+              inputType: r.inputType,
+              inputAttributes: r.inputAttributes
             };
       })
     );
@@ -693,6 +706,74 @@ const GeoJsonGeometryConverter = {
   }
 };
 
+const FileConverter = {
+  inputToParameter: function (
+    catalogFunction: CatalogFunctionMixin.Instance,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
+    const formats = input.ComplexData?.Supported?.Format
+      ? Array.isArray(input.ComplexData.Supported.Format)
+        ? input.ComplexData.Supported.Format
+        : [input.ComplexData.Supported.Format]
+      : undefined;
+
+    const supportedFormats = formats
+      ? filterOutUndefined(
+          formats.map((format) => {
+            if (format?.MimeType) {
+              if (
+                format.Encoding === undefined ||
+                format.Encoding === "base64"
+              ) {
+                return {
+                  mimeType: format.MimeType,
+                  encoding: format.Encoding ?? "none"
+                } as SupportedFormat;
+              }
+            }
+          })
+        )
+      : undefined;
+
+    if (!supportedFormats?.length) {
+      return;
+    }
+
+    const maximumMegabytes = input.ComplexData?.maximumMegabytes
+      ? parseFloat(input.ComplexData?.maximumMegabytes)
+      : undefined;
+
+    const blobParameter = new FileParameter(catalogFunction, {
+      ...options,
+      supportedFormats,
+      maximumMegabytes
+    });
+
+    return blobParameter;
+  },
+
+  parameterToInput: function (
+    parameter: FunctionParameter
+  ): WpsInputData | undefined {
+    if (!(parameter instanceof FileParameter)) {
+      return;
+    }
+
+    const value = parameter.value;
+    return value
+      ? {
+          inputType: `ComplexData`,
+          inputValue: value.content,
+          inputAttributes: [
+            { name: "mimeType", value: value.mimeType },
+            { name: "encoding", value: "base64" }
+          ]
+        }
+      : undefined;
+  }
+};
+
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
     inputToParameter: function (
@@ -755,6 +836,8 @@ function parameterTypeToConverter(
       return RectangleConverter;
     case GeoJsonParameter.type:
       return GeoJsonGeometryConverter;
+    case FileParameter.type:
+      return FileConverter;
     default:
       break;
   }
@@ -768,7 +851,11 @@ const parameterConverters: ParameterConverter[] = [
   LineConverter,
   PolygonConverter,
   RectangleConverter,
-  GeoJsonGeometryConverter
+  GeoJsonGeometryConverter,
+
+  // Blob converter can handle arbitrary ComplexData types, so it should be the
+  // last type we try.
+  FileConverter
 ];
 
 function throwInvalidWpsServerError(

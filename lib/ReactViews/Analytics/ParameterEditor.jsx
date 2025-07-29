@@ -1,23 +1,24 @@
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import PointParameterEditor from "./PointParameterEditor";
-import LineParameterEditor from "./LineParameterEditor";
-import PolygonParameterEditor from "./PolygonParameterEditor";
-import RectangleParameterEditor from "./RectangleParameterEditor";
-import RegionParameterEditor from "./RegionParameterEditor";
-import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
+import defined from "terriajs-cesium/Source/Core/defined";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import BooleanParameterEditor from "./BooleanParameterEditor";
 import BooleanParameterGroupEditor from "./BooleanParameterGroupEditor";
 import DateParameterEditor from "./DateParameterEditor";
 import DateTimeParameterEditor from "./DateTimeParameterEditor";
 import EnumerationParameterEditor from "./EnumerationParameterEditor";
+import FileParameterEditor from "./FileParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
-import NumberParameterEditor from "./NumberParameterEditor";
 import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Styles from "./parameter-editors.scss";
 import InfoParameterEditor from "./InfoParameterEditor";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import LineParameterEditor from "./LineParameterEditor";
+import NumberParameterEditor from "./NumberParameterEditor";
+import PointParameterEditor from "./PointParameterEditor";
+import PolygonParameterEditor from "./PolygonParameterEditor";
+import RectangleParameterEditor from "./RectangleParameterEditor";
+import RegionParameterEditor from "./RegionParameterEditor";
+import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
+import Styles from "./parameter-editors.scss";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
@@ -381,6 +382,23 @@ ParameterEditor.parameterTypeConverters = [
           <div>
             {parameterEditor.renderLabel()}
             <NumberParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "file",
+    parameterTypeToDiv: function FileeParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <FileParameterEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}

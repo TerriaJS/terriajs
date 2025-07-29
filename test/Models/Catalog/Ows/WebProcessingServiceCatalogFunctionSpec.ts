@@ -481,7 +481,8 @@ describe("WebProcessingServiceCatalogFunction", function () {
         inputIdentifier: "foo",
         inputValue:
           '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[0,0,0]},"properties":{}}]}',
-        inputType: "ComplexData"
+        inputType: "ComplexData",
+        inputAttributes: undefined
       });
     });
 
