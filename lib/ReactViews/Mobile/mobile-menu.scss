@@ -18,6 +18,8 @@
   background: variables.$mobile-main-bg;
   color: variables.$mobile-text;
   text-align: left;
+  display: flex;
+  flex-direction: column;
 
   &--hidden {
     left: -9999px;

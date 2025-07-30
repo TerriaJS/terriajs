@@ -1,7 +1,11 @@
 declare namespace MobileMenuItemScssNamespace {
   export interface IMobileMenuItemScss {
     icon: string;
-    link: string;
+    item: string;
+    "item-content": string;
+    "item-simple": string;
+    itemContent: string;
+    itemSimple: string;
     root: string;
   }
 }
