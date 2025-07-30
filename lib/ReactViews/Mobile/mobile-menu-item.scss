@@ -4,9 +4,7 @@
   padding: 0 variables.$padding-small * 3;
 }
 
-.link {
-  composes: btn from "../../Sass/common/_buttons.scss";
-
+.item-simple {
   font-size: 1rem;
   width: 100%;
   text-align: left;
@@ -23,6 +21,12 @@
     height: 14px;
     padding: 3px;
   }
+}
+
+.item {
+  composes: item-simple;
+  composes: btn from "../../Sass/common/_buttons.scss";
+
   &:hover,
   &:focus {
     color: variables.$color-primary;
@@ -32,6 +36,11 @@
       fill: variables.$color-primary;
     }
   }
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
 }
 
 .icon {
