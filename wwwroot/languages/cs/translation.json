@@ -154,7 +154,7 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "Nebylo vybráno žádné místo",
+        "title": "Nebylo vybráno žádné místo!",
         "description": "Chcete-li filtrovat výběr data snímku podle místa, přiblížíte si mapu a vyberete bod zájmu na mapě"
       },
       "locationSelected": {
@@ -367,7 +367,7 @@
   },
   "story": {
     "panelTitle": "Editor příběhu",
-    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy",
+    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy.",
     "gettingStarted": "Začínáme",
     "gettingStartedTitle": "Začínáme",
     "badgeBarLabel": "Scény",
@@ -882,7 +882,10 @@
       "disclaimer": "Odmítnutí odpovědnosti",
       "basemap": "Základní mapa",
       "dataProvider": "Data poskytl:",
-      "termsOfUse": "Podmínky použití"
+      "termsOfUse": "Podmínky použití",
+      "credits": "Zásluhy",
+      "mapCredits": "Zdroje mapy",
+      "searchProvider": "Vyhledávání poskytuje:"
     },
     "computeRingWindingOrder": {
       "devError": "Očekávané body typu {x:number, y:number}"
