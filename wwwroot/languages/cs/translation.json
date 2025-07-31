@@ -154,7 +154,7 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "Nevybráno žádné místo!",
+        "title": "Nebylo vybráno žádné místo",
         "description": "Chcete-li filtrovat výběr data snímku podle místa, přiblížíte si mapu a vyberete bod zájmu na mapě"
       },
       "locationSelected": {
