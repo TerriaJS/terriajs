@@ -109,8 +109,8 @@ export default class RerSearchProvider extends LocationSearchProviderMixin(
                   element.pROVINCIA,
                 isImportant: parseFloat(element.gR_AFFIDABILITA) < 1,
                 location: {
-                  latitude: centerY,
-                  longitude: centerX
+                  latitude: isNaN(centerY) ? 0 : centerY,
+                  longitude: isNaN(centerX) ? 0 : centerX
                 },
                 clickAction: createZoomToFunction(
                   this,
@@ -187,6 +187,12 @@ function createZoomToFunction(
   centerY: number,
   isHouseNumber: boolean
 ) {
+  if (isNaN(centerX) || isNaN(centerY)) {
+    return function () {
+      console.log("Bad coordinate: can't use Nan!");
+    };
+  }
+
   const delta = isHouseNumber ? 0.0025 : 0.005;
   const rectangle = Rectangle.fromDegrees(
     centerX - delta,
