@@ -8,7 +8,7 @@ import { IReactionDisposer, onBecomeObserved, onBecomeUnobserved } from "mobx";
  * @param prop An observable property belonging to object
  * @param startReaction The reaction to run when the `prop` is observed.
  */
-export default function runWhenObserved<T extends Object, P extends keyof T>(
+export default function runWhenObserved<T extends object, P extends keyof T>(
   obj: T,
   prop: P,
   startReaction: () => IReactionDisposer
