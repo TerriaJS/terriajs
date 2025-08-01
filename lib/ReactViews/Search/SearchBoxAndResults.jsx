@@ -40,7 +40,7 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
       </Box>
     </RawButton>
-  );git diff
+  );
   
 }
 
