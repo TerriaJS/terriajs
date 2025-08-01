@@ -1,13 +1,15 @@
 import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { computed, makeObservable } from "mobx";
+import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
@@ -15,10 +17,9 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableColumnType from "./TableColumnType";
-import { ImageryParts } from "../ModelMixins/MappableMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -56,7 +57,22 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get disableSplitter() {
-    return !this.catalogItem.mapItems.find(ImageryParts.is) ? true : undefined;
+    const hasImagery = this.catalogItem.mapItems.find(ImageryParts.is);
+    return !hasImagery && !this.hasPointsOrBillboards;
+  }
+
+  /**
+   * Return true if any dataSource has points or billboards
+   */
+  @computed
+  private get hasPointsOrBillboards() {
+    return this.catalogItem.mapItems.some(
+      (it: any) =>
+        it?.entities instanceof EntityCollection &&
+        (it.entities as EntityCollection).values.some(
+          (value) => value.point || value.billboard
+        )
+    );
   }
 
   /**
