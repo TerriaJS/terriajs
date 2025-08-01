@@ -10,6 +10,7 @@ export interface Options {
   name?: string;
   description?: string;
   isRequired?: boolean;
+  maxOccurs?: number;
 }
 
 export type FunctionConstructorParameters = ConstructorParameters<
@@ -25,6 +26,7 @@ export default abstract class FunctionParameter<
   readonly name: string;
   readonly description: string;
   readonly isRequired: boolean;
+  readonly maxOccurs: number | undefined;
 
   constructor(
     protected readonly catalogFunction: CatalogFunctionMixin.Instance,
@@ -35,6 +37,7 @@ export default abstract class FunctionParameter<
     this.name = options.name || this.id;
     this.description = options.description || "";
     this.isRequired = options.isRequired || false;
+    this.maxOccurs = options.maxOccurs;
   }
 
   @computed

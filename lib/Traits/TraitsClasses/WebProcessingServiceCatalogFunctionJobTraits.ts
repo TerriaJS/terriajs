@@ -36,7 +36,7 @@ export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
 ) {
   @objectArrayTrait({
     type: WPSParameterTraits,
-    idProperty: "inputIdentifier",
+    idProperty: "index",
     name: "Parameters",
     description: "Parameter names & values for this result item"
   })

@@ -351,7 +351,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
         Title: "Geometry ID",
         Abstract: "ID of the input",
         LiteralData: { AnyValue: {} },
-        minOccurs: 1
+        minOccurs: "1"
       });
       expect(parameter).toBeDefined();
       if (isDefined(parameter)) {
@@ -470,17 +470,42 @@ describe("WebProcessingServiceCatalogFunction", function () {
     });
   });
 
-  it("can convert a parameter to data input", async function () {
-    const parameter = new PointParameter(wps, {
-      id: "foo"
+  describe("convertParameterToInput", function () {
+    it("can convert a parameter to data input", async function () {
+      const parameter = new PointParameter(wps, {
+        id: "foo"
+      });
+      parameter.setValue(CommonStrata.user, Cartographic.ZERO);
+      const input = await wps.convertParameterToInput(parameter);
+      expect(input?.[0]).toEqual({
+        inputIdentifier: "foo",
+        inputValue:
+          '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[0,0,0]},"properties":{}}]}',
+        inputType: "ComplexData"
+      });
     });
-    parameter.setValue(CommonStrata.user, Cartographic.ZERO);
-    const input = await wps.convertParameterToInput(parameter);
-    expect(input).toEqual({
-      inputIdentifier: "foo",
-      inputValue:
-        '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[0,0,0]},"properties":{}}]}',
-      inputType: "ComplexData"
+
+    describe("for EnumerationParameter", function () {
+      it("generates multiple inputs for enumeration parameter with maxOccurs > 1", async function () {
+        const parameter = new EnumerationParameter(wps, {
+          id: "color",
+          options: [
+            { id: "red", name: "Red" },
+            { id: "green", name: "Green" },
+            { id: "blue", name: "Blue" }
+          ],
+          maxOccurs: 3
+        });
+
+        parameter.setValue(CommonStrata.user, ["red", "green", "blue"]);
+        const input = await wps.convertParameterToInput(parameter);
+        expect(parameter.isValid).toBe(true);
+        expect(input?.map((inp) => inp.inputValue)).toEqual([
+          "red",
+          "green",
+          "blue"
+        ]);
+      });
     });
   });
 });
