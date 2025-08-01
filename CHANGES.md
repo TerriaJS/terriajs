@@ -14,6 +14,7 @@
 - Replace react-uid with react useId hook for generating unique ids.
 - Remove ts-essentials dependency and replace with custom type utility.
 - Remove fs-extra dependency and replace with native fs.
+- Added support for using splitter with points and billboards in vector datasets.
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
