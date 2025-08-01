@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { IReactionDisposer, when, runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
@@ -2110,42 +2110,58 @@ describe("TableMixin", function () {
       );
     });
 
-    it("correctly sets splitDirection for points", async function () {
-      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
-      item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.LEFT);
-      await item.loadMapItems();
-      const mapItem = item.mapItems[0] as CustomDataSource;
-      mapItem.entities.values.forEach((entity) =>
-        expect(entity.point?.splitDirection?.getValue()).toEqual(
-          SplitDirection.LEFT
-        )
-      );
-    });
+    describe("splitDirection", function () {
+      let disposeObserver: IReactionDisposer;
 
-    it("correctly sets splitDirection for billboards", async function () {
-      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
-      item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.LEFT);
+      beforeEach(function () {
+        // splitDirection requires an active observer to reflect traits change
+        disposeObserver = when(
+          () => item.mapItems.length === Infinity,
+          () => {}
+        );
+      });
 
-      item.setTrait(CommonStrata.user, "styles", [
-        createStratumInstance(TableStyleTraits, {
-          id: "test-style",
-          point: createStratumInstance(TablePointStyleTraits, {
-            null: createStratumInstance(PointSymbolTraits, {
-              marker: BILLBOARD_IMAGE,
-              height: 20
+      afterEach(function () {
+        disposeObserver();
+      });
+
+      it("correctly sets splitDirection for points", async function () {
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+        item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.LEFT);
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0] as CustomDataSource;
+        mapItem.entities.values.forEach((entity) =>
+          expect(entity.point?.splitDirection?.getValue()).toEqual(
+            SplitDirection.LEFT
+          )
+        );
+      });
+
+      it("correctly sets splitDirection for billboards", async function () {
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+        item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.LEFT);
+
+        item.setTrait(CommonStrata.user, "styles", [
+          createStratumInstance(TableStyleTraits, {
+            id: "test-style",
+            point: createStratumInstance(TablePointStyleTraits, {
+              null: createStratumInstance(PointSymbolTraits, {
+                marker: BILLBOARD_IMAGE,
+                height: 20
+              })
             })
           })
-        })
-      ]);
-      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+        ]);
+        item.setTrait(CommonStrata.user, "activeStyle", "test-style");
 
-      await item.loadMapItems();
-      const mapItem = item.mapItems[0] as CustomDataSource;
-      mapItem.entities.values.forEach((entity) =>
-        expect(entity.billboard?.splitDirection?.getValue()).toEqual(
-          SplitDirection.LEFT
-        )
-      );
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0] as CustomDataSource;
+        mapItem.entities.values.forEach((entity) =>
+          expect(entity.billboard?.splitDirection?.getValue()).toEqual(
+            SplitDirection.LEFT
+          )
+        );
+      });
     });
 
     it("doesn't pick hidden style as default activeStyle", async function () {

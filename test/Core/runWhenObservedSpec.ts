@@ -1,10 +1,16 @@
-import { makeAutoObservable, reaction, runInAction, when } from "mobx";
+import {
+  IReactionDisposer,
+  makeAutoObservable,
+  reaction,
+  runInAction,
+  when
+} from "mobx";
 import runWhenObserved from "../../lib/Core/runWhenObserved";
 
 describe("runWhenObserved", function () {
   let testObj: { value: string; items: unknown[] };
   let valueCopy: string | undefined;
-  let observer: Promise<void> & { cancel: () => void };
+  let disposeObserver: IReactionDisposer;
 
   beforeEach(function () {
     testObj = new (class {
@@ -17,22 +23,26 @@ describe("runWhenObserved", function () {
     })();
 
     runWhenObserved(testObj, "items", () =>
-      // this reaction will be started when observableValue is observed
+      // this reaction will be started when items is observed
       reaction(
         () => testObj.value,
         (newValue) => {
-          // If the reaction is running then valueCopy will mirror the observableValue
+          // If this reaction is active then valueCopy will be same as value
           valueCopy = newValue;
         },
         { fireImmediately: true }
       )
     );
 
-    observer = when(() => testObj.items.length === Infinity);
+    // Observer that hangs for ever
+    disposeObserver = when(
+      () => testObj.items.length === Infinity,
+      () => {}
+    );
   });
 
   afterEach(function () {
-    observer.cancel();
+    disposeObserver();
   });
 
   it("starts the given reaction when observableValue becomes observed", function () {
@@ -53,7 +63,7 @@ describe("runWhenObserved", function () {
 
     runInAction(() => {
       // destroy observer
-      observer.cancel();
+      disposeObserver();
     });
 
     runInAction(() => {
