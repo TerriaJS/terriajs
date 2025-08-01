@@ -100,7 +100,7 @@ export default class AssImpCatalogItem
      */
     const fileArrayBuffers: {
       name: string;
-      arrayBuffer: ArrayBuffer;
+      arrayBuffer: ArrayBufferLike;
     }[] = [];
 
     let zipRootDir: string | undefined;
