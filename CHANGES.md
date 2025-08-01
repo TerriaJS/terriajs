@@ -3,6 +3,9 @@
 #### next release (8.10.1)
 
 - Added support for using splitter with points and billboards in vector datasets.
+- Fix app crash when encountering unsupported WPS input types.
+- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
+- Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
@@ -38,6 +41,7 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
+- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24

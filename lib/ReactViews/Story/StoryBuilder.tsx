@@ -1,4 +1,11 @@
-import { action, makeObservable, toJS } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import { observer } from "mobx-react";
 import {
   RefObject,
@@ -258,6 +265,40 @@ class StoryBuilder extends Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
+  @observable
+  viewState: ViewState | undefined;
+
+  @computed
+  get shareDataStringSize() {
+    if (!this.viewState) return undefined;
+    const terria = this.viewState.terria;
+    const stories = terria.stories;
+
+    const validStories = stories.filter(
+      (story) => story.shareData.initSources.length > 0
+    ).length;
+
+    return JSON.stringify(
+      getShareData(terria, this.viewState, {
+        includeStories: validStories > 0
+      })
+    ).length;
+  }
+
+  componentDidMount() {
+    runInAction(() => {
+      this.viewState = this.props.viewState;
+    });
+  }
+
+  componentDidUpdate(prevProps: { viewState: ViewState }) {
+    if (prevProps.viewState !== this.props.viewState) {
+      runInAction(() => {
+        this.viewState = this.props.viewState;
+      });
+    }
+  }
+
   componentWillUnmount() {
     this.clearRecaptureSuccessTimeout?.();
   }
@@ -477,6 +518,16 @@ class StoryBuilder extends Component<
   render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
+    const shareDataSize = this.shareDataStringSize;
+    const shareMaxRequestSize =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
+    const shareMaxRequestSizeBytes =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
+    // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
+    const shareDataTooLong =
+      shareDataSize && shareMaxRequestSizeBytes
+        ? shareDataSize > shareMaxRequestSizeBytes
+        : false;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -508,13 +559,24 @@ class StoryBuilder extends Component<
           </Text>
           <Spacing bottom={2} />
           <Text medium color={this.props.theme.textLightDimmed} highlightLinks>
-            {t("story.panelBody")}
+            {`${t("story.panelBody")}${
+              shareMaxRequestSize
+                ? ` ${t("story.panelBodyCapped", { shareMaxRequestSize })}`
+                : ""
+            }`}
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
           {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
+        {shareDataTooLong && (
+          <Box paddedHorizontally={2}>
+            <Text small color={this.props.theme.textWarning} highlightLinks>
+              {t("story.storiesTooLong")}
+            </Text>
+          </Box>
+        )}
         {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
