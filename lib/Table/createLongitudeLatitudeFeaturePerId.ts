@@ -146,12 +146,15 @@ class PreSampledPositionProperty {
  * Create lat/lon features, one for each id group in the table
  */
 export default function createLongitudeLatitudeFeaturePerId(
-  style: RequiredTableStyle
+  style: RequiredTableStyle,
+  options?: {
+    splitDirection?: ConstantProperty;
+  }
 ): TerriaFeature[] {
   const features: TerriaFeature[] = [];
   for (let i = 0; i < style.rowGroups.length; i++) {
     const [featureId, rowIds] = style.rowGroups[i];
-    features.push(createFeature(featureId, rowIds, style));
+    features.push(createFeature(featureId, rowIds, style, options));
   }
 
   return features;
@@ -166,7 +169,10 @@ function createProperty(type: Packable, interpolate: boolean) {
 function createFeature(
   _featureId: string,
   rowIds: number[],
-  style: RequiredTableStyle
+  style: RequiredTableStyle,
+  options?: {
+    splitDirection?: ConstantProperty;
+  }
 ): TerriaFeature {
   const isSampled = !!style.isSampled;
   const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
@@ -406,14 +412,16 @@ function createFeature(
       ? new PointGraphics({
           ...convertPreSampledProperties(pointGraphicsTimeProperties),
           show,
-          heightReference: HeightReference.CLAMP_TO_GROUND
+          heightReference: HeightReference.CLAMP_TO_GROUND,
+          splitDirection: options?.splitDirection
         })
       : undefined,
     billboard: !usePointGraphicsForId
       ? new BillboardGraphics({
           ...convertPreSampledProperties(billboardGraphicsTimeProperties),
+          show,
           heightReference: HeightReference.CLAMP_TO_GROUND,
-          show
+          splitDirection: options?.splitDirection
         })
       : undefined,
     path: pathGraphicsTimeProperties

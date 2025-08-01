@@ -2,6 +2,7 @@
 
 #### next release (8.10.1)
 
+- Added support for using splitter with points and billboards in vector datasets.
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08

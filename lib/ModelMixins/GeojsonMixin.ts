@@ -8,9 +8,9 @@ import {
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
+  IReactionDisposer,
   action,
   computed,
-  IReactionDisposer,
   makeObservable,
   observable,
   onBecomeObserved,
@@ -23,7 +23,6 @@ import {
 import { createTransformer } from "mobx-utils";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
@@ -31,6 +30,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import clone from "terriajs-cesium/Source/Core/clone";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
@@ -47,24 +47,24 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import formatPropertyValue from "../Core/formatPropertyValue";
 import {
-  explodeMultiPoint,
   FeatureCollectionWithCrs,
+  explodeMultiPoint,
   isPoint
 } from "../Core/GeoJson";
-import hashFromString from "../Core/hashFromString";
-import isDefined from "../Core/isDefined";
 import {
+  JsonObject,
   isJsonArray,
   isJsonNumber,
-  isJsonObject,
-  JsonObject
+  isJsonObject
 } from "../Core/Json";
-import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import formatPropertyValue from "../Core/formatPropertyValue";
+import hashFromString from "../Core/hashFromString";
+import isDefined from "../Core/isDefined";
+import { isJson } from "../Core/loadBlob";
 import ProtomapsImageryProvider, {
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
@@ -74,17 +74,17 @@ import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
 import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
-import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import TableStyle, { createRowGroupId } from "../Table/TableStyle";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
@@ -645,11 +645,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        const features: Entity[] = createLongitudeLatitudeFeaturePerRow(
-          style,
+        const features: Entity[] = createLongitudeLatitudeFeaturePerRow(style, {
           longitudes,
-          latitudes
-        );
+          latitudes,
+          splitDirection: this.splitDirectionProperty
+        });
 
         // _catalogItem property is needed for some feature picking functions (eg FeatureInfoUrlTemplateMixin)
         features.forEach((f) => {
@@ -993,6 +993,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       const dataSource = await GeoJsonDataSource.load(geoJson, styles);
       const entities = dataSource.entities;
+
+      dataSource.entities.suspendEvents();
       for (let i = 0; i < entities.values.length; ++i) {
         const entity = entities.values[i];
 
@@ -1138,7 +1140,16 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             createPolylineFromPolygon(entities, entity, now);
           }
         }
+
+        if (entity.point) {
+          entity.point.splitDirection = this.splitDirectionProperty;
+        }
+
+        if (entity.billboard) {
+          entity.billboard.splitDirection = this.splitDirectionProperty;
+        }
       }
+      dataSource.entities.resumeEvents();
       return dataSource;
     }
 

@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import {
   action,
+  autorun,
   computed,
   makeObservable,
   observable,
@@ -10,6 +11,7 @@ import {
 import { ITransformer, createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -22,6 +24,7 @@ import TerriaError from "../Core/TerriaError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import runWhenObserved from "../Core/runWhenObserved";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
@@ -98,6 +101,13 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           );
         });
       }
+
+      runWhenObserved(this, "mapItems", () =>
+        autorun(() => {
+          // Update splitDirectionProperty based on the trait value
+          this.splitDirectionProperty.setValue(this.splitDirection);
+        })
+      );
     }
 
     get hasTableMixin() {
@@ -113,6 +123,13 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     @observable
     regionProviderLists: RegionProviderList[] | undefined;
+
+    /**
+     * A shared property that tracks the value of `splitDirection` trait. It
+     * can be passed to Cesium Entity objects like PointGraphics and
+     * BillboardGraphics without having to create a new one for each Entity.
+     */
+    splitDirectionProperty: ConstantProperty = new ConstantProperty();
 
     /**
      * The raw data table in column-major format, i.e. the outer array is an
@@ -844,9 +861,13 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
         let features: TerriaFeature[];
         if (style.isTimeVaryingPointsWithId()) {
-          features = createLongitudeLatitudeFeaturePerId(style);
+          features = createLongitudeLatitudeFeaturePerId(style, {
+            splitDirection: this.splitDirectionProperty
+          });
         } else {
-          features = createLongitudeLatitudeFeaturePerRow(style);
+          features = createLongitudeLatitudeFeaturePerRow(style, {
+            splitDirection: this.splitDirectionProperty
+          });
         }
 
         // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
