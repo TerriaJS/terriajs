@@ -6,6 +6,8 @@ import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
 
+export const DEFAULT_MAX_SHARE_SIZE = 200 * 1024; // 200 KB
+
 interface ShareDataServiceOptions {
   terria: Terria;
   url?: string;
@@ -44,6 +46,16 @@ export default class ShareDataService {
         typeof this._serverConfig.newShareUrlPrefix === "string") ||
       this.url !== "share"
     );
+  }
+
+  // get the raw string from serverConfig.shareMaxRequestSize
+  get shareMaxRequestSize(): string | undefined {
+    return this._serverConfig.shareMaxRequestSize;
+  }
+
+  // get the parsed value in bytes from the server
+  get shareMaxRequestSizeBytes(): number | undefined {
+    return this._serverConfig.shareMaxRequestSizeBytes;
   }
 
   /**

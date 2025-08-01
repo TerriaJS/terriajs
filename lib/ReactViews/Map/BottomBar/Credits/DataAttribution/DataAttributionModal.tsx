@@ -4,16 +4,18 @@ import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../../../../../Styled/Box";
-import { Li } from "../../../../../Styled/List";
+import Ul, { Li } from "../../../../../Styled/List";
 import Spacing from "../../../../../Styled/Spacing";
 import Text from "../../../../../Styled/Text";
 import parseCustomHtmlToReact from "../../../../Custom/parseCustomHtmlToReact";
+import { parseCustomMarkdownToReactWithOptions } from "../../../../Custom/parseCustomMarkdownToReact";
 import CloseButton from "../../../../Generic/CloseButton";
 import { PrefaceBox } from "../../../../Generic/PrefaceBox";
 
 interface IDataAttributionModalProps {
   closeModal: () => void;
-  attributions?: string[];
+  attributions: string[];
+  searchAttributions: string[];
 }
 
 const AttributionText = styled(Text).attrs(() => ({ medium: true }))`
@@ -57,7 +59,7 @@ const DataAttributionBox = styled(Box).attrs({
 `;
 
 export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
-  ({ closeModal, attributions }) => {
+  ({ closeModal, attributions, searchAttributions }) => {
     const { t } = useTranslation();
     if (!attributions || attributions.length === 0) {
       return null;
@@ -75,19 +77,45 @@ export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
         <DataAttributionBox>
           <CloseButton color="#red" topRight onClick={closeModal} />
           <Text extraExtraLarge bold textDarker>
-            {t("map.extraCreditLinks.dataProvider")}
+            {t("map.extraCreditLinks.mapCredits")}
           </Text>
           <Spacing bottom={2} />
-          <Box paddedHorizontally={4}>
-            <ul css={{ padding: 0, margin: 0 }}>
-              {attributions.map((attribution, index: number) => (
-                <Li key={index}>
-                  <AttributionText>
-                    {parseCustomHtmlToReact(attribution)}
-                  </AttributionText>
-                </Li>
-              ))}
-            </ul>
+          <Box column>
+            <Text extraLarge medium textDarker>
+              {t("map.extraCreditLinks.dataProvider")}
+            </Text>
+            <Spacing bottom={2} />
+            <Box paddedHorizontally={4}>
+              <ul css={{ padding: 0, margin: 0 }}>
+                {attributions.map((attribution, index: number) => (
+                  <Li key={index}>
+                    <AttributionText>
+                      {parseCustomHtmlToReact(attribution)}
+                    </AttributionText>
+                  </Li>
+                ))}
+              </ul>
+            </Box>
+          </Box>
+          <Spacing bottom={4} />
+          <Box column>
+            <Text extraLarge medium textDarker>
+              {t("map.extraCreditLinks.searchProvider")}
+            </Text>
+            <Spacing bottom={2} />
+            <Box paddedHorizontally={4}>
+              <Ul css={{ listStyle: "disc" }} column gap={2}>
+                {searchAttributions.map((attribution, index: number) => (
+                  <Li key={index}>
+                    <AttributionText>
+                      {parseCustomMarkdownToReactWithOptions(attribution, {
+                        inline: true
+                      })}
+                    </AttributionText>
+                  </Li>
+                ))}
+              </Ul>
+            </Box>
           </Box>
         </DataAttributionBox>
       </>,
