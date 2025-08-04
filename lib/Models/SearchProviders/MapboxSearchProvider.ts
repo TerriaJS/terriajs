@@ -104,19 +104,21 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           lonLat = lonLat.reverse();
         }
 
+        const [lonf, latf] = lonLat.map(parseFloat);
+
         if (this.showCoordinatesInReverseGeocodeResult) {
           searchResults.results.push(
             new SearchResult({
               name: formattedCoordinateString,
               clickAction: createZoomToFunction(this, {
                 geometry: {
-                  coordinates: [parseFloat(lonLat[0]), parseFloat(lonLat[1])]
+                  coordinates: [lonf, latf]
                 },
                 properties: {}
               }),
               location: {
-                longitude: parseFloat(lonLat[0]),
-                latitude: parseFloat(lonLat[1])
+                longitude: lonf,
+                latitude: latf
               }
             })
           );
