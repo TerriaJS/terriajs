@@ -198,14 +198,13 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           // A new search has superseded this one, so ignore the result.
           return;
         }
-        let features = result.features;
 
         if (
-          (features.length === 0 &&
+          (result.features.length === 0 &&
             searchDirection === MapboxGeocodeDirection.Forward) ||
           //in the case where coordinate result is true, list is
           //not empty.
-          (features.length === 0 &&
+          (result.features.length === 0 &&
             searchDirection === MapboxGeocodeDirection.Reverse &&
             this.showCoordinatesInReverseGeocodeResult === false)
         ) {
@@ -215,7 +214,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        const locations: SearchResult[] = features
+        const locations: SearchResult[] = result.features
           .filter(
             (feat) =>
               feat.properties && feat.geometry && feat.properties.full_address
