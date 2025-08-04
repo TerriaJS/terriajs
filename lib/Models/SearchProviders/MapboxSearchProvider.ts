@@ -242,7 +242,6 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         const attribution = result.attribution;
         if (attribution) {
           runInAction(() => {
-            console.log("in attribution");
             this.setTrait(CommonStrata.underride, "attributions", [
               attribution
             ]);
