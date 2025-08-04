@@ -95,10 +95,33 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         isCoordinate.test(lonLat[0]) &&
         isCoordinate.test(lonLat[1])
       ) {
+        const formattedCoordinateString = `${parseFloat(lonLat[0]).toFixed(
+          5
+        )}, ${parseFloat(lonLat[1]).toFixed(5)}`;
+
         // need to reverse the coord order if true.
         if (this.latLonSearchOrder) {
           lonLat = lonLat.reverse();
         }
+
+        if (this.showCoordinatesInReverseGeocodeResult) {
+          searchResults.results.push(
+            new SearchResult({
+              name: formattedCoordinateString,
+              clickAction: createZoomToFunction(this, {
+                geometry: {
+                  coordinates: [parseFloat(lonLat[0]), parseFloat(lonLat[1])]
+                },
+                properties: {}
+              }),
+              location: {
+                longitude: parseFloat(lonLat[0]),
+                latitude: parseFloat(lonLat[1])
+              }
+            })
+          );
+        }
+
         queryParams = {
           ...queryParams,
           ...{
@@ -175,15 +198,19 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           // A new search has superseded this one, so ignore the result.
           return;
         }
+        let features = result.features;
 
-        if (result.features.length === 0) {
+        if (
+          features.length === 0 &&
+          searchDirection === MapboxGeocodeDirection.Forward
+        ) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
           };
           return;
         }
 
-        const locations: SearchResult[] = result.features
+        const locations: SearchResult[] = features
           .filter(
             (feat) =>
               feat.properties && feat.geometry && feat.properties.full_address
@@ -211,6 +238,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         const attribution = result.attribution;
         if (attribution) {
           runInAction(() => {
+            console.log("in attribution");
             this.setTrait(CommonStrata.underride, "attributions", [
               attribution
             ]);
