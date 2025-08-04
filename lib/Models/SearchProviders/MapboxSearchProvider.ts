@@ -103,9 +103,8 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
         const [lonf, latf] = lonLat.map(parseFloat);
 
-        const prettyCoords = prettifyCoordinates(lonf, latf);
-
         if (this.showCoordinatesInReverseGeocodeResult) {
+          const prettyCoords = prettifyCoordinates(lonf, latf);
           searchResults.results.push(
             new SearchResult({
               name: `${prettyCoords.latitude}, ${prettyCoords.longitude}`,
