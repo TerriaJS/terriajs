@@ -36,6 +36,7 @@ export default withViewState(
     const version = props.version ?? "Unknown";
     return (
       <div
+        className="drag-handle"
         css={`
           display: flex;
           justify-content: space-between;

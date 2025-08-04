@@ -219,6 +219,7 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           css={`
             overflow: hidden;
           `}
+          className="drag-handle"
         >
           {terria.workbench.items && terria.workbench.items.length > 0 ? (
             <Workbench viewState={viewState} terria={terria} />
