@@ -39,6 +39,7 @@ const SidePanelContainer: React.FC<PropsType> = (props) => {
       minHeight={370}
       bounds="parent"
       disableDragging={!props.show}
+      dragHandleClassName="drag-handle"
       enableResizing={{
         top: true,
         bottom: true
