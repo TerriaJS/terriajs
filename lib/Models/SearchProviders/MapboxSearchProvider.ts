@@ -19,6 +19,7 @@ import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../Definition/CommonStrata";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",
@@ -95,10 +96,6 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         isCoordinate.test(lonLat[0]) &&
         isCoordinate.test(lonLat[1])
       ) {
-        const formattedCoordinateString = `${parseFloat(lonLat[0]).toFixed(
-          5
-        )}, ${parseFloat(lonLat[1]).toFixed(5)}`;
-
         // need to reverse the coord order if true.
         if (this.latLonSearchOrder) {
           lonLat = lonLat.reverse();
@@ -106,10 +103,12 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
         const [lonf, latf] = lonLat.map(parseFloat);
 
+        const prettyCoords = prettifyCoordinates(lonf, latf);
+
         if (this.showCoordinatesInReverseGeocodeResult) {
           searchResults.results.push(
             new SearchResult({
-              name: formattedCoordinateString,
+              name: `${prettyCoords.latitude}, ${prettyCoords.longitude}`,
               clickAction: createZoomToFunction(this, {
                 geometry: {
                   coordinates: [lonf, latf]
