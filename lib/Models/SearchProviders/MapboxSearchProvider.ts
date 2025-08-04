@@ -201,8 +201,13 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         let features = result.features;
 
         if (
-          features.length === 0 &&
-          searchDirection === MapboxGeocodeDirection.Forward
+          (features.length === 0 &&
+            searchDirection === MapboxGeocodeDirection.Forward) ||
+          //in the case where coordinate result is true, list is
+          //not empty.
+          (features.length === 0 &&
+            searchDirection === MapboxGeocodeDirection.Reverse &&
+            this.showCoordinatesInReverseGeocodeResult === false)
         ) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
