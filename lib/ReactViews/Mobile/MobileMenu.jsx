@@ -148,20 +148,28 @@ class MobileMenu extends Component {
               {menuItem}
             </div>
           ))}
-          {mapUserGuide && <MobileMenuItem {...mapUserGuide} />}
+          {mapUserGuide && (
+            <MobileMenuItem>
+              <MobileMenuItem.Link {...mapUserGuide}>
+                {mapUserGuide.caption}
+              </MobileMenuItem.Link>
+            </MobileMenuItem>
+          )}
           {this.props.showFeedback && (
-            <MobileMenuItem
-              onClick={() => this.onFeedbackFormClick()}
-              caption={t("feedback.feedbackBtnText")}
-            />
+            <MobileMenuItem>
+              <MobileMenuItem.Button onClick={() => this.onFeedbackFormClick()}>
+                {t("feedback.feedbackBtnText")}
+              </MobileMenuItem.Button>
+            </MobileMenuItem>
           )}
           {hasStories && (
-            <MobileMenuItem
-              onClick={() => this.runStories()}
-              caption={t("story.mobileViewStory", {
-                storiesLength: this.props.terria.stories.length
-              })}
-            />
+            <MobileMenuItem>
+              <MobileMenuItem.Button onClick={() => this.runStories()}>
+                {t("story.mobileViewStory", {
+                  storiesLength: this.props.terria.stories.length
+                })}
+              </MobileMenuItem.Button>
+            </MobileMenuItem>
           )}
           {this.props.terria.configParameters.languageConfiguration
             ?.enabled && (
