@@ -18,7 +18,7 @@ import { BaseModel } from "../lib/Models/Definition/Model";
 import hasTraits from "../lib/Models/Definition/hasTraits";
 import { CatalogIndexFile } from "../lib/Models/SearchProviders/CatalogIndex";
 import registerSearchProviders from "../lib/Models/SearchProviders/registerSearchProviders";
-import Terria from "../lib/Models/Terria";
+import Terria, { defaultLoadConfig } from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
 import { program } from "commander";
@@ -313,7 +313,7 @@ export default async function generateCatalogIndex(
   try {
     terria.configParameters.serverConfigUrl = `${baseUrl}serverconfig`;
     terria.configParameters.corsProxyBaseUrl = `${baseUrl}proxy/`;
-    await terria.start({ configUrl });
+    await terria.start({ loadConfig: () => defaultLoadConfig(configUrl) });
 
     await terria.loadInitSources();
   } catch (e) {
