@@ -77,4 +77,13 @@ export default class MapboxSearchProviderTraits extends mixTraits(
     the default is true, which is familar with most users from other platforms.`
   })
   latLonSearchOrder?: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "showCoordinatesInReverseGeocodeResult",
+    description: `When the user searches using coordinates, the first result in the list will be the
+    coordinate location. If using in conjunction with another search provider, this behaviour may not
+    be desired. Defaults to true.`
+  })
+  showCoordinatesInReverseGeocodeResult?: boolean = true;
 }

@@ -19,6 +19,7 @@ import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../Definition/CommonStrata";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",
@@ -99,6 +100,28 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         if (this.latLonSearchOrder) {
           lonLat = lonLat.reverse();
         }
+
+        const [lonf, latf] = lonLat.map(parseFloat);
+
+        if (this.showCoordinatesInReverseGeocodeResult) {
+          const prettyCoords = prettifyCoordinates(lonf, latf);
+          searchResults.results.push(
+            new SearchResult({
+              name: `${prettyCoords.latitude}, ${prettyCoords.longitude}`,
+              clickAction: createZoomToFunction(this, {
+                geometry: {
+                  coordinates: [lonf, latf]
+                },
+                properties: {}
+              }),
+              location: {
+                longitude: lonf,
+                latitude: latf
+              }
+            })
+          );
+        }
+
         queryParams = {
           ...queryParams,
           ...{
@@ -176,7 +199,15 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        if (result.features.length === 0) {
+        if (
+          (result.features.length === 0 &&
+            searchDirection === MapboxGeocodeDirection.Forward) ||
+          //in the case where coordinate result is true, list is
+          //not empty.
+          (result.features.length === 0 &&
+            searchDirection === MapboxGeocodeDirection.Reverse &&
+            this.showCoordinatesInReverseGeocodeResult === false)
+        ) {
           searchResults.message = {
             content: "translate#viewModels.searchNoLocations"
           };
