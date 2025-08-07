@@ -28,8 +28,7 @@
   composes: clearfix from "../../../Sass/common/_base.scss";
   composes: sm-show from "../../../Sass/common/_base.scss";
 
-  margin: 0 variables.$padding-small variables.$padding-small
-    variables.$padding-small;
+  margin: 0 variables.$padding-small 0 variables.$padding-small;
 
   /* Align About button with compass */
   // margin-right: 7px;
@@ -84,6 +83,7 @@
 
 .flex {
   composes: flex from "../../../Sass/common/_base.scss";
+  align-items: center;
 }
 
 .langBtn {
