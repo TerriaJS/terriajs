@@ -431,7 +431,11 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     ) {
       let errorMessage: string | undefined;
       try {
-        errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
+        const jsonResponse = xml2json(getFeatureResponse);
+        errorMessage =
+          jsonResponse && typeof jsonResponse !== "string"
+            ? jsonResponse.Exception?.ExceptionText
+            : undefined;
       } catch {}
 
       const originalError = isDefined(errorMessage)
