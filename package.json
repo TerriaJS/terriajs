@@ -169,7 +169,6 @@
     "urijs": "^1.18.12",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
@@ -218,7 +217,6 @@
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "gulp": "gulp",
     "start": "terriajs-server --port 3002",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "build-tools": "webpack --config buildprocess/webpack-tools.config.js",
     "watch-tools": "webpack --watch --config buildprocess/webpack-tools.config.js",
     "build-docs": "yarn build-tools && node build/generateDocs.js",
