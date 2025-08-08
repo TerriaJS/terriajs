@@ -119,7 +119,7 @@ export default class CesiumSelectionIndicator {
   @action
   update() {
     if (this.showSelection && isDefined(this.position)) {
-      const screenPosition = SceneTransforms.wgs84ToWindowCoordinates(
+      const screenPosition = SceneTransforms.worldToWindowCoordinates(
         this._cesium.scene,
         this.position,
         screenSpacePos
