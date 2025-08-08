@@ -20,6 +20,7 @@ interface DataCatalogTabProps {
   hideToggleItemOnMap?: boolean;
   hideSearch?: boolean;
   hideActionButton?: boolean;
+  hideBreadcrumbs?: boolean;
 }
 
 const DataCatalogTab = observer(function DataCatalogTab(
@@ -31,7 +32,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
   const {
     searchState,
     previewedItem: previewed,
-    breadcrumbsShown: showBreadcrumbs,
+    breadcrumbsShown: viewStateBreadcrumbsShown,
     terria
   } = viewState;
 
@@ -80,7 +81,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
           </Box>
         </Box>
 
-        {showBreadcrumbs && (
+        {!props.hideBreadcrumbs && viewStateBreadcrumbsShown && (
           <Breadcrumbs
             terria={terria}
             viewState={viewState}
