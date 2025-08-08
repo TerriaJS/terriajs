@@ -7,6 +7,7 @@
 - Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
 - Add coordinate position to MapboxSearchProvider results when using reverse geocoder functionality (configurable).
 - Removes webpack-dev-server from dependencies as it is no longer used.
+- Upgrade babel to the latest version 7.27/7.28
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
