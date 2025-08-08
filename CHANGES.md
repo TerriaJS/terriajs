@@ -6,6 +6,7 @@
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
 - Add coordinate position to MapboxSearchProvider results when using reverse geocoder functionality (configurable).
+- Removes webpack-dev-server from dependencies as it is no longer used.
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
