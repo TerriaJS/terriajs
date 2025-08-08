@@ -20,6 +20,7 @@ interface IAdvancedOptionsProps {
   includeStoryInShareOnChange: () => void;
   shouldShortenOnChange: () => void;
   shareUrl: MutableRefObject<IShareUrlRef | null>;
+  disableShareEmbed?: boolean;
 }
 
 export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
@@ -28,7 +29,8 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
   includeStoryInShare,
   includeStoryInShareOnChange,
   shouldShortenOnChange,
-  shareUrl
+  shareUrl,
+  disableShareEmbed
 }) => {
   const { t } = useTranslation();
 
@@ -88,8 +90,12 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
             >
               <TextSpan>{t("share.shortenUsingService")}</TextSpan>
             </Checkbox>
-            <Spacing bottom={2} />
-            <EmbedSection shareUrl={shareUrl?.current} />
+            {!disableShareEmbed && (
+              <>
+                <Spacing bottom={2} />
+                <EmbedSection shareUrl={shareUrl?.current} />
+              </>
+            )}
           </Box>
         </>
       )}

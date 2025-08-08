@@ -54,7 +54,8 @@ import {
 } from "../SelectableDimensions/SelectableDimensions";
 import ViewingControls from "../ViewingControls";
 import SelectableDimensionWorkflow, {
-  SelectableDimensionWorkflowGroup
+  SelectableDimensionWorkflowGroup,
+  SelectableDimensionWorkflowOptions
 } from "../Workflows/SelectableDimensionWorkflow";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
@@ -101,6 +102,7 @@ export default class TableStylingWorkflow
    * See setColorSchemeTypeFromPalette and setColorSchemeType for how this is set. */
   @observable colorSchemeType: ColorSchemeType | undefined;
   @observable styleType: StyleType = "fill";
+  @observable options: SelectableDimensionWorkflowOptions;
 
   /** Which bin is currently open in `binMaximumsSelectableDims` or `enumColorsSelectableDim`.
    * This is used in `SelectableDimensionGroup.onToggle` and `SelectableDimensionGroup.isOpen` to make the groups act like an accordion - so only one bin can be edited at any given time.
@@ -113,7 +115,10 @@ export default class TableStylingWorkflow
 
   private activeStyleDisposer: IReactionDisposer;
 
-  constructor(readonly item: TableMixin.Instance) {
+  constructor(
+    readonly item: TableMixin.Instance,
+    options?: SelectableDimensionWorkflowOptions
+  ) {
     makeObservable(this);
     // We need to reset colorSchemeType every time Table.activeStyle changes
     this.activeStyleDisposer = reaction(
@@ -133,6 +138,7 @@ export default class TableStylingWorkflow
       }
     );
     this.setColorSchemeTypeFromPalette();
+    this.options = options ?? {};
   }
 
   onClose() {
@@ -869,10 +875,10 @@ export default class TableStylingWorkflow
                 this.colorSchemeType === "sequential-discrete"
                   ? 9
                   : // Diverging discrete color scales support up to 11 bins
-                  this.colorSchemeType === "diverging-discrete"
-                  ? 11
-                  : // Custom discrete color scales can be any number of bins
-                    undefined,
+                    this.colorSchemeType === "diverging-discrete"
+                    ? 11
+                    : // Custom discrete color scales can be any number of bins
+                      undefined,
               value: this.tableStyle.colorTraits.numberOfBins,
               setDimensionValue: (stratumId, value) => {
                 if (!isDefined(value)) return;
@@ -1044,7 +1050,7 @@ export default class TableStylingWorkflow
                     }
                   }
                 ]
-              } as SelectableDimensionGroup)
+              }) as SelectableDimensionGroup
           )
           .reverse() // Reverse array of bins to match Legend (descending order)
       ]
@@ -1470,7 +1476,7 @@ export default class TableStylingWorkflow
                 setDimensionValue: (stratumId, value) => {
                   legendItem.setTrait(stratumId, "title", value);
                 }
-              } as SelectableDimensionText)
+              }) as SelectableDimensionText
           )
         ])
       },
@@ -2114,15 +2120,15 @@ export default class TableStylingWorkflow
                             "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.noValue"
                           )
                         : idx > 0 &&
-                          isDefined(traits.bin[idx - 1].maxValue ?? undefined)
-                        ? i18next.t(
-                            "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.range",
-                            {
-                              value1: traits.bin[idx - 1].maxValue,
-                              value2: bin.maxValue
-                            }
-                          )
-                        : `${bin.maxValue}`
+                            isDefined(traits.bin[idx - 1].maxValue ?? undefined)
+                          ? i18next.t(
+                              "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.range",
+                              {
+                                value1: traits.bin[idx - 1].maxValue,
+                                value2: bin.maxValue
+                              }
+                            )
+                          : `${bin.maxValue}`
                     ),
 
                     isOpen: this.openBinIndex.get(key) === idx,

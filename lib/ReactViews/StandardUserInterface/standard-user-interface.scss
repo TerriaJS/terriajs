@@ -70,6 +70,10 @@
   bottom: 0;
 }
 
+.disableMobileInterface {
+  top: 0;
+}
+
 .feedback {
   position: absolute;
   z-index: variables.$front-component-z-index - 10;

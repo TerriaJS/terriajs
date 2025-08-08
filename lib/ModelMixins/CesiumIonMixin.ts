@@ -13,10 +13,12 @@ type BaseType = Model<CesiumIonTraits & CatalogMemberTraits>;
  * `forceLoadMetadata`). If defined, the resource in this property should be used as the "URL" given to
  * CesiumJS instead of a regular URL.
  */
-export default function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(
-  Base: T
-) {
+function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class CesiumIonMixin extends Base {
+    get hasCesiumIonMixin() {
+      return true;
+    }
+
     /**
      * The {@link IonResource} that can be given to CesiumJS most places that a resource URL can be used.
      */
@@ -45,3 +47,13 @@ export default function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(
 
   return CesiumIonMixin;
 }
+
+namespace CesiumIonMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof CesiumIonMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return model && model.hasCesiumIonMixin;
+  }
+}
+
+export default CesiumIonMixin;

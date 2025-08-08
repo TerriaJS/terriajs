@@ -78,7 +78,7 @@ import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
+import { BaseMapItem, BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
@@ -256,12 +256,25 @@ export interface ConfigParameters {
    */
   displayOneBrand?: number;
   /**
+   * True to disable the mobile interface.
+   */
+  disableMobileInterface?: boolean;
+  /**
    * True to disable the "Centre map at your current location" button.
    */
   disableMyLocation?: boolean;
   disableSplitter?: boolean;
 
   disablePedestrianMode?: boolean;
+
+  /**
+   * True to disable the share panel.
+   */
+  disableSharePanel?: boolean;
+  /**
+   * True to disable the share embed panel.
+   */
+  disableShareEmbed?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -564,9 +577,12 @@ export default class Terria {
     brandBarElements: undefined,
     brandBarSmallElements: undefined,
     displayOneBrand: 0,
+    disableMobileInterface: false,
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disableSharePanel: false,
+    disableShareEmbed: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
@@ -1218,7 +1234,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0];
+    let baseMap = baseMapItems[0] as BaseMapItem | undefined;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
@@ -1245,7 +1261,9 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    if (baseMap) {
+      await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    }
   }
 
   get isLoadingInitSources(): boolean {

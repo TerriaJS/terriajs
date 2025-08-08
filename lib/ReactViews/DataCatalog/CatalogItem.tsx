@@ -35,6 +35,7 @@ interface Props {
   trashable?: boolean;
 
   btnState: ButtonState;
+  hideBtn?: boolean;
   onBtnClick: (event: MouseEvent<HTMLButtonElement>) => void;
   onTextClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   onTrashClick?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -70,14 +71,16 @@ function CatalogItem(props: Props) {
       </Text>
       <Box>
         {props.isPrivate && <PrivateIndicator />}
-        <ActionButton
-          type="button"
-          onClick={props.onBtnClick}
-          title={stateToTitle[props.btnState] || ""}
-        >
-          {STATE_TO_ICONS[props.btnState]}
-        </ActionButton>
-        {props.trashable && (
+        {!props.hideBtn && (
+          <ActionButton
+            type="button"
+            onClick={props.onBtnClick}
+            title={stateToTitle[props.btnState] || ""}
+          >
+            {STATE_TO_ICONS[props.btnState]}
+          </ActionButton>
+        )}
+        {!props.hideBtn && props.trashable && (
           <ActionButton
             type="button"
             onClick={props.onTrashClick}

@@ -102,7 +102,7 @@ class Breadcrumbs extends Component {
           glyph={Icon.GLYPHS.globe}
         />
         <Spacing right={1.2} />
-        <Box flexWrap>
+        <Box flexWrap alignItemsFlexEnd>
           {parentGroups &&
             parentGroups.map((parent, i) => (
               <Fragment key={i}>

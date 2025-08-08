@@ -418,6 +418,7 @@ export default class ViewState {
       (disclaimerVisible) => {
         this.isMapFullScreen =
           disclaimerVisible ||
+          terria.elements.get("show-workbench")?.visible === false ||
           terria.userProperties.get("hideWorkbench") === "1" ||
           terria.userProperties.get("hideExplorerPanel") === "1";
       }
@@ -425,6 +426,7 @@ export default class ViewState {
 
     this._isMapFullScreenSubscription = reaction(
       () =>
+        terria.elements.get("show-workbench")?.visible === false ||
         terria.userProperties.get("hideWorkbench") === "1" ||
         terria.userProperties.get("hideExplorerPanel") === "1",
       (isMapFullScreen: boolean) => {
@@ -505,9 +507,10 @@ export default class ViewState {
         }
 
         try {
-          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
-            previewedItemId
-          );
+          const result =
+            await this.terria.getModelByIdShareKeyOrCatalogIndex(
+              previewedItemId
+            );
           result.throwIfError();
           const model = result.throwIfUndefined();
           this.viewCatalogMember(model);

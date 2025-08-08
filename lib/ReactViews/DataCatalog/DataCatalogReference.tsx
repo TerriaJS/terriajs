@@ -23,6 +23,7 @@ interface Props {
     Model<CatalogMemberReferenceTraits>;
   viewState: ViewState;
   terria: Terria;
+  hideActionButton?: boolean;
   onActionButtonClicked?: (item: Props["reference"]) => void;
   isTopLevel: boolean;
 }
@@ -31,7 +32,8 @@ export default observer(function DataCatalogReference({
   reference,
   viewState,
   onActionButtonClicked,
-  isTopLevel
+  isTopLevel,
+  hideActionButton
 }: Props) {
   const setPreviewedItem = () =>
     viewState
@@ -98,6 +100,7 @@ export default observer(function DataCatalogReference({
       title={path}
       btnState={btnState}
       onBtnClick={reference.isFunction ? setPreviewedItem : add}
+      hideBtn={hideActionButton}
     />
   );
 });

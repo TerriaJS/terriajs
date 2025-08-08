@@ -14,6 +14,7 @@ class DataCatalog extends Component {
     terria: PropTypes.object,
     viewState: PropTypes.object,
     items: PropTypes.array,
+    hideActionButton: PropTypes.bool,
     onActionButtonClicked: PropTypes.func,
     removable: PropTypes.bool,
     t: PropTypes.func.isRequired
@@ -58,6 +59,7 @@ class DataCatalog extends Component {
                   isSearching && !catalogSearchProvider.resultsAreReferences
                 }
                 key={item.uniqueId}
+                hideActionButton={this.props.hideActionButton}
                 onActionButtonClicked={this.props.onActionButtonClicked}
                 removable={this.props.removable}
                 terria={this.props.terria}
