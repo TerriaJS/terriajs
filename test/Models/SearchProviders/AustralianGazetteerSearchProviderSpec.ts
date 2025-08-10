@@ -26,8 +26,7 @@ describe("GazetteerSearchProvider", function () {
     spyOn(searchProvider, "getXml").and.callFake(() =>
       Promise.resolve(wfsResponseXml)
     );
-    searchProvider.search("Fred");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("Fred", true);
 
     expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
     expect(searchProvider.result).toBeDefined();

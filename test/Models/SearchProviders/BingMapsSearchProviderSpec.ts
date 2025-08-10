@@ -102,8 +102,7 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    bingMapsSearchProvider.search("test");
-    await bingMapsSearchProvider.result.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
     expect(bingMapsSearchProvider.result.message).toBeUndefined();
     expect(bingMapsSearchProvider.result.results.length).toEqual(2);
@@ -172,8 +171,7 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    bingMapsSearchProvider.search("test");
-    await bingMapsSearchProvider.result.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
     expect(bingMapsSearchProvider.result.results.length).toEqual(2);
     expect(bingMapsSearchProvider.result.message).toBeUndefined();

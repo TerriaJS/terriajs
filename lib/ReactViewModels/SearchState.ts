@@ -99,7 +99,8 @@ export default class SearchState {
       if (manuallyTriggered) {
         if (
           !searchProvider.autocompleteEnabled ||
-          searchProvider.result.isWaitingToStartSearch
+          searchProvider.result.isWaitingToStartSearch ||
+          searchProvider.result.isSearching
         )
           searchProvider.search(this.locationSearchText, manuallyTriggered);
       } else {

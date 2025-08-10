@@ -40,8 +40,7 @@ describe("CesiumIonSearchProvider", () => {
       http.get("http://api.test.com", () => HttpResponse.json(fixture))
     );
 
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(1);
     expect(searchProvider.result.results[0].name).toBe("West End, Australia");
     expect(searchProvider.result.results[0].location?.latitude).toBe(
@@ -52,8 +51,7 @@ describe("CesiumIonSearchProvider", () => {
   it("Handles empty result", async () => {
     worker.use(http.get("http://api.test.com", () => HttpResponse.json([])));
 
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(0);
     expect(searchProvider.result.message?.content).toBe(
       "translate#viewModels.searchNoLocations"
@@ -67,8 +65,7 @@ describe("CesiumIonSearchProvider", () => {
       )
     );
 
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(0);
     expect(searchProvider.result.message?.content).toBe(
       "translate#viewModels.searchErrorOccurred"
