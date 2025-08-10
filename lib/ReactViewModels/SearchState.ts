@@ -34,13 +34,9 @@ export default class SearchState {
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
 
-  @observable locationSearchResults: SearchProviderResults[] = [];
+  @observable locationSearchResults: Record<string, SearchProviderResults> = {};
   @observable catalogSearchResults: SearchProviderResults | undefined;
-  @observable unifiedSearchResults: SearchProviderResults[] = [];
 
-  private _catalogSearchDisposer: IReactionDisposer;
-  private _locationSearchDisposer: IReactionDisposer;
-  private _unifiedSearchDisposer: IReactionDisposer;
   private _workbenchItemsSubscription: IReactionDisposer;
 
   private readonly terria: Terria;
@@ -56,42 +52,6 @@ export default class SearchState {
         new CatalogSearchProvider("catalog-search-provider", options.terria);
     });
 
-    const self = this;
-
-    this._catalogSearchDisposer = reaction(
-      () => self.catalogSearchText,
-      () => {
-        self.isWaitingToStartCatalogSearch = true;
-        if (self.catalogSearchProvider) {
-          self.catalogSearchResults = self.catalogSearchProvider.search("");
-        }
-      }
-    );
-
-    this._locationSearchDisposer = reaction(
-      () => self.locationSearchText,
-      () => {
-        self.isWaitingToStartLocationSearch = true;
-        self.locationSearchResults = self.locationSearchProviders.map(
-          (provider) => {
-            return provider.search("");
-          }
-        );
-      }
-    );
-
-    this._unifiedSearchDisposer = reaction(
-      () => this.unifiedSearchText,
-      () => {
-        this.isWaitingToStartUnifiedSearch = true;
-        this.unifiedSearchResults = this.unifiedSearchProviders.map(
-          (provider) => {
-            return provider.search("");
-          }
-        );
-      }
-    );
-
     this._workbenchItemsSubscription = reaction(
       () => this.terria.workbench.items,
       () => {
@@ -101,16 +61,13 @@ export default class SearchState {
   }
 
   dispose(): void {
-    this._catalogSearchDisposer();
-    this._locationSearchDisposer();
-    this._unifiedSearchDisposer();
     this._workbenchItemsSubscription();
   }
 
   @computed
   get supportsAutocomplete(): boolean {
-    return this.locationSearchProviders.every((provider) =>
-      provider.supportsAutocomplete()
+    return this.locationSearchProviders.every(
+      (provider) => provider.autocompleteEnabled
     );
   }
 
@@ -134,16 +91,14 @@ export default class SearchState {
 
   @action
   searchCatalog(): void {
-    if (this.isWaitingToStartCatalogSearch) {
-      this.isWaitingToStartCatalogSearch = false;
-      if (this.catalogSearchResults) {
-        this.catalogSearchResults.isCanceled = true;
-      }
-      if (this.catalogSearchProvider) {
-        this.catalogSearchResults = this.catalogSearchProvider.search(
-          this.catalogSearchText
-        );
-      }
+    if (this.catalogSearchResults) {
+      this.catalogSearchResults.isCanceled = true;
+    }
+    if (this.catalogSearchProvider) {
+      this.catalogSearchResults = this.catalogSearchProvider.search(
+        this.catalogSearchText,
+        true
+      );
     }
   }
 
@@ -153,28 +108,20 @@ export default class SearchState {
   }
 
   @action
-  searchLocations(): void {
-    if (this.isWaitingToStartLocationSearch) {
-      this.isWaitingToStartLocationSearch = false;
-      this.locationSearchResults.forEach((results) => {
-        results.isCanceled = true;
-      });
-      this.locationSearchResults = this.locationSearchProviders.map(
-        (searchProvider) => searchProvider.search(this.locationSearchText)
-      );
-    }
-  }
+  searchLocations(manuallyTriggered: boolean): void {
+    Object.values(this.locationSearchResults).forEach((results) => {
+      results.isCanceled = true;
+    });
 
-  @action
-  searchUnified(): void {
-    if (this.isWaitingToStartUnifiedSearch) {
-      this.isWaitingToStartUnifiedSearch = false;
-      this.unifiedSearchResults.forEach((results) => {
-        results.isCanceled = true;
-      });
-      this.unifiedSearchResults = this.unifiedSearchProviders.map(
-        (searchProvider) => searchProvider.search(this.unifiedSearchText)
-      );
+    for (const searchProvider of this.locationSearchProviders) {
+      if (manuallyTriggered) {
+        if (!searchProvider.autocompleteEnabled)
+          this.locationSearchResults[searchProvider.uniqueId!] =
+            searchProvider.search(this.locationSearchText, manuallyTriggered);
+      } else {
+        this.locationSearchResults[searchProvider.uniqueId!] =
+          searchProvider.search(this.locationSearchText, manuallyTriggered);
+      }
     }
   }
 }

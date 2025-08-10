@@ -37,7 +37,6 @@ const RawButtonAndHighlight = styled(RawButton)`
 
 interface LocationSearchResultsProps {
   viewState: ViewState;
-  isWaitingForSearchToStart: boolean;
   terria: Terria;
   search: SearchProviderResults;
   onLocationClick: (result: SearchResultModel) => void;
@@ -48,7 +47,6 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
   ({
     search,
     terria,
-    isWaitingForSearchToStart,
     locationSearchText,
     onLocationClick
   }: LocationSearchResultsProps) => {
@@ -118,7 +116,6 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
               length={validResults?.length}
               isOpen={isOpen}
               search={search}
-              isWaitingForSearchToStart={isWaitingForSearchToStart}
             />
             <StyledIcon
               styledWidth={"9px"}
@@ -129,10 +126,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
         <Text textDarker>
           {isOpen && (
             <>
-              <SearchHeader
-                searchResults={search}
-                isWaitingForSearchToStart={isWaitingForSearchToStart}
-              />
+              <SearchHeader searchResults={search} />
               <Ul column fullWidth>
                 {results.map((result: SearchResultModel, i: number) => (
                   <SearchResult
@@ -194,7 +188,6 @@ interface NameWithLoaderProps {
   length?: number;
   isOpen: boolean;
   search: SearchProviderResults;
-  isWaitingForSearchToStart: boolean;
 }
 
 const NameWithLoader: FC<NameWithLoaderProps> = observer(
@@ -204,15 +197,16 @@ const NameWithLoader: FC<NameWithLoaderProps> = observer(
       <BoxSpan styledHeight={"25px"}>
         <BoxSpan verticalCenter>
           <TextSpan textDarker uppercase>
-            {`${applyTranslationIfExists(props.name, i18n)} (${
-              props.length || 0
-            })`}
+            {`${applyTranslationIfExists(props.name, i18n)} ${
+              !props.search.isWaitingToStartSearch
+                ? `(${props.length || 0})`
+                : ""
+            }`}
           </TextSpan>
         </BoxSpan>
-        {!props.isOpen &&
-          (props.search.isSearching || props.isWaitingForSearchToStart) && (
-            <Loader hideMessage boxProps={{ fullWidth: false }} />
-          )}
+        {!props.isOpen && props.search.isSearching && (
+          <Loader hideMessage boxProps={{ fullWidth: false }} />
+        )}
       </BoxSpan>
     );
   }

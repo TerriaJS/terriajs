@@ -9,14 +9,13 @@ import Loader from "../Loader";
 
 interface SearchHeaderProps {
   searchResults: SearchProviderResults;
-  isWaitingForSearchToStart: boolean;
 }
 
 const SearchHeader: FC<SearchHeaderProps> = observer(
   (props: SearchHeaderProps) => {
     const { i18n } = useTranslation();
 
-    if (props.searchResults.isSearching || props.isWaitingForSearchToStart) {
+    if (props.searchResults.isSearching) {
       return (
         <div key="loader">
           <Loader boxProps={{ padded: true }} />

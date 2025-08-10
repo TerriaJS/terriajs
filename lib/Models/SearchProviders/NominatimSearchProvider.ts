@@ -1,5 +1,5 @@
 import { Feature, Point } from "geojson";
-import { makeObservable, runInAction } from "mobx";
+import { makeObservable, override, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -44,7 +44,7 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
     );
   }
 
-  protected doSearch(
+  protected async doSearch(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
@@ -131,7 +131,8 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
       });
   }
 
-  supportsAutocomplete(): boolean {
+  @override
+  get autocompleteEnabled(): boolean {
     return false;
   }
 }

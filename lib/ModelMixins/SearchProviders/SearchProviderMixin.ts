@@ -26,7 +26,10 @@ function SearchProviderMixin<
     ): Promise<void>;
 
     @action
-    search(searchText: string): SearchProviderResults {
+    search(
+      searchText: string,
+      _manuallyTriggered: boolean
+    ): SearchProviderResults {
       const result = new SearchProviderResults(this);
       if (!this.shouldRunSearch(searchText)) {
         result.resultsCompletePromise = fromPromise(Promise.resolve());
@@ -36,9 +39,12 @@ function SearchProviderMixin<
             count: this.minCharacters
           }
         };
+        result.isWaitingToStartSearch = true;
         return result;
       }
+
       this.logEvent(searchText);
+      result.isWaitingToStartSearch = false;
       result.resultsCompletePromise = fromPromise(
         this.doSearch(searchText, result)
       );
