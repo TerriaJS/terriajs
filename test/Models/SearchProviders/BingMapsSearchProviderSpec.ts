@@ -53,8 +53,7 @@ describe("BingMapsSearchProvider", function () {
     jasmine.Ajax.stubRequest(/.*/).andReturn({
       responseText: JSON.stringify({ resourceSets: [] })
     });
-    bingMapsSearchProvider.search("test");
-    await bingMapsSearchProvider.result.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
     const req = jasmine.Ajax.requests.mostRecent();
     expect(req.url).toBe(
@@ -125,8 +124,7 @@ describe("BingMapsSearchProvider", function () {
       })
     });
 
-    bingMapsSearchProvider.search("test");
-    await bingMapsSearchProvider.result.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
     expect(bingMapsSearchProvider.result.results.length).toEqual(2);
     expect(bingMapsSearchProvider.result.message).toBeUndefined();

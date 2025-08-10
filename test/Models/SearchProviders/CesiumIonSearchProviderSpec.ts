@@ -40,8 +40,7 @@ describe("CesiumIonSearchProvider", () => {
       "api.test.com?text=test&access_token=testkey"
     ).andReturn({ responseText: JSON.stringify(fixture) });
 
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(1);
     expect(searchProvider.result.results[0].name).toBe("West End, Australia");
     expect(searchProvider.result.results[0].location?.latitude).toBe(
@@ -55,8 +54,7 @@ describe("CesiumIonSearchProvider", () => {
     ).andReturn({
       responseText: JSON.stringify([])
     });
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(0);
     expect(searchProvider.result.message?.content).toBe(
       "translate#viewModels.searchNoLocations"
@@ -69,8 +67,7 @@ describe("CesiumIonSearchProvider", () => {
     ).andReturn({
       status: 404
     });
-    searchProvider.search("test");
-    await searchProvider.result.resultsCompletePromise;
+    await searchProvider.search("test", true);
     expect(searchProvider.result.results.length).toBe(0);
     expect(searchProvider.result.message?.content).toBe(
       "translate#viewModels.searchErrorOccurred"
