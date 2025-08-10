@@ -23,7 +23,7 @@ enum MapboxGeocodeDirection {
   Reverse = "reverse"
 }
 
-interface MapboxGeocodingResponse {
+export interface MapboxGeocodingResponse {
   features: Feature<Point>[];
   type: string;
   attribution?: string;

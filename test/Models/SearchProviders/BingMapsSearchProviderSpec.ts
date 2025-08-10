@@ -102,11 +102,11 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    const result = bingMapsSearchProvider.search("test");
-    await result.resultsCompletePromise;
+    bingMapsSearchProvider.search("test");
+    await bingMapsSearchProvider.result.resultsCompletePromise;
 
-    expect(result.message).toBeUndefined();
-    expect(result.results.length).toEqual(2);
+    expect(bingMapsSearchProvider.result.message).toBeUndefined();
+    expect(bingMapsSearchProvider.result.results.length).toEqual(2);
   });
 
   it(" - propperly sort the search results", async () => {
@@ -172,12 +172,16 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    const searchResult = bingMapsSearchProvider.search("test");
-    await searchResult.resultsCompletePromise;
+    bingMapsSearchProvider.search("test");
+    await bingMapsSearchProvider.result.resultsCompletePromise;
 
-    expect(searchResult.results.length).toEqual(2);
-    expect(searchResult.message).toBeUndefined();
-    expect(searchResult.results[0].name).toEqual("test result 2");
-    expect(searchResult.results[1].name).toEqual("test result 1, Italy");
+    expect(bingMapsSearchProvider.result.results.length).toEqual(2);
+    expect(bingMapsSearchProvider.result.message).toBeUndefined();
+    expect(bingMapsSearchProvider.result.results[0].name).toEqual(
+      "test result 2"
+    );
+    expect(bingMapsSearchProvider.result.results[1].name).toEqual(
+      "test result 1, Italy"
+    );
   });
 });

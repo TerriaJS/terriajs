@@ -89,6 +89,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     const value = event.target.value;
     // immediately bypass debounce if we started with no value
     onSearchTextChanged(value);
+    console.log(value);
 
     if (searchText.length === 0) {
       search(false);

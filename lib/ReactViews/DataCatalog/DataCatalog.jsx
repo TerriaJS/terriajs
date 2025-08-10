@@ -26,8 +26,8 @@ class DataCatalog extends Component {
     const unfilteredItems =
       isSearching &&
       catalogSearchProvider &&
-      searchState.catalogSearchResults?.results
-        ? searchState.catalogSearchResults.results.map(
+      searchState.catalogSearchProvider?.results
+        ? searchState.catalogSearchProvider.results.map(
             (result) => result.catalogItem
           )
         : this.props.items;
@@ -38,7 +38,7 @@ class DataCatalog extends Component {
         {isSearching && catalogSearchProvider && (
           <>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
-            <SearchHeader searchResults={searchState.catalogSearchResults} />
+            <SearchHeader searchResults={catalogSearchProvider.results} />
           </>
         )}
         {items.map(

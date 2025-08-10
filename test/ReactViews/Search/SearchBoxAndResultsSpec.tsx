@@ -1,12 +1,21 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import i18next from "i18next";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
+import { I18nextProvider } from "react-i18next";
 import { ThemeProvider } from "styled-components";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
+import MapboxSearchProvider, {
+  MapboxGeocodingResponse
+} from "../../../lib/Models/SearchProviders/MapboxSearchProvider";
+import NominatimSearchProvider from "../../../lib/Models/SearchProviders/NominatimSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import { worker } from "../../mocks/browser";
 import { renderWithContexts } from "../withContext";
 
 describe("SearchBoxAndResults", function () {
@@ -28,7 +37,6 @@ describe("SearchBoxAndResults", function () {
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = false;
-      viewState.searchState.locationSearchResults = [];
     });
     renderWithContexts(
       <ThemeProvider theme={terriaTheme}>
@@ -51,7 +59,6 @@ describe("SearchBoxAndResults", function () {
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
-      viewState.searchState.locationSearchResults = [];
     });
 
     renderWithContexts(
@@ -73,7 +80,7 @@ describe("SearchBoxAndResults", function () {
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
-      viewState.searchState.locationSearchResults = [];
+
       viewState.terria.searchBarModel.catalogSearchProvider = undefined;
     });
     renderWithContexts(
@@ -96,7 +103,6 @@ describe("SearchBoxAndResults", function () {
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
-      viewState.searchState.locationSearchResults = [];
 
       viewState.terria.searchBarModel.setTrait(
         CommonStrata.user,
@@ -117,5 +123,259 @@ describe("SearchBoxAndResults", function () {
     expect(
       screen.queryByText("search.searchInDataCatalog")
     ).not.toBeInTheDocument();
+  });
+
+  let nominatimProvider: NominatimSearchProvider;
+  let mapboxProvider: MapboxSearchProvider;
+  let nominatimSpy: jasmine.Spy;
+  let mapboxSpy: jasmine.Spy;
+
+  const i18n = i18next.createInstance({
+    lng: "spec",
+    debug: false,
+    resources: {
+      spec: {
+        translation: {}
+      }
+    }
+  });
+
+  beforeEach(async () => {
+    await i18n.init();
+
+    nominatimProvider = new NominatimSearchProvider("nominatim", terria);
+    mapboxProvider = new MapboxSearchProvider("mapbox", terria);
+    // @ts-expect-error: Accessing protected method for testing purposes
+    nominatimSpy = spyOn(nominatimProvider, "doSearch").and.callThrough();
+    // @ts-expect-error: Accessing protected method for testing purposes
+    mapboxSpy = spyOn(mapboxProvider, "doSearch").and.callThrough();
+
+    worker.use(
+      http.get("https://nominatim.openstreetmap.org/search", ({ request }) => {
+        const searchText = new URL(request.url).searchParams.get("q") || "";
+        return HttpResponse.json({
+          features: [
+            {
+              properties: {
+                display_name: `Nominatim result for ${searchText}`,
+                importance: 0
+              },
+              geometry: {
+                coordinates: [0, 0]
+              },
+              bbox: [0, 0, 0, 0]
+            }
+          ]
+        });
+      }),
+      http.get(
+        "https://api.mapbox.com/search/geocode/v6/forward",
+        ({ request }) => {
+          const searchText = new URL(request.url).searchParams.get("q");
+          return HttpResponse.json({
+            features: [
+              {
+                properties: {
+                  full_address: `Mapbox result for ${searchText}`
+                },
+                type: "Feature",
+                geometry: {
+                  coordinates: [0, 0],
+                  type: "Point"
+                }
+              }
+            ],
+            type: "FeatureCollection"
+          } satisfies MapboxGeocodingResponse);
+        }
+      )
+    );
+  });
+
+  afterEach(() => {
+    mapboxSpy.calls.reset();
+    nominatimSpy.calls.reset();
+
+    // Clear the search providers after each test
+    // @ts-expect-error: locationSearchProviders is a private property
+    terria.searchBarModel.locationSearchProviders.clear();
+  });
+
+  it("should display search results from mapbox search provider", async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(mapboxProvider);
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+
+    await user.type(searchBox, "test search");
+
+    // Wait for results to appear
+    await waitFor(() => {
+      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+    });
+
+    expect(mapboxProvider.result.results.length).toBe(1);
+
+    expect(mapboxSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should not trigger search for nominatim provider until "Enter" is pressed', async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(nominatimProvider);
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+
+    // Type in the search box but do not press Enter
+    await user.type(searchBox, "test search");
+
+    // Results should not appear yet
+    expect(
+      screen.queryByText(/Nominatim result for.*/i)
+    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText("viewModels.enterToStartSearch")
+      ).toBeInTheDocument();
+    });
+
+    expect(nominatimSpy).not.toHaveBeenCalled();
+
+    // Now press Enter to trigger the search
+    await user.keyboard("{Enter}");
+
+    // Wait for results to appear
+    await waitFor(() => {
+      expect(screen.getByText(/Nominatim result for.*/i)).toBeInTheDocument();
+    });
+
+    expect(nominatimProvider.result.results.length).toBe(1);
+    expect(nominatimSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("should cancel previous search when new search text is set", async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(nominatimProvider);
+      terria.searchBarModel.addSearchProvider(mapboxProvider);
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+    await user.type(searchBox, "first");
+
+    await waitFor(() => {
+      expect(mapboxSpy).toHaveBeenCalledTimes(1);
+    });
+
+    await user.clear(searchBox);
+    await user.type(searchBox, "second");
+
+    // Wait for searches to complete
+    await waitFor(() => {
+      expect(screen.getByText("second")).toBeInTheDocument();
+    });
+
+    // Should not show results for first search
+    expect(screen.queryByText("first")).not.toBeInTheDocument();
+    expect(screen.queryByText("first")).not.toBeInTheDocument();
+  });
+
+  it("should preserve individual provider state during searches", async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(nominatimProvider);
+      terria.searchBarModel.addSearchProvider(mapboxProvider);
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    await user.type(screen.getByRole("textbox"), "test query");
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("viewModels.enterToStartSearch")
+      ).toBeInTheDocument();
+      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+    });
+
+    await user.keyboard("{Enter}");
+
+    await waitFor(() => {
+      expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
+      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+    });
+
+    expect(nominatimSpy).toHaveBeenCalledTimes(1);
+    expect(mapboxSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("should clear results when search input is cleared", async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(nominatimProvider);
+      terria.searchBarModel.addSearchProvider(mapboxProvider);
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    await user.type(screen.getByRole("textbox"), "test");
+    await user.keyboard("{Enter}");
+
+    await waitFor(() => {
+      expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
+    });
+
+    await userEvent.clear(screen.getByRole("textbox"));
+
+    // Results should be hidden when showLocationSearchResults becomes false
+    await waitFor(() => {
+      expect(viewState.searchState.showLocationSearchResults).toBe(false);
+    });
+    expect(nominatimProvider.result.results.length).toBe(0);
+    expect(mapboxProvider.result.results.length).toBe(0);
   });
 });
