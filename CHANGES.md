@@ -8,6 +8,7 @@
 - Add coordinate position to MapboxSearchProvider results when using reverse geocoder functionality (configurable).
 - Removes webpack-dev-server from dependencies as it is no longer used.
 - Upgrade babel to the latest version 7.27/7.28
+- Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08
