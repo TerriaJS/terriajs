@@ -1,7 +1,7 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import { useEffect, useRef, type FC } from "react";
+import { useCallback, useEffect, useRef, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
@@ -113,9 +113,12 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       }
     };
 
-    const search = (manuallyTriggered: boolean) => {
-      viewState.searchState.searchLocations(manuallyTriggered);
-    };
+    const search = useCallback(
+      (manuallyTriggered: boolean) => {
+        viewState.searchState.searchLocations(manuallyTriggered);
+      },
+      [viewState]
+    );
 
     const startLocationSearch = () => {
       toggleShowLocationSearchResults(true);
@@ -172,28 +175,26 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                   overflow-y: auto;
                 `}
               >
-                {Object.values(searchState.locationSearchResults).map(
-                  (search) => (
-                    <LocationSearchResults
-                      key={search.searchProvider.uniqueId}
-                      terria={viewState.terria}
-                      viewState={viewState}
-                      search={search}
-                      locationSearchText={locationSearchText}
-                      onLocationClick={(result) => {
-                        if (!result.location) return;
-                        addMarker(viewState.terria, {
-                          name: result.name,
-                          location: result.location
-                        });
-                        result.clickAction?.();
-                        runInAction(() => {
-                          searchState.showLocationSearchResults = false;
-                        });
-                      }}
-                    />
-                  )
-                )}
+                {searchState.locationSearchProviders.map((searchProvider) => (
+                  <LocationSearchResults
+                    key={searchProvider.uniqueId}
+                    terria={viewState.terria}
+                    viewState={viewState}
+                    search={searchProvider.result}
+                    locationSearchText={locationSearchText}
+                    onLocationClick={(result) => {
+                      if (!result.location) return;
+                      addMarker(viewState.terria, {
+                        name: result.name,
+                        location: result.location
+                      });
+                      result.clickAction?.();
+                      runInAction(() => {
+                        searchState.showLocationSearchResults = false;
+                      });
+                    }}
+                  />
+                ))}
               </Box>
             </Box>
           )}

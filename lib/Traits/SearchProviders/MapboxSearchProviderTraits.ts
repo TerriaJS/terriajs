@@ -86,4 +86,8 @@ export default class MapboxSearchProviderTraits extends mixTraits(
     be desired. Defaults to true.`
   })
   showCoordinatesInReverseGeocodeResult?: boolean = true;
+
+  get autocompleteEnabled() {
+    return true;
+  }
 }

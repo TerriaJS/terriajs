@@ -112,7 +112,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
             justifySpaceBetween
           >
             <NameWithLoader
-              name={search.searchProvider.name}
+              name={searchProvider.name}
               length={validResults?.length}
               isOpen={isOpen}
               search={search}

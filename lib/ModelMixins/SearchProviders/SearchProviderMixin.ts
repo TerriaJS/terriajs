@@ -1,4 +1,4 @@
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { fromPromise } from "mobx-utils";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import Model from "../../Models/Definition/Model";
@@ -16,7 +16,11 @@ function SearchProviderMixin<
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
+      this.result = new SearchProviderResults(this);
     }
+
+    @observable
+    public result: SearchProviderResults;
 
     protected abstract logEvent(searchText: string): void;
 
@@ -26,29 +30,31 @@ function SearchProviderMixin<
     ): Promise<void>;
 
     @action
-    search(
-      searchText: string,
-      _manuallyTriggered: boolean
-    ): SearchProviderResults {
-      const result = new SearchProviderResults(this);
+    cancelSearch() {
+      this.result.isCanceled = true;
+
+      this.result = new SearchProviderResults(this);
+    }
+
+    @action
+    search(searchText: string, _manuallyTriggered?: boolean): void {
       if (!this.shouldRunSearch(searchText)) {
-        result.resultsCompletePromise = fromPromise(Promise.resolve());
-        result.message = {
+        this.result.resultsCompletePromise = fromPromise(Promise.resolve());
+        this.result.message = {
           content: "translate#viewModels.searchMinCharacters",
           params: {
             count: this.minCharacters
           }
         };
-        result.isWaitingToStartSearch = true;
-        return result;
+        this.result.isWaitingToStartSearch = true;
+        return;
       }
 
       this.logEvent(searchText);
-      result.isWaitingToStartSearch = false;
-      result.resultsCompletePromise = fromPromise(
-        this.doSearch(searchText, result)
+      this.result.isWaitingToStartSearch = false;
+      this.result.resultsCompletePromise = fromPromise(
+        this.doSearch(searchText, this.result)
       );
-      return result;
     }
 
     private shouldRunSearch(searchText: string) {

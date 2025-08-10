@@ -1,4 +1,5 @@
 import { action, makeObservable } from "mobx";
+import { fromPromise } from "mobx-utils";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -8,8 +9,6 @@ import Model from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
-import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
-import { fromPromise } from "mobx-utils";
 
 type LocationSearchProviderModel = Model<LocationSearchProviderTraits>;
 
@@ -34,22 +33,18 @@ function LocationSearchProviderMixin<
     @action
     showWarning() {}
 
-    search(
-      searchText: string,
-      manuallyTriggered: boolean
-    ): SearchProviderResults {
-      const result = new SearchProviderResults(this);
-
+    search(searchText: string, manuallyTriggered?: boolean) {
       if (!this.autocompleteEnabled && !manuallyTriggered) {
-        result.resultsCompletePromise = fromPromise(Promise.resolve());
-        result.message = {
+        this.result.resultsCompletePromise = fromPromise(Promise.resolve());
+        this.result.message = {
           content: "translate#viewModels.enterToStartSearch"
         };
-        result.isWaitingToStartSearch = true;
-        return result;
+        this.result.isWaitingToStartSearch = true;
+
+        return;
       }
 
-      return super.search(searchText, manuallyTriggered);
+      super.search(searchText, manuallyTriggered);
     }
   }
 

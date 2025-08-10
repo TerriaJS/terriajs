@@ -2,18 +2,15 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
-  makeObservable,
   runInAction
 } from "mobx";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import SearchProviderMixin from "../ModelMixins/SearchProviders/SearchProviderMixin";
-import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
-import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
-import Terria from "../Models/Terria";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
+import Terria from "../Models/Terria";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -24,7 +21,7 @@ export default class SearchState {
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
 
-  @observable locationSearchText: string = "";
+  @observable private _locationSearchText: string = "";
   @observable isWaitingToStartLocationSearch: boolean = false;
 
   @observable unifiedSearchText: string = "";
@@ -33,9 +30,6 @@ export default class SearchState {
   @observable showLocationSearchResults: boolean = false;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
-
-  @observable locationSearchResults: Record<string, SearchProviderResults> = {};
-  @observable catalogSearchResults: SearchProviderResults | undefined;
 
   private _workbenchItemsSubscription: IReactionDisposer;
 
@@ -65,14 +59,20 @@ export default class SearchState {
   }
 
   @computed
-  get supportsAutocomplete(): boolean {
-    return this.locationSearchProviders.every(
-      (provider) => provider.autocompleteEnabled
-    );
+  get locationSearchText() {
+    return this._locationSearchText;
+  }
+
+  set locationSearchText(newText: string) {
+    this._locationSearchText = newText;
+
+    for (const searchProvider of this.locationSearchProviders) {
+      searchProvider.cancelSearch();
+    }
   }
 
   @computed
-  private get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
+  get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
     return this.terria.searchBarModel.locationSearchProvidersArray;
   }
 
@@ -81,46 +81,29 @@ export default class SearchState {
     return this.terria.searchBarModel.catalogSearchProvider;
   }
 
-  @computed
-  get unifiedSearchProviders(): SearchProviderMixin.Instance[] {
-    return filterOutUndefined([
-      this.catalogSearchProvider,
-      ...this.locationSearchProviders
-    ]);
-  }
-
   @action
   searchCatalog(): void {
-    if (this.catalogSearchResults) {
-      this.catalogSearchResults.isCanceled = true;
-    }
-    if (this.catalogSearchProvider) {
-      this.catalogSearchResults = this.catalogSearchProvider.search(
-        this.catalogSearchText,
-        true
-      );
-    }
+    this.catalogSearchProvider?.search(this.catalogSearchText, true);
   }
 
   @action
   setCatalogSearchText(newText: string): void {
     this.catalogSearchText = newText;
+
+    this.catalogSearchProvider?.cancelSearch();
   }
 
   @action
   searchLocations(manuallyTriggered: boolean): void {
-    Object.values(this.locationSearchResults).forEach((results) => {
-      results.isCanceled = true;
-    });
-
     for (const searchProvider of this.locationSearchProviders) {
       if (manuallyTriggered) {
-        if (!searchProvider.autocompleteEnabled)
-          this.locationSearchResults[searchProvider.uniqueId!] =
-            searchProvider.search(this.locationSearchText, manuallyTriggered);
-      } else {
-        this.locationSearchResults[searchProvider.uniqueId!] =
+        if (
+          !searchProvider.autocompleteEnabled ||
+          searchProvider.result.isWaitingToStartSearch
+        )
           searchProvider.search(this.locationSearchText, manuallyTriggered);
+      } else {
+        searchProvider.search(this.locationSearchText, manuallyTriggered);
       }
     }
   }
