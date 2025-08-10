@@ -8,6 +8,8 @@ import Model from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
+import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import { fromPromise } from "mobx-utils";
 
 type LocationSearchProviderModel = Model<LocationSearchProviderTraits>;
 
@@ -32,8 +34,22 @@ function LocationSearchProviderMixin<
     @action
     showWarning() {}
 
-    supportsAutocomplete(): boolean {
-      return true;
+    search(
+      searchText: string,
+      manuallyTriggered: boolean
+    ): SearchProviderResults {
+      const result = new SearchProviderResults(this);
+
+      if (!this.autocompleteEnabled && !manuallyTriggered) {
+        result.resultsCompletePromise = fromPromise(Promise.resolve());
+        result.message = {
+          content: "translate#viewModels.enterToStartSearch"
+        };
+        result.isWaitingToStartSearch = true;
+        return result;
+      }
+
+      return super.search(searchText, manuallyTriggered);
     }
   }
 

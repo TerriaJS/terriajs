@@ -38,12 +38,7 @@ class DataCatalog extends Component {
         {isSearching && catalogSearchProvider && (
           <>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
-            <SearchHeader
-              searchResults={searchState.catalogSearchResults}
-              isWaitingForSearchToStart={
-                searchState.isWaitingToStartCatalogSearch
-              }
-            />
+            <SearchHeader searchResults={searchState.catalogSearchResults} />
           </>
         )}
         {items.map(

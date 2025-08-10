@@ -113,8 +113,8 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       }
     };
 
-    const search = () => {
-      viewState.searchState.searchLocations();
+    const search = (manuallyTriggered: boolean) => {
+      viewState.searchState.searchLocations(manuallyTriggered);
     };
 
     const startLocationSearch = () => {
@@ -139,7 +139,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               onFocus={startLocationSearch}
               searchText={searchState.locationSearchText}
               placeholder={placeholder}
-              supportsAutocomplete={searchState.supportsAutocomplete}
             />
           </PresentationBox>
           {/* Results */}
@@ -156,9 +155,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                 overflow: hidden;
               `}
             >
-              {/* search {searchterm} in data catalog */}
-              {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
-              {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
               {viewState.terria.searchBarModel.showSearchInCatalog &&
                 searchState.catalogSearchProvider && (
                   <Box column paddedRatio={2}>
@@ -176,8 +172,8 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                   overflow-y: auto;
                 `}
               >
-                {!searchState.isWaitingToStartLocationSearch &&
-                  searchState.locationSearchResults.map((search) => (
+                {Object.values(searchState.locationSearchResults).map(
+                  (search) => (
                     <LocationSearchResults
                       key={search.searchProvider.uniqueId}
                       terria={viewState.terria}
@@ -195,11 +191,9 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                           searchState.showLocationSearchResults = false;
                         });
                       }}
-                      isWaitingForSearchToStart={
-                        searchState.isWaitingToStartLocationSearch
-                      }
                     />
-                  ))}
+                  )
+                )}
               </Box>
             </Box>
           )}

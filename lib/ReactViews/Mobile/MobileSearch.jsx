@@ -88,7 +88,6 @@ class MobileSearch extends Component {
         search={search}
         locationSearchText={searchState.locationSearchText}
         onLocationClick={this.onLocationClick.bind(this)}
-        isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
         theme={theme}
       />
     ));

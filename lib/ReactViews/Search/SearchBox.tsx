@@ -1,12 +1,11 @@
 import debounce from "lodash-es/debounce";
 import React, {
   ChangeEvent,
-  KeyboardEvent,
+  forwardRef,
   useCallback,
   useEffect,
   useRef
 } from "react";
-import { forwardRef } from "react";
 import styled, { useTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -31,14 +30,13 @@ export const DEBOUNCE_INTERVAL = 1000;
 
 interface SearchBoxProps {
   onSearchTextChanged: (text: string) => void;
-  onDoSearch: () => void;
+  onDoSearch: (manuallyTriggered: boolean) => void;
   searchText: string;
   onFocus?: () => void;
   placeholder?: string;
   onClear?: () => void;
   alwaysShowClear?: boolean;
   debounceDuration?: number;
-  supportsAutocomplete?: boolean;
   autoFocus?: boolean;
   inputBoxRef?: React.Ref<HTMLInputElement>;
 }
@@ -58,7 +56,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   alwaysShowClear = false,
   debounceDuration,
   autoFocus = false,
-  supportsAutocomplete = true,
   inputBoxRef
 }) => {
   const theme = useTheme();
@@ -66,7 +63,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   useEffect(() => {
     const debounced = debounce(
-      () => onDoSearch(),
+      () => onDoSearch(false),
       debounceDuration ?? DEBOUNCE_INTERVAL
     );
     debouncedOnDoSearch.current = debounced;
@@ -80,19 +77,21 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     return () => debouncedOnDoSearch.current?.cancel();
   }, []);
 
-  const search = useCallback(() => {
-    debouncedOnDoSearch.current?.cancel();
-    onDoSearch();
-  }, [onDoSearch]);
+  const search = useCallback(
+    (manuallyTriggered: boolean) => {
+      debouncedOnDoSearch.current?.cancel();
+      onDoSearch(manuallyTriggered);
+    },
+    [onDoSearch]
+  );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     // immediately bypass debounce if we started with no value
     onSearchTextChanged(value);
-    if (!supportsAutocomplete) return;
 
     if (searchText.length === 0) {
-      search();
+      search(false);
     } else {
       debouncedOnDoSearch.current?.();
     }
@@ -100,16 +99,9 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   const clearSearch = () => {
     onSearchTextChanged("");
-    search();
 
     if (onClear) {
       onClear();
-    }
-  };
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Enter") {
-      search();
     }
   };
 
@@ -121,7 +113,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        search();
+        search(true);
       }}
       css={`
         position: relative;
@@ -156,7 +148,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           value={searchText}
           onChange={handleChange}
           onFocus={onFocus}
-          onKeyDown={onKeyDown}
           placeholder={placeholder}
           autoComplete="off"
           autoFocus={autoFocus}
