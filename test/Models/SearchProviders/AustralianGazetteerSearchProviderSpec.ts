@@ -26,11 +26,11 @@ describe("GazetteerSearchProvider", function () {
     spyOn(searchProvider, "getXml").and.returnValue(
       Promise.resolve(wfsResponseXml)
     );
-    const results = searchProvider.search("Fred");
-    return results.resultsCompletePromise.then(() => {
+    searchProvider.search("Fred");
+    return searchProvider.result.resultsCompletePromise.then(() => {
       expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
-      expect(results).toBeDefined();
-      expect(results.results.length > 0).toBeTruthy();
+      expect(searchProvider.result).toBeDefined();
+      expect(searchProvider.result.results.length > 0).toBeTruthy();
     });
   });
 });

@@ -2,9 +2,10 @@ import { makeObservable, observable } from "mobx";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import SearchResult from "./SearchResult";
-import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 
-export default class SearchProviderResults {
+export default class SearchProviderResults<
+  SeachProviderType = SearchProviderMixin.Instance
+> {
   @observable results: SearchResult[] = [];
   @observable message?: {
     content: string;
@@ -12,17 +13,13 @@ export default class SearchProviderResults {
       [key: string]: string | number | undefined;
     };
   };
-  @observable isWaitingToStartSearch: boolean = true;
+  @observable isWaitingToStartSearch: boolean = false;
   isCanceled = false;
   resultsCompletePromise: IPromiseBasedObservable<void> = fromPromise(
     Promise.resolve()
   );
 
-  constructor(
-    readonly searchProvider:
-      | SearchProviderMixin.Instance
-      | LocationSearchProviderMixin.Instance
-  ) {
+  constructor(readonly searchProvider: SeachProviderType) {
     makeObservable(this);
   }
 

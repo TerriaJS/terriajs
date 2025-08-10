@@ -9,9 +9,9 @@ class TestSearchProvider extends SearchProviderMixin(
 ) {
   type = "test";
 
-  public override logEvent = jasmine.createSpy();
+  public override logEvent = jasmine.createSpy("logEvent");
   public override doSearch = jasmine
-    .createSpy()
+    .createSpy("doSearch")
     .and.returnValue(Promise.resolve());
 }
 
@@ -34,36 +34,36 @@ describe("SearchProviderMixin", () => {
   });
 
   it(" - should not run search if searchText is undefined", () => {
-    const result = searchProvider.search(undefined as never);
-    expect(result.resultsCompletePromise).toBeDefined();
-    expect(result.message).toBeDefined();
+    searchProvider.search(undefined as never);
+    expect(searchProvider.result.resultsCompletePromise).toBeDefined();
+    expect(searchProvider.result.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
   });
 
   it(" - should not run search if only spaces", () => {
-    const result = searchProvider.search("        ");
-    expect(result.resultsCompletePromise).toBeDefined();
-    expect(result.message).toBeDefined();
+    searchProvider.search("        ");
+    expect(searchProvider.result.resultsCompletePromise).toBeDefined();
+    expect(searchProvider.result.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
   });
 
   it(" - should not run search if searchText less than minCharacters", () => {
-    const result = searchProvider.search("12");
-    expect(result.resultsCompletePromise).toBeDefined();
-    expect(result.message).toBeDefined();
+    searchProvider.search("12");
+    expect(searchProvider.result.resultsCompletePromise).toBeDefined();
+    expect(searchProvider.result.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
   });
 
   it(" - should run search if searchText is valid", () => {
-    const result = searchProvider.search("1234");
-    expect(result.resultsCompletePromise).toBeDefined();
-    expect(result.message).not.toBeDefined();
+    searchProvider.search("1234");
+    expect(searchProvider.result.resultsCompletePromise).toBeDefined();
+    expect(searchProvider.result.message).not.toBeDefined();
 
     expect(searchProvider.logEvent).toHaveBeenCalled();
     expect(searchProvider.doSearch).toHaveBeenCalled();
