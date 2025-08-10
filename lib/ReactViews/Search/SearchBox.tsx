@@ -1,11 +1,4 @@
-import debounce from "lodash-es/debounce";
-import React, {
-  ChangeEvent,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef
-} from "react";
+import React, { ChangeEvent, forwardRef } from "react";
 import styled, { useTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -25,8 +18,6 @@ const SearchInput = styled.input<{ rounded?: boolean }>`
   vertical-align: middle;
   -webkit-appearance: none;
 `;
-
-export const DEBOUNCE_INTERVAL = 1000;
 
 interface SearchBoxProps {
   onSearchTextChanged: (text: string) => void;
@@ -54,48 +45,18 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   placeholder = "Search",
   onClear,
   alwaysShowClear = false,
-  debounceDuration,
+  debounceDuration: _debounceDuration, // Keep for backward compatibility but don't use
   autoFocus = false,
   inputBoxRef
 }) => {
   const theme = useTheme();
-  const debouncedOnDoSearch = useRef<ReturnType<typeof debounce>>();
-
-  useEffect(() => {
-    const debounced = debounce(
-      () => onDoSearch(false),
-      debounceDuration ?? DEBOUNCE_INTERVAL
-    );
-    debouncedOnDoSearch.current = debounced;
-
-    return () => {
-      debounced.flush();
-    };
-  }, [onDoSearch, debounceDuration]);
-
-  useEffect(() => {
-    return () => debouncedOnDoSearch.current?.cancel();
-  }, []);
-
-  const search = useCallback(
-    (manuallyTriggered: boolean) => {
-      debouncedOnDoSearch.current?.cancel();
-      onDoSearch(manuallyTriggered);
-    },
-    [onDoSearch]
-  );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    // immediately bypass debounce if we started with no value
     onSearchTextChanged(value);
-    console.log(value);
 
-    if (searchText.length === 0) {
-      search(false);
-    } else {
-      debouncedOnDoSearch.current?.();
-    }
+    // Trigger automatic search (will be debounced at provider level)
+    onDoSearch(false);
   };
 
   const clearSearch = () => {
@@ -114,7 +75,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        search(true);
+        // Trigger manual search
+        onDoSearch(true);
       }}
       css={`
         position: relative;

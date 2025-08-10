@@ -1,5 +1,5 @@
+import { debounce } from "lodash-es";
 import { action, makeObservable, observable } from "mobx";
-import { fromPromise } from "mobx-utils";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
@@ -13,10 +13,18 @@ function SearchProviderMixin<
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
 
+    protected debounceTime = 1000;
+    private _debouncedSearch: ReturnType<typeof debounce>;
+
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
       this.result = new SearchProviderResults(this);
+
+      // Create debounced search function
+      this._debouncedSearch = debounce((searchText: string) => {
+        this.performSearch(searchText);
+      }, this.debounceTime);
     }
 
     @observable
@@ -31,30 +39,52 @@ function SearchProviderMixin<
 
     @action
     cancelSearch() {
-      this.result.isCanceled = true;
+      // Cancel any pending debounced search
+      this._debouncedSearch.cancel();
 
+      this.result.isCanceled = true;
       this.result = new SearchProviderResults(this);
     }
 
     @action
-    search(searchText: string, _manuallyTriggered?: boolean): void {
+    async search(
+      searchText: string,
+      manuallyTriggered?: boolean
+    ): Promise<void> {
+      this.result.isWaitingToStartSearch = true;
       if (!this.shouldRunSearch(searchText)) {
-        this.result.resultsCompletePromise = fromPromise(Promise.resolve());
+        // Cancel any pending search
+        this._debouncedSearch.cancel();
+
+        this.result.isSearching = false;
         this.result.message = {
           content: "translate#viewModels.searchMinCharacters",
           params: {
             count: this.minCharacters
           }
         };
-        this.result.isWaitingToStartSearch = true;
         return;
       }
 
+      // If manually triggered (e.g., Enter key), search immediately
+      if (manuallyTriggered) {
+        this._debouncedSearch.cancel(); // Cancel any pending debounced search
+        await this.performSearch(searchText);
+      } else {
+        // Use debounced search for automatic searches (typing)
+        await this._debouncedSearch(searchText);
+      }
+    }
+
+    @action
+    private async performSearch(searchText: string): Promise<void> {
       this.logEvent(searchText);
       this.result.isWaitingToStartSearch = false;
-      this.result.resultsCompletePromise = fromPromise(
-        this.doSearch(searchText, this.result)
-      );
+      this.result.isSearching = true;
+
+      await this.doSearch(searchText, this.result);
+
+      this.result.isSearching = false;
     }
 
     private shouldRunSearch(searchText: string) {

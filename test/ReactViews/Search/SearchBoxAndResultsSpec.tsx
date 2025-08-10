@@ -222,13 +222,16 @@ describe("SearchBoxAndResults", function () {
     await user.type(searchBox, "test search");
 
     // Wait for results to appear
-    await waitFor(() => {
-      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
 
     expect(mapboxProvider.result.results.length).toBe(1);
 
-    expect(mapboxSpy).toHaveBeenCalledTimes(2);
+    expect(mapboxSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should not trigger search for nominatim provider until "Enter" is pressed', async function () {
@@ -292,20 +295,18 @@ describe("SearchBoxAndResults", function () {
     const searchBox = screen.getByRole("textbox");
     await user.type(searchBox, "first");
 
-    await waitFor(() => {
-      expect(mapboxSpy).toHaveBeenCalledTimes(1);
-    });
-
     await user.clear(searchBox);
     await user.type(searchBox, "second");
 
     // Wait for searches to complete
-    await waitFor(() => {
-      expect(screen.getByText("second")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("second")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
 
     // Should not show results for first search
-    expect(screen.queryByText("first")).not.toBeInTheDocument();
     expect(screen.queryByText("first")).not.toBeInTheDocument();
   });
 
@@ -327,22 +328,39 @@ describe("SearchBoxAndResults", function () {
 
     await user.type(screen.getByRole("textbox"), "test query");
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("viewModels.enterToStartSearch")
-      ).toBeInTheDocument();
-      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(
+          screen.getByText("viewModels.enterToStartSearch")
+        ).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+    await waitFor(
+      () => {
+        expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
 
     await user.keyboard("{Enter}");
 
-    await waitFor(() => {
-      expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
-      expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+
+    await waitFor(
+      () => {
+        expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
 
     expect(nominatimSpy).toHaveBeenCalledTimes(1);
-    expect(mapboxSpy).toHaveBeenCalledTimes(2);
+    expect(mapboxSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should clear results when search input is cleared", async function () {
@@ -376,5 +394,37 @@ describe("SearchBoxAndResults", function () {
     });
     expect(nominatimProvider.result.results.length).toBe(0);
     expect(mapboxProvider.result.results.length).toBe(0);
+  });
+
+  it("should handle manual vs automatic search triggering correctly", async function () {
+    const user = userEvent.setup();
+    runInAction(() => {
+      terria.searchBarModel.addSearchProvider(mapboxProvider); // Has autocomplete enabled
+    });
+
+    renderWithContexts(
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults placeholder="Search for places" />
+        </ThemeProvider>
+      </I18nextProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+
+    // Type text (automatic search)
+    await user.type(searchBox, "test");
+
+    expect(mapboxSpy).not.toHaveBeenCalled();
+
+    await user.keyboard("{Enter}");
+
+    await waitFor(
+      () => {
+        expect(mapboxSpy).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 8000 }
+    );
   });
 });
