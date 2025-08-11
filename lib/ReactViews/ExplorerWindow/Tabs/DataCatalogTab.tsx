@@ -51,7 +51,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
               <SearchBox
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
-                onDoSearch={() => search()}
+                onDoSearch={search}
                 placeholder={searchPlaceholder}
               />
             )}

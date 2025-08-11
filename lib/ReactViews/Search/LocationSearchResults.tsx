@@ -204,9 +204,10 @@ const NameWithLoader: FC<NameWithLoaderProps> = observer(
             }`}
           </TextSpan>
         </BoxSpan>
-        {!props.isOpen && props.search.isSearching && (
-          <Loader hideMessage boxProps={{ fullWidth: false }} />
-        )}
+        {!props.isOpen &&
+          (props.search.isSearching || props.search.isWaitingToStartSearch) && (
+            <Loader hideMessage boxProps={{ fullWidth: false }} />
+          )}
       </BoxSpan>
     );
   }
