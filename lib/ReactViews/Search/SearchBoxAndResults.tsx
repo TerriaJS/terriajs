@@ -27,10 +27,6 @@ export function SearchInDataCatalog({
       fullWidth
       onClick={() => {
         const { searchState } = viewState;
-        // Set text here as a separate action so that it doesn't get batched up and the catalog
-        // search text has a chance to set isWaitingToStartCatalogSearch
-        searchState.setCatalogSearchText(searchState.locationSearchText);
-
         viewState.searchInCatalog(searchState.locationSearchText);
         if (handleClick) {
           handleClick();
@@ -113,14 +109,11 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       }
     };
 
-    const search = useCallback(
-      (manuallyTriggered: boolean) => {
-        viewState.searchState.searchLocations(manuallyTriggered);
-      },
-      [viewState]
-    );
+    const search = useCallback(() => {
+      viewState.searchState.searchLocations();
+    }, [viewState]);
 
-    const startLocationSearch = () => {
+    const showLocationSearchResults = () => {
       toggleShowLocationSearchResults(true);
     };
 
@@ -139,7 +132,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               ref={locationSearchRef}
               onSearchTextChanged={changeSearchText}
               onDoSearch={search}
-              onFocus={startLocationSearch}
+              onFocus={showLocationSearchResults}
               searchText={searchState.locationSearchText}
               placeholder={placeholder}
             />

@@ -18,11 +18,9 @@ interface SearchStateOptions {
 }
 
 export default class SearchState {
-  @observable catalogSearchText: string = "";
-  @observable isWaitingToStartCatalogSearch: boolean = false;
+  @observable private _catalogSearchText: string = "";
 
   @observable private _locationSearchText: string = "";
-  @observable isWaitingToStartLocationSearch: boolean = false;
 
   @observable unifiedSearchText: string = "";
   @observable isWaitingToStartUnifiedSearch: boolean = false;
@@ -68,7 +66,20 @@ export default class SearchState {
 
     for (const searchProvider of this.locationSearchProviders) {
       searchProvider.cancelSearch();
+
+      if (newText.length > 0) searchProvider.search(newText, false);
     }
+  }
+
+  @computed get catalogSearchText() {
+    return this._catalogSearchText;
+  }
+
+  set catalogSearchText(newText: string) {
+    this._catalogSearchText = newText;
+
+    this.catalogSearchProvider?.cancelSearch();
+    if (newText.length > 0) this.catalogSearchProvider?.search(newText, false);
   }
 
   @computed
@@ -87,25 +98,14 @@ export default class SearchState {
   }
 
   @action
-  setCatalogSearchText(newText: string): void {
-    this.catalogSearchText = newText;
-
-    this.catalogSearchProvider?.cancelSearch();
-  }
-
-  @action
-  searchLocations(manuallyTriggered: boolean): void {
+  searchLocations(): void {
     for (const searchProvider of this.locationSearchProviders) {
-      if (manuallyTriggered) {
-        if (
-          !searchProvider.autocompleteEnabled ||
-          searchProvider.result.isWaitingToStartSearch ||
-          searchProvider.result.isSearching
-        )
-          searchProvider.search(this.locationSearchText, manuallyTriggered);
-      } else {
-        searchProvider.search(this.locationSearchText, manuallyTriggered);
-      }
+      if (
+        !searchProvider.autocompleteEnabled ||
+        searchProvider.result.isWaitingToStartSearch ||
+        searchProvider.result.isSearching
+      )
+        searchProvider.search(this.locationSearchText, true);
     }
   }
 }

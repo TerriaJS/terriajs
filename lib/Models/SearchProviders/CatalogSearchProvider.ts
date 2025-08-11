@@ -107,7 +107,6 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
-  @observable isSearching: boolean = false;
   debounceTime = 300;
 
   constructor(id: string | undefined, terria: Terria) {
@@ -138,13 +137,13 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    runInAction(() => (this.isSearching = true));
+    runInAction(() => (searchResults.isSearching = true));
 
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
     if (searchText === undefined || /^\s*$/.test(searchText)) {
-      runInAction(() => (this.isSearching = false));
+      runInAction(() => (searchResults.isSearching = false));
       return Promise.resolve();
     }
 
@@ -167,16 +166,18 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
         const results = await this.terria.catalogIndex.search(searchText);
         runInAction(() => (searchResults.results = results));
       } else {
-        await loadAndSearchCatalogRecursively(
+        const t = await loadAndSearchCatalogRecursively(
           this.terria.modelValues,
           searchText.toLowerCase(),
           searchResults,
           resultMap
         );
+
+        console.log(t);
       }
 
       runInAction(() => {
-        this.isSearching = false;
+        searchResults.isSearching = false;
       });
 
       if (searchResults.isCanceled) {
@@ -194,6 +195,7 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
         };
       }
     } catch (e) {
+      console.error(e);
       this.terria.raiseErrorToUser(e, {
         message: "An error occurred while searching",
         severity: TerriaErrorSeverity.Warning
