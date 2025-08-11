@@ -14,7 +14,7 @@ import LocationSearchProviderMixin, {
 import MapboxSearchProviderTraits from "../../Traits/SearchProviders/MapboxSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import { Feature, Point } from "@turf/helpers";
 import isDefined from "../../Core/isDefined";
@@ -68,7 +68,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
   protected doSearch(
     searchText: string,
-    searchResults: SearchProviderResults
+    searchResults: SearchProviderResult
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;

@@ -29,7 +29,7 @@ describe("GazetteerSearchProvider", function () {
     await searchProvider.search("Fred", true);
 
     expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
-    expect(searchProvider.result).toBeDefined();
-    expect(searchProvider.result.results.length > 0).toBeTruthy();
+    expect(searchProvider.searchResult).toBeDefined();
+    expect(searchProvider.searchResult.results.length > 0).toBeTruthy();
   });
 });

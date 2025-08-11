@@ -12,7 +12,7 @@ import styled from "styled-components";
 import isDefined from "../../Core/isDefined";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResultModel from "../../Models/SearchProviders/SearchResult";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -38,14 +38,14 @@ const RawButtonAndHighlight = styled(RawButton)`
 interface LocationSearchResultsProps {
   viewState: ViewState;
   terria: Terria;
-  search: SearchProviderResults;
+  searchResult: SearchProviderResult;
   onLocationClick: (result: SearchResultModel) => void;
   locationSearchText: string;
 }
 
 const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
   ({
-    search,
+    searchResult,
     terria,
     locationSearchText,
     onLocationClick
@@ -74,7 +74,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
       }
 
       const validResults = filterResults
-        ? search.results.filter(function (r: any) {
+        ? searchResult.results.filter(function (r: any) {
             return (
               r.location.longitude > west! &&
               r.location.longitude < east! &&
@@ -82,12 +82,12 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
               r.location.latitude < north!
             );
           })
-        : search.results;
+        : searchResult.results;
       return validResults;
-    }, [search.results, terria]);
+    }, [searchResult.results, terria]);
 
     const searchProvider: LocationSearchProviderMixin.Instance =
-      search.searchProvider as unknown as LocationSearchProviderMixin.Instance;
+      searchResult.searchProvider as unknown as LocationSearchProviderMixin.Instance;
 
     const maxResults = searchProvider.recommendedListLength || 5;
     const results =
@@ -115,7 +115,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
               name={searchProvider.name}
               length={validResults?.length}
               isOpen={isOpen}
-              search={search}
+              search={searchResult}
             />
             <StyledIcon
               styledWidth={"9px"}
@@ -126,7 +126,7 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
         <Text textDarker>
           {isOpen && (
             <>
-              <SearchHeader searchResults={search} />
+              <SearchHeader searchResult={searchResult} />
               <Ul column fullWidth>
                 {results.map((result: SearchResultModel, i: number) => (
                   <SearchResult
@@ -187,7 +187,7 @@ interface NameWithLoaderProps {
   name: string;
   length?: number;
   isOpen: boolean;
-  search: SearchProviderResults;
+  search: SearchProviderResult;
 }
 
 const NameWithLoader: FC<NameWithLoaderProps> = observer(
