@@ -32,7 +32,7 @@ import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
-import {
+import JsonValue, {
   JsonArray,
   JsonObject,
   isJsonBoolean,
@@ -389,11 +389,32 @@ export interface ConfigParameters {
   keepCatalogOpen: boolean;
 }
 
-interface StartOptions {
-  configUrl: string;
-  configUrlHeaders?: {
-    [key: string]: string;
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
+export const defaultLoadConfig = async (configUrl: string) => {
+  const hashProperties = queryToObject(new URI(window.location).fragment());
+
+  // If in development environment, allow usage of #configUrl to set Terria config URL
+  if (IS_DEVELOPMENT) {
+    if (hashProperties["configUrl"] && hashProperties["configUrl"] !== "")
+      configUrl = hashProperties["configUrl"];
+  }
+
+  const baseUri = new URI(configUrl).filename("");
+
+  const config = await loadJson5(configUrl);
+
+  return {
+    config,
+    baseUri
   };
+};
+
+interface StartOptions {
+  loadConfig: (cb?: () => void) => Promise<{
+    config: JsonValue;
+    baseUri: URI;
+  }>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
@@ -1023,31 +1044,11 @@ export default class Terria {
 
     this.shareDataService = options.shareDataService;
 
-    // If in development environment, allow usage of #configUrl to set Terria config URL
-    if (this.developmentEnv) {
-      if (
-        isDefined(hashProperties["configUrl"]) &&
-        hashProperties["configUrl"] !== ""
-      )
-        options.configUrl = hashProperties["configUrl"];
-    }
-
-    const baseUri = new URI(options.configUrl).filename("");
-
-    const launchUrlForAnalytics =
-      options.applicationUrl?.href || getUriWithoutPath(baseUri);
+    let launchUrlForAnalytics = options.applicationUrl?.href;
 
     try {
-      const config = await loadJson5(
-        options.configUrl,
-        options.configUrlHeaders
-      );
-
-      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-      // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, config, baseUri);
-      }
+      const { config, baseUri } = await options.loadConfig();
+      launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
@@ -1058,7 +1059,7 @@ export default class Terria {
       this.raiseErrorToUser(error, {
         sender: this,
         title: { key: "models.terria.loadConfigErrorTitle" },
-        message: `Couldn't load ${options.configUrl}`,
+        message: `Couldn't load configuration`,
         severity: TerriaErrorSeverity.Error
       });
     } finally {

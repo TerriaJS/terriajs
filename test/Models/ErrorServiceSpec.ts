@@ -1,7 +1,7 @@
 import TerriaError from "../../lib/Core/TerriaError";
 import { ErrorServiceProvider } from "../../lib/Models/ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "../../lib/Models/ErrorServiceProviders/StubErrorServiceProvider";
-import Terria from "../../lib/Models/Terria";
+import Terria, { defaultLoadConfig } from "../../lib/Models/Terria";
 
 describe("ErrorService", function () {
   let mockErrorServiceProvider: ErrorServiceProvider;
@@ -31,7 +31,7 @@ describe("ErrorService", function () {
   it("Initializes an error service, passing in config", async function () {
     const initSpy = spyOn(mockErrorServiceProvider, "init");
     await terria.start({
-      configUrl: "test-config.json",
+      loadConfig: () => defaultLoadConfig("test-config.json"),
       errorService: mockErrorServiceProvider
     });
     expect(initSpy).toHaveBeenCalledTimes(1);
@@ -40,7 +40,7 @@ describe("ErrorService", function () {
   it("Gets called with error", async function () {
     const errorSpy = spyOn(mockErrorServiceProvider, "error").and.callThrough();
     await terria.start({
-      configUrl: "test-config.json",
+      loadConfig: () => defaultLoadConfig("test-config.json"),
       errorService: mockErrorServiceProvider
     });
     const error = new TerriaError({
@@ -52,7 +52,7 @@ describe("ErrorService", function () {
 
   it("Falls back to stub provider", () => {
     terria.start({
-      configUrl: "test-config.json"
+      loadConfig: () => defaultLoadConfig("test-config.json")
     });
     expect(terria.errorService).toEqual(jasmine.any(StubErrorServiceProvider));
   });
