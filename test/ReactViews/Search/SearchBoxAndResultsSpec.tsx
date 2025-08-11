@@ -228,7 +228,7 @@ describe("SearchBoxAndResults", function () {
       { timeout: 5000 }
     );
 
-    expect(mapboxProvider.result.results.length).toBe(1);
+    expect(mapboxProvider.searchResult.results.length).toBe(1);
 
     expect(mapboxSpy).toHaveBeenCalledTimes(1);
   });
@@ -273,7 +273,7 @@ describe("SearchBoxAndResults", function () {
       expect(screen.getByText(/Nominatim result for.*/i)).toBeInTheDocument();
     });
 
-    expect(nominatimProvider.result.results.length).toBe(1);
+    expect(nominatimProvider.searchResult.results.length).toBe(1);
     expect(nominatimSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -393,8 +393,8 @@ describe("SearchBoxAndResults", function () {
     await waitFor(() => {
       expect(viewState.searchState.showLocationSearchResults).toBe(false);
     });
-    expect(nominatimProvider.result.results.length).toBe(0);
-    expect(mapboxProvider.result.results.length).toBe(0);
+    expect(nominatimProvider.searchResult.results.length).toBe(0);
+    expect(mapboxProvider.searchResult.results.length).toBe(0);
   });
 
   it("should handle manual vs automatic search triggering correctly", async function () {

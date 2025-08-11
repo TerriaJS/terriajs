@@ -2,7 +2,7 @@ import { debounce } from "lodash-es";
 import { action, makeObservable, observable } from "mobx";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import Model from "../../Models/Definition/Model";
-import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 
 type SearchProviderModel = Model<SearchProviderTraits>;
@@ -19,7 +19,7 @@ function SearchProviderMixin<
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
-      this.result = new SearchProviderResults(this);
+      this.searchResult = new SearchProviderResult(this);
 
       // Create debounced search function
       this._debouncedSearch = debounce((searchText: string) => {
@@ -28,13 +28,13 @@ function SearchProviderMixin<
     }
 
     @observable
-    public result: SearchProviderResults;
+    public searchResult: SearchProviderResult;
 
     protected abstract logEvent(searchText: string): void;
 
     protected abstract doSearch(
       searchText: string,
-      results: SearchProviderResults
+      results: SearchProviderResult
     ): Promise<void>;
 
     @action
@@ -42,8 +42,8 @@ function SearchProviderMixin<
       // Cancel any pending debounced search
       this._debouncedSearch.cancel();
 
-      this.result.isCanceled = true;
-      this.result = new SearchProviderResults(this);
+      this.searchResult.isCanceled = true;
+      this.searchResult = new SearchProviderResult(this);
     }
 
     @action
@@ -51,13 +51,13 @@ function SearchProviderMixin<
       searchText: string,
       manuallyTriggered?: boolean
     ): Promise<void> {
-      this.result.isWaitingToStartSearch = true;
+      this.searchResult.isWaitingToStartSearch = true;
       if (!this.shouldRunSearch(searchText)) {
         // Cancel any pending search
         this._debouncedSearch.cancel();
 
-        this.result.isSearching = false;
-        this.result.message = {
+        this.searchResult.isSearching = false;
+        this.searchResult.message = {
           content: "translate#viewModels.searchMinCharacters",
           params: {
             count: this.minCharacters
@@ -79,12 +79,12 @@ function SearchProviderMixin<
     @action
     private async performSearch(searchText: string): Promise<void> {
       this.logEvent(searchText);
-      this.result.isWaitingToStartSearch = false;
-      this.result.isSearching = true;
+      this.searchResult.isWaitingToStartSearch = false;
+      this.searchResult.isSearching = true;
 
-      await this.doSearch(searchText, this.result);
+      await this.doSearch(searchText, this.searchResult);
 
-      this.result.isSearching = false;
+      this.searchResult.isSearching = false;
     }
 
     private shouldRunSearch(searchText: string) {

@@ -41,9 +41,11 @@ describe("CesiumIonSearchProvider", () => {
     );
 
     await searchProvider.search("test", true);
-    expect(searchProvider.result.results.length).toBe(1);
-    expect(searchProvider.result.results[0].name).toBe("West End, Australia");
-    expect(searchProvider.result.results[0].location?.latitude).toBe(
+    expect(searchProvider.searchResult.results.length).toBe(1);
+    expect(searchProvider.searchResult.results[0].name).toBe(
+      "West End, Australia"
+    );
+    expect(searchProvider.searchResult.results[0].location?.latitude).toBe(
       -27.4822998046875
     );
   });
@@ -52,8 +54,8 @@ describe("CesiumIonSearchProvider", () => {
     worker.use(http.get("http://api.test.com", () => HttpResponse.json([])));
 
     await searchProvider.search("test", true);
-    expect(searchProvider.result.results.length).toBe(0);
-    expect(searchProvider.result.message?.content).toBe(
+    expect(searchProvider.searchResult.results.length).toBe(0);
+    expect(searchProvider.searchResult.message?.content).toBe(
       "translate#viewModels.searchNoLocations"
     );
   });
@@ -66,8 +68,8 @@ describe("CesiumIonSearchProvider", () => {
     );
 
     await searchProvider.search("test", true);
-    expect(searchProvider.result.results.length).toBe(0);
-    expect(searchProvider.result.message?.content).toBe(
+    expect(searchProvider.searchResult.results.length).toBe(0);
+    expect(searchProvider.searchResult.message?.content).toBe(
       "translate#viewModels.searchErrorOccurred"
     );
   });
