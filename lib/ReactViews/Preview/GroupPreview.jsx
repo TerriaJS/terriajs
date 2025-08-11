@@ -43,38 +43,38 @@ class GroupPreview extends Component {
         >
           <h3>{this.props.previewed.name}</h3>
 
-          {this.props.terria.configParameters.disableSharePanel && (
-            <div className={Styles.shareLinkWrapper}>
-              {/* If this is a display group, show the "Add/Remove All" button next to the shareLink */}
-              {this.props.previewed.displayGroup === true && (
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    addRemoveButtonClicked(
-                      this.props.previewed,
-                      this.props.viewState,
-                      this.props.terria,
-                      event.shiftKey || event.ctrlKey
-                    );
-                  }}
-                  className={Styles.btnAddAll}
-                >
-                  {allMappableMembersInWorkbench(
-                    this.props.previewed.members,
-                    this.props.terria
-                  )
-                    ? t("models.catalog.removeAll")
-                    : t("models.catalog.addAll")}
-                </button>
-              )}
+          <div className={Styles.shareLinkWrapper}>
+            {/* If this is a display group, show the "Add/Remove All" button next to the shareLink */}
+            {this.props.previewed.displayGroup === true && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  addRemoveButtonClicked(
+                    this.props.previewed,
+                    this.props.viewState,
+                    this.props.terria,
+                    event.shiftKey || event.ctrlKey
+                  );
+                }}
+                className={Styles.btnAddAll}
+              >
+                {allMappableMembersInWorkbench(
+                  this.props.previewed.members,
+                  this.props.terria
+                )
+                  ? t("models.catalog.removeAll")
+                  : t("models.catalog.addAll")}
+              </button>
+            )}
+            {this.props.terria.configParameters.disableSharePanel && (
               <SharePanel
                 catalogShare
                 modalWidth={this.props.widthFromMeasureElementHOC}
                 terria={this.props.terria}
                 viewState={this.props.viewState}
               />
-            </div>
-          )}
+            )}
+          </div>
         </div>
         {this.props.previewed.loadMetadataResult?.error && (
           <WarningBox
