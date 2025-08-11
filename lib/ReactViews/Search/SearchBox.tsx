@@ -27,7 +27,6 @@ interface SearchBoxProps {
   placeholder?: string;
   onClear?: () => void;
   alwaysShowClear?: boolean;
-  debounceDuration?: number;
   autoFocus?: boolean;
   inputBoxRef?: React.Ref<HTMLInputElement>;
 }
@@ -45,7 +44,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   placeholder = "Search",
   onClear,
   alwaysShowClear = false,
-  debounceDuration: _debounceDuration, // Keep for backward compatibility but don't use
   autoFocus = false,
   inputBoxRef
 }) => {
@@ -72,7 +70,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        // Trigger the search
         onDoSearch();
       }}
       css={`

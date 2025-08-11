@@ -221,7 +221,6 @@ describe("SearchBoxAndResults", function () {
 
     await user.type(searchBox, "test search");
 
-    // Wait for results to appear
     await waitFor(
       () => {
         expect(screen.getByText("Mapbox result for")).toBeInTheDocument();
@@ -251,10 +250,8 @@ describe("SearchBoxAndResults", function () {
 
     const searchBox = screen.getByRole("textbox");
 
-    // Type in the search box but do not press Enter
     await user.type(searchBox, "test search");
 
-    // Results should not appear yet
     expect(screen.queryByText("Nominatim result for")).not.toBeInTheDocument();
     await waitFor(() => {
       expect(
@@ -264,10 +261,8 @@ describe("SearchBoxAndResults", function () {
 
     expect(nominatimSpy).not.toHaveBeenCalled();
 
-    // Now press Enter to trigger the search
     await user.keyboard("{Enter}");
 
-    // Wait for results to appear
     await waitFor(() => {
       expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
     });
@@ -298,7 +293,6 @@ describe("SearchBoxAndResults", function () {
     await user.clear(searchBox);
     await user.type(searchBox, "second");
 
-    // Wait for searches to complete
     await waitFor(
       () => {
         expect(screen.getByText("second")).toBeInTheDocument();
@@ -306,7 +300,6 @@ describe("SearchBoxAndResults", function () {
       { timeout: 5000 }
     );
 
-    // Should not show results for first search
     expect(screen.queryByText("first")).not.toBeInTheDocument();
   });
 
@@ -388,7 +381,6 @@ describe("SearchBoxAndResults", function () {
 
     await userEvent.clear(screen.getByRole("textbox"));
 
-    // Results should be hidden when showLocationSearchResults becomes false
     await waitFor(() => {
       expect(viewState.searchState.showLocationSearchResults).toBe(false);
     });
@@ -413,7 +405,6 @@ describe("SearchBoxAndResults", function () {
 
     const searchBox = screen.getByRole("textbox");
 
-    // Type text (automatic search)
     await user.type(searchBox, "test");
 
     expect(mapboxSpy).not.toHaveBeenCalled();

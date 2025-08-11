@@ -21,7 +21,6 @@ function SearchProviderMixin<
       makeObservable(this);
       this.searchResult = new SearchProviderResult(this);
 
-      // Create debounced search function
       this._debouncedSearch = debounce((searchText: string) => {
         this.performSearch(searchText);
       }, this.debounceTime);
@@ -39,7 +38,6 @@ function SearchProviderMixin<
 
     @action
     cancelSearch() {
-      // Cancel any pending debounced search
       this._debouncedSearch.cancel();
 
       this.searchResult.isCanceled = true;
@@ -53,7 +51,6 @@ function SearchProviderMixin<
     ): Promise<void> {
       this.searchResult.isWaitingToStartSearch = true;
       if (!this.shouldRunSearch(searchText)) {
-        // Cancel any pending search
         this._debouncedSearch.cancel();
 
         this.searchResult.isSearching = false;
@@ -66,12 +63,10 @@ function SearchProviderMixin<
         return;
       }
 
-      // If manually triggered (e.g., Enter key), search immediately
       if (manuallyTriggered) {
-        this._debouncedSearch.cancel(); // Cancel any pending debounced search
+        this._debouncedSearch.cancel();
         await this.performSearch(searchText);
       } else {
-        // Use debounced search for automatic searches (typing)
         await this._debouncedSearch(searchText);
       }
     }
