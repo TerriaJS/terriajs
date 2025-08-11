@@ -66,6 +66,9 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
     });
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+      if (props.terria.configParameters.disableUserAddedData) {
+        return;
+      }
       if (!e.dataTransfer.types || !e.dataTransfer.types.includes("Files")) {
         return;
       }
