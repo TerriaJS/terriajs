@@ -173,7 +173,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                     key={searchProvider.uniqueId}
                     terria={viewState.terria}
                     viewState={viewState}
-                    search={searchProvider.result}
+                    searchResult={searchProvider.searchResult}
                     locationSearchText={locationSearchText}
                     onLocationClick={(result) => {
                       if (!result.location) return;

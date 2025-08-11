@@ -35,8 +35,8 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if searchText is undefined", () => {
     searchProvider.search(undefined as never);
-    expect(searchProvider.result.isSearching).toBeFalsy();
-    expect(searchProvider.result.message).toBeDefined();
+    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
@@ -44,8 +44,8 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if only spaces", () => {
     searchProvider.search("        ");
-    expect(searchProvider.result.isSearching).toBeFalsy();
-    expect(searchProvider.result.message).toBeDefined();
+    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
@@ -53,8 +53,8 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if searchText less than minCharacters", () => {
     searchProvider.search("12");
-    expect(searchProvider.result.isSearching).toBeFalsy();
-    expect(searchProvider.result.message).toBeDefined();
+    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
     expect(searchProvider.doSearch).not.toHaveBeenCalled();
@@ -62,8 +62,8 @@ describe("SearchProviderMixin", () => {
 
   it(" - should run search if searchText is valid", () => {
     searchProvider.search("1234", true);
-    expect(searchProvider.result.isSearching).toBeTruthy();
-    expect(searchProvider.result.message).not.toBeDefined();
+    expect(searchProvider.searchResult.isSearching).toBeTruthy();
+    expect(searchProvider.searchResult.message).not.toBeDefined();
 
     expect(searchProvider.logEvent).toHaveBeenCalled();
     expect(searchProvider.doSearch).toHaveBeenCalled();

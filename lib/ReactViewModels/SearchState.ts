@@ -102,8 +102,8 @@ export default class SearchState {
     for (const searchProvider of this.locationSearchProviders) {
       if (
         !searchProvider.autocompleteEnabled ||
-        searchProvider.result.isWaitingToStartSearch ||
-        searchProvider.result.isSearching
+        searchProvider.searchResult.isWaitingToStartSearch ||
+        searchProvider.searchResult.isSearching
       )
         searchProvider.search(this.locationSearchText, true);
     }

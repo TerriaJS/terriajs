@@ -8,7 +8,7 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider from "../../../lib/Models/SearchProviders/MapboxSearchProvider";
 import NominatimSearchProvider from "../../../lib/Models/SearchProviders/NominatimSearchProvider";
-import SearchProviderResults from "../../../lib/Models/SearchProviders/SearchProviderResults";
+import SearchProviderResult from "../../../lib/Models/SearchProviders/SearchProviderResults";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
@@ -146,7 +146,7 @@ describe("SearchBoxAndResults", function () {
     // Mock the doSearch methods to avoid actual API calls.
     // @ts-expect-error: doSearch method is protected
     nominatimSpy = spyOn(nominatimProvider, "doSearch").and.callFake(
-      (searchText: string, results: SearchProviderResults) => {
+      (searchText: string, results: SearchProviderResult) => {
         return new Promise((resolve) => {
           if (!results.isCanceled) {
             runInAction(() => {
@@ -170,7 +170,7 @@ describe("SearchBoxAndResults", function () {
 
     // @ts-expect-error: doSearch method is protected
     mapboxSpy = spyOn(mapboxProvider, "doSearch").and.callFake(
-      (searchText: string, results: SearchProviderResults) => {
+      (searchText: string, results: SearchProviderResult) => {
         return new Promise((resolve) => {
           if (!results.isCanceled) {
             runInAction(() => {
@@ -229,7 +229,7 @@ describe("SearchBoxAndResults", function () {
       { timeout: 5000 }
     );
 
-    expect(mapboxProvider.result.results.length).toBe(1);
+    expect(mapboxProvider.searchResult.results.length).toBe(1);
 
     expect(mapboxSpy).toHaveBeenCalledTimes(1);
   });
@@ -272,7 +272,7 @@ describe("SearchBoxAndResults", function () {
       expect(screen.getByText("Nominatim result for")).toBeInTheDocument();
     });
 
-    expect(nominatimProvider.result.results.length).toBe(1);
+    expect(nominatimProvider.searchResult.results.length).toBe(1);
     expect(nominatimSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -392,8 +392,8 @@ describe("SearchBoxAndResults", function () {
     await waitFor(() => {
       expect(viewState.searchState.showLocationSearchResults).toBe(false);
     });
-    expect(nominatimProvider.result.results.length).toBe(0);
-    expect(mapboxProvider.result.results.length).toBe(0);
+    expect(nominatimProvider.searchResult.results.length).toBe(0);
+    expect(mapboxProvider.searchResult.results.length).toBe(0);
   });
 
   it("should handle manual vs automatic search triggering correctly", async function () {

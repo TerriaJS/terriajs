@@ -2,7 +2,7 @@ import { computed, makeObservable, observable } from "mobx";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import SearchResult from "./SearchResult";
 
-export default class SearchProviderResults<
+export default class SearchProviderResult<
   SeachProviderType = SearchProviderMixin.Instance
 > {
   @observable results: SearchResult[] = [];

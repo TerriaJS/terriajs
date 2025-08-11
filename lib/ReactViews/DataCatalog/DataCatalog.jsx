@@ -39,7 +39,7 @@ class DataCatalog extends Component {
         {isSearching && catalogSearchProvider && (
           <>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
-            <SearchHeader searchResults={catalogSearchProvider.result} />
+            <SearchHeader searchResult={catalogSearchProvider.result} />
           </>
         )}
         {items.map(

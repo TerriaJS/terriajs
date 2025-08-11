@@ -12,7 +12,7 @@ import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/Locat
 import CesiumIonSearchProviderTraits from "../../Traits/SearchProviders/CesiumIonSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import CommonStrata from "../Definition/CommonStrata";
 
@@ -71,7 +71,7 @@ export default class CesiumIonSearchProvider extends LocationSearchProviderMixin
 
   protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResults
+    searchResults: SearchProviderResult
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;

@@ -126,12 +126,12 @@ describe("BingMapsSearchProvider", function () {
 
     await bingMapsSearchProvider.search("test", true);
 
-    expect(bingMapsSearchProvider.result.results.length).toEqual(2);
-    expect(bingMapsSearchProvider.result.message).toBeUndefined();
-    expect(bingMapsSearchProvider.result.results[0].name).toEqual(
+    expect(bingMapsSearchProvider.searchResult.results.length).toEqual(2);
+    expect(bingMapsSearchProvider.searchResult.message).toBeUndefined();
+    expect(bingMapsSearchProvider.searchResult.results[0].name).toEqual(
       "test result 2"
     );
-    expect(bingMapsSearchProvider.result.results[1].name).toEqual(
+    expect(bingMapsSearchProvider.searchResult.results[1].name).toEqual(
       "test result 1, Italy"
     );
   });
