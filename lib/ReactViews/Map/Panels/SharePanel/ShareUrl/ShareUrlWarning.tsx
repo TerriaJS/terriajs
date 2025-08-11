@@ -43,7 +43,10 @@ export const ShareUrlWarning: FC<IShareUrlWarningProps> = observer(
         (model) => !isShareable(terria)(model.uniqueId || "")
       );
 
-    if (unshareableItems.length === 0) {
+    if (
+      unshareableItems.length === 0 ||
+      terria.configParameters.disableUserAddedData
+    ) {
       return null;
     }
 

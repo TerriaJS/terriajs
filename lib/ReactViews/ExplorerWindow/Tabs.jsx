@@ -46,23 +46,11 @@ class Tabs extends Component {
       return this.props.tabs;
     }
 
-    const myDataTab = {
-      title: "my-data",
-      name: t("addData.myData"),
-      category: "my-data",
-      panel: (
-        <MyDataTab
-          terria={this.props.terria}
-          viewState={this.props.viewState}
-          onFileAddFinished={(files) => this.onFileAddFinished(files)}
-          onUrlAddFinished={() => this.onUrlAddFinished()}
-        />
-      )
-    };
+    const tabs = [];
 
     if (this.props.terria.configParameters.tabbedCatalog) {
-      return [].concat(
-        this.props.terria.catalog.group.memberModels
+      tabs.push(
+        ...this.props.terria.catalog.group.memberModels
           .filter(
             (member) => member !== this.props.terria.catalog.userAddedDataGroup
           )
@@ -77,25 +65,39 @@ class Tabs extends Component {
                 searchPlaceholder={t("addData.searchPlaceholderWhole")}
               />
             )
-          })),
-        [myDataTab]
+          }))
       );
     } else {
-      return [
-        {
-          name: t("addData.data"),
-          title: "data-catalog",
-          category: "data-catalog",
-          panel: (
-            <DataCatalogTab
-              items={this.props.terria.catalog.group.memberModels}
-              searchPlaceholder={t("addData.searchPlaceholder")}
-            />
-          )
-        },
-        myDataTab
-      ];
+      tabs.push({
+        name: t("addData.data"),
+        title: "data-catalog",
+        category: "data-catalog",
+        panel: (
+          <DataCatalogTab
+            items={this.props.terria.catalog.group.memberModels}
+            searchPlaceholder={t("addData.searchPlaceholder")}
+          />
+        )
+      });
     }
+
+    if (!this.props.terria.configParameters.disableUserAddedData) {
+      tabs.push({
+        title: "my-data",
+        name: t("addData.myData"),
+        category: "my-data",
+        panel: (
+          <MyDataTab
+            terria={this.props.terria}
+            viewState={this.props.viewState}
+            onFileAddFinished={(files) => this.onFileAddFinished(files)}
+            onUrlAddFinished={() => this.onUrlAddFinished()}
+          />
+        )
+      });
+    }
+
+    return tabs;
   }
 
   async activateTab(category, idInCategory) {

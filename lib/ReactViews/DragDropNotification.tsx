@@ -39,6 +39,10 @@ const DragDropNotification: FC<DragDropNotificationProps> = observer(
       };
     }, [uploadedFiles]);
 
+    if (viewState.terria.configParameters.disableUserAddedData) {
+      return null;
+    }
+
     const handleHover = () => {
       // reset timer on hover
       if (notificationTimeoutRef.current) {

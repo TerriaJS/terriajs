@@ -276,6 +276,11 @@ export interface ConfigParameters {
    */
   disableShareEmbed?: boolean;
 
+  /**
+   * True to disable user added data.
+   */
+  disableUserAddedData?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -583,6 +588,7 @@ export default class Terria {
     disablePedestrianMode: false,
     disableSharePanel: false,
     disableShareEmbed: false,
+    disableUserAddedData: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
