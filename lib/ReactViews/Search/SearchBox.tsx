@@ -21,7 +21,7 @@ const SearchInput = styled.input<{ rounded?: boolean }>`
 
 interface SearchBoxProps {
   onSearchTextChanged: (text: string) => void;
-  onDoSearch: (manuallyTriggered: boolean) => void;
+  onDoSearch: () => void;
   searchText: string;
   onFocus?: () => void;
   placeholder?: string;
@@ -54,9 +54,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     onSearchTextChanged(value);
-
-    // Trigger automatic search (will be debounced at provider level)
-    onDoSearch(false);
   };
 
   const clearSearch = () => {
@@ -75,8 +72,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        // Trigger manual search
-        onDoSearch(true);
+        // Trigger the search
+        onDoSearch();
       }}
       css={`
         position: relative;
