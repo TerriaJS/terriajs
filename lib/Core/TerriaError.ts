@@ -378,7 +378,7 @@ export default class TerriaError {
   /**
    * Returns a plain error object for this TerriaError instance.
    *
-   * Will return the highest importance erorr (as name/message), and then returns a stack trace with the messages from all the nested `originalError`s for this instance.
+   * Will return the highest importance error (as name/message), and then returns a stack trace with the messages from all the nested `originalError`s for this instance.
    */
   toError(): Error {
     // indentation required per nesting when stringifying nested error messages

@@ -27,7 +27,9 @@ const SelectableDimensionWorkflow: FC = observer(() => {
       viewState={viewState}
       icon={terria.selectableDimensionWorkflow.icon}
       title={terria.selectableDimensionWorkflow.name}
-      options={terria.selectableDimensionWorkflow.options}
+      hideCloseButton={
+        terria.selectableDimensionWorkflow.options?.hideCloseButton
+      }
       closeButtonText={t("compare.done")}
       onClose={action(() => {
         terria.selectableDimensionWorkflow = undefined;

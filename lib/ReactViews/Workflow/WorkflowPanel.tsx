@@ -9,7 +9,6 @@ import { scrollBars } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
 import { PortalChild } from "../StandardUserInterface/Portal";
 import { PanelButton } from "./Panel";
-import { SelectableDimensionWorkflowOptions } from "../../Models/Workflows/SelectableDimensionWorkflow";
 
 export const WorkflowPanelPortalId = "workflow-panel-portal";
 
@@ -23,7 +22,7 @@ type PropsType = {
     onClick: () => void;
     buttonText: string;
   };
-  options?: SelectableDimensionWorkflowOptions;
+  hideCloseButton?: boolean;
   children?: ReactNode;
 };
 
@@ -56,7 +55,7 @@ const WorkflowPanel: FC<PropsType> = observer((props) => {
         <TitleBar>
           <TitleIcon glyph={props.icon} />
           <Title>{props.title}</Title>
-          {!props.options?.hideCloseButton && (
+          {!props.hideCloseButton && (
             <>
               {!props.closeButtonText && (
                 <CloseIconButton onClick={props.onClose} />
