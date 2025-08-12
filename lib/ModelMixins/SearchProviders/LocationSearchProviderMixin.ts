@@ -31,6 +31,10 @@ function LocationSearchProviderMixin<
 
     @action
     showWarning() {}
+
+    supportsAutocomplete(): boolean {
+      return true;
+    }
   }
 
   return LocationSearchProviderMixin;

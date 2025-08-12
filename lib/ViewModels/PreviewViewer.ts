@@ -1,4 +1,4 @@
-import { IComputedValue, computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
@@ -25,20 +25,20 @@ export default class PreviewViewer extends TerriaViewer {
    * @param terria Terria instance
    * @param previewed A computed value that returns the previewed item
    */
-  constructor(
-    terria: Terria,
-    previewed: IComputedValue<MappableMixin.Instance>
-  ) {
+  constructor(terria: Terria, previewed: MappableMixin.Instance | undefined) {
     super(
       terria,
       computed(() => {
+        if (!previewed) {
+          return [];
+        }
+
         // Wrap preview item in an adapter that boosts the opacity value for imagery items
-        const previewedItem = previewed.get();
-        const previewAdapter = new AdaptForPreviewMap(previewedItem);
+        const previewAdapter = new AdaptForPreviewMap(previewed);
         // Show rectangle extent of the previewed item
         return filterOutUndefined([
           previewAdapter,
-          this.boundingRectangleCatalogItem(previewedItem)
+          this.boundingRectangleCatalogItem(previewed)
         ]);
       })
     );
@@ -176,7 +176,7 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   @computed
   get mapItems() {
     return (
-      this.previewed?.mapItems.map((m) =>
+      this.previewed.mapItems.map((m) =>
         ImageryParts.is(m)
           ? {
               ...m,
