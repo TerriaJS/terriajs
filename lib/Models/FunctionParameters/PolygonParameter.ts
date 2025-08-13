@@ -25,15 +25,7 @@ export default class PolygonParameter
   static formatValueForUrl(value: PolygonCoordinates) {
     return JSON.stringify({
       type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "Polygon",
-            coordinates: value
-          }
-        }
-      ]
+      features: [PolygonParameter.getGeoJsonFeature(value)]
     });
   }
 
