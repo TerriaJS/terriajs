@@ -61,7 +61,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
   protected logEvent(searchText: string) {
     this.terria.analytics?.logEvent(
       Category.search,
-      SearchAction.bing,
+      SearchAction.mapbox,
       searchText
     );
   }
