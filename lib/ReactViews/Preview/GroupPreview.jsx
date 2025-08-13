@@ -66,12 +66,14 @@ class GroupPreview extends Component {
                   : t("models.catalog.addAll")}
               </button>
             )}
-            <SharePanel
-              catalogShare
-              modalWidth={this.props.widthFromMeasureElementHOC}
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
+            {this.props.terria.configParameters.disableSharePanel && (
+              <SharePanel
+                catalogShare
+                modalWidth={this.props.widthFromMeasureElementHOC}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            )}
           </div>
         </div>
         {this.props.previewed.loadMetadataResult?.error && (

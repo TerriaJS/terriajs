@@ -418,6 +418,7 @@ export default class ViewState {
       (disclaimerVisible) => {
         this.isMapFullScreen =
           disclaimerVisible ||
+          terria.elements.get("show-workbench")?.visible === false ||
           terria.userProperties.get("hideWorkbench") === "1" ||
           terria.userProperties.get("hideExplorerPanel") === "1";
       }
@@ -425,6 +426,7 @@ export default class ViewState {
 
     this._isMapFullScreenSubscription = reaction(
       () =>
+        terria.elements.get("show-workbench")?.visible === false ||
         terria.userProperties.get("hideWorkbench") === "1" ||
         terria.userProperties.get("hideExplorerPanel") === "1",
       (isMapFullScreen: boolean) => {
@@ -595,6 +597,9 @@ export default class ViewState {
 
   @action
   openUserData(): void {
+    if (this.terria.configParameters.disableUserAddedData) {
+      return;
+    }
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = USER_DATA_NAME;
   }

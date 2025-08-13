@@ -16,6 +16,7 @@ class DataCatalogMember extends Component {
     member: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     manageIsOpenLocally: PropTypes.bool,
+    hideActionButton: PropTypes.bool,
     onActionButtonClicked: PropTypes.func,
     removable: PropTypes.bool,
     terria: PropTypes.object,
@@ -35,6 +36,7 @@ class DataCatalogMember extends Component {
           reference={member}
           viewState={this.props.viewState}
           terria={this.props.terria}
+          hideActionButton={this.props.hideActionButton}
           onActionButtonClicked={this.props.onActionButtonClicked}
           isTopLevel={this.props.isTopLevel}
         />
@@ -45,6 +47,7 @@ class DataCatalogMember extends Component {
           group={member}
           viewState={this.props.viewState}
           manageIsOpenLocally={this.props.manageIsOpenLocally}
+          hideActionButton={this.props.hideActionButton}
           onActionButtonClicked={this.props.onActionButtonClicked}
           removable={this.props.removable}
           terria={this.props.terria}
@@ -56,6 +59,7 @@ class DataCatalogMember extends Component {
         <DataCatalogItem
           item={member}
           viewState={this.props.viewState}
+          hideActionButton={this.props.hideActionButton}
           onActionButtonClicked={this.props.onActionButtonClicked}
           removable={this.props.removable}
           terria={this.props.terria}

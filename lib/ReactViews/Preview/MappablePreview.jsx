@@ -36,10 +36,17 @@ class MappablePreview extends Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     widthFromMeasureElementHOC: PropTypes.number,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    onToggleItemOnMap: PropTypes.func,
+    hideToggleItemOnMap: PropTypes.bool
   };
 
   async toggleOnMap(event) {
+    if (this.props.onToggleItemOnMap) {
+      this.props.onToggleItemOnMap(this.props.previewed);
+      return;
+    }
+
     if (defined(this.props.viewState.storyShown)) {
       runInAction(() => (this.props.viewState.storyShown = false));
     }
@@ -80,15 +87,17 @@ class MappablePreview extends Component {
               }
             />
           )}
-        <button
-          type="button"
-          onClick={this.toggleOnMap.bind(this)}
-          className={Styles.btnAdd}
-        >
-          {this.props.terria.workbench.contains(catalogItem)
-            ? t("preview.removeFromMap")
-            : t("preview.addToMap")}
-        </button>
+        {!this.props.hideToggleItemOnMap && (
+          <button
+            type="button"
+            onClick={this.toggleOnMap.bind(this)}
+            className={Styles.btnAdd}
+          >
+            {this.props.terria.workbench.contains(catalogItem)
+              ? t("preview.removeFromMap")
+              : t("preview.addToMap")}
+          </button>
+        )}
         <div className={Styles.previewedInfo}>
           <div
             className={Styles.titleAndShareWrapper}

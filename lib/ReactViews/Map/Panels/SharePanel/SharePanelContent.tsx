@@ -72,6 +72,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
         includeStoryInShare={includeStoryInShare}
         includeStoryInShareOnChange={includeStoryInShareOnChange}
         shareUrl={shareUrlRef}
+        disableShareEmbed={terria.configParameters.disableShareEmbed}
       />
     </Box>
   );
