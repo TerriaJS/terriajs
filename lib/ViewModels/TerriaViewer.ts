@@ -20,7 +20,7 @@ import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
-import ViewerMode from "../Models/ViewerMode";
+import ViewerMode, { getViewerType } from "../Models/ViewerMode";
 
 // Async loading of Leaflet and Cesium
 
@@ -81,7 +81,6 @@ export default class TerriaViewer {
 
     try {
       const result = await baseMap.loadMapItems();
-
       if (result.error) {
         result.raiseError(this.terria, {
           title: {
@@ -117,6 +116,34 @@ export default class TerriaViewer {
         });
       }
     }
+  }
+
+  /**
+   * Switch to a base map that is compatible with the current viewer
+   *
+   * @returns A promise that yields `true` if the switch was made.
+   */
+  async useViewerCompatibleBaseMap(): Promise<boolean> {
+    const currentViewerType = this.viewerMode;
+    const baseMapViewerType = this.baseMap?.preferredViewerMode
+      ? getViewerType(this.baseMap.preferredViewerMode)
+      : undefined;
+
+    if (!baseMapViewerType || baseMapViewerType === currentViewerType) {
+      return false;
+    }
+
+    // Select a base map that either does not require a specific viewer mode or
+    // specifies a compatible mode.
+    const compatibleBaseMap = this.terria.baseMapsModel.baseMapItems.find(
+      (it) =>
+        !it.item.preferredViewerMode ||
+        getViewerType(it.item.preferredViewerMode) === currentViewerType
+    )?.item;
+
+    return compatibleBaseMap
+      ? this.setBaseMap(compatibleBaseMap).then(() => true)
+      : false;
   }
 
   // This is a "view" of a workbench/other
@@ -280,6 +307,7 @@ export default class TerriaViewer {
 
   destroy(): void {
     this.detach();
+    this.viewerChangeTracker?.();
   }
 
   private destroyCurrentViewer() {

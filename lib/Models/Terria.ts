@@ -1417,14 +1417,18 @@ export default class Terria {
       })
     );
 
+    let baseMapPromise: Promise<void> | undefined;
     // Sequentially apply all InitSources
     for (let i = 0; i < loadedInitSources.length; i++) {
       const initSource = loadedInitSources[i];
       if (!isDefined(initSource?.data)) continue;
       try {
-        await this.applyInitData({
+        const result = await this._applyInitData({
           initData: initSource!.data
         });
+        if (result.baseMapPromise) {
+          baseMapPromise = result.baseMapPromise;
+        }
       } catch (e) {
         errors.push(
           TerriaError.from(e, {
@@ -1440,9 +1444,9 @@ export default class Terria {
       }
     }
 
-    // Load basemap. Wait for any basemap loaded from applyInitData to finish
+    // Wait for any basemap loaded from applyInitData to finish
     // loading before we restore from user preference.
-    Promise.resolve(this._loadPersistedSettings.baseMapPromise).finally(() => {
+    Promise.resolve(baseMapPromise).finally(() => {
       runInAction(() => {
         if (!this.mainViewer.baseMap) {
           // Note: there is no "await" here - as basemaps can take a while
@@ -1684,21 +1688,34 @@ export default class Terria {
     }
   }
 
-  @action
-  async applyInitData({
-    initData,
-    replaceStratum = false,
-    canUnsetFeaturePickingState = false
-  }: {
+  async applyInitData(params: {
     initData: InitSourceData;
     replaceStratum?: boolean;
     // When feature picking state is missing from the initData, unset the state only if this flag is true
     // This is for eg, set to true when switching through story slides.
     canUnsetFeaturePickingState?: boolean;
   }): Promise<void> {
+    await this._applyInitData(params);
+  }
+
+  /**
+   * @private
+   */
+  @action
+  async _applyInitData({
+    initData,
+    replaceStratum = false,
+    canUnsetFeaturePickingState = false
+  }: {
+    initData: InitSourceData;
+    replaceStratum?: boolean;
+    canUnsetFeaturePickingState?: boolean;
+  }): Promise<{ baseMapPromise: Promise<void> | undefined }> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
+
+    let baseMapPromise: Promise<void> | undefined;
 
     const stratumId =
       typeof initData.stratum === "string"
@@ -1803,15 +1820,11 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this._loadPersistedSettings.baseMapPromise = this.mainViewer
-          .setBaseMap(
-            this.baseMapsModel.baseMapItems.find(
-              (item) => item.item.uniqueId === initData.settings!.baseMapId
-            )?.item
-          )
-          .finally(() => {
-            this._loadPersistedSettings.baseMapPromise = undefined;
-          });
+        baseMapPromise = this.mainViewer.setBaseMap(
+          this.baseMapsModel.baseMapItems.find(
+            (item) => item.item.uniqueId === initData.settings!.baseMapId
+          )?.item
+        );
       }
       if (isJsonNumber(initData.settings.terrainSplitDirection)) {
         this.terrainSplitDirection = initData.settings.terrainSplitDirection;
@@ -1957,6 +1970,8 @@ export default class Terria {
           key: "models.terria.loadingInitSourceErrorTitle"
         }
       });
+
+    return { baseMapPromise };
   }
 
   @action
