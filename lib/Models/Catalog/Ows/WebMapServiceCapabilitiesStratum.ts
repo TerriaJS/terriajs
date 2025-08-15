@@ -14,7 +14,8 @@ import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
   InfoSectionTraits,
-  MetadataUrlTraits
+  MetadataUrlTraits,
+  ShortReportTraits
 } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { ProjectedBoundingBoxTraits } from "../../../Traits/TraitsClasses/CrsTraits";
 import {
@@ -47,6 +48,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import { GeographicTilingScheme } from "terriajs-cesium";
 
 /** Transforms WMS GetCapabilities XML into WebMapServiceCatalogItemTraits */
 export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
@@ -623,14 +625,31 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get shortReport() {
-    const catalogItem = this.catalogItem;
-    if (catalogItem.isShowingDiff) {
-      const format = "yyyy/mm/dd";
-      const d1 = dateFormat(catalogItem.firstDiffDate, format);
-      const d2 = dateFormat(catalogItem.secondDiffDate, format);
-      return `Showing difference image computed for ${catalogItem.diffStyleId} style on dates ${d1} and ${d2}`;
+  get shortReport(): string | undefined {
+    if (
+      this.catalogItem.tilingScheme instanceof GeographicTilingScheme &&
+      this.catalogItem.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
     }
+  }
+
+  @computed
+  get shortReportSections() {
+    const catalogItem = this.catalogItem;
+    if (!catalogItem.isShowingDiff) {
+      return;
+    }
+
+    const format = "yyyy/mm/dd";
+    const d1 = dateFormat(catalogItem.firstDiffDate, format);
+    const d2 = dateFormat(catalogItem.secondDiffDate, format);
+    return [
+      createStratumInstance(ShortReportTraits, {
+        name: "Difference",
+        content: `Showing difference image computed for ${catalogItem.diffStyleId} style on dates ${d1} and ${d2}`
+      })
+    ];
   }
 
   @computed

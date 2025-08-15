@@ -41,6 +41,10 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
   }, [terria, previewed, homeCamera]);
 
   useEffect(() => {
+    if (!showMap) {
+      return;
+    }
+
     const container = mapContainerRef.current;
 
     const baseMapItems = terria.baseMapsModel.baseMapItems;
@@ -65,6 +69,7 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
       }
     };
   }, [
+    showMap,
     previewViewer,
     terria.baseMapsModel.baseMapItems,
     terria.baseMapsModel.previewBaseMapId
@@ -124,6 +129,9 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
       <label className={Styles.badge}>
         {previewBadgeLabels[previewBadgeState] || ""}
       </label>
+      {previewed?.previewCaption && (
+        <div className={Styles.caption}>{previewed?.previewCaption}</div>
+      )}
     </div>
   );
 });

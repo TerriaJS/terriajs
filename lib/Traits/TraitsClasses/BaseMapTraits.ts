@@ -71,4 +71,12 @@ export class BaseMapsTraits extends ModelTraits {
       "Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps."
   })
   enabledBaseMaps?: string[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "statusMessage",
+    description:
+      "A short message to show next to the basemap selector in map settings panel"
+  })
+  statusMessage?: string;
 }

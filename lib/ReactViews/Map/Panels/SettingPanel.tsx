@@ -12,11 +12,15 @@ import {
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { BaseMapItem } from "../../../Models/BaseMaps/BaseMapsModel";
 import Cesium from "../../../Models/Cesium";
-import { BaseModel } from "../../../Models/Definition/Model";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
+  getViewerType,
   setViewerMode
 } from "../../../Models/ViewerMode";
 import Box from "../../../Styled/Box";
@@ -25,8 +29,9 @@ import Checkbox from "../../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
+import CrsTraits from "../../../Traits/TraitsClasses/CrsTraits";
+import TerriaViewer from "../../../ViewModels/TerriaViewer";
 import { useViewState } from "../../Context";
-import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
@@ -45,22 +50,41 @@ const SettingPanel: FC = observer(() => {
     SETTING_PANEL_NAME,
     viewState
   );
-  const [hoverBaseMap, setHoverBaseMap] = useState<string | null>(null);
+  const [hoverBaseMap, setHoverBaseMap] = useState<
+    MappableMixin.Instance | undefined
+  >();
 
-  const activeMapName = hoverBaseMap
-    ? hoverBaseMap
-    : terria.mainViewer.baseMap
-    ? (terria.mainViewer.baseMap as any).name
-    : "(None)";
+  const activeMap = hoverBaseMap ?? terria.mainViewer.baseMap;
+  const activeMapName = activeMap ? mapDisplayName(activeMap) : "(None)";
 
   const selectBaseMap = (
-    baseMap: BaseModel,
+    baseMap: MappableMixin.Instance,
     event: MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation();
     if (!MappableMixin.isMixedInto(baseMap)) return;
 
-    terria.mainViewer.setBaseMap(baseMap);
+    const currentViewerMode = terria.mainViewer.viewerMode;
+    const newViewerMode = baseMap.preferredViewerMode
+      ? getViewerType(baseMap.preferredViewerMode)
+      : undefined;
+
+    terria.mainViewer.setBaseMap(baseMap).then(() => {
+      const switchedViewerMode =
+        newViewerMode &&
+        currentViewerMode &&
+        newViewerMode !== currentViewerMode &&
+        terria.mainViewer.viewerMode === newViewerMode;
+
+      if (switchedViewerMode) {
+        notifyViewerModeSwitch(
+          baseMap,
+          currentViewerMode,
+          newViewerMode,
+          terria
+        );
+      }
+    });
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
@@ -72,12 +96,12 @@ const SettingPanel: FC = observer(() => {
     }
   };
 
-  const mouseEnterBaseMap = (baseMap: any) => {
-    setHoverBaseMap(baseMap.item?.name);
+  const mouseEnterBaseMap = (baseMap: BaseMapItem) => {
+    setHoverBaseMap(baseMap.item);
   };
 
   const mouseLeaveBaseMap = () => {
-    setHoverBaseMap(null);
+    setHoverBaseMap(undefined);
   };
 
   const selectViewer = action(
@@ -86,6 +110,12 @@ const SettingPanel: FC = observer(() => {
       event.stopPropagation();
       showTerrainOnSide(sides.both, undefined);
       setViewerMode(viewer, mainViewer);
+      ensureComaptibleBaseMapForViewer(
+        viewer,
+        mainViewer.viewerMode,
+        mainViewer,
+        terria
+      );
       // We store the user's chosen viewer mode for future use.
       terria.setLocalProperty("viewermode", viewer);
       terria.currentViewer.notifyRepaintRequired();
@@ -204,8 +234,6 @@ const SettingPanel: FC = observer(() => {
     ? t("settingPanel.timeline.alwaysShowLabel")
     : t("settingPanel.timeline.hideLabel");
 
-  const CustomMapViewOptions = viewState._customMapViewOptions;
-
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
@@ -231,11 +259,6 @@ const SettingPanel: FC = observer(() => {
             </SettingsButton>
           ))}
         </FlexGrid>
-        {CustomMapViewOptions && (
-          <RaiseToUserErrorBoundary viewState={viewState}>
-            <CustomMapViewOptions />
-          </RaiseToUserErrorBoundary>
-        )}
         {!!supportsSide && (
           <>
             <Spacing bottom={2} />
@@ -311,6 +334,11 @@ const SettingPanel: FC = observer(() => {
                 </StyledBasemapButton>
               ))}
             </FlexGrid>
+            {terria.baseMapsModel.statusMessage && (
+              <BaseMapStatus>
+                {terria.baseMapsModel.statusMessage}
+              </BaseMapStatus>
+            )}
           </Box>
         </>
         <>
@@ -379,6 +407,90 @@ const SettingPanel: FC = observer(() => {
   );
 });
 
+/**
+ * Return name + CRS if the base map specifies one
+ */
+function mapDisplayName(baseMap: MappableMixin.Instance): string {
+  const name =
+    (CatalogMemberMixin.isMixedInto(baseMap) ? baseMap.name : undefined) ?? "";
+  const crs = hasTraits(baseMap, CrsTraits, "crs") ? baseMap.crs : undefined;
+  return name && crs ? `${name} (${crs})` : name;
+}
+
+/**
+ * Ensure the base map is compatible with the viewer mode user has selected
+ *
+ * If the current base map specifies a `preferredViewerMode` and this doesn't
+ * match the new viewer mode then switch to a compatible base map.
+ */
+function ensureComaptibleBaseMapForViewer(
+  newViewerMode: "3d" | "3dsmooth" | "2d",
+  newViewerType: ViewerMode | undefined,
+  viewer: TerriaViewer,
+  terria: Terria
+) {
+  const preferredViewerMode = viewer.baseMap?.preferredViewerMode;
+  if (!preferredViewerMode || preferredViewerMode === newViewerMode) {
+    return;
+  }
+
+  const newBaseMap = terria.baseMapsModel.baseMapItems.find((it) => {
+    const baseMap = it.item;
+    return (
+      !baseMap.preferredViewerMode ||
+      baseMap.preferredViewerMode === newViewerMode
+    );
+  })?.item;
+
+  if (newBaseMap) {
+    const lastBaseMapName = mapDisplayName(viewer.baseMap);
+    const newBaseMapName = mapDisplayName(newBaseMap);
+    const mapMode = newViewerMode.slice(0, 2).toUpperCase(); // 3D | 2D;
+    const message = `The '${lastBaseMapName}' base map cannot be viewed in ${mapMode}. The Base Map has
+        been changed to '${newBaseMapName}'.`;
+    const title = "Base map switched";
+
+    viewer.setBaseMap(newBaseMap).then(() => {
+      // If already showing a similar notification, dismiss it to show a new one.
+      const currentNotification = terria.notificationState.currentNotification;
+      if (currentNotification?.title === title) {
+        terria.notificationState.dismissCurrentNotification();
+      }
+
+      terria.notificationState.addNotificationToQueue({
+        title,
+        message,
+        ignore: () =>
+          viewer.baseMap !== newBaseMap || viewer.viewerMode !== newViewerType,
+        showAsToast: true,
+        toastVisibleDuration: 15
+      });
+    });
+  }
+}
+
+function notifyViewerModeSwitch(
+  newBaseMap: MappableMixin.Instance,
+  currentViewerMode: ViewerMode,
+  newViewerMode: ViewerMode,
+  terria: Terria
+) {
+  const viewer = terria.mainViewer;
+  const currentMode = currentViewerMode === ViewerMode.Cesium ? "3D" : "2D";
+  const newMode = newViewerMode === ViewerMode.Cesium ? "3D" : "2D";
+  const newBaseMapName = mapDisplayName(newBaseMap);
+  const message = `The ‘${newBaseMapName}’ base map cannot be viewed in ${currentMode}. The Map View has been changed to ${newMode}.`;
+
+  terria.notificationState.addNotificationToQueue({
+    title: "",
+    message,
+    ignore: () =>
+      viewer.viewerMode !== newViewerMode || viewer.baseMap !== newBaseMap,
+    showAsToast: true,
+    toastVisibleDuration: 15
+  });
+}
+
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
 export default SettingPanel;
 
@@ -419,4 +531,9 @@ const StyledImage = styled(Box).attrs({
   as: "img"
 })<ComponentProps<"img">>`
   border-radius: inherit;
+`;
+
+const BaseMapStatus = styled(Text)`
+  font-size: 11px;
+  padding: ${(p) => p.theme.padding} 0;
 `;

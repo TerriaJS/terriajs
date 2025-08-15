@@ -14,6 +14,16 @@
   background: #fff;
 }
 
+.caption {
+  bottom: 5px;
+  left: 5px;
+  padding: 3px 5px 3px 5px;
+  height: 16px;
+  font-size: 75%;
+  position: absolute;
+  background: #fff;
+}
+
 //Preview map
 .terria-preview {
   &:global(.leaflet-container) {

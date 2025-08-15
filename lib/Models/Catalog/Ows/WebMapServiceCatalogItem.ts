@@ -8,7 +8,6 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction, trace } from "mobx";
 import { computedFn } from "mobx-utils";
-import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TilingScheme from "terriajs-cesium/Source/Core/TilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -178,17 +177,6 @@ class WebMapServiceCatalogItem
 
   get type() {
     return WebMapServiceCatalogItem.type;
-  }
-
-  @override
-  get shortReport(): string | undefined {
-    if (
-      this.tilingScheme instanceof GeographicTilingScheme &&
-      this.terria.currentViewer.type === "Leaflet"
-    ) {
-      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
-    }
-    return super.shortReport;
   }
 
   @computed
