@@ -18,6 +18,7 @@ import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import { defaultBaseMaps } from "./defaultBaseMaps";
+import { json } from "stream/consumers";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
@@ -115,17 +116,19 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
-        const existingItem = this.items.find(
-          (baseMap) => baseMap.item === member.item
-        );
-        if (existingItem) {
-          // object array trait doesn't automatically update model item
-          existingItem.setTrait(stratumId, "image", member.image);
-        } else {
-          this.add(stratumId, member);
-        }
-      });
+      newItemsIds
+        .pushErrorTo(errors)
+        ?.forEach((member: BaseMapModel, i: number) => {
+          const existingItem = this.items.find(
+            (baseMap) => baseMap.item === member.item
+          );
+          if (existingItem) {
+            // object array trait doesn't automatically update model item
+            updateModelFromJson(existingItem, stratumId, items[i]);
+          } else {
+            this.add(stratumId, member);
+          }
+        });
     }
 
     if (isJsonObject(rest))
