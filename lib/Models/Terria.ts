@@ -408,6 +408,11 @@ export interface ConfigParameters {
    * Keep catalog open when adding / removing items
    */
   keepCatalogOpen: boolean;
+
+  /**
+   * Zoom preview map on previewed item
+   */
+  zoomMapOnPreviewedItem: boolean;
 }
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
@@ -679,7 +684,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    zoomMapOnPreviewedItem: false
   };
 
   @observable
