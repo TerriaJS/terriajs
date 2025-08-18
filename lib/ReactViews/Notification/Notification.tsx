@@ -4,6 +4,7 @@ import triggerResize from "../../Core/triggerResize";
 import { useViewState } from "../Context";
 import NotificationToast from "./NotificationToast";
 import NotificationWindow from "./NotificationWindow";
+import AnimateSlideUpFadeIn from "../Transitions/SlideUpFadeIn/AnimateSlideUpFadeIn";
 
 const Notification = observer(() => {
   const viewState = useViewState();
@@ -21,51 +22,48 @@ const Notification = observer(() => {
     }
   }, [notificationState, ignore]);
 
-  if (
-    viewState === undefined ||
-    notificationState === undefined ||
-    notification === undefined
-  ) {
-    return null;
-  }
-
   const close = () => {
-    // Force refresh once the notification is dispatched if .hideUi is set since once all the .hideUi's
-    // have been dispatched the UI will no longer be suppressed causing a change in the view state.
+    if (!notification) return;
+
+    // Force refresh once the notification is dispatched if .hideUi is set
+    // since once all the .hideUi's have been dispatched the UI will no longer
+    // be suppressed causing a change in the view state.
+
     if (notification.hideUi) {
       triggerResize();
     }
 
     notificationState.dismissCurrentNotification();
   };
-  const confirm = () => {
-    if (notification.confirmAction !== undefined) {
-      notification.confirmAction();
-    }
-    close();
-  };
-  const deny = () => {
-    if (notification.denyAction !== undefined) {
-      notification.denyAction();
-    }
-    close();
-  };
 
-  return notification.showAsToast ? (
-    <NotificationToast notification={notification} />
-  ) : (
-    <NotificationWindow
-      viewState={viewState}
-      title={notification.title}
-      message={notification.message}
-      confirmText={notification.confirmText}
-      denyText={notification.denyText}
-      onConfirm={confirm}
-      onDeny={deny}
-      type={notification.type ?? "notification"}
-      width={notification.width}
-      height={notification.height}
-    />
+  return (
+    <>
+      <AnimateSlideUpFadeIn
+        isVisible={notification?.showAsToast === true}
+        renderOnVisible={() =>
+          notification ? (
+            <NotificationToast notification={notification} />
+          ) : null
+        }
+      />
+      {notification && !notification.showAsToast && (
+        <NotificationWindow
+          viewState={viewState}
+          title={notification.title}
+          message={notification.message}
+          confirmText={notification.confirmText}
+          denyText={notification.denyText}
+          onConfirm={() => {
+            notification.confirmAction?.();
+            close();
+          }}
+          onDeny={() => notification.denyAction?.()}
+          type={notification.type ?? "notification"}
+          width={notification.width}
+          height={notification.height}
+        />
+      )}
+    </>
   );
 });
 

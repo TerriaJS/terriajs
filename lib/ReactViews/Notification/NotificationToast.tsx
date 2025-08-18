@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
 import { Notification } from "../../ReactViewModels/NotificationState";
 import { Button } from "../../Styled/Button";
@@ -9,19 +9,24 @@ const NotificationToast: FC<{
   notification: Notification;
 }> = ({ notification }) => {
   const viewState = useViewState();
-  const nodeRef = useRef(null);
 
   const notificationState = viewState.terria.notificationState;
-  const durationMsecs = notification.toastVisibleDuration
-    ? notification.toastVisibleDuration * 1000
+  const durationMsecs =
+    notification && notification.toastVisibleDuration !== undefined
+      ? notification.toastVisibleDuration * 1000
+      : undefined;
+
+  const message = notification
+    ? typeof notification.message === "function"
+      ? notification.message(viewState)
+      : notification?.message
     : undefined;
 
-  const message =
-    typeof notification.message === "function"
-      ? notification.message(viewState)
-      : notification.message;
-
   useEffect(() => {
+    if (durationMsecs === undefined) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
       if (notificationState.currentNotification === notification) {
         notificationState.dismissCurrentNotification();
@@ -31,7 +36,7 @@ const NotificationToast: FC<{
   }, [notification, notificationState, durationMsecs]);
 
   return (
-    <Wrapper ref={nodeRef}>
+    <Wrapper>
       <StyledIcon
         styledWidth="24px"
         styledHeight="24px"
@@ -56,8 +61,8 @@ const Wrapper = styled.div`
 
   position: fixed;
   bottom: 70px;
-  left: 50%;
-  transform: translate(-35%);
+  left: 35%;
+
   border: 1px solid #ea580c;
   border-radius: 6px;
   z-index: ${(p) => p.theme.notificationWindowZIndex};
