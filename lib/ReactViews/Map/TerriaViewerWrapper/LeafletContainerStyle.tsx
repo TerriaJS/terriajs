@@ -6,7 +6,7 @@ import { useViewState } from "terriajs-plugin-api";
 /**
  * Injects global styles for leaflet container based on map state.
  */
-const LeafletContainerStyle: FC<void> = observer(() => {
+const LeafletContainerStyle: FC<object> = observer(() => {
   const terria = useViewState().terria;
 
   // Derive background color from active base map
