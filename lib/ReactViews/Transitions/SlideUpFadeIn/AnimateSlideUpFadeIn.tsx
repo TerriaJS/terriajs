@@ -26,6 +26,7 @@ const AnimateSlideUpFadeIn: FC<PropsType> = ({
       isVisible={isVisible}
       onEnter={() => setChildren(renderOnVisible())}
     >
+      {/* eslint-disable-next-line react/jsx-no-useless-fragment -- react-transition-group expects a single child */}
       <>{children}</>
     </SlideUpFadeIn>
   );
