@@ -146,7 +146,9 @@ class DataPreviewMap extends Component {
     console.log(
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
-    this.isZoomedToExtent = false;
+    this.isZoomedToExtent =
+      this.props.terria.configParameters.zoomMapOnPreviewedItem;
+
     const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
     // Find preview basemap using `terria.previewBaseMapId`
     const initPreviewBaseMap = baseMapItems.find(
