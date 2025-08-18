@@ -95,7 +95,16 @@ export default class ShareDataService {
       }
 
       return shareJson;
-    } catch (error) {
+    } catch (e: any) {
+      const error: Error & { statusCode?: number } = e || {};
+      if (error.statusCode === 404) {
+        throw TerriaError.from(error, {
+          title: i18next.t("models.shareData.shareNotFoundTitle"),
+          message: i18next.t("models.shareData.shareNotFoundMessage"),
+          importance: 1
+        });
+      }
+
       throw TerriaError.from(error, {
         title: i18next.t("models.shareData.expandErrorTitle"),
         message: i18next.t("models.shareData.expandErrorMessage", {
