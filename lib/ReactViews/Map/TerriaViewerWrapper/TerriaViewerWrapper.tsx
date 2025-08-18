@@ -1,9 +1,9 @@
 import { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
+import ViewerMode from "../../../Models/ViewerMode";
 import { useViewState } from "../../Context";
 import LeafletContainerStyle from "./LeafletContainerStyle";
 import { Splitter } from "./Splitter/Splitter";
-import { ViewerMode } from "terriajs-plugin-api";
 
 export const TerriaViewerWrapper: FC = () => {
   const viewState = useViewState();

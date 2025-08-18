@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { FC } from "react";
 import { createGlobalStyle } from "styled-components";
-import { useViewState } from "terriajs-plugin-api";
+import { useViewState } from "../../Context/ViewStateContext";
 
 /**
  * Injects global styles for leaflet container based on map state.
