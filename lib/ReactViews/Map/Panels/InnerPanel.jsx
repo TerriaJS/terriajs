@@ -36,6 +36,8 @@ const InnerPanel = createReactClass({
     /** How far the dropdown should be offset from the left of the container. */
     dropdownOffset: PropTypes.string,
 
+    showCloseButton: PropTypes.bool,
+
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.element),
       PropTypes.element
@@ -45,7 +47,8 @@ const InnerPanel = createReactClass({
 
   getDefaultProps() {
     return {
-      onDismissed: () => {}
+      onDismissed: () => {},
+      showCloseButton: true
     };
   },
 
@@ -125,42 +128,44 @@ const InnerPanel = createReactClass({
             : this.props.caretOffset && `${this.props.caretOffset} top`
         }}
       >
-        <button
-          type="button"
-          className={classNames(
-            // Until we break these few components out of sass, we'll use regular ol classnames
-            "tjs-sc-InnerPanelCloseButton",
-            Styles.innerCloseBtn,
-            {
-              [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
-            }
-          )}
-          onClick={this.forceClose}
-          title={t("general.close")}
-          aria-label={t("general.close")}
-          // eslint-disable-next-line react/no-unknown-property
-          showDropdownAsModal={this.props.showDropdownAsModal}
-          css={`
-            svg {
-              fill: ${(p) => p.theme.textLight};
-            }
-            &:hover,
-            &:focus {
-              svg {
-                fill: ${(p) => p.theme.colorPrimary};
+        {this.props.showCloseButton && (
+          <button
+            type="button"
+            className={classNames(
+              // Until we break these few components out of sass, we'll use regular ol classnames
+              "tjs-sc-InnerPanelCloseButton",
+              Styles.innerCloseBtn,
+              {
+                [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
               }
-            }
-            ${(p) =>
-              p.showDropdownAsModal &&
-              `
+            )}
+            onClick={this.forceClose}
+            title={t("general.close")}
+            aria-label={t("general.close")}
+            // eslint-disable-next-line react/no-unknown-property
+            showDropdownAsModal={this.props.showDropdownAsModal}
+            css={`
+              svg {
+                fill: ${(p) => p.theme.textLight};
+              }
+              &:hover,
+              &:focus {
+                svg {
+                  fill: ${(p) => p.theme.colorPrimary};
+                }
+              }
+              ${(p) =>
+                p.showDropdownAsModal &&
+                `
                 svg {
                   fill: ${p.theme.grey};
                 }
             `}
-          `}
-        >
-          <Icon glyph={Icon.GLYPHS.close} />
-        </button>
+            `}
+          >
+            <Icon glyph={Icon.GLYPHS.close} />
+          </button>
+        )}
         {defined(this.props.caretOffset) && !this.props.showDropdownAsModal && (
           <span
             className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}

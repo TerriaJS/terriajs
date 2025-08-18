@@ -123,6 +123,7 @@ const DropdownPanel = createReactClass({
             caretOffset={this.state.caretOffset}
             dropdownOffset={this.state.dropdownOffset}
             disableCloseOnFocusLoss={this.props.disableCloseOnFocusLoss}
+            showCloseButton={this.props.showCloseButton}
           >
             {this.props.children}
           </InnerPanel>
