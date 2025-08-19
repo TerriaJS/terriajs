@@ -238,6 +238,10 @@ const SettingPanel: FC = observer(() => {
       btnText={t("settingPanel.btnText")}
       viewState={viewState}
       smallScreen={viewState.useSmallScreenInterface}
+      isOpen={viewState.settingsPanelIsVisible}
+      onOpenChanged={action((isOpen: boolean) => {
+        viewState.settingsPanelIsVisible = isOpen;
+      })}
     >
       <Box padded column>
         <Box paddedVertically={1}>
