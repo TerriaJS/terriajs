@@ -6,7 +6,9 @@ import { isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
 import { isDataSource } from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
@@ -20,9 +22,10 @@ import { ColorStyleLegend } from "./ColorStyleLegend";
 import { MergedStyleMapLegend } from "./MergedStyleMapLegend";
 import { StyleMapLegend } from "./StyleMapLegend";
 
-export class TableAutomaticLegendStratum extends LoadableStratum(
-  LegendOwnerTraits
-) {
+export class TableAutomaticLegendStratum
+  extends LoadableStratum(LegendOwnerTraits)
+  implements LockedDownStratum<LegendOwnerTraits, TableAutomaticLegendStratum>
+{
   static stratumName = "table-legend";
   constructor(private readonly _item: TableMixin.Instance) {
     super();
@@ -39,7 +42,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     return new TableAutomaticLegendStratum(item);
   }
 
-  @computed get legendItemOverrides(): Partial<LegendItemTraits> {
+  @computed private get legendItemOverrides(): Partial<LegendItemTraits> {
     const override = {
       ...(this._item.activeTableStyle.tableColorMap.type === "constant"
         ? {
@@ -70,12 +73,12 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     return override;
   }
 
-  @computed get colorStyleLegend() {
+  @computed private get colorStyleLegend() {
     if (this._item.activeTableStyle.tableColorMap.type !== "constant")
       return new ColorStyleLegend(this._item, this.legendItemOverrides);
   }
 
-  @computed get pointStyleMapLegend() {
+  @computed private get pointStyleMapLegend() {
     if (this._item.activeTableStyle.pointStyleMap.styleMap.type !== "constant")
       return new StyleMapLegend(
         this._item,
@@ -85,7 +88,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
       );
   }
 
-  @computed get outlineStyleMapLegend() {
+  @computed private get outlineStyleMapLegend() {
     if (
       this._item.activeTableStyle.outlineStyleMap.styleMap.type !== "constant"
     )
@@ -97,13 +100,13 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
       );
   }
 
-  @computed get showPointLegend() {
+  @computed private get showPointLegend() {
     return !!this._item.mapItems.find(
       (d) => isDataSource(d) && d.entities.values.length > 0
     );
   }
 
-  @computed get mergedLegend() {
+  @computed private get mergedLegend() {
     if (this.styleLegends.length === 0) return;
 
     const mergableStyleTypes = [
@@ -133,7 +136,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     }
   }
 
-  @computed get styleLegends() {
+  @computed private get styleLegends() {
     return filterOutUndefined([
       this.colorStyleLegend,
       this.showPointLegend ? this.pointStyleMapLegend : undefined,

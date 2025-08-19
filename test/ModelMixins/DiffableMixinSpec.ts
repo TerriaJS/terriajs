@@ -57,10 +57,6 @@ class TestDiffableItem extends DiffableMixin(
     return true;
   }
 
-  get discreteTimes() {
-    return undefined;
-  }
-
   showDiffImage(
     _firstDate: JulianDate,
     _secondDate: JulianDate,

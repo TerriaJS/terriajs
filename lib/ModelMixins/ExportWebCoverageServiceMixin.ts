@@ -15,7 +15,9 @@ import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import ResultPendingCatalogItem from "../Models/Catalog/ResultPendingCatalogItem";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import UserDrawing from "../Models/UserDrawing";
@@ -46,9 +48,14 @@ type Coverage = {
  *
  * Note: not currently used
  */
-class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
-  ExportWebCoverageServiceTraits
-) {
+class WebCoverageServiceCapabilitiesStratum
+  extends LoadableStratum(ExportWebCoverageServiceTraits)
+  implements
+    LockedDownStratum<
+      ExportWebCoverageServiceTraits,
+      WebCoverageServiceCapabilitiesStratum
+    >
+{
   static stratumName = "wcsCapabilitiesStratum";
 
   static async load(catalogItem: ExportWebCoverageServiceMixin.Instance) {
@@ -87,8 +94,8 @@ class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogItem: ExportWebCoverageServiceMixin.Instance,
-    readonly capabilities: {
+    private readonly catalogItem: ExportWebCoverageServiceMixin.Instance,
+    private readonly capabilities: {
       coverages: Coverage[];
       formats: string[];
       crs: string[];

@@ -8,7 +8,9 @@ import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../Map/ColorMap/EnumColorMap";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
@@ -16,15 +18,18 @@ import LegendTraits, {
 } from "../Traits/TraitsClasses/LegendTraits";
 import TableStyle from "./TableStyle";
 
-export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
+export class ColorStyleLegend
+  extends LoadableStratum(LegendTraits)
+  implements LockedDownStratum<LegendTraits, ColorStyleLegend>
+{
   /**
    *
    * @param catalogItem
    * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
    */
   constructor(
-    readonly catalogItem: TableMixin.Instance,
-    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
+    private readonly catalogItem: TableMixin.Instance,
+    private readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
     makeObservable(this);
@@ -34,13 +39,13 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     return new ColorStyleLegend(newModel as TableMixin.Instance) as this;
   }
 
-  @computed get tableStyle() {
+  @computed private get tableStyle() {
     return this.catalogItem.activeTableStyle;
   }
 
   // Keep these here until we deprecate LegendTraits in TableColorStyleTraits
   // See https://github.com/TerriaJS/terriajs/issues/6356
-  @computed get oldLegendTraits() {
+  @computed private get oldLegendTraits() {
     return this.tableStyle.colorTraits.legend;
   }
 

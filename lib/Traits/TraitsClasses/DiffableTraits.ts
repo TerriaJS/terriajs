@@ -3,9 +3,15 @@ import anyTrait from "../Decorators/anyTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import ExportableTraits from "./ExportableTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 
-export default class DiffableTraits extends mixTraits(TimeFilterTraits) {
+export default class DiffableTraits extends mixTraits(
+  TimeFilterTraits,
+  LegendOwnerTraits,
+  ExportableTraits
+) {
   @primitiveArrayTrait({
     type: "string",
     name: "Available diff styles",
