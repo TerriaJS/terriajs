@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import { createElement, ReactElement } from "react";
-import { ViewState } from "terriajs-plugin-api";
+import ViewState from "../../ReactViewModels/ViewState";
 import FeatureLink from "../Generic/FeatureLink";
 import CustomComponent, {
   DomElement,
@@ -31,10 +31,13 @@ export default class SettingsPanelLinkCustomComponent extends CustomComponent {
     node: DomElement,
     children: ReactElement[]
   ): ReactElement {
-    return createElement(FeatureLink, {
-      title: node.attribs?.title,
-      children,
-      onClick: action((viewState: ViewState) => viewState.openSettingsPanel())
-    });
+    return createElement(
+      FeatureLink,
+      {
+        title: node.attribs?.title,
+        onClick: action((viewState: ViewState) => viewState.openSettingsPanel())
+      },
+      ...children
+    );
   }
 }

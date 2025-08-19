@@ -1,10 +1,11 @@
 import { FC, ReactNode } from "react";
 import styled from "styled-components";
-import { ViewState, useViewState } from "terriajs-plugin-api";
+import ViewState from "../../ReactViewModels/ViewState";
+import { useViewState } from "../Context/ViewStateContext";
 
 interface PropsType {
   title?: string;
-  children: ReactNode | ReactNode[];
+  children?: ReactNode | ReactNode[];
   onClick: (viewState: ViewState) => void;
 }
 
