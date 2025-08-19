@@ -1,7 +1,7 @@
 const SVGSpriter = require("svg-sprite");
 const collector = require("./svg-sprite-collector");
 const { sources } = require("webpack");
-const { basename } = require("path");
+const { basename, join } = require("path");
 
 /**
  * SVG Sprite Webpack Plugin
@@ -10,17 +10,22 @@ const { basename } = require("path");
 class SvgSpriteWebpackPlugin {
   constructor(options = {}) {
     this.options = {
-      outputPath: "build/TerriaJS/build/",
+      outputPath: "build/",
       ...options
     };
 
     this.sprites = new Map();
+    this.spritesPaths = new Set();
   }
 
   apply(compiler) {
+    console.log("🔨 Initializing SVG Sprite Webpack Plugin...");
     compiler.hooks.thisCompilation.tap(
       SvgSpriteWebpackPlugin.name,
       (compilation) => {
+        console.log("🔨 Compiling SVG sprites...");
+        this.sprites.clear();
+        this.spritesPaths.clear();
         // Hook into finishModules to process after all modules are loaded
         compilation.hooks.finishModules.tapPromise(
           {
@@ -38,21 +43,40 @@ class SvgSpriteWebpackPlugin {
                   `🔨 Processing ${icons.size} SVG icons for sprite ${namespace}...`
                 );
 
-                const sprite = await this.buildSprite(namespace, icons);
+                const sprite = await this.buildSprite(
+                  namespace,
+                  icons,
+                  this.options.outputPath
+                );
 
                 // Build sprite from collected icons
                 compilation.emitAsset(
                   sprite.filename,
                   new sources.RawSource(sprite.content)
                 );
-
                 // Register sprite in global registry with content
                 this.sprites.set(sprite.filename, sprite.content);
+                this.spritesPaths.add(
+                  join(this.options.outputPath, sprite.filename)
+                );
 
                 console.log(
                   `✅ Generated ${sprite.filename} with ${icons.size} icons`
                 );
               }
+
+              // Generate sprite manifest for runtime loading
+              const spriteManifest = {
+                sprites: Array.from(this.spritesPaths),
+                generated: new Date().toISOString()
+              };
+
+              compilation.emitAsset(
+                "sprite-manifest.json",
+                new sources.RawSource(JSON.stringify(spriteManifest, null, 2))
+              );
+
+              console.log("✅ Generated sprite-manifest.json");
             } catch (error) {
               console.error("Failed to build SVG sprite:", error);
               throw error;
@@ -87,6 +111,9 @@ class SvgSpriteWebpackPlugin {
                       data.plugin.options.sprites = Object.fromEntries(
                         this.sprites.entries()
                       );
+                      data.plugin.options.spritesPaths = Array.from(
+                        this.spritesPaths
+                      );
                       callback(null, data);
                     }
                   );
@@ -110,12 +137,12 @@ class SvgSpriteWebpackPlugin {
   /**
    * Build SVG sprite from collected icons
    */
-  async buildSprite(namespace, icons) {
+  async buildSprite(namespace, icons, dest = "") {
     const spriter = new SVGSpriter({
       mode: {
         symbol: {
           inline: true,
-          dest: "",
+          dest,
           sprite: `sprite-${namespace}`,
           bust: true
         }
