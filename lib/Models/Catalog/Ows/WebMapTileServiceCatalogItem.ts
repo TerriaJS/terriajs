@@ -1,11 +1,13 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable, override } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
+import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
@@ -17,15 +19,13 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
   WebMapTileServiceAvailableLayerStylesTraits
 } from "../../../Traits/TraitsClasses/WebMapTileServiceCatalogItemTraits";
-import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import { ServiceProvider } from "./OwsInterfaces";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
-import { ModelConstructorParameters } from "../../Definition/Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
@@ -34,10 +34,14 @@ import WebMapTileServiceCapabilities, {
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 
+export const SUPPORTED_CRS_3857 = [/EPSG.*3857/, /EPSG.*900913/];
+export const SUPPORTED_CRS_4326 = [/EPSG.*4326/, /CRS.*84/, /EPSG.*4283/];
+
 interface UsableTileMatrixSets {
   identifiers: string[];
   tileWidth: number;
   tileHeight: number;
+  scheme: WebMercatorTilingScheme | GeographicTilingScheme;
 }
 
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -316,15 +320,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get usableTileMatrixSets() {
-    const usableTileMatrixSets: { [key: string]: UsableTileMatrixSets } = {
-      "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible": {
-        identifiers: ["0"],
-        tileWidth: 256,
-        tileHeight: 256
-      }
-    };
+    const usableTileMatrixSets: { [key: string]: UsableTileMatrixSets } = {};
 
-    const standardTilingScheme = new WebMercatorTilingScheme();
+    // const standardTilingScheme = new GeographicTilingScheme();
 
     const matrixSets = this.capabilities.tileMatrixSets;
     if (matrixSets === undefined) {
@@ -334,8 +332,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const matrixSet = matrixSets[i];
       if (
         !matrixSet.SupportedCRS ||
-        (!/EPSG.*900913/.test(matrixSet.SupportedCRS) &&
-          !/EPSG.*3857/.test(matrixSet.SupportedCRS))
+        ![...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326].some((crs) =>
+          crs.test(matrixSet.SupportedCRS as string)
+        )
       ) {
         continue;
       }
@@ -351,17 +350,27 @@ class GetCapabilitiesStratum extends LoadableStratum(
         continue;
       }
 
-      const levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
-      const startX = parseFloat(levelZeroTopLeftCorner[0]);
-      const startY = parseFloat(levelZeroTopLeftCorner[1]);
-      const rectangleInMeters = standardTilingScheme.rectangleToNativeRectangle(
-        standardTilingScheme.rectangle
-      );
-      if (
-        Math.abs(startX - rectangleInMeters.west) > 1 ||
-        Math.abs(startY - rectangleInMeters.north) > 1
-      ) {
-        continue;
+      const scheme = SUPPORTED_CRS_3857.some((crs) =>
+        crs.test(matrixSet.SupportedCRS as string)
+      )
+        ? new WebMercatorTilingScheme()
+        : new GeographicTilingScheme();
+
+      if (scheme instanceof WebMercatorTilingScheme) {
+        const standardTilingScheme = new WebMercatorTilingScheme();
+        const levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
+        const startX = parseFloat(levelZeroTopLeftCorner[0]);
+        const startY = parseFloat(levelZeroTopLeftCorner[1]);
+        const rectangleInMeters =
+          standardTilingScheme.rectangleToNativeRectangle(
+            standardTilingScheme.rectangle
+          );
+        if (
+          Math.abs(startX - rectangleInMeters.west) > 1 ||
+          Math.abs(startY - rectangleInMeters.north) > 1
+        ) {
+          continue;
+        }
       }
 
       if (defined(matrixSet.TileMatrix) && matrixSet.TileMatrix.length > 0) {
@@ -372,7 +381,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
         usableTileMatrixSets[matrixSet.Identifier] = {
           identifiers: ids,
           tileWidth: firstTile.TileWidth,
-          tileHeight: firstTile.TileHeight
+          tileHeight: firstTile.TileHeight,
+          scheme: scheme
         };
       }
     }
@@ -523,12 +533,12 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       style: this.style,
       tileMatrixSetID: tileMatrixSet.id,
       tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: this.minimumLevel ?? tileMatrixSet.minLevel,
-      maximumLevel: this.maximumLevel ?? tileMatrixSet.maxLevel,
+      minimumLevel: tileMatrixSet.minLevel,
+      maximumLevel: tileMatrixSet.maxLevel,
       tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
       tileHeight:
         this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
-      tilingScheme: new WebMercatorTilingScheme(),
+      tilingScheme: tileMatrixSet.scheme,
       format,
       credit: this.attribution
       // TODO: implement picking for WebMapTileServiceImageryProvider
@@ -599,6 +609,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         minLevel: number;
         tileWidth: number;
         tileHeight: number;
+        scheme: GeographicTilingScheme | WebMercatorTilingScheme;
       }
     | undefined {
     const stratum = this.strata.get(
@@ -624,13 +635,13 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       }
     }
 
-    let tileMatrixSetId: string =
-      "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible";
+    let tileMatrixSetId: string | undefined = undefined;
     let maxLevel: number = 0;
     let minLevel: number = 0;
     let tileWidth: number = 256;
     let tileHeight: number = 256;
     let tileMatrixSetLabels: string[] = [];
+    let scheme: WebMercatorTilingScheme | GeographicTilingScheme;
     for (let i = 0; i < tileMatrixSetLinks.length; i++) {
       const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
       if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
@@ -638,9 +649,12 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
         tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
         tileHeight = Number(usableTileMatrixSets[tileMatrixSet].tileHeight);
+        scheme = usableTileMatrixSets[tileMatrixSet].scheme;
         break;
       }
     }
+
+    if (!tileMatrixSetId) return undefined;
 
     if (Array.isArray(tileMatrixSetLabels)) {
       const levels = tileMatrixSetLabels.map((label) => {
@@ -652,7 +666,12 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       }, 0);
       minLevel = levels.reduce((currentMaximum, level) => {
         return level < currentMaximum ? level : currentMaximum;
-      }, 0);
+      }, Infinity);
+    }
+    if (minLevel > 0) {
+      for (let i = 0; i < minLevel; i++) {
+        tileMatrixSetLabels.unshift("");
+      }
     }
 
     return {
@@ -661,7 +680,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       maxLevel: maxLevel,
       minLevel: minLevel,
       tileWidth: tileWidth,
-      tileHeight: tileHeight
+      tileHeight: tileHeight,
+      scheme: scheme!
     };
   }
 
