@@ -88,12 +88,7 @@ const SettingPanel: FC = observer(() => {
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
-    if (baseMap) {
-      const baseMapId = baseMap.uniqueId;
-      if (baseMapId) {
-        terria.setLocalProperty("basemap", baseMapId);
-      }
-    }
+    saveBaseMapPreference(terria, baseMap);
   };
 
   const mouseEnterBaseMap = (baseMap: BaseMapItem) => {
@@ -451,6 +446,10 @@ function ensureComaptibleBaseMapForViewer(
     const title = "Base map switched";
 
     viewer.setBaseMap(newBaseMap).then(() => {
+      // User did not explicitly choose this base map but we still save it for
+      // consistency.
+      saveBaseMapPreference(terria, newBaseMap);
+
       // If already showing a similar notification, dismiss it to show a new one.
       const currentNotification = terria.notificationState.currentNotification;
       if (currentNotification?.title === title) {
@@ -489,6 +488,18 @@ function notifyViewerModeSwitch(
     showAsToast: true,
     toastVisibleDuration: 15
   });
+}
+
+/**
+ * Save user's base map preference
+ */
+function saveBaseMapPreference(
+  terria: Terria,
+  baseMap: MappableMixin.Instance
+) {
+  if (baseMap.uniqueId) {
+    terria.setLocalProperty("basemap", baseMap.uniqueId);
+  }
 }
 
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
