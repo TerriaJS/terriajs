@@ -11,7 +11,9 @@ interface Options extends FunctionParameterOptions {
   options: EnumDimensionOption[];
 }
 
-export default class EnumerationParameter extends FunctionParameter<string> {
+export default class EnumerationParameter extends FunctionParameter<
+  string | string[]
+> {
   static readonly type = "enumeration";
   readonly type = "enumeration";
 
@@ -44,10 +46,25 @@ export default class EnumerationParameter extends FunctionParameter<string> {
 
   @override
   get isValid(): boolean {
-    if (!isDefined(this.value)) {
+    const isMultiValued = this.maxOccurs !== undefined && this.maxOccurs > 1;
+    const isEmpty =
+      this.value === undefined ||
+      (isMultiValued
+        ? Array.isArray(this.value) && this.value.length === 0
+        : false);
+
+    if (isEmpty) {
       return !this.isRequired;
     }
 
-    return isDefined(this.options.find((option) => option.id === this.value));
+    const values = Array.isArray(this.value) ? this.value : [this.value];
+    if (this.maxOccurs !== undefined && values.length > this.maxOccurs) {
+      // more values selected than allowed by maxOccurs
+      return false;
+    }
+
+    const validValues = this.options.map((opt) => opt.id);
+    const allValuesValid = values.every((value) => validValues.includes(value));
+    return allValuesValid;
   }
 }
