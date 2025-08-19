@@ -3,6 +3,7 @@ const collector = require("./svg-sprite-collector");
 const { sources } = require("webpack");
 const { basename, join } = require("path");
 const crypto = require("crypto");
+const fs = require("fs");
 
 /**
  * SVG Sprite Webpack Plugin
@@ -11,7 +12,6 @@ const crypto = require("crypto");
 class SvgSpriteWebpackPlugin {
   constructor(options = {}) {
     this.options = {
-      outputPath: "build/",
       ...options
     };
 
@@ -30,14 +30,36 @@ class SvgSpriteWebpackPlugin {
     return hash.digest("hex").substring(0, 8);
   }
 
+  /**
+   * Clean up old sprite files from previous builds in watch mode
+   */
+  cleanupOldSpriteFiles(previousSpritePaths, compilation) {
+    if (!previousSpritePaths || previousSpritePaths.length === 0) {
+      return;
+    }
+    console.log("🧹 Cleaning up old sprite files...");
+
+    previousSpritePaths.forEach((filePath) => {
+      const path = join(compilation.outputOptions.path, filePath);
+      try {
+        if (fs.existsSync(path)) {
+          fs.unlinkSync(path);
+          console.log(`🗑️  Cleaned up old sprite file: ${basename(path)}`);
+        }
+      } catch (error) {
+        console.warn(
+          `⚠️  Failed to delete old sprite file ${basename(path)}:`,
+          error.message
+        );
+      }
+    });
+  }
+
   apply(compiler) {
     console.log("🔨 Initializing SVG Sprite Webpack Plugin...");
     compiler.hooks.thisCompilation.tap(
       SvgSpriteWebpackPlugin.name,
       (compilation) => {
-        console.log("🔨 Compiling SVG sprites...");
-        this.sprites.clear();
-        this.spritesPaths.clear();
         // Hook into finishModules to process after all modules are loaded
         compilation.hooks.finishModules.tapPromise(
           {
@@ -46,6 +68,22 @@ class SvgSpriteWebpackPlugin {
           },
           async () => {
             try {
+              // Check if any SVG files changed this build
+              if (!collector.hasChanges()) {
+                console.log(
+                  "⏭️  Skipping sprite compilation - no SVG changes detected"
+                );
+                return;
+              }
+              console.log("🔨 Compiling SVG sprites...");
+              this.cleanupOldSpriteFiles(
+                Array.from(this.spritesPaths),
+                compilation
+              );
+
+              this.sprites.clear();
+              this.spritesPaths.clear();
+
               const iconsByNamespace = collector.getIconsByNamespace();
 
               for (const [namespace, icons] of Object.entries(
@@ -68,14 +106,14 @@ class SvgSpriteWebpackPlugin {
                 );
                 // Register sprite in global registry with content
                 this.sprites.set(sprite.filename, sprite.content);
-                this.spritesPaths.add(
-                  join(this.options.outputPath, sprite.filename)
-                );
+                this.spritesPaths.add(compilation.getPath(sprite.filename));
 
                 console.log(
                   `✅ Generated ${sprite.filename} with ${icons.size} icons`
                 );
               }
+
+              collector.markAsProcessed();
 
               // Generate sprite manifest for runtime loading
               const spriteManifest = {
@@ -136,14 +174,6 @@ class SvgSpriteWebpackPlugin {
         }
       }
     );
-
-    // Reset collector and registry on watch mode rebuilds
-    if (compiler.options.watch) {
-      compiler.hooks.watchRun.tap(SvgSpriteWebpackPlugin.name, () => {
-        collector.reset();
-        this.sprites.clear();
-      });
-    }
   }
 
   /**
