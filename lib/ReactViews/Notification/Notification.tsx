@@ -2,9 +2,9 @@ import { observer } from "mobx-react";
 import { useEffect } from "react";
 import triggerResize from "../../Core/triggerResize";
 import { useViewState } from "../Context";
+import { SlideUpFadeIn } from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 import NotificationToast from "./NotificationToast";
 import NotificationWindow from "./NotificationWindow";
-import AnimateSlideUpFadeIn from "../Transitions/SlideUpFadeIn/AnimateSlideUpFadeIn";
 
 const Notification = observer(() => {
   const viewState = useViewState();
@@ -38,14 +38,11 @@ const Notification = observer(() => {
 
   return (
     <>
-      <AnimateSlideUpFadeIn
-        isVisible={notification?.showAsToast === true}
-        renderOnVisible={() =>
-          notification ? (
-            <NotificationToast notification={notification} />
-          ) : null
-        }
-      />
+      <SlideUpFadeIn isVisible={notification?.showAsToast === true}>
+        <div>
+          {notification && <NotificationToast notification={notification} />}
+        </div>
+      </SlideUpFadeIn>
       {notification && !notification.showAsToast && (
         <NotificationWindow
           viewState={viewState}
