@@ -2,6 +2,7 @@ const SVGSpriter = require("svg-sprite");
 const collector = require("./svg-sprite-collector");
 const { sources } = require("webpack");
 const { basename, join } = require("path");
+const crypto = require("crypto");
 
 /**
  * SVG Sprite Webpack Plugin
@@ -16,6 +17,17 @@ class SvgSpriteWebpackPlugin {
 
     this.sprites = new Map();
     this.spritesPaths = new Set();
+  }
+
+  /**
+   * Generate custom hash for sprite content
+   */
+  generateSpriteHash(content, namespace) {
+    const hash = crypto.createHash("md5");
+    hash.update(content);
+    hash.update(namespace);
+
+    return hash.digest("hex").substring(0, 8);
   }
 
   apply(compiler) {
@@ -78,7 +90,7 @@ class SvgSpriteWebpackPlugin {
 
               console.log("✅ Generated sprite-manifest.json");
             } catch (error) {
-              console.error("Failed to build SVG sprite:", error);
+              console.error("❌ Failed to build SVG sprite:", error);
               throw error;
             }
           }
@@ -144,7 +156,7 @@ class SvgSpriteWebpackPlugin {
           inline: true,
           dest,
           sprite: `sprite-${namespace}`,
-          bust: true
+          bust: false
         }
       },
       svg: {
@@ -169,7 +181,7 @@ class SvgSpriteWebpackPlugin {
     });
 
     // Add all collected icons to the spriter
-    for (const [iconId, iconData] of icons) {
+    for (const [_iconId, iconData] of icons) {
       const name = basename(iconData.path, ".svg");
       spriter.add(iconData.path, `${name}.svg`, iconData.content);
     }
@@ -177,9 +189,13 @@ class SvgSpriteWebpackPlugin {
     const { result } = await spriter.compileAsync();
     const spriteContent = result.symbol.sprite.contents.toString();
 
+    // Generate our custom hash
+    const customHash = this.generateSpriteHash(spriteContent, namespace);
+    const customFilename = `sprite-${namespace}-${customHash}.svg`;
+
     return {
       content: spriteContent,
-      filename: result.symbol.sprite.basename
+      filename: customFilename
     };
   }
 }
