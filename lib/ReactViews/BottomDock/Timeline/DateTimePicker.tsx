@@ -18,6 +18,7 @@ import { MonthView } from "./DatePicker/MonthView";
 import { TimeListView } from "./DatePicker/TimeListView";
 import { YearView } from "./DatePicker/YearView";
 import { BackButton } from "./DatePicker/DateTimePickerStyles";
+import { OutsideClickHandler } from "../../Generic/OutsideClickHandler";
 
 interface PropsType {
   dates: ObjectifiedDates;
@@ -270,13 +271,6 @@ const DateTimePicker: React.FC<PropsType> = ({
   });
 
   useEffect(() => {
-    window.addEventListener("click", onClose);
-    return () => {
-      window.removeEventListener("click", onClose);
-    };
-  }, [onClose]);
-
-  useEffect(() => {
     if (isDefined(currentDate)) {
       runInAction(() => {
         store.day = isDefined(store.day) ? currentDate.getDate() : undefined;
@@ -297,113 +291,115 @@ const DateTimePicker: React.FC<PropsType> = ({
   if (!dates || !isOpen) return null;
 
   return (
-    <div
-      css={`
-        color: ${(p: any) => p.theme.textLight};
-        display: table-cell;
-        width: 30px;
-        height: 30px;
-      `}
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-    >
+    <OutsideClickHandler disabled={!isOpen} onOutsideClick={onClose}>
       <div
         css={`
-          background: ${(p: any) => p.theme.dark};
-          width: 260px;
-          height: 300px;
-          border: 1px solid ${(p: any) => p.theme.grey};
-          border-radius: 5px;
-          padding: 5px;
-          position: relative;
-          top: -170px;
-          left: 0;
-          z-index: 100;
-
-          ${openDirection === "down"
-            ? `
-          top: 40px;
-          left: -190px;
-        `
-            : ""}
+          color: ${(p: any) => p.theme.textLight};
+          display: table-cell;
+          width: 30px;
+          height: 30px;
         `}
-        className={"scrollbars"}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
       >
         <div
           css={`
-            padding-bottom: 5px;
-            padding-right: 5px;
-          `}
-        >
-          <BackButton
-            title={t("dateTime.back")}
-            disabled={!store.canGoBack}
-            type="button"
-            onClick={store.goBack}
-          >
-            <Icon glyph={Icon.GLYPHS.left} />
-          </BackButton>
-        </div>
+            background: ${(p: any) => p.theme.dark};
+            width: 260px;
+            height: 300px;
+            border: 1px solid ${(p: any) => p.theme.grey};
+            border-radius: 5px;
+            padding: 5px;
+            position: relative;
+            top: -170px;
+            left: 0;
+            z-index: 100;
 
-        {(store.currentView.view === "time" ||
-          store.currentView.view === "minutes") && (
-          <TimeListView
-            items={store.currentView.dates as Date[]}
-            dateFormatString={dateFormat}
-            onTimeSelected={(time) => {
-              store.setDate(time);
-              onChange(time);
-              onClose();
-            }}
-          />
-        )}
-        {store.currentView.view === "century" && (
-          <CenturyView
-            datesObject={store.currentView.dates as ObjectifiedDates}
-            onSelectCentury={store.selectCentury}
-          />
-        )}
-        {store.currentView.view === "year" && (
-          <YearView
-            datesObject={store.currentView.dates as ObjectifiedYears}
-            onSelectYear={store.selectYear}
-          />
-        )}
-        {store.currentView.view === "month" && (
-          <MonthView
-            year={store.year!}
-            datesObject={store.currentView.dates as ObjectifiedMonths}
-            onSelectMonth={store.selectMonth}
-            onBack={store.goBack}
-          />
-        )}
-        {store.currentView.view === "day" && (
-          <DayView
-            year={store.year!}
-            month={store.month!}
-            datesObject={store.currentView.dates as ObjectifiedDays}
-            selectedDay={store.day}
-            onSelectDay={(date) => store.selectDay(date?.getDate())}
-            onBackToYear={() => {
-              store.selectYear(store.year!);
-            }}
-            onBackToMonth={() => {
-              store.selectMonth(store.month!);
-            }}
-          />
-        )}
-        {store.currentView.view === "hour" && (
-          <HourView
-            year={store.year!}
-            month={store.month!}
-            day={store.day!}
-            datesObject={store.currentView.dates as ObjectifiedHours}
-            onSelectHour={store.selectHour}
-          />
-        )}
+            ${openDirection === "down"
+              ? `
+          top: 40px;
+          left: -190px;
+        `
+              : ""}
+          `}
+          className={"scrollbars"}
+        >
+          <div
+            css={`
+              padding-bottom: 5px;
+              padding-right: 5px;
+            `}
+          >
+            <BackButton
+              title={t("dateTime.back")}
+              disabled={!store.canGoBack}
+              type="button"
+              onClick={store.goBack}
+            >
+              <Icon glyph={Icon.GLYPHS.left} />
+            </BackButton>
+          </div>
+
+          {(store.currentView.view === "time" ||
+            store.currentView.view === "minutes") && (
+            <TimeListView
+              items={store.currentView.dates as Date[]}
+              dateFormatString={dateFormat}
+              onTimeSelected={(time) => {
+                store.setDate(time);
+                onChange(time);
+                onClose();
+              }}
+            />
+          )}
+          {store.currentView.view === "century" && (
+            <CenturyView
+              datesObject={store.currentView.dates as ObjectifiedDates}
+              onSelectCentury={store.selectCentury}
+            />
+          )}
+          {store.currentView.view === "year" && (
+            <YearView
+              datesObject={store.currentView.dates as ObjectifiedYears}
+              onSelectYear={store.selectYear}
+            />
+          )}
+          {store.currentView.view === "month" && (
+            <MonthView
+              year={store.year!}
+              datesObject={store.currentView.dates as ObjectifiedMonths}
+              onSelectMonth={store.selectMonth}
+              onBack={store.goBack}
+            />
+          )}
+          {store.currentView.view === "day" && (
+            <DayView
+              year={store.year!}
+              month={store.month!}
+              datesObject={store.currentView.dates as ObjectifiedDays}
+              selectedDay={store.day}
+              onSelectDay={(date) => store.selectDay(date?.getDate())}
+              onBackToYear={() => {
+                store.selectYear(store.year!);
+              }}
+              onBackToMonth={() => {
+                store.selectMonth(store.month!);
+              }}
+            />
+          )}
+          {store.currentView.view === "hour" && (
+            <HourView
+              year={store.year!}
+              month={store.month!}
+              day={store.day!}
+              datesObject={store.currentView.dates as ObjectifiedHours}
+              onSelectHour={store.selectHour}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </OutsideClickHandler>
   );
 };
 

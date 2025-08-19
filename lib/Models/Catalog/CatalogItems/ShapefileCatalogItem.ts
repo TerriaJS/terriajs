@@ -1,10 +1,9 @@
-import * as geoJsonMerge from "@mapbox/geojson-merge";
+import { FeatureCollection } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
-import { parseZip } from "shpjs";
-import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
+import { FeatureCollectionWithFilename, parseZip } from "shpjs";
 import isDefined from "../../../Core/isDefined";
-import JsonValue, { isJsonObject, JsonArray } from "../../../Core/Json";
+import { isJsonObject } from "../../../Core/Json";
 import loadBlob, { isZip } from "../../../Core/loadBlob";
 import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
@@ -15,9 +14,9 @@ import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { fileApiNotSupportedError } from "./GeoJsonCatalogItem";
 
-export function isJsonArrayOrDeepArrayOfObjects(
-  value: JsonValue | undefined
-): value is JsonArray {
+export function isJsonArrayOrDeepArrayOfObjects<T>(
+  value: T | T[]
+): value is T[] {
   return (
     Array.isArray(value) &&
     value.every(
@@ -82,15 +81,28 @@ class ShapefileCatalogItem
   }
 }
 
-async function parseShapefile(blob: Blob): Promise<FeatureCollectionWithCrs> {
-  let json: any;
-  const asAb = await blob.arrayBuffer();
-  json = await parseZip(asAb);
-  if (isJsonArrayOrDeepArrayOfObjects(json)) {
-    // There were multiple shapefiles in this zip file. Merge them.
-    json = geoJsonMerge.merge(json);
+const mergeFeatureCollections = (items: FeatureCollectionWithFilename[]) => {
+  const output: FeatureCollection = {
+    type: "FeatureCollection",
+    features: []
+  };
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    for (let j = 0; j < item.features.length; j++) {
+      output.features.push(item.features[j] as never);
+    }
   }
-  return json;
+
+  return output;
+};
+
+async function parseShapefile(blob: Blob): Promise<FeatureCollection> {
+  const asAb = await blob.arrayBuffer();
+  const json = await parseZip(asAb);
+  if (isJsonArrayOrDeepArrayOfObjects(json)) {
+    return mergeFeatureCollections(json);
+  }
+  return json as FeatureCollection;
 }
 
 export default ShapefileCatalogItem;

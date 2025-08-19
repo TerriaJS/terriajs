@@ -4,8 +4,6 @@ import type { ObjectifiedDays } from "../../../../ModelMixins/DiscretelyTimeVary
 import Spacing from "../../../../Styled/Spacing";
 import * as DTP from "./DateTimePickerStyles";
 import { monthNames } from "./utils";
-import moment from "moment";
-import isDefined from "../../../../Core/isDefined";
 
 interface DayViewProps {
   year: number;
@@ -33,19 +31,8 @@ export const DayView: React.FC<DayViewProps> = ({
     return null;
   }
 
-  const days = dayObject.index;
-  const daysToDisplay = days.map((d) =>
-    moment().date(d).month(month!).year(year!)
-  );
-  const selected = isDefined(selectedDay)
-    ? moment().date(selectedDay).month(month).year(year)
-    : null;
-
-  // Aside: You might think this implementation is clearer - use the first date available on each day.
-  // However it fails because react-datepicker actually requires a moment() object for selected, not a Date object.
-  // const monthObject = this.props.datesObject[this.currentDateIndice.year][this.currentDateIndice.month];
-  // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
-  // const selected = isDefined(this.currentDateIndice.day) ? this.props.datesObject[this.currentDateIndice.year][this.currentDateIndice.month][this.currentDateIndice.day][0] : null;
+  const daysToDisplay = dayObject.dates;
+  const selected = selectedDay ? dayObject[selectedDay].dates[0] : null;
 
   return (
     <div
@@ -66,9 +53,7 @@ export const DayView: React.FC<DayViewProps> = ({
       </div>
       <DatePicker
         inline
-        onChange={(momentDateObj: moment.Moment) => {
-          onSelectDay(momentDateObj.toDate());
-        }}
+        onChange={onSelectDay}
         includeDates={daysToDisplay}
         selected={selected}
       />

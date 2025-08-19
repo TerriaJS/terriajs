@@ -51,4 +51,15 @@
   .terria .react-datepicker__current-month {
     display: none;
   }
+
+  .terria .react-datepicker {
+    &:not(:focus-within) .react-datepicker__day--keyboard-selected {
+      background-color: transparent;
+    }
+
+    &:is(:focus-within) .react-datepicker__day--keyboard-selected {
+      background-color: variables.get-hover-color(variables.$color-primary);
+      color: #fff;
+    }
+  }
 }
