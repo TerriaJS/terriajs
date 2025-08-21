@@ -1,10 +1,11 @@
 import { observer } from "mobx-react";
 import { FC } from "react";
+import { isJsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
-import { Complete } from "../../../Core/TypeModifiers";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import {
   DEFAULT_PLACEMENT,
   SelectableDimension
@@ -26,8 +27,6 @@ import ShortReport from "./ShortReport";
 import TimerSection from "./TimerSection";
 import ViewingControls from "./ViewingControls";
 import { WorkbenchControls, buildControlSet } from "./WorkbenchControls";
-import { CatalogMemberMixin } from "terriajs-plugin-api";
-import { isJsonObject } from "../../../Core/Json";
 
 type WorkbenchItemControlsProps = {
   item: BaseModel;
