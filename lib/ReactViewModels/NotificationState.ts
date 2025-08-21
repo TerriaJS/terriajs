@@ -14,9 +14,27 @@ export interface Notification {
   width?: number | string;
   height?: number | string;
   key?: string;
-  /** If notification should not be shown to the user */
+
+  /** Show notification as a toast instead of as a blocking message */
+  showAsToast?: boolean;
+
+  /**
+   * Duration in seconds after which the toast is dismissed. If undefined, the
+   * toast must be explicitly dismissed by the user.
+   */
+  toastVisibleDuration?: number;
+
+  /**
+   * True if notification should not be shown to the user. You can also pass a
+   * reactive function which will dismiss the message even if it is currently
+   * being shown to the user.
+   */
   ignore?: boolean | (() => boolean);
-  /** Called when notification is dismissed, this will also be triggered for confirm/deny actions */
+
+  /**
+   * Called when notification is dismissed, this will also be triggered for
+   *    confirm/deny actions
+   */
   onDismiss?: () => void;
 }
 

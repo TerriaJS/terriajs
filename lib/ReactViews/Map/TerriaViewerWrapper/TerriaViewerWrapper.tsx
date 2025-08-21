@@ -1,8 +1,9 @@
 import { FC, useEffect, useRef } from "react";
-
-import { Splitter } from "./Splitter/Splitter";
-import { useViewState } from "../../Context";
 import styled from "styled-components";
+import ViewerMode from "../../../Models/ViewerMode";
+import { useViewState } from "../../Context";
+import LeafletContainerStyle from "./LeafletContainerStyle";
+import { Splitter } from "./Splitter/Splitter";
 
 export const TerriaViewerWrapper: FC = () => {
   const viewState = useViewState();
@@ -27,6 +28,9 @@ export const TerriaViewerWrapper: FC = () => {
         Loading the map, please wait...
       </StyledMapPlaceholder>
       <Splitter />
+      {viewState.terria.mainViewer.viewerMode === ViewerMode.Leaflet && (
+        <LeafletContainerStyle />
+      )}
       <div
         id="cesiumContainer"
         css={`

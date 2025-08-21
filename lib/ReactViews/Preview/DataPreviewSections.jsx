@@ -100,13 +100,12 @@ class DataPreviewSections extends Component {
               }
               bodyTextProps={{ medium: true }}
             >
-              {item.content?.length > 0
-                ? renderSection(item)
-                : item.contentAsObject !== undefined && (
-                    <Box paddedVertically={3} fullWidth>
-                      <MetadataTable metadataItem={item.contentAsObject} />
-                    </Box>
-                  )}
+              {item.content?.length > 0 && renderSection(item)}
+              {item.contentAsObject !== undefined && (
+                <Box paddedVertically={3} fullWidth>
+                  <MetadataTable metadataItem={item.contentAsObject} />
+                </Box>
+              )}
             </Collapsible>
           </Box>
         ))}

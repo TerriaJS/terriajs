@@ -1,6 +1,7 @@
 declare namespace DataPreviewMapScssNamespace {
   export interface IDataPreviewMapScss {
     badge: string;
+    caption: string;
     map: string;
     placeholder: string;
     "terria-preview": string;
