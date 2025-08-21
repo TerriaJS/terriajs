@@ -257,6 +257,12 @@ class CatalogMemberTraits extends ModelTraits {
       "True (default) if this catalog member may be included in share links. False to exclude it from share links."
   })
   shareable: boolean = true;
+
+  @anyTrait({
+    name: "Workbench controls",
+    description: "Flags to enable or disable workbench controls."
+  })
+  workbenchControls?: JsonObject;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
