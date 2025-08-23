@@ -1,7 +1,7 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## データを追加\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
+      "content": "## デジタルツインデータを探索\n\nデータカタログ を参照し、ここからデジタルツインに追加できます。一度に複数のデータセットを追加することができ、追加したデータは下の データパネル に表示されます。"
     },
     "locationSearchInput": {
       "content": "## 場所・データを検索\n\n地名やキーワードを入力すると、その場所に関連するデータや地図上の位置を検索できます。"
@@ -133,7 +133,10 @@
       "saveBtn": "保存",
       "cancelEditing": "キャンセル",
       "cancelBtn": "キャンセル",
-      "placeholder": "タイトルをここに入れてください"
+      "placeholder": "タイトルをここに入れてください",
+      "modalHeader": "ストーリーエディタ - シーン取得",
+      "titleLabel": "タイトル (必須)",
+      "descriptionLabel": "説明"
     },
     "captureScene": "シーンをキャプチャ",
     "captureSceneTitle": "現在のシーンをキャプチャ",
@@ -158,14 +161,16 @@
     "badgeBarLabel": "シーン",
     "gettingStartedTitle": "開始する",
     "gettingStarted": "開始する",
-    "panelBody": "地図のスクリーンショットをつなげて「ストーリー」を作成すれば、伝えたい情報をわかりやすく共有することができます。データを読み込み、共有したい場所を表示させたら、「シーンをキャプチャ」ボタンをクリックして、「ストーリー」を作ってみましょう。各場面には詳しい解説も追加できます。作成したストーリーは、誰とでも共有できます。",
+    "panelBody": "マップから直接、インタラクティブなストーリーを作成して共有できます。",
     "panelTitle": "ストーリーエディタ",
     "playStory": "ストーリー",
     "prev": "前",
     "next": "次",
     "restart": "再開",
     "expand": "展開する",
-    "collapse": "折りたたむ"
+    "collapse": "折りたたむ",
+    "panelBodyCapped": "各ストーリーの上限は {{ shareMaxRequestSize }} です。大きなデータやシーン数が多い場合は、複数のストーリーに分けてください。",
+    "storiesTooLong": "ストーリーのサイズが上限を超えています。表示データセットを減らすか、シーン数を減らしてお試しください。"
   },
   "diffTool": {
     "instructions": {
@@ -204,8 +209,8 @@
         "title": "場所で選択および日付でフィルタ"
       },
       "noLocationSelected": {
-        "description": "場所で画像の日付ピッカーをフィルターするには、地図で場所を選択してください",
-        "title": "場所が選択されていません"
+        "description": "画像の日付ピッカーを場所でフィルタするには、地図を拡大して関心のある地点を選択してください",
+        "title": "場所が選択されていません！"
       }
     },
     "labels": {
@@ -218,13 +223,15 @@
       "dateComparisonB": "日付比較 B",
       "dateComparisonA": "日付比較 A",
       "dates": "日付",
-      "area": "エリア"
+      "area": "エリア",
+      "saveToWorkbench": "ワークベンチに保存"
     },
     "differenceResultsTitle": "検出結果の変更",
     "chooseDifference": "別のアウトプットの選択",
     "choosePreview": "プレビュースタイルの選択",
     "exit": "終了",
-    "title": "違い"
+    "title": "違い",
+    "close": "閉じる"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "WebGLのパフォーマンスが不足しています",
@@ -256,7 +263,8 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>ドラッグ&ドロップ</0><1>してあなたのデータをマップに表示<1>"
+    "text": "<0>ドラッグ&ドロップ</0><1>してあなたのデータをマップに表示<1>",
+    "notification_0": "<0>「{{fileNames}}」</0> を <4>マイデータ</4> に追加しました。"
   },
   "clipboard": {
     "copy": "コピー",
@@ -300,7 +308,9 @@
     "colorScaleRangeTitle": "カラーレンジのスケールが間違っています",
     "searchItemTitle": "検索",
     "searchItem": "検索",
-    "splitScreenMode": "画面分割モード"
+    "splitScreenMode": "画面分割モード",
+    "disableAll": "すべて無効",
+    "enableAll": "すべて有効"
   },
   "description": {
     "dataNotLocal": "データの詳細はデータ提供者に確認してください（データ利用上の制限も含む）。",
@@ -356,7 +366,7 @@
   "search": {
     "searchCatalogue": "カタログを検索する",
     "placeholder": "場所・データを検索",
-    "viewMore": "より {{name}} 結果を表示",
+    "viewMore": "{{name}} ：結果をさらに表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
     "searchInDataCatalog": "データカタログで「{{locationSearchText}}」を検索",
@@ -398,7 +408,7 @@
   },
   "sui": {
     "hideWorkbench": "ワークベンチを非表示",
-    "showWorkbench": "ワークベンチを表示",
+    "showWorkbench": "データセットを表示 [{{count}}]",
     "notifications": {
       "denyText": "後で",
       "confirmText": "はい",
@@ -504,7 +514,7 @@
     "printViewButton": "印刷ビューを表示",
     "printButton": "印刷",
     "generatingUrl": "共有URLを作成しています...",
-    "localDataNote": "<0><0>注意：</0></0><1>以下のデータはローカルからのデータを含むため共有できません。これらのデータを共有するには、データをウェブサーバーにアップロードして<2>URLを使用して追加してください</2></1>",
+    "localDataNote": "<0><0>注意：</0></0><1>以下のデータソースは、このローカルシステムや認証が必要なオンラインサービスからのデータを含むため、共有されません。これらのデータソースを共有するには、データを Web サーバーに公開し、<2>URL を使って追加</2>してください。</1>",
     "shortLinkError": "短縮リンクが作成できませんでした。インターネット接続を確認してやり直してください。",
     "shortLinkShortening": "短縮リンクを作成しています...",
     "browserPrint": "より良い印刷結果を得るには、ブラウザの印刷機能ではなく{{appName}}の印刷ボタンを使用してください。",
@@ -543,7 +553,10 @@
     "location": "位置",
     "myLocation": "自位置",
     "browserCannotProvide": "ブラウザが位置情報を提供できません。",
-    "errorGettingLocation": "位置を取得する際にエラー発生"
+    "errorGettingLocation": "位置を取得する際にエラー発生",
+    "permissionDenied": "位置情報の取得が許可されていません。ブラウザ設定を確認してください。",
+    "positionUnavailable": "位置情報を取得できません。",
+    "timeout": "位置情報を取得できませんでした。後でもう一度お試しください。"
   },
   "measure": {
     "measureDistance": "距離を計測します",
@@ -573,7 +586,9 @@
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "データを追加"
+    "addDataBtnText": "データを見る",
+    "data": "データ",
+    "modalTitle": "データを閲覧"
   },
   "feedback": {
     "minLength": "ご意見・ご要望のコメントは最低でも{{minLength}}が必要です",
@@ -637,7 +652,11 @@
       "assimp-local": "3Dファイルコンバーター (zip) (試験的機能)",
       "assimp-local-description": "**警告:** 3D ファイルコンバータは試験的機能です。  \n[サポートされる形式のリスト](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nファイルは必ずZIPしてください。",
       "assimp-remote": "3Dファイルコンバータ（試験的機能）",
-      "carto-v3": "CARTO V3"
+      "carto-v3": "CARTO V3",
+      "esri-imageServer": "Esri ArcGIS ImageServer (シングルレイヤ)",
+      "cog": "Cloud Optimised GeoTiff (COG)",
+      "i3s": "I3S",
+      "cesium-ion": "Cesium ion"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLを $t(browsers.chrome), $t(browsers.firefox), $t(browsers.safari)など別のブラウザにコピーしてください。{{href}}",
@@ -718,7 +737,7 @@
     "closePanel": "パネルを閉じる",
     "sectionLabel": "図",
     "loading": "チャートデータの読み込み...",
-    "noData": "チャート化できるデータがありません。",
+    "noData": "チャートデータが見つかりません。",
     "showItemInChart": "チャートで {{value}} を表示"
   },
   "concept": {
@@ -800,7 +819,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "ローカルデータ",
+      "upload": "データを追加",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
@@ -1252,7 +1271,8 @@
       "expandErrorMessage": "{{appName}} を起動するためために利用する共有データサービスが見つかりません。リンクのエラーか現在サービスが使えない可能性があります。",
       "expandErrorTitle": "URLを展開できません",
       "generateErrorMessage": "短縮URLを生成するための共有データサービスを利用する際に問題が発生しました。",
-      "generateErrorTitle": "短縮URLを生成できませんでした。"
+      "generateErrorTitle": "短縮URLを生成できませんでした。",
+      "generateErrorDataExceedsLimitMessage": "エラー：共有データが上限を超えています"
     },
     "sdmxCatalogItem": {
       "viewBy": {
@@ -2018,6 +2038,17 @@
           }
         }
       }
+    },
+    "arcGisImageServerCatalogItem": {
+      "name": "Esri ArcGIS ImageServer",
+      "invalidUrlTitle": "ImageServer を読み込めません",
+      "invalidUrlMessage": "カタログアイテムに `url` がないため、ArcGIS ImageServer エンドポイントを読み込めませんでした。",
+      "invalidServiceTitle": "無効な ArcGIS Image Service",
+      "invalidServiceMessage": "ArcGIS Image Service の呼び出し中にエラーが発生しました。サーバーの応答は有効な Image Service ドキュメントではないようです。",
+      "rasterFunction": "ラスタ機能"
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "この COG はネイティブ投影法 (EPSG:4326 または EPSG:3857) ではありません。再投影は実験的な機能であり、期待通りに動作しない可能性があります。ソースデータを制御できる場合は、GDAL などを用いて EPSG:4326 または EPSG:3857 に再投影することを推奨します。"
     }
   },
   "map": {
@@ -2088,7 +2119,11 @@
       "basemap": "背景地図",
       "disclaimer": "免責事項",
       "dataAttribution": "データの帰属",
-      "dataProvider": "データの出典"
+      "dataProvider": "データの出典",
+      "termsOfUse": "利用規約",
+      "credits": "出典",
+      "mapCredits": "地図の出典",
+      "searchProvider": "検索サービス提供："
     }
   },
   "toast": {
@@ -2223,5 +2258,38 @@
       "unsupportedTypeMessage": "不明モデルタイプ {{type}}は作成できません。"
     },
     "noSearchProviders": "検索プロバイダが設定されていません"
+  },
+  "emptyWorkbenchInfo": [
+    {
+      "heading": "データセットをここに追加",
+      "body": "データセットを追加すると、ここに凡例と設定が表示されます。"
+    },
+    {
+      "heading": "スタート",
+      "list": [
+        "『データを探索』をクリックすると、利用可能なデータセットを表示できます",
+        "データを追加』から自分のデータを追加",
+        "このパネルに追加したデータが表示されます"
+      ]
+    },
+    {
+      "heading": "利用方法",
+      "list": [
+        "データの表示・非表示",
+        "透明度を調整",
+        "並べて比較",
+        "色・線・シンボルを変更",
+        "対応している場合、異なる日時を表示"
+      ]
+    },
+    {
+      "body": "データの探索や設定の管理、マップシーン・ストーリーの作成はこのパネルで行います。"
+    }
+  ],
+  "relatedMaps": {
+    "buttonText": "関連マップ",
+    "buttonTitle": "関連するマップを表示",
+    "panelHeading": "関連するマップ",
+    "panelText": "下のマップをクリックすると、別のウィンドウまたはタブで開きます。"
   }
 }
