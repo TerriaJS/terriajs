@@ -35,7 +35,7 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
     child.on("exit", (exitCode, signal) => {
       done(
         new Error(
-          "terriajs-server quit" +
+          "❌ terriajs-server quit" +
             (exitCode !== null ? ` with exit code: ${exitCode}` : "") +
             (signal ? ` from signal: ${signal}` : "") +
             "\nCheck terriajs-server.log for more information."
@@ -43,7 +43,9 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
       );
     });
     child.on("spawn", () => {
-      console.log("terriajs-server started - see terriajs-server.log for logs");
+      console.log(
+        "✅ terriajs-server started - see terriajs-server.log for logs"
+      );
     });
     // Intercept SIGINT, SIGTERM and SIGHUP, cleanup terriajs-server and re-send signal
     // May fail to catch some relevant signals on Windows
