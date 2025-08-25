@@ -30,8 +30,7 @@ function configureWebpack({
 
   // Use empty polyfills for nodejs modules
   config.resolve.fallback = {
-    fs: false, // geojson-merge, assimp
-    stream: false, // geojson-merge -> geojson-stream
+    fs: false, // assimp
     crypto: false, // assismp.js
     path: false // assimp.js
   };
@@ -175,7 +174,6 @@ function configureWebpack({
     })
   );
 
-  // Handle reference to Buffer in geojson-merge
   config.plugins.push(
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"]
