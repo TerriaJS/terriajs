@@ -28,12 +28,14 @@ import ArcGisImageServerCatalogItemTraits, {
   ArcGisImageServerAvailableRasterFunctionTraits,
   ArcGisImageServerRenderingRule
 } from "../../../Traits/TraitsClasses/ArcGisImageServerCatalogItemTraits";
-import DiscreteTimeTraits from "../../../Traits/TraitsClasses/DiscreteTimeTraits";
+import { DiscreteTimesTraits } from "../../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -45,14 +47,16 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ImageServer, Legends } from "./ArcGisInterfaces";
 import { getRectangleFromLayer } from "./ArcGisMapServerCatalogItem";
 
-class ImageServerStratum extends LoadableStratum(
-  ArcGisImageServerCatalogItemTraits
-) {
+class ImageServerStratum
+  extends LoadableStratum(ArcGisImageServerCatalogItemTraits)
+  implements
+    LockedDownStratum<ArcGisImageServerCatalogItemTraits, ImageServerStratum>
+{
   static stratumName = "arcgisImageserver";
 
   constructor(
     private readonly _item: ArcGisImageServerCatalogItem,
-    readonly imageServer: ImageServer,
+    private readonly imageServer: ImageServer,
     private readonly _token: string | undefined
   ) {
     super();
@@ -261,13 +265,39 @@ class ImageServerStratum extends LoadableStratum(
   get disableRasterFunctionSelectors() {
     return !this._item.allowRasterFunction;
   }
+
+  get discreteTimes() {
+    if (this.imageServer.timeInfo === undefined) return undefined;
+
+    const result: {
+      times: string[];
+      tags: string[];
+    } = {
+      times: [],
+      tags: []
+    };
+
+    createDiscreteTimesFromIsoSegments(
+      result,
+      new Date(this.imageServer.timeInfo.timeExtent[0]).toISOString(),
+      new Date(this.imageServer.timeInfo.timeExtent[1]).toISOString(),
+      undefined,
+      this._item.maxRefreshIntervals
+    );
+    return createStratumInstance(DiscreteTimesTraits, result);
+  }
 }
 
 StratumOrder.addLoadStratum(ImageServerStratum.stratumName);
 
-class ImageServerLegendStratum extends LoadableStratum(
-  ArcGisImageServerCatalogItemTraits
-) {
+class ImageServerLegendStratum
+  extends LoadableStratum(ArcGisImageServerCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      ArcGisImageServerCatalogItemTraits,
+      ImageServerLegendStratum
+    >
+{
   static stratumName = "arcgisImageserverLegend";
 
   constructor(
@@ -390,33 +420,6 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
 
   protected forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
-  }
-
-  @computed
-  get discreteTimes() {
-    const imageServerStratum: ImageServerStratum | undefined = this.strata.get(
-      ImageServerStratum.stratumName
-    ) as ImageServerStratum | undefined;
-
-    if (imageServerStratum?.imageServer.timeInfo === undefined)
-      return undefined;
-
-    const result: (StratumFromTraits<DiscreteTimeTraits> & {
-      time: string;
-    })[] = [];
-
-    createDiscreteTimesFromIsoSegments(
-      result,
-      new Date(
-        imageServerStratum.imageServer.timeInfo.timeExtent[0]
-      ).toISOString(),
-      new Date(
-        imageServerStratum.imageServer.timeInfo.timeExtent[1]
-      ).toISOString(),
-      undefined,
-      this.maxRefreshIntervals
-    );
-    return result;
   }
 
   @computed
