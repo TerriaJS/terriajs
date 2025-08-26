@@ -39,7 +39,7 @@ const HelpCentreButton = () => {
         large: true
       }}
       css={`
-        ${(p) => p.theme.addTerriaPrimaryBtnStyles(p)}
+        ${(p: any) => p.theme.addTerriaPrimaryBtnStyles(p)}
       `}
     >
       Help Centre
