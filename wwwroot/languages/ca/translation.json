@@ -862,7 +862,10 @@
       "disclaimer": "Exempció de responsabilitat",
       "basemap": "Mapa base",
       "dataProvider": "Dades proporciondes per:",
-      "termsOfUse": "Condicions d'ús"
+      "termsOfUse": "Condicions d'ús",
+      "credits": "Crèdits",
+      "mapCredits": "Crèdits del mapa",
+      "searchProvider": "Cerca proporcionada per:"
     }
   },
   "helpPanel": {
