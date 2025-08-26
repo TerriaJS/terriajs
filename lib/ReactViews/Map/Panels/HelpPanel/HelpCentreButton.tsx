@@ -1,11 +1,11 @@
 import { runInAction } from "mobx";
-import { StyledIcon, useViewState } from "terriajs-plugin-api";
 import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 import Button from "../../../../Styled/Button";
-import Icon from "../../../../Styled/Icon";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
+import { useViewState } from "../../../Context";
 
 const HELP_CENTER_URL = "https://terriajs.gitbook.io/help-center";
 
