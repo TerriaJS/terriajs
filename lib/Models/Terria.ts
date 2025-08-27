@@ -298,6 +298,16 @@ export interface ConfigParameters {
   googleAnalyticsOptions?: unknown;
 
   /**
+   * PostHog analytics key
+   */
+  postHogAnalyticsKey?: string;
+
+  /**
+   * PostHog analytics host
+   */
+  postHogAnalyticsHost?: string;
+
+  /**
    * Error service provider configuration.
    */
   errorService?: ErrorServiceOptions;
@@ -640,6 +650,8 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
+    postHogAnalyticsKey: undefined,
+    postHogAnalyticsHost: undefined,
     errorService: undefined,
     globalDisclaimer: undefined,
     theme: {},
