@@ -16,7 +16,6 @@ import Text from "../../../../Styled/Text";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import { withViewState } from "../../../Context";
 import HelpPanelItem from "./HelpPanelItem";
-import HelpCenterButton from "./HelpCentreButton";
 
 export const HELP_PANEL_ID = "help";
 
@@ -136,7 +135,6 @@ class HelpPanel extends Component {
             >
               {t("helpPanel.takeTour")}
             </Button>
-            <HelpCenterButton />
           </Box>
         </Box>
         <Spacing bottom={10} />
