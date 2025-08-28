@@ -338,7 +338,7 @@
   },
   "story": {
     "panelTitle": "Editor d'històries",
-    "panelBody": "Creeu i compartiu històries interactives directament des del vostre mapa",
+    "panelBody": "Creeu i compartiu històries interactives directament des del vostre mapa.",
     "gettingStarted": "Començant",
     "gettingStartedTitle": "Començant",
     "badgeBarLabel": "Escenes",
@@ -395,7 +395,9 @@
     "collapse": "Reduir",
     "prev": "Anterior",
     "next": "Següent",
-    "restart": "Reinicia"
+    "restart": "Reinicia",
+    "panelBodyCapped": "Cada història té un límit de {{ shareMaxRequestSize }}: divideix dades grans o moltes escenes en diverses històries per mantenir-te per sota del límit.",
+    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes."
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -859,7 +861,11 @@
       "dataAttribution": "Atribució de dades",
       "disclaimer": "Exempció de responsabilitat",
       "basemap": "Mapa base",
-      "dataProvider": "Dades proporciondes per:"
+      "dataProvider": "Dades proporciondes per:",
+      "termsOfUse": "Condicions d'ús",
+      "credits": "Crèdits",
+      "mapCredits": "Crèdits del mapa",
+      "searchProvider": "Cerca proporcionada per:"
     }
   },
   "helpPanel": {
@@ -1407,7 +1413,8 @@
       "generateErrorTitle": "No s'ha pogut generar una URL curta.",
       "generateErrorMessage": "Alguna cosa ha fallat en intentar utilitzar el servei de compartició de dades per generar una URL curta.",
       "expandErrorTitle": "No s'ha pogut expandir l'URL",
-      "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment."
+      "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment.",
+      "generateErrorDataExceedsLimitMessage": "Error: Les dades compartides superen el límit"
     },
     "socrataServer": {
       "name": "Servidor Socrata",
