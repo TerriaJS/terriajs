@@ -4,14 +4,14 @@ import {
   action,
   computed,
   isObservableArray,
-  runInAction,
   makeObservable,
-  override
+  override,
+  runInAction
 } from "mobx";
 import URI from "urijs";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Reproject from "../../../Map/Vector/Reproject";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
@@ -20,7 +20,7 @@ import WebProcessingServiceCatalogFunctionTraits from "../../../Traits/TraitsCla
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
@@ -34,6 +34,7 @@ import GeoJsonParameter, {
   isGeoJsonFunctionParameter
 } from "../../FunctionParameters/GeoJsonParameter";
 import LineParameter from "../../FunctionParameters/LineParameter";
+import NumberParameter from "../../FunctionParameters/NumberParameter";
 import PointParameter from "../../FunctionParameters/PointParameter";
 import PolygonParameter from "../../FunctionParameters/PolygonParameter";
 import RectangleParameter from "../../FunctionParameters/RectangleParameter";
@@ -41,10 +42,7 @@ import RegionParameter from "../../FunctionParameters/RegionParameter";
 import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
-
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import NumberParameter from "../../FunctionParameters/NumberParameter";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -70,7 +68,7 @@ type LiteralData = {
 };
 
 type ComplexData = {
-  Default?: { Format?: { Schema?: string } };
+  Default?: { Format?: { Schema?: string; MimeType?: string } };
 };
 
 type BoundingBoxData = {
@@ -677,6 +675,54 @@ const GeoJsonGeometryConverter = {
   }
 };
 
+const RegionConverter = {
+  inputToParameter: function (
+    catalogFunction: CatalogFunctionMixin.Instance,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
+    const mime = input.ComplexData?.Default?.Format?.MimeType;
+    if (mime !== "application/vnd.terriajs.region+json") {
+      return;
+    }
+
+    // Region selection requires two parameters, one to select a region layer
+    // from a list of available region layers and another to select a specific
+    // region (from the layer).
+    const regionParameter = new RegionParameter(catalogFunction, {
+      ...options,
+      // Parameter to select region-type
+      regionProvider: new RegionTypeParameter(catalogFunction, {
+        id: `${options.id}RegionType`,
+        name: "Region Type",
+        description: "The type of region to analyze."
+      })
+    });
+
+    return regionParameter;
+  },
+
+  parameterToInput: function (
+    parameter: FunctionParameter
+  ): WpsInputData | undefined {
+    if (!(parameter instanceof RegionParameter)) {
+      return;
+    }
+
+    const regionType = parameter.regionTypeParameter?.value;
+    const region = parameter.value;
+    const inputValue =
+      regionType && region ? JSON.stringify({ regionType, region }) : undefined;
+
+    return inputValue
+      ? {
+          inputType: "ComplexData",
+          inputValue
+        }
+      : undefined;
+  }
+};
+
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
     inputToParameter: function (
@@ -739,6 +785,8 @@ function parameterTypeToConverter(
       return RectangleConverter;
     case GeoJsonParameter.type:
       return GeoJsonGeometryConverter;
+    case RegionParameter.type:
+      return RegionConverter;
     default:
       break;
   }
@@ -748,6 +796,7 @@ const parameterConverters: ParameterConverter[] = [
   LiteralDataConverter,
   ComplexDateConverter,
   ComplexDateTimeConverter,
+  RegionConverter,
   PointConverter,
   LineConverter,
   PolygonConverter,

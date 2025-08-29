@@ -1,9 +1,18 @@
-import { action, observable, runInAction, makeObservable } from "mobx";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { Feature } from "@turf/helpers/dist/js/lib/geojson";
+import i18next from "i18next";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import defined from "terriajs-cesium/Source/Core/defined";
+import URI from "urijs";
 import CorsProxy from "../../Core/CorsProxy";
+import { isFeature } from "../../Core/GeoJson";
+import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";
+import loadText from "../../Core/loadText";
+import Terria from "../../Models/Terria";
+import xml2json from "../../ThirdParty/xml2json";
 
 /*
 Encapsulates one entry in regionMapping.json
@@ -45,6 +54,11 @@ export interface RegionProvierOptions {
    * URL of the MVT server
    */
   server: string;
+
+  /**
+   * Server type (either 'WMS' or 'MVT')
+   */
+  serverType: string | undefined;
 
   /**
    * List of subdomains for requests to be sent to (only defined for MVT providers)
@@ -116,9 +130,19 @@ export interface RegionProvierOptions {
    * JSON file for disambiguation attribute, as per regionIdsFile.
    */
   regionDisambigIdsFile: string;
+
+  /**
+   * URL of WMS server. Needed if the layer is a MVT layer, but the layer is also used for analytics region picker (analytics section uses WMS/WFS)
+   */
+  analyticsWmsServer?: string;
+
+  /**
+   * Name of the layer on the WMS server. Needed if the layer is a MVT layer, but the layer is also used for analytics region picker (analytics section uses WMS/WFS)
+   */
+  analyticsWmsLayerName?: string;
 }
 
-interface Region {
+export interface Region {
   fid?: number;
   regionProp?: string | number | undefined;
   regionPropWithServerReplacement?: string | number | undefined;
@@ -137,6 +161,7 @@ export default class RegionProvider {
   readonly description: string;
   readonly layerName: string;
   readonly server: string;
+  readonly serverType: string;
   readonly serverSubdomains: string[] | undefined;
   readonly serverMinZoom: number;
   readonly serverMaxZoom: number;
@@ -148,8 +173,10 @@ export default class RegionProvider {
   readonly disambigProp: string | undefined;
   readonly uniqueIdProp: string;
   readonly textCodes: boolean;
-  readonly regionIdsFile: string;
-  readonly regionDisambigIdsFile: string;
+  readonly regionIdsFile: string | undefined;
+  readonly regionDisambigIdsFile: string | undefined;
+  readonly analyticsWmsServer: string | undefined;
+  readonly analyticsWmsLayerName: string | undefined;
 
   private disambigDataReplacements: [string, string, RegExp][] | undefined;
   private disambigServerReplacements: [string, string, RegExp][] | undefined;
@@ -167,6 +194,11 @@ export default class RegionProvider {
    */
   private _regions: Region[] = [];
 
+  /**
+   * Array of names for regions in the same order as regions.
+   */
+  regionNames: string[] = [];
+
   get regions() {
     return this._regions;
   }
@@ -176,9 +208,12 @@ export default class RegionProvider {
    */
   private _idIndex: RegionIndex = {};
 
-  /** Cache the loadRegionID promises so they are not regenerated each time until this._regions is defined. */
-
+  /** Cache the loadRegionID promises so they are not regenerated each time
+      until this._regions is defined. */
   private _loadRegionIDsPromises: Promise<any>[] | undefined = undefined;
+
+  /** Cache the loadRegionNames promises so they are not regenerated each time */
+  private _loadRegionNamesPromise: Promise<any[]> | undefined;
 
   /** Flag to indicate if loadRegionID has finished */
   @observable
@@ -202,6 +237,7 @@ export default class RegionProvider {
     this.description = properties.description;
     this.layerName = properties.layerName;
     this.server = properties.server;
+    this.serverType = properties.serverType ?? "MVT";
     this.serverSubdomains = properties.serverSubdomains;
     this.serverMinZoom = defaultValue(properties.serverMinZoom, 0);
     this.serverMaxZoom = defaultValue(properties.serverMaxZoom, Infinity);
@@ -241,6 +277,14 @@ export default class RegionProvider {
 
     this.regionIdsFile = properties.regionIdsFile;
     this.regionDisambigIdsFile = properties.regionDisambigIdsFile;
+
+    this.analyticsWmsServer =
+      properties.analyticsWmsServer ??
+      (this.serverType === "WMS" ? this.server : undefined);
+
+    this.analyticsWmsLayerName =
+      properties.analyticsWmsLayerName ??
+      (this.serverType === "WMS" ? this.layerName : undefined);
   }
 
   setDisambigProperties(dp: RegionProvider | undefined) {
@@ -250,7 +294,8 @@ export default class RegionProvider {
   }
 
   /**
-   * Given an entry from the region mapping config, load the IDs that correspond to it, and possibly the disambiguation properties.
+   * Given an entry from the region mapping config, load the IDs that
+     correspond to it, and possibly the disambiguation properties.
    */
   @action
   async loadRegionIDs() {
@@ -266,19 +311,27 @@ export default class RegionProvider {
       }
       // Check for a pre-calculated promise (which may not have resolved yet), and returned that if it exists.
       if (!isDefined(this._loadRegionIDsPromises)) {
-        const fetchAndProcess = async (
-          idListFile: string,
-          disambig: boolean
-        ) => {
-          if (!isDefined(idListFile)) {
-            return;
-          }
+        const loadRegionIds: Promise<unknown> = this.regionIdsFile
+          ? loadJson(this.regionIdsFile)
+          : loadRegionsFromWfs(this, this.regionProp);
 
-          this.processRegionIds((await loadJson(idListFile)).values, disambig);
-        };
+        const loadDisambigIds: Promise<unknown> = this.regionDisambigIdsFile
+          ? loadJson(this.regionDisambigIdsFile)
+          : this.disambigProp
+          ? loadRegionsFromWfs(this, this.disambigProp)
+          : Promise.resolve(undefined);
+
         this._loadRegionIDsPromises = [
-          fetchAndProcess(this.regionIdsFile, false),
-          fetchAndProcess(this.regionDisambigIdsFile, true)
+          loadRegionIds.then((result: any) => {
+            if (Array.isArray(result?.values)) {
+              this.processRegionIds(result?.values, false);
+            }
+          }),
+          loadDisambigIds.then((result: any) => {
+            if (Array.isArray(result?.values)) {
+              this.processRegionIds(result?.values, true);
+            }
+          })
         ];
       }
       await Promise.all(this._loadRegionIDsPromises);
@@ -287,6 +340,51 @@ export default class RegionProvider {
     } finally {
       runInAction(() => (this._loaded = true));
     }
+  }
+
+  loadRegionNames() {
+    if (defined(this._loadRegionNamesPromise)) {
+      return this._loadRegionNamesPromise;
+    }
+
+    const nameProp = this.nameProp || this.regionProp;
+
+    const baseuri = URI(this.analyticsWmsServer).addQuery({
+      service: "wfs",
+      version: "2.0",
+      request: "getPropertyValue",
+      typenames: this.analyticsWmsLayerName
+    });
+
+    // get the list of IDs that we will attempt to match against for this column
+
+    let url = baseuri.setQuery("valueReference", nameProp).toString();
+
+    if (this.corsProxy.shouldUseProxy(url)) {
+      url = this.corsProxy.getURL(url);
+    }
+
+    this._loadRegionNamesPromise = loadText(url).then((xml) => {
+      const obj = xml2json(xml);
+
+      if (!defined(obj.member)) {
+        const exception = defined(obj.Exception)
+          ? "<br/><br/>" + obj.Exception.ExceptionText
+          : "";
+        throw new TerriaError({
+          title: "CSV region mapping",
+          message:
+            "Couldn't load region names for region type " +
+            this.regionType +
+            exception
+        });
+      }
+
+      this.regionNames = obj.member.map((m: any) => m[nameProp]);
+      return this.regionNames;
+    });
+
+    return this._loadRegionNamesPromise;
   }
 
   /**
@@ -473,6 +571,88 @@ export default class RegionProvider {
     }
     return -1;
   }
+
+  /**
+   * Finds a region with a given region ID.
+   *
+   * @param {String} regionID The ID of the region to find.
+   * @return {Region} The region, or undefined if no region matching the ID was found.
+   */
+  findRegionByID(regionID: string | number): Region | undefined {
+    if (
+      typeof regionID === "string" &&
+      typeof this.regions[0]?.regionProp === "number"
+    ) {
+      regionID = parseInt(regionID, 10);
+    } else if (typeof regionID === "string") {
+      regionID = regionID.toLowerCase();
+      const replacedValue =
+        this._appliedReplacements.serverReplacements[regionID];
+      if (defined(replacedValue)) {
+        regionID = replacedValue;
+      }
+    }
+
+    return this.regions?.find((region) => region.regionProp === regionID);
+  }
+
+  findRegionNameById(regionID: string | number): string | undefined {
+    if (
+      typeof regionID === "string" &&
+      typeof this.regions[0]?.regionProp === "number"
+    ) {
+      regionID = parseInt(regionID, 10);
+    } else if (typeof regionID === "string") {
+      regionID = regionID.toLowerCase();
+      const replacedValue =
+        this._appliedReplacements.serverReplacements[regionID];
+      if (defined(replacedValue)) {
+        regionID = replacedValue;
+      }
+    }
+
+    const index = this.regions?.findIndex(
+      (region) => region.regionProp === regionID
+    );
+    const name = this.regionNames[index];
+    return name;
+  }
+
+  /**
+   * Gets the feature associated with a given region.
+   * @param terria Terria instance
+   * @param regionId The region id
+   * @return {Promise} A promise for the GeoJSON feature.
+   */
+  async getRegionFeature(
+    regionId: string | number,
+    terria: Terria
+  ): Promise<Feature | undefined> {
+    let url = this.analyticsWmsServer || this.server;
+    if (terria.corsProxy.shouldUseProxy(url)) {
+      url = terria.corsProxy.getURL(url);
+    }
+
+    url = new URI(url)
+      .search("")
+      .addQuery({
+        service: "WFS",
+        version: "1.1.0",
+        request: "GetFeature",
+        typeName: this.layerName,
+        outputFormat: "JSON",
+        cql_filter: `${this.uniqueIdProp}=${regionId}`
+      })
+      .toString();
+
+    return loadJson(url).then(function (result) {
+      const value = result?.features?.[0];
+      const feature = isFeature(value)
+        ? { ...value, crs: result?.crs }
+        : undefined;
+      return feature;
+    });
+  }
 }
 
 function findVariableForAliases(varNames: string[], aliases: string[]) {
@@ -499,4 +679,70 @@ function findVariableForAliases(varNames: string[], aliases: string[]) {
   }
 
   return undefined;
+}
+
+/**
+ * Fetch a list of region IDs in feature ID (FID) order by querying a WFS server
+.
+ * This is a slower fall-back method if we don't have a pre-computed JSON list a
+vailable.
+ * Returns a promise which resolves to an object whose 'values' property can be
+used as an argument in processRegionIds.
+ * @private
+ */
+function loadRegionsFromWfs(
+  regionProvider: RegionProvider,
+  propName: string
+): Promise<{ values: (string | number)[] }> {
+  if (regionProvider.serverType !== "WMS") {
+    throw new DeveloperError(
+      "Cannot fetch region ids for region providers that are not WMS"
+    );
+  }
+
+  const baseuri = URI(regionProvider.server).addQuery({
+    service: "wfs",
+    version: "2.0",
+    request: "getPropertyValue",
+    typenames: regionProvider.layerName
+  });
+
+  // get the list of IDs that we will attempt to match against for this column
+  const url = regionProvider.corsProxy.getURLProxyIfNecessary(
+    baseuri.setQuery("valueReference", propName).toString()
+  );
+
+  return loadText(url).then(function (xml) {
+    const obj = xml2json(xml);
+
+    if (obj.member === undefined) {
+      console.log(xml);
+      const exception = defined(obj.Exception)
+        ? "<br/><br/>" + obj.Exception.ExceptionText
+        : "";
+      throw new TerriaError({
+        title: i18next.t("map.regionProvider.csvRegionMappingTitle"),
+        message: i18next.t(
+          "map.regionProvider.csvRegionMappingMessageLoadError",
+          { regionName: propName, exception: exception }
+        )
+      });
+    }
+
+    if (!(obj.member instanceof Array)) {
+      obj.member = [obj.member];
+    }
+    if (obj.member.length === 1 && !defined(obj.member[0])) {
+      throw new TerriaError({
+        title: i18next.t("map.regionProvider.csvRegionMappingTitle"),
+        message: i18next.t(
+          "map.regionProvider.csvRegionMappingMessageZeroBoundariesFound",
+          { regionName: propName }
+        )
+      });
+    }
+    return {
+      values: obj.member.map((m: any) => m[propName])
+    };
+  });
 }
