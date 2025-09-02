@@ -443,6 +443,8 @@ interface TerriaOptions {
   cesiumBaseUrl?: string;
 
   analytics?: Analytics;
+
+  corsProxy?: CorsProxy;
 }
 
 interface HomeCameraInit {
@@ -513,7 +515,7 @@ export default class Terria {
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
    * @type {CorsProxy}
    */
-  corsProxy: CorsProxy = new CorsProxy();
+  corsProxy: CorsProxy;
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log
@@ -767,6 +769,8 @@ export default class Terria {
     (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
     this.analytics = options.analytics ?? new NoopAnalytics();
+
+    this.corsProxy = options.corsProxy ?? new CorsProxy();
   }
 
   /** Raise error to user.
