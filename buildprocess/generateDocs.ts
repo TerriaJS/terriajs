@@ -50,7 +50,7 @@ function markdownFromTraitType(trait: Trait) {
  */
 function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
   let traitType = markdownFromTraitType(trait);
-  let traitTypeIsArray =
+  const traitTypeIsArray =
     trait instanceof PrimitiveArrayTrait || trait instanceof ObjectArrayTrait;
   if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
     traitType = `<a href="#${traitType.toLocaleLowerCase()}"><code>${
@@ -85,7 +85,7 @@ function renderTraitRows(
 ) {
   const objectTraits: BaseModel[] = [];
   const traitRows = Object.entries(model.traits)
-    .filter(([property, trait]) => trait.parent.name === parentTrait)
+    .filter(([_property, trait]) => trait.parent.name === parentTrait)
     .map(([property, trait]) => {
       if (trait instanceof ObjectTrait) {
         objectTraits.push((model as any)[property]);
@@ -127,6 +127,7 @@ function renderTraitTable(model: BaseModel, recursive = false, depth = 1) {
   const traits = Object.values(model.traits).reduce<{
     [parentTrait: string]: Trait[];
   }>((obj, cur) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     obj[cur.parent.name]
       ? obj[cur.parent.name].push(cur)
       : (obj[cur.parent.name] = [cur]);

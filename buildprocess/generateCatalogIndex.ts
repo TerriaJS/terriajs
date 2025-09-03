@@ -39,6 +39,7 @@ function indexModel(
       ? member.nameInCatalog
       : undefined;
 
+    // eslint-disable-next-line prefer-const
     let description = "";
     // Remove description from CatalogIndex - as it makes files too large
     // if (CatalogMemberMixin.isMixedInto(member)) {
@@ -142,7 +143,7 @@ export default async function generateCatalogIndex(
   basicAuth: string | undefined,
   timeoutMs: number
 ) {
-  let debug = false;
+  const debug = false;
 
   let speed = speedString ? parseFloat(speedString) : 1;
   if (speed < 1) speed = 1;
@@ -180,7 +181,7 @@ export default async function generateCatalogIndex(
    */
   async function loadAndIndexMember(terria: Terria, member: BaseModel) {
     let name = getName(member);
-    let path = getPath(terria, member);
+    const path = getPath(terria, member);
 
     if (member.uniqueId && excludeIds && excludeIds.includes(member.uniqueId)) {
       console.log(`Excluding model \`${member.uniqueId}\`:"${name}" (${path}`);
@@ -211,6 +212,7 @@ export default async function generateCatalogIndex(
               ? groupPriority
               : memberPriority;
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           debug
             ? console.log(
                 "\x1b[32m%s\x1b[0m",
@@ -226,7 +228,7 @@ export default async function generateCatalogIndex(
             member,
             errors
           );
-        } catch (timeout) {
+        } catch (_timeout) {
           errors.push(
             TerriaError.from(
               `TIMEOUT FAILED to load Reference ${name} (${path})`
@@ -248,6 +250,7 @@ export default async function generateCatalogIndex(
     }
 
     if (GroupMixin.isMixedInto(member)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       debug
         ? console.log("\x1b[36m%s\x1b[0m", `Adding Group ${name} (${path})`)
         : null;
@@ -267,7 +270,7 @@ export default async function generateCatalogIndex(
             member,
             errors
           );
-        } catch (timeout) {
+        } catch (_timeout) {
           errors.push(
             TerriaError.from(
               `TIMEOUT FAILED to load GROUP ${name} (${path}) = ${groupPriority}`

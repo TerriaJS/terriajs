@@ -1,3 +1,4 @@
+/* eslint-disable prefer-rest-params */
 import fetch, { Headers, Request, Response } from "node-fetch";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
@@ -22,7 +23,7 @@ export default function patchNetworkRequests(
   // Adapted from https://stackoverflow.com/a/43875390
   const open = window.XMLHttpRequest.prototype.open;
   window.XMLHttpRequest.prototype.open = function (
-    method: string,
+    _method: string,
     url: string
   ) {
     // All URLs need to be absolute - so add the base URL if it's not already there

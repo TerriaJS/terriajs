@@ -1,5 +1,6 @@
 /*eslint-env node*/
 /*eslint no-sync: 0*/
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 "use strict";
 

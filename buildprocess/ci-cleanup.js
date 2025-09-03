@@ -10,7 +10,7 @@ function getAllBranches(repo) {
   function getNextPage() {
     ++page;
 
-    let url = baseUrl + "?page=" + page;
+    const url = baseUrl + "?page=" + page;
     return fetch(url, {
       headers: {
         "User-Agent": "TerriaJS CI",

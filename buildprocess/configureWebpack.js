@@ -131,7 +131,7 @@ function configureWebpack({
     proxy: {
       "*": {
         target: "http://localhost:3001",
-        bypass: function (req, res, proxyOptions) {
+        bypass: function (req, _res, _proxyOptions) {
           if (
             req.url.indexOf("/proxy") < 0 &&
             req.url.indexOf("/proj4lookup") < 0 &&
