@@ -434,6 +434,11 @@ export interface ConfigParameters {
    * Polyline width for KML and GeoJson (and derived)
    */
   polylineWidth?: number;
+
+  /**
+   * Maximum camera pitch (in radians) for the play path tool.
+   */
+  playPathCameraPitchThreshold?: number;
 }
 
 interface StartOptions {
@@ -678,7 +683,8 @@ export default class Terria {
     mapViewers: ["3d", "3dsmooth", "2d"],
     pickSize: undefined,
     cesiumGlobeColor: undefined,
-    polylineWidth: undefined
+    polylineWidth: undefined,
+    playPathCameraPitchThreshold: 30
   };
 
   @observable

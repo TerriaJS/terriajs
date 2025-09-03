@@ -36,7 +36,8 @@ const PlayPathPanel = observer((props: Props) => {
     onPlay,
     onPause,
     onStop,
-    resetPlayPath
+    resetPlayPath,
+    isPitchTooLow
   } = usePlayPath(props.terria, props.viewState);
 
   const currentGeom =
@@ -102,6 +103,11 @@ const PlayPathPanel = observer((props: Props) => {
           gap: 8
         }}
       >
+        {isPitchTooLow() && !playingPath && (
+          <div style={{ color: "red", marginBottom: 4 }}>
+            {i18next.t("playPath.tooltip.pitchTooLow")}
+          </div>
+        )}
         <div
           style={{
             display: "flex",
@@ -114,16 +120,19 @@ const PlayPathPanel = observer((props: Props) => {
         >
           <Button
             onClick={playingPath ? onPause : onPlay}
-            disabled={!playingPath && isCameraMoving}
+            disabled={
+              (!playingPath && isCameraMoving) ||
+              (!playingPath && isPitchTooLow())
+            }
             css={`
               color: ${theme.textLight};
               background: ${theme.colorPrimary};
               min-width: 50px;
             `}
             title={
-              playingPath
-                ? i18next.t("playPath.tooltip.pause")
-                : i18next.t("playPath.tooltip.play")
+              isPitchTooLow() && !playingPath
+                ? i18next.t("playPath.tooltip.pitchTooLow")
+                : playingPath
             }
           >
             <StyledIcon
@@ -144,7 +153,7 @@ const PlayPathPanel = observer((props: Props) => {
               min-width: 50px;
             `}
           >
-            <StyledIcon glyph={Icon.GLYPHS.refresh} styledWidth="16px" />
+            <StyledIcon glyph={Icon.GLYPHS.revert} styledWidth="16px" />
           </Button>
         </div>
         <div

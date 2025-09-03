@@ -140,7 +140,8 @@
       "speedLabel": "Speed label",
       "speedSlider": "Adjust playback speed",
       "speedSliderTitle": "Modify playback speed",
-      "currentSpeed": "Current speed"
+      "currentSpeed": "Current speed",
+      "pitchTooLow": "Camera pitch is too low"
     }
   },
   "pickInfo": {
