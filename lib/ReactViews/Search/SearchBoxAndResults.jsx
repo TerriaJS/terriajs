@@ -41,7 +41,6 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
       </Box>
     </RawButton>
   );
-  
 }
 
 SearchInDataCatalog.propTypes = {

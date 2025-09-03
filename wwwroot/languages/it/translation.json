@@ -145,6 +145,20 @@
       "speedSliderTitle": "Modifica la velocità di riproduzione del percorso",
       "currentSpeed": "Velocità corrente",
       "pitchTooLow": "L'inclinazione della camera è troppo bassa"
+    },
+    "tour": {
+      "helpButton": "Guida",
+      "preface": {
+        "title": "Guida PlayPath",
+        "content": "Scopri come utilizzare lo strumento PlayPath per creare animazioni fluide lungo i percorsi misurati. Questa guida ti mostrerà le funzionalità principali.",
+        "start": "Inizia la guida",
+        "skip": "Salta"
+      },
+      "playButton": "## Pulsante Play/Pausa\n\nClicca questo pulsante per avviare o mettere in pausa l'animazione lungo il percorso. Durante la riproduzione, la camera seguirà automaticamente il percorso tracciato.",
+      "stopButton": "## Pulsante Stop\n\nUtilizza questo pulsante per fermare l'animazione e tornare al punto di partenza. Utile per ricominciare dall'inizio e resettare la vista.",
+      "speedSlider": "## Controllo Velocità\n\nRegola la velocità dell'animazione trascinando il cursore. Puoi impostare velocità da 0.5x (più lenta) fino a 3x (più veloce).",
+      "playPathPanel": "## Pannello Play Path\n\nQuesto pannello permette di visualizzare mediante lo scorrimento della camera sulla mappa un percorso disegnato manualmente o caricato da file. Il pannello può essere spostato trascinandolo e anche chiuso per avere una visuale completa.",
+      "cameraPosition": "## Posizione della Camera\n\nLa camera seguirà il percorso prestabilito. All'inizio sarà necessario posizionarla in prossimità del punto di partenza (che può coincidere con l’inizio effettivo del percorso o con il punto finale). È inoltre importante impostare lo zoom e l'inclinazione della camera in modo coerente con le caratteristiche del tracciato: ad esempio, in presenza di zone montuose è preferibile evitare un’inclinazione troppo bassa."
     }
   },
   "pickInfo": {

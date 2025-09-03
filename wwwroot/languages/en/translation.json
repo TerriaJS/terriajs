@@ -142,6 +142,21 @@
       "speedSliderTitle": "Modify playback speed",
       "currentSpeed": "Current speed",
       "pitchTooLow": "Camera pitch is too low"
+    },
+    "tour": {
+      "helpButton": "Help",
+      "preface": {
+        "title": "PlayPath Guide",
+        "content": "Learn how to use the PlayPath tool to create smooth animations along measured paths. This guide will show you the main features.",
+        "start": "Start guide",
+        "skip": "Skip"
+      },
+      "playButton": "## Play/Pause Button\n\nClick this button to start or pause the animation along the path. During playback, the camera will automatically follow the traced path.",
+      "stopButton": "## Stop Button\n\nUse this button to stop the animation and return to the starting point. Useful for starting over or resetting the view.",
+      "speedSlider": "## Speed Control\n\nAdjust the animation speed by dragging the slider. You can set speeds from 0.5x (slower) to 3x (faster) to match your needs.",
+      "dragPanel": "## Movable Panel\n\nYou can drag this panel to any position on the screen by holding down on the title bar. Position it wherever you prefer for better viewing.",
+      "playPathPanel": "## Play Path Panel\n\nThis panel allows you to view by scrolling the camera on the map a route drawn manually or loaded from files. The panel can be moved by dragging and also closed to get a full view.",
+      "cameraPosition": "## Camera Position\n\nThe camera will follow the predefined path. At the beginning, it is necessary to place the camera near the starting point (which can either be the actual beginning of the route or the endpoint). It is also important to setting the camera's zoom and pitch according to the characteristics of the path: for example, in mountainous areas, it is advisable to avoid a very low pitch angle."
     }
   },
   "pickInfo": {

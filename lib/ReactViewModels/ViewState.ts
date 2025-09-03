@@ -36,6 +36,7 @@ import {
   RelativePosition,
   TourPoint
 } from "./defaultTourPoints";
+import { defaultPlayPathTourPoints } from "./defaultPlayPathTourPoints";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
@@ -254,7 +255,10 @@ export default class ViewState {
    * }
    *  */
 
-  @observable tourPoints: TourPoint[] = defaultTourPoints;
+  @observable tourPoints: TourPoint[] = [...defaultTourPoints];
+
+  @observable isPlayPathTour: boolean = false;
+
   @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
   @observable currentTourIndex: number = -1;
@@ -267,7 +271,7 @@ export default class ViewState {
     // update: well it turns out you can be smarter about it and actually
     // properly clean up your refs - so we'll leave that up to the UI to
     // provide valid refs
-    return this.tourPoints
+    return this.activeTourPoints
       .slice()
       .sort((a, b) => {
         return a.priority - b.priority;
@@ -276,6 +280,30 @@ export default class ViewState {
         (tourPoint) => (this.appRefs as any).get(tourPoint.appRefName)?.current
       );
   }
+
+  @action
+  setIsPlayPathTour(value: boolean) {
+    this.isPlayPathTour = value;
+  }
+
+  @computed
+  get activeTourPoints() {
+    return this.isPlayPathTour ? defaultPlayPathTourPoints : defaultTourPoints;
+  }
+
+  @action
+  startPlayPathTour() {
+    this.setIsPlayPathTour(true);
+    this.tourPoints = [...defaultPlayPathTourPoints];
+    const playPathTourStartIndex = this.tourPoints.findIndex(
+      (point) => point.appRefName === "PlayPathPanel"
+    );
+    if (playPathTourStartIndex !== -1) {
+      this.setTourIndex(playPathTourStartIndex);
+      this.setShowTour(true);
+    }
+  }
+
   @action
   setTourIndex(index: number) {
     this.currentTourIndex = index;
@@ -292,6 +320,8 @@ export default class ViewState {
   closeTour() {
     this.currentTourIndex = -1;
     this.showTour = false;
+    this.setIsPlayPathTour(false);
+    this.tourPoints = [...defaultTourPoints];
   }
   @action
   previousTourPoint() {
