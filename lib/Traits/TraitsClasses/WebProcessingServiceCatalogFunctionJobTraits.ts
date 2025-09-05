@@ -7,6 +7,22 @@ import ModelTraits from "../ModelTraits";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
 import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
 
+export class InputAttributeTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "Input attribtue name"
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Value",
+    description: "Input attribtue value"
+  })
+  value?: string;
+}
+
 export class WPSParameterTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -28,6 +44,14 @@ export class WPSParameterTraits extends ModelTraits {
     description: "WPS input parameter type"
   })
   inputType?: string;
+
+  @objectArrayTrait({
+    type: InputAttributeTraits,
+    name: "Input Attributes",
+    description: "Attributes to set for the input type",
+    idProperty: "name"
+  })
+  inputAttributes?: InputAttributeTraits[];
 }
 
 export default class WebProcessingServiceCatalogJobTraits extends mixTraits(

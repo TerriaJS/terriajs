@@ -865,8 +865,10 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "termsOfUse": "Terms of use",
-      "basemap": "Basemap",
-      "dataProvider": "Data provided by:"
+      "credits": "Credits",
+      "mapCredits": "Map credits",
+      "dataProvider": "Data provided by:",
+      "searchProvider": "Search provided by:"
     }
   },
   "models": {

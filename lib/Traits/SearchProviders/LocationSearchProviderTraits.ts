@@ -1,3 +1,4 @@
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
@@ -36,6 +37,14 @@ export default class LocationSearchProviderTraits extends mixTraits(
     isNullable: true
   })
   isOpen: boolean = true;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Attribution",
+    description: "The attribution text for this search provider.",
+    isNullable: true
+  })
+  attributions: string[] = [];
 }
 
 export class SearchProviderMapCenterTraits extends ModelTraits {
