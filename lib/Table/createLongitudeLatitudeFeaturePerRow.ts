@@ -11,12 +11,23 @@ import TerriaFeature from "../Models/Feature/Feature";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+
+interface Options {
+  longitudes?: (number | null)[];
+  latitudes?: (number | null)[];
+  splitDirection?: ConstantProperty;
+}
 
 export default function createLongitudeLatitudeFeaturePerRow(
   style: TableStyle,
-  longitudes = style.longitudeColumn?.valuesAsNumbers.values,
-  latitudes = style.latitudeColumn?.valuesAsNumbers.values
+  options?: Options
 ): TerriaFeature[] {
+  const longitudes =
+    options?.longitudes ?? style.longitudeColumn?.valuesAsNumbers.values;
+  const latitudes =
+    options?.latitudes ?? style.latitudeColumn?.valuesAsNumbers.values;
+
   if (!longitudes || !latitudes) return [];
 
   const tableColumns = style.tableModel.tableColumns;
@@ -50,14 +61,16 @@ export default function createLongitudeLatitudeFeaturePerRow(
         pointGraphicsOptions && usePointGraphics
           ? new PointGraphics({
               ...pointGraphicsOptions,
-              heightReference: HeightReference.CLAMP_TO_GROUND
+              heightReference: HeightReference.CLAMP_TO_GROUND,
+              splitDirection: options?.splitDirection
             })
           : undefined,
       billboard:
         billboardGraphicsOptions && !usePointGraphics
           ? new BillboardGraphics({
               ...billboardGraphicsOptions,
-              heightReference: HeightReference.CLAMP_TO_GROUND
+              heightReference: HeightReference.CLAMP_TO_GROUND,
+              splitDirection: options?.splitDirection
             })
           : undefined,
       label: labelGraphicsOptions
