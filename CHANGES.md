@@ -2,6 +2,7 @@
 
 #### next release (8.10.1)
 
+- Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
 - Fix app crash when encountering unsupported WPS input types.
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.

@@ -60,10 +60,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
-    // Use a stable clippign plane collection. Replacing the collection on
+    // Use a stable clipping plane collection. Replacing the collection on
     // change seems to crash Cesium, which could be related to:
-    // https://github.com/CesiumGS/cesium/issues/6599
-    private _clippingPlaneCollection = new ClippingPlaneCollection();
+    // https://github.com/CesiumGS/cesium/issues/6599 .
+    @observable
+    private _clippingPlaneCollection: ClippingPlaneCollection | undefined;
 
     constructor(...args: any[]) {
       super(...args);
@@ -127,10 +128,10 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         });
       }
 
-      return updateClippingPlanesCollection(
-        this._clippingPlaneCollection,
-        options
-      );
+      const clippingPlaneCollection =
+        this.getOrCreateClippingPlanesCollection();
+
+      return updateClippingPlanesCollection(clippingPlaneCollection, options);
     }
 
     @computed
@@ -139,7 +140,9 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const clippingPlaneCollection = this._clippingPlaneCollection;
+      const clippingPlaneCollection =
+        this.getOrCreateClippingPlanesCollection();
+
       if (!this.clippingBox.clipModel) {
         clippingPlaneCollection.enabled = false;
         return clippingPlaneCollection;
@@ -167,6 +170,24 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       });
 
       return clippingPlaneCollection;
+    }
+
+    private getOrCreateClippingPlanesCollection(): ClippingPlaneCollection {
+      if (this._clippingPlaneCollection) {
+        return this._clippingPlaneCollection;
+      }
+
+      this._clippingPlaneCollection = new ClippingPlaneCollection();
+
+      // Unset our reference if the collection gets destroyed.
+      // This could happen for example when switching to 2D mode and back to 3D.
+      const originalDestroy = this._clippingPlaneCollection.destroy;
+      this._clippingPlaneCollection.destroy = action(() => {
+        originalDestroy.apply(this._clippingPlaneCollection);
+        this._clippingPlaneCollection = undefined;
+      });
+
+      return this._clippingPlaneCollection;
     }
 
     @computed
