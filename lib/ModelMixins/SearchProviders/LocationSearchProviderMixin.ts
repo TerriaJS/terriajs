@@ -32,8 +32,18 @@ function LocationSearchProviderMixin<
     @action
     showWarning() {}
 
-    supportsAutocomplete(): boolean {
-      return true;
+    async search(searchText: string, manuallyTriggered?: boolean) {
+      if (!this.autocompleteEnabled && !manuallyTriggered) {
+        this.searchResult.isSearching = false;
+        this.searchResult.isWaitingToStartSearch = false;
+        this.searchResult.message = {
+          content: "translate#viewModels.enterToStartSearch"
+        };
+
+        return;
+      }
+
+      await super.search(searchText, manuallyTriggered);
     }
   }
 

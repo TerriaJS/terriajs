@@ -85,10 +85,9 @@ class MobileSearch extends Component {
         key={search.searchProvider.name}
         terria={this.props.terria}
         viewState={this.props.viewState}
-        search={search}
+        searchResult={search}
         locationSearchText={searchState.locationSearchText}
         onLocationClick={this.onLocationClick.bind(this)}
-        isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
         theme={theme}
       />
     ));
