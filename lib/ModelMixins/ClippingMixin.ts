@@ -60,7 +60,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
-    // Use a stable clippign plane collection. Replacing the collection on
+    // Use a stable clipping plane collection. Replacing the collection on
     // change seems to crash Cesium, which could be related to:
     // https://github.com/CesiumGS/cesium/issues/6599 .
     @observable
