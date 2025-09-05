@@ -6,7 +6,6 @@
     "outDir": "dist",
     "types": [
       "terriajs-cesium",
-      "mapbox__geojson-merge",
       "mapbox__point-geometry",
       "terriajs-html2canvas",
       "styled-components", // eventually it will be required anyway for SSR.
