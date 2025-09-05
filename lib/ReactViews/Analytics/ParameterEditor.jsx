@@ -393,7 +393,7 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "file",
-    parameterTypeToDiv: function FileeParameterToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function FileParameterToDiv(type, parameterEditor) {
       if (type === this.id) {
         return (
           <div>
