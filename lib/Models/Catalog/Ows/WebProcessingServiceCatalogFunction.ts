@@ -718,7 +718,7 @@ const FileConverter = {
         : [input.ComplexData.Supported.Format]
       : undefined;
 
-    const supportedFormats = formats
+    const supportedFormats: SupportedFormat[] | undefined = formats
       ? filterOutUndefined(
           formats.map((format) => {
             if (format?.MimeType) {
@@ -729,7 +729,7 @@ const FileConverter = {
                 return {
                   mimeType: format.MimeType,
                   encoding: format.Encoding ?? "none"
-                } as SupportedFormat;
+                };
               }
             }
           })
