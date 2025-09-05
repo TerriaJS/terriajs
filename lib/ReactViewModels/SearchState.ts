@@ -108,6 +108,13 @@ export default class SearchState {
   }
 
   @computed
+  get supportsAutocomplete(): boolean {
+    return this.locationSearchProviders.every((provider) =>
+      provider.supportsAutocomplete()
+    );
+  }
+
+  @computed
   private get locationSearchProviders(): LocationSearchProviderMixin.Instance[] {
     return this.terria.searchBarModel.locationSearchProvidersArray;
   }

@@ -30,4 +30,8 @@ export default class NominatimSearchProviderTraits extends mixTraits(
     description: "The maximum number of results to return."
   })
   maxResults: number = 5;
+
+  attributions: string[] = [
+    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>"
+  ];
 }
