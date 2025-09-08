@@ -287,7 +287,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       this.tileset.modelMatrix = this.modelMatrix;
 
-      this.tileset.clippingPlanes = toJS(this.clippingPlaneCollection)!;
+      this.tileset.clippingPlanes = this.clippingPlaneCollection!;
       this.clippingMapItems.forEach((mapItem) => {
         mapItem.show = this.show;
       });
