@@ -49,9 +49,9 @@ const RegionParameterEditor: React.FC<PropsType> = observer(
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
- * @param {Object} viewState ViewState.
- * @param {FunctionParameter} parameter Parameter.
- * @param {Object} previewed Previewed.
+ * @param viewState ViewState.
+ * @param parameter Region parameter.
+ * @param previewed Previewed catalog function item.
  */
 export function selectOnMap(
   viewState: ViewState,
@@ -64,14 +64,12 @@ export function selectOnMap(
 
   const pickPointMode = new MapInteractionMode({
     message: "Select a region on the map",
-    onCancel: function () {
+    onCancel: () => {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
     },
     buttonText: "Done",
-    customUi: function Done() {
-      return <RegionPicker previewed={previewed} parameter={parameter} />;
-    }
+    customUi: () => <RegionPicker previewed={previewed} parameter={parameter} />
   });
   terria.mapInteractionModeStack.push(pickPointMode);
   viewState.explorerPanelIsVisible = false;
