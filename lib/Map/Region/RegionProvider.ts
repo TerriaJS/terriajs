@@ -367,7 +367,7 @@ export default class RegionProvider {
     this._loadRegionNamesPromise = loadText(url).then((xml) => {
       const obj = xml2json(xml);
 
-      if (!defined(obj.member)) {
+      if (!defined(obj?.member)) {
         const exception = defined(obj.Exception)
           ? "<br/><br/>" + obj.Exception.ExceptionText
           : "";
@@ -715,8 +715,7 @@ function loadRegionsFromWfs(
   return loadText(url).then(function (xml) {
     const obj = xml2json(xml);
 
-    if (obj.member === undefined) {
-      console.log(xml);
+    if (!defined(obj?.member)) {
       const exception = defined(obj.Exception)
         ? "<br/><br/>" + obj.Exception.ExceptionText
         : "";
