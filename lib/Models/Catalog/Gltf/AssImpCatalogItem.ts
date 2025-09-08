@@ -100,7 +100,7 @@ export default class AssImpCatalogItem
      */
     const fileArrayBuffers: {
       name: string;
-      arrayBuffer: ArrayBuffer;
+      arrayBuffer: Uint8Array<ArrayBuffer>;
     }[] = [];
 
     let zipRootDir: string | undefined;
@@ -116,6 +116,12 @@ export default class AssImpCatalogItem
               // directory that contains all the other files.
               zipRootDir = zipFile.fileName;
             }
+
+            if (zipFile.isDirectory) {
+              // Skip directories, they have no data
+              return;
+            }
+
             fileArrayBuffers.push({
               name: zipFile.fileName,
               arrayBuffer: zipFile.data
@@ -146,7 +152,7 @@ export default class AssImpCatalogItem
           const name = uri.filename();
           fileArrayBuffers.push({
             name,
-            arrayBuffer
+            arrayBuffer: new Uint8Array(arrayBuffer)
           });
 
           // Because all these files are "remote", we want to substitute filename with absolute URL
@@ -274,7 +280,7 @@ export default class AssImpCatalogItem
         }
 
         // Turn GlTf back into array buffer - this overwrites existing GlTf
-        arrayBuffer = Buffer.from(JSON.stringify(gltfJson));
+        arrayBuffer = new TextEncoder().encode(JSON.stringify(gltfJson)).buffer;
       }
 
       // Convert assimp output file to blob and create object URL
