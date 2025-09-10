@@ -10,6 +10,11 @@
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
   },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "resolutions": {
     "colors": "1.4.0",
     "@types/react": "^18.3.3",
@@ -171,7 +176,7 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
-    "@types/node": "^22.13.1",
+    "@types/node": "^24.3.1",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
     "babel-plugin-styled-components": "^1.10.7",
