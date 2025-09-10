@@ -102,19 +102,19 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     return this.strata.size;
   }
 
-  [Symbol.iterator](): IterableIterator<[string, StratumFromTraits<T>]> {
+  [Symbol.iterator](): MapIterator<[string, StratumFromTraits<T>]> {
     return this.strata.entries();
   }
 
-  entries(): IterableIterator<[string, StratumFromTraits<T>]> {
+  entries(): MapIterator<[string, StratumFromTraits<T>]> {
     return this.strata.entries();
   }
 
-  keys(): IterableIterator<string> {
+  keys(): MapIterator<string> {
     return this.strata.keys();
   }
 
-  values(): IterableIterator<StratumFromTraits<T>> {
+  values(): MapIterator<StratumFromTraits<T>> {
     return this.strata.values();
   }
 
