@@ -4,7 +4,6 @@ import {
   computed,
   makeObservable,
   observable,
-  override,
   toJS,
   untracked
 } from "mobx";
@@ -29,7 +28,7 @@ import Cesium from "../Models/Cesium";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import SelectableDimensions, {
+import {
   SelectableDimension,
   SelectableDimensionCheckboxGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
