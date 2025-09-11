@@ -10,11 +10,6 @@
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
   "resolutions": {
     "colors": "1.4.0",
     "@types/react": "^18.3.3",
