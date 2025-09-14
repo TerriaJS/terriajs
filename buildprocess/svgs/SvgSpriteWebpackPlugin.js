@@ -134,8 +134,6 @@ class SvgSpriteWebpackPlugin {
           }
         );
 
-        // No need for combined loader generation anymore - sprites are injected directly into HTML
-
         // Hook into HtmlWebpackPlugin at the compiler level
         if (compiler.hooks.compilation) {
           compiler.hooks.compilation.tap(
