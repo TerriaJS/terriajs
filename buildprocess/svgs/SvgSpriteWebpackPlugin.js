@@ -12,7 +12,8 @@ const fs = require("fs");
 class SvgSpriteWebpackPlugin {
   constructor(options = {}) {
     this.options = {
-      ...options
+      ...options,
+      debug: options.debug || false
     };
 
     this.sprites = new Map();
@@ -98,12 +99,13 @@ class SvgSpriteWebpackPlugin {
                   icons,
                   this.options.outputPath
                 );
-
-                // Build sprite from collected icons
-                compilation.emitAsset(
-                  sprite.filename,
-                  new sources.RawSource(sprite.content)
-                );
+                if (this.options.debug) {
+                  // Emit sprite file for debugging
+                  compilation.emitAsset(
+                    sprite.filename,
+                    new sources.RawSource(sprite.content)
+                  );
+                }
                 // Register sprite in global registry with content
                 this.sprites.set(sprite.namespace, sprite.content);
                 this.spritesPaths.add(compilation.getPath(sprite.filename));
