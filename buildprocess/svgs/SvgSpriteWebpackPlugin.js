@@ -105,32 +105,69 @@ class SvgSpriteWebpackPlugin {
                   new sources.RawSource(sprite.content)
                 );
                 // Register sprite in global registry with content
-                this.sprites.set(sprite.filename, sprite.content);
+                this.sprites.set(sprite.namespace, sprite.content);
                 this.spritesPaths.add(compilation.getPath(sprite.filename));
 
                 console.log(
-                  `✅ Generated ${sprite.filename} with ${icons.size} icons`
+                  `✅ Generated ${sprite.filename} for ${sprite.namespace} with ${icons.size} icons`
                 );
               }
 
               collector.markAsProcessed();
-
-              // Generate sprite manifest for runtime loading
-              const spriteManifest = {
-                sprites: Array.from(this.spritesPaths),
-                generated: new Date().toISOString()
-              };
-
-              compilation.emitAsset(
-                "sprite-manifest.json",
-                new sources.RawSource(JSON.stringify(spriteManifest, null, 2))
-              );
-
-              console.log("✅ Generated sprite-manifest.json");
             } catch (error) {
               console.error("❌ Failed to build SVG sprite:", error);
               throw error;
             }
+          }
+        );
+
+        compilation.hooks.processAssets.tap(
+          {
+            name: SvgSpriteWebpackPlugin.name,
+            stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
+          },
+          () => {
+            let source = `const existingContainer = document.getElementById("svg-sprites") ?? document.body;
+
+function injectSprites() {`;
+
+            this.sprites.forEach((svgContent, namespace) => {
+              const div = `div_${namespace.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+
+              source += `
+  // Append SVG sprite: ${namespace}
+  const ${div} = document.createElement('div');
+  ${div}.style.display = 'none';
+  ${div}.innerHTML = \`${svgContent}\`;
+  existingContainer.appendChild(${div});
+`;
+            });
+
+            source += `}
+
+function init() {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+    return;
+  }
+  injectSprites();
+}
+
+init();`;
+
+            const { sources } = compiler.webpack;
+
+            compilation.emitAsset(
+              "svg-sprite.js",
+              new sources.RawSource(source)
+            );
+
+            const mainChunk = compilation.namedChunks.get("main");
+            if (mainChunk) {
+              mainChunk.files.add("svg-sprite.js");
+            }
+
+            console.log("✅ Generate svg sprite injection script");
           }
         );
 
@@ -223,7 +260,8 @@ class SvgSpriteWebpackPlugin {
 
     return {
       content: spriteContent,
-      filename: customFilename
+      filename: customFilename,
+      namespace
     };
   }
 }
