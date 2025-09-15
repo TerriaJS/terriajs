@@ -20,42 +20,6 @@ class SvgSpriteWebpackPlugin {
     this.spritesPaths = new Set();
   }
 
-  /**
-   * Generate custom hash for sprite content
-   */
-  generateSpriteHash(content, namespace) {
-    const hash = crypto.createHash("md5");
-    hash.update(content);
-    hash.update(namespace);
-
-    return hash.digest("hex").substring(0, 8);
-  }
-
-  /**
-   * Clean up old sprite files from previous builds in watch mode
-   */
-  cleanupOldSpriteFiles(previousSpritePaths, compilation) {
-    if (!previousSpritePaths || previousSpritePaths.length === 0) {
-      return;
-    }
-    console.log("🧹 Cleaning up old sprite files...");
-
-    previousSpritePaths.forEach((filePath) => {
-      const path = join(compilation.outputOptions.path, filePath);
-      try {
-        if (fs.existsSync(path)) {
-          fs.unlinkSync(path);
-          console.log(`🗑️  Cleaned up old sprite file: ${basename(path)}`);
-        }
-      } catch (error) {
-        console.warn(
-          `⚠️  Failed to delete old sprite file ${basename(path)}:`,
-          error.message
-        );
-      }
-    });
-  }
-
   apply(compiler) {
     console.log("🔨 Initializing SVG Sprite Webpack Plugin...");
     compiler.hooks.thisCompilation.tap(
@@ -77,45 +41,8 @@ class SvgSpriteWebpackPlugin {
                 return;
               }
               console.log("🔨 Compiling SVG sprites...");
-              this.cleanupOldSpriteFiles(
-                Array.from(this.spritesPaths),
-                compilation
-              );
 
-              this.sprites.clear();
-              this.spritesPaths.clear();
-
-              const iconsByNamespace = collector.getIconsByNamespace();
-
-              for (const [namespace, icons] of Object.entries(
-                iconsByNamespace
-              )) {
-                console.log(
-                  `🔨 Processing ${icons.size} SVG icons for sprite ${namespace}...`
-                );
-
-                const sprite = await this.buildSprite(
-                  namespace,
-                  icons,
-                  this.options.outputPath
-                );
-                if (this.options.debug) {
-                  // Emit sprite file for debugging
-                  compilation.emitAsset(
-                    sprite.filename,
-                    new sources.RawSource(sprite.content)
-                  );
-                }
-                // Register sprite in global registry with content
-                this.sprites.set(sprite.namespace, sprite.content);
-                this.spritesPaths.add(compilation.getPath(sprite.filename));
-
-                console.log(
-                  `✅ Generated ${sprite.filename} for ${sprite.namespace} with ${icons.size} icons`
-                );
-              }
-
-              collector.markAsProcessed();
+              await this.processIcons(compilation);
             } catch (error) {
               console.error("❌ Failed to build SVG sprite:", error);
               throw error;
@@ -129,23 +56,45 @@ class SvgSpriteWebpackPlugin {
             stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
           },
           () => {
-            let source = `const existingContainer = document.getElementById("svg-sprites") ?? document.body;
+            const script = this.generateInjectionScript();
+
+            const { sources } = compiler.webpack;
+
+            compilation.emitAsset(
+              "svg-sprite.js",
+              new sources.RawSource(script)
+            );
+
+            const mainChunk = compilation.namedChunks.get("main");
+            if (mainChunk) {
+              mainChunk.files.add("svg-sprite.js");
+            }
+
+            console.log("✅ Generate svg sprite injection script");
+          }
+        );
+      }
+    );
+  }
+
+  generateInjectionScript() {
+    let source = `const existingContainer = document.getElementById("svg-sprites") ?? document.body;
 
 function injectSprites() {`;
 
-            this.sprites.forEach((svgContent, namespace) => {
-              const div = `div_${namespace.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+    this.sprites.forEach((svgContent, namespace) => {
+      const div = `div_${namespace.replace(/[^a-zA-Z0-9_]/g, "_")}`;
 
-              source += `
+      source += `
   // Append SVG sprite: ${namespace}
   const ${div} = document.createElement('div');
   ${div}.style.display = 'none';
   ${div}.innerHTML = \`${svgContent}\`;
   existingContainer.appendChild(${div});
 `;
-            });
+    });
 
-            source += `}
+    source += `}
 
 function init() {
   if (document.readyState === "loading") {
@@ -157,60 +106,46 @@ function init() {
 
 init();`;
 
-            const { sources } = compiler.webpack;
+    return source;
+  }
 
-            compilation.emitAsset(
-              "svg-sprite.js",
-              new sources.RawSource(source)
-            );
+  async processIcons(compilation) {
+    this.cleanupOldSpriteFiles(Array.from(this.spritesPaths), compilation);
 
-            const mainChunk = compilation.namedChunks.get("main");
-            if (mainChunk) {
-              mainChunk.files.add("svg-sprite.js");
-            }
+    this.sprites.clear();
+    this.spritesPaths.clear();
 
-            console.log("✅ Generate svg sprite injection script");
-          }
+    const iconsByNamespace = collector.getIconsByNamespace();
+
+    for (const [namespace, icons] of Object.entries(iconsByNamespace)) {
+      console.log(
+        `🔨 Processing ${icons.size} SVG icons for sprite ${namespace}...`
+      );
+
+      const sprite = await this.buildSprite(
+        namespace,
+        icons,
+        this.options.outputPath
+      );
+
+      // Register sprite in global registry with content
+      this.sprites.set(namespace, sprite.content);
+
+      if (this.options.debug) {
+        // Emit sprite file for debugging
+        compilation.emitAsset(
+          sprite.filename,
+          new sources.RawSource(sprite.content)
         );
-
-        // Hook into HtmlWebpackPlugin at the compiler level
-        if (compiler.hooks.compilation) {
-          compiler.hooks.compilation.tap(
-            SvgSpriteWebpackPlugin.name,
-            (compilation) => {
-              // Check if HtmlWebpackPlugin is present
-              const HtmlWebpackPlugin = compiler.options.plugins?.find(
-                (plugin) => plugin.constructor.name === "HtmlWebpackPlugin"
-              );
-
-              if (HtmlWebpackPlugin && HtmlWebpackPlugin.constructor.getHooks) {
-                const hooks =
-                  HtmlWebpackPlugin.constructor.getHooks(compilation);
-                // Hook before HTML generation to add sprite data
-                if (hooks.beforeAssetTagGeneration) {
-                  hooks.beforeAssetTagGeneration.tapAsync(
-                    SvgSpriteWebpackPlugin.name,
-                    (data, callback) => {
-                      // Add sprite information to template parameters
-                      if (!data.plugin.options) {
-                        data.plugin.options = {};
-                      }
-                      data.plugin.options.sprites = Object.fromEntries(
-                        this.sprites.entries()
-                      );
-                      data.plugin.options.spritesPaths = Array.from(
-                        this.spritesPaths
-                      );
-                      callback(null, data);
-                    }
-                  );
-                }
-              }
-            }
-          );
-        }
+        this.spritesPaths.add(compilation.getPath(sprite.filename));
       }
-    );
+
+      console.log(
+        `✅ Generated sprite for ${namespace} with ${icons.size} icons`
+      );
+    }
+
+    collector.markAsProcessed();
   }
 
   /**
@@ -262,9 +197,44 @@ init();`;
 
     return {
       content: spriteContent,
-      filename: customFilename,
-      namespace
+      filename: customFilename
     };
+  }
+
+  /**
+   * Generate custom hash for sprite content
+   */
+  generateSpriteHash(content, namespace) {
+    const hash = crypto.createHash("md5");
+    hash.update(content);
+    hash.update(namespace);
+
+    return hash.digest("hex").substring(0, 8);
+  }
+
+  /**
+   * Clean up old sprite files from previous builds in watch mode
+   */
+  cleanupOldSpriteFiles(previousSpritePaths, compilation) {
+    if (!previousSpritePaths || previousSpritePaths.length === 0) {
+      return;
+    }
+    console.log("🧹 Cleaning up old sprite files...");
+
+    previousSpritePaths.forEach((filePath) => {
+      const path = join(compilation.outputOptions.path, filePath);
+      try {
+        if (fs.existsSync(path)) {
+          fs.unlinkSync(path);
+          console.log(`🗑️  Cleaned up old sprite file: ${basename(path)}`);
+        }
+      } catch (error) {
+        console.warn(
+          `⚠️  Failed to delete old sprite file ${basename(path)}:`,
+          error.message
+        );
+      }
+    });
   }
 }
 
