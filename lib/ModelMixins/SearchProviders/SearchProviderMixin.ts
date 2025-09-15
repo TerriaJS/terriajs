@@ -60,6 +60,7 @@ function SearchProviderMixin<
             count: this.minCharacters
           }
         };
+        this.searchResult.isWaitingToStartSearch = false;
         return;
       }
 
