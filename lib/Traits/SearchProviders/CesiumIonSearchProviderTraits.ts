@@ -17,4 +17,8 @@ export default class CesiumIonSearchProviderTraits extends mixTraits(
       "The Cesium ION key. If not provided, will try to use the global cesium ion key."
   })
   key?: string;
+
+  get autocompleteEnabled() {
+    return true;
+  }
 }
