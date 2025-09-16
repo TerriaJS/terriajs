@@ -83,7 +83,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     controller: myLocation,
     screenSize: undefined,
-    order: 3
+    order: 6
   });
 
   const toggleSplitterController = new ToggleSplitterController(viewState);
@@ -98,7 +98,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     controller: toggleSplitterController,
     screenSize: undefined,
-    order: 4
+    order: 6
   });
 
   const measureTools = new MeasureTools(terria);
@@ -145,7 +145,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: undefined,
     controller: measureToolsController,
-    order: 5,
+    order: 4,
     noExpand: window.innerWidth < 1100
   });
 
@@ -198,7 +198,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: undefined,
     controller: measureAngleToolController,
-    order: 6,
+    order: 5,
     noExpand: window.innerWidth < 1100
   });
 
@@ -262,7 +262,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: undefined,
     controller: measurePolygonToolController,
-    order: 6,
+    order: 5,
     noExpand: window.innerWidth < 1100
   });
 
@@ -329,7 +329,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: undefined,
     controller: measureLineToolController,
-    order: 6,
+    order: 5,
     noExpand: window.innerWidth < 1100
   });
 
@@ -394,7 +394,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     controller: measurePointTool,
     screenSize: undefined,
-    order: 6,
+    order: 5,
     noExpand: window.innerWidth < 1100
   });
 
@@ -406,7 +406,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     controller: toggleInfoController,
     screenSize: undefined,
-    order: 7
+    order: 3
   });
 
   const pedestrianModeToolController = new ToolButtonController({
@@ -422,7 +422,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: "medium",
     controller: pedestrianModeToolController,
-    order: 5
+    order: 7
   });
 
   const closeToolButtonController = new GenericMapNavigationItemController({
