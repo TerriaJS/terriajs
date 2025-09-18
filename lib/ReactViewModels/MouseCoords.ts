@@ -275,9 +275,7 @@ export default class MouseCoords {
     ) {
       return;
     }
-    const urlFast = terria?.corsProxy.getURL(
-      terria.configParameters.whereAmIParams.urlFast
-    );
+    const urlFast = terria.configParameters.whereAmIParams.urlFast;
     if (!urlFast) {
       return;
     }
