@@ -6,6 +6,7 @@ import {
   TextSymbolizer,
   TextSymbolizerOptions
 } from "protomaps-leaflet";
+import { PROTOMAPS_DEFAULT_TILE_SIZE } from "../../../ImageryProvider/ProtomapsImageryProvider";
 
 interface TextFieldOptions {
   textField?: (zoom?: number, f?: Feature) => string | undefined;
@@ -25,5 +26,33 @@ export class CustomCenteredTextSymbolizer extends CenteredTextSymbolizer {
     // the text transform code from protomaps-leaflet
     textFieldSymbolizer.text.get = (z, f) => options.textField?.(z, f);
     this.centered = new CenteredSymbolizer(textFieldSymbolizer);
+  }
+}
+
+export interface BackgroundRule {
+  symbolizer: BackgroundSymbolizer;
+}
+
+export class BackgroundSymbolizer {
+  backgroundColor: (z?: number, f?: Feature) => string;
+  backgroundOpacity: (z?: number, f?: Feature) => number;
+
+  constructor(options: {
+    backgroundColor: (z?: number, f?: Feature) => string;
+    backgroundOpacity: (z?: number, f?: Feature) => number;
+  }) {
+    this.backgroundColor = options.backgroundColor;
+    this.backgroundOpacity = options.backgroundOpacity;
+  }
+
+  draw(ctx: CanvasRenderingContext2D, z: number): void {
+    ctx.globalAlpha = this.backgroundOpacity(z);
+    ctx.fillStyle = this.backgroundColor(z);
+    ctx.fillRect(
+      0,
+      0,
+      PROTOMAPS_DEFAULT_TILE_SIZE,
+      PROTOMAPS_DEFAULT_TILE_SIZE
+    );
   }
 }

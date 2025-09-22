@@ -9,7 +9,10 @@ import {
 import JsonValue from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import { evalBool, evalColor, evalNumber, evalString } from "./Style/expr";
-import { CustomCenteredTextSymbolizer } from "./Style/symbolizer";
+import {
+  BackgroundSymbolizer,
+  CustomCenteredTextSymbolizer
+} from "./Style/symbolizer";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -202,6 +205,7 @@ export function mapboxStyleJsonToProtomaps(
 
   const paintRules = [];
   const labelRules = [];
+  let backgroundRule: { symbolizer: BackgroundSymbolizer } | undefined;
   const refs = new Map<string, any>();
   try {
     for (const layer of obj.layers) {
@@ -224,7 +228,18 @@ export function mapboxStyleJsonToProtomaps(
         filter = evalBool(layer.filter, false);
       }
 
-      // ignore background-color?
+      if (layer.type === "background") {
+        backgroundRule = {
+          symbolizer: new BackgroundSymbolizer({
+            backgroundColor: evalColor(
+              layer.paint["background-color"],
+              "black"
+            ),
+            backgroundOpacity: evalNumber(layer.paint["background-opacity"], 1)
+          })
+        };
+      }
+
       if (layer.type === "fill") {
         paintRules.push({
           dataLayer: layer["source-layer"],
@@ -325,5 +340,5 @@ export function mapboxStyleJsonToProtomaps(
   } catch (e) {
     TerriaError.from(e, "Error parsing mapbox style").log();
   }
-  return { paintRules, labelRules, tasks: [] };
+  return { paintRules, labelRules, backgroundRule, tasks: [] };
 }

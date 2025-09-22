@@ -34,6 +34,7 @@ import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
 } from "../Vector/Protomaps/ProtomapsGeojsonSource";
+import { BackgroundRule } from "../Vector/Protomaps/Style/symbolizer";
 
 export const LAYER_NAME_PROP = "__LAYERNAME";
 
@@ -63,6 +64,7 @@ interface Options {
   credit?: Credit | string;
   paintRules: PaintRule[];
   labelRules: LabelRule[];
+  backgroundRule?: BackgroundRule;
 
   /** The name of the property that is a unique ID for features */
   idProperty?: string;
@@ -140,6 +142,7 @@ export default class ProtomapsImageryProvider
   readonly source: Source;
   readonly paintRules: PaintRule[];
   readonly labelRules: LabelRule[];
+  readonly backgroundRule?: BackgroundRule;
 
   constructor(options: Options) {
     makeObservable(this);
@@ -178,6 +181,7 @@ export default class ProtomapsImageryProvider
     // Protomaps
     this.paintRules = options.paintRules;
     this.labelRules = options.labelRules;
+    this.backgroundRule = options.backgroundRule;
     this.idProperty = options.idProperty ?? "FID";
 
     // Generate protomaps source based on this.data
@@ -314,21 +318,16 @@ export default class ProtomapsImageryProvider
       0
     );
 
-    // ctx.clearRect(
-    //   0,
-    //   0,
-    //   PROTOMAPS_DEFAULT_TILE_SIZE,
-    //   PROTOMAPS_DEFAULT_TILE_SIZE
-    // );
-
-    // TODO: read background color from style definition
-    ctx.fillStyle = "#cccccc";
-    ctx.fillRect(
-      0,
-      0,
-      PROTOMAPS_DEFAULT_TILE_SIZE,
-      PROTOMAPS_DEFAULT_TILE_SIZE
-    );
+    if (this.backgroundRule) {
+      this.backgroundRule.symbolizer.draw(ctx, coords.z);
+    } else {
+      ctx.clearRect(
+        0,
+        0,
+        PROTOMAPS_DEFAULT_TILE_SIZE,
+        PROTOMAPS_DEFAULT_TILE_SIZE
+      );
+    }
 
     if (labelData)
       paint(

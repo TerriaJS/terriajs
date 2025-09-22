@@ -25,6 +25,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BackgroundRule } from "../../../Map/Vector/Protomaps/Style/symbolizer";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
@@ -166,6 +167,11 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   }
 
   @computed
+  get backgroundRule(): BackgroundRule | undefined {
+    return this.parsedJsonStyle?.backgroundRule;
+  }
+
+  @computed
   get imageryProvider(): ProtomapsImageryProvider | undefined {
     if (this.url === undefined) {
       return;
@@ -183,6 +189,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       credit: this.attribution,
       paintRules: this.paintRules,
       labelRules: this.labelRules,
+      backgroundRule: this.backgroundRule,
       idProperty: this.idProperty
     });
   }
