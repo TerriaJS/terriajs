@@ -130,14 +130,12 @@ export function numberOrFn(
 }
 
 export function widthFn(width_obj: any, gap_obj: any) {
-  const w = numberOrFn(width_obj, 1);
-  const g = numberOrFn(gap_obj);
-  return (z: number, f?: Feature) => {
-    const tmp = typeof w === "number" ? w : w(z, f);
-    if (g) {
-      return tmp + (typeof g === "number" ? g : g(z, f));
-    }
-    return tmp;
+  const widthThunk = evalNumber(width_obj, 1);
+  const gapThunk = evalNumber(gap_obj, 0);
+  return (z?: number, f?: Feature) => {
+    const width = widthThunk(z, f);
+    const gap = gapThunk(z, f);
+    return width + gap;
   };
 }
 
