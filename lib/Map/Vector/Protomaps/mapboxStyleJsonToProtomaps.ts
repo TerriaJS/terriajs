@@ -1,15 +1,21 @@
 import {
-  CenteredTextSymbolizer,
   CircleSymbolizer,
   Feature,
   Filter,
-  LineLabelSymbolizer,
   LineSymbolizer,
   PolygonSymbolizer,
   exp
 } from "protomaps-leaflet";
 import JsonValue from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
+import {
+  evalBool,
+  evalColor,
+  evalNumber,
+  evalString,
+  evalStringArray
+} from "./Style/expr";
+import { CustomCenteredTextSymbolizer } from "./Style/symbolizer";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -125,7 +131,8 @@ export function numberOrFn(
     return obj;
   }
   // If feature f is defined, use numberFn, otherwise use defaultValue
-  return (z: number, f?: Feature) => (f ? numberFn(obj)(z, f) : defaultValue);
+  return (z: number, f?: Feature) =>
+    f ? evalNumber(obj, 1)(z, f) : defaultValue;
 }
 
 export function widthFn(width_obj: any, gap_obj: any) {
@@ -148,7 +155,7 @@ interface FontSub {
 
 export function getFont(obj: any, fontSubMap: Record<string, FontSub>) {
   const fontFaces: FontSub[] = [];
-  for (const wanted_face of obj["text-font"]) {
+  for (const wanted_face of obj["text-font"] ?? []) {
     if (wanted_face in fontSubMap) {
       fontFaces.push(fontSubMap[wanted_face]);
     }
@@ -169,19 +176,19 @@ export function getFont(obj: any, fontSubMap: Record<string, FontSub>) {
         .map((f) => f.face)
         .join(", ")}`;
   }
-  if (text_size.stops) {
+  if (text_size?.stops) {
     let base = 1.4;
     if (text_size.base) base = text_size.base;
     else text_size.base = base;
-    const t = numberFn(text_size);
+    const t = evalNumber(text_size, 1);
     return (z: number, f?: Feature) => {
       return `${style}${weight}${t(z, f)}px ${fontFaces
         .map((f) => f.face)
         .join(", ")}`;
     };
   }
-  if (text_size[0] === "step") {
-    const t = numberFn(text_size);
+  if (text_size?.[0] === "step") {
+    const t = evalNumber(text_size, 1);
     return (z: number, f?: Feature) => {
       return `${style}${weight}${t(z, f)}px ${fontFaces
         .map((f) => f.face)
@@ -222,7 +229,7 @@ export function mapboxStyleJsonToProtomaps(
 
       let filter = undefined;
       if (layer.filter) {
-        filter = filterFn(layer.filter);
+        filter = evalBool(layer.filter, false);
       }
 
       // ignore background-color?
@@ -231,8 +238,8 @@ export function mapboxStyleJsonToProtomaps(
           dataLayer: layer["source-layer"],
           filter: filter,
           symbolizer: new PolygonSymbolizer({
-            fill: layer.paint["fill-color"],
-            opacity: layer.paint["fill-opacity"]
+            fill: evalColor(layer.paint["fill-color"], "black"),
+            opacity: evalNumber(layer.paint["fill-opacity"], 1)
           })
         });
       } else if (layer.type === "fill-extrusion") {
@@ -241,7 +248,7 @@ export function mapboxStyleJsonToProtomaps(
           dataLayer: layer["source-layer"],
           filter: filter,
           symbolizer: new PolygonSymbolizer({
-            fill: layer.paint["fill-extrusion-color"],
+            fill: evalColor(layer.paint["fill-extrusion-color"], "black"),
             opacity: layer.paint["fill-extrusion-opacity"]
           })
         });
@@ -257,7 +264,7 @@ export function mapboxStyleJsonToProtomaps(
                 layer.paint["line-gap-width"]
               ),
               dash: layer.paint["line-dasharray"],
-              dashColor: layer.paint["line-color"]
+              dashColor: evalColor(layer.paint["line-color"], "black")
             })
           });
         } else {
@@ -265,7 +272,7 @@ export function mapboxStyleJsonToProtomaps(
             dataLayer: layer["source-layer"],
             filter: filter,
             symbolizer: new LineSymbolizer({
-              color: layer.paint["line-color"],
+              color: evalColor(layer.paint["line-color"], "black"),
               width: widthFn(
                 layer.paint["line-width"],
                 layer.paint["line-gap-width"]
@@ -275,32 +282,33 @@ export function mapboxStyleJsonToProtomaps(
         }
       } else if (layer.type === "symbol") {
         if (layer.layout["symbol-placement"] === "line") {
-          labelRules.push({
-            dataLayer: layer["source-layer"],
-            filter: filter,
-            symbolizer: new LineLabelSymbolizer({
-              font: getFont(layer.layout, fontSubMap),
-              fill: layer.paint["text-color"],
-              width: layer.paint["text-halo-width"],
-              stroke: layer.paint["text-halo-color"],
-              textTransform: layer.layout["text-transform"],
-              labelProps: layer.layout["text-field"]
-                ? [layer.layout["text-field"]]
-                : undefined
-            })
-          });
+          // TODO: fix memory leak or something that crashes the app
+          // labelRules.push({
+          //   dataLayer: layer["source-layer"],
+          //   filter: filter,
+          //   symbolizer: new LineLabelSymbolizer({
+          //     font: getFont(layer.layout, fontSubMap),
+          //     fill: evalColor(layer.paint?.["text-color"], "black"),
+          //     width: layer.paint?.["text-halo-width"],
+          //     stroke: layer.paint?.["text-halo-color"],
+          //     textTransform: layer.layout["text-transform"],
+          //     labelProps: layer.layout["text-field"]
+          //       ? evalStringArray(layer.layout["text-field"], [])
+          //       : undefined
+          //   })
+          // });
         } else {
           labelRules.push({
             dataLayer: layer["source-layer"],
             filter: filter,
-            symbolizer: new CenteredTextSymbolizer({
+            symbolizer: new CustomCenteredTextSymbolizer({
               font: getFont(layer.layout, fontSubMap),
-              fill: layer.paint["text-color"],
-              stroke: layer.paint["text-halo-color"],
-              width: layer.paint["text-halo-width"],
+              fill: evalColor(layer.paint?.["text-color"], "black"),
+              stroke: evalColor(layer.paint?.["text-halo-color"], "black"),
+              width: layer.paint?.["text-halo-width"],
               textTransform: layer.layout["text-transform"],
-              labelProps: layer.layout["text-field"]
-                ? [layer.layout["text-field"]]
+              textField: layer.layout["text-field"]
+                ? evalString(layer.layout["text-field"])
                 : undefined
             })
           });
@@ -311,11 +319,13 @@ export function mapboxStyleJsonToProtomaps(
           filter: filter,
           symbolizer: new CircleSymbolizer({
             radius: layer.paint["circle-radius"],
-            fill: layer.paint["circle-color"],
-            stroke: layer.paint["circle-stroke-color"],
+            fill: evalColor(layer.paint["text-color"], "black"),
+            stroke: evalColor(layer.paint["circle-stroke-color"], "black"),
             width: layer.paint["circle-stroke-width"]
           })
         });
+      } else {
+        console.log(`Unhandled layer ${layer.type}`);
       }
     }
 

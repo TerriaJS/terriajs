@@ -313,7 +313,17 @@ export default class ProtomapsImageryProvider
       0,
       0
     );
-    ctx.clearRect(
+
+    // ctx.clearRect(
+    //   0,
+    //   0,
+    //   PROTOMAPS_DEFAULT_TILE_SIZE,
+    //   PROTOMAPS_DEFAULT_TILE_SIZE
+    // );
+
+    // TODO: read background color from style definition
+    ctx.fillStyle = "#cccccc";
+    ctx.fillRect(
       0,
       0,
       PROTOMAPS_DEFAULT_TILE_SIZE,
