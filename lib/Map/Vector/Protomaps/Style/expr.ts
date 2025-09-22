@@ -96,7 +96,7 @@ function mapThunk<A, B>(
   });
 }
 
-export type Op<T = {}> = T & {
+export type Op<T = unknown> = T & {
   evalOp: (paramsExpr: Expr[]) => Thunk;
 };
 

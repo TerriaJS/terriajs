@@ -8,13 +8,7 @@ import {
 } from "protomaps-leaflet";
 import JsonValue from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
-import {
-  evalBool,
-  evalColor,
-  evalNumber,
-  evalString,
-  evalStringArray
-} from "./Style/expr";
+import { evalBool, evalColor, evalNumber, evalString } from "./Style/expr";
 import { CustomCenteredTextSymbolizer } from "./Style/symbolizer";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
