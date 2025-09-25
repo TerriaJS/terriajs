@@ -7,7 +7,7 @@ import { scaleLinear, scaleTime } from "@visx/scale";
 import groupBy from "lodash-es/groupBy";
 import minBy from "lodash-es/minBy";
 import { observer } from "mobx-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import type { ChartPoint } from "../../../Charts/ChartData";
 import type { ChartAxis, ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Styles from "./bottom-dock-chart.scss";
@@ -73,9 +73,18 @@ const Chart: React.FC<ChartProps> = observer(
     height,
     margin = DEFAULT_MARGIN
   }) => {
-    const [zoomedXScale, setZoomedXScale] = useState<XScale | undefined>(
-      undefined
-    );
+    const zoomReducer = (
+      _state: XScale | undefined,
+      action: { type: "SET"; scale: XScale | undefined }
+    ) => {
+      return action.scale;
+    };
+
+    const [zoomedXScale, dispatchZoom] = useReducer(zoomReducer, undefined);
+    const setZoomedXScale = useCallback((scale: XScale | undefined) => {
+      dispatchZoom({ type: "SET", scale });
+    }, []);
+
     const [mouseCoords, setMouseCoords] = useState<
       { x: number; y: number } | undefined
     >(undefined);
@@ -207,9 +216,16 @@ const Chart: React.FC<ChartProps> = observer(
       });
     };
 
+    const handleZoom = useCallback(
+      (zoomedScale: XScale) => {
+        setZoomedXScale(zoomedScale);
+      },
+      [setZoomedXScale]
+    );
+
     useEffect(() => {
       setZoomedXScale(undefined);
-    }, [processedChartItems]);
+    }, [propsChartItems.length, setZoomedXScale]);
 
     if (processedChartItems.length === 0)
       return <div className={Styles.empty}>No data available</div>;
@@ -223,7 +239,7 @@ const Chart: React.FC<ChartProps> = observer(
           [0, 0],
           [Infinity, Infinity]
         ]}
-        onZoom={setZoomedXScale}
+        onZoom={handleZoom}
       >
         <Legends width={plotWidth} chartItems={processedChartItems} />
         <div style={{ position: "relative" }}>
