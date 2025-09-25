@@ -66,6 +66,10 @@ The easiest way to build your own Terria-based map is using the TerriaMap starti
 
 See [Getting Started](https://docs.terria.io/guide/getting-started/) in the [Documentation](https://docs.terria.io/guide/) for all the details.
 
+Go deeper by chatting with the source code:
+
+<a href="https://deepwiki.com/TerriaJS/terriajs"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+
 ### Components and naming
 
 - **[Terria™](http://terria.io)** is the overall name for the spatial data platform and the team that built TerriaJS.
