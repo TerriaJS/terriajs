@@ -34,7 +34,7 @@ import {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsGeojsonSource
 } from "../Vector/Protomaps/ProtomapsGeojsonSource";
-import { BackgroundRule } from "../Vector/Protomaps/Style/symbolizer";
+import { BackgroundRule } from "../Vector/Protomaps/Style/Symbolizers/BackgroundSymbolizer";
 
 export const LAYER_NAME_PROP = "__LAYERNAME";
 
@@ -240,9 +240,22 @@ export default class ProtomapsImageryProvider
 
   async requestImage(x: number, y: number, level: number, request?: Request) {
     const canvas = document.createElement("canvas");
-    canvas.width = this.tileWidth;
-    canvas.height = this.tileHeight;
-    return await this.requestImageForCanvas(x, y, level, canvas, request);
+    // canvas.width = this.tileWidth;
+    // canvas.height = this.tileHeight;
+    // canvas.style.width = `${PROTOMAPS_DEFAULT_TILE_SIZE}px`;
+    // canvas.style.height = `${PROTOMAPS_DEFAULT_TILE_SIZE}px`;
+    // console.log(canvas.style.width, canvas.style.height);
+    const jobId = `${level}/${x}/${y}`;
+    //console.time(`xximprovider:${jobId}`);
+    return await this.requestImageForCanvas(
+      x,
+      y,
+      level,
+      canvas,
+      request
+    ).finally(() => {
+      //console.timeEnd(`xximprovider:${jobId}`);
+    });
   }
 
   async requestImageForCanvas(
@@ -307,16 +320,22 @@ export default class ProtomapsImageryProvider
       PROTOMAPS_DEFAULT_TILE_SIZE * coords.y
     );
 
+    // Configure canvas to draw in native resolution if useNativeResolution is true
+    const dpr = this.terria.useNativeResolution ? window.devicePixelRatio : 1;
+    const drawWidth = Math.floor(this.tileWidth * dpr);
+    const drawHeight = Math.floor(this.tileWidth * dpr);
+    canvas.width = drawWidth;
+    canvas.height = drawHeight;
+    canvas.style.width = `${drawWidth / dpr}px`;
+    canvas.style.height = `${drawHeight / dpr}px`;
+
     const ctx = canvas.getContext("2d");
+
     if (!ctx) throw TerriaError.from("Failed to get canvas context");
-    ctx.setTransform(
-      this.tileWidth / PROTOMAPS_DEFAULT_TILE_SIZE,
-      0,
-      0,
-      this.tileHeight / PROTOMAPS_DEFAULT_TILE_SIZE,
-      0,
-      0
-    );
+
+    // Apply scale so that draw instructions can use CSS pixel units instead of
+    // native unit
+    ctx.scale(dpr, dpr);
 
     if (this.backgroundRule) {
       this.backgroundRule.symbolizer.draw(ctx, coords.z);
@@ -329,7 +348,7 @@ export default class ProtomapsImageryProvider
       );
     }
 
-    if (labelData)
+    if (labelData) {
       paint(
         ctx,
         coords.z,
@@ -341,6 +360,7 @@ export default class ProtomapsImageryProvider
         false,
         ""
       );
+    }
 
     return canvas;
   }

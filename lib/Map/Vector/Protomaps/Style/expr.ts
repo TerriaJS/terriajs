@@ -1,11 +1,13 @@
 import { Feature, JsonValue } from "protomaps-leaflet";
-import { isJsonString } from "../../../../Core/Json";
+import { isJsonNumber, isJsonString } from "../../../../Core/Json";
 import { builtinOps } from "./ops";
 
 export type Expr = JsonValue;
 export type Thunk<T = JsonValue> = (zoom?: number, f?: Feature) => T;
 
-export function evalExpr(expr: Expr): Thunk {
+type Vars = Record<string, Thunk>;
+
+export function evalExpr(expr: Expr, vars: Vars): Thunk {
   if (!Array.isArray(expr)) {
     return () => expr; // An atomic value
   }
@@ -15,7 +17,7 @@ export function evalExpr(expr: Expr): Thunk {
   if (!op) {
     throw new Error(`Unsupported style function '${opCode}'`);
   }
-  return op.evalOp(params);
+  return op.applyOp(params, vars);
 }
 
 function evaluator<T>(mapValue: (value: JsonValue) => T) {
@@ -26,9 +28,15 @@ function evaluator<T>(mapValue: (value: JsonValue) => T) {
   ): Thunk<NonNullable<T>>;
   function evalWithDefault(expr: Expr, defaultValue?: T): Thunk<T | undefined> {
     try {
-      const thunk = evalExpr(expr);
-      return mapThunk(thunk, (value) => {
-        return mapValue(value) ?? defaultValue;
+      const t = evalExpr(expr, {});
+      return thunk(t.length, (...env) => {
+        try {
+          const value = mapValue(t(...env));
+          return value ?? defaultValue;
+        } catch (error) {
+          logStyleError(error);
+          throw error;
+        }
       });
     } catch (error) {
       logStyleError(error);
@@ -46,17 +54,27 @@ export const evalNumber = evaluator((value) =>
   typeof value === "number" && !isNaN(value) ? value : undefined
 );
 
-export const evalBool = evaluator((value) => {
-  return typeof value === "boolean" ? value : undefined;
-});
+export const evalBool = evaluator((value) =>
+  typeof value === "boolean" ? value : undefined
+);
 
 export const evalStringArray = evaluator((value) =>
   Array.isArray(value) && value.every(isJsonString) ? value : undefined
 );
 
+export const evalNumberArray = evaluator((value) =>
+  Array.isArray(value) && value.every(isJsonNumber) ? value : undefined
+);
+
 export const evalColor = evaluator((value) =>
   typeof value === "string" ? value : undefined
 );
+
+export const evalEnum = function <T extends readonly unknown[]>(enumValues: T) {
+  return evaluator((value) =>
+    enumValues.includes(value) ? (value as T[number]) : undefined
+  );
+};
 
 export function thunk<T>(
   arity: number,
@@ -74,40 +92,60 @@ export function thunk<T>(
       return fn(zoom, undefined);
     };
   } else if (arity === 0) {
-    return () => {
-      return fn(undefined, undefined);
-    };
+    // fn has no dependencies, so we can execute the function and return a simple thunk
+    const value = fn(undefined, undefined);
+    return () => value;
   } else {
     throw new Error(`Invalid arity`);
   }
 }
 
-function mapThunk<A, B>(
+export function mapThunk<A, B>(
   srcThunk: Thunk<A>,
   mapValue: (value: A) => B
-): Thunk<B | undefined> {
+): Thunk<B> {
   const arity = srcThunk.length;
   return thunk(arity, (zoom, f) => {
     try {
       return mapValue(srcThunk(zoom, f));
     } catch (error) {
       logStyleError(error);
+      throw error;
     }
   });
 }
 
+export function mapAllThunks<Tuple extends unknown[], T>(
+  srcThunks: [...{ [K in keyof Tuple]: Thunk<Tuple[K]> }],
+  mapValues: (values: Tuple) => T
+): Thunk<T> {
+  const maxArity = Math.max(...srcThunks.map((t) => t.length));
+  return thunk(maxArity, (zoom, f) =>
+    mapValues(srcThunks.map((t) => t(zoom, f)) as any)
+  );
+}
+
+export function mergeAllThunks<Tuple extends unknown[], T>(
+  srcThunks: [...{ [K in keyof Tuple]: Thunk<Tuple[K]> }],
+  newThunk: (values: typeof srcThunks) => Thunk<T>
+): Thunk<T> {
+  const t = newThunk(srcThunks);
+  const maxArity = Math.max(t.length, ...srcThunks.map((t) => t.length));
+  return thunk(maxArity, (...env) => t(...env));
+}
+
 export type Op<T = unknown> = T & {
-  evalOp: (paramsExpr: Expr[]) => Thunk;
+  applyOp: (paramsExpr: Expr[], vars: Vars) => Thunk;
 };
 
 // Create an operation that strictly evals its params before executing it
 function createOp(opArity: 0 | 1 | 2, opImpl: (...args: any[]) => any) {
   return Object.assign(opImpl, {
-    evalOp: (paramExprs: Expr[]) => {
-      const paramsThunk = evalParams(paramExprs);
-      const arity = Math.max(opArity, paramsThunk.length);
-      return thunk(arity, (zoom, f) => {
-        const params: any = paramsThunk(zoom, f);
+    applyOp: (paramExprs: Expr[], vars: Vars) => {
+      const paramThunks = paramExprs.map((e) => evalExpr(e, vars));
+      const arity = Math.max(opArity, ...paramThunks.map((t) => t.length));
+      return thunk(arity, function opThunk(zoom, f) {
+        const params: any = paramThunks.map((t) => t(zoom, f));
         return opArity === 2
           ? opImpl(zoom, f, ...params)
           : opArity === 1
@@ -137,12 +175,6 @@ export function op0<T extends JsonValue, Args extends JsonValue[]>(
   opImpl: (...args: Args) => T
 ): Op<typeof opImpl> {
   return createOp(0, opImpl);
-}
-
-function evalParams(paramExprs: Expr[]): Thunk<JsonValue[]> {
-  const paramThunks = paramExprs.map(evalExpr);
-  const maxArity = Math.max(0, ...paramThunks.map((t) => t.length));
-  return thunk(maxArity, (zoom, f) => paramThunks.map((t) => t(zoom, f)));
 }
 
 export function getOp(opCode: string): Op | undefined {

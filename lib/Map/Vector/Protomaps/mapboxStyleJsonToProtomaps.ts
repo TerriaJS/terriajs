@@ -1,18 +1,29 @@
 import {
   CircleSymbolizer,
-  Feature,
-  Filter,
+  JsonObject,
+  LabelRule,
   LineSymbolizer,
+  PaintRule,
   PolygonSymbolizer,
-  exp
+  Sheet
 } from "protomaps-leaflet";
-import JsonValue from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
-import { evalBool, evalColor, evalNumber, evalString } from "./Style/expr";
+import IndexedSpriteSheet from "./Style/IndexedSpriteSheet";
+import BackgroundSymbolizer from "./Style/Symbolizers/BackgroundSymbolizer";
+import CustomGroupSymbolizer from "./Style/Symbolizers/CustomGroupSymbolizer";
+import CustomIconSymbolizer from "./Style/Symbolizers/CustomIconSymbolizer";
+import CustomLabelSymbolizer from "./Style/Symbolizers/CustomLabelSymbolizer";
 import {
-  BackgroundSymbolizer,
-  CustomCenteredTextSymbolizer
-} from "./Style/symbolizer";
+  Expr,
+  Thunk,
+  evalBool,
+  evalColor,
+  evalEnum,
+  evalNumber,
+  evalString,
+  evalStringArray,
+  mapAllThunks
+} from "./Style/expr";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -20,127 +31,16 @@ import {
  * Full license https://github.com/protomaps/protomaps-leaflet/blob/main/LICENSE
  */
 
-function number(val: JsonValue, defaultValue: number) {
-  return typeof val === "number" ? val : defaultValue;
+export function evalLineWidth(widthExpr: Expr, gapExpr: Expr) {
+  return mapAllThunks(
+    [evalNumber(widthExpr, 1), evalNumber(gapExpr, 0)],
+    ([width, gap]) => width + gap
+  );
 }
 
-export function filterFn(arr: any[]): Filter {
-  // hack around "$type"
-  if (arr.includes("$type")) {
-    return (_) => true;
-  }
-  if (arr[0] === "==") {
-    return (_, f) => f.props[arr[1]] === arr[2];
-  }
-  if (arr[0] === "!=") {
-    return (_, f) => f.props[arr[1]] !== arr[2];
-  }
-  if (arr[0] === "!") {
-    const sub = filterFn(arr[1]);
-    return (z, f) => !sub(z, f);
-  }
-  if (arr[0] === "<") {
-    return (_, f) => number(f.props[arr[1]], Infinity) < arr[2];
-  }
-  if (arr[0] === "<=") {
-    return (_, f) => number(f.props[arr[1]], Infinity) <= arr[2];
-  }
-  if (arr[0] === ">") {
-    return (_, f) => number(f.props[arr[1]], -Infinity) > arr[2];
-  }
-  if (arr[0] === ">=") {
-    return (_, f) => number(f.props[arr[1]], -Infinity) >= arr[2];
-  }
-  if (arr[0] === "in") {
-    return (_, f) => arr.slice(2, arr.length).includes(f.props[arr[1]]);
-  }
-  if (arr[0] === "!in") {
-    return (_, f) => !arr.slice(2, arr.length).includes(f.props[arr[1]]);
-  }
-  if (arr[0] === "has") {
-    return (_, f) => arr[1] in f.props;
-  }
-  if (arr[0] === "!has") {
-    return (_, f) => !(arr[1] in f.props);
-  }
-  if (arr[0] === "all") {
-    const parts = arr.slice(1, arr.length).map((e) => filterFn(e));
-    return (z, f) =>
-      parts.every((p) => {
-        return p(z, f);
-      });
-  }
-  if (arr[0] === "any") {
-    const parts = arr.slice(1, arr.length).map((e) => filterFn(e));
-    return (z, f) =>
-      parts.some((p) => {
-        return p(z, f);
-      });
-  }
-  console.log("Unimplemented filter: ", arr[0]);
-  return (_) => false;
-}
+const evalLineCap = evalEnum(["butt", "round", "square"] as CanvasLineCap[]);
 
-export function numberFn(obj: any): (z: number, f?: Feature) => number {
-  if (obj.base && obj.stops) {
-    return (z: number) => {
-      return exp(obj.base, obj.stops)(z - 1);
-    };
-  }
-  if (
-    obj[0] === "interpolate" &&
-    obj[1][0] === "exponential" &&
-    obj[2][0] === "zoom"
-  ) {
-    const slice = obj.slice(3);
-    const stops: number[][] = [];
-    for (let i = 0; i < slice.length; i += 2) {
-      stops.push([slice[i], slice[i + 1]]);
-    }
-    return (z: number) => {
-      return exp(obj[1][1], stops)(z - 1);
-    };
-  }
-  if (obj[0] === "step" && obj[1][0] === "get") {
-    const slice = obj.slice(2);
-    const prop = obj[1][1];
-    return (_: number, f?: Feature) => {
-      const val = f?.props[prop];
-      if (typeof val === "number") {
-        if (val < slice[1]) return slice[0];
-        for (let i = 1; i < slice.length; i += 2) {
-          if (val <= slice[i]) return slice[i + 1];
-        }
-      }
-      return slice[slice.length - 1];
-    };
-  }
-  console.log("Unimplemented numeric fn: ", obj);
-  return (_) => 1;
-}
-
-export function numberOrFn(
-  obj: any,
-  defaultValue = 0
-): number | ((z: number, f?: Feature) => number) {
-  if (!obj) return defaultValue;
-  if (typeof obj === "number") {
-    return obj;
-  }
-  // If feature f is defined, use numberFn, otherwise use defaultValue
-  return (z: number, f?: Feature) =>
-    f ? evalNumber(obj, 1)(z, f) : defaultValue;
-}
-
-export function widthFn(width_obj: any, gap_obj: any) {
-  const widthThunk = evalNumber(width_obj, 1);
-  const gapThunk = evalNumber(gap_obj, 0);
-  return (z?: number, f?: Feature) => {
-    const width = widthThunk(z, f);
-    const gap = gapThunk(z, f);
-    return width + gap;
-  };
-}
+const evalLineJoin = evalEnum(["bevel", "miter", "round"] as CanvasLineJoin[]);
 
 interface FontSub {
   face: string;
@@ -148,50 +48,64 @@ interface FontSub {
   style?: string;
 }
 
-export function getFont(obj: any, fontSubMap: Record<string, FontSub>) {
-  const fontFaces: FontSub[] = [];
-  for (const wanted_face of obj["text-font"] ?? []) {
-    if (wanted_face in fontSubMap) {
-      fontFaces.push(fontSubMap[wanted_face]);
+function evalFont(fontExpr: JsonObject, fontSubMap: Record<string, FontSub>) {
+  return mapAllThunks(
+    [
+      evalStringArray(["literal", fontExpr?.["text-font"] ?? []], []),
+      evalNumber(fontExpr?.["text-size"], 16)
+    ],
+    ([textFonts, textSize]) => {
+      textSize = Math.round(textSize); //window.devicePixelRatio
+      const fontFaces = textFonts.reduce<FontSub[]>(
+        (acc, face) => (face in fontSubMap ? [...acc, fontSubMap[face]] : acc),
+        []
+      );
+      if (fontFaces.length === 0) fontFaces.push({ face: "sans-serif" });
+
+      const weight = fontFaces[0]?.weight;
+      const style = fontFaces[0]?.style;
+      return [
+        weight ?? "",
+        style ?? "",
+        textSize ? `${textSize}px` : "",
+        fontFaces.map((f) => f.face).join(",")
+      ]
+        .join(" ")
+        .trim();
+    }
+  );
+}
+
+function transformText(
+  textThunk: Thunk<string | undefined>,
+  transformThunk: Thunk<string>
+): Thunk<string | undefined> {
+  return mapAllThunks([textThunk, transformThunk], ([text, transform]) => {
+    return text && transform === "uppercase"
+      ? text.toLocaleUpperCase()
+      : transform === "lowercase"
+      ? transform.toLocaleLowerCase()
+      : text;
+  });
+}
+
+function buildSpriteSheets(sprite: any): Map<string, Sheet> {
+  const sprites =
+    typeof sprite === "string"
+      ? [{ id: "", url: sprite }]
+      : Array.isArray(sprite)
+      ? sprite
+      : [];
+
+  const spriteSheets = new Map<string, IndexedSpriteSheet>();
+  for (sprite of sprites) {
+    const { id, url } = sprite ?? {};
+    if (typeof id === "string" && typeof url === "string") {
+      spriteSheets.set(id, new IndexedSpriteSheet(url));
     }
   }
-  if (fontFaces.length === 0) fontFaces.push({ face: "sans-serif" });
 
-  const text_size = obj["text-size"];
-  // for fallbacks, use the weight and style of the first font
-  let weight = "";
-  if (fontFaces.length && fontFaces[0].weight)
-    weight = `${fontFaces[0].weight} `;
-  let style = "";
-  if (fontFaces.length && fontFaces[0].style) style = `${fontFaces[0].style} `;
-
-  if (typeof text_size === "number") {
-    return (_: number) =>
-      `${style}${weight}${text_size}px ${fontFaces
-        .map((f) => f.face)
-        .join(", ")}`;
-  }
-  if (text_size?.stops) {
-    let base = 1.4;
-    if (text_size.base) base = text_size.base;
-    else text_size.base = base;
-    const t = evalNumber(text_size, 1);
-    return (z: number, f?: Feature) => {
-      return `${style}${weight}${t(z, f)}px ${fontFaces
-        .map((f) => f.face)
-        .join(", ")}`;
-    };
-  }
-  if (text_size?.[0] === "step") {
-    const t = evalNumber(text_size, 1);
-    return (z: number, f?: Feature) => {
-      return `${style}${weight}${t(z, f)}px ${fontFaces
-        .map((f) => f.face)
-        .join(", ")}`;
-    };
-  }
-  console.log("Can't parse font: ", obj);
-  return (_: number) => "12px sans-serif";
+  return spriteSheets;
 }
 
 /** Convert mapbox style json to Protomaps paint and label rules.
@@ -203,10 +117,11 @@ export function mapboxStyleJsonToProtomaps(
 ) {
   if (!obj || !obj.layers) return undefined;
 
-  const paintRules = [];
-  const labelRules = [];
+  const paintRules: PaintRule[] = [];
+  const labelRules: LabelRule[] = [];
   let backgroundRule: { symbolizer: BackgroundSymbolizer } | undefined;
   const refs = new Map<string, any>();
+  const spriteSheets = buildSpriteSheets(obj.sprite);
   try {
     for (const layer of obj.layers) {
       refs.set(layer.id, layer);
@@ -228,6 +143,10 @@ export function mapboxStyleJsonToProtomaps(
         filter = evalBool(layer.filter, false);
       }
 
+      const commonLayerOpts = {
+        minzoom: layer.minzoom,
+        maxzoom: layer.maxzoom
+      };
       if (layer.type === "background") {
         backgroundRule = {
           symbolizer: new BackgroundSymbolizer({
@@ -238,10 +157,9 @@ export function mapboxStyleJsonToProtomaps(
             backgroundOpacity: evalNumber(layer.paint["background-opacity"], 1)
           })
         };
-      }
-
-      if (layer.type === "fill") {
+      } else if (layer.type === "fill") {
         paintRules.push({
+          ...commonLayerOpts,
           dataLayer: layer["source-layer"],
           filter: filter,
           symbolizer: new PolygonSymbolizer({
@@ -252,6 +170,7 @@ export function mapboxStyleJsonToProtomaps(
       } else if (layer.type === "fill-extrusion") {
         // simulate fill-extrusion with plain fill
         paintRules.push({
+          ...commonLayerOpts,
           dataLayer: layer["source-layer"],
           filter: filter,
           symbolizer: new PolygonSymbolizer({
@@ -260,68 +179,76 @@ export function mapboxStyleJsonToProtomaps(
           })
         });
       } else if (layer.type === "line") {
-        // simulate gap-width
-        if (layer.paint["line-dasharray"]) {
-          paintRules.push({
-            dataLayer: layer["source-layer"],
-            filter: filter,
-            symbolizer: new LineSymbolizer({
-              width: widthFn(
-                layer.paint["line-width"],
-                layer.paint["line-gap-width"]
-              ),
-              dash: layer.paint["line-dasharray"],
-              dashColor: evalColor(layer.paint["line-color"], "black")
-            })
-          });
-        } else {
-          paintRules.push({
-            dataLayer: layer["source-layer"],
-            filter: filter,
-            symbolizer: new LineSymbolizer({
-              color: evalColor(layer.paint["line-color"], "black"),
-              width: widthFn(
-                layer.paint["line-width"],
-                layer.paint["line-gap-width"]
-              )
-            })
-          });
-        }
-      } else if (layer.type === "symbol") {
-        if (layer.layout["symbol-placement"] === "line") {
-          // TODO: fix memory leak or something that crashes the app
-          // labelRules.push({
-          //   dataLayer: layer["source-layer"],
-          //   filter: filter,
-          //   symbolizer: new LineLabelSymbolizer({
-          //     font: getFont(layer.layout, fontSubMap),
-          //     fill: evalColor(layer.paint?.["text-color"], "black"),
-          //     width: layer.paint?.["text-halo-width"],
-          //     stroke: layer.paint?.["text-halo-color"],
-          //     textTransform: layer.layout["text-transform"],
-          //     labelProps: layer.layout["text-field"]
-          //       ? evalStringArray(layer.layout["text-field"], [])
-          //       : undefined
-          //   })
-          // });
-        } else {
-          labelRules.push({
-            dataLayer: layer["source-layer"],
-            filter: filter,
-            symbolizer: new CustomCenteredTextSymbolizer({
-              font: getFont(layer.layout, fontSubMap),
-              fill: evalColor(layer.paint?.["text-color"], "black"),
-              stroke: evalColor(layer.paint?.["text-halo-color"], "black"),
-              width: layer.paint?.["text-halo-width"],
-              textTransform: layer.layout["text-transform"],
-              textField: layer.layout["text-field"]
-                ? evalString(layer.layout["text-field"])
+        paintRules.push({
+          ...commonLayerOpts,
+          dataLayer: layer["source-layer"],
+          filter: filter,
+          symbolizer: new LineSymbolizer({
+            color: evalColor(layer.paint["line-color"], "black"),
+            width: evalLineWidth(
+              layer.paint["line-width"],
+              layer.paint["line-gap-width"]
+            ),
+            opacity: evalNumber(layer.paint["line-opacity"], 1),
+            lineCap: evalLineCap(layer.paint["line-cap"], "butt"),
+            lineJoin: evalLineJoin(layer.paint["line-join"], "miter"),
+            dash: layer.paint["line-dasharray"],
+            dashColor: evalColor(layer.paint["line-color"], "black"),
+            dashWidth: evalLineWidth(
+              layer.paint["line-width"],
+              layer.paint["line-gap-width"]
+            )
+          })
+        });
+      } else if (layer.type === "symbol" && layer.layout) {
+        const labelSymbolizers = [];
+
+        if (layer.layout["icon-image"]) {
+          labelSymbolizers.push(
+            new CustomIconSymbolizer({
+              name: evalString(layer.layout["icon-image"]),
+              sheets: spriteSheets,
+              rotate: layer.layout["icon-rotate"]
+                ? evalNumber(layer.layout["icon-rotate"])
+                : undefined,
+              rotationAlignment: layer.layout["icon-rotation-alignment"]
+                ? evalString(layer.layout["icon-rotation-alignment"])
+                : undefined,
+              size: layer.layout["icon-size"]
+                ? evalNumber(layer.layout["icon-size"])
                 : undefined
             })
-          });
+          );
         }
+
+        if (layer.layout["text-field"]) {
+          labelSymbolizers.push(
+            new CustomLabelSymbolizer({
+              symbolPlacement: evalString(layer.layout["symbol-placement"]),
+              rotationAlignment: layer.layout["text-rotation-alignment"]
+                ? evalString(layer.layout["text-rotation-alignment"])
+                : undefined,
+              font: evalFont(layer.layout, fontSubMap),
+              fill: evalColor(layer.paint?.["text-color"], "black"),
+              stroke: evalColor(layer.paint?.["text-halo-color"], "black"),
+              textField: transformText(
+                evalString(layer.layout["text-field"]),
+                evalString(layer.layout["text-transform"], "none")
+              ),
+              textAnchor: evalString(layer.layout["text-anchor"])
+            })
+          );
+        }
+
+        labelRules.push({
+          ...commonLayerOpts,
+          dataLayer: layer["source-layer"],
+          filter: filter,
+          symbolizer: new CustomGroupSymbolizer(labelSymbolizers)
+        });
       } else if (layer.type === "circle") {
         paintRules.push({
+          ...commonLayerOpts,
           dataLayer: layer["source-layer"],
           filter: filter,
           symbolizer: new CircleSymbolizer({
@@ -340,5 +267,11 @@ export function mapboxStyleJsonToProtomaps(
   } catch (e) {
     TerriaError.from(e, "Error parsing mapbox style").log();
   }
-  return { paintRules, labelRules, backgroundRule, tasks: [] };
+
+  return {
+    paintRules,
+    labelRules,
+    backgroundRule,
+    tasks: [...Array.from(spriteSheets).map(([_, sheet]) => sheet.load())]
+  };
 }

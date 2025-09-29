@@ -6,7 +6,7 @@ const scratchColor = new Color();
 export function interpColorsLinear(stops: [number, string][]) {
   return (input: number) => {
     const colorStops = stops.map(([stop, val]) => {
-      return [stop, Color.fromCssColorString(val, scratchColor)] as const;
+      return [stop, Color.fromCssColorString(val)] as const;
     });
     const reds = colorStops.map(([stop, color]) => [stop, color.red]);
     const greens = colorStops.map(([stop, color]) => [stop, color.green]);
@@ -24,7 +24,7 @@ export function interpColorsLinear(stops: [number, string][]) {
 export function interpColorsExp(base: number, stops: [number, string][]) {
   return (input: number) => {
     const colorStops = stops.map(([stop, val]) => {
-      return [stop, Color.fromCssColorString(val, scratchColor)] as const;
+      return [stop, Color.fromCssColorString(val)] as const;
     });
     const reds = colorStops.map(([stop, color]) => [stop, color.red]);
     const greens = colorStops.map(([stop, color]) => [stop, color.green]);
