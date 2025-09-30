@@ -47,7 +47,7 @@ export default class CustomLabelSymbolizer implements LabelSymbolizer {
   ): Label[] | undefined {
     const zoom = layout.zoom;
     const symbolPlacement = this.options.symbolPlacement(zoom, feature);
-    let rotationAlignment =
+    const rotationAlignment =
       this.options.rotationAlignment?.(zoom, feature) ?? "auto";
 
     const placeWithOffset = (symbolizer: LabelSymbolizer) => {

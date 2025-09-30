@@ -36,7 +36,7 @@ export default class IndexedSpriteSheet extends Sheet {
       ctx.drawImage(sprite, 0, 0);
     }
 
-    for (let iconId in index) {
+    for (const iconId in index) {
       const icon = index[iconId] ?? {};
       const { x, y, width, height } = icon;
       if (

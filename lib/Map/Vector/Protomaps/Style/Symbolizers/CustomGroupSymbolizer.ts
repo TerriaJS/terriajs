@@ -11,7 +11,7 @@ export default class CustomGroupSymbolizer implements LabelSymbolizer {
   public place(layout: Layout, geom: Point[][], feature: Feature) {
     let bbox: Bbox | undefined;
     let anchor: Point | undefined;
-    let draws: ((ctx: CanvasRenderingContext2D) => void)[] = [];
+    const draws: ((ctx: CanvasRenderingContext2D) => void)[] = [];
     this.list.forEach((symbolizer) => {
       const labels = symbolizer.place(layout, geom, feature);
       if (!labels) return;

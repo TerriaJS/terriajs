@@ -208,16 +208,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     return [
       {
-        imageryProvider: new TileCoordinatesImageryProvider({
-          tilingScheme: new WebMercatorTilingScheme()
-        }),
-        show: false,
-        alpha: 1,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
-      },
-      {
         imageryProvider: this.imageryProvider,
         show: this.show,
         alpha: this.opacity,

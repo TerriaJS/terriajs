@@ -240,22 +240,7 @@ export default class ProtomapsImageryProvider
 
   async requestImage(x: number, y: number, level: number, request?: Request) {
     const canvas = document.createElement("canvas");
-    // canvas.width = this.tileWidth;
-    // canvas.height = this.tileHeight;
-    // canvas.style.width = `${PROTOMAPS_DEFAULT_TILE_SIZE}px`;
-    // canvas.style.height = `${PROTOMAPS_DEFAULT_TILE_SIZE}px`;
-    // console.log(canvas.style.width, canvas.style.height);
-    const jobId = `${level}/${x}/${y}`;
-    //console.time(`xximprovider:${jobId}`);
-    return await this.requestImageForCanvas(
-      x,
-      y,
-      level,
-      canvas,
-      request
-    ).finally(() => {
-      //console.timeEnd(`xximprovider:${jobId}`);
-    });
+    return await this.requestImageForCanvas(x, y, level, canvas, request);
   }
 
   async requestImageForCanvas(
