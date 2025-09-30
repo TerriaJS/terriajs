@@ -96,7 +96,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     if (this.arcgisPortalItem.type === "Scene Service")
       return `/i3s-to-3dtiles/${this.arcgisPortalItem.url}`;
     if (this.arcgisPortalItem.type === "Web Map")
-      return this.arcgisPortalItem._portalRootUrl;
+      return this.arcgisPortalItemReference._portalRootUrl;
     return this.arcgisPortalItem.url;
   }
 
