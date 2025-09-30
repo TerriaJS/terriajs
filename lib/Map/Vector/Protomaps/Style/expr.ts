@@ -131,7 +131,7 @@ export function mergeAllThunks<Tuple extends unknown[], T>(
 ): Thunk<T> {
   const t = newThunk(srcThunks);
   const maxArity = Math.max(t.length, ...srcThunks.map((t) => t.length));
-  return thunk(maxArity, (...env) => t(...env));
+  return thunk(maxArity, t);
 }
 
 export type Op<T = unknown> = T & {

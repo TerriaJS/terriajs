@@ -8,9 +8,10 @@ import {
   PolygonSymbolizer
 } from "protomaps-leaflet";
 import { JsonObject } from "../../../Core/Json";
-import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
+import loadJson from "../../../Core/loadJson";
 import ProtomapsImageryProvider from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
+import { BackgroundRule } from "../../../Map/Vector/Protomaps/Style/Symbolizers/BackgroundSymbolizer";
 import { mapboxStyleJsonToProtomaps } from "../../../Map/Vector/Protomaps/mapboxStyleJsonToProtomaps";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -20,14 +21,11 @@ import LegendTraits, {
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import TileCoordinatesImageryProvider from "terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import { BackgroundRule } from "../../../Map/Vector/Protomaps/Style/Symbolizers/BackgroundSymbolizer";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
