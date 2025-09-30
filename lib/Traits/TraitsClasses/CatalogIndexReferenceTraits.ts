@@ -1,6 +1,7 @@
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import { traitClass } from "../Trait";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 
 @traitClass({
