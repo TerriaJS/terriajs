@@ -1,14 +1,12 @@
 import {
   CircleSymbolizer,
   JsonObject,
+  Justify,
   LabelRule,
   LineSymbolizer,
   PaintRule,
   PolygonSymbolizer,
-  Sheet,
-  paintRules as pr,
-  labelRules as lr,
-  Justify
+  Sheet
 } from "protomaps-leaflet";
 import TerriaError from "../../../Core/TerriaError";
 import IndexedSpriteSheet from "./Style/IndexedSpriteSheet";
@@ -25,11 +23,8 @@ import {
   evalNumber,
   evalString,
   evalStringArray,
-  mapAllThunks,
-  mapThunk,
-  mergeAllThunks
+  mapAllThunks
 } from "./Style/expr";
-import { LIGHT } from "@protomaps/basemaps";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -173,16 +168,7 @@ export function mapboxStyleJsonToProtomaps(
         paintRules.push({
           ...commonLayerOpts,
           dataLayer: layer["source-layer"],
-          filter:
-            filter &&
-            mergeAllThunks([filter], () => {
-              return (zoom, f) => {
-                if (f?.props.kind === "water") {
-                  //console.log(zoom, f?.geomType, f?.props);
-                }
-                return filter(zoom, f);
-              };
-            }),
+          filter,
           symbolizer: new PolygonSymbolizer({
             fill: evalColor(layer.paint["fill-color"], "black"),
             opacity: evalNumber(layer.paint["fill-opacity"], 1)
@@ -276,16 +262,7 @@ export function mapboxStyleJsonToProtomaps(
         labelRules.push({
           ...commonLayerOpts,
           dataLayer: layer["source-layer"],
-          filter:
-            filter &&
-            mergeAllThunks([filter], ([]) => {
-              return (zoom, f) => {
-                if (f?.props?.["kind"]) {
-                  //console.log(f?.props["kind"]);
-                }
-                return filter?.(zoom, f);
-              };
-            }),
+          filter,
           symbolizer: new CustomGroupSymbolizer(labelSymbolizers)
         });
       } else if (layer.type === "circle") {

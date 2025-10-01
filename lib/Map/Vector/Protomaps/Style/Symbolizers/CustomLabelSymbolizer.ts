@@ -93,7 +93,7 @@ export default class CustomLabelSymbolizer implements LabelSymbolizer {
     const textVariableAnchor = this.options.textVariableAnchor?.(zoom, feature);
 
     // text-variable-anchor overrides text-anchor
-    let placements = textVariableAnchor
+    const placements = textVariableAnchor
       ? anchorsToPlacements(textVariableAnchor)
       : textAnchor
       ? anchorsToPlacements([textAnchor])
