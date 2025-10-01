@@ -1,10 +1,11 @@
-import { Feature, LabelSymbolizer, Layout, Sheet } from "protomaps-leaflet";
-import { Thunk } from "../expr";
 import Point from "@mapbox/point-geometry";
+import { Feature, LabelSymbolizer, Layout, Sheet } from "protomaps-leaflet";
+import SpriteSheets from "../SpriteSheets";
+import { Thunk } from "../expr";
 
 export interface CustomIconSymbolizerOptions {
   name: (zoom?: number, f?: Feature) => string | undefined;
-  sheets: Map<string, Sheet>;
+  sheets: SpriteSheets;
   rotate?: (zoom?: number, f?: Feature) => number | undefined;
   rotationAlignment?: (zoom?: number, f?: Feature) => string | undefined;
   size?: (zoom?: number, f?: Feature) => number | undefined;
@@ -14,7 +15,7 @@ export interface CustomIconSymbolizerOptions {
  * A symbolizer for icons that can read a sprite sheet with raster sprite and index.
  */
 export default class CustomIconSymbolizer implements LabelSymbolizer {
-  sheets: Map<string, Sheet>;
+  sheets: SpriteSheets;
   dpr: number;
 
   name: Thunk<string | undefined>;
@@ -39,13 +40,7 @@ export default class CustomIconSymbolizer implements LabelSymbolizer {
     }
 
     const name = this.name(zoom, feature);
-    let [sheetName, iconName] = name?.split(":") ?? [];
-    if (iconName === undefined) {
-      [sheetName, iconName] = ["", sheetName];
-    }
-    const sheet = this.sheets.get(sheetName);
-    const glyph = sheet?.get(iconName);
-    const icon = name && glyph && sheet ? { name, glyph, sheet } : undefined;
+    const icon = name && this.sheets.getIcon(name);
 
     // persist the icon we found if name is not dynamic
     if (icon && this.name.length === 0) {

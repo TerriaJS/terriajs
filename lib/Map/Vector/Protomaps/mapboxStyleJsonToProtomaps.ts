@@ -5,11 +5,11 @@ import {
   LabelRule,
   LineSymbolizer,
   PaintRule,
-  PolygonSymbolizer,
-  Sheet
+  PolygonSymbolizer
 } from "protomaps-leaflet";
 import TerriaError from "../../../Core/TerriaError";
 import IndexedSpriteSheet from "./Style/IndexedSpriteSheet";
+import SpriteSheets from "./Style/SpriteSheets";
 import BackgroundSymbolizer from "./Style/Symbolizers/BackgroundSymbolizer";
 import CustomGroupSymbolizer from "./Style/Symbolizers/CustomGroupSymbolizer";
 import CustomIconSymbolizer from "./Style/Symbolizers/CustomIconSymbolizer";
@@ -25,6 +25,7 @@ import {
   evalStringArray,
   mapAllThunks
 } from "./Style/expr";
+import WithFillPattern from "./Style/Symbolizers/WithFillPattern";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -99,7 +100,7 @@ function transformText(
   });
 }
 
-function buildSpriteSheets(sprite: any): Map<string, Sheet> {
+function buildSpriteSheets(sprite: any): SpriteSheets {
   const sprites =
     typeof sprite === "string"
       ? [{ id: "", url: sprite }]
@@ -107,11 +108,11 @@ function buildSpriteSheets(sprite: any): Map<string, Sheet> {
       ? sprite
       : [];
 
-  const spriteSheets = new Map<string, IndexedSpriteSheet>();
+  const spriteSheets = new SpriteSheets();
   for (sprite of sprites) {
     const { id, url } = sprite ?? {};
     if (typeof id === "string" && typeof url === "string") {
-      spriteSheets.set(id, new IndexedSpriteSheet(url));
+      spriteSheets.add(id, new IndexedSpriteSheet(url));
     }
   }
 
@@ -169,10 +170,16 @@ export function mapboxStyleJsonToProtomaps(
           ...commonLayerOpts,
           dataLayer: layer["source-layer"],
           filter,
-          symbolizer: new PolygonSymbolizer({
-            fill: evalColor(layer.paint["fill-color"], "black"),
-            opacity: evalNumber(layer.paint["fill-opacity"], 1)
-          })
+          symbolizer: new WithFillPattern(
+            evalString(layer.paint["fill-pattern"]),
+            spriteSheets,
+            new PolygonSymbolizer({
+              fill: layer.paint["fill-pattern"]
+                ? undefined
+                : evalString(layer.paint["fill-color"], "black"),
+              opacity: evalNumber(layer.paint["fill-opacity"], 1)
+            })
+          )
         });
       } else if (layer.type === "fill-extrusion") {
         // simulate fill-extrusion with plain fill
@@ -291,6 +298,6 @@ export function mapboxStyleJsonToProtomaps(
     paintRules,
     labelRules,
     backgroundRule,
-    tasks: [...Array.from(spriteSheets).map(([_, sheet]) => sheet.load())]
+    tasks: [spriteSheets.loadAll()]
   };
 }
