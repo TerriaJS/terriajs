@@ -5,7 +5,10 @@ import {
   LineSymbolizer,
   PaintRule,
   PolygonSymbolizer,
-  Sheet
+  Sheet,
+  paintRules as pr,
+  labelRules as lr,
+  Justify
 } from "protomaps-leaflet";
 import TerriaError from "../../../Core/TerriaError";
 import IndexedSpriteSheet from "./Style/IndexedSpriteSheet";
@@ -22,8 +25,11 @@ import {
   evalNumber,
   evalString,
   evalStringArray,
-  mapAllThunks
+  mapAllThunks,
+  mapThunk,
+  mergeAllThunks
 } from "./Style/expr";
+import { LIGHT } from "@protomaps/basemaps";
 
 /** This file is adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/src/compat/json_style.ts
  * License: BSD-3-Clause
@@ -41,6 +47,15 @@ export function evalLineWidth(widthExpr: Expr, gapExpr: Expr) {
 const evalLineCap = evalEnum(["butt", "round", "square"] as CanvasLineCap[]);
 
 const evalLineJoin = evalEnum(["bevel", "miter", "round"] as CanvasLineJoin[]);
+
+const textJustify = (value: string) =>
+  value === "left"
+    ? Justify.Left
+    : value === "center"
+    ? Justify.Center
+    : value === "right"
+    ? Justify.Right
+    : undefined;
 
 interface FontSub {
   face: string;
@@ -138,10 +153,7 @@ export function mapboxStyleJsonToProtomaps(
         layer["source-layer"] = referenced["source-layer"];
       }
 
-      let filter = undefined;
-      if (layer.filter) {
-        filter = evalBool(layer.filter, false);
-      }
+      const filter = layer.filter ? evalBool(layer.filter, false) : undefined;
 
       const commonLayerOpts = {
         minzoom: layer.minzoom,
@@ -161,7 +173,16 @@ export function mapboxStyleJsonToProtomaps(
         paintRules.push({
           ...commonLayerOpts,
           dataLayer: layer["source-layer"],
-          filter: filter,
+          filter:
+            filter &&
+            mergeAllThunks([filter], () => {
+              return (zoom, f) => {
+                if (f?.props.kind === "water") {
+                  //console.log(zoom, f?.geomType, f?.props);
+                }
+                return filter(zoom, f);
+              };
+            }),
           symbolizer: new PolygonSymbolizer({
             fill: evalColor(layer.paint["fill-color"], "black"),
             opacity: evalNumber(layer.paint["fill-opacity"], 1)
@@ -235,7 +256,19 @@ export function mapboxStyleJsonToProtomaps(
                 evalString(layer.layout["text-field"]),
                 evalString(layer.layout["text-transform"], "none")
               ),
-              textAnchor: evalString(layer.layout["text-anchor"])
+              textAnchor: layer.layout["text-anchor"]
+                ? evalString(layer.layout["text-anchor"])
+                : undefined,
+              textVariableAnchor: layer.layout["text-variable-anchor"]
+                ? evalStringArray(layer.layout["text-variable-anchor"])
+                : undefined,
+              textOffset: Array.isArray(layer.layout["text-offset"])
+                ? () => layer.layout["text-offset"]
+                : undefined,
+              justify: textJustify(layer.layout["text-justify"]),
+              fontSize: layer.layout["text-size"]
+                ? evalNumber(layer.layout["text-size"], 16)
+                : undefined
             })
           );
         }
@@ -243,7 +276,16 @@ export function mapboxStyleJsonToProtomaps(
         labelRules.push({
           ...commonLayerOpts,
           dataLayer: layer["source-layer"],
-          filter: filter,
+          filter:
+            filter &&
+            mergeAllThunks([filter], ([]) => {
+              return (zoom, f) => {
+                if (f?.props?.["kind"]) {
+                  //console.log(f?.props["kind"]);
+                }
+                return filter?.(zoom, f);
+              };
+            }),
           symbolizer: new CustomGroupSymbolizer(labelSymbolizers)
         });
       } else if (layer.type === "circle") {

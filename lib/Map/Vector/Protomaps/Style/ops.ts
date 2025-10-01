@@ -39,15 +39,15 @@ const toString = op0((value: JsonValue) => {
 });
 
 // -- Feature data --
-const geometryType = op2((_, f) =>
-  f.geomType === GeomType.Point
+const geometryType = op2((_, f) => {
+  return f.geomType === GeomType.Point
     ? "Point"
     : f.geomType === GeomType.Line
     ? "LineString"
     : f.geomType === GeomType.Polygon
     ? "Polygon"
-    : null
-);
+    : null;
+});
 
 // -- Lookup --
 const get = op2(

@@ -38,7 +38,7 @@ export default class IndexedSpriteSheet extends Sheet {
 
     for (const iconId in index) {
       const icon = index[iconId] ?? {};
-      const { x, y, width, height } = icon;
+      const { x, y, width, height, pixelRatio } = icon;
       if (
         isJsonNumber(x) &&
         isJsonNumber(y) &&
@@ -49,8 +49,11 @@ export default class IndexedSpriteSheet extends Sheet {
           x: x,
           y: y,
           w: width,
-          h: height
-        });
+          h: height,
+          // TODO: pixelRatio is a custom field non-existent in `Sprite`. Is
+          // there a better way to pass it?
+          pixelRatio: typeof pixelRatio === "number" ? pixelRatio : 1
+        } as any);
       }
     }
 

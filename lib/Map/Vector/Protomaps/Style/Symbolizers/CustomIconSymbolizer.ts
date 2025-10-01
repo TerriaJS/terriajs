@@ -69,17 +69,25 @@ export default class CustomIconSymbolizer implements LabelSymbolizer {
     const { glyph, sheet } = icon;
     const a = new Point(geom[0][0].x, geom[0][0].y);
 
-    const width = glyph.w / this.dpr;
-    const height = glyph.h / this.dpr;
+    const pixelRatio = (glyph as any).pixelRatio || 1;
+
+    // Resize the glyph to respect pixel ratio
+    const resizedGlyph = {
+      // center the glyph
+      x: -glyph.w / 2 / pixelRatio,
+      y: -glyph.h / 2 / pixelRatio,
+      w: glyph.w / pixelRatio,
+      h: glyph.h / pixelRatio
+    };
 
     const rotate = this.rotate?.(layout.zoom, feature);
     const size = this.size?.(layout.zoom, feature);
 
     const bbox = {
-      minX: a.x - width / 2,
-      minY: a.y - height / 2,
-      maxX: a.x + width / 2,
-      maxY: a.y + height / 2
+      minX: a.x - resizedGlyph.w,
+      minY: a.y - resizedGlyph.h,
+      maxX: a.x + resizedGlyph.w,
+      maxY: a.y + resizedGlyph.h
     };
 
     const draw = (ctx: CanvasRenderingContext2D) => {
@@ -93,10 +101,10 @@ export default class CustomIconSymbolizer implements LabelSymbolizer {
         glyph.y,
         glyph.w,
         glyph.h,
-        -glyph.w / 2 / this.dpr,
-        -glyph.h / 2 / this.dpr,
-        glyph.w / this.dpr,
-        glyph.h / this.dpr
+        resizedGlyph.x,
+        resizedGlyph.y,
+        resizedGlyph.w,
+        resizedGlyph.h
       );
       ctx.restore();
     };
