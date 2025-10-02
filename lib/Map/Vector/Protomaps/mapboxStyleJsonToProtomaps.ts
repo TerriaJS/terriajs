@@ -66,7 +66,7 @@ function evalFont(fontExpr: JsonObject, fontSubMap: Record<string, FontSub>) {
       evalNumber(fontExpr?.["text-size"], 16)
     ],
     ([textFonts, textSize]) => {
-      textSize = Math.round(textSize); //window.devicePixelRatio
+      textSize = Math.round(textSize) / window.devicePixelRatio;
       const fontFaces = textFonts.reduce<FontSub[]>(
         (acc, face) => (face in fontSubMap ? [...acc, fontSubMap[face]] : acc),
         []
@@ -75,7 +75,7 @@ function evalFont(fontExpr: JsonObject, fontSubMap: Record<string, FontSub>) {
 
       const weight = fontFaces[0]?.weight;
       const style = fontFaces[0]?.style;
-      return [
+      const fontStyle = [
         weight ?? "",
         style ?? "",
         textSize ? `${textSize}px` : "",
@@ -83,6 +83,7 @@ function evalFont(fontExpr: JsonObject, fontSubMap: Record<string, FontSub>) {
       ]
         .join(" ")
         .trim();
+      return fontStyle;
     }
   );
 }

@@ -5,6 +5,7 @@ import {
   Label,
   LabelSymbolizer,
   Layout,
+  LineLabelPlacement,
   LineLabelSymbolizer,
   OffsetSymbolizer,
   TextPlacements,
@@ -55,24 +56,37 @@ export default class CustomLabelSymbolizer implements LabelSymbolizer {
 
     // line placement is ignored when text-rotation-alignment is viewport
     if (rotationAlignment !== "viewport" && symbolPlacement === "line") {
-      return this.lineLabelSymbolizer.place(layout, geom, feature);
+      return this.lineLabelSymbolizer(layout, feature).place(
+        layout,
+        geom,
+        feature
+      );
     } else {
       return this.placeWithOffset(
         layout,
         geom,
         feature,
-        this.pointLabelSymbolizer
+        this.pointLabelSymbolizer()
       );
     }
   }
 
-  get lineLabelSymbolizer() {
-    const lineLabelSymbolizer = new LineLabelSymbolizer(this.options);
+  lineLabelSymbolizer(layout: Layout, feature: Feature) {
+    const anchor = this.options.textAnchor?.(layout.zoom, feature);
+    const position = anchor?.includes("top")
+      ? LineLabelPlacement.Below // top of the text should be close to the anchor
+      : anchor?.includes("bottom")
+      ? LineLabelPlacement.Above // bottom of the text should be close to the anchor
+      : LineLabelPlacement.Center;
+    const lineLabelSymbolizer = new LineLabelSymbolizer({
+      ...this.options,
+      position
+    });
     lineLabelSymbolizer.text.get = this.getText;
     return lineLabelSymbolizer;
   }
 
-  get pointLabelSymbolizer() {
+  pointLabelSymbolizer() {
     const textSymbolizer = new TextSymbolizer(this.options);
     textSymbolizer.text.get = this.getText;
     return textSymbolizer;
