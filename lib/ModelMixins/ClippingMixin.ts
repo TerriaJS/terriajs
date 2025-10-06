@@ -4,7 +4,6 @@ import {
   computed,
   makeObservable,
   observable,
-  override,
   toJS,
   untracked
 } from "mobx";
@@ -29,7 +28,7 @@ import Cesium from "../Models/Cesium";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import SelectableDimensions, {
+import {
   SelectableDimension,
   SelectableDimensionCheckboxGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
@@ -38,7 +37,7 @@ import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
 import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 
-type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
+type BaseType = Model<ClippingPlanesTraits>;
 
 function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ClippingMixinBase extends Base {
@@ -355,10 +354,10 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       );
     }
 
-    @override
-    get selectableDimensions(): SelectableDimension[] {
+    @computed
+    get clippingDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
-        return super.selectableDimensions;
+        return [];
       }
 
       const checkboxGroupInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
@@ -450,7 +449,6 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             ];
 
       return [
-        ...super.selectableDimensions,
         {
           // Checkbox group that also enables/disables the clipping behaviour altogether
           type: "checkbox-group",

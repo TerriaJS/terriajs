@@ -1,4 +1,4 @@
-import { FeatureCollection } from "@turf/helpers";
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
 import { FeatureCollectionWithFilename, parseZip } from "shpjs";

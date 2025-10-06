@@ -5,7 +5,7 @@ import {
   MultiPolygon,
   Point,
   Polygon
-} from "@turf/helpers";
+} from "geojson";
 import i18next from "i18next";
 import {
   action,
@@ -747,7 +747,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Set czml properties to feature properties
       for (let i = 0; i < geoJson.features.length; i++) {
         const feature = geoJson.features[i];
-        if (feature === null || feature.geometry.type === "Line") {
+        if (feature === null) {
           continue;
         }
 
