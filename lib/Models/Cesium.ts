@@ -21,7 +21,6 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -1628,7 +1627,7 @@ export default class Cesium extends GlobeOrMap {
 
               return resultFeaturesSoFar.concat(features);
             },
-            defaultValue(existingFeatures, [])
+            existingFeatures ?? []
           );
         });
       })
