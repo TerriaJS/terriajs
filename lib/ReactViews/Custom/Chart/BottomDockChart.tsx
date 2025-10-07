@@ -13,7 +13,7 @@ import type { ChartAxis, ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Styles from "./bottom-dock-chart.scss";
 import Legends from "./Legends";
 import Tooltip from "./Tooltip";
-import type { XScale } from "./types";
+import type { XScale, YScale } from "./types";
 import { Cursor, Plot, PointsOnMap, XAxis, YAxis } from "./utils";
 import { ZoomX } from "./ZoomX";
 
@@ -141,15 +141,23 @@ const Chart: React.FC<ChartProps> = observer(
 
     const xScale = zoomedXScale || initialXScale;
 
-    const initialScales = processedChartItems.map((c) => ({
-      x: initialXScale,
-      y: yAxes.find((y) => y.units === c.units)!.scale
-    }));
+    const initialScales: ReadonlyArray<{ x: XScale; y: YScale }> = useMemo(
+      () =>
+        processedChartItems.map((c: ChartItem) => ({
+          x: initialXScale,
+          y: yAxes.find((y) => y.units === c.units)!.scale
+        })),
+      [processedChartItems, initialXScale, yAxes] as const
+    );
 
-    const zoomedScales = processedChartItems.map((c) => ({
-      x: xScale,
-      y: yAxes.find((y) => y.units === c.units)!.scale
-    }));
+    const zoomedScales: ReadonlyArray<{ x: XScale; y: YScale }> = useMemo(
+      () =>
+        processedChartItems.map((c: ChartItem) => ({
+          x: xScale,
+          y: yAxes.find((y) => y.units === c.units)!.scale
+        })),
+      [processedChartItems, xScale, yAxes] as const
+    );
 
     const pointsNearMouse = useMemo(() => {
       if (!mouseCoords) return [];
