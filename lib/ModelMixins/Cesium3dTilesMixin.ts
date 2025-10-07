@@ -32,6 +32,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
@@ -514,6 +515,15 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           conditions
         }
       });
+    }
+
+    @override
+    get selectableDimensions(): SelectableDimension[] {
+      return [
+        ...super.selectableDimensions,
+        ...super.shadowDimensions,
+        ...super.clippingDimensions
+      ];
     }
   }
 
