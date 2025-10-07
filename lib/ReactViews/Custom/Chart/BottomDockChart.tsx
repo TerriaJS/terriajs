@@ -223,7 +223,9 @@ const Chart: React.FC<ChartProps> = observer(
           [0, 0],
           [Infinity, Infinity]
         ]}
-        onZoom={setZoomedXScale}
+        // Wrap setZoomedXScale in a function to ensure React stores the D3 scale function as a value.
+        // If passed directly, React treats functions as state updaters, causing zoom to break.
+        onZoom={(xScale) => setZoomedXScale(() => xScale)}
       >
         <Legends width={plotWidth} chartItems={processedChartItems} />
         <div style={{ position: "relative" }}>
