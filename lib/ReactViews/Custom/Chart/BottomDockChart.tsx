@@ -147,7 +147,7 @@ const Chart: React.FC<ChartProps> = observer(
           x: initialXScale,
           y: yAxes.find((y) => y.units === c.units)!.scale
         })),
-      [processedChartItems, initialXScale, yAxes] as const
+      [processedChartItems, initialXScale, yAxes]
     );
 
     const zoomedScales: ReadonlyArray<{ x: XScale; y: YScale }> = useMemo(
@@ -156,7 +156,7 @@ const Chart: React.FC<ChartProps> = observer(
           x: xScale,
           y: yAxes.find((y) => y.units === c.units)!.scale
         })),
-      [processedChartItems, xScale, yAxes] as const
+      [processedChartItems, xScale, yAxes]
     );
 
     const pointsNearMouse = useMemo(() => {
