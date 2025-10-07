@@ -1,9 +1,5 @@
-import {
-  featureCollection,
-  Geometry,
-  GeometryCollection,
-  Properties
-} from "@turf/helpers";
+import { featureCollection } from "@turf/helpers";
+import { GeoJsonProperties, Geometry, GeometryCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -53,7 +49,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   }
 
   protected async forceLoadGeojsonData(): Promise<
-    FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
+    FeatureCollectionWithCrs<Geometry | GeometryCollection, GeoJsonProperties>
   > {
     // If we are tiling requests, then we use the ProtomapsImageryProvider - see mapItems
     if (this.tileRequests) return featureCollection([]);

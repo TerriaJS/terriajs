@@ -1,3 +1,4 @@
+import { Feature, Point } from "geojson";
 import i18next from "i18next";
 import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -6,20 +7,19 @@ import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 import LocationSearchProviderMixin, {
   getMapCenter
 } from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import MapboxSearchProviderTraits from "../../Traits/SearchProviders/MapboxSearchProviderTraits";
+import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import { Feature, Point } from "@turf/helpers";
-import isDefined from "../../Core/isDefined";
-import CommonStrata from "../Definition/CommonStrata";
-import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 
 enum MapboxGeocodeDirection {
   Forward = "forward",

@@ -19,10 +19,8 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -125,8 +123,6 @@ export default class Cesium extends GlobeOrMap {
   readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
   readonly scene: Scene;
-  readonly dataSources: DataSourceCollection = new DataSourceCollection();
-  readonly dataSourceDisplay: DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
@@ -190,7 +186,6 @@ export default class Cesium extends GlobeOrMap {
     9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
     const options = {
-      dataSources: this.dataSources,
       clock: this.terria.timelineClock,
       baseLayer: ImageryLayer.fromProviderAsync(
         SingleTileImageryProvider.fromUrl(img),
@@ -228,20 +223,11 @@ export default class Cesium extends GlobeOrMap {
 
     //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
-    this.dataSourceDisplay = new DataSourceDisplay({
-      scene: this.scene,
-      dataSourceCollection: this.dataSources
-    });
-
     this._selectionIndicator = new CesiumSelectionIndicator(this);
 
     this.supportsPolylinesOnTerrain = (this.scene as any).context.depthTexture;
 
     this._eventHelper = new EventHelper();
-
-    this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
-      this.dataSourceDisplay.update(clock.currentTime);
-    }) as any);
 
     // Progress
     this._eventHelper.add(
@@ -417,7 +403,7 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
-      this.scene.globe.terrainProvider = this.terrainProvider;
+      this.cesiumWidget.terrainProvider = this.terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : SplitDirection.NONE;
@@ -436,6 +422,14 @@ export default class Cesium extends GlobeOrMap {
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
     });
+  }
+
+  get dataSources(): DataSourceCollection {
+    return this.cesiumWidget.dataSources;
+  }
+
+  get dataSourceDisplay(): DataSourceDisplay {
+    return this.cesiumWidget.dataSourceDisplay;
   }
 
   /** Add an event listener to a TerrainProvider.
@@ -615,7 +609,6 @@ export default class Cesium extends GlobeOrMap {
     this.stopObserving();
     this._eventHelper.removeAll();
     this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
-    this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
     this._disposeResolutionReaction();
@@ -1067,8 +1060,8 @@ export default class Cesium extends GlobeOrMap {
 
     const frustrum = scene.camera.frustum as PerspectiveFrustum;
 
-    const fovy = frustrum.fovy * 0.5;
-    const fovx = Math.atan(Math.tan(fovy) * frustrum.aspectRatio);
+    const fovy = (frustrum.fovy ?? 0) * 0.5;
+    const fovx = Math.atan(Math.tan(fovy) * (frustrum.aspectRatio ?? 0));
 
     const cameraOffset = Cartesian3.subtract(
       camera.positionWC,
@@ -1620,6 +1613,7 @@ export default class Cesium extends GlobeOrMap {
                   result.pickPosition
                 );
                 const pickedSide =
+                  screenPosition &&
                   this._getSplitterSideForScreenPosition(screenPosition);
 
                 features = features.filter((feature) => {
@@ -1633,7 +1627,7 @@ export default class Cesium extends GlobeOrMap {
 
               return resultFeaturesSoFar.concat(features);
             },
-            defaultValue(existingFeatures, [])
+            existingFeatures ?? []
           );
         });
       })
@@ -1700,7 +1694,7 @@ export default class Cesium extends GlobeOrMap {
    * @return The screen position, or undefined if the position is not on the screen.
    */
   private _computePositionOnScreen(position: Cartesian3, result?: Cartesian2) {
-    return SceneTransforms.wgs84ToWindowCoordinates(
+    return SceneTransforms.worldToWindowCoordinates(
       this.scene,
       position,
       result
