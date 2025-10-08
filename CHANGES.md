@@ -11,6 +11,9 @@
 - Upgrade babel to the latest version 7.27/7.28
 - Fix analytics tracking for the MapboxSearchProvider.
 - Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
+- Upgrade Typescript to `^5.9.2`. Also switched the `target` in `tsconfig.json` to `esnext`.
+- Upgrade `mobx` to version `^6.13.7`.
+- Fix zooming by mouse wheel in charts #7654
 - [The next improvement]
 
 #### 8.10.0 - 2025-07-08

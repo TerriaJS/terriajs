@@ -154,7 +154,7 @@
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "Nevybráno žádné místo!",
+        "title": "Nebylo vybráno žádné místo!",
         "description": "Chcete-li filtrovat výběr data snímku podle místa, přiblížíte si mapu a vyberete bod zájmu na mapě"
       },
       "locationSelected": {
@@ -367,7 +367,7 @@
   },
   "story": {
     "panelTitle": "Editor příběhu",
-    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy",
+    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy.",
     "gettingStarted": "Začínáme",
     "gettingStartedTitle": "Začínáme",
     "badgeBarLabel": "Scény",
@@ -424,7 +424,9 @@
     "collapse": "Sbalit",
     "prev": "Předchozí",
     "next": "Další",
-    "restart": "Restartovat"
+    "restart": "Restartovat",
+    "panelBodyCapped": "Každý příběh má maximální velikost {{ shareMaxRequestSize }} - rozdělte velká data nebo mnoho scén do více příběhů, abyste nepřekročili limit.",
+    "storiesTooLong": "Tento příběh překračuje maximální povolenou velikost. Zkuste snížit počet viditelných datových sad nebo zachytit méně scén."
   },
   "satelliteGuidance": {
     "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
@@ -879,7 +881,11 @@
       "dataAttribution": "Připsání dat",
       "disclaimer": "Odmítnutí odpovědnosti",
       "basemap": "Základní mapa",
-      "dataProvider": "Data poskytl:"
+      "dataProvider": "Data poskytl:",
+      "termsOfUse": "Podmínky použití",
+      "credits": "Zásluhy",
+      "mapCredits": "Zdroje mapy",
+      "searchProvider": "Vyhledávání poskytuje:"
     },
     "computeRingWindingOrder": {
       "devError": "Očekávané body typu {x:number, y:number}"
@@ -1301,7 +1307,8 @@
       "generateErrorMessage": "Při pokusu o použití služby sdílení dat k vygenerování krátké adresy URL se něco pokazilo.",
       "expandErrorTitle": "Nelze rozbalit adresu URL",
       "generateErrorTitle": "Nepodařilo se vygenerovat krátkou adresu URL.",
-      "expandErrorMessage": "Služba sdílení dat použitá ke spuštění {{appName}} nebyla nalezena. To může znamenat chybu v odkazu nebo to, že služba je v tuto chvíli nedostupná."
+      "expandErrorMessage": "Služba sdílení dat použitá ke spuštění {{appName}} nebyla nalezena. To může znamenat chybu v odkazu nebo to, že služba je v tuto chvíli nedostupná.",
+      "generateErrorDataExceedsLimitMessage": "Chyba: Sdílená data překračují limit"
     },
     "socrataServer": {
       "description": "Popis",

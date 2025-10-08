@@ -13,7 +13,7 @@ import type { ChartAxis, ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Styles from "./bottom-dock-chart.scss";
 import Legends from "./Legends";
 import Tooltip from "./Tooltip";
-import type { XScale } from "./types";
+import type { XScale, YScale } from "./types";
 import { Cursor, Plot, PointsOnMap, XAxis, YAxis } from "./utils";
 import { ZoomX } from "./ZoomX";
 
@@ -141,15 +141,23 @@ const Chart: React.FC<ChartProps> = observer(
 
     const xScale = zoomedXScale || initialXScale;
 
-    const initialScales = processedChartItems.map((c) => ({
-      x: initialXScale,
-      y: yAxes.find((y) => y.units === c.units)!.scale
-    }));
+    const initialScales: ReadonlyArray<{ x: XScale; y: YScale }> = useMemo(
+      () =>
+        processedChartItems.map((c: ChartItem) => ({
+          x: initialXScale,
+          y: yAxes.find((y) => y.units === c.units)!.scale
+        })),
+      [processedChartItems, initialXScale, yAxes]
+    );
 
-    const zoomedScales = processedChartItems.map((c) => ({
-      x: xScale,
-      y: yAxes.find((y) => y.units === c.units)!.scale
-    }));
+    const zoomedScales: ReadonlyArray<{ x: XScale; y: YScale }> = useMemo(
+      () =>
+        processedChartItems.map((c: ChartItem) => ({
+          x: xScale,
+          y: yAxes.find((y) => y.units === c.units)!.scale
+        })),
+      [processedChartItems, xScale, yAxes]
+    );
 
     const pointsNearMouse = useMemo(() => {
       if (!mouseCoords) return [];
@@ -223,7 +231,9 @@ const Chart: React.FC<ChartProps> = observer(
           [0, 0],
           [Infinity, Infinity]
         ]}
-        onZoom={setZoomedXScale}
+        // Wrap setZoomedXScale in a function to ensure React stores the D3 scale function as a value.
+        // If passed directly, React treats functions as state updaters, causing zoom to break.
+        onZoom={(xScale) => setZoomedXScale(() => xScale)}
       >
         <Legends width={plotWidth} chartItems={processedChartItems} />
         <div style={{ position: "relative" }}>
