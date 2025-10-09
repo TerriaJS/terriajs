@@ -157,7 +157,6 @@
     "shpjs": "^6.1.0",
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
-    "svg-sprite-loader": "^6.0.11",
     "terriajs-cesium": "21.0.0",
     "terriajs-cesium-widgets": "13.2.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
@@ -173,6 +172,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.1",
+    "@types/svg-sprite": "^0.0.39",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
     "babel-plugin-styled-components": "^1.10.7",
@@ -208,6 +208,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^18.3.1",
     "sass": "^1.81.0",
+    "svg-sprite": "^2.0.4",
     "terriajs-server": "^4.0.2",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
