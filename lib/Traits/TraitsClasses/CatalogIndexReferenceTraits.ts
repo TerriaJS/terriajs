@@ -8,6 +8,7 @@ import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
   description: `See [CatalogIndex](/guide/customizing/search-providers/#catalogindex) guide. 
 
 If your TerriaMap has many dynamic groups which need to be loaded, it may be worth generating a static catalog index JSON file.
+
 - \`yarn build-tools\`
 - \`node ./build/generateCatalogIndex.js -c config-url -b base-url\``
 })
