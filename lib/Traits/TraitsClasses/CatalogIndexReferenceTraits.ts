@@ -12,7 +12,6 @@ If your TerriaMap has many dynamic groups which need to be loaded, it may be wor
 - \`yarn build-tools\`
 - \`node ./build/generateCatalogIndex.js -c config-url -b base-url\``
 })
-  
 export default class CatalogIndexReferenceTraits extends mixTraits(
   CatalogMemberReferenceTraits
 ) {
