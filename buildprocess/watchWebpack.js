@@ -3,7 +3,7 @@ const notifier = require("node-notifier");
 /**
  * Start webpack in watch mode
  */
-function watchWebpack(webpack, config, doneCallback) {
+function watchWebpack(webpack, config, _doneCallback) {
   // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
   // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
   const wp = webpack(config);

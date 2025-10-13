@@ -5,7 +5,7 @@ import {
   MultiPolygon,
   Point,
   Polygon
-} from "@turf/helpers";
+} from "geojson";
 import i18next from "i18next";
 import {
   action,
@@ -91,7 +91,7 @@ import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
-import { isDataSource } from "./MappableMixin";
+import { ImageryParts, isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
 
 export const FEATURE_ID_PROP = "_id_";
@@ -362,12 +362,12 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         points,
         this._dataSource,
         this._imageryProvider
-          ? {
+          ? ({
               imageryProvider: this._imageryProvider,
               show: this.show,
               alpha: this.opacity,
               clippingRectangle: undefined
-            }
+            } as ImageryParts)
           : undefined
       ]);
     }
@@ -747,7 +747,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Set czml properties to feature properties
       for (let i = 0; i < geoJson.features.length; i++) {
         const feature = geoJson.features[i];
-        if (feature === null || feature.geometry.type === "Line") {
+        if (feature === null) {
           continue;
         }
 

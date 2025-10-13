@@ -7,10 +7,11 @@ Terriajs supports 2 types of search providers
 
 Each search provider can be configured using following options
 
-| Name          | Required | Type       | Default                                     | Description                                                |
-| ------------- | -------- | ---------- | ------------------------------------------- | ---------------------------------------------------------- |
-| name          | no       | **string** | `unknown`                                   | Name of the search provider.                               |
-| minCharacters | no       | **number** | `catalogParameters.searchBar.minCharacters` | Minimum number of characters required for search to start. |
+| Name          | Required | Type         | Default                                     | Description                                                    |
+| ------------- | -------- | ------------ | ------------------------------------------- | -------------------------------------------------------------- |
+| name          | no       | **string**   | `unknown`                                   | Name of the search provider.                                   |
+| minCharacters | no       | **number**   | `catalogParameters.searchBar.minCharacters` | Minimum number of characters required for search to start.     |
+| attributions  | no       | **string[]** | []                                          | List of attributions to be displayed at the bottom of the map. |
 
 ## Catalog search provider
 
@@ -52,11 +53,13 @@ For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/gener
 
 ## Location search providers
 
-Location search providers are used to search for locations on the map. TerriaJS currently supports two implementations of search providers:
+Location search providers are used to search for locations on the map. TerriaJS currently supports five implementations of search providers:
 
 - [`BingMapsSearchProvider`](#bingmapssearchprovider) - implementation which in background uses Bing Map search API
 - [`CesiumIonSearchProvider`](#cesiumionsearchprovider) - implementation which in background use CesiumIon geocoding API
 - [`AustralianGazetteerSearchProvider`](#australiangazetteersearchprovider) - uses `WebFeatureServiceSearchProvider`
+- [`NominatimSearchProvider`](#NominatimSearchProvider) - implementation which in background use Nominatim geocoding API
+- [`MapboxSearchProvider`](#mapboxsearchprovider) - implementation which in background use Mapbox geocoding API
 
 Each `LocationSearchProvider support following confing options
 
@@ -155,13 +158,14 @@ It can be configured using following options
 
 `type: nominatim-search-provider`
 
-Nominatim uses OpenStreetMap data to find locations on Earth.
+Nominatim uses OpenStreetMap data to find locations on Earth. If the nominatim search provider is used the autocompletion of search results is disabled for all search providers as per [Nominatim's usage policy](https://operations.osmfoundation.org/policies/nominatim/), and user will have to manually trigger the search by pressing enter.
 It can be configured using following options
 
-| Name           | Required | Type       | Default     | Description                                                                                 |
-| -------------- | -------- | ---------- | ----------- | ------------------------------------------------------------------------------------------- |
-| `countryCodes` | no       | **string** | `undefined` | A comma-separated list of country codes (ISO 3166-1alpha2) to prioritize the search results |
-| `maxResults`   | no       | **number** | 5           | The maximum number of results to return                                                     |
+| Name           | Required | Type         | Default                                                                                  | Description                                                                                 |
+| -------------- | -------- | ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `countryCodes` | no       | **string**   | `undefined`                                                                              | A comma-separated list of country codes (ISO 3166-1alpha2) to prioritize the search results |
+| `maxResults`   | no       | **number**   | 5                                                                                        | The maximum number of results to return                                                     |
+| `attributions` | no       | **string[]** | `['© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>']` | List of attributions to be displayed at the bottom of the map.                              |
 
 **Example**
 
@@ -170,6 +174,38 @@ It can be configured using following options
   "id": "search-provider/nominatim",
   "type": "nominatim-search-provider",
   "name": "Nominatim",
+  "flightDurationSeconds": 2,
+  "minCharacters": 2,
+  "maxResults": 5
+}
+```
+
+### MapboxSearchProvider
+
+`type: mapbox-search-provider`
+
+Mapbox geocoder API requires a [Mapbox access token](https://docs.mapbox.com/help/glossary/access-token/). Supports forward and reverse geocoding. Reverse Geocoding search term is in the form of `<latitude>, <longitude>` by default.
+
+| Name                | Required | Type        | Default                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------- | -------- | ----------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accessToken`       | yes      | **string**  | `undefined`                                | a Mapbox access token, managed by a Mapbox account                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `url`               | no       | **string**  | `https://api.mapbox.com/search/geocode/v6` | The base url for the Mapbox geocoding API                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `partialMatch`      | no       | **boolean** | `true`                                     | Note that when Mapbox `partialMatch` is set to `true`, the Mapbox API will consider every key stroke an API request; use the `minCharacters` parameter to reduce the amount of API requests made.                                                                                                                                                                                                                                                                                                        |
+| `country`           | no       | **string**  | `undefined`                                | filter results by a comma-separated list of ISO 3166 alpha 2 country codes.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `language`          | no       | **string**  | `eng`                                      | The ISO language code to be returned. If not provided, the default is English.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `limit`             | no       | **number**  | 5                                          | The number of results to return, up to 10. Does not apply to reverse geocode.                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `types`             | no       | **string**  | `undefined`                                | Limit results to one or more types of features, provided as a comma-separated list. Pass one or more of the type names as a comma separated list. If no types are specified, all possible types may be returned. Available types are: country, region, postcode, district, place, city, locality, neighborhood, street, address, poi, and category. See the [Administrative unit types](https://docs.mapbox.com/api/search/search-box/#administrative-unit-types) section for details about these types. |
+| `worldview`         | no       | **string**  | `undefined`                                | Returns features that are defined differently by audiences that belong to various regional, cultural, or political groups. Available worldviews are: ar,cn,in,jp,ma,rs,ru,tr,us. If worldview is not set, the us worldview boundaries are returned by default. For more information about using the worldview parameter, see the [worldviews section](https://docs.mapbox.com/api/search/geocoding/#worldviews).                                                                                         |
+| `latLonSearchOrder` | no       | **boolean** | `true`                                     | When the user searches using coordinates, should the order be 'latitude, longitude' the default is true, which is familar with most users from Terria and other platforms.                                                                                                                                                                                                                                                                                                                               |
+
+**Example**
+
+```json
+{
+  "id": "search-provider/mapbox",
+  "type": "mapbox-search-provider",
+  "name": "Mapbox",
+  "accessToken": "<replace with your token>",
   "flightDurationSeconds": 2,
   "minCharacters": 3
 }

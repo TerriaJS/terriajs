@@ -14,7 +14,6 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -722,7 +721,7 @@ export default class Leaflet extends GlobeOrMap {
       }
     );
 
-    tileCoordinates = defaultValue(tileCoordinates, {});
+    tileCoordinates = tileCoordinates ?? {};
 
     const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
     this._pickedFeatures.pickPosition =
