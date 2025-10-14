@@ -2,6 +2,7 @@
 
 #### next release (8.11.1)
 
+- Improve default supported formats for ArcGisPortalItemReference.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
