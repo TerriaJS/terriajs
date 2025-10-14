@@ -2,6 +2,7 @@
 
 #### next release (8.11.1)
 
+- Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
