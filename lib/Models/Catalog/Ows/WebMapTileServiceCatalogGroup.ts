@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -10,24 +10,31 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import WebMapTileServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebMapTileServiceCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapTileServiceCapabilities, {
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 
-class GetCapabilitiesStratum extends LoadableStratum(
-  WebMapTileServiceCatalogGroupTraits
-) {
+class GetCapabilitiesStratum
+  extends LoadableStratum(WebMapTileServiceCatalogGroupTraits)
+  implements
+    LockedDownStratum<
+      WebMapTileServiceCatalogGroupTraits,
+      GetCapabilitiesStratum
+    >
+{
   static async load(
     catalogItem: WebMapTileServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
@@ -54,8 +61,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogGroup: WebMapTileServiceCatalogGroup,
-    readonly capabilities: WebMapTileServiceCapabilities
+    private readonly catalogGroup: WebMapTileServiceCatalogGroup,
+    private readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -138,14 +145,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     this.capabilities.layers.forEach((layer) =>
       this.createMemberFromLayer(layer)
     );
   }
 
   @action
-  createMemberFromLayer(layer: WmtsLayer) {
+  private createMemberFromLayer(layer: WmtsLayer) {
     const layerId = this.getLayerId(layer);
     if (!layerId) {
       return;
@@ -205,7 +212,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
-  getLayerId(layer: WmtsLayer) {
+  private getLayerId(layer: WmtsLayer) {
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
@@ -243,7 +250,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum) {
-      await runLater(() => getCapabilitiesStratum.createMembersFromLayers());
+      await runLater(() => getCapabilitiesStratum.createMembers());
     }
   }
 

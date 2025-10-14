@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable, override } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import threddsCrawler from "thredds-catalog-crawler/src/entryBrowser";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -7,15 +7,16 @@ import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ModelReference from "../../../Traits/ModelReference";
 import ThreddsCatalogGroupTraits from "../../../Traits/TraitsClasses/ThreddsCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-import { ModelConstructorParameters } from "../../Definition/Model";
+import CatalogGroup from "../CatalogGroup";
 import ThreddsItemReference from "../CatalogReferences/ThreddsItemReference";
+import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
 
 interface ThreddsCatalog {
   id: string;
@@ -46,11 +47,14 @@ export interface ThreddsDataset {
   loadAllNestedCatalogs: () => Promise<void>;
 }
 
-export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
+export class ThreddsStratum
+  extends LoadableStratum(ThreddsCatalogGroupTraits)
+  implements LockedDownStratum<ThreddsCatalogGroupTraits, ThreddsStratum>
+{
   static stratumName = "thredds";
   private threddsCatalog: ThreddsCatalog | undefined = undefined;
 
-  constructor(readonly _catalogGroup: ThreddsCatalogGroup) {
+  constructor(private readonly _catalogGroup: ThreddsCatalogGroup) {
     super();
     makeObservable(this);
   }
@@ -85,7 +89,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
   }
 
   @action
-  createThreddsCatalog(catalog: ThreddsCatalog) {
+  private createThreddsCatalog(catalog: ThreddsCatalog) {
     const id = `${this._catalogGroup.uniqueId}/${catalog.id}`;
 
     let model = this._catalogGroup.terria.getModelById(ThreddsCatalogGroup, id);
@@ -154,7 +158,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
   }
 
   @action
-  createMemberFromDataset(
+  private createMemberFromDataset(
     threddsDataset: ThreddsDataset
   ): BaseModel | undefined {
     if (!isDefined(threddsDataset.id)) {
@@ -209,7 +213,6 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     if (!this.strata.get(ThreddsStratum.stratumName)) {
       const stratum = await ThreddsStratum.load(this);
       if (stratum === undefined) return;
-      await stratum.createMembers();
       runInAction(() => {
         this.strata.set(ThreddsStratum.stratumName, stratum);
       });

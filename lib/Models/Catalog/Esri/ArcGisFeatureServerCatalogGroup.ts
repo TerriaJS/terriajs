@@ -18,7 +18,9 @@ import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -43,9 +45,14 @@ interface FeatureServer {
   layers: Layer[];
 }
 
-export class FeatureServerStratum extends LoadableStratum(
-  ArcGisFeatureServerCatalogGroupTraits
-) {
+export class FeatureServerStratum
+  extends LoadableStratum(ArcGisFeatureServerCatalogGroupTraits)
+  implements
+    LockedDownStratum<
+      ArcGisFeatureServerCatalogGroupTraits,
+      FeatureServerStratum
+    >
+{
   static stratumName = "featureServer";
 
   constructor(
@@ -65,7 +72,7 @@ export class FeatureServerStratum extends LoadableStratum(
     ) as this;
   }
 
-  get featureServerData() {
+  private get featureServerData() {
     return this._featureServer;
   }
 
@@ -165,17 +172,17 @@ export class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed
-  get layers(): readonly Layer[] {
+  private get layers(): readonly Layer[] {
     return this._featureServer.layers;
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
-  createMemberFromLayer(layer: Layer) {
+  private createMemberFromLayer(layer: Layer) {
     if (!isDefined(layer.id)) {
       return;
     }
@@ -242,7 +249,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
       FeatureServerStratum.stratumName
     ) as FeatureServerStratum | undefined;
     if (featureServerStratum) {
-      await runLater(() => featureServerStratum.createMembersFromLayers());
+      await runLater(() => featureServerStratum.createMembers());
     }
   }
 }

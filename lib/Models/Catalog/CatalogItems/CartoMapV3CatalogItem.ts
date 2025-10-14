@@ -21,14 +21,19 @@ import { GeoJsonTraits } from "../../../Traits/TraitsClasses/GeoJsonTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 
-class CartoMapV3Stratum extends LoadableStratum(GeoJsonTraits) {
+class CartoMapV3Stratum
+  extends LoadableStratum(GeoJsonTraits)
+  implements LockedDownStratum<GeoJsonTraits, CartoMapV3Stratum>
+{
   static stratumName = "cartoMapV3Stratum";
-  constructor(readonly catalogItem: CartoMapV3CatalogItem) {
+  constructor(private readonly catalogItem: CartoMapV3CatalogItem) {
     super();
     makeObservable(this);
   }
