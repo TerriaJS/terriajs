@@ -6,6 +6,7 @@ module.exports = {
     node: true
   },
   rules: {
-    "no-sync": 0
+    "no-sync": 0,
+    "@typescript-eslint/no-require-imports": 0
   }
 };

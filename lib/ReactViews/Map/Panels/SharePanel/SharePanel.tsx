@@ -137,13 +137,13 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     const btnText = catalogShare
       ? t("share.btnCatalogShareText")
       : storyShare
-        ? t("share.btnStoryShareText")
-        : t("share.btnMapShareText");
+      ? t("share.btnStoryShareText")
+      : t("share.btnMapShareText");
     const btnTitle = catalogShare
       ? t("share.btnCatalogShareTitle")
       : storyShare
-        ? t("share.btnStoryShareTitle")
-        : t("share.btnMapShareTitle");
+      ? t("share.btnStoryShareTitle")
+      : t("share.btnMapShareTitle");
 
     if (this.props.terria.configParameters.disableSharePanel) {
       return null;

@@ -1,9 +1,5 @@
-import {
-  featureCollection,
-  Geometry,
-  GeometryCollection,
-  Properties
-} from "@turf/helpers";
+import { featureCollection } from "@turf/helpers";
+import { GeoJsonProperties, Geometry, GeometryCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -53,7 +49,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   }
 
   protected async forceLoadGeojsonData(): Promise<
-    FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
+    FeatureCollectionWithCrs<Geometry | GeometryCollection, GeoJsonProperties>
   > {
     // If we are tiling requests, then we use the ProtomapsImageryProvider - see mapItems
     if (this.tileRequests) return featureCollection([]);
@@ -136,15 +132,19 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
 
   @computed get imageryProvider() {
     // Don't return an imagery provider if we haven't loaded metadata yet
-    if (!this.loadMetadataResult) return undefined;
+    if (!this.strata.has(ArcGisFeatureServerStratum.stratumName)) {
+      return undefined;
+    }
 
     const { paintRules, labelRules } = tableStyleToProtomaps(this, false, true);
 
-    const url = this.buildEsriJsonUrl()
-      .logError("Failed to create valid FeatureServer URL")
-      ?.toString();
+    const uri = this.buildEsriJsonUrl().logError(
+      "Failed to create valid FeatureServer URL"
+    );
 
-    if (!url) return;
+    if (!uri) return;
+
+    const url = proxyCatalogItemUrl(this, uri.toString());
 
     let provider = new ProtomapsImageryProvider({
       maximumZoom: this.getMaximumLevel(false),
@@ -184,7 +184,9 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         imageryProvider: this.imageryProvider,
         show: this.show,
         alpha: this.opacity,
-        clippingRectangle: undefined
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       }
     ];
   }

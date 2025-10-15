@@ -144,8 +144,12 @@ describe("DateTimePicker", () => {
         />
       );
 
-      expect(screen.getByLabelText("day-7")).toBeVisible();
-      expect(screen.getByLabelText("day-12")).toBeVisible();
+      expect(
+        screen.getByLabelText("Choose Tuesday, February 1st, 2000")
+      ).toBeVisible();
+      expect(
+        screen.getByLabelText("Not available Friday, February 4th, 2000")
+      ).toBeVisible();
       expect(screen.getByText("Feb")).toBeVisible();
     });
 
@@ -253,7 +257,9 @@ describe("DateTimePicker", () => {
         />
       );
 
-      expect(screen.getByLabelText("day-5")).toBeVisible();
+      expect(
+        screen.getByLabelText("Choose Tuesday, February 1st, 2000")
+      ).toBeVisible();
     });
   });
 
@@ -314,7 +320,9 @@ describe("DateTimePicker", () => {
 
       await userEvent.click(screen.getByText("Jan"));
 
-      await userEvent.click(screen.getAllByLabelText("day-1")[0]);
+      await userEvent.click(
+        screen.getByLabelText("Choose Monday, January 1st, 2001")
+      );
 
       await userEvent.click(screen.getByText("0 : 00 - 1 : 00"));
 
@@ -364,7 +372,9 @@ describe("DateTimePicker", () => {
 
       await userEvent.click(screen.getByText("Jan"));
 
-      await userEvent.click(screen.getAllByLabelText("day-1")[0]);
+      await userEvent.click(
+        screen.getByLabelText("Choose Monday, January 1st, 2001")
+      );
 
       await userEvent.click(screen.getByText("0 : 00 - 1 : 00"));
 
@@ -379,7 +389,9 @@ describe("DateTimePicker", () => {
         screen.getByRole("button", { name: "dateTime.back" })
       );
 
-      expect(screen.getAllByLabelText("day-1")[0]).toBeVisible();
+      expect(
+        screen.getByLabelText("Choose Monday, January 1st, 2001")
+      ).toBeVisible();
 
       await userEvent.click(
         screen.getByRole("button", { name: "dateTime.back" })

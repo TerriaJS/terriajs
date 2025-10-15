@@ -1,4 +1,5 @@
-import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
+import { featureCollection } from "@turf/helpers";
+import { Geometry, GeometryCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, observable, runInAction } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";

@@ -332,7 +332,7 @@ describeIfSupported("Cesium Model", function () {
 
     beforeEach(function () {
       terria2 = new Terria({
-        baseUrl: "./"
+        baseUrl: "/"
       });
       terriaViewer2 = new TerriaViewer(
         terria2,
@@ -356,10 +356,7 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await when(
-        () => terria2.notificationState.currentNotification !== undefined
-      );
+      await terrainLoadPromise(cesium2);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =

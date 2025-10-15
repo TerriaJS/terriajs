@@ -108,8 +108,8 @@ export const MapColumn: FC<IMapColumnProps> = observer(
                     false
                     ? `0px`
                     : viewState.isMapFullScreen
-                      ? `${theme.workbenchMargin}px`
-                      : `calc(${theme.workbenchWidth}px + 2 * ${theme.workbenchMargin}px)`};
+                    ? `${theme.workbenchMargin}px`
+                    : `calc(${theme.workbenchWidth}px + 2 * ${theme.workbenchMargin}px)`};
                   margin-right: ${viewState.useSmallScreenInterface ||
                   viewState.terria.elements.get("show-workbench")?.visible ===
                     false
