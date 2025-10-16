@@ -81,10 +81,7 @@ class MappablePreview extends Component {
             <DataPreviewMap
               terria={this.props.terria}
               previewed={catalogItem}
-              showMap={
-                this.props.viewState.explorerPanelIsVisible ||
-                this.props.viewState.useSmallScreenInterface
-              }
+              showMap
             />
           )}
         {!this.props.hideToggleItemOnMap && (
