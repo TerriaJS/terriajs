@@ -2,6 +2,7 @@
 
 #### next release (8.11.1)
 
+- Fix to show preview map when used outside the explorer panel.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
