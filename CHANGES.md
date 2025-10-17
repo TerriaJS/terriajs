@@ -3,6 +3,7 @@
 #### next release (8.11.1)
 
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
+- Fix to show preview map when used outside the explorer panel.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
@@ -254,6 +255,7 @@
 
 #### 8.7.5 - 2024-06-26
 
+- Add clustering trait to GeoJson (and consequently to WFS, ...) using Cesium as viewer.
 - TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Upgraded a bunch of d3 dependencies for fixing security errors.
 - Show rectangle selector for WPS bounding box parameter
