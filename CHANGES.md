@@ -2,6 +2,7 @@
 
 #### next release (8.11.1)
 
+- Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
 - [The next improvement]
 
