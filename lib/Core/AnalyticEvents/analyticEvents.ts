@@ -17,7 +17,8 @@ export enum SearchAction {
   catalog = "Catalog",
   gazetteer = "Gazetteer",
   nominatim = "nominatim",
-  cesium = "Cesium"
+  cesium = "Cesium",
+  mapbox = "Mapbox"
 }
 
 export enum LaunchAction {
