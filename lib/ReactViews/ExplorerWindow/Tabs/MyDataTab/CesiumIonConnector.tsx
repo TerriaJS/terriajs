@@ -264,13 +264,18 @@ function CesiumIonConnector() {
           tokens.items.forEach((item) => {
             item.uniqueName = `${item.name} (${item.id})`;
           });
+
+          if (viewState.terria.configParameters.cesiumIonDisableDefaultToken) {
+            tokens.items = tokens.items.filter((item) => !item.isDefault);
+          }
           setTokens(tokens.items);
         }
         setIsLoadingTokens(false);
       });
   }, [
     loginToken,
-    viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets
+    viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets,
+    viewState.terria.configParameters.cesiumIonDisableDefaultToken
   ]);
 
   let selectedToken = viewState.currentCesiumIonToken
@@ -353,24 +358,29 @@ function CesiumIonConnector() {
       return selectedToken.assetIds.indexOf(asset.id) >= 0;
     };
 
+    const accessibleAssets = assets.filter(isAssetAccessibleBySelectedToken);
+
     return (
       <>
         {renderTokenSelector()}
         {isLoadingAssets ? (
           <label className={AddDataStyles.label}>Loading asset list...</label>
         ) : (
-          <table className={Styles.assetsList}>
-            <tbody>
-              <tr>
-                <th />
-                <th>Name</th>
-                <th>Type</th>
-              </tr>
-              {assets
-                .filter(isAssetAccessibleBySelectedToken)
-                .map(renderAssetRow)}
-            </tbody>
-          </table>
+          <>
+            {accessibleAssets.length === 0 && renderNoAssetsAvailableWarning()}
+            {accessibleAssets.length > 0 && (
+              <table className={Styles.assetsList}>
+                <tbody>
+                  <tr>
+                    <th />
+                    <th>Name</th>
+                    <th>Type</th>
+                  </tr>
+                  {accessibleAssets.map(renderAssetRow)}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
       </>
     );
@@ -379,23 +389,29 @@ function CesiumIonConnector() {
   function renderTokenSelector() {
     if (!viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets)
       return undefined;
+    console.log(tokens);
 
     return (
       <>
         <label className={AddDataStyles.label}>
-          <Trans i18nKey="addData.cesiumIonToken">Cesium ion Token:</Trans>
+          <Trans i18nKey="addData.cesiumIonToken">Cesium ion token:</Trans>
         </label>
         {isLoadingTokens ? (
           <label className={AddDataStyles.label}>Loading token list...</label>
         ) : (
-          <Dropdown
-            options={tokens}
-            textProperty="uniqueName"
-            selected={selectedToken}
-            selectOption={setSelectedToken}
-            matchWidth
-            theme={dropdownTheme}
-          />
+          <>
+            {renderNoTokensAvailableWarning()}
+            {tokens.length > 0 && (
+              <Dropdown
+                options={tokens}
+                textProperty="uniqueName"
+                selected={selectedToken}
+                selectOption={setSelectedToken}
+                matchWidth
+                theme={dropdownTheme}
+              />
+            )}
+          </>
         )}
         <div
           className={classNames(Styles.tokenWarning, {
@@ -406,6 +422,11 @@ function CesiumIonConnector() {
         </div>
       </>
     );
+  }
+
+  function renderNoAssetsAvailableWarning() {
+    if (!selectedToken) return undefined;
+    return <strong>No assets available.</strong>;
   }
 
   function renderDisconnected() {
@@ -426,6 +447,31 @@ function CesiumIonConnector() {
           </button>
         </div>
       </div>
+    );
+  }
+
+  function renderNoTokensAvailableWarning() {
+    if (tokens.length > 0) return undefined;
+    return (
+      <>
+        <p>
+          <strong>No restricted tokens found.</strong> To protect your data,
+          Cesium default tokens are not allowed. Add a new token with a
+          restricted scope to access your datasets.
+        </p>
+        <button
+          className={Styles.connectButton}
+          onClick={() =>
+            window.open(
+              "https://ion.cesium.com/tokens",
+              "_blank",
+              "noopener,noreferrer"
+            )
+          }
+        >
+          Add a new token
+        </button>
+      </>
     );
   }
 
@@ -718,7 +764,7 @@ function CesiumIonConnector() {
           content: userProfile.username
         },
         {
-          name: "Cesium ion Token",
+          name: "Cesium ion token",
           content: token.name ?? token.id
         }
       ],
