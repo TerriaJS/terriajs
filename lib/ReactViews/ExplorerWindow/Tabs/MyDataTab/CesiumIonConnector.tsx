@@ -389,7 +389,6 @@ function CesiumIonConnector() {
   function renderTokenSelector() {
     if (!viewState.terria.configParameters.cesiumIonAllowSharingAddedAssets)
       return undefined;
-    console.log(tokens);
 
     return (
       <>
