@@ -44,7 +44,11 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
-import { WorkbenchControlSet, buildControlSet } from "./WorkbenchControls";
+import {
+  WorkbenchControls,
+  enableAllControls,
+  isControlEnabled
+} from "./WorkbenchControls";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -92,11 +96,11 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 interface PropsType {
   viewState: ViewState;
   item: BaseModel;
-  controls?: WorkbenchControlSet;
+  controls?: WorkbenchControls;
 }
 
 const ViewingControls: React.FC<PropsType> = observer((props) => {
-  const { viewState, item, controls = buildControlSet() } = props;
+  const { viewState, item, controls = enableAllControls } = props;
   const { t } = useTranslation();
   const [isMenuOpen, setIsOpen] = useState(false);
   const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
@@ -330,7 +334,10 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
     return sortBy(
       uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
       "name"
-    ).filter(({ id }) => controls[id] === true);
+    ).filter(({ id }) => {
+      // Exclude disabled controls
+      return isControlEnabled(controls, id);
+    });
   }, [item, viewState.globalViewingControlOptions]);
 
   const renderViewingControlsMenu = () => {

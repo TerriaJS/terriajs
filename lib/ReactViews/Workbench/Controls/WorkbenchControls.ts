@@ -1,19 +1,44 @@
 /**
- * Default visibility for statically known workbench controls
+ * Static and dynamic flags for enabling/disabling controls in the workbench
  */
-const defaultControls = {
-  // When true, disable all controls
+export type WorkbenchControls = Partial<{
+  // When true, disable all controls by default. You can then selectively
+  // enable/disable flags individually to override the default.
+  disableAll: boolean;
+
+  viewingControlsGroup: boolean; // when false, disable all viewing controls
+  compare: boolean; // Flag for compare tool also known as splitter
+  difference: boolean; // Flag for difference tool
+  idealZoom: boolean;
+  aboutData: boolean;
+  exportData: boolean;
+  search: boolean; // Flag for item search tool
+  opacity: boolean;
+  scaleWorkbench: boolean;
+  timer: boolean;
+  chartItems: boolean;
+  filter: boolean;
+  dateTime: boolean;
+  timeFilter: boolean;
+  selectableDimensions: boolean;
+  colorScaleRange: boolean;
+  shortReport: boolean;
+  legend: boolean;
+
+  [dynamicControl: string]: boolean | undefined;
+}>;
+
+export const enableAllControls: WorkbenchControls = {
   disableAll: false,
 
-  // Viewing control flags
   viewingControlsGroup: true, // when false, disable all viewing controls
+
   compare: true, // Flag for compare tool also known as splitter
   difference: true, // Flag for difference tool
   idealZoom: true,
   aboutData: true,
   exportData: true,
   search: true, // Flag for item search tool
-
   opacity: true,
   scaleWorkbench: true,
   timer: true,
@@ -27,50 +52,61 @@ const defaultControls = {
   legend: true
 };
 
-/**
- * WorkbenchControls can be any of the static flags defined in defaultControls
- * or the ID of any dynamic control.
- */
-export type WorkbenchControls = Partial<
-  typeof defaultControls & {
-    [dynamicControlId: string]: boolean;
-  }
->;
+const disableAllControls: WorkbenchControls = {
+  disableAll: true,
+
+  // Keep viewing controls group enabled so that we can render any member of
+  // that group that has been selectively enabled.
+  viewingControlsGroup: true,
+
+  compare: false, // Flag for compare tool also known as splitter
+  difference: false, // Flag for difference tool
+  idealZoom: false,
+  aboutData: false,
+  exportData: false,
+  search: false, // Flag for item search tool
+  opacity: false,
+  scaleWorkbench: false,
+  timer: false,
+  chartItems: false,
+  filter: false,
+  dateTime: false,
+  timeFilter: false,
+  selectableDimensions: false,
+  colorScaleRange: false,
+  shortReport: false,
+  legend: false
+};
 
 /**
- *  A complete set of WorkbenchControls
+ * Merge all control flags
+ * @param partialControls One or more control flags definition
+ * @returns a merged object
  */
-export type WorkbenchControlSet = Required<WorkbenchControls>;
+export function mergeControls(
+  ...partialControls: Partial<WorkbenchControls>[]
+): WorkbenchControls {
+  return partialControls.reduce((acc, controls) => {
+    return {
+      ...acc,
+      ...(controls.disableAll === true
+        ? disableAllControls
+        : controls.disableAll === false
+        ? enableAllControls
+        : {}),
+      ...controls
+    };
+  }, enableAllControls) as WorkbenchControls;
+}
 
 /**
- * Derives a complete flag set from partial flags
- *
- * @param controls Optional partial flag set to override the defaults. If
- * `disableAll` is `true` then all flags except group flags will be turned off.
+ * Check if a control is enabled in the given controls object
  */
-export function buildControlSet(
-  controls?: WorkbenchControls
-): WorkbenchControlSet {
-  const { disableAll = false, ...overrides } = controls ?? {};
-  const defaultValue = disableAll ? false : true;
-
-  // Use a Proxy to handle undefined flags and dynamic flags
-  return new Proxy<WorkbenchControlSet>(
-    {
-      // Enable group controls by default even if disableAll is set so that we
-      // render the child controls if they are individually enabled. To fully
-      // disable the group, explicitly set it to false (through the `overrides`
-      // below).
-      viewingControlsGroup: true,
-      ...overrides,
-      disableAll
-    } as WorkbenchControlSet,
-    {
-      get(target, prop) {
-        if (typeof prop === "string") {
-          return !!(target[prop] ?? defaultValue);
-        }
-      }
-    }
-  );
+export function isControlEnabled(
+  controls: WorkbenchControls,
+  controlName: string
+): boolean {
+  return controlName in controls
+    ? !!controls[controlName]
+    : !controls.disableAll;
 }

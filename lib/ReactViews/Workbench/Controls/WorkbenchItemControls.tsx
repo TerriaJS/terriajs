@@ -26,34 +26,26 @@ import DimensionSelectorSection from "./SelectableDimensionSection";
 import ShortReport from "./ShortReport";
 import TimerSection from "./TimerSection";
 import ViewingControls from "./ViewingControls";
-import { WorkbenchControls, buildControlSet } from "./WorkbenchControls";
+import { WorkbenchControls, mergeControls } from "./WorkbenchControls";
 
 type WorkbenchItemControlsProps = {
   item: BaseModel;
   viewState: ViewState;
   /** Flag to show each control - defaults to all true */
-  controls?: WorkbenchControls;
+  controls?: Partial<WorkbenchControls>;
 };
 
 const WorkbenchItemControls: FC<WorkbenchItemControlsProps> = observer(
-  ({ item, viewState, controls: controlsProp }) => {
-    // Apply controls from props on top of defaultControls
+  ({ item, viewState, controls: propsControls = {} }) => {
     const itemControls =
       CatalogMemberMixin.isMixedInto(item) &&
       isJsonObject(item.workbenchControls)
-        ? (item.workbenchControls as WorkbenchControls)
-        : undefined;
+        ? item.workbenchControls
+        : {};
 
-    const controls = buildControlSet({
-      ...controlsProp,
-      ...itemControls
-    });
-    console.log(
-      "**controls**",
-      itemControls,
-      controls.disableAll,
-      controls.aboutData
-    );
+    // Overrides item controls with props controls
+    const controls = mergeControls(itemControls, propsControls);
+
     const { generatedControls, error } = generateControls(viewState, item);
 
     if (error) {

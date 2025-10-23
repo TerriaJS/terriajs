@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import { JsonObject } from "../../Core/Json";
+import { WorkbenchControls } from "../../ReactViews/Workbench/Controls/WorkbenchControls";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import mixTraits from "../mixTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
@@ -260,9 +261,9 @@ class CatalogMemberTraits extends ModelTraits {
 
   @anyTrait({
     name: "Workbench controls",
-    description: "Flags to enable or disable workbench controls."
+    description: "Flags for enabling or disabling workbench controls."
   })
-  workbenchControls?: JsonObject;
+  workbenchControls?: Partial<WorkbenchControls> | JsonObject;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
