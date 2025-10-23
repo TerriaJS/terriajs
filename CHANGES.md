@@ -4,6 +4,7 @@
 
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
+- Add UI to show toast messages.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
