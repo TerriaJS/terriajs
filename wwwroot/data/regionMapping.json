@@ -207,7 +207,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "LGA_CODE_2023",
       "nameProp": "LGA_NAME_2023",
-      "aliases": ["lga_code_2023", "lga_code", "lga"],
+      "aliases": ["lga_code_2023"],
       "description": "Local Government Areas 2023",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
