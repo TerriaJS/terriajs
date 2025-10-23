@@ -18,8 +18,4 @@ export default class WebFeatureServiceSearchProviderTraits extends mixTraits(
     description: "Type of the properties to search"
   })
   searchPropertyTypeName?: string;
-
-  get autocompleteEnabled() {
-    return true;
-  }
 }

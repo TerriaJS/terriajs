@@ -39,8 +39,4 @@ export default class BingMapsSearchProviderTraits extends mixTraits(
     description: "The maximum number of results to return."
   })
   maxResults: number = 5;
-
-  get autocompleteEnabled() {
-    return true;
-  }
 }
