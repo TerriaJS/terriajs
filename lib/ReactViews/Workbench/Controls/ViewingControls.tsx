@@ -338,7 +338,7 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
       // Exclude disabled controls
       return isControlEnabled(controls, id);
     });
-  }, [item, viewState.globalViewingControlOptions]);
+  }, [item, controls, viewState.globalViewingControlOptions]);
 
   const renderViewingControlsMenu = () => {
     const canSplit =
