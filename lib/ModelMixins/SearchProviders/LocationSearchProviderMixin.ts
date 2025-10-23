@@ -1,4 +1,4 @@
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, override } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -44,6 +44,11 @@ function LocationSearchProviderMixin<
       }
 
       await super.search(searchText, manuallyTriggered);
+    }
+
+    @override
+    get autocompleteEnabled() {
+      return super.autocompleteEnabled ?? true;
     }
   }
 
