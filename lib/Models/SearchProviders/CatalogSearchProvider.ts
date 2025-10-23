@@ -169,14 +169,12 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
         const results = await this.terria.catalogIndex.search(searchText);
         runInAction(() => (searchResults.results = results));
       } else {
-        const t = await loadAndSearchCatalogRecursively(
+        await loadAndSearchCatalogRecursively(
           this.terria.modelValues,
           searchText.toLowerCase(),
           searchResults,
           resultMap
         );
-
-        console.log(t);
       }
 
       runInAction(() => {
