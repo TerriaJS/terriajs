@@ -222,7 +222,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "LGA_CODE_2024",
       "nameProp": "LGA_NAME_2024",
-      "aliases": ["lga_code_2024", "lga_code", "lga"],
+      "aliases": ["lga_code_2024"],
       "description": "Local Government Areas 2024",
       "bbox": [96.81, -43.74, 168, -9.14]
     },
@@ -282,7 +282,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "SED_CODE_2022",
       "nameProp": "SED_NAME_2022",
-      "aliases": ["sed_code_2022", "sed_code", "sed"],
+      "aliases": ["sed_code_2022"],
       "description": "State Electoral Divisions 2022 (ABS)",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
@@ -297,7 +297,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "SED_NAME_2022",
       "nameProp": "SED_NAME_2022",
-      "aliases": ["sed_name_2022", "sed_name"],
+      "aliases": ["sed_name_2022"],
       "description": "State Electoral Divisions 2022 (ABS)",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
@@ -312,7 +312,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "SED_CODE_2024",
       "nameProp": "SED_NAME_2024",
-      "aliases": ["sed_code_2024", "sed_code", "sed"],
+      "aliases": ["sed_code_2024"],
       "description": "State Electoral Divisions 2024 (ABS)",
       "bbox": [96.81, -43.74, 168, -9.14]
     },
@@ -327,7 +327,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "SED_NAME_2024",
       "nameProp": "SED_NAME_2024",
-      "aliases": ["sed_name_2024", "sed_name"],
+      "aliases": ["sed_name_2024"],
       "description": "State Electoral Divisions 2024 (ABS)",
       "bbox": [96.81, -43.74, 168, -9.14]
     },
@@ -372,7 +372,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "CED_CODE_2021",
       "nameProp": "CED_NAME_2021",
-      "aliases": ["ced_code_2021", "ced_code", "ced"],
+      "aliases": ["ced_code_2021"],
       "description": "Commonwealth Electoral Divisions 2021 (ABS)",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
@@ -387,7 +387,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "CED_NAME_2021",
       "nameProp": "CED_NAME_2021",
-      "aliases": ["ced_name_2021", "ced_name"],
+      "aliases": ["ced_name_2021"],
       "description": "Commonwealth Electoral Divisions 2021 (ABS)",
       "bbox": [96.81, -43.74, 168.0, -9.14]
     },
@@ -402,7 +402,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "CED_CODE_2024",
       "nameProp": "CED_NAME_2024",
-      "aliases": ["ced_code_2024", "ced_code", "ced"],
+      "aliases": ["ced_code_2024"],
       "description": "Commonwealth Electoral Divisions 2024 (ABS)",
       "bbox": [96.81, -43.74, 168, -9.14]
     },
@@ -417,7 +417,7 @@
       "uniqueIdProp": "FID",
       "regionProp": "CED_NAME_2024",
       "nameProp": "CED_NAME_2024",
-      "aliases": ["ced_name_2024", "ced_name"],
+      "aliases": ["ced_name_2024"],
       "description": "Commonwealth Electoral Divisions 2024 (ABS)",
       "bbox": [96.81, -43.74, 168, -9.14]
     },
