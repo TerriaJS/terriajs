@@ -5,13 +5,19 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import MapProjection from "terriajs-cesium/Source/Core/MapProjection";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
@@ -616,15 +622,7 @@ class WebMapServiceCatalogItem
         credit: this.attribution
         // Note: we set enablePickFeatures in _currentImageryParts and _nextImageryParts
       };
-
-      if (isDefined(this.getFeatureInfoFormat?.type)) {
-        imageryOptions.getFeatureInfoFormats = [
-          new GetFeatureInfoFormat(
-            this.getFeatureInfoFormat.type,
-            this.getFeatureInfoFormat.format
-          )
-        ];
-      }
+      imageryOptions.getFeatureInfoFormats = this.getFeatureInfoFormats;
 
       if (
         imageryOptions.maximumLevel !== undefined &&
@@ -790,6 +788,31 @@ class WebMapServiceCatalogItem
     if (this.getFeatureInfoFormat.format !== "text/csv") return () => ({});
     return csvFeatureInfoContext(this);
   }
+
+  @computed
+  get getFeatureInfoFormats() {
+    const customFormat = this.getFeatureInfoFormat;
+    if (customFormat) {
+      if (customFormat.type === "json") {
+        return [
+          new GetFeatureInfoFormat("json", "application/json", (json) =>
+            geoJsonToFeatureInfoWithProject(json, this.tilingScheme.projection)
+          )
+        ];
+      } else {
+        return [
+          new GetFeatureInfoFormat(customFormat.type, customFormat.format)
+        ];
+      }
+    }
+    return [
+      new GetFeatureInfoFormat("json", "application/json", (json) =>
+        geoJsonToFeatureInfoWithProject(json, this.tilingScheme.projection)
+      ),
+      new GetFeatureInfoFormat("xml", "text/xml"),
+      new GetFeatureInfoFormat("csv", "text/csv")
+    ];
+  }
 }
 
 /**
@@ -816,6 +839,42 @@ export function formatDimensionsForOws(
       },
     {}
   );
+}
+
+function geoJsonToFeatureInfoWithProject(
+  json: FeatureCollection,
+  projection: MapProjection
+) {
+  const result = [];
+
+  const features = json.features;
+  for (let i = 0; i < features.length; ++i) {
+    const feature = features[i];
+
+    const featureInfo = new ImageryLayerFeatureInfo();
+    featureInfo.data = feature;
+    featureInfo.properties = feature.properties;
+    featureInfo.configureNameFromProperties(feature.properties);
+    featureInfo.configureDescriptionFromProperties(feature.properties);
+
+    // If this is a point feature, use the coordinates of the point.
+    if (!!feature.geometry && feature.geometry.type === "Point") {
+      const x = feature.geometry.coordinates[0];
+      const y = feature.geometry.coordinates[1];
+
+      if (!projection || projection instanceof GeographicProjection) {
+        featureInfo.position = Cartographic.fromDegrees(x, y);
+      } else {
+        const positionInMeters = new Cartesian3(x, y, 0);
+        const cartographic = projection.unproject(positionInMeters);
+        featureInfo.position = cartographic;
+      }
+    }
+
+    result.push(featureInfo);
+  }
+
+  return result;
 }
 
 export default WebMapServiceCatalogItem;
