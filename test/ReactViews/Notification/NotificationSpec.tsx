@@ -47,7 +47,7 @@ describe("Notification", function () {
       expect(title).toBeNull();
     });
 
-    it("accpets an ignore fn", function () {
+    it("accepts an ignore fn", function () {
       viewState.terria.notificationState.addNotificationToQueue({
         title: "Hello, world",
         message: "this is a test message",
