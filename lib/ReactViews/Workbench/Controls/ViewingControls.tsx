@@ -4,19 +4,19 @@ import { observer } from "mobx-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -26,13 +26,13 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import CameraView from "../../../Models/CameraView";
-import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
-import getAncestors from "../../../Models/getAncestors";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import { ViewingControl } from "../../../Models/ViewingControls";
+import getAncestors from "../../../Models/getAncestors";
 import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
@@ -44,6 +44,11 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import {
+  WorkbenchControls,
+  enableAllControls,
+  isControlEnabled
+} from "./WorkbenchControls";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -91,10 +96,11 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 interface PropsType {
   viewState: ViewState;
   item: BaseModel;
+  controls?: WorkbenchControls;
 }
 
 const ViewingControls: React.FC<PropsType> = observer((props) => {
-  const { viewState, item } = props;
+  const { viewState, item, controls = enableAllControls } = props;
   const { t } = useTranslation();
   const [isMenuOpen, setIsOpen] = useState(false);
   const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
@@ -328,11 +334,15 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
     return sortBy(
       uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
       "name"
-    );
-  }, [item, viewState.globalViewingControlOptions]);
+    ).filter(({ id }) => {
+      // Exclude disabled controls
+      return isControlEnabled(controls, id);
+    });
+  }, [item, controls, viewState.globalViewingControlOptions]);
 
   const renderViewingControlsMenu = () => {
     const canSplit =
+      controls.compare &&
       !item.terria.configParameters.disableSplitter &&
       hasTraits(item, SplitterTraits, "splitDirection") &&
       hasTraits(item, SplitterTraits, "disableSplitter") &&
@@ -376,7 +386,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.difference &&
+        viewState.useSmallScreenInterface === false &&
         DiffableMixin.isMixedInto(item) &&
         !item.isShowingDiff &&
         item.canDiffImages ? (
@@ -392,7 +403,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.exportData &&
+        viewState.useSmallScreenInterface === false &&
         ExportableMixin.isMixedInto(item) &&
         item.canExportData ? (
           <li key={"workbench.exportData"}>
@@ -407,7 +419,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.search &&
+        viewState.useSmallScreenInterface === false &&
         SearchableItemMixin.isMixedInto(item) &&
         item.canSearch ? (
           <li key={"workbench.searchItem"}>
@@ -464,6 +477,7 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
           onClick={zoomTo}
           title={t("workbench.zoomToTitle")}
           disabled={
+            !controls.idealZoom ||
             // disabled if the item cannot be zoomed to or if a zoom is already in progress
             (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
             isMapZoomingToCatalogItem === true
@@ -483,7 +497,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
           title={t("workbench.previewItemTitle")}
           iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
           disabled={
-            CatalogMemberMixin.isMixedInto(item) && item.disableAboutData
+            !controls.aboutData ||
+            (CatalogMemberMixin.isMixedInto(item) && item.disableAboutData)
           }
         >
           {t("workbench.previewItem")}

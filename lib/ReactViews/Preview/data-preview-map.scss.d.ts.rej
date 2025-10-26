@@ -1,0 +1,9 @@
+diff a/lib/ReactViews/Preview/data-preview-map.scss.d.ts b/lib/ReactViews/Preview/data-preview-map.scss.d.ts	(rejected hunks)
+@@ -1,6 +1,7 @@
+ declare namespace DataPreviewMapScssNamespace {
+   export interface IDataPreviewMapScss {
+     badge: string;
++    caption: string;
+     map: string;
+     placeholder: string;
+     "terria-preview": string;
