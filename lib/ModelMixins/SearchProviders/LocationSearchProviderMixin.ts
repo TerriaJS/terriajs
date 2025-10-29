@@ -33,10 +33,6 @@ function LocationSearchProviderMixin<
     showWarning() {}
 
     async search(searchText: string, manuallyTriggered?: boolean) {
-      if (searchText.length === 0) {
-        this.cancelSearch();
-        return;
-      }
       if (!this.autocompleteEnabled && !manuallyTriggered) {
         this.cancelSearch();
         this.searchResult.state = "idle";

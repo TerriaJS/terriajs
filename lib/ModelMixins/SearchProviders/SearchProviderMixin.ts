@@ -55,9 +55,6 @@ function SearchProviderMixin<
       manuallyTriggered?: boolean
     ): Promise<void> {
       this.cancelSearch();
-      if (searchText.length === 0) {
-        return;
-      }
       if (!this.shouldRunSearch(searchText)) {
         this.searchResult.state = "idle";
         this.searchResult.message = {
@@ -72,7 +69,6 @@ function SearchProviderMixin<
       this.searchResult.state = "waiting";
 
       if (manuallyTriggered) {
-        this._debouncedSearch.cancel();
         await this.performSearch(searchText);
       } else {
         await this._debouncedSearch(searchText);
