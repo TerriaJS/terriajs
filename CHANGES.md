@@ -1,7 +1,19 @@
 # Change Log
 
-#### next release (8.10.1)
+#### next release (8.11.1)
 
+- Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
+- Fix to show preview map when used outside the explorer panel.
+- [The next improvement]
+
+#### 8.11.0 - 2025-10-09
+
+- **Breaking changes:**
+
+  - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
+    - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
+
+- Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
 - Fix app crash when encountering unsupported WPS input types.
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
@@ -12,6 +24,10 @@
 - Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
 - WMTS read URL from operations metadata
 - [The next improvement]
+- Upgrade Typescript to `^5.9.2`. Also switched the `target` in `tsconfig.json` to `esnext`.
+- Upgrade `mobx` to version `^6.13.7`.
+- Upgraded `terriajs-cesium` to `21.0.0` and `terriajs-cesium-widgets` to `13.2.0`.
+- Fix zooming by mouse wheel in charts #7654
 
 #### 8.10.0 - 2025-07-08
 
@@ -242,6 +258,7 @@
 
 #### 8.7.5 - 2024-06-26
 
+- Add clustering trait to GeoJson (and consequently to WFS, ...) using Cesium as viewer.
 - TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Upgraded a bunch of d3 dependencies for fixing security errors.
 - Show rectangle selector for WPS bounding box parameter

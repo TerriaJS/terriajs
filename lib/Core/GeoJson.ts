@@ -1,9 +1,8 @@
+import { feature, featureCollection } from "@turf/helpers";
 import {
-  feature,
   Feature,
-  featureCollection,
   FeatureCollection,
-  Geometries,
+  GeoJsonProperties,
   Geometry,
   GeometryCollection,
   LineString,
@@ -11,9 +10,8 @@ import {
   MultiPoint,
   MultiPolygon,
   Point,
-  Polygon,
-  Properties
-} from "@turf/helpers";
+  Polygon
+} from "geojson";
 import { isJsonObject, isJsonString } from "./Json";
 
 export type GeoJsonCrs =
@@ -31,8 +29,8 @@ export type GeoJsonCrs =
     };
 
 export type FeatureCollectionWithCrs<
-  G = Geometry | GeometryCollection,
-  P = Properties
+  G extends Geometry | null = Geometry | GeometryCollection,
+  P = GeoJsonProperties
 > = FeatureCollection<G, P> & {
   crs?: GeoJsonCrs;
 };
@@ -118,7 +116,7 @@ export function isGeometryCollection(
   );
 }
 
-export function isGeometries(json: any): json is Geometries {
+export function isGeometries(json: any): json is Geometry {
   return (
     isJsonObject(json, false) &&
     isJsonString(json.type) &&

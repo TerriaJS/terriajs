@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
@@ -31,11 +30,7 @@ export default class ShareDataService {
   }
 
   init(serverConfig: any): void {
-    this.url = defaultValue(
-      this.url,
-      defaultValue(this.terria.configParameters.shareUrl, "share")
-    );
-
+    this.url = this.url ?? this.terria.configParameters.shareUrl ?? "share";
     this._serverConfig = serverConfig;
   }
 

@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "esNext",
+    "module": "esNext",
     "incremental": true,
     "experimentalDecorators": true,
-    "module": "esNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "strict": true,
     "allowJs": true,
@@ -12,7 +12,6 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noUncheckedSideEffectImports": true,
-    "useDefineForClassFields": true, // required for mobx6 - https://mobx.js.org/installation.html#use-spec-compliant-transpilation-for-class-properties
     "outDir": "ts-out",
     "resolveJsonModule": true,
     "typeRoots": [
