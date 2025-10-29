@@ -1,12 +1,25 @@
 import { observer } from "mobx-react";
+import { useEffect } from "react";
 import triggerResize from "../../Core/triggerResize";
 import { useViewState } from "../Context";
+import NotificationToast from "./NotificationToast";
 import NotificationWindow from "./NotificationWindow";
 
 const Notification = observer(() => {
   const viewState = useViewState();
   const notificationState = viewState?.terria.notificationState;
   const notification = notificationState?.currentNotification;
+
+  const ignore =
+    typeof notification?.ignore === "function"
+      ? notification.ignore()
+      : notification?.ignore ?? false;
+
+  useEffect(() => {
+    if (ignore) {
+      notificationState.dismissCurrentNotification();
+    }
+  }, [notificationState, ignore]);
 
   if (
     viewState === undefined ||
@@ -38,7 +51,9 @@ const Notification = observer(() => {
     close();
   };
 
-  return (
+  return notification.showAsToast ? (
+    <NotificationToast notification={notification} />
+  ) : (
     <NotificationWindow
       viewState={viewState}
       title={notification.title}
