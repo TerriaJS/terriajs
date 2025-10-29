@@ -36,6 +36,10 @@ class NoViewer extends GlobeOrMap {
     return Promise.resolve();
   }
 
+  setInitialView(view: CameraView) {
+    this._currentView = view;
+  }
+
   notifyRepaintRequired(): void {}
 
   pickFromLocation(

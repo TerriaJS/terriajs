@@ -145,6 +145,7 @@ import minusList from "../../wwwroot/images/icons/dismiss-20.svg";
 import switchOn from "../../wwwroot/images/icons/switch-on.svg";
 import switchOff from "../../wwwroot/images/icons/switch-off.svg";
 import dragDrop from "../../wwwroot/images/icons/drag-drop.svg";
+import warning from "../../wwwroot/images/icons/warning.svg";
 
 // Icon
 export const GLYPHS = {
@@ -289,7 +290,8 @@ export const GLYPHS = {
   minusList,
   switchOn,
   switchOff,
-  dragDrop
+  dragDrop,
+  warning
 };
 
 export interface IconGlyph {

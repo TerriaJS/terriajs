@@ -32,6 +32,16 @@ export class ImageryParts {
   clippingRectangle: Rectangle | undefined = undefined;
   show: boolean = true;
 
+  /*
+   * An optional method that returns an ImageryProvider instance for the
+   *  preview map which may use a CRS and tiling scheme different to the
+   *  default imageryprovider used for the main map.
+   *
+   * This is currently only used by plugins to customize preview map behaviour.
+   * (eg terriajs-plugin-proj4leaflet)
+   */
+  previewImageryProvider?: (crs: string) => ImageryProvider | undefined;
+
   static fromAsync(options: {
     imageryProviderPromise: Promise<ImageryProvider | undefined>;
     alpha?: number;
@@ -171,13 +181,6 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     async loadMapItems(force?: boolean): Promise<Result<void>> {
       try {
-        runInAction(() => {
-          if (this.shouldShowInitialMessage) {
-            // Don't await the initialMessage because this causes cyclic dependency between loading
-            //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
-            this.showInitialMessage();
-          }
-        });
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
@@ -225,8 +228,15 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             : undefined,
           message: this.initialMessage.content ?? "",
           key: "initialMessage:" + this.initialMessage.key,
-          confirmAction: () => resolve()
+          confirmAction: () => resolve(),
+          showAsToast: this.initialMessage.showAsToast,
+          toastVisibleDuration: this.initialMessage.toastVisibleDuration
         });
+
+        // No need to wait for confirmation if the message is a toast
+        if (this.initialMessage.showAsToast) {
+          resolve();
+        }
       });
     }
 

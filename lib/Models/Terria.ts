@@ -636,6 +636,10 @@ export default class Terria {
    */
   private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
 
+  private _loadPersistedSettings: { baseMapPromise?: Promise<void> } = {
+    baseMapPromise: undefined
+  };
+
   @computed
   get baseMapContrastColor() {
     return (
@@ -1436,12 +1440,17 @@ export default class Terria {
       }
     }
 
-    // Load basemap
-    runInAction(() => {
-      if (!this.mainViewer.baseMap) {
-        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-        this.loadPersistedOrInitBaseMap();
-      }
+    // Load basemap. Wait for any basemap loaded from applyInitData to finish
+    // loading before we restore from user preference.
+    Promise.resolve(this._loadPersistedSettings.baseMapPromise).finally(() => {
+      runInAction(() => {
+        if (!this.mainViewer.baseMap) {
+          // Note: there is no "await" here - as basemaps can take a while
+          // to load and there is no need to wait for them to load before
+          // rendering Terria
+          this.loadPersistedOrInitBaseMap();
+        }
+      });
     });
 
     // Zoom to workbench items if any of the init sources specifically requested it
@@ -1734,7 +1743,9 @@ export default class Terria {
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
-      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
+      if (isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
+      }
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1792,11 +1803,16 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this.mainViewer.setBaseMap(
-          this.baseMapsModel.baseMapItems.find(
-            (item) => item.item.uniqueId === initData.settings!.baseMapId
-          )?.item
-        );
+        const baseMapId = initData.settings.baseMapId;
+        this._loadPersistedSettings.baseMapPromise = this.mainViewer
+          .setBaseMap(
+            this.baseMapsModel.baseMapItems.find(
+              (item) => item.item.uniqueId === baseMapId
+            )?.item
+          )
+          .finally(() => {
+            this._loadPersistedSettings.baseMapPromise = undefined;
+          });
       }
       if (isJsonNumber(initData.settings.terrainSplitDirection)) {
         this.terrainSplitDirection = initData.settings.terrainSplitDirection;
