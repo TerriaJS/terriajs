@@ -34,8 +34,8 @@ function LocationSearchProviderMixin<
 
     async search(searchText: string, manuallyTriggered?: boolean) {
       if (!this.autocompleteEnabled && !manuallyTriggered) {
-        this.searchResult.isSearching = false;
-        this.searchResult.isWaitingToStartSearch = false;
+        this.cancelSearch();
+        this.searchResult.state = "idle";
         this.searchResult.message = {
           content: "translate#viewModels.enterToStartSearch"
         };

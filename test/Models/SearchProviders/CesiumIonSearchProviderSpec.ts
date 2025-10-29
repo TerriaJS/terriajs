@@ -75,4 +75,35 @@ describe("CesiumIonSearchProvider", () => {
       "translate#viewModels.searchErrorOccurred"
     );
   });
+
+  it("cancels previous requests when a new search is made", async () => {
+    const stub1 = jasmine.Ajax.stubRequest(
+      "api.test.com?text=test1&access_token=testkey"
+    );
+    stub1.andCallFunction((request) => {
+      setTimeout(() => {
+        request.respondWith({
+          responseText: JSON.stringify({})
+        });
+      }, 1000);
+    });
+    const stub2 = jasmine.Ajax.stubRequest(
+      "api.test.com?text=test2&access_token=testkey"
+    );
+    stub2.andCallFunction((request) => {
+      request.respondWith({
+        responseText: JSON.stringify(fixture)
+      });
+    });
+
+    const searchPromise1 = searchProvider.search("test1", true);
+    const searchPromise2 = searchProvider.search("test2", true);
+
+    await Promise.all([searchPromise1, searchPromise2]);
+
+    expect(searchProvider.searchResult.results.length).toBe(1);
+    expect(searchProvider.searchResult.results[0].name).toBe(
+      "West End, Australia"
+    );
+  });
 });

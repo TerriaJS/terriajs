@@ -1,20 +1,20 @@
 import i18next from "i18next";
-import { makeObservable, override, runInAction } from "mobx";
+import { action, makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import loadJson from "../../Core/loadJson";
+import { loadJsonAbortable } from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import CesiumIonSearchProviderTraits from "../../Traits/SearchProviders/CesiumIonSearchProviderTraits";
+import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import CommonStrata from "../Definition/CommonStrata";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 interface CesiumIonGeocodeResultFeature {
   bbox: [number, number, number, number];
@@ -69,47 +69,60 @@ export default class CesiumIonSearchProvider extends LocationSearchProviderMixin
     );
   }
 
+  @action
   protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResult
+    abortSignal: AbortSignal
   ): Promise<void> {
-    searchResults.results.length = 0;
-    searchResults.message = undefined;
+    this.searchResult.cancel();
 
-    let response: CesiumIonGeocodeResult;
     try {
-      response = await loadJson<CesiumIonGeocodeResult>(
+      const resource = new Resource(
         `${this.url}?text=${searchText}&access_token=${this.key}`
       );
-    } catch (_e) {
-      searchResults.message = {
-        content: "translate#viewModels.searchErrorOccurred"
-      };
-      return;
-    }
 
-    runInAction(() => {
-      if (!response.features || response.features.length === 0) {
-        searchResults.message = {
-          content: "translate#viewModels.searchNoLocations"
-        };
+      const response = await loadJsonAbortable<CesiumIonGeocodeResult>(
+        resource,
+        { abortSignal }
+      );
+
+      if (abortSignal.aborted) {
+        // A new search has superseded this one, so ignore the result.
         return;
       }
 
-      searchResults.results = response.features.map<SearchResult>((feature) => {
-        const [w, s, e, n] = feature.bbox;
-        const rectangle = Rectangle.fromDegrees(w, s, e, n);
+      if (!response.features || response.features.length === 0) {
+        this.searchResult.noResults("translate#viewModels.searchNoLocations");
 
-        return new SearchResult({
-          name: feature.properties.label,
-          clickAction: createZoomToFunction(this, rectangle),
-          location: {
-            latitude: (s + n) / 2,
-            longitude: (e + w) / 2
-          }
-        });
-      });
-    });
+        return;
+      }
+
+      this.searchResult.results = response.features.map<SearchResult>(
+        (feature) => {
+          const [w, s, e, n] = feature.bbox;
+          const rectangle = Rectangle.fromDegrees(w, s, e, n);
+
+          return new SearchResult({
+            name: feature.properties.label,
+            clickAction: createZoomToFunction(this, rectangle),
+            location: {
+              latitude: (s + n) / 2,
+              longitude: (e + w) / 2
+            }
+          });
+        }
+      );
+    } catch (e) {
+      if (
+        abortSignal.aborted ||
+        (e instanceof Error && e.message === "Aborted")
+      ) {
+        return;
+      }
+
+      this.searchResult.errorOccurred();
+      return;
+    }
   }
 }
 

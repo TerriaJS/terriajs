@@ -16,6 +16,9 @@ function SearchProviderMixin<
     protected debounceTime = 1000;
     private _debouncedSearch: ReturnType<typeof debounce>;
 
+    // Store current AbortController
+    private _currentAbortController?: AbortController;
+
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
@@ -33,15 +36,17 @@ function SearchProviderMixin<
 
     protected abstract doSearch(
       searchText: string,
-      results: SearchProviderResult
+      results: AbortSignal
     ): Promise<void>;
 
     @action
     cancelSearch() {
       this._debouncedSearch.cancel();
 
-      this.searchResult.isCanceled = true;
-      this.searchResult = new SearchProviderResult(this);
+      this._currentAbortController?.abort();
+      this._currentAbortController = undefined;
+
+      this.searchResult.cancel();
     }
 
     @action
@@ -49,23 +54,21 @@ function SearchProviderMixin<
       searchText: string,
       manuallyTriggered?: boolean
     ): Promise<void> {
-      this.searchResult.isWaitingToStartSearch = true;
+      this.cancelSearch();
       if (!this.shouldRunSearch(searchText)) {
-        this._debouncedSearch.cancel();
-
-        this.searchResult.isSearching = false;
+        this.searchResult.state = "idle";
         this.searchResult.message = {
           content: "translate#viewModels.searchMinCharacters",
           params: {
             count: this.minCharacters
           }
         };
-        this.searchResult.isWaitingToStartSearch = false;
         return;
       }
 
+      this.searchResult.state = "waiting";
+
       if (manuallyTriggered) {
-        this._debouncedSearch.cancel();
         await this.performSearch(searchText);
       } else {
         await this._debouncedSearch(searchText);
@@ -75,12 +78,28 @@ function SearchProviderMixin<
     @action
     private async performSearch(searchText: string): Promise<void> {
       this.logEvent(searchText);
-      this.searchResult.isWaitingToStartSearch = false;
-      this.searchResult.isSearching = true;
+      this.searchResult.state = "searching";
 
-      await this.doSearch(searchText, this.searchResult);
+      const abortController = new AbortController();
+      this._currentAbortController = abortController;
 
-      this.searchResult.isSearching = false;
+      try {
+        await this.doSearch(searchText, abortController.signal);
+
+        if (abortController.signal.aborted) {
+          return;
+        }
+      } catch (error) {
+        if (abortController.signal.aborted) {
+          this.searchResult.cancel();
+          throw error;
+        }
+      } finally {
+        this.searchResult.state = "idle";
+        if (this._currentAbortController === abortController) {
+          this._currentAbortController = undefined;
+        }
+      }
     }
 
     private shouldRunSearch(searchText: string) {

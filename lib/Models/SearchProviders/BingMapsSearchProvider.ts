@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { makeObservable, override, runInAction } from "mobx";
+import { action, makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -7,7 +7,7 @@ import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import loadJson from "../../Core/loadJson";
+import { loadJsonAbortable } from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
   getMapCenter
@@ -16,7 +16,6 @@ import BingMapsSearchProviderTraits from "../../Traits/SearchProviders/BingMapsS
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import CommonStrata from "./../Definition/CommonStrata";
-import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
@@ -63,12 +62,12 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     );
   }
 
-  protected doSearch(
+  @action
+  protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResult
+    abortSignal: AbortSignal
   ): Promise<void> {
-    searchResults.results.length = 0;
-    searchResults.message = undefined;
+    this.searchResult.clear();
 
     const searchQuery = new Resource({
       url: this.url + "REST/v1/Locations",
@@ -88,52 +87,40 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    const promise: Promise<any> = loadJson(searchQuery);
-    return promise
-      .then((result) => {
-        if (searchResults.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
-          return;
-        }
+    const promise: Promise<any> = loadJsonAbortable(searchQuery, {
+      abortSignal
+    });
 
-        if (result.resourceSets.length === 0) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
-          return;
-        }
+    try {
+      const result = await promise;
+      if (abortSignal.aborted) {
+        return;
+      }
+      if (result.resourceSets.length === 0) {
+        this.searchResult.noResults("translate#viewModels.searchNoLocations");
+        return;
+      }
 
-        const resourceSet = result.resourceSets[0];
-        if (resourceSet.resources.length === 0) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
-          return;
-        }
+      const resourceSet = result.resourceSets[0];
+      if (resourceSet.resources.length === 0) {
+        this.searchResult.noResults("translate#viewModels.searchNoLocations");
+        return;
+      }
 
-        runInAction(() => {
-          const locations = this.sortByPriority(resourceSet.resources);
+      const locations = this.sortByPriority(resourceSet.resources);
 
-          searchResults.results.push(...locations.primaryCountry);
-          searchResults.results.push(...locations.other);
-        });
+      this.searchResult.results.push(...locations.primaryCountry);
+      this.searchResult.results.push(...locations.other);
 
-        if (searchResults.results.length === 0) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
-        }
-      })
-      .catch(() => {
-        if (searchResults.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
-          return;
-        }
-
-        searchResults.message = {
-          content: "translate#viewModels.searchErrorOccurred"
-        };
-      });
+      if (this.searchResult.results.length === 0) {
+        this.searchResult.noResults("translate#viewModels.searchNoLocations");
+      }
+    } catch {
+      if (abortSignal.aborted) {
+        return;
+      }
+      this.searchResult.errorOccurred();
+    }
   }
 
   protected sortByPriority(resources: any[]) {

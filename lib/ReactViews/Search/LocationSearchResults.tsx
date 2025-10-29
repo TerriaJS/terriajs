@@ -198,14 +198,16 @@ const NameWithLoader: FC<NameWithLoaderProps> = observer(
         <BoxSpan verticalCenter>
           <TextSpan textDarker uppercase>
             {`${applyTranslationIfExists(props.name, i18n)} ${
-              !props.search.isWaitingToStartSearch
+              props.search.state !== "waiting" &&
+              props.search.state !== "searching"
                 ? `(${props.length || 0})`
                 : ""
             }`}
           </TextSpan>
         </BoxSpan>
         {!props.isOpen &&
-          (props.search.isSearching || props.search.isWaitingToStartSearch) && (
+          (props.search.state === "searching" ||
+            props.search.state === "waiting") && (
             <Loader hideMessage boxProps={{ fullWidth: false }} />
           )}
       </BoxSpan>

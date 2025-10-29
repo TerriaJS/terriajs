@@ -8,7 +8,6 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider from "../../../lib/Models/SearchProviders/MapboxSearchProvider";
 import NominatimSearchProvider from "../../../lib/Models/SearchProviders/NominatimSearchProvider";
-import SearchProviderResult from "../../../lib/Models/SearchProviders/SearchProviderResults";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
@@ -146,11 +145,11 @@ describe("SearchBoxAndResults", function () {
     // Mock the doSearch methods to avoid actual API calls.
     // @ts-expect-error: doSearch method is protected
     nominatimSpy = spyOn(nominatimProvider, "doSearch").and.callFake(
-      (searchText: string, results: SearchProviderResult) => {
+      (searchText: string, abortSignal: AbortSignal) => {
         return new Promise((resolve) => {
-          if (!results.isCanceled) {
+          if (!abortSignal.aborted) {
             runInAction(() => {
-              results.results.push({
+              nominatimProvider.searchResult.results.push({
                 name: `Nominatim result for ${searchText}`,
                 tooltip: undefined,
                 isImportant: false,
@@ -170,11 +169,11 @@ describe("SearchBoxAndResults", function () {
 
     // @ts-expect-error: doSearch method is protected
     mapboxSpy = spyOn(mapboxProvider, "doSearch").and.callFake(
-      (searchText: string, results: SearchProviderResult) => {
+      (searchText: string, abortSignal: AbortSignal) => {
         return new Promise((resolve) => {
-          if (!results.isCanceled) {
+          if (!abortSignal.aborted) {
             runInAction(() => {
-              results.results.push({
+              mapboxProvider.searchResult.results.push({
                 name: `Mapbox result for ${searchText}`,
                 tooltip: undefined,
                 isImportant: false,
