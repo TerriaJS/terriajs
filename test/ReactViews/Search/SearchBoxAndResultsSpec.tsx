@@ -8,7 +8,6 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider from "../../../lib/Models/SearchProviders/MapboxSearchProvider";
 import NominatimSearchProvider from "../../../lib/Models/SearchProviders/NominatimSearchProvider";
-import SearchProviderResult from "../../../lib/Models/SearchProviders/SearchProviderResults";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
