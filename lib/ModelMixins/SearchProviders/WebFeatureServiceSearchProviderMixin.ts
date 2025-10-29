@@ -4,7 +4,6 @@ import URI from "urijs";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";
 import Model from "../../Models/Definition/Model";
-import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
@@ -48,12 +47,11 @@ function WebFeatureServiceSearchProviderMixin<
       });
     }
 
-    protected doSearch(
+    protected async doSearch(
       searchText: string,
-      results: SearchProviderResult
+      abortSignal: AbortSignal
     ): Promise<void> {
-      results.results.length = 0;
-      results.message = undefined;
+      this.searchResult.clear();
 
       if (this._waitingForResults) {
         // There's been a new search! Cancel the previous one.
@@ -94,9 +92,7 @@ function WebFeatureServiceSearchProviderMixin<
           const json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {
-            results.message = {
-              content: "translate#viewModels.searchErrorOccurred"
-            };
+            this.searchResult.errorOccurred();
             return;
           }
 
@@ -105,9 +101,10 @@ function WebFeatureServiceSearchProviderMixin<
           } else if (json.featureMember !== undefined) {
             features = json.featureMember;
           } else {
-            results.message = {
-              content: "translate#viewModels.searchNoPlaceNames"
-            };
+            this.searchResult.noResults(
+              "translate#viewModels.searchNoPlaceNames"
+            );
+
             return;
           }
 
@@ -124,9 +121,9 @@ function WebFeatureServiceSearchProviderMixin<
             }
 
             if (features.length === 0) {
-              results.message = {
-                content: "translate#viewModels.searchNoPlaceNames"
-              };
+              this.searchResult.noResults(
+                "translate#viewModels.searchNoPlaceNames"
+              );
               return;
             }
 
@@ -175,17 +172,15 @@ function WebFeatureServiceSearchProviderMixin<
             });
 
             // append new results to all results
-            results.results.push(...searchResults);
+            this.searchResult.results.push(...searchResults);
           });
         })
         .catch((_e) => {
-          if (results.isCanceled) {
-            // A new search has superseded this one, so ignore the result.
+          if (abortSignal.aborted) {
+            // This search is aborted, so ignore the result.
             return;
           }
-          results.message = {
-            content: "translate#viewModels.searchErrorOccurred"
-          };
+          this.searchResult.errorOccurred();
         });
     }
 

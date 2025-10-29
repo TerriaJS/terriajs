@@ -16,8 +16,8 @@ const SearchHeader: FC<SearchHeaderProps> = observer(
     const { i18n } = useTranslation();
 
     if (
-      props.searchResult.isSearching ||
-      props.searchResult.isWaitingToStartSearch
+      props.searchResult.state === "searching" ||
+      props.searchResult.state === "waiting"
     ) {
       return (
         <div key="loader">

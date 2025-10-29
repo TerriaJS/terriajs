@@ -35,7 +35,7 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if searchText is undefined", () => {
     searchProvider.search(undefined as never);
-    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.state).toBe('idle');
     expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
@@ -44,7 +44,7 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if only spaces", () => {
     searchProvider.search("        ");
-    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.state).toBe('idle');
     expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
@@ -53,7 +53,7 @@ describe("SearchProviderMixin", () => {
 
   it(" - should not run search if searchText less than minCharacters", () => {
     searchProvider.search("12");
-    expect(searchProvider.searchResult.isSearching).toBeFalsy();
+    expect(searchProvider.searchResult.state).toBe('idle');
     expect(searchProvider.searchResult.message).toBeDefined();
 
     expect(searchProvider.logEvent).not.toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe("SearchProviderMixin", () => {
 
   it(" - should run search if searchText is valid", () => {
     searchProvider.search("1234", true);
-    expect(searchProvider.searchResult.isSearching).toBeTruthy();
+    expect(searchProvider.searchResult.state).toBe('searching');
     expect(searchProvider.searchResult.message).not.toBeDefined();
 
     expect(searchProvider.logEvent).toHaveBeenCalled();
