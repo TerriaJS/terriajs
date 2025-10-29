@@ -1599,45 +1599,45 @@ describe("Terria", function () {
 
     it("correctly loads the base maps", async function () {
       await terria.start({ configUrl: "" });
-      terria.applyInitData({
-        initData: {
-          baseMaps: {
-            items: [
-              {
-                item: {
-                  id: "basemap-natural-earth-II",
-                  name: "Natural Earth II",
-                  type: "url-template-imagery",
-                  url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
-                  attribution:
-                    "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
-                  maximumLevel: 7,
-                  opacity: 1.0
+      await (
+        await terria._applyInitData({
+          initData: {
+            settings: { baseMapId: "basemap-2" },
+            baseMaps: {
+              items: [
+                {
+                  item: {
+                    id: "basemap-natural-earth-II",
+                    name: "Natural Earth II",
+                    type: "url-template-imagery",
+                    url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+                    attribution:
+                      "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+                    maximumLevel: 7,
+                    opacity: 1.0
+                  },
+                  image: "build/TerriaJS/images/natural-earth.png",
+                  contrastColor: "#000000"
                 },
-                image: "build/TerriaJS/images/natural-earth.png",
-                contrastColor: "#000000"
-              },
-              {
-                item: {
-                  id: "basemap-darkmatter1",
-                  name: "Dark Matter",
-                  type: "open-street-map",
-                  url: "https://basemaps.cartocdn.com/dark_all/",
-                  attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                  subdomains: ["a", "b", "c", "d"],
-                  opacity: 1.0
+                {
+                  item: {
+                    id: "basemap-2",
+                    name: "Base map 2",
+                    type: "url-template-imagery",
+                    url: "https://example.com"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
-        }
-      });
+        })
+      ).baseMapPromise;
       const _defaultBaseMaps = defaultBaseMaps(terria);
       expect(terria.baseMapsModel).toBeDefined();
       expect(terria.baseMapsModel.baseMapItems.length).toEqual(
         _defaultBaseMaps.length + 1
       );
+      expect(terria.mainViewer.baseMap?.uniqueId).toBe("basemap-2");
     });
   });
 

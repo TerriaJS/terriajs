@@ -271,6 +271,17 @@
     "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Viewer mode switched",
+      "message": "The '{{newBaseMap}}' base map cannot be viewed in {{currentMode}}. The Map View has been changed to {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Base map switched",
+      "message": "The '{{currentBaseMap}}' base map cannot be viewed in {{mapMode}}. The Base Map has been changed to '{{newBaseMap}}'"
+    },
     "timeline": {
       "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",

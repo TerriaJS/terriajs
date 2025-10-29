@@ -636,6 +636,10 @@ export default class Terria {
    */
   private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
 
+  private _loadPersistedSettings: { baseMapPromise?: Promise<void> } = {
+    baseMapPromise: undefined
+  };
+
   @computed
   get baseMapContrastColor() {
     return (
@@ -1413,14 +1417,18 @@ export default class Terria {
       })
     );
 
+    let baseMapPromise: Promise<void> | undefined;
     // Sequentially apply all InitSources
     for (let i = 0; i < loadedInitSources.length; i++) {
       const initSource = loadedInitSources[i];
       if (!isDefined(initSource?.data)) continue;
       try {
-        await this.applyInitData({
+        const result = await this._applyInitData({
           initData: initSource!.data
         });
+        if (result.baseMapPromise) {
+          baseMapPromise = result.baseMapPromise;
+        }
       } catch (e) {
         errors.push(
           TerriaError.from(e, {
@@ -1436,12 +1444,17 @@ export default class Terria {
       }
     }
 
-    // Load basemap
-    runInAction(() => {
-      if (!this.mainViewer.baseMap) {
-        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-        this.loadPersistedOrInitBaseMap();
-      }
+    // Wait for any basemap loaded from applyInitData to finish
+    // loading before we restore from user preference.
+    Promise.resolve(baseMapPromise).finally(() => {
+      runInAction(() => {
+        if (!this.mainViewer.baseMap) {
+          // Note: there is no "await" here - as basemaps can take a while
+          // to load and there is no need to wait for them to load before
+          // rendering Terria
+          this.loadPersistedOrInitBaseMap();
+        }
+      });
     });
 
     // Zoom to workbench items if any of the init sources specifically requested it
@@ -1675,21 +1688,34 @@ export default class Terria {
     }
   }
 
-  @action
-  async applyInitData({
-    initData,
-    replaceStratum = false,
-    canUnsetFeaturePickingState = false
-  }: {
+  async applyInitData(params: {
     initData: InitSourceData;
     replaceStratum?: boolean;
     // When feature picking state is missing from the initData, unset the state only if this flag is true
     // This is for eg, set to true when switching through story slides.
     canUnsetFeaturePickingState?: boolean;
   }): Promise<void> {
+    await this._applyInitData(params);
+  }
+
+  /**
+   * @private
+   */
+  @action
+  async _applyInitData({
+    initData,
+    replaceStratum = false,
+    canUnsetFeaturePickingState = false
+  }: {
+    initData: InitSourceData;
+    replaceStratum?: boolean;
+    canUnsetFeaturePickingState?: boolean;
+  }): Promise<{ baseMapPromise: Promise<void> | undefined }> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
+
+    let baseMapPromise: Promise<void> | undefined;
 
     const stratumId =
       typeof initData.stratum === "string"
@@ -1734,7 +1760,9 @@ export default class Terria {
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
-      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
+      if (isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
+      }
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1792,7 +1820,7 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this.mainViewer.setBaseMap(
+        baseMapPromise = this.mainViewer.setBaseMap(
           this.baseMapsModel.baseMapItems.find(
             (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
@@ -1942,6 +1970,8 @@ export default class Terria {
           key: "models.terria.loadingInitSourceErrorTitle"
         }
       });
+
+    return { baseMapPromise };
   }
 
   @action
