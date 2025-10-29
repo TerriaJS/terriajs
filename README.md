@@ -27,7 +27,7 @@ We've put together a list of things we've removed from version 8 and some steps 
 - 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 - Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 - Drag-and-drop files from your desktop to the browser, for instant visualisation (no file upload to server required).
-- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
+- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc. Refer to the [active mappings](./doc/active_region_mapping_table.md) for a complete list of supported regions and how to reference them.
 - Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data.
 - The interface is internationalised and translations are available for French, Italian and Japanese. Partial translations have also been contributed for other languages (see [TerriaJS weblate](https://hosted.weblate.org/engage/terriajs/))
 
