@@ -86,7 +86,7 @@ const _MomentPointsChart = function MomentPointsChart(
   const baseKey = `moment-point-${chartItem.categoryName}-${chartItem.name}`;
   const fillColor = chartItem.getColor();
   const isClickable = chartItem.onClick !== undefined;
-  const clickProps = (point: typeof points[0]) => {
+  const clickProps = (point: (typeof points)[0]) => {
     if (isClickable) {
       return {
         pointerEvents: "all",

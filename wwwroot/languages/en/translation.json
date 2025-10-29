@@ -354,7 +354,8 @@
   },
   "story": {
     "panelTitle": "Story editor",
-    "panelBody": "Create and share interactive stories directly from your map",
+    "panelBody": "Create and share interactive stories directly from your map.",
+    "panelBodyCapped": "Each story is capped at {{ shareMaxRequestSize }} - split large data or many scenes into multiple stories to stay under the limit.",
     "gettingStarted": "Getting started",
     "gettingStartedTitle": "Getting started",
     "badgeBarLabel": "Scenes",
@@ -406,6 +407,7 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
+    "storiesTooLong": "This story exceeds the maximum size allowed. Try reducing the number of visible datasets, or capture fewer scenes.",
     "hideStoryPanel": "hide story builder",
     "loadSceneErrorTitle": "Error loading Story Scene",
     "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
@@ -863,8 +865,10 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "termsOfUse": "Terms of use",
-      "basemap": "Basemap",
-      "dataProvider": "Data provided by:"
+      "credits": "Credits",
+      "mapCredits": "Map credits",
+      "dataProvider": "Data provided by:",
+      "searchProvider": "Search provided by:"
     }
   },
   "models": {
@@ -1296,6 +1300,7 @@
     "shareData": {
       "generateErrorTitle": "Couldn't generate short URL.",
       "generateErrorMessage": "Something went wrong when trying to use the share data service to generate a short URL.",
+      "generateErrorDataExceedsLimitMessage": "Error: Share data exceeds limit",
       "expandErrorTitle": "Couldn't expand URL",
       "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time."
     },

@@ -1,6 +1,6 @@
 import Point from "@mapbox/point-geometry";
-import { Feature, FeatureCollection, Position } from "@turf/helpers";
 import arcGisPbfDecode from "arcgis-pbf-parser";
+import { Feature, FeatureCollection, Position } from "geojson";
 import {
   Feature as ProtomapsFeature,
   TileSource,

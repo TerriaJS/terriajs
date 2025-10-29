@@ -68,7 +68,7 @@ export default {
     if (!source || !dest) {
       return;
     }
-    const result = proj4.transform(source, dest, coordinates) ?? {};
+    const result = proj4.transform(source, dest, coordinates, false);
     if (result) {
       const { x, y } = result;
       return [x, y];

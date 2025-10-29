@@ -28,7 +28,12 @@ export const ZoomX = ({
         onZoom(event.transform.rescaleX(initialScale));
       });
 
-    d3Select(surface).call(zoom as never);
+    const selection = d3Select(surface);
+    selection.call(zoom as never);
+
+    return () => {
+      selection.on(".zoom", null);
+    };
   }, [initialScale, onZoom, scaleExtent, surface, translateExtent]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment

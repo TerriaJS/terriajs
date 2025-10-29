@@ -20,7 +20,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Request from "terriajs-cesium/Source/Core/Request";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { FeatureCollectionWithCrs } from "../../Core/GeoJson";
 import TerriaError from "../../Core/TerriaError";
@@ -152,11 +151,8 @@ export default class ProtomapsImageryProvider
     // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel (see softMinimumLevel)
     this.minimumLevel = 0;
     this.softMinimumLevel = options.minimumZoom;
-    this.maximumLevel = defaultValue(options.maximumZoom, 24);
-    this.maximumNativeZoom = defaultValue(
-      options.maximumNativeZoom,
-      this.maximumLevel
-    );
+    this.maximumLevel = options.maximumZoom ?? 24;
+    this.maximumNativeZoom = options.maximumNativeZoom ?? this.maximumLevel;
 
     this.rectangle = isDefined(options.rectangle)
       ? Rectangle.intersection(

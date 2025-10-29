@@ -7,7 +7,10 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
 import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
-import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
+import {
+  ImageryParts,
+  isDataSource
+} from "../../../../lib/ModelMixins/MappableMixin";
 import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
 import { convertEsriPointSizeToPixels } from "../../../../lib/Models/Catalog/Esri/esriStyleToTableStyle";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
@@ -18,6 +21,7 @@ import TablePointStyleTraits, {
   PointSymbolTraits
 } from "../../../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../../lib/Traits/TraitsClasses/Table/StyleTraits";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 configure({
   enforceActions: "observed",
@@ -580,6 +584,31 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         });
 
         expect(item.tileRequests).toEqual(false);
+      });
+    });
+
+    describe("clipToRectangle", function () {
+      it("when true sets the clipping rectangle for the imagery part", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
+        expect(item.clipToRectangle).toBe(true);
+        await item.loadMapItems();
+        const imageryParts = item.mapItems[0] as ImageryParts;
+        expect(imageryParts.clippingRectangle).toBeDefined();
+        expect(
+          Rectangle.equals(imageryParts.clippingRectangle, item.cesiumRectangle)
+        ).toBe(true);
+      });
+
+      it("when false does not set the clipping rectangle for the imagery part", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(CommonStrata.definition, "clipToRectangle", false);
+        });
+        await item.loadMapItems();
+        const imageryParts = item.mapItems[0] as ImageryParts;
+        expect(imageryParts.clippingRectangle).toBeUndefined();
       });
     });
   });
