@@ -33,18 +33,13 @@ function WebFeatureServiceSearchProviderMixin<
       | ((feature: any, searchText: string) => number)
       | undefined;
 
-    cancelRequest?: () => void;
-
-    private _waitingForResults: boolean = false;
-
-    getXml(url: string): Promise<XMLDocument> {
+    getXml(url: string, abortSignal: AbortSignal): Promise<XMLDocument> {
       const resource = new Resource({ url });
-      this._waitingForResults = true;
       const xmlPromise = resource.fetchXML()!;
-      this.cancelRequest = resource.request.cancelFunction;
-      return xmlPromise.finally(() => {
-        this._waitingForResults = false;
+      abortSignal.addEventListener("abort", () => {
+        resource.request.cancelFunction();
       });
+      return xmlPromise;
     }
 
     protected async doSearch(
@@ -52,15 +47,6 @@ function WebFeatureServiceSearchProviderMixin<
       abortSignal: AbortSignal
     ): Promise<void> {
       this.searchResult.clear();
-
-      if (this._waitingForResults) {
-        // There's been a new search! Cancel the previous one.
-        if (this.cancelRequest !== undefined) {
-          this.cancelRequest();
-          this.cancelRequest = undefined;
-        }
-        this._waitingForResults = false;
-      }
 
       const originalSearchText = searchText;
 
@@ -87,8 +73,13 @@ function WebFeatureServiceSearchProviderMixin<
         filter: filter
       });
 
-      return this.getXml(_wfsServiceUrl.toString())
+      return this.getXml(_wfsServiceUrl.toString(), abortSignal)
         .then((xml: any) => {
+          if (abortSignal.aborted) {
+            // This search is aborted, so ignore the result.
+            return;
+          }
+
           const json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {
