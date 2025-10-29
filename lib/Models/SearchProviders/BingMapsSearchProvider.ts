@@ -58,7 +58,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   protected logEvent(searchText: string) {
     this.terria.analytics?.logEvent(
       Category.search,
-      SearchAction.gazetteer,
+      SearchAction.bing,
       searchText
     );
   }

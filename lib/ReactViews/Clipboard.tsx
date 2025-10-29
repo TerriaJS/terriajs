@@ -20,6 +20,8 @@ interface ClipboardProps {
   text?: string;
   inputTheme?: "light" | "dark";
   inputPlaceholder?: string;
+  // needed for testing
+  timeout?: number;
   onCopy?: (contents: string) => void;
 }
 
@@ -46,11 +48,11 @@ const Clipboard: FC<ClipboardProps> = (props) => {
     if (status === CopyStatus.Success || status === CopyStatus.Error) {
       const timer = setTimeout(() => {
         setStatus(CopyStatus.Default);
-      }, 3000);
+      }, props.timeout ?? 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [status]);
+  }, [status, props.timeout]);
 
   const isLightTheme = theme === "light";
   const canCopy = !!navigator.clipboard;

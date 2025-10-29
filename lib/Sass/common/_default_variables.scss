@@ -13,7 +13,7 @@
  * 1. Create a custom variables file in your app
  * 2. Configure the `terriajs-variables` webpack alias to point to your custom variables file
  * 3. In your custom variables file, override specific variables values using the `@use ... with` syntax
- * 
+ *
  * For a complete example, see the `variables.scss` file in the TerriaMap repository.
  */
 
@@ -65,6 +65,7 @@ $text-dark2: #606d80 !default;
 $text-darker: #4d5766 !default;
 $text-light: #ffffff !default;
 $text-light-dimmed: #bbbbbb !default;
+$text-warning: rgb(255, 105, 97) !default;
 
 // You can override these functions to change the link color depending on the background, eg.
 // @function get-link-color($bg-color) {

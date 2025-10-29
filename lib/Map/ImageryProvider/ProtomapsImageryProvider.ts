@@ -20,7 +20,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Request from "terriajs-cesium/Source/Core/Request";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { FeatureCollectionWithCrs } from "../../Core/GeoJson";
 import TerriaError from "../../Core/TerriaError";
@@ -152,11 +151,8 @@ export default class ProtomapsImageryProvider
     // Note we leave minimumLevel at 0, and then we fail requests for levels below softMinimumLevel (see softMinimumLevel)
     this.minimumLevel = 0;
     this.softMinimumLevel = options.minimumZoom;
-    this.maximumLevel = defaultValue(options.maximumZoom, 24);
-    this.maximumNativeZoom = defaultValue(
-      options.maximumNativeZoom,
-      this.maximumLevel
-    );
+    this.maximumLevel = options.maximumZoom ?? 24;
+    this.maximumNativeZoom = options.maximumNativeZoom ?? this.maximumLevel;
 
     this.rectangle = isDefined(options.rectangle)
       ? Rectangle.intersection(
@@ -183,14 +179,15 @@ export default class ProtomapsImageryProvider
     // Generate protomaps source based on this.data
     // - URL of pmtiles, geojson or pbf files
     if (typeof this.data === "string") {
-      if (this.data.endsWith(".pmtiles")) {
+      // Note: the `base` passed to URL is not relevant as we only use the
+      // parsed path. It still needs to be passed so that URL won't throw an
+      // error when passing relative URLs like /proxy/something.
+      const path = new URL(this.data, "http://example").pathname;
+      if (path.endsWith(".pmtiles")) {
         this.source = new PmtilesSource(this.data, false);
         const cache = new TileCache(this.source, TILE_CACHE_TILE_SIZE);
         this.view = new View(cache, this.maximumNativeZoom, 2);
-      } else if (
-        this.data.endsWith(".json") ||
-        this.data.endsWith(".geojson")
-      ) {
+      } else if (path.endsWith(".json") || path.endsWith(".geojson")) {
         this.source = new ProtomapsGeojsonSource(this.data);
       } else {
         this.source = new ZxySource(this.data, false);

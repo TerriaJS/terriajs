@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  FC,
-  MouseEvent,
-  AnchorHTMLAttributes,
-  default as React
-} from "react";
+import { ReactNode, FC, MouseEvent, AnchorHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useViewState } from "../Context";

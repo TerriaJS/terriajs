@@ -943,14 +943,16 @@ export default class BoxDrawing {
           direction,
           mouseMove
         );
-        // Get the move vector
-        const moveVector = Cartesian3.multiplyByScalar(
-          direction,
-          moveAmount,
-          scratchMoveVector
-        );
+        if (moveAmount !== undefined) {
+          // Get the move vector
+          const moveVector = Cartesian3.multiplyByScalar(
+            direction,
+            moveAmount,
+            scratchMoveVector
+          );
 
-        moveStep = moveVector;
+          moveStep = moveVector;
+        }
       } else if (this.keepHeightSteadyWhenMovingLaterally) {
         // Move the box laterally on the globe while keeping its height (almost) steady.
         // To do this:
@@ -1425,6 +1427,10 @@ export default class BoxDrawing {
       const boxCenter = scene.cartesianToCanvasCoordinates(
         this.trs.translation
       );
+      if (!boxCenter) {
+        return undefined;
+      }
+
       // mouse coords relative to the box center
       const x = mousePos.x - boxCenter.x;
       const y = mousePos.y - boxCenter.y;
@@ -1508,13 +1514,19 @@ export default class BoxDrawing {
 
       // scaleAmount is a measure of how much to scale in the given direction
       // for the given mouse movement.
-      const { scaleAmount, pixelLengthAfterScaling } = computeScaleAmount(
+      const scaleResult = computeScaleAmount(
         this.scene,
         position,
         scaleDirection,
         length,
         mouseMove
       );
+
+      if (!scaleResult) {
+        return;
+      }
+
+      const { scaleAmount, pixelLengthAfterScaling } = scaleResult;
 
       // When downscaling, stop at 20px length.
       if (scaleAmount < 0) {
@@ -1662,7 +1674,7 @@ function computeMoveAmount(
   position: Cartesian3,
   direction: Cartesian3,
   mouseMove: MouseMove
-): number {
+): number | undefined {
   const mouseVector2d = Cartesian2.subtract(
     mouseMove.endPosition,
     mouseMove.startPosition,
@@ -1676,6 +1688,10 @@ function computeMoveAmount(
     1,
     scratchScreenVector2d
   );
+
+  if (!screenVector2d) {
+    return undefined;
+  }
 
   const screenNormal2d = Cartesian2.normalize(
     screenVector2d,
@@ -1718,6 +1734,10 @@ function computeScaleAmount(
     1,
     scratchScreenVector2d
   );
+  if (!screenVector2d) {
+    return undefined;
+  }
+
   const screenNormal2d = Cartesian2.normalize(
     screenVector2d,
     scratchScreenNormal2d
@@ -1741,7 +1761,7 @@ function screenProjectVector(
   direction: Cartesian3,
   length: number,
   result: Cartesian2
-): Cartesian2 {
+): Cartesian2 | undefined {
   const ray = scratchRay;
   ray.origin = position;
   ray.direction = direction;
@@ -1754,6 +1774,9 @@ function screenProjectVector(
     Ray.getPoint(ray, length),
     scratchFarPoint2d
   );
+  if (!farPoint2d || !nearPoint2d) {
+    return undefined;
+  }
   const screenVector2d = Cartesian2.subtract(farPoint2d, nearPoint2d, result);
   return screenVector2d;
 }

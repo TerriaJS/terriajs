@@ -16,7 +16,6 @@ import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -118,7 +117,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { RelatedMap, defaultRelatedMaps } from "./RelatedMaps";
+import { RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -587,15 +586,18 @@ export default class Terria {
       // Default credit links (shown at the bottom of the Cesium map)
       {
         text: "map.extraCreditLinks.dataAttribution",
-        url: "about.html#data-attribution"
+        url: "https://terria.io/attributions"
       },
-      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+      {
+        text: "map.extraCreditLinks.termsOfUse",
+        url: "https://terria.io/demo-terms"
+      }
     ],
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
-    relatedMaps: defaultRelatedMaps,
+    relatedMaps: [],
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
@@ -1342,11 +1344,8 @@ export default class Terria {
       }
     });
 
-    this.appName = defaultValue(this.configParameters.appName, this.appName);
-    this.supportEmail = defaultValue(
-      this.configParameters.supportEmail,
-      this.supportEmail
-    );
+    this.appName = this.configParameters.appName ?? this.appName;
+    this.supportEmail = this.configParameters.supportEmail ?? this.supportEmail;
   }
 
   protected async forceLoadInitSources(): Promise<void> {

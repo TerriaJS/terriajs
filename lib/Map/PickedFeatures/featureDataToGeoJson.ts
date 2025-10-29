@@ -1,10 +1,5 @@
 import Point from "@mapbox/point-geometry";
 import {
-  Feature as GeoJsonFeature,
-  Geometry as GeoJsonGeometry,
-  Position
-} from "@turf/helpers";
-import {
   Feature as ArcGisFeature,
   Point as ArcGisPoint,
   Polygon as ArcGisPolygon,
@@ -14,6 +9,11 @@ import {
   FeatureSet,
   SpatialReference
 } from "arcgis-rest-api";
+import {
+  Feature as GeoJsonFeature,
+  Geometry as GeoJsonGeometry,
+  Position
+} from "geojson";
 import pointInPolygon from "point-in-polygon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
