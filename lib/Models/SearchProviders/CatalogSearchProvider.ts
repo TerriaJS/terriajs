@@ -1,4 +1,4 @@
-import { autorun, makeObservable, runInAction } from "mobx";
+import { action, autorun, makeObservable, runInAction } from "mobx";
 import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -20,12 +20,13 @@ export function loadAndSearchCatalogRecursively(
   searchTextLowercase: string,
   searchResults: SearchProviderResult,
   resultMap: ResultMap,
+  abortSignal: AbortSignal,
   iteration: number = 0
 ): Promise<void> {
   // checkTerriaAgainstResults(terria, searchResults)
   // don't go further than 10 deep, but also if we have references that never
   // resolve to a target, might overflow
-  if (iteration > 10) {
+  if (iteration > 10 || abortSignal.aborted) {
     return Promise.resolve();
   }
   // add some public interface for terria's `models`?
@@ -73,6 +74,9 @@ export function loadAndSearchCatalogRecursively(
     autorun((reaction) => {
       Promise.all(
         referencesAndGroupsToLoad.map(async (model) => {
+          if (abortSignal.aborted) {
+            return;
+          }
           if (ReferenceMixin.isMixedInto(model)) {
             // TODO: could handle errors better here
             (await model.loadReference()).throwIfError();
@@ -91,6 +95,7 @@ export function loadAndSearchCatalogRecursively(
               searchTextLowercase,
               searchResults,
               resultMap,
+              abortSignal,
               iteration + 1
             )
           );
@@ -133,19 +138,12 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     );
   }
 
+  @action
   protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResult
+    abortSignal: AbortSignal
   ): Promise<void> {
-    runInAction(() => (searchResults.isSearching = true));
-
-    searchResults.results.length = 0;
-    searchResults.message = undefined;
-
-    if (searchText === undefined || /^\s*$/.test(searchText)) {
-      runInAction(() => (searchResults.isSearching = false));
-      return Promise.resolve();
-    }
+    this.searchResult.clear();
 
     // Load catalogIndex if needed
     if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
@@ -164,48 +162,42 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     try {
       if (this.terria.catalogIndex?.searchIndex) {
         const results = await this.terria.catalogIndex.search(searchText);
-        runInAction(() => (searchResults.results = results));
+        this.searchResult.results = results;
       } else {
         await loadAndSearchCatalogRecursively(
           this.terria.modelValues,
           searchText.toLowerCase(),
-          searchResults,
-          resultMap
+          this.searchResult,
+          resultMap,
+          abortSignal
         );
       }
 
-      runInAction(() => {
-        searchResults.isSearching = false;
-      });
+      this.searchResult.state = "idle";
 
-      if (searchResults.isCanceled) {
+      if (abortSignal.aborted) {
         // A new search has superseded this one, so ignore the result.
         return;
       }
 
-      runInAction(() => {
-        this.terria.catalogReferencesLoaded = true;
-      });
+      this.terria.catalogReferencesLoaded = true;
 
-      if (searchResults.results.length === 0) {
-        searchResults.message = {
-          content: "translate#viewModels.searchNoCatalogueItem"
-        };
+      if (this.searchResult.results.length === 0) {
+        this.searchResult.noResults(
+          "translate#viewModels.searchNoCatalogueItem"
+        );
       }
     } catch (e) {
-      console.error(e);
       this.terria.raiseErrorToUser(e, {
         message: "An error occurred while searching",
         severity: TerriaErrorSeverity.Warning
       });
-      if (searchResults.isCanceled) {
+      if (abortSignal.aborted) {
         // A new search has superseded this one, so ignore the result.
         return;
       }
 
-      searchResults.message = {
-        content: "translate#viewModels.searchErrorOccurred"
-      };
+      this.searchResult.errorOccurred();
     }
   }
 }
