@@ -90,10 +90,7 @@ const SettingPanel: FC = observer(() => {
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
     if (baseMap) {
-      const baseMapId = baseMap.uniqueId;
-      if (baseMapId) {
-        terria.setLocalProperty("basemap", baseMapId);
-      }
+      saveBaseMapPreference(terria, baseMap);
     }
   };
 
@@ -115,14 +112,17 @@ const SettingPanel: FC = observer(() => {
       // Ensure a base map that is compatible with the new viewer mode
       const prevBaseMap = mainViewer.baseMap;
       mainViewer.useViewerCompatibleBaseMap().then((baseMapChanged) => {
-        if (baseMapChanged && prevBaseMap && mainViewer.baseMap) {
-          notifyBaseMapSwitch(
-            terria,
-            mainViewer,
-            prevBaseMap,
-            mainViewer.baseMap,
-            t
-          );
+        if (baseMapChanged && mainViewer.baseMap) {
+          saveBaseMapPreference(terria, mainViewer.baseMap);
+          if (prevBaseMap) {
+            notifyBaseMapSwitch(
+              terria,
+              mainViewer,
+              prevBaseMap,
+              mainViewer.baseMap,
+              t
+            );
+          }
         }
       });
       // We store the user's chosen viewer mode for future use.
@@ -431,6 +431,18 @@ function mapDisplayName(baseMap: MappableMixin.Instance): string {
   const name =
     (CatalogMemberMixin.isMixedInto(baseMap) ? baseMap.name : undefined) ?? "";
   return name;
+}
+
+/**
+ * Save user's base map preference
+ */
+function saveBaseMapPreference(
+  terria: Terria,
+  baseMap: MappableMixin.Instance
+) {
+  if (baseMap.uniqueId) {
+    terria.setLocalProperty("basemap", baseMap.uniqueId);
+  }
 }
 
 /**
