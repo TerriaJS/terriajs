@@ -122,7 +122,7 @@ export class MyLocation extends MapNavigationItemController {
           coordinates: [longitude, latitude]
         },
         properties: {
-          title: t("location.location"),
+          title: t<string>("location.location"),
           longitude: longitude,
           latitude: latitude
         }

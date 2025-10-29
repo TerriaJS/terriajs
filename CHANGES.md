@@ -4,6 +4,7 @@
 
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
