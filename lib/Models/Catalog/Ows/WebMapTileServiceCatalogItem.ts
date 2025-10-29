@@ -322,8 +322,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get usableTileMatrixSets() {
     const usableTileMatrixSets: { [key: string]: UsableTileMatrixSets } = {};
 
-    // const standardTilingScheme = new GeographicTilingScheme();
-
     const matrixSets = this.capabilities.tileMatrixSets;
     if (matrixSets === undefined) {
       return;
