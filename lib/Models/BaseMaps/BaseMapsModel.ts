@@ -1,14 +1,14 @@
 import { action, computed, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import isDefined from "../../Core/isDefined";
-import { isJsonObject, JsonObject } from "../../Core/Json";
+import { JsonObject, isJsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import isDefined from "../../Core/isDefined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import ModelReference from "../../Traits/ModelReference";
 import {
-  BaseMapsTraits,
-  BaseMapTraits
+  BaseMapTraits,
+  BaseMapsTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
 import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
 import CommonStrata from "../Definition/CommonStrata";
@@ -18,7 +18,6 @@ import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import { defaultBaseMaps } from "./defaultBaseMaps";
-import { json } from "stream/consumers";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 

@@ -24,7 +24,10 @@ const LeafletContainerGlobalStyle = createGlobalStyle<{
   backgroundColor?: string;
 }>`
   .leaflet-container {
-    background-color: ${(props) => props.backgroundColor ?? "#ddd"}
+    ${(props) =>
+      props.backgroundColor
+        ? `background-color: ${props.backgroundColor};`
+        : ""}
   }
 `;
 
