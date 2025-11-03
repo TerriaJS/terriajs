@@ -74,7 +74,7 @@ describe("TerriaViewer", function () {
   });
 
   describe("currentViewer", function () {
-    let rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
       west: CesiumMath.toDegrees(west),
       south: CesiumMath.toDegrees(south),
       east: CesiumMath.toDegrees(east),

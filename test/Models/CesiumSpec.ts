@@ -435,7 +435,7 @@ describeIfSupported("Cesium Model", function () {
   });
 
   describe("getCurrentCameraView", function () {
-    let rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
       west: CesiumMath.toDegrees(west),
       south: CesiumMath.toDegrees(south),
       east: CesiumMath.toDegrees(east),
@@ -454,7 +454,7 @@ describeIfSupported("Cesium Model", function () {
     });
 
     describe("when initial camera view is set", function () {
-      let viewRectangle = {
+      const viewRectangle = {
         west: 119.04785,
         south: -33.6512,
         east: 156.31347,
