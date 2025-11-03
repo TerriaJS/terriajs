@@ -18,14 +18,14 @@ describe("TerriaViewer", function () {
     });
     container = document.createElement("div");
     document.body.appendChild(container);
-    terria.mainViewer.attach(container);
-    terriaViewer = terria.mainViewer;
     terria.loadHomeCamera({
       west: 45,
       south: -20,
       east: 55,
       north: -10
     });
+    terria.mainViewer.attach(container);
+    terriaViewer = terria.mainViewer;
 
     setViewerMode("3d", terriaViewer);
 
