@@ -32,7 +32,9 @@ export const TerriaViewerWrapper: FC = () => {
         <LeafletContainerStyle />
       )}
       <div
+        data-testid="mapContainer"
         id="cesiumContainer"
+        className="mapContainer"
         css={`
           cursor: auto;
           position: absolute;

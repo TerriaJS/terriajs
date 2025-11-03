@@ -1,6 +1,8 @@
 import { observer } from "mobx-react";
 import { FC } from "react";
 import { createGlobalStyle } from "styled-components";
+import Terria from "../../../Models/Terria";
+import ViewerMode from "../../../Models/ViewerMode";
 import { useViewState } from "../../Context/ViewStateContext";
 
 /**
@@ -9,13 +11,25 @@ import { useViewState } from "../../Context/ViewStateContext";
 const LeafletContainerStyle: FC<object> = observer(() => {
   const terria = useViewState().terria;
 
-  // Derive background color from active base map
-  const backgroundColor = terria.baseMapsModel.baseMapItems.find(
-    (b) => b.item === terria.mainViewer.baseMap
-  )?.backgroundColor;
+  if (terria.mainViewer.viewerMode !== ViewerMode.Leaflet) {
+    return null;
+  }
 
-  return <LeafletContainerGlobalStyle backgroundColor={backgroundColor} />;
+  const containerBackgroundColor = getBaseMapBackgroundColor(terria);
+
+  return containerBackgroundColor ? (
+    <LeafletContainerGlobalStyle backgroundColor={containerBackgroundColor} />
+  ) : null;
 });
+
+/**
+ * Return background color of the active base map
+ */
+function getBaseMapBackgroundColor(terria: Terria): string | undefined {
+  return terria.baseMapsModel.baseMapItems.find(
+    (it) => it.item === terria.mainViewer.baseMap
+  )?.backgroundColor;
+}
 
 /**
  * Defines global styles for leaflet map container
@@ -23,7 +37,7 @@ const LeafletContainerStyle: FC<object> = observer(() => {
 const LeafletContainerGlobalStyle = createGlobalStyle<{
   backgroundColor?: string;
 }>`
-  .leaflet-container {
+  .mapContainer {
     ${(props) =>
       props.backgroundColor
         ? `background-color: ${props.backgroundColor};`
