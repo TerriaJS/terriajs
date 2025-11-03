@@ -5,6 +5,7 @@
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
 - Update `csv-geo-au` support to include the latest Australian Government regions.
+- Keep camera steady when switching between viewer modes.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
