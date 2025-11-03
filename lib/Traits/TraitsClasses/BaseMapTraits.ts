@@ -22,6 +22,14 @@ export class BaseMapTraits extends ModelTraits {
   })
   contrastColor?: string = "#ffffff";
 
+  @primitiveTrait({
+    type: "string",
+    name: "Background color",
+    description:
+      "Background color to use for the map container when showing this base map. This setting is currently only applicable in Leaflet or 2D mode. It is useful when the base map does not cover the entire screen and a background color matching the overall base map style is desired."
+  })
+  backgroundColor?: string;
+
   @modelReferenceTrait({
     factory: CatalogMemberFactory,
     name: "Base map item",
@@ -71,4 +79,12 @@ export class BaseMapsTraits extends ModelTraits {
       "Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps."
   })
   enabledBaseMaps?: string[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "statusMessage",
+    description:
+      "A short message to show next to the basemap selector in map settings panel"
+  })
+  statusMessage?: string;
 }

@@ -1,17 +1,17 @@
 import { isEqual } from "lodash-es";
 import {
-  action,
-  computed,
   IComputedValue,
   IObservableValue,
   IReactionDisposer,
+  action,
+  computed,
+  makeObservable,
   observable,
   reaction,
   runInAction,
-  untracked,
-  makeObservable
+  untracked
 } from "mobx";
-import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
+import { FULFILLED, IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -20,21 +20,7 @@ import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
-import ViewerMode from "../Models/ViewerMode";
-
-// Async loading of Leaflet and Cesium
-
-const leafletFromPromise = computed(
-  () =>
-    fromPromise(import("../Models/Leaflet").then((Leaflet) => Leaflet.default)),
-  { keepAlive: true }
-);
-
-const cesiumFromPromise = computed(
-  () =>
-    fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default)),
-  { keepAlive: true }
-);
+import ViewerMode, { getViewerType } from "../Models/ViewerMode";
 
 // Viewer options. Designed to be easily serialisable
 interface ViewerOptions {
@@ -50,33 +36,84 @@ const viewerOptionsDefaults: ViewerOptions = {
  * Each map-view should have it's own TerriaViewer (main viewer, preview map, etc.)
  */
 export default class TerriaViewer {
+  /**
+   * Loaders for different viewers.
+   *
+   * Plugins may override the loaders to customize the viewer implementation.
+   */
+  static readonly Loaders = observable({
+    [ViewerMode.Cesium]: (_terriaViewer: TerriaViewer) =>
+      import("../Models/Cesium").then((mod) => mod.default),
+    [ViewerMode.Leaflet]: (_terriaViewer: TerriaViewer) =>
+      import("../Models/Leaflet").then((mod) => mod.default)
+  });
+
   readonly terria: Terria;
 
   @observable
   private _baseMap: MappableMixin.Instance | undefined;
 
+  /**
+   * Tracks the basemap that is currently being loaded
+   */
+  @observable
+  private _loadingBaseMap: MappableMixin.Instance | undefined;
+
   get baseMap() {
     return this._baseMap;
+  }
+
+  /**
+   * Returns the basemap that is currently loading
+   */
+  get loadingBaseMap(): MappableMixin.Instance | undefined {
+    return this._loadingBaseMap;
   }
 
   async setBaseMap(baseMap?: MappableMixin.Instance): Promise<void> {
     if (!baseMap) return;
 
-    const result = await baseMap.loadMapItems();
-    if (result.error) {
-      result.raiseError(this.terria, {
-        title: {
-          key: "models.terria.loadingBaseMapErrorTitle",
-          parameters: {
-            name:
-              (CatalogMemberMixin.isMixedInto(baseMap)
-                ? baseMap.name
-                : baseMap.uniqueId) ?? "Unknown item"
+    runInAction(() => {
+      this._loadingBaseMap = baseMap;
+    });
+
+    try {
+      const result = await baseMap.loadMapItems();
+
+      if (result.error) {
+        result.raiseError(this.terria, {
+          title: {
+            key: "models.terria.loadingBaseMapErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(baseMap)
+                  ? baseMap.name
+                  : baseMap.uniqueId) ?? "Unknown item"
+            }
           }
-        }
-      });
-    } else {
-      runInAction(() => (this._baseMap = baseMap));
+        });
+      } else {
+        runInAction(() => {
+          // Concurrent attempts to load basemap might not complete in the same
+          // order they were called. Set as current basemap only if this was
+          // the last call to setBaseMap.
+          if (this._loadingBaseMap === baseMap) {
+            // If the basemap specifies a preferred viewer mode, switch to it.
+            if (baseMap.preferredViewerMode) {
+              this.viewerMode =
+                getViewerType(baseMap.preferredViewerMode) ?? this.viewerMode;
+            }
+            this._baseMap = baseMap;
+          }
+        });
+      }
+    } finally {
+      // Unset loadingBaseMap
+      if (this._loadingBaseMap === baseMap) {
+        runInAction(() => {
+          this._loadingBaseMap = undefined;
+        });
+      }
     }
   }
 
@@ -170,11 +207,21 @@ export default class TerriaViewer {
       typeof NoViewer
     >;
     if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-      viewerFromPromise = leafletFromPromise.get();
+      viewerFromPromise = this.leafletPromise;
     } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-      viewerFromPromise = cesiumFromPromise.get();
+      viewerFromPromise = this.cesiumPromise;
     }
     return viewerFromPromise;
+  }
+
+  @computed({ keepAlive: true })
+  private get leafletPromise() {
+    return fromPromise(TerriaViewer.Loaders[ViewerMode.Leaflet](this));
+  }
+
+  @computed({ keepAlive: true })
+  private get cesiumPromise() {
+    return fromPromise(TerriaViewer.Loaders[ViewerMode.Cesium](this));
   }
 
   @computed({
@@ -220,7 +267,7 @@ export default class TerriaViewer {
     }
 
     this._lastViewer = newViewer;
-    newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
+    newViewer.setInitialView(currentView || untracked(() => this.homeCamera));
 
     return newViewer;
   }

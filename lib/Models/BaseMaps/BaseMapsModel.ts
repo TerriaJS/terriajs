@@ -35,6 +35,7 @@ export type BaseMapsJson = Partial<
 export interface BaseMapItem {
   image?: string;
   contrastColor?: string;
+  backgroundColor?: string;
   item: MappableMixin.Instance;
 }
 
@@ -65,6 +66,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
           enabledBaseMaps.push({
             image: baseMapItem.image,
             contrastColor: baseMapItem.contrastColor,
+            backgroundColor: baseMapItem.backgroundColor,
             item: itemModel
           });
         }

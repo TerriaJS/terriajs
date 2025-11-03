@@ -90,6 +90,8 @@ export default class Leaflet extends GlobeOrMap {
   @observable nw: L.Point | undefined;
   @observable se: L.Point | undefined;
 
+  private _initialView: CameraView | undefined;
+
   @action
   private updateMapObservables() {
     this.size = this.map.getSize();
@@ -116,7 +118,13 @@ export default class Leaflet extends GlobeOrMap {
     }
   });
 
-  private _makeImageryLayerFromParts(
+  /**
+   * Make leaflet layer for ImageryParts
+   *
+   * Alternate implementations my override this method, so it is marked as
+   * `protected` method (eg terriajs-plugin-proj4leaflet)
+   */
+  protected _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
@@ -140,7 +148,11 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
+  constructor(
+    terriaViewer: TerriaViewer,
+    container: string | HTMLElement,
+    initOptions?: { mapOptions?: L.MapOptions }
+  ) {
     super();
     makeObservable(this);
     this.terria = terriaViewer.terria;
@@ -150,8 +162,11 @@ export default class Leaflet extends GlobeOrMap {
       attributionControl: false,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
-      worldCopyJump: false
-    }).setView([-28.5, 135], 5);
+      worldCopyJump: false,
+      center: [-28.5, 135],
+      zoom: 5,
+      ...initOptions?.mapOptions
+    });
 
     this.map.on("move", () => this.updateMapObservables());
     this.map.on("zoom", () => this.updateMapObservables());
@@ -339,6 +354,7 @@ export default class Leaflet extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
     this.map.off("move");
     this.map.off("zoom");
+    this.map.off("zoomlevelschange");
     this.map.remove();
   }
 
@@ -501,7 +517,6 @@ export default class Leaflet extends GlobeOrMap {
       return Promise.resolve();
     }
     let bounds;
-
     if (isDefined(target.entities)) {
       if (isDefined(this.dataSourceDisplay)) {
         bounds = this.dataSourceDisplay.getLatLngBounds(target);
@@ -549,7 +564,30 @@ export default class Leaflet extends GlobeOrMap {
     return Promise.resolve();
   }
 
+  setInitialView(view: CameraView) {
+    this.doZoomTo(view, 0);
+    this._initialView = view;
+    this.map.addOneTimeEventListener("move", () => {
+      this._initialView = undefined;
+    });
+  }
+
+  /**
+   * Return the initial view if it hasn't changed. Otherwise return undefined.
+   */
+  getInitialView(): CameraView | undefined {
+    return this._initialView;
+  }
+
   getCurrentCameraView(): CameraView {
+    // Return the initial view if the camera hasn't changed since setting it.
+    // This ensures that the view remains constant when switching between
+    // viewer modes.
+    const initialView = this.getInitialView();
+    if (initialView) {
+      return initialView;
+    }
+
     const bounds = this.map.getBounds();
     return new CameraView(
       Rectangle.fromDegrees(

@@ -1550,7 +1550,10 @@ describe("Terria", function () {
     });
 
     it("uses `settings` in initsource", async () => {
-      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+      const setBaseMapSpy = spyOn(
+        terria.mainViewer,
+        "setBaseMap"
+      ).and.callThrough();
 
       await terria.start({ configUrl: "" });
 

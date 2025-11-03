@@ -1,45 +1,45 @@
 import {
+  IReactionDisposer,
   action,
   computed,
-  IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
-import { ReactNode, MouseEvent, ComponentType, Ref } from "react";
+import { ComponentType, MouseEvent, ReactNode, Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../Core/addedByUser";
 import {
   Category,
   HelpAction,
   StoryAction
 } from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
+import addedByUser from "../Core/addedByUser";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
-import getAncestors from "../Models/getAncestors";
+import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
+import getAncestors from "../Models/getAncestors";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import { FeatureInfoPanelButtonGenerator } from "../ViewModels/FeatureInfoPanel";
-import {
-  defaultTourPoints,
-  RelativePosition,
-  TourPoint
-} from "./defaultTourPoints";
 import SearchState from "./SearchState";
-import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
-import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
-import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
+import {
+  RelativePosition,
+  TourPoint,
+  defaultTourPoints
+} from "./defaultTourPoints";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -156,6 +156,15 @@ export default class ViewState {
   @observable
   readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
     [];
+
+  /**
+   * @private
+   *
+   * Hook used by proj4leaflet plugin to extend the SettingsPanel UI.
+   * Do not rely on this; marked as private as it can change.
+   */
+  @observable
+  _customMapViewOptions?: ComponentType<unknown>;
 
   @action
   setSelectedTrainerItem(trainerItem: string): void {
@@ -366,6 +375,8 @@ export default class ViewState {
    * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
    */
   @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
+
+  @observable settingsPanelIsVisible: boolean = false;
 
   /**
    * The currently open tool
@@ -611,6 +622,14 @@ export default class ViewState {
     this.openAddData();
     this.searchState.catalogSearchText = query;
     this.searchState.searchCatalog();
+  }
+
+  /**
+   * Open settings panel
+   */
+  @action
+  openSettingsPanel(): void {
+    this.settingsPanelIsVisible = true;
   }
 
   @action
