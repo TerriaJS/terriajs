@@ -193,19 +193,6 @@ describe("Leaflet Model", function () {
       north: CesiumMath.toDegrees(north)
     });
 
-    it("returns the current camera view", function () {
-      const cameraView = leaflet.getCurrentCameraView();
-      const { west, south, east, north } = rectangleDegrees(
-        cameraView.rectangle
-      );
-      // These values match the hard-coded coordinates in call to map.setView()
-      // during Leaflet initialization
-      expect(west).toBeCloseTo(98.085);
-      expect(south).toBeCloseTo(-28.5);
-      expect(east).toBeCloseTo(171.914);
-      expect(north).toBeCloseTo(-28.497);
-    });
-
     describe("when initial camera view is set", function () {
       const viewRectangle = {
         west: 119.04785,

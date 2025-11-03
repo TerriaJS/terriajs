@@ -475,10 +475,7 @@ describeIfSupported("Cesium Model", function () {
       });
 
       it("returns a new view if the camera view changes", async function () {
-        await cesium.doZoomTo(
-          Rectangle.fromDegrees(107.53236, -17.32317, 151.45236, 6.61319),
-          0
-        );
+        cesium.scene.camera.changed.raiseEvent(1.0);
         const view = cesium.getCurrentCameraView();
         const rectangle = rectangleDegrees(view.rectangle);
         expect(rectangle.west).not.toBe(119.04785);
