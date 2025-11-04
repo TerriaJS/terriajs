@@ -1,8 +1,8 @@
-import { FC, useEffect, useRef } from "react";
+import { autorun } from "mobx";
+import { FC, RefObject, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ViewerMode from "../../../Models/ViewerMode";
 import { useViewState } from "../../Context";
-import LeafletContainerStyle from "./LeafletContainerStyle";
 import { Splitter } from "./Splitter/Splitter";
 
 export const TerriaViewerWrapper: FC = () => {
@@ -22,19 +22,19 @@ export const TerriaViewerWrapper: FC = () => {
     };
   }, [viewState]);
 
+  // Use an effect hook to change map container background so that we don't
+  // re-render the whole component when the map container background changes.
+  useMapBackground(containerRef);
+
   return (
     <TerrriaViewerContainer>
       <StyledMapPlaceholder>
         Loading the map, please wait...
       </StyledMapPlaceholder>
       <Splitter />
-      {viewState.terria.mainViewer.viewerMode === ViewerMode.Leaflet && (
-        <LeafletContainerStyle />
-      )}
       <div
         data-testid="mapContainer"
         id="cesiumContainer"
-        className="mapContainer"
         css={`
           cursor: auto;
           position: absolute;
@@ -47,6 +47,32 @@ export const TerriaViewerWrapper: FC = () => {
       />
     </TerrriaViewerContainer>
   );
+};
+
+/**
+ * A hook to reactively set the map container background color from the base
+ * map background color setting
+ */
+const useMapBackground = (containerRef: RefObject<HTMLElement>) => {
+  const terria = useViewState().terria;
+
+  useEffect(() => {
+    const disposer = autorun(() => {
+      // Only relevant when using leaflet mode
+      if (terria.mainViewer.viewerMode !== ViewerMode.Leaflet) {
+        return;
+      }
+
+      const containerBackground = terria.baseMapsModel.baseMapItems.find(
+        (it) => it.item === terria.mainViewer.baseMap
+      )?.backgroundColor;
+
+      if (containerRef.current) {
+        containerRef.current.style.backgroundColor = containerBackground ?? "";
+      }
+    });
+    return disposer;
+  }, [containerRef, terria]);
 };
 
 const TerrriaViewerContainer = styled.aside`
