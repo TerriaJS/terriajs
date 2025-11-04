@@ -14,6 +14,7 @@ import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
 import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
 import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
+import GeoPackageCatalogItem from "./CatalogItems/GeoPackageCatalogItem";
 import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
 import I3SCatalogItem from "./CatalogItems/I3SCatalogItem";
@@ -95,6 +96,10 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(
+    GeoPackageCatalogItem.type,
+    GeoPackageCatalogItem
+  );
   CatalogMemberFactory.register(GpxCatalogItem.type, GpxCatalogItem);
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
@@ -271,6 +276,10 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesExtension("gpx"),
     GpxCatalogItem.type
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("gpkg"),
+    GeoPackageCatalogItem.type
   );
   UrlToCatalogMemberMapping.register(
     matchesExtension("kmz"),

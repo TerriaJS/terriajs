@@ -739,6 +739,7 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
+      "gpkg": "GeoPackage",
       "json": "Terria Catalog",
       "carto": "Carto V1",
       "carto-v3": "Carto V3",
@@ -1115,6 +1116,13 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Error loading GPX",
       "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}."
+    },
+    "geoPackage": {
+      "name": "GeoPackage",
+      "dataSourceErrorMessage": "This data source does not have any details available.",
+      "serviceErrorMessage": "This service does not have any details available.",
+      "errorLoadingTitle": "Error loading GeoPackage",
+      "errorLoadingMessage": "An error occurred while loading a GeoPackage file. This may indicate that the file is invalid or that it is not supported by {{appName}}."
     },
     "georss": {
       "name": "GeoRSS",

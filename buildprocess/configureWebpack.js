@@ -161,12 +161,18 @@ function configureWebpack({
   );
 
   // Copy assimpjs.wasm file - this is used by AssImpCatalogItem (see AssImpCatalogItem.forceLoadMapItems())
+  // Copy sql-wasm.wasm file - this is used by GeoPackageCatalogItem (via @ngageoint/geopackage)
+  // Note: geopackage uses rtree-sql.js (a fork of sql.js), so we must use its WASM file
   config.plugins.push(
     new CopyPlugin({
       patterns: [
         {
           from: require.resolve("assimpjs/dist/assimpjs.wasm"),
           to: "assimpjs.wasm"
+        },
+        {
+          from: require.resolve("rtree-sql.js/dist/sql-wasm.wasm"),
+          to: "sql-wasm.wasm"
         }
       ]
     })

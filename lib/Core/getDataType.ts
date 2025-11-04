@@ -100,6 +100,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
     name: "core.dataType.gpx"
   },
   {
+    value: "gpkg",
+    name: "core.dataType.gpkg"
+  },
+  {
     value: "georss",
     name: "core.dataType.geoRss"
   },
@@ -174,6 +178,11 @@ const builtinLocalDataTypes: LocalDataType[] = [
     value: "gpx",
     name: "core.dataType.gpx",
     extensions: ["gpx"]
+  },
+  {
+    value: "gpkg",
+    name: "core.dataType.gpkg",
+    extensions: ["gpkg"]
   },
   {
     value: "json",
