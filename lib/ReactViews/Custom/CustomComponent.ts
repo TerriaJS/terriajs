@@ -104,6 +104,13 @@ export default abstract class CustomComponent {
   }
 
   /**
+   * Unregister all components
+   */
+  static unregisterAll() {
+    this._types.clear();
+  }
+
+  /**
    * Checks if a custom component with a given name is registered.
    * @param name The name of the custom component.
    * @returns True if the custom component is registered, otherwise false.
