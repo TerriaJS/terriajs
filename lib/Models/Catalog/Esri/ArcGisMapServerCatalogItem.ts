@@ -53,7 +53,7 @@ class MapServerStratum extends LoadableStratum(
     readonly mapServer: MapServer,
     readonly allLayers: Layer[],
     private readonly _legends: Legends | undefined,
-    readonly token: string | undefined
+    private readonly _token: string | undefined
   ) {
     super();
     makeObservable(this);
@@ -65,7 +65,7 @@ class MapServerStratum extends LoadableStratum(
       this.mapServer,
       this.allLayers,
       this._legends,
-      this.token
+      this._token
     ) as this;
   }
 
@@ -82,6 +82,8 @@ class MapServerStratum extends LoadableStratum(
     let token: string | undefined;
     if (isDefined(item.tokenUrl)) {
       token = await getToken(item.terria, item.tokenUrl, item.url);
+    } else if (isDefined(item.token)) {
+      token = item.token;
     }
 
     let serviceUri = getBaseURI(item);
@@ -163,6 +165,10 @@ class MapServerStratum extends LoadableStratum(
     }
 
     return stratum;
+  }
+
+  get token() {
+    return this._token;
   }
 
   @computed get maximumScale() {
