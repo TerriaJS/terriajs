@@ -144,6 +144,33 @@ describe("ArcGisImageServer", function () {
     });
   });
 
+  describe("when token is set", function () {
+    beforeEach(() => {
+      imageServerItem.setTrait(
+        CommonStrata.definition,
+        "token",
+        "some-token-in-config"
+      );
+    });
+
+    it("uses the token in url when loading metadata", async function () {
+      await imageServerItem.loadMapItems();
+      const tokenre = /token=some-token-in-config/;
+      expect(tokenre.test(spyOnLoad.calls.argsFor(0)[0])).toBeTruthy();
+      expect(tokenre.test(spyOnLoad.calls.argsFor(1)[0])).toBeTruthy();
+    });
+
+    it("passes the token to the imageryProvider", async function () {
+      await imageServerItem.loadMapItems();
+      const imageryProvider = imageServerItem.mapItems[0]
+        .imageryProvider as ArcGisImageServerImageryProvider;
+
+      expect(imageryProvider.baseResource.queryParameters.token).toBe(
+        "some-token-in-config"
+      );
+    });
+  });
+
   describe("basic image server", function () {
     it("correctly sets `alpha`", function () {
       runInAction(() =>

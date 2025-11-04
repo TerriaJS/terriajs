@@ -79,6 +79,17 @@ describe("ArcGisMapServerCatalogItem", function () {
     );
   });
 
+  it("uses token in url when loading metadata", async function () {
+    runInAction(() => {
+      item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+      item.setTrait(CommonStrata.definition, "token", "test-token");
+    });
+    await item.loadMetadata();
+    expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+      mapServerUrl + "?token=test-token&f=json"
+    );
+  });
+
   it("supports splitting", function () {
     expect(item.disableSplitter).toBeFalsy();
   });
@@ -159,10 +170,38 @@ describe("ArcGisMapServerCatalogItem", function () {
         expect(tokenre.test(loadWithXhr.load.calls.argsFor(3)[0])).toBeTruthy();
       });
 
-      it("passess the token to the imageryProvider", async function () {
+      it("passes the token to the imageryProvider", async function () {
         await item.loadMapItems();
         const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
+      });
+    });
+
+    describe("when token is set", function () {
+      beforeEach(() => {
+        runInAction(() => {
+          item = new ArcGisMapServerCatalogItem("test", new Terria());
+          item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
+          item.setTrait(
+            CommonStrata.definition,
+            "token",
+            "some-token-in-config"
+          );
+        });
+      });
+
+      it("adds the token to subsequent requests", async function () {
+        await item.loadMapItems();
+
+        const tokenre = /token=some-token-in-config/;
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(2)[0])).toBeTruthy();
+      });
+
+      it("passes the token to the imageryProvider", async function () {
+        await item.loadMapItems();
+        const imageryProvider: any = item.mapItems[0].imageryProvider;
+        expect(imageryProvider.token).toBe("some-token-in-config");
       });
     });
   });
