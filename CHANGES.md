@@ -8,6 +8,7 @@
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
 - Add UI to show toast messages.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
