@@ -49,6 +49,7 @@ export interface ShareInitSourceData {
 export interface InitSourceData {
   stratum?: string;
   corsDomains?: string[];
+  parameters?: JsonObject;
   catalog?: JsonObject[];
   elements?: Map<string, IElementConfig>;
   stories?: StoryData[];

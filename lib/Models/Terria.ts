@@ -1700,6 +1700,42 @@ export default class Terria {
         ? initData.stratum
         : CommonStrata.definition;
 
+    if (isJsonObject(initData.parameters)) {
+      const parameterOverrides: Partial<ConfigParameters> = {};
+      let hasOverrides = false;
+
+      const { brandBarElements, brandBarSmallElements, displayOneBrand } =
+        initData.parameters;
+
+      const stringArrayFrom = (value: unknown): string[] | undefined => {
+        if (!Array.isArray(value)) return undefined;
+        return value.every((item) => typeof item === "string")
+          ? (value as string[]).slice()
+          : undefined;
+      };
+
+      const overrideBrandElements = stringArrayFrom(brandBarElements);
+      if (overrideBrandElements) {
+        parameterOverrides.brandBarElements = overrideBrandElements;
+        hasOverrides = true;
+      }
+
+      const overrideBrandSmallElements = stringArrayFrom(brandBarSmallElements);
+      if (overrideBrandSmallElements) {
+        parameterOverrides.brandBarSmallElements = overrideBrandSmallElements;
+        hasOverrides = true;
+      }
+
+      if (isJsonNumber(displayOneBrand)) {
+        parameterOverrides.displayOneBrand = Number(displayOneBrand);
+        hasOverrides = true;
+      }
+
+      if (hasOverrides) {
+        this.updateParameters(parameterOverrides as JsonObject);
+      }
+    }
+
     // Extract the list of CORS-ready domains.
     if (Array.isArray(initData.corsDomains)) {
       this.corsProxy.corsDomains.push(...(initData.corsDomains as string[]));
