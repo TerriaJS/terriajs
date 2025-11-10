@@ -25,6 +25,8 @@
 - Upgrade babel to the latest version 7.27/7.28
 - Fix analytics tracking for the MapboxSearchProvider.
 - Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
+- WMTS read URL from operations metadata
+- [The next improvement]
 - Upgrade Typescript to `^5.9.2`. Also switched the `target` in `tsconfig.json` to `esnext`.
 - Upgrade `mobx` to version `^6.13.7`.
 - Upgraded `terriajs-cesium` to `21.0.0` and `terriajs-cesium-widgets` to `13.2.0`.
@@ -192,6 +194,7 @@
 - Move release guide from README.md to RELEASE_GUIDE.md
 - Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
 - Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
+- [The next improvement]
 
 #### 8.7.10 - 2024-11-29
 
