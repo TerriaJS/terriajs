@@ -259,7 +259,7 @@ export default class MouseCoords {
     });
     this.latitude = prettyCoordinate.latitude;
     this.longitude = prettyCoordinate.longitude;
-    this.elevation = prettyCoordinate.elevation;
+    this.elevation = errorBar ? "..." : prettyCoordinate.elevation;
     this.updateEvent.raiseEvent();
   }
 
