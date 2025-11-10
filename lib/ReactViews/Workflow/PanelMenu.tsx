@@ -1,65 +1,55 @@
-import React, { useEffect, useState } from "react";
+import { FC, MouseEvent, MouseEventHandler, useState } from "react";
 import styled from "styled-components";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
+import { OutsideClickHandler } from "../Generic/OutsideClickHandler";
 
 export type PanelMenuProps = {
   options: {
     text: string;
-    onSelect: React.MouseEventHandler<HTMLButtonElement>;
+    onSelect: MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
   }[];
 };
 /**
  * A popup overflow menu for the panel
  */
-export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
+export const PanelMenu: FC<PanelMenuProps> = ({ options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hideMenu = () => setIsOpen(false);
 
-  useEffect(
-    function clickAnywhereToCloseMenu() {
-      if (isOpen) {
-        window.addEventListener("click", hideMenu);
-        return () => window.removeEventListener("click", hideMenu);
-      }
-    },
-    [isOpen]
-  );
-
   const handleClick = (
-    onSelect: React.MouseEventHandler<HTMLButtonElement>,
-    event: React.MouseEvent<HTMLButtonElement>
+    onSelect: MouseEventHandler<HTMLButtonElement>,
+    event: MouseEvent<HTMLButtonElement>
   ) => {
-    // If onSelect decides to stop event propagation,
-    // clickAnywhereToCloseMenu() will not work. So we close the menu before
-    // calling onSelect.
     setIsOpen(false);
     onSelect(event);
   };
 
   return (
-    <PanelMenuContainer>
-      <PanelMenuButton isOpen={isOpen} onClick={() => setIsOpen(true)}>
-        <StyledIcon glyph={GLYPHS.menuDotted} />
-      </PanelMenuButton>
-      {isOpen && (
-        <ul>
-          {options.map(({ text, onSelect, disabled }) => (
-            <li key={text}>
-              <PanelMenuItem
-                onClick={(e) => handleClick(onSelect, e)}
-                disabled={disabled}
-              >
-                <Text noWrap medium textLight>
-                  {text}
-                </Text>
-              </PanelMenuItem>
-            </li>
-          ))}
-        </ul>
-      )}
-    </PanelMenuContainer>
+    <OutsideClickHandler onOutsideClick={hideMenu} disabled={!isOpen}>
+      <PanelMenuContainer>
+        <PanelMenuButton isOpen={isOpen} onClick={() => setIsOpen(true)}>
+          <StyledIcon glyph={GLYPHS.menuDotted} />
+        </PanelMenuButton>
+        {isOpen && (
+          <ul>
+            {options.map(({ text, onSelect, disabled }) => (
+              <li key={text}>
+                <PanelMenuItem
+                  onClick={(e) => handleClick(onSelect, e)}
+                  disabled={disabled}
+                >
+                  <Text noWrap medium textLight>
+                    {text}
+                  </Text>
+                </PanelMenuItem>
+              </li>
+            ))}
+          </ul>
+        )}
+      </PanelMenuContainer>
+    </OutsideClickHandler>
   );
 };
 

@@ -2,7 +2,7 @@
 // import styled from "styled-components";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
 import Terria from "../../Models/Terria";
@@ -16,7 +16,7 @@ import TerrainSide from "./TerrainSide";
 interface IWorkbenchSplitScreenProps {
   terria: Terria;
 }
-const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
+const WorkbenchSplitScreen: FC<IWorkbenchSplitScreenProps> = observer(
   (props: IWorkbenchSplitScreenProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
@@ -37,6 +37,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
             background: ${theme.darkWithOverlay};
             color: ${theme.textLight};
             border-radius: 2px;
+            flex-basis: 145px;
           `}
         >
           <Box
@@ -67,13 +68,17 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
             </RawButton>
           </Box>
 
-          <Box fullWidth paddedHorizontally>
+          <Box fullWidth paddedRatio={3}>
             <TerrainSide
               terria={terria}
               spaced={false}
               buttonProps={{
                 css: `border: 0;
                 padding: 8px 0;
+                border-radius: 3px;
+                &:nth-of-type(even) {
+                  border-radius: 0;
+                }
               `
               }}
               activeColor={theme.colorSecondary}

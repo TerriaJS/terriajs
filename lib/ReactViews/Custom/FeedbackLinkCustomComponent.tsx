@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import ViewState from "../../ReactViewModels/ViewState";
 import { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
@@ -71,7 +71,7 @@ export default class FeedbackLinkCustomComponent extends CustomComponent {
   processNode(
     context: ProcessNodeContext,
     node: DomElement,
-    children: ReactElement[]
+    _children: ReactElement[]
   ) {
     if (!context.viewState) return undefined;
 

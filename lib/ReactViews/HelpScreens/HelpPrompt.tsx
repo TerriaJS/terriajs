@@ -1,15 +1,12 @@
 /**
  * Prompt.tsx - don't use without guarding on useSmallScreenInterface - it won't look pretty!
  */
-import React, { useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useTheme } from "styled-components";
-
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-const TourExplanationBox: any = require("../Tour/TourExplanationBox").default;
-const TourPrefaceBox: any = require("../Tour/TourPrefaceBox").default;
-
+import TourExplanationBox from "../Tour/TourExplanationBox";
+import TourPrefaceBox from "../Tour/TourPrefaceBox";
 import CloseButton from "../Generic/CloseButton";
 import ViewState from "../../ReactViewModels/ViewState";
 import Text from "../../Styled/Text";
@@ -28,7 +25,7 @@ interface PromptProps {
   isVisible: boolean;
 }
 
-export const HelpPrompt: React.FC<PromptProps> = ({
+export const HelpPrompt: FC<PromptProps> = ({
   title,
   content,
   dismissLabel,
@@ -40,6 +37,8 @@ export const HelpPrompt: React.FC<PromptProps> = ({
   const theme = useTheme();
   // This is required so we can do nested animations
   const [childrenVisible, setChildrenVisible] = useState(isVisible);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const slideInRef = useRef<HTMLDivElement>(null);
   return (
     <FadeIn
       isVisible={isVisible}
@@ -47,8 +46,10 @@ export const HelpPrompt: React.FC<PromptProps> = ({
       transitionProps={{
         onExiting: () => setChildrenVisible(false)
       }}
+      nodeRef={fadeRef}
     >
       <Box
+        ref={fadeRef}
         fullWidth
         fullHeight
         position="absolute"
@@ -62,8 +63,9 @@ export const HelpPrompt: React.FC<PromptProps> = ({
           aria-hidden="true"
           pseudoBg
         />
-        <SlideUpFadeIn isVisible={childrenVisible}>
+        <SlideUpFadeIn isVisible={childrenVisible} nodeRef={slideInRef}>
           <TourExplanationBox
+            ref={slideInRef}
             longer
             paddedRatio={4}
             column

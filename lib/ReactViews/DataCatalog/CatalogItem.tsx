@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import React from "react";
+import { ReactElement, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Icon from "../../Styled/Icon";
@@ -18,10 +17,10 @@ export enum ButtonState {
   Preview
 }
 
-const STATE_TO_ICONS: Record<ButtonState, React.ReactElement> = {
+const STATE_TO_ICONS: Record<ButtonState, ReactElement> = {
   [ButtonState.Loading]: <Icon glyph={Icon.GLYPHS.loader} />,
-  [ButtonState.Remove]: <Icon glyph={Icon.GLYPHS.remove} />,
-  [ButtonState.Add]: <Icon glyph={Icon.GLYPHS.add} />,
+  [ButtonState.Remove]: <Icon glyph={Icon.GLYPHS.minus} />,
+  [ButtonState.Add]: <Icon glyph={Icon.GLYPHS.plus} />,
   [ButtonState.Trash]: <Icon glyph={Icon.GLYPHS.trashcan} />,
   [ButtonState.Stats]: <Icon glyph={Icon.GLYPHS.barChart} />,
   [ButtonState.Preview]: <Icon glyph={Icon.GLYPHS.right} />
@@ -35,9 +34,9 @@ interface Props {
   trashable?: boolean;
 
   btnState: ButtonState;
-  onBtnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onTextClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onTrashClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onBtnClick: (event: MouseEvent<HTMLButtonElement>) => void;
+  onTextClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onTrashClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   titleOverrides?: Partial<Record<ButtonState, string>>;
 }
 
@@ -51,10 +50,9 @@ function CatalogItem(props: Props) {
     [ButtonState.Trash]: t("catalogItem.trash"),
     [ButtonState.Preview]: t("catalogItem.preview")
   };
-  const stateToTitle: Partial<Record<ButtonState, string>> = defaultValue(
-    props.titleOverrides,
-    STATE_TO_TITLE
-  );
+  const stateToTitle: Partial<Record<ButtonState, string>> =
+    props.titleOverrides ?? STATE_TO_TITLE;
+
   return (
     <Root>
       <Text fullWidth primary={props.isPrivate} bold={props.selected} breakWord>
@@ -103,8 +101,9 @@ const ItemTitleButton = styled(RawButton)<{
   text-align: left;
   word-break: normal;
   overflow-wrap: anywhere;
-  padding: 8px;
+  padding: 10px;
   width: 100%;
+  font-size: 0.8125rem;
 
   &:focus,
   &:hover {
@@ -123,10 +122,10 @@ const ItemTitleButton = styled(RawButton)<{
 
 const ActionButton = styled(RawButton)`
   svg {
-    height: 20px;
-    width: 20px;
+    height: 12px;
+    width: 12px;
     margin: 5px;
-    fill: ${(p) => p.theme.charcoalGrey};
+    fill: ${(p) => p.theme.grey};
   }
 
   &:hover,

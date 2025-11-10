@@ -1,6 +1,3 @@
-"use strict";
-
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import isDefined from "../../Core/isDefined";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import { BaseModel } from "../Definition/Model";
@@ -25,13 +22,12 @@ export default function proxyCatalogItemUrl(
     (corsProxy.shouldUseProxy(url) ||
       (UrlMixin.isMixedInto(catalogItem) && catalogItem.forceProxy))
   ) {
-    return corsProxy.getURL(
-      url,
-      defaultValue(
-        UrlMixin.isMixedInto(catalogItem) && catalogItem.cacheDuration,
-        cacheDuration
-      )
-    );
+    cacheDuration =
+      (UrlMixin.isMixedInto(catalogItem)
+        ? catalogItem.cacheDuration
+        : undefined) ?? cacheDuration;
+
+    return corsProxy.getURL(url, cacheDuration);
   } else {
     return url;
   }
@@ -52,11 +48,11 @@ export function proxyCatalogItemBaseUrl(
     (corsProxy.shouldUseProxy(url) ||
       (UrlMixin.isMixedInto(catalogItem) && catalogItem.forceProxy))
   ) {
-    return corsProxy.getProxyBaseURL(
-      defaultValue(
-        UrlMixin.isMixedInto(catalogItem) && catalogItem.cacheDuration,
-        cacheDuration
-      )
-    );
+    cacheDuration =
+      (UrlMixin.isMixedInto(catalogItem)
+        ? catalogItem.cacheDuration
+        : undefined) ?? cacheDuration;
+
+    return corsProxy.getProxyBaseURL(cacheDuration);
   }
 }

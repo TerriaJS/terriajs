@@ -119,8 +119,6 @@ class PreSampledPositionProperty {
 
   private allValuesAreTheSame = true;
 
-  constructor() {}
-
   getProperty() {
     if (this.allValuesAreTheSame) {
       return new ConstantPositionProperty(this.values[0]);
@@ -166,7 +164,7 @@ function createProperty(type: Packable, interpolate: boolean) {
 }
 
 function createFeature(
-  featureId: string,
+  _featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
 ): TerriaFeature {

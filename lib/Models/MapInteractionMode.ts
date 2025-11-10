@@ -1,7 +1,7 @@
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";
+import { ReactNode } from "react";
 
 export enum UIMode {
   Difference
@@ -10,7 +10,7 @@ export enum UIMode {
 interface Options {
   onCancel?: () => void;
   message: string;
-  messageAsNode?: React.ReactNode;
+  messageAsNode?: ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
   uiMode?: UIMode; // diff tool hack for now
@@ -25,7 +25,7 @@ export default class MapInteractionMode {
   readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  readonly uiMode: UIMode;
+  readonly uiMode?: UIMode;
 
   readonly invisible: boolean;
 
@@ -36,7 +36,7 @@ export default class MapInteractionMode {
   message: () => string;
 
   @observable
-  messageAsNode: () => React.ReactNode;
+  messageAsNode: () => ReactNode;
 
   @observable
   pickedFeatures?: PickedFeatures;
@@ -76,7 +76,7 @@ export default class MapInteractionMode {
     /**
      * Set the text of the button for the dialog the message is displayed on.
      */
-    this.buttonText = defaultValue(options.buttonText, "Cancel");
+    this.buttonText = options.buttonText ?? "Cancel";
 
     /**
      * Gets or sets the features that are currently picked.
@@ -86,14 +86,14 @@ export default class MapInteractionMode {
     /**
      * Gets or sets whether to use the diff tool UI+styles
      */
-    this.uiMode = defaultValue(options.uiMode, undefined);
+    this.uiMode = options.uiMode ?? undefined;
 
     /**
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
-    // this.drawRectangle = defaultValue(options.drawRectangle, false);
+    // this.drawRectangle = options.drawRectangle ?? false;
     this.onEnable = options.onEnable;
 
-    this.invisible = defaultValue(options.invisible, false);
+    this.invisible = options.invisible ?? false;
   }
 }

@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
@@ -30,7 +30,7 @@ import WarningBox from "./WarningBox";
  * @extends {React.Component<Props>}
  */
 @observer
-class MappablePreview extends React.Component {
+class MappablePreview extends Component {
   static propTypes = {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
@@ -44,7 +44,10 @@ class MappablePreview extends React.Component {
       runInAction(() => (this.props.viewState.storyShown = false));
     }
 
-    const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+    const keepCatalogOpen =
+      this.props.viewState.terria.configParameters.keepCatalogOpen ||
+      event.shiftKey ||
+      event.ctrlKey;
 
     await toggleItemOnMapFromCatalog(
       this.props.viewState,
@@ -71,10 +74,7 @@ class MappablePreview extends React.Component {
             <DataPreviewMap
               terria={this.props.terria}
               previewed={catalogItem}
-              showMap={
-                !this.props.viewState.explorerPanelAnimating ||
-                this.props.viewState.useSmallScreenInterface
-              }
+              showMap
             />
           )}
         <button

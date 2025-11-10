@@ -1,16 +1,32 @@
-import { action, toJS, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import {
+  RefObject,
+  ComponentPropsWithoutRef,
+  FC,
+  ReactNode,
+  ReactElement,
+  createRef,
+  Component
+} from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
+  WithTranslation,
   useTranslation,
-  withTranslation,
-  WithTranslation
+  withTranslation
 } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import {
   Category,
   StoryAction
@@ -22,16 +38,14 @@ import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
-import BadgeBar from "../BadgeBar";
+import { WithViewState, withViewState } from "../Context";
 import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
-import Styles from "./story-builder.scss";
 import StoryEditor from "./StoryEditor";
-const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
+import Styles from "./story-builder.scss";
 
 const STORY_VIDEO = "storyVideo";
 
@@ -57,11 +71,11 @@ interface IState {
 }
 
 @observer
-class StoryBuilder extends React.Component<
+class StoryBuilder extends Component<
   IProps & MeasureElementProps & WithTranslation & WithViewState,
   IState
 > {
-  storiesWrapperRef = React.createRef<HTMLElement>();
+  storiesWrapperRef = createRef<HTMLElement>();
 
   refToMeasure: any;
 
@@ -251,6 +265,40 @@ class StoryBuilder extends React.Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
+  @observable
+  viewState: ViewState | undefined;
+
+  @computed
+  get shareDataStringSize() {
+    if (!this.viewState) return undefined;
+    const terria = this.viewState.terria;
+    const stories = terria.stories;
+
+    const validStories = stories.filter(
+      (story) => story.shareData.initSources.length > 0
+    ).length;
+
+    return JSON.stringify(
+      getShareData(terria, this.viewState, {
+        includeStories: validStories > 0
+      })
+    ).length;
+  }
+
+  componentDidMount() {
+    runInAction(() => {
+      this.viewState = this.props.viewState;
+    });
+  }
+
+  componentDidUpdate(prevProps: { viewState: ViewState }) {
+    if (prevProps.viewState !== this.props.viewState) {
+      runInAction(() => {
+        this.viewState = this.props.viewState;
+      });
+    }
+  }
+
   componentWillUnmount() {
     this.clearRecaptureSuccessTimeout?.();
   }
@@ -293,13 +341,13 @@ class StoryBuilder extends React.Component<
     });
   };
 
-  renderPlayShare(hasStories: boolean | undefined) {
+  renderPlayShare() {
     const { t } = this.props;
     return (
       <Box justifySpaceBetween>
         <StoryButton
           fullWidth
-          disabled={this.state.editingMode || !hasStories}
+          disabled={this.state.editingMode}
           title={t("story.preview")}
           btnText={t("story.play")}
           onClick={this.runStories}
@@ -313,7 +361,7 @@ class StoryBuilder extends React.Component<
         <Spacing right={1} />
         <SharePanel
           storyShare
-          btnDisabled={this.state.editingMode || !hasStories}
+          btnDisabled={this.state.editingMode}
           terria={this.props.viewState.terria}
           viewState={this.props.viewState}
           modalWidth={(this.props.widthFromMeasureElementHOC ?? 100) - 22}
@@ -329,7 +377,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(editingMode: boolean) {
+  renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove
@@ -338,11 +386,20 @@ class StoryBuilder extends React.Component<
         : t("story.untitledScene")
       : "";
     return (
-      <Box displayInlineBlock>
-        <BadgeBar
-          label={t("story.badgeBarLabel")}
-          badge={this.props.viewState.terria.stories.length}
+      <>
+        <Box
+          justifySpaceBetween
+          verticalCenter
+          paddedRatio={2}
+          css={`
+            border-top: 1px solid ${this.props.theme.darkLighter};
+            border-bottom: 1px solid ${this.props.theme.darkLighter};
+          `}
         >
+          <TextSpan textLight uppercase overflowHide overflowEllipsis>
+            {t("story.badgeBarLabel")}{" "}
+            {`(${this.props.viewState.terria.stories.length})`}
+          </TextSpan>
           <RawButton
             type="button"
             onClick={this.toggleRemoveDialog}
@@ -351,9 +408,9 @@ class StoryBuilder extends React.Component<
           >
             <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
           </RawButton>
-        </BadgeBar>
+        </Box>
         <Spacing bottom={2} />
-        <Box column paddedHorizontally={2}>
+        <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (
             <RemoveDialog
               theme={this.props.theme}
@@ -363,6 +420,7 @@ class StoryBuilder extends React.Component<
                     <Trans i18nKey="story.removeStoryDialog" i18n={i18n}>
                       Are you sure you wish to delete
                       <TextSpan textLight large bold>
+                        {/* @ts-expect-error i18next won't properly interpolate text if not in double brackets({{ }}) */}
                         {{ storyName }}
                       </TextSpan>
                       ?
@@ -382,7 +440,7 @@ class StoryBuilder extends React.Component<
           )}
           <Box
             column
-            position="static"
+            styledHeight="100%"
             css={`
               ${(this.state.isRemoving || this.state.isSharing) &&
               `opacity: 0.3`}
@@ -392,10 +450,10 @@ class StoryBuilder extends React.Component<
               column
               scroll
               overflowY={"auto"}
-              styledMaxHeight={"calc(100vh - 283px)"}
-              position="static"
-              ref={this.storiesWrapperRef as React.RefObject<HTMLDivElement>}
+              styledMaxHeight="100%"
+              ref={this.storiesWrapperRef as RefObject<HTMLDivElement>}
               css={`
+                min-height: 130px;
                 margin-right: -10px;
               `}
             >
@@ -404,7 +462,6 @@ class StoryBuilder extends React.Component<
                 direction="vertical"
                 dynamic
                 css={`
-                  position: static;
                   margin-right: 10px;
                 `}
               >
@@ -424,6 +481,7 @@ class StoryBuilder extends React.Component<
                     closeMenu={() => this.openMenu(undefined)}
                     editStory={() => this.editStory(story)}
                     parentRef={this.storiesWrapperRef}
+                    index={index}
                   />
                 ))}
               </Sortable>
@@ -433,10 +491,10 @@ class StoryBuilder extends React.Component<
               disabled={this.state.isRemoving}
               onClickCapture={this.onClickCapture}
             />
+            <Spacing bottom={2} />
           </Box>
-          <Spacing bottom={2} />
         </Box>
-      </Box>
+      </>
     );
   }
 
@@ -460,6 +518,16 @@ class StoryBuilder extends React.Component<
   render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
+    const shareDataSize = this.shareDataStringSize;
+    const shareMaxRequestSize =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
+    const shareMaxRequestSizeBytes =
+      this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
+    // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
+    const shareDataTooLong =
+      shareDataSize && shareMaxRequestSizeBytes
+        ? shareDataSize > shareMaxRequestSizeBytes
+        : false;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -467,7 +535,7 @@ class StoryBuilder extends React.Component<
         isHidden={!this.props.isVisible}
         styledWidth={"320px"}
         styledMinWidth={"320px"}
-        charcoalGreyBg
+        backgroundColor={this.props.theme.dark}
         column
       >
         <Box right>
@@ -491,14 +559,25 @@ class StoryBuilder extends React.Component<
           </Text>
           <Spacing bottom={2} />
           <Text medium color={this.props.theme.textLightDimmed} highlightLinks>
-            {t("story.panelBody")}
+            {`${t("story.panelBody")}${
+              shareMaxRequestSize
+                ? ` ${t("story.panelBodyCapped", { shareMaxRequestSize })}`
+                : ""
+            }`}
           </Text>
           <Spacing bottom={3} />
           {!hasStories && this.renderIntro()}
-          {hasStories && this.renderPlayShare(hasStories)}
+          {hasStories && this.renderPlayShare()}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories(this.state.editingMode)}
+        {shareDataTooLong && (
+          <Box paddedHorizontally={2}>
+            <Text small color={this.props.theme.textWarning} highlightLinks>
+              {t("story.storiesTooLong")}
+            </Text>
+          </Box>
+        )}
+        {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}
@@ -513,7 +592,7 @@ class StoryBuilder extends React.Component<
   }
 }
 
-type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
+type PanelProps = ComponentPropsWithoutRef<typeof Box> & {
   isVisible?: boolean;
   isHidden?: boolean;
 };
@@ -521,6 +600,9 @@ type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
 const Panel = styled(Box)<PanelProps>`
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  width: 320px;
+  min-width: 320px;
+  height: 100vh;
   ${(props) =>
     props.isVisible &&
     `
@@ -531,7 +613,7 @@ const Panel = styled(Box)<PanelProps>`
     props.isHidden &&
     `
     visibility: hidden;
-    margin-right: -${props.styledWidth ? props.styledWidth : "320px"};
+    margin-right: -100%;
   `}
 `;
 
@@ -540,7 +622,7 @@ interface CaptureSceneProps {
   disabled?: boolean;
 }
 
-const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
+const CaptureScene: FC<CaptureSceneProps> = (props) => {
   const { t } = useTranslation();
   return (
     <StoryButton
@@ -555,12 +637,12 @@ const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
   );
 };
 
-type StoryButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
+type StoryButtonProps = ComponentPropsWithoutRef<typeof Button> & {
   btnText: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-export const StoryButton: React.FC<StoryButtonProps> = (props) => {
+export const StoryButton: FC<StoryButtonProps> = (props) => {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -578,16 +660,16 @@ export const StoryButton: React.FC<StoryButtonProps> = (props) => {
 
 interface RemoveDialogProps {
   theme: DefaultTheme;
-  text: React.ReactElement;
+  text: ReactElement;
   onConfirm: () => void;
   closeDialog: () => void;
 }
 
-const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
+const RemoveDialog: FC<RemoveDialogProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Box
-      backgroundColor={props.theme.darkWithOverlay}
+      backgroundColor={props.theme.darkLighter}
       position="absolute"
       rounded
       paddedVertically={3}
@@ -602,7 +684,6 @@ const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
       <Box>
         <Button
           denyButton
-          rounded
           fullWidth
           textProps={{
             large: true,

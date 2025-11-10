@@ -1,9 +1,9 @@
-@import "~terriajs-variables";
+@use "../../../Sass/common/_variables";
 
 .colorscalerange {
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   label {
-    margin-right: $padding-small;
+    margin-right: variables.$padding-small;
   }
 }
 

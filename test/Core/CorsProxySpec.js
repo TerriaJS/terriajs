@@ -1,6 +1,6 @@
 "use strict";
 
-var CorsProxy = require("../../lib/Core/CorsProxy");
+import CorsProxy from "../../lib/Core/CorsProxy";
 
 describe("CorsProxy", function () {
   var corsProxy, loadDeferred, loadJson;

@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   isButton,
   isCheckbox,
@@ -26,17 +26,17 @@ import {
 } from "./Select";
 import { SelectableDimensionText } from "./Text";
 
-const SelectableDimension: React.FC<{
+const SelectableDimension: FC<{
   id: string;
   dim: SelectableDimensionModel;
 }> = ({ id, dim }) => {
   return (
-    <Box displayInlineBlock fullWidth styledPadding="5px 0">
+    <Box displayInlineBlock fullWidth styledMargin="0 0 5px 0">
       {/* Render label for all SelectableDimensions except for groups */}
       {dim.name && dim.type !== "group" ? (
         <>
           <label htmlFor={id}>
-            <Text textLight medium as="span">
+            <Text textGreyLighter medium as="span">
               {parseCustomMarkdownToReactWithOptions(dim.name, {
                 inline: true
               })}

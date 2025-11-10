@@ -1,6 +1,3 @@
-"use strict";
-
-import React from "react";
 import PropTypes from "prop-types";
 import Styles from "../HelpScreens/obscure-overlay.scss";
 import classNames from "classnames";
@@ -103,4 +100,4 @@ TourOverlay.propTypes = {
   onCancel: PropTypes.func.isRequired
 };
 
-module.exports = TourOverlay;
+export default TourOverlay;

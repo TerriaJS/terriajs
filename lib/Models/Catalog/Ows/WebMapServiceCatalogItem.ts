@@ -1,5 +1,3 @@
-// const mobx = require('mobx');
-// const mobxUtils = require('mobx-utils');
 // Problems in current architecture:
 // 1. After loading, can't tell what user actually set versus what came from e.g. GetCapabilities.
 //  Solution: layering
@@ -362,6 +360,20 @@ class WebMapServiceCatalogItem
     this.setTrait(CommonStrata.user, "secondDiffDate", undefined);
     this.setTrait(CommonStrata.user, "diffStyleId", undefined);
     this.setTrait(CommonStrata.user, "isShowingDiff", false);
+  }
+
+  getLegendBaseUrl(): string {
+    // Remove problematic query parameters from URL
+    const baseUrl = QUERY_PARAMETERS_TO_REMOVE.reduce(
+      (url, parameter) =>
+        url
+          .removeQuery(parameter)
+          .removeQuery(parameter.toUpperCase())
+          .removeQuery(parameter.toLowerCase()),
+      new URI(this.url)
+    );
+
+    return baseUrl.toString();
   }
 
   getLegendUrlForStyle(

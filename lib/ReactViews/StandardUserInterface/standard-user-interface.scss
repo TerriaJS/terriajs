@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
 // happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
@@ -7,7 +7,7 @@
 // back in.
 
 .story-wrapper {
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     display: flex;
   }
 }
@@ -18,7 +18,7 @@
     width: 100vw;
   }
 
-  @media (max-width: $md) {
+  @media (max-width: variables.$md) {
     html {
       height: 100%;
       overflow: hidden;
@@ -30,7 +30,7 @@
   }
 
   .top-element {
-    z-index: $notification-window-z-index - 10 !important;
+    z-index: variables.$notification-window-z-index - 10 !important;
     &:focus {
       outline: none;
     }
@@ -43,7 +43,7 @@
   position: relative;
   flex-basis: 100%;
   height: 100vh;
-  @media (max-width: $sm) {
+  @media (max-width: variables.$sm) {
     position: unset;
   }
   svg use {
@@ -62,17 +62,17 @@
 }
 
 .map {
-  @include transition(left $animation-fast ease-in);
+  @include mixins.transition(left variables.$animation-fast ease-in);
   position: absolute;
   left: 0;
   right: 0;
-  top: $mobile-header-height;
+  top: variables.$mobile-header-height;
   bottom: 0;
 }
 
 .feedback {
   position: absolute;
-  z-index: $front-component-z-index - 10;
+  z-index: variables.$front-component-z-index - 10;
 }
 
 .featureInfo {
@@ -81,13 +81,13 @@
   // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
   // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
   $feature-info-medium-max-size: calc(
-    $sm * 0.9 - $feature-info-right-margin * 0.5
+    variables.$sm * 0.9 - variables.$feature-info-right-margin * 0.5
   );
   $feature-info-forty-percent-size: calc(
     $feature-info-medium-max-size * 100 / 40
   );
 
-  z-index: $front-component-z-index - 20;
+  z-index: variables.$front-component-z-index - 20;
   position: absolute;
   right: 0;
   bottom: 0;
@@ -95,8 +95,8 @@
   pointer-events: none;
   left: 0;
 
-  @media (min-width: $md) {
-    left: $work-bench-width + 22px;
+  @media (min-width: variables.$md) {
+    left: variables.$work-bench-width + 22px;
     top: 62px;
     right: 96px;
     bottom: 0;
@@ -105,15 +105,15 @@
   & > div {
     pointer-events: auto;
     position: absolute;
-    top: $mobile-header-height + 10px;
+    top: variables.$mobile-header-height + 10px;
     right: 10px;
     max-width: 95%;
     min-width: 150px;
     max-height: 80vh;
     z-index: 99;
-    font-family: $font-base;
+    font-family: variables.$font-base;
 
-    @media (min-width: $sm) and (max-width: $feature-info-forty-percent-size) {
+    @media (min-width: variables.$sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
       top: 60px;
     }
@@ -152,7 +152,7 @@
   transition-delay: 0s;
 }
 
-@media (min-width: $sm) {
+@media (min-width: variables.$sm) {
   .uiInner {
     display: flex;
     overflow: hidden;
@@ -172,7 +172,7 @@
     // bug, if anything goes wrong revert this back
     // overflow: hidden;
     flex-grow: 1;
-    flex-basis: calc(100% - #{$work-bench-width});
+    flex-basis: calc(100% - #{variables.$work-bench-width});
   }
 }
 

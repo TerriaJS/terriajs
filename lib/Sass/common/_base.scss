@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "mixins";
+@use "_variables";
+@use "mixins";
 
 .clearfix {
   @extend %clearfix;
@@ -24,8 +24,8 @@
 }
 
 .link {
-  @include link(
-    $overlay
+  @include mixins.link(
+    variables.$overlay
   ); // Arbitrarily use the workbench's background as the default.
 }
 
@@ -469,16 +469,20 @@
   -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
-    width: 10px; /* for vertical scrollbars */
-    height: 8px; /* for horizontal scrollbars */
+    width: 5px;
+    /* for vertical scrollbars */
+    height: 8px;
+    /* for horizontal scrollbars */
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(#888, 0.1);
+    background: variables.$scrollbar-track-color;
+    border-radius: variables.$radius-large;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(#888, 0.6);
+    background: variables.$scrollbar-color;
+    border-radius: variables.$radius-large;
   }
 }
 
@@ -488,8 +492,8 @@
 .h4,
 .h5,
 .h6 {
-  font-family: $font-base;
-  font-weight: $font-weight-bold;
+  font-family: variables.$font-base;
+  font-weight: variables.$font-weight-bold;
   line-height: 1.25;
   margin-top: 1em;
   margin-bottom: 0.5em;
