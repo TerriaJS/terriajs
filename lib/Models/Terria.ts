@@ -439,6 +439,11 @@ export interface ConfigParameters {
    * Maximum camera pitch (in radians) for the play path tool.
    */
   playPathCameraPitchThreshold?: number;
+
+  /**
+   * Default height in pixels for the workbench.
+   */
+  workbenchPanelDefaultHeight?: number;
 }
 
 interface StartOptions {
@@ -684,7 +689,8 @@ export default class Terria {
     pickSize: undefined,
     cesiumGlobeColor: undefined,
     polylineWidth: undefined,
-    playPathCameraPitchThreshold: 30
+    playPathCameraPitchThreshold: 30,
+    workbenchPanelDefaultHeight: 600
   };
 
   @observable
