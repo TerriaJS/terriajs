@@ -3,6 +3,11 @@
 #### next release (8.11.1)
 
 - Fix translations key typo "zoomCotrol".
+- Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
+- Fix to show preview map when used outside the explorer panel.
+- Update `csv-geo-au` support to include the latest Australian Government regions.
+- Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
+- Keep camera steady when switching between viewer modes.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
@@ -37,6 +42,8 @@
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
+- Add internationalization support to tinymce editor used in story editor
+- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
@@ -254,6 +261,7 @@
 
 #### 8.7.5 - 2024-06-26
 
+- Add clustering trait to GeoJson (and consequently to WFS, ...) using Cesium as viewer.
 - TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Upgraded a bunch of d3 dependencies for fixing security errors.
 - Show rectangle selector for WPS bounding box parameter

@@ -51,7 +51,7 @@ import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_20
 import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
 import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
-const NUMBER_OF_REGION_MAPPING_TYPES = 144;
+const NUMBER_OF_REGION_MAPPING_TYPES = 154;
 
 describe("TableMixin", function () {
   let item: CsvCatalogItem;
