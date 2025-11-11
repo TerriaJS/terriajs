@@ -86,7 +86,7 @@
       "copyName": "{{name}} (copy)"
     }
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom in",
     "zoomReset": "Reset zoom",
     "zoomOut": "Zoom out"

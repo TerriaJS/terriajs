@@ -804,7 +804,7 @@
   "compass": {
     "title": "Klikk og dra for å rotere kameraet"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Forminsk",
     "zoomReset": "Tilbakestill forstørring",
     "zoomIn": "Forstørr"

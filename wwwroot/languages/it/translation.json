@@ -172,7 +172,7 @@
     "embedDescription": "Per incorporare, copia questo codice per incorporare questa mappa in una pagina HTML:",
     "downloadMap": "Scarica mappa (png)"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomReset": "Ripristina lo zoom",
     "zoomOut": "Zoom indietro",
     "zoomIn": "Zoom in"

@@ -93,7 +93,7 @@
     "duplicateModelErrorMessage": "Při rozdělování položky katalogu `\"{{name}}\"` došlo k chybě. Tato položka katalogu nemusí podporovat funkci \"porovnat\"",
     "modelNotFoundErrorMessage": "ID modelu `\"{{id}}\"` nebylo nalezeno"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Přiblížit",
     "zoomReset": "Obnovit přiblížení",
     "zoomOut": "Oddálit"

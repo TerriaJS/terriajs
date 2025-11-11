@@ -207,7 +207,7 @@
     "elev": "Höhe",
     "zone": "ZONE"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Herauszoomen",
     "zoomReset": "Zoom zurücksetzen",
     "zoomIn": "Heranzoomen"
