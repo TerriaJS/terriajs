@@ -4,9 +4,8 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import SearchProviderTraits from "./SearchProviderTraits";
 
-export default class LocationSearchProviderTraits extends mixTraits(
-  SearchProviderTraits
-) {
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
+class LocationSearchProviderTraits extends mixTraits(SearchProviderTraits) {
   @primitiveTrait({
     type: "string",
     name: "URL",
@@ -45,6 +44,16 @@ export default class LocationSearchProviderTraits extends mixTraits(
     isNullable: true
   })
   attributions: string[] = [];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Autocomplete enabled",
+    description:
+      "Whether the autocomplete is supported for this search provider"
+  })
+  get autocompleteEnabled() {
+    return true;
+  }
 }
 
 export class SearchProviderMapCenterTraits extends ModelTraits {
@@ -56,3 +65,12 @@ export class SearchProviderMapCenterTraits extends ModelTraits {
   })
   mapCenter: boolean = true;
 }
+
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
+interface LocationSearchProviderTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  autocompleteEnabled: LocationSearchProviderTraits["autocompleteEnabled"];
+}
+
+export default LocationSearchProviderTraits;
