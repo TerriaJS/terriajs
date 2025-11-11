@@ -1034,9 +1034,9 @@
       "wms-group": "Server Web Map Service (WMS)",
       "wmts-group": "Server Web Map Tile Service (WMTS)",
       "assimp-local": "Convertitore file 3D (zip) (sperimentale)",
-      "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",
-      "assimp-remote": "3D file converter (experimental)",
-      "assimp-remote-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nZip files are also supported"
+      "assimp-local-description": "**Attenzione:** la funzione è sperimentale.  \nVedi la lista dei [formati supportati](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nI file devono essere zippati.",
+      "assimp-remote": "Convertitore file 3D (zip) (sperimentale)",
+      "assimp-remote-description": "**Attenzione:** la funzione è sperimentale.  \nVedi la lista dei [formati supportati](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nIl formato .zip è supportato."
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
