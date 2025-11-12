@@ -1594,16 +1594,16 @@
     },
     "done": "Fatto",
     "entireMap": {
-      "emptyText": "Add new data to show across the entire map via the dotted menu above.",
+      "emptyText": "Aggiungi nuovi dati da mostrare usando il menù sopra.",
       "title": "Mappa intera"
     },
     "entireMapMenu": {
-      "browse": "Browse map data",
+      "browse": "Sfoglia i dati della mappa.",
       "hideAll": "Nascondi tutto",
       "sendAllToBack": "Porta dietro",
       "sendAllToFront": "Porta in primo piano"
     },
-    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "info": "Compara dataset spaziali visualizzandoli affiancati direttamente sulla mappa.",
     "leftPanel": "Pannello di sinistra",
     "rightPanel": "Pannello di destra",
     "title": "Compara"
