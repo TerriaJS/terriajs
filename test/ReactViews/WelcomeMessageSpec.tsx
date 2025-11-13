@@ -1,12 +1,10 @@
 import { runInAction } from "mobx";
-import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 import { createWithContexts } from "./withContext";
-const WelcomeMessage: any =
-  require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage").default;
+import WelcomeMessage from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 
 describe("WelcomeMessage", function () {
   let terria: Terria;

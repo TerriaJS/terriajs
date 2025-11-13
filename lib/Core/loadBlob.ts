@@ -8,11 +8,16 @@ import {
   Uint8ArrayWriter as ZipUint8ArrayWriter
 } from "@zip.js/zip.js";
 
-interface ZipEntries {
-  fileName: string;
-  isDirectory: boolean;
-  data: Uint8Array;
-}
+type ZipEntries =
+  | {
+      isDirectory: true;
+      fileName: string;
+    }
+  | {
+      isDirectory: false;
+      fileName: string;
+      data: Uint8Array<ArrayBuffer>;
+    };
 
 export default function loadBlob(
   urlOrResource: string,
@@ -40,35 +45,12 @@ export function isZip(uri: string) {
 }
 
 /** Get zipjs ZipReader for given Blob */
-function getZipReader(blob: Blob): any {
-  // const zWorkerPakoUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/z-worker-pako.js");
-  // const inflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_inflate.min.js");
-  // const deflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_deflate.min.js");
-
-  // zip annoyingly requires the inflateUrl and deflateUrl to be relative to the zWorkerPakoUrl.
-  // To do that, we need to go via absolute URLs
-  // const absoluteBase = new URI(zWorkerPakoUrl)
-  //   .absoluteTo(location.href)
-  //   .toString();
-  // const relativeInflateUri = new URI(deflateUrl)
-  //   .absoluteTo(location.href)
-  //   .relativeTo(absoluteBase);
-  // const relativeDeflateUri = new URI(inflateUrl)
-  //   .absoluteTo(location.href)
-  //   .relativeTo(absoluteBase);
-
-  // zip.configure({
-  //   workerScripts: {
-  //     deflate: [zWorkerPakoUrl, relativeInflateUri.toString()],
-  //     inflate: [zWorkerPakoUrl, relativeDeflateUri.toString()]
-  //   }
-  // });
-
+function getZipReader(blob: Blob) {
   return new ZipReader(new ZipBlobReader(blob));
 }
 
 /** Parse zipped blob into JsonValue */
-export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
+export async function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
   const reader = getZipReader(blob);
 
   return reader.getEntries().then(function (entries: any) {
@@ -93,13 +75,14 @@ export async function parseZipArrayBuffers(blob: Blob): Promise<ZipEntries[]> {
   const entries = await reader.getEntries();
 
   return await Promise.all(
-    entries.map(async (entry: any) => {
-      const data = await entry.getData(new ZipUint8ArrayWriter());
-      return {
-        fileName: entry.filename,
-        isDirectory: entry.directory === true,
-        data
-      };
+    entries.map(async (entry) => {
+      return entry.directory
+        ? { fileName: entry.filename, isDirectory: true }
+        : {
+            fileName: entry.filename,
+            isDirectory: false,
+            data: await entry.getData(new ZipUint8ArrayWriter())
+          };
     })
   );
 }

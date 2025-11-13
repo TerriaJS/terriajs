@@ -4,7 +4,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob-all");
+const glob = require("fast-glob");
 
 const cesiumDeclarationFile = require.resolve("terriajs-cesium/index.d.ts");
 const cesiumDirectory = path.dirname(cesiumDeclarationFile);
@@ -19,7 +19,7 @@ let matches;
 const publicModules = new Set();
 //eslint-disable-next-line no-cond-assign
 while ((matches = regex.exec(declrationFileSource))) {
-  const moduleName = matches[2].match(/([^\s|\(]+)/);
+  const moduleName = matches[2].match(/([^\s(]+)/);
   publicModules.add(moduleName[1]);
 }
 

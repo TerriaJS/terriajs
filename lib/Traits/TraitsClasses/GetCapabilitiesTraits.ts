@@ -8,7 +8,9 @@ export default class GetCapabilitiesTraits extends ModelTraits {
     description:
       "The URL at which to access to the OGC GetCapabilities service."
   })
-  getCapabilitiesUrl?: string;
+  get getCapabilitiesUrl(): string | undefined {
+    return;
+  }
 
   @primitiveTrait({
     type: "string",

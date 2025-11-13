@@ -1,4 +1,4 @@
-import React from "react";
+import type { Component } from "react";
 import ViewState from "../../../../ReactViewModels/ViewState";
 
 interface PropsType {
@@ -10,5 +10,5 @@ interface PropsType {
   backgroundOpacity?: number;
 }
 
-declare class VideoGuide extends React.Component<PropsType> {}
+declare class VideoGuide extends Component<PropsType> {}
 export default VideoGuide;

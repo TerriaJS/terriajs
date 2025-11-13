@@ -1,4 +1,5 @@
-@import "~terriajs-variables";
+@use "sass:meta";
+@use "_variables";
 
 @mixin transition($transition...) {
   -moz-transition: $transition;
@@ -133,26 +134,26 @@
 
 // %link is deprecated. Instead of @extend %link;, use @include link($bg-color);
 %link {
-  @if variable-exists(text-link) {
+  @if meta.variable-exists(text-link) {
     color: $text-link;
   } @else {
-    color: $color-primary; // for backwards compatibility
+    color: variables.$color-primary; // for backwards compatibility
   }
-  text-decoration: $link-text-decoration;
+  text-decoration: variables.$link-text-decoration;
   &:visited {
-    @if variable-exists(text-visited-link) {
+    @if meta.variable-exists(text-visited-link) {
       color: $text-visited-link;
     } @else {
-      color: $color-primary;
+      color: variables.$color-primary;
     }
   }
 }
 
 @mixin link($bg-color) {
-  text-decoration: $link-text-decoration;
-  color: get-link-color($bg-color);
+  text-decoration: variables.$link-text-decoration;
+  color: variables.get-link-color($bg-color);
   &:visited {
-    color: get-visited-link-color($bg-color);
+    color: variables.get-visited-link-color($bg-color);
   }
 }
 
@@ -188,37 +189,37 @@
   display: none !important;
 }
 
-@media (min-width: $sm) {
+@media (min-width: variables.$sm) {
   %sm-show {
     display: block !important;
   }
 }
 
-@media (min-width: $md) {
+@media (min-width: variables.$md) {
   %md-show {
     display: block !important;
   }
 }
 
-@media (min-width: $lg) {
+@media (min-width: variables.$lg) {
   %lg-show {
     display: block !important;
   }
 }
 
-@media (min-width: $sm) {
+@media (min-width: variables.$sm) {
   %sm-hide {
     display: none !important;
   }
 }
 
-@media (min-width: $md) {
+@media (min-width: variables.$md) {
   %md-hide {
     display: none !important;
   }
 }
 
-@media (min-width: $lg) {
+@media (min-width: variables.$lg) {
   %lg-hide {
     display: none !important;
   }

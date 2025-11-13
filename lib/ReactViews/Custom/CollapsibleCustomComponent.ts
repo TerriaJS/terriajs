@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { createElement, ReactElement } from "react";
 import Collapsible from "./Collapsible/Collapsible";
 import CustomComponent, {
   DomElement,
@@ -22,7 +22,7 @@ export default class CollapsibleCustomComponent extends CustomComponent {
   }
 
   processNode(
-    context: ProcessNodeContext,
+    _context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[]
   ): ReactElement {
@@ -32,7 +32,7 @@ export default class CollapsibleCustomComponent extends CustomComponent {
     const btnRight = Boolean(node.attribs?.rightbtn);
     const btnStyle = node.attribs?.btnstyle;
 
-    return React.createElement(
+    return createElement(
       Collapsible,
       {
         key: title,

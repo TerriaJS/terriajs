@@ -1,4 +1,3 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import Terria from "../../../../lib/Models/Terria";
@@ -20,7 +19,7 @@ describe("Ideal Zoom", function () {
   let theItem: Cesium3DTilesCatalogItem;
   let testRenderer: ReactTestRenderer;
   let viewState: ViewState;
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

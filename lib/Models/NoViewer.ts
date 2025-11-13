@@ -1,6 +1,5 @@
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -23,11 +22,11 @@ class NoViewer extends GlobeOrMap {
     this.terria = terriaViewer.terria;
   }
 
-  destroy() {}
+  destroy(): void {}
 
   doZoomTo(
     v: CameraView | Rectangle | MappableMixin.Instance,
-    t: any
+    _t: any
   ): Promise<void> {
     if (v instanceof CameraView) {
       this._currentView = v;
@@ -37,13 +36,17 @@ class NoViewer extends GlobeOrMap {
     return Promise.resolve();
   }
 
-  notifyRepaintRequired() {}
+  setInitialView(view: CameraView) {
+    this._currentView = view;
+  }
+
+  notifyRepaintRequired(): void {}
 
   pickFromLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: TerriaFeature[]
-  ) {}
+    _latLngHeight: LatLonHeight,
+    _providerCoords: ProviderCoordsMap,
+    _existingFeatures: TerriaFeature[]
+  ): void {}
 
   getCurrentCameraView(): CameraView {
     return this._currentView;
@@ -53,11 +56,11 @@ class NoViewer extends GlobeOrMap {
     return undefined;
   }
 
-  pauseMapInteraction() {}
-  resumeMapInteraction() {}
+  pauseMapInteraction(): void {}
+  resumeMapInteraction(): void {}
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    _imageryProvider: ProtomapsImageryProvider,
+    _rectangle: Rectangle
   ) {
     return () => {};
   }

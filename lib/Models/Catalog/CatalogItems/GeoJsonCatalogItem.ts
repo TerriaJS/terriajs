@@ -1,29 +1,33 @@
+import { featureCollection } from "@turf/helpers";
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
-import { get as _get, set as _set } from "lodash";
-import { computed, toJS, makeObservable } from "mobx";
+import { get as _get, set as _set } from "lodash-es";
+import { computed, makeObservable, toJS } from "mobx";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
+import {
+  FeatureCollectionWithCrs,
+  toFeatureCollection
+} from "../../../Core/GeoJson";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject } from "../../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
 import loadJson from "../../../Core/loadJson";
 import readJson from "../../../Core/readJson";
 import TerriaError from "../../../Core/TerriaError";
+import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 import GeoJsonMixin, {
-  FeatureCollectionWithCrs,
-  reprojectToGeographic,
-  toFeatureCollection
+  reprojectToGeographic
 } from "../../../ModelMixins/GeojsonMixin";
+import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import Model, { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
-import Model, { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
-import { featureCollection, FeatureCollection } from "@turf/helpers";
 
 class GeoJsonCatalogItem
-  extends GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits))
+  extends CesiumIonMixin(GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits)))
   implements HasLocalData
 {
   static readonly type = "geojson";
@@ -90,6 +94,12 @@ class GeoJsonCatalogItem
     return undefined;
   }
 
+  protected override async forceLoadMetadata() {
+    const ionResourcePromise = this.loadIonResource();
+    await super.forceLoadMetadata();
+    await ionResourcePromise;
+  }
+
   protected async forceLoadGeojsonData() {
     let jsonData: JsonValue | undefined = undefined;
 
@@ -110,6 +120,8 @@ class GeoJsonCatalogItem
       } else {
         jsonData = await readJson(this._file);
       }
+    } else if (isDefined(this.ionResource)) {
+      jsonData = await loadJson(this.ionResource);
     }
     // We have multiple sources.
     else if (this.urls.length > 0) {

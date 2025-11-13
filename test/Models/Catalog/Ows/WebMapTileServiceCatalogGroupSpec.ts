@@ -25,7 +25,7 @@ describe("WebMapTileServiceCatalogGroup", function () {
   });
 
   describe("after loading capabilities", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       });
@@ -76,7 +76,7 @@ describe("WebMapTileServiceCatalogGroup", function () {
       await wmts.loadMembers();
     });
 
-    it("loads", async function () {
+    it("loads", function () {
       expect(wmts.members.length).toEqual(3);
       expect(wmts.memberModels.length).toEqual(3);
     });

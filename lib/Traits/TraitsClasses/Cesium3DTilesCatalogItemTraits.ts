@@ -12,7 +12,6 @@ import UrlTraits from "./UrlTraits";
 
 @traitClass({
   description: `Creates a 3d tiles item in the catalog from an ION Asset ID.
-  
   <strong>Note:</strong> <i>Instead of specifying <b>ionAssetId</b> property, you can also provide a URL, for example, <code>"url": "https://storage.googleapis.com/vic-datasets-public/1ce41fe7-aed2-4ad3-be4d-c38b715ce9af/v1/tileset.json"</code>.</i>`,
   example: {
     type: "3d-tiles",

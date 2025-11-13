@@ -1,20 +1,17 @@
+import L from "leaflet";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import isDefined from "../../Core/isDefined";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L from "leaflet";
 import LeafletScene from "./LeafletScene";
-
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
-const destroyObject =
-  require("terriajs-cesium/Source/Core/destroyObject").default;
 
 interface Visualizer {
   update(time: JulianDate): boolean;
@@ -75,10 +72,9 @@ export default class LeafletDataSourceDisplay {
     this._displayID = createGuid();
     this._scene = options.scene;
     this._dataSourceCollection = options.dataSourceCollection;
-    this._visualizersCallback = defaultValue(
-      options.visualizersCallback,
-      LeafletDataSourceDisplay.defaultVisualizersCallback
-    );
+    this._visualizersCallback =
+      options.visualizersCallback ??
+      LeafletDataSourceDisplay.defaultVisualizersCallback;
 
     this._eventHelper = new EventHelper();
     this._eventHelper.add(

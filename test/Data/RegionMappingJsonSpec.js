@@ -1,7 +1,7 @@
 "use strict";
 
-// tests will not build if this require statement is not valid
-var RegionMappingJson = require("../../wwwroot/data/regionMapping.json");
+// Tests will not build if this import statement is not valid.
+import RegionMappingJson from "../../wwwroot/data/regionMapping.json";
 
 describe("RegionMappingJson", function () {
   it("is valid JSON", function () {

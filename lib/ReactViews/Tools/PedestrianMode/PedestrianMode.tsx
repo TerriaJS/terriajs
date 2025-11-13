@@ -1,6 +1,6 @@
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -21,7 +21,7 @@ type PedestrianModeProps = {
 };
 export const PEDESTRIAN_MODE_ID = "pedestrian-mode";
 
-const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
+const PedestrianMode: FC<PedestrianModeProps> = observer((props) => {
   const { viewState } = props;
 
   const cesium = viewState.terria.currentViewer;
@@ -47,6 +47,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
     return () => {
       viewState.terria.mapNavigationModel.enable(MeasureTool.id);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(function closeOnZoomTo() {
@@ -56,6 +57,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer((props) => {
         if (isMapZooming) viewState.closeTool();
       }
     );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (

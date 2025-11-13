@@ -981,13 +981,6 @@
       "viewDatasetPage": "Afficher la page du jeu de données"
     }
   },
-  "emptyWorkbench": {
-    "helpfulHintsThree": "Dans le plan de travail, vous pouvez activer et désactiver les ensembles de données, modifier leur opacité, activer la comparaison d'écran partagé, modifier les styles et parcourir les dates et les heures, si les données prennent en charge cette fonctionnalité.",
-    "helpfulHintsTwo": "Une fois que vous avez ajouté des données à la carte, vos ensembles de données actifs sont répertoriés ici dans votre plan de travail. Le plan de travail vous aidera à interagir avec les données.",
-    "helpfulHintsOne": "Parcourez les données disponibles en sélectionnant \"Explorer les données de la carte\" ou cliquez sur \"Télécharger\" pour ajouter vos propres données à la carte.",
-    "helpfulHints": "Astuces utiles",
-    "emptyArea": "Votre espace de travail est vide"
-  },
   "diffTool": {
     "instructions": {
       "paneDescription": "Visualisez et comparez la différence de données entre deux dates à un même endroit.",
@@ -1308,7 +1301,6 @@
     "groupEmpty": "Ce groupe est vide",
     "groupRemove": "supprimer ce groupe"
   },
-  "emptyWorkbenchMessage": "<0><0>Votre établi est vide</0><1><strong>Cliquez '$t(addData.addDataBtnText)' ci-dessus pour </strong></1><2><0>Consulter le catalogue de données</0><1>Chargez vos propres données sur la carte</1></2><3><0></0><strong>TIP.</strong><2>Tous vos ensembles de données actifs seront listés ici</2></3></0>",
   "loader": {
     "loadingMessage": "Chargement en cours"
   },

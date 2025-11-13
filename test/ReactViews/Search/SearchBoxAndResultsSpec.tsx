@@ -1,21 +1,17 @@
-const create: any = require("react-test-renderer").create;
-import React from "react";
-import { act } from "react-dom/test-utils";
+import { screen } from "@testing-library/dom";
 import { runInAction } from "mobx";
+import { ThemeProvider } from "styled-components";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import SearchBoxAndResults, {
-  SearchInDataCatalog
-} from "../../../lib/ReactViews/Search/SearchBoxAndResults";
-import { ThemeProvider } from "styled-components";
+import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
-import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
+import { renderWithContexts } from "../withContext";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
   let viewState: ViewState;
-
-  let testRenderer: any;
 
   beforeEach(function () {
     terria = new Terria({
@@ -34,49 +30,42 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = false;
       viewState.searchState.locationSearchResults = [];
     });
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
-        </ThemeProvider>
-      );
-    });
+    renderWithContexts(
+      <ThemeProvider theme={terriaTheme}>
+        <SearchBoxAndResults placeholder="Search" />
+      </ThemeProvider>,
+      viewState
+    );
 
-    const searchBox = testRenderer.root.findByType("input");
-    expect(() => {
-      testRenderer.root.findByType(SearchInDataCatalog);
-    }).toThrow();
-    expect(searchBox).toBeDefined();
-    expect(searchBox.props.value).toEqual(searchText);
+    const searchBox = screen.getByRole("textbox");
+    expect(searchBox).toBeVisible();
+    expect(searchBox).toHaveValue(searchText);
+
+    expect(
+      screen.queryByText("search.searchInDataCatalog")
+    ).not.toBeInTheDocument();
   });
 
-  it("renders with an input & SearchInDataCatalog when showLocationSearchResults", function () {
+  it("renders with an input & SearchInDataCatalog when showLocationSearchResults", async () => {
     const searchText = "mochi";
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
     });
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
-        </ThemeProvider>
-      );
-    });
 
-    const searchBox = testRenderer.root.findByType("input");
-    expect(searchBox).toBeDefined();
-    expect(testRenderer.root.findByType(SearchInDataCatalog)).toBeDefined();
-    expect(searchBox.props.value).toEqual(searchText);
+    renderWithContexts(
+      <ThemeProvider theme={terriaTheme}>
+        <SearchBoxAndResults placeholder="Search" />
+      </ThemeProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+    expect(searchBox).toBeVisible();
+    expect(searchBox).toHaveValue(searchText);
+
+    expect(screen.getByText("search.searchInDataCatalog")).toBeVisible();
   });
 
   it("renders with an input & no SearchInDataCatalog without catalogSearchProvider", function () {
@@ -87,23 +76,46 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchResults = [];
       viewState.terria.searchBarModel.catalogSearchProvider = undefined;
     });
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <SearchBoxAndResults
-            t={() => {}}
-            terria={terria}
-            viewState={viewState}
-          />
-        </ThemeProvider>
+    renderWithContexts(
+      <ThemeProvider theme={terriaTheme}>
+        <SearchBoxAndResults placeholder="Search" />
+      </ThemeProvider>,
+      viewState
+    );
+
+    const searchBox = screen.getByRole("textbox");
+    expect(searchBox).toBeVisible();
+    expect(searchBox).toHaveValue(searchText);
+    expect(
+      screen.queryByText("search.searchInDataCatalog")
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders with an input & no SearchInDataCatalog when showSearchInCatalog is false", function () {
+    const searchText = "timmynook";
+    runInAction(() => {
+      viewState.searchState.locationSearchText = searchText;
+      viewState.searchState.showLocationSearchResults = true;
+      viewState.searchState.locationSearchResults = [];
+
+      viewState.terria.searchBarModel.setTrait(
+        CommonStrata.user,
+        "showSearchInCatalog",
+        false
       );
     });
+    renderWithContexts(
+      <ThemeProvider theme={terriaTheme}>
+        <SearchBoxAndResults placeholder="Search" />
+      </ThemeProvider>,
+      viewState
+    );
 
-    const searchBox = testRenderer.root.findByType("input");
-    expect(searchBox).toBeDefined();
-    expect(() => {
-      testRenderer.root.findByType(SearchInDataCatalog);
-    }).toThrow();
-    expect(searchBox.props.value).toEqual(searchText);
+    const searchBox = screen.getByRole("textbox");
+    expect(searchBox).toBeVisible();
+    expect(searchBox).toHaveValue(searchText);
+    expect(
+      screen.queryByText("search.searchInDataCatalog")
+    ).not.toBeInTheDocument();
   });
 });

@@ -11,7 +11,7 @@ describe("BingMapsCatalogItem", () => {
   let item: BingMapsCatalogItem;
 
   beforeEach(async () => {
-    spyOn(Resource.prototype, "fetchJsonp").and.returnValue(
+    spyOn(Resource.prototype, "fetchJson").and.returnValue(
       Promise.resolve({
         // A clipped version of an actual request to
         // http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial

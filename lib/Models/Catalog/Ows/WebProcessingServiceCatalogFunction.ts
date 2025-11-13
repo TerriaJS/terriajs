@@ -8,7 +8,6 @@ import {
   makeObservable,
   override
 } from "mobx";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -275,7 +274,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       throw new TerriaError({
         sender: this,
         title: "Unsupported parameter type",
-        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
+        message: `The parameter '${input.Identifier}' is not a supported type of parameter.`
       });
     });
   }
