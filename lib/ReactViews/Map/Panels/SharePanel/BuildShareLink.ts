@@ -40,13 +40,13 @@ function buildBaseShareUrl(
 ) {
   const uri = new URI(document.baseURI).fragment("").search("");
 
-  const usefulSubs = new URL(document.URL).hash
+  const fragmentsToShare = new URL(document.URL).hash
     .split(/[#&]/)
     .filter(
       (elem) =>
         elem !== "" && !elem.includes("share=") && !elem.includes("start=")
     );
-  usefulSubs.forEach((sub) => {
+  fragmentsToShare.forEach((sub) => {
     uri.addSearch(sub);
   });
 
