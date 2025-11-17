@@ -155,9 +155,9 @@ describe("TableMixin", function () {
 
     describe("when timeColumn is `null`", function () {
       it("returns an empty `discreteTimes`", function () {
-        expect(item.discreteTimes?.length).toBe(6);
+        expect(item.discreteTimes?.times.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
-        expect(item.discreteTimes).toBe(undefined);
+        expect(item.discreteTimes.times.length).toBe(0);
       });
 
       it("creates entities for all times", async function () {
@@ -250,9 +250,9 @@ describe("TableMixin", function () {
 
     describe("when timeColumn is `null`", function () {
       it("returns an empty `discreteTimes`", function () {
-        expect(item.discreteTimes?.length).toBe(6);
+        expect(item.discreteTimes.times?.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
-        expect(item.discreteTimes).toBe(undefined);
+        expect(item.discreteTimes.times.length).toBe(0);
       });
 
       it("creates entities for all times", async function () {

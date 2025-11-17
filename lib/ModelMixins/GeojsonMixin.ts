@@ -75,7 +75,9 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TerriaFeature from "../Models/Feature/Feature";
@@ -85,10 +87,10 @@ import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import TableStyle, { createRowGroupId } from "../Table/TableStyle";
+import { DiscreteTimesTraits } from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { ImageryParts, isDataSource } from "./MappableMixin";
@@ -114,7 +116,10 @@ const SIMPLE_STYLE_KEYS = [
   "fill-opacity"
 ];
 
-class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
+class GeoJsonStratum
+  extends LoadableStratum(GeoJsonTraits)
+  implements LockedDownStratum<GeoJsonTraits, GeoJsonStratum>
+{
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
     super();
@@ -176,6 +181,39 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
         0.5
     ) {
       return true;
+    }
+  }
+
+  @computed get discreteTimes() {
+    if (this._item.readyData === undefined) {
+      return undefined;
+    }
+
+    // If we are using mvt (mapbox vector tiles / protomaps imagery provider) we use TableMixin.discreteTimes instead
+    if (this._item.useTableStylingAndProtomaps) return undefined;
+
+    // If using timeProperty - get discrete times from that
+    if (this._item.timeProperty) {
+      const times: string[] = [];
+      const tags: string[] = [];
+
+      for (let i = 0; i < this._item.readyData.features.length; i++) {
+        const feature = this._item.readyData.features[i];
+        if (
+          feature.properties !== null &&
+          feature.properties !== undefined &&
+          feature.properties[this._item.timeProperty!] !== undefined
+        ) {
+          times.push(
+            new Date(
+              `${feature.properties[this._item.timeProperty!]}`
+            ).toISOString()
+          );
+          tags.push(feature.properties[this._item.timeProperty!]);
+        }
+      }
+
+      return createStratumInstance(DiscreteTimesTraits, { tags, times });
     }
   }
 }
@@ -1169,40 +1207,6 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         }
       }
       return dataSource;
-    }
-
-    @override
-    get discreteTimes(): DiscreteTimeAsJS[] | undefined {
-      if (this.readyData === undefined) {
-        return undefined;
-      }
-
-      // If we are using mvt (mapbox vector tiles / protomaps imagery provider) return TableMixin.discreteTimes
-      if (this.useTableStylingAndProtomaps) return super.discreteTimes;
-
-      // If using timeProperty - get discrete times from that
-      if (this.timeProperty) {
-        const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
-
-        for (let i = 0; i < this.readyData.features.length; i++) {
-          const feature = this.readyData.features[i];
-          if (
-            feature.properties !== null &&
-            feature.properties !== undefined &&
-            feature.properties[this.timeProperty!] !== undefined
-          ) {
-            const dt = {
-              time: new Date(
-                `${feature.properties[this.timeProperty!]}`
-              ).toISOString(),
-              tag: feature.properties[this.timeProperty!]
-            };
-            discreteTimesMap.set(dt.tag, dt);
-          }
-        }
-
-        return Array.from(discreteTimesMap.values());
-      }
     }
 
     /**
