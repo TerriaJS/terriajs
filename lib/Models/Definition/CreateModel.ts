@@ -4,7 +4,8 @@ import {
   observable,
   runInAction,
   toJS,
-  makeObservable
+  makeObservable,
+  isObservableMap
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
@@ -60,7 +61,21 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     ) {
       super(id, terria, sourceReference);
       makeObservable(this);
-      this.strata = strata || observable.map<string, StratumTraits>();
+
+      // Use provided strata if it's Map-like (Map, ObservableMap, or ArrayNestedStrataMap)
+      // Otherwise create a new ObservableMap
+      const isMapLike =
+        strata &&
+        (isObservableMap(strata) ||
+          strata instanceof Map ||
+          (strata as any).get !== undefined);
+
+      this.strata = (isMapLike
+        ? strata
+        : observable.map<string, StratumTraits>()) as unknown as Map<
+        string,
+        StratumTraits
+      >;
     }
 
     dispose() {}
