@@ -4,11 +4,9 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
-import SelectableDimension from "../SelectableDimensions/SelectableDimension";
 import { useViewState } from "../Context";
-import WorkbenchItemControls, {
-  hideAllControls
-} from "../Workbench/Controls/WorkbenchItemControls";
+import SelectableDimension from "../SelectableDimensions/SelectableDimension";
+import WorkbenchItemControls from "../Workbench/Controls/WorkbenchItemControls";
 import { Panel } from "./Panel";
 import { PanelMenu } from "./PanelMenu";
 import WorkflowPanel from "./WorkflowPanel";
@@ -45,8 +43,9 @@ const SelectableDimensionWorkflow: FC = observer(() => {
         <WorkbenchItemControls
           item={terria.selectableDimensionWorkflow.item}
           viewState={viewState}
+          disableViewingControlsMenu
           controls={{
-            ...hideAllControls,
+            disableAll: true,
             opacity: true,
             timer: true,
             dateTime: true,

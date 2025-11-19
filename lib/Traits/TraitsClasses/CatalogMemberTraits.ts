@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import { JsonObject } from "../../Core/Json";
+import { WorkbenchControls } from "../../ReactViews/Workbench/Controls/WorkbenchControls";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import mixTraits from "../mixTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
@@ -257,6 +258,12 @@ class CatalogMemberTraits extends ModelTraits {
       "True (default) if this catalog member may be included in share links. False to exclude it from share links."
   })
   shareable: boolean = true;
+
+  @anyTrait({
+    name: "Workbench controls",
+    description: "Flags for enabling or disabling workbench controls."
+  })
+  workbenchControlFlags?: Partial<WorkbenchControls> | JsonObject;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */

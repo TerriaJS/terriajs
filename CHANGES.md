@@ -9,6 +9,7 @@
 - Keep camera steady when switching between viewer modes.
 - Add UI to show toast messages.
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
