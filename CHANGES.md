@@ -8,6 +8,7 @@
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
+- WMTS read URL from operations metadata
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
@@ -26,8 +27,6 @@
 - Upgrade babel to the latest version 7.27/7.28
 - Fix analytics tracking for the MapboxSearchProvider.
 - Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
-- WMTS read URL from operations metadata
-- [The next improvement]
 - Upgrade Typescript to `^5.9.2`. Also switched the `target` in `tsconfig.json` to `esnext`.
 - Upgrade `mobx` to version `^6.13.7`.
 - Upgraded `terriajs-cesium` to `21.0.0` and `terriajs-cesium-widgets` to `13.2.0`.
@@ -45,7 +44,6 @@
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - Add internationalization support to tinymce editor used in story editor
-- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
@@ -68,7 +66,6 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
-- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
@@ -195,7 +192,6 @@
 - Move release guide from README.md to RELEASE_GUIDE.md
 - Add `clampToGround` to `KmlCatalogItemTraits` (defaults to `true`) - this is now passed to `KmlDataSource.load`. Terria no longer clamps polygon geometries to terrain manually. All clamping logic is now handled by Cesium.
 - Add `dataSourceUri` to `KmlCatalogItemTraits` - Overrides the url to use for resolving relative links and other KML network features
-- [The next improvement]
 
 #### 8.7.10 - 2024-11-29
 
