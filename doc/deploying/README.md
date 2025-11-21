@@ -11,6 +11,7 @@ Deploying other services for use with TerriaJS:
 
 - [Setting Up a Region Mapping Server](setting-up-a-region-mapping-server.md): Set up a server for use with TerriaJS's region mapping feature.
 - [Setting Up Geoserver](setting-up-geoserver.md): Configure [GeoServer](http://geoserver.org/) for effective use with TerriaJS.
+  - [Timeseries WMS: Creating ImageMosaic layer in GeoServer](geoserver-timeseries-wms.md): How to create a time series WMS layer in GeoServer.
 
 Using a TerriaMap in other applications:
 
