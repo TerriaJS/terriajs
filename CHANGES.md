@@ -2,12 +2,14 @@
 
 #### next release (8.11.1)
 
+- Fix translations key typo "zoomCotrol".
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
 - Update `csv-geo-au` support to include the latest Australian Government regions.
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
 - Fix "Add data" button width for some languages #7726.
+- Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09
