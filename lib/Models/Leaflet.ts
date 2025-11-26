@@ -149,7 +149,7 @@ export default class Leaflet extends GlobeOrMap {
     this.map = L.map(container, {
       zoomControl: false,
       attributionControl: false,
-      zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
+      zoomSnap: 0.2, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
       worldCopyJump: false
     }).setView([-28.5, 135], 5);
