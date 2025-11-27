@@ -1,5 +1,6 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import { traitClass } from "../Trait";
@@ -34,4 +35,19 @@ export default class CartoMapV1CatalogItemTraits extends mixTraits(
     description: "The authorization token to pass to the Carto Maps API"
   })
   auth_token?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Tile URL",
+    description:
+      "The URL to the Carto Maps API. This is the URL that will be used to fetch the tiles."
+  })
+  tileUrl?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Tile subdomains",
+    description: "The subdomains to use for the Carto Maps API"
+  })
+  tileSubdomains?: string[];
 }
