@@ -26,7 +26,7 @@
     "finish": "Acabar",
     "previous": "Anterior",
     "exploreMapDataButton": {
-      "content": "## Explora les dades del mapa\n\nExploreu el catàleg de dades disponibles i afegiu-lo al mapa aquí. Podeu afegir diversos conjunts de dades alhora, i els veureu a continuació al Workbench."
+      "content": "## Explora dades del Bessó Digital\n\nExploreu el catàleg de dades disponibles del Terreny i afegiu-lo al Bessó Digital aquí. Podeu afegir diversos conjunts de dades alhora, i els veureu a continuació en el panell de dades del Bessó Digital."
     },
     "mapNavigationCompassOuterRing": {
       "content": "## Control de vista\n\nAquí podeu canviar la vista del mapa. Podeu canviar l'orientació de la vista utilitzant l'anell exterior i podeu inclinar l'angle de la càmera amb l'anell interior. Feu doble clic per restablir la vista."
@@ -59,7 +59,10 @@
     "myLocation": "La meva posició",
     "location": "Posició",
     "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir HTTPS. És possible que pugueu utilitzar {{secureUrl}}.",
-    "centreMap": "Centreu el mapa a la vostra ubicació actual"
+    "centreMap": "Centreu el mapa a la vostra ubicació actual",
+    "permissionDenied": "S'ha denegat el permís per obtenir la vostra ubicació. Comproveu la configuració del vostre navegador.",
+    "positionUnavailable": "La vostra informació d'ubicació no està disponible.",
+    "timeout": "L'obtenció de la informació d'ubicació triga massa temps. Si us plau, torneu-ho a provar més tard."
   },
   "splitterTool": {
     "toggleSplitterToolTitle": "Comparar",
@@ -79,7 +82,7 @@
     "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
     "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom +",
     "zoomReset": "Restablir zoom",
     "zoomOut": "Zoom -"
@@ -144,12 +147,13 @@
       "areaFilterSelection": "Selecció de filtre d'àrea",
       "area": "Àrea",
       "dates": "Dates",
-      "dateComparisonA": "Comparació de dates A"
+      "dateComparisonA": "Comparació de dates A",
+      "saveToWorkbench": "Desar al banc de treball"
     },
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No s'ha seleccionat cap ubicació",
-        "description": "Per filtrar el selector de dates de la imatge per ubicació, seleccioneu un punt del mapa"
+        "title": "No s'ha seleccionat cap ubicació!",
+        "description": "Per filtrar el selector de dates de la imatge per ubicació, feu zoom i seleccioneu un punt d'interès al mapa"
       },
       "locationSelected": {
         "title": "Ubicació seleccionada i dates filtrades",
@@ -182,7 +186,8 @@
     },
     "differenceResultsTitle": "Canvia els resultats de la detecció",
     "choosePreview": "Trieu un estil de vista prèvia",
-    "chooseDifference": "Trieu una sortida de diferència"
+    "chooseDifference": "Trieu una sortida de diferència",
+    "close": "Tancar"
   },
   "legend": {
     "lat": "Lat",
@@ -333,7 +338,7 @@
   },
   "story": {
     "panelTitle": "Editor d'històries",
-    "panelBody": "Creeu i compartiu històries interactives directament des del vostre mapa",
+    "panelBody": "Creeu i compartiu històries interactives directament des del vostre mapa.",
     "gettingStarted": "Començant",
     "gettingStartedTitle": "Començant",
     "badgeBarLabel": "Escenes",
@@ -368,7 +373,10 @@
       "placeholder": "Introduïu un títol",
       "saveBtn": "desar",
       "cancelBtn": "cancel·lar",
-      "saveStory": "Desar"
+      "saveStory": "Desar",
+      "descriptionLabel": "Descripció",
+      "modalHeader": "Editor d'històries - Capturador d'escenes",
+      "titleLabel": "Títol (obligatori)"
     },
     "exitBtn": "sortir de l'història",
     "promptHtml2": "<0><0>PRESENTACIÓ</0><1>Històries de dades</1><2>Creeu i compartiu històries interactives directament des del vostre mapa.</2></0>",
@@ -387,7 +395,9 @@
     "collapse": "Reduir",
     "prev": "Anterior",
     "next": "Següent",
-    "restart": "Reinicia"
+    "restart": "Reinicia",
+    "panelBodyCapped": "Cada història té un límit de {{ shareMaxRequestSize }}: divideix dades grans o moltes escenes en diverses històries per mantenir-te per sota del límit.",
+    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes."
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -426,9 +436,11 @@
     "infoText": "<0>Arrossegueu i deixeu anar un arxiu aquí per veure'l localment al mapa</0><1>(no es desarà ni es penjarà a Internet)</1>",
     "back": "Enrere",
     "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
-    "addDataBtnText": "Explora les dades del mapa",
+    "addDataBtnText": "Explora les dades",
     "webTitle": "Afegir dades web",
-    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web"
+    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web",
+    "data": "Dades",
+    "modalTitle": "Explora Dades"
   },
   "search": {
     "resultsLabel": "Resultats de la cerca",
@@ -535,7 +547,9 @@
     "searchItemTitle": "Cerca",
     "colorScaleRangeMinSmallerThanMax": "El valor mínim de l'escala de colors ha de ser inferior al valor màxim.",
     "rangeMax": "Màxim:",
-    "splitScreenMode": "MODE PANTALLA PARTIDA"
+    "splitScreenMode": "MODE PANTALLA PARTIDA",
+    "enableAll": "Activa-ho tot",
+    "disableAll": "Desactiva-ho tot"
   },
   "dateTime": {
     "selectorLabel": "Temps:",
@@ -590,19 +604,41 @@
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
-    "not": "<0>bbbb</0>"
+    "not": "<0>bbbb</0>",
+    "notification_0": "<0>\"{{fileNames}}\"</0> s'ha afegit a <4>Les meves dades</4>.",
+    "notification_1": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>.",
+    "notification_2": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>."
   },
   "loader": {
     "loadingMessage": "Carregant"
   },
-  "emptyWorkbenchMessage": "<0><0>El vostre banc de treball està buit</0><1><strong>Feu clic a \"$t(addData.addDataBtnText)\" a dalt per </strong></1><2><0>Navegar pel catàleg de dades </0><1>Carrega les teves pròpies dades al mapa</1></2><3><0></0><strong>CONSELL.</strong><2>Tots els teus conjunts de dades actius apareixeran aquí</2></3></0>",
-  "emptyWorkbench": {
-    "emptyArea": "El teu banc de treball està buit",
-    "helpfulHints": "Consells útils",
-    "helpfulHintsOne": "Exploreu les dades disponibles seleccionant \"Explora les dades del mapa\" o feu clic a \"Carrega\" per afegir les vostres pròpies dades al mapa.",
-    "helpfulHintsTwo": "Un cop hàgiu afegit dades al mapa, els vostres conjunts de dades actius es mostren aquí al vostre espai de treball. L'espai de treball us ajudarà a interactuar amb les dades.",
-    "helpfulHintsThree": "Al l'espai de treball podeu activar i desactivar conjunts de dades, canviar-ne l'opacitat, activar la comparació de pantalla dividida, canviar els estils i navegar per dates i hores, si les dades admeten aquesta funcionalitat."
-  },
+  "emptyWorkbenchInfo": [
+    {
+      "heading": "Afegiu un conjunt de dades aquí",
+      "body": "Quan afegiu un conjunt de dades, la seva llegenda i la seva configuració apareixen aquí."
+    },
+    {
+      "list": [
+        "Feu clic a Explora dades per veure els conjunts de dades disponibles",
+        "Carregueu el vostre mitjançant Càrrega de dades",
+        "Trobeu les vostres dades afegides en aquest tauler"
+      ],
+      "heading": "Comenceu"
+    },
+    {
+      "heading": "Què podeu fer",
+      "list": [
+        "Mostra o amaga dades",
+        "Ajustar la transparència (opacitat)",
+        "Compareu l'un al costat de l'altre",
+        "Canviar estils (colors, línies, símbols)",
+        "Veure diferents dates i hores (si es pot)"
+      ]
+    },
+    {
+      "body": "Utilitzeu aquest tauler per explorar dades, gestionar la configuració i crear la vostra escena o història del mapa."
+    }
+  ],
   "dataCatalog": {
     "groupRemove": "elimina aquest grup",
     "groupEmpty": "Aquest grup és buit"
@@ -712,7 +748,8 @@
       "carto-v3": "Carto V3",
       "i3s": "I3S",
       "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
-      "cesium-ion": "Cesium ion"
+      "cesium-ion": "Cesium ion",
+      "cog": "Geotiff optimitzat al núvol (COG)"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
@@ -824,7 +861,11 @@
       "dataAttribution": "Atribució de dades",
       "disclaimer": "Exempció de responsabilitat",
       "basemap": "Mapa base",
-      "dataProvider": "Dades proporciondes per:"
+      "dataProvider": "Dades proporciondes per:",
+      "termsOfUse": "Condicions d'ús",
+      "credits": "Crèdits",
+      "mapCredits": "Crèdits del mapa",
+      "searchProvider": "Cerca proporcionada per:"
     }
   },
   "helpPanel": {
@@ -853,7 +894,7 @@
       "confirmText": "Si",
       "denyText": "Potser després"
     },
-    "showWorkbench": "Mostra el Banc de Treball",
+    "showWorkbench": "Explora els conjunts de dades [{{count}}]",
     "hideWorkbench": "Amaga el Banc de Treball"
   },
   "models": {
@@ -978,7 +1019,7 @@
       "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen:<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
       "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
-      "upload": "Pujar",
+      "upload": "Carregar dades",
       "cancel": "Cancel·lar",
       "useConversion": "Voleu utilitzar el servei de conversió?",
       "mustHaveType": "Cada element ha de tenir un tipus.",
@@ -1372,7 +1413,8 @@
       "generateErrorTitle": "No s'ha pogut generar una URL curta.",
       "generateErrorMessage": "Alguna cosa ha fallat en intentar utilitzar el servei de compartició de dades per generar una URL curta.",
       "expandErrorTitle": "No s'ha pogut expandir l'URL",
-      "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment."
+      "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment.",
+      "generateErrorDataExceedsLimitMessage": "Error: Les dades compartides superen el límit"
     },
     "socrataServer": {
       "name": "Servidor Socrata",
@@ -2090,6 +2132,9 @@
       "name": "Esri ArcGIS ImageServer",
       "invalidUrlMessage": "No s'ha pogut carregar el punt final de l'ArcGis ImageServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceMessage": "S'ha produït un error en invocar ArcGIS Image Service. La resposta del servidor no sembla ser un document Image Service vàlid."
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "Aquest COG no es està en una projecció nativa (EPG:4326 o EPSG:3857). La reprojecció és experimental i pot ser que no funcioni com s'esperava. Si teniu el control de les dades d'origen, us recomanem que torneu a projectar a EPSG:4326 o EPSG:3857 mitjançant GDAL o similar."
     }
   },
   "deltaTool": {

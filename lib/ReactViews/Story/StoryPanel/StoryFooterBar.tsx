@@ -1,6 +1,5 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
-import styled, { useTheme } from "styled-components";
+import styled from "styled-components";
 import { constVoid } from "../../../Core/types";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -44,7 +43,6 @@ const FooterBar = ({
 }: FooterBarProps) => {
   const isEnd = currentHumanIndex === totalStories;
   const { t } = useTranslation();
-  const theme = useTheme();
 
   return (
     <>
@@ -54,7 +52,7 @@ const FooterBar = ({
             <StoryIcon
               displayInline
               styledWidth="15px"
-              fillColor={theme.grey}
+              fillColor={"white"}
               glyph={Icon.GLYPHS.left}
             />
             <Text medium>{t("story.prev")}</Text>
@@ -68,7 +66,7 @@ const FooterBar = ({
             displayInline
             styledWidth="15px"
             glyph={Icon.GLYPHS.menu}
-            fillColor={theme.grey}
+            fillColor={"white"}
           />
         </FooterButton>
         <Box paddedRatio={3}>
@@ -96,7 +94,7 @@ const FooterBar = ({
                   displayInline
                   styledWidth="15px"
                   glyph={Icon.GLYPHS.revert}
-                  fillColor={theme.grey}
+                  fillColor={"white"}
                 />
               </>
             ) : (
@@ -106,7 +104,7 @@ const FooterBar = ({
                   displayInline
                   styledWidth="15px"
                   glyph={Icon.GLYPHS.right}
-                  fillColor={theme.grey}
+                  fillColor={"white"}
                 />
               </>
             )}

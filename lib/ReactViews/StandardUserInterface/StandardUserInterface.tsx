@@ -2,14 +2,13 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { ReactNode, useEffect } from "react";
+import { FC, DragEvent, ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
-import DragDropNotification from "../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
@@ -54,8 +53,8 @@ interface StandardUserInterfaceProps {
   children?: ReactNode;
 }
 
-const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
-  observer((props) => {
+const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
+  (props) => {
     const { t } = useTranslation();
 
     const acceptDragDropFile = action(() => {
@@ -66,7 +65,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       }
     });
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
       if (!e.dataTransfer.types || !e.dataTransfer.types.includes("Files")) {
         return;
       }
@@ -212,7 +211,9 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                   >
                     <FullScreenButton
                       minified={false}
-                      btnText={t("sui.showWorkbench")}
+                      btnText={t("sui.showWorkbench", {
+                        count: props.viewState.terria.workbench.items.length
+                      })}
                       animationDuration={animationDuration}
                       elementConfig={props.terria.elements.get(
                         "show-workbench"
@@ -278,7 +279,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
               <FeatureInfoPanel />
             </div>
             <DragDropFile />
-            <DragDropNotification />
             {showStoryPanel && <StoryPanel />}
           </div>
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
@@ -300,7 +300,8 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
         <ClippingBoxToolLauncher viewState={props.viewState} />
       </ContextProviders>
     );
-  });
+  }
+);
 
 export const StandardUserInterface = withFallback(StandardUserInterfaceBase);
 export default withFallback(StandardUserInterfaceBase);

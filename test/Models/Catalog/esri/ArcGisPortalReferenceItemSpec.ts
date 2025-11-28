@@ -24,7 +24,7 @@ describe("ArcGisPortalItemReference", function () {
   let arcGisPortalItemReference: ArcGisPortalItemReference;
   let portalItemTarget: any;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

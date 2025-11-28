@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/_mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/_mixins";
 
 .window {
   display: none;
@@ -9,10 +9,10 @@
   width: 300px;
   top: 50px;
   z-index: 2500;
-  color: $text-black;
-  border-radius: $radius-small;
+  color: variables.$text-black;
+  border-radius: variables.$radius-small;
   box-shadow: 2px 2px 5px #888888;
-  font-size: $font-size-small !important;
+  font-size: variables.$font-size-small !important;
 }
 
 .isActive {
@@ -21,12 +21,12 @@
 
 .content {
   z-index: 2500;
-  padding: $padding;
+  padding: variables.$padding;
   position: relative;
 }
 
 .next-button {
-  font-size: $font-size-small !important;
+  font-size: variables.$font-size-small !important;
 }
 
 .caret {
@@ -37,7 +37,7 @@
   background: #fff;
   position: absolute;
   z-index: 2400;
-  @include transform(rotate(45deg));
+  @include mixins.transform(rotate(45deg));
 }
 
 .screen-count {
@@ -45,13 +45,13 @@
   z-index: 2501;
   color: white;
   padding: 6px;
-  font-size: $font-size-small !important;
+  font-size: variables.$font-size-small !important;
 }
 
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   padding: 5px !important;
-  font-size: $font-size-small !important;
+  font-size: variables.$font-size-small !important;
   color: white !important;
 }

@@ -1,7 +1,8 @@
 "use strict";
 
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
-var EarthGravityModel1996 = require("../../lib/Map/Vector/EarthGravityModel1996");
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import EarthGravityModel1996 from "../../lib/Map/Vector/EarthGravityModel1996";
+import gravityModel from "../../wwwroot/data/WW15MGH.DAC";
 
 var describeIfSupported = EarthGravityModel1996.isSupported()
   ? describe
@@ -11,9 +12,7 @@ describeIfSupported("EarthGravityModel1996", function () {
   var egm96;
 
   beforeAll(function () {
-    egm96 = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
-    );
+    egm96 = new EarthGravityModel1996(gravityModel);
   });
 
   // NGA calculator is here: http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/intpt.html

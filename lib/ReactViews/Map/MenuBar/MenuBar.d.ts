@@ -1,5 +1,4 @@
 import IElementConfig from "../../../Models/IElementConfig";
-import React from "react";
 
 interface PropsType {
   animationDuration?: number;

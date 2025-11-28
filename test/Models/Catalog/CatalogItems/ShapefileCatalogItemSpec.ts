@@ -25,7 +25,7 @@ describe("ShapefileCatalogItem", function () {
     expect(shapefile.mapItems.length).toEqual(1);
     expect(
       (shapefile.mapItems[0] as GeoJsonDataSource).entities.values.length
-    ).toBeGreaterThan(0);
+    ).toEqual(315);
     expect(
       (shapefile.mapItems[0] as GeoJsonDataSource).entities.values[0].position
     ).toBeDefined();
@@ -41,7 +41,26 @@ describe("ShapefileCatalogItem", function () {
     expect(shapefile.mapItems.length).toEqual(1);
     expect(
       (shapefile.mapItems[0] as GeoJsonDataSource).entities.values.length
-    ).toBeGreaterThan(0);
+    ).toEqual(59);
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+    ).toBeDefined();
+  });
+
+  it("works with multiple shapefiles in single zip", async () => {
+    shapefile.setTrait(
+      CommonStrata.user,
+      "url",
+      "test/Shapefile/multiple_shapefiles.zip"
+    );
+
+    await shapefile.loadMapItems();
+
+    expect(shapefile.mapItems.length).toEqual(1);
+
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values.length
+    ).toEqual(374);
     expect(
       (shapefile.mapItems[0] as GeoJsonDataSource).entities.values[0].position
     ).toBeDefined();

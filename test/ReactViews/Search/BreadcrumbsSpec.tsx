@@ -1,16 +1,14 @@
-const create: any = require("react-test-renderer").create;
-import React from "react";
-import { act } from "react-dom/test-utils";
-import Terria from "../../../lib/Models/Terria";
-import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
-import ViewState from "../../../lib/ReactViewModels/ViewState";
-import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
-const DataCatalogTab: any =
-  require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
-import Icon from "../../../lib/Styled/Icon";
-import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { runInAction } from "mobx";
+import { act } from "react-dom/test-utils";
+import { ThemeProvider } from "styled-components";
+import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
+import Terria from "../../../lib/Models/Terria";
+import ViewState from "../../../lib/ReactViewModels/ViewState";
+import DataCatalogTab from "../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab";
+import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import Icon from "../../../lib/Styled/Icon";
+import { createWithContexts } from "../withContext";
 
 describe("Breadcrumbs", function () {
   let terria: Terria;
@@ -36,9 +34,10 @@ describe("Breadcrumbs", function () {
       await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
-        testRenderer = create(
+        testRenderer = createWithContexts(
+          viewState,
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab terria={terria} viewState={viewState} />
+            <DataCatalogTab />
           </ThemeProvider>
         );
       });
@@ -46,7 +45,7 @@ describe("Breadcrumbs", function () {
       const breadcrumbs = testRenderer.root.findByType(Breadcrumbs);
       expect(breadcrumbs).toBeDefined();
       const icon = breadcrumbs.findByType(Icon);
-      expect(icon.props.glyph.id).toBe("globe");
+      expect(icon.props.glyph.id).toBe("terriajs-globe");
     });
   });
 
@@ -60,9 +59,10 @@ describe("Breadcrumbs", function () {
       expect(viewState.userDataPreviewedItem).toBeUndefined();
 
       act(() => {
-        testRenderer = create(
+        testRenderer = createWithContexts(
+          viewState,
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab terria={terria} viewState={viewState} />
+            <DataCatalogTab />
           </ThemeProvider>
         );
       });

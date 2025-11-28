@@ -16,7 +16,6 @@ import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -118,7 +117,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { RelatedMap, defaultRelatedMaps } from "./RelatedMaps";
+import { RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -127,8 +126,6 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-
-// import overrides from "../Overrides/defaults.jsx";
 
 export interface ConfigParameters {
   /**
@@ -378,6 +375,11 @@ export interface ConfigParameters {
    * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
    */
   mapViewers: string[];
+  
+  /**
+   * Keep catalog open when adding / removing items
+   */
+  keepCatalogOpen: boolean;
 }
 
 interface StartOptions {
@@ -555,6 +557,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -588,15 +591,18 @@ export default class Terria {
       // Default credit links (shown at the bottom of the Cesium map)
       {
         text: "map.extraCreditLinks.dataAttribution",
-        url: "about.html#data-attribution"
+        url: "https://terria.io/attributions"
       },
-      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+      {
+        text: "map.extraCreditLinks.termsOfUse",
+        url: "https://terria.io/demo-terms"
+      }
     ],
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
-    relatedMaps: defaultRelatedMaps,
+    relatedMaps: [],
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
@@ -709,7 +715,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process.env.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be provided via the
@@ -772,7 +778,7 @@ export default class Terria {
     error: unknown,
     overrides?: TerriaErrorOverrides,
     forceRaiseToUser = false
-  ) {
+  ): void {
     const terriaError = TerriaError.from(error, overrides);
 
     // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
@@ -844,7 +850,7 @@ export default class Terria {
   }
 
   @action
-  addModel(model: BaseModel, shareKeys?: string[]) {
+  addModel(model: BaseModel, shareKeys?: string[]): void {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
     }
@@ -865,7 +871,7 @@ export default class Terria {
    * Remove references to a model from Terria.
    */
   @action
-  removeModelReferences(model: BaseModel) {
+  removeModelReferences(model: BaseModel): void {
     this.removeSelectedFeaturesForModel(model);
     this.workbench.remove(model);
     if (model.uniqueId) {
@@ -874,7 +880,7 @@ export default class Terria {
   }
 
   @action
-  removeSelectedFeaturesForModel(model: BaseModel) {
+  removeSelectedFeaturesForModel(model: BaseModel): void {
     const pickedFeatures = this.pickedFeatures;
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
@@ -938,14 +944,15 @@ export default class Terria {
   }
 
   @action
-  addShareKey(id: string, shareKey: string) {
+  addShareKey(id: string, shareKey: string): void {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
-  setupInitializationUrls(baseUri: uri.URI, config: any) {
+  setupInitializationUrls(baseUri: URI, config: any): void {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map((url) => ({
       name: `Init URL from config ${url}`,
@@ -997,7 +1004,7 @@ export default class Terria {
     this.initSources.push(...initSources);
   }
 
-  async start(options: StartOptions) {
+  async start(options: StartOptions): Promise<void> {
     // Some hashProperties need to be set before anything else happens
     const hashProperties = queryToObject(new URI(window.location).fragment());
 
@@ -1190,7 +1197,7 @@ export default class Terria {
   }
 
   @action
-  setUseNativeResolution(useNativeResolution: boolean) {
+  setUseNativeResolution(useNativeResolution: boolean): void {
     this.useNativeResolution = useNativeResolution;
   }
 
@@ -1199,7 +1206,7 @@ export default class Terria {
     this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
-  async loadPersistedOrInitBaseMap() {
+  async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
     let baseMap = baseMapItems[0];
@@ -1239,11 +1246,11 @@ export default class Terria {
   /**
    * Asynchronously loads init sources
    */
-  loadInitSources() {
+  loadInitSources(): Promise<Result<void>> {
     return this._initSourceLoader.load();
   }
 
-  dispose() {
+  dispose(): void {
     this._initSourceLoader.dispose();
   }
 
@@ -1253,7 +1260,7 @@ export default class Terria {
     name: string = "Application start data",
     /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
     errorSeverity?: TerriaErrorSeverity
-  ) {
+  ): Promise<Result<void>> {
     try {
       await interpretStartData(this, startData, name, errorSeverity);
     } catch (e) {
@@ -1263,7 +1270,7 @@ export default class Terria {
     return await this.loadInitSources();
   }
 
-  async updateApplicationUrl(newUrl: string) {
+  async updateApplicationUrl(newUrl: string): Promise<Result<void>> {
     const uri = new URI(newUrl);
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
@@ -1343,11 +1350,8 @@ export default class Terria {
       }
     });
 
-    this.appName = defaultValue(this.configParameters.appName, this.appName);
-    this.supportEmail = defaultValue(
-      this.configParameters.supportEmail,
-      this.supportEmail
-    );
+    this.appName = this.configParameters.appName ?? this.appName;
+    this.supportEmail = this.configParameters.supportEmail ?? this.supportEmail;
   }
 
   protected async forceLoadInitSources(): Promise<void> {
@@ -1947,7 +1951,7 @@ export default class Terria {
   }
 
   @action
-  loadHomeCamera(homeCameraInit: JsonObject | HomeCameraInit) {
+  loadHomeCamera(homeCameraInit: JsonObject | HomeCameraInit): void {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
@@ -1963,7 +1967,7 @@ export default class Terria {
     magdaCatalogConfigUrl: string,
     config?: any,
     configUrlHeaders?: { [key: string]: string }
-  ) {
+  ): Promise<void> {
     const theConfig = config
       ? config
       : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
@@ -2005,7 +2009,11 @@ export default class Terria {
     }
   }
 
-  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
+  async loadMagdaConfig(
+    configUrl: string,
+    config: any,
+    baseUri: URI
+  ): Promise<void> {
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
 
@@ -2105,7 +2113,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as TerriaFeature[]
+        vectorFeatures
       );
     }
 
@@ -2135,7 +2143,10 @@ export default class Terria {
     });
   }
 
-  async initCorsProxy(config: ConfigParameters, serverConfig: any) {
+  async initCorsProxy(
+    config: ConfigParameters,
+    serverConfig: any
+  ): Promise<void> {
     if (config.proxyableDomainsUrl) {
       console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
     }
@@ -2151,7 +2162,7 @@ export default class Terria {
       if (!defined(window.localStorage)) {
         return null;
       }
-    } catch (e) {
+    } catch (_e) {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
@@ -2169,7 +2180,7 @@ export default class Terria {
       if (!defined(window.localStorage)) {
         return false;
       }
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
     window.localStorage.setItem(this.appName + "." + key, value.toString());
@@ -2178,7 +2189,7 @@ export default class Terria {
 }
 
 function generateInitializationUrl(
-  baseUri: uri.URI,
+  baseUri: URI,
   initFragmentPaths: string[],
   url: string
 ): InitSource {
@@ -2204,7 +2215,7 @@ async function interpretHash(
   terria: Terria,
   hashProperties: any,
   userProperties: Map<string, any>,
-  baseUri: uri.URI
+  baseUri: URI
 ) {
   if (isDefined(hashProperties.clean)) {
     runInAction(() => {

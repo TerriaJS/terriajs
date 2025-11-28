@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .root {
 }
@@ -11,17 +11,17 @@
   padding: 10px;
 
   // toggle-enable data-preview__add-to-map
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     display: inline-block;
     width: inherit;
     position: absolute;
-    top: $padding * 2;
-    right: $padding * 2;
+    top: variables.$padding * 2;
+    right: variables.$padding * 2;
   }
 }
 
 .previewed--info {
-  margin: 2 * $padding 0;
+  margin: 2 * variables.$padding 0;
 }
 
 .field {
@@ -51,7 +51,7 @@
 }
 
 .share-link--wrapper {
-  margin-top: $padding;
+  margin-top: variables.$padding;
   min-width: 118px;
   float: right;
 }
@@ -59,19 +59,19 @@
 .h3 {
   composes: h3 from "../../Sass/common/_base.scss";
   margin-top: 0;
-  padding-right: $padding-small;
+  padding-right: variables.$padding-small;
   float: left;
   width: 80%;
-  font-size: $font-size-mid-large;
+  font-size: variables.$font-size-mid-large;
 }
 .h4 {
   composes: h4 from "../../Sass/common/_base.scss";
 
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .error {
-  color: $grey;
+  color: variables.$grey;
 }
 
 .metadata {
@@ -82,7 +82,7 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   padding: 8px;
-  @media (min-width: $sm) {
+  @media (min-width: variables.$sm) {
     display: inline-block;
     width: inherit;
   }

@@ -1,5 +1,4 @@
-const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
-
+import { findAllWithClass } from "react-shallow-testutils";
 import TestRenderer from "react-test-renderer";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -29,7 +28,7 @@ describe("Legend", function () {
       );
     });
 
-    it("A legend image can be rendered", async function (done) {
+    it("A legend image can be rendered", function (done) {
       wmsItem
         .loadMapItems()
         .then(() => {
@@ -41,7 +40,7 @@ describe("Legend", function () {
         .then(done);
     });
 
-    it("A legend image can be hidden", async function (done) {
+    it("A legend image can be hidden", function (done) {
       wmsItem.setTrait("definition", "hideLegendInWorkbench", true);
       wmsItem
         .loadMapItems()

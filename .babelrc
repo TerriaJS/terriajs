@@ -8,16 +8,11 @@
       }
     ],
     ["@babel/preset-react", { "runtime": "automatic" }],
-    ["@babel/typescript", { "allowNamespaces": true }]
+    ["@babel/preset-typescript", { "allowNamespaces": true }]
   ],
   "plugins": [
-    "@babel/plugin-transform-modules-commonjs",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
-    "@babel/plugin-proposal-class-properties",
-    "@babel/proposal-object-rest-spread",
-    "babel-plugin-styled-components",
-    "@babel/plugin-syntax-dynamic-import",
-    "babel-plugin-lodash"
+    "babel-plugin-styled-components"
   ],
   "assumptions": {
     "setPublicClassFields": false

@@ -3,11 +3,11 @@ import {
   action,
   computed,
   isObservableArray,
-  observable,
-  runInAction,
-  toJS,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction,
+  toJS
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -23,24 +23,25 @@ import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeatur
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
-import runLater from "../Core/runLater";
+import { JsonObject, isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
+import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
@@ -54,7 +55,7 @@ export class ObservableCesium3DTileset extends Cesium3DTileset {
     makeObservable(this);
   }
 
-  destroy() {
+  destroy(): void {
     super.destroy();
     // TODO: we are running later to prevent this
     // modification from happening in some computed up the call chain.
@@ -203,7 +204,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
       const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
-        Matrix4.getMatrix3(modelMatrix, new Matrix3())
+        Matrix4.getRotation(modelMatrix, new Matrix3())
       );
 
       const { latitude, longitude, height } = this.origin;
@@ -271,6 +272,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (colorBlendMode !== undefined)
         this.tileset.colorBlendMode = colorBlendMode;
       this.tileset.colorBlendAmount = this.colorBlendAmount;
+      if (this.lightColor)
+        this.tileset.lightColor = Cartesian3.fromArray(this.lightColor.slice());
 
       // default is 16 (baseMaximumScreenSpaceError @ 2)
       // we want to reduce to 8 for higher levels of quality
@@ -285,7 +288,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       this.tileset.modelMatrix = this.modelMatrix;
 
-      this.tileset.clippingPlanes = toJS(this.clippingPlaneCollection)!;
+      this.tileset.clippingPlanes = this.clippingPlaneCollection!;
       this.clippingMapItems.forEach((mapItem) => {
         mapItem.show = this.show;
       });
@@ -512,6 +515,15 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           conditions
         }
       });
+    }
+
+    @override
+    get selectableDimensions(): SelectableDimension[] {
+      return [
+        ...super.selectableDimensions,
+        ...super.shadowDimensions,
+        ...super.clippingDimensions
+      ];
     }
   }
 

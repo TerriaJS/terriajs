@@ -350,7 +350,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
 
     if (model === undefined) return;
-    _previousTarget = model;
     await this.setArcgisStrata(model);
 
     const defintionStratum = this.strata.get(CommonStrata.definition);
@@ -406,7 +405,7 @@ async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
       proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
     );
     return response;
-  } catch (err) {
+  } catch (_err) {
     return undefined;
   }
 }

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import { Component } from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Box from "../../Styled/Box";
@@ -17,7 +17,7 @@ import WarningBox from "./WarningBox";
  * CatalogItem description.
  */
 @observer
-class Description extends React.Component {
+class Description extends Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
     printView: PropTypes.bool,
@@ -105,7 +105,7 @@ class Description extends React.Component {
         {metadataUrls && metadataUrls.length > 0 && (
           <>
             <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-            {metadataUrls.map((metadataUrl, i) => (
+            {metadataUrls.map((metadataUrl, _i) => (
               <Box paddedVertically key={metadataUrl.url}>
                 <a
                   href={metadataUrl.url}
@@ -185,7 +185,7 @@ class Description extends React.Component {
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
                 {dataUrls.map(
-                  (dataUrl, i) =>
+                  (dataUrl, _i) =>
                     (dataUrl.type?.startsWith("wfs") ||
                       dataUrl.type?.startsWith("wcs")) && (
                       <>

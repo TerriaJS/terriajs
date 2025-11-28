@@ -1,8 +1,9 @@
-import React, {
+import {
+  PropsWithChildren,
+  forwardRef,
   useEffect,
   useImperativeHandle,
-  useState,
-  PropsWithChildren
+  useState
 } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -13,14 +14,16 @@ import ViewState from "../../../../../ReactViewModels/ViewState";
 import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
 
-import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
-import { ShareUrlWarning } from "./ShareUrlWarning";
-import Clipboard from "../../../../Clipboard";
-import Input from "../../../../../Styled/Input";
 import {
   Category,
   ShareAction
 } from "../../../../../Core/AnalyticEvents/analyticEvents";
+import Clipboard from "../../../../Clipboard";
+import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
+import { ShareUrlWarning } from "./ShareUrlWarning";
+import TerriaError, {
+  TerriaErrorSeverity
+} from "../../../../../Core/TerriaError";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -38,7 +41,7 @@ export interface IShareUrlRef {
   shorteningInProgress: boolean;
 }
 
-export const ShareUrl = React.forwardRef<
+export const ShareUrl = forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(
@@ -72,21 +75,41 @@ export const ShareUrl = React.forwardRef<
   );
 
   useEffect(() => {
+    let cancelled = false;
     if (shouldShorten) {
       setPlaceholder(t("share.shortLinkShortening"));
       setShorteningInProgress(true);
-      buildShortShareLink(terria, viewState, {
-        includeStories
-      })
-        .then((shareUrl) => setShareUrl(shareUrl))
-        .catch(() => {
-          setShareUrl(
-            buildShareLink(terria, viewState, {
-              includeStories
-            })
-          );
+      buildShortShareLink(terria, viewState, { includeStories })
+        .then((shareUrl) => {
+          if (!cancelled) setShareUrl(shareUrl);
         })
-        .finally(() => setShorteningInProgress(false));
+        .catch((error) => {
+          let userMessage = t("models.shareData.generateErrorMessage");
+          if (error instanceof TerriaError) {
+            const highestImportanceError = error.highestImportanceError;
+            const highestImportanceOriginalErrorMessage =
+              highestImportanceError.originalError?.[0].message;
+            if (highestImportanceOriginalErrorMessage?.includes("413")) {
+              userMessage = t(
+                "models.shareData.generateErrorDataExceedsLimitMessage"
+              );
+              terria.raiseErrorToUser(
+                TerriaError.from(error, {
+                  message: userMessage
+                }),
+                {
+                  severity: TerriaErrorSeverity.Error
+                }
+              );
+            }
+          }
+          if (!cancelled) {
+            setShareUrl(userMessage);
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setShorteningInProgress(false);
+        });
     } else {
       setShareUrl(
         buildShareLink(terria, viewState, {
@@ -94,6 +117,9 @@ export const ShareUrl = React.forwardRef<
         })
       );
     }
+    return () => {
+      cancelled = true;
+    };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
@@ -106,23 +132,8 @@ export const ShareUrl = React.forwardRef<
       <Clipboard
         theme={theme}
         text={shareUrl}
-        source={
-          <Input
-            light={inputTheme === "light"}
-            dark={inputTheme === "dark"}
-            large
-            type="text"
-            value={shareUrl}
-            placeholder={placeholder ?? t("share.shortLinkShortening")}
-            readOnly
-            onClick={(e) => e.currentTarget.select()}
-            css={`
-              ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
-            `}
-            id="share-url"
-          />
-        }
-        id="share-url"
+        inputPlaceholder={placeholder}
+        inputTheme={inputTheme}
         rounded={rounded}
         onCopy={(text) =>
           terria.analytics?.logEvent(

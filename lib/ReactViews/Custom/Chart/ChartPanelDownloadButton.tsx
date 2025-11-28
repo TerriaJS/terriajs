@@ -1,8 +1,6 @@
-"use strict";
 import FileSaver from "file-saver";
 import { runInAction, toJS } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import isDefined from "../../../Core/isDefined";
 import Result from "../../../Core/Result";
@@ -70,8 +68,10 @@ async function download(items: TableMixin.Instance[]) {
   const synthesized = synthesizeNameAndValueArrays(items);
 
   // Could implement this using TaskProcessor, but requires webpack magic.
-  const HrefWorker = require("worker-loader!./downloadHrefWorker");
-  const worker = new HrefWorker();
+  const worker = await import("worker-loader!./downloadHrefWorker").then(
+    (labelLayoutWorker) => new labelLayoutWorker.default()
+  );
+
   // console.log('names and value arrays', synthesized.names, synthesized.values);
   if (synthesized.values && synthesized.values.length > 0) {
     worker.postMessage(synthesized);

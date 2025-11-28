@@ -1,19 +1,17 @@
 "use strict";
 
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
-var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
-var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");
-var Color = require("terriajs-cesium/Source/Core/Color").default;
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
-var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
-var GeoJsonDataSource =
-  require("terriajs-cesium/Source/DataSources/GeoJsonDataSource").default;
-var ImageryLayerFeatureInfo =
-  require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo").default;
-var L = require("leaflet");
-var Leaflet = require("../../lib/Models/Leaflet");
-var loadJson = require("../../lib/Core/loadJson").default;
-var Terria = require("../../lib/Models/Terria");
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import CesiumTileLayer from "../../lib/Map/CesiumTileLayer";
+import Color from "terriajs-cesium/Source/Core/Color";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import L from "leaflet";
+import Leaflet from "../../lib/Models/Leaflet";
+import loadJson from "../../lib/Core/loadJson";
+import Terria from "../../lib/Models/Terria";
 
 var DEFAULT_ZOOM_LEVEL = 5;
 

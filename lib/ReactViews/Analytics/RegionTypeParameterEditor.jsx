@@ -1,6 +1,3 @@
-"use strict";
-
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -64,4 +61,4 @@ const RegionTypeParameterEditor = createReactClass({
   }
 });
 
-module.exports = RegionTypeParameterEditor;
+export default RegionTypeParameterEditor;

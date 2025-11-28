@@ -1,16 +1,21 @@
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
 
 @traitClass({
-  description: `Creates a single item in the catalog from one ESRI WFS layer.
+  description: `Creates a single item in the catalog from one ESRI Feature Server layer.
 
-  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>`,
+  <strong>Note:</strong> <i>Must specify <b>layer ID</b>, e.g. <code>/0</code>, in the URL path.</i>
+
+  Some traits are only relevant when the service supports tiling (see \`tileRequests\` trait).`,
   example: {
     url: "https://services5.arcgis.com/OvOcYIrJnM97ABBA/arcgis/rest/services/Australian_Public_Hospitals_WFL1/FeatureServer/0",
     type: "esri-featureServer",
@@ -23,7 +28,9 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  GeoJsonTraits
+  GeoJsonTraits,
+  FeaturePickingTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "boolean",
@@ -81,4 +88,72 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "Whether this feature service supports pagination. By default, this will be inferred from the server's response."
   })
   supportsPagination?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Tile requests",
+    description:
+      "Whether this feature service supports tiled requests. This will be true by default, if the server supports tiling and no unsupported Point/Label/Trail styles are used (for example custom marker images)"
+  })
+  tileRequests: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Clip tile requests to rectangle",
+    description: `Gets or sets a value indicating whether this dataset should be clipped to the {@link CatalogItem#rectangle}.
+If true, no part of the dataset will be displayed outside the rectangle.
+This property is true by default, leading to better performance and avoiding tile request errors that might occur when requesting tiles outside the server-specified rectangle.
+However, it may also cause features to be cut off in some cases, such as if a server reports an extent that does not take into account that the representation of features sometimes require a larger spatial extent than the features themselves.
+For example, if a point feature on the edge of the extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.`
+  })
+  clipToRectangle: boolean = true;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum features",
+    description:
+      "For each tile, the maximum number of features to be retrieved from the feature service. This will limit the number of requests, each request uses featuresPerTileRequest trait."
+  })
+  maxTiledFeatures: number = 100000;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Features per request",
+    description:
+      "The number of features to be retrieved from the feature service in each request. This should be equal to the " +
+      "tileMaxRecordCount specified by the server."
+  })
+  featuresPerTileRequest: number = 4000;
+
+  @primitiveTrait({
+    type: "number",
+    name: "maxRecordCountFactor",
+    description:
+      "When set, the maximum number of features returned by the query will equal the maxRecordCount of the service multiplied by this factor. This only applies to tiled requests. This will use the server's default value."
+  })
+  maxRecordCountFactor: number = 1;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Tile requests",
+    description:
+      "Whether this feature service supports tiled requests. By default, this will be inferred from the server's response."
+  })
+  supportsQuantization: boolean = true;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Object ID Field",
+    description:
+      "The field in the feature service that contains the unique identifier for each feature."
+  })
+  objectIdField: string = "OBJECTID";
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Out Fields",
+    description:
+      "The fields to be included in the response from the feature service. This will default to the object ID field, and include any fields required for styling. Currently, this only applies to tiled requests."
+  })
+  outFields: string[] = ["OBJECTID"];
 }

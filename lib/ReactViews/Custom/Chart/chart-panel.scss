@@ -1,36 +1,39 @@
-@import "~terriajs-variables";
-@import "../../../Sass/common/mixins";
+@use "../../../Sass/common/_variables";
+@use "../../../Sass/common/mixins";
 
-@include empty-module("inner");
-@include empty-module("chart-panel");
+@include mixins.empty-module("inner");
+@include mixins.empty-module("chart-panel");
 
 .holder {
   left: 0;
   right: 0;
-  z-index: 10;
-  background: $chart-panel-background;
-  padding-bottom: 13px;
+  background: variables.$transparent-dark;
+  backdrop-filter: variables.$blur;
+  padding-bottom: 40px; //hack to allow timeline visible
+  margin-bottom: 6px;
+  border-radius: 8px 8px 0 0;
 }
 
 .header {
   height: 41px;
   box-sizing: border-box;
   position: relative;
-  background-color: $chart-panel-header;
-  font-size: $font-size-mid-small;
+  background-color: variables.$chart-panel-header;
+  font-size: variables.$font-size-mid-small;
   fill: #fff;
+  border-radius: 8px 8px 0 0;
 }
 
 .chart {
-  color: $text-light;
+  color: variables.$text-light;
 
   :global {
     .base-chart .axis path.domain {
-      stroke: $chart-axis-color;
+      stroke: variables.$chart-axis-color;
     }
 
     .base-chart .axis .tick line {
-      stroke: $chart-grid-color;
+      stroke: variables.$chart-grid-color;
     }
 
     .base-chart .axis .colors line {
@@ -38,24 +41,24 @@
     }
 
     .base-chart .plot-area {
-      fill: $chart-area-color;
+      fill: variables.$chart-area-color;
     }
 
     .units-label-shadow {
-      stroke: $chart-darker;
+      stroke: variables.$chart-darker;
       stroke-width: 2.5px;
       opacity: 0.9;
     }
 
     .base-chart text {
-      fill: $chart-text-color;
+      fill: variables.$chart-text-color;
       font-family: monospace;
       font-size: 110%;
     }
 
     .base-chart .line {
       fill: none;
-      stroke: $chart-line-color;
+      stroke: variables.$chart-line-color;
       stroke-width: 1;
     }
   }
@@ -67,7 +70,7 @@
 
 .section-label,
 .btn {
-  color: $text-light;
+  color: variables.$text-light;
   display: inline-block;
   vertical-align: top;
 }
@@ -76,28 +79,23 @@
   composes: label from "../../../Sass/common/_labels.scss";
 }
 
-.loader {
-  padding: 0px 0px 0px $padding * 3 !important;
-  &:before {
-    top: 0px;
-  }
-}
-
 .btn--close-chart-panel {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
   right: 0;
   top: 0;
   padding: 12px;
+
   svg {
     height: 15px;
     width: 15px;
     fill: #fff;
   }
+
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      fill: variables.$color-primary;
     }
   }
 }

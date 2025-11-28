@@ -174,7 +174,9 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       };
 
       const retryWithBackoff = (e: Error) => {
-        operation.retry(e) || failTile(e);
+        if (!operation.retry(e)) {
+          failTile(e);
+        }
       };
 
       const tellMapToRetry = () => {

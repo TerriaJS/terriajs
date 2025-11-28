@@ -1,9 +1,13 @@
-"use strict";
-
 import classNames from "classnames";
-import { Lambda, observable, reaction, makeObservable } from "mobx";
+import {
+  Lambda,
+  observable,
+  reaction,
+  makeObservable,
+  runInAction
+} from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import styled from "styled-components";
 import isDefined from "../../Core/isDefined";
 import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
@@ -30,7 +34,7 @@ const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
 `;
 
 @observer
-class MapInteractionWindow extends React.Component<{
+class MapInteractionWindow extends Component<{
   viewState: ViewState;
 }> {
   displayName = "MapInteractionWindow";
@@ -38,10 +42,12 @@ class MapInteractionWindow extends React.Component<{
   private disposeMapInteractionObserver?: Lambda;
 
   @observable currentInteractionMode?: MapInteractionMode;
+  @observable.ref observableViewState: ViewState;
 
   constructor(props: { viewState: ViewState }) {
     super(props);
     makeObservable(this);
+    this.observableViewState = props.viewState;
   }
 
   componentWillUnmount() {
@@ -50,20 +56,22 @@ class MapInteractionWindow extends React.Component<{
       this.currentInteractionMode.onEnable(this.props.viewState);
     }
 
-    this.disposeMapInteractionObserver && this.disposeMapInteractionObserver();
+    if (this.disposeMapInteractionObserver) {
+      this.disposeMapInteractionObserver();
+    }
   }
 
   componentDidMount() {
     this.disposeMapInteractionObserver = reaction(
       () =>
-        this.props.viewState.terria.mapInteractionModeStack.length > 0 &&
-        this.props.viewState.terria.mapInteractionModeStack[
-          this.props.viewState.terria.mapInteractionModeStack.length - 1
+        this.observableViewState.terria.mapInteractionModeStack.length > 0 &&
+        this.observableViewState.terria.mapInteractionModeStack[
+          this.observableViewState.terria.mapInteractionModeStack.length - 1
         ],
       () => {
         const mapInteractionMode =
-          this.props.viewState.terria.mapInteractionModeStack[
-            this.props.viewState.terria.mapInteractionModeStack.length - 1
+          this.observableViewState.terria.mapInteractionModeStack[
+            this.observableViewState.terria.mapInteractionModeStack.length - 1
           ];
 
         if (mapInteractionMode !== this.currentInteractionMode) {
@@ -75,6 +83,12 @@ class MapInteractionWindow extends React.Component<{
         }
       }
     );
+  }
+
+  componentDidUpdate(): void {
+    runInAction(() => {
+      this.observableViewState = this.props.viewState;
+    });
   }
 
   // /* eslint-disable-next-line camelcase */

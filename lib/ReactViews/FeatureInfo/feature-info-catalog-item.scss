@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@use "../../Sass/common/_variables";
 
 .group {
 }
@@ -8,7 +8,7 @@
 }
 
 .message-item {
-  background: $info-color;
-  color: $dark;
+  background: variables.$info-color;
+  color: variables.$dark;
   padding: 5px 8px;
 }

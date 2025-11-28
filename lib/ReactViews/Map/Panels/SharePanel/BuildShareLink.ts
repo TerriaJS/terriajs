@@ -1,5 +1,3 @@
-"use strict";
-
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -24,6 +22,7 @@ import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
+import ViewerMode from "../../../../Models/ViewerMode";
 
 /** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
  * If in Dev, we add all user properties.
@@ -305,7 +304,7 @@ function addViewSettings(
   // };
 
   let viewerMode: ViewModeJson;
-  if (terria.mainViewer.viewerMode === "cesium") {
+  if (terria.mainViewer.viewerMode === ViewerMode.Cesium) {
     if (terria.mainViewer.viewerOptions.useTerrain) {
       viewerMode = "3d";
     } else {

@@ -7,7 +7,7 @@ It has following structure:
 | Name                                          | Required | Type                          | Default | Description                                                                                                                                                                                                             |
 | --------------------------------------------- | -------- | ----------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [initializationUrls](#intializationurls)      | yes      | **string[]**                  | []      | The list of initialization files which define the catalog content, for more details check [below](#intializationurls).                                                                                                  |
-| [v7initializationUrls](#v7initializationurls) | yes      | **string[]**                  | []      | The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls). |
+| [v7initializationUrls](#v7initializationurls) | yes      | **string[]**                  | []      | The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationurls). |
 | parameters                                    | yes      | **[Parameters](#parameters)** |         | TerriaJS configuration options                                                                                                                                                                                          |
 
 **Example**
@@ -45,10 +45,10 @@ Note: relative paths will be resolved to the base URL of client-side config URL 
 
 For example a map hosted at http://something.com/map
 
--   will have default `configUrl = http://something.com/map/config.json`
--   therefore will resolve `initFragmentPaths` to `http://something.com/map`
--   if using default `initFragmentPaths = ["init"]`
-    -   init fragments will be resolved to `http://something.com/map/init`
+- will have default `configUrl = http://something.com/map/config.json`
+- therefore will resolve `initFragmentPaths` to `http://something.com/map`
+- if using default `initFragmentPaths = ["init"]`
+  - init fragments will be resolved to `http://something.com/map/init`
 
 ### `v7initializationUrls`
 
@@ -92,7 +92,6 @@ Specifies various options for configuring TerriaJS:
 | `disableSplitter`                 | no       | **boolean**                                                                                              | undefined                                                          | True to disable the use of the splitter control.                                                                                                                                                                                                                                                       |
 | `experimentalFeatures`            | no       | **boolean**                                                                                              | undefined                                                          |                                                                                                                                                                                                                                                                                                        |
 | `magdaReferenceHeaders`           | no       | **[MagdaReferenceHeaders](#magdareferenceheaders)**                                                      | undefined                                                          |
-| `locationSearchBoundingBox`       | no       | **number**                                                                                               | undefined                                                          |
 | `googleAnalyticsKey`              | no       | **string**                                                                                               | undefined                                                          | A Google API key for [Google Analytics](https://analytics.google.com). If specified, TerriaJS will send various events about how it's used to Google Analytics.                                                                                                                                        |
 | `errorService`                    | no       | **[ErrorServiceOptions](#errorserviceoptions)**                                                          | undefined                                                          | Optional configuration for the remote error logging service that Terria should log errors to.                                                                                                                                                                                                          |
 | `globalDisclaimer`                | no       | **any**                                                                                                  | undefined                                                          |                                                                                                                                                                                                                                                                                                        |
@@ -115,7 +114,7 @@ Specifies various options for configuring TerriaJS:
 | `storyVideo.videoUrl`             | no       | **string**                                                                                               | https://www.youtube-nocookie.com/embed/fbiQawV8IYY                 | Video to show in Story Editor panel under Getting Started.                                                                                                                                                                                                                                             |
 | `relatedMaps`                     | no       | **[RelatedMap](#relatedmap)[]**                                                                          | See [`lib/Models/RelatedMaps.ts`](../../lib/Models/RelatedMaps.ts) | Maps to show in "Related Maps" menu panel                                                                                                                                                                                                                                                              |
 | `aboutButtonHrefUrl`              | no       | **string**                                                                                               | `"about.html"`                                                     | About button URL. If set to `null`, then the About button will not be shown                                                                                                                                                                                                                            |
-| `searchBar`                       | no       | **[SearchBar](#searchbar)**                                                                              | `new SearchBar()`                                                  | Search bar configuration                                                                                                                                                                                                                                                                               |
+| `searchBarConfig`                 | no       | **[SearchBar](#searchbar)**                                                                              | `new SearchBar()`                                                  | Search bar configuration                                                                                                                                                                                                                                                                               |
 | `searchProviders`                 | no       | \*\*[SearchProviders](search-providers.md)                                                               | `[]`                                                               | Search providers that will be used for search                                                                                                                                                                                                                                                          |
 
 ### MagdaReferenceHeaders
@@ -174,6 +173,7 @@ Configuration of items to appear in the search bar
 | languages                 | yes      | **Object**       | `{en: "english"}`                                         | Language abbreviations. Please mind that matching locale files must exist.                                                                                                                                                                                                       |
 | fallbackLanguage          | yes      | **string**       | `"en"`                                                    | Fallback language used if contents are not available in the currently selected language.                                                                                                                                                                                         |
 | changeLanguageOnStartWhen | yes      | **string[]**     | `["querystring", "localStorage", "navigator", "htmlTag"]` | Order of user language detection. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.                                                                                                               |
+| lookupCookie              | no       | **string**       | `"i18next"`                                               | Name of the cookie that handles i18n. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.                                                                                                           |
 | overridesBaseUrl          | yes      | **string**       |                                                           | Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in "/". For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"` |
 
 ---
@@ -189,22 +189,23 @@ Configuration of items to appear in the search bar
 
 ```json
 {
-    "enabled": true,
-    "debug": false,
-    "react": {
-        "useSuspense": false
-    },
-    "languages": {
-        "en": "english",
-        "de": "deutsch"
-    },
-    "fallbackLanguage": "en",
-    "changeLanguageOnStartWhen": [
-        "querystring",
-        "localStorage",
-        "navigator",
-        "htmlTag"
-    ]
+  "enabled": true,
+  "debug": false,
+  "react": {
+    "useSuspense": false
+  },
+  "languages": {
+    "en": "english",
+    "de": "deutsch"
+  },
+  "fallbackLanguage": "en",
+  "changeLanguageOnStartWhen": [
+    "querystring",
+    "localStorage",
+    "navigator",
+    "htmlTag"
+  ],
+  "lookupCookie": "i18next"
 }
 ```
 
@@ -223,10 +224,10 @@ Configuration of maps to appear in "Related Maps" menu panel
 
 ```json
 {
-    "imageUrl": "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/nationalmap.jpg",
-    "url": "http://nationalmap.gov.au/",
-    "title": "NationalMap",
-    "description": "The NationalMap is a website for map-based access to spatial data from Australian government agencies. It is an initiative of the Australian Government's Department of the Prime Minister and Cabinet and the software has been developed by Data61 working closely with the Department of the Prime Minister and Cabinet, Geoscience Australia and other government agencies."
+  "imageUrl": "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/nationalmap.jpg",
+  "url": "http://nationalmap.gov.au/",
+  "title": "NationalMap",
+  "description": "The NationalMap is a website for map-based access to spatial data from Australian government agencies. It is an initiative of the Australian Government's Department of the Prime Minister and Cabinet and the software has been developed by Data61 working closely with the Department of the Prime Minister and Cabinet, Geoscience Australia and other government agencies."
 }
 ```
 
@@ -238,14 +239,14 @@ Credits/Attribution shown at the bottom of the map. Supports internationalizatio
 
 ```json
 [
-    {
-        "text": "map.extraCreditLinks.dataAttribution",
-        "url": "about.html#data-attribution"
-    },
-    {
-        "text": "map.extraCreditLinks.disclaimer",
-        "url": "about.html#disclaimer"
-    }
+  {
+    "text": "map.extraCreditLinks.dataAttribution",
+    "url": "https://terria.io/attributions"
+  },
+  {
+    "text": "map.extraCreditLinks.termsOfUse",
+    "url": "https://terria.io/demo-terms"
+  }
 ]
 ```
 
@@ -263,3 +264,4 @@ search provider values.
 | flightDurationSeconds | no       | **number**    | `1.5`                          | The duration of the camera flight to an entered location, in seconds.                             |
 | minCharacters         | no       | **number**    | 3                              | Minimum number of characters required for search to start                                         |
 | boundingBoxLimit      | no       | **Rectangle** | `Cesium.Rectangle.MAX_VALUE`   | Bounding box limits for the search results {west, south, east, north}                             |
+| showSearchInCatalog   | no       | **boolean**   | true                           | True to show "Search in Catalog" link in location search results.                                 |
