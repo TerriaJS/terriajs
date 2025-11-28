@@ -9,6 +9,8 @@
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
+- Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
+- Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]
 
 #### 8.11.0 - 2025-10-09

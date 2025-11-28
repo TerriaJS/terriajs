@@ -36,6 +36,12 @@ const cesiumFromPromise = computed(
   { keepAlive: true }
 );
 
+const cesium2dFromPromise = computed(
+  () =>
+    fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default)),
+  { keepAlive: true }
+);
+
 // Viewer options. Designed to be easily serialisable
 interface ViewerOptions {
   useTerrain: boolean;
@@ -171,8 +177,14 @@ export default class TerriaViewer {
     >;
     if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
       viewerFromPromise = leafletFromPromise.get();
-    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+    } else if (
+      this.attached &&
+      (this.viewerMode === ViewerMode.Cesium ||
+        this.viewerMode === ViewerMode.Cesium2D)
+    ) {
       viewerFromPromise = cesiumFromPromise.get();
+    } else if (this.attached && this.viewerMode === ViewerMode.Cesium2D) {
+      viewerFromPromise = cesium2dFromPromise.get();
     }
     return viewerFromPromise;
   }
