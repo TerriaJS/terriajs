@@ -90,10 +90,8 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import ViewerMode, { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
-import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 
@@ -194,14 +192,7 @@ export default class Cesium extends GlobeOrMap {
         {}
       ),
       scene3DOnly: false,
-      sceneMode:
-        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
-          ? SceneMode.SCENE3D
-          : SceneMode.SCENE2D,
-      mapProjection:
-        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
-          ? new GeographicProjection()
-          : new WebMercatorProjection(),
+      mapProjection: new WebMercatorProjection(),
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };

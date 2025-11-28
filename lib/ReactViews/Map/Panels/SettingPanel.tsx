@@ -173,7 +173,7 @@ class SettingPanel extends React.Component<PropTypes> {
     };
     const currentViewer =
       this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
-        ? ViewerMode.Cesium2D
+        ? "2dcesium"
         : this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
         ? this.props.terria.mainViewer.viewerOptions.useTerrain
           ? "3d"
@@ -254,7 +254,12 @@ class SettingPanel extends React.Component<PropTypes> {
           </Box>
           <FlexGrid gap={1} elementsNo={3}>
             {Object.entries(MapViewers)
-              .filter(([_, viewerMode]) => viewerMode.available)
+              .filter(
+                ([key, viewerMode]) =>
+                  viewerMode.available &&
+                  this.props.terria.configParameters.mapViewers.indexOf(key) >=
+                    0
+              )
               .map(([key, viewerMode]) => (
                 <SettingsButton
                   key={key}

@@ -375,7 +375,7 @@ export interface ConfigParameters {
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 
   /**
-   * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
+   * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
    */
   mapViewers: string[];
 }
