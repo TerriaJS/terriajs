@@ -63,7 +63,7 @@ describe("FeatureInfoSection", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    catalogItem = new TestModel("test", terria);
+    catalogItem = new TestModel("teststrata", terria);
 
     viewState = new ViewState({
       terria,
