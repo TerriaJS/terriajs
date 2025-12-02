@@ -103,6 +103,11 @@ export default abstract class GlobeOrMap {
     );
   }
 
+  /**
+   * Set initial camera view
+   */
+  abstract setInitialView(cameraView: CameraView): void;
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.

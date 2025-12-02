@@ -140,7 +140,7 @@
     "inDataCatalogue": "在数据目录中",
     "searchMinCharacters_0": "您需要输入至少 {{count}} 个字符"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "放大",
     "zoomReset": "重置缩放",
     "zoomOut": "缩小"

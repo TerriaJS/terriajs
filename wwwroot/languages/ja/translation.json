@@ -542,7 +542,7 @@
     },
     "exitBtnTitle": "終了"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "ズームアウト",
     "zoomReset": "初期表示位置に戻る",
     "zoomIn": "ズームイン"
