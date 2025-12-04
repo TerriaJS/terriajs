@@ -2,6 +2,7 @@
 
 #### next release (8.11.2)
 
+- WMTS read URL from operations metadata #7371
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
@@ -49,7 +50,6 @@
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - Add internationalization support to tinymce editor used in story editor
-- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
@@ -72,7 +72,6 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
-- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
