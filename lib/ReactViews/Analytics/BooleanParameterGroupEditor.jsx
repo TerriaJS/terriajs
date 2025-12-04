@@ -1,7 +1,7 @@
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import MoreOrLess from "../Generic/MoreOrLess.jsx";
-import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
+import MoreOrLess from "../Generic/MoreOrLess";
+import BooleanParameterEditor from "./BooleanParameterEditor";
 import Styles from "./parameter-editors.scss";
 
 const BooleanParameterGroupEditor = createReactClass({
