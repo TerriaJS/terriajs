@@ -1,7 +1,13 @@
 # Change Log
 
-#### next release (8.11.1)
+#### next release (8.11.2)
 
+- [The next improvement]
+
+#### 8.11.1 - 2025-12-04
+
+- ##### Security fixes
+  - Upgrades terriajs-server to v4.0.3. See [terriajs-server changes](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#security-fixes).
 - Fix translations key typo "zoomCotrol".
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
