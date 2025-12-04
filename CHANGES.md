@@ -2,6 +2,8 @@
 
 #### next release (8.11.2)
 
+- Update development environment guide
+- Update guide for using the custom version of cesium
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
