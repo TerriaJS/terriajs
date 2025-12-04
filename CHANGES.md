@@ -2,6 +2,7 @@
 
 #### next release (8.11.2)
 
+- WMTS read URL from operations metadata
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
@@ -15,8 +16,6 @@
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
-- WMTS read URL from operations metadata
-- [The next improvement]
 
 #### 8.11.0 - 2025-10-09
 
