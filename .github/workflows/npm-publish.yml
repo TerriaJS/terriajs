@@ -7,8 +7,17 @@ on:
 env:
   NPM_TAG: latest
 
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   publish:
+    permissions:
+      contents: write # to create and push a tag
+      actions: read
     name: Publish to NPM
     runs-on: ubuntu-latest
 
