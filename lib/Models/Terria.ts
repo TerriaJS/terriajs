@@ -375,7 +375,7 @@ export interface ConfigParameters {
    * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
    */
   mapViewers: string[];
-  
+
   /**
    * Keep catalog open when adding / removing items
    */
