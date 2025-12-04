@@ -14,7 +14,9 @@ import ModelReference from "../../../Traits/ModelReference";
 import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -38,7 +40,10 @@ interface ArcGisServer {
 
 const validServerTypes = ["MapServer", "FeatureServer"];
 
-class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
+class ArcGisServerStratum
+  extends LoadableStratum(ArcGisCatalogGroupTraits)
+  implements LockedDownStratum<ArcGisCatalogGroupTraits, ArcGisServerStratum>
+{
   static stratumName = "arcgisServer";
 
   constructor(
@@ -56,7 +61,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
     ) as this;
   }
 
-  get arcgisServerData() {
+  private get arcgisServerData() {
     return this._arcgisServer;
   }
 
@@ -122,22 +127,28 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   }
 
   @computed
-  get folders(): readonly string[] {
+  private get folders(): readonly string[] {
     return this._arcgisServer.folders ? this._arcgisServer.folders : [];
   }
 
   @computed
-  get services(): readonly Service[] {
+  private get services(): readonly Service[] {
     return this._arcgisServer.services ? this._arcgisServer.services : [];
   }
 
   @action
-  createMembersFromFolders() {
+  createMembers(): void {
+    this.createMembersFromFolders();
+    this.createMembersFromServices();
+  }
+
+  @action
+  private createMembersFromFolders() {
     this.folders.forEach((folder) => this.createMemberFromFolder(folder));
   }
 
   @action
-  createMemberFromFolder(folder: string) {
+  private createMemberFromFolder(folder: string) {
     const localName = removePathFromName(
       getBasePath(this._catalogGroup),
       folder
@@ -168,12 +179,12 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   }
 
   @action
-  createMembersFromServices() {
+  private createMembersFromServices() {
     this.services.forEach((service) => this.createMemberFromService(service));
   }
 
   @action
-  createMemberFromService(service: Service) {
+  private createMemberFromService(service: Service) {
     const localName = removePathFromName(
       getBasePath(this._catalogGroup),
       service.name
@@ -294,13 +305,12 @@ export default class ArcGisCatalogGroup extends UrlMixin(
 
     await runLater(() => {
       if (arcgisServerStratum instanceof ArcGisServerStratum) {
-        arcgisServerStratum.createMembersFromFolders();
-        arcgisServerStratum.createMembersFromServices();
+        arcgisServerStratum.createMembers();
       } else if (
         arcgisServerStratum instanceof MapServerStratum ||
         arcgisServerStratum instanceof FeatureServerStratum
       ) {
-        arcgisServerStratum.createMembersFromLayers();
+        arcgisServerStratum.createMembers();
       }
     });
   }

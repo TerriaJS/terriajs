@@ -16,7 +16,9 @@ import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -26,10 +28,13 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 /**
  * Loadable stratum for overriding CogCatalogItem traits
  */
-class CogLoadableStratum extends LoadableStratum(CogCatalogItemTraits) {
+class CogLoadableStratum
+  extends LoadableStratum(CogCatalogItemTraits)
+  implements LockedDownStratum<CogCatalogItemTraits, CogLoadableStratum>
+{
   static stratumName = "cog-loadable-stratum";
 
-  constructor(readonly model: CogCatalogItem) {
+  constructor(private readonly model: CogCatalogItem) {
     super();
     makeObservable(this);
   }

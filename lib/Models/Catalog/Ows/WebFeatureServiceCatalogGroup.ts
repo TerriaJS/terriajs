@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -10,24 +10,31 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import WebFeatureServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebFeatureServiceCapabilities, {
   FeatureType
 } from "./WebFeatureServiceCapabilities";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 
-class GetCapabilitiesStratum extends LoadableStratum(
-  WebFeatureServiceCatalogGroupTraits
-) {
+class GetCapabilitiesStratum
+  extends LoadableStratum(WebFeatureServiceCatalogGroupTraits)
+  implements
+    LockedDownStratum<
+      WebFeatureServiceCatalogGroupTraits,
+      GetCapabilitiesStratum
+    >
+{
   static async load(
     catalogItem: WebFeatureServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
@@ -54,8 +61,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogGroup: WebFeatureServiceCatalogGroup,
-    readonly capabilities: WebFeatureServiceCapabilities
+    private readonly catalogGroup: WebFeatureServiceCatalogGroup,
+    private readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -138,14 +145,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     this.capabilities.featureTypes.forEach((layer) =>
       this.createMemberFromLayer(layer)
     );
   }
 
   @action
-  createMemberFromLayer(layer: FeatureType) {
+  private createMemberFromLayer(layer: FeatureType) {
     const layerId = this.getLayerId(layer);
 
     if (!layerId) {
@@ -206,7 +213,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
-  getLayerId(layer: FeatureType) {
+  private getLayerId(layer: FeatureType) {
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
@@ -244,7 +251,7 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum) {
-      await runLater(() => getCapabilitiesStratum.createMembersFromLayers());
+      await runLater(() => getCapabilitiesStratum.createMembers());
     }
   }
 

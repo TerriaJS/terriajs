@@ -109,6 +109,7 @@ type ParameterConverter = {
   parameterToInput: (parameter: FunctionParameter) => WpsInputData | undefined;
 };
 
+// TODO make LockedDownStratum compatible with CatalogFunctions
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionTraits
 ) {
@@ -261,6 +262,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     keepAlive: true
   })
   get functionParameters() {
+    // TODO: Fix incorrect use of stratum here
+    // Stratum should only be used to set trait values - you shouldn't use the stratum object directly
     const stratum = this.strata.get(
       WpsLoadableStratum.stratumName
     ) as WpsLoadableStratum;

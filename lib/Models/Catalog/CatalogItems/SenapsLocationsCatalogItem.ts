@@ -66,6 +66,7 @@ interface LocationsData {
   };
 }
 
+// TODO: Refactor to adhere to LockedDownStratum
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
 ) {
@@ -260,6 +261,8 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   }
 
   @computed get geoJsonItem() {
+    // TODO: Fix incorrect use of stratum here
+    // Stratum should only be used to set trait values - you shouldn't use the stratum object directly
     const stratum = this.strata.get(
       SenapsLocationsStratum.stratumName
     ) as SenapsLocationsStratum;

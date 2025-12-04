@@ -25,7 +25,9 @@ import TablePointStyleTraits, {
 } from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -235,9 +237,14 @@ interface Extent {
   spatialReference?: SpatialReference;
 }
 
-export class ArcGisFeatureServerStratum extends LoadableStratum(
-  ArcGisFeatureServerCatalogItemTraits
-) {
+export class ArcGisFeatureServerStratum
+  extends LoadableStratum(ArcGisFeatureServerCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      ArcGisFeatureServerCatalogItemTraits,
+      ArcGisFeatureServerStratum
+    >
+{
   static stratumName = "featureServer";
 
   constructor(

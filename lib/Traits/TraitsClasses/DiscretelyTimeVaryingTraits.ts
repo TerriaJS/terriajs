@@ -1,12 +1,40 @@
+import objectTrait from "../Decorators/objectTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import ChartTraits from "./ChartTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
+
+export class DiscreteTimesTraits extends ModelTraits {
+  @primitiveArrayTrait({
+    name: "Times",
+    type: "string",
+    description: "The discrete times expressed as ISO8601 strings."
+  })
+  times: string[] = [];
+
+  @primitiveArrayTrait({
+    name: "Normal Cartesian3",
+    type: "string",
+    description:
+      "The discrete time tags, these are optional (this array can be empty, or it can be expressed as empty strings). This can be used to store model specific information about the discrete times (eg )."
+  })
+  tags: string[] = [];
+}
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(
   ChartTraits,
   TimeVaryingTraits
 ) {
+  @objectTrait({
+    type: DiscreteTimesTraits,
+    name: "Discrete Times",
+    description:
+      "The discrete times for this dataset. Note, for performance reasons, this is split into two arrays of strings: `times` and `tags`."
+  })
+  discreteTimes?: DiscreteTimesTraits;
+
   @primitiveTrait({
     name: "Mapping from Continuous Time",
     description:

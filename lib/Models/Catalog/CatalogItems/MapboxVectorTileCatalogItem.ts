@@ -21,19 +21,26 @@ import LegendTraits, {
 import MapboxVectorTileCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
-class MapboxVectorTileLoadableStratum extends LoadableStratum(
-  MapboxVectorTileCatalogItemTraits
-) {
+class MapboxVectorTileLoadableStratum
+  extends LoadableStratum(MapboxVectorTileCatalogItemTraits)
+  implements
+    LockedDownStratum<
+      MapboxVectorTileCatalogItemTraits,
+      MapboxVectorTileLoadableStratum
+    >
+{
   static stratumName = "MapboxVectorTileLoadable";
 
   constructor(
-    readonly item: MapboxVectorTileCatalogItem,
-    readonly styleJson: JsonObject | undefined
+    private readonly item: MapboxVectorTileCatalogItem,
+    private readonly styleJson: JsonObject | undefined
   ) {
     super();
     makeObservable(this);

@@ -8,7 +8,6 @@ import {
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
-import { DiscreteTimeAsJS } from "../../lib/ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -74,10 +73,11 @@ describe("TimeFilterMixin", function () {
         "2023-01-05"
       ];
 
-      item.discreteTimes = fullAvailability.map((time) => ({
-        time,
-        tag: undefined
-      }));
+      item.discreteTimes.setTrait(
+        CommonStrata.definition,
+        "times",
+        fullAvailability
+      );
     });
 
     it(
@@ -315,8 +315,6 @@ describe("TimeFilterMixin", function () {
 class TestTimeFilterableItem extends TimeFilterMixin(
   MappableMixin(CreateModel(mixTraits(TimeFilterTraits)))
 ) {
-  @observable discreteTimes: DiscreteTimeAsJS[] = [];
-
   @observable
   imageryProviders: ImageryProvider[] = [];
 

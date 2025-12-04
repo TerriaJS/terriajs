@@ -1,9 +1,7 @@
 import moment from "moment";
-import StratumFromTraits from "../Models/Definition/StratumFromTraits";
-import DiscreteTimeTraits from "../Traits/TraitsClasses/DiscreteTimeTraits";
 
 export default function createDiscreteTimesFromIsoSegments(
-  result: StratumFromTraits<DiscreteTimeTraits>[],
+  result: { times: string[]; tags: string[] },
   startDate: string,
   stopDate: string,
   isoDuration: string | undefined,
@@ -80,10 +78,9 @@ export default function createDiscreteTimesFromIsoSegments(
     current.isSameOrBefore(stop) &&
     count < maxRefreshIntervals
   ) {
-    result.push({
-      time: formatMomentForWms(current, duration),
-      tag: undefined
-    });
+    result.times.push(formatMomentForWms(current, duration));
+    result.tags.push("");
+
     current.add(duration);
     ++count;
   }
@@ -96,10 +93,8 @@ export default function createDiscreteTimesFromIsoSegments(
     );
   } else if (!current.isSame(stop)) {
     // Add stop date if it has not been added yet.
-    result.push({
-      time: formatMomentForWms(stop, duration),
-      tag: undefined
-    });
+    result.times.push(formatMomentForWms(stop, duration));
+    result.tags.push("");
   }
 }
 

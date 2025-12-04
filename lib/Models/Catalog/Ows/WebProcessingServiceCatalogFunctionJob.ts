@@ -36,6 +36,7 @@ import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import executeWpsTemplate from "./ExecuteWpsTemplate.xml";
 
+// TODO make LockedDownStratum compatible with CatalogFunctions
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits
 ) {

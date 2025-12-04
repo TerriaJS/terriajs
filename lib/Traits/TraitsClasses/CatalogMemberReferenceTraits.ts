@@ -1,5 +1,7 @@
+import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import { InfoSectionTraits } from "./CatalogMemberTraits";
 import ReferenceTraits from "./ReferenceTraits";
 
 export default class CatalogMemberReferenceTraits extends mixTraits(
@@ -20,6 +22,15 @@ export default class CatalogMemberReferenceTraits extends mixTraits(
       "The description to use for this catalog member before the reference is loaded. Markdown and HTML may be used."
   })
   description?: string;
+
+  @objectArrayTrait({
+    type: InfoSectionTraits,
+    name: "Info",
+    description:
+      "Human-readable information to use for this catalog member before the reference is loaded.",
+    idProperty: "name"
+  })
+  info: InfoSectionTraits[] = [];
 
   @primitiveTrait({
     name: "Data Custodian",

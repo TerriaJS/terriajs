@@ -37,7 +37,9 @@ import GtfsCatalogItemTraits from "../../../Traits/TraitsClasses/GtfsCatalogItem
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
@@ -57,7 +59,10 @@ interface RectangleExtent {
   north: number;
 }
 
-class GtfsStratum extends LoadableStratum(GtfsCatalogItemTraits) {
+class GtfsStratum
+  extends LoadableStratum(GtfsCatalogItemTraits)
+  implements LockedDownStratum<GtfsCatalogItemTraits, GtfsStratum>
+{
   static stratumName = "gtfs";
 
   constructor(private readonly _item: GtfsCatalogItem) {

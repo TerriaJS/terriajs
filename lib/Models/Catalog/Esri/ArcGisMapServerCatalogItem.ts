@@ -3,6 +3,7 @@ import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import moment from "moment";
+import proj4 from "proj4";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
@@ -23,15 +24,21 @@ import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import ArcGisMapServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
+import ArcGisMapServerCatalogItemTraits, {
+  ArcGisExtentTraits,
+  ArcGisMapServerAvailableLayerTraits,
+  ArcGisSpatialReferenceTraits
+} from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import DiscreteTimeTraits from "../../../Traits/TraitsClasses/DiscreteTimeTraits";
+
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -41,17 +48,19 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, Legends, MapServer } from "./ArcGisInterfaces";
-import proj4 from "proj4";
+import { DiscreteTimesTraits } from "../../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 
-class MapServerStratum extends LoadableStratum(
-  ArcGisMapServerCatalogItemTraits
-) {
+class MapServerStratum
+  extends LoadableStratum(ArcGisMapServerCatalogItemTraits)
+  implements
+    LockedDownStratum<ArcGisMapServerCatalogItemTraits, MapServerStratum>
+{
   static stratumName = "mapServer";
 
   constructor(
     private readonly _item: ArcGisMapServerCatalogItem,
-    readonly mapServer: MapServer,
-    readonly allLayers: Layer[],
+    private readonly mapServer: MapServer,
+    private readonly allLayers: Layer[],
     private readonly _legends: Legends | undefined,
     readonly token: string | undefined
   ) {
@@ -162,7 +171,7 @@ class MapServerStratum extends LoadableStratum(
       );
     }
 
-    return stratum;
+    return { stratum, mapServerData: serviceMetadata };
   }
 
   @computed get maximumScale() {
@@ -236,7 +245,11 @@ class MapServerStratum extends LoadableStratum(
     ) {
       getRectangleFromLayer(this.mapServer.fullExtent, rectangle);
     } else {
-      getRectangleFromLayers(rectangle, this._item.layersArray);
+      this._item.layersArray.forEach(function (item) {
+        if (item.extent) {
+          getRectangleFromLayer(item.extent, rectangle);
+        }
+      });
     }
 
     if (rectangle.west === Infinity) return;
@@ -330,6 +343,47 @@ class MapServerStratum extends LoadableStratum(
       )
     );
   }
+
+  get availableLayers() {
+    return this.allLayers.map((layer) => {
+      return createStratumInstance(ArcGisMapServerAvailableLayerTraits, {
+        id: layer.id,
+        name: layer.name,
+        description: layer.description,
+        maxScale: layer.maxScale,
+        extent: createStratumInstance(ArcGisExtentTraits, {
+          ...layer.extent,
+          spatialReference: createStratumInstance(
+            ArcGisSpatialReferenceTraits,
+            layer.extent?.spatialReference
+          )
+        })
+      });
+    });
+  }
+
+  @computed
+  get discreteTimes() {
+    if (this?.mapServer.timeInfo === undefined) return undefined;
+    // Add union type - as `time` is always defined
+    const result: {
+      times: string[];
+      tags: string[];
+    } = {
+      times: [],
+      tags: []
+    };
+
+    createDiscreteTimesFromIsoSegments(
+      result,
+      new Date(this.mapServer.timeInfo.timeExtent[0]).toISOString(),
+      new Date(this.mapServer.timeInfo.timeExtent[1]).toISOString(),
+      undefined,
+      this._item.maxRefreshIntervals
+    );
+
+    return createStratumInstance(DiscreteTimesTraits, result);
+  }
 }
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
@@ -352,6 +406,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 ) {
   static readonly type = "esri-mapServer";
 
+  private _mapServerData: MapServer | undefined;
+
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
@@ -366,7 +422,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    const stratum = await MapServerStratum.load(this);
+    const { stratum, mapServerData } = await MapServerStratum.load(this);
+    this._mapServerData = mapServerData;
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
     });
@@ -385,28 +442,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       return super.cacheDuration;
     }
     return "1d";
-  }
-
-  @computed
-  get discreteTimes() {
-    const mapServerStratum: MapServerStratum | undefined = this.strata.get(
-      MapServerStratum.stratumName
-    ) as MapServerStratum | undefined;
-
-    if (mapServerStratum?.mapServer.timeInfo === undefined) return undefined;
-    // Add union type - as `time` is always defined
-    const result: (StratumFromTraits<DiscreteTimeTraits> & {
-      time: string;
-    })[] = [];
-
-    createDiscreteTimesFromIsoSegments(
-      result,
-      new Date(mapServerStratum.mapServer.timeInfo.timeExtent[0]).toISOString(),
-      new Date(mapServerStratum.mapServer.timeInfo.timeExtent[1]).toISOString(),
-      undefined,
-      this.maxRefreshIntervals
-    );
-    return result;
   }
 
   private getCurrentTime() {
@@ -542,11 +577,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     (
       timeParams: TimeParams | undefined
     ): IPromiseBasedObservable<ArcGisMapServerImageryProvider | undefined> => {
-      const stratum = this.strata.get(
-        MapServerStratum.stratumName
-      ) as MapServerStratum;
-
-      if (!isDefined(this.url) || !isDefined(stratum)) {
+      if (!isDefined(this.url)) {
         return fromPromise(Promise.resolve(undefined));
       }
 
@@ -586,8 +617,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           parameters: params,
           enablePickFeatures: this.allowFeaturePicking,
           usePreCachedTilesIfAvailable: this.usePreCachedTilesIfAvailable,
-          mapServerData: stratum.mapServer,
-          token: stratum.token,
+          mapServerData: this._mapServerData,
+          token: this.token,
           credit: this.attribution
         }
       );
@@ -617,12 +648,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   /** Return array of MapServer layers from `layers` trait (which is CSV of layer IDs) - this will only return **valid** MapServer layers.*/
   @computed get layersArray() {
-    const stratum = this.strata.get(MapServerStratum.stratumName) as
-      | MapServerStratum
-      | undefined;
-    if (!stratum) return [];
-
-    return filterOutUndefined(findLayers(stratum.allLayers, this.layers));
+    return findValidLayers(this);
   }
 }
 
@@ -648,13 +674,15 @@ async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
 }
 
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
-function findLayers(layers: Layer[], names: string | undefined) {
-  function findLayer(layers: Layer[], id: string) {
+function findValidLayers(
+  item: ArcGisMapServerCatalogItem
+): readonly StratumFromTraits<ArcGisMapServerAvailableLayerTraits>[] {
+  function findLayer(item: ArcGisMapServerCatalogItem, id: string) {
     const idLowerCase = id.toLowerCase();
     let foundByName;
-    for (let i = 0; i < layers.length; ++i) {
-      const layer = layers[i];
-      if (layer.id.toString() === id) {
+    for (let i = 0; i < item.availableLayers.length; ++i) {
+      const layer = item.availableLayers[i];
+      if (layer.id?.toString() === id) {
         return layer;
       } else if (
         isDefined(layer.name) &&
@@ -666,13 +694,16 @@ function findLayers(layers: Layer[], names: string | undefined) {
     return foundByName;
   }
 
-  if (!isDefined(names)) {
+  if (!isDefined(item.layers)) {
     // If a list of layers is not specified, we're using all layers.
-    return layers;
+    return item.availableLayers;
   }
-  return names.split(",").map(function (id) {
-    return findLayer(layers, id);
-  });
+  return item.layers
+    .split(",")
+    .map(function (id) {
+      return findLayer(item, id);
+    })
+    .filter(isDefined);
 }
 
 function updateBbox(extent: Extent, rectangle: RectangleCoordinates) {
@@ -683,15 +714,30 @@ function updateBbox(extent: Extent, rectangle: RectangleCoordinates) {
 }
 
 export function getRectangleFromLayer(
-  extent: Extent,
+  extent: Partial<Extent>,
   rectangle: RectangleCoordinates
 ) {
   const wkidCode =
     extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
-  if (isDefined(extent) && isDefined(wkidCode)) {
+  if (
+    isDefined(extent) &&
+    isDefined(extent.xmax) &&
+    isDefined(extent.xmin) &&
+    isDefined(extent.ymax) &&
+    isDefined(extent.ymin) &&
+    isDefined(wkidCode)
+  ) {
     if (wkidCode === 4326) {
-      return updateBbox(extent, rectangle);
+      return updateBbox(
+        {
+          xmax: extent.xmax,
+          xmin: extent.xmin,
+          ymax: extent.ymax,
+          ymin: extent.ymin
+        },
+        rectangle
+      );
     }
 
     const wkid = "EPSG:" + wkidCode;
@@ -719,17 +765,6 @@ export function getRectangleFromLayer(
       rectangle
     );
   }
-}
-
-function getRectangleFromLayers(
-  rectangle: RectangleCoordinates,
-  layers: Layer[]
-) {
-  layers.forEach(function (item) {
-    if (item.extent) {
-      getRectangleFromLayer(item.extent, rectangle);
-    }
-  });
 }
 
 function cleanAndProxyUrl(

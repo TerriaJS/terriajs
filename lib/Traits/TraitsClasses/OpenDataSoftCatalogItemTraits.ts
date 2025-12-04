@@ -99,4 +99,11 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
       'Template used to calculate refresh interval based on Opendatasoft dataset object. This template is rendered using dataset JSON object as view. For example `"{{metas.custom.update-frequency}}"` will use `"update-frequency"` custom metadata property. This supports "human readable" time strings - for example "15 minutes" and "60 sec".'
   })
   refreshIntervalTemplate?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Records count",
+    description: "Number of records (rows) for this OpenDataSoftCatalogItem."
+  })
+  recordsCount?: number;
 }

@@ -2,11 +2,22 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../../Core/Constructor";
 import ModelTraits from "../../Traits/ModelTraits";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
-import { BaseModel } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
+import { BaseModel } from "./Model";
 
-export abstract class LoadableStratumClass {
-  abstract duplicateLoadableStratum(newModel: BaseModel): this;
+export type LockedDownStratum<T extends ModelTraits, Class> = {
+  [K in keyof Class]: K extends keyof StratumFromTraits<T>
+    ? StratumFromTraits<T>[K]
+    : K extends keyof LoadableStratumClass
+    ? LoadableStratumClass[K]
+    : never;
+};
+
+interface LoadableStratumClass {
+  duplicateLoadableStratum(newModel: BaseModel): this;
+
+  // Currently the pattern to create members is to call a method on the stratum
+  createMembers?(): void;
 }
 
 export default function LoadableStratum<

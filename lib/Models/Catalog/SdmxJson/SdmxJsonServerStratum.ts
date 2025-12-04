@@ -11,7 +11,9 @@ import ModelReference from "../../../Traits/ModelReference";
 import SdmxCatalogGroupTraits from "../../../Traits/TraitsClasses/SdmxCatalogGroupTraits";
 import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -38,7 +40,10 @@ export interface SdmxServer {
   dataflows: Dataflows;
 }
 
-export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
+export class SdmxServerStratum
+  extends LoadableStratum(SdmxCatalogGroupTraits)
+  implements LockedDownStratum<SdmxCatalogGroupTraits, SdmxServerStratum>
+{
   static stratumName = "sdmxServer";
 
   static async load(
@@ -165,7 +170,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
             // Find current categoryId in parent categoryScheme or parent category
             if (categoryParentNode.type === "categoryScheme") {
-              category = this.getCategoryFromCatagoryScheme(
+              category = this.getCategoryFromCategoryScheme(
                 categorySchemeId,
                 categoryId
               );
@@ -241,7 +246,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   }
 
   @action
-  createMemberFromLayer(node: DataflowTreeNode) {
+  private createMemberFromLayer(node: DataflowTreeNode) {
     const layerId = this.getMemberId(node);
 
     if (!layerId) {
@@ -355,21 +360,21 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     );
   }
 
-  getMemberId(node: DataflowTreeNode) {
+  private getMemberId(node: DataflowTreeNode) {
     return `${this.catalogGroup.uniqueId}/${node.type}-${node.item.id}`;
   }
 
-  getDataflow(id?: string) {
+  private getDataflow(id?: string) {
     if (!isDefined(id)) return;
     return this.sdmxServer.dataflows.find((d) => d.id === id);
   }
 
-  getCategoryScheme(id?: string) {
+  private getCategoryScheme(id?: string) {
     if (!isDefined(id)) return;
     return this.sdmxServer.categorySchemes?.find((d) => d.id === id);
   }
 
-  getCategoryFromCatagoryScheme(
+  private getCategoryFromCategoryScheme(
     categoryScheme: CategoryScheme | string | undefined,
     id?: string
   ) {
@@ -385,11 +390,14 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     );
   }
 
-  getCategoryFromCategories(categories: Categories | undefined, id?: string) {
+  private getCategoryFromCategories(
+    categories: Categories | undefined,
+    id?: string
+  ) {
     return isDefined(id) ? categories?.find((c) => c.id === id) : undefined;
   }
 
-  getAgency(id?: string) {
+  private getAgency(id?: string) {
     if (!isDefined(id)) return;
 
     const agencies = this.sdmxServer.agencySchemes?.map(
@@ -516,7 +524,7 @@ export enum SdmxHttpErrorCodes {
   Unauthorized = 401,
   // 130 Response too large due to client request = 413 Request entity too large
   // 510 Response size exceeds service limit = 413 Request entity too large
-  ReponseTooLarge = 413,
+  ResponseTooLarge = 413,
   // 140 Syntax error = 400 Bad syntax
   SyntaxError = 400,
   // 150 Semantic error = 403 Forbidden
@@ -535,7 +543,7 @@ export const sdmxErrorString = new Map<SdmxHttpErrorCodes, string>();
 sdmxErrorString.set(SdmxHttpErrorCodes.NoChanges, "No changes");
 sdmxErrorString.set(SdmxHttpErrorCodes.NoResults, "No results");
 sdmxErrorString.set(SdmxHttpErrorCodes.Unauthorized, "Unauthorised");
-sdmxErrorString.set(SdmxHttpErrorCodes.ReponseTooLarge, "Response too large");
+sdmxErrorString.set(SdmxHttpErrorCodes.ResponseTooLarge, "Response too large");
 sdmxErrorString.set(SdmxHttpErrorCodes.SyntaxError, "Syntax error");
 sdmxErrorString.set(SdmxHttpErrorCodes.SemanticError, "Semantic error");
 sdmxErrorString.set(SdmxHttpErrorCodes.UriTooLong, "URI too long");

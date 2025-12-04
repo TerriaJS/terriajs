@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -17,7 +17,9 @@ import WebMapServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebMa
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
+import LoadableStratum, {
+  LockedDownStratum
+} from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
@@ -28,9 +30,11 @@ import WebMapServiceCapabilities, {
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
-class GetCapabilitiesStratum extends LoadableStratum(
-  WebMapServiceCatalogGroupTraits
-) {
+class GetCapabilitiesStratum
+  extends LoadableStratum(WebMapServiceCatalogGroupTraits)
+  implements
+    LockedDownStratum<WebMapServiceCatalogGroupTraits, GetCapabilitiesStratum>
+{
   static async load(
     catalogItem: WebMapServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
@@ -52,8 +56,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   constructor(
-    readonly catalogGroup: WebMapServiceCatalogGroup,
-    readonly capabilities: WebMapServiceCapabilities
+    private readonly catalogGroup: WebMapServiceCatalogGroup,
+    private readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
     makeObservable(this);
@@ -135,7 +139,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   }
 
-  get topLevelLayers(): readonly CapabilitiesLayer[] {
+  private get topLevelLayers(): readonly CapabilitiesLayer[] {
     if (this.catalogGroup.flatten) {
       return this.capabilities.allLayers;
     } else {
@@ -163,12 +167,15 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @action
-  createMembersFromLayers() {
+  createMembers() {
     this.topLevelLayers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
-  createMemberFromLayer(layer: CapabilitiesLayer, parentLayerId?: string) {
+  private createMemberFromLayer(
+    layer: CapabilitiesLayer,
+    parentLayerId?: string
+  ) {
     const layerId = this.getLayerId(layer, parentLayerId);
 
     if (!layerId) {
@@ -270,7 +277,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     model.setTrait(CommonStrata.definition, "name", layer.Title);
     model.setTrait(CommonStrata.definition, "url", this.catalogGroup.url);
-    model._webMapServiceCatalogGroup = this.catalogGroup;
     model.setTrait(
       CommonStrata.definition,
       "getCapabilitiesUrl",
@@ -323,7 +329,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
-  getLayerId(layer: CapabilitiesLayer, parentLayerId?: string) {
+  private getLayerId(layer: CapabilitiesLayer, parentLayerId?: string) {
     if (!isDefined(this.catalogGroup.uniqueId) && !isDefined(parentLayerId)) {
       return;
     }
@@ -337,7 +343,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
    * - `WMS Group Catalog ID/WMS Layer Name` - regardless of nesting
    * - `WMS Group Catalog ID/WMS Layer Title`
    */
-  getLayerShareKeys(layer: CapabilitiesLayer, layerId: string) {
+  private getLayerShareKeys(layer: CapabilitiesLayer, layerId: string) {
     const shareKeys: string[] = [];
 
     if (layerId !== `${this.catalogGroup.uniqueId}/${layer.Name}`)
@@ -392,7 +398,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum | undefined;
     if (getCapabilitiesStratum !== undefined) {
-      await runLater(() => getCapabilitiesStratum!.createMembersFromLayers());
+      await runLater(() => getCapabilitiesStratum!.createMembers());
     }
   }
 
