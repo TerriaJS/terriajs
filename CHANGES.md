@@ -3,6 +3,8 @@
 #### next release (8.11.2)
 
 - WMTS read URL from operations metadata #7371
+- Allow to use Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
+- Add a new configuration parameter `mapViewers` to specify which map viewers to show in `SettingPanel`.
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04

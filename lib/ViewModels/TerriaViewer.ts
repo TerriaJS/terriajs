@@ -171,7 +171,11 @@ export default class TerriaViewer {
     >;
     if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
       viewerFromPromise = leafletFromPromise.get();
-    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+    } else if (
+      this.attached &&
+      (this.viewerMode === ViewerMode.Cesium ||
+        this.viewerMode === ViewerMode.Cesium2D)
+    ) {
       viewerFromPromise = cesiumFromPromise.get();
     }
     return viewerFromPromise;
