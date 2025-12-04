@@ -1,13 +1,20 @@
 # Change Log
 
-#### next release (8.11.1)
+#### next release (8.11.2)
 
+- [The next improvement]
+
+#### 8.11.1 - 2025-12-04
+
+- ##### Security fixes
+  - Upgrades terriajs-server to v4.0.3. See [terriajs-server changes](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#security-fixes).
+- Fix translations key typo "zoomCotrol".
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
 - Update `csv-geo-au` support to include the latest Australian Government regions.
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
-- [The next improvement]
+- Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 
 #### 8.11.0 - 2025-10-09
 
