@@ -103,7 +103,7 @@
     },
     "catalog": {
       "cancel": "Cancelar",
-      "upload": "Subir",
+      "upload": "Subir datos",
       "unsupportedFileTypeTitle": "Tipo de archivo no soportado",
       "group": "Grupo"
     },
@@ -122,25 +122,30 @@
       "accessConstraints": "Restricciones de acceso",
       "noLayerFoundTitle": "Capa no encontrada",
       "defaultStyleLabel": "Estilo por defecto",
-      "dataDescription": "Descripción de los datos"
+      "dataDescription": "Descripción de los datos",
+      "missingDataTitle": "Faltan datos"
     },
     "userDrawing": {
       "messageHeader": "Dibujar en el mapa",
       "clickToAddFirstPoint": "Haga click para añadir un punto",
       "btnCancel": "Cancelar",
       "btnDone": "Hecho",
-      "clickToAddAnotherPoint": "Haga click para añadir otro punto"
+      "clickToAddAnotherPoint": "Haga click para añadir otro punto",
+      "pointEntities": "Puntos",
+      "line": "Línea"
     },
     "raiseError": {
       "notificationFeedback": "Para preguntas y comentarios, haga click aquí.",
       "developerDetails": "Detalles para desarrolladores",
-      "notificationFeedbackEmail": "Para preguntas y comentarios, por favor contáctenos en {{email}}"
+      "notificationFeedbackEmail": "Para preguntas y comentarios, por favor contáctenos en {{email}}",
+      "errorTitle": "Ha ocurrido un error"
     },
     "mapboxVectorTile": {
       "name": "Teselas vectoriales de Mapbox (MVT)"
     },
     "webFeatureServiceCatalogItem": {
-      "noLayerFoundMessage": "El conjunto de dato WFS '{{name}}' no tiene capas que coincidan con '{{typeNames}}'. O el catálogo ha sido configurado erróneamente, o el servidor WFS ha cambiado."
+      "noLayerFoundMessage": "El conjunto de dato WFS '{{name}}' no tiene capas que coincidan con '{{typeNames}}'. O el catálogo ha sido configurado erróneamente, o el servidor WFS ha cambiado.",
+      "missingDataTitle": "Faltan datos"
     },
     "tableData": {
       "activeStyle": "Mostrar Variable",
@@ -412,6 +417,50 @@
           }
         }
       }
+    },
+    "georss": {
+      "author": "Autor"
+    },
+    "senaps": {
+      "locationHeadingFeatureInfo": "Localización"
+    },
+    "openStreetMap": {
+      "name": "Open Street Map"
+    },
+    "placesLikeMe": {
+      "regionName": "Región",
+      "characteristics": "Características"
+    },
+    "sensorObservationService": {
+      "procedure": "Procedimiento",
+      "property": "Propiedad",
+      "sos": "SOS"
+    },
+    "sdmxJsonDataflowStratum": {
+      "defaultUnitMeasure": "Unidades"
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "region": "Región"
+      }
+    },
+    "time": {
+      "invalidDate": "Fecha no válida"
+    },
+    "terriaJSONcatalog": {
+      "buttonTitleConfirm": "Estoy de acuerdo"
+    },
+    "webMapTileServiceCatalogItem": {
+      "noUsableTileMatrixTitle": "Atención"
+    },
+    "webProcessingService": {
+      "errorDetails": "Detalles del error"
+    },
+    "shadow": {
+      "name": "Sombras",
+      "options": {
+        "none": "Ninguno"
+      }
     }
   },
   "analytics": {
@@ -448,7 +497,7 @@
       "message": "¿Le gustaría verlo ahora?",
       "title": "Este mapa contiene una historia"
     },
-    "showWorkbench": "Mostrar Banco de Trabajo",
+    "showWorkbench": "Explorar datasets [{{count}}]",
     "hideWorkbench": "Ocultar Banco de Trabajo"
   },
   "chart": {
@@ -609,7 +658,7 @@
     "removeAllStoriesDialog_0": "¿Está seguro de que desea eliminar {{ count }} escena?",
     "removeAllStoriesDialog_1": "¿Está seguro de que desea eliminar las {{ count }} escenas?",
     "removeAllStoriesDialog_2": "",
-    "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa",
+    "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa.",
     "recapture": "Recaptura",
     "recaptureStory": "volver a capturar",
     "expand": "Expandir",
@@ -702,7 +751,7 @@
     "btnAdvanced": "Opciones avanzadas",
     "printButton": "Imprimir",
     "shortenUsingService": "Acortar la URL para compartir usando un servicio web",
-    "localDataNote": "<0><0>Nota:</0></0> <1> Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local. Para compartir estas fuentes de datos, publique sus datos en un servidor web y <2> añádalos usando una URL </2>. </1>",
+    "localDataNote": "<0><0>Nota:</0></0> <1> Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local o de un servicio autenticado. Para compartir estas fuentes de datos, publique sus datos en un servidor web y <2> añádalos usando una URL </2>. </1>",
     "shortLinkShortening": "Acortamiento…",
     "embedTitle": "Incrustar mapa",
     "shortLinkError": "Se ha producido un error cuando se intentaba acortar la URL. Por favor revise sus opciones de conexión a internet y pruebe de nuevo.",
@@ -782,9 +831,9 @@
     "resetAlignmentTitle": "Restablecer Alineación",
     "manualAlignmentTitle": "Alineación Manual",
     "title": "Funcionalidad Experimental: Realidad Aumentada",
-    "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
+    "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Esto puede hacerse en cualquier momento.<br /><br />Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Zoom -",
     "zoomReset": "Restablecer zoom",
     "zoomIn": "Zoom +"
@@ -895,16 +944,16 @@
     },
     "finish": "Finalizar",
     "menuBarStoryButton": {
-      "content": "## Historias\nLas historias permiten añadir información contextual a un conjunto de datos para dar vida a una narración. Cree su propia historia de datos con el Editor de Historias y compártala a través del panel \"Compartir\" una vez que haya terminado."
+      "content": "## Historias\n\nLas Historias le permiten agregar información contextual a un dataset para agregarle narrativa. Cree su propia historia con datos usando el Editor de Historias y compártala usando el panel \"Compartir\" una vez finalizada."
     },
     "exploreMapDataButton": {
-      "content": "## Explore datos del mapa\n\nRecorra el catálogo de datos disponibles y agréguelos al mapa desde aquí. Puede agregar múltiples conjuntos de datos en cualquier momento, y los verá listados debajo en el Tablero."
+      "content": "## Explore datos en el gemelo digital\n\nRecorra el catálogo de datos disponibles y agréguelos al gemelo digital desde aquí. Puede agregar múltiples conjuntos de datos en cualquier momento, y los verá listados debajo en el Tablero."
     },
     "menuBarMapSettingsButton": {
-      "content": "## Configuraciones de mapa\nPersonalice los ajustes de los mapas, como los mapas base, el terreno 2D/3D y la calidad de la imagen del mapa para mejorar el rendimiento."
+      "content": "## Configuración del mapa\n\nPara un mejor rendimiento personalice las configuraciones del mapa como capa base, terreno 2D/3D y calidad de imagen del mapa."
     },
     "sidePanelUploadButton": {
-      "content": "## Cargar datos\nPuede cargar sus propios datos en el mapa para visualizarlos con otros conjuntos de datos. Cargue un archivo o enlace a un conjunto de datos en línea o servicio de datos existente. Los formatos de datos admitidos son CSV, GeoJSON, KML, GPX and CZML."
+      "content": "## Subir datos\n\nPuede subir sus propios datos al mapa para verlo junto a otros datasets. Suba un archivo o pegue el link a un dataset o servicio de datos disponible. Entre los formatos soportados se incluyen CSV, GeoJSON, KML, GPX y CZML."
     },
     "mapNavigationCompassOuterRing": {
       "content": "## Controles de la vista\n\nAquí puedes cambiar la vista del mapa. Puedes cambiar la orientación de la vista usando el anillo exterior, y puedes inclinar el ángulo de la cámara usando el anillo interior. Haz doble clic para restablecer la vista."
@@ -923,7 +972,7 @@
     "closeButtonTitle": "Cerrar {{toolName}} herramienta",
     "loadingError": {
       "message": "Se ha producido un error al intentar cargar esta herramienta desde el servidor. Por favor, inténtelo de nuevo",
-      "title": "Error al cargar {{Nombre herrmienta} Herramienta"
+      "title": "Error al cargar la herramienta {{toolName}}"
     },
     "button": {
       "open": "Salir {{toolNameLowerCase}}",
@@ -957,7 +1006,7 @@
     "differenceResultsTitle": "Cambia la detección de cambios",
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No se ha seleccionado ninguna ubicación",
+        "title": "No se ha seleccionado ninguna ubicación.",
         "description": "Para filtrar el selector de fecha de la imagen por ubicación, por favor seleccione un punto en el mapa"
       },
       "locationSelected": {
@@ -1182,7 +1231,15 @@
     "panelText": "Hacer click en el mapa inferior lo abrirá en una ventana o pestaña separadas."
   },
   "compare": {
-    "done": "Hecho"
+    "done": "Hecho",
+    "dateButton": {
+      "left": "Izquierda",
+      "right": "Derecha"
+    },
+    "dateLocationFilter": {
+      "cancel": "Cancelar",
+      "mouseTooltipTitle": "Seleccionar localización"
+    }
   },
   "selectableDimensions": {
     "undefinedLabel": "No especificado",
@@ -1249,5 +1306,23 @@
     {
       "body": "Usa este panel para explorar datos, gestionar configuraciones y construir tu escena o historia en el mapa."
     }
-  ]
+  ],
+  "itemSearchTool": {
+    "searching": "Buscando",
+    "numericParameter": {
+      "minimum": "Mínimo",
+      "maximum": "Máximo"
+    },
+    "searchBtnText": "Buscar",
+    "backBtnText": "Buscar otra vez",
+    "resultsCount_0": "{{count}} coincidencia encontrada",
+    "resultsCount_1": "{{count}} coincidencias encontradas",
+    "resultsCount_2": "{{count}} coincidencias encontradas"
+  },
+  "notification": {
+    "title": "Mensaje"
+  },
+  "printView": {
+    "loading": "Creando vista de impresión…"
+  }
 }
