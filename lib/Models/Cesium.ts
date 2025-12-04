@@ -90,10 +90,8 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
-import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 import { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";

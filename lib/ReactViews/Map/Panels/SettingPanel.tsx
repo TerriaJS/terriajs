@@ -219,9 +219,11 @@ const SettingPanel: FC = observer(() => {
         </Box>
         <FlexGrid gap={1} elementsNo={3}>
           {Object.entries(MapViewers)
-            .filter(([key, viewerMode]) =>
-              viewerMode.available &&
-              this.props.terria.configParameters.mapViewers.indexOf(key) >= 0)
+            .filter(
+              ([key, viewerMode]) =>
+                viewerMode.available &&
+                terria.configParameters.mapViewers.indexOf(key) >= 0
+            )
             .map(([key, viewerMode]) => (
               <SettingsButton
                 key={key}
@@ -230,7 +232,7 @@ const SettingPanel: FC = observer(() => {
               >
                 <Text mini>{t(viewerMode.label)}</Text>
               </SettingsButton>
-          ))}
+            ))}
         </FlexGrid>
         {!!supportsSide && (
           <>
