@@ -68,6 +68,13 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
         ? await ArcGISTiledElevationTerrainProvider.fromUrl(this.terrainURL)
         : undefined
     });
+
+    if (this.token) {
+      i3sProvider.resource.appendQueryParameters({
+        token: this.token
+      });
+    }
+
     runInAction(() => {
       this.dataProvider = i3sProvider;
     });

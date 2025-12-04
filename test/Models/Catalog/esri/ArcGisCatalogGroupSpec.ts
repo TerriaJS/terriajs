@@ -44,6 +44,11 @@ describe("ArcGisCatalogGroup", function () {
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
 
+      // Remove token from url if it exists so we can test that it is added
+      if (url.includes("&token=test-token")) {
+        url = url.replace("&token=test-token", "");
+      }
+
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
@@ -253,6 +258,49 @@ describe("ArcGisCatalogGroup", function () {
       );
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
+    });
+  });
+
+  describe("loading ArcGIS group with token", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", arcgisServerUrl);
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+    });
+
+    it("Uses token in url", async function () {
+      await group.loadMembers();
+      expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+        arcgisServerUrl + "?f=json&token=test-token"
+      );
+    });
+
+    it("Correctly passes token to members", async function () {
+      await group.loadMembers();
+
+      expect(group.members).toBeDefined();
+      expect(group.members.length).toBe(8);
+      expect(group.memberModels).toBeDefined();
+      expect(group.memberModels.length).toBe(8);
+
+      const member0 = group.memberModels[0] as ArcGisCatalogGroup;
+      const member1 = group.memberModels[1] as ArcGisCatalogGroup;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogGroup;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
+      const member4 = group.memberModels[4] as ArcGisFeatureServerCatalogGroup;
+      const member5 = group.memberModels[5] as ArcGisMapServerCatalogGroup;
+      const member6 = group.memberModels[6] as ArcGisFeatureServerCatalogGroup;
+      const member7 = group.memberModels[7] as ArcGisMapServerCatalogGroup;
+
+      expect(member0.token).toBe("test-token");
+      expect(member1.token).toBe("test-token");
+      expect(member2.token).toBe("test-token");
+      expect(member3.token).toBe("test-token");
+      expect(member4.token).toBe("test-token");
+      expect(member5.token).toBe("test-token");
+      expect(member6.token).toBe("test-token");
+      expect(member7.token).toBe("test-token");
     });
   });
 });
