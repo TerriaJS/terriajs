@@ -2,7 +2,7 @@
 
 #### next release (8.11.2)
 
-- WMTS read URL from operations metadata
+- WMTS read URL from operations metadata #7371
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
