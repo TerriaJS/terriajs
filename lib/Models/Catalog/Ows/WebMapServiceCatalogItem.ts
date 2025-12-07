@@ -9,7 +9,7 @@ import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import TilingScheme from "terriajs-cesium/Source/Core/TilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
@@ -19,6 +19,7 @@ import TerriaError from "../../../Core/TerriaError";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
+import TilingSchemeRegistry from "../../../Map/ImageryProvider/TilingSchemeRegistry";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -35,10 +36,7 @@ import {
   TimeSeriesFeatureInfoContext,
   csvFeatureInfoContext
 } from "../../../Table/tableFeatureInfoContext";
-import WebMapServiceCatalogItemTraits, {
-  SUPPORTED_CRS_3857,
-  SUPPORTED_CRS_4326
-} from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
+import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -423,16 +421,17 @@ class WebMapServiceCatalogItem
     return result;
   }
 
+  private generateTilingScheme(crs: string | undefined): TilingScheme {
+    const generatorName = this.tilingSchemeGenerator;
+    const tilingScheme = generatorName
+      ? TilingSchemeRegistry.generateTilingScheme(generatorName, this.crs)
+      : undefined;
+    return tilingScheme ?? TilingSchemeRegistry.defaultTilingScheme(crs);
+  }
+
   @computed
   get tilingScheme() {
-    if (this.crs) {
-      if (SUPPORTED_CRS_3857.includes(this.crs))
-        return new WebMercatorTilingScheme();
-      if (SUPPORTED_CRS_4326.includes(this.crs))
-        return new GeographicTilingScheme();
-    }
-
-    return new WebMercatorTilingScheme();
+    return this.generateTilingScheme(this.crs);
   }
 
   @computed

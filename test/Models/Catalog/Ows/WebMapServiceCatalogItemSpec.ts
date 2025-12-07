@@ -3,11 +3,16 @@ import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTiling
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import {
+  registerTilingSchemeGenerator,
+  unregisterTilingSchemeGenerator
+} from "../../../../lib/Map/ImageryProvider/registerTilingSchemeGenerator";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import Terria from "../../../../lib/Models/Terria";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
+import Terria from "../../../../lib/Models/Terria";
+import { TerriaTilingScheme } from "../../../../lib/Map/ImageryProvider/TilingSchemeRegistry";
 
 describe("WebMapServiceCatalogItem", function () {
   describe("derives getCapabilitiesUrl from url", () => {
@@ -103,6 +108,46 @@ describe("WebMapServiceCatalogItem", function () {
 
       expect(wms.crs).toBe("EPSG:3857");
       expect(wms.tilingScheme instanceof WebMercatorTilingScheme).toBeTruthy();
+    });
+
+    describe("when using custom tiling scheme generator", function () {
+      let wms: WebMapServiceCatalogItem;
+
+      class CustomTilingScheme {
+        constructor(readonly crs: string) {}
+      }
+
+      beforeEach(function () {
+        registerTilingSchemeGenerator("testTilingSchemeGenerator", (crs) => {
+          if (crs === "EPSG:3577") {
+            return new CustomTilingScheme(crs) as any as TerriaTilingScheme;
+          }
+        });
+
+        const terria = new Terria();
+        wms = new WebMapServiceCatalogItem("test", terria);
+        wms.setTrait("definition", "url", "test/WMS/wms_crs.xml");
+        wms.setTrait("definition", "layers", "ls8_nbart_geomedian_annual");
+        wms.setTrait(
+          "definition",
+          "tilingSchemeGenerator",
+          "testTilingSchemeGenerator"
+        );
+      });
+
+      afterEach(function () {
+        unregisterTilingSchemeGenerator("testTilingSchemeGenerator");
+      });
+
+      it("generates custom tiling scheme", function () {
+        wms.setTrait("definition", "crs", "EPSG:3577");
+        expect(wms.tilingScheme instanceof CustomTilingScheme).toBe(true);
+      });
+
+      it("uses default tiling scheme if the generator does not support the CRS", function () {
+        wms.setTrait("definition", "crs", "EPSG:3031");
+        expect(wms.tilingScheme instanceof WebMercatorTilingScheme).toBe(true);
+      });
     });
   });
 
@@ -535,6 +580,39 @@ describe("WebMapServiceCatalogItem", function () {
       expect(wmsItem.rectangle.east).toBe(160);
       expect(wmsItem.rectangle.south).toBe(-50);
       expect(wmsItem.rectangle.north).toBe(-10);
+    });
+  });
+
+  describe("boundingBoxes", function () {
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test-boundingboxes", terria);
+
+    beforeEach(() => {
+      runInAction(() => {
+        wms.setTrait("definition", "url", "test/WMS/wms_crs.xml");
+        wms.setTrait(
+          "definition",
+          "layers",
+          "ls8_nbart_geomedian_annual,ls7_nbart_geomedian_annual"
+        );
+      });
+    });
+
+    it("returns a bounding box for each CRS", async function () {
+      await wms.loadMapItems();
+      ["EPSG:3111", "EPSG:3577", "EPSG:3857", "EPSG:4326"].forEach((crs) =>
+        expect(wms.boundingBoxes.find((b) => b.crs === crs)).toBeDefined()
+      );
+    });
+
+    it("returns unified bounding box of all layers", async function () {
+      await wms.loadMapItems();
+      const bbox = wms.boundingBoxes.find((b) => b.crs === "EPSG:3111");
+      expect(bbox).toBeDefined();
+      expect(bbox!.max.x).toBeCloseTo(3983581.4498, 3);
+      expect(bbox!.max.y).toBeCloseTo(5725855.4078, 3);
+      expect(bbox!.min.x).toBeCloseTo(-1623290.9363, 3);
+      expect(bbox!.min.y).toBeCloseTo(1042109.992, 3);
     });
   });
 
