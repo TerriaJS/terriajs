@@ -106,6 +106,10 @@ export class MapServerStratum extends LoadableStratum(
   ): Promise<MapServerStratum> {
     const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
+    if (catalogGroup.token) {
+      uri.addQuery("token", catalogGroup.token);
+    }
+
     const mapServer: MapServer | undefined = await loadJson(
       proxyCatalogItemUrl(catalogGroup, uri.toString())
     );
@@ -194,6 +198,13 @@ export class MapServerStratum extends LoadableStratum(
         .toString()
     );
     model.setTrait(CommonStrata.definition, "url", this._catalogGroup.url);
+    if (this._catalogGroup.token) {
+      model.setTrait(
+        CommonStrata.definition,
+        "token",
+        this._catalogGroup.token
+      );
+    }
   }
 
   @action
@@ -258,6 +269,21 @@ export class MapServerStratum extends LoadableStratum(
 
     const uri = new URI(this._catalogGroup.url).segment(layer.id.toString()); // Convert layer id to string as segment(0) means something different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
+
+    if (this._catalogGroup.token) {
+      if (model instanceof ArcGisMapServerCatalogItem)
+        model.setTrait(
+          CommonStrata.definition,
+          "token",
+          this._catalogGroup.token
+        );
+      if (model instanceof ArcGisMapServerCatalogGroup)
+        model.setTrait(
+          CommonStrata.definition,
+          "token",
+          this._catalogGroup.token
+        );
+    }
   }
 }
 
