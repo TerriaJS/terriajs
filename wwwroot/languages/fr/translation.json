@@ -230,7 +230,7 @@
     "guidanceBtnText": "Afficher des instructions détaillées sur l'utilisation de la boussole",
     "guidanceBtnTitle": "Guidage du gyroscope"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Zoom arrière",
     "zoomReset": "Réinitialiser le zoom",
     "zoomIn": "Zoom avant"

@@ -1,14 +1,14 @@
 import { action, computed, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import isDefined from "../../Core/isDefined";
-import { isJsonObject, JsonObject } from "../../Core/Json";
+import { JsonObject, isJsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import isDefined from "../../Core/isDefined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import ModelReference from "../../Traits/ModelReference";
 import {
-  BaseMapsTraits,
-  BaseMapTraits
+  BaseMapTraits,
+  BaseMapsTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
 import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
 import CommonStrata from "../Definition/CommonStrata";
@@ -35,6 +35,7 @@ export type BaseMapsJson = Partial<
 export interface BaseMapItem {
   image?: string;
   contrastColor?: string;
+  backgroundColor?: string;
   item: MappableMixin.Instance;
 }
 
@@ -65,6 +66,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
           enabledBaseMaps.push({
             image: baseMapItem.image,
             contrastColor: baseMapItem.contrastColor,
+            backgroundColor: baseMapItem.backgroundColor,
             item: itemModel
           });
         }
@@ -113,17 +115,19 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
-        const existingItem = this.items.find(
-          (baseMap) => baseMap.item === member.item
-        );
-        if (existingItem) {
-          // object array trait doesn't automatically update model item
-          existingItem.setTrait(stratumId, "image", member.image);
-        } else {
-          this.add(stratumId, member);
-        }
-      });
+      newItemsIds
+        .pushErrorTo(errors)
+        ?.forEach((member: BaseMapModel, i: number) => {
+          const existingItem = this.items.find(
+            (baseMap) => baseMap.item === member.item
+          );
+          if (existingItem) {
+            // object array trait doesn't automatically update model item
+            updateModelFromJson(existingItem, stratumId, items[i]);
+          } else {
+            this.add(stratumId, member);
+          }
+        });
     }
 
     if (isJsonObject(rest))
