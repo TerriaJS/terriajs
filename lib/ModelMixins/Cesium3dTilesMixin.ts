@@ -204,7 +204,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
       const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
-        Matrix4.getMatrix3(modelMatrix, new Matrix3())
+        Matrix4.getRotation(modelMatrix, new Matrix3())
       );
 
       const { latitude, longitude, height } = this.origin;

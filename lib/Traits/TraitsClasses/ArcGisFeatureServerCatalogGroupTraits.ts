@@ -1,3 +1,4 @@
+import primitiveTrait from "../Decorators/primitiveTrait";
 import { traitClass } from "../Trait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -22,4 +23,11 @@ export default class ArcGisFeatureServerCatalogGroupTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits
-) {}
+) {
+  @primitiveTrait({
+    name: "Token",
+    description: "Token to use for ArcGiS REST API requests.",
+    type: "string"
+  })
+  token?: string;
+}

@@ -1,3 +1,5 @@
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -23,14 +25,14 @@ describe("TerriaViewer", function () {
     });
     container = document.createElement("div");
     document.body.appendChild(container);
-    terria.mainViewer.attach(container);
-    terriaViewer = terria.mainViewer;
     terria.loadHomeCamera({
       west: 45,
       south: -20,
       east: 55,
       north: -10
     });
+    terria.mainViewer.attach(container);
+    terriaViewer = terria.mainViewer;
 
     setViewerMode("3d", terriaViewer);
 
@@ -113,6 +115,25 @@ describe("TerriaViewer", function () {
       await terriaViewer.setBaseMap(baseMap);
       expect(terriaViewer.baseMap).toBe(baseMap);
       expect(terriaViewer.viewerMode).toBe(ViewerMode.Leaflet);
+    });
+  });
+
+  describe("currentViewer", function () {
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+      west: CesiumMath.toDegrees(west),
+      south: CesiumMath.toDegrees(south),
+      east: CesiumMath.toDegrees(east),
+      north: CesiumMath.toDegrees(north)
+    });
+
+    it("should return the home camera view", function () {
+      const r = rectangleDegrees(
+        terriaViewer.currentViewer.getCurrentCameraView().rectangle
+      );
+      expect(r.west).toBe(45);
+      expect(r.south).toBe(-20);
+      expect(r.east).toBe(55);
+      expect(r.north).toBe(-10);
     });
   });
 });

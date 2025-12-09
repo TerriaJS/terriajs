@@ -286,7 +286,7 @@ export default class TerriaViewer {
     }
 
     this._lastViewer = newViewer;
-    newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
+    newViewer.setInitialView(currentView || untracked(() => this.homeCamera));
 
     return newViewer;
   }

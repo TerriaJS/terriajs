@@ -237,6 +237,10 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
       .addQuery("outFields", "*")
       .addQuery("outSR", "4326");
 
+    if (this.token) {
+      uri.addQuery("token", this.token);
+    }
+
     if (resultOffset !== undefined) {
       // Pagination specific parameters
       uri
