@@ -1696,6 +1696,7 @@ export default class Cesium extends GlobeOrMap {
       // Ignore layers using custom tiling schemes. Custom tiling schemes are
       // currently only supported in Leaflet and may result in unexpected
       // errors when rendered using Cesium.
+      console.log(`Ignoring layer using custom CRS`);
       return;
     }
 

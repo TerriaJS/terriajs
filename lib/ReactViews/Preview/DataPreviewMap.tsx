@@ -1,96 +1,16 @@
 import classNames from "classnames";
-import {
-  action,
-  makeObservable,
-  computed as mobxComputed,
-  observable
-} from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import filterOutUndefined from "../../Core/filterOutUndefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
-import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import CommonStrata from "../../Models/Definition/CommonStrata";
-import CreateModel from "../../Models/Definition/CreateModel";
-import { ModelConstructorParameters } from "../../Models/Definition/Model";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
-import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
-import TerriaViewer from "../../ViewModels/TerriaViewer";
+import PreviewViewer from "../../ViewModels/PreviewViewer";
 import Styles from "./data-preview-map.scss";
 
 type PreviewedItem = MappableMixin.Instance & CatalogMemberMixin.Instance;
-
-// AdaptForPreviewMap class remains largely the same
-class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
-  @observable previewed: PreviewedItem | undefined;
-
-  constructor(...args: ModelConstructorParameters) {
-    super(...args);
-    makeObservable(this);
-  }
-
-  async forceLoadMapItems() {}
-
-  @mobxComputed
-  get mapItems() {
-    return (
-      this.previewed?.mapItems.map((m) =>
-        ImageryParts.is(m)
-          ? {
-              ...m,
-              alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
-              show: true
-            }
-          : m
-      ) ?? []
-    );
-  }
-}
-
-interface BBox {
-  west: number;
-  south: number;
-  east: number;
-  north: number;
-}
-
-const createBoundingRectangleCatalogItem = (
-  terria: Terria,
-  bbox: BBox,
-  id = "__preview-data-extent"
-) => {
-  const rectangleCatalogItem = new GeoJsonCatalogItem(id, terria);
-
-  rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {
-          stroke: "#08ABD5",
-          "stroke-width": 2,
-          "stroke-opacity": 1
-        },
-        geometry: {
-          type: "LineString",
-          coordinates: [
-            [bbox.west, bbox.south],
-            [bbox.west, bbox.north],
-            [bbox.east, bbox.north],
-            [bbox.east, bbox.south],
-            [bbox.west, bbox.south]
-          ]
-        }
-      }
-    ]
-  });
-  rectangleCatalogItem.loadMapItems();
-  return rectangleCatalogItem;
-};
 
 interface DataPreviewMapProps {
   terria: Terria;
@@ -104,127 +24,30 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
-  const isZoomedToExtentRef = useRef(false);
-
   const homeCamera = useMemo(() => {
     return terria.mainViewer.homeCamera;
   }, [terria]);
 
-  const boundingRectangleCatalogItem = useMemo(() => {
-    const rectangle = previewed?.rectangle;
-    if (!rectangle) {
-      return undefined;
-    }
-    const { west, south, east, north } = rectangle;
-
-    if (
-      west === undefined ||
-      south === undefined ||
-      east === undefined ||
-      north === undefined
-    ) {
-      return undefined;
-    }
-
-    return createBoundingRectangleCatalogItem(
-      terria,
-      {
-        west,
-        south,
-        east,
-        north
-      },
-      "__preview-data-extent"
-    );
-  }, [previewed?.rectangle, terria]);
-
-  const zoomedOutBoundingRectangleCatalogItem = useMemo(() => {
-    const rectangle = previewed?.rectangle;
-    if (!rectangle) {
-      return undefined;
-    }
-    let { west, south, east, north } = rectangle;
-
-    if (
-      west === undefined ||
-      south === undefined ||
-      east === undefined ||
-      north === undefined
-    ) {
-      return undefined;
-    }
-
-    // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
-    // the home view, so that it is actually visible.
-    const minimumFraction = 0.05;
-    const homeView = homeCamera;
-    const minimumWidth =
-      CesiumMath.toDegrees(homeView.rectangle.width) * minimumFraction;
-    if (east - west < minimumWidth) {
-      const center = (east + west) * 0.5;
-      west = center - minimumWidth * 0.5;
-      east = center + minimumWidth * 0.5;
-    }
-
-    const minimumHeight =
-      CesiumMath.toDegrees(homeView.rectangle.height) * minimumFraction;
-    if (north - south < minimumHeight) {
-      const center = (north + south) * 0.5;
-      south = center - minimumHeight * 0.5;
-      north = center + minimumHeight * 0.5;
-    }
-
-    return createBoundingRectangleCatalogItem(
-      terria,
-      {
-        west,
-        south,
-        east,
-        north
-      },
-      "__preview-data-extent-zoomed-out"
-    );
-  }, [homeCamera, previewed?.rectangle, terria]);
-
   const previewViewer = useMemo(() => {
-    const viewer = new TerriaViewer(
-      terria,
-      mobxComputed(() => {
-        const previewItem = new AdaptForPreviewMap(undefined, terria);
-        previewItem.previewed = previewed;
-        return filterOutUndefined([
-          previewItem,
-          boundingRectangleCatalogItem,
-          zoomedOutBoundingRectangleCatalogItem
-        ]);
-      })
-    );
+    const viewer = new PreviewViewer(terria, previewed);
 
-    viewer.viewerMode = ViewerMode.Leaflet;
-    viewer.disableInteraction = true;
-    viewer.homeCamera = homeCamera;
+    runInAction(() => {
+      viewer.viewerMode = ViewerMode.Leaflet;
+      viewer.disableInteraction = true;
+      viewer.homeCamera = homeCamera;
+    });
 
     return viewer;
-  }, [
-    boundingRectangleCatalogItem,
-    homeCamera,
-    previewed,
-    terria,
-    zoomedOutBoundingRectangleCatalogItem
-  ]);
+  }, [homeCamera, previewed, terria]);
 
   useEffect(() => {
     const container = mapContainerRef.current;
 
-    const baseMapItems = terria.baseMapsModel.baseMapItems;
-    const initPreviewBaseMap = action(() =>
-      baseMapItems.find(
-        (bm) => bm.item.uniqueId === terria.baseMapsModel.previewBaseMapId
-      )
-    )();
-    if (initPreviewBaseMap) {
-      previewViewer.setBaseMap(initPreviewBaseMap.item);
+    const previewBaseMap = previewViewer.previewBaseMap;
+    if (previewBaseMap) {
+      previewViewer.setBaseMap(previewBaseMap.item);
     } else {
+      const baseMapItems = terria.baseMapsModel.baseMapItems;
       previewViewer.setBaseMap(
         baseMapItems.length > 0 ? baseMapItems[0].item : undefined
       );
@@ -239,39 +62,19 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
     };
   }, [
     previewViewer,
-    terria.baseMapsModel.baseMapItems,
-    terria.baseMapsModel.previewBaseMapId
+    previewViewer.previewBaseMap,
+    terria.baseMapsModel.baseMapItems
   ]);
 
   const toggleZoom = action(() => {
-    isZoomedToExtentRef.current = !isZoomedToExtentRef.current;
-
-    if (isZoomedToExtentRef.current) {
-      boundingRectangleCatalogItem?.setTrait(
-        CommonStrata.override,
-        "show",
-        true
-      );
-      zoomedOutBoundingRectangleCatalogItem?.setTrait(
-        CommonStrata.override,
-        "show",
-        false
-      );
-      if (previewed) {
-        previewViewer?.currentViewer.zoomTo(previewed);
-      }
-    } else {
-      boundingRectangleCatalogItem?.setTrait(
-        CommonStrata.override,
-        "show",
-        false
-      );
-      zoomedOutBoundingRectangleCatalogItem?.setTrait(
-        CommonStrata.override,
-        "show",
-        true
-      );
+    if (previewViewer.isZoomedToExtent) {
       previewViewer.currentViewer.zoomTo(previewViewer?.homeCamera);
+      previewViewer.isZoomedToExtent = false;
+    } else {
+      if (previewed) {
+        previewViewer.currentViewer.zoomTo(previewed);
+      }
+      previewViewer.isZoomedToExtent = true;
     }
   });
 
@@ -283,14 +86,10 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
     )
       return "dataPreviewError";
 
-    if (
-      (!previewed?.mapItems || previewed.mapItems.length === 0) &&
-      !boundingRectangleCatalogItem
-    )
+    if (!previewed?.mapItems || previewed.mapItems.length === 0)
       return "noPreviewAvailable";
     return "dataPreview";
   }, [
-    boundingRectangleCatalogItem,
     previewed?.isLoading,
     previewed?.loadMapItemsResult?.error,
     previewed?.loadMetadataResult?.error,

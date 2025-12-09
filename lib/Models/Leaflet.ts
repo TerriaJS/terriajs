@@ -121,7 +121,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   });
 
-  private _makeImageryLayerFromParts(
+  protected _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
