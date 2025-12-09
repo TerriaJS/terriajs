@@ -188,7 +188,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomIn.bind(this)}
-              title={t("zoomCotrol.zoomIn")}
+              title={t("zoomControl.zoomIn")}
             >
               <Icon glyph={Icon.GLYPHS.zoomIn} />
             </RawButton>
@@ -197,7 +197,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomReset.bind(this)}
-              title={t("zoomCotrol.zoomReset")}
+              title={t("zoomControl.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
@@ -206,7 +206,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomOut.bind(this)}
-              title={t("zoomCotrol.zoomOut")}
+              title={t("zoomControl.zoomOut")}
             >
               <Icon glyph={GLYPHS.zoomOut} />
             </RawButton>

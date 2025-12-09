@@ -27,6 +27,7 @@ import {
 
 interface ArcGisPbfSourceOptions {
   url: string;
+  token?: string;
   objectIdField: string;
   outFields: string[];
   maxRecordCountFactor: number;
@@ -51,6 +52,13 @@ export class ProtomapsArcGisPbfSource implements TileSource {
   constructor(options: ArcGisPbfSourceOptions) {
     this.baseResource = new Resource(options.url);
     this.baseResource.appendForwardSlash();
+
+    if (options.token) {
+      this.baseResource.setQueryParameters({
+        token: options.token
+      });
+    }
+
     this.tilingScheme = options.tilingScheme;
 
     this.objectIdField = options.objectIdField;

@@ -80,6 +80,8 @@ class ImageServerStratum extends LoadableStratum(
     let token: string | undefined;
     if (isDefined(item.tokenUrl) && isDefined(item.url)) {
       token = await getToken(item.terria, item.tokenUrl, item.url);
+    } else if (isDefined(item.token)) {
+      token = item.token;
     }
 
     let serviceUri = getBaseURI(item);
@@ -299,6 +301,7 @@ class ImageServerLegendStratum extends LoadableStratum(
 
     legendUri.addQuery(item.flattenedParameters);
 
+    // Note we don't need to fetch token from tokenUrl here - as ImageServerStratum handles that, and will populate `token` trait with the response
     if (isDefined(item.token)) {
       legendUri = legendUri.addQuery("token", item.token);
     }
