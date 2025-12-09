@@ -55,10 +55,19 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     name: "Token URL",
-    description: "URL to use for fetching request tokens",
+    description:
+      "URL to use for fetching request tokens. Note this will override the token trait if both are set.",
     type: "string"
   })
   tokenUrl?: string;
+
+  @primitiveTrait({
+    name: "Token",
+    description:
+      "Token to use for ArcGiS REST API requests (if not using tokenUrl)",
+    type: "string"
+  })
+  token?: string;
 
   @primitiveTrait({
     type: "number",

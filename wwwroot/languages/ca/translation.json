@@ -82,7 +82,7 @@
     "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
     "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom +",
     "zoomReset": "Restablir zoom",
     "zoomOut": "Zoom -"

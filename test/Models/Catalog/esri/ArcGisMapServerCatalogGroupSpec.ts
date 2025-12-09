@@ -36,6 +36,10 @@ describe("ArcGisMapServerCatalogGroup", function () {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
+
+      // Remove token from url
+      url = url.replace("&token=test-token", "");
+
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
@@ -160,6 +164,47 @@ describe("ArcGisMapServerCatalogGroup", function () {
     });
   });
 
+  describe("Supports MapServer with token", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", mapServerUrl);
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+      await group.loadMembers();
+    });
+
+    it("Uses token in url", async function () {
+      expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+        mapServerUrl + "?f=json&token=test-token"
+      );
+    });
+
+    it("Correctly passes token to members", async function () {
+      expect(group.members).toBeDefined();
+      expect(group.members.length).toBe(4);
+      expect(group.memberModels).toBeDefined();
+      expect(group.memberModels.length).toBe(4);
+
+      const member0 = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisMapServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogItem;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
+
+      expect(member0.token).toBe("test-token");
+      expect(member1.token).toBe("test-token");
+      expect(member2.token).toBe("test-token");
+      expect(member3.token).toBe("test-token");
+
+      await member3.loadMembers();
+
+      const member4 = member3.memberModels[0] as ArcGisMapServerCatalogGroup;
+      const member5 = member3.memberModels[1] as ArcGisMapServerCatalogGroup;
+
+      expect(member4.token).toBe("test-token");
+      expect(member5.token).toBe("test-token");
+    });
+  });
+
   describe("Supports MapServer with TilesOnly single fused map cache", function () {
     beforeEach(async () => {
       runInAction(() => {
@@ -183,6 +228,16 @@ describe("ArcGisMapServerCatalogGroup", function () {
       );
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
+    });
+
+    it("Correctly passes token to members", async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+      await group.loadMembers();
+
+      const member = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      expect(member.token).toBe("test-token");
     });
   });
 });
