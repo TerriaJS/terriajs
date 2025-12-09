@@ -5,30 +5,15 @@ import Terria from "../Models/Terria";
 import PreviewItem from "./PreviewViewer/PreviewItem";
 import TerriaViewer from "./TerriaViewer";
 
+/**
+ * Viewer used for rendering preview maps
+ */
 export default class PreviewViewer extends TerriaViewer {
   /**
    * The previewed item
    */
   readonly previewed: MappableMixin.Instance | undefined;
   readonly previeweAdapter: PreviewItem | undefined;
-
-  /**
-   * True if the preview map is currently zoomed to the items extent, otherwise
-   * it is zoomed to the home camera view.
-   */
-  get isZoomedToExtent() {
-    return this.previeweAdapter?.isZoomedToExtent ?? false;
-  }
-
-  set isZoomedToExtent(value: boolean) {
-    const previewAdapter = this.previeweAdapter;
-    if (!previewAdapter) {
-      return;
-    }
-    runInAction(() => {
-      previewAdapter.isZoomedToExtent = value;
-    });
-  }
 
   /**
    * @param terria Terria instance
@@ -47,6 +32,24 @@ export default class PreviewViewer extends TerriaViewer {
     this.previewed = previewed;
     this.previeweAdapter = previewAdapter;
     makeObservable(this);
+  }
+
+  /**
+   * True if the preview map is currently zoomed to the items extent, otherwise
+   * it is zoomed to the home camera view.
+   */
+  get isZoomedToExtent() {
+    return this.previeweAdapter?.isZoomedToExtent ?? false;
+  }
+
+  set isZoomedToExtent(value: boolean) {
+    const previewAdapter = this.previeweAdapter;
+    if (!previewAdapter) {
+      return;
+    }
+    runInAction(() => {
+      previewAdapter.isZoomedToExtent = value;
+    });
   }
 
   /**

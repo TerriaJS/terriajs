@@ -12,6 +12,9 @@ interface Rectangle {
 }
 
 export default class PreviewExtentGeoJson {
+  /**
+   * Create a preview extent item given a rectangle
+   */
   static fromRectangle(terria: Terria, rectangle: Rectangle, crsCode?: string) {
     const { west, south, east, north } = rectangle;
     if (
@@ -66,6 +69,9 @@ export default class PreviewExtentGeoJson {
     return rectangleItem;
   }
 
+  /**
+   * Create a preview extent item given a projected bounding box
+   */
   static fromProjectedBoundingBox(
     terria: Terria,
     bbox: Model<ProjectedBoundingBoxTraits>
