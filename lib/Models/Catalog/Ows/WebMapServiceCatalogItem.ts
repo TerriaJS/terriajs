@@ -52,6 +52,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import { computedFn } from "mobx-utils";
 
 // Remove problematic query parameters from URLs (GetCapabilities, GetMap, ...) - these are handled separately
 const QUERY_PARAMETERS_TO_REMOVE = [
@@ -424,7 +425,7 @@ class WebMapServiceCatalogItem
   private generateTilingScheme(crs: string | undefined): TilingScheme {
     const generatorName = this.tilingSchemeGenerator;
     const tilingScheme = generatorName
-      ? TilingSchemeRegistry.generateTilingScheme(generatorName, this.crs)
+      ? TilingSchemeRegistry.generateTilingScheme(generatorName, crs)
       : undefined;
     return tilingScheme ?? TilingSchemeRegistry.defaultTilingScheme(crs);
   }
@@ -453,6 +454,10 @@ class WebMapServiceCatalogItem
       show: this.show,
       clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
     };
+  }
+
+  getImageryProviderForCrs(crs: string) {
+    return this._createImageryProviderForCrs(this.currentDiscreteTimeTag, crs);
   }
 
   @computed
@@ -527,13 +532,29 @@ class WebMapServiceCatalogItem
       : undefined;
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
+  /**
+   * A memoized function that creates an ImageryProvider for the given time tag
+   * and CRS.
+   */
+  private _createImageryProviderForCrs = computedFn(
+    (
+      time: string | undefined,
+      crsCode: string | undefined
+    ): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
       }
       if (this.url === undefined) {
+        return undefined;
+      }
+
+      // Return undefined if the selected CRS is not supported by this model
+      if (
+        crsCode &&
+        this.availableCrs &&
+        !this.availableCrs.includes(crsCode)
+      ) {
         return undefined;
       }
 
@@ -596,8 +617,8 @@ class WebMapServiceCatalogItem
 
       // Set CRS for WMS 1.3.0
       // Set SRS for WMS 1.1.1
-      const crs = this.useWmsVersion130 ? this.crs : undefined;
-      const srs = this.useWmsVersion130 ? undefined : this.crs;
+      const crs = this.useWmsVersion130 ? crsCode : undefined;
+      const srs = this.useWmsVersion130 ? undefined : crsCode;
 
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
@@ -609,7 +630,7 @@ class WebMapServiceCatalogItem
         getFeatureInfoUrl: this.getFeatureInfoUrl,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
-        tilingScheme: this.tilingScheme,
+        tilingScheme: this.generateTilingScheme(crs),
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
         credit: this.attribution
@@ -635,6 +656,12 @@ class WebMapServiceCatalogItem
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
       return this.updateRequestImage(imageryProvider);
+    }
+  );
+
+  private _createImageryProvider = createTransformerAllowUndefined(
+    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
+      return this._createImageryProviderForCrs(time, this.crs);
     }
   );
 

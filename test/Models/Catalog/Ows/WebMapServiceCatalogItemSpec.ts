@@ -3,16 +3,14 @@ import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTiling
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
-import {
-  registerTilingSchemeGenerator,
-  unregisterTilingSchemeGenerator
-} from "../../../../lib/Map/ImageryProvider/registerTilingSchemeGenerator";
+import TilingSchemeRegistry, {
+  TerriaTilingScheme
+} from "../../../../lib/Map/ImageryProvider/TilingSchemeRegistry";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
-import { TerriaTilingScheme } from "../../../../lib/Map/ImageryProvider/TilingSchemeRegistry";
 
 describe("WebMapServiceCatalogItem", function () {
   describe("derives getCapabilitiesUrl from url", () => {
@@ -118,7 +116,7 @@ describe("WebMapServiceCatalogItem", function () {
       }
 
       beforeEach(function () {
-        registerTilingSchemeGenerator("testTilingSchemeGenerator", (crs) => {
+        TilingSchemeRegistry.register("testTilingSchemeGenerator", (crs) => {
           if (crs === "EPSG:3577") {
             return new CustomTilingScheme(crs) as any as TerriaTilingScheme;
           }
@@ -136,7 +134,7 @@ describe("WebMapServiceCatalogItem", function () {
       });
 
       afterEach(function () {
-        unregisterTilingSchemeGenerator("testTilingSchemeGenerator");
+        TilingSchemeRegistry.unregister("testTilingSchemeGenerator");
       });
 
       it("generates custom tiling scheme", function () {

@@ -69,6 +69,7 @@ import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import TilingSchemeRegistry from "../Map/ImageryProvider/TilingSchemeRegistry";
 import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
@@ -1686,6 +1687,17 @@ export default class Cesium extends GlobeOrMap {
     item: MappableMixin.Instance
   ): ImageryLayer | undefined {
     if (parts.imageryProvider === undefined) return undefined;
+
+    if (
+      TilingSchemeRegistry.isCustomTilingScheme(
+        parts.imageryProvider.tilingScheme
+      )
+    ) {
+      // Ignore layers using custom tiling schemes. Custom tiling schemes are
+      // currently only supported in Leaflet and may result in unexpected
+      // errors when rendered using Cesium.
+      return;
+    }
 
     const layer = this._createImageryLayer(
       parts.imageryProvider,
