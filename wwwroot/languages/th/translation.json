@@ -26,7 +26,7 @@
     "lon": "ลองจิจูด",
     "lat": "ละติจูด"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "ซูมออก",
     "zoomReset": "ตั้งค่าการซูมใหม่",
     "zoomIn": "ซูมเข้า"
