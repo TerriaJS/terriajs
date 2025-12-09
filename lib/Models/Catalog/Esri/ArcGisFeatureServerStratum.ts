@@ -29,6 +29,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import { esriStyleToTableStyle } from "./esriStyleToTableStyle";
@@ -242,7 +243,8 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
 
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
-    private readonly _featureServer?: FeatureServer
+    private readonly _featureServer: FeatureServer | undefined,
+    private readonly _token: string | undefined
   ) {
     super();
     makeObservable(this);
@@ -251,7 +253,8 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new ArcGisFeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
-      this._featureServer
+      this._featureServer,
+      this._token
     ) as this;
   }
 
@@ -259,11 +262,23 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     item: ArcGisFeatureServerCatalogItem
   ): Promise<ArcGisFeatureServerStratum> {
     if (item.url === undefined) {
-      return new ArcGisFeatureServerStratum(item, undefined);
+      return new ArcGisFeatureServerStratum(item, undefined, undefined);
     }
-    const metaUrl = buildMetadataUrl(item);
+
+    let token: string | undefined;
+    if (isDefined(item.tokenUrl) && isDefined(item.url)) {
+      token = await getToken(item.terria, item.tokenUrl, item.url);
+    } else if (isDefined(item.token)) {
+      token = item.token;
+    }
+
+    const metaUrl = buildMetadataUrl(item, token);
     const featureServer = await loadJson(metaUrl);
-    return new ArcGisFeatureServerStratum(item, featureServer);
+    return new ArcGisFeatureServerStratum(item, featureServer, token);
+  }
+
+  get token() {
+    return this._token;
   }
 
   @computed
@@ -642,11 +657,15 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   }
 }
 
-function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
-  return proxyCatalogItemUrl(
-    catalogItem,
-    new URI(catalogItem.url).addQuery("f", "json").toString()
-  );
+function buildMetadataUrl(
+  catalogItem: ArcGisFeatureServerCatalogItem,
+  token: string | undefined
+) {
+  const url = new URI(catalogItem.url).addQuery("f", "json");
+  if (token) {
+    url.addQuery("token", token);
+  }
+  return proxyCatalogItemUrl(catalogItem, url.toString());
 }
 
 StratumOrder.addLoadStratum(ArcGisFeatureServerStratum.stratumName);
