@@ -1,8 +1,10 @@
 import { runInAction } from "mobx";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 
 enum ViewerMode {
   Cesium = "cesium",
+  Cesium2D = "cesium2d",
   Leaflet = "leaflet"
 }
 
@@ -17,6 +19,12 @@ export const MapViewers = Object.seal({
     viewerMode: ViewerMode.Cesium,
     terrain: false,
     label: "settingPanel.viewerModeLabels.CesiumEllipsoid",
+    available: true
+  },
+  "2dcesium": {
+    viewerMode: ViewerMode.Cesium2D,
+    terrain: false,
+    label: "settingPanel.viewerModeLabels.Cesium2D",
     available: true
   },
   "2d": {
@@ -38,6 +46,16 @@ export function setViewerMode(
     if (viewerMode === "3d" || viewerMode === "3dsmooth") {
       viewer.viewerMode = ViewerMode.Cesium;
       viewer.viewerOptions.useTerrain = viewerMode === "3d";
+      if (viewer.terria.cesium) {
+        viewer.terria.cesium.scene.mode =
+          viewerMode === "3d" ? SceneMode.SCENE3D : SceneMode.COLUMBUS_VIEW;
+      }
+    } else if (viewerMode === "2dcesium") {
+      viewer.viewerMode = ViewerMode.Cesium2D;
+      viewer.viewerOptions.useTerrain = false;
+      if (viewer.terria.cesium) {
+        viewer.terria.cesium.scene.mode = SceneMode.SCENE2D;
+      }
     } else if (viewerMode === "2d") {
       viewer.viewerMode = ViewerMode.Leaflet;
     } else {
