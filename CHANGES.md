@@ -7,6 +7,7 @@
 - WMTS read URL from operations metadata #7371
 - Add UI to show toast messages.
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
