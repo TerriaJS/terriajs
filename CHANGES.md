@@ -6,6 +6,7 @@
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
 - WMTS read URL from operations metadata #7371
 - Add UI to show toast messages.
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
