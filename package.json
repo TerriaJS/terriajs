@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.11.0-saas-next",
+  "version": "8.11.1-saas-next",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -157,7 +157,7 @@
     "shpjs": "^6.1.0",
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
-    "terriajs-cesium": "21.0.0",
+    "terriajs-cesium": "21.0.1",
     "terriajs-cesium-widgets": "13.2.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "terriajs-tiff-imagery-provider": "2.13.3-webpack5-3",
@@ -209,7 +209,7 @@
     "react-test-renderer": "^18.3.1",
     "sass": "^1.81.0",
     "svg-sprite": "^2.0.4",
-    "terriajs-server": "^4.0.2",
+    "terriajs-server": "^4.0.3",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
   },
