@@ -146,6 +146,7 @@ export class IdealZoomTraits extends ModelTraits {
   })
   camera?: CameraTraits;
 }
+
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -197,6 +198,21 @@ export class InitialMessageTraits extends ModelTraits {
     description: "Height of the message."
   })
   height?: number;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show as toast message",
+    description: "Show the initial message as a toast"
+  })
+  showAsToast?: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Toast visible duration",
+    description:
+      "Time in seconds after which the toast will be dismissed. If undefined, user must take action."
+  })
+  toastVisibleDuration?: number;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */

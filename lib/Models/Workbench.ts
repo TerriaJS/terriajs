@@ -211,6 +211,10 @@ export default class Workbench {
       });
     }
 
+    if (MappableMixin.isMixedInto(item) && item.shouldShowInitialMessage) {
+      await item.showInitialMessage();
+    }
+
     this.insertItem(item);
 
     let error: TerriaError | undefined;
