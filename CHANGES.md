@@ -6,6 +6,7 @@
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
 - WMTS read URL from operations metadata #7371
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add UI to show toast messages.
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
@@ -18,6 +19,7 @@
 - Update `csv-geo-au` support to include the latest Australian Government regions.
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
+- Fix sharing when using initfile.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 
 #### 8.11.0 - 2025-10-09
