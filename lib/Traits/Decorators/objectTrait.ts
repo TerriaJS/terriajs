@@ -10,8 +10,13 @@ import saveStratumToJson from "../../Models/Definition/saveStratumToJson";
 import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import ModelTraits from "../ModelTraits";
 import NestedStrataMap from "../NestedStrataMap";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 import traitsClassToModelClass from "../traitsClassToModelClass";
+import { ensureTraitsClassDefinition } from "../traitsToJsonSpec";
 import TraitsConstructor from "../TraitsConstructor";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
@@ -114,6 +119,17 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     }
 
     return saveStratumToJson(this.type.traits, value);
+  }
+
+  toJsonSpec(model: BaseModel, context: TraitJsonSpecContext): TraitJsonSpec {
+    const ref = ensureTraitsClassDefinition(this.type, model, context);
+    const baseRef: TraitJsonSpec = { $ref: ref };
+
+    return this.buildJsonSpec({
+      ...(this.isNullable
+        ? { oneOf: [baseRef, { type: "null" }] }
+        : baseRef)
+    });
   }
 
   isSameType(trait: Trait): boolean {

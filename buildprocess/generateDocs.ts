@@ -16,7 +16,11 @@ import { ObjectTrait } from "../lib/Traits/Decorators/objectTrait";
 import { PrimitiveArrayTrait } from "../lib/Traits/Decorators/primitiveArrayTrait";
 import { PrimitiveTrait } from "../lib/Traits/Decorators/primitiveTrait";
 import ModelTraits from "../lib/Traits/ModelTraits";
-import Trait from "../lib/Traits/Trait";
+import Trait, { TraitJsonSpec } from "../lib/Traits/Trait";
+import {
+  cleanJsonSpec,
+  createModelJsonSchema
+} from "../lib/Traits/traitsToJsonSpec";
 
 /** Get type name for a given Trait */
 function markdownFromTraitType(trait: Trait) {
@@ -113,6 +117,8 @@ ${traitRows}`,
 // This tracks which traits have been rendered already - so we don't get duplicates
 // It is reset for every catalog model
 let alreadyRenderedTraits: string[] = [];
+const catalogTypeJsonSpecDir =
+  "doc/connecting-to-data/catalog-type-details/json";
 
 /** Render table of traits for given model */
 function renderTraitTable(model: BaseModel, recursive = false, depth = 1) {
@@ -207,12 +213,201 @@ ${JSON.stringify(sampleMember.TraitsClass.example, null, 2)}
   return content;
 }
 
+function createJsonSpecForMember(sampleMember: BaseModel) {
+  return createModelJsonSchema(sampleMember);
+}
+
+function createCameraViewSchema() {
+  const vector: TraitJsonSpec = {
+    type: "object",
+    properties: {
+      x: { type: "number" },
+      y: { type: "number" },
+      z: { type: "number" }
+    },
+    required: ["x", "y", "z"] as string[],
+    additionalProperties: false
+  };
+
+  const lookAt: TraitJsonSpec = {
+    type: "object",
+    properties: {
+      lookAt: {
+        type: "object",
+        properties: {
+          targetLongitude: { type: "number" },
+          targetLatitude: { type: "number" },
+          targetHeight: { type: "number" },
+          heading: { type: "number" },
+          pitch: { type: "number" },
+          range: { type: "number" }
+        },
+        required: [
+          "targetLongitude",
+          "targetLatitude",
+          "targetHeight",
+          "heading",
+          "pitch",
+          "range"
+        ] as string[],
+        additionalProperties: false
+      }
+    },
+    required: ["lookAt"] as string[],
+    additionalProperties: false
+  };
+
+  const positionHeadingPitchRoll: TraitJsonSpec = {
+    type: "object",
+    properties: {
+      positionHeadingPitchRoll: {
+        type: "object",
+        properties: {
+          cameraLongitude: { type: "number" },
+          cameraLatitude: { type: "number" },
+          cameraHeight: { type: "number" },
+          heading: { type: "number" },
+          pitch: { type: "number" },
+          roll: { type: "number" }
+        },
+        required: [
+          "cameraLongitude",
+          "cameraLatitude",
+          "cameraHeight",
+          "heading",
+          "pitch",
+          "roll"
+        ] as string[],
+        additionalProperties: false
+      }
+    },
+    required: ["positionHeadingPitchRoll"] as string[],
+    additionalProperties: false
+  };
+
+  const rectangle: TraitJsonSpec = {
+    type: "object",
+    properties: {
+      west: { type: "number" },
+      south: { type: "number" },
+      east: { type: "number" },
+      north: { type: "number" },
+      position: vector,
+      direction: vector,
+      up: vector
+    },
+    required: ["west", "south", "east", "north"] as string[],
+    additionalProperties: false,
+    allOf: [
+      {
+        if: {
+          anyOf: [
+            { required: ["position"] },
+            { required: ["direction"] },
+            { required: ["up"] }
+          ]
+        },
+        then: {
+          required: ["position", "direction", "up"] as string[]
+        }
+      }
+    ]
+  };
+
+  return cleanJsonSpec({
+    description:
+      "Camera view definition. Accepts lookAt, positionHeadingPitchRoll, or explicit rectangle (with optional position/direction/up vectors).",
+    oneOf: [lookAt, positionHeadingPitchRoll, rectangle]
+  });
+}
+
+function createInitSourceSchema(members: BaseModel[]) {
+  const modelSchemas = members.map((member) => createModelJsonSchema(member));
+
+  return cleanJsonSpec({
+    title: "InitSourceData",
+    description:
+      "Terria init source data describing catalog members and viewer configuration.",
+    type: "object",
+    properties: {
+      catalog: {
+        description:
+          "Catalog members. Each entry should match one of the catalog item/group/function/reference schemas.",
+        type: "array",
+        items: {
+          oneOf: modelSchemas
+        }
+      },
+      viewerMode: {
+        description: "Initial viewer mode.",
+        enum: ["3d", "3dSmooth", "2d"]
+      },
+      baseMaps: {
+        description: "Base map configuration.",
+        type: "object"
+      },
+      initialCamera: {
+        description:
+          "Initial camera view or a flag to focus the camera on workbench items.",
+        oneOf: [
+          createCameraViewSchema(),
+          {
+            type: "object",
+            properties: {
+              focusWorkbenchItems: { type: "boolean" }
+            },
+            required: ["focusWorkbenchItems"],
+            additionalProperties: false
+          }
+        ]
+      },
+      workbench: {
+        description: "List of model IDs to place on the workbench.",
+        type: "array",
+        items: { type: "string" }
+      },
+      timeline: {
+        description: "Timeline of model IDs.",
+        type: "array",
+        items: { type: "string" }
+      },
+      settings: {
+        description:
+          "Overrides for persistent settings (used for shares/stories).",
+        type: "object",
+        properties: {
+          baseMaximumScreenSpaceError: { type: "number" },
+          useNativeResolution: { type: "boolean" },
+          alwaysShowTimeline: { type: "boolean" },
+          baseMapId: { type: "string" },
+          terrainSplitDirection: { type: "number" },
+          depthTestAgainstTerrainEnabled: { type: "boolean" },
+          shortenShareUrls: { type: "boolean" }
+        },
+        additionalProperties: true
+      }
+    },
+    additionalProperties: true
+  });
+}
+
+function createGenericModelSchema(members: BaseModel[]) {
+  const modelSchemas = members.map((member) => createModelJsonSchema(member));
+
+  return cleanJsonSpec({
+    title: "CatalogModel",
+    description: "Union schema for any Terria catalog member type.",
+    oneOf: modelSchemas
+  });
+}
+
 async function processArray(members: BaseModel[]) {
   const typeDetailsNavItems = [];
   let catalogItemsContent = "";
   let catalogGroupsContent = "";
   let catalogFunctionsContent = "";
   let catalogReferencesContent = "";
+  fs.mkdirSync(catalogTypeJsonSpecDir, { recursive: true });
   for (let i = 0; i < members.length; i++) {
     const sampleMember = members[i];
     const memberName = sampleMember.constructor.name;
@@ -240,6 +435,12 @@ async function processArray(members: BaseModel[]) {
     fs.writeFileSync(
       `doc/connecting-to-data/catalog-type-details/${sampleMember.type}.md`,
       content
+    );
+
+    const jsonSpec = createJsonSpecForMember(sampleMember);
+    fs.writeFileSync(
+      `${catalogTypeJsonSpecDir}/${sampleMember.type}.json`,
+      JSON.stringify(jsonSpec, null, 2)
     );
   }
 
@@ -298,6 +499,18 @@ export default async function generateDocs() {
     catalogReferencesContent,
     typeDetailsNavItems
   } = await processArray(members);
+
+  const initSourceSchema = createInitSourceSchema(members);
+  fs.writeFileSync(
+    `${catalogTypeJsonSpecDir}/init-source.json`,
+    JSON.stringify(initSourceSchema, null, 2)
+  );
+
+  const genericModelSchema = createGenericModelSchema(members);
+  fs.writeFileSync(
+    `${catalogTypeJsonSpecDir}/model.json`,
+    JSON.stringify(genericModelSchema, null, 2)
+  );
 
   // Add entries for all the catalog item/group/function/reference types to type details subsection in mkdocs.yml
   const connectingToDataSection = mkDocsConfig.nav

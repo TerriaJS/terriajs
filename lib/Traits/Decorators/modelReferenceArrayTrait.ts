@@ -7,7 +7,11 @@ import { BaseModel } from "../../Models/Definition/Model";
 import ModelFactory from "../../Models/Definition/ModelFactory";
 import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import ModelReference from "../ModelReference";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;
@@ -148,6 +152,21 @@ export class ModelReferenceArrayTrait extends Trait {
 
   toJson(value: ReadonlyArray<ModelReference> | undefined): any {
     return value;
+  }
+
+  toJsonSpec(
+    _model: BaseModel,
+    _context: TraitJsonSpecContext
+  ): TraitJsonSpec {
+    return this.buildJsonSpec({
+      type: "array",
+      items: {
+        oneOf: [
+          { type: "string", format: "model-id" },
+          { type: "object", description: "Inline model definition" }
+        ]
+      }
+    });
   }
 
   isSameType(trait: Trait): boolean {

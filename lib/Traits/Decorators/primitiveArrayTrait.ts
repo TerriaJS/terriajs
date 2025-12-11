@@ -1,7 +1,11 @@
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { BaseModel } from "../../Models/Definition/Model";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
 
@@ -26,7 +30,9 @@ export default function primitiveArrayTrait<T>(
   };
 }
 
-export class PrimitiveArrayTrait<T> extends Trait {
+export class PrimitiveArrayTrait<
+  T extends string | number | boolean
+> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
@@ -67,6 +73,17 @@ export class PrimitiveArrayTrait<T> extends Trait {
 
   toJson(value: T[]): any {
     return value;
+  }
+
+  toJsonSpec(model: BaseModel, _context: TraitJsonSpecContext): TraitJsonSpec {
+    return this.buildJsonSpec(
+      {
+        type: this.isNullable ? ["array", "null"] : "array",
+        items: { type: this.type }
+      },
+      model,
+      { includeDefault: true }
+    );
   }
 
   isSameType(trait: Trait): boolean {

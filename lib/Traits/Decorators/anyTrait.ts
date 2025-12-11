@@ -1,7 +1,11 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
 import { BaseModel } from "../../Models/Definition/Model";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 
 export interface AnyTraitOptions extends TraitOptions {}
 
@@ -42,6 +46,15 @@ export class AnyTrait extends Trait {
 
   toJson(value: any): any {
     return value;
+  }
+
+  toJsonSpec(
+    _model: BaseModel,
+    _context: TraitJsonSpecContext
+  ): TraitJsonSpec {
+    return this.buildJsonSpec({
+      type: ["string", "number", "boolean", "object", "array", "null"]
+    });
   }
 
   isSameType(trait: Trait): boolean {

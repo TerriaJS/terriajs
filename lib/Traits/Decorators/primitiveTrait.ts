@@ -1,7 +1,11 @@
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { BaseModel } from "../../Models/Definition/Model";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
 
@@ -70,6 +74,17 @@ export class PrimitiveTrait<T> extends Trait {
 
   toJson(value: T): any {
     return value;
+  }
+
+  toJsonSpec(
+    model: BaseModel,
+    _context: TraitJsonSpecContext
+  ): TraitJsonSpec {
+    return this.buildJsonSpec(
+      { type: this.isNullable ? [this.type, "null"] : this.type },
+      model,
+      { includeDefault: true }
+    );
   }
 
   isSameType(trait: Trait): boolean {

@@ -1,3 +1,4 @@
+import { JSONSchema7 } from "json-schema";
 import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import { BaseModel } from "../Models/Definition/Model";
@@ -18,6 +19,18 @@ export function traitClass(options: TraitClassOptions) {
 export interface TraitOptions {
   name: string;
   description: string;
+}
+
+export type TraitJsonSpec = JSONSchema7 & { [key: string]: any };
+
+export interface TraitJsonSpecContext {
+  definitions: Record<string, TraitJsonSpec>;
+  visitedTraits: Set<string>;
+}
+
+interface BuildJsonSpecOptions {
+  includeDefault?: boolean;
+  example?: any;
 }
 
 export default abstract class Trait {
@@ -45,5 +58,46 @@ export default abstract class Trait {
   ): Result<any | undefined>;
   abstract toJson(value: any): any;
 
+  abstract toJsonSpec(
+    model: BaseModel,
+    context: TraitJsonSpecContext
+  ): TraitJsonSpec;
+
   abstract isSameType(trait: Trait): boolean;
+
+  protected buildJsonSpec(
+    base: TraitJsonSpec,
+    model?: BaseModel,
+    options?: BuildJsonSpecOptions
+  ): TraitJsonSpec {
+    const spec: TraitJsonSpec = {
+      title: this.name,
+      description: this.description,
+      ...base
+    };
+
+    if (options?.includeDefault && model) {
+      const defaultValue = this.getValue(model);
+      if (defaultValue !== undefined) {
+        spec.default = defaultValue;
+      }
+    }
+
+    const example =
+      options?.example ??
+      (this as any).example ??
+      (this.constructor as any).example;
+    if (example !== undefined) {
+      spec.examples = [example];
+    }
+
+    Object.keys(spec).forEach((key) => {
+      const value = (spec as any)[key];
+      if (value === undefined) {
+        delete (spec as any)[key];
+      }
+    });
+
+    return spec;
+  }
 }

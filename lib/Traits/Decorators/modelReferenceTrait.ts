@@ -5,7 +5,11 @@ import createStubCatalogItem from "../../Models/Catalog/createStubCatalogItem";
 import { BaseModel } from "../../Models/Definition/Model";
 import ModelFactory from "../../Models/Definition/ModelFactory";
 import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 
 export interface ModelTraitOptions extends TraitOptions {
   modelParentId?: string;
@@ -103,6 +107,24 @@ export class ModelReferenceTrait extends Trait {
 
   toJson(value: BaseModel | undefined): any {
     return value;
+  }
+
+  toJsonSpec(
+    model: BaseModel,
+    _context: TraitJsonSpecContext
+  ): TraitJsonSpec {
+    const defaultValue = this.getValue(model);
+    const defaultId = typeof defaultValue === "string" ? defaultValue : undefined;
+    return this.buildJsonSpec(
+      {
+        oneOf: [
+          { type: "string", format: "model-id" },
+          { type: "object", description: "Inline model definition" }
+        ],
+        default: defaultId
+      },
+      model
+    );
   }
 
   isSameType(trait: Trait): boolean {

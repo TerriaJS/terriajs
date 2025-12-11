@@ -15,8 +15,13 @@ import ArrayNestedStrataMap, {
   TraitsConstructorWithRemoval
 } from "../ArrayNestedStrataMap";
 import ModelTraits from "../ModelTraits";
-import Trait, { TraitOptions } from "../Trait";
+import Trait, {
+  TraitJsonSpec,
+  TraitJsonSpecContext,
+  TraitOptions
+} from "../Trait";
 import traitsClassToModelClass from "../traitsClassToModelClass";
+import { ensureTraitsClassDefinition } from "../traitsToJsonSpec";
 
 export enum MergeStrategy {
   /**
@@ -256,6 +261,16 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     }
 
     return value.map((element) => saveStratumToJson(this.type.traits, element));
+  }
+
+  toJsonSpec(model: BaseModel, context: TraitJsonSpecContext): TraitJsonSpec {
+    const ref = ensureTraitsClassDefinition(this.type, model, context);
+    return this.buildJsonSpec({
+      type: "array",
+      items: { $ref: ref },
+      "x-idProperty": String(this.idProperty),
+      "x-mergeStrategy": this.merge
+    });
   }
 
   isSameType(trait: Trait): boolean {
