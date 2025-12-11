@@ -230,6 +230,15 @@ export interface ConfigParameters {
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
   bingMapsKey?: string;
+  /**
+   * An [Anthropic API key](https://console.anthropic.com/) used for AI-powered features such as automatic scene summary generation in the Story editor. It is your responsibility to request a key and comply with all terms and conditions.
+   */
+  claudeApiKey?: string;
+  /**
+   * The Claude model to use for AI features. Check https://console.anthropic.com/ for available models.
+   * Examples: "claude-3-opus-20240229", "claude-3-sonnet-20240229", "claude-3-haiku-20240307"
+   */
+  claudeModel?: string;
   hideTerriaLogo?: boolean;
   /**
    * An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).
@@ -545,6 +554,8 @@ export default class Terria {
     cesiumIonLoginTokenPersistence: "page",
     cesiumIonAllowSharingAddedAssets: false,
     bingMapsKey: undefined,
+    claudeApiKey: undefined,
+    claudeModel: "claude-3-opus-20240229",
     hideTerriaLogo: false,
     brandBarElements: undefined,
     brandBarSmallElements: undefined,

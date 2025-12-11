@@ -410,7 +410,14 @@
     "storiesTooLong": "This story exceeds the maximum size allowed. Try reducing the number of visible datasets, or capture fewer scenes.",
     "hideStoryPanel": "hide story builder",
     "loadSceneErrorTitle": "Error loading Story Scene",
-    "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
+    "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`.",
+    "generateAISummary": "Generate AI Summary",
+    "generatingAISummary": "Generating summary...",
+    "aiSummaryError": "AI Generation Failed",
+    "aiSummaryErrorMessage": "Failed to generate scene summary. Please check your API key and try again.",
+    "aiSummaryNoApiKey": "Claude API Key Not Configured",
+    "aiSummaryNoApiKeyMessage": "Please add your Anthropic Claude API key to the configuration file to use AI-powered scene summaries.",
+    "aiSummaryTooltip": "Use AI to analyze the map and suggest a title and description"
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",

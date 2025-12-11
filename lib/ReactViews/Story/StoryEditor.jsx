@@ -7,6 +7,10 @@ import tinymce from "tinymce";
 import Text from "../../Styled/Text";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
+import Icon, { GLYPHS } from "../../Styled/Icon";
+import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
+import ClaudeApi from "../../Core/ClaudeApi";
+import captureSceneData from "./captureSceneData";
 
 // Lazy load the Editor component as the tinyMCE library is large
 const Editor = lazy(() => import("../Generic/Editor.tsx"));
@@ -17,7 +21,8 @@ class StoryEditor extends Component {
       title: "",
       text: "",
       id: undefined,
-      inView: false
+      inView: false,
+      isGeneratingAI: false
     };
 
     this.keys = {
@@ -29,8 +34,8 @@ class StoryEditor extends Component {
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-
     this.onKeyUp = this.onKeyUp.bind(this);
+    this.generateAISummary = this.generateAISummary.bind(this);
     this.slideInTimer = null;
     this.slideOutTimer = null;
     this.escKeyListener = null;
@@ -145,6 +150,53 @@ class StoryEditor extends Component {
     }
   }
 
+  async generateAISummary() {
+    const { terria, t } = this.props;
+
+    // Check if API key is configured
+    const apiKey = terria?.configParameters?.claudeApiKey;
+    const model = terria?.configParameters?.claudeModel;
+
+    if (!apiKey) {
+      terria.notificationState.addNotificationToQueue({
+        title: t("story.aiSummaryNoApiKey"),
+        message: t("story.aiSummaryNoApiKeyMessage")
+      });
+      return;
+    }
+
+    this.setState({ isGeneratingAI: true });
+
+    try {
+      // Capture current scene data
+      const sceneData = await captureSceneData(terria);
+
+      // Generate summary using Claude API (direct browser request)
+      const summary = await ClaudeApi.generateSceneSummary(
+        apiKey,
+        model,
+        sceneData.screenshot,
+        sceneData.context
+      );
+
+      // Update title and description with AI-generated content
+      this.setState({
+        title: summary.title,
+        text: summary.description,
+        isGeneratingAI: false
+      });
+    } catch (error) {
+      console.error("AI generation error:", error);
+      this.setState({ isGeneratingAI: false });
+
+      // Show error notification
+      terria.notificationState.addNotificationToQueue({
+        title: t("story.aiSummaryError"),
+        message: error.message || t("story.aiSummaryErrorMessage")
+      });
+    }
+  }
+
   render() {
     const { t } = this.props;
     const maxImageHeight = "350px"; // TODO: where to put this to reduce coupling?
@@ -177,6 +229,35 @@ class StoryEditor extends Component {
             value={this.state.title}
             onChange={this.updateTitle}
           />
+          <Box centered css={{ marginTop: "12px", marginBottom: "12px" }}>
+            <Button
+              styledWidth={"100%"}
+              secondary
+              disabled={this.state.isGeneratingAI}
+              onClick={this.generateAISummary}
+              type="button"
+              title={t("story.aiSummaryTooltip")}
+              textProps={{
+                medium: true
+              }}
+            >
+              {this.state.isGeneratingAI ? (
+                <>
+                  <AnimatedSpinnerIcon
+                    styledWidth="20px"
+                    styledHeight="20px"
+                    css={{ marginRight: "8px" }}
+                  />
+                  {t("story.generatingAISummary")}
+                </>
+              ) : (
+                <>
+                  <Icon glyph={GLYPHS.bulb} css={{ marginRight: "8px" }} />
+                  {t("story.generateAISummary")}
+                </>
+              )}
+            </Button>
+          </Box>
           <div className={Styles.body}>
             <Text small textGreyLighter css={{ marginBottom: "8px" }}>
               {t("story.editor.descriptionLabel")}
