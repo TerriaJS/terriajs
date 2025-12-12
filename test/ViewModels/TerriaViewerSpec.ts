@@ -1,8 +1,15 @@
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode, { setViewerMode } from "../../lib/Models/ViewerMode";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 const mockBeforeViewerChanges = jasmine.createSpy("", () => {});
 const mockAfterViewerChanges = jasmine.createSpy("", () => {});
@@ -73,6 +80,44 @@ describe("TerriaViewer", function () {
     });
   });
 
+  describe("setBaseMap", function () {
+    let baseMap: TestBaseMapItem;
+
+    beforeEach(function () {
+      baseMap = new TestBaseMapItem("test-basemap", terria);
+    });
+
+    it("sets the base map", async function () {
+      expect(terriaViewer.baseMap).toBeUndefined();
+      await terriaViewer.setBaseMap(baseMap);
+      expect(terriaViewer.baseMap).toBe(baseMap);
+    });
+
+    describe("if the base map fails to load", function () {
+      it("does not change the base map", async function () {
+        expect(terriaViewer.baseMap).toBeUndefined();
+        baseMap.failLoading = true;
+        await terriaViewer.setBaseMap(baseMap);
+        expect(terriaViewer.baseMap).toBeUndefined();
+      });
+
+      it("raises an error notification", async function () {
+        expect(terria.notificationState.getAllNotifications().length).toBe(0);
+        baseMap.failLoading = true;
+        await terriaViewer.setBaseMap(baseMap);
+        expect(terria.notificationState.getAllNotifications().length).toBe(1);
+      });
+    });
+
+    it("should switch the viewer mode if the base map sets a preferredViewerMode", async function () {
+      expect(terriaViewer.viewerMode).toBe(ViewerMode.Cesium);
+      baseMap.setTrait(CommonStrata.user, "preferredViewerMode", "2d");
+      await terriaViewer.setBaseMap(baseMap);
+      expect(terriaViewer.baseMap).toBe(baseMap);
+      expect(terriaViewer.viewerMode).toBe(ViewerMode.Leaflet);
+    });
+  });
+
   describe("currentViewer", function () {
     const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
       west: CesiumMath.toDegrees(west),
@@ -92,3 +137,22 @@ describe("TerriaViewer", function () {
     });
   });
 });
+
+/**
+ * Catalog item for base map tests
+ */
+class TestBaseMapItem extends MappableMixin(
+  CatalogMemberMixin(
+    CreateModel(mixTraits(CatalogMemberTraits, MappableTraits))
+  )
+) {
+  failLoading = false;
+
+  protected async forceLoadMapItems(): Promise<void> {
+    if (this.failLoading) throw new Error("Loading failed.");
+  }
+
+  get mapItems(): MapItem[] {
+    return [];
+  }
+}
