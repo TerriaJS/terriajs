@@ -485,6 +485,10 @@ describeIfSupported("Cesium Model", function () {
       });
     });
   });
+
+  describe("imagery mapping", function () {
+    it("does not render imagery with custom tiling schemes");
+  });
 });
 
 /**

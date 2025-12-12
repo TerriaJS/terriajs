@@ -77,6 +77,9 @@ const SettingPanel: FC = observer(() => {
         terria.mainViewer.viewerMode === newViewerMode;
 
       if (switchedViewerMode) {
+        if (baseMap?.preferredViewerMode) {
+          terria.setLocalProperty("viewermode", baseMap.preferredViewerMode);
+        }
         notifyViewerModeSwitch(
           baseMap,
           currentViewerMode,

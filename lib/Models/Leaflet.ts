@@ -121,7 +121,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   });
 
-  private _makeImageryLayerFromParts(
+  protected _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
@@ -145,7 +145,11 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
+  constructor(
+    terriaViewer: TerriaViewer,
+    container: string | HTMLElement,
+    initOptions?: { mapOptions?: L.MapOptions }
+  ) {
     super();
     makeObservable(this);
     this.terria = terriaViewer.terria;
@@ -155,7 +159,8 @@ export default class Leaflet extends GlobeOrMap {
       attributionControl: false,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
-      worldCopyJump: false
+      worldCopyJump: false,
+      ...initOptions?.mapOptions
     }).setView([-28.5, 135], 5);
 
     this.map.on("move", () => this.updateMapObservables());
@@ -349,12 +354,12 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   @computed
-  get availableCatalogItems() {
+  get availableCatalogItems(): MappableMixin.Instance[] {
     const catalogItems = [
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
-    return catalogItems;
+    return filterOutUndefined(catalogItems);
   }
 
   @computed
