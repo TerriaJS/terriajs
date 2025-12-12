@@ -8,6 +8,9 @@
 - Add UI to show toast messages.
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add UI to show toast messages.
 - [The next improvement]
 
 #### 8.11.1 - 2025-12-04
@@ -24,6 +27,7 @@
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - [The next improvement]
+- Fix sharing when using initfile.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 
 #### 8.11.0 - 2025-10-09
