@@ -1,7 +1,18 @@
-import { SceneContext } from "../../Core/ClaudeApi";
+import {
+  SceneContext,
+  WorkbenchItemInfo,
+  DatasetLegend,
+  DatasetMetadata
+} from "../../Core/ClaudeApi";
 import Terria from "../../Models/Terria";
 import isDefined from "../../Core/isDefined";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
+import hasTraits from "../../Models/Definition/hasTraits";
+import LegendOwnerTraits from "../../Traits/TraitsClasses/LegendOwnerTraits";
+import CatalogMemberTraits from "../../Traits/TraitsClasses/CatalogMemberTraits";
+import proxyCatalogItemUrl from "../../Models/Catalog/proxyCatalogItemUrl";
+import Model from "../../Models/Definition/Model";
+import LegendTraits from "../../Traits/TraitsClasses/LegendTraits";
 
 /**
  * Data captured from the current map scene, ready for AI processing
@@ -23,11 +34,93 @@ export default async function captureSceneData(
   // 1. Capture screenshot
   const screenshot = await terria.currentViewer.captureScreenshot();
 
-  // 2. Collect workbench items (active data layers)
-  const workbenchItems = terria.workbench.items
+  // 2. Collect workbench items (active data layers) with legends and metadata
+  const workbenchItems: WorkbenchItemInfo[] = terria.workbench.items
     .map((item) => {
       // Get the name of each workbench item using getName helper
-      return getName(item) || item.uniqueId;
+      const name = getName(item) || item.uniqueId;
+      if (!name) return null;
+
+      const itemInfo: WorkbenchItemInfo = { name };
+
+      // Extract legend information
+      if (hasTraits(item, LegendOwnerTraits, "legends")) {
+        const legends = item.legends;
+        if (legends && legends.length > 0) {
+          const legend: DatasetLegend = {};
+
+          // Get the first legend (most items only have one)
+          const firstLegend = legends[0] as Model<LegendTraits>;
+
+          if (firstLegend.title) {
+            legend.title = firstLegend.title;
+          }
+
+          // Check if it's an image legend
+          if (firstLegend.url) {
+            // Make the URL absolute and proxied
+            const proxiedUrl = proxyCatalogItemUrl(item, firstLegend.url);
+            if (proxiedUrl) {
+              legend.imageUrl = String(proxiedUrl);
+              legend.imageMimeType = firstLegend.urlMimeType || "image/png";
+            }
+          }
+          // Check if it's a structured legend with items
+          else if (firstLegend.items && firstLegend.items.length > 0) {
+            legend.items = firstLegend.items.map((legendItem) => ({
+              title: legendItem.title,
+              color: legendItem.color,
+              imageUrl: legendItem.imageUrl
+            }));
+          }
+
+          if (legend.imageUrl || legend.items) {
+            itemInfo.legend = legend;
+          }
+        }
+      }
+
+      // Extract metadata information
+      if (hasTraits(item, CatalogMemberTraits, "description")) {
+        const metadata: DatasetMetadata = {};
+
+        // Get description
+        if (item.description) {
+          metadata.description = item.description;
+        }
+
+        // Get custodian
+        if (
+          hasTraits(item, CatalogMemberTraits, "dataCustodian") &&
+          item.dataCustodian
+        ) {
+          metadata.custodian = item.dataCustodian;
+        }
+
+        // Get info sections
+        if (
+          hasTraits(item, CatalogMemberTraits, "info") &&
+          item.info &&
+          item.info.length > 0
+        ) {
+          metadata.infoSections = item.info
+            .filter((section) => section.name && section.content)
+            .map((section) => ({
+              name: section.name,
+              content: section.content || undefined
+            }));
+        }
+
+        if (
+          metadata.description ||
+          metadata.custodian ||
+          (metadata.infoSections && metadata.infoSections.length > 0)
+        ) {
+          itemInfo.metadata = metadata;
+        }
+      }
+
+      return itemInfo;
     })
     .filter(isDefined);
 
