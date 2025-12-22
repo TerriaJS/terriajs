@@ -401,7 +401,11 @@ const MeasurablePanel = observer((props: Props) => {
         <div className={classNames(Styles.btnPanelHeading)}>
           <span
             className="drag-handle"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "move"
+            }}
           >
             <b>{i18next.t("measurableGeometry.header")}</b>
           </span>
