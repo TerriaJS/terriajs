@@ -11,6 +11,7 @@ declare namespace StandardUserInterfaceScssNamespace {
     showWorkbenchButtonisVisible: string;
     sidePanel: string;
     "story-wrapper": string;
+    storyPanel: string;
     storyWrapper: string;
     ui: string;
     "ui-root": string;

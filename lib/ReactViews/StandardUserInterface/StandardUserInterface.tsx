@@ -279,7 +279,22 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
               <FeatureInfoPanel />
             </div>
             <DragDropFile />
-            {showStoryPanel && <StoryPanel />}
+            {showStoryPanel && (
+              <div
+                className={classNames(
+                  Styles.storyPanel,
+                  props.viewState.topElement === "StoryPanel"
+                    ? "top-element"
+                    : ""
+                )}
+                tabIndex={0}
+                onClick={action(() => {
+                  props.viewState.topElement = "StoryPanel";
+                })}
+              >
+                <StoryPanel />
+              </div>
+            )}
           </div>
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
             <StoryBuilder
