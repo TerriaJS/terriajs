@@ -139,15 +139,9 @@ class GpxCatalogItem
           !download.download?.includes("_polygon")
         );
       } else if (geom.isClosed) {
-        return (
-          !download.download?.includes("_points") &&
-          !download.download?.includes("_lines")
-        );
+        return true;
       } else {
-        return (
-          !download.download?.includes("_points") &&
-          !download.download?.includes("_polygon")
-        );
+        return !download.download?.includes("_polygon");
       }
     });
   }

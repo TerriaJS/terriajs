@@ -32,6 +32,11 @@ import isDefined from "../../Core/isDefined";
 import Checkbox from "../../Styled/Checkbox";
 import { MeasureToolsController } from "../Map/MapNavigation/Items/MeasureTools";
 import MeasurableTransform from "./MeasurableTransform";
+import DataUri from "../../Core/DataUri";
+import {
+  generatePathSummaryCsvData,
+  getSummaryKind
+} from "../../ViewModels/Measure/MeasurableSummaryCsv";
 
 interface Props {
   viewState: ViewState;
@@ -227,6 +232,40 @@ const MeasurablePanel = observer((props: Props) => {
     }
     return numberStr;
   };
+
+  const activeToolIsPolygon = React.useCallback(() => {
+    const polygonTool = terria.mapNavigationModel.findItem(
+      MeasurePolygonTool.id
+    );
+    return polygonTool?.controller?.active === true;
+  }, [terria.mapNavigationModel]);
+
+  const downloadPathSummaryCsv = React.useCallback(() => {
+    const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
+    if (!geom) return;
+
+    const kind = getSummaryKind({
+      geom,
+      activeToolIsPolygon: activeToolIsPolygon()
+    });
+
+    const { csv, filename } = generatePathSummaryCsvData({
+      geom,
+      name: layerName,
+      kind,
+      ellipsoid: terria?.cesium?.scene?.globe?.ellipsoid
+    });
+
+    const href = DataUri.make("csv", csv);
+    if (!href) return;
+
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [activeToolIsPolygon, layerName, terria]);
 
   // UseEffects Methods
   function useWindowSize() {
@@ -537,13 +576,6 @@ const MeasurablePanel = observer((props: Props) => {
       terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!currentGeom) return null;
 
-    const activeToolIsPolygon = () => {
-      const polygonTool = terria.mapNavigationModel.findItem(
-        MeasurePolygonTool.id
-      );
-      return polygonTool?.controller?.active === true;
-    };
-
     if (activeToolIsPolygon() || currentGeom.hasArea || currentGeom.isClosed) {
       return (
         <>
@@ -630,6 +662,20 @@ const MeasurablePanel = observer((props: Props) => {
                 prettifyNumber(currentGeom.groundDistance ?? 0)
               ]
             )}
+
+            <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+              <Button
+                css={`
+                  color: ${theme.textLight};
+                  background: ${theme.colorPrimary};
+                `}
+                disabled={!currentGeom.stopPoints?.length}
+                onClick={downloadPathSummaryCsv}
+                title="Download CSV Summary"
+              >
+                CSV Summary
+              </Button>
+            </div>
           </small>
         </>
       );
@@ -683,6 +729,20 @@ const MeasurablePanel = observer((props: Props) => {
                 prettifyNumber(currentGeom.groundDistance ?? 0)
               ]
             )}
+
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button
+              css={`
+                color: ${theme.textLight};
+                background: ${theme.colorPrimary};
+              `}
+              disabled={!currentGeom.stopPoints?.length}
+              onClick={downloadPathSummaryCsv}
+              title="Download CSV Summary"
+            >
+              CSV Summary
+            </Button>
+          </div>
         </small>
       </>
     );

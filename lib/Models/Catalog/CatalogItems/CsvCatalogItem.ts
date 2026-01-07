@@ -75,27 +75,95 @@ export default class CsvCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  private generateCsvData(geom: MeasurableGeometry, name: string): string {
-    const headers = [
-      "name",
-      "path_notes",
-      ...Object.keys(geom.stopPoints[0]),
-      "description"
-    ].join(",");
+  private formatNumber(value: number | undefined, digits: number): string {
+    if (typeof value !== "number" || !isFinite(value)) return "";
+    return value.toFixed(digits);
+  }
+
+  private generatePointsCsvData(
+    geom: MeasurableGeometry,
+    name: string
+  ): string {
+    const isPointsOnly = geom.onlyPoints === true;
+    const headers = isPointsOnly
+      ? [
+          "name",
+          "path_notes",
+          "longitude",
+          "latitude",
+          "height",
+          "description"
+        ].join(",")
+      : [
+          "name",
+          "path_notes",
+          "longitude",
+          "latitude",
+          "height",
+          "alt_diff",
+          "geodetic_distance",
+          "air_distance",
+          "ground_distance",
+          "slope"
+        ].join(",");
+
+    if (!geom.stopPoints || geom.stopPoints.length === 0) {
+      return headers;
+    }
 
     const rows = [headers];
 
+    const stopGeodeticDistances = geom.stopGeodeticDistances ?? [];
+    const stopAirDistances = geom.stopAirDistances ?? [];
+    const stopGroundDistances = geom.stopGroundDistances ?? [];
+
     rows.push(
-      ...geom.stopPoints.map((elem, index) =>
-        [
-          name,
-          geom.pathNotes,
+      ...geom.stopPoints.map((elem, index) => {
+        const baseColumns: (string | number)[] = [
+          index === 0 ? name : "",
+          index === 0 ? geom.pathNotes ?? "" : "",
           CesiumMath.toDegrees(elem.longitude),
           CesiumMath.toDegrees(elem.latitude),
-          Math.round(elem.height),
-          geom.pointDescriptions?.[index] || ""
-        ].join(",")
-      )
+          Math.round(elem.height)
+        ];
+
+        if (isPointsOnly) {
+          return [...baseColumns, geom.pointDescriptions?.[index] || ""].join(
+            ","
+          );
+        }
+
+        const prev = index > 0 ? geom.stopPoints[index - 1] : undefined;
+
+        const altDiff =
+          index > 0 && prev
+            ? this.formatNumber(elem.height - prev.height, 0)
+            : "";
+
+        const geodeticDistance =
+          index > 0 ? this.formatNumber(stopGeodeticDistances[index], 2) : "";
+        const airDistance =
+          index > 0 ? this.formatNumber(stopAirDistances[index], 2) : "";
+        const groundDistance =
+          index > 0 ? this.formatNumber(stopGroundDistances[index], 2) : "";
+
+        let slope = "";
+        const airDistNum = stopAirDistances[index];
+        if (index > 0 && prev && typeof airDistNum === "number" && airDistNum) {
+          slope = Math.abs(
+            (100 * (elem.height - prev.height)) / airDistNum
+          ).toFixed(1);
+        }
+
+        return [
+          ...baseColumns,
+          altDiff,
+          geodeticDistance,
+          airDistance,
+          groundDistance,
+          slope
+        ].join(",");
+      })
     );
 
     return rows.join("\n");
@@ -103,35 +171,19 @@ export default class CsvCatalogItem
 
   async generateDownloadLinks(
     geom: MeasurableGeometry,
-    name: string
+    name: string,
+    isMultiPath: boolean
   ): Promise<DownloadLink[]> {
-    const downloads: DownloadLink[] = [
+    if (isMultiPath) return [];
+
+    return [
       {
         key: "csv",
-        href: DataUri.make("csv", this.generateCsvData(geom, name)),
+        href: DataUri.make("csv", this.generatePointsCsvData(geom, name)),
         download: `${name}_points.csv`,
         label: "CSV"
       }
     ];
-
-    return downloads.filter((download) => {
-      if (geom.onlyPoints) {
-        return (
-          !download.download?.includes("_lines") &&
-          !download.download?.includes("_polygon")
-        );
-      } else if (geom.isClosed) {
-        return (
-          !download.download?.includes("_points") &&
-          !download.download?.includes("_lines")
-        );
-      } else {
-        return (
-          !download.download?.includes("_points") &&
-          !download.download?.includes("_polygon")
-        );
-      }
-    });
   }
 
   @override

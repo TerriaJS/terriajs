@@ -1473,82 +1473,133 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     get canUseAsPath() {
       let pathType: PathTypes = PathTypes.noPath;
-      if (
-        this.readyData &&
-        isJsonObject(this.readyData.crs) &&
-        this.readyData.crs.type === "EPSG" &&
-        isJsonObject(this.readyData.crs.properties) &&
-        this.readyData.crs.properties.code === "4326"
-      ) {
-        if (
-          this.readyData.type === "FeatureCollection" &&
-          isJsonArray(this.readyData.features) &&
-          this.readyData.features.length === 1 &&
-          isJsonObject(this.readyData.features[0])
-        ) {
-          const geometry = this.readyData.features[0].geometry;
 
-          if (isJsonObject(geometry) && isJsonArray(geometry.coordinates)) {
-            if (
-              this.arePolylinesValid([geometry.coordinates]) ||
-              this.isPolygonValid([geometry.coordinates[0]]) ||
-              this.isPolygonValid(([geometry.coordinates[0]] as any)[0])
-            ) {
-              if (
-                geometry.type === "MultiLineString" &&
-                geometry.coordinates.length >= 1
-              ) {
-                pathType = PathTypes.featureCollectionMultiLineString;
-              } else if (
-                geometry.type === "LineString" &&
-                geometry.coordinates.length > 1
-              ) {
-                pathType = PathTypes.featureCollectionLineString;
-              } else if (
-                geometry.type === "Polygon" &&
-                geometry.coordinates.length > 0
-              ) {
-                pathType = PathTypes.featureCollectionPolygon;
-              } else if (
-                geometry.type === "MultiPolygon" &&
-                geometry.coordinates.length > 0
-              ) {
-                pathType = PathTypes.featureCollectionMultiPolygon;
-              }
-            }
-          }
-        } else if (
-          this.readyData.type === "FeatureCollection" &&
-          isJsonArray(this.readyData.features) &&
-          this.readyData.features.length > 1
+      if (!this.readyData || !this.isCrsOkForPath(this.readyData)) {
+        this._pathType = pathType;
+        return false;
+      }
+
+      const features = this.readyData.features;
+      if (!isJsonArray(features) || features.length === 0) {
+        this._pathType = pathType;
+        return false;
+      }
+
+      if (features.length === 1 && isJsonObject(features[0])) {
+        const geometry = (features[0] as any).geometry;
+        pathType = this.getPathTypeFromGeometry(geometry);
+      } else if (features.length > 1) {
+        if (
+          this.allFeaturesHaveGeometryType(features as any, "MultiLineString")
         ) {
-          let allMultiLineString = true;
-          for (let i = 0; i < this.readyData.features.length; i++) {
-            const feature = this.readyData.features[i];
-            if (feature.geometry.type !== "MultiLineString") {
-              allMultiLineString = false;
-              break;
-            }
-          }
-          if (allMultiLineString) {
-            pathType = PathTypes.featureCollectionMultiLineString;
-          } else {
-            let allMultiPolygon = true;
-            for (let i = 0; i < this.readyData.features.length; i++) {
-              const feature = this.readyData.features[i];
-              if (feature.geometry.type !== "MultiPolygon") {
-                allMultiPolygon = false;
-                break;
-              }
-            }
-            if (allMultiPolygon) {
-              pathType = PathTypes.featureCollectionMultiPolygon;
-            }
-          }
+          pathType = PathTypes.featureCollectionMultiLineString;
+        } else if (
+          this.allFeaturesHaveGeometryType(features as any, "MultiPolygon")
+        ) {
+          pathType = PathTypes.featureCollectionMultiPolygon;
         }
       }
+
       this._pathType = pathType;
       return pathType !== PathTypes.noPath;
+    }
+
+    private isCrsOkForPath(fc: any): boolean {
+      const crs = fc ? (fc as any).crs : undefined;
+      return (
+        isJsonObject(crs) ||
+        (crs.type === "EPSG" &&
+          isJsonObject(crs.properties) &&
+          crs.properties.code === "4326")
+      );
+    }
+
+    private allFeaturesHaveGeometryType(
+      features: any[],
+      geometryType: string
+    ): boolean {
+      for (let i = 0; i < features.length; i++) {
+        const feature = features[i];
+        if (
+          !feature ||
+          !feature.geometry ||
+          feature.geometry.type !== geometryType
+        )
+          return false;
+      }
+      return true;
+    }
+
+    private getPathTypeFromGeometry(geometry: any): PathTypes {
+      if (!isJsonObject(geometry) || !isJsonArray(geometry.coordinates)) {
+        return PathTypes.noPath;
+      }
+
+      const coords: any = geometry.coordinates;
+
+      if (geometry.type === "LineString") {
+        return this.isValidLineStringCoords(coords)
+          ? PathTypes.featureCollectionLineString
+          : PathTypes.noPath;
+      }
+
+      if (geometry.type === "MultiLineString") {
+        return this.isValidMultiLineStringCoords(coords)
+          ? PathTypes.featureCollectionMultiLineString
+          : PathTypes.noPath;
+      }
+
+      if (geometry.type === "Polygon") {
+        return this.isValidPolygonCoords(coords)
+          ? PathTypes.featureCollectionPolygon
+          : PathTypes.noPath;
+      }
+
+      if (geometry.type === "MultiPolygon") {
+        return this.isValidMultiPolygonCoords(coords)
+          ? PathTypes.featureCollectionMultiPolygon
+          : PathTypes.noPath;
+      }
+
+      return PathTypes.noPath;
+    }
+
+    private isValidLineStringCoords(coords: any): boolean {
+      return (
+        Array.isArray(coords) &&
+        coords.length > 1 &&
+        this.isPosition(coords[0]) &&
+        this.isPosition(coords[coords.length - 1])
+      );
+    }
+
+    private isValidMultiLineStringCoords(coords: any): boolean {
+      if (!Array.isArray(coords) || coords.length < 1) return false;
+
+      const isTwoPointSegments = coords.every(
+        (line: any) =>
+          Array.isArray(line) &&
+          line.length === 2 &&
+          this.isPosition(line[0]) &&
+          this.isPosition(line[1])
+      );
+      if (isTwoPointSegments) return this.arePolylinesValid(coords);
+
+      return coords.some((line: any) => this.isValidLineStringCoords(line));
+    }
+
+    private isValidPolygonCoords(coords: any): boolean {
+      return (
+        Array.isArray(coords) &&
+        coords.length > 0 &&
+        this.isPolygonValid(coords)
+      );
+    }
+
+    private isValidMultiPolygonCoords(coords: any): boolean {
+      if (!Array.isArray(coords) || coords.length === 0) return false;
+      const firstPoly = coords[0];
+      return Array.isArray(firstPoly) && this.isPolygonValid(firstPoly);
     }
 
     // Validates if the coordinates of the polyline are correct by ensuring the first and last points are connected.
@@ -1556,17 +1607,38 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       const pointOccurrences: { point: number[]; count: number }[] = [];
 
       coordinates.forEach((line) => {
-        const firstPoint = line[0]; // First point of the line
-        const lastPoint = line[line.length - 1]; // Last point of the line
+        if (!Array.isArray(line) || line.length < 2) return;
+
+        const firstPoint = line[0]; // First point of the line/segment
+        const lastPoint = line[line.length - 1]; // Last point of the line/segment
+
+        if (!this.isPosition(firstPoint) || !this.isPosition(lastPoint)) return;
 
         this.updatePointOccurrences(pointOccurrences, firstPoint);
         this.updatePointOccurrences(pointOccurrences, lastPoint);
       });
 
+      if (pointOccurrences.length === 0) return false;
+
       const validPoints = pointOccurrences.filter(
         ({ count }) => count === 1
       ).length;
-      return validPoints === 2;
+      if (validPoints === 2) return true;
+
+      if (validPoints === 0) {
+        return pointOccurrences.every(({ count }) => count === 2);
+      }
+
+      return false;
+    }
+
+    private isPosition(value: any): value is number[] {
+      return (
+        Array.isArray(value) &&
+        value.length >= 2 &&
+        typeof value[0] === "number" &&
+        typeof value[1] === "number"
+      );
     }
 
     // Validates if the coordinates of the polygon are correct by ensuring the first and last points are the same.
@@ -1628,39 +1700,77 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (!this.readyData || !isJsonArray(this.readyData.features)) return;
 
       const processFeature = (feature: any, index?: number) => {
-        let jsonCoords: JsonArray | undefined;
-        let closeLoop = false;
-        switch (this._pathType) {
-          case PathTypes.featureCollectionMultiLineString:
-            jsonCoords = this.getOrderedSegments(index);
-            break;
-          case PathTypes.featureCollectionLineString:
-            jsonCoords = this.getLineStringCoordinates();
-            break;
-          case PathTypes.featureCollectionMultiPolygon:
-            jsonCoords = this.getMultiPolygonCoordinates(index);
-            closeLoop = true;
-            break;
-          case PathTypes.featureCollectionPolygon:
-            jsonCoords = this.getPolygonCoordinates();
-            closeLoop = true;
-            break;
-        }
+        const coordsResult = this.getPathCoordsForFeature(index);
+        if (!coordsResult) return;
+
+        const { jsonCoords, closeLoop } = coordsResult;
         if (!jsonCoords || jsonCoords.length === 0) return;
 
-        const properties = feature.properties ?? {};
+        const properties = feature?.properties ?? {};
         const pathNotes = properties.desc || properties.path_notes || "";
         const coordinates = this.convertJsonCoords(jsonCoords);
         this.asPath(coordinates, pathNotes, index, closeLoop);
       };
 
-      if (this.readyData.features.length === 1) {
-        processFeature(this.readyData.features[0]);
-      } else {
-        for (let i = 0; i < this.readyData.features.length; i++) {
-          processFeature(this.readyData.features[i], i);
-        }
+      for (let i = 0; i < this.readyData.features.length; i++) {
+        processFeature(
+          this.readyData.features[i],
+          this.readyData.features.length === 1 ? undefined : i
+        );
       }
+    }
+
+    private getPathCoordsForFeature(
+      index?: number
+    ): { jsonCoords: JsonArray; closeLoop: boolean } | undefined {
+      let jsonCoords: JsonArray | undefined;
+      let closeLoop = false;
+
+      switch (this._pathType) {
+        case PathTypes.featureCollectionMultiLineString:
+          jsonCoords = this.getOrderedSegments(index);
+          break;
+        case PathTypes.featureCollectionLineString:
+          jsonCoords = this.getLineStringCoordinates();
+          break;
+        case PathTypes.featureCollectionMultiPolygon:
+          jsonCoords = this.getMultiPolygonCoordinates(index);
+          closeLoop = true;
+          break;
+        case PathTypes.featureCollectionPolygon:
+          jsonCoords = this.getPolygonCoordinates();
+          closeLoop = true;
+          break;
+        default:
+          return undefined;
+      }
+
+      if (!jsonCoords) return undefined;
+
+      if (!closeLoop && jsonCoords.length > 1) {
+        closeLoop = this.areCoordsClosed(jsonCoords);
+      }
+
+      return { jsonCoords, closeLoop };
+    }
+
+    private areCoordsClosed(jsonCoords: JsonArray): boolean {
+      const first = jsonCoords[0];
+      const last = jsonCoords[jsonCoords.length - 1];
+      if (
+        isJsonArray(first) &&
+        isJsonArray(last) &&
+        isJsonNumber(first[0]) &&
+        isJsonNumber(first[1]) &&
+        isJsonNumber(last[0]) &&
+        isJsonNumber(last[1])
+      ) {
+        return this.arePointsEqual(
+          [first[0], first[1]] as any,
+          [last[0], last[1]] as any
+        );
+      }
+      return false;
     }
 
     // Get the ordered segments
@@ -1676,38 +1786,119 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         ) &&
         (this.readyData.features[index].geometry as any).coordinates.length > 0
       ) {
-        const segments = (this.readyData.features[index].geometry as any)
-          .coordinates;
-        const localSegments = segments.slice();
+        const coordinates: any[] = (
+          this.readyData.features[index].geometry as any
+        ).coordinates;
 
-        const startingSegmentIndex = this.findStartingSegmentIndex(
-          localSegments as JsonArray[]
-        );
-        const orderedSegments = this.orderSegments(
-          localSegments as JsonArray[],
-          startingSegmentIndex
+        const isTwoPointSegments = coordinates.every(
+          (line) =>
+            Array.isArray(line) &&
+            line.length === 2 &&
+            this.isPosition(line[0]) &&
+            this.isPosition(line[1])
         );
 
-        return Array.from(
-          new Set(orderedSegments.flat().map((coord) => JSON.stringify(coord)))
-        ).map((coord) => JSON.parse(coord));
+        if (isTwoPointSegments) {
+          const localSegments = coordinates.slice();
+          const startingSegmentIndex = this.findStartingSegmentIndex(
+            localSegments as JsonArray[]
+          );
+          const orderedSegments = this.orderSegments(
+            localSegments as JsonArray[],
+            startingSegmentIndex
+          );
+
+          return Array.from(
+            new Set(
+              orderedSegments.flat().map((coord) => JSON.stringify(coord))
+            )
+          ).map((coord) => JSON.parse(coord));
+        }
+
+        const lines: any[] = coordinates.filter(
+          (line) =>
+            Array.isArray(line) &&
+            line.length > 1 &&
+            this.isPosition(line[0]) &&
+            this.isPosition(line[line.length - 1])
+        );
+
+        if (lines.length === 0) return undefined;
+        if (lines.length === 1) return lines[0] as JsonArray;
+
+        const startKey = (pos: any) =>
+          this.isPosition(pos) ? `${pos[0]},${pos[1]}` : "";
+        const endKey = (line: any[]) => startKey(line[line.length - 1]);
+
+        const remaining = new Map<string, any[]>();
+        for (const line of lines) remaining.set(startKey(line[0]), line);
+
+        const endKeys = new Set(lines.map((l) => endKey(l)));
+        let current = lines.find((l) => !endKeys.has(startKey(l[0])));
+
+        if (!current) {
+          current = lines.reduce(
+            (best, l) => (l.length > best.length ? l : best),
+            lines[0]
+          );
+        }
+
+        let result: any[] = current.slice();
+        remaining.delete(startKey(current[0]));
+
+        while (remaining.size > 0) {
+          const next = remaining.get(endKey(result));
+          if (!next) break;
+
+          if (
+            result.length > 0 &&
+            this.isPosition(result[result.length - 1]) &&
+            this.isPosition(next[0]) &&
+            this.arePointsEqual(
+              result[result.length - 1] as any,
+              next[0] as any
+            )
+          ) {
+            result = result.concat(next.slice(1));
+          } else {
+            result = result.concat(next);
+          }
+
+          remaining.delete(startKey(next[0]));
+        }
+
+        if (remaining.size > 0) {
+          const longest = lines.reduce(
+            (best, l) => (l.length > best.length ? l : best),
+            lines[0]
+          );
+          return longest as JsonArray;
+        }
+
+        return result as JsonArray;
       }
     }
 
     // Find the starting segment index by locating the segment that has no other segment ending at its starting point
     private findStartingSegmentIndex(segments: JsonArray[]): number {
+      if (segments.length === 0) {
+        throw new Error("No segments to order");
+      }
+
       const endPoints = new Set<string>(
-        segments.map((segment) => JSON.stringify(segment[1]))
+        segments.map((segment) =>
+          JSON.stringify((segment as any)[(segment as any).length - 1])
+        )
       );
 
       for (let i = 0; i < segments.length; i++) {
-        const startPoint = JSON.stringify(segments[i][0]);
+        const startPoint = JSON.stringify((segments[i] as any)[0]);
         if (!endPoints.has(startPoint)) {
           return i;
         }
       }
 
-      throw new Error("No valid starting segment found");
+      return 0;
     }
 
     // Order the segments based on the matching points
@@ -1727,9 +1918,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       });
 
       while (segmentMap.size > 0) {
-        const lastPoint = JSON.stringify(
-          orderedSegments[orderedSegments.length - 1][1]
-        );
+        const lastSegment = orderedSegments[orderedSegments.length - 1] as any;
+        const lastPoint = JSON.stringify(lastSegment[lastSegment.length - 1]);
         const nextSegment = segmentMap.get(lastPoint);
 
         if (nextSegment) {
