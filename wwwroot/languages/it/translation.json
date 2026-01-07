@@ -1823,7 +1823,7 @@
     "mapUserGuide": "Guida all'uso della mappa",
     "takeTour": "Fai il tour",
     "promptMessage": "Trova il Tour, i video come fare e altri contenuti di aiuto qui",
-    "menuPaneBody": "Trova consigli utili su come usare TerriaJS controllando le guide qui sotto o contattando il team a [{{supportEmail}}]({{supportEmail}})"
+    "menuPaneBody": "Trova consigli utili su come usare TerriaJS controllando le guide qui sotto o contattando il team a [{{supportEmail}}](mailto:{{supportEmail}})"
   },
   "term": {
     "missingContent": "contenuto mancante"

@@ -435,7 +435,7 @@
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [{{supportEmail}}]({{supportEmail}})",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [{{supportEmail}}](mailto:{{supportEmail}})",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
     "takeTour": "Take the tour",
