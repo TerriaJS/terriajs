@@ -75,25 +75,13 @@ export default class CsvCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  private formatNumber(value: number | undefined, digits: number): string {
-    if (typeof value !== "number" || !isFinite(value)) return "";
-    return value.toFixed(digits);
-  }
-
   private generatePointsCsvData(
     geom: MeasurableGeometry,
     name: string
   ): string {
     const isPointsOnly = geom.onlyPoints === true;
-    const headers = isPointsOnly
-      ? [
-          "name",
-          "path_notes",
-          "longitude",
-          "latitude",
-          "height",
-          "description"
-        ].join(",")
+    const headerColumns = isPointsOnly
+      ? ["name", "path_notes", "longitude", "latitude", "height", "description"]
       : [
           "name",
           "path_notes",
@@ -105,10 +93,12 @@ export default class CsvCatalogItem
           "air_distance",
           "ground_distance",
           "slope"
-        ].join(",");
+        ];
+
+    const headers = headerColumns.join(",");
 
     if (!geom.stopPoints || geom.stopPoints.length === 0) {
-      return headers;
+      return [headers].join("\n");
     }
 
     const rows = [headers];
@@ -122,9 +112,9 @@ export default class CsvCatalogItem
         const baseColumns: (string | number)[] = [
           index === 0 ? name : "",
           index === 0 ? geom.pathNotes ?? "" : "",
-          CesiumMath.toDegrees(elem.longitude),
-          CesiumMath.toDegrees(elem.latitude),
-          Math.round(elem.height)
+          CesiumMath.toDegrees(elem.longitude).toFixed(6),
+          CesiumMath.toDegrees(elem.latitude).toFixed(6),
+          elem.height.toFixed(2)
         ];
 
         if (isPointsOnly) {
@@ -136,16 +126,13 @@ export default class CsvCatalogItem
         const prev = index > 0 ? geom.stopPoints[index - 1] : undefined;
 
         const altDiff =
-          index > 0 && prev
-            ? this.formatNumber(elem.height - prev.height, 0)
-            : "";
+          index > 0 && prev ? (elem.height - prev.height).toFixed(2) : "";
 
         const geodeticDistance =
-          index > 0 ? this.formatNumber(stopGeodeticDistances[index], 2) : "";
-        const airDistance =
-          index > 0 ? this.formatNumber(stopAirDistances[index], 2) : "";
+          index > 0 ? stopGeodeticDistances[index].toFixed(2) : "";
+        const airDistance = index > 0 ? stopAirDistances[index].toFixed(2) : "";
         const groundDistance =
-          index > 0 ? this.formatNumber(stopGroundDistances[index], 2) : "";
+          index > 0 ? stopGroundDistances[index].toFixed(2) : "";
 
         let slope = "";
         const airDistNum = stopAirDistances[index];
@@ -302,11 +289,14 @@ export default class CsvCatalogItem
       return acc;
     }, {} as { [key: string]: any[] });
 
-    const path_notes = columns["path_notes"]?.[0] || "";
-    const longitudes = columns["longitude"] || [];
-    const latitudes = columns["latitude"] || [];
-    const heights = columns["height"] || [];
-    const descriptions = columns["description"] || [];
+    const rawPathNotes = (columns["path_notes"] as any[]) || [];
+    const longitudes = (columns["longitude"] as any[]) || [];
+    const latitudes = (columns["latitude"] as any[]) || [];
+    const heights = (columns["height"] as any[]) || [];
+    const descriptions = (columns["description"] as any[]) || [];
+    const path_notes =
+      rawPathNotes.find((v) => typeof v === "string" && v.trim().length > 0) ||
+      "";
 
     const positions = longitudes.map((longitude: number, i: number) =>
       Cartographic.fromDegrees(longitude, latitudes[i], heights[i])

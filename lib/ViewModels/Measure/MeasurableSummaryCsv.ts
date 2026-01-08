@@ -31,14 +31,16 @@ export function generatePathSummaryCsvData(options: {
     const headers = [
       "name",
       "path_notes",
-      "geodetic_area_km2",
-      "geodetic_area_ha",
-      "air_area_km2",
-      "air_area_ha",
+      "geodetic_area",
+      "geodetic_area",
+      "air_area",
+      "air_area",
       "geodetic_perimeter",
       "air_perimeter",
       "ground_perimeter"
     ].join(",");
+
+    const units = ["", "", "km2", "ha", "km2", "ha", "m", "m", "m"].join(",");
 
     const values = [
       name,
@@ -53,7 +55,7 @@ export function generatePathSummaryCsvData(options: {
     ].join(",");
 
     return {
-      csv: [headers, values].join("\n"),
+      csv: [headers, units, values].join("\n"),
       filename: `${name}_path.csv`
     };
   }
@@ -75,11 +77,13 @@ export function generatePathSummaryCsvData(options: {
       "ground_distance"
     ].join(",");
 
+    const units = ["", "", "m", "m", "deg", "m", "m", "m", "m"].join(",");
+
     const values = [
       name,
       pathNotes,
-      formatSummaryNumber(altMin, 0),
-      formatSummaryNumber(altMax, 0),
+      formatSummaryNumber(altMin, 2),
+      formatSummaryNumber(altMax, 2),
       bearing,
       altDiff,
       formatSummaryNumber(geom.geodeticDistance, 2),
@@ -88,7 +92,7 @@ export function generatePathSummaryCsvData(options: {
     ].join(",");
 
     return {
-      csv: [headers, values].join("\n"),
+      csv: [headers, units, values].join("\n"),
       filename: `${name}_path.csv`
     };
   }
@@ -103,17 +107,19 @@ export function generatePathSummaryCsvData(options: {
     "alt_diff"
   ].join(",");
 
+  const units = ["", "", "m", "m", "deg", "m"].join(",");
+
   const values = [
     name,
     pathNotes,
-    formatSummaryNumber(altMin, 0),
-    formatSummaryNumber(altMax, 0),
+    formatSummaryNumber(altMin, 2),
+    formatSummaryNumber(altMax, 2),
     bearing,
     altDiff
   ].join(",");
 
   return {
-    csv: [headers, values].join("\n"),
+    csv: [headers, units, values].join("\n"),
     filename: `${name}_path.csv`
   };
 }
@@ -140,7 +146,7 @@ function getAltDiff(stopPoints: MeasurableGeometry["stopPoints"]) {
   const end = stopPoints?.at(-1);
   if (!start || !end) return "";
   if (!isFinite(start.height) || !isFinite(end.height)) return "";
-  return (end.height - start.height).toFixed(0);
+  return (end.height - start.height).toFixed(2);
 }
 
 function getBearingDegrees(
@@ -153,5 +159,5 @@ function getBearingDegrees(
   const end = stopPoints.at(-1);
   if (!end) return "";
   const geo = new EllipsoidGeodesic(start, end, ellipsoid);
-  return ((CesiumMath.toDegrees(geo.startHeading) + 360) % 360).toFixed(0);
+  return ((CesiumMath.toDegrees(geo.startHeading) + 360) % 360).toFixed(1);
 }
