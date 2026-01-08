@@ -287,7 +287,18 @@
     "qualityLabel": "Qualitat",
     "performanceLabel": "Rendiment",
     "nativeResolutionLabel": "Premeu per deixar d'utilitzar la resolució {{resolution1}} i començar a utilitzar la resolució {{resolution2}}",
-    "btnTitle": "Canvia la vista"
+    "btnTitle": "Canvia la vista",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ El mapa base seleccionat només es pot visualitzar en {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Mode de visualització canviat",
+      "message": "El mapa base '{{newBaseMap}}' no es pot visualitzar a {{currentMode}}. La vista de mapa s'ha canviat a {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Mapa base canviat",
+      "message": "El mapa base '{{currentBaseMap}}' no es pot visualitzar a {{mapMode}}. El mapa base s'ha canviat a '{{newBaseMap}}'"
+    }
   },
   "feedback": {
     "feedbackPreamble": "Ens encantaria saber de tu!",
