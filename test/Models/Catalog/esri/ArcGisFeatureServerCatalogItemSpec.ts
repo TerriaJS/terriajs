@@ -77,6 +77,8 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         "layer.json"
       );
 
+      // Remove token from url
+      url = url.replace(/token=some-token-in-config/, "");
       if (originalUrl.match("Water_Network/FeatureServer")) {
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
@@ -126,6 +128,22 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
   it("supports show info", function () {
     expect(item.disableAboutData).toBeFalsy();
+  });
+
+  describe("when token is set", function () {
+    beforeEach(() => {
+      runInAction(() => {
+        item.setTrait("definition", "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "token", "some-token-in-config");
+      });
+    });
+
+    it("adds the token to metadata request", async function () {
+      await item.loadMapItems();
+
+      const tokenre = /token=some-token-in-config/;
+      expect(tokenre.test(loadWithXhr.load.calls.argsFor(0)[0])).toBeTruthy();
+    });
   });
 
   describe("after loading metadata", function () {
@@ -224,6 +242,22 @@ describe("ArcGisFeatureServerCatalogItem", function () {
   });
 
   describe("loadMapItems - geojson query", function () {
+    it("uses the token in url when loading feature server", async function () {
+      runInAction(() => {
+        item.setTrait("definition", "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
+        item.setTrait(CommonStrata.definition, "tileRequests", false);
+        item.setTrait("definition", "token", "some-token-in-config");
+      });
+
+      await item.loadMapItems();
+
+      expect(loadWithXhr.load.calls.argsFor(1)[0]).toContain("query?");
+      expect(loadWithXhr.load.calls.argsFor(1)[0]).toContain(
+        "token=some-token-in-config"
+      );
+    });
+
     it("properly loads a single layer", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl);
@@ -236,7 +270,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       expect(item.mapItems.length).toEqual(1);
       const mapItem = item.mapItems[0];
 
-      console.log(item.mapItems);
       expect(isDataSource(mapItem)).toBeTruthy();
       expect(
         isDataSource(mapItem) ? mapItem.entities.values.length : 0
@@ -379,6 +412,36 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         }
       });
 
+      it("fetch tile - with token", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(
+            CommonStrata.definition,
+            "token",
+            "some-token-in-config"
+          );
+        });
+
+        await item.loadMapItems();
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          // Fetch a tile - this tile will return a single polygon
+          await source.get({ x: 241014, y: 157088, z: 18 }, 256);
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0&token=some-token-in-config"
+          );
+        }
+      });
+
       it("fetch tile - with multiple requests", async function () {
         runInAction(() => {
           item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
@@ -470,6 +533,43 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           expect(feature.properties?.OBJECTID).toEqual(994364);
           expect(feature.properties.shapeuuid).toEqual(
             "0c28d4c1-5b56-3698-8a39-c7b02b238a55"
+          );
+        }
+      });
+
+      it("pick feature - with token", async function () {
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+          item.setTrait(
+            CommonStrata.definition,
+            "token",
+            "some-token-in-config"
+          );
+        });
+
+        await item.loadMapItems();
+
+        expect(item.allowFeaturePicking).toBeTruthy();
+
+        const mapItem = item.mapItems[0];
+
+        expect("imageryProvider" in mapItem).toBeTruthy();
+        if ("imageryProvider" in mapItem) {
+          const imageryProvider =
+            mapItem.imageryProvider as ProtomapsImageryProvider;
+
+          const source = imageryProvider.source as ProtomapsArcGisPbfSource;
+
+          await source.pickFeatures(
+            0,
+            0,
+            18,
+            2.635084429672604,
+            -0.5866868013895533
+          );
+
+          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query?f=geojson&sr=4326&geometryType=esriGeometryPoint&geometry={%22x%22%3A150.9792164808778%2C%22y%22%3A-33.61467761565137%2C%22spatialReference%22%3A{%22wkid%22%3A4326}}&outFields=*&returnGeometry=false&outSR=4326&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&distance=2.3886566162109375&where=1%3D1&token=some-token-in-config"
           );
         }
       });

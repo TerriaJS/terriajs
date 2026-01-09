@@ -1,16 +1,28 @@
 # Change Log
 
-#### next release (8.11.1)
+#### next release (8.11.2)
 
+- Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
+  - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
+- WMTS read URL from operations metadata #7371
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add UI to show toast messages.
+- Fix "Add data" button width for some languages #7726.
+- [The next improvement]
+
+#### 8.11.1 - 2025-12-04
+
+- ##### Security fixes
+  - Upgrades terriajs-server to v4.0.3. See [terriajs-server changes](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#security-fixes).
 - Fix translations key typo "zoomCotrol".
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
 - Update `csv-geo-au` support to include the latest Australian Government regions.
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
-- Fix "Add data" button width for some languages #7726.
+- Fix sharing when using initfile.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
-- [The next improvement]
 
 #### 8.11.0 - 2025-10-09
 
@@ -45,7 +57,6 @@
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - Add internationalization support to tinymce editor used in story editor
-- [The next improvement]
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
@@ -68,7 +79,6 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
-- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
