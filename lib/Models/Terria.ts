@@ -372,6 +372,11 @@ export interface ConfigParameters {
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 
   /**
+   * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
+   */
+  mapViewers: string[];
+
+  /**
    * Keep catalog open when adding / removing items
    */
   keepCatalogOpen: boolean;
@@ -601,7 +606,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    mapViewers: ["3d", "3dsmooth", "2d"]
   };
 
   @observable
