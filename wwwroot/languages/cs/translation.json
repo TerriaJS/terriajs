@@ -287,7 +287,18 @@
       "right": "Vpravo",
       "showUndergroundFeatures": "Stisknutím tlačítka začnete zobrazovat prvky, které se nacházejí pod povrchem terénu"
     },
-    "nativeResolutionLabel": "Stisknutím přestanete používat rozlišení {{resolution1}} a začnete používat rozlišení {{resolution2}}"
+    "nativeResolutionLabel": "Stisknutím přestanete používat rozlišení {{resolution1}} a začnete používat rozlišení {{resolution2}}",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ Vybranou základní mapu lze zobrazit pouze v režimu {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Režim prohlížeče přepnut",
+      "message": "Základní mapa '{{newBaseMap}}' nelze zobrazit v režimu {{currentMode}}. Zobrazení mapy bylo změněno na {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Základní mapa přepnuta",
+      "message": "Základní mapa '{{currentBaseMap}}' nelze zobrazit v režimu {{mapMode}}. Základní mapa byla změněna na '{{newBaseMap}}'"
+    }
   },
   "feedback": {
     "feedbackPreamble": "Rádi vás uslyšíme!",
