@@ -177,6 +177,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     onOpen: () => {
       runInAction(() => {
         viewState.measurableDownloadPanelIsVisible = false;
+        viewState.playPathPanelIsVisible = false;
         [
           MeasureLineTool.id,
           MeasurePolygonTool.id,
@@ -231,6 +232,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     onOpen: () => {
       runInAction(() => {
         viewState.measurableDownloadPanelIsVisible = false;
+        viewState.playPathPanelIsVisible = false;
         [MeasureLineTool.id, MeasureAngleTool.id, MeasurePointTool.id].forEach(
           (id) => {
             const item =
@@ -297,6 +299,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     onOpen: () => {
       runInAction(() => {
         viewState.measurableDownloadPanelIsVisible = false;
+        viewState.playPathPanelIsVisible = false;
         [
           MeasurePolygonTool.id,
           MeasureAngleTool.id,
@@ -363,6 +366,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     onOpen: () => {
       runInAction(() => {
         viewState.measurableDownloadPanelIsVisible = false;
+        viewState.playPathPanelIsVisible = false;
         [
           MeasureLineTool.id,
           MeasureAngleTool.id,

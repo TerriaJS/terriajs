@@ -602,6 +602,12 @@ class ViewingControls extends React.Component<
                 }
                 onClick={() =>
                   runInAction(() => {
+                    if (
+                      this.props.viewState.playPathPanelIsVisible ||
+                      this.props.viewState.measurableDownloadPanelIsVisible
+                    ) {
+                      this.props.viewState.measurablePanelIsVisible = true;
+                    }
                     item.computePath();
                     [
                       MeasureToolsController.id,
