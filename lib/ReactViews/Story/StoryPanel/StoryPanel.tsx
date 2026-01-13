@@ -219,6 +219,10 @@ class StoryPanel extends Component<Props, State> {
     const stories = this.props.viewState.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
 
+    if (!story) {
+      return null;
+    }
+
     return (
       <DragWrapper
         handleSelector=".drag-handle"
@@ -231,38 +235,38 @@ class StoryPanel extends Component<Props, State> {
           width: "min(80%, 700px)"
         }}
       >
-        <Swipeable
-          onSwipedLeft={() => this.goToNextStory()}
-          onSwipedRight={() => this.goToPrevStory()}
-        >
-          <Box onClick={() => this.onClickContainer()}>
+        <Box onClick={() => this.onClickContainer()}>
+          <Box
+            column
+            rounded
+            className={classNames(Styles.storyContainer, {
+              [Styles.isMounted]: this.state.inView
+            })}
+            key={story.id}
+            ref={this.slideRef as RefObject<HTMLDivElement>}
+            css={`
+              border-radius: 6px;
+              overflow: hidden;
+            `}
+          >
             <Box
+              backgroundColor={this.props.theme.dark}
+              css={{ color: "white", cursor: "move" }}
+              paddedRatio={3}
               column
-              rounded
-              className={classNames(Styles.storyContainer, {
-                [Styles.isMounted]: this.state.inView
-              })}
-              key={story.id}
-              ref={this.slideRef as RefObject<HTMLDivElement>}
-              css={`
-                border-radius: 6px;
-                overflow: hidden;
-              `}
+              className="drag-handle"
             >
-              <Box
-                backgroundColor={this.props.theme.dark}
-                css={{ color: "white", cursor: "move" }}
-                paddedRatio={3}
-                column
-                className="drag-handle"
-              >
-                <TitleBar
-                  title={story.title}
-                  isCollapsed={this.state.isCollapsed}
-                  collapseHandler={() => this.toggleCollapse()}
-                  closeHandler={() => this.exitStory()}
-                />
-              </Box>
+              <TitleBar
+                title={story.title}
+                isCollapsed={this.state.isCollapsed}
+                collapseHandler={() => this.toggleCollapse()}
+                closeHandler={() => this.exitStory()}
+              />
+            </Box>
+            <Swipeable
+              onSwipedLeft={() => this.goToNextStory()}
+              onSwipedRight={() => this.goToPrevStory()}
+            >
               <Box
                 css={{
                   backgroundColor: "rgba(255, 255, 255, 0.85)",
@@ -297,9 +301,9 @@ class StoryPanel extends Component<Props, State> {
                   }}
                 />
               </Box>
-            </Box>
+            </Swipeable>
           </Box>
-        </Swipeable>
+        </Box>
       </DragWrapper>
     );
   }

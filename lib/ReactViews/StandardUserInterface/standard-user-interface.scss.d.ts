@@ -12,6 +12,7 @@ declare namespace StandardUserInterfaceScssNamespace {
     sidePanel: string;
     "story-wrapper": string;
     storyPanel: string;
+    storyPanelFullScreen: string;
     storyWrapper: string;
     ui: string;
     "ui-root": string;

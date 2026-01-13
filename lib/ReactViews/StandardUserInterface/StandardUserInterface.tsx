@@ -272,7 +272,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                 }
               )}
               tabIndex={0}
-              onClick={action(() => {
+              onPointerDown={action(() => {
                 props.viewState.topElement = "FeatureInfo";
               })}
             >
@@ -285,10 +285,14 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                   Styles.storyPanel,
                   props.viewState.topElement === "StoryPanel"
                     ? "top-element"
-                    : ""
+                    : "",
+                  {
+                    [Styles.storyPanelFullScreen]:
+                      props.viewState.isMapFullScreen
+                  }
                 )}
                 tabIndex={0}
-                onClick={action(() => {
+                onPointerDown={action(() => {
                   props.viewState.topElement = "StoryPanel";
                 })}
               >

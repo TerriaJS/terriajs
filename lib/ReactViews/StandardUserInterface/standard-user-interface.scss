@@ -125,10 +125,6 @@
   }
 }
 
-.featureInfoFullScreen {
-  left: 0;
-}
-
 .storyPanel {
   z-index: variables.$front-component-z-index - 20;
   position: absolute;
@@ -149,6 +145,11 @@
     pointer-events: auto;
     position: absolute;
   }
+}
+
+.featureInfoFullScreen,
+.storyPanelFullScreen {
+  left: 0;
 }
 
 .showWorkbenchButton {
