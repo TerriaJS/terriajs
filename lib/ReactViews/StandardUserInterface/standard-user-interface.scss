@@ -95,7 +95,7 @@
   pointer-events: none;
   left: 0;
 
-  @media (min-width: variables.$md) {
+  @media (min-width: variables.$sm) {
     left: variables.$work-bench-width + 22px;
     top: 62px;
     right: 96px;
@@ -138,7 +138,7 @@
   pointer-events: none;
   left: 0;
 
-  @media (min-width: variables.$md) {
+  @media (min-width: variables.$sm) {
     left: variables.$work-bench-width + 22px;
     top: 62px;
     right: 96px;

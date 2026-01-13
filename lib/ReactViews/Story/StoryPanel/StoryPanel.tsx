@@ -95,7 +95,6 @@ const Swipeable = ({
 class StoryPanel extends Component<Props, State> {
   keydownListener: EventListener | undefined;
   slideRef: RefObject<HTMLElement>;
-  dragWrapperCallbackRef: (node: HTMLDivElement | null) => void;
 
   constructor(props: Props) {
     super(props);
@@ -104,14 +103,6 @@ class StoryPanel extends Component<Props, State> {
       inView: false
     };
     this.slideRef = createRef();
-    this.dragWrapperCallbackRef = (node: HTMLDivElement | null) => {
-      if (node) {
-        // Calculate and set initial centered position
-        const width = node.offsetWidth;
-        const halfWidth = width / 2;
-        node.style.marginLeft = `-${halfWidth}px`;
-      }
-    };
   }
 
   componentDidMount() {
@@ -236,83 +227,79 @@ class StoryPanel extends Component<Props, State> {
             this.props.viewState.terria.timelineStack.top !== undefined
               ? "146px"
               : "80px",
-          left: "50%"
+          left: "calc(50% - min(40%, 350px))",
+          width: "min(80%, 700px)"
         }}
       >
-        <div ref={this.dragWrapperCallbackRef}>
-          <Swipeable
-            onSwipedLeft={() => this.goToNextStory()}
-            onSwipedRight={() => this.goToPrevStory()}
-          >
-            <Box onClick={() => this.onClickContainer()}>
+        <Swipeable
+          onSwipedLeft={() => this.goToNextStory()}
+          onSwipedRight={() => this.goToPrevStory()}
+        >
+          <Box onClick={() => this.onClickContainer()}>
+            <Box
+              column
+              rounded
+              className={classNames(Styles.storyContainer, {
+                [Styles.isMounted]: this.state.inView
+              })}
+              key={story.id}
+              ref={this.slideRef as RefObject<HTMLDivElement>}
+              css={`
+                border-radius: 6px;
+                overflow: hidden;
+              `}
+            >
               <Box
+                backgroundColor={this.props.theme.dark}
+                css={{ color: "white", cursor: "move" }}
+                paddedRatio={3}
                 column
-                rounded
-                className={classNames(Styles.storyContainer, {
-                  [Styles.isMounted]: this.state.inView
-                })}
-                key={story.id}
-                ref={this.slideRef as RefObject<HTMLDivElement>}
-                css={`
-                  border-radius: 6px;
-                  overflow: hidden;
-                `}
+                className="drag-handle"
               >
-                <Box
-                  backgroundColor={this.props.theme.dark}
-                  css={{ color: "white", cursor: "move" }}
-                  paddedRatio={3}
-                  column
-                  className="drag-handle"
-                >
-                  <TitleBar
-                    title={story.title}
-                    isCollapsed={this.state.isCollapsed}
-                    collapseHandler={() => this.toggleCollapse()}
-                    closeHandler={() => this.exitStory()}
-                  />
-                </Box>
-                <Box
-                  css={{
-                    backgroundColor: "rgba(255, 255, 255, 0.85)",
-                    backdropFilter: this.props.theme.blur
+                <TitleBar
+                  title={story.title}
+                  isCollapsed={this.state.isCollapsed}
+                  collapseHandler={() => this.toggleCollapse()}
+                  closeHandler={() => this.exitStory()}
+                />
+              </Box>
+              <Box
+                css={{
+                  backgroundColor: "rgba(255, 255, 255, 0.85)",
+                  backdropFilter: this.props.theme.blur
+                }}
+              >
+                <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
+              </Box>
+              <Box
+                backgroundColor={this.props.theme.dark}
+                css={{ color: "white" }}
+                paddedHorizontally={3}
+                fullWidth
+              >
+                <FooterBar
+                  goPrev={() => this.goToPrevStory()}
+                  goNext={() => this.goToNextStory()}
+                  jumpToStory={(index: number) => this.navigateStory(index)}
+                  zoomTo={() => this.onCenterScene(story)}
+                  currentHumanIndex={this.props.viewState.currentStoryId + 1}
+                  totalStories={stories.length}
+                  listStories={() => {
+                    runInAction(() => {
+                      this.props.viewState.storyShown = false;
+                    });
+                    onStoryButtonClick({
+                      terria: this.props.viewState.terria,
+                      theme: this.props.theme,
+                      viewState: this.props.viewState,
+                      animationDuration: 250
+                    })();
                   }}
-                >
-                  <StoryBody
-                    isCollapsed={this.state.isCollapsed}
-                    story={story}
-                  />
-                </Box>
-                <Box
-                  backgroundColor={this.props.theme.dark}
-                  css={{ color: "white" }}
-                  paddedHorizontally={3}
-                  fullWidth
-                >
-                  <FooterBar
-                    goPrev={() => this.goToPrevStory()}
-                    goNext={() => this.goToNextStory()}
-                    jumpToStory={(index: number) => this.navigateStory(index)}
-                    zoomTo={() => this.onCenterScene(story)}
-                    currentHumanIndex={this.props.viewState.currentStoryId + 1}
-                    totalStories={stories.length}
-                    listStories={() => {
-                      runInAction(() => {
-                        this.props.viewState.storyShown = false;
-                      });
-                      onStoryButtonClick({
-                        terria: this.props.viewState.terria,
-                        theme: this.props.theme,
-                        viewState: this.props.viewState,
-                        animationDuration: 250
-                      })();
-                    }}
-                  />
-                </Box>
+                />
               </Box>
             </Box>
-          </Swipeable>
-        </div>
+          </Box>
+        </Swipeable>
       </DragWrapper>
     );
   }
