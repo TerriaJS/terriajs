@@ -529,6 +529,19 @@
       },
       "name": "Ombre"
     },
+    "clippingBox": {
+      "groupName": "Box di taglio",
+      "clipModel": "Taglia il modello",
+      "showClippingBox": "Mostra il box di taglio",
+      "keepBoxAboveGround": "Solo sopra il terreno",
+      "clipDirection": {
+        "name": "Direzione di taglio",
+        "options": {
+          "inside": "Taglia l'interno del box",
+          "outside": "Taglia l'esterno del box"
+        }
+      }
+    },
     "webMapTileServiceCatalogItem": {
       "noUsableTileMatrixTitle": "Avvertimento",
       "serviceDescription": "Descrizione del Servizio",
@@ -938,7 +951,8 @@
     "extraCreditLinks": {
       "disclaimer": "Scarico di responsabilità",
       "dataAttribution": "Attribuzione dei dati",
-      "basemap": "Mappa di base"
+      "basemap": "Attribuzione mappa di base",
+      "dataProvider": "Dati forniti da:"
     },
     "drawExtentHelper": {
       "drawExtent": "Disegnare l'estensione",
@@ -957,6 +971,8 @@
       "devError": "cesium è richiesto.",
       "unusalTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché utilizza uno schema di tile insolito che non è supportato.",
       "notWebMercatorTilingScheme": "Questo set di dati non può essere visualizzato sulla mappa 2D perché non supporta la proiezione Web Mercator (EPSG:3857).",
+      "terrainServerErrorMessage": "Il server del Terreno al momento non risponde. Si può comunque usare le funzionalità di {{appName}} ma non in modalità 3D.",
+      "stoppedRenderingMessage": "L'errore potrebbe essere stato causato dall'aggiunta di un layer. Prova a rimuoverlo, se il problema rimane prova a ricaricare l'applicazione {{appName}}.",
       "failedToObtain": "Impossibile ottenere la tile dell'immagine X: {{x}} Y: {{y}} Livello: {{level}}.",
       "stoppedRenderingTitle": "Rendering della mappa 3D fallito",
       "terrainServerErrorTitle": "Server Terreno Non Risponde"
@@ -994,6 +1010,7 @@
       "json": "JSON",
       "gpx": "GPX",
       "csv": "CSV",
+      "ifc": "IFC",
       "opendatasoft-group": "Portale Opendatasoft",
       "shp": "Shapefile (zip)",
       "3d-tiles": "Tile 3D",
@@ -1001,6 +1018,7 @@
       "sdmx-group": "SDMX-JSON",
       "gltf": "GLTF",
       "carto": "Carto",
+      "carto-v3": "Carto V3",
       "czml": "CZML",
       "geoRss": "GeoRSS",
       "other": "Altro (usare il servizio di conversione)",
@@ -1008,13 +1026,17 @@
       "kml": "KML o KMZ",
       "esri-group": "Esri ArcGIS Server",
       "geojson": "GeoJSON",
+      "socrata-group": "Socrata Server",
       "esri-featureServer": "Esri ArcGIS FeatureServer (singolo livello)",
       "esri-mapServer": "Esri ArcGIS MapServer (singolo livello)",
       "wps-getCapabilities": "Server Web Processing Service (WPS)",
       "wfs-group": "Server Web Feature Service (WFS)",
       "wms-group": "Server Web Map Service (WMS)",
       "wmts-group": "Server Web Map Tile Service (WMTS)",
-      "assimp-local": "Convertitore file 3D (zip) (sperimentale)"
+      "assimp-local": "Convertitore file 3D (zip) (sperimentale)",
+      "assimp-local-description": "**Attenzione:** la funzione è sperimentale.  \nVedi la lista dei [formati supportati](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nI file devono essere zippati.",
+      "assimp-remote": "Convertitore file 3D (zip) (sperimentale)",
+      "assimp-remote-description": "**Attenzione:** la funzione è sperimentale.  \nVedi la lista dei [formati supportati](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nIl formato .zip è supportato."
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
@@ -1063,6 +1085,7 @@
     "unverifiedExternalLink": {
       "title": "Attenzione: link non verificato",
       "denyText": "Annulla",
+      "message": "Stai per aprire: \n\n`{{url}}`  \n\nQuesto link non è verificato e potrebbe non essere sicuro.",
       "confirmText": "Apri in una nuova pagina"
     }
   },
@@ -1128,7 +1151,7 @@
     "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
     "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
-    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima",
+    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima <br><i>(premi CTRL per selezionare più layers)</i>",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vai alla mappa",
     "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali.",
@@ -1157,6 +1180,7 @@
     "toggleSplitterToolDisabled": "Si prega di disabilitare le altre funzionalità di confronto fianco a fianco per abilitare il confronto standard",
     "toggleSplitterTool": "Abilita il confronto affiancato tra due diversi set di dati",
     "errorTitle": "Impossibile comparare l'elemento del catalogo.",
+    "duplicateModelErrorMessage": "Errore nel confronto del layer `\"{{name}}\"`. Questo layer potrebbe non supportare la funzionalità di \"confronto\"",
     "modelNotFoundErrorMessage": "Modello ID `\"{{id}}\"`non è stato trovato"
   },
   "deltaTool": {
@@ -1202,6 +1226,7 @@
     "sectionLabel": "Grafici",
     "closePanel": "Chiudi pannello",
     "loading": "Caricamento dei dati del grafico...",
+    "showItemInChart": "Mostra il grafico di {{value}}",
     "noData": "Non sono stati trovati dati cartografici."
   },
   "catalogItem": {
@@ -1236,6 +1261,9 @@
       "addFirstText": "Aggiungi una nuova condizione",
       "addMoreText": "Aggiungi una condizione"
     }
+  },
+  "printView": {
+    "loading": "Creazione della vista di stampa in corso…"
   },
   "satellite": {
     "newLocation": "Nuova posizione",
@@ -1317,7 +1345,7 @@
     "viewMore": "Visualizza più risultati {{name}}",
     "viewLess": "Visualizza meno risultati {{name}}",
     "search": "Cerca '{{searchText}}' nel catalogo dei dati",
-    "searchInDataCatalog": "Cerca <1>'{{locationSearchText}}'</1> nel catalogo dei dati"
+    "searchInDataCatalog": "Cerca '{{locationSearchText}}' nel catalogo dei dati"
   },
   "addData": {
     "back": "Indietro",
@@ -1336,7 +1364,7 @@
     "closeDataPanel": "Chiudi pannello dati",
     "load": "Carica dati locali/web",
     "browse": "Sfoglia...",
-    "addDataBtnText": "Esplora i dati della mappa",
+    "addDataBtnText": "Esplora i dati",
     "localFile": "<0>Passo 2:</0> Selezionare il file",
     "note": "<0>Nota: </0>I dati aggiunti in questo modo non vengono salvati o resi visibili agli altri.",
     "infoText": "<0>Trascina un file qui per visualizzarlo localmente sulla mappa</0><1>(non sarà salvato o caricato su internet)</1>",
@@ -1542,6 +1570,43 @@
       "title": "Errore nel caricamento dello strumento {{toolName}}"
     },
     "closeButtonTitle": "Chiudere lo strumento {{toolName}}"
+  },
+  "compare": {
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Seleziona"
+    },
+    "dateButton": {
+      "left": "Sinistra",
+      "right": "Destra",
+      "select": "Seleziona una data"
+    },
+    "dateLocationFilter": {
+      "cancel": "Cancella",
+      "filter": "Filtra per posizione",
+      "loading": "Caricamento...",
+      "location": "Ora mostra i dati disponibili in {{latitude}}, {{longitude}}",
+      "mouseTooltipMessage": "Click del tasto detro per cancellare",
+      "mouseTooltipTitle": "Seleziona una posizione"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Non specificato"
+    },
+    "done": "Fatto",
+    "entireMap": {
+      "emptyText": "Aggiungi nuovi dati da mostrare usando il menù sopra.",
+      "title": "Mappa intera"
+    },
+    "entireMapMenu": {
+      "browse": "Sfoglia i dati della mappa.",
+      "hideAll": "Nascondi tutto",
+      "sendAllToBack": "Porta dietro",
+      "sendAllToFront": "Porta in primo piano"
+    },
+    "info": "Compara dataset spaziali visualizzandoli affiancati direttamente sulla mappa.",
+    "leftPanel": "Pannello di sinistra",
+    "rightPanel": "Pannello di destra",
+    "title": "Compara"
   },
   "compass": {
     "guidance": {

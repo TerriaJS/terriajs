@@ -48,4 +48,20 @@ export function setViewerMode(
   });
 }
 
+/**
+ * Returns the viewer type for the given viewer mode
+ *
+ * @param viewerMode 3d, 3dsmooth or 2d
+ */
+export function getViewerType(viewerMode: string): ViewerMode | undefined {
+  // Note:
+  // There is small naming ambiguity here
+  // ViewerMode can either mean Leaflet|Cesium|NoViewer or 3d|3dsmooth|2d
+  // The 3d|2d sense of viewermode is used in APIs, for eg to set preference in localStorage
+  // So I think we should rename Leaflet|Cesium... as viewerType instead!
+  if (isViewerMode(viewerMode)) {
+    return MapViewers[viewerMode].viewerMode;
+  }
+}
+
 export default ViewerMode;

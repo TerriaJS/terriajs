@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
@@ -40,6 +41,11 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import {
+  WorkbenchControls,
+  enableAllControls,
+  isControlEnabled
+} from "./WorkbenchControls";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -87,10 +93,11 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 interface PropsType {
   viewState: ViewState;
   item: BaseModel;
+  controls?: WorkbenchControls;
 }
 
 const ViewingControls: React.FC<PropsType> = observer((props) => {
-  const { viewState, item } = props;
+  const { viewState, item, controls = enableAllControls } = props;
   const { t } = useTranslation();
   const [isMenuOpen, setIsOpen] = useState(false);
   const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
@@ -257,11 +264,15 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
     return sortBy(
       uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
       "name"
-    );
-  }, [item, viewState.globalViewingControlOptions]);
+    ).filter(({ id }) => {
+      // Exclude disabled controls
+      return isControlEnabled(controls, id);
+    });
+  }, [item, controls, viewState.globalViewingControlOptions]);
 
   const renderViewingControlsMenu = () => {
     const canSplit =
+      controls.compare &&
       !item.terria.configParameters.disableSplitter &&
       hasTraits(item, SplitterTraits, "splitDirection") &&
       hasTraits(item, SplitterTraits, "disableSplitter") &&
@@ -305,7 +316,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.difference &&
+        viewState.useSmallScreenInterface === false &&
         DiffableMixin.isMixedInto(item) &&
         !item.isShowingDiff &&
         item.canDiffImages ? (
@@ -321,7 +333,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.exportData &&
+        viewState.useSmallScreenInterface === false &&
         ExportableMixin.isMixedInto(item) &&
         item.canExportData ? (
           <li key={"workbench.exportData"}>
@@ -336,7 +349,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.search &&
+        viewState.useSmallScreenInterface === false &&
         SearchableItemMixin.isMixedInto(item) &&
         item.canSearch ? (
           <li key={"workbench.searchItem"}>
@@ -393,6 +407,7 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
           onClick={zoomTo}
           title={t("workbench.zoomToTitle")}
           disabled={
+            !controls.idealZoom ||
             // disabled if the item cannot be zoomed to or if a zoom is already in progress
             (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
             isMapZoomingToCatalogItem === true
@@ -412,7 +427,8 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
           title={t("workbench.previewItemTitle")}
           iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
           disabled={
-            CatalogMemberMixin.isMixedInto(item) && item.disableAboutData
+            !controls.aboutData ||
+            (CatalogMemberMixin.isMixedInto(item) && item.disableAboutData)
           }
         >
           {t("workbench.previewItem")}
