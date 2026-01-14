@@ -42,7 +42,9 @@
 .url-input {
   &__text-box {
     composes: field from "../../../../Sass/common/_form.scss";
-    width: calc(100% - 77px);
+    width: 100%;
+    height: auto;
+    margin-bottom: 1vh;
     float: left;
     font-family: variables.$font-base;
   }
@@ -52,8 +54,9 @@
     composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
     composes: btn-primary from "../../../../Sass/common/_buttons.scss";
 
-    width: 77px;
-    float: left;
+    max-width: 150px;
+    word-wrap: break-word;
+    float: center;
   }
 }
 
