@@ -95,7 +95,7 @@
   pointer-events: none;
   left: 0;
 
-  @media (min-width: variables.$md) {
+  @media (min-width: variables.$sm) {
     left: variables.$work-bench-width + 22px;
     top: 62px;
     right: 96px;
@@ -125,7 +125,30 @@
   }
 }
 
-.featureInfoFullScreen {
+.storyPanel {
+  z-index: variables.$front-component-z-index - 20;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events: none;
+  left: 0;
+
+  @media (min-width: variables.$sm) {
+    left: variables.$work-bench-width + 22px;
+    top: 62px;
+    right: 96px;
+    bottom: 0;
+  }
+
+  & > div {
+    pointer-events: auto;
+    position: absolute;
+  }
+}
+
+.featureInfoFullScreen,
+.storyPanelFullScreen {
   left: 0;
 }
 
