@@ -146,6 +146,7 @@ export class IdealZoomTraits extends ModelTraits {
   })
   camera?: CameraTraits;
 }
+
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -197,6 +198,21 @@ export class InitialMessageTraits extends ModelTraits {
     description: "Height of the message."
   })
   height?: number;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show as toast message",
+    description: "Show the initial message as a toast"
+  })
+  showAsToast?: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Toast visible duration",
+    description:
+      "Time in seconds after which the toast will be dismissed. If undefined, user must take action."
+  })
+  toastVisibleDuration?: number;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
@@ -281,6 +297,14 @@ class MappableTraits extends mixTraits(AttributionTraits) {
       'The maximum number of "feature infos" that can be displayed in feature info panel.'
   })
   maximumShownFeatureInfos?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Preferred viewer mode",
+    description:
+      "The preferred viewer mode for this item - either '2d' '3d' or '3dsmooth'. If this dataset is used as a basemap then we automatically switch the viewer to the preferred mode. However the user can still switch to another mode, so this preference is not strongly enforced."
+  })
+  preferredViewerMode?: string;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
