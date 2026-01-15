@@ -47,6 +47,7 @@
     composes: field from "../../../../Sass/common/_form.scss";
     float: left;
     font-family: variables.$font-base;
+    height: auto;
   }
 
   &__btn {
