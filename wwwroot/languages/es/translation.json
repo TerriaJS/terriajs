@@ -517,7 +517,25 @@
     },
     "arcGisService": {
       "name": "Grupo de servicio ArcGIS",
-      "invalidServerTitle": "Servidor ArcGIS inválido"
+      "invalidServerTitle": "Servidor ArcGIS inválido",
+      "invalidServerMessage": "Ocurrió un error al invocar el servicio de ArcGIS REST. La respuesta del servidor no parece ser un documento ArcGIS REST válido.",
+      "groupNotAvailableTitle": "Grupo no disponible",
+      "groupNotAvailableMessage": "Occurió un error al invocar el servicio ArcGIS REST."
+    },
+    "arcGisFeatureServer": {
+      "invalidServiceTitle": "ArcGIS Servicio de Entidades inválido"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "serviceDescription": "Descripción del Servicio",
+      "dataDescription": "Descripción de los Datos",
+      "copyrightText": "Texto de Derechos de Autor"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "serviceDescription": "Descripción del Servicio",
+      "dataDescription": "Descipción de los Datos"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "groupNotAvailableTitle": "Grupo no disponible"
     }
   },
   "analytics": {
@@ -669,14 +687,16 @@
     "localFile": "<0>Paso 2:</0> Seleccionar archivo",
     "webTitle": "Añadir datos web",
     "dataCatalogue": "Catálogo de datos",
-    "localFileType": "<0>Paso 1:</0> Seleccionar tipo de archivo"
+    "localFileType": "<0>Paso 1:</0> Seleccionar tipo de archivo",
+    "data": "Datos",
+    "modalTitle": "Explorar Datos"
   },
   "satelliteGuidance": {
     "prevI": "No, gracias",
     "titleI": "Imágenes por satélite: ¿Cómo puedo...?",
     "bodyI": "Una guía súper rápida para sacar el máximo partido a las imágenes históricas por satélite.",
     "nextI": "Ver guía",
-    "titleII": "¿Dónde está mi imagen satélite?",
+    "titleII": "¿Dónde está mi imagen satelital?",
     "bodyIII": "En su banco de trabajo de datos, haga clic en el desplegable de la fecha de captura y seleccione entre las horas disponibles para cargar las imágenes históricas.",
     "titleIV": "Filtrar las imágenes por ubicación",
     "menuTitle": "Puedes acceder a las guías de los mapas en cualquier momento buscando en el <2>menú de ayuda</2>",
@@ -696,7 +716,8 @@
       "cancelEditing": "Cancelar",
       "placeholder": "Introduzca un título aquí",
       "modalHeader": "Editor de escenas - Captura de escena",
-      "titleLabel": "Título (requerido)"
+      "titleLabel": "Título (requerido)",
+      "descriptionLabel": "Descripción"
     },
     "removeAllStories": "Eliminar Todas",
     "delete": "Eliminar",
@@ -804,8 +825,9 @@
     "subTotals": "<div> {{name}}: {{items}} elementos/ {{groups}} grupos</div>",
     "totals": "<div>El catálogo contiene {{items}} elementos en {{groups}} grupos.</div>",
     "countingMessage": "Contando, por favor espere…",
-    "mapDataState": "{{count}} conjunto de datos habilitado en el mapa",
-    "mapDataState_plural": "{{count}} conjunto de datos habilitado en el mapa",
+    "mapDataState_0": "{{count}} conjunto de datos habilitado en el mapa",
+    "mapDataState_1": "{{count}} conjuntos de datos habilitados en el mapa",
+    "mapDataState_2": "{{count}} conjuntos de datos habilitados en el mapa",
     "noMapDataEnabled": "No hay datos cartográficos habilitados"
   },
   "share": {
@@ -1187,7 +1209,7 @@
       "czml": "CZML",
       "wms-group": "Servidor del Servicio de Mapas en la Web (WMS)",
       "carto-v3": "Carto V3",
-      "auto": "Tipo de carpeta",
+      "auto": "Tipo de archivo",
       "esri-group": "Esri ArcGIS Servidor",
       "open-street-map": "Open Street mapa",
       "sdmx-group": "SDMX-JSON",
