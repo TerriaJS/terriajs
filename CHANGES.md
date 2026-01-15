@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.11.2)
+#### next release (8.11.3)
+
+- [The next improvement]
+
+#### 8.11.2 - 2026-01-15
 
 - Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
@@ -9,7 +13,6 @@
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add UI to show toast messages.
 - Make `<StoryPanel>` draggable
-- [The next improvement]
 
 #### 8.11.1 - 2025-12-04
 
