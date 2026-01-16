@@ -1,10 +1,8 @@
-"use strict";
-
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const MarkdownIt = require("markdown-it");
-const DOMPurify = require("dompurify/dist/purify");
-import injectTerms from "./injectTerms";
+import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
+import MarkdownIt from "markdown-it";
+import defined from "terriajs-cesium/Source/Core/defined";
 import { Term } from "../ReactViewModels/defaultTerms";
+import injectTerms from "./injectTerms";
 
 const md = new MarkdownIt({
   html: true,
@@ -35,7 +33,7 @@ export interface MarkdownOptions {
 function markdownToHtml(
   markdownString: string,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: object = {},
+  domPurifyOptions: DomPurifyConfig = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {

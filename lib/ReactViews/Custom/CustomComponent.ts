@@ -72,6 +72,7 @@ export default abstract class CustomComponent {
    * @param context The context for the custom component
    * @param node The node that should possibly be processed.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   shouldProcessNode(context: ProcessNodeContext, node: DomElement): boolean {
     return this.name === node.name;
   }
@@ -100,6 +101,13 @@ export default abstract class CustomComponent {
    */
   static register(component: CustomComponent) {
     this._types.set(component.name, component);
+  }
+
+  /**
+   * Unregister all components
+   */
+  static unregisterAll() {
+    this._types.clear();
   }
 
   /**

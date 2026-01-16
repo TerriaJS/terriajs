@@ -1,10 +1,10 @@
 import {
   action,
   computed,
+  makeObservable,
   observable,
   runInAction,
-  toJS,
-  makeObservable
+  toJS
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
@@ -15,7 +15,6 @@ import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
-import Terria from "../Terria";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
 import { isLoadableStratum } from "./LoadableStratum";
@@ -23,6 +22,7 @@ import ModelType, {
   ArrayElementTypes,
   BaseModel,
   ModelConstructor,
+  ModelConstructorParameters,
   ModelInterface
 } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
@@ -31,39 +31,17 @@ import StratumOrder from "./StratumOrder";
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   Traits: T
 ): ModelConstructor<ModelType<InstanceType<T>>> {
-  type Traits = InstanceType<T>;
-  type StratumTraits = StratumFromTraits<Traits>;
+  type TraitsType = InstanceType<T>;
+  type StratumTraits = StratumFromTraits<TraitsType>;
 
-  abstract class Model extends BaseModel implements ModelInterface<Traits> {
+  abstract class Model extends BaseModel implements ModelInterface<TraitsType> {
     abstract get type(): string;
     static readonly TraitsClass = Traits;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = Traits as any;
-    readonly strata: Map<string, StratumTraits>;
 
-    /**
-     * Babel transpiles this & correctly assigns undefined to this property as
-     * under `proposal-class-fields` declaring a property without initialising
-     * it still declares it, thus treated as
-     *
-     * `sourceReference = undefined;`
-     * >This differs a bit from certain transpiler implementations, which would
-     * >just entirely ignore a field declaration which has no initializer.
-     *
-     * instead of what we had expected with TypeScript's treatment of this class
-     * property being:
-     * `readonly sourceReference: BaseModel | undefined;`
-     *
-     * whereas ts-loader strips the type completely along with the implicit
-     * undefined assignment getting removed entirely before it hits
-     * babel-loader, side-stepping this case.
-     *
-     * Given we don't actually do anything different to the main constructor
-     * call in `BaseModel`, it feels more correct to remove this annotation
-     * rather than declare it here + re-assigning it in the `Model` constructor
-     */
-    // readonly sourceReference: BaseModel | undefined;
+    readonly strata: Map<string, StratumTraits>;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.
@@ -75,15 +53,13 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     @observable
     readonly knownContainerUniqueIds: string[] = [];
 
-    constructor(
-      id: string | undefined,
-      terria: Terria,
-      sourceReference: BaseModel | undefined,
-      strata: Map<string, StratumTraits> | undefined
-    ) {
+    constructor(...args: ModelConstructorParameters) {
+      const [id, terria, sourceReference, strata] = args;
       super(id, terria, sourceReference);
+      this.strata =
+        (strata as Map<string, StratumTraits>) ||
+        observable.map<string, StratumTraits>();
       makeObservable(this);
-      this.strata = strata || observable.map<string, StratumTraits>();
     }
 
     dispose() {}
@@ -108,7 +84,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
           this.terria,
           sourceReference
         );
-      } catch (e) {
+      } catch (_e) {
         throw TerriaError.from(`Failed to create model \`"${newId}"\``);
       }
 
@@ -154,13 +130,13 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return this.getOrCreateStratum(stratumId)[trait];
     }
 
-    addObject<Key extends keyof ArrayElementTypes<Traits>>(
+    addObject<Key extends keyof ArrayElementTypes<TraitsType>>(
       stratumId: string,
       traitId: Key,
       objectId?: string | undefined
-    ): ModelType<ArrayElementTypes<Traits>[Key]> | undefined {
+    ): ModelType<ArrayElementTypes<TraitsType>[Key]> | undefined {
       const trait = this.traits[traitId as string] as ObjectArrayTrait<
-        ArrayElementTypes<Traits>[Key]
+        ArrayElementTypes<TraitsType>[Key]
       >;
       const nestedTraitsClass = trait.type;
       const newStratum = createStratumInstance(nestedTraitsClass);
@@ -177,9 +153,8 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         (newStratum as any)[trait.idProperty] = objectId;
         array.push(newStratum);
 
-        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (
-          this as any
-        )[traitId];
+        const models: readonly ModelType<ArrayElementTypes<TraitsType>[Key]>[] =
+          (this as any)[traitId];
         return models.find(
           (o: any, i: number) =>
             getObjectId(trait.idProperty, o, i) === objectId
@@ -191,7 +166,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         let maxIndex = -1;
         this.strata.forEach((s) =>
           (s[traitId] as Array<unknown> | undefined)?.forEach(
-            (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
+            (_e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
           )
         );
 
@@ -204,9 +179,8 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         array[maxIndex + 1] = newStratum;
 
         // Return newly created model
-        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (
-          this as any
-        )[traitId];
+        const models: readonly ModelType<ArrayElementTypes<TraitsType>[Key]>[] =
+          (this as any)[traitId];
         return models[models.length - 1];
       }
     }

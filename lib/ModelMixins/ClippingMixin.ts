@@ -4,7 +4,6 @@ import {
   computed,
   makeObservable,
   observable,
-  override,
   toJS,
   untracked
 } from "mobx";
@@ -29,7 +28,7 @@ import Cesium from "../Models/Cesium";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import SelectableDimensions, {
+import {
   SelectableDimension,
   SelectableDimensionCheckboxGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
@@ -38,7 +37,7 @@ import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
 import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 
-type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
+type BaseType = Model<ClippingPlanesTraits>;
 
 function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ClippingMixinBase extends Base {
@@ -60,10 +59,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
-    // Use a stable clippign plane collection. Replacing the collection on
+    // Use a stable clipping plane collection. Replacing the collection on
     // change seems to crash Cesium, which could be related to:
-    // https://github.com/CesiumGS/cesium/issues/6599
-    private _clippingPlaneCollection = new ClippingPlaneCollection();
+    // https://github.com/CesiumGS/cesium/issues/6599 .
+    @observable
+    private _clippingPlaneCollection: ClippingPlaneCollection | undefined;
 
     constructor(...args: any[]) {
       super(...args);
@@ -127,10 +127,10 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         });
       }
 
-      return updateClippingPlanesCollection(
-        this._clippingPlaneCollection,
-        options
-      );
+      const clippingPlaneCollection =
+        this.getOrCreateClippingPlanesCollection();
+
+      return updateClippingPlanesCollection(clippingPlaneCollection, options);
     }
 
     @computed
@@ -139,7 +139,9 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const clippingPlaneCollection = this._clippingPlaneCollection;
+      const clippingPlaneCollection =
+        this.getOrCreateClippingPlanesCollection();
+
       if (!this.clippingBox.clipModel) {
         clippingPlaneCollection.enabled = false;
         return clippingPlaneCollection;
@@ -167,6 +169,24 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       });
 
       return clippingPlaneCollection;
+    }
+
+    private getOrCreateClippingPlanesCollection(): ClippingPlaneCollection {
+      if (this._clippingPlaneCollection) {
+        return this._clippingPlaneCollection;
+      }
+
+      this._clippingPlaneCollection = new ClippingPlaneCollection();
+
+      // Unset our reference if the collection gets destroyed.
+      // This could happen for example when switching to 2D mode and back to 3D.
+      const originalDestroy = this._clippingPlaneCollection.destroy;
+      this._clippingPlaneCollection.destroy = action(() => {
+        originalDestroy.apply(this._clippingPlaneCollection);
+        this._clippingPlaneCollection = undefined;
+      });
+
+      return this._clippingPlaneCollection;
     }
 
     @computed
@@ -334,10 +354,10 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       );
     }
 
-    @override
-    get selectableDimensions(): SelectableDimension[] {
+    @computed
+    get clippingDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
-        return super.selectableDimensions;
+        return [];
       }
 
       const checkboxGroupInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
@@ -429,7 +449,6 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             ];
 
       return [
-        ...super.selectableDimensions,
         {
           // Checkbox group that also enables/disables the clipping behaviour altogether
           type: "checkbox-group",

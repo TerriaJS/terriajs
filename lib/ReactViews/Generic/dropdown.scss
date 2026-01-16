@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/_variables";
+@use "../../Sass/common/mixins";
 
 .dropdown {
   position: relative;
@@ -8,18 +8,20 @@
 .list {
   composes: list-reset from "../../Sass/common/_base.scss";
 
-  @include transform(scaleY(0));
-  @include transition(transform $animation-fast cubic-bezier(0.19, 1, 0.22, 1));
-  @include transform-origin(center, top);
+  @include mixins.transform(scaleY(0));
+  @include mixins.transition(
+    transform variables.$animation-fast cubic-bezier(0.19, 1, 0.22, 1)
+  );
+  @include mixins.transform-origin(center, top);
   position: absolute;
   min-width: 100%;
   overflow: hidden;
   z-index: 9999;
   box-sizing: border-box;
   background: #fff;
-  border-radius: $radius-small;
-  border: 1px solid rgba($grey, 0.4);
-  box-shadow: 0px 3px 15px rgba($dark, 0.15);
+  border-radius: variables.$radius-small;
+  border: 1px solid rgba(variables.$grey, 0.4);
+  box-shadow: 0px 3px 15px rgba(variables.$dark, 0.15);
   &.is-open {
     transform: scaleY(1);
     overflow-y: auto;
@@ -30,17 +32,17 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
   text-align: left;
-  background: $text-light;
-  color: $text-dark;
-  border: 1px solid $field-border;
+  background: variables.$text-light;
+  color: variables.$text-dark;
+  border: 1px solid variables.$field-border;
   position: relative;
   &:hover,
   &:focus {
-    background: $text-light;
-    color: $text-dark;
-    border: 1px solid $color-primary;
+    background: variables.$text-light;
+    color: variables.$text-dark;
+    border: 1px solid variables.$color-primary;
   }
   svg {
     width: 30px;
@@ -52,11 +54,11 @@
     position: absolute;
     right: 10px;
     top: 15px;
-    fill: $dark-lighter;
+    fill: variables.$dark-lighter;
   }
   &:disabled {
-    background: $text-light !important;
-    color: $text-dark;
+    background: variables.$text-light !important;
+    color: variables.$text-dark;
     opacity: 0.3;
   }
 }
@@ -67,15 +69,15 @@
   composes: btn--small from "../../Sass/common/_buttons.scss";
 
   width: 100%;
-  color: $text-dark;
+  color: variables.$text-dark;
 
   &:hover,
   &:focus {
-    color: $dropdown-hover-color;
+    color: variables.$dropdown-hover-color;
   }
 
   &.is-selected {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }
 

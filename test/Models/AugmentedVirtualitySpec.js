@@ -642,7 +642,7 @@ function bod(roll, pitch, heading) {
 //       the tests can remain the same (this may need to be aware of the frame of reference...which might make this
 //       option less practical).
 var customMatchers = {
-  closeOrientation: function (util, customEqualityTesters) {
+  closeOrientation: function (_util, _customEqualityTesters) {
     return {
       compare: function (actual, expected) {
         var result = {};

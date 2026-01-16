@@ -120,8 +120,11 @@ export class FeatureServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
-    const terria = catalogGroup.terria;
     const uri = new URI(catalogGroup.url).addQuery("f", "json");
+
+    if (catalogGroup.token) {
+      uri.addQuery("token", catalogGroup.token);
+    }
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
@@ -210,6 +213,14 @@ export class FeatureServerStratum extends LoadableStratum(
 
     const uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
+
+    if (this._catalogGroup.token) {
+      model.setTrait(
+        CommonStrata.definition,
+        "token",
+        this._catalogGroup.token
+      );
+    }
   }
 }
 

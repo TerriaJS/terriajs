@@ -41,6 +41,7 @@ export default class SearchState {
   private _catalogSearchDisposer: IReactionDisposer;
   private _locationSearchDisposer: IReactionDisposer;
   private _unifiedSearchDisposer: IReactionDisposer;
+  private _workbenchItemsSubscription: IReactionDisposer;
 
   private readonly terria: Terria;
 
@@ -90,12 +91,27 @@ export default class SearchState {
         );
       }
     );
+
+    this._workbenchItemsSubscription = reaction(
+      () => this.terria.workbench.items,
+      () => {
+        this.showLocationSearchResults = false;
+      }
+    );
   }
 
-  dispose() {
+  dispose(): void {
     this._catalogSearchDisposer();
     this._locationSearchDisposer();
     this._unifiedSearchDisposer();
+    this._workbenchItemsSubscription();
+  }
+
+  @computed
+  get supportsAutocomplete(): boolean {
+    return this.locationSearchProviders.every((provider) =>
+      provider.supportsAutocomplete()
+    );
   }
 
   @computed
@@ -117,7 +133,7 @@ export default class SearchState {
   }
 
   @action
-  searchCatalog() {
+  searchCatalog(): void {
     if (this.isWaitingToStartCatalogSearch) {
       this.isWaitingToStartCatalogSearch = false;
       if (this.catalogSearchResults) {
@@ -132,12 +148,12 @@ export default class SearchState {
   }
 
   @action
-  setCatalogSearchText(newText: string) {
+  setCatalogSearchText(newText: string): void {
     this.catalogSearchText = newText;
   }
 
   @action
-  searchLocations() {
+  searchLocations(): void {
     if (this.isWaitingToStartLocationSearch) {
       this.isWaitingToStartLocationSearch = false;
       this.locationSearchResults.forEach((results) => {
@@ -150,7 +166,7 @@ export default class SearchState {
   }
 
   @action
-  searchUnified() {
+  searchUnified(): void {
     if (this.isWaitingToStartUnifiedSearch) {
       this.isWaitingToStartUnifiedSearch = false;
       this.unifiedSearchResults.forEach((results) => {

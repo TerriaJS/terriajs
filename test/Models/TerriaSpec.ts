@@ -36,22 +36,18 @@ import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/Build
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "../../lib/Models/BaseMaps/defaultBaseMaps";
 
-const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
-const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
-
-const mapConfigV7Json = require("../../wwwroot/test/Magda/map-config-v7.json");
-const mapConfigV7String = JSON.stringify(mapConfigV7Json);
-
-const mapConfigInlineInitJson = require("../../wwwroot/test/Magda/map-config-inline-init.json");
-const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
-
-const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
-const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
-
-const mapConfigDereferencedNewJson = require("../../wwwroot/test/Magda/map-config-dereferenced-new.json");
-const mapConfigDereferencedNewString = JSON.stringify(
-  mapConfigDereferencedNewJson
-);
+import mapConfigBasicJson from "../../wwwroot/test/Magda/map-config-basic.json";
+import mapConfigV7Json from "../../wwwroot/test/Magda/map-config-v7.json";
+import mapConfigInlineInitJson from "../../wwwroot/test/Magda/map-config-inline-init.json";
+import mapConfigDereferencedJson from "../../wwwroot/test/Magda/map-config-dereferenced.json";
+import mapConfigDereferencedNewJson from "../../wwwroot/test/Magda/map-config-dereferenced-new.json";
+import magdaRecord1 from "../../wwwroot/test/Magda/shareKeys/6b24aa39-1aa7-48d1-b6a6-9e755aff4476.json";
+import magdaRecord2 from "../../wwwroot/test/Magda/shareKeys/bfc69476-1c85-4208-9046-4f736bab9b8e.json";
+import magdaRecord3 from "../../wwwroot/test/Magda/shareKeys/12f26f07-f39e-4753-979d-2de01af54bd1.json";
+import mapConfigOld from "../../wwwroot/test/Magda/shareKeys/map-config-example-old.json";
+import mapConfigNew from "../../wwwroot/test/Magda/shareKeys/map-config-example-new.json";
+import configProxy from "../../wwwroot/test/init/configProxy.json";
+import serverConfig from "../../wwwroot/test/init/serverconfig.json";
 
 // i18nOptions for CI
 const i18nOptions = {
@@ -147,34 +143,34 @@ describe("Terria", function () {
 
       jasmine.Ajax.stubRequest(/.*(serverconfig|proxyabledomains).*/).andReturn(
         {
-          responseText: JSON.stringify({ foo: "bar" })
+          responseJSON: { foo: "bar" }
         }
       );
 
       // from `terria.start()`
       jasmine.Ajax.stubRequest("test/Magda/map-config-basic.json").andReturn({
-        responseText: mapConfigBasicString
+        responseJSON: mapConfigBasicJson
       });
 
       jasmine.Ajax.stubRequest("test/Magda/map-config-v7.json").andReturn({
-        responseText: mapConfigV7String
+        responseJSON: mapConfigV7Json
       });
 
       // terria's "Magda derived url"
       jasmine.Ajax.stubRequest(
         /.*api\/v0\/registry\/records\/map-config-basic.*/
-      ).andReturn({ responseText: mapConfigBasicString });
+      ).andReturn({ responseJSON: mapConfigBasicJson });
 
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-inline-init.*/).andReturn({
-        responseText: mapConfigInlineInitString
+        responseJSON: mapConfigInlineInitJson
       });
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced.*/).andReturn({
-        responseText: mapConfigDereferencedString
+        responseJSON: mapConfigDereferencedJson
       });
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced-new.*/).andReturn({
-        responseText: mapConfigDereferencedNewString
+        responseJSON: mapConfigDereferencedNewJson
       });
     });
 
@@ -292,7 +288,7 @@ describe("Terria", function () {
 
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -314,7 +310,7 @@ describe("Terria", function () {
       it("works with basic initializationUrls", function (done) {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -345,7 +341,7 @@ describe("Terria", function () {
       it("works with v7initializationUrls", async function () {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
-          responseText: mapConfigBasicString
+          responseJSON: mapConfigBasicJson
         });
         const groupName = "Simple converter test";
         jasmine.Ajax.stubRequest(
@@ -387,7 +383,7 @@ describe("Terria", function () {
       it("works with inline init", async function () {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigInlineInitString
+          responseJSON: mapConfigInlineInitJson
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
@@ -418,7 +414,7 @@ describe("Terria", function () {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigDereferencedString
+          responseJSON: mapConfigDereferencedJson
         });
         await terria
           .start({
@@ -743,7 +739,7 @@ describe("Terria", function () {
     });
 
     describe("using story route", function () {
-      beforeEach(async function () {
+      beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with Karma runner
         terria.updateParameters({
@@ -936,31 +932,23 @@ describe("Terria", function () {
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/6b24aa39-1aa7-48d1-b6a6-9e755aff4476?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/6b24aa39-1aa7-48d1-b6a6-9e755aff4476.json")
-          )
+          responseJSON: magdaRecord1
         });
 
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/bfc69476-1c85-4208-9046-4f736bab9b8e?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/bfc69476-1c85-4208-9046-4f736bab9b8e.json")
-          )
+          responseJSON: magdaRecord2
         });
 
         jasmine.Ajax.stubRequest(
           "https://magda.example.com/api/v0/registry/records/12f26f07-f39e-4753-979d-2de01af54bd1?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
         ).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/12f26f07-f39e-4753-979d-2de01af54bd1.json")
-          )
+          responseJSON: magdaRecord3
         });
 
         jasmine.Ajax.stubRequest(configUrl).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/map-config-example-old.json")
-          )
+          responseJSON: mapConfigOld
         });
 
         await terria.start({
@@ -968,9 +956,7 @@ describe("Terria", function () {
           i18nOptions
         });
         jasmine.Ajax.stubRequest(configUrl).andReturn({
-          responseText: JSON.stringify(
-            require("../../wwwroot/test/Magda/shareKeys/map-config-example-new.json")
-          )
+          responseJSON: mapConfigNew
         });
 
         await newTerria.start({
@@ -1119,14 +1105,10 @@ describe("Terria", function () {
     beforeEach(function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(/.*(test\/init\/configProxy).*/).andReturn({
-        responseText: JSON.stringify(
-          require("../../wwwroot/test/init/configProxy.json")
-        )
+        responseJSON: configProxy
       });
       jasmine.Ajax.stubRequest(/.*(serverconfig).*/).andReturn({
-        responseText: JSON.stringify(
-          require("../../wwwroot/test/init/serverconfig.json")
-        )
+        responseJSON: serverConfig
       });
     });
 
@@ -1148,7 +1130,7 @@ describe("Terria", function () {
           ]);
           done();
         })
-        .catch((error) => {
+        .catch((_error) => {
           done.fail();
         });
     });
@@ -1344,15 +1326,15 @@ describe("Terria", function () {
         loadMapItemsArcGisMap = spyOn(
           ArcGisMapServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Result.none());
+        ).and.returnValue(Promise.resolve(Result.none()));
         loadMapItemsArcGisFeature = spyOn(
           ArcGisFeatureServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Result.none());
+        ).and.returnValue(Promise.resolve(Result.none()));
         loadMapItemsWms = spyOn(
           WebMapServiceCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Result.none());
+        ).and.returnValue(Promise.resolve(Result.none()));
       });
 
       it("when a workbench item is a simple map server group", async function () {
@@ -1465,7 +1447,7 @@ describe("Terria", function () {
       });
     });
 
-    describe("Enable/disable shorten share URL via init data", async function () {
+    describe("Enable/disable shorten share URL via init data", function () {
       beforeEach(function () {
         window.localStorage.clear();
       });
@@ -1526,11 +1508,13 @@ describe("Terria", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
-      //@ts-expect-error
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=2d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
@@ -1552,11 +1536,13 @@ describe("Terria", function () {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
-      //@ts-expect-error
-      const location: Location = {
+      const location = {
         href: "http://test.com/#map=4d"
-      };
-      await terria.start({ configUrl: "", applicationUrl: location });
+      } as Location;
+      await terria.start({
+        configUrl: "",
+        applicationUrl: location
+      });
       await terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
@@ -1584,7 +1570,7 @@ describe("Terria", function () {
       await terria.loadInitSources();
 
       expect(terria.baseMaximumScreenSpaceError).toBe(1);
-      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.useNativeResolution).toBeTruthy();
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(
@@ -1611,47 +1597,47 @@ describe("Terria", function () {
       );
     });
 
-    it("propperly loads base maps", async function () {
+    it("correctly loads the base maps", async function () {
       await terria.start({ configUrl: "" });
-      terria.applyInitData({
-        initData: {
-          baseMaps: {
-            items: [
-              {
-                item: {
-                  id: "basemap-positron",
-                  name: "Positron (Light)",
-                  type: "open-street-map",
-                  url: "https://basemaps.cartocdn.com/light_all/",
-                  attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                  subdomains: ["a", "b", "c", "d"],
-                  opacity: 1.0
+      await (
+        await terria._applyInitData({
+          initData: {
+            settings: { baseMapId: "basemap-2" },
+            baseMaps: {
+              items: [
+                {
+                  item: {
+                    id: "basemap-natural-earth-II",
+                    name: "Natural Earth II",
+                    type: "url-template-imagery",
+                    url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+                    attribution:
+                      "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+                    maximumLevel: 7,
+                    opacity: 1.0
+                  },
+                  image: "build/TerriaJS/images/natural-earth.png",
+                  contrastColor: "#000000"
                 },
-                image: "/images/positron.png"
-              },
-              {
-                item: {
-                  id: "basemap-darkmatter1",
-                  name: "Dark Matter",
-                  type: "open-street-map",
-                  url: "https://basemaps.cartocdn.com/dark_all/",
-                  attribution:
-                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                  subdomains: ["a", "b", "c", "d"],
-                  opacity: 1.0
-                },
-                image: "/images/dark-matter.png"
-              }
-            ]
+                {
+                  item: {
+                    id: "basemap-2",
+                    name: "Base map 2",
+                    type: "url-template-imagery",
+                    url: "https://example.com"
+                  }
+                }
+              ]
+            }
           }
-        }
-      });
+        })
+      ).baseMapPromise;
       const _defaultBaseMaps = defaultBaseMaps(terria);
       expect(terria.baseMapsModel).toBeDefined();
       expect(terria.baseMapsModel.baseMapItems.length).toEqual(
         _defaultBaseMaps.length + 1
       );
+      expect(terria.mainViewer.baseMap?.uniqueId).toBe("basemap-2");
     });
   });
 
@@ -1747,7 +1733,7 @@ describe("Terria", function () {
     describe("behaviour of `initialCamera.focusWorkbenchItems`", function () {
       let container: HTMLElement;
 
-      beforeEach(async function () {
+      beforeEach(function () {
         jasmine.Ajax.install();
 
         // Attach cesium viewer and wait for it to be loaded

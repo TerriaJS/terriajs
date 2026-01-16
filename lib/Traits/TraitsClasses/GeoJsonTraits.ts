@@ -5,6 +5,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import ClusteringTraits from "./ClusteringTraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import StyleTraits from "./StyleTraits";
@@ -171,4 +172,12 @@ export class GeoJsonTraits extends mixTraits(
       "If true, point features will render without depth testing so they remain visible through terrain and tiles."
   })
   disableDepthTest?: boolean = false;
+  
+  @objectTrait({
+    type: ClusteringTraits,
+    name: "clustering",
+    description:
+      "Allows to activate the clustering of entities, works only with Cesium as a viewer."
+  })
+  clustering?: ClusteringTraits;
 }

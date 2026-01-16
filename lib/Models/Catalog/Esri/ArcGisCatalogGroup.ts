@@ -25,11 +25,6 @@ import ArcGisMapServerCatalogGroup, {
   MapServerStratum
 } from "./ArcGisMapServerCatalogGroup";
 
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
 interface Service {
   name: string;
   type: string;
@@ -68,8 +63,12 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   static async load(
     catalogGroup: ArcGisCatalogGroup
   ): Promise<ArcGisServerStratum> {
-    const terria = catalogGroup.terria;
     const uri = new URI(catalogGroup.url).addQuery("f", "json");
+
+    if (catalogGroup.token) {
+      uri.addQuery("token", catalogGroup.token);
+    }
+
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((arcgisServer: ArcGisServer) => {
         // Is this really a ArcGisServer REST response?
@@ -171,6 +170,14 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
 
     const uri = new URI(this._catalogGroup.url).segment(folder);
     model.setTrait(CommonStrata.definition, "url", uri.toString());
+
+    if (this._catalogGroup.token) {
+      model.setTrait(
+        CommonStrata.definition,
+        "token",
+        this._catalogGroup.token
+      );
+    }
   }
 
   @action
@@ -234,6 +241,14 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
       .segment(localName)
       .segment(service.type);
     model.setTrait(CommonStrata.definition, "url", uri.toString());
+
+    if (this._catalogGroup.token) {
+      model.setTrait(
+        CommonStrata.definition,
+        "token",
+        this._catalogGroup.token
+      );
+    }
   }
 }
 

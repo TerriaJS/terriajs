@@ -1,13 +1,13 @@
-@import "../../Sass/common/variables";
-@import "../../Sass/common/mixins";
+@use "../../Sass/common/variables";
+@use "../../Sass/common/mixins";
 
 .chart-disclaimer-panel {
   background: #9a4b4b;
   color: white;
-  padding: 1px $padding;
+  padding: 1px variables.$padding;
   font-size: 0.8rem;
   p {
-    margin: $padding 0px;
+    margin: variables.$padding 0px;
     a,
     a:visited {
       color: white;

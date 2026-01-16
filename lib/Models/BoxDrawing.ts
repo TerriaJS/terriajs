@@ -207,11 +207,6 @@ const FACE_POINT_VECTORS = [
   new Cartesian3(0.0, 0.0, 0.5)
 ];
 
-// The box has 8 corner points and 6 face points that act as scaling grips.
-// Here we represent them as 7 vectors in local coordinates space.
-// Each vector represents a point and its opposite points can be easily derived from it.
-const SCALE_POINT_VECTORS = [...CORNER_POINT_VECTORS, ...FACE_POINT_VECTORS];
-
 /**
  * Checks whether the given entity is updatable (i.e repsonds to box parameter changes).
  */
@@ -301,7 +296,11 @@ export default class BoxDrawing {
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
-          value === true ? this.startInteractions() : this.stopInteractions();
+          if (value === true) {
+            this.startInteractions();
+          } else {
+            this.stopInteractions();
+          }
         }
         return Reflect.set(target, prop, value);
       }
@@ -352,7 +351,7 @@ export default class BoxDrawing {
     return boxDrawing;
   }
 
-  public setTranslationRotationScale(trs: TranslationRotationScale) {
+  public setTranslationRotationScale(trs: TranslationRotationScale): void {
     Cartesian3.clone(trs.translation, this.trs.translation);
     Quaternion.clone(trs.rotation, this.trs.rotation);
     Cartesian3.clone(trs.scale, this.trs.scale);
@@ -362,7 +361,7 @@ export default class BoxDrawing {
   /**
    * A method to udpate the world transform.
    */
-  public setTransform(transform: Matrix4) {
+  public setTransform(transform: Matrix4): void {
     Matrix4.clone(transform, this.worldTransform);
     Matrix4.getTranslation(this.worldTransform, this.trs.translation);
     Matrix4.getScale(this.worldTransform, this.trs.scale);
@@ -450,7 +449,7 @@ export default class BoxDrawing {
   /**
    * Set the box position
    */
-  setPosition(position: Cartesian3) {
+  setPosition(position: Cartesian3): void {
     const moveStep = Cartesian3.subtract(
       position,
       this.trs.translation,
@@ -839,7 +838,7 @@ export default class BoxDrawing {
    */
   private createSide(planeLocal: Plane): Side {
     const scene = this.scene;
-    const plane = new Plane(new Cartesian3(), 0);
+    const plane = new Plane(Cartesian3.UNIT_X, 0);
     const planeDimensions = new Cartesian3();
     const normalAxis = planeLocal.normal.x
       ? Axis.X
@@ -944,14 +943,16 @@ export default class BoxDrawing {
           direction,
           mouseMove
         );
-        // Get the move vector
-        const moveVector = Cartesian3.multiplyByScalar(
-          direction,
-          moveAmount,
-          scratchMoveVector
-        );
+        if (moveAmount !== undefined) {
+          // Get the move vector
+          const moveVector = Cartesian3.multiplyByScalar(
+            direction,
+            moveAmount,
+            scratchMoveVector
+          );
 
-        moveStep = moveVector;
+          moveStep = moveVector;
+        }
       } else if (this.keepHeightSteadyWhenMovingLaterally) {
         // Move the box laterally on the globe while keeping its height (almost) steady.
         // To do this:
@@ -1111,9 +1112,11 @@ export default class BoxDrawing {
 
     const onMouseOver = () => {
       highlightAllSides();
-      isTopOrBottomSide
-        ? setCanvasCursor(scene, "n-resize")
-        : setCustomCanvasCursor(scene, "grab", "ew-resize");
+      if (isTopOrBottomSide) {
+        setCanvasCursor(scene, "n-resize");
+      } else {
+        setCustomCanvasCursor(scene, "grab", "ew-resize");
+      }
     };
 
     const onMouseOut = () => {
@@ -1125,9 +1128,11 @@ export default class BoxDrawing {
       Cartesian2.clone(click.position, moveStartPos);
       dragStart = true;
       highlightAllSides();
-      isTopOrBottomSide
-        ? setCanvasCursor(scene, "n-resize")
-        : setCustomCanvasCursor(scene, "grabbing", "ew-resize");
+      if (isTopOrBottomSide) {
+        setCanvasCursor(scene, "n-resize");
+      } else {
+        setCustomCanvasCursor(scene, "grabbing", "ew-resize");
+      }
     };
 
     const onPickDisabled = () => {
@@ -1422,6 +1427,10 @@ export default class BoxDrawing {
       const boxCenter = scene.cartesianToCanvasCoordinates(
         this.trs.translation
       );
+      if (!boxCenter) {
+        return undefined;
+      }
+
       // mouse coords relative to the box center
       const x = mousePos.x - boxCenter.x;
       const y = mousePos.y - boxCenter.y;
@@ -1505,13 +1514,19 @@ export default class BoxDrawing {
 
       // scaleAmount is a measure of how much to scale in the given direction
       // for the given mouse movement.
-      const { scaleAmount, pixelLengthAfterScaling } = computeScaleAmount(
+      const scaleResult = computeScaleAmount(
         this.scene,
         position,
         scaleDirection,
         length,
         mouseMove
       );
+
+      if (!scaleResult) {
+        return;
+      }
+
+      const { scaleAmount, pixelLengthAfterScaling } = scaleResult;
 
       // When downscaling, stop at 20px length.
       if (scaleAmount < 0) {
@@ -1659,7 +1674,7 @@ function computeMoveAmount(
   position: Cartesian3,
   direction: Cartesian3,
   mouseMove: MouseMove
-): number {
+): number | undefined {
   const mouseVector2d = Cartesian2.subtract(
     mouseMove.endPosition,
     mouseMove.startPosition,
@@ -1673,6 +1688,10 @@ function computeMoveAmount(
     1,
     scratchScreenVector2d
   );
+
+  if (!screenVector2d) {
+    return undefined;
+  }
 
   const screenNormal2d = Cartesian2.normalize(
     screenVector2d,
@@ -1715,6 +1734,10 @@ function computeScaleAmount(
     1,
     scratchScreenVector2d
   );
+  if (!screenVector2d) {
+    return undefined;
+  }
+
   const screenNormal2d = Cartesian2.normalize(
     screenVector2d,
     scratchScreenNormal2d
@@ -1738,7 +1761,7 @@ function screenProjectVector(
   direction: Cartesian3,
   length: number,
   result: Cartesian2
-): Cartesian2 {
+): Cartesian2 | undefined {
   const ray = scratchRay;
   ray.origin = position;
   ray.direction = direction;
@@ -1751,6 +1774,9 @@ function screenProjectVector(
     Ray.getPoint(ray, length),
     scratchFarPoint2d
   );
+  if (!farPoint2d || !nearPoint2d) {
+    return undefined;
+  }
   const screenVector2d = Cartesian2.subtract(farPoint2d, nearPoint2d, result);
   return screenVector2d;
 }
@@ -1778,23 +1804,6 @@ export function screenToGlobePosition(
   const globePosition = scene.globe.pick(pickRay, scene, result);
   return globePosition;
 }
-
-/**
- * Project the given point to the ellipsoid surface.
- */
-function projectPointToSurface(
-  position: Cartesian3,
-  result: Cartesian3
-): Cartesian3 {
-  const cartographic = Cartographic.fromCartesian(
-    position,
-    undefined,
-    scratchCartographic
-  );
-  cartographic.height = 0;
-  return Cartographic.toCartesian(cartographic, undefined, result);
-}
-const scratchCartographic = new Cartographic();
 
 function setPlaneDimensions(
   boxDimensions: Cartesian3,

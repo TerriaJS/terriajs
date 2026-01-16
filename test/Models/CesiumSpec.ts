@@ -3,6 +3,7 @@ import { action, computed, observable, runInAction, when } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -10,7 +11,9 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
+import supportsWebGL from "../../lib/Core/supportsWebGL";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
+import CameraView from "../../lib/Models/CameraView";
 import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -24,8 +27,6 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-
-const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -254,7 +255,6 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
-      fakeIonTerrainProvider.availability;
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
@@ -334,7 +334,7 @@ describeIfSupported("Cesium Model", function () {
 
     beforeEach(function () {
       terria2 = new Terria({
-        baseUrl: "./"
+        baseUrl: "/"
       });
       terriaViewer2 = new TerriaViewer(
         terria2,
@@ -358,10 +358,7 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
-      await when(
-        () => terria2.notificationState.currentNotification !== undefined
-      );
+      await terrainLoadPromise(cesium2);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -434,6 +431,58 @@ describeIfSupported("Cesium Model", function () {
       expect(currentNotificationTitle).toBe(
         "map.cesium.terrainServerErrorTitle"
       );
+    });
+  });
+
+  describe("getCurrentCameraView", function () {
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+      west: CesiumMath.toDegrees(west),
+      south: CesiumMath.toDegrees(south),
+      east: CesiumMath.toDegrees(east),
+      north: CesiumMath.toDegrees(north)
+    });
+
+    it("returns the current camera view", function () {
+      const cameraView = cesium.getCurrentCameraView();
+      const { west, south, east, north } = rectangleDegrees(
+        cameraView.rectangle
+      );
+      expect(west).toBeCloseTo(-180);
+      expect(south).toBeCloseTo(-90);
+      expect(east).toBeCloseTo(180);
+      expect(north).toBeCloseTo(90);
+    });
+
+    describe("when initial camera view is set", function () {
+      const viewRectangle = {
+        west: 119.04785,
+        south: -33.6512,
+        east: 156.31347,
+        north: -22.83694
+      };
+
+      beforeEach(function () {
+        const initialView = CameraView.fromJson(viewRectangle);
+        cesium.setInitialView(initialView);
+      });
+
+      it("returns the initial view", function () {
+        const r = rectangleDegrees(cesium.getCurrentCameraView().rectangle);
+        expect(r.west).toBe(viewRectangle.west);
+        expect(r.south).toBe(viewRectangle.south);
+        expect(r.east).toBe(viewRectangle.east);
+        expect(r.north).toBe(viewRectangle.north);
+      });
+
+      it("returns a new view if the camera view changes", async function () {
+        cesium.scene.camera.changed.raiseEvent(1.0);
+        const view = cesium.getCurrentCameraView();
+        const rectangle = rectangleDegrees(view.rectangle);
+        expect(rectangle.west).not.toBe(119.04785);
+        expect(rectangle.south).not.toBe(-33.6512);
+        expect(rectangle.east).not.toBe(156.31347);
+        expect(rectangle.north).not.toBe(-22.83694);
+      });
     });
   });
 });

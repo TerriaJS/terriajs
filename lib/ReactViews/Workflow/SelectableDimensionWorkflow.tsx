@@ -1,14 +1,12 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
-import SelectableDimension from "../SelectableDimensions/SelectableDimension";
 import { useViewState } from "../Context";
-import WorkbenchItemControls, {
-  hideAllControls
-} from "../Workbench/Controls/WorkbenchItemControls";
+import SelectableDimension from "../SelectableDimensions/SelectableDimension";
+import WorkbenchItemControls from "../Workbench/Controls/WorkbenchItemControls";
 import { Panel } from "./Panel";
 import { PanelMenu } from "./PanelMenu";
 import WorkflowPanel from "./WorkflowPanel";
@@ -17,7 +15,7 @@ import WorkflowPanel from "./WorkflowPanel";
  * - Title panel with `title`, item `WorkbenchItemControls` and menu
  * - Panel for each top-level selectable dimension
  */
-const SelectableDimensionWorkflow: React.FC = observer(() => {
+const SelectableDimensionWorkflow: FC = observer(() => {
   const viewState = useViewState();
   const terria = viewState.terria;
   const [t] = useTranslation();
@@ -45,8 +43,9 @@ const SelectableDimensionWorkflow: React.FC = observer(() => {
         <WorkbenchItemControls
           item={terria.selectableDimensionWorkflow.item}
           viewState={viewState}
+          disableViewingControlsMenu
           controls={{
-            ...hideAllControls,
+            disableAll: true,
             opacity: true,
             timer: true,
             dateTime: true,

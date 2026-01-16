@@ -1,6 +1,5 @@
 // CompassSpec.tsx
-const create: any = require("react-test-renderer").create;
-import React from "react";
+import { create } from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";

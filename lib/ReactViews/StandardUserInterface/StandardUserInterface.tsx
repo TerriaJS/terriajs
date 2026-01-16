@@ -2,15 +2,13 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { ReactNode, useEffect } from "react";
+import { FC, DragEvent, ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
-import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
-import DragDropNotification from "../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
@@ -55,8 +53,8 @@ interface StandardUserInterfaceProps {
   children?: ReactNode;
 }
 
-const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
-  observer((props) => {
+const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
+  (props) => {
     const { t } = useTranslation();
 
     const acceptDragDropFile = action(() => {
@@ -67,11 +65,8 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       }
     });
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-      if (
-        !e.dataTransfer.types ||
-        !arrayContains(e.dataTransfer.types, "Files")
-      ) {
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+      if (!e.dataTransfer.types || !e.dataTransfer.types.includes("Files")) {
         return;
       }
       e.preventDefault();
@@ -92,8 +87,10 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       return () => {
         window.removeEventListener("resize", resizeListener, false);
       };
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
 
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     useEffect(resizeListener, [props.minimumLargeScreenWidth]);
 
     useEffect(() => {
@@ -118,6 +115,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
           width: 300
         });
       }
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [props.terria.storyPromptShown]);
 
     // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
@@ -132,8 +130,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
       props.viewState.useSmallScreenInterface,
       props.children
     );
-
-    const terria = props.terria;
 
     const showStoryBuilder =
       props.viewState.storyBuilderShown &&
@@ -215,7 +211,9 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                   >
                     <FullScreenButton
                       minified={false}
-                      btnText={t("sui.showWorkbench")}
+                      btnText={t("sui.showWorkbench", {
+                        count: props.viewState.terria.workbench.items.length
+                      })}
                       animationDuration={animationDuration}
                       elementConfig={props.terria.elements.get(
                         "show-workbench"
@@ -226,7 +224,6 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
 
                 <section className={Styles.map}>
                   <MapColumn
-                    customFeedbacks={customElements.feedback}
                     customElements={customElements}
                     animationDuration={animationDuration}
                   />
@@ -275,15 +272,33 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 }
               )}
               tabIndex={0}
-              onClick={action(() => {
+              onPointerDown={action(() => {
                 props.viewState.topElement = "FeatureInfo";
               })}
             >
               <FeatureInfoPanel />
             </div>
             <DragDropFile />
-            <DragDropNotification />
-            {showStoryPanel && <StoryPanel />}
+            {showStoryPanel && (
+              <div
+                className={classNames(
+                  Styles.storyPanel,
+                  props.viewState.topElement === "StoryPanel"
+                    ? "top-element"
+                    : "",
+                  {
+                    [Styles.storyPanelFullScreen]:
+                      props.viewState.isMapFullScreen
+                  }
+                )}
+                tabIndex={0}
+                onPointerDown={action(() => {
+                  props.viewState.topElement = "StoryPanel";
+                })}
+              >
+                <StoryPanel />
+              </div>
+            )}
           </div>
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
             <StoryBuilder
@@ -304,7 +319,8 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
         <ClippingBoxToolLauncher viewState={props.viewState} />
       </ContextProviders>
     );
-  });
+  }
+);
 
 export const StandardUserInterface = withFallback(StandardUserInterfaceBase);
 export default withFallback(StandardUserInterfaceBase);

@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import React from "react";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
@@ -126,6 +125,7 @@ export const terriaErrorNotification = (error: TerriaError) =>
               isOpen={error.showDetails}
               onToggle={(show) => {
                 runInAction(() => (error.showDetails = show));
+                return false;
               }}
             >
               <ErrorsBox errors={detailedErrors} viewState={viewState} />

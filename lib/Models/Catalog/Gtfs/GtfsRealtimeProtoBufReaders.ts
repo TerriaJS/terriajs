@@ -29,10 +29,6 @@ export class FeedMessageReader extends ProtobufMessageReader<FeedMessage> {
     entity: []
   };
 
-  constructor() {
-    super();
-  }
-
   protected readField(tag: number, obj?: FeedMessage, pbf?: Pbf): void {
     if (pbf === null || pbf === undefined) {
       return;

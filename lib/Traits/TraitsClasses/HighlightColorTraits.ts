@@ -8,5 +8,7 @@ export default class HighlightColorTraits extends ModelTraits {
     description:
       "The color used to highlight a feature when it is picked. If not set, this defaults to `Terria.baseMapContrastColor`"
   })
-  highlightColor?: string;
+  get highlightColor(): string | undefined {
+    return;
+  }
 }

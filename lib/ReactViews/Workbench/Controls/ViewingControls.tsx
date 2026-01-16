@@ -1,22 +1,22 @@
-import { sortBy, uniqBy } from "lodash";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { sortBy, uniqBy } from "lodash-es";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -26,13 +26,13 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import CameraView from "../../../Models/CameraView";
-import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
-import getAncestors from "../../../Models/getAncestors";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import { ViewingControl } from "../../../Models/ViewingControls";
+import getAncestors from "../../../Models/getAncestors";
 import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
@@ -44,6 +44,11 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import {
+  WorkbenchControls,
+  enableAllControls,
+  isControlEnabled
+} from "./WorkbenchControls";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -73,7 +78,7 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 
   border-radius: 0;
 
-  width: 114px;
+  width: 124px;
   // ensure we support long strings
   min-height: 32px;
   display: block;
@@ -88,60 +93,42 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
   }
 `;
 
-interface PropsType extends WithTranslation {
+interface PropsType {
   viewState: ViewState;
   item: BaseModel;
+  controls?: WorkbenchControls;
 }
 
-@observer
-class ViewingControls extends React.Component<
-  PropsType,
-  { isMapZoomingToCatalogItem: boolean }
-> {
-  constructor(props: any) {
-    // Required step: always call the parent class' constructor
-    super(props);
+const ViewingControls: React.FC<PropsType> = observer((props) => {
+  const { viewState, item, controls = enableAllControls } = props;
+  const { t } = useTranslation();
+  const [isMenuOpen, setIsOpen] = useState(false);
+  const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
+    useState(false);
 
-    makeObservable(this);
-
-    // Set the state directly. Use props if necessary.
-    this.state = {
-      isMapZoomingToCatalogItem: false
+  useEffect(() => {
+    const hideMenu = () => {
+      setIsOpen(false);
     };
-  }
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    window.addEventListener("click", this.hideMenu.bind(this));
-  }
+    window.addEventListener("click", hideMenu);
+    return () => window.removeEventListener("click", hideMenu);
+  }, [viewState]);
 
-  componentWillUnmount() {
-    window.removeEventListener("click", this.hideMenu.bind(this));
-  }
-
-  hideMenu() {
-    runInAction(() => {
-      this.props.viewState.workbenchItemWithOpenControls = undefined;
-    });
-  }
-
-  removeFromMap() {
-    const terria = this.props.viewState.terria;
-    terria.workbench.remove(this.props.item);
-    terria.removeSelectedFeaturesForModel(this.props.item);
-    if (TimeVarying.is(this.props.item))
-      this.props.viewState.terria.timelineStack.remove(this.props.item);
-    this.props.viewState.terria.analytics?.logEvent(
+  const removeFromMap = useCallback(() => {
+    const terria = viewState.terria;
+    terria.workbench.remove(item);
+    terria.removeSelectedFeaturesForModel(item);
+    if (TimeVarying.is(item)) viewState.terria.timelineStack.remove(item);
+    viewState.terria.analytics?.logEvent(
       Category.dataSource,
       DataSourceAction.removeFromWorkbench,
-      getPath(this.props.item)
+      getPath(item)
     );
-  }
+  }, [item, viewState]);
 
-  @action
-  zoomTo() {
-    const viewer = this.props.viewState.terria.currentViewer;
-    const item = this.props.item;
+  const zoomTo = useCallback(() => {
+    const viewer = viewState.terria.currentViewer;
 
     if (!MappableMixin.isMixedInto(item)) return;
 
@@ -207,22 +194,20 @@ class ViewingControls extends React.Component<
       item.rectangle?.west !== undefined &&
       item.rectangle.east - item.rectangle.west >= 360
     ) {
-      zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
+      zoomToView = viewState.terria.mainViewer.homeCamera;
       console.log("Extent is wider than world so using homeCamera.");
     }
 
-    this.setState({ isMapZoomingToCatalogItem: true });
+    setIsMapZoomingToCatalogItem(true);
     viewer.zoomTo(zoomToView).finally(() => {
-      this.setState({ isMapZoomingToCatalogItem: false });
+      setIsMapZoomingToCatalogItem(false);
     });
-  }
+  }, [item, viewState]);
 
-  splitItem() {
-    const { t } = this.props;
-    const item = this.props.item;
+  const splitItem = useCallback(() => {
     const terria = item.terria;
-
     const splitRef = new SplitItemReference(createGuid(), terria);
+
     runInAction(async () => {
       if (!hasTraits(item, SplitterTraits, "splitDirection")) return;
 
@@ -266,23 +251,21 @@ class ViewingControls extends React.Component<
         open: false
       });
     });
-  }
+  }, [item, t]);
 
-  openDiffTool() {
-    this.props.viewState.openTool({
+  const openDiffTool = useCallback(() => {
+    viewState.openTool({
       toolName: "Difference",
       getToolComponent: () =>
         import("../../Tools/DiffTool/DiffTool").then((m) => m.default),
-      showCloseButton: true,
       params: {
-        sourceItem: this.props.item
+        sourceItem: item
       }
     });
-  }
+  }, [item, viewState]);
 
-  searchItem() {
+  const searchItem = useCallback(() => {
     runInAction(() => {
-      const { item, viewState } = this.props;
       if (!SearchableItemMixin.isMixedInto(item)) return;
 
       let itemSearchProvider;
@@ -292,10 +275,9 @@ class ViewingControls extends React.Component<
         viewState.terria.raiseErrorToUser(error);
         return;
       }
-      this.props.viewState.openTool({
+      viewState.openTool({
         toolName: "Search Item",
         getToolComponent: () => LazyItemSearchTool,
-        showCloseButton: false,
         params: {
           item,
           itemSearchProvider,
@@ -303,40 +285,31 @@ class ViewingControls extends React.Component<
         }
       });
     });
-  }
+  }, [item, viewState]);
 
-  async previewItem() {
-    const item = this.props.item;
+  const previewItem = useCallback(async () => {
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-    getAncestors(this.props.item)
+    getAncestors(item)
       .map((item) => getDereferencedIfExists(item))
       .forEach((group) => {
         runInAction(() => {
           group.setTrait(CommonStrata.user, "isOpen", true);
         });
       });
-    this.props.viewState
+    viewState
       .viewCatalogMember(item)
-      .then((result) => result.raiseError(this.props.viewState.terria));
-  }
+      .then((result) => result.raiseError(viewState.terria));
+  }, [item, viewState]);
 
-  exportDataClicked() {
-    const item = this.props.item;
-
+  const exportDataClicked = useCallback(() => {
     if (!ExportableMixin.isMixedInto(item)) return;
 
     exportData(item).catch((e) => {
-      this.props.item.terria.raiseErrorToUser(e);
+      item.terria.raiseErrorToUser(e);
     });
-  }
+  }, [item]);
 
-  /**
-   * Return a list of viewing controls collated from global and item specific settings.
-   */
-  @computed
-  get viewingControls(): ViewingControl[] {
-    const item = this.props.item;
-    const viewState = this.props.viewState;
+  const viewingControls = useMemo(() => {
     if (!CatalogMemberMixin.isMixedInto(item)) {
       return [];
     }
@@ -358,16 +331,18 @@ class ViewingControls extends React.Component<
     const itemViewingControls: ViewingControl[] = item.viewingControls;
 
     // Collate list, unique by id and sorted by name
-    const viewingControls = sortBy(
+    return sortBy(
       uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
       "name"
-    );
-    return viewingControls;
-  }
+    ).filter(({ id }) => {
+      // Exclude disabled controls
+      return isControlEnabled(controls, id);
+    });
+  }, [item, controls, viewState.globalViewingControlOptions]);
 
-  renderViewingControlsMenu() {
-    const { t, item, viewState } = this.props;
+  const renderViewingControlsMenu = () => {
     const canSplit =
+      controls.compare &&
       !item.terria.configParameters.disableSplitter &&
       hasTraits(item, SplitterTraits, "splitDirection") &&
       hasTraits(item, SplitterTraits, "disableSplitter") &&
@@ -377,7 +352,7 @@ class ViewingControls extends React.Component<
 
     const handleOnClick = (viewingControl: ViewingControl) => {
       try {
-        viewingControl.onClick(this.props.viewState);
+        viewingControl.onClick(viewState);
       } catch (err) {
         viewState.terria.raiseErrorToUser(TerriaError.from(err));
       }
@@ -385,7 +360,7 @@ class ViewingControls extends React.Component<
 
     return (
       <ul>
-        {this.viewingControls.map((viewingControl) => (
+        {viewingControls.map((viewingControl) => (
           <li key={viewingControl.id}>
             <ViewingControlMenuButton
               onClick={() => handleOnClick(viewingControl)}
@@ -401,7 +376,7 @@ class ViewingControls extends React.Component<
         {canSplit ? (
           <li key={"workbench.splitItem"}>
             <ViewingControlMenuButton
-              onClick={this.splitItem.bind(this)}
+              onClick={splitItem}
               title={t("workbench.splitItemTitle")}
             >
               <BoxViewingControl>
@@ -411,13 +386,14 @@ class ViewingControls extends React.Component<
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.difference &&
+        viewState.useSmallScreenInterface === false &&
         DiffableMixin.isMixedInto(item) &&
         !item.isShowingDiff &&
         item.canDiffImages ? (
           <li key={"workbench.diffImage"}>
             <ViewingControlMenuButton
-              onClick={this.openDiffTool.bind(this)}
+              onClick={openDiffTool}
               title={t("workbench.diffImageTitle")}
             >
               <BoxViewingControl>
@@ -427,12 +403,13 @@ class ViewingControls extends React.Component<
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.exportData &&
+        viewState.useSmallScreenInterface === false &&
         ExportableMixin.isMixedInto(item) &&
         item.canExportData ? (
           <li key={"workbench.exportData"}>
             <ViewingControlMenuButton
-              onClick={this.exportDataClicked.bind(this)}
+              onClick={exportDataClicked}
               title={t("workbench.exportDataTitle")}
             >
               <BoxViewingControl>
@@ -442,12 +419,13 @@ class ViewingControls extends React.Component<
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        {viewState.useSmallScreenInterface === false &&
+        {controls.search &&
+        viewState.useSmallScreenInterface === false &&
         SearchableItemMixin.isMixedInto(item) &&
         item.canSearch ? (
           <li key={"workbench.searchItem"}>
             <ViewingControlMenuButton
-              onClick={this.searchItem.bind(this)}
+              onClick={searchItem}
               title={t("workbench.searchItemTitle")}
             >
               <BoxViewingControl>
@@ -459,7 +437,7 @@ class ViewingControls extends React.Component<
         ) : null}
         <li key={"workbench.removeFromMap"}>
           <ViewingControlMenuButton
-            onClick={this.removeFromMap.bind(this)}
+            onClick={removeFromMap}
             title={t("workbench.removeFromMapTitle")}
           >
             <BoxViewingControl>
@@ -470,105 +448,101 @@ class ViewingControls extends React.Component<
         </li>
       </ul>
     );
-  }
+  };
 
-  render() {
-    const viewState = this.props.viewState;
-    const item = this.props.item;
-    const { t } = this.props;
-    const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
-    return (
-      <Box>
-        <Ul
-          css={`
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-            width: 100%;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
+  return (
+    <Box>
+      <Ul
+        css={`
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+          width: 100%;
+          position: relative;
+          display: flex;
+          justify-content: space-between;
 
-            li {
-              display: block;
-              float: left;
-              box-sizing: border-box;
+          li {
+            display: block;
+            float: left;
+            box-sizing: border-box;
+          }
+          & > button:last-child {
+            margin-right: 0;
+          }
+        `}
+        gap={2}
+      >
+        <WorkbenchButton
+          onClick={zoomTo}
+          title={t("workbench.zoomToTitle")}
+          disabled={
+            !controls.idealZoom ||
+            // disabled if the item cannot be zoomed to or if a zoom is already in progress
+            (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
+            isMapZoomingToCatalogItem === true
+          }
+          iconElement={() =>
+            isMapZoomingToCatalogItem ? (
+              <AnimatedSpinnerIcon />
+            ) : (
+              <Icon glyph={Icon.GLYPHS.search} />
+            )
+          }
+        >
+          {t("workbench.zoomTo")}
+        </WorkbenchButton>
+        <WorkbenchButton
+          onClick={previewItem}
+          title={t("workbench.previewItemTitle")}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
+          disabled={
+            !controls.aboutData ||
+            (CatalogMemberMixin.isMixedInto(item) && item.disableAboutData)
+          }
+        >
+          {t("workbench.previewItem")}
+        </WorkbenchButton>
+        <WorkbenchButton
+          css="flex-grow:0;"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (isMenuOpen) {
+              setIsOpen(false);
+            } else {
+              setIsOpen(true);
             }
-            & > button:last-child {
-              margin-right: 0;
+          }}
+          title={t("workbench.showMoreActionsTitle")}
+          iconOnly
+          iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
+        />
+      </Ul>
+      {isMenuOpen && (
+        <Box
+          css={`
+            position: absolute;
+            z-index: 100;
+            right: 0;
+            top: 0;
+            top: 32px;
+            top: 42px;
+
+            padding: 0;
+            margin: 0;
+
+            ul {
+              list-style: none;
             }
           `}
-          gap={2}
         >
-          <WorkbenchButton
-            onClick={this.zoomTo.bind(this)}
-            title={t("workbench.zoomToTitle")}
-            disabled={
-              // disabled if the item cannot be zoomed to or if a zoom is already in progress
-              (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
-              this.state.isMapZoomingToCatalogItem === true
-            }
-            iconElement={() =>
-              this.state.isMapZoomingToCatalogItem ? (
-                <AnimatedSpinnerIcon />
-              ) : (
-                <Icon glyph={Icon.GLYPHS.search} />
-              )
-            }
-          >
-            {t("workbench.zoomTo")}
-          </WorkbenchButton>
-          <WorkbenchButton
-            onClick={this.previewItem.bind(this)}
-            title={t("workbench.previewItemTitle")}
-            iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
-            disabled={
-              CatalogMemberMixin.isMixedInto(item) && item.disableAboutData
-            }
-          >
-            {t("workbench.previewItem")}
-          </WorkbenchButton>
-          <WorkbenchButton
-            css="flex-grow:0;"
-            onClick={(e) => {
-              e.stopPropagation();
-              runInAction(() => {
-                if (viewState.workbenchItemWithOpenControls === item.uniqueId) {
-                  viewState.workbenchItemWithOpenControls = undefined;
-                } else {
-                  viewState.workbenchItemWithOpenControls = item.uniqueId;
-                }
-              });
-            }}
-            title={t("workbench.showMoreActionsTitle")}
-            iconOnly
-            iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
-          />
-        </Ul>
-        {showMenu && (
-          <Box
-            css={`
-              position: absolute;
-              z-index: 100;
-              right: 0;
-              top: 0;
-              top: 32px;
-              top: 42px;
+          {renderViewingControlsMenu()}
+        </Box>
+      )}
+    </Box>
+  );
+});
 
-              padding: 0;
-              margin: 0;
+ViewingControls.displayName = "ViewingControls";
 
-              ul {
-                list-style: none;
-              }
-            `}
-          >
-            {this.renderViewingControlsMenu()}
-          </Box>
-        )}
-      </Box>
-    );
-  }
-}
-
-export default withTranslation()(ViewingControls);
+export default ViewingControls;

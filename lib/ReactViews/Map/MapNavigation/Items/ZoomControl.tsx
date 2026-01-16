@@ -1,6 +1,5 @@
-import { TFunction } from "i18next";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { Component } from "react";
+import { withTranslation, WithTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -28,12 +27,8 @@ interface PropTypes extends WithTranslation {
 
 export const ZOOM_CONTROL_ID = "zoom";
 
-class ZoomControlBase extends React.Component<PropTypes> {
+class ZoomControlBase extends Component<PropTypes> {
   static displayName = "ZoomControl";
-
-  constructor(props: PropTypes) {
-    super(props);
-  }
 
   flyToPosition(
     scene: Scene,
@@ -180,7 +175,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
   }
 
   render() {
-    const { t, theme } = this.props;
+    const { t } = this.props;
     return (
       <StyledZoomControl>
         <Ul
@@ -193,7 +188,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomIn.bind(this)}
-              title={t("zoomCotrol.zoomIn")}
+              title={t("zoomControl.zoomIn")}
             >
               <Icon glyph={Icon.GLYPHS.zoomIn} />
             </RawButton>
@@ -202,7 +197,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomReset.bind(this)}
-              title={t("zoomCotrol.zoomReset")}
+              title={t("zoomControl.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
@@ -211,7 +206,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomOut.bind(this)}
-              title={t("zoomCotrol.zoomOut")}
+              title={t("zoomControl.zoomOut")}
             >
               <Icon glyph={GLYPHS.zoomOut} />
             </RawButton>
@@ -223,17 +218,18 @@ class ZoomControlBase extends React.Component<PropTypes> {
 }
 
 const StyledZoomControl = styled(Box).attrs((props) => ({
-  backgroundColor: props.theme.textLight,
+  backgroundColor: props.theme.dark,
   centered: true,
   column: true,
   styledWidth: "32px",
   styledMargin: "7px 0 0 0"
 }))`
   border-radius: 100px;
+  border: 1px solid ${(props) => props.theme.darkLighter};
   svg {
     height: 20px;
     width: 20px;
-    fill: ${(props) => props.theme.darkWithOverlay};
+    fill: ${(props) => props.theme.grey};
   }
   ${Li} {
     margin: 5px 0;

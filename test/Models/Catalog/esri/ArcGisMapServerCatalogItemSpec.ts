@@ -6,6 +6,7 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
+import mapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json";
 
 configure({
   enforceActions: "observed",
@@ -75,6 +76,17 @@ describe("ArcGisMapServerCatalogItem", function () {
     expect(ArcGisMapServerCatalogItem.type).toBe("esri-mapServer");
     expect(item.typeName).toBe(
       i18next.t("models.arcGisMapServerCatalogItem.name")
+    );
+  });
+
+  it("uses token in url when loading metadata", async function () {
+    runInAction(() => {
+      item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+      item.setTrait(CommonStrata.definition, "token", "test-token");
+    });
+    await item.loadMetadata();
+    expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+      mapServerUrl + "?token=test-token&f=json"
     );
   });
 
@@ -158,10 +170,38 @@ describe("ArcGisMapServerCatalogItem", function () {
         expect(tokenre.test(loadWithXhr.load.calls.argsFor(3)[0])).toBeTruthy();
       });
 
-      it("passess the token to the imageryProvider", async function () {
+      it("passes the token to the imageryProvider", async function () {
         await item.loadMapItems();
         const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
+      });
+    });
+
+    describe("when token is set", function () {
+      beforeEach(() => {
+        runInAction(() => {
+          item = new ArcGisMapServerCatalogItem("test", new Terria());
+          item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
+          item.setTrait(
+            CommonStrata.definition,
+            "token",
+            "some-token-in-config"
+          );
+        });
+      });
+
+      it("adds the token to subsequent requests", async function () {
+        await item.loadMapItems();
+
+        const tokenre = /token=some-token-in-config/;
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(2)[0])).toBeTruthy();
+      });
+
+      it("passes the token to the imageryProvider", async function () {
+        await item.loadMapItems();
+        const imageryProvider: any = item.mapItems[0].imageryProvider;
+        expect(imageryProvider.token).toBe("some-token-in-config");
       });
     });
   });
@@ -515,7 +555,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with duplicate legends", async function () {
+    it("defines legends - with single layer specified - with duplicate legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "61");
 
       expect(item.legends).toBeDefined();
@@ -530,7 +570,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with single layer specified - with unique legends", async function () {
+    it("defines legends - with single layer specified - with unique legends", function () {
       item.setTrait(CommonStrata.definition, "layers", "67");
 
       expect(item.legends).toBeDefined();
@@ -545,7 +585,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       );
     });
 
-    it("defines legends - with multiple layers specified", async function () {
+    it("defines legends - with multiple layers specified", function () {
       item.setTrait(
         CommonStrata.definition,
         "layers",
@@ -731,17 +771,17 @@ describe("ArcGisMapServerCatalogItem", function () {
       (await item.loadMapItems()).throwIfError();
     });
 
-    it("doesn't request specific layers", async function () {
+    it("doesn't request specific layers", function () {
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
     });
 
-    it("defines legends", async function () {
+    it("defines legends", function () {
       expect(item.legends.length).toBe(1);
       expect(item.legends[0].items.length).toBe(3);
     });
 
-    it("defines name", async function () {
+    it("defines name", function () {
       expect(item.name).toBe("Layers");
     });
 
@@ -782,11 +822,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("can generate rectangle from an extent in CRS EPSG:7844", async function () {
-      const mapServerJson = require("../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json");
       mapServerJson.fullExtent.spatialReference.wkid = 7844;
 
       jasmine.Ajax.stubRequest(/.*?\/foo\/MapServer.*/).andReturn({
-        responseText: JSON.stringify(mapServerJson)
+        responseJSON: mapServerJson
       });
 
       runInAction(() => {

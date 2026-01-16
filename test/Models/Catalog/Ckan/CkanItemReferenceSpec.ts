@@ -1,24 +1,21 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import CkanItemReference, {
-  CkanDatasetStratum
-} from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
+import CkanItemReference from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 
-const taxationStatisticsPackage = require("../../../../wwwroot/test/CKAN/taxation-statistics-package.json");
-const taxationStatisticsWmsResource = require("../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json");
-const vicWmsLayerResource = require("../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json");
-const wmsNoLayerResource = require("../../../../wwwroot/test/CKAN/wms-no-layer-resource.json");
+import taxationStatisticsPackage from "../../../../wwwroot/test/CKAN/taxation-statistics-package.json";
+import taxationStatisticsWmsResource from "../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json";
+import vicWmsLayerResource from "../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json";
+import wmsNoLayerResource from "../../../../wwwroot/test/CKAN/wms-no-layer-resource.json";
 
 describe("CkanItemReference", function () {
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
-  let ckanDatasetStratum: CkanDatasetStratum;
   let ckanItemTarget: any;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -33,24 +30,24 @@ describe("CkanItemReference", function () {
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/package_show?id=tax-stats-package"
-    ).andReturn({ responseText: JSON.stringify(taxationStatisticsPackage) });
+    ).andReturn({ responseJSON: taxationStatisticsPackage });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=tax-stats-wms-resource"
     ).andReturn({
-      responseText: JSON.stringify(taxationStatisticsWmsResource)
+      responseJSON: taxationStatisticsWmsResource
     });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=wms-no-layers-resource"
     ).andReturn({
-      responseText: JSON.stringify(wmsNoLayerResource)
+      responseJSON: wmsNoLayerResource
     });
 
     jasmine.Ajax.stubRequest(
       "https://example.com/api/3/action/resource_show?id=vic-wms-resource"
     ).andReturn({
-      responseText: JSON.stringify(vicWmsLayerResource)
+      responseJSON: vicWmsLayerResource
     });
   });
 
@@ -75,9 +72,6 @@ describe("CkanItemReference", function () {
         );
       });
       (await ckanItemReference.loadReference()).throwIfError();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
 
@@ -147,7 +141,7 @@ describe("CkanItemReference", function () {
   });
 
   describe("Can load an item by resourceId - ", function () {
-    beforeEach(async function () {
+    beforeEach(function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
@@ -161,9 +155,6 @@ describe("CkanItemReference", function () {
         "tax-stats-wms-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -191,9 +182,6 @@ describe("CkanItemReference", function () {
         "wms-no-layers-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
 
       expect(ckanItemReference._ckanResource).toBeDefined();
@@ -229,9 +217,6 @@ describe("CkanItemReference", function () {
         );
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = ckanItemReference.strata.get(
-        CkanDatasetStratum.stratumName
-      ) as CkanDatasetStratum;
       ckanItemTarget = ckanItemReference.target;
     });
     it("uses LAYERS from url query string for WMS item", function () {

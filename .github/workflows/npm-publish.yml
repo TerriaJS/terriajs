@@ -7,8 +7,17 @@ on:
 env:
   NPM_TAG: latest
 
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   publish:
+    permissions:
+      contents: write # to create and push a tag
+      actions: read
     name: Publish to NPM
     runs-on: ubuntu-latest
 
@@ -40,7 +49,7 @@ jobs:
 
       - name: Install yarn
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npm install -g yarn@^1.19.0
+        run: npm install -g yarn@^1.22.22
 
       - name: Install dependencies
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version

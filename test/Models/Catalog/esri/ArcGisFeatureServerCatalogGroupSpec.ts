@@ -34,6 +34,10 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
+
+      // Remove token from url
+      url = url.replace("&token=test-token", "");
+
       if (url.match("Redlands_Emergency_Vehicles/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(/FeatureServer\/?\?f=json$/i, "featureServer.json");
@@ -106,6 +110,37 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
 
       expect(member2.name).toBe("Fire");
       expect(member2.url).toBe(featureServerUrl + "/123");
+    });
+  });
+
+  describe("Supports FeatureServer with token", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+      await group.loadMembers();
+    });
+
+    it("Uses token in url", async function () {
+      expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+        featureServerUrl + "?f=json&token=test-token"
+      );
+    });
+
+    it("Correctly passes token to members", async function () {
+      expect(group.members).toBeDefined();
+      expect(group.members.length).toBe(3);
+      expect(group.memberModels).toBeDefined();
+      expect(group.memberModels.length).toBe(3);
+
+      const member0 = group.memberModels[0] as ArcGisFeatureServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisFeatureServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisFeatureServerCatalogItem;
+
+      expect(member0.token).toBe("test-token");
+      expect(member1.token).toBe("test-token");
+      expect(member2.token).toBe("test-token");
     });
   });
 });

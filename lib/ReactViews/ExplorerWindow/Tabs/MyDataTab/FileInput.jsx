@@ -1,9 +1,7 @@
-import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
 import { withTranslation } from "react-i18next";
-
 import Styles from "./file-input.scss";
 
 // When uploading a file
@@ -58,4 +56,4 @@ const FileInput = createReactClass({
   }
 });
 
-module.exports = withTranslation()(FileInput);
+export default withTranslation()(FileInput);

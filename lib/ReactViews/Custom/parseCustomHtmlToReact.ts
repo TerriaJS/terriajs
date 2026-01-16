@@ -1,27 +1,27 @@
-"use strict";
+import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
 
-import React, {
+import {
   AnchorHTMLAttributes,
   createElement,
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
+
+import * as React from "react";
+import combine from "terriajs-cesium/Source/Core/combine";
+import defined from "terriajs-cesium/Source/Core/defined";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import { ExternalLinkWithWarning, ExternalLinkIcon } from "./ExternalLink";
+import { ExternalLinkIcon, ExternalLinkWithWarning } from "./ExternalLink";
+import { Parser, ProcessNodeDefinitions } from "html-to-react";
+import { createElement as htmlCreateElement } from "html-to-react/lib/utils";
 
-const DOMPurify = require("dompurify/dist/purify");
-const HtmlToReact = require("html-to-react");
-const combine = require("terriajs-cesium/Source/Core/combine").default;
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const utils = require("html-to-react/lib/utils");
-
-const htmlToReactParser = new HtmlToReact.Parser({
+const htmlToReactParser = Parser({
   decodeEntities: true
 });
-const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+const processNodeDefinitions = ProcessNodeDefinitions();
 
 const isValidNode = function () {
   return true;
@@ -81,7 +81,6 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
     shouldProcessNode: (node: DomElement) => node.name === "a",
     processNode: function (node: DomElement, children, index) {
       // Make sure any <a href> tags open in a new window
-      // eslint-disable-line react/display-name
       const elementProps = {
         key: "anchor-" + keyIndex++,
         target: "_blank",
@@ -100,7 +99,7 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
       }
 
       // Create new Anchor element
-      const aElement = utils.createElement(
+      const aElement = htmlCreateElement(
         node,
         index,
         node.data,
@@ -148,7 +147,7 @@ function parseCustomHtmlToReact(
   html: string,
   context?: ParseCustomHtmlToReactContext,
   allowUnsafeHtml: boolean = false,
-  domPurifyOptions: object = {}
+  domPurifyOptions: DomPurifyConfig = {}
 ) {
   if (!defined(html) || html.length === 0) {
     return html;

@@ -20,7 +20,7 @@ import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
-import ViewerMode from "../Models/ViewerMode";
+import ViewerMode, { getViewerType } from "../Models/ViewerMode";
 
 // Async loading of Leaflet and Cesium
 
@@ -55,29 +55,95 @@ export default class TerriaViewer {
   @observable
   private _baseMap: MappableMixin.Instance | undefined;
 
+  /**
+   * Tracks the basemap that is currently being loaded
+   */
+  @observable
+  private _loadingBaseMap: MappableMixin.Instance | undefined;
+
   get baseMap() {
     return this._baseMap;
   }
 
-  async setBaseMap(baseMap?: MappableMixin.Instance) {
+  /**
+   * Returns the basemap that is currently loading
+   */
+  get loadingBaseMap(): MappableMixin.Instance | undefined {
+    return this._loadingBaseMap;
+  }
+
+  async setBaseMap(baseMap?: MappableMixin.Instance): Promise<void> {
     if (!baseMap) return;
 
-    const result = await baseMap.loadMapItems();
-    if (result.error) {
-      result.raiseError(this.terria, {
-        title: {
-          key: "models.terria.loadingBaseMapErrorTitle",
-          parameters: {
-            name:
-              (CatalogMemberMixin.isMixedInto(baseMap)
-                ? baseMap.name
-                : baseMap.uniqueId) ?? "Unknown item"
+    runInAction(() => {
+      this._loadingBaseMap = baseMap;
+    });
+
+    try {
+      const result = await baseMap.loadMapItems();
+      if (result.error) {
+        result.raiseError(this.terria, {
+          title: {
+            key: "models.terria.loadingBaseMapErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(baseMap)
+                  ? baseMap.name
+                  : baseMap.uniqueId) ?? "Unknown item"
+            }
           }
-        }
-      });
-    } else {
-      runInAction(() => (this._baseMap = baseMap));
+        });
+      } else {
+        runInAction(() => {
+          // Concurrent attempts to load basemap might not complete in the same
+          // order they were called. Set as current basemap only if this was
+          // the last call to setBaseMap.
+          if (this._loadingBaseMap === baseMap) {
+            // If the basemap specifies a preferred viewer mode, switch to it.
+            if (baseMap.preferredViewerMode) {
+              this.viewerMode =
+                getViewerType(baseMap.preferredViewerMode) ?? this.viewerMode;
+            }
+            this._baseMap = baseMap;
+          }
+        });
+      }
+    } finally {
+      // Unset loadingBaseMap
+      if (this._loadingBaseMap === baseMap) {
+        runInAction(() => {
+          this._loadingBaseMap = undefined;
+        });
+      }
     }
+  }
+
+  /**
+   * Switch to a base map that is compatible with the current viewer
+   *
+   * @returns A promise that yields `true` if the switch was made.
+   */
+  async useViewerCompatibleBaseMap(): Promise<boolean> {
+    const currentViewerType = this.viewerMode;
+    const baseMapViewerType = this.baseMap?.preferredViewerMode
+      ? getViewerType(this.baseMap.preferredViewerMode)
+      : undefined;
+
+    if (!baseMapViewerType || baseMapViewerType === currentViewerType) {
+      return false;
+    }
+
+    // Select a base map that either does not require a specific viewer mode or
+    // specifies a compatible mode.
+    const compatibleBaseMap = this.terria.baseMapsModel.baseMapItems.find(
+      (it) =>
+        !it.item.preferredViewerMode ||
+        getViewerType(it.item.preferredViewerMode) === currentViewerType
+    )?.item;
+
+    return compatibleBaseMap
+      ? this.setBaseMap(compatibleBaseMap).then(() => true)
+      : false;
   }
 
   // This is a "view" of a workbench/other
@@ -220,7 +286,7 @@ export default class TerriaViewer {
     }
 
     this._lastViewer = newViewer;
-    newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
+    newViewer.setInitialView(currentView || untracked(() => this.homeCamera));
 
     return newViewer;
   }
@@ -228,19 +294,20 @@ export default class TerriaViewer {
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
   // before its UI element is mounted in React to set basemap, items, viewermode
   @action
-  attach(mapContainer?: string | HTMLElement) {
+  attach(mapContainer?: string | HTMLElement): void {
     this.mapContainer = mapContainer;
   }
 
   @action
-  detach() {
+  detach(): void {
     // Detach from a container
     this.mapContainer = undefined;
     this.destroyCurrentViewer();
   }
 
-  destroy() {
+  destroy(): void {
     this.detach();
+    this.viewerChangeTracker?.();
   }
 
   private destroyCurrentViewer() {

@@ -1,14 +1,15 @@
-@import "~terriajs-variables";
-@import "../../../../Sass/common/mixins";
-@include empty-module("url-input");
-@include empty-module("inner");
+@use "../../../../Sass/common/_variables";
+@use "../../../../Sass/common/mixins";
+@include mixins.empty-module("url-input");
+@include mixins.empty-module("inner");
 
 .tab-panels {
-  width: 50%;
+  width: fit-content;
+  min-width: 50%;
   max-width: 600px;
   margin: 3vh auto;
   text-align: left;
-  padding-top: 10vh;
+  //padding-top: 10vh;
 }
 .tab-panel {
   text-align: left;
@@ -18,12 +19,12 @@
   composes: label from "../../../../Sass/common/_labels.scss";
 
   padding-left: 0;
-  font-size: $font-size-mid-small;
+  font-size: variables.$font-size-mid-small;
 }
 
 .tabHeading {
   font-weight: 500;
-  border-bottom: 1px solid $dark-lighter;
+  border-bottom: 1px solid variables.$dark-lighter;
   margin-bottom: 3vh;
   display: inline-block;
 }
@@ -43,7 +44,7 @@
     composes: field from "../../../../Sass/common/_form.scss";
     width: calc(100% - 50px);
     float: left;
-    font-family: $font-base;
+    font-family: variables.$font-base;
   }
 
   &__btn {
@@ -59,6 +60,7 @@
 .dropdown {
   &__list {
     height: 250px;
+    overflow-y: visible;
   }
   @media (max-height: 800px) {
     &__list {

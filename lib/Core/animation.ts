@@ -2,19 +2,19 @@
  * The purpose of this module is to provide a standard way to perform actions after an animations ends.
  * The advantage is that the code is more tightly coupled together and we don't have to guess when the animation ends.
  * There is also a timeout fallback that will reject the Promise if the animation end event is not fired in time.
- * 
+ *
  * Old code:
  *
   triggerSomeAnimation();
   setTimeout(function() {
     somePostAction();
   }, 200);
- * 
- * New code: 
+ *
+ * New code:
   animateEnd(this.elementRef.current).finally(somePostAction);
   triggerAnimation();
- * 
- *   
+ *
+ *
  */
 
 const ANIMATION_TIMEOUT = 500;
@@ -33,10 +33,10 @@ const transitionEnd = (element: Element | null) =>
   });
 
 const animationTimeout = (
-  timeoutID: ReturnType<typeof setTimeout> | undefined
+  _timeoutID: ReturnType<typeof setTimeout> | undefined
 ) =>
   new Promise<void>((_, reject) => {
-    timeoutID = setTimeout(() => {
+    _timeoutID = setTimeout(() => {
       reject("Animation timed out. Did you forget to animate the element?");
     }, ANIMATION_TIMEOUT);
   });

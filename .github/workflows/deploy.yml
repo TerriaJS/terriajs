@@ -2,8 +2,19 @@ name: Deploy TerriaMap
 
 on: push
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id  }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
 jobs:
   deploy:
+    permissions:
+      contents: read # to fetch code (actions/checkout)
+      statuses: write # to create commit status (ci-deploy.sh)
+    if: github.repository_owner == 'TerriaJS'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +40,7 @@ jobs:
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Upload new yarn.lock file (as it may change after `sync-dependencies`)
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: yarn.lock
