@@ -163,4 +163,12 @@ export class GeoJsonTraits extends mixTraits(
       "Replaces `MultiPoint` features with its equivalent `Point` features when `true`. This is useful for example when using Table mode which does not support `MultiPoint` features currently."
   })
   explodeMultiPoints = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable depth test ",
+    description:
+      "If true, point features will render without depth testing so they remain visible through terrain and tiles."
+  })
+  disableDepthTest?: boolean = false;
 }
