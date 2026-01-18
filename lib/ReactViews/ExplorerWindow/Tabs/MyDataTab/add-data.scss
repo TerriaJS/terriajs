@@ -45,7 +45,6 @@
 
   &__text-box {
     composes: field from "../../../../Sass/common/_form.scss";
-    float: left;
     font-family: variables.$font-base;
     height: auto;
   }
@@ -57,7 +56,7 @@
 
     width: unset;
     max-width: 150px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
