@@ -40,11 +40,13 @@
 // Style guide: 3.3
 //
 .url-input {
+  display: flex;
+  flex-direction: row;
+
   &__text-box {
     composes: field from "../../../../Sass/common/_form.scss";
-    width: calc(100% - 50px);
-    float: left;
     font-family: variables.$font-base;
+    height: auto;
   }
 
   &__btn {
@@ -52,8 +54,9 @@
     composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
     composes: btn-primary from "../../../../Sass/common/_buttons.scss";
 
-    width: 50px;
-    float: left;
+    width: unset;
+    max-width: 150px;
+    overflow-wrap: break-word;
   }
 }
 
