@@ -579,6 +579,21 @@ const MeasurablePanel = observer((props: Props) => {
     if (activeToolIsPolygon() || currentGeom.hasArea || currentGeom.isClosed) {
       return (
         <>
+          {!isMobile && (
+            <StyledTextArea
+              title={i18next.t("measurableGeometry.pathNotesTitle")}
+              placeholder={i18next.t("measurableGeometry.textareaPlaceholder")}
+              dark
+              value={currentGeom.pathNotes}
+              onChange={(e) => {
+                runInAction(() => {
+                  if (terria.measurableGeomList && currentGeom) {
+                    currentGeom.pathNotes = e.target.value;
+                  }
+                });
+              }}
+            />
+          )}
           <Text textLight style={{ marginLeft: 1 }} title="">
             {i18next.t("measurableGeometry.geometrySummaryHeader")}
           </Text>
