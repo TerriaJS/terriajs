@@ -1,17 +1,17 @@
 import { isEqual } from "lodash-es";
 import {
-  action,
-  computed,
   IComputedValue,
   IObservableValue,
   IReactionDisposer,
+  action,
+  computed,
+  makeObservable,
   observable,
   reaction,
   runInAction,
-  untracked,
-  makeObservable
+  untracked
 } from "mobx";
-import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
+import { FULFILLED, IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -21,20 +21,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode, { getViewerType } from "../Models/ViewerMode";
-
-// Async loading of Leaflet and Cesium
-
-const leafletFromPromise = computed(
-  () =>
-    fromPromise(import("../Models/Leaflet").then((Leaflet) => Leaflet.default)),
-  { keepAlive: true }
-);
-
-const cesiumFromPromise = computed(
-  () =>
-    fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default)),
-  { keepAlive: true }
-);
+import ViewerLoaders from "./ViewerLoaders";
 
 // Viewer options. Designed to be easily serialisable
 interface ViewerOptions {
@@ -51,6 +38,8 @@ const viewerOptionsDefaults: ViewerOptions = {
  */
 export default class TerriaViewer {
   readonly terria: Terria;
+
+  static readonly ViewerLoaders = ViewerLoaders;
 
   @observable
   private _baseMap: MappableMixin.Instance | undefined;
@@ -236,11 +225,21 @@ export default class TerriaViewer {
       typeof NoViewer
     >;
     if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-      viewerFromPromise = leafletFromPromise.get();
+      viewerFromPromise = this.leafletPromise;
     } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-      viewerFromPromise = cesiumFromPromise.get();
+      viewerFromPromise = this.cesiumPromise;
     }
     return viewerFromPromise;
+  }
+
+  @computed({ keepAlive: true })
+  private get leafletPromise() {
+    return fromPromise(TerriaViewer.ViewerLoaders[ViewerMode.Leaflet](this));
+  }
+
+  @computed({ keepAlive: true })
+  private get cesiumPromise() {
+    return fromPromise(TerriaViewer.ViewerLoaders[ViewerMode.Cesium](this));
   }
 
   @computed({
