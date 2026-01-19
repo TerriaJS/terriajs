@@ -16,9 +16,9 @@ import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
-import ExportableFormat from "../../../ViewModels/Measure/ExportableFormat";
-import { MeasurableGeometry } from "../../../ViewModels/Measure/MeasurableGeometryManager";
-import { DownloadLink } from "../../../ViewModels/Measure/MeasurableDownload";
+import ExportableFormat from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryExportableFormat";
+import { MeasurableGeometry } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
+import { DownloadLink } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryDownload";
 import DataUri from "../../../Core/DataUri";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 

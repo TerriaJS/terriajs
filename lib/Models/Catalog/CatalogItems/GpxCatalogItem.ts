@@ -12,10 +12,10 @@ import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import ExportableFormat from "../../../ViewModels/Measure/ExportableFormat";
+import ExportableFormat from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryExportableFormat";
 import DataUri from "../../../Core/DataUri";
-import { MeasurableGeometry } from "../../../ViewModels/Measure/MeasurableGeometryManager";
-import { DownloadLink } from "../../../ViewModels/Measure/MeasurableDownload";
+import { MeasurableGeometry } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
+import { DownloadLink } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryDownload";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";

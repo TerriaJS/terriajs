@@ -6,7 +6,7 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import MeasurableGeometryManager from "../ViewModels/Measure/MeasurableGeometryManager";
+import MeasurableGeometryManager from "../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
 
 type MixinModel = Model<MappableTraits>;
 

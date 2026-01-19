@@ -24,10 +24,10 @@ import { featureCollection, FeatureCollection } from "@turf/helpers";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
-import ExportableFormat from "../../../ViewModels/Measure/ExportableFormat";
+import ExportableFormat from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryExportableFormat";
 import DataUri from "../../../Core/DataUri";
-import { DownloadLink } from "../../../ViewModels/Measure/MeasurableDownload";
-import { MeasurableGeometry } from "../../../ViewModels/Measure/MeasurableGeometryManager";
+import { DownloadLink } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryDownload";
+import { MeasurableGeometry } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 class GeoJsonCatalogItem

@@ -29,10 +29,10 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ExportableMixin, {
   ExportData
 } from "../../../ModelMixins/ExportableMixin";
-import ExportableFormat from "../../../ViewModels/Measure/ExportableFormat";
+import ExportableFormat from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryExportableFormat";
 import DataUri from "../../../Core/DataUri";
-import { MeasurableGeometry } from "../../../ViewModels/Measure/MeasurableGeometryManager";
-import { DownloadLink } from "../../../ViewModels/Measure/MeasurableDownload";
+import { MeasurableGeometry } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
+import { DownloadLink } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryDownload";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import { exportKmlResultKml } from "terriajs-cesium";
@@ -653,6 +653,10 @@ class KmlCatalogItem
       }
       const allCoordinates = this.getPositions(element);
       if (allCoordinates.length === 0) return;
+
+      console.log("dataSource:", this._dataSource);
+      console.log("entities:", entities);
+      console.log("items", items);
 
       const allCartographics = allCoordinates.map((elem) =>
         Cartographic.fromCartesian(elem)

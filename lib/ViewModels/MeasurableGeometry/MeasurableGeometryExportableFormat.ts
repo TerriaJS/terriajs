@@ -1,5 +1,5 @@
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import { DownloadLink } from "./MeasurableDownload";
+import { DownloadLink } from "./MeasurableGeometryDownload";
 import { MeasurableGeometry } from "./MeasurableGeometryManager";
 
 interface ExportableFormat {
