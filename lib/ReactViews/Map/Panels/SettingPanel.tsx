@@ -179,7 +179,9 @@ const SettingPanel: FC = observer(() => {
   };
 
   const currentViewer =
-    terria.mainViewer.viewerMode === ViewerMode.Cesium
+    terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+    ? "2dcesium"
+    : terria.mainViewer.viewerMode === ViewerMode.Cesium
       ? terria.mainViewer.viewerOptions.useTerrain
         ? "3d"
         : "3dsmooth"

@@ -92,7 +92,7 @@ import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
-import { setViewerMode } from "./ViewerMode";
+import ViewerMode, { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -431,6 +431,10 @@ export default class Cesium extends GlobeOrMap {
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
     });
+
+    if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D) {
+      this.scene.mode = SceneMode.SCENE2D;
+    }
   }
 
   get dataSources(): DataSourceCollection {
