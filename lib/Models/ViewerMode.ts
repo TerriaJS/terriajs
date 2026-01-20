@@ -35,6 +35,8 @@ export const MapViewers = Object.seal({
   }
 });
 
+export type MapViewersKey = keyof typeof MapViewers;
+
 export const isViewerMode = (mode: string): mode is keyof typeof MapViewers =>
   mode in MapViewers;
 
@@ -69,7 +71,7 @@ export function setViewerMode(
 /**
  * Returns the viewer type for the given viewer mode
  *
- * @param viewerMode 3d, 3dsmooth or 2d
+ * @param viewerMode 3d, 3dsmooth, 2d or 2dcesium
  */
 export function getViewerType(viewerMode: string): ViewerMode | undefined {
   // Note:

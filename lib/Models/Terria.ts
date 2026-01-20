@@ -123,7 +123,7 @@ import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
-import { isViewerMode, setViewerMode } from "./ViewerMode";
+import { isViewerMode, setViewerMode, MapViewersKey } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
@@ -374,7 +374,7 @@ export interface ConfigParameters {
   /**
    * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
    */
-  mapViewers: string[];
+  mapViewers: MapViewersKey[];
 
   /**
    * Keep catalog open when adding / removing items
