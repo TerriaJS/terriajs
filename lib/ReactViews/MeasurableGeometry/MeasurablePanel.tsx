@@ -34,9 +34,9 @@ import { MeasureToolsController } from "../Map/MapNavigation/Items/MeasureTools"
 import MeasurableTransform from "./MeasurableTransform";
 import DataUri from "../../Core/DataUri";
 import {
-  generatePathSummaryCsvData,
+  generatePathSummaryTxtData,
   getSummaryKind
-} from "../../ViewModels/MeasurableGeometry/MeasurableGeometrySummaryCsv";
+} from "../../ViewModels/MeasurableGeometry/MeasurableGeometrySummary";
 
 interface Props {
   viewState: ViewState;
@@ -240,7 +240,7 @@ const MeasurablePanel = observer((props: Props) => {
     return polygonTool?.controller?.active === true;
   }, [terria.mapNavigationModel]);
 
-  const downloadPathSummaryCsv = React.useCallback(() => {
+  const downloadPathSummaryTxt = React.useCallback(() => {
     const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!geom) return;
 
@@ -249,14 +249,14 @@ const MeasurablePanel = observer((props: Props) => {
       activeToolIsPolygon: activeToolIsPolygon()
     });
 
-    const { csv, filename } = generatePathSummaryCsvData({
+    const { text, filename } = generatePathSummaryTxtData({
       geom,
       name: layerName,
       kind,
       ellipsoid: terria?.cesium?.scene?.globe?.ellipsoid
     });
 
-    const href = DataUri.make("csv", csv);
+    const href = DataUri.make("txt", text);
     if (!href) return;
 
     const a = document.createElement("a");
@@ -670,10 +670,10 @@ const MeasurablePanel = observer((props: Props) => {
                   background: ${theme.colorPrimary};
                 `}
                 disabled={!currentGeom.stopPoints?.length}
-                onClick={downloadPathSummaryCsv}
-                title="Download CSV Summary"
+                onClick={downloadPathSummaryTxt}
+                title={i18next.t("measurableGeometry.downloadSummaryInfoTitle")}
               >
-                CSV Summary
+                {i18next.t("measurableGeometry.downloadSummaryInfo")}
               </Button>
             </div>
           </small>
@@ -737,10 +737,10 @@ const MeasurablePanel = observer((props: Props) => {
                 background: ${theme.colorPrimary};
               `}
               disabled={!currentGeom.stopPoints?.length}
-              onClick={downloadPathSummaryCsv}
-              title="Download CSV Summary"
+              onClick={downloadPathSummaryTxt}
+              title={i18next.t("measurableGeometry.downloadSummaryInfoTitle")}
             >
-              CSV Summary
+              {i18next.t("measurableGeometry.downloadSummaryInfo")}
             </Button>
           </div>
         </small>
