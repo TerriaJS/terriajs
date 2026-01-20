@@ -20,6 +20,7 @@ import Cesium from "../../../Models/Cesium";
 import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
+  MapViewersKey,
   getViewerType,
   isViewerMode,
   setViewerMode
@@ -180,8 +181,8 @@ const SettingPanel: FC = observer(() => {
 
   const currentViewer =
     terria.mainViewer.viewerMode === ViewerMode.Cesium2D
-    ? "2dcesium"
-    : terria.mainViewer.viewerMode === ViewerMode.Cesium
+      ? "2dcesium"
+      : terria.mainViewer.viewerMode === ViewerMode.Cesium
       ? terria.mainViewer.viewerOptions.useTerrain
         ? "3d"
         : "3dsmooth"
@@ -249,6 +250,12 @@ const SettingPanel: FC = observer(() => {
     terria.mainViewer.baseMap &&
     getBaseMapStatusMessage(terria.mainViewer.baseMap, t);
 
+  const availableMapViewers = Object.entries(MapViewers).filter(
+    ([key, viewerMode]) =>
+      viewerMode.available &&
+      terria.configParameters.mapViewers.includes(key as MapViewersKey)
+  );
+
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
@@ -268,21 +275,18 @@ const SettingPanel: FC = observer(() => {
           <Text as="label">{t("settingPanel.mapView")}</Text>
         </Box>
         <FlexGrid gap={1} elementsNo={3}>
-          {Object.entries(MapViewers)
-            .filter(
-              ([key, viewerMode]) =>
-                viewerMode.available &&
-                terria.configParameters.mapViewers.indexOf(key) >= 0
-            )
-            .map(([key, viewerMode]) => (
-              <SettingsButton
-                key={key}
-                isActive={key === currentViewer}
-                onClick={(event: any) => selectViewer(key as any, event)}
-              >
-                <Text mini>{t(viewerMode.label)}</Text>
-              </SettingsButton>
-            ))}
+          {(availableMapViewers?.length
+            ? availableMapViewers
+            : Object.entries([MapViewers["2d"]])
+          ).map(([key, viewerMode]) => (
+            <SettingsButton
+              key={key}
+              isActive={key === currentViewer}
+              onClick={(event: any) => selectViewer(key as any, event)}
+            >
+              <Text mini>{t(viewerMode.label)}</Text>
+            </SettingsButton>
+          ))}
         </FlexGrid>
         {!!supportsSide && (
           <>
