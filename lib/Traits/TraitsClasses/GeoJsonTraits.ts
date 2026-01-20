@@ -172,7 +172,7 @@ export class GeoJsonTraits extends mixTraits(
       "If true, point features will render without depth testing so they remain visible through terrain and tiles."
   })
   disableDepthTest?: boolean = false;
-  
+
   @objectTrait({
     type: ClusteringTraits,
     name: "clustering",
