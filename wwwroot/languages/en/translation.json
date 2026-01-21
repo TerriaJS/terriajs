@@ -690,9 +690,9 @@
     "searchItem": "Search",
     "searchItemTitle": "Search",
     "splitScreenMode": "SPLIT SCREEN MODE",
-    "pathItem": "Path",
+    "pathItem": "Measurements",
     "pointsItem": "Points",
-    "playPath": "Play Path"
+    "playPath": "Flight"
   },
   "dateTime": {
     "selectorLabel": "Time:",

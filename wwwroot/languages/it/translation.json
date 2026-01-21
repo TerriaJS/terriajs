@@ -1454,9 +1454,9 @@
     "colorScaleRangeMin": "Il valore minimo deve essere un numero.",
     "searchItemTitle": "Cerca",
     "searchItem": "Cerca",
-    "pathItem": "Percorso",
+    "pathItem": "Misure",
     "pointsItem": "Punti",
-    "playPath": "Avvia percorso",
+    "playPath": "Volo",
     "dimensionsSelector": {
       "undefinedLabel": "Non specificato"
     },
