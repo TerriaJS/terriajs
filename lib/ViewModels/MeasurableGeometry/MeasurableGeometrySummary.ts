@@ -15,48 +15,65 @@ export function getSummaryKind(options: {
   return "line";
 }
 
-export function generatePathSummaryCsvData(options: {
+export function generatePathSummaryTxtData(options: {
   geom: MeasurableGeometry;
   name: string;
   kind: MeasurableSummaryKind;
   ellipsoid?: Ellipsoid;
-}): { csv: string; filename: string } {
+}): { text: string; filename: string } {
   const { geom, name, kind, ellipsoid } = options;
-  const pathNotes = geom.pathNotes ?? "";
+  const pathNotes = (geom.pathNotes ?? "").trim();
+  const lines: string[] = [];
+  const addLine = (label: string, value: string | undefined) => {
+    if (!value) return;
+    lines.push(`${label}: ${value}`);
+  };
+  const addNumberLine = (
+    label: string,
+    value: number | undefined,
+    digits: number,
+    unit: string
+  ) => {
+    const formatted = formatSummaryNumber(value, digits);
+    if (!formatted) return;
+    addLine(label, `${formatted} ${unit}`);
+  };
+
+  addLine("name", name);
+  if (pathNotes.length > 0) {
+    addLine("path_notes", pathNotes);
+  }
 
   if (kind === "polygon") {
     const geoAreaM2 = geom.geodeticArea ?? 0;
     const airAreaM2 = geom.airArea ?? 0;
 
-    const headers = [
-      "name",
-      "path_notes",
+    addNumberLine(
       "geodetic_area",
+      geoAreaM2 > 0 ? geoAreaM2 / 1_000_000 : 0,
+      6,
+      "km2"
+    );
+    addNumberLine(
       "geodetic_area",
+      geoAreaM2 > 0 ? geoAreaM2 * 0.0001 : 0,
+      4,
+      "ha"
+    );
+    addNumberLine(
       "air_area",
-      "air_area",
-      "geodetic_perimeter",
-      "air_perimeter",
-      "ground_perimeter"
-    ].join(",");
-
-    const units = ["", "", "km2", "ha", "km2", "ha", "m", "m", "m"].join(",");
-
-    const values = [
-      name,
-      pathNotes,
-      formatSummaryNumber(geoAreaM2 > 0 ? geoAreaM2 / 1_000_000 : 0, 6),
-      formatSummaryNumber(geoAreaM2 > 0 ? geoAreaM2 * 0.0001 : 0, 4),
-      formatSummaryNumber(airAreaM2 > 0 ? airAreaM2 / 1_000_000 : 0, 6),
-      formatSummaryNumber(airAreaM2 > 0 ? airAreaM2 * 0.0001 : 0, 4),
-      formatSummaryNumber(geom.geodeticDistance ?? 0, 2),
-      formatSummaryNumber(geom.airDistance ?? 0, 2),
-      formatSummaryNumber(geom.groundDistance ?? 0, 2)
-    ].join(",");
+      airAreaM2 > 0 ? airAreaM2 / 1_000_000 : 0,
+      6,
+      "km2"
+    );
+    addNumberLine("air_area", airAreaM2 > 0 ? airAreaM2 * 0.0001 : 0, 4, "ha");
+    addNumberLine("geodetic_perimeter", geom.geodeticDistance ?? 0, 2, "m");
+    addNumberLine("air_perimeter", geom.airDistance ?? 0, 2, "m");
+    addNumberLine("ground_perimeter", geom.groundDistance ?? 0, 2, "m");
 
     return {
-      csv: [headers, units, values].join("\n"),
-      filename: `${name}_path.csv`
+      text: lines.join("\n"),
+      filename: `${name}_summary.txt`
     };
   }
 
@@ -64,63 +81,24 @@ export function generatePathSummaryCsvData(options: {
   const bearing = getBearingDegrees(geom.stopPoints, ellipsoid);
   const altDiff = getAltDiff(geom.stopPoints);
 
-  if (kind === "line") {
-    const headers = [
-      "name",
-      "path_notes",
-      "alt_min",
-      "alt_max",
-      "bearing",
-      "alt_diff",
-      "geodetic_distance",
-      "air_distance",
-      "ground_distance"
-    ].join(",");
-
-    const units = ["", "", "m", "m", "deg", "m", "m", "m", "m"].join(",");
-
-    const values = [
-      name,
-      pathNotes,
-      formatSummaryNumber(altMin, 2),
-      formatSummaryNumber(altMax, 2),
-      bearing,
-      altDiff,
-      formatSummaryNumber(geom.geodeticDistance, 2),
-      formatSummaryNumber(geom.airDistance, 2),
-      formatSummaryNumber(geom.groundDistance, 2)
-    ].join(",");
-
-    return {
-      csv: [headers, units, values].join("\n"),
-      filename: `${name}_path.csv`
-    };
+  addNumberLine("alt_min", altMin, 2, "m");
+  addNumberLine("alt_max", altMax, 2, "m");
+  if (bearing) {
+    addLine("bearing", `${bearing}°`);
+  }
+  if (altDiff) {
+    addLine("alt_diff", `${altDiff} m`);
   }
 
-  // points
-  const headers = [
-    "name",
-    "path_notes",
-    "alt_min",
-    "alt_max",
-    "bearing",
-    "alt_diff"
-  ].join(",");
-
-  const units = ["", "", "m", "m", "deg", "m"].join(",");
-
-  const values = [
-    name,
-    pathNotes,
-    formatSummaryNumber(altMin, 2),
-    formatSummaryNumber(altMax, 2),
-    bearing,
-    altDiff
-  ].join(",");
+  if (kind === "line") {
+    addNumberLine("geodetic_distance", geom.geodeticDistance, 2, "m");
+    addNumberLine("air_distance", geom.airDistance, 2, "m");
+    addNumberLine("ground_distance", geom.groundDistance, 2, "m");
+  }
 
   return {
-    csv: [headers, units, values].join("\n"),
-    filename: `${name}_path.csv`
+    text: lines.join("\n"),
+    filename: `${name}_summary.txt`
   };
 }
 

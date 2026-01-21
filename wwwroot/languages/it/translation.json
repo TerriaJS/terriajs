@@ -108,7 +108,9 @@
     "removePath": "Rimuovi il percorso attuale",
     "showDistanceCheckbox": "Mostra etichette distanze",
     "showDistanceCheckboxTitle": "Attiva/disattiva etichette distanze nella mappa",
-    "tempLayerName": "Inserisci il nome del layer temporaneo"
+    "tempLayerName": "Inserisci il nome del layer temporaneo",
+    "downloadSummaryInfo": "Scarica info",
+    "downloadSummaryInfoTitle": "Scarica informazioni di riepilogo"
   },
   "elevationChart": {
     "header": "Profilo altimetrico",

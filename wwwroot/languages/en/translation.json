@@ -105,7 +105,9 @@
     "removePath": "Delete the current path",
     "showDistanceCheckbox": "Show distances labels",
     "showDistanceCheckboxTitle": "Toggle distance labels",
-    "tempLayerName": "Insert the temporary layer name"
+    "tempLayerName": "Insert the temporary layer name",
+    "downloadSummaryInfo": "Download info",
+    "downloadSummaryInfoTitle": "Download summary info"
   },
   "elevationChart": {
     "header": "Elevation profile",
