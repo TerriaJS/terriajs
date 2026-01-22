@@ -165,6 +165,14 @@ export class GeoJsonTraits extends mixTraits(
   })
   explodeMultiPoints = true;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable depth test ",
+    description:
+      "If true, point features will render without depth testing so they remain visible through terrain and tiles."
+  })
+  disableDepthTest?: boolean = false;
+
   @objectTrait({
     type: ClusteringTraits,
     name: "clustering",
