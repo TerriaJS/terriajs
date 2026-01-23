@@ -2,6 +2,7 @@
 
 #### next release (8.11.3)
 
+- enforce the WMS layer limit
 - [The next improvement]
 
 #### 8.11.2 - 2026-01-15
