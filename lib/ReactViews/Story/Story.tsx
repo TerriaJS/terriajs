@@ -5,6 +5,7 @@ import React, {
   useLayoutEffect,
   useRef
 } from "react";
+import { createPortal } from "react-dom";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
@@ -43,7 +44,7 @@ interface Props {
 }
 
 interface MenuProps extends Props {
-  storyRef: React.RefObject<HTMLElement>;
+  menuAnchorRef: React.RefObject<HTMLElement>;
 }
 
 const findTextContent = (content: any): string => {
@@ -84,7 +85,7 @@ const StoryMenuButton = styled(RawButton)`
 
   border-radius: 0;
 
-  width: 114px;
+  width: 150px;
   // ensure we support long strings
   min-height: 32px;
   display: block;
@@ -150,30 +151,33 @@ const recaptureStory =
 
 const StoryMenu = (props: MenuProps) => {
   const { t } = useTranslation();
-  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [menuStyle, setMenuStyle] = React.useState<React.CSSProperties>({});
   useLayoutEffect(() => {
-    // Adjust the position of the menu so it stays inside the scroll container.
+    const updatePosition = () => {
+      if (!props.menuAnchorRef.current) return;
+      const rect = props.menuAnchorRef.current.getBoundingClientRect();
+      setMenuStyle({
+        top: Math.round(rect.bottom),
+        left: Math.round(rect.right)
+      });
+    };
 
-    if (!menuRef.current) return;
-    if (!props.parentRef.current) return;
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
 
-    // Grow downwards, by default:
-    Object.assign(menuRef.current.style, { top: "0px", bottom: "unset" });
-
-    const selfRect = menuRef.current.getBoundingClientRect();
-    const parentRect = props.parentRef.current.getBoundingClientRect();
-    if (selfRect.bottom > parentRect.bottom) {
-      // Looks like there's no room to the bottom; grow upwards.
-      Object.assign(menuRef.current.style, { top: "unset", bottom: "0px" });
-    }
-  }, [props.parentRef]);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [props.menuAnchorRef]);
   return (
     <Box
-      ref={menuRef}
+      style={menuStyle}
       css={`
-        position: absolute;
-        z-index: 100;
-        right: 0px;
+        position: fixed;
+        z-index: 1000;
+        transform: translateX(-100%);
         padding: 0;
         margin: 0;
 
@@ -238,6 +242,7 @@ const Story = (props: Props) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const storyRef = useRef<HTMLDivElement>(null);
+  const menuAnchorRef = useRef<HTMLButtonElement>(null);
   const closeHandler = () => {
     hideList(props);
   };
@@ -295,7 +300,11 @@ const Story = (props: Props) => {
                 />
               </RawButton>
             )}
-            <MenuButton theme={theme} onClick={toggleMenu(props)}>
+            <MenuButton
+              ref={menuAnchorRef}
+              theme={theme}
+              onClick={toggleMenu(props)}
+            >
               <StyledIcon
                 styledWidth="20px"
                 light
@@ -303,7 +312,11 @@ const Story = (props: Props) => {
               />
             </MenuButton>
           </Box>
-          {props.menuOpen && <StoryMenu {...props} storyRef={storyRef} />}
+          {props.menuOpen &&
+            createPortal(
+              <StoryMenu {...props} menuAnchorRef={menuAnchorRef} />,
+              document.body
+            )}
         </Box>
         {bodyText.length > 0 && (
           <Box paddedRatio={2} paddedHorizontally={3}>
