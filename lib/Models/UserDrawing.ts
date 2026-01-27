@@ -231,12 +231,14 @@ export default class UserDrawing extends MappableMixin(
           if (!posA || !posB) return "";
           return (Cartesian3.distance(posA, posB) / 1000).toFixed(2) + " km";
         }, false),
-        font: "16px sans-serif",
+        font: "18px sans-serif",
         style: LabelStyle.FILL_AND_OUTLINE,
-        fillColor: Color.BLACK,
+        fillColor: Color.DARKBLUE,
         outlineColor: Color.WHITE,
-        outlineWidth: 2,
-        pixelOffset: new Cartesian2(0, -10),
+        outlineWidth: 4,
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        pixelOffset: new Cartesian2(0, -16),
         verticalOrigin: VerticalOrigin.BOTTOM
       }
     });
