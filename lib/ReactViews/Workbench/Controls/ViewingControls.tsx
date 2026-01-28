@@ -454,6 +454,8 @@ class ViewingControls extends React.Component<
 
     if (MeasurableGeometryMixin.isMixedInto(item)) {
       runInAction(() => {
+        this.props.viewState.measurableDownloadPanelDefaultName =
+          getName(item) || "";
         this.props.viewState.measurableDownloadPanelIsVisible = true;
       });
     }

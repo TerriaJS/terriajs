@@ -417,10 +417,16 @@ export default class ViewState {
   @observable measurableChartIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the ElevationDownloadPanel is visible.
+   * Gets or sets a value indicating whether the DownloadPanel is visible.
    * @type {Boolean}
    */
   @observable measurableDownloadPanelIsVisible: boolean = false;
+
+  /**
+   * Default filename used in the DownloadPanel.
+   * @type {String}
+   */
+  @observable measurableDownloadPanelDefaultName: string = "";
 
   /**
    * Gets or sets a value indicating whether the PlayPathPanel is visible.
