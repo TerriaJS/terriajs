@@ -37,6 +37,7 @@ import {
   TourPoint
 } from "./defaultTourPoints";
 import { defaultPlayPathTourPoints } from "./defaultPlayPathTourPoints";
+import { defaultMeasurableTourPoints } from "./defaultMeasurableTourPoints";
 import SearchState from "./SearchState";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
@@ -258,6 +259,7 @@ export default class ViewState {
   @observable tourPoints: TourPoint[] = [...defaultTourPoints];
 
   @observable isPlayPathTour: boolean = false;
+  @observable isMeasurableTour: boolean = false;
 
   @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
@@ -286,20 +288,41 @@ export default class ViewState {
     this.isPlayPathTour = value;
   }
 
+  @action
+  setIsMeasurableTour(value: boolean) {
+    this.isMeasurableTour = value;
+  }
+
   @computed
   get activeTourPoints() {
+    if (this.isMeasurableTour) return defaultMeasurableTourPoints;
     return this.isPlayPathTour ? defaultPlayPathTourPoints : defaultTourPoints;
   }
 
   @action
   startPlayPathTour() {
     this.setIsPlayPathTour(true);
+    this.setIsMeasurableTour(false);
     this.tourPoints = [...defaultPlayPathTourPoints];
     const playPathTourStartIndex = this.tourPoints.findIndex(
       (point) => point.appRefName === "PlayPathPanel"
     );
     if (playPathTourStartIndex !== -1) {
       this.setTourIndex(playPathTourStartIndex);
+      this.setShowTour(true);
+    }
+  }
+
+  @action
+  startMeasurableTour() {
+    this.setIsMeasurableTour(true);
+    this.setIsPlayPathTour(false);
+    this.tourPoints = [...defaultMeasurableTourPoints];
+    const measurableTourStartIndex = this.tourPoints.findIndex(
+      (point) => point.appRefName === "MeasurablePanel"
+    );
+    if (measurableTourStartIndex !== -1) {
+      this.setTourIndex(measurableTourStartIndex);
       this.setShowTour(true);
     }
   }
@@ -321,6 +344,7 @@ export default class ViewState {
     this.currentTourIndex = -1;
     this.showTour = false;
     this.setIsPlayPathTour(false);
+    this.setIsMeasurableTour(false);
     this.tourPoints = [...defaultTourPoints];
   }
   @action

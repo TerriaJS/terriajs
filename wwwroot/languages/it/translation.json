@@ -110,7 +110,23 @@
     "showDistanceCheckboxTitle": "Attiva/disattiva etichette distanze nella mappa",
     "tempLayerName": "Inserisci il nome del layer temporaneo",
     "downloadSummaryInfo": "Scarica info",
-    "downloadSummaryInfoTitle": "Scarica informazioni di riepilogo"
+    "downloadSummaryInfoTitle": "Scarica informazioni di riepilogo",
+    "tempLayerInfo": "Un layer temporaneo ti permette di trasformare punti o un percorso in dati subito utilizzabili: puoi esportarli, presentare il percorso (PlayPath), modificarne lo stile e confrontarlo con altri layer.",
+    "tourPrompt": "Prima volta con le Misure? Fai un tour veloce!",
+    "tour": {
+      "helpButton": "Apri tour Misure",
+      "preface": {
+        "start": "Avvia tour"
+      },
+      "panel": "## Pannello Misure\n\nQui trovi tutti gli strumenti e i risultati delle misure. Segui i passaggi per capire ogni sezione.",
+      "summaryTable": "## Tabella di dettaglio\n\nMostra i valori riepilogativi (altitudine min/max, rotta, distanze o aree totali) della misura corrente.",
+      "stopSummaryTable": "## Tabella dettaglio tappe\n\nElenca ogni tappa/vertice con altitudine, distanze, pendenza e note. Se consentito puoi riordinare i punti trascinandoli.",
+      "samplingStep": "## Passo di campionamento\n\nImposta ogni quanto campionare il terreno lungo il percorso. Passi più piccoli danno più dettaglio ma richiedono più calcoli.",
+      "chartButton": "## Grafico altimetrico\n\nApre il profilo altimetrico del percorso (se disponibile).",
+      "clampButton": "## Ancoraggio al terreno\n\nPassa tra distanze ancorate al terreno e distanze libere (in aria).",
+      "transformButton": "## Trasforma\n\nTrasforma la misura in un layer temporaneo che puoi stilizzare, esportare o presentare in modalità volo.",
+      "multiPathControls": "## Gestione multipercorsi\n\nCambia percorso, aggiungine uno nuovo o rimuovi quello corrente per creare misure multi-tratta."
+    }
   },
   "elevationChart": {
     "header": "Profilo altimetrico",
@@ -120,7 +136,7 @@
   },
   "transformLayer": {
     "transform": "Trasforma in un layer temporaneo",
-    "transformation": "Trasformazione a un layer temporaneo"
+    "transformation": "Trasformazione a un layer temporaneo, un layer locale creato dalle tue misurazioni quindi non viene salvato nel dispositivo finché non lo si esporta con uno dei formati supportati."
   },
   "downloadData": {
     "downloadPanel": "Esporta",

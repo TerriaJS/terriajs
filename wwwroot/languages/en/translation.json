@@ -107,7 +107,23 @@
     "showDistanceCheckboxTitle": "Toggle distance labels",
     "tempLayerName": "Insert the temporary layer name",
     "downloadSummaryInfo": "Download info",
-    "downloadSummaryInfoTitle": "Download summary info"
+    "downloadSummaryInfoTitle": "Download summary info",
+    "tempLayerInfo": "A temporary layer lets you turn points or a path into map data you can use right away: export it, play the route (PlayPath), edit its style, and compare it with other layers.",
+    "tourPrompt": "First time using Measures? Take a quick tour!",
+    "tour": {
+      "helpButton": "Open Measures tour",
+      "preface": {
+        "start": "Start tour"
+      },
+      "panel": "## Measures panel\n\nThis panel collects all measurement tools and results in one place. Use the steps below to understand each section.",
+      "summaryTable": "## Summary table\n\nShows overall stats like altitude min/max, bearing, and total distances or areas for the current measurement.",
+      "stopSummaryTable": "## Stop summary table\n\nLists each stop/vertex with elevation, step distances, slope and optional notes. You can reorder points by dragging (when allowed).",
+      "samplingStep": "## Terrain sampling step\n\nControls how often terrain is sampled along the path. Smaller steps give more detail but are heavier to compute.",
+      "chartButton": "## Elevation chart\n\nOpens the elevation profile for the path (if available).",
+      "clampButton": "## Clamp to ground\n\nToggle between clamped-to-terrain distances and free (air) distances.",
+      "transformButton": "## Transform\n\nTurns your measurement into a temporary layer you can style, export, or present it in flight mode.",
+      "multiPathControls": "## Multi-path management\n\nSwitch between paths, add new paths, or remove the current one to build multi-segment measurements."
+    }
   },
   "elevationChart": {
     "header": "Elevation profile",
@@ -117,7 +133,7 @@
   },
   "transformLayer": {
     "transform": "Transform into a temporary layer",
-    "transformation": "Transformation to a temporary layer"
+    "transformation": "Transform into a temporary layer, a local layer created from your measurements so it is not saved unless you export it with one of the supported formats."
   },
   "downloadData": {
     "downloadPanel": "Export",
