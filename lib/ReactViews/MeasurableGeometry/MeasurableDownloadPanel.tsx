@@ -50,6 +50,7 @@ const MeasurableDownloadPanel = observer((props: Props) => {
             if (onClose) onClose();
             runInAction(() => {
               downloadProps.viewState.measurableDownloadPanelIsVisible = false;
+              downloadProps.viewState.measurableDownloadPanelDefaultName = "";
             });
             downloadProps.terria.measurableGeomList.splice(
               1,
@@ -83,6 +84,9 @@ const MeasurableDownloadPanel = observer((props: Props) => {
           viewState={downloadProps.viewState}
           pathNotes={currentGeom.pathNotes ?? ""}
           ellipsoid={downloadProps.terria?.cesium?.scene?.globe?.ellipsoid!!}
+          defaultFilename={
+            downloadProps.viewState.measurableDownloadPanelDefaultName
+          }
         />
       </div>
     </div>
@@ -130,6 +134,9 @@ const MeasurableDownloadPanel = observer((props: Props) => {
             viewState={downloadProps.viewState}
             pathNotes={currentGeom.pathNotes ?? ""}
             ellipsoid={downloadProps.terria?.cesium?.scene?.globe?.ellipsoid!!}
+            defaultFilename={
+              downloadProps.viewState.measurableDownloadPanelDefaultName
+            }
           />
         </div>
       </div>

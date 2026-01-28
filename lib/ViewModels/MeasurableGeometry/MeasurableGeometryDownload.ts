@@ -23,6 +23,13 @@ export default class MeasurableDownload {
     this.initializeFormatHandlers();
   }
 
+  static normalizeDefaultFilename(rawName: string): string {
+    if (!rawName) return "";
+
+    const withoutExtension = rawName.replace(/\.[^/.]+$/, "");
+    return withoutExtension.replace(/_[^_]*$/, "");
+  }
+
   private initializeFormatHandlers(): void {
     this.formatHandlers = [
       new CsvCatalogItem("format-csv", this.terria, undefined),
