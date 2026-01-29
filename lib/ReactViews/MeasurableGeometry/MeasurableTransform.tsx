@@ -286,7 +286,12 @@ const MeasurableTransform = observer((props: Props) => {
         onClick={() => {
           handleTransform();
         }}
-        disabled={!layerName}
+        disabled={
+          !layerName ||
+          terria.measurableGeomList[terria.measurableGeometryIndex]
+            ?.isPointAdding ||
+          viewState.measurableDownloadPanelIsVisible === true
+        }
       >
         {i18next.t("transformLayer.transform")}
       </Button>
