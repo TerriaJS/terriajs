@@ -6,6 +6,7 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import { JsonObject } from "../Core/Json";
 import MeasurableGeometryManager from "../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
 
 type MixinModel = Model<MappableTraits>;
@@ -28,7 +29,8 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
       stopPoints: Cartographic[],
       pathNotes?: any,
       indexPath?: number,
-      closeLoop?: boolean
+      closeLoop?: boolean,
+      featureProperties?: JsonObject
     ) {
       if (indexPath && !this.terria.measurableGeometryManager[indexPath]) {
         this.terria.measurableGeometryManager.push(
@@ -44,7 +46,8 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
         [],
         pathNotes,
         true,
-        indexPath
+        indexPath,
+        featureProperties
       );
     }
 
@@ -52,7 +55,8 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
       positions: Cartographic[],
       pathNotes?: any,
       indexPath?: number,
-      closeLoop?: boolean
+      closeLoop?: boolean,
+      featureProperties?: JsonObject
     ) {
       if (!this?.terria?.cesium?.scene) {
         return;
@@ -67,7 +71,13 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
         );
       }
       prom.then((newPositions: Cartographic[]) => {
-        this.update(newPositions, pathNotes, indexPath, closeLoop);
+        this.update(
+          newPositions,
+          pathNotes,
+          indexPath,
+          closeLoop,
+          featureProperties
+        );
       });
     }
   }

@@ -1709,7 +1709,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const properties = feature?.properties ?? {};
         const pathNotes = properties.desc || properties.path_notes || "";
         const coordinates = this.convertJsonCoords(jsonCoords);
-        this.asPath(coordinates, pathNotes, index, closeLoop);
+        this.asPath(coordinates, pathNotes, index, closeLoop, properties);
       };
 
       for (let i = 0; i < this.readyData.features.length; i++) {

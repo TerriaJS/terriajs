@@ -78,8 +78,8 @@ const MeasurableDownloadContent = observer((props: Props) => {
             geom,
             name,
             isMultiPath,
-            geomListForMultiPath,
-            ellipsoid
+            ellipsoid,
+            geomListForMultiPath
           );
 
           setDownloadLinks(allLinks);

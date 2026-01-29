@@ -12,20 +12,12 @@ import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import ExportableFormat from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryExportableFormat";
-import DataUri from "../../../Core/DataUri";
-import { MeasurableGeometry } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
-import { DownloadLink } from "../../../ViewModels/MeasurableGeometry/MeasurableGeometryDownload";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
-class GpxCatalogItem
-  extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits))
-  implements ExportableFormat
-{
+class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
   static readonly type = "gpx";
 
   constructor(...args: ModelConstructorParameters) {
@@ -50,100 +42,6 @@ class GpxCatalogItem
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._gpxFile);
-  }
-
-  private generateGpxTracks(geom: MeasurableGeometry, name: string): string {
-    return `<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="runtracker">
-            <metadata/>
-            <trk>
-              <name>${name}</name>
-              <desc>${geom.pathNotes || ""}</desc>
-              <trkseg>
-                ${geom.stopPoints
-                  .map(
-                    (elem) =>
-                      `<trkpt lat="${CesiumMath.toDegrees(elem.latitude)}"
-                        lon="${CesiumMath.toDegrees(elem.longitude)}"
-                        ele="${elem.height.toFixed(2)}">
-                      </trkpt>`
-                  )
-                  .join("")}
-              </trkseg>
-            </trk>
-          </gpx>`;
-  }
-
-  private generateGpxWaypoints(geom: MeasurableGeometry, name: string): string {
-    return `<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="runtracker">
-            <metadata/>
-            ${geom.stopPoints
-              .map((elem, index) => {
-                let waypoint = "";
-                if (index === 0) {
-                  waypoint += `<wpt name="Info File" lat="${CesiumMath.toDegrees(
-                    geom.stopPoints[0].latitude
-                  )}" lon="${CesiumMath.toDegrees(
-                    geom.stopPoints[0].longitude
-                  )}">
-                                   <name>${name}</name>
-                                   <desc>${geom.pathNotes || ""}</desc>
-                                 </wpt>`;
-                }
-                waypoint += `<wpt name="Tappa ${index}"
-                                lat="${CesiumMath.toDegrees(elem.latitude)}"
-                                lon="${CesiumMath.toDegrees(elem.longitude)}"
-                                ele="${elem.height.toFixed(2)}">
-                                <desc>${
-                                  geom.pointDescriptions?.[index] || ""
-                                }</desc>
-                              </wpt>`;
-                return waypoint;
-              })
-              .join("")}
-          </gpx>`;
-  }
-
-  async generateDownloadLinks(
-    geom: MeasurableGeometry,
-    name: string,
-    isMultiPath: boolean
-  ): Promise<DownloadLink[]> {
-    const downloads: DownloadLink[] = [];
-    if (!isMultiPath) {
-      downloads.push(
-        {
-          key: "gpxPolygon",
-          href: DataUri.make("xml", this.generateGpxTracks(geom, name)),
-          download: `${name}_polygon.gpx`,
-          label: `${i18next.t("downloadData.polygon")} GPX`
-        },
-        {
-          key: "gpxTracks",
-          href: DataUri.make("xml", this.generateGpxTracks(geom, name)),
-          download: `${name}_lines.gpx`,
-          label: `${i18next.t("downloadData.lines")} GPX`
-        },
-        {
-          key: "gpxWaypoints",
-          href: DataUri.make("xml", this.generateGpxWaypoints(geom, name)),
-          download: `${name}_points.gpx`,
-          label: `${i18next.t("downloadData.points")} GPX`
-        }
-      );
-    }
-
-    return downloads.filter((download) => {
-      if (geom.onlyPoints) {
-        return (
-          !download.download?.includes("_lines") &&
-          !download.download?.includes("_polygon")
-        );
-      } else if (geom.isClosed) {
-        return true;
-      } else {
-        return !download.download?.includes("_polygon");
-      }
-    });
   }
 
   private loadGpxText(text: string) {

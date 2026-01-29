@@ -37,6 +37,7 @@ import {
   generatePathSummaryTxtData,
   getSummaryKind
 } from "../../ViewModels/MeasurableGeometry/MeasurableGeometrySummary";
+import MeasurableGeometryExporter from "../../ViewModels/MeasurableGeometry/MeasurableGeometryExporter";
 
 interface Props {
   viewState: ViewState;
@@ -276,6 +277,30 @@ const MeasurablePanel = observer((props: Props) => {
     a.click();
     document.body.removeChild(a);
   }, [activeToolIsPolygon, layerName, terria]);
+
+  const downloadStopPointsCsv = React.useCallback(async () => {
+    const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
+    if (!geom) return;
+
+    const ellipsoid = terria?.cesium?.scene?.globe?.ellipsoid;
+    if (!ellipsoid) return;
+
+    const links = await MeasurableGeometryExporter.generateAllDownloadLinks(
+      geom,
+      layerName,
+      false,
+      ellipsoid
+    );
+    const csvLink = links.find((link) => link.key === "csv");
+    if (!csvLink?.href || !csvLink.download) return;
+
+    const a = document.createElement("a");
+    a.href = csvLink.href;
+    a.download = csvLink.download;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [layerName, terria]);
 
   // UseEffects Methods
   function useWindowSize() {
@@ -741,9 +766,42 @@ const MeasurablePanel = observer((props: Props) => {
               }}
             />
           )}
-          <Text textLight style={{ marginLeft: 1 }} title="">
-            {i18next.t("measurableGeometry.geometrySummaryHeader")}
-          </Text>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8
+            }}
+          >
+            <Text textLight style={{ marginLeft: 1 }} title="">
+              {i18next.t("measurableGeometry.geometrySummaryHeader")}
+            </Text>
+            <Button
+              primary
+              title={i18next.t("measurableGeometry.downloadLayerTitle")}
+              onClick={downloadPathSummaryTxt}
+              disabled={!currentGeom.stopPoints?.length}
+              css={`
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 2px;
+              `}
+            >
+              <StyledIcon
+                light
+                realDark={false}
+                glyph={Icon.GLYPHS.downloadNew}
+                styledWidth="16px"
+              />
+            </Button>
+          </div>
           <small>
             <table className={Styles.elevation}>
               <thead>
@@ -825,19 +883,7 @@ const MeasurablePanel = observer((props: Props) => {
               ]
             )}
 
-            <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-              <Button
-                css={`
-                  color: ${theme.textLight};
-                  background: ${theme.colorPrimary};
-                `}
-                disabled={!currentGeom.stopPoints?.length}
-                onClick={downloadPathSummaryTxt}
-                title={i18next.t("measurableGeometry.downloadSummaryInfoTitle")}
-              >
-                {i18next.t("measurableGeometry.downloadSummaryInfo")}
-              </Button>
-            </div>
+            <div style={{ marginTop: "10px", marginBottom: "10px" }} />
           </small>
         </>
       );
@@ -883,9 +929,42 @@ const MeasurablePanel = observer((props: Props) => {
             }}
           />
         )}
-        <Text textLight style={{ marginLeft: 1 }} title="">
-          {i18next.t("measurableGeometry.geometrySummaryHeader")}
-        </Text>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8
+          }}
+        >
+          <Text textLight style={{ marginLeft: 1 }} title="">
+            {i18next.t("measurableGeometry.geometrySummaryHeader")}
+          </Text>
+          <Button
+            primary
+            title={i18next.t("measurableGeometry.downloadLayerTitle")}
+            onClick={downloadPathSummaryTxt}
+            disabled={!currentGeom.stopPoints?.length}
+            css={`
+              width: 24px;
+              height: 24px;
+              min-width: 24px;
+              min-height: 24px;
+              padding: 0;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 2px;
+            `}
+          >
+            <StyledIcon
+              light
+              realDark={false}
+              glyph={Icon.GLYPHS.downloadNew}
+              styledWidth="16px"
+            />
+          </Button>
+        </div>
         <small>
           {renderSummaryTable(tableHeaders, tableData)}
           {!currentGeom.onlyPoints &&
@@ -902,19 +981,7 @@ const MeasurablePanel = observer((props: Props) => {
               ]
             )}
 
-          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button
-              css={`
-                color: ${theme.textLight};
-                background: ${theme.colorPrimary};
-              `}
-              disabled={!currentGeom.stopPoints?.length}
-              onClick={downloadPathSummaryTxt}
-              title={i18next.t("measurableGeometry.downloadSummaryInfoTitle")}
-            >
-              {i18next.t("measurableGeometry.downloadSummaryInfo")}
-            </Button>
-          </div>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }} />
         </small>
       </>
     );
@@ -1280,9 +1347,42 @@ const MeasurablePanel = observer((props: Props) => {
 
     return (
       <div ref={stopSummaryRef}>
-        <Text textLight style={{ marginLeft: 1 }} title="">
-          {i18next.t("measurableGeometry.geometrySummaryStopSummary")}
-        </Text>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8
+          }}
+        >
+          <Text textLight style={{ marginLeft: 1 }} title="">
+            {i18next.t("measurableGeometry.geometrySummaryStopSummary")}
+          </Text>
+          <Button
+            primary
+            title={i18next.t("measurableGeometry.downloadStopPointsTitle")}
+            onClick={downloadStopPointsCsv}
+            disabled={!stopPoints.length}
+            css={`
+              width: 24px;
+              height: 24px;
+              min-width: 24px;
+              min-height: 24px;
+              padding: 0;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 2px;
+            `}
+          >
+            <StyledIcon
+              light
+              realDark={false}
+              glyph={Icon.GLYPHS.downloadNew}
+              styledWidth="16px"
+            />
+          </Button>
+        </div>
         <small>
           <table className={Styles.elevation}>
             <thead>

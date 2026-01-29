@@ -6,6 +6,7 @@ import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import EarthGravityModel1996 from "../../Map/Vector/EarthGravityModel1996";
+import { JsonObject } from "../../Core/Json";
 
 export interface MeasurableGeometry {
   isClosed: boolean;
@@ -27,6 +28,9 @@ export interface MeasurableGeometry {
   pathNotes?: string;
   isFileUploaded?: boolean;
   isPointAdding?: boolean;
+  indexPath?: number;
+  featureProperties?: JsonObject;
+  pointProperties?: JsonObject[];
 }
 
 export default class MeasurableGeometryManager {
@@ -55,7 +59,13 @@ export default class MeasurableGeometryManager {
       this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
         ?.pathNotes,
       this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.isFileUploaded
+        ?.isFileUploaded,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.indexPath,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.featureProperties,
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
+        ?.pointProperties
     );
   }
 
@@ -114,7 +124,9 @@ export default class MeasurableGeometryManager {
     pointDescriptions: string[] = [],
     pathNotes?: string,
     isFileUploaded?: boolean,
-    indexPath?: number
+    indexPath?: number,
+    featureProperties?: JsonObject,
+    pointProperties?: JsonObject[]
   ) {
     const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
@@ -220,7 +232,9 @@ export default class MeasurableGeometryManager {
             pointDescriptions,
             pathNotes,
             isFileUploaded,
-            indexPath
+            indexPath,
+            featureProperties,
+            pointProperties
           ]
         : [
             cartoPositions,
@@ -234,7 +248,9 @@ export default class MeasurableGeometryManager {
             [],
             pathNotes,
             isFileUploaded,
-            indexPath
+            indexPath,
+            featureProperties,
+            pointProperties
           ];
 
       this.updatePath(...updatePathParams);
@@ -254,7 +270,9 @@ export default class MeasurableGeometryManager {
     pointDescriptions: string[] = [],
     pathNotes?: string,
     isFileUploaded?: boolean,
-    indexPath?: number
+    indexPath?: number,
+    featureProperties?: JsonObject,
+    pointProperties?: JsonObject[]
   ) {
     let geodeticArea = 0;
     let airArea = 0;
@@ -288,7 +306,9 @@ export default class MeasurableGeometryManager {
       pointDescriptions: pointDescriptions,
       pathNotes: pathNotes,
       isFileUploaded: isFileUploaded,
-      indexPath: indexPath
+      indexPath: indexPath,
+      featureProperties: featureProperties,
+      pointProperties: pointProperties
     };
 
     if (indexPath !== undefined) {
