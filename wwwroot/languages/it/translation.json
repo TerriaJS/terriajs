@@ -55,6 +55,20 @@
     "resetAlignmentMessage": "Ripristino dell'allineamento della bussola. Se l'allineamento non corrisponde al mondo reale, prova a muovere il dispositivo con un movimento a 8 per ricalibrarlo. Questo può essere fatto in qualsiasi momento.<br /> <br />Evitare luoghi con campi magnetici o oggetti metallici, poiché questi possono disorientare la bussola del dispositivo.",
     "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br /><br />ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br /><br />La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
   },
+  "viewshed": {
+    "toolButton": "Linea di vista",
+    "toolButtonTitle": "Linea di vista",
+    "messageHeader": "Linea di vista",
+    "distance": "Distanza:",
+    "distanceVisible": "Distanza visibile:",
+    "resultOk": "VISIBILE",
+    "resultKo": "COPERTO",
+    "parameters": "Parametri Linea di vista",
+    "observerHeightInput": "Altezza dell'osservatore rispetto al suolo in metri (punto arancione)",
+    "observerHeightInputTitle": "Altezza dell'osservatore rispetto al suolo (m)",
+    "targetHeightInput": "Altezza del bersaglio<br/>rispetto al suolo in metri<br/>(punto viola)",
+    "targetHeightInputTitle": "Altezza del bersaglio rispetto al suolo (m)"
+  },
   "measure": {
     "measureTool": "Apri strumento di misura",
     "measurePointTool": "Strumento di misura di punti",

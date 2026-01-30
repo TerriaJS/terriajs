@@ -45,6 +45,8 @@ import { terriaTheme } from "./StandardTheme";
 import MeasurablePanel from "../MeasurableGeometry/MeasurablePanel";
 import MeasurableDownloadPanel from "../MeasurableGeometry/MeasurableDownloadPanel";
 import PlayPathPanel from "../MeasurableGeometry/PlayPathPanel";
+import ViewshedPanel from "../Viewshed/ViewshedPanel";
+
 export const animationDuration = 250;
 
 interface StandardUserInterfaceProps {
@@ -286,6 +288,10 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 viewState={props.viewState}
               />
               <PlayPathPanel
+                terria={props.terria}
+                viewState={props.viewState}
+              />
+              <ViewshedPanel
                 terria={props.terria}
                 viewState={props.viewState}
               />

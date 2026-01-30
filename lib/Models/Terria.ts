@@ -715,6 +715,24 @@ export default class Terria {
   @observable clampMeasureLineToGround: boolean = true;
 
   /**
+   * Gets or sets height of viewshed observer point.
+   * @type {string}
+   */
+  @observable viewshedObserverHeight: number = 0;
+
+  /**
+   * Gets or sets height of viewshed target point.
+   * @type {string}
+   */
+  @observable viewshedTargetHeight: number = 0;
+
+  /**
+   * Gets or sets viewshed computed distances
+   * @type {string}
+   */
+  @observable viewshedDistances?: (number | undefined)[];
+
+  /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
    * (highest index) handles click interactions with the map
    */

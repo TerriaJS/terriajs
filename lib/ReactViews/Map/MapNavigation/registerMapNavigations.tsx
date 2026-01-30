@@ -13,6 +13,7 @@ import PedestrianMode, {
 } from "../../Tools/PedestrianMode/PedestrianMode";
 import { ToolButtonController } from "../../Tools/Tool";
 import {
+  ViewshedTool,
   AR_TOOL_ID,
   AugmentedVirtualityController,
   AugmentedVirtualityHoverController,
@@ -517,6 +518,38 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 9
   });
 
+  const viewshedTool = new ViewshedTool({
+    terria,
+    onClose: () => {
+      runInAction(() => {
+        viewState.terria.mapNavigationModel.enable(ViewshedTool.id);
+        viewState.panel = undefined;
+      });
+    },
+    onOpen: () => {
+      runInAction(() => {
+        if (viewState.terria.mainViewer.viewerMode === ViewerMode.Cesium) {
+          const item = viewState.terria.mapNavigationModel.findItem(
+            ViewshedTool.id
+          )?.controller;
+          if (item && item.active) {
+            item.deactivate();
+          }
+          viewState.terria.mapNavigationModel.disable(ViewshedTool.id);
+        }
+      });
+    }
+  });
+  mapNavigationModel.addItem({
+    id: ViewshedTool.id,
+    name: "translate#viewshed.toolButton",
+    title: "translate#viewshed.toolButtonTitle",
+    location: "TOP",
+    controller: viewshedTool,
+    screenSize: undefined,
+    order: 8
+  });
+
   const feedbackController = new FeedbackButtonController(viewState);
   mapNavigationModel.addItem({
     id: FEEDBACK_TOOL_ID,
@@ -525,6 +558,6 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "BOTTOM",
     screenSize: "medium",
     controller: feedbackController,
-    order: 8
+    order: 9
   });
 };

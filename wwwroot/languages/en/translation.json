@@ -52,6 +52,20 @@
       "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series component, such as satellite images, you can compare dates backwards and forwards in time by clicking on the date picker/selector."
     }
   },
+  "viewshed": {
+    "toolButton": "Viewshed",
+    "toolButtonTitle": "Viewshed",
+    "messageHeader": "Viewshed",
+    "distance": "Distance:",
+    "distanceVisible": "Visible distance:",
+    "resultOk": "VISIBLE",
+    "resultKo": "HIDDEN",
+    "parameters": "Viewshed parameters",
+    "observerHeightInput": "Observer height above ground in meters (the orange point)",
+    "observerHeightInputTitle": "Height of observer above ground (m)",
+    "targetHeightInput": "Target height above ground in meters (the purple point)",
+    "targetHeightInputTitle": "Height of target above ground (m)"
+  },
   "measure": {
     "measurePointTool": "Measure Point Tool",
     "measureTool": "Open Measure Tool",

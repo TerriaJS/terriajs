@@ -404,6 +404,12 @@ export default class ViewState {
    * @type {Boolean}
    */
   @observable measurablePanelIsVisible: boolean = false;
+
+  /**
+   * Gets or sets a value indicating whether the ViewshedPanel is visible.
+   * @type {Boolean}
+   */
+  @observable viewshedPanelIsVisible: boolean = false;
   /**
    * Gets or sets a value indicating whether the ElevationPanel is collapsed.
    * @type {Boolean}
@@ -477,6 +483,7 @@ export default class ViewState {
   private _storyBeforeUnloadSubscription: IReactionDisposer;
   private _measurablePanelIsVisibleSubscription: IReactionDisposer;
   private _disposeSamplingPathStep: IReactionDisposer;
+  private _viewshedPanelIsVisibleSubscription: IReactionDisposer;
 
   constructor(options: ViewStateOptions) {
     makeObservable(this);
@@ -654,6 +661,14 @@ export default class ViewState {
       }
     );
 
+    this._viewshedPanelIsVisibleSubscription = reaction(
+      () => this.terria.viewshedDistances,
+      (viewshedDistances?: (number | undefined)[]) => {
+        this.viewshedPanelIsVisible =
+          viewshedDistances !== undefined && viewshedDistances.length > 0;
+      }
+    );
+
     this._disposeSamplingPathStep = reaction(
       () => this.terria.measurableGeomSamplingStep,
       () => {
@@ -695,7 +710,7 @@ export default class ViewState {
     this._storyBeforeUnloadSubscription();
     this._measurablePanelIsVisibleSubscription();
     this._disposeSamplingPathStep();
-
+    this._viewshedPanelIsVisibleSubscription();
     this.searchState.dispose();
   }
 

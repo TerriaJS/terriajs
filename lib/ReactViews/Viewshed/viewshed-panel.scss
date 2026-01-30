@@ -1,0 +1,55 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.panel {
+  background: $feature-info-bg;
+  color: $feature-info-color;
+  border-radius: $radius-small;
+  display: none;
+
+  svg {
+    fill: $feature-info-color;
+  }
+
+  a {
+    @include link($feature-info-bg);
+  }
+}
+
+.is-collapsed {
+  .body {
+    display: none;
+  }
+}
+
+.is-visible {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.is-translucent {
+  opacity: 0.6;
+}
+
+.header {
+  background: $feature-info-header-bg;
+  line-height: $modal-header-height;
+}
+
+.btnPanelHeading {
+  padding: 0px 8px;
+  color: $feature-info-btn-color;
+  width: 10vw;
+}
+
+.body {
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: scrollbars from "../../Sass/common/_base.scss";
+
+  overflow-y: auto;
+  overflow-x: auto;
+  width: 8vw;
+  font-size: $font-size-feature-info;
+  margin-top: 5px;
+}
