@@ -253,37 +253,41 @@ export const WelcomeMessagePure = (props) => {
                 </>
               )}
               <Box fullWidth styledMinHeight={"160px"}>
-                {!viewState.useSmallScreenInterface && (
-                  <>
-                    <Box
-                      col6
-                      centered
-                      backgroundImage={
-                        viewState.terria.configParameters.welcomeMessageVideo
-                          .placeholderImage
-                      }
-                      backgroundBlackOverlay={0.5}
-                    >
-                      <RawButton
-                        fullWidth
-                        fullHeight
-                        onClick={() =>
-                          viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                {!viewState.useSmallScreenInterface &&
+                  viewState.terria.configParameters.welcomeMessageVideo
+                    .videoUrl && (
+                    <>
+                      <Box
+                        col6
+                        centered
+                        backgroundImage={
+                          viewState.terria.configParameters.welcomeMessageVideo
+                            .placeholderImage
                         }
+                        backgroundBlackOverlay={0.5}
                       >
-                        <StyledIcon
-                          styledWidth={"48px"}
-                          light
-                          glyph={Icon.GLYPHS.playInverted}
-                          css={`
-                            margin: auto;
-                          `}
-                        />
-                      </RawButton>
-                    </Box>
-                    <Spacing right={5} />
-                  </>
-                )}
+                        <RawButton
+                          fullWidth
+                          fullHeight
+                          onClick={() =>
+                            viewState.setVideoGuideVisible(
+                              WELCOME_MESSAGE_VIDEO
+                            )
+                          }
+                        >
+                          <StyledIcon
+                            styledWidth={"48px"}
+                            light
+                            glyph={Icon.GLYPHS.playInverted}
+                            css={`
+                              margin: auto;
+                            `}
+                          />
+                        </RawButton>
+                      </Box>
+                      <Spacing right={5} />
+                    </>
+                  )}
                 <Box styledMargin={"0 auto"} displayInlineBlock>
                   {!viewState.useSmallScreenInterface && (
                     <>
