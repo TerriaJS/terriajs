@@ -250,11 +250,14 @@ const SettingPanel: FC = observer(() => {
     terria.mainViewer.baseMap &&
     getBaseMapStatusMessage(terria.mainViewer.baseMap, t);
 
-  const availableMapViewers = Object.entries(MapViewers).filter(
+  const tmpMapViewers = Object.entries(MapViewers).filter(
     ([key, viewerMode]) =>
       viewerMode.available &&
       terria.configParameters.mapViewers.includes(key as MapViewersKey)
   );
+  const availableMapViewers = tmpMapViewers?.length
+    ? tmpMapViewers
+    : [["2d", MapViewers["2d"]] as const];
 
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
@@ -275,10 +278,7 @@ const SettingPanel: FC = observer(() => {
           <Text as="label">{t("settingPanel.mapView")}</Text>
         </Box>
         <FlexGrid gap={1} elementsNo={3}>
-          {(availableMapViewers?.length
-            ? availableMapViewers
-            : Object.entries([MapViewers["2d"]])
-          ).map(([key, viewerMode]) => (
+          {availableMapViewers.map(([key, viewerMode]) => (
             <SettingsButton
               key={key}
               isActive={key === currentViewer}
