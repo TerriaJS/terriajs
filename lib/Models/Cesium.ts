@@ -59,6 +59,8 @@ import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -90,8 +92,6 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
-import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
-import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import ViewerMode, { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
@@ -1046,6 +1046,8 @@ export default class Cesium extends GlobeOrMap {
       if (rect) {
         return new CameraView(rect);
       }
+      // Fallback for 2D mode when computeViewRectangle returns undefined
+      return new CameraView(this.terriaViewer.homeCamera.rectangle);
     }
 
     const width = scene.canvas.clientWidth;
