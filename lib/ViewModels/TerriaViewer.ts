@@ -280,7 +280,8 @@ export default class TerriaViewer {
         action(() => {
           this.terria.raiseErrorToUser(error);
           this.viewerMode =
-            this.viewerMode === ViewerMode.Cesium
+            this.viewerMode === ViewerMode.Cesium ||
+            this.viewerMode === ViewerMode.Cesium2D
               ? ViewerMode.Leaflet
               : undefined;
         }),
