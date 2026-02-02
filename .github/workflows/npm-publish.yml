@@ -11,7 +11,9 @@ concurrency:
   group: npm-publish
   cancel-in-progress: false
 
-permissions: {}
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
 
 jobs:
   publish:
