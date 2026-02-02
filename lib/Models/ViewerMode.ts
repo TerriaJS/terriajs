@@ -49,8 +49,7 @@ export function setViewerMode(
       viewer.viewerMode = ViewerMode.Cesium;
       viewer.viewerOptions.useTerrain = viewerMode === "3d";
       if (viewer.terria.cesium) {
-        viewer.terria.cesium.scene.mode =
-          viewerMode === "3d" ? SceneMode.SCENE3D : SceneMode.COLUMBUS_VIEW;
+        viewer.terria.cesium.scene.mode = SceneMode.SCENE3D;
       }
     } else if (viewerMode === "2dcesium") {
       viewer.viewerMode = ViewerMode.Cesium2D;
