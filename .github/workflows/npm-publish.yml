@@ -11,15 +11,12 @@ concurrency:
   group: npm-publish
   cancel-in-progress: false
 
-permissions:
-  id-token: write # Required for OIDC
-  contents: read
-
 jobs:
   publish:
     permissions:
       contents: write # to create and push a tag
       actions: read
+      id-token: write
     name: Publish to NPM
     runs-on: ubuntu-latest
 
@@ -70,7 +67,6 @@ jobs:
         run: npm publish --tag ${NPM_TAG}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
       #  action-detect-and-tag-new-version. It also allows for a bit better message customisation
