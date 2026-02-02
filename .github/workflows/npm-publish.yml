@@ -1,8 +1,9 @@
 name: npm-publish
 on:
-  push:
-    branches:
-      - main
+  push
+  # push:
+  # branches:
+  #   - main
 
 env:
   NPM_TAG: latest
