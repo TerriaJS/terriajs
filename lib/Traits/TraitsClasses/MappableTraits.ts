@@ -305,6 +305,14 @@ class MappableTraits extends mixTraits(AttributionTraits) {
       "The preferred viewer mode for this item - either '2d' '3d' or '3dsmooth'. If this dataset is used as a basemap then we automatically switch the viewer to the preferred mode. However the user can still switch to another mode, so this preference is not strongly enforced."
   })
   preferredViewerMode?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Preview base map",
+    description:
+      "The ID of the preview base map to use for this dataset. This will overide the global preview base map setting"
+  })
+  previewBaseMapId?: string;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */

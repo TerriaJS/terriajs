@@ -8,6 +8,7 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import CrsTraits from "./CrsTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
@@ -175,7 +176,8 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  MinMaxLevelTraits
+  MinMaxLevelTraits,
+  CrsTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -191,15 +193,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Style(s)",
-    description: `CRS to use with WMS layers. We support Web Mercator (${SUPPORTED_CRS_3857.join(
-      ", "
-    )}) and WGS 84 (${SUPPORTED_CRS_4326.join(", ")})`
-  })
-  crs?: string;
 
   @anyTrait({
     name: "Dimensions",

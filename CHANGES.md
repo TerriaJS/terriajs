@@ -13,6 +13,9 @@
 - Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
 - WMTS read URL from operations metadata #7371
+- Add UI to show toast messages.
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add UI to show toast messages.
@@ -29,6 +32,10 @@
 - Update `csv-geo-au` support to include the latest Australian Government regions.
 - Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
 - Keep camera steady when switching between viewer modes.
+- Add UI to show toast messages.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- [The next improvement]
 - Fix sharing when using initfile.
 - Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 

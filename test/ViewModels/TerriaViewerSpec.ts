@@ -80,6 +80,25 @@ describe("TerriaViewer", function () {
     });
   });
 
+  describe("currentViewer", function () {
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+      west: CesiumMath.toDegrees(west),
+      south: CesiumMath.toDegrees(south),
+      east: CesiumMath.toDegrees(east),
+      north: CesiumMath.toDegrees(north)
+    });
+
+    it("should return the home camera view", function () {
+      const r = rectangleDegrees(
+        terriaViewer.currentViewer.getCurrentCameraView().rectangle
+      );
+      expect(r.west).toBe(45);
+      expect(r.south).toBe(-20);
+      expect(r.east).toBe(55);
+      expect(r.north).toBe(-10);
+    });
+  });
+
   describe("setBaseMap", function () {
     let baseMap: TestBaseMapItem;
 

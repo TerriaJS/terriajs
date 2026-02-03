@@ -1,16 +1,17 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
+import { networkRequestError } from "../../../Core/TerriaError";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadXML from "../../../Core/loadXML";
-import { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
+import StratumFromTraits from "../../Definition/StratumFromTraits";
 import {
   CapabilitiesStyle,
   OnlineResource,
   OwsKeywordList
 } from "./OwsInterfaces";
-import StratumFromTraits from "../../Definition/StratumFromTraits";
 
 export interface CapabilitiesGeographicBoundingBox {
   readonly westBoundLongitude: number;
@@ -24,6 +25,15 @@ export interface CapabilitiesLatLonBoundingBox {
   readonly miny: number;
   readonly maxx: number;
   readonly maxy: number;
+}
+
+export interface BoundingBox {
+  readonly CRS?: string;
+  readonly crs?: string;
+  readonly minx?: string;
+  readonly miny?: string;
+  readonly maxx?: string;
+  readonly maxy?: string;
 }
 
 export type CapabilitiesDimension = string & {
@@ -71,6 +81,7 @@ export interface CapabilitiesLayer {
   readonly MetadataURL?: MetadataURL | ReadonlyArray<MetadataURL>;
   readonly EX_GeographicBoundingBox?: CapabilitiesGeographicBoundingBox; // WMS 1.3.0
   readonly LatLonBoundingBox?: CapabilitiesLatLonBoundingBox; // WMS 1.0.0-1.1.1
+  readonly BoundingBox?: ReadonlyArray<BoundingBox> | BoundingBox;
   readonly Style?: CapabilitiesStyle | ReadonlyArray<CapabilitiesStyle>;
   readonly Layer?: CapabilitiesLayer | ReadonlyArray<CapabilitiesLayer>;
   readonly Dimension?:
@@ -128,6 +139,48 @@ export interface ContactInformationContactAddress {
 type ElementTypeIfArray<T> = T extends ReadonlyArray<infer U> ? U : T;
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
+
+/**
+ * Get BoundingBox definitions for layer.
+ *
+ * A bounding box is usually defined for each supported CRS.
+ */
+export function getLayerBoundingBoxes(
+  layer: CapabilitiesLayer
+): { crs: string; minx: number; miny: number; maxx: number; maxy: number }[] {
+  const boxes: BoundingBox[] = Array.isArray(layer.BoundingBox)
+    ? layer.BoundingBox
+    : layer.BoundingBox
+    ? [layer.BoundingBox]
+    : [];
+
+  return filterOutUndefined(
+    boxes.map((box) => {
+      const crs = box.CRS ?? box.crs;
+      const [minx, miny, maxx, maxy] = [
+        box.minx,
+        box.miny,
+        box.maxx,
+        box.maxy
+      ].map((x) => {
+        const num = x === undefined ? undefined : parseFloat(x);
+        return num === undefined || isNaN(num) ? undefined : num;
+      });
+
+      if (
+        crs === undefined ||
+        minx === undefined ||
+        miny === undefined ||
+        maxx === undefined ||
+        maxy === undefined
+      ) {
+        return;
+      }
+
+      return { crs, minx, miny, maxx, maxy };
+    })
+  );
+}
 
 export function getRectangleFromLayer(
   layer: CapabilitiesLayer
