@@ -1,7 +1,7 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import { useEffect, useRef, type FC } from "react";
+import { useCallback, useEffect, useRef, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
@@ -27,10 +27,6 @@ export function SearchInDataCatalog({
       fullWidth
       onClick={() => {
         const { searchState } = viewState;
-        // Set text here as a separate action so that it doesn't get batched up and the catalog
-        // search text has a chance to set isWaitingToStartCatalogSearch
-        searchState.setCatalogSearchText(searchState.locationSearchText);
-
         viewState.searchInCatalog(searchState.locationSearchText);
         if (handleClick) {
           handleClick();
@@ -113,11 +109,11 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       }
     };
 
-    const search = () => {
+    const search = useCallback(() => {
       viewState.searchState.searchLocations();
-    };
+    }, [viewState]);
 
-    const startLocationSearch = () => {
+    const showLocationSearchResults = () => {
       toggleShowLocationSearchResults(true);
     };
 
@@ -136,10 +132,9 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               ref={locationSearchRef}
               onSearchTextChanged={changeSearchText}
               onDoSearch={search}
-              onFocus={startLocationSearch}
+              onFocus={showLocationSearchResults}
               searchText={searchState.locationSearchText}
               placeholder={placeholder}
-              supportsAutocomplete={searchState.supportsAutocomplete}
             />
           </PresentationBox>
           {/* Results */}
@@ -156,9 +151,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                 overflow: hidden;
               `}
             >
-              {/* search {searchterm} in data catalog */}
-              {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
-              {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
               {viewState.terria.searchBarModel.showSearchInCatalog &&
                 searchState.catalogSearchProvider && (
                   <Box column paddedRatio={2}>
@@ -176,30 +168,26 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                   overflow-y: auto;
                 `}
               >
-                {!searchState.isWaitingToStartLocationSearch &&
-                  searchState.locationSearchResults.map((search) => (
-                    <LocationSearchResults
-                      key={search.searchProvider.uniqueId}
-                      terria={viewState.terria}
-                      viewState={viewState}
-                      search={search}
-                      locationSearchText={locationSearchText}
-                      onLocationClick={(result) => {
-                        if (!result.location) return;
-                        addMarker(viewState.terria, {
-                          name: result.name,
-                          location: result.location
-                        });
-                        result.clickAction?.();
-                        runInAction(() => {
-                          searchState.showLocationSearchResults = false;
-                        });
-                      }}
-                      isWaitingForSearchToStart={
-                        searchState.isWaitingToStartLocationSearch
-                      }
-                    />
-                  ))}
+                {searchState.locationSearchProviders.map((searchProvider) => (
+                  <LocationSearchResults
+                    key={searchProvider.uniqueId}
+                    terria={viewState.terria}
+                    viewState={viewState}
+                    searchResult={searchProvider.searchResult}
+                    locationSearchText={locationSearchText}
+                    onLocationClick={(result) => {
+                      if (!result.location) return;
+                      addMarker(viewState.terria, {
+                        name: result.name,
+                        location: result.location
+                      });
+                      result.clickAction?.();
+                      runInAction(() => {
+                        searchState.showLocationSearchResults = false;
+                      });
+                    }}
+                  />
+                ))}
               </Box>
             </Box>
           )}
