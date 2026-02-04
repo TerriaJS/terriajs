@@ -5,6 +5,10 @@ interface CssExports {
   'dropdownInner': string;
   'image': string;
   'link': string;
+  'relatedMapsBtn': string;
+  'relatedMapsOuter': string;
+  'relatedMapsOuterFullscreen': string;
+  'relatedMapsOuterTrainerBar': string;
   'section': string;
 }
 declare var cssExports: CssExports;

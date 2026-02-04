@@ -10,6 +10,36 @@
   }
 }
 
+.relatedMapsOuter {
+  position: fixed;
+  z-index: $front-component-z-index;
+  top: $map-button-top;
+  left: calc(#{$work-bench-width} + 60px);
+  pointer-events: auto;
+}
+
+.relatedMapsOuterFullscreen {
+  left: calc(16px + 150px + #{$padding-small});
+}
+
+.relatedMapsOuterTrainerBar {
+  top: $map-button-top + $trainer-height;
+}
+
+.relatedMapsBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  border-radius: 999px;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: #ffffff;
+    }
+  }
+}
+
 .section {
   composes: clearfix from "~terriajs/lib/Sass/common/_base.scss";
   margin-bottom: 10px;
