@@ -365,11 +365,9 @@ class ViewingControls extends React.Component<
   }
 
   splitItem() {
-    const { t } = this.props;
     const item = this.props.item;
     const terria = item.terria;
 
-    const splitRef = new SplitItemReference(createGuid(), terria);
     runInAction(async () => {
       if (!hasTraits(item, SplitterTraits, "splitDirection")) return;
 
@@ -381,9 +379,20 @@ class ViewingControls extends React.Component<
         );
       }
 
+      terria.showSplitter = true;
+    });
+  }
+
+  copyItem() {
+    const { t } = this.props;
+    const item = this.props.item;
+    const terria = item.terria;
+
+    const splitRef = new SplitItemReference(createGuid(), terria);
+
+    runInAction(async () => {
       splitRef.setTrait(CommonStrata.user, "splitSourceItemId", item.uniqueId);
       terria.addModel(splitRef);
-      terria.showSplitter = true;
 
       await splitRef.loadReference();
       runInAction(() => {
@@ -395,15 +404,6 @@ class ViewingControls extends React.Component<
             t("splitterTool.workbench.copyName", {
               name: getName(item)
             })
-          );
-
-          // Set a direction opposite to the original item
-          target.setTrait(
-            CommonStrata.user,
-            "splitDirection",
-            item.splitDirection === SplitDirection.LEFT
-              ? SplitDirection.RIGHT
-              : SplitDirection.LEFT
           );
         }
       });
@@ -561,6 +561,19 @@ class ViewingControls extends React.Component<
               <BoxViewingControl>
                 <StyledIcon glyph={Icon.GLYPHS.compare} />
                 <span>{t("workbench.splitItem")}</span>
+              </BoxViewingControl>
+            </ViewingControlMenuButton>
+          </li>
+        ) : null}
+        {canSplit ? (
+          <li key={"workbench.copyItem"}>
+            <ViewingControlMenuButton
+              onClick={this.copyItem.bind(this)}
+              title={t("workbench.copyItemTitle")}
+            >
+              <BoxViewingControl>
+                <StyledIcon glyph={Icon.GLYPHS.copy} />
+                <span>{t("workbench.copyItem")}</span>
               </BoxViewingControl>
             </ViewingControlMenuButton>
           </li>

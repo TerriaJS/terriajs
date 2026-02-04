@@ -710,6 +710,8 @@
     "previewItem": "About Data",
     "splitItemTitle": "Duplicate and show splitter",
     "splitItem": "Compare",
+    "copyItem": "Copy",
+    "copyItemTitle": "Copy",
     "diffImageTitle": "View image differences between two dates",
     "diffImage": "Difference",
     "exportDataTitle": "Export map data",

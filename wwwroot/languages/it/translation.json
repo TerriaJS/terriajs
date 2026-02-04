@@ -1506,6 +1506,8 @@
     "previewItem": "Informazioni",
     "zoomTo": "Zoom ideale",
     "splitItemTitle": "Duplicare e mostrare lo splitter",
+    "copyItem": "Copia",
+    "copyItemTitle": "Copia",
     "colorScaleRangeTitle": "Gamma di scala di colore non valida",
     "addItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "addItemErrorTitle": "L'articolo del catalogo non può essere aggiunto alla workbench.",
