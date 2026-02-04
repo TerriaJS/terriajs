@@ -10,7 +10,8 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import { ModelConstructorParameters } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
+import { ModelId } from "../../../Traits/ModelReference";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -37,6 +38,14 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
 
   setFileInput(file: File) {
     this._gpxFile = file;
+  }
+
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
+    const newModel = super.duplicateModel(newId, sourceReference);
+    if (this._gpxFile) {
+      newModel.setFileInput(this._gpxFile);
+    }
+    return newModel;
   }
 
   @computed

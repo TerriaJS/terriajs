@@ -14,9 +14,13 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import Model, {
+  BaseModel,
+  ModelConstructorParameters
+} from "../../Definition/Model";
+import { ModelId } from "../../../Traits/ModelReference";
 import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
-import Model, { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -48,6 +52,14 @@ class GeoJsonCatalogItem
 
   setFileInput(file: File) {
     this._file = file;
+  }
+
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
+    const newModel = super.duplicateModel(newId, sourceReference);
+    if (this._file) {
+      newModel.setFileInput(this._file);
+    }
+    return newModel;
   }
 
   @computed get hasLocalData(): boolean {

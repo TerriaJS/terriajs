@@ -20,8 +20,9 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
+import { ModelId } from "../../../Traits/ModelReference";
 import HasLocalData from "../../HasLocalData";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 import MeasurableGeometryMixin from "../../../ModelMixins/MeasurableGeometryMixin";
@@ -70,6 +71,14 @@ class KmlCatalogItem
 
   setFileInput(file: File) {
     this._kmlFile = file;
+  }
+
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
+    const newModel = super.duplicateModel(newId, sourceReference);
+    if (this._kmlFile) {
+      newModel.setFileInput(this._kmlFile);
+    }
+    return newModel;
   }
 
   @computed
