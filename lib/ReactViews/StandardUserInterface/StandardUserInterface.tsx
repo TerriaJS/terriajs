@@ -45,6 +45,8 @@ import { terriaTheme } from "./StandardTheme";
 import MeasurablePanel from "../MeasurableGeometry/MeasurablePanel";
 import MeasurableDownloadPanel from "../MeasurableGeometry/MeasurableDownloadPanel";
 import PlayPathPanel from "../MeasurableGeometry/PlayPathPanel";
+import QueryWindow from "../QueryWindow/QueryWindow";
+import { MessageModal } from "../MessageModal/MessageModal";
 import ViewshedPanel from "../Viewshed/ViewshedPanel";
 
 export const animationDuration = 250;
@@ -232,6 +234,14 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                   <div id="map-data-attribution" />
                   <main>
                     <ExplorerWindow />
+                    <QueryWindow />
+                    {props.terria.messageModal?.isVisible && (
+                      <MessageModal
+                        closeModal={() => props.viewState.closeMessageModal()}
+                        header={props.terria.messageModal.header}
+                        message={props.terria.messageModal.message}
+                      />
+                    )}
                     {props.terria.configParameters.experimentalFeatures &&
                       !props.viewState.hideMapUi && (
                         <ExperimentalFeatures

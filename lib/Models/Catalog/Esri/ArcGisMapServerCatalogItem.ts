@@ -50,6 +50,13 @@ import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjec
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import defined from "terriajs-cesium/Source/Core/defined";
+import SearchableCatalogItemMixin, {
+  SearchableData
+} from "../../../ModelMixins/SearchableCatalogItemMixin";
+import CesiumResource from "terriajs-cesium/Source/Core/Resource";
+import { JsonObject } from "../../../Core/Json";
+import { FeatureCollection, Geometry } from "@turf/helpers";
+import bbox from "@turf/bbox";
 
 const proj4 = require("proj4").default;
 
@@ -352,11 +359,13 @@ interface TimeParams {
   isForwardTimeWindow: boolean;
 }
 
-export default class ArcGisMapServerCatalogItem extends UrlMixin(
-  DiscretelyTimeVaryingMixin(
-    MinMaxLevelMixin(
-      CatalogMemberMixin(
-        MappableMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+export default class ArcGisMapServerCatalogItem extends SearchableCatalogItemMixin(
+  UrlMixin(
+    DiscretelyTimeVaryingMixin(
+      MinMaxLevelMixin(
+        CatalogMemberMixin(
+          MappableMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+        )
       )
     )
   )
@@ -755,6 +764,55 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     if (!stratum) return [];
 
     return filterOutUndefined(findLayers(stratum.allLayers, this.layers));
+  }
+
+  async doSearch(text: string): Promise<SearchableData[]> {
+    if (
+      !this.catalogItemWebSearch?.url ||
+      !this.catalogItemWebSearch.returnFields
+    )
+      return Promise.resolve([]);
+
+    const filteredElements: FeatureCollection = await CesiumResource.fetchJson({
+      url: this.catalogItemWebSearch.url,
+      queryParameters: {
+        text: text,
+        outFields: this.catalogItemWebSearch.returnFields
+      }
+    });
+
+    const elements = filteredElements.features.map((feature) => {
+      const type = feature.geometry.type;
+      let lat: number;
+      let lon: number;
+      if (
+        type === "Point" &&
+        (feature.geometry as Geometry).coordinates.length === 2
+      ) {
+        lon = (feature.geometry as Geometry).coordinates[0] as number;
+        lat = (feature.geometry as Geometry).coordinates[1] as number;
+      } else {
+        const geojsonBbox = bbox(feature);
+        const west = geojsonBbox[0];
+        const south = geojsonBbox[1];
+        const east = geojsonBbox[2];
+        const north = geojsonBbox[3];
+        lon = (east - west) * 0.5 + west;
+        lat = (north - south) * 0.5 + south;
+      }
+
+      return {
+        searchField: Object.values(feature.properties as JsonObject).join(
+          " - "
+        ),
+        latitude: lat,
+        longitude: lon,
+        geometry:
+          "coordinates" in feature.geometry ? feature.geometry : undefined
+      };
+    });
+
+    return elements;
   }
 }
 

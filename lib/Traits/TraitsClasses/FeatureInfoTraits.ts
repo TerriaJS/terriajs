@@ -57,6 +57,21 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
     description: "An object, mapping field names to formatting options."
   })
   formats?: Record<string, FeatureInfoFormat>;
+
+  @anyTrait({
+    name: "perProfileInfoFields",
+    description:
+      "Specifies which info fields are visible from each user profiles."
+  })
+  perProfileInfoFields?: Record<string, string[]>;
+
+  @primitiveTrait({
+    type: "string",
+    name: "webServiceUrlProfileCheck",
+    description:
+      "The url to the web-service that check if the user can see all feature info."
+  })
+  webServiceUrlProfileCheck?: string;
 }
 
 /** Note: MappableTraits has the following:

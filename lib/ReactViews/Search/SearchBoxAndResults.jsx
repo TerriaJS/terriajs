@@ -12,6 +12,39 @@ import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchBox from "../Search/SearchBox";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import GlobeOrMap from "../../Models/GlobeOrMap";
+
+export function SearchInCatalogItems({ viewState, handleClick }) {
+  const { t } = useTranslation();
+  const locationSearchText = viewState.searchState.locationSearchText;
+  return (
+    <RawButton
+      fullWidth
+      onClick={() => {
+        const { searchState } = viewState;
+        searchState.setCatalogItemsSearchText(searchState.locationSearchText);
+        handleClick && handleClick();
+      }}
+    >
+      <Box paddedRatio={2} rounded charcoalGreyBg>
+        <StyledIcon styledWidth={"14px"} glyph={Icon.GLYPHS["dataCatalog"]} />
+        <Spacing right={2} />
+        <Text textAlignLeft textLight large fullWidth>
+          {t("search.searchInCatalogItems", {
+            locationSearchText: locationSearchText
+          })}
+        </Text>
+        <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
+      </Box>
+    </RawButton>
+  );
+}
+
+SearchInCatalogItems.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  viewState: PropTypes.object.isRequired
+};
 
 export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
@@ -115,6 +148,15 @@ export class SearchBoxAndResultsRaw extends React.Component {
 
     if (newText.length === 0) {
       removeMarker(this.props.terria);
+
+      const catalogItem = this.props.terria.getModelById(
+        GeoJsonCatalogItem,
+
+        GlobeOrMap.featureHighlightID
+      );
+
+      this.props.terria.overlays.remove(catalogItem);
+
       runInAction(() => {
         this.toggleShowLocationSearchResults(false);
       });
@@ -193,12 +235,46 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   />
                 </Box>
               )}
+              {searchState?.catalogItemsSearchProvider?.canUse && (
+                <Box column paddedRatio={2}>
+                  <SearchInCatalogItems
+                    viewState={viewState}
+                    handleClick={() => {
+                      searchState.searchCatalogItems();
+                    }}
+                  />
+                </Box>
+              )}
               <Box
                 column
                 css={`
                   overflow-y: auto;
                 `}
               >
+                {this.props.viewState.searchState
+                  ?.catalogItemsSearchResults && (
+                  <LocationSearchResults
+                    key={
+                      this.props.viewState.searchState
+                        ?.catalogItemsSearchResults.searchProvider.name
+                    }
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    search={
+                      this.props.viewState.searchState
+                        ?.catalogItemsSearchResults
+                    }
+                    locationSearchText={locationSearchText}
+                    onLocationClick={(result) => {
+                      addMarker(this.props.terria, result);
+                      result.clickAction();
+                      runInAction(() => {
+                        searchState.showLocationSearchResults = false;
+                      });
+                    }}
+                    isWaitingForSearchToStart={false}
+                  />
+                )}
                 {searchState.locationSearchResults.map((search) => (
                   <LocationSearchResults
                     key={search.searchProvider.uniqueId}

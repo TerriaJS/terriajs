@@ -1,0 +1,17 @@
+@import "~terriajs-variables";
+
+.loginBtn {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../../../Sass/common/_buttons.scss";
+
+  svg {
+    margin-left: 3px;
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: #ffffff;
+    }
+  }
+}

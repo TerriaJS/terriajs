@@ -58,22 +58,13 @@ export default {
     destCode: string
   ): [number, number] | undefined {
     const source =
-      sourceCode in Proj4Definitions
-        ? proj4.Proj(Proj4Definitions[sourceCode])
-        : undefined;
+      sourceCode in Proj4Definitions ? Proj4Definitions[sourceCode] : undefined;
     const dest =
-      destCode in Proj4Definitions
-        ? proj4.Proj(Proj4Definitions[destCode])
-        : undefined;
+      destCode in Proj4Definitions ? Proj4Definitions[destCode] : undefined;
     if (!source || !dest) {
       return;
     }
-    const result = proj4.transform(source, dest, coordinates) ?? {};
-    if (result) {
-      const { x, y } = result;
-      return [x, y];
-    }
-    return undefined;
+    return proj4(source, dest, coordinates) ?? {};
   },
 
   /**

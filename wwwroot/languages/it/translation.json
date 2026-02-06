@@ -273,6 +273,10 @@
     "toPlaceholder": "A",
     "applyButton": "Applica"
   },
+  "login": {
+    "loginTitle": "Login",
+    "logoutTitle": "Logout"
+  },
   "settingPanel": {
     "performanceLabel": "Prestazioni",
     "qualityLabel": "Qualità",
@@ -1529,7 +1533,26 @@
     "viewMore": "Visualizza più risultati {{name}}",
     "viewLess": "Visualizza meno risultati {{name}}",
     "search": "Cerca '{{searchText}}' nel catalogo dei dati",
-    "searchInDataCatalog": "Cerca '{{locationSearchText}}' nel catalogo dei dati"
+    "searchInDataCatalog": "Cerca '{{locationSearchText}}' nel catalogo dei dati",
+    "searchInCatalogItems": "Cerca '{{locationSearchText}}' nei layer aperti"
+  },
+  "queryTab": {
+    "charts": "Grafici",
+    "table": "Tabella",
+    "aggregateBy": "Aggrega per",
+    "represent": "Rappresenta",
+    "graphModel": "Modello di grafo",
+    "percentage": "Percentuale",
+    "value": "Valore",
+    "category": "Categoria",
+    "sum": "Somma",
+    "count": "Conta",
+    "pivotTable": "Tabella pivot",
+    "horizontalBars": "Barre orizzontali",
+    "verticalBars": "Barre verticali",
+    "pie": "Torta",
+    "changeColors": "Cambia colori",
+    "aggregationNotPossible": "La combinazione di filtri non permette di generare grafici di aggregazione"
   },
   "addData": {
     "back": "Indietro",

@@ -1,0 +1,22 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.root {
+  height: 100%;
+}
+
+.data-explorer {
+  @media (min-width: $sm) {
+    width: 40%;
+    float: left;
+    height: 100%;
+    padding: 0 $padding-small;
+    background: $modal-secondary-bg;
+    display: flex;
+    flex-direction: column;
+
+    form {
+      margin: $padding 0;
+    }
+  }
+}

@@ -25,7 +25,7 @@ export default class CatalogIndex {
   private _models: Map<string, CatalogIndexReference> | undefined;
 
   private _searchIndex:
-    | Document<{ id: string; name: string; description: string }>
+    | Document<{ id: string; name: string; description: string }, true>
     | undefined; // Flex-search document index
 
   @observable

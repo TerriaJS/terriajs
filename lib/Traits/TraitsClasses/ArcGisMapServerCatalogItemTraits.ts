@@ -9,6 +9,7 @@ import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
+import SearchableCatalogItemTraits from "./SearchableCatalogItemTraits";
 import UrlTraits from "./UrlTraits";
 
 @traitClass({
@@ -22,6 +23,7 @@ import UrlTraits from "./UrlTraits";
   }
 })
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
+  SearchableCatalogItemTraits,
   ImageryProviderTraits,
   LayerOrderingTraits,
   UrlTraits,

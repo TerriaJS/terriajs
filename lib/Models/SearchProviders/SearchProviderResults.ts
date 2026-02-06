@@ -21,6 +21,7 @@ export default class SearchProviderResults {
   }
 
   get isSearching() {
-    return this.resultsCompletePromise.state === "pending";
+    //return this.resultsCompletePromise.state === "pending";
+    return false;
   }
 }

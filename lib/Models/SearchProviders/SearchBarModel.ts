@@ -11,6 +11,7 @@ import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CatalogItemsSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogItemsSearchProviderMixin";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
@@ -28,6 +29,11 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
 
   @observable
   catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
+
+  @observable
+  catalogItemsSearchProvider:
+    | CatalogItemsSearchProviderMixin.Instance
+    | undefined;
 
   constructor(readonly terria: Terria) {
     super("search-bar-model", terria);

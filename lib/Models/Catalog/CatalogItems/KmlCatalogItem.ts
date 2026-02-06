@@ -29,15 +29,24 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ExportableMixin, {
   ExportData
 } from "../../../ModelMixins/ExportableMixin";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import SearchableCatalogItemMixin, {
+  SearchableData
+} from "../../../ModelMixins/SearchableCatalogItemMixin";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 const kmzRegex = /\.kmz$/i;
 
 class KmlCatalogItem
-  extends MeasurableGeometryMixin(
-    MappableMixin(
-      ExportableMixin(
-        UrlMixin(
-          CesiumIonMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+  extends SearchableCatalogItemMixin(
+    MeasurableGeometryMixin(
+      MappableMixin(
+        ExportableMixin(
+          UrlMixin(
+            CesiumIonMixin(
+              CatalogMemberMixin(CreateModel(KmlCatalogItemTraits))
+            )
+          )
         )
       )
     )
@@ -249,6 +258,64 @@ class KmlCatalogItem
         }
       );
     }
+  }
+
+  doSearch(text: string): Promise<SearchableData[]> {
+    if (!this.nameOfCatalogItemSearchField || !this._dataSource?.entities)
+      return Promise.resolve([]);
+    const nameOfCatalogItemSearchField = this.nameOfCatalogItemSearchField;
+
+    const filteredElements = this._dataSource.entities.values.filter(
+      (entity) => {
+        return (
+          (entity.billboard ||
+            entity.point ||
+            entity.polyline ||
+            entity.polygon) &&
+          (entity.properties?.[nameOfCatalogItemSearchField]
+            .valueOf()
+            .toLowerCase()
+            .includes(text) ||
+            entity.name?.toLowerCase().includes(text))
+        );
+      }
+    );
+    const searchableData = filteredElements.map((entity) => {
+      let cartoPosition: Cartographic;
+
+      if (entity.polyline) {
+        cartoPosition = Rectangle.center(
+          Rectangle.fromCartesianArray(
+            entity.polyline?.positions?.getValue(JulianDate.now()) ?? []
+          )
+        );
+      } else if (entity.polygon) {
+        cartoPosition = Rectangle.center(
+          Rectangle.fromCartesianArray(
+            (
+              entity.polygon?.hierarchy?.getValue(JulianDate.now()) as
+                | PolygonHierarchy
+                | undefined
+            )?.positions ?? []
+          )
+        );
+      } else {
+        const cartesianPosition = entity.position!.getValue(JulianDate.now());
+        cartoPosition = Cartographic.fromCartesian(cartesianPosition!!);
+      }
+
+      return {
+        searchField:
+          entity.name ??
+          (entity.properties![
+            nameOfCatalogItemSearchField
+          ].valueOf() as string),
+        latitude: CesiumMath.toDegrees(cartoPosition.latitude),
+        longitude: CesiumMath.toDegrees(cartoPosition.longitude)
+      };
+    });
+
+    return Promise.resolve(searchableData);
   }
 
   @computed

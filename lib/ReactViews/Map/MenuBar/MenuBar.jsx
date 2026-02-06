@@ -2,7 +2,6 @@ import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
 import styled from "styled-components";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import { useViewState } from "../../Context";
@@ -10,12 +9,12 @@ import LangPanel from "../Panels/LangPanel/LangPanel";
 import SettingPanel from "../Panels/SettingPanel";
 import SharePanel from "../Panels/SharePanel/SharePanel";
 import ToolsPanel from "../Panels/ToolsPanel/ToolsPanel";
-import StoryButton from "./StoryButton/StoryButton";
-import HelpButton from "./HelpButton/HelpButton";
-
-import Styles from "./menu-bar.scss";
 import CoordsPanel from "../Panels/CoordsPanel/CoordsPanel";
 import ColorPanel from "../Panels/ColorPanel/ColorPanel";
+import LoginButton from "./LoginButton/LoginButton";
+import StoryButton from "./StoryButton/StoryButton";
+import HelpButton from "./HelpButton/HelpButton";
+import Styles from "./menu-bar.scss";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -37,6 +36,7 @@ const MenuBar = observer((props) => {
   };
 
   const storyEnabled = terria.configParameters.storyEnabled;
+  const loginEnabled = terria.configParameters.userProfileLoginServiceUrl;
   const enableTools = terria.userProperties.get("tools") === "1";
 
   return (
@@ -112,6 +112,17 @@ const MenuBar = observer((props) => {
             />
           </li>
         </ul>
+        {loginEnabled && (
+          <ul className={classNames(Styles.menu)}>
+            <li className={Styles.menuItem}>
+              <LoginButton
+                terria={terria}
+                viewState={viewState}
+                theme={props.theme}
+              />
+            </li>
+          </ul>
+        )}
         {!viewState.useSmallScreenInterface &&
           menuItems.map((element, i) => (
             <li className={Styles.menuItem} key={i}>

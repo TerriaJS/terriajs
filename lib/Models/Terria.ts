@@ -421,6 +421,18 @@ export interface ConfigParameters {
   mapViewers: string[];
 
   /**
+   * Url to login service
+   */
+  userProfileLoginServiceUrl?: string;
+
+  /**
+   * Types of user profile
+   */
+  userProfilesDefinition?: {
+    [key: string]: { allowed: string[]; isAdmin: boolean };
+  };
+
+  /**
    * Side size for the drill pick in Cesium
    */
   pickSize?: number;
@@ -511,6 +523,12 @@ interface HomeCameraInit {
   east: number;
   south: number;
   west: number;
+}
+
+export interface MessageModal {
+  isVisible: boolean;
+  header?: string;
+  message?: string;
 }
 
 export default class Terria {
@@ -686,6 +704,8 @@ export default class Terria {
     useElevationMeanSeaLevel: false,
     wgs84vsMeanSeaLevelRoughDiff: undefined,
     mapViewers: ["3d", "3dsmooth", "2d"],
+    userProfilesDefinition: undefined,
+    userProfileLoginServiceUrl: undefined,
     pickSize: undefined,
     cesiumGlobeColor: undefined,
     polylineWidth: undefined,
@@ -713,6 +733,30 @@ export default class Terria {
    * @type {Boolean}
    */
   @observable clampMeasureLineToGround: boolean = true;
+
+  /**
+   * Gets or sets the item to query.
+   * @type {BaseModel}
+   */
+  @observable itemToQuery: BaseModel | undefined = undefined;
+
+  /**
+   * Gets or sets the item to query.
+   * @type {Message}
+   */
+  @observable messageModal?: MessageModal;
+
+  /**
+   * Gets or sets user profile.
+   * @type {string}
+   */
+  @observable userProfile?: string;
+
+  /**
+   * Gets or sets user auth token.
+   * @type {string}
+   */
+  @observable userAuthToken?: string;
 
   /**
    * Gets or sets height of viewshed observer point.
@@ -800,6 +844,13 @@ export default class Terria {
   @observable private _previewedItemId: string | undefined;
   get previewedItemId() {
     return this._previewedItemId;
+  }
+
+  @computed
+  get profile() {
+    return this.userProfile
+      ? this.configParameters.userProfilesDefinition?.[this.userProfile]
+      : undefined;
   }
 
   /**
@@ -2304,6 +2355,14 @@ export default class Terria {
     window.localStorage.setItem(this.appName + "." + key, value.toString());
     return true;
   }
+
+  isFeatureAllowedByProfile(featureName: string): boolean {
+    if (!this.configParameters.userProfilesDefinition) return true;
+    if (!this.userProfile) return false;
+    const profile =
+      this.configParameters.userProfilesDefinition[this.userProfile];
+    return profile.isAdmin || profile.allowed.includes(featureName);
+  }
 }
 
 function generateInitializationUrl(
@@ -2343,7 +2402,16 @@ async function interpretHash(
 
   runInAction(() => {
     Object.keys(hashProperties).forEach(function (property) {
-      if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
+      if (
+        [
+          "clean",
+          "hideWelcomeMessage",
+          "start",
+          "share",
+          "profile",
+          "authToken"
+        ].includes(property)
+      )
         return;
       const propertyValue = hashProperties[property];
       if (defined(propertyValue) && propertyValue.length > 0) {
@@ -2363,6 +2431,10 @@ async function interpretHash(
     });
   });
 
+  if (isDefined(hashProperties.profile)) {
+    terria.userProfile = hashProperties.profile;
+    terria.userAuthToken = hashProperties.authToken;
+  }
   if (isDefined(hashProperties.hideWelcomeMessage)) {
     terria.configParameters.showWelcomeMessage = false;
   }

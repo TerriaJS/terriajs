@@ -86,6 +86,7 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
       viewState.terria.searchBarModel.catalogSearchProvider = undefined;
+      viewState.terria.searchBarModel.catalogItemsSearchProvider = undefined;
     });
     act(() => {
       testRenderer = create(

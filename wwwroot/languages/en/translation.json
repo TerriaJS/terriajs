@@ -468,6 +468,10 @@
     "toPlaceholder": "To",
     "applyButton": "Apply"
   },
+  "login": {
+    "loginTitle": "Login",
+    "logoutTitle": "Logout"
+  },
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
@@ -632,7 +636,26 @@
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
     "placeholder": "Search for locations",
-    "searchCatalogue": "Search the catalogue"
+    "searchCatalogue": "Search the catalogue",
+    "searchInCatalogItems": "Search '{{locationSearchText}}' in the Catalog Items"
+  },
+  "queryTab": {
+    "charts": "Charts",
+    "table": "Table",
+    "aggregateBy": "Aggregate by",
+    "represent": "Represent",
+    "graphModel": "Graph model",
+    "percentage": "Percentage",
+    "value": "Value",
+    "category": "Category",
+    "sum": "Sum",
+    "count": "Count",
+    "pivotTable": "Pivot table",
+    "horizontalBars": "Horizontal bars",
+    "verticalBars": "Vertical bars",
+    "pie": "Pie",
+    "changeColors": "Change colors",
+    "aggregationNotPossible": "The filter combination does not allow generating aggregation charts"
   },
   "mobile": {
     "toggleNavigation": "toggle navigation",

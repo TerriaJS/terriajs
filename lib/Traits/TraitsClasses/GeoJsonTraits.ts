@@ -6,8 +6,11 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import ClusteringTraits from "./ClusteringTraits";
+import ClusterizableCatalogItemTraits from "./ClusterizableCatalogItemTraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
+import SearchableCatalogItemTraits from "./SearchableCatalogItemTraits";
+import QueryableCatalogItemTraits from "./QueryableCatalogItemTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
@@ -38,6 +41,9 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  ClusterizableCatalogItemTraits,
+  QueryableCatalogItemTraits,
+  SearchableCatalogItemTraits,
   FeatureInfoUrlTemplateTraits,
   LegendOwnerTraits,
   TableTraits,

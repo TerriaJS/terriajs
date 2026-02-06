@@ -61,7 +61,6 @@ import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphic
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
@@ -110,6 +109,11 @@ import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import SearchableCatalogItemMixin, {
+  SearchableData
+} from "./SearchableCatalogItemMixin";
+import QueryableCatalogItemMixin from "./QueryableCatalogItemMixin";
+import Constructor from "../Core/Constructor";
 
 enum PathTypes {
   noPath = 0,
@@ -242,9 +246,13 @@ interface FeatureCounts {
 
 type BaseType = Model<GeoJsonTraits>;
 
-function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
-  abstract class GeoJsonMixin extends MeasurableGeometryMixin(
-    TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
+function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
+  abstract class GeoJsonMixin extends QueryableCatalogItemMixin(
+    SearchableCatalogItemMixin(
+      MeasurableGeometryMixin(
+        TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
+      )
+    )
   ) {
     @observable
     private _dataSource:
@@ -662,7 +670,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         } else {
           const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
 
-          if (this.clustering.enabled) {
+          if (this.clustering.enabled || this.clusterize) {
             const pinBackgroundColor = this.clustering.pinBackgroundColor;
             const pinSize = this.clustering.pinSize;
 
@@ -1980,6 +1988,179 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         isJsonArray(this.readyData.features[0].geometry.coordinates)
       ) {
         return this.readyData.features[0].geometry.coordinates[0] as JsonArray;
+      }
+    }
+
+    doSearch(text: string): Promise<SearchableData[]> {
+      // Search in TerriaJS Feature and Turf Geometry
+
+      if (!this.nameOfCatalogItemSearchField || !this.readyData?.features)
+        return Promise.resolve([]);
+      const nameOfCatalogItemSearchField = this.nameOfCatalogItemSearchField;
+
+      const filteredElements = this.readyData.features.filter((feature) => {
+        const fieldContent =
+          feature.properties?.[nameOfCatalogItemSearchField] ?? "";
+        return fieldContent.toLowerCase().includes(text);
+      });
+      const searchableData = filteredElements.map((feature) => {
+        const fieldContent =
+          feature.properties?.[nameOfCatalogItemSearchField] ?? "";
+        const type = feature.geometry.type;
+        let lat: number;
+        let lon: number;
+        if (
+          type === "Point" &&
+          (feature.geometry as Geometry).coordinates.length === 2
+        ) {
+          lon = (feature.geometry as Geometry).coordinates[0] as number;
+          lat = (feature.geometry as Geometry).coordinates[1] as number;
+        } else {
+          const geojsonBbox = bbox(feature);
+          const west = geojsonBbox[0];
+          const south = geojsonBbox[1];
+          const east = geojsonBbox[2];
+          const north = geojsonBbox[3];
+          lon = (east - west) * 0.5 + west;
+          lat = (north - south) * 0.5 + south;
+        }
+
+        return {
+          searchField: fieldContent,
+          latitude: lat,
+          longitude: lon
+        };
+      });
+
+      return Promise.resolve(searchableData);
+    }
+
+    getEnumValues(propertyName: string): string[] {
+      if (
+        this.mapItems &&
+        this.mapItems.length > 0 &&
+        (this.mapItems[0] instanceof CustomDataSource ||
+          this.mapItems[0] instanceof GeoJsonDataSource ||
+          this.mapItems[0] instanceof CzmlDataSource)
+      ) {
+        const values: Set<string> = new Set<string>([this.ENUM_ALL_VALUE]);
+        for (const entity of this.mapItems[0].entities.values) {
+          if (entity?.properties && entity.show) {
+            if (entity.properties.hasProperty(propertyName)) {
+              values.add(
+                entity.properties.getValue(JulianDate.now())[propertyName]
+              );
+            }
+          }
+        }
+
+        this.numberOfTotalElements = this.mapItems[0].entities.values.length;
+
+        return Array.from(values);
+      } else return [];
+    }
+
+    getFeaturePropertiesByName(
+      propertyNames: string[]
+    ): { [key: string]: any }[] {
+      if (
+        this.mapItems &&
+        this.mapItems.length > 0 &&
+        (this.mapItems[0] instanceof CustomDataSource ||
+          this.mapItems[0] instanceof GeoJsonDataSource ||
+          this.mapItems[0] instanceof CzmlDataSource)
+      ) {
+        const results = this.mapItems[0].entities.values.map((entity) => {
+          const obj = Object.fromEntries(
+            propertyNames.map((name) => {
+              const value = entity.properties?.[name];
+              const property = this.queryProperties?.[name];
+              return [
+                name,
+                property?.type === "dictionary"
+                  ? JSON.parse((value as ConstantProperty).valueOf() as string)
+                  : property?.type === "enum" && property?.enumMultiValue
+                  ? ((value as ConstantProperty).valueOf() as string)
+                      .split(",")
+                      .map((txt) => txt.trim())
+                  : value
+              ];
+            })
+          );
+          obj["show"] = new ConstantProperty(entity.show);
+          return obj;
+        });
+        return results;
+      } else return [];
+    }
+
+    filterData() {
+      if (!this.queryProperties || !this.queryValues) return;
+      const selectedValuesArray = Object.values(this.queryValues);
+
+      const showAll = !selectedValuesArray
+        .flat()
+        .some((value) => value !== "" && value !== this.ENUM_ALL_VALUE);
+
+      if (
+        this.mapItems &&
+        this.mapItems.length > 0 &&
+        (this.mapItems[0] instanceof CustomDataSource ||
+          this.mapItems[0] instanceof GeoJsonDataSource ||
+          this.mapItems[0] instanceof CzmlDataSource)
+      ) {
+        for (const entity of this.mapItems[0].entities.values) {
+          const visibility: boolean[] = selectedValuesArray.map((_) => true);
+          if (!showAll) {
+            Object.entries(this.queryValues).forEach(([key, value], index) => {
+              if (entity?.properties?.hasProperty(key)) {
+                const entityValue = entity.properties.getValue(
+                  JulianDate.now()
+                )[key];
+
+                if (
+                  (this.queryProperties?.[key].type === "enum" &&
+                    !this.queryProperties?.[key].enumMultiValue) ||
+                  this.queryProperties?.[key].type === "string" ||
+                  this.queryProperties?.[key].type === "number"
+                ) {
+                  visibility[index] =
+                    value[0].toLowerCase() === this.ENUM_ALL_VALUE ||
+                    value[0].toLowerCase() === "" ||
+                    entityValue.toLowerCase() === value[0].toLowerCase();
+                } else if (
+                  this.queryProperties?.[key].type === "enum" &&
+                  this.queryProperties?.[key].enumMultiValue
+                ) {
+                  visibility[index] =
+                    value[0].toLowerCase() === this.ENUM_ALL_VALUE ||
+                    value[0].toLowerCase() === "" ||
+                    entityValue.toLowerCase().includes(value[0].toLowerCase());
+                } else if (this.queryProperties?.[key].type === "date") {
+                  if (value[0] === "" || value[1] === "") {
+                    visibility[index] = true;
+                  } else {
+                    const fromDate = new Date(value[0]);
+                    const toDate = new Date(value[1]);
+                    const entityDate = new Date(entityValue);
+                    visibility[index] =
+                      fromDate.getTime() < entityDate.getTime() &&
+                      entityDate.getTime() < toDate.getTime();
+                  }
+                }
+              }
+            });
+          }
+
+          entity.show = visibility.every((vis) => vis);
+        }
+
+        this.numberOfTotalElements = this.mapItems[0].entities.values.length;
+        this.numberOfVisibleElements = this.mapItems[0].entities.values.filter(
+          (elem) => elem.show
+        ).length;
+
+        this.terria.currentViewer.notifyRepaintRequired();
       }
     }
 

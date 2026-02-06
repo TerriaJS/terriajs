@@ -2,6 +2,7 @@ import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import StubSearchProvider from "./StubSearchProvider";
+import { runInAction } from "mobx";
 
 const getUniqueStubSearchProviderName = (terria: Terria) => {
   const stubName = "[StubSearchProvider]";
@@ -22,6 +23,8 @@ export default function createStubSearchProvider(
   const stub = new StubSearchProvider(idToUse, terria);
 
   stub.setTrait(CommonStrata.underride, "name", stub.uniqueId);
-  terria.searchBarModel.addSearchProvider(stub);
+  runInAction(() => {
+    terria.searchBarModel.addSearchProvider(stub);
+  });
   return stub;
 }

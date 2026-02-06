@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 // Icon
 export const GLYPHS = {
+  chartTable: require("../../wwwroot/images/icons/chartTable.svg"),
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
   calendar2: require("../../wwwroot/images/icons/calendar2.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),

@@ -14,15 +14,21 @@ import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvid
 import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
 import Terria from "../Models/Terria";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CatalogItemsSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogItemsSearchProviderMixin";
+import CatalogItemsSearchProvider from "../Models/SearchProviders/CatalogItemsSearchProvider";
 
 interface SearchStateOptions {
   terria: Terria;
   catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
+  catalogItemsSearchProvider?: CatalogItemsSearchProviderMixin.Instance;
 }
 
 export default class SearchState {
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
+
+  @observable catalogItemsSearchText: string = "";
+  @observable isWaitingToStartCatalogItemsSearch: boolean = false;
 
   @observable locationSearchText: string = "";
   @observable isWaitingToStartLocationSearch: boolean = false;
@@ -36,9 +42,11 @@ export default class SearchState {
 
   @observable locationSearchResults: SearchProviderResults[] = [];
   @observable catalogSearchResults: SearchProviderResults | undefined;
+  @observable catalogItemsSearchResults: SearchProviderResults | undefined;
   @observable unifiedSearchResults: SearchProviderResults[] = [];
 
   private _catalogSearchDisposer: IReactionDisposer;
+  private _catalogItemsSearchDisposer: IReactionDisposer;
   private _locationSearchDisposer: IReactionDisposer;
   private _unifiedSearchDisposer: IReactionDisposer;
 
@@ -53,6 +61,13 @@ export default class SearchState {
       this.terria.searchBarModel.catalogSearchProvider =
         options.catalogSearchProvider ||
         new CatalogSearchProvider("catalog-search-provider", options.terria);
+
+      this.terria.searchBarModel.catalogItemsSearchProvider =
+        options.catalogItemsSearchProvider ||
+        new CatalogItemsSearchProvider(
+          "catalog-items-search-provider",
+          options.terria
+        );
     });
 
     const self = this;
@@ -63,6 +78,17 @@ export default class SearchState {
         self.isWaitingToStartCatalogSearch = true;
         if (self.catalogSearchProvider) {
           self.catalogSearchResults = self.catalogSearchProvider.search("");
+        }
+      }
+    );
+
+    this._catalogItemsSearchDisposer = reaction(
+      () => self.catalogItemsSearchText,
+      () => {
+        self.isWaitingToStartCatalogItemsSearch = true;
+        if (self.catalogItemsSearchProvider) {
+          self.catalogItemsSearchResults =
+            self.catalogItemsSearchProvider.search("");
         }
       }
     );
@@ -94,6 +120,7 @@ export default class SearchState {
 
   dispose() {
     this._catalogSearchDisposer();
+    this._catalogItemsSearchDisposer();
     this._locationSearchDisposer();
     this._unifiedSearchDisposer();
   }
@@ -106,6 +133,13 @@ export default class SearchState {
   @computed
   get catalogSearchProvider(): CatalogSearchProviderMixin.Instance | undefined {
     return this.terria.searchBarModel.catalogSearchProvider;
+  }
+
+  @computed
+  get catalogItemsSearchProvider():
+    | CatalogItemsSearchProviderMixin.Instance
+    | undefined {
+    return this.terria.searchBarModel.catalogItemsSearchProvider;
   }
 
   @computed
@@ -132,6 +166,26 @@ export default class SearchState {
   }
 
   @action
+  searchCatalogItems() {
+    if (this.isWaitingToStartCatalogItemsSearch) {
+      this.isWaitingToStartCatalogItemsSearch = false;
+      if (this.catalogItemsSearchResults) {
+        this.catalogItemsSearchResults.isCanceled = true;
+      }
+      if (this.catalogItemsSearchProvider) {
+        this.catalogItemsSearchResults = this.catalogItemsSearchProvider.search(
+          this.catalogItemsSearchText
+        );
+      }
+    }
+  }
+
+  @action
+  setCatalogItemsSearchText(newText: string) {
+    this.catalogItemsSearchText = newText;
+  }
+
+  @action
   setCatalogSearchText(newText: string) {
     this.catalogSearchText = newText;
   }
@@ -146,6 +200,10 @@ export default class SearchState {
       this.locationSearchResults = this.locationSearchProviders.map(
         (searchProvider) => searchProvider.search(this.locationSearchText)
       );
+    }
+
+    if (this.catalogItemsSearchProvider && this.locationSearchText === "") {
+      this.catalogItemsSearchResults = undefined;
     }
   }
 

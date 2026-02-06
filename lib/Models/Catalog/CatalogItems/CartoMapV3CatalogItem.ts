@@ -1,6 +1,6 @@
 import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
 import i18next from "i18next";
-import { computed, observable, runInAction, makeObservable } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
 import JsonValue, {
@@ -30,7 +30,6 @@ class CartoMapV3Stratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "cartoMapV3Stratum";
   constructor(readonly catalogItem: CartoMapV3CatalogItem) {
     super();
-    makeObservable(this);
   }
 
   static load(item: CartoMapV3CatalogItem) {
@@ -75,8 +74,6 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   ) {
     super(id, terria, sourceReference);
 
-    makeObservable(this);
-
     if (this.strata.get(CartoMapV3Stratum.stratumName) === undefined) {
       runInAction(() => {
         this.strata.set(
@@ -109,7 +106,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
           q: this.cartoQuery,
           geo_column: this.cartoGeoColumn
         })
-      )?.throwIfError();
+      ).throwIfError();
     }
     // If cartoTableName is defined - use Table API (https://api-docs.carto.com/#6a05d4d7-c6a1-4635-a8de-c91fa5e77fda)
     else if (this.cartoTableName) {
@@ -124,7 +121,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
 
       response = (
         await callCartoApi(url.toString(), this.accessToken)
-      )?.throwIfError();
+      ).throwIfError();
     } else {
       throw new TerriaError({
         title: "Invalid Carto V3 config",
@@ -176,7 +173,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     // Download all geoJson files
     const geojsonResponses = await Promise.all(
       this.geoJsonUrls.map(async (url) => {
-        jsonData = (await callCartoApi(url, this.accessToken))?.throwIfError();
+        jsonData = (await callCartoApi(url, this.accessToken)).throwIfError();
 
         if (jsonData === undefined) {
           throw new TerriaError({
@@ -289,8 +286,8 @@ async function callCartoApi(url: string, auth?: string, body?: JsonObject) {
             )
           );
         }
-      } catch {
-        /* eslint-disable-line no-empty */
+      } catch (e) {
+        console.log(e);
       }
     }
     return Result.error(e);
