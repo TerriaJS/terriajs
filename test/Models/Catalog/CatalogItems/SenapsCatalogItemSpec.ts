@@ -113,7 +113,7 @@ describe("SenapsLocationsCatalogItem", function () {
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
-      expect(await foundError()).toBe(true);
+      expect(foundError()).toBe(true);
     });
 
     it("- fail to construct streams url", async function () {
@@ -127,7 +127,7 @@ describe("SenapsLocationsCatalogItem", function () {
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
-      expect(await foundError()).toBe(true);
+      expect(foundError()).toBe(true);
     });
   });
 
