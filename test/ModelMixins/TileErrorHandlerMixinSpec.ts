@@ -56,6 +56,8 @@ class TestCatalogItem extends TileErrorHandlerMixin(
       }
     ];
   }
+
+  handleTileError = (promise: Promise<void>, _tile: any) => promise;
 }
 
 describe("TileErrorHandlerMixin", function () {
@@ -246,14 +248,14 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("tells the map to reload the tile again if an xhr attempt succeeds", async function () {
-      spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+      spyOn(Resource, "fetchImage").and.returnValue(undefined);
       await onTileLoadError(item, newError(randomIntBetween(500, 599)));
       expect(item.tileFailures).toBe(0);
     });
 
     it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function () {
       try {
-        spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+        spyOn(Resource, "fetchImage").and.returnValue(undefined);
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 0));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 1));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 2));
@@ -334,7 +336,6 @@ describe("TileErrorHandlerMixin", function () {
   });
 
   it("calls `handleTileError` if the item defines it", async function () {
-    item.handleTileError = (promise) => promise;
     spyOn(item, "handleTileError");
     try {
       await onTileLoadError(item, newError(400));
