@@ -167,6 +167,8 @@
     "@types/svg-sprite": "^0.0.39",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
+    "@vitest/browser": "^4.0.0",
+    "@vitest/browser-playwright": "^4.0.0",
     "babel-plugin-styled-components": "^1.10.7",
     "bufferutil": "^4.0.8",
     "eslint": "^8.57.1",
@@ -192,6 +194,7 @@
     "minimist": "^1.2.8",
     "msw": "^2.12.9",
     "node-notifier": "^10.0.1",
+    "playwright": "^1.58.0",
     "plugin-error": "^2.0.1",
     "prettier": "3.8.1",
     "pretty-quick": "^4.2.2",
@@ -199,6 +202,8 @@
     "svg-sprite": "^2.0.4",
     "terriajs-server": "^4.0.3",
     "utf-8-validate": "^6.0.3",
+    "vitest": "^4.0.0",
+    "vitest-browser-react": "^2.0.0",
     "yaml": "^1.10.0"
   },
   "scripts": {
