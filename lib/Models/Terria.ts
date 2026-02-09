@@ -1709,7 +1709,8 @@ export default class Terria {
 
       const stringArrayFrom = (value: unknown): string[] | undefined => {
         if (!Array.isArray(value)) return undefined;
-        return value.every((item) => typeof item === "string")
+        return value.every((item) => typeof item === "string") &&
+          value.some((item) => item !== "")
           ? (value as string[]).slice()
           : undefined;
       };
