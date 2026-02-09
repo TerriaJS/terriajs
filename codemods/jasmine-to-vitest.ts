@@ -11,6 +11,7 @@ export default function transform(file: FileInfo, api: API, _options: Options) {
   const j = api.jscodeshift;
   const root = j(file.source);
   let modified = false;
+  let needsMockImport = false; // eslint-disable-line prefer-const
 
   // jasmine.createSpy('name') → vi.fn()
   // jasmine.createSpy() → vi.fn()
@@ -270,6 +271,99 @@ export default function transform(file: FileInfo, api: API, _options: Options) {
       modified = true;
     });
 
+  // .calls.first().args → .mock.calls[0]
+  // Handle .calls.first().args first (more specific)
+  root
+    .find(j.MemberExpression, {
+      property: { type: "Identifier", name: "args" },
+      object: {
+        type: "CallExpression",
+        callee: {
+          type: "MemberExpression",
+          property: { type: "Identifier", name: "first" },
+          object: {
+            type: "MemberExpression",
+            property: { type: "Identifier", name: "calls" }
+          }
+        }
+      }
+    })
+    .forEach((path: ASTPath<MemberExpression>) => {
+      const callExpr = path.node.object as CallExpression;
+      const callee = callExpr.callee as MemberExpression;
+      const callsObj = callee.object as MemberExpression;
+      path.replace(
+        j.memberExpression(
+          j.memberExpression(
+            j.memberExpression(callsObj.object, j.identifier("mock")),
+            j.identifier("calls")
+          ),
+          j.numericLiteral(0),
+          true // computed
+        )
+      );
+      modified = true;
+    });
+
+  // .calls.first() → .mock.calls[0] (standalone, returns {args: [...]})
+  root
+    .find(j.CallExpression, {
+      callee: {
+        type: "MemberExpression",
+        property: { type: "Identifier", name: "first" },
+        object: {
+          type: "MemberExpression",
+          property: { type: "Identifier", name: "calls" }
+        }
+      }
+    })
+    .forEach((path: ASTPath<CallExpression>) => {
+      const callee = path.node.callee as MemberExpression;
+      const callsObj = callee.object as MemberExpression;
+      path.replace(
+        j.memberExpression(
+          j.memberExpression(
+            j.memberExpression(callsObj.object, j.identifier("mock")),
+            j.identifier("calls")
+          ),
+          j.numericLiteral(0),
+          true // computed
+        )
+      );
+      modified = true;
+    });
+
+  // .calls.any() → .mock.calls.length > 0
+  root
+    .find(j.CallExpression, {
+      callee: {
+        type: "MemberExpression",
+        property: { type: "Identifier", name: "any" },
+        object: {
+          type: "MemberExpression",
+          property: { type: "Identifier", name: "calls" }
+        }
+      }
+    })
+    .forEach((path: ASTPath<CallExpression>) => {
+      const callee = path.node.callee as MemberExpression;
+      const callsObj = callee.object as MemberExpression;
+      path.replace(
+        j.binaryExpression(
+          ">",
+          j.memberExpression(
+            j.memberExpression(
+              j.memberExpression(callsObj.object, j.identifier("mock")),
+              j.identifier("calls")
+            ),
+            j.identifier("length")
+          ),
+          j.numericLiteral(0)
+        )
+      );
+      modified = true;
+    });
+
   // jasmine.clock().install() → vi.useFakeTimers()
   root
     .find(j.CallExpression, {
@@ -445,6 +539,22 @@ export default function transform(file: FileInfo, api: API, _options: Options) {
       modified = true;
     });
 
+  // jasmine.Spy type annotation → Mock (with import)
+  const spyTypeRefs = root.find(j.TSTypeReference, {
+    typeName: {
+      type: "TSQualifiedName",
+      left: { type: "Identifier", name: "jasmine" },
+      right: { type: "Identifier", name: "Spy" }
+    }
+  });
+  if (spyTypeRefs.length > 0) {
+    spyTypeRefs.forEach((path) => {
+      path.replace(j.tsTypeReference(j.identifier("Mock")));
+    });
+    needsMockImport = true;
+    modified = true;
+  }
+
   // Remove `import "../SpecMain"` or similar SpecMain imports
   root
     .find(j.ImportDeclaration)
@@ -490,6 +600,22 @@ export default function transform(file: FileInfo, api: API, _options: Options) {
 
   if (!modified) {
     return undefined;
+  }
+
+  // Add `import type { Mock } from "vitest"` if jasmine.Spy was replaced
+  if (needsMockImport) {
+    const existingVitestImport = root.find(j.ImportDeclaration, {
+      source: { value: "vitest" }
+    });
+    if (existingVitestImport.length === 0) {
+      const mockImport = j.importDeclaration(
+        [j.importSpecifier(j.identifier("Mock"))],
+        j.literal("vitest")
+      );
+      mockImport.importKind = "type";
+      const body = root.find(j.Program).get("body");
+      body.value.unshift(mockImport);
+    }
   }
 
   return root.toSource({ quote: "double" });
