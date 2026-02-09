@@ -202,6 +202,7 @@
     "svg-sprite": "^2.0.4",
     "terriajs-server": "^4.0.3",
     "utf-8-validate": "^6.0.3",
+    "vite": "^7.3.0",
     "vitest": "^4.0.0",
     "vitest-browser-react": "^2.0.0",
     "yaml": "^1.10.0"
