@@ -26,7 +26,11 @@
       "../../../node_modules/",
       "../../../node_modules/@types/"
     ],
-    "types": ["terriajs-cesium", "@testing-library/jasmine-dom"]
+    "types": [
+      "terriajs-cesium",
+      "@testing-library/jasmine-dom",
+      "vitest/globals"
+    ]
   },
   "include": ["./lib/**/*", "./test/**/*", "./buildprocess/**/*"]
 }
