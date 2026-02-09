@@ -184,7 +184,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    include: ["test/**/*Spec.{ts,tsx,js,jsx}"],
+    include: ["test/**/*Spec.{ts,tsx}"],
     exclude: [],
     setupFiles: ["test/setup.ts"],
     testTimeout: 60_000,
