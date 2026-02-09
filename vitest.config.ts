@@ -41,7 +41,76 @@ function svgSpritePlugin(): Plugin {
 
 function scssModulesPlugin(): Plugin {
   const JS_EXTENSIONS = /\.(ts|tsx|js|jsx)$/;
-  const virtualToReal = new Map<string, string>();
+  const VIRTUAL_PREFIX = "\0scss-module:";
+
+  const SASS_ALIASES: Record<string, string> = {
+    "terriajs-variables": path.resolve(
+      terriaJSBasePath,
+      "lib/Sass/common/_default_variables.scss"
+    )
+  };
+
+  function compileSassAndExtract(filePath: string): string {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const sass = require("sass");
+    const result = sass.compile(filePath, {
+      loadPaths: [
+        path.dirname(filePath),
+        path.join(terriaJSBasePath, "lib"),
+        terriaJSBasePath
+      ],
+      importers: [
+        {
+          findFileUrl(url: string) {
+            if (SASS_ALIASES[url]) {
+              return new URL("file://" + SASS_ALIASES[url]);
+            }
+            return null;
+          }
+        }
+      ],
+      silenceDeprecations: [
+        "mixed-decls",
+        "legacy-js-api",
+        "color-functions",
+        "import"
+      ]
+    });
+    const css: string = result.css;
+    const exports: Record<string, string> = {};
+
+    // Extract :export block values (e.g. `mobile: 767;`)
+    const exportBlockRe = /:export\s*\{([^}]+)\}/g;
+    let exportMatch;
+    while ((exportMatch = exportBlockRe.exec(css)) !== null) {
+      const block = exportMatch[1];
+      const propRe = /\s*([\w-]+)\s*:\s*([^;]+);/g;
+      let propMatch;
+      while ((propMatch = propRe.exec(block)) !== null) {
+        const key = propMatch[1].replace(/-([a-z])/g, (_: string, c: string) =>
+          c.toUpperCase()
+        );
+        exports[key] = propMatch[2].trim();
+      }
+    }
+
+    // Extract CSS class names — identity-mapped for tests
+    const classRe = /\.([\w-]+)\s*[{,]/g;
+    let classMatch;
+    while ((classMatch = classRe.exec(css)) !== null) {
+      const raw = classMatch[1];
+      const camel = raw.replace(/-([a-z])/g, (_: string, c: string) =>
+        c.toUpperCase()
+      );
+      exports[camel] = raw;
+      if (camel !== raw) {
+        exports[raw] = raw;
+      }
+    }
+
+    return `const styles = ${JSON.stringify(exports)};\nexport default styles;`;
+  }
+
   return {
     name: "scss-as-modules",
     enforce: "pre",
@@ -49,21 +118,18 @@ function scssModulesPlugin(): Plugin {
       if (
         source.endsWith(".scss") &&
         importer &&
-        !source.includes(".module.") &&
         JS_EXTENSIONS.test(importer)
       ) {
         const resolved = path.resolve(path.dirname(importer), source);
         if (resolved.includes(path.join(terriaJSBasePath, "lib"))) {
-          const virtualId = resolved.replace(/\.scss$/, ".module.scss");
-          virtualToReal.set(virtualId, resolved);
-          return { id: virtualId, external: false };
+          return { id: VIRTUAL_PREFIX + resolved + ".js", external: false };
         }
       }
     },
     load(id: string) {
-      const realPath = virtualToReal.get(id);
-      if (realPath) {
-        return readFileSync(realPath, "utf-8");
+      if (id.startsWith(VIRTUAL_PREFIX) && id.endsWith(".scss.js")) {
+        const realPath = id.slice(VIRTUAL_PREFIX.length, -3);
+        return compileSassAndExtract(realPath);
       }
     }
   };
