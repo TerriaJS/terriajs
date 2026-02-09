@@ -12,7 +12,7 @@ import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
 
-const describeIfSupported = supportsWebGL() ? describe : xdescribe;
+const describeIfSupported = supportsWebGL() ? describe : describe.skip;
 
 describeIfSupported("UserDrawing that requires WebGL", function () {
   let terria: Terria;
@@ -108,7 +108,7 @@ describe("UserDrawing", function () {
   });
 
   it("ensures onPointClicked callback is called when point is picked by user", function () {
-    const onPointClicked = jasmine.createSpy();
+    const onPointClicked = vi.fn();
     const userDrawing = new UserDrawing({ terria, onPointClicked });
     userDrawing.enterDrawMode();
     const pickedFeatures = new PickedFeatures();
@@ -122,7 +122,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    const pointEntities = onPointClicked.calls.mostRecent().args[0];
+    const pointEntities = onPointClicked.mock.lastCall[0];
     expect(pointEntities.entities.values.length).toEqual(1);
   });
 
@@ -282,7 +282,7 @@ describe("UserDrawing", function () {
   });
 
   it("ensures onCleanUp callback is called when clean up occurs", function () {
-    const onCleanUp = jasmine.createSpy();
+    const onCleanUp = vi.fn();
     const userDrawing = new UserDrawing({ terria, onCleanUp });
     userDrawing.enterDrawMode();
     expect(onCleanUp).not.toHaveBeenCalled();

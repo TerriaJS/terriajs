@@ -55,11 +55,11 @@ describe("CogCatalogItem", function () {
       const testUrl = TEST_URLS["4326"];
       item.setTrait(CommonStrata.user, "url", testUrl);
 
-      const fromUrl = spyOn(TIFFImageryProvider, "fromUrl").and.callThrough();
+      const fromUrl = vi.spyOn(TIFFImageryProvider, "fromUrl");
       await item.loadMapItems();
       expect(item.mapItems[0]).toBeDefined();
 
-      const [url] = fromUrl.calls.first().args;
+      const [url] = fromUrl.mock.calls[0];
       expect(url).toBe(testUrl);
     });
 
@@ -117,12 +117,12 @@ describe("CogCatalogItem", function () {
       const testUrl = TEST_URLS["32756"];
       item.setTrait(CommonStrata.user, "url", testUrl);
 
-      const mockReprojector = jasmine.createSpy();
+      const mockReprojector = vi.fn();
       item.reprojector = () => mockReprojector;
       await item.loadMapItems();
 
-      expect(mockReprojector.calls.count()).toBe(1);
-      expect(mockReprojector.calls.first().args[0]).toBe(32756);
+      expect(mockReprojector.mock.calls.length).toBe(1);
+      expect(mockReprojector.mock.calls[0][0]).toBe(32756);
     });
   });
 
@@ -138,7 +138,7 @@ describe("CogCatalogItem", function () {
       await when(() => item.mapItems.length > 0);
       const imageryProvider = getImageryProvider(item);
       expect(imageryProvider).toBeDefined();
-      const destroy = spyOn(imageryProvider, "destroy");
+      const destroy = vi.spyOn(imageryProvider, "destroy");
 
       destroyReaction();
       expect(destroy).toHaveBeenCalledTimes(1);

@@ -44,8 +44,8 @@ describe("DataCatalogItem", () => {
 
     removable = false;
 
-    spyOn(viewState, "viewCatalogMember").and.callThrough();
-    spyOn(viewState, "switchMobileView");
+    vi.spyOn(viewState, "viewCatalogMember");
+    vi.spyOn(viewState, "switchMobileView");
   });
 
   afterAll(async function () {

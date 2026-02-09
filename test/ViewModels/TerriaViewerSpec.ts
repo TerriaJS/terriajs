@@ -11,8 +11,8 @@ import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
-const mockBeforeViewerChanges = jasmine.createSpy("", () => {});
-const mockAfterViewerChanges = jasmine.createSpy("", () => {});
+const mockBeforeViewerChanges = vi.fn();
+const mockAfterViewerChanges = vi.fn();
 
 describe("TerriaViewer", function () {
   let terria: Terria;
@@ -42,8 +42,8 @@ describe("TerriaViewer", function () {
     terriaViewer.afterViewerChanged.addEventListener(() => {
       mockAfterViewerChanges();
     });
-    mockBeforeViewerChanges.calls.reset();
-    mockAfterViewerChanges.calls.reset();
+    mockBeforeViewerChanges.mockReset();
+    mockAfterViewerChanges.mockReset();
   });
 
   afterEach(() => {

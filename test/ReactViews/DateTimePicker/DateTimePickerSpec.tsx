@@ -10,8 +10,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(12)
         .fill(0)
         .map((_, i) => new Date(2000 + i * 100, 0, 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -30,8 +30,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(11)
         .fill(0)
         .map((_, i) => new Date(2000 + i * 100, 0, 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -52,8 +52,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(13)
         .fill(0)
         .map((_, i) => new Date(2000 + i, 0, 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -72,8 +72,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(11)
         .fill(0)
         .map((_, i) => new Date(2000 + i, 0, 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -92,8 +92,8 @@ describe("DateTimePicker", () => {
   describe("months view", () => {
     it("should render grid view with more than 12 dates in only one year", () => {
       const dates = new Array(13).fill(0).map((_, i) => new Date(2000, 1, i));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -110,8 +110,8 @@ describe("DateTimePicker", () => {
 
     it("should render time list view with 12 dates or less in only one year", () => {
       const dates = new Array(12).fill(0).map((_, i) => new Date(2000, 1, i));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -132,8 +132,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(32)
         .fill(0)
         .map((_, i) => new Date(2000, 1, 1, i + 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -157,8 +157,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000, 1, i + 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -179,8 +179,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000, 1, 1, 1, i + 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -199,8 +199,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(23)
         .fill(0)
         .map((_, i) => new Date(2000, 1, 1, 1, i * 2));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -221,8 +221,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(35)
         .fill(0)
         .map((_, i) => new Date(2000, 1, 1, 1, i + 1, 0));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -244,8 +244,8 @@ describe("DateTimePicker", () => {
       const dates2 = new Array(20)
         .fill(0)
         .map((_, i) => new Date(2000, 1, 2, i + 1, 0, 0));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -268,8 +268,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000, 1, i + 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -302,8 +302,8 @@ describe("DateTimePicker", () => {
 
       const dates = [...centuries, ...years, ...days, ...hours, ...minutes];
 
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -354,8 +354,8 @@ describe("DateTimePicker", () => {
 
       const dates = [...centuries, ...years, ...days, ...hours, ...minutes];
 
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -422,8 +422,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000, 1, i + 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -443,8 +443,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000 + i, 1, 1));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker
@@ -464,8 +464,8 @@ describe("DateTimePicker", () => {
       const dates = new Array(25)
         .fill(0)
         .map((_, i) => new Date(2000, 1, i - 5));
-      const onChange = jasmine.createSpy("onChange");
-      const onClose = jasmine.createSpy("onClose");
+      const onChange = vi.fn();
+      const onClose = vi.fn();
 
       render(
         <DateTimePicker

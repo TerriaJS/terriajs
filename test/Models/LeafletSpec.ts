@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import L from "leaflet";
 import { action, computed, when } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -21,7 +22,7 @@ describe("Leaflet Model", function () {
   let leaflet: Leaflet;
   // let layers: [L.Layer];
   let layers: any[];
-  let terriaProgressEvt: jasmine.Spy;
+  let terriaProgressEvt: Mock;
 
   beforeEach(function () {
     worker.use(http.get("http://example.com", () => HttpResponse.text("")));
@@ -37,7 +38,7 @@ describe("Leaflet Model", function () {
     container.id = "container";
     document.body.appendChild(container);
 
-    terriaProgressEvt = spyOn(terria.tileLoadProgressEvent, "raiseEvent");
+    terriaProgressEvt = vi.spyOn(terria.tileLoadProgressEvent, "raiseEvent");
 
     leaflet = new Leaflet(terriaViewer, container);
     layers = [
@@ -109,7 +110,7 @@ describe("Leaflet Model", function () {
       changeTileLoadingCount(8);
       changeTileLoadingCount(2);
 
-      expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 8]);
+      expect(terriaProgressEvt.mock.lastCall).toEqual([2, 8]);
     });
 
     it("to 0 when loading tile count reaches 0", function () {
@@ -120,11 +121,11 @@ describe("Leaflet Model", function () {
       changeTileLoadingCount(8);
       changeTileLoadingCount(0);
 
-      expect(terriaProgressEvt.calls.mostRecent().args).toEqual([0, 0]);
+      expect(terriaProgressEvt.mock.lastCall).toEqual([0, 0]);
 
       changeTileLoadingCount(3);
 
-      expect(terriaProgressEvt.calls.mostRecent().args).toEqual([3, 3]);
+      expect(terriaProgressEvt.mock.lastCall).toEqual([3, 3]);
     });
 
     function changeTileLoadingCount(count: number) {
@@ -153,7 +154,7 @@ describe("Leaflet Model", function () {
             south: 0
           })
         );
-        spyOn(terria.timelineStack, "promoteToTop");
+        vi.spyOn(terria.timelineStack, "promoteToTop");
         await leaflet.zoomTo(targetItem, 0);
         expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
           targetItem

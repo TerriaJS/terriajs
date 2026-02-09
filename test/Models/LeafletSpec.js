@@ -30,7 +30,7 @@ describe("Leaflet Model", function () {
     document.body.appendChild(container);
     map = L.map("container").setView([-28.5, 135], DEFAULT_ZOOM_LEVEL);
 
-    spyOn(terria.tileLoadProgressEvent, "raiseEvent");
+    vi.spyOn(terria.tileLoadProgressEvent, "raiseEvent");
 
     layers = [
       new L.TileLayer("http://example.com"),
@@ -100,7 +100,7 @@ describe("Leaflet Model", function () {
       changeTileLoadingCount(2);
 
       expect(
-        terria.tileLoadProgressEvent.raiseEvent.calls.mostRecent().args
+        terria.tileLoadProgressEvent.raiseEvent.mock.lastCall
       ).toEqual([2, 8]);
     });
 
@@ -113,13 +113,13 @@ describe("Leaflet Model", function () {
       changeTileLoadingCount(0);
 
       expect(
-        terria.tileLoadProgressEvent.raiseEvent.calls.mostRecent().args
+        terria.tileLoadProgressEvent.raiseEvent.mock.lastCall
       ).toEqual([0, 0]);
 
       changeTileLoadingCount(3);
 
       expect(
-        terria.tileLoadProgressEvent.raiseEvent.calls.mostRecent().args
+        terria.tileLoadProgressEvent.raiseEvent.mock.lastCall
       ).toEqual([3, 3]);
     });
 
@@ -155,9 +155,7 @@ describe("Leaflet Model", function () {
           isEnabled: true,
           isShown: true,
           imageryLayer: new CesiumTileLayer({
-            pickFeatures: jasmine
-              .createSpy("pickFeatures")
-              .and.returnValue(deferred1.promise),
+            pickFeatures: vi.fn().mockReturnValue(deferred1.promise),
             url: "http://example.com/1",
             ready: true,
             tilingScheme: {
@@ -171,9 +169,7 @@ describe("Leaflet Model", function () {
           isEnabled: true,
           isShown: true,
           imageryLayer: new CesiumTileLayer({
-            pickFeatures: jasmine
-              .createSpy("pickFeatures")
-              .and.returnValue(deferred2.promise),
+            pickFeatures: vi.fn().mockReturnValue(deferred2.promise),
             url: "http://example.com/2",
             ready: true,
             tilingScheme: {
@@ -187,7 +183,7 @@ describe("Leaflet Model", function () {
           isEnabled: false,
           isShown: true,
           imageryLayer: new CesiumTileLayer({
-            pickFeatures: jasmine.createSpy("pickFeatures"),
+            pickFeatures: vi.fn(),
             url: "http://example.com/3",
             ready: true,
             tilingScheme: {
@@ -201,7 +197,7 @@ describe("Leaflet Model", function () {
           isEnabled: false,
           isShown: true,
           imageryLayer: new CesiumTileLayer({
-            pickFeatures: jasmine.createSpy("pickFeatures"),
+            pickFeatures: vi.fn(),
             url: "http://example.com/4",
             ready: true,
             tilingScheme: {
@@ -230,35 +226,23 @@ describe("Leaflet Model", function () {
         });
 
         expect(
-          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[0]
+          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][0]
         ).toBe(100);
         expect(
-          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[1]
+          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][1]
         ).toBe(200);
         expect(
-          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[2]
+          terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][2]
         ).toBe(300);
 
         expect(
-          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[0]
+          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][0]
         ).toBe(400);
         expect(
-          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[1]
+          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][1]
         ).toBe(500);
         expect(
-          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(
-            0
-          )[2]
+          terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.mock.calls[0][2]
         ).toBe(600);
       });
 
@@ -278,7 +262,7 @@ describe("Leaflet Model", function () {
       var click;
 
       beforeEach(function () {
-        spyOn(map, "on").and.callFake(function (type, callback) {
+        vi.spyOn(map, "on").mockImplementation(function (type, callback) {
           if (type === "click") {
             click = callback;
           }

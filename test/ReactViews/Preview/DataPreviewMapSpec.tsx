@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
@@ -8,13 +9,13 @@ import TerriaViewer from "../../../lib/ViewModels/TerriaViewer";
 
 describe("DataPreviewMapSpec", () => {
   let terria: Terria;
-  let attachSpy: jasmine.Spy;
+  let attachSpy: Mock;
 
   beforeEach(() => {
     terria = new Terria({
       baseUrl: "./"
     });
-    attachSpy = spyOn(TerriaViewer.prototype, "attach").and.callThrough();
+    attachSpy = vi.spyOn(TerriaViewer.prototype, "attach");
   });
   it("renders DataPreviewMap placeholder", () => {
     const { container } = render(

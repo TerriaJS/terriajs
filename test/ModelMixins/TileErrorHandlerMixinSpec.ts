@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import i18next from "i18next";
 import L from "leaflet";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
@@ -166,7 +167,7 @@ describe("TileErrorHandlerMixin", function () {
     it("retries fetching the tile using xhr", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
+        vi.spyOn(Resource, "fetchImage").mockReturnValue(
           Promise.reject(error.error)
         );
         await onTileLoadError(item, error);
@@ -176,10 +177,10 @@ describe("TileErrorHandlerMixin", function () {
   });
 
   describe("when statusCode is undefined", function () {
-    let raiseEvent: jasmine.Spy;
+    let raiseEvent: Mock;
 
     beforeEach(function () {
-      raiseEvent = spyOn(item.terria, "raiseErrorToUser");
+      raiseEvent = vi.spyOn(item.terria, "raiseErrorToUser");
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -197,7 +198,7 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, newError(undefined));
       } catch {}
       expect(item.tileFailures).toBe(0);
-      expect(raiseEvent.calls.count()).toBe(0);
+      expect(raiseEvent.mock.calls.length).toBe(0);
     });
 
     it("fails with bad image error if the error defines a target element", async function () {
@@ -211,8 +212,8 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, tileProviderError);
       } catch {}
       expect(item.tileFailures).toBe(1);
-      expect(raiseEvent.calls.count()).toBe(1);
-      expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
+      expect(raiseEvent.mock.calls.length).toBe(1);
+      expect(raiseEvent.mock.calls[0][0]?.message).toContain(
         i18next.t("models.imageryLayer.tileErrorMessageII")
       );
     });
@@ -227,7 +228,7 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, tileProviderError);
       } catch {}
       expect(item.tileFailures).toBe(0);
-      expect(raiseEvent.calls.count()).toBe(0);
+      expect(raiseEvent.mock.calls.length).toBe(0);
     });
 
     it("otherwise, it fails with unknown error", async function () {
@@ -235,8 +236,8 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, newError(undefined));
       } catch {}
       expect(item.tileFailures).toBe(1);
-      expect(raiseEvent.calls.count()).toBe(1);
-      expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
+      expect(raiseEvent.mock.calls.length).toBe(1);
+      expect(raiseEvent.mock.calls[0][0]?.message).toContain(
         i18next.t("models.imageryLayer.unknownTileErrorMessage")
       );
     });
@@ -246,7 +247,7 @@ describe("TileErrorHandlerMixin", function () {
     it("it fails after retrying a maximum of specified number of times", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
+        vi.spyOn(Resource, "fetchImage").mockReturnValue(
           Promise.reject(error.error)
         );
         await onTileLoadError(item, error);
@@ -260,14 +261,14 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("tells the map to reload the tile again if an xhr attempt succeeds", async function () {
-      spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+      vi.spyOn(Resource, "fetchImage").mockReturnValue(Promise.resolve());
       await onTileLoadError(item, newError(randomIntBetween(500, 599)));
       expect(item.tileFailures).toBe(0);
     });
 
     it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function () {
       try {
-        spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+        vi.spyOn(Resource, "fetchImage").mockReturnValue(Promise.resolve());
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 0));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 1));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 2));
@@ -281,7 +282,7 @@ describe("TileErrorHandlerMixin", function () {
     it("gives up silently if the item is hidden", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
+        vi.spyOn(Resource, "fetchImage").mockReturnValue(
           Promise.reject(error.error)
         );
         const result = onTileLoadError(item, error);
@@ -302,7 +303,7 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("reports the last error to the user", async function () {
-      spyOn(item.terria, "raiseErrorToUser");
+      vi.spyOn(item.terria, "raiseErrorToUser");
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
@@ -349,7 +350,7 @@ describe("TileErrorHandlerMixin", function () {
 
   it("calls `handleTileError` if the item defines it", async function () {
     item.handleTileError = (promise) => promise;
-    spyOn(item, "handleTileError");
+    vi.spyOn(item, "handleTileError");
     try {
       await onTileLoadError(item, newError(400));
     } catch {}

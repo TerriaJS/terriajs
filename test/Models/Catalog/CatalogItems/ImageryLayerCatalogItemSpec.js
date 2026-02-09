@@ -172,8 +172,9 @@ describe("ImageryLayerCatalogItem", function () {
     });
 
     function failLoad(statusCode, times) {
-      return spyOn(Resource.prototype, "fetchImage").and.callFake(
-        function (options) {
+      return vi
+        .spyOn(Resource.prototype, "fetchImage")
+        .mockImplementation(function (options) {
           if (times > 0) {
             --times;
             if (options.preferBlob) {
@@ -186,12 +187,11 @@ describe("ImageryLayerCatalogItem", function () {
           } else {
             return Promise.resolve(image);
           }
-        }
-      );
+        });
     }
 
     it("ignores errors in disabled layers", async function () {
-      spyOn(globeOrMap, "isImageryLayerShown").and.returnValue(false);
+      vi.spyOn(globeOrMap, "isImageryLayerShown").mockReturnValue(false);
       const fetchImage = failLoad(503, 10);
 
       imageryLayer._requestImagery(imagery);
@@ -199,7 +199,7 @@ describe("ImageryLayerCatalogItem", function () {
       await pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
       });
-      expect(fetchImage.calls.count()).toEqual(1);
+      expect(fetchImage.mock.calls.length).toEqual(1);
     });
 
     it("retries images that fail with a 503 error", async function () {
@@ -210,12 +210,13 @@ describe("ImageryLayerCatalogItem", function () {
       await pollToPromise(function () {
         return imagery.state === ImageryState.RECEIVED;
       });
-      expect(fetchImage.calls.count()).toEqual(4);
+      expect(fetchImage.mock.calls.length).toEqual(4);
     });
 
     it("eventually gives up on a tile that only succeeds when loaded via blob", async function () {
-      const fetchImage = spyOn(Resource.prototype, "fetchImage").and.callFake(
-        function (options) {
+      const fetchImage = vi
+        .spyOn(Resource.prototype, "fetchImage")
+        .mockImplementation(function (options) {
           if (options.preferBlob) {
             return runLater(function () {
               return image;
@@ -225,15 +226,14 @@ describe("ImageryLayerCatalogItem", function () {
               return Promise.reject(image);
             });
           }
-        }
-      );
+        });
 
       imageryLayer._requestImagery(imagery);
 
       await pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
       });
-      expect(fetchImage.calls.count()).toBeGreaterThan(5);
+      expect(fetchImage.mock.calls.length).toBeGreaterThan(5);
     });
 
     it("ignores any number of 404 errors if treat404AsError is false", async function () {
@@ -257,7 +257,7 @@ describe("ImageryLayerCatalogItem", function () {
         }
         return result;
       });
-      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(fetchImage.mock.calls.length).toEqual(tiles.length * 2);
     });
 
     it("ignores any number of 403 errors if treat403AsError is false", async function () {
@@ -281,7 +281,7 @@ describe("ImageryLayerCatalogItem", function () {
         }
         return result;
       });
-      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(fetchImage.mock.calls.length).toEqual(tiles.length * 2);
     });
 
     it("doesn't disable the layer after only five 404s if treat404AsError is true", async function () {
@@ -306,7 +306,7 @@ describe("ImageryLayerCatalogItem", function () {
         }
         return result;
       });
-      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(fetchImage.mock.calls.length).toEqual(tiles.length * 2);
       expect(catalogItem.isShown).toBe(true);
     });
 
@@ -332,7 +332,7 @@ describe("ImageryLayerCatalogItem", function () {
         }
         return result;
       });
-      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(fetchImage.mock.calls.length).toEqual(tiles.length * 2);
       expect(catalogItem.isShown).toBe(false);
     });
   });

@@ -465,7 +465,7 @@ describe("ArcGisMapServerCatalogItem", function () {
             "hideLayerAfterMinScaleDenominator",
             true
           );
-          spyOn(item.terria, "raiseErrorToUser");
+          vi.spyOn(item.terria, "raiseErrorToUser");
           await imageryProvider.requestImage(0, 0, 100);
           expect(item.scaleWorkbenchInfo).toBeDefined();
         });

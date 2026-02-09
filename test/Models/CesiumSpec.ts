@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import range from "lodash-es/range";
 import {
   IObservableValue,
@@ -36,14 +37,14 @@ import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
 import { http, HttpResponse } from "msw";
 
-const describeIfSupported = supportsWebGL() ? describe : xdescribe;
+const describeIfSupported = supportsWebGL() ? describe : describe.skip;
 
 describeIfSupported("Cesium Model", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
   let container: HTMLElement;
   let cesium: Cesium;
-  let terriaProgressEvt: jasmine.Spy;
+  let terriaProgressEvt: Mock;
   let viewerItems: IObservableValue<MappableMixin.Instance[]>;
 
   beforeEach(function () {
@@ -62,7 +63,7 @@ describeIfSupported("Cesium Model", function () {
     container.id = "container";
     document.body.appendChild(container);
 
-    terriaProgressEvt = spyOn(terria.tileLoadProgressEvent, "raiseEvent");
+    terriaProgressEvt = vi.spyOn(terria.tileLoadProgressEvent, "raiseEvent");
 
     cesium = new Cesium(terriaViewer, container);
 
@@ -97,11 +98,11 @@ describeIfSupported("Cesium Model", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(4);
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(0);
 
-    expect(terriaProgressEvt.calls.mostRecent().args).toEqual([0, 0]);
+    expect(terriaProgressEvt.mock.lastCall).toEqual([0, 0]);
 
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
-    expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
+    expect(terriaProgressEvt.mock.lastCall).toEqual([2, 2]);
   });
 
   describe("zoomTo", function () {
@@ -132,7 +133,7 @@ describeIfSupported("Cesium Model", function () {
             south: 0
           })
         );
-        const promoteToTop = spyOn(terria.timelineStack, "promoteToTop");
+        const promoteToTop = vi.spyOn(terria.timelineStack, "promoteToTop");
         await cesium.zoomTo(targetItem, 0);
         expect(promoteToTop).toHaveBeenCalledWith(targetItem);
       });
@@ -364,10 +365,10 @@ describeIfSupported("Cesium Model", function () {
           },
           { addModelToTerria: true }
         ).throwIfUndefined() as CesiumTerrainCatalogItem;
-        spyOn(
+        vi.spyOn(
           workbenchTerrainItem as any,
           "loadTerrainProvider"
-        ).and.returnValue(new CesiumTerrainProvider());
+        ).mockReturnValue(new CesiumTerrainProvider());
         (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
@@ -395,10 +396,10 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = spyOn(
+      const createSpy = vi.spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
-      ).and.returnValue(Promise.resolve(fakeIonTerrainProvider));
+      ).mockReturnValue(Promise.resolve(fakeIonTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -413,10 +414,10 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", async function () {
       const fakeUrlTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = spyOn(
+      const createSpy = vi.spyOn(
         cesium as any,
         "createTerrainProviderFromUrl"
-      ).and.returnValue(Promise.resolve(fakeUrlTerrainProvider));
+      ).mockReturnValue(Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -431,10 +432,10 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", async function () {
       const fakeCesiumWorldTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = spyOn(
+      const createSpy = vi.spyOn(
         cesium as any,
         "createWorldTerrain"
-      ).and.returnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
+      ).mockReturnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;

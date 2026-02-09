@@ -12,7 +12,7 @@ describe("TimeSeriesStack", function () {
       baseUrl: "./"
     });
     clock = {
-      setCatalogItem: jasmine.createSpy("setCatalogItem")
+      setCatalogItem: vi.fn()
     };
     stack = new TimelineStack(terria, clock);
   });
@@ -30,7 +30,7 @@ describe("TimeSeriesStack", function () {
     });
 
     it("the global clock should take that layer's clock", function () {
-      expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(
+      expect(clock.setCatalogItem.mock.lastCall[0]).toEqual(
         catalogItem
       );
     });
@@ -52,7 +52,7 @@ describe("TimeSeriesStack", function () {
     });
 
     it("the global clock should be set to the second layer's value", function () {
-      expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(
+      expect(clock.setCatalogItem.mock.lastCall[0]).toEqual(
         catalogItem2
       );
     });
@@ -75,7 +75,7 @@ describe("TimeSeriesStack", function () {
     });
 
     it("the global clock should have been set back to the first layer", function () {
-      expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(
+      expect(clock.setCatalogItem.mock.lastCall[0]).toEqual(
         catalogItem1
       );
     });
@@ -98,7 +98,7 @@ describe("TimeSeriesStack", function () {
     });
 
     it("the global clock should still be set to the second layer's value", function () {
-      expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(
+      expect(clock.setCatalogItem.mock.lastCall[0]).toEqual(
         catalogItem2
       );
     });
@@ -130,7 +130,7 @@ describe("TimeSeriesStack", function () {
     });
 
     it("the global clock should still be set to the first layer's value", function () {
-      expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(
+      expect(clock.setCatalogItem.mock.lastCall[0]).toEqual(
         catalogItem1
       );
     });

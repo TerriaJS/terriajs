@@ -76,14 +76,14 @@ describe("ChartCustomComponent", function () {
         sources: "a, b"
       }
     };
-    spyOn(component, "constructShareableCatalogItem").and.callThrough();
+    vi.spyOn(component, "constructShareableCatalogItem");
     component.processNode(context, node, [], 0);
 
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
     // Make sure the id is dependent on parent, title & source name
     expect(component.constructShareableCatalogItem).toHaveBeenCalledWith(
       "parent:Foo:a",
-      jasmine.any(Object),
+      expect.any(Object),
       undefined
     );
   });

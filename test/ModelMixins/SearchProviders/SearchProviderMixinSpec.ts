@@ -9,10 +9,8 @@ class TestSearchProvider extends SearchProviderMixin(
 ) {
   type = "test";
 
-  public override logEvent = jasmine.createSpy();
-  public override doSearch = jasmine
-    .createSpy()
-    .and.returnValue(Promise.resolve());
+  public override logEvent = vi.fn();
+  public override doSearch = vi.fn().mockReturnValue(Promise.resolve());
 }
 
 describe("SearchProviderMixin", () => {
@@ -25,8 +23,8 @@ describe("SearchProviderMixin", () => {
     });
     searchProvider = new TestSearchProvider("test", terria);
     searchProvider.setTrait(CommonStrata.definition, "minCharacters", 3);
-    searchProvider.logEvent.calls.reset();
-    searchProvider.doSearch.calls.reset();
+    searchProvider.logEvent.mockReset();
+    searchProvider.doSearch.mockReset();
   });
 
   it(" - properly mixed", () => {

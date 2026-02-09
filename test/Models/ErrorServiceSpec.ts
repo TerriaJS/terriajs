@@ -31,7 +31,7 @@ describe("ErrorService", function () {
   });
 
   it("Initializes an error service, passing in config", async function () {
-    const initSpy = spyOn(mockErrorServiceProvider, "init");
+    const initSpy = vi.spyOn(mockErrorServiceProvider, "init");
     await terria.start({
       configUrl: "test-config.json",
       errorService: mockErrorServiceProvider
@@ -40,7 +40,7 @@ describe("ErrorService", function () {
   });
 
   it("Gets called with error", async function () {
-    const errorSpy = spyOn(mockErrorServiceProvider, "error").and.callThrough();
+    const errorSpy = vi.spyOn(mockErrorServiceProvider, "error");
     await terria.start({
       configUrl: "test-config.json",
       errorService: mockErrorServiceProvider
@@ -56,6 +56,6 @@ describe("ErrorService", function () {
     await terria.start({
       configUrl: "test-config.json"
     });
-    expect(terria.errorService).toEqual(jasmine.any(StubErrorServiceProvider));
+    expect(terria.errorService).toEqual(expect.any(StubErrorServiceProvider));
   });
 });

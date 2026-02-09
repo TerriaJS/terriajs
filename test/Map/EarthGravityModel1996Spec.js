@@ -6,7 +6,7 @@ import gravityModel from "../../wwwroot/data/WW15MGH.DAC";
 
 var describeIfSupported = EarthGravityModel1996.isSupported()
   ? describe
-  : xdescribe;
+  : describe.skip;
 
 describeIfSupported("EarthGravityModel1996", function () {
   var egm96;

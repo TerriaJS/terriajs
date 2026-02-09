@@ -1750,10 +1750,10 @@ describe("GeoJsonCatalogItemSpec", () => {
         imagery.imageryProvider instanceof ProtomapsImageryProvider
       ).toBeTruthy();
 
-      const spyOnProcessPickedFeatures = spyOn(
+      const spyOnProcessPickedFeatures = vi.spyOn(
         imagery.imageryProvider!,
         "pickFeatures"
-      ).and.callThrough();
+      );
 
       const features =
         (await imagery.imageryProvider!.pickFeatures(
@@ -1792,10 +1792,10 @@ describe("GeoJsonCatalogItemSpec", () => {
         imagery.imageryProvider instanceof ProtomapsImageryProvider
       ).toBeTruthy();
 
-      const spyOnProcessPickedFeatures = spyOn(
+      const spyOnProcessPickedFeatures = vi.spyOn(
         imagery.imageryProvider!,
         "pickFeatures"
-      ).and.callThrough();
+      );
 
       const features =
         (await imagery.imageryProvider!.pickFeatures(

@@ -87,8 +87,8 @@ describe("ItemSearchTool", function () {
   });
 
   it("initializes and describes the parameters when mounted", async function () {
-    spyOn(itemSearchProvider, "initialize").and.callThrough();
-    spyOn(itemSearchProvider, "describeParameters").and.callThrough();
+    vi.spyOn(itemSearchProvider, "initialize");
+    vi.spyOn(itemSearchProvider, "describeParameters");
     render(
       withThemeContext(
         <ItemSearchTool
@@ -107,7 +107,7 @@ describe("ItemSearchTool", function () {
 
   describe("loading", function () {
     it("shows an error message on load error", async function () {
-      spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
+      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(() =>
         Promise.reject(new Error(`Something happened`))
       );
 
@@ -133,7 +133,7 @@ describe("ItemSearchTool", function () {
     });
 
     it("shows a search from on successful load", async function () {
-      spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
+      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(() =>
         Promise.resolve([
           {
             type: "numeric",
@@ -160,7 +160,7 @@ describe("ItemSearchTool", function () {
     });
 
     it("it shows the search results", async function () {
-      spyOn(itemSearchProvider, "search").and.callFake(() =>
+      vi.spyOn(itemSearchProvider, "search").mockImplementation(() =>
         Promise.resolve([])
       );
 

@@ -104,10 +104,10 @@ describe("ViewState", function () {
   });
   describe("tour and trainer interaction", function () {
     beforeEach(function () {
-      jasmine.clock().install();
+      vi.useFakeTimers();
     });
     afterEach(function () {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
     it("disables trainer bar if turning on tour", function () {
       runInAction(() => {
@@ -122,7 +122,7 @@ describe("ViewState", function () {
         viewState.setShowTour(true);
       });
 
-      jasmine.clock().tick(animationDuration); // wait for workbench animation
+      vi.advanceTimersByTime(animationDuration); // wait for workbench animation
 
       expect(viewState.trainerBarExpanded).toEqual(false);
       expect(viewState.trainerBarShowingAllSteps).toEqual(false);

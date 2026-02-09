@@ -17,7 +17,7 @@ describe("TerrainCatalogItem", function () {
 
   it("sets terrainProvider on Cesium scene when enabled", async function () {
     var fakeTerrainProvider = {};
-    spyOn(item, "_createTerrainProvider").and.returnValue(fakeTerrainProvider);
+    vi.spyOn(item, "_createTerrainProvider").mockReturnValue(fakeTerrainProvider);
 
     terria.cesium = {
       scene: {
@@ -33,7 +33,7 @@ describe("TerrainCatalogItem", function () {
 
   it("restores previous terrainProvider when disabled", async function () {
     var fakeTerrainProvider = {};
-    spyOn(item, "_createTerrainProvider").and.returnValue(fakeTerrainProvider);
+    vi.spyOn(item, "_createTerrainProvider").mockReturnValue(fakeTerrainProvider);
 
     var originalTerrainProvider = {};
     terria.cesium = {
@@ -59,11 +59,11 @@ describe("TerrainCatalogItem", function () {
     };
 
     var enabledItem = new TerrainCatalogItem(terria);
-    spyOn(enabledItem, "_createTerrainProvider").and.returnValue({});
+    vi.spyOn(enabledItem, "_createTerrainProvider").mockReturnValue({});
     enabledItem.isEnabled = true;
 
     await enabledItem.load();
-    spyOn(item, "_createTerrainProvider").and.returnValue({});
+    vi.spyOn(item, "_createTerrainProvider").mockReturnValue({});
     item.isEnabled = true;
 
     await item.load();
@@ -79,13 +79,13 @@ describe("TerrainCatalogItem", function () {
 
     var composite = new CompositeCatalogItem(terria);
     var enabledItem = new TerrainCatalogItem(terria);
-    spyOn(enabledItem, "_createTerrainProvider").and.returnValue({});
+    vi.spyOn(enabledItem, "_createTerrainProvider").mockReturnValue({});
     composite.add(enabledItem);
 
     composite.isEnabled = true;
 
     await composite.load();
-    spyOn(item, "_createTerrainProvider").and.returnValue({});
+    vi.spyOn(item, "_createTerrainProvider").mockReturnValue({});
     item.isEnabled = true;
 
     await item.load();
@@ -94,8 +94,8 @@ describe("TerrainCatalogItem", function () {
 
   it("throws when shown in 2D", async function () {
     terria.leaflet = {};
-    spyOn(item, "_createTerrainProvider").and.returnValue({});
-    spyOn(terria.error, "raiseEvent");
+    vi.spyOn(item, "_createTerrainProvider").mockReturnValue({});
+    vi.spyOn(terria.error, "raiseEvent");
 
     item.isEnabled = true;
 
@@ -103,6 +103,6 @@ describe("TerrainCatalogItem", function () {
     expect(terria.raiseErrorToUser).toHaveBeenCalled();
     expect(item.isShown).toBe(false);
     item.isShown = true;
-    expect(terria.raiseErrorToUser.calls.count()).toBe(2);
+    expect(terria.raiseErrorToUser.mock.calls.length).toBe(2);
   });
 });

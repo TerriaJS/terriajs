@@ -43,9 +43,9 @@ describe("CzmlCatalogItem", function () {
     it("proxies URLs", async function () {
       czml.setTrait(CommonStrata.user, "url", "https://someexternalurl/");
       czml.setTrait(CommonStrata.user, "forceProxy", true);
-      const load = spyOn(CzmlDataSource, "load");
+      const load = vi.spyOn(CzmlDataSource, "load");
       await czml.loadMapItems();
-      expect(load.calls.mostRecent().args[0]).toBe(
+      expect(load.mock.lastCall[0]).toBe(
         "proxy/https://someexternalurl/"
       );
     });
@@ -168,7 +168,7 @@ describe("CzmlCatalogItem", function () {
       await czml.loadMapItems();
       const [dataSource] = czml.mapItems as [CzmlDataSource];
       expect(dataSource).toBeDefined("Expected datasource to be defined");
-      spyOn(dataSource, "process");
+      vi.spyOn(dataSource, "process");
       czml.refreshData();
       expect(dataSource.process).toHaveBeenCalledWith("test/CZML/Vehicle.czml");
     });

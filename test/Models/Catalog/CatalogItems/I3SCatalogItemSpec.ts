@@ -1,4 +1,3 @@
-import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
@@ -32,10 +31,10 @@ describe("I3SCatalogItemSpec", function () {
   const testUrl = "/test/Cesium3DTiles/tileset.json";
 
   beforeAll(function () {
-    spyOn(Resource.prototype, "fetchJson").and.callFake(function fetch() {
+    vi.spyOn(Resource.prototype, "fetchJson").mockImplementation(function fetch() {
       return Promise.resolve(mockProviderData);
     });
-    spyOn(Cesium3DTileset, "fromUrl").and.callFake(() => {
+    vi.spyOn(Cesium3DTileset, "fromUrl").mockImplementation(() => {
       const tileset = new Cesium3DTileset({});
       /* @ts-expect-error Mock the root tile so that i3s property can be appended */
       tileset._root = {};

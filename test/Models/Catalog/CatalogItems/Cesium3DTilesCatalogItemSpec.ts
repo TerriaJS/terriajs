@@ -1,4 +1,3 @@
-import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -141,7 +140,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           item.setTrait("definition", "ionAccessToken", "fakeToken");
           item.setTrait("definition", "ionServer", "fakeServer");
         });
-        spyOn(IonResource, "fromAssetId").and.callFake(() => {});
+        vi.spyOn(IonResource, "fromAssetId").mockImplementation(() => {});
         try {
           await item.loadMapItems();
         } catch {}
@@ -152,7 +151,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
       });
     });
 
-    xit("sets the extra options", async function () {
+    it.skip("sets the extra options", async function () {
       runInAction(() => {
         item.setTrait(
           "definition",
@@ -312,7 +311,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   it("correctly builds `Feature` from picked Cesium3DTileFeature", async function () {
     const picked = new Cesium3DTileFeature();
-    spyOn(picked, "getPropertyIds").and.returnValue([]);
+    vi.spyOn(picked, "getPropertyIds").mockReturnValue([]);
     const feature = await item.buildFeatureFromPickResult(
       Cartesian2.ZERO,
       picked
@@ -325,7 +324,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   it("can change the visibility of a feature", function () {
     const feature = new Cesium3DTileFeature();
-    spyOn(feature, "getProperty").and.callFake((prop: string) => {
+    vi.spyOn(feature, "getProperty").mockImplementation((prop: string) => {
       const props: any = { doorNumber: 10, color: "red" };
       return props[prop];
     });

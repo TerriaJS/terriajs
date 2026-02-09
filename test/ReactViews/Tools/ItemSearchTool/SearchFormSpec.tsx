@@ -36,7 +36,7 @@ describe("SearchForm", function () {
   });
   it("calls `onResults` after searching", async function () {
     const itemSearchProvider = new TestItemSearchProvider({}, []);
-    const onResults = jasmine.createSpy("onResults");
+    const onResults = vi.fn();
     render(
       <SearchForm
         itemSearchProvider={itemSearchProvider}
@@ -57,9 +57,9 @@ describe("SearchForm", function () {
     await waitFor(() => {
       expect(onResults).toHaveBeenCalled();
     });
-    const [_, results] = onResults.calls.mostRecent().args;
+    const [_, results] = onResults.mock.lastCall;
     expect(results).toEqual(
-      jasmine.arrayContaining([jasmine.objectContaining({ id: "1" })])
+      expect.arrayContaining([expect.objectContaining({ id: "1" })])
     );
   });
 });

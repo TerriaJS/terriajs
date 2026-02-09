@@ -23,7 +23,7 @@ describe("SearchBox", function () {
     it("renders", () => {
       renderWithContexts(
         <SearchBox
-          onSearchTextChanged={jasmine.createSpy()}
+          onSearchTextChanged={vi.fn()}
           onDoSearch={() => {}}
           onFocus={() => {}}
           searchText={"mochi"}
@@ -39,7 +39,7 @@ describe("SearchBox", function () {
     });
 
     it("renders and clearSearch triggers onSearchTextChanged callback", async () => {
-      const onSeachTextChangedSpy = jasmine.createSpy();
+      const onSeachTextChangedSpy = vi.fn();
       renderWithContexts(
         <SearchBox
           onSearchTextChanged={onSeachTextChangedSpy}

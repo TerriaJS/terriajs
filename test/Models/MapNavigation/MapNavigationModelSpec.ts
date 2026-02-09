@@ -271,7 +271,7 @@ describe("MapNavigationModel", function () {
   it("properly sets pinned", function () {
     const items = [item1, item2, item3, item4, item5];
     const mapNavigationModel = new MapNavigationModel(terria, items);
-    spyOn(console, "error");
+    vi.spyOn(console, "error");
 
     mapNavigationModel.setPinned(item1.id, true);
     expect(console.error).toHaveBeenCalledTimes(0);

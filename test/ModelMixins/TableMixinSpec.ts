@@ -2117,7 +2117,7 @@ describe("TableMixin", function () {
         expect(
           entity.point?.scaleByDistance?.getValue(JulianDate.now())
         ).toEqual(
-          jasmine.objectContaining({
+          expect.objectContaining({
             near: 0,
             nearValue: 4,
             far: 50000,

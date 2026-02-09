@@ -9,7 +9,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import AugmentedVirtuality from "../../lib/Models/AugmentedVirtuality";
 
-var describeIfSupportsWebGL = supportsWebGL() ? describe : xdescribe;
+var describeIfSupportsWebGL = supportsWebGL() ? describe : describe.skip;
 
 describe("AugmentedVirtuality", function () {
   let terria;

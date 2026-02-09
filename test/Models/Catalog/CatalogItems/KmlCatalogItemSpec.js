@@ -8,7 +8,7 @@ import loadText from "../../../../lib/Core/loadText";
 import loadXML from "../../../../lib/Core/loadXML";
 
 // KML requires support for Blob.  See https://github.com/TerriaJS/terriajs/issues/508
-var describeIfSupported = typeof Blob !== "undefined" ? describe : xdescribe;
+var describeIfSupported = typeof Blob !== "undefined" ? describe : describe.skip;
 
 describeIfSupported("KmlCatalogItem", function () {
   var terria;

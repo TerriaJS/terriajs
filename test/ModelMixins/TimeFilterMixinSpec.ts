@@ -88,7 +88,7 @@ describe("TimeFilterMixin", function () {
         fakeImageryFeature.properties = {
           availabilityAtLocation: ["2023-01-02", "2023-01-03"]
         };
-        spyOn(imageryProvider, "pickFeatures").and.returnValue(
+        vi.spyOn(imageryProvider, "pickFeatures").mockReturnValue(
           Promise.resolve([fakeImageryFeature])
         );
 
@@ -121,7 +121,7 @@ describe("TimeFilterMixin", function () {
       fakeImageryFeature.properties = {
         availabilityAtLocation: ["2023-01-02", "2023-01-03"]
       };
-      spyOn(imageryProvider, "pickFeatures").and.returnValue(
+      vi.spyOn(imageryProvider, "pickFeatures").mockReturnValue(
         Promise.resolve([fakeImageryFeature])
       );
 
@@ -166,14 +166,14 @@ describe("TimeFilterMixin", function () {
             layers: "layer2"
           })
         ];
-        const spy0 = spyOn(
+        const spy0 = vi.spyOn(
           item.imageryProviders[0],
           "pickFeatures"
-        ).and.returnValue(undefined);
-        const spy1 = spyOn(
+        ).mockReturnValue(undefined);
+        const spy1 = vi.spyOn(
           item.imageryProviders[1],
           "pickFeatures"
-        ).and.returnValue(undefined);
+        ).mockReturnValue(undefined);
 
         await item.setTimeFilterFromLocation({
           // Position to pick
@@ -224,14 +224,14 @@ describe("TimeFilterMixin", function () {
             "timeprop"
           );
 
-          const spy0 = spyOn(
+          const spy0 = vi.spyOn(
             item.imageryProviders[0],
             "pickFeatures"
-          ).and.returnValue(Promise.resolve([featureInfo1]));
-          const spy1 = spyOn(
+          ).mockReturnValue(Promise.resolve([featureInfo1]));
+          const spy1 = vi.spyOn(
             item.imageryProviders[1],
             "pickFeatures"
-          ).and.returnValue(Promise.resolve([featureInfo2]));
+          ).mockReturnValue(Promise.resolve([featureInfo2]));
 
           await item.setTimeFilterFromLocation({
             // Position to pick
@@ -261,7 +261,7 @@ describe("TimeFilterMixin", function () {
     });
 
     it("passes the correct arguments when picking the imagery provider", async function () {
-      const spy = spyOn(imageryProvider, "pickFeatures").and.returnValue(
+      const spy = vi.spyOn(imageryProvider, "pickFeatures").mockReturnValue(
         undefined
       );
 
@@ -280,17 +280,17 @@ describe("TimeFilterMixin", function () {
         }
       });
 
-      const [x, y, level, longitude, latitude] = spy.calls.mostRecent().args;
+      const [x, y, level, longitude, latitude] = spy.mock.lastCall;
       expect([x, y, level]).toEqual([1, 2, 3]);
       expect(longitude).toBeCloseTo(2.5302);
       expect(latitude).toBeCloseTo(-0.6602);
     });
 
     it("does nothing when terria.allowFeatureInfoRequests is set to `false`", async function () {
-      const pickFeatures = spyOn(
+      const pickFeatures = vi.spyOn(
         imageryProvider,
         "pickFeatures"
-      ).and.returnValue(undefined);
+      ).mockReturnValue(undefined);
 
       terria.allowFeatureInfoRequests = false;
       await item.setTimeFilterFromLocation({

@@ -1132,7 +1132,7 @@ describe("WebMapServiceCatalogItem", function () {
           true
         );
       });
-      spyOn(item.terria, "raiseErrorToUser");
+      vi.spyOn(item.terria, "raiseErrorToUser");
       await imageryProvider.requestImage(0, 0, 100);
       expect(item.scaleWorkbenchInfo).toBeDefined();
     });
@@ -1146,7 +1146,7 @@ describe("WebMapServiceCatalogItem", function () {
         );
       });
       await item.loadMapItems();
-      spyOn(item.terria, "raiseErrorToUser");
+      vi.spyOn(item.terria, "raiseErrorToUser");
       await imageryProvider.requestImage(0, 0, 100);
       expect(item.scaleWorkbenchInfo).not.toBeDefined();
     });

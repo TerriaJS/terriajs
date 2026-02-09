@@ -187,7 +187,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
     });
     it("returns mapItems", function () {
       expect(job.mapItems.length).toBe(1);
-      expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
+      expect(job.mapItems[0]).toEqual(expect.any(GeoJsonDataSource));
     });
 
     it("defines a rectangle", function () {
@@ -244,7 +244,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
     });
 
     it("stops polling if pendingItem is removed from the workbench", async function () {
-      spyOn(wps.terria.workbench, "add").and.returnValue(
+      vi.spyOn(wps.terria.workbench, "add").mockReturnValue(
         Promise.resolve(Result.none())
       ); // do nothing
       worker.use(
@@ -386,7 +386,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
         Identifier: "geometry_id",
         LiteralData: { AllowedValues: { Value: ["Point", "Polygon"] } }
       });
-      expect(parameter).toEqual(jasmine.any(EnumerationParameter));
+      expect(parameter).toEqual(expect.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = parameter as EnumerationParameter;
         expect(enumParameter.options).toEqual([
@@ -401,7 +401,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
         Identifier: "geometry_id",
         LiteralData: { AllowedValue: { Value: "Point" } }
       });
-      expect(parameter).toEqual(jasmine.any(EnumerationParameter));
+      expect(parameter).toEqual(expect.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = parameter as EnumerationParameter;
         expect(enumParameter.options).toEqual([{ id: "Point" }]);
@@ -413,7 +413,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
         Identifier: "geometry_id",
         LiteralData: { AnyValue: {} }
       });
-      expect(parameter).toEqual(jasmine.any(StringParameter));
+      expect(parameter).toEqual(expect.any(StringParameter));
     });
 
     it("converts ComplexData input with datetime schema to DateTimeParameter", function () {
@@ -425,7 +425,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           }
         }
       });
-      expect(parameter).toEqual(jasmine.any(DateTimeParameter));
+      expect(parameter).toEqual(expect.any(DateTimeParameter));
     });
 
     it("converts ComplexData input with point schema to PointParameter", function () {
@@ -437,7 +437,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           }
         }
       });
-      expect(parameter).toEqual(jasmine.any(PointParameter));
+      expect(parameter).toEqual(expect.any(PointParameter));
     });
 
     it("converts ComplexData input with line schema to LineParameter", function () {
@@ -451,7 +451,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           }
         }
       });
-      expect(parameter).toEqual(jasmine.any(LineParameter));
+      expect(parameter).toEqual(expect.any(LineParameter));
     });
 
     it("converts ComplexData input with polygon schema to PolygonParameter", function () {
@@ -463,7 +463,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           }
         }
       });
-      expect(parameter).toEqual(jasmine.any(PolygonParameter));
+      expect(parameter).toEqual(expect.any(PolygonParameter));
     });
 
     it("converts ComplexData input with GeoJson schema to GeoJsonParameter", function () {
@@ -475,7 +475,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           }
         }
       });
-      expect(parameter).toEqual(jasmine.any(GeoJsonParameter));
+      expect(parameter).toEqual(expect.any(GeoJsonParameter));
     });
 
     it("converts input with BoundingBoxData to RectangleParameter", function () {
@@ -485,7 +485,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
           Default: { CRS: "crs84" }
         }
       });
-      expect(parameter).toEqual(jasmine.any(RectangleParameter));
+      expect(parameter).toEqual(expect.any(RectangleParameter));
     });
   });
 

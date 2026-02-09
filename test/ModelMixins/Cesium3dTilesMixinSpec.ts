@@ -162,7 +162,7 @@ describe("Cesium3dTilesMixin", function () {
         "building-no"
       ]);
       const fakeTileFeature = new Cesium3DTileFeature();
-      spyOn(fakeTileFeature, "getProperty").and.callFake((property: string) =>
+      vi.spyOn(fakeTileFeature, "getProperty").mockImplementation((property: string) =>
         property === "locality"
           ? "foo"
           : property === "building-no"

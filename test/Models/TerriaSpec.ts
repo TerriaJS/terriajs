@@ -440,15 +440,13 @@ describe("TerriaSpec", function () {
         baseUrl: "./"
       });
 
-      const restoreAppState = spyOn(
+      const restoreAppState = vi.spyOn(
         terria,
         "restoreAppState" as any
-      ).and.callThrough();
+      );
 
-      const beforeRestoreAppState = jasmine
-        .createSpy("beforeRestoreAppState")
-        // It should also handle errors when calling beforeRestoreAppState
-        .and.callFake(() => Promise.reject("some error"));
+      const beforeRestoreAppState = // It should also handle errors when calling beforeRestoreAppState
+      vi.fn().mockImplementation(() => Promise.reject("some error"));
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       await terria.start({
@@ -1280,18 +1278,18 @@ describe("TerriaSpec", function () {
         );
 
         // Do not call through.
-        loadMapItemsArcGisMap = spyOn(
+        loadMapItemsArcGisMap = vi.spyOn(
           ArcGisMapServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
-        loadMapItemsArcGisFeature = spyOn(
+        ).mockReturnValue(Promise.resolve(Result.none()));
+        loadMapItemsArcGisFeature = vi.spyOn(
           ArcGisFeatureServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
-        loadMapItemsWms = spyOn(
+        ).mockReturnValue(Promise.resolve(Result.none()));
+        loadMapItemsWms = vi.spyOn(
           WebMapServiceCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
+        ).mockReturnValue(Promise.resolve(Result.none()));
       });
 
       it("when a workbench item is a simple map server group", async function () {
@@ -1464,7 +1462,7 @@ describe("TerriaSpec", function () {
 
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
-      const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
+      const getLocalPropertySpy = vi.spyOn(terria, "getLocalProperty");
       const location = {
         href: "http://test.com/#map=2d"
       } as Location;
@@ -1478,10 +1476,10 @@ describe("TerriaSpec", function () {
     });
 
     it("properly resolves persisted map viewer", async () => {
-      const getLocalPropertySpy = spyOn(
+      const getLocalPropertySpy = vi.spyOn(
         terria,
         "getLocalProperty"
-      ).and.returnValue("2d");
+      ).mockReturnValue("2d");
       await terria.start({ configUrl: "test-config.json" });
       terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
@@ -1489,10 +1487,10 @@ describe("TerriaSpec", function () {
     });
 
     it("properly interprets wrong map hash parameter and resolves persisted value", async () => {
-      const getLocalPropertySpy = spyOn(
+      const getLocalPropertySpy = vi.spyOn(
         terria,
         "getLocalProperty"
-      ).and.returnValue("3dsmooth");
+      ).mockReturnValue("3dsmooth");
       const location = {
         href: "http://test.com/#map=4d"
       } as Location;
@@ -1507,7 +1505,7 @@ describe("TerriaSpec", function () {
     });
 
     it("uses `settings` in initsource", async () => {
-      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+      const setBaseMapSpy = vi.spyOn(terria.mainViewer, "setBaseMap");
 
       await terria.start({ configUrl: "test-config.json" });
 

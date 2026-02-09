@@ -16,7 +16,7 @@ describe("CatalogMember", function () {
 
   describe("triggering load()", function () {
     beforeEach(function () {
-      spyOn(terria, "disclaimerListener");
+      vi.spyOn(terria, "disclaimerListener");
       member._load = function () {
         return Promise.resolve(); // make the implementation-specific _load method return instantly, it's not on trial here.
       };

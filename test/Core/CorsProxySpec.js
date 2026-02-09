@@ -12,9 +12,7 @@ describe("CorsProxy", function () {
       loadDeferred.resolve = resolve;
       loadDeferred.reject = reject;
     });
-    loadJson = jasmine
-      .createSpy("loadJson")
-      .and.returnValue(loadDeferred.promise);
+    loadJson = vi.fn().mockReturnValue(loadDeferred.promise);
     corsProxy = new CorsProxy(loadJson);
 
     originalPageIsHttps = corsProxy.pageIsHttps;

@@ -52,19 +52,19 @@ describe("MovementsController", function () {
     );
 
     it("sets up the key map", function () {
-      const setupKeyMap = spyOn(controller, "setupKeyMap");
+      const setupKeyMap = vi.spyOn(controller, "setupKeyMap");
       controller.activate();
       expect(setupKeyMap).toHaveBeenCalled();
     });
 
     it("sets up the mouse map", function () {
-      const setupMouseMap = spyOn(controller, "setupMouseMap");
+      const setupMouseMap = vi.spyOn(controller, "setupMouseMap");
       controller.activate();
       expect(setupMouseMap).toHaveBeenCalled();
     });
 
     it("starts animating", function () {
-      const startAnimating = spyOn(controller, "startAnimating");
+      const startAnimating = vi.spyOn(controller, "startAnimating");
       controller.activate();
       expect(startAnimating).toHaveBeenCalled();
     });
@@ -86,24 +86,24 @@ describe("MovementsController", function () {
     );
 
     it("destroys the key map", function () {
-      const destroyKeyMap = jasmine.createSpy("destroyKeyMap");
-      spyOn(controller, "setupKeyMap").and.returnValue(destroyKeyMap);
+      const destroyKeyMap = vi.fn();
+      vi.spyOn(controller, "setupKeyMap").mockReturnValue(destroyKeyMap);
       const deactivate = controller.activate();
       deactivate();
       expect(destroyKeyMap).toHaveBeenCalled();
     });
 
     it("destroys the mouse map", function () {
-      const destroyMouseMap = jasmine.createSpy("destroyMouseMap");
-      spyOn(controller, "setupMouseMap").and.returnValue(destroyMouseMap);
+      const destroyMouseMap = vi.fn();
+      vi.spyOn(controller, "setupMouseMap").mockReturnValue(destroyMouseMap);
       const deactivate = controller.activate();
       deactivate();
       expect(destroyMouseMap).toHaveBeenCalled();
     });
 
     it("stops animating", function () {
-      const stopAnimating = jasmine.createSpy("stopAnimating");
-      spyOn(controller, "startAnimating").and.returnValue(stopAnimating);
+      const stopAnimating = vi.fn();
+      vi.spyOn(controller, "startAnimating").mockReturnValue(stopAnimating);
       const deactivate = controller.activate();
       deactivate();
       expect(stopAnimating).toHaveBeenCalled();
@@ -123,7 +123,7 @@ describe("MovementsController", function () {
         spyOnProperty(
           controller,
           "currentPedestrianHeightFromSurface"
-        ).and.returnValue(100);
+        ).mockReturnValue(100);
         expect(controller.moveAmount).toBe(1);
       });
 
@@ -132,7 +132,7 @@ describe("MovementsController", function () {
         spyOnProperty(
           controller,
           "currentPedestrianHeightFromSurface"
-        ).and.returnValue(0.5);
+        ).mockReturnValue(0.5);
         expect(controller.moveAmount).toBe(0.2);
       });
     });
@@ -168,7 +168,7 @@ describe("MovementsController", function () {
     });
 
     it("can move forward", function () {
-      spyOnProperty(controller, "moveAmount").and.returnValue(100000);
+      spyOnProperty(controller, "moveAmount").mockReturnValue(100000);
       controller.move("forward");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.55,
@@ -178,7 +178,7 @@ describe("MovementsController", function () {
     });
 
     it("can move backward", function () {
-      spyOnProperty(controller, "moveAmount").and.returnValue(100000);
+      spyOnProperty(controller, "moveAmount").mockReturnValue(100000);
       controller.move("backward");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.49,
@@ -188,7 +188,7 @@ describe("MovementsController", function () {
     });
 
     it("can move up", function () {
-      spyOnProperty(controller, "moveAmount").and.returnValue(100);
+      spyOnProperty(controller, "moveAmount").mockReturnValue(100);
       controller.move("up");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.52,
@@ -198,7 +198,7 @@ describe("MovementsController", function () {
     });
 
     it("can move down", function () {
-      spyOnProperty(controller, "moveAmount").and.returnValue(100);
+      spyOnProperty(controller, "moveAmount").mockReturnValue(100);
       controller.move("down");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.52,
