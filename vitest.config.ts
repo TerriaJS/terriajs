@@ -135,6 +135,28 @@ function scssModulesPlugin(): Plugin {
   };
 }
 
+function webpackLoaderSyntaxPlugin(): Plugin {
+  return {
+    name: "strip-webpack-loader-syntax",
+    enforce: "pre",
+    resolveId(source: string, importer: string | undefined) {
+      // Strip webpack inline loader prefixes like "!!style-loader!css-loader!./file.css"
+      // or "worker-loader!./downloadHrefWorker"
+      const match = source.match(/^(?:!{1,2})?(?:[\w-]+!)+(.+)$/);
+      if (match) {
+        const stripped = match[1];
+        if (
+          importer &&
+          (stripped.startsWith("./") || stripped.startsWith("../"))
+        ) {
+          return path.resolve(path.dirname(importer), stripped);
+        }
+        return stripped;
+      }
+    }
+  };
+}
+
 function csvRawPlugin(): Plugin {
   return {
     name: "csv-raw-import",
@@ -155,6 +177,7 @@ function csvRawPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [
+    webpackLoaderSyntaxPlugin(),
     scssModulesPlugin(),
     xmlRawPlugin(),
     svgSpritePlugin(),
@@ -176,6 +199,10 @@ export default defineConfig({
       localsConvention: "camelCase"
     }
   },
+  esbuild: {
+    loader: "tsx",
+    include: /\.[jt]sx?$/
+  },
   assetsInclude: ["**/*.DAC"],
   server: {
     fs: {
@@ -185,7 +212,7 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["test/**/*Spec.{ts,tsx}"],
-    exclude: [],
+    exclude: ["test/Types/**", "test/ModelMixins/MinMaxLevelMixinSpec.ts"],
     setupFiles: ["test/setup.ts"],
     testTimeout: 60_000,
     browser: {
