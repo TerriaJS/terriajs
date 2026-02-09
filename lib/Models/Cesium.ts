@@ -756,7 +756,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   /**
-   * Sync imagery layers added to the workbench with Cesium scene and tilesets
+   * Sync imagery layers added to the viewer with Cesium Scene and Tilesets
    */
   private syncImagery() {
     const topImageryLayers: ImageryLayer[] = [];
@@ -787,7 +787,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   /**
-   * Sync primitives added to the workbench with Cesium scene
+   * Sync primitives added to the viewer with Cesium Scene
    */
   private syncPrimitives() {
     const mapPrimitives = this.availablePrimitives.filter(isPrimitive);

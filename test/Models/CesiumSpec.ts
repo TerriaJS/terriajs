@@ -1,31 +1,37 @@
 import range from "lodash-es/range";
-import { action, computed, observable, runInAction, when } from "mobx";
+import {
+  IObservableValue,
+  action,
+  computed,
+  observable,
+  runInAction,
+  when
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
-import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
+import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CameraView from "../../lib/Models/CameraView";
+import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
+import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
-import MappableTraits, {
-  RectangleTraits
-} from "../../lib/Traits/TraitsClasses/MappableTraits";
+import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
@@ -36,14 +42,19 @@ describeIfSupported("Cesium Model", function () {
   let container: HTMLElement;
   let cesium: Cesium;
   let terriaProgressEvt: jasmine.Spy;
+  let viewerItems: IObservableValue<MappableMixin.Instance[]>;
 
   beforeEach(function () {
     terria = new Terria({
-      baseUrl: "./"
+      baseUrl: "../"
     });
+
+    // Use an observable box so that we can dynamically change the viewer items
+    // from specs
+    viewerItems = observable.box([]);
     terriaViewer = new TerriaViewer(
       terria,
-      computed(() => [])
+      computed(() => viewerItems.get())
     );
     container = document.createElement("div");
     container.id = "container";
@@ -52,6 +63,10 @@ describeIfSupported("Cesium Model", function () {
     terriaProgressEvt = spyOn(terria.tileLoadProgressEvent, "raiseEvent");
 
     cesium = new Cesium(terriaViewer, container);
+
+    // TODO: some specs results in calls to ION api for fetching terrain which
+    // we should avoid. Ideally we do this after splitting terrain handling
+    // into a separate TerrainManager class
   });
 
   afterEach(function () {
@@ -122,76 +137,195 @@ describeIfSupported("Cesium Model", function () {
     });
   });
 
-  it("correctly removes all the primitives from the scene when they are removed from the viewer", async function () {
-    const tilesets = [
-      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=1"),
-      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=2"),
-      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=3")
-    ];
-    const items = observable([
-      new MappablePrimitiveItem("1", terria, tilesets[0]),
-      new MappablePrimitiveItem("2", terria, tilesets[1]),
-      new MappablePrimitiveItem("3", terria, tilesets[2])
-    ]);
+  describe("adding and removing viewer items", function () {
+    function create3dTilesCatalogItem(id: number) {
+      const item = new Cesium3DTilesCatalogItem(`tileset-${id}`, terria);
+      updateModelFromJson(item, CommonStrata.definition, {
+        id: `tileset-${id}`,
+        url: `test/Cesium3DTiles/tileset.json?id=${id}`,
+        drapeImagery: true
+      });
+      return item;
+    }
 
-    const container2 = document.createElement("div");
-    container2.id = "cesium-test-container";
-    document.body.appendChild(container2);
+    function createImageryItem(id: number) {
+      const item = new WebMapServiceCatalogItem(`wms-${id}`, terria);
+      updateModelFromJson(item, CommonStrata.definition, {
+        id: `wms-${id}`,
+        url: `wms-${id}`
+      });
+      return item;
+    }
 
-    const terriaViewer2 = new TerriaViewer(
-      terria,
-      computed(() => items)
-    );
+    function createDataSourceItem(id: number) {
+      const item = new GeoJsonCatalogItem(`geojson-${id}`, terria);
+      updateModelFromJson(item, CommonStrata.definition, {
+        geoJsonData: {
+          type: "Feature",
+          properties: {
+            nameProp: `ds-${id}`
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [145.0130295753479, -37.77042639061412],
+                [145.0200891494751, -37.77042639061412],
+                [145.0200891494751, -37.76543949054887],
+                [145.0130295753479, -37.76543949054887],
+                [145.0130295753479, -37.77042639061412]
+              ]
+            ]
+          }
+        },
+        forceCesiumPrimitives: true
+      });
+      return item;
+    }
 
-    const cesium2 = new Cesium(terriaViewer2, container2);
+    function loadItems(items: MappableMixin.Instance[]) {
+      return Promise.all(items.map((it) => it.loadMapItems().then(() => it)));
+    }
 
-    try {
+    it("correctly removes all the primitives, imageries and datasources from the scene when they are removed from the viewer", async function () {
+      let items = await loadItems([
+        create3dTilesCatalogItem(0),
+        createImageryItem(0),
+        createDataSourceItem(0),
+
+        create3dTilesCatalogItem(1),
+        createImageryItem(1),
+        createDataSourceItem(1),
+
+        create3dTilesCatalogItem(2),
+        createImageryItem(2),
+        createDataSourceItem(2)
+      ]);
+
+      runInAction(() => {
+        viewerItems.set(items);
+      });
+
       // Return urls of all tilesets in the scene
-      const tilesetUrls = () =>
-        filterOutUndefined(
-          range(cesium2.scene.primitives.length).map((i) => {
-            const prim = cesium2.scene.primitives.get(i);
+      const tilesetUrls = () => {
+        const terriaPrimitives: PrimitiveCollection =
+          cesium.scene.primitives.get(0);
+        return filterOutUndefined(
+          range(terriaPrimitives.length).map((i) => {
+            const prim = terriaPrimitives.get(i);
             return prim.allTilesLoaded && prim._url;
           })
         );
+      };
 
       // Return names of all datasources in the scene
       const dataSourceNames = () =>
-        range(cesium2.dataSources.length).map(
-          (i) => cesium2.dataSources.get(i).name
-        );
+        range(cesium.dataSources.length).map((i) => {
+          const ds = cesium.dataSources.get(i);
+          const name = ds.entities.values[0].properties?.getValue().nameProp;
+          return name;
+        });
 
       // Return urls of all imagery providers in the scene
       const imageryProviderUrls = () =>
-        range(cesium2.scene.imageryLayers.length)
+        range(cesium.scene.imageryLayers.length)
           .map(
             (i) =>
-              (cesium2.scene.imageryLayers.get(i).imageryProvider as any).url
+              (cesium.scene.imageryLayers.get(i).imageryProvider as any).url
           )
           .reverse();
 
+      // Need await here for the datasources reaction to sync
       await runLater(() => {});
 
       // Test that we have added the correct items
-      expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
+      expect(dataSourceNames()).toEqual(["ds-0", "ds-1", "ds-2"]);
       expect(tilesetUrls()).toEqual([
+        "test/Cesium3DTiles/tileset.json?id=0",
         "test/Cesium3DTiles/tileset.json?id=1",
-        "test/Cesium3DTiles/tileset.json?id=2",
-        "test/Cesium3DTiles/tileset.json?id=3"
+        "test/Cesium3DTiles/tileset.json?id=2"
       ]);
-      expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
+      expect(imageryProviderUrls()).toEqual(["wms-0", "wms-1", "wms-2"]);
 
-      runInAction(() => items.splice(0, 2));
+      runInAction(() => {
+        // Remove all except middle 3 items
+        items = items.slice(3, 6);
+        viewerItems.set(items);
+      });
+
+      // Need await here for the datasources reaction to sync
       await runLater(() => {});
 
       // Test that we have removed the correct items
-      expect(dataSourceNames()).toEqual(["ds3"]);
-      expect(tilesetUrls()).toEqual(["test/Cesium3DTiles/tileset.json?id=3"]);
-      expect(imageryProviderUrls()).toEqual(["img3"]);
-    } finally {
-      cesium2.destroy();
-      document.body.removeChild(container2);
-    }
+      expect(dataSourceNames()).toEqual(["ds-1"]);
+      expect(tilesetUrls()).toEqual(["test/Cesium3DTiles/tileset.json?id=1"]);
+      expect(imageryProviderUrls()).toEqual(["wms-1"]);
+    });
+
+    describe("tilesets with imagery draping enabled", function () {
+      let items: MappableMixin.Instance[];
+
+      beforeEach(async function () {
+        items = await loadItems([
+          create3dTilesCatalogItem(0),
+          createImageryItem(1),
+          create3dTilesCatalogItem(2),
+          createImageryItem(3),
+          create3dTilesCatalogItem(4)
+        ]);
+        runInAction(() => viewerItems.set(items));
+      });
+
+      it("must add the imageries that are placed above a tileset to the tileset's own imagery collection", function () {
+        const tileset0 = items[0].mapItems[0] as Cesium3DTileset;
+        const tileset1 = items[2].mapItems[0] as Cesium3DTileset;
+        const tileset2 = items[4].mapItems[0] as Cesium3DTileset;
+
+        expect(tileset0.imageryLayers.length).toBe(0);
+        expect(tileset1.imageryLayers.length).toBe(1);
+        expect(tileset2.imageryLayers.length).toBe(2);
+
+        // Make sure tileset1 and tileset2 have 1 and 2 layers respectively added
+        // to their imageryLayer collection
+        expect((tileset1.imageryLayers.get(0).imageryProvider as any).url).toBe(
+          `wms-1`
+        );
+
+        // Note that this reflects the ordering of Cesium imagery collection, the
+        // layer with lowest index will appear at the bottom.
+        expect((tileset2.imageryLayers.get(0).imageryProvider as any).url).toBe(
+          `wms-3`
+        );
+
+        expect((tileset2.imageryLayers.get(1).imageryProvider as any).url).toBe(
+          `wms-1`
+        );
+      });
+
+      it("must remove items from a tilesets imagery collection when they are removed from the viewer", function () {
+        // Remove the last WMS imagery item
+        items.splice(3, 1);
+        runInAction(() => viewerItems.set(items));
+
+        const tileset0 = items[0].mapItems[0] as Cesium3DTileset;
+        const tileset1 = items[2].mapItems[0] as Cesium3DTileset;
+        const tileset2 = items[3].mapItems[0] as Cesium3DTileset;
+
+        expect(tileset0.imageryLayers.length).toBe(0);
+        expect(tileset1.imageryLayers.length).toBe(1);
+        expect(tileset2.imageryLayers.length).toBe(1);
+
+        // Make sure tileset1 and tileset2 have 1 and 2 layers respectively added
+        // to their imageryLayer collection
+        expect((tileset1.imageryLayers.get(0).imageryProvider as any).url).toBe(
+          `wms-1`
+        );
+
+        expect((tileset2.imageryLayers.get(0).imageryProvider as any).url).toBe(
+          `wms-1`
+        );
+      });
+    });
   });
 
   describe("Terrain provider selection", function () {
@@ -486,34 +620,6 @@ describeIfSupported("Cesium Model", function () {
     });
   });
 });
-
-/**
- * A mappable test class that generates tileset, datasource & imagery layer map
- * items.
- */
-class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
-  constructor(id: string, terria: Terria, readonly tileset: Cesium3DTileset) {
-    super(id, terria);
-  }
-
-  async forceLoadMapItems() {}
-
-  get mapItems() {
-    const result: MapItem[] = [];
-    result.push(this.tileset);
-    result.push(new GeoJsonDataSource(`ds${this.uniqueId}`));
-    result.push({
-      alpha: 1,
-      imageryProvider: new WebMapServiceImageryProvider({
-        url: `img${this.uniqueId}`,
-        layers: this.uniqueId!
-      }),
-      show: true,
-      clippingRectangle: undefined
-    });
-    return result;
-  }
-}
 
 /**
  * Returns a promise that fulfills when terrain provider has finished loading.
