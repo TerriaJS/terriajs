@@ -57,7 +57,6 @@ describe("WebMapServiceCatalogItem", function () {
   });
 
   it("loads", function () {
-    expect().nothing();
     const terria = new Terria({ baseUrl: "./" });
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
@@ -68,7 +67,6 @@ describe("WebMapServiceCatalogItem", function () {
   });
 
   it("loads - for WMS 1.1.1", function () {
-    expect().nothing();
     const terria = new Terria({ baseUrl: "./" });
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
@@ -197,7 +195,6 @@ describe("WebMapServiceCatalogItem", function () {
   });
 
   it("correctly constructs ImageryProvider - for WMS 1.1.1", async function () {
-    expect().nothing();
     const terria = new Terria({ baseUrl: "./" });
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
@@ -618,7 +615,6 @@ describe("WebMapServiceCatalogItem", function () {
   });
 
   it("uses GetFeatureInfo from GetCapabilities", async function () {
-    expect().nothing();
     const terria = new Terria({ baseUrl: "./" });
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
@@ -632,7 +628,6 @@ describe("WebMapServiceCatalogItem", function () {
   });
 
   it("uses GetFeatureInfo from GetCapabilities - WMS 1.1.1", async function () {
-    expect().nothing();
     const terria = new Terria({ baseUrl: "./" });
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
