@@ -20,5 +20,8 @@ dist
 .history/
 ts-out/
 
+# Vitest browser mode screenshots
+__screenshots__/
+
 # Catalog index generation files
 catalog-index*.json
