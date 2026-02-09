@@ -39,7 +39,15 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - name: Run tests using xvfb
+      - name: Run Karma tests using xvfb
         uses: GabrielBB/xvfb-action@v1
         with:
           run: yarn gulp test-firefox
+
+      - name: Install Playwright browsers
+        run: npx playwright install firefox
+
+      - name: Run Vitest tests using xvfb
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: yarn test

@@ -219,7 +219,10 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node && husky install"
+    "prepare": "yarn build-for-node && husky install",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
   },
   "msw": {
     "workerDirectory": [
