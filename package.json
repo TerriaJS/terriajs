@@ -180,6 +180,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "husky": "^8.0.3",
     "jasmine-core": "^2.9.1",
+    "jscodeshift": "^17.3.0",
     "jsdom": "^17.0.0",
     "jsdom-global": "^3.0.2",
     "karma": "^6.4.3",
