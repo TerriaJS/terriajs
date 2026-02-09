@@ -841,6 +841,8 @@ export function formatDimensionsForOws(
   );
 }
 
+// Take the GetFeatureInfo response and reproject the feature coordinates to geographic if necessary, so the position is correct when displayed on the map.
+// Cesium [GetFeatureInfoFormat](https://github.com/CesiumGS/cesium/blob/5754031f65646bee5f9d0e9a56dec7d3677a8b08/packages/engine/Source/Scene/GetFeatureInfoFormat.js#L74) assumes picked features is returned in geographic projection, so we need to convert them when tile scheme is not geographic.
 function geoJsonToFeatureInfoWithProject(
   json: FeatureCollection,
   projection: MapProjection
