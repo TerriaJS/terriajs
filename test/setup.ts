@@ -32,7 +32,15 @@ beforeAll(async () => {
   }
 
   await worker.start({
-    onUnhandledRequest: "bypass",
+    onUnhandledRequest(request, print) {
+      const url = new URL(request.url);
+      // Allow Vite dev server and local fixture requests
+      if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
+        return;
+      }
+      print.error();
+      throw new Error(`UNHANDLED REQUEST: ${request.method} ${request.url}`);
+    },
     quiet: true
   });
 

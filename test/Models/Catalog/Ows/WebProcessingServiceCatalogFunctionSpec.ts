@@ -254,7 +254,12 @@ describe("WebProcessingServiceCatalogFunction", function () {
             new HttpResponse(pendingExecuteResponseXml, {
               headers: { "Content-Type": "text/xml" }
             })
-        )
+        ),
+        http.get("http://example.com/ows", () => {
+          return new HttpResponse(executeResponseXml, {
+            headers: { "Content-Type": "text/xml" }
+          });
+        })
       );
 
       // Note: we don't stubRequest "http://example.com/ows?check_status/123" here - so an error will be thrown if the job polls for a result
