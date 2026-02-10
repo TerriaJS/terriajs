@@ -157,6 +157,23 @@ function webpackLoaderSyntaxPlugin(): Plugin {
   };
 }
 
+function wasmPlugin(): Plugin {
+  return {
+    name: "wasm-mime-type",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url && req.url.endsWith("assimpjs.wasm")) {
+          const wasmPath = require.resolve("assimpjs/dist/assimpjs.wasm");
+          res.setHeader("Content-Type", "application/wasm");
+          res.end(readFileSync(wasmPath));
+          return;
+        }
+        next();
+      });
+    }
+  };
+}
+
 function cesiumAssetsPlugin(): Plugin {
   return {
     name: "cesium-assets-serve",
@@ -235,7 +252,8 @@ export default defineConfig({
     csvRawPlugin(),
     pbfPlugin(),
     geojsonPlugin(),
-    cesiumAssetsPlugin()
+    cesiumAssetsPlugin(),
+    wasmPlugin()
   ],
   resolve: {
     alias: {
