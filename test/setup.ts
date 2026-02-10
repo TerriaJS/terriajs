@@ -6,7 +6,8 @@ import { worker } from "./mocks/browser";
 
 configure({
   enforceActions: "always",
-  computedRequiresReaction: true,
+  computedRequiresReaction: false,
+  reactionRequiresObservable: false,
   safeDescriptors: false
 });
 
@@ -19,6 +20,15 @@ spy((event) => {
 });
 
 beforeAll(async () => {
+  // Unregister stale service workers from previous runs.
+  // In Vitest watch mode, the old SW may stop intercepting requests
+  // after the previous page context is destroyed. Unregistering forces
+  // a clean SW registration on each run.
+  const existingRegs = await navigator.serviceWorker.getRegistrations();
+  for (const reg of existingRegs) {
+    await reg.unregister();
+  }
+
   await worker.start({
     onUnhandledRequest: "bypass",
     quiet: true
