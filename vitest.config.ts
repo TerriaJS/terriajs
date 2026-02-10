@@ -30,8 +30,9 @@ function svgSpritePlugin(): Plugin {
         id.includes(path.join("wwwroot", "images", "icons"))
       ) {
         const name = path.basename(id, ".svg");
+        const symbolId = `terriajs-${name}`;
         return {
-          code: `export default "terriajs_${name}";`,
+          code: `export default { id: "${symbolId}", viewBox: "0 0 100 100", content: "" };`,
           map: null
         };
       }
@@ -95,7 +96,8 @@ function scssModulesPlugin(): Plugin {
     }
 
     // Extract CSS class names — identity-mapped for tests
-    const classRe = /\.([\w-]+)\s*[{,]/g;
+    // Match any .className pattern (handles compound selectors like .foo.bar, .foo:pseudo)
+    const classRe = /\.([a-zA-Z_][\w-]*)/g;
     let classMatch;
     while ((classMatch = classRe.exec(css)) !== null) {
       const raw = classMatch[1];

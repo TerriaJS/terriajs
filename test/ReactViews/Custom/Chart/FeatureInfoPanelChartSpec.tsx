@@ -1,9 +1,4 @@
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { ThemeProvider } from "styled-components";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -60,11 +55,9 @@ describe("FeatureInfoPanelChart", function () {
           `<chart src="test/csv_nongeo/x_height.csv" y-column="plant height"></chart>`,
           context
         );
-        await waitForElementToBeRemoved(() =>
-          screen.queryByText("chart.noData")
+        await waitFor(() =>
+          expect(screen.getByText("Plant Height x x")).toBeVisible()
         );
-
-        expect(screen.getByText("Plant Height x x")).toBeVisible();
       });
 
       it("renders nothing if the specified y-column does not exist", async function () {
