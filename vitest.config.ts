@@ -287,7 +287,7 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["test/**/*Spec.{ts,tsx}"],
-    exclude: ["test/Types/**", "test/ModelMixins/MinMaxLevelMixinSpec.ts"],
+    exclude: ["test/Types/**"],
     setupFiles: ["test/setup.ts"],
     testTimeout: 60_000,
     browser: {
