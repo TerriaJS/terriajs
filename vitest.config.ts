@@ -157,6 +157,21 @@ function webpackLoaderSyntaxPlugin(): Plugin {
   };
 }
 
+function geojsonPlugin(): Plugin {
+  return {
+    name: "geojson-as-json",
+    transform(_code: string, id: string) {
+      if (id.endsWith(".geojson")) {
+        const content = readFileSync(id, "utf-8");
+        return {
+          code: `export default ${content};`,
+          map: null
+        };
+      }
+    }
+  };
+}
+
 function csvRawPlugin(): Plugin {
   return {
     name: "csv-raw-import",
@@ -181,7 +196,8 @@ export default defineConfig({
     scssModulesPlugin(),
     xmlRawPlugin(),
     svgSpritePlugin(),
-    csvRawPlugin()
+    csvRawPlugin(),
+    geojsonPlugin()
   ],
   resolve: {
     alias: {
