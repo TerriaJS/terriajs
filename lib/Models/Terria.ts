@@ -429,7 +429,10 @@ export interface ConfigParameters {
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 export const defaultLoadConfig = async (configUrl: string) => {
-  const hashProperties = queryToObject(new URI(window.location).fragment());
+  const hashProperties =
+    typeof window !== "undefined"
+      ? queryToObject(new URI(window.location).fragment())
+      : {};
 
   // If in development environment, allow usage of #configUrl to set Terria config URL
   if (IS_DEVELOPMENT) {
@@ -1089,7 +1092,10 @@ export default class Terria {
 
   async start(options: StartOptions): Promise<void> {
     // Some hashProperties need to be set before anything else happens
-    const hashProperties = queryToObject(new URI(window.location).fragment());
+    const hashProperties =
+      typeof window !== "undefined"
+        ? queryToObject(new URI(window.location).fragment())
+        : {};
 
     if (isDefined(hashProperties["ignoreErrors"])) {
       this.userProperties.set("ignoreErrors", hashProperties["ignoreErrors"]);
@@ -2250,7 +2256,10 @@ export default class Terria {
 
   getLocalProperty(key: string): string | boolean | null {
     try {
-      if (!defined(window.localStorage)) {
+      if (
+        typeof window === "undefined" ||
+        !defined(window.localStorage)
+      ) {
         return null;
       }
     } catch (_e) {
@@ -2268,7 +2277,10 @@ export default class Terria {
 
   setLocalProperty(key: string, value: string | boolean): boolean {
     try {
-      if (!defined(window.localStorage)) {
+      if (
+        typeof window === "undefined" ||
+        !defined(window.localStorage)
+      ) {
         return false;
       }
     } catch (_e) {
