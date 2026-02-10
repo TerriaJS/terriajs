@@ -219,6 +219,7 @@ export default defineConfig({
     loader: "tsx",
     include: /\.[jt]sx?$/
   },
+  publicDir: "wwwroot",
   assetsInclude: ["**/*.DAC"],
   server: {
     fs: {
