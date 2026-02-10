@@ -1,10 +1,9 @@
-import { act } from "react-test-renderer";
 import { ChartItem } from "../../../../lib/ModelMixins/ChartableMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import { BottomDockChart } from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
-import { createWithContexts } from "../../withContext";
+import { renderWithContexts } from "../../withContext";
 
 describe("BottomDockChart", function () {
   let terria: Terria;
@@ -58,18 +57,16 @@ describe("BottomDockChart", function () {
   });
 
   it("renders all points on map for active chart items", async function () {
-    act(() => {
-      createWithContexts(
-        viewState,
-        <BottomDockChart
-          height={100}
-          initialHeight={100}
-          initialWidth={100}
-          xAxis={{ scale: "time" } as never}
-          chartItems={chartItems}
-        />
-      );
-    });
+    renderWithContexts(
+      <BottomDockChart
+        height={100}
+        initialHeight={100}
+        initialWidth={100}
+        xAxis={{ scale: "time" } as never}
+        chartItems={chartItems}
+      />,
+      viewState
+    );
 
     const pointsOnMap = terria.overlays.items.filter(
       (item) => item instanceof GeoJsonCatalogItem

@@ -99,6 +99,7 @@ class VideoGuide extends Component {
           >
             <Loader message={` `} />
             <iframe
+              title={this.props.videoName}
               src={this.props.videoLink}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               css={`

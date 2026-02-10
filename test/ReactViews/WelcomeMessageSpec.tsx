@@ -1,16 +1,13 @@
 import { runInAction } from "mobx";
-import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
-import { createWithContexts } from "./withContext";
 import WelcomeMessage from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
+import { renderWithContexts } from "./withContext";
+import { screen } from "@testing-library/dom";
 
 describe("WelcomeMessage", function () {
   let terria: Terria;
   let viewState: ViewState;
-
-  let testRenderer: any;
 
   beforeEach(function () {
     terria = new Terria({
@@ -23,20 +20,44 @@ describe("WelcomeMessage", function () {
   });
 
   it("renders when showWelcomeMessage is set to true in config file", function () {
-    runInAction(() => (terria.configParameters.showWelcomeMessage = true));
-    act(() => {
-      testRenderer = createWithContexts(viewState, <WelcomeMessage />);
+    runInAction(() => {
+      terria.configParameters.showWelcomeMessage = true;
+      terria.configParameters.welcomeMessageVideo = {
+        videoTitle: "Getting started with the map",
+        videoUrl: "",
+        placeholderImage: ""
+      };
     });
-    const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
-    expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
+    renderWithContexts(<WelcomeMessage />, viewState);
+
+    expect(viewState.showWelcomeMessage).toEqual(true);
+    expect(screen.getByText("welcomeMessage.title")).toBeVisible();
+    expect(
+      screen.getByText(
+        /Interested in data discovery and exploration\?*Dive right in and get started or check the following help guide options./
+      )
+    ).toBeVisible();
+
+    expect(screen.getByText("Getting started with the map")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "welcomeMessage.tourBtnText" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "welcomeMessage.helpBtnText" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "welcomeMessage.exploreDataBtnText" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "welcomeMessage.dismissText" })
+    ).toBeVisible();
   });
 
-  it("doesn't render when showWelcomeMessage is set to true in config file", function () {
+  it("doesn't render when showWelcomeMessage is set to false in config file", function () {
     runInAction(() => (terria.configParameters.showWelcomeMessage = false));
-    act(() => {
-      testRenderer = createWithContexts(viewState, <WelcomeMessage />);
-    });
-    const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
-    expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(false);
+    renderWithContexts(<WelcomeMessage />, viewState);
+
+    expect(viewState.showWelcomeMessage).toEqual(false);
+    expect(screen.queryByText("welcomeMessage.title")).not.toBeInTheDocument();
   });
 });
