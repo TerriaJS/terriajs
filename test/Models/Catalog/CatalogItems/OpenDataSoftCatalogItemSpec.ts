@@ -24,11 +24,11 @@ describe("OpenDataSoftCatalogItem", function () {
         "https://example.com/api/v2/catalog/datasets/weather-stations/records/",
         ({ request }) => {
           const url = new URL(request.url);
-          if (url.searchParams.has("group_by"))
-            return HttpResponse.json(groupBy);
-          if (url.searchParams.has("order_by"))
-            return HttpResponse.json(weatherStationData);
-          throw new Error(`Unexpected query params: ${url.search}`);
+          const groupByParam = url.searchParams.get("group_by");
+
+          if (groupByParam === "geolocation") return HttpResponse.json(groupBy);
+
+          return HttpResponse.json(weatherStationData);
         }
       ),
       http.get("*/build/TerriaJS/data/regionMapping.json", () =>

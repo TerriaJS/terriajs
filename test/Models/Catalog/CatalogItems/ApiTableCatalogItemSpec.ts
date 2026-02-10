@@ -38,6 +38,9 @@ describe("ApiTableCatalogItem", function () {
       worker.use(
         http.get("*/build/TerriaJS/data/regionMapping.json", () =>
           HttpResponse.json(regionMapping)
+        ),
+        http.get("https://terria.io/values.json", () =>
+          HttpResponse.json(valueApiResponse)
         )
       );
     });

@@ -19,6 +19,21 @@ describe("CatalogIndexReference", function () {
         // We are setting up the following hierarchy: MagdaReference -> TerriaReference -> Group -> Leaf
         // and asserting that we load the reference containers all the way down to the Leaf node
 
+        // The terria-reference points to a group containing a 'leaf' node.
+        worker.use(
+          http.get("*/catalog.json", () =>
+            HttpResponse.json({
+              catalog: [
+                {
+                  type: "group",
+                  name: "Group",
+                  members: [{ id: "leaf", type: "csv", name: "leaf" }]
+                }
+              ]
+            })
+          )
+        );
+
         // Setup parent magda reference item
         const parent = new MagdaReference("parent", terria);
         parent.setTrait(CommonStrata.definition, "magdaRecord", {
@@ -59,7 +74,7 @@ describe("CatalogIndexReference", function () {
           memberKnownContainerUniqueIds: ["parent"]
         });
         await leafIndex.loadReference();
-        // Ensure then index reference is correctly resolved to the leaf node
+        // Ensure the index reference is correctly resolved to the leaf node
         expect(leafIndex.nestedTarget?.uniqueId).toBe("leaf");
       });
     });
