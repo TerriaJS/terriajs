@@ -157,6 +157,42 @@ function webpackLoaderSyntaxPlugin(): Plugin {
   };
 }
 
+function cesiumAssetsPlugin(): Plugin {
+  return {
+    name: "cesium-assets-serve",
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const marker = "/build/Cesium/build/";
+        if (req.url && req.url.includes(marker)) {
+          const assetPath = req.url.split(marker)[1];
+          req.url = `/@fs/${path.join(cesiumDir, "Source", assetPath)}`;
+        }
+        next();
+      });
+    }
+  };
+}
+
+function pbfPlugin(): Plugin {
+  return {
+    name: "pbf-as-arraybuffer",
+    transform(_code: string, id: string) {
+      if (id.endsWith(".pbf")) {
+        const base64 = readFileSync(id).toString("base64");
+        return {
+          code: [
+            `const b = atob("${base64}");`,
+            `const u = new Uint8Array(b.length);`,
+            `for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);`,
+            `export default u.buffer;`
+          ].join("\n"),
+          map: null
+        };
+      }
+    }
+  };
+}
+
 function geojsonPlugin(): Plugin {
   return {
     name: "geojson-as-json",
@@ -197,7 +233,9 @@ export default defineConfig({
     xmlRawPlugin(),
     svgSpritePlugin(),
     csvRawPlugin(),
-    geojsonPlugin()
+    pbfPlugin(),
+    geojsonPlugin(),
+    cesiumAssetsPlugin()
   ],
   resolve: {
     alias: {
@@ -223,7 +261,7 @@ export default defineConfig({
   assetsInclude: ["**/*.DAC"],
   server: {
     fs: {
-      allow: [terriaJSBasePath]
+      allow: [terriaJSBasePath, cesiumDir]
     }
   },
   test: {

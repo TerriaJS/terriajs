@@ -103,6 +103,10 @@ describe("TileErrorHandlerMixin", function () {
     item.setTrait(CommonStrata.user, "url", "/foo");
   });
 
+  afterEach(function () {
+    vi.restoreAllMocks();
+  });
+
   it("gives up silently if the failed tile is outside the extent of the item", async function () {
     item.setTrait(CommonStrata.user, "rectangle", {
       west: 106.9,
@@ -167,7 +171,7 @@ describe("TileErrorHandlerMixin", function () {
     it("retries fetching the tile using xhr", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        vi.spyOn(Resource, "fetchImage").mockReturnValue(
+        vi.spyOn(Resource, "fetchImage").mockImplementation(() =>
           Promise.reject(error.error)
         );
         await onTileLoadError(item, error);
@@ -247,7 +251,7 @@ describe("TileErrorHandlerMixin", function () {
     it("it fails after retrying a maximum of specified number of times", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        vi.spyOn(Resource, "fetchImage").mockReturnValue(
+        vi.spyOn(Resource, "fetchImage").mockImplementation(() =>
           Promise.reject(error.error)
         );
         await onTileLoadError(item, error);
@@ -282,7 +286,7 @@ describe("TileErrorHandlerMixin", function () {
     it("gives up silently if the item is hidden", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        vi.spyOn(Resource, "fetchImage").mockReturnValue(
+        vi.spyOn(Resource, "fetchImage").mockImplementation(() =>
           Promise.reject(error.error)
         );
         const result = onTileLoadError(item, error);

@@ -34,7 +34,7 @@ import tiledActVegMapJson from "../../../../wwwroot/test/ArcGisFeatureServer/Til
 import waterNetworkMulti2Json from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/2.json";
 import waterNetworkMultiLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layer.json";
 import waterNetworkMultiLayerBJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layerB.json";
-import tilePbfPath from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/test-tile.pbf";
+import tilePbfBuffer from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/test-tile.pbf";
 import featurePickGeojson from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/feature-pick.geojson" with { type: "json" };
 
 configure({
@@ -62,17 +62,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
   let item: ArcGisFeatureServerCatalogItem;
 
   let multiCallCount: number;
-  let tilePbfBuffer: ArrayBuffer;
-
-  beforeAll(async function () {
-    worker.use(
-      http.get(/\.pbf$/, () => {
-        return passthrough();
-      })
-    );
-    const [pbfRes] = await Promise.all([fetch(tilePbfPath)]);
-    tilePbfBuffer = await pbfRes.arrayBuffer();
-  });
 
   beforeEach(function () {
     terria = new Terria({

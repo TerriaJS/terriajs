@@ -60,7 +60,9 @@ describe("WebMapTileServiceCatalogGroup", function () {
         fees
       ]);
 
-      expect(wmts.info.map(({ content }) => content)).toEqual([
+      // xml2json returns String wrapper objects (not primitives) for elements
+      // with attributes (e.g. xml:lang). Use String() to normalize.
+      expect(wmts.info.map(({ content }) => String(content))).toEqual([
         "Datum. Of the test variety.",
         "test",
         "test"

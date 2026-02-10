@@ -3,6 +3,10 @@ declare module "*.css";
 declare module "*.csv";
 declare module "*.xml";
 declare module "*.svg";
+declare module "*.pbf" {
+  const buffer: ArrayBuffer;
+  export default buffer;
+}
 declare module "*.png";
 declare module "*.jpg";
 declare module "*.css";

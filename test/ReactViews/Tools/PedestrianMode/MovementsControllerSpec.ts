@@ -7,6 +7,7 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import LatLonHeight from "../../../../lib/Core/LatLonHeight";
 import Cesium from "../../../../lib/Models/Cesium";
 import Terria from "../../../../lib/Models/Terria";
+import { setViewerMode } from "../../../../lib/Models/ViewerMode";
 import MovementsController from "../../../../lib/ReactViews/Tools/PedestrianMode/MovementsController";
 import {
   MAX_VERTICAL_LOOK_ANGLE,
@@ -120,18 +121,20 @@ describe("MovementsController", function () {
     describe("in fly mode", function () {
       it("is proportional to the height", function () {
         controller.mode = "fly";
-        spyOnProperty(
+        vi.spyOn(
           controller,
-          "currentPedestrianHeightFromSurface"
+          "currentPedestrianHeightFromSurface",
+          "get"
         ).mockReturnValue(100);
         expect(controller.moveAmount).toBe(1);
       });
 
       it("is never below baseAmount", function () {
         controller.mode = "fly";
-        spyOnProperty(
+        vi.spyOn(
           controller,
-          "currentPedestrianHeightFromSurface"
+          "currentPedestrianHeightFromSurface",
+          "get"
         ).mockReturnValue(0.5);
         expect(controller.moveAmount).toBe(0.2);
       });
@@ -168,7 +171,7 @@ describe("MovementsController", function () {
     });
 
     it("can move forward", function () {
-      spyOnProperty(controller, "moveAmount").mockReturnValue(100000);
+      vi.spyOn(controller, "moveAmount", "get").mockReturnValue(100000);
       controller.move("forward");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.55,
@@ -178,7 +181,7 @@ describe("MovementsController", function () {
     });
 
     it("can move backward", function () {
-      spyOnProperty(controller, "moveAmount").mockReturnValue(100000);
+      vi.spyOn(controller, "moveAmount", "get").mockReturnValue(100000);
       controller.move("backward");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.49,
@@ -188,7 +191,7 @@ describe("MovementsController", function () {
     });
 
     it("can move up", function () {
-      spyOnProperty(controller, "moveAmount").mockReturnValue(100);
+      vi.spyOn(controller, "moveAmount", "get").mockReturnValue(100);
       controller.move("up");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.52,
@@ -198,7 +201,7 @@ describe("MovementsController", function () {
     });
 
     it("can move down", function () {
-      spyOnProperty(controller, "moveAmount").mockReturnValue(100);
+      vi.spyOn(controller, "moveAmount", "get").mockReturnValue(100);
       controller.move("down");
       expect(toLatLonHeight(camera.position)).toEqual({
         latitude: 8.52,

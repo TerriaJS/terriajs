@@ -23,8 +23,8 @@ describe("SearchProviderMixin", () => {
     });
     searchProvider = new TestSearchProvider("test", terria);
     searchProvider.setTrait(CommonStrata.definition, "minCharacters", 3);
-    searchProvider.logEvent.mockReset();
-    searchProvider.doSearch.mockReset();
+    searchProvider.logEvent.mockClear();
+    searchProvider.doSearch.mockClear();
   });
 
   it(" - properly mixed", () => {

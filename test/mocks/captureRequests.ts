@@ -23,13 +23,15 @@ export function captureRequests(): {
     });
   };
 
-  worker.events.on("request:match", listener);
+  // Use request:start (fires before handler) so the body is not yet consumed.
+  // request:match fires after the handler, where POST body may already be read.
+  worker.events.on("request:start", listener);
 
   return {
     requests,
     clear: () => {
       requests.length = 0;
     },
-    dispose: () => worker.events.removeListener("request:match", listener)
+    dispose: () => worker.events.removeListener("request:start", listener)
   };
 }
