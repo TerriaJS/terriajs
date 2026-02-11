@@ -546,7 +546,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "translate#viewshed.toolButtonTitle",
     location: "TOP",
     controller: viewshedTool,
-    screenSize: undefined,
+    screenSize: "medium",
     order: 8
   });
 
