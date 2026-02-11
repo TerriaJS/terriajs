@@ -285,7 +285,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 
                 // If image element is Leaflet's emtpy pixel ignore this error (See: https://github.com/Leaflet/Leaflet/issues/9311)
                 if (e.target.src === L.Util.emptyImageUrl) {
-                  tileProviderError.retry = false;
+                  tellMapToSilentlyGiveUp();
                   return;
                 }
 
