@@ -18,7 +18,9 @@ import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
-import L from "leaflet";
+
+const LEAFLET_EMPTY_IMAGE_URL =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 type ModelType = Model<
   MappableTraits & ImageryProviderTraits & CatalogMemberTraits
@@ -284,7 +286,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                 // could not load it as an image.
 
                 // If image element is Leaflet's emtpy pixel ignore this error (See: https://github.com/Leaflet/Leaflet/issues/9311)
-                if (e.target.src === L.Util.emptyImageUrl) {
+                if (e.target.src === LEAFLET_EMPTY_IMAGE_URL) {
                   tellMapToSilentlyGiveUp();
                   return;
                 }
