@@ -1,15 +1,15 @@
 import toGeoJSON from "@mapbox/togeojson";
 import i18next from "i18next";
-import { computed, makeObservable, override } from "mobx";
+import { action, computed, makeObservable, override } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
-import readText from "../../../Core/readText";
 import { networkRequestError } from "../../../Core/TerriaError";
 import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import CommonStrata from "../../Definition/CommonStrata";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
@@ -29,15 +29,18 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     return i18next.t("models.gpx.name");
   }
 
-  private _gpxFile?: File;
-
+  @action
   setFileInput(file: File) {
-    this._gpxFile = file;
+    this.setTrait(
+      CommonStrata.user,
+      "url",
+      URL.createObjectURL(file) + "#" + file.name
+    );
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._gpxFile);
+    return this.url?.startsWith("blob:") ?? false;
   }
 
   private loadGpxText(text: string) {
@@ -49,8 +52,6 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     let data: string | undefined;
     if (isDefined(this.gpxString)) {
       data = this.gpxString;
-    } else if (isDefined(this._gpxFile)) {
-      data = await readText(this._gpxFile);
     } else if (isDefined(this.url)) {
       data = await loadText(proxyCatalogItemUrl(this, this.url));
     }

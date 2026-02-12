@@ -4,7 +4,6 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import DataSourceClock from "terriajs-cesium/Source/DataSources/DataSourceClock";
 import isDefined from "../../../Core/isDefined";
-import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -17,6 +16,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
+import CommonStrata from "../../Definition/CommonStrata";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
@@ -90,15 +90,19 @@ export default class CzmlCatalogItem
   }
 
   @observable _dataSource: CzmlDataSource | undefined;
-  private _czmlFile?: File;
 
+  @action
   setFileInput(file: File) {
-    this._czmlFile = file;
+    this.setTrait(
+      CommonStrata.user,
+      "url",
+      URL.createObjectURL(file) + "#" + file.name
+    );
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._czmlFile);
+    return this.url?.startsWith("blob:") ?? false;
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -108,8 +112,6 @@ export default class CzmlCatalogItem
       loadableData = toJS(this.czmlData);
     } else if (isDefined(this.czmlString)) {
       loadableData = JSON.parse(this.czmlString);
-    } else if (isDefined(this._czmlFile)) {
-      loadableData = readJson(this._czmlFile);
     } else if (isDefined(this.ionResource)) {
       loadableData = this.ionResource;
     } else if (isDefined(this.url)) {
