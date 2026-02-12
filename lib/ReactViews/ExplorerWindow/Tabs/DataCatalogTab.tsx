@@ -7,9 +7,8 @@ import { useViewState } from "../../Context";
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
 import Breadcrumbs from "../../Search/Breadcrumbs";
-import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox";
+import SearchBox from "../../Search/SearchBox";
 import Styles from "./data-catalog-tab.scss";
-import CatalogSearchProvider from "../../../Models/SearchProviders/CatalogSearchProvider";
 
 interface DataCatalogTabProps {
   items?: unknown[];
@@ -52,15 +51,8 @@ const DataCatalogTab = observer(function DataCatalogTab(
               <SearchBox
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
-                onDoSearch={() => search()}
+                onDoSearch={search}
                 placeholder={searchPlaceholder}
-                debounceDuration={
-                  terria.catalogReferencesLoaded
-                    ? (
-                        searchState.catalogSearchProvider as CatalogSearchProvider
-                      ).debounceDurationOnceLoaded
-                    : DEBOUNCE_INTERVAL
-                }
               />
             )}
             <DataCatalog
