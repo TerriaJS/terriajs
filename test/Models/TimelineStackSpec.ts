@@ -61,7 +61,7 @@ describe("TimelineStack", function () {
     expect(terria.timelineStack.clock.shouldAnimate).toBe(false);
   });
 
-  describe("toggling always show timeline", function () {
+  describe("toggling 'always show timeline'", function () {
     const DEFAULT_TIMELINE_MODEL_ID = "defaultTimeline";
 
     it("adds the default timeline model to terria when enabled", function () {
@@ -77,7 +77,7 @@ describe("TimelineStack", function () {
       ).toBe(terria.timelineStack.defaultTimeVarying as any);
     });
 
-    it("adds removes the default timeline  model to terria when enabled", function () {
+    it("removes the default timeline model from terria when disabled", function () {
       runInAction(() => {
         terria.timelineStack.setAlwaysShowTimeline(true);
       });
