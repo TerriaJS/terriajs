@@ -40,6 +40,10 @@ class KmlCatalogItem
 
   private _kmlFile?: File;
 
+  get fileInput(): File | undefined {
+    return this._kmlFile;
+  }
+
   setFileInput(file: File) {
     this._kmlFile = file;
   }

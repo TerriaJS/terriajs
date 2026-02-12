@@ -31,6 +31,10 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
 
   private _gpxFile?: File;
 
+  get fileInput(): File | undefined {
+    return this._gpxFile;
+  }
+
   setFileInput(file: File) {
     this._gpxFile = file;
   }

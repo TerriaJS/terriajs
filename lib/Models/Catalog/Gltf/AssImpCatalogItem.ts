@@ -52,6 +52,10 @@ export default class AssImpCatalogItem
 
   @observable hasLocalData = false;
 
+  get fileInput(): File | undefined {
+    return undefined;
+  }
+
   @action
   setFileInput(file: File | Blob) {
     const dataUrl = URL.createObjectURL(file);

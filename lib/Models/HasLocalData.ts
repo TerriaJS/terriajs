@@ -1,5 +1,6 @@
 interface HasLocalData {
-  hasLocalData: boolean;
+  get hasLocalData(): boolean;
+  get fileInput(): File | undefined;
   setFileInput(file: File): void;
 }
 

@@ -92,6 +92,10 @@ export default class CzmlCatalogItem
   @observable _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;
 
+  get fileInput(): File | undefined {
+    return this._czmlFile;
+  }
+
   setFileInput(file: File) {
     this._czmlFile = file;
   }

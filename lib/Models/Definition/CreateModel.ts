@@ -76,7 +76,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return result;
     }
 
-    duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
+    override duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
       let newModel: this;
       try {
         newModel = new (this.constructor as any)(

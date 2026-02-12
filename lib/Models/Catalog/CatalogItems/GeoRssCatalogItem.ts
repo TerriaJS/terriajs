@@ -144,6 +144,10 @@ export default class GeoRssCatalogItem
 
   private _georssFile?: File;
 
+  get fileInput(): File | undefined {
+    return this._georssFile;
+  }
+
   setFileInput(file: File) {
     this._georssFile = file;
   }

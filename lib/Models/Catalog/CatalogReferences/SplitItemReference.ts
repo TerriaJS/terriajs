@@ -5,6 +5,7 @@ import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import SplitItemReferenceTraits from "../../../Traits/TraitsClasses/SplitItemReferenceTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
+import HasLocalData from "../../HasLocalData";
 
 /**
  * This item is a reference to a copy of the original item from which it was created.
@@ -53,7 +54,17 @@ export default class SplitItemReference extends ReferenceMixin(
     try {
       // Ensure the target we create is a concrete item
       sourceItem = getDereferencedIfExists(sourceItem);
-      return sourceItem.duplicateModel(this.uniqueId, this);
+      const clone = sourceItem.duplicateModel(this.uniqueId, this);
+
+      if (HasLocalData.is(sourceItem) && HasLocalData.is(clone)) {
+        const file = sourceItem.fileInput;
+        if (file) {
+          // clone.hasLocalData = true;
+          // clone.setFileInput(file);
+        }
+      }
+
+      return clone;
     } catch (e) {
       throw TerriaError.from(e, {
         title: { key: "splitterTool.errorTitle" },

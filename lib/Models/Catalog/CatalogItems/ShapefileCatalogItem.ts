@@ -46,6 +46,10 @@ class ShapefileCatalogItem
 
   protected _file?: File;
 
+  get fileInput(): File | undefined {
+    return this._file;
+  }
+
   setFileInput(file: File) {
     this._file = file;
   }

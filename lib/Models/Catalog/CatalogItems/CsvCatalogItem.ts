@@ -37,6 +37,10 @@ export default class CsvCatalogItem
 
   private _csvFile?: File;
 
+  get fileInput(): File | undefined {
+    return this._csvFile;
+  }
+
   constructor(
     id: string | undefined,
     terria: Terria,
