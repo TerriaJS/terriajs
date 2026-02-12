@@ -285,7 +285,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                 // This is a failed image element, which means we got a 200 response but
                 // could not load it as an image.
 
-                // If image element is Leaflet's emtpy pixel ignore this error (See: https://github.com/Leaflet/Leaflet/issues/9311)
+                // If image element is Leaflet's empty pixel ignore this error (See: https://github.com/Leaflet/Leaflet/issues/9311)
                 if (e.target.src === LEAFLET_EMPTY_IMAGE_URL) {
                   tellMapToSilentlyGiveUp();
                   return;
