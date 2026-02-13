@@ -1044,10 +1044,20 @@ export default class Cesium extends GlobeOrMap {
     if (scene.mode === SceneMode.SCENE2D) {
       const rect = camera.computeViewRectangle();
       if (rect) {
-        return new CameraView(rect);
+        return new CameraView(
+          rect,
+          camera.positionWC,
+          camera.directionWC,
+          camera.upWC
+        );
       }
       // Fallback for 2D mode when computeViewRectangle returns undefined
-      return new CameraView(this.terriaViewer.homeCamera.rectangle);
+      return new CameraView(
+        this.terriaViewer.homeCamera.rectangle,
+        camera.positionWC,
+        camera.directionWC,
+        camera.upWC
+      );
     }
 
     const width = scene.canvas.clientWidth;
