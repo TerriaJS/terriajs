@@ -250,13 +250,13 @@ const SettingPanel: FC = observer(() => {
     terria.mainViewer.baseMap &&
     getBaseMapStatusMessage(terria.mainViewer.baseMap, t);
 
-  const tmpMapViewers = Object.entries(MapViewers).filter(
+  const filteredMapViewers = Object.entries(MapViewers).filter(
     ([key, viewerMode]) =>
       viewerMode.available &&
       terria.configParameters.mapViewers.includes(key as MapViewersKey)
   );
-  const availableMapViewers = tmpMapViewers?.length
-    ? tmpMapViewers
+  const availableMapViewers = filteredMapViewers.length
+    ? filteredMapViewers
     : [["2d", MapViewers["2d"]] as const];
 
   return (
