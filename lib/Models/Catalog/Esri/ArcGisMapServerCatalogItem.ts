@@ -36,6 +36,7 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import createStratumInstance from "../../Definition/createStratumInstance";
+import CommonStrata from "../../Definition/CommonStrata";
 import { RectangleCoordinates } from "../../FunctionParameters/RectangleParameter";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
