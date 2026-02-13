@@ -219,13 +219,6 @@ const SettingPanel: FC = observer(() => {
     ? t("settingPanel.terrain.showUndergroundFeatures")
     : t("settingPanel.terrain.hideUndergroundFeatures");
 
-  if (
-    terria.configParameters.useCesiumIonTerrain ||
-    terria.configParameters.cesiumTerrainUrl
-  ) {
-    MapViewers["3d"].available = true;
-  }
-
   const supportsSide = isCesiumWithTerrain;
 
   let currentSide = sides.both;
