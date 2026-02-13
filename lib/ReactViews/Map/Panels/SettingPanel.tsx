@@ -282,7 +282,9 @@ const SettingPanel: FC = observer(() => {
             <SettingsButton
               key={key}
               isActive={key === currentViewer}
-              onClick={(event: any) => selectViewer(key as any, event)}
+              onClick={(event: MouseEvent<HTMLButtonElement>) =>
+                selectViewer(key as keyof typeof MapViewers, event)
+              }
             >
               <Text mini>{t(viewerMode.label)}</Text>
             </SettingsButton>
