@@ -3,7 +3,7 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import WelcomeMessage from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 import { renderWithContexts } from "./withContext";
-import { screen } from "@testing-library/dom";
+import { screen, within } from "@testing-library/dom";
 
 describe("WelcomeMessage", function () {
   let terria: Terria;
@@ -28,28 +28,29 @@ describe("WelcomeMessage", function () {
         placeholderImage: ""
       };
     });
-    renderWithContexts(<WelcomeMessage />, viewState);
+    const { container } = renderWithContexts(<WelcomeMessage />, viewState);
+    const localScreen = within(container);
 
     expect(viewState.showWelcomeMessage).toEqual(true);
-    expect(screen.getByText("welcomeMessage.title")).toBeVisible();
+    expect(localScreen.getByText("welcomeMessage.title")).toBeVisible();
     expect(
-      screen.getByText(
-        /Interested in data discovery and exploration\?*Dive right in and get started or check the following help guide options./
-      )
+      localScreen.getByText("welcomeMessage.welcomeMessage")
     ).toBeVisible();
 
-    expect(screen.getByText("Getting started with the map")).toBeVisible();
+    expect(localScreen.getByText("Getting started with the map")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "welcomeMessage.tourBtnText" })
+      localScreen.getByRole("button", { name: "welcomeMessage.tourBtnText" })
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "welcomeMessage.helpBtnText" })
+      localScreen.getByRole("button", { name: "welcomeMessage.helpBtnText" })
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "welcomeMessage.exploreDataBtnText" })
+      localScreen.getByRole("button", {
+        name: "welcomeMessage.exploreDataBtnText"
+      })
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "welcomeMessage.dismissText" })
+      localScreen.getByRole("button", { name: "welcomeMessage.dismissText" })
     ).toBeVisible();
   });
 
