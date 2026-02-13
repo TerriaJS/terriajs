@@ -1,10 +1,8 @@
-import { findAllWithClass } from "react-shallow-testutils";
-import TestRenderer from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
-import { getShallowRenderedOutput } from "../../MoreShallowTools";
 
 describe("Legend", function () {
   let terria: Terria;
@@ -28,32 +26,22 @@ describe("Legend", function () {
       );
     });
 
-    it("A legend image can be rendered", function (done) {
-      wmsItem
-        .loadMapItems()
-        .then(() => {
-          const testRenderer = TestRenderer.create(<Legend item={wmsItem} />);
-
-          const legends = testRenderer.root.findAllByType("img");
-          expect(legends.length).toEqual(1);
-        })
-        .then(done);
+    it("A legend image can be rendered", async function () {
+      await wmsItem.loadMapItems();
+      const { container } = render(<Legend item={wmsItem} />);
+      const legends = container.querySelectorAll("img");
+      expect(legends.length).toEqual(1);
     });
 
-    it("A legend image can be hidden", function (done) {
+    it("A legend image can be hidden", async function () {
       wmsItem.setTrait("definition", "hideLegendInWorkbench", true);
-      wmsItem
-        .loadMapItems()
-        .then(() => {
-          const legendSection = <Legend item={wmsItem} />;
-          const result = getShallowRenderedOutput(legendSection);
-          expect(result).toBeNull();
-        })
-        .then(done);
+      await wmsItem.loadMapItems();
+      const { container } = render(<Legend item={wmsItem} />);
+      expect(container.innerHTML).toBe("");
     });
   });
 
-  xdescribe(" - from Table", function () {
+  describe(" - from Table", function () {
     let csvItem: CsvCatalogItem;
     beforeEach(async function () {
       csvItem = new CsvCatalogItem("mycsv", terria, undefined);
@@ -67,16 +55,8 @@ describe("Legend", function () {
     });
 
     it(" - can be generated", function () {
-      const legendSection = <Legend item={csvItem} />;
-      const result = getShallowRenderedOutput(legendSection);
-      const memberComponents = findAllWithClass(
-        result,
-        "tjs-legend__legendTitles"
-      );
-      expect(memberComponents.length).toEqual(2);
-      expect(memberComponents[0].props.children[1].props.children).toEqual(
-        "1,500 to 2,000"
-      );
+      render(<Legend item={csvItem} />);
+      expect(screen.getByText("1,500 to 2,000")).toBeTruthy();
     });
 
     it(" - can be formatted using toLocaleString", function () {
@@ -86,19 +66,12 @@ describe("Legend", function () {
         minimumFractionDigits: 0
       });
 
-      const legendSection = <Legend item={csvItem} />;
-      const result = getShallowRenderedOutput(legendSection);
-      const memberComponents = findAllWithClass(
-        result,
-        "tjs-legend__legendTitles"
-      );
-      expect(memberComponents.length).toEqual(2);
+      render(<Legend item={csvItem} />);
       // toLocaleString can return $1,500 when using locale en-AU and A$1,500 when using en
-      expect(
-        ["$1,500 to $2,000", "A$1,500 to A$2,000"].includes(
-          memberComponents[0].props.children[1].props.children
-        )
-      ).toBeTruthy();
+      const match =
+        screen.queryByText("$1,500 to $2,000") ??
+        screen.queryByText("A$1,500 to A$2,000");
+      expect(match).toBeTruthy();
     });
   });
 });
