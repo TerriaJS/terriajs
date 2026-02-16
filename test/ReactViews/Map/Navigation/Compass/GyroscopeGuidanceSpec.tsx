@@ -24,9 +24,6 @@ describe("GyroscopeGuidance", function () {
 
       const button = screen.getByRole("button");
       expect(button).toBeVisible();
-      await userEvent.click(button);
-
-      screen.debug();
     });
 
     it("opens the guidance when the button is clicked", async function () {

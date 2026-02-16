@@ -30,9 +30,11 @@ describe("FeatureInfoPanel", function () {
   });
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function () {
-    viewState.featureInfoPanelIsVisible = true;
+    runInAction(() => {
+      viewState.featureInfoPanelIsVisible = true;
+    });
     const { container } = renderWithContexts(
-      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
       viewState
     );
     expect(container.querySelector('[class*="is-visible"]')).toBeTruthy();
@@ -44,18 +46,20 @@ describe("FeatureInfoPanel", function () {
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
-    const { container } = renderWithContexts(
-      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+    renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
       viewState
     );
     // Loader renders a spinning icon (svg) and optional message text
-    expect(container.querySelector("svg")).toBeInTheDocument();
+    expect(screen.getByText("loader.loadingMessage")).toBeInTheDocument();
   });
 
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
-    viewState.featureInfoPanelIsVisible = false;
+    runInAction(() => {
+      viewState.featureInfoPanelIsVisible = false;
+    });
     const { container } = renderWithContexts(
-      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
       viewState
     );
     expect(container.querySelector('[class*="is-visible"]')).toBeNull();
@@ -84,7 +88,7 @@ describe("FeatureInfoPanel", function () {
     terria.pickedFeatures = pickedFeatures;
     terria.workbench.items = [simple1, simple2];
     const { container } = renderWithContexts(
-      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
       viewState
     );
     await waitFor(() =>

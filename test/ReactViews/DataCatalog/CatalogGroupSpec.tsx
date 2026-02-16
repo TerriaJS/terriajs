@@ -6,15 +6,15 @@ import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 describe("CatalogGroup", () => {
   describe("Loading", () => {
     it("Shows loader", () => {
-      const { container } = render(
+      render(
         <ThemeProvider theme={terriaTheme}>
-          <CatalogGroup open t={() => {}} loading />
+          <CatalogGroup open t={() => {}} loading emptyMessage="nothing here" />
         </ThemeProvider>
       );
       // Loader renders a spinning element
       expect(screen.getByText("loader.loadingMessage")).toBeVisible();
       // No empty message
-      expect(container.querySelectorAll("[key='empty']").length).toEqual(0);
+      expect(screen.queryByText("nothing here")).not.toBeInTheDocument();
     });
     it("Doesn't show children when loading", () => {
       render(
@@ -27,6 +27,7 @@ describe("CatalogGroup", () => {
       expect(screen.getByText("loader.loadingMessage")).toBeVisible();
       expect(screen.queryByText("some child")).not.toBeInTheDocument();
     });
+
     it("Shows children when not loading", () => {
       render(
         <ThemeProvider theme={terriaTheme}>

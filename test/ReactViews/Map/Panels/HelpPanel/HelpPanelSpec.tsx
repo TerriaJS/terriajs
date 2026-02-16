@@ -101,9 +101,6 @@ describe("HelpPanel", function () {
     screen.getByText("This is another paragraph");
     const videoPlaceholder = container.querySelector('[class*="videoLink"]');
     expect(videoPlaceholder).toBeVisible();
-    console.log(
-      videoPlaceholder?.closest("[style]")?.attributes.getNamedItem("style")
-    );
     expect(
       videoPlaceholder?.closest("[style]")?.attributes.getNamedItem("style")
         ?.value
