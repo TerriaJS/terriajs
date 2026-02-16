@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
-import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -30,9 +29,11 @@ import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/Feature
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
-import { createWithContexts } from "./withContext";
+import { renderWithContexts } from "./withContext";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import { cleanup, screen, within } from "@testing-library/react";
+import { act } from "react";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -40,12 +41,6 @@ if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
   if (thousand.length === 5) {
     separator = thousand[1];
   }
-}
-
-function findWithText(test: ReactTestRenderer, text: string) {
-  return test.root.findAll((node) =>
-    node.children.some((child) => child === text)
-  );
 }
 
 // Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
@@ -56,7 +51,7 @@ function absPad2(value: number) {
 describe("FeatureInfoSection", function () {
   let terria: Terria;
   let feature: TerriaFeature;
-  let viewState: any;
+  let viewState: ViewState;
   let catalogItem: TestModel;
 
   beforeEach(function () {
@@ -92,39 +87,38 @@ describe("FeatureInfoSection", function () {
 
   it("renders a static description", function () {
     feature.description = new ConstantProperty("<p>hi!</p>");
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    result.root.findAllByType("p");
-    expect(result.root.findAllByType("p").length).toEqual(1);
-    expect(findWithText(result, "hi!").length).toEqual(1);
+
+    expect(screen.getByText("hi!")).toBeVisible();
   });
 
   it("does not render unsafe html", function () {
     feature.description = new ConstantProperty(
       '<script>alert("gotcha")</script><p>hi!</p>'
     );
-    const section = (
+    const { container } = renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(result.root.findAllByType("script").length).toEqual(0);
-    expect(findWithText(result, 'alert("gotcha")').length).toEqual(0);
-    expect(result.root.findAllByType("p").length).toEqual(1);
-    expect(findWithText(result, "hi!").length).toEqual(1);
+
+    expect(container.querySelectorAll("script").length).toEqual(0);
+    expect(screen.queryByText(/alert\("gotcha"\)/)).not.toBeInTheDocument();
+    expect(screen.getByText("hi!")).toBeVisible();
   });
 
   function timeVaryingDescription() {
@@ -150,7 +144,25 @@ describe("FeatureInfoSection", function () {
     feature.description = timeVaryingDescription();
     catalogItem.setTrait(CommonStrata.user, "currentTime", "2011-06-30");
 
-    const section = (
+    const { rerender } = renderWithContexts(
+      <FeatureInfoSection
+        feature={feature}
+        isOpen
+        catalogItem={catalogItem}
+        viewState={viewState}
+        t={() => {}}
+      />,
+      viewState
+    );
+
+    expect(screen.queryByText("hi")).not.toBeInTheDocument();
+    expect(screen.getByText("bye")).toBeVisible();
+
+    act(() => {
+      catalogItem.setTrait(CommonStrata.user, "currentTime", "2010-06-30");
+    });
+
+    rerender(
       <FeatureInfoSection
         feature={feature}
         isOpen
@@ -159,36 +171,9 @@ describe("FeatureInfoSection", function () {
         t={() => {}}
       />
     );
-    const result = createWithContexts(viewState, section);
 
-    expect(
-      result.root.findAll((node) =>
-        node.children.some((child) => child === "hi")
-      ).length
-    ).toEqual(0, "hi");
-    expect(
-      result.root.findAll(
-        (node) => node.children.some((child) => child === "bye"),
-        {
-          deep: true
-        }
-      ).length
-    ).toEqual(1, "bye");
-
-    catalogItem.setTrait(CommonStrata.user, "currentTime", "2010-06-30");
-
-    const section2 = (
-      <FeatureInfoSection
-        feature={feature}
-        isOpen
-        catalogItem={catalogItem}
-        viewState={viewState}
-        t={() => {}}
-      />
-    );
-    const result2 = createWithContexts(viewState, section2);
-    expect(findWithText(result2, "hi").length).toEqual(1, "hi2");
-    expect(findWithText(result2, "bye").length).toEqual(0, "bye2");
+    expect(screen.getByText("hi")).toBeVisible();
+    expect(screen.queryByText("bye")).not.toBeInTheDocument();
   });
 
   it("handles features with no properties", function () {
@@ -196,21 +181,19 @@ describe("FeatureInfoSection", function () {
       name: "Foot",
       description: "bart"
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
 
-    expect(
-      findWithText(result, getName(catalogItem) + " - " + "Foot").length
-    ).toEqual(1);
-    expect(findWithText(result, "bart").length).toEqual(1);
+    expect(screen.getByText("bart")).toBeVisible();
+    expect(screen.getByText(`${getName(catalogItem)} - Foot`)).toBeVisible();
   });
 
   it("handles html format feature info", function () {
@@ -219,20 +202,20 @@ describe("FeatureInfoSection", function () {
       description:
         "<html><head><title>GetFeatureInfo</title></head><body><table><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>"
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(
-      findWithText(result, getName(catalogItem) + " - " + "Foo").length
-    ).toEqual(1);
-    expect(findWithText(result, "BAR").length).toEqual(1);
+
+    expect(screen.getByText(`${getName(catalogItem)} - Foo`)).toBeVisible();
+    expect(screen.queryByText("GetFeatureInfo")).not.toBeInTheDocument();
+    expect(screen.getByText("BAR")).toBeVisible();
   });
 
   it("handles html format feature info where markdown would break the html", function () {
@@ -241,19 +224,21 @@ describe("FeatureInfoSection", function () {
       description:
         "<html><head><title>GetFeatureInfo</title></head><body><table>\n\n    <tr>\n\n<th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>"
     });
+
     // Markdown applied to this description would pull out the lonely <tr> and make it <pre><code><tr>\n</code></pre> , so check this doesn't happen.
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(findWithText(result, "<tr>\n").length).toEqual(0);
-    expect(findWithText(result, "&lt;\n").length).toEqual(0); // Also cover the possibility that it might be encoded.
+
+    expect(screen.queryByText("<tr>\n")).not.toBeInTheDocument();
+    expect(screen.queryByText("&lt;\n")).not.toBeInTheDocument();
   });
 
   it("maintains and applies inline style attributes", function () {
@@ -261,45 +246,42 @@ describe("FeatureInfoSection", function () {
       name: "Foo",
       description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    const divs = findWithText(result, "countdown");
-    expect(findWithText(result, "countdown").length).toEqual(1);
-    // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly. Also IE11 adds space to the front, so strip all spaces out.
-    expect(divs[0].props.style.background.replace(/ /g, "")).toEqual(
+
+    const styledDiv = screen.getByText("countdown");
+    expect(styledDiv.style.background.replace(/ /g, "")).toEqual(
       "rgb(170,187,204)"
     );
   });
 
   it("does not break when html format feature info has style tag", function () {
-    // Note this does not test that it actually uses the style tag for styling.
     feature = new Entity({
       name: "Foo",
       description:
         '<html><head><title>GetFeatureInfo</title></head><style>table.info tr {background:#fff;}</style><body><table class="info"><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(
-      findWithText(result, getName(catalogItem) + " - " + "Foo").length
-    ).toEqual(1);
-    expect(findWithText(result, "BAR").length).toEqual(1);
+    expect(screen.getByText(`${getName(catalogItem)} - Foo`)).toBeVisible();
+    expect(screen.queryByText("GetFeatureInfo")).not.toBeInTheDocument();
+    expect(screen.getByText("BAR")).toBeVisible();
   });
 
   it("does not break when there are neither properties nor description", function () {
@@ -307,26 +289,19 @@ describe("FeatureInfoSection", function () {
       name: "Vapid"
     });
 
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
-        t={() => {}}
-      />
+        t={(s: string) => s}
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
 
-    expect(
-      findWithText(result, getName(catalogItem) + " - " + "Vapid").length
-    ).toEqual(1);
-
-    // Dodgy test to see if no info message is shown
-    expect(
-      result.root.findAll((node) => (node as any)._fiber.key === "no-info")
-        .length
-    ).toEqual(1);
+    expect(screen.getByText(`${getName(catalogItem)} - Vapid`)).toBeVisible();
+    expect(screen.getByText("featureInfo.noInfoAvailable")).toBeVisible();
   });
 
   it("does not break when a template name needs to be rendered but no properties are set", function () {
@@ -337,21 +312,21 @@ describe("FeatureInfoSection", function () {
     );
 
     feature = new Entity();
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(findWithText(result, "Title ").length).toEqual(1);
+
+    expect(screen.getByText("Title")).toBeVisible();
   });
 
   it("shows properties if no description", function () {
-    // Tests both static and potentially time-varying properties.
     feature = new Entity({
       name: "Meals",
       properties: {
@@ -363,23 +338,22 @@ describe("FeatureInfoSection", function () {
         }
       }
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-    expect(
-      findWithText(result, getName(catalogItem) + " - " + "Meals").length
-    ).toEqual(1);
-    expect(findWithText(result, "lunch").length).toEqual(1);
-    expect(findWithText(result, "eggs").length).toEqual(1);
-    expect(findWithText(result, "dinner").length).toEqual(1);
-    expect(findWithText(result, "ham").length).toEqual(1);
+
+    expect(screen.getByText(`${getName(catalogItem)} - Meals`)).toBeVisible();
+    expect(screen.getByText("lunch")).toBeVisible();
+    expect(screen.getByText("eggs")).toBeVisible();
+    expect(screen.getByText("dinner")).toBeVisible();
+    expect(screen.getByText("ham")).toBeVisible();
   });
 
   it("gracefully handles bad nested JSON", function () {
@@ -390,21 +364,18 @@ describe("FeatureInfoSection", function () {
         somethingGood: JSON.stringify({ good: "this object is good" })
       }
     });
-    const section = (
+    renderWithContexts(
       <FeatureInfoSection
         catalogItem={catalogItem}
         feature={feature}
         isOpen
         viewState={viewState}
         t={() => {}}
-      />
+      />,
+      viewState
     );
-    const result = createWithContexts(viewState, section);
-
-    expect(findWithText(result, "{broken object").length).toEqual(1);
-    expect(
-      findWithText(result, `{"good":"this object is good"}`).length
-    ).toEqual(1);
+    expect(screen.getByText("{broken object")).toBeVisible();
+    expect(screen.getByText(`{"good":"this object is good"}`)).toBeVisible();
   });
 
   describe("templating", function () {
@@ -415,23 +386,22 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "This is a steel bar.").length).toEqual(1);
+      expect(screen.getByText("This is a steel bar.")).toBeInTheDocument();
     });
 
     it("uses activeStyle of catalog item having TableTraits in featureInfoTemplate", function () {
       const csvItem = new CsvCatalogItem("testId", terria, undefined);
       csvItem.setTrait(CommonStrata.user, "activeStyle", "User Style");
-      // Do not specify the styles as TableStyleTraits[] type, as it will cause an error in the vscode editor.
       const styles = [
         {
           id: "User Style",
@@ -459,19 +429,19 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={csvItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       expect(
-        findWithText(result, "The active style id is User Style.").length
-      ).toEqual(1);
+        screen.getByText("The active style id is User Style.")
+      ).toBeInTheDocument();
     });
 
     it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {
@@ -482,19 +452,17 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Made from smelted steel.").length).toEqual(
-        1
-      );
+      expect(screen.getByText("Made from smelted steel.")).toBeInTheDocument();
     });
 
     it("formats large numbers without commas", function () {
@@ -505,17 +473,17 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Size: 12345678.9012").length).toEqual(1);
+      expect(screen.getByText("Size: 12345678.9012")).toBeInTheDocument();
     });
 
     it("can format numbers with commas", function () {
@@ -529,23 +497,22 @@ describe("FeatureInfoSection", function () {
         "formats",
         { size: { type: "number", useGrouping: true } } as any
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
 
       expect(
-        findWithText(
-          result,
+        screen.getByText(
           "Size: 12" + separator + "345" + separator + "678.9012"
-        ).length
-      ).toEqual(1);
+        )
+      ).toBeVisible();
     });
 
     it("formats numbers in the formats section with no type as if type were number", function () {
@@ -560,87 +527,75 @@ describe("FeatureInfoSection", function () {
         { size: { useGrouping: true } } as any
       );
 
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       expect(
-        findWithText(
-          result,
+        screen.getByText(
           "Size: 12" + separator + "345" + separator + "678.9012"
-        ).length
-      ).toEqual(1);
+        )
+      ).toBeVisible();
     });
 
     it("can format numbers using terria.formatNumber", function () {
       let template =
         'Base: {{#terria.formatNumber}}{"useGrouping":false}{{size}}{{/terria.formatNumber}}';
       template +=
-        '  Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3}{{size}}{{/terria.formatNumber}}';
+        '; Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3}{{size}}{{/terria.formatNumber}}';
       template +=
-        '  DP: {{#terria.formatNumber}}{"maximumFractionDigits":3}{{efficiency}}{{/terria.formatNumber}}';
+        '; DP: {{#terria.formatNumber}}{"maximumFractionDigits":3}{{efficiency}}{{/terria.formatNumber}}';
 
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
 
       expect(
-        findWithText(
-          result,
-          "Base: 12345678.9012  Sep: 12" +
-            separator +
-            "345" +
-            separator +
-            "678.901  DP: 0.235"
-        ).length
-      ).toEqual(1);
+        screen.getByText("Base: 12345678.9012; Sep: 12,345,678.901; DP: 0.235")
+      ).toBeVisible();
     });
 
     it("can format numbers using terria.formatNumber without quotes", function () {
       let template =
         "Sep: {{#terria.formatNumber}}{useGrouping:true, maximumFractionDigits:3}{{size}}{{/terria.formatNumber}}";
       template +=
-        "  DP: {{#terria.formatNumber}}{maximumFractionDigits:3}{{efficiency}}{{/terria.formatNumber}}";
+        "; DP: {{#terria.formatNumber}}{maximumFractionDigits:3}{{efficiency}}{{/terria.formatNumber}}";
 
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(
-        findWithText(
-          result,
-          "Sep: 12" + separator + "345" + separator + "678.901  DP: 0.235"
-        ).length
-      ).toEqual(1);
+
+      expect(screen.getByText("Sep: 12,345,678.901; DP: 0.235")).toBeVisible();
     });
 
     it("can handle white text in terria.formatNumber", function () {
@@ -652,22 +607,19 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       expect(
-        findWithText(
-          result,
-          "Sep: 12" + separator + "345" + separator + "678.901"
-        ).length
-      ).toEqual(1);
+        screen.getByText("Sep: 12" + separator + "345" + separator + "678.901")
+      ).toBeVisible();
     });
 
     it("handles non-numbers terria.formatNumber", function () {
@@ -679,17 +631,17 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Test: text").length).toEqual(1);
+      expect(screen.getByText("Test: text")).toBeInTheDocument();
     });
 
     it("can use a dateFormatString when it is specified in terria.formatDateTime", function () {
@@ -701,16 +653,16 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
       const formattedDate =
         absPad2(date.getDate()) +
@@ -723,8 +675,9 @@ describe("FeatureInfoSection", function () {
         ":" +
         absPad2(date.getMinutes()) +
         ":" +
-        absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
-      expect(findWithText(result, "Test: " + formattedDate).length).toEqual(1);
+        absPad2(date.getSeconds());
+
+      expect(screen.getByText("Test: " + formattedDate)).toBeInTheDocument();
     });
 
     it("defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime", function () {
@@ -736,16 +689,16 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
       const offset = -date.getTimezoneOffset();
       const offsetMinute = offset % 60;
@@ -767,8 +720,9 @@ describe("FeatureInfoSection", function () {
         absPad2(date.getMinutes()) +
         ":" +
         absPad2(date.getSeconds()) +
-        timeZone; // E.g. "2017-11-23T19:47:53+1100"
-      expect(findWithText(result, "Test: " + formattedDate).length).toEqual(1);
+        timeZone;
+
+      expect(screen.getByText("Test: " + formattedDate)).toBeInTheDocument();
     });
 
     it("can format dates using the dateTime as the type within the formats section", function () {
@@ -782,16 +736,16 @@ describe("FeatureInfoSection", function () {
         "formats",
         { date: { type: "dateTime", format: "dd-mm-yyyy HH:MM:ss" } } as any
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
       const formattedDate =
         absPad2(date.getDate()) +
@@ -804,8 +758,9 @@ describe("FeatureInfoSection", function () {
         ":" +
         absPad2(date.getMinutes()) +
         ":" +
-        absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
-      expect(findWithText(result, "Date: " + formattedDate).length).toEqual(1);
+        absPad2(date.getSeconds());
+
+      expect(screen.getByText("Date: " + formattedDate)).toBeInTheDocument();
     });
 
     it("handles non-numbers in terria.formatDateTime", function () {
@@ -817,17 +772,17 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Test: text").length).toEqual(1);
+      expect(screen.getByText("Test: text")).toBeInTheDocument();
     });
 
     it("url encodes text components", function () {
@@ -839,17 +794,17 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Test: W%2FHO%3AE%231").length).toEqual(1);
+      expect(screen.getByText("Test: W%2FHO%3AE%231")).toBeInTheDocument();
     });
 
     it("url encodes sections of text", function () {
@@ -861,20 +816,21 @@ describe("FeatureInfoSection", function () {
         "template",
         template
       );
-      const section = (
+      const { container } = renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
 
-      expect(
-        result.root.findAllByProps({ href: "http://example.com/a%20b" }).length
-      ).toEqual(1);
+      expect(within(container).getByRole("link")).toHaveAttribute(
+        "href",
+        "http://example.com/a%20b"
+      );
     });
 
     it("does not escape ampersand as &amp;", function () {
@@ -883,18 +839,18 @@ describe("FeatureInfoSection", function () {
         "template",
         "Ampersand: {{ampersand}}"
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Ampersand: A & B").length).toEqual(1);
-      expect(findWithText(result, "&amp;").length).toEqual(0);
+      expect(screen.getByText("Ampersand: A & B")).toBeInTheDocument();
+      expect(screen.queryByText(/&amp;/)).not.toBeInTheDocument();
     });
 
     it("does not escape < as &lt;", function () {
@@ -903,18 +859,18 @@ describe("FeatureInfoSection", function () {
         "template",
         "Less than: {{lessThan}}"
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Less than: A < B").length).toEqual(1);
-      expect(findWithText(result, "&lt;").length).toEqual(0);
+      expect(screen.getByText("Less than: A < B")).toBeInTheDocument();
+      expect(screen.queryByText(/&lt;/)).not.toBeInTheDocument();
     });
 
     it("can embed safe html in template", function () {
@@ -925,19 +881,19 @@ describe("FeatureInfoSection", function () {
         template
       );
 
-      const section = (
+      const { container } = renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Hello Jay").length).toEqual(1);
-      expect(result.root.findAllByType("br").length).toEqual(1);
-      expect(findWithText(result, "Smith.").length).toEqual(1);
+      expect(screen.getByText(/Hello Jay/)).toBeInTheDocument();
+      expect(container.querySelectorAll("br").length).toEqual(1);
+      expect(screen.getByText(/Smith\./)).toBeInTheDocument();
     });
 
     it("cannot embed unsafe html in template", function () {
@@ -948,19 +904,19 @@ describe("FeatureInfoSection", function () {
         template
       );
 
-      const section = (
+      const { container } = renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Hello ok!").length).toEqual(1);
-      expect(result.root.findAllByType("script").length).toEqual(0);
-      expect(findWithText(result, 'alert("gotcha")').length).toEqual(0);
+      expect(screen.getByText(/Hello ok!/)).toBeInTheDocument();
+      expect(container.querySelectorAll("script").length).toEqual(0);
+      expect(screen.queryByText(/alert\("gotcha"\)/)).not.toBeInTheDocument();
     });
 
     it("can use a json featureInfoTemplate with partials", function () {
@@ -974,22 +930,22 @@ describe("FeatureInfoSection", function () {
         "partials",
         { boldfoo: "<b>{{foo}}</b>" }
       );
-      const section = (
+      const { container } = renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
 
-      expect(result.root.findAllByProps({ className: "jk" }).length).toEqual(0); // just to be sure the null case gives 0.
-      expect(result.root.findAllByProps({ className: "jj" }).length).toEqual(1);
-      expect(result.root.findAllByType("b").length).toEqual(1);
-      expect(findWithText(result, "test ").length).toEqual(1);
-      expect(findWithText(result, "bar").length).toEqual(1);
+      expect(container.querySelectorAll(".jk").length).toEqual(0);
+      expect(container.querySelectorAll(".jj").length).toEqual(1);
+      expect(container.querySelectorAll("b").length).toEqual(1);
+      expect(screen.getByText(/bar/)).toBeInTheDocument();
+      expect(container.textContent).toContain("test ");
     });
 
     it("sets the name from featureInfoTemplate", function () {
@@ -998,18 +954,18 @@ describe("FeatureInfoSection", function () {
         "name",
         "{{name}} {{foo}}"
       );
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen={false}
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
 
-      expect(findWithText(result, "Kay bar").length).toBe(1);
+      expect(screen.getByText("Kay bar")).toBeInTheDocument();
     });
 
     it("can access clicked lat and long", function () {
@@ -1024,7 +980,7 @@ describe("FeatureInfoSection", function () {
         template
       );
 
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
@@ -1032,15 +988,13 @@ describe("FeatureInfoSection", function () {
           viewState={viewState}
           position={position}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Clicked 44, 77").length).toEqual(1);
+      expect(screen.getByText("Clicked 44, 77")).toBeInTheDocument();
     });
 
     it("can replace text, using terria.partialByName", function () {
-      // Replace "Kay" of feature.properties.name with "Yak", or "This name" with "That name".
-
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -1056,32 +1010,33 @@ describe("FeatureInfoSection", function () {
         }
       );
 
-      let section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
-          feature={feature} // feature.properties.name === "Kay";
+          feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      let result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Yak").length).toEqual(1);
-      expect(findWithText(result, "Kay").length).toEqual(0);
+      expect(screen.getByText("Yak")).toBeInTheDocument();
+      expect(screen.queryByText("Kay")).not.toBeInTheDocument();
 
+      cleanup();
       feature.properties = new PropertyBag({ name: "This name" });
-      section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           catalogItem={catalogItem}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      result = createWithContexts(viewState, section);
-      expect(findWithText(result, "That name").length).toEqual(1);
-      expect(findWithText(result, "Yak").length).toEqual(0);
+      expect(screen.getByText("That name")).toBeInTheDocument();
+      expect(screen.queryByText("Yak")).not.toBeInTheDocument();
     });
 
     it("does not replace text if no matching, using terria.partialByName", function () {
@@ -1100,18 +1055,18 @@ describe("FeatureInfoSection", function () {
         }
       );
 
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
-          feature={feature} // feature.properties.name === "Kay";
+          feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Yak").length).toEqual(0);
-      expect(findWithText(result, "Kay").length).toEqual(1);
+      expect(screen.queryByText("Yak")).not.toBeInTheDocument();
+      expect(screen.getByText("Kay")).toBeInTheDocument();
     });
 
     it("can replace text and filter out unsafe replacement, using terria.partialByName", function () {
@@ -1130,23 +1085,20 @@ describe("FeatureInfoSection", function () {
         }
       );
 
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
-          feature={feature} // feature.properties.name === "Kay";
+          feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "Yak!").length).toEqual(1);
-      expect(findWithText(result, "Yak!alert('gotcha')").length).toEqual(0);
-      expect(findWithText(result, "alert('gotcha')").length).toEqual(0);
-      expect(
-        findWithText(result, "Yak!<script>alert('gotcha')</script>").length
-      ).toEqual(0);
-      expect(findWithText(result, "Kay").length).toEqual(0);
+      expect(screen.getByText("Yak!")).toBeInTheDocument();
+      expect(screen.queryByText(/Yak!alert/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/alert\('gotcha'\)/)).not.toBeInTheDocument();
+      expect(screen.queryByText("Kay")).not.toBeInTheDocument();
     });
 
     it("can access the current time", function () {
@@ -1159,45 +1111,23 @@ describe("FeatureInfoSection", function () {
 
       catalogItem._discreteTimes = ["2017-11-23", "2018-01-03"];
 
-      // const timeInterval = new TimeInterval({
-      //   start: JulianDate.fromIso8601("2017-11-23T19:47:53+11:00"),
-      //   stop: JulianDate.fromIso8601("2018-01-03T07:05:00Z"),
-      //   isStartIncluded: true,
-      //   isStopIncluded: false
-      // });
-      // const intervals = new TimeIntervalCollection([timeInterval]);
-      // const availableDate = JulianDate.toDate(timeInterval.start);
-      // catalogItem.intervals = intervals;
-      // catalogItem.availableDates = [availableDate];
-
-      // catalogItem.canUseOwnClock = true;
-      // catalogItem.useOwnClock = true;
-
-      // catalogItem.clock.currentTime = JulianDate.fromIso8601(
-      //   "2017-12-19T17:13:11+07:00"
-      // );
-
       catalogItem.setTrait(CommonStrata.user, "currentTime", "2017-12-01");
 
       terria.timelineClock.currentTime = JulianDate.fromIso8601(
         "2001-01-01T01:01:01+01:00"
-      ); // An decoy date to make sure that we are indeed using the catalog items clock and not terria.clock.
-      const section = (
+      );
+      renderWithContexts(
         <FeatureInfoSection
           feature={feature}
           isOpen
           viewState={viewState}
           catalogItem={catalogItem}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(
-        findWithText(
-          result,
-          "Time: " + new Date(catalogItem._discreteTimes[0]).toString()
-        ).length
-      ).toEqual(1);
+      const expectedTime = new Date(catalogItem._discreteTimes[0]).toString();
+      expect(screen.getByText(`Time: ${expectedTime}`)).toBeInTheDocument();
     });
 
     it("can render a recursive featureInfoTemplate", function () {
@@ -1233,33 +1163,18 @@ describe("FeatureInfoSection", function () {
           }
         ]
       });
-      // const recursedHtml = ''
-      //     + '<ul>'
-      //     +   '<li>Alice'
-      //     +       '<ul>'
-      //     +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
-      //     +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
-      //     +       '</ul>'
-      //     +   '</li>'
-      //     +   '<li>Xavier'
-      //     +       '<ul>'
-      //     +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
-      //     +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
-      //     +       '</ul>'
-      //     +   '</li>'
-      //     + '</ul>';
-      const section = (
+      const { container } = renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(result.root.findAllByType("ul").length).toEqual(7);
-      expect(result.root.findAllByType("li").length).toEqual(7); // Note extra "li" element for FeatureInfoSection <li>
+      expect(within(container).getAllByRole("list").length).toBe(7);
+      expect(within(container).getAllByRole("listitem").length).toBe(7);
     });
   });
 
@@ -1269,20 +1184,22 @@ describe("FeatureInfoSection", function () {
     });
 
     it("does not appear if no template", function () {
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={i18next.t}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       expect(
-        findWithText(result, "featureInfo.showCuratedData").length
-      ).toEqual(0);
-      expect(findWithText(result, "featureInfo.showRawData").length).toEqual(0);
+        screen.queryByText(/featureInfo\.showCuratedData/)
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/featureInfo\.showRawData/)
+      ).not.toBeInTheDocument();
     });
 
     it('shows "Show Raw Data" if template', function () {
@@ -1293,20 +1210,20 @@ describe("FeatureInfoSection", function () {
         template
       );
 
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={i18next.getFixedT("cimode")}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
       expect(
-        findWithText(result, "featureInfo.showCuratedData").length
-      ).toEqual(0);
-      expect(findWithText(result, "featureInfo.showRawData").length).toEqual(1);
+        screen.queryByText(/featureInfo\.showCuratedData/)
+      ).not.toBeInTheDocument();
+      expect(screen.getByText("featureInfo.showRawData")).toBeInTheDocument();
     });
   });
 
@@ -1314,8 +1231,6 @@ describe("FeatureInfoSection", function () {
     beforeEach(function () {});
 
     it("uses and completes a string-form featureInfoTemplate", async function () {
-      // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
-      //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-0.json");
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
@@ -1331,30 +1246,24 @@ describe("FeatureInfoSection", function () {
       const czmlData = czmlItem.mapItems;
       expect(czmlData.length).toBeGreaterThan(0);
       const czmlFeature = czmlData[0].entities.values[0];
-      const section = (
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={czmlFeature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      const result = createWithContexts(viewState, section);
-      expect(findWithText(result, "ABC").length).toEqual(1);
-      expect(findWithText(result, "2010").length).toEqual(1);
-      expect(findWithText(result, "14.4").length).toEqual(1);
-      expect(findWithText(result, "2012").length).toEqual(1);
-      expect(findWithText(result, "10.7").length).toEqual(1);
+      expect(screen.getByText(/ABC/)).toBeInTheDocument();
+      expect(screen.getByText(/2010/)).toBeInTheDocument();
+      expect(screen.getByText(/14\.4/)).toBeInTheDocument();
+      expect(screen.getByText(/2012/)).toBeInTheDocument();
+      expect(screen.getByText(/10\.7/)).toBeInTheDocument();
     });
 
     it("uses and completes a time-varying, string-form featureInfoTemplate", async function () {
-      // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
-      //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-      // targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
-      //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-      // targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br />
-      //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-1.json");
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
@@ -1371,45 +1280,48 @@ describe("FeatureInfoSection", function () {
       expect(czmlData.length).toBeGreaterThan(0);
       const czmlFeature = czmlData[0].entities.values[0];
       czmlItem.setTrait(CommonStrata.user, "currentTime", "2010-02-02");
-      let section = (
+      renderWithContexts(
         <FeatureInfoSection
           feature={czmlFeature}
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      let result = createWithContexts(viewState, section);
-      expect(findWithText(result, "ABC").length).toEqual(0);
-      expect(findWithText(result, "DEF").length).toEqual(0);
-      czmlItem.setTrait(CommonStrata.user, "currentTime", "2012-02-02");
-      section = (
-        <FeatureInfoSection
-          feature={czmlFeature}
-          isOpen
-          catalogItem={czmlItem}
-          viewState={viewState}
-          t={() => {}}
-        />
-      );
-      result = createWithContexts(viewState, section);
-      expect(findWithText(result, "ABC").length).toEqual(1);
-      expect(findWithText(result, "DEF").length).toEqual(0);
+      expect(screen.queryByText(/ABC/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/DEF/)).not.toBeInTheDocument();
 
-      czmlItem.setTrait(CommonStrata.user, "currentTime", "2014-02-02");
-      section = (
+      cleanup();
+      czmlItem.setTrait(CommonStrata.user, "currentTime", "2012-02-02");
+      renderWithContexts(
         <FeatureInfoSection
           feature={czmlFeature}
           isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      result = createWithContexts(viewState, section);
-      expect(findWithText(result, "ABC").length).toEqual(0);
-      expect(findWithText(result, "DEF").length).toEqual(1);
+      expect(screen.getByText(/ABC/)).toBeInTheDocument();
+      expect(screen.queryByText(/DEF/)).not.toBeInTheDocument();
+
+      cleanup();
+      czmlItem.setTrait(CommonStrata.user, "currentTime", "2014-02-02");
+      renderWithContexts(
+        <FeatureInfoSection
+          feature={czmlFeature}
+          isOpen
+          catalogItem={czmlItem}
+          viewState={viewState}
+          t={() => {}}
+        />,
+        viewState
+      );
+      expect(screen.queryByText(/ABC/)).not.toBeInTheDocument();
+      expect(screen.getByText(/DEF/)).toBeInTheDocument();
     });
   });
 
@@ -1431,24 +1343,20 @@ describe("FeatureInfoSection", function () {
             }
           : undefined;
       });
-      const result = createWithContexts(
-        viewState,
+      renderWithContexts(
         <FeatureInfoSection
           catalogItem={catalogItem}
           feature={feature}
           isOpen
           viewState={viewState}
           t={() => {}}
-        />
+        />,
+        viewState
       );
-      expect(findWithText(result, "More info on steel").length).toEqual(1);
+      expect(screen.getByText("More info on steel")).toBeInTheDocument();
     });
   });
 });
-
-// Test time varying item
-// Mixins: discretely time varying & Mappable mixins
-// Traits: traits for the above
 
 class TestModelTraits extends mixTraits(
   FeatureInfoUrlTemplateTraits,
