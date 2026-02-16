@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 
-import { screen, waitFor } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
