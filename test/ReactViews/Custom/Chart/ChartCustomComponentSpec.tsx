@@ -1,6 +1,6 @@
-import { ReactChild } from "react";
-import { isComponentOfType } from "react-shallow-testutils";
-import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
+import ChartableMixin, {
+  ChartItem
+} from "../../../../lib/ModelMixins/ChartableMixin";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import { BaseModel } from "../../../../lib/Models/Definition/Model";
@@ -42,21 +42,17 @@ describe("ChartCustomComponent", function () {
       }
     };
     const chart = component.processNode(context, node, [], 0);
+    console.log(chart);
 
     expect(chart).toBeDefined();
     expect(chart?.key).toContain("chart-wrapper");
-    expect(isComponentOfType(chart, "div"));
+    expect(chart?.type).toBe("div");
+
     expect(chart?.props.children).toBeDefined();
     expect(
-      chart?.props.children.find((child: ReactChild) =>
-        isComponentOfType(child, Chart)
-      )
+      chart?.props.children[0].type === ChartExpandAndDownloadButtons
     ).toBeTruthy();
-    expect(
-      chart?.props.children.find((child: ReactChild) =>
-        isComponentOfType(child, ChartExpandAndDownloadButtons)
-      )
-    ).toBeTruthy();
+    expect(chart?.props.children[1].type === Chart).toBeTruthy();
   });
 
   it("creates shareable chart items for the expand menu", function () {
@@ -83,6 +79,7 @@ describe("ChartCustomComponent", function () {
     };
     spyOn(component, "constructShareableCatalogItem").and.callThrough();
     component.processNode(context, node, [], 0);
+
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
     // Make sure the id is dependent on parent, title & source name
     expect(component.constructShareableCatalogItem).toHaveBeenCalledWith(
@@ -127,6 +124,41 @@ class TestCatalogItem extends ChartableMixin(
     return Promise.resolve();
   }
   get chartItems() {
-    return [];
+    return [
+      {
+        item: {} as never,
+        id: "zzz",
+        name: "zzz",
+        categoryName: "ZZZ",
+        key: `key-zzz`,
+        type: "line",
+        xAxis: { name: "Time", scale: "time" },
+        points: [{ x: 10, y: 10 }],
+        domain: { x: [0, 100], y: [0, 50] },
+        units: "time",
+        isSelectedInWorkbench: true,
+        showInChartPanel: true,
+        updateIsSelectedInWorkbench: () => {},
+        getColor: () => "#fff",
+        pointOnMap: { latitude: -33.8688, longitude: 151.2093 }
+      },
+      {
+        item: {} as never,
+        id: "aaa",
+        name: "aaa",
+        categoryName: "AAA",
+        key: `key-aaa`,
+        type: "line",
+        xAxis: { name: "Time", scale: "time" },
+        points: [{ x: 10, y: 10 }],
+        domain: { x: [0, 100], y: [0, 50] },
+        units: "time",
+        isSelectedInWorkbench: true,
+        showInChartPanel: true,
+        updateIsSelectedInWorkbench: () => {},
+        getColor: () => "#fff",
+        pointOnMap: { latitude: -37.814, longitude: 144.96332 }
+      }
+    ] as ChartItem[];
   }
 }
