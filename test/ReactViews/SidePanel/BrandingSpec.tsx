@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Branding from "../../../lib/ReactViews/SidePanel/Branding";
