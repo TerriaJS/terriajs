@@ -1,6 +1,6 @@
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { runInAction } from "mobx";
-import ReactSelect from "react-select";
-import TestRenderer from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -9,14 +9,12 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
+  SelectableDimensionGroup,
   SelectableDimension as SelectableDimensionModel
 } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
-import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
-import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
-import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
@@ -96,10 +94,10 @@ describe("DimensionSelectorSection", function () {
     });
   });
 
-  it("shows all dimensions and styles for a mock layer", function (done) {
+  it("shows all dimensions and styles for a mock layer", function () {
     const mockItem = new TestCatalogItem("what", terria);
 
-    const section = TestRenderer.create(
+    render(
       <ThemeProvider theme={terriaTheme}>
         <SelectableDimensionSection
           item={mockItem}
@@ -108,16 +106,14 @@ describe("DimensionSelectorSection", function () {
       </ThemeProvider>
     );
 
-    const selects = section.root.findAllByType(ReactSelect);
-    expect(selects.length).toBe(2); // The 3rd Dimension has disable:true
+    // 2 select dropdowns (3rd has disable:true so not rendered)
+    expect(screen.getAllByRole("combobox").length).toBe(2);
 
-    const checkboxes = section.root.findAllByType(Checkbox);
-    expect(checkboxes.length).toBe(1);
-
-    done();
+    // 1 checkbox dimension
+    expect(screen.getAllByRole("checkbox").length).toBe(1);
   });
 
-  it("show dimensions and styles for a 'real' WMS layer", function (done) {
+  it("show dimensions and styles for a 'real' WMS layer", async function () {
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
       wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
@@ -139,30 +135,25 @@ describe("DimensionSelectorSection", function () {
       );
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        const section = TestRenderer.create(
-          <ThemeProvider theme={terriaTheme}>
-            <SelectableDimensionSection
-              item={wmsItem}
-              placement={DEFAULT_PLACEMENT}
-            />
-          </ThemeProvider>
-        );
+    await wmsItem.loadMetadata().then(function () {
+      const { container } = render(
+        <ThemeProvider theme={terriaTheme}>
+          <SelectableDimensionSection
+            item={wmsItem}
+            placement={DEFAULT_PLACEMENT}
+          />
+        </ThemeProvider>
+      );
 
-        const selects = section.root.findAllByType(ReactSelect);
-        const labels = section.root.findAllByType("label");
+      // Expect 5 dimensions (elevation, custom, another + 2 styles)
+      const labels = container.querySelectorAll("label");
 
-        // Expect 3 dimensions (elevation, custom, another) + 2 styles (layer A, layer B)
-        expect(selects.length).toBe(5);
-        expect(labels.length).toBe(5);
-      })
-      .then(done)
-      .catch(done.fail);
+      expect(screen.getAllByRole("combobox").length).toBe(5);
+      expect(labels.length).toBe(5);
+    });
   });
 
-  it("shows csv region mapping options", async function (done) {
+  it("shows csv region mapping options", async function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
@@ -198,7 +189,7 @@ describe("DimensionSelectorSection", function () {
 
     await csvItem.loadMapItems();
 
-    const section = TestRenderer.create(
+    render(
       <ThemeProvider theme={terriaTheme}>
         <SelectableDimensionSection
           item={csvItem}
@@ -207,13 +198,11 @@ describe("DimensionSelectorSection", function () {
       </ThemeProvider>
     );
 
-    const groups = section.root.findAllByType(SelectableDimensionGroup);
-    expect(groups.length).toBe(1);
-
-    console.log(groups[0].props);
-    expect(groups[0].props.dim.id).toBe(csvItem.selectableDimensions[0].id);
-
-    done();
+    expect(
+      screen.getByRole("button", {
+        name: "models.tableData.manualRegionMapping"
+      })
+    ).toBeVisible();
 
     jasmine.Ajax.uninstall();
   });
@@ -332,7 +321,7 @@ describe("DimensionSelectorSection", function () {
     });
 
     it("renders the group", function () {
-      const section = TestRenderer.create(
+      render(
         <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection
             item={mockItem}
@@ -341,12 +330,20 @@ describe("DimensionSelectorSection", function () {
         </ThemeProvider>
       );
 
-      const group = section.root.findByType(SelectableDimensionGroup);
-      expect(group.props.dim.type).toEqual("group");
+      expect(
+        screen.getByRole("button", { name: "Selectable group" })
+      ).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "Selectable group" })
+      ).toHaveAttribute("aria-expanded", "true");
     });
 
-    it("renders all the group children", function () {
-      const section = TestRenderer.create(
+    it("renders all the group children", async function () {
+      (
+        mockItem.selectableDimensionsValue[0] as SelectableDimensionGroup
+      ).isOpen = false;
+
+      render(
         <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection
             item={mockItem}
@@ -355,21 +352,15 @@ describe("DimensionSelectorSection", function () {
         </ThemeProvider>
       );
 
-      expect(section.root.findAllByType(SelectableDimension).length).toBe(1);
+      expect(screen.queryAllByRole("checkbox").length).toBe(0);
+      expect(screen.queryAllByRole("combobox").length).toBe(0);
 
-      const group = section.root.findByType(SelectableDimensionGroup);
-      expect(group.props.dim.type).toEqual("group");
+      await userEvent.click(
+        screen.getByRole("button", { name: "Selectable group" })
+      );
 
-      const collapsible: TestRenderer.ReactTestInstance = (
-        group.children[0] as any
-      ).children[0].children[0];
-
-      const button = collapsible.children[0];
-
-      if (typeof button === "string") throw "Invalid button";
-      button.props.onClick();
-
-      expect(section.root.findAllByType(SelectableDimension).length).toBe(3);
+      expect(screen.getAllByRole("checkbox").length).toBe(1);
+      expect(screen.getAllByRole("combobox").length).toBe(1);
     });
   });
 });

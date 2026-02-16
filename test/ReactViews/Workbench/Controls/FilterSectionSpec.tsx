@@ -1,6 +1,5 @@
-import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
 import FilterSection from "../../../../lib/ReactViews/Workbench/Controls/FilterSection";
-import { Range } from "rc-slider";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
@@ -22,7 +21,6 @@ class TestTraits extends ModelTraits {
 class TestModel extends CreateModel(TestTraits) {}
 
 describe("FilterSectionSpec", function () {
-  let testRenderer: ReactTestRenderer;
   let terria: Terria;
   let item: TestModel;
 
@@ -34,8 +32,8 @@ describe("FilterSectionSpec", function () {
   });
 
   it("Renders nothing if no filters", function () {
-    testRenderer = TestRenderer.create(<FilterSection item={item} />);
-    expect(testRenderer.root.children.length).toBe(0);
+    const { container } = render(<FilterSection item={item} />);
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("Renders a range input for each filter", function () {
@@ -52,8 +50,9 @@ describe("FilterSectionSpec", function () {
       filter?.setTrait(CommonStrata.user, "maximumShown", 20);
     });
 
-    testRenderer = TestRenderer.create(<FilterSection item={item} />);
-    const rangeInputs = testRenderer.root.findAllByType(Range);
-    expect(rangeInputs.length).toBe(1);
+    render(<FilterSection item={item} />);
+    expect(screen.getByText("Show level-filter: 10 to 20")).toBeVisible();
+    expect(screen.getAllByRole("slider")).toBeDefined();
+    expect(screen.getAllByRole("slider").length).toBe(2);
   });
 });

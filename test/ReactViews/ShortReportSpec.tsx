@@ -1,18 +1,12 @@
-import { act } from "react-dom/test-utils";
-import {
-  create,
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
 import { ThemeProvider } from "styled-components";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
+import userEvent from "@testing-library/user-event";
 
 describe("ShortReport", function () {
-  let testRenderer: ReactTestRenderer | undefined;
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
@@ -41,56 +35,47 @@ describe("ShortReport", function () {
     ]);
   });
 
-  describe("with basic props", function () {
-    it("renders without errors", function () {
-      act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <ShortReport item={wmsItem} />
-          </ThemeProvider>
-        );
-      });
+  it("renders section content", function () {
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <ShortReport item={wmsItem} />
+      </ThemeProvider>
+    );
 
-      if (!testRenderer) throw "Invalid testRenderer";
+    // All three report names should be rendered
+    expect(screen.getByRole("button", { name: "Report Name 1" })).toBeVisible();
+    expect(screen.getByText("Some content which is showing")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Report Name 2" })).toBeVisible();
+    expect(
+      screen.queryByText("Some content which is hidden by default")
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Report Name - with no content")).toBeVisible();
+  });
 
-      const reports = testRenderer.root.findAll((node: ReactTestInstance) =>
-        node.children.some((child: any) => child.match?.("Report Name"))
-      );
-      expect(reports.length).toEqual(3);
+  it("should expand and collapse sections when the section name is clicked", async function () {
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <ShortReport item={wmsItem} />
+      </ThemeProvider>
+    );
 
-      // Test that collapsible components have been created with correct props
-      expect(
-        testRenderer.root
-          .findAllByProps({
-            title: "Report Name 1",
-            isOpen: true
-          })
-          .filter((n) => n.type === (Collapsible as any).type).length
-      ).toBe(1);
+    const section2Btn = screen.getByRole("button", { name: "Report Name 2" });
+    expect(
+      screen.queryByText("Some content which is hidden by default")
+    ).not.toBeInTheDocument();
 
-      expect(
-        testRenderer.root
-          .findAllByProps({
-            title: "Report Name 2",
-            isOpen: false
-          })
-          .filter((n) => n.type === (Collapsible as any).type).length
-      ).toBe(1);
+    await userEvent.click(section2Btn);
 
-      // Expect no Collapsible component
-      expect(
-        testRenderer.root.findAllByProps({
-          title: "Report Name - with no content",
-          isOpen: true
-        }).length
-      ).toBe(0);
+    expect(
+      screen.getByText("Some content which is hidden by default")
+    ).toBeVisible();
 
-      const boxes = testRenderer.root.findAllByType("p");
-      expect(
-        boxes.some(
-          (box) => box.props.children === "Report Name - with no content"
-        )
-      ).toBeTruthy();
-    });
+    const section1Btn = screen.getByRole("button", { name: "Report Name 1" });
+    expect(screen.getByText("Some content which is showing")).toBeVisible();
+    await userEvent.click(section1Btn);
+
+    expect(
+      screen.queryByText("Some content which is showing")
+    ).not.toBeInTheDocument();
   });
 });
