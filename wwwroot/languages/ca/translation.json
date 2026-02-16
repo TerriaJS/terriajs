@@ -926,7 +926,7 @@
       "missingUrlTitle": "No es pot carregar FeatureServer",
       "missingUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis FeatureServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceTitle": "Capa invàlida de l'ArcGIS Feature Service",
-      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions WFS ({{maxFeatures}})."
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService ({{maxFeatures}})."
     },
     "arcGisFeatureServerCatalogGroup": {
       "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
@@ -1245,7 +1245,7 @@
       "locationHeadingFeatureInfo": "Ubicació",
       "availableStreamsHeadingFeatureInfo": "Fluxos disponibles",
       "noStreamsMessageFeatureInfo": "No hi ha fluxos en aquesta ubicació.",
-      "missingSenapsBaseUrl": "No s'ha proporcionat l'URL base de Senaps. Has iniciat sessió?"
+      "missingSenapsBaseUrl": "No s'ha proporcionat l'Url base de Senaps. Has iniciat sessió?"
     },
     "placesLikeMe": {
       "regionsLikeThisDescription": "Identifica regions que _s'assemblen més_ a una regió determinada segons un conjunt de característiques.",
