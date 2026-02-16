@@ -75,7 +75,7 @@ export class MeasureTool extends MapNavigationItemController {
     }
     let numberStr = number.toFixed(2);
     // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-    numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    numberStr = numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     numberStr = `${numberStr} ${label}`;
     if (squared) {
       numberStr += "\u00B2";

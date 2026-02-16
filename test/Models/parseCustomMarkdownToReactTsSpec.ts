@@ -1,7 +1,9 @@
-import { parseCustomMarkdownToReactWithOptions } from "../../lib/ReactViews/Custom/parseCustomMarkdownToReact";
+import { render, screen, within } from "@testing-library/react";
+import parseCustomMarkdownToReact, {
+  parseCustomMarkdownToReactWithOptions
+} from "../../lib/ReactViews/Custom/parseCustomMarkdownToReact";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
-import { isComponentOfType, findAll } from "react-shallow-testutils";
+import { withThemeContext } from "../ReactViews/withContext";
 
 describe("parseCustomMarkdownToReactTs", function () {
   beforeEach(function () {
@@ -20,22 +22,34 @@ describe("parseCustomMarkdownToReactTs", function () {
       }
     );
 
-    const tooltip = findAll(result, (el: any) =>
-      isComponentOfType(el, TooltipWithButtonLauncher)
-    )[0];
-    expect(tooltip).toBeDefined();
-    expect(tooltip.props.launcherComponent()).toContain(spatialDataTerm.term);
-    expect(tooltip.props.children()).toContain(spatialDataTerm.content);
+    render(withThemeContext(result));
+
+    expect(
+      screen.getByRole("button", { name: /spatial data/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(spatialDataTerm.content)).toBeInTheDocument();
   });
+
   it("skips injecting tooltips when no options provided", function () {
     const result = parseCustomMarkdownToReactWithOptions(
       "something something spatial data mochi",
       {}
     );
 
-    const tooltip = findAll(result, (el: any) =>
-      isComponentOfType(el, TooltipWithButtonLauncher)
-    );
-    expect(tooltip.length).toEqual(0);
+    render(withThemeContext(result));
+
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("correctly linkifies URLs with ampersands", function () {
+    const url =
+      "https://programs.communications.gov.au/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities";
+    const result = parseCustomMarkdownToReact(url);
+
+    const { container } = render(withThemeContext(result));
+
+    const link = within(container).getByRole("link");
+    expect(link).toHaveAttribute("href", url);
+    expect(link).toHaveTextContent(url);
   });
 });
