@@ -1,8 +1,5 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { ThemeProvider } from "styled-components";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
@@ -16,6 +13,7 @@ import CustomComponent, {
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
 import parseCustomHtmlToReact from "../../../../lib/ReactViews/Custom/parseCustomHtmlToReact";
 import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
+import { worker } from "../../../mocks/browser";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
@@ -42,21 +40,12 @@ describe("FeatureInfoPanelChart", function () {
 
     CustomComponent.register(new CsvChartCustomComponent());
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
-
-    // Without stubbing the chart csv, the specs could fail due to loadMapItems
-    // not finishing by the time the test renderer returns.
-    // So expect some race conditions here.
-    jasmine.Ajax.stubRequest("test/csv_nongeo/x_height.csv").andReturn({
-      responseText: csv
-    });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      ),
+      http.get("*/test/csv_nongeo/x_height.csv", () => new HttpResponse(csv))
+    );
   });
 
   describe("yColumn prop", function () {
@@ -66,11 +55,9 @@ describe("FeatureInfoPanelChart", function () {
           `<chart src="test/csv_nongeo/x_height.csv" y-column="plant height"></chart>`,
           context
         );
-        await waitForElementToBeRemoved(() =>
-          screen.queryByText("chart.noData")
+        await waitFor(() =>
+          expect(screen.getByText("Plant Height x x")).toBeVisible()
         );
-
-        expect(screen.getByText("Plant Height x x")).toBeVisible();
       });
 
       it("renders nothing if the specified y-column does not exist", async function () {
@@ -90,11 +77,7 @@ describe("FeatureInfoPanelChart", function () {
           context
         );
 
-        await waitForElementToBeRemoved(() =>
-          screen.queryByText("chart.noData")
-        );
-
-        expect(screen.getByText("Z x x")).toBeVisible();
+        await waitFor(() => expect(screen.getByText("Z x x")).toBeVisible());
       });
     });
   });
@@ -105,9 +88,9 @@ describe("FeatureInfoPanelChart", function () {
       context
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByText("chart.noData"));
-
-    expect(screen.getAllByText("life-time")[1]).toBeVisible();
+    await waitFor(() =>
+      expect(screen.getAllByText("life-time")[1]).toBeVisible()
+    );
   });
 });
 

@@ -1,10 +1,12 @@
 import { configure, reaction, toJS } from "mobx";
+import { http, HttpResponse } from "msw";
 import addUserCatalogMember from "../../../../lib/Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import YDYRCatalogFunction from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
+import { worker } from "../../../mocks/browser";
 import "../../../SpecHelpers";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
@@ -24,46 +26,46 @@ describe("YDYRCatalogFunction", function () {
   let ydyr: YDYRCatalogFunction;
 
   beforeEach(async function () {
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "http://example.com/api/v1/disaggregate.json"
-    ).andReturn({ responseText: `"someStatusId"` });
-
-    jasmine.Ajax.stubRequest(
-      "http://example.com/api/v1/download/someResultKey?format=csv"
-    ).andReturn({
-      responseText: `SA4_code_2016,Negative Binomial: Lower (10%),Negative Binomial: Upper (90%),Negative Binomial: Average
+    let logCounter = 0;
+    worker.use(
+      http.all(
+        "http://example.com/api/v1/disaggregate.json",
+        () => new HttpResponse(`"someStatusId"`)
+      ),
+      http.get(
+        "http://example.com/api/v1/download/someResultKey",
+        ({ request }) => {
+          const url = new URL(request.url);
+          if (url.searchParams.get("format") !== "csv")
+            throw new Error(`Unexpected query params: ${url.search}`);
+          return new HttpResponse(`SA4_code_2016,Negative Binomial: Lower (10%),Negative Binomial: Upper (90%),Negative Binomial: Average
 313,0,1,0
 316,0,1,0
-`
-    });
-
-    let logCounter = 0;
-    jasmine.Ajax.stubRequest(
-      "http://example.com/api/v1/status/someStatusId"
-    ).andCallFunction((req) => {
-      if (logCounter < 1) {
-        req.respondWith({ responseText: `"Some Log ${logCounter}"` });
-
-        logCounter++;
-      } else {
-        req.respondWith({
-          responseText: `{"key":"someResultKey","report":{"Quality Control":"OK (Model is performing better than baseline), providing full result"}}`
-        });
-      }
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
-    ).andReturn({ responseJSON: sa4regionCodes });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
-    ).andReturn({ responseJSON: lga2011RegionCodes });
-
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
+`);
+        }
+      ),
+      http.get("http://example.com/api/v1/status/someStatusId", () => {
+        if (logCounter < 1) {
+          const msg = `"Some Log ${logCounter}"`;
+          logCounter++;
+          return new HttpResponse(msg);
+        }
+        return new HttpResponse(
+          `{"key":"someResultKey","report":{"Quality Control":"OK (Model is performing better than baseline), providing full result"}}`
+        );
+      }),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json",
+        () => HttpResponse.json(sa4regionCodes)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
+        () => HttpResponse.json(lga2011RegionCodes)
+      ),
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      )
+    );
 
     terria = new Terria();
     csv = new CsvCatalogItem("test", terria, undefined);
@@ -92,10 +94,6 @@ describe("YDYRCatalogFunction", function () {
         }
       );
     });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
   });
 
   it("has a type & typeName", function () {
