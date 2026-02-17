@@ -200,6 +200,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-spec-reporter": "^0.0.36",
     "minimist": "^1.2.8",
+    "msw": "^2.12.9",
     "node-notifier": "^10.0.1",
     "plugin-error": "^2.0.1",
     "prettier": "2.8.8",
@@ -224,5 +225,10 @@
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "yarn build-for-node && husky install"
+  },
+  "msw": {
+    "workerDirectory": [
+      "wwwroot"
+    ]
   }
 }
