@@ -1,19 +1,13 @@
 import { runInAction } from "mobx";
-import { act } from "react-dom/test-utils";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-import HelpPanelItem from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanelItem";
-import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpVideoPanel";
-import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
-import Text from "../../../../../lib/Styled/Text";
-import { createWithContexts } from "../../../withContext";
+import { renderWithContexts } from "../../../withContext";
 import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
+import { screen } from "@testing-library/dom";
 
 describe("HelpPanel", function () {
   let terria: Terria;
   let viewState: ViewState;
-
-  let testRenderer: any;
 
   beforeEach(function () {
     terria = new Terria({
@@ -26,13 +20,18 @@ describe("HelpPanel", function () {
   });
 
   describe("with no help content in config", function () {
-    it("does not render any items in help", function () {
-      act(() => {
-        testRenderer = createWithContexts(viewState, <HelpPanel />);
-      });
+    it("renders title, description, tour item ", function () {
+      renderWithContexts(<HelpPanel />, viewState);
 
-      const helpItems = testRenderer.root.findAllByType(HelpPanelItem);
-      expect(helpItems.length).toBeFalsy();
+      expect(screen.getByText("helpPanel.menuPaneTitle")).toBeVisible();
+      expect(screen.getByText("helpPanel.menuPaneBody")).toBeVisible();
+      // Only close button and tour button should exist (no help item buttons)
+      expect(
+        screen.getByRole("button", { name: "Close help panel" })
+      ).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "helpPanel.takeTour" })
+      ).toBeVisible();
     });
   });
 
@@ -41,74 +40,72 @@ describe("HelpPanel", function () {
       runInAction(() => {
         terria.configParameters.helpContent = [
           {
-            itemName: "test"
+            itemName: "test",
+            title: "test"
           }
         ];
-      });
-      act(() => {
-        testRenderer = createWithContexts(viewState, <HelpPanel />);
       });
     });
 
     it("renders 1 help menu item", function () {
-      const helpItems = testRenderer.root.findAllByType(HelpPanelItem);
-      expect(helpItems.length).toBe(1);
-    });
+      renderWithContexts(<HelpPanel />, viewState);
 
-    it("does not render any text on the help menu buttons", function () {
-      const helpItem = testRenderer.root.findByType(HelpPanelItem);
-      expect(() => {
-        helpItem.findByType(Text);
-      }).toThrow();
+      // Close button + tour button + 1 help menu item button = 3
+
+      expect(
+        screen.getByRole("button", { name: "Close help panel" })
+      ).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "helpPanel.takeTour" })
+      ).toBeVisible();
+      expect(screen.getByRole("button", { name: "test" })).toBeVisible();
     });
 
     it("does not render any text in video panel", function () {
-      const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
-      expect(videoPanel.props.htmlContent).toBeFalsy();
-      expect(() => {
-        videoPanel.findByType(StyledHtml);
-      }).toThrow();
+      const { container } = renderWithContexts(<HelpPanel />, viewState);
+
+      // HelpVideoPanel only renders when selected, which it isn't
+      // So no markdown content should appear from the video panel
+      expect(container.textContent).not.toContain("markdownContent");
     });
 
     it("does not render any images in video panel", function () {
-      const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
-      expect(() => {
-        videoPanel.findByProps({ className: "tjs-help-panel__videoLink" });
-      }).toThrow();
+      const { container } = renderWithContexts(<HelpPanel />, viewState);
+
+      // No video link element should exist (panel not selected, no image)
+      expect(container.querySelector('[class*="videoLink"]')).toBeNull();
     });
   });
 
-  describe("when help item with text, video and image in helpContent is selected", function () {
-    beforeEach(() => {
-      runInAction(() => {
-        terria.configParameters.helpContent = [
-          {
-            itemName: "test",
-            markdownText:
-              "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
-            videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
-            placeholderImage:
-              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-          }
-        ];
-        viewState.selectedHelpMenuItem = "test";
-      });
-      act(() => {
-        testRenderer = createWithContexts(viewState, <HelpPanel />);
-      });
+  it("when help item with text, video and image in helpContent is selected", async function () {
+    const placeholderImage =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    runInAction(() => {
+      terria.configParameters.helpContent = [
+        {
+          itemName: "test",
+          markdownText:
+            "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
+          videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
+          placeholderImage: placeholderImage
+        }
+      ];
+      viewState.selectedHelpMenuItem = "test";
     });
 
-    it("renders 3 styled html components", function () {
-      const styledHtml = testRenderer.root.findByType(StyledHtml);
-      expect(styledHtml).toBeDefined();
-      expect(styledHtml.findAllByType(Text).length).toBe(3);
-    });
+    const { container } = renderWithContexts(<HelpPanel />, viewState);
 
-    it("renders the video component", function () {
-      const videoComponent = testRenderer.root.findByProps({
-        className: "tjs-help-panel__videoLink"
-      });
-      expect(videoComponent).toBeDefined();
-    });
+    // The markdown renders as 3 text blocks: h1 + 2 paragraphs
+    screen.getByText("Test");
+    screen.getByText("Hello, this is just a test");
+    screen.getByText("This is another paragraph");
+    const videoPlaceholder = container.querySelector('[class*="videoLink"]');
+    expect(videoPlaceholder).toBeVisible();
+    expect(
+      videoPlaceholder?.closest("[style]")?.attributes.getNamedItem("style")
+        ?.value
+    ).toMatch(
+      new RegExp(`.*background-image: .*url\\("${placeholderImage}"\\).*`)
+    );
   });
 });

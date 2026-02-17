@@ -1,31 +1,22 @@
-// import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import { findWithType } from "react-shallow-testutils";
-import { getShallowRenderedOutput } from "./MoreShallowTools";
 import { runInAction } from "mobx";
 
-// import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-
+import { screen, waitFor, within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
+import Terria from "../../lib/Models/Terria";
+import ViewState from "../../lib/ReactViewModels/ViewState";
 import {
   FeatureInfoPanel,
   determineCatalogItem
 } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
-import Loader from "../../lib/ReactViews/Loader";
-import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
-import Terria from "../../lib/Models/Terria";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import TerriaFeature from "../../lib/Models/Feature/Feature";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-
-// var separator = ',';
-// if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
-//     separator = (Intl.NumberFormat().format(1000)[1]);
-// }
+import { renderWithContexts } from "./withContext";
 
 describe("FeatureInfoPanel", function () {
   let terria: Terria;
-  // let feature;
   let viewState: ViewState;
 
   beforeEach(function () {
@@ -39,10 +30,14 @@ describe("FeatureInfoPanel", function () {
   });
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function () {
-    viewState.featureInfoPanelIsVisible = true;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(result.props.children.props.className).toContain("is-visible");
+    runInAction(() => {
+      viewState.featureInfoPanelIsVisible = true;
+    });
+    const { container } = renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
+      viewState
+    );
+    expect(container.querySelector('[class*="is-visible"]')).toBeTruthy();
   });
 
   it("displays loader while asychronously loading feature information", function () {
@@ -51,40 +46,133 @@ describe("FeatureInfoPanel", function () {
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(findWithType(result, Loader)).toBeDefined();
+    renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
+      viewState
+    );
+    // Loader renders a spinning icon (svg) and optional message text
+    expect(screen.getByText("loader.loadingMessage")).toBeInTheDocument();
   });
 
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
-    viewState.featureInfoPanelIsVisible = false;
-    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
-    const result = getShallowRenderedOutput(panel);
-    expect(result.props.children.props.className).not.toContain("is-visible");
+    runInAction(() => {
+      viewState.featureInfoPanelIsVisible = false;
+    });
+    const { container } = renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
+      viewState
+    );
+    expect(container.querySelector('[class*="is-visible"]')).toBeNull();
   });
 
-  // This test won't work for two reasons:
-  //   - the behaviour it tests occurs in ComponentDidMount
-  //   - FeatureInfoPanel doesn't have FeatureInfoSections - there is a FeatureInfoCatalogItem layer in between.
-  //
-  // it('shows an open section even if none have any info', function() {
-  //     const feature1 = new Entity({
-  //         name: 'Foo'
-  //     });
-  //     const feature2 = new Entity({
-  //         name: 'Bar'
-  //     });
-  //     var pickedFeatures = new PickedFeatures();
-  //     pickedFeatures.allFeaturesAvailablePromise = runLater(function() {
-  //         pickedFeatures.features = [feature1, feature2];
-  //     });
-  //     terria.pickedFeatures = pickedFeatures;
-  //     const panel = <FeatureInfoPanel viewState={viewState}/>;
-  //     const result = getShallowRenderedOutput(panel);
-  //     const sections = findAllWithType(result, FeatureInfoSection);
-  //     expect(sections.length).toEqual(2);
-  //     expect(sections[0].props.isOpen).toBe(true);
-  // });
+  it("shows a feature info sections", async function () {
+    const simple1 = new SimpleCatalogItem("simple1", terria);
+    const feature1 = new TerriaFeature({
+      name: "Foo"
+    });
+    feature1._catalogItem = simple1;
+
+    const feature2 = new TerriaFeature({
+      name: "Bar"
+    });
+    const simple2 = new SimpleCatalogItem("simple2", terria);
+    feature2._catalogItem = simple2;
+
+    const pickedFeatures = new PickedFeatures();
+    pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
+    runInAction(() => {
+      pickedFeatures.features = [feature1, feature2];
+      pickedFeatures.isLoading = false;
+    });
+
+    terria.pickedFeatures = pickedFeatures;
+    terria.workbench.items = [simple1, simple2];
+    const { container } = renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
+      viewState
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByText("loader.loadingMessage")
+      ).not.toBeInTheDocument()
+    );
+
+    expect(screen.queryByText("loader.loadingMessage")).not.toBeInTheDocument();
+    expect(
+      within(container).getByRole("button", { name: "simple1 - Foo" })
+    ).toBeVisible();
+    expect(
+      within(container).getByRole("button", { name: "simple2 - Bar" })
+    ).toBeVisible();
+  });
+
+  it('opens a feature info section with "featureInfo.noInfoAvailable" message when the feature has no properties', async function () {
+    const feature = new TerriaFeature({
+      name: "Foo"
+    });
+    const simple = new SimpleCatalogItem("simple", terria);
+    feature._catalogItem = simple;
+
+    const pickedFeatures = new PickedFeatures();
+    pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
+    runInAction(() => {
+      pickedFeatures.features = [feature];
+      pickedFeatures.isLoading = false;
+    });
+    terria.pickedFeatures = pickedFeatures;
+    terria.workbench.items = [simple];
+    renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+      viewState
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByText("loader.loadingMessage")
+      ).not.toBeInTheDocument()
+    );
+    const button = screen.getByRole("button", { name: "simple - Foo" });
+    expect(button).toBeVisible();
+    await userEvent.click(button);
+
+    expect(screen.getByText("featureInfo.noInfoAvailable")).toBeInTheDocument();
+  });
+
+  it("opens a feature info section with feature properties", async function () {
+    const feature = new TerriaFeature({
+      name: "Foo",
+      properties: {
+        prop1: "Value 1",
+        prop2: "Value 2"
+      }
+    });
+    const simple = new SimpleCatalogItem("simple", terria);
+    feature._catalogItem = simple;
+
+    const pickedFeatures = new PickedFeatures();
+    pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
+    runInAction(() => {
+      pickedFeatures.features = [feature];
+      pickedFeatures.isLoading = false;
+    });
+    terria.pickedFeatures = pickedFeatures;
+    terria.workbench.items = [simple];
+    renderWithContexts(
+      <FeatureInfoPanel viewState={viewState} t={() => {}} />,
+      viewState
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByText("loader.loadingMessage")
+      ).not.toBeInTheDocument()
+    );
+    const button = screen.getByRole("button", { name: "simple - Foo" });
+    expect(button).toBeVisible();
+    await userEvent.click(button);
+    expect(screen.getByText("prop1")).toBeInTheDocument();
+    expect(screen.getByText("Value 1")).toBeInTheDocument();
+    expect(screen.getByText("prop2")).toBeInTheDocument();
+    expect(screen.getByText("Value 2")).toBeInTheDocument();
+  });
 
   describe("determineCatalogItem", function () {
     let simple1: SimpleCatalogItem,
@@ -111,8 +199,6 @@ describe("FeatureInfoPanel", function () {
       terria.workbench.items = [composite];
       expect(determineCatalogItem(terria.workbench, feature1)).toBe(simple1);
       expect(determineCatalogItem(terria.workbench, feature2)).toBe(simple2);
-      // Features from a member of a composite model are determined to belong to
-      // the member model, instead of the composite one.
     });
   });
 });
