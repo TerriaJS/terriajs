@@ -27,10 +27,10 @@ describe("GazetteerSearchProvider", function () {
       Promise.resolve(wfsResponseXml)
     );
     const results = searchProvider.search("Fred");
-    return results.resultsCompletePromise.then(() => {
-      expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
-      expect(results).toBeDefined();
-      expect(results.results.length > 0).toBeTruthy();
-    });
+    await results.resultsCompletePromise;
+
+    expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
+    expect(results).toBeDefined();
+    expect(results.results.length > 0).toBeTruthy();
   });
 });
