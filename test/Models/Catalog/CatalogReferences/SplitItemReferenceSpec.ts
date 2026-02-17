@@ -57,6 +57,9 @@ describe("SplitItemReference", function () {
     expect(HasLocalData.is(cloneGeoJson)).toBe(true);
     if (HasLocalData.is(cloneGeoJson)) {
       expect(cloneGeoJson.hasLocalData).toBe(true);
+      expect(cloneGeoJson.url).toBe(sourceItem.url);
     }
+
+    URL.revokeObjectURL(sourceItem.url?.split("#")[0] ?? "");
   });
 });
