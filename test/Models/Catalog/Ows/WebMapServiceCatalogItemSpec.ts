@@ -646,7 +646,7 @@ describe("WebMapServiceCatalogItem", function () {
     expect(wms.getFeatureInfoFormat.format).toBe("application/vnd.ogc.gml");
   });
 
-  it("uses default time", function (done) {
+  it("uses default time", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -659,13 +659,8 @@ describe("WebMapServiceCatalogItem", function () {
       wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.currentTime).toBe("2016-09-24T00:00:00.000Z");
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.currentTime).toBe("2016-09-24T00:00:00.000Z");
   });
 
   it("uses default time=current", async function () {
@@ -768,7 +763,7 @@ describe("WebMapServiceCatalogItem", function () {
     expect(imageryProvider.enablePickFeatures).toBe(false);
   });
 
-  it("dimensions and styles for a 'real' WMS layer", function (done) {
+  it("dimensions and styles for a 'real' WMS layer", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -790,63 +785,50 @@ describe("WebMapServiceCatalogItem", function () {
       );
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.styleSelectableDimensions.length).toBe(2);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.styleSelectableDimensions.length).toBe(2);
 
-        // Check Styles and dimensions
-        expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
-          "contour/ferret"
-        );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
+    // Check Styles and dimensions
+    expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
+      "contour/ferret"
+    );
+    expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
 
-        expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
-          "shadefill/alg2"
-        );
-        expect(wmsItem.styleSelectableDimensions[1].options!.length).toBe(40);
+    expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
+      "shadefill/alg2"
+    );
+    expect(wmsItem.styleSelectableDimensions[1].options!.length).toBe(40);
 
-        expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe(
-          "elevation"
-        );
-        expect(wmsItem.wmsDimensionSelectableDimensions[0].selectedId).toBe(
-          "-0.59375"
-        );
-        expect(
-          wmsItem.wmsDimensionSelectableDimensions[0].options!.length
-        ).toBe(16);
+    expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe("elevation");
+    expect(wmsItem.wmsDimensionSelectableDimensions[0].selectedId).toBe(
+      "-0.59375"
+    );
+    expect(wmsItem.wmsDimensionSelectableDimensions[0].options!.length).toBe(
+      16
+    );
 
-        expect(wmsItem.wmsDimensionSelectableDimensions[1].name).toBe("custom");
-        expect(wmsItem.wmsDimensionSelectableDimensions[1].selectedId).toBe(
-          "Another thing"
-        );
-        expect(
-          wmsItem.wmsDimensionSelectableDimensions[1].options!.length
-        ).toBe(4);
+    expect(wmsItem.wmsDimensionSelectableDimensions[1].name).toBe("custom");
+    expect(wmsItem.wmsDimensionSelectableDimensions[1].selectedId).toBe(
+      "Another thing"
+    );
+    expect(wmsItem.wmsDimensionSelectableDimensions[1].options!.length).toBe(4);
 
-        expect(wmsItem.wmsDimensionSelectableDimensions[2].name).toBe(
-          "another"
-        );
-        expect(wmsItem.wmsDimensionSelectableDimensions[2].selectedId).toBe(
-          "Second"
-        );
-        expect(
-          wmsItem.wmsDimensionSelectableDimensions[2].options!.length
-        ).toBe(3);
+    expect(wmsItem.wmsDimensionSelectableDimensions[2].name).toBe("another");
+    expect(wmsItem.wmsDimensionSelectableDimensions[2].selectedId).toBe(
+      "Second"
+    );
+    expect(wmsItem.wmsDimensionSelectableDimensions[2].options!.length).toBe(3);
 
-        expect(wmsItem.legends.length).toBe(2);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=ferret"
-        );
-        expect(wmsItem.legends[1].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=wetdry_mask_u&PALETTE=alg2"
-        );
-      })
-      .then(done)
-      .catch(done.fail);
+    expect(wmsItem.legends.length).toBe(2);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=ferret"
+    );
+    expect(wmsItem.legends[1].url).toBe(
+      "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=wetdry_mask_u&PALETTE=alg2"
+    );
   });
 
-  it("fetches default legend - if supportsGetLegendRequest is false", function (done) {
+  it("fetches default legend - if supportsGetLegendRequest is false", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -859,16 +841,11 @@ describe("WebMapServiceCatalogItem", function () {
       wmsItem.setTrait(CommonStrata.definition, "layers", "A");
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.legends.length).toBe(1);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=rainbow"
-        );
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=rainbow"
+    );
   });
 
   it("fetches default legend - if supportsGetLegendRequest is true", async () => {
@@ -910,7 +887,7 @@ describe("WebMapServiceCatalogItem", function () {
     );
   });
 
-  it("fetches geoserver legend", function (done) {
+  it("fetches geoserver legend", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -924,24 +901,19 @@ describe("WebMapServiceCatalogItem", function () {
       wmsItem.setTrait(CommonStrata.definition, "isGeoServer", true);
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.legends.length).toBe(1);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.legends.length).toBe(1);
 
-        // Match for fontColour = 0xffffff || 0xfff
-        expect(
-          wmsItem.legends[0].url ===
-            "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182&transparent=true" ||
-            wmsItem.legends[0].url ===
-              "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
-        ).toBeTruthy();
-      })
-      .then(done)
-      .catch(done.fail);
+    // Match for fontColour = 0xffffff || 0xfff
+    expect(
+      wmsItem.legends[0].url ===
+        "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182&transparent=true" ||
+        wmsItem.legends[0].url ===
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
+    ).toBeTruthy();
   });
 
-  it("fetches GetLegendGraphic", function (done) {
+  it("fetches GetLegendGraphic", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -960,19 +932,15 @@ describe("WebMapServiceCatalogItem", function () {
       );
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.legends.length).toBe(1);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&style=no-legend"
-        );
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&style=no-legend"
+    );
   });
 
-  it("supports parameters in a GetLegendGraphic request for a layer without a style configured", function (done) {
+  it("supports parameters in a GetLegendGraphic request for a layer without a style configured", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -994,19 +962,14 @@ describe("WebMapServiceCatalogItem", function () {
       );
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.legends.length).toBe(1);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/mapserv?map=%2Fmap%2Fexample.map&service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A"
-        );
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://example.com/mapserv?map=%2Fmap%2Fexample.map&service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A"
+    );
   });
 
-  it("fetches legend with colourScaleRange", function (done) {
+  it("fetches legend with colourScaleRange", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -1030,20 +993,15 @@ describe("WebMapServiceCatalogItem", function () {
       wmsItem.setTrait(CommonStrata.definition, "colorScaleMaximum", 1);
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.isThredds).toBeTruthy();
-        expect(wmsItem.legends.length).toBe(1);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&colorscalerange=0%2C1"
-        );
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.isThredds).toBeTruthy();
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&colorscalerange=0%2C1"
+    );
   });
 
-  it("`selectableDimensions` is empty if `disableDimensionSelectors` is true", function (done) {
+  it("`selectableDimensions` is empty if `disableDimensionSelectors` is true", async function () {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -1067,13 +1025,8 @@ describe("WebMapServiceCatalogItem", function () {
       wmsItem.setTrait(CommonStrata.user, "disableDimensionSelectors", true);
     });
 
-    wmsItem
-      .loadMetadata()
-      .then(function () {
-        expect(wmsItem.selectableDimensions.length).toBe(0);
-      })
-      .then(done)
-      .catch(done.fail);
+    await wmsItem.loadMetadata();
+    expect(wmsItem.selectableDimensions.length).toBe(0);
   });
 
   it("sets isEsri from URL", async function () {

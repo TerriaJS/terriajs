@@ -12,6 +12,7 @@ import L from "leaflet";
 import Leaflet from "../../lib/Models/Leaflet";
 import loadJson from "../../lib/Core/loadJson";
 import Terria from "../../lib/Models/Terria";
+import runLater from "../../lib/Core/runLater";
 
 var DEFAULT_ZOOM_LEVEL = 5;
 
@@ -261,18 +262,15 @@ describe("Leaflet Model", function () {
         ).toBe(600);
       });
 
-      it("adds existingFeatures to end result", function (done) {
+      it("adds existingFeatures to end result", async function () {
         var existing = new ImageryLayerFeatureInfo();
         existing.name = "existing";
         leaflet.pickFromLocation(latlng, {}, [existing]);
         finishPickingPromise();
 
-        terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function () {
-            expect(terria.pickedFeatures.features[0].name).toBe("existing");
-          })
-          .then(done)
-          .catch(done.fail);
+        await terria.pickedFeatures.allFeaturesAvailablePromise;
+
+        expect(terria.pickedFeatures.features[0].name).toBe("existing");
       });
     });
 
@@ -307,7 +305,7 @@ describe("Leaflet Model", function () {
           });
         });
 
-        it("includes vector features with click events both before and after the map click event", function (done) {
+        it("includes vector features with click events both before and after the map click event", async function () {
           // vector and map clicks can come in any order.
           leaflet.scene.featureClicked.raiseEvent(vectorFeature1, {
             latlng: latlng
@@ -321,18 +319,14 @@ describe("Leaflet Model", function () {
 
           finishPickingPromise();
 
-          terria.pickedFeatures.allFeaturesAvailablePromise
-            .then(function () {
-              expect(terria.pickedFeatures.features.length).toBe(5);
-              expect(terria.pickedFeatures.features[0].name).toBe("vector1");
-              expect(terria.pickedFeatures.features[1].name).toBe("vector2");
-              expect(terria.pickedFeatures.features[2].name).toBe("1");
-            })
-            .then(done)
-            .catch(done.fail);
+          await terria.pickedFeatures.allFeaturesAvailablePromise;
+          expect(terria.pickedFeatures.features.length).toBe(5);
+          expect(terria.pickedFeatures.features[0].name).toBe("vector1");
+          expect(terria.pickedFeatures.features[1].name).toBe("vector2");
+          expect(terria.pickedFeatures.features[2].name).toBe("1");
         });
 
-        it("resets the picked vector features if a subsequent map click is made", function (done) {
+        it("resets the picked vector features if a subsequent map click is made", async function () {
           leaflet.scene.featureClicked.raiseEvent(vectorFeature1, {
             latlng: latlng
           });
@@ -346,25 +340,20 @@ describe("Leaflet Model", function () {
           // The reset happens in a runLater, which a second click will always come behind in a browser,
           // but this isn't guaranteed in unit tests because they're just two setTimeouts racing each other,
           // so give this a healthy 50ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
-          setTimeout(function () {
-            click({
-              latlng: latlng
-            });
-            finishPickingPromise();
-            terria.pickedFeatures.allFeaturesAvailablePromise
-              .then(function () {
-                expect(terria.pickedFeatures.features.length).toBe(3);
-                expect(terria.pickedFeatures.features[0].name).toBe("1");
-              })
-              .then(done)
-              .catch(done.fail);
-          }, 50);
+          await runLater(50);
+          click({
+            latlng: latlng
+          });
+          finishPickingPromise();
+          await terria.pickedFeatures.allFeaturesAvailablePromise;
+          expect(terria.pickedFeatures.features.length).toBe(3);
+          expect(terria.pickedFeatures.features[0].name).toBe("1");
         });
       });
     });
 
     function commonFeaturePickingTests(trigger) {
-      it("correctly tracks loading state", function (done) {
+      it("correctly tracks loading state", async function () {
         expect(terria.pickedFeatures).toBeUndefined();
 
         trigger();
@@ -373,15 +362,12 @@ describe("Leaflet Model", function () {
 
         finishPickingPromise();
 
-        terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function () {
-            expect(terria.pickedFeatures.isLoading).toBe(false);
-          })
-          .then(done)
-          .catch(done.fail);
+        await terria.pickedFeatures.allFeaturesAvailablePromise;
+
+        expect(terria.pickedFeatures.isLoading).toBe(false);
       });
 
-      it("should load imagery layer features when feature info requests are enabled", function (done) {
+      it("should load imagery layer features when feature info requests are enabled", async function () {
         terria.allowFeatureInfoRequests = true;
         trigger();
 
@@ -396,28 +382,21 @@ describe("Leaflet Model", function () {
         deferred1.resolve([featureInfo1]);
         deferred2.resolve([featureInfo2]);
 
-        terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function () {
-            expect(terria.pickedFeatures.isLoading).toBe(false);
-            expect(terria.pickedFeatures.features.length).toBe(2);
-            expect(terria.pickedFeatures.features[0].name).toBe("name1");
-            expect(terria.pickedFeatures.features[1].name).toBe("name2");
-          })
-          .then(done)
-          .catch(done.fail);
+        await terria.pickedFeatures.allFeaturesAvailablePromise;
+        expect(terria.pickedFeatures.isLoading).toBe(false);
+        expect(terria.pickedFeatures.features.length).toBe(2);
+        expect(terria.pickedFeatures.features[0].name).toBe("name1");
+        expect(terria.pickedFeatures.features[1].name).toBe("name2");
       });
 
-      it("should not load imagery layer features when feature info requests are disabled", function (done) {
+      it("should not load imagery layer features when feature info requests are disabled", async function () {
         terria.allowFeatureInfoRequests = false;
         trigger();
 
-        terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function () {
-            expect(terria.pickedFeatures.isLoading).toBe(false);
-            expect(terria.pickedFeatures.features.length).toBe(0);
-          })
-          .then(done)
-          .catch(done.fail);
+        await terria.pickedFeatures.allFeaturesAvailablePromise;
+
+        expect(terria.pickedFeatures.isLoading).toBe(false);
+        expect(terria.pickedFeatures.features.length).toBe(0);
       });
 
       it("records pickPosition", function () {
@@ -468,12 +447,10 @@ describe("Leaflet Model", function () {
         });
 
         describe("after pickFeatures returns for all layers", function () {
-          beforeEach(function (done) {
+          beforeEach(async function () {
             finishPickingPromise();
 
-            terria.pickedFeatures.allFeaturesAvailablePromise
-              .then(done)
-              .catch(done.fail);
+            await terria.pickedFeatures.allFeaturesAvailablePromise;
           });
 
           it("combines promise results", function () {
@@ -501,92 +478,72 @@ describe("Leaflet Model", function () {
       });
     }
 
-    it("should create GeoJSON for polygon when a rasterized polygon feature is selected", function (done) {
-      loadJson("test/GeoJSON/polygon.geojson")
-        .then(function (polygonGeoJson) {
-          initLeaflet();
+    it("should create GeoJSON for polygon when a rasterized polygon feature is selected", async function () {
+      const polygonGeoJson = await loadJson("test/GeoJSON/polygon.geojson");
+      initLeaflet();
 
-          var entity = new Entity();
-          entity.data = polygonGeoJson;
+      var entity = new Entity();
+      entity.data = polygonGeoJson;
 
-          terria.selectedFeature = entity;
+      terria.selectedFeature = entity;
 
-          expect(terria.leaflet._highlightPromise).toBeDefined();
-          expect(terria.leaflet._removeHighlightCallback).toBeDefined();
+      expect(terria.leaflet._highlightPromise).toBeDefined();
+      expect(terria.leaflet._removeHighlightCallback).toBeDefined();
 
-          return terria.leaflet._highlightPromise.then(function () {
-            expect(terria.dataSources.length).toBe(1);
-            expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(
-              true
-            );
-          });
-        })
-        .then(done)
-        .catch(done.fail);
+      await terria.leaflet._highlightPromise;
+      expect(terria.dataSources.length).toBe(1);
+      expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
     });
 
-    it("should create GeoJSON for polyline when a rasterized polyline feature is selected", function (done) {
-      loadJson("test/GeoJSON/polyline.geojson")
-        .then(function (polylineGeoJson) {
-          initLeaflet();
+    it("should create GeoJSON for polyline when a rasterized polyline feature is selected", async function () {
+      const polylineGeoJson = await loadJson("test/GeoJSON/polyline.geojson");
+      initLeaflet();
 
-          var entity = new Entity();
-          entity.data = polylineGeoJson;
+      var entity = new Entity();
+      entity.data = polylineGeoJson;
 
-          terria.selectedFeature = entity;
+      terria.selectedFeature = entity;
 
-          expect(terria.leaflet._highlightPromise).toBeDefined();
-          expect(terria.leaflet._removeHighlightCallback).toBeDefined();
+      expect(terria.leaflet._highlightPromise).toBeDefined();
+      expect(terria.leaflet._removeHighlightCallback).toBeDefined();
 
-          return terria.leaflet._highlightPromise.then(function () {
-            expect(terria.dataSources.length).toBe(1);
-            expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(
-              true
-            );
-          });
-        })
-        .then(done)
-        .catch(done.fail);
+      await terria.leaflet._highlightPromise;
+      expect(terria.dataSources.length).toBe(1);
+      expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
     });
 
-    it("should update the style of a vector polygon when selected", function (done) {
-      GeoJsonDataSource.load("test/GeoJSON/polygon.geojson")
-        .then(function (dataSource) {
-          initLeaflet();
+    it("should update the style of a vector polygon when selected", async function () {
+      const dataSource = await GeoJsonDataSource.load(
+        "test/GeoJSON/polygon.geojson"
+      );
+      initLeaflet();
 
-          terria.dataSources.add(dataSource);
+      terria.dataSources.add(dataSource);
 
-          var entity = dataSource.entities.values[0];
+      var entity = dataSource.entities.values[0];
 
-          terria.selectedFeature = entity;
-          expect(entity.polygon.outlineColor.getValue()).toEqual(Color.WHITE);
+      terria.selectedFeature = entity;
+      expect(entity.polygon.outlineColor.getValue()).toEqual(Color.WHITE);
 
-          terria.selectedFeature = undefined;
-          expect(entity.polygon.outlineColor.getValue()).not.toEqual(
-            Color.WHITE
-          );
-        })
-        .then(done)
-        .catch(done.fail);
+      terria.selectedFeature = undefined;
+      expect(entity.polygon.outlineColor.getValue()).not.toEqual(Color.WHITE);
     });
 
-    it("should update the style of a vector polyline when selected", function (done) {
-      GeoJsonDataSource.load("test/GeoJSON/polyline.geojson")
-        .then(function (dataSource) {
-          initLeaflet();
+    it("should update the style of a vector polyline when selected", async function () {
+      const dataSource = await GeoJsonDataSource.load(
+        "test/GeoJSON/polyline.geojson"
+      );
+      initLeaflet();
 
-          terria.dataSources.add(dataSource);
+      terria.dataSources.add(dataSource);
 
-          var entity = dataSource.entities.values[0];
+      var entity = dataSource.entities.values[0];
 
-          terria.selectedFeature = entity;
-          expect(entity.polyline.width.getValue()).toEqual(2);
+      terria.selectedFeature = entity;
+      expect(entity.polyline.width.getValue()).toEqual(2);
 
-          terria.selectedFeature = undefined;
-          expect(entity.polyline.width.getValue()).not.toEqual(2);
-        })
-        .then(done)
-        .catch(done.fail);
+      terria.selectedFeature = undefined;
+      expect(entity.polyline.width.getValue()).not.toEqual(2);
     });
 
     function finishPickingPromise() {

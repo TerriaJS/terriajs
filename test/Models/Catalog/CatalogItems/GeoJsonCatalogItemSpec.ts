@@ -198,27 +198,22 @@ describe("GeoJsonCatalogItemSpec", () => {
          expect(geojson.dataUrl).toBe("test/GeoJSON/bike_racks.geojson");
          expect(geojson.dataUrlType).toBe("direct");
        })
-       it("use provided dataUrl", function(done) {
+       it("use provided dataUrl", async function() {
          geojson.url = "test/GeoJSON/bike_racks.geojson";
          geojson.dataUrl = "test/test.html";
          geojson.dataUrlType = "fake type";
-         geojson.load().then(function() {
-           expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-           expect(geojson.dataUrl).toBe("test/test.html");
-           expect(geojson.dataUrlType).toBe("fake type");
-           done();
-         });
+         await geojson.load();
+         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+         expect(geojson.dataUrl).toBe("test/test.html");
+         expect(geojson.dataUrlType).toBe("fake type");
        })
 
-       it("works by blob", function(done) {
-         loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
-           geojson.data = blob;
-           geojson.dataSourceUrl = "anything.geojson";
-           geojson.load().then(function() {
-             expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-             done();
-           });
-         });
+       it("works by blob", async function() {
+         const blob = await loadBlob("test/GeoJSON/bike_racks.geojson");
+         geojson.data = blob;
+         geojson.dataSourceUrl = "anything.geojson";
+         await geojson.load();
+         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
        }); */
     });
 
@@ -433,23 +428,19 @@ describe("GeoJsonCatalogItemSpec", () => {
     //     geojson.isEnabled = true;
     //   });
 
-    //   it("can add attribution", function(done) {
+    //   it("can add attribution", async function() {
     //     spyOn(currentViewer, "addAttribution");
     //     geojson.load();
-    //     geojson._loadForEnablePromise.then(function() {
-    //       expect(currentViewer.addAttribution).toHaveBeenCalled();
-    //       done();
-    //     });
+    //     await geojson._loadForEnablePromise;
+    //     expect(currentViewer.addAttribution).toHaveBeenCalled();
     //   });
 
-    //   it("can remove attribution", function(done) {
+    //   it("can remove attribution", async function() {
     //     spyOn(currentViewer, "removeAttribution");
     //     geojson.load();
-    //     geojson._loadForEnablePromise.then(function() {
-    //       geojson.isEnabled = false;
-    //       expect(currentViewer.removeAttribution).toHaveBeenCalled();
-    //       done();
-    //     });
+    //     await geojson._loadForEnablePromise;
+    //     geojson.isEnabled = false;
+    //     expect(currentViewer.removeAttribution).toHaveBeenCalled();
     //   });
     // });
 

@@ -135,22 +135,22 @@ describe("DimensionSelectorSection", function () {
       );
     });
 
-    await wmsItem.loadMetadata().then(function () {
-      const { container } = render(
-        <ThemeProvider theme={terriaTheme}>
-          <SelectableDimensionSection
-            item={wmsItem}
-            placement={DEFAULT_PLACEMENT}
-          />
-        </ThemeProvider>
-      );
+    await wmsItem.loadMetadata();
 
-      // Expect 5 dimensions (elevation, custom, another + 2 styles)
-      const labels = container.querySelectorAll("label");
+    const { container } = render(
+      <ThemeProvider theme={terriaTheme}>
+        <SelectableDimensionSection
+          item={wmsItem}
+          placement={DEFAULT_PLACEMENT}
+        />
+      </ThemeProvider>
+    );
 
-      expect(screen.getAllByRole("combobox").length).toBe(5);
-      expect(labels.length).toBe(5);
-    });
+    // Expect 5 dimensions (elevation, custom, another + 2 styles)
+    const labels = container.querySelectorAll("label");
+
+    expect(screen.getAllByRole("combobox").length).toBe(5);
+    expect(labels.length).toBe(5);
   });
 
   it("shows csv region mapping options", async function () {
