@@ -65,54 +65,44 @@ describe("BuildShareLink", function () {
   });
 
   describe("user added model containing local data", function () {
-    it("should not be serialized", function (done) {
+    it("should not be serialized", async function () {
       const modelId = "Test";
       const model = new GeoJsonCatalogItem(modelId, terria);
 
-      loadBlob("test/GeoJSON/bike_racks.geojson", {})
-        .then((blob) => {
-          model.setFileInput(blob as File);
-          terria.addModel(model);
+      const blob = await loadBlob("test/GeoJSON/bike_racks.geojson", {});
+      model.setFileInput(blob as File);
+      terria.addModel(model);
 
-          expect(terria.getModelById(BaseModel, modelId)).toBe(model);
-          expect(isShareable(terria)(modelId)).toBe(false);
-          return addUserCatalogMember(terria, model);
-        })
-        .then(() => {
-          const shareLink = buildShareLink(terria, viewState);
-          const params = decodeAndParseStartHash(shareLink);
-          const initSources = flattenInitSources(params.initSources);
+      expect(terria.getModelById(BaseModel, modelId)).toBe(model);
+      expect(isShareable(terria)(modelId)).toBe(false);
+      await addUserCatalogMember(terria, model);
 
-          expect(
-            initSources.models?.[USER_ADDED_CATEGORY_ID].members
-          ).not.toContain(model.uniqueId);
+      const shareLink = buildShareLink(terria, viewState);
+      const params = decodeAndParseStartHash(shareLink);
+      const initSources = flattenInitSources(params.initSources);
 
-          done();
-        });
+      expect(
+        initSources.models?.[USER_ADDED_CATEGORY_ID].members
+      ).not.toContain(model.uniqueId);
     });
 
-    it("should not be added to workbench in generated url", function (done) {
+    it("should not be added to workbench in generated url", async function () {
       const modelId = "Test";
       const model = new GeoJsonCatalogItem(modelId, terria);
 
-      loadBlob("test/GeoJSON/bike_racks.geojson", {})
-        .then((blob) => {
-          model.setFileInput(blob as File);
-          terria.addModel(model);
-          return addUserCatalogMember(terria, model);
-        })
-        .then(() => {
-          return terria.workbench.add(model);
-        })
-        .then(() => {
-          const shareLink = buildShareLink(terria, viewState);
-          const params = decodeAndParseStartHash(shareLink);
-          const initSources = flattenInitSources(params.initSources);
+      const blob = await loadBlob("test/GeoJSON/bike_racks.geojson", {});
 
-          expect(initSources.workbench).not.toContain(model.uniqueId);
+      model.setFileInput(blob as File);
+      terria.addModel(model);
+      await addUserCatalogMember(terria, model);
 
-          done();
-        });
+      await terria.workbench.add(model);
+
+      const shareLink = buildShareLink(terria, viewState);
+      const params = decodeAndParseStartHash(shareLink);
+      const initSources = flattenInitSources(params.initSources);
+
+      expect(initSources.workbench).not.toContain(model.uniqueId);
     });
   });
 
@@ -131,36 +121,29 @@ describe("BuildShareLink", function () {
       terria.addModel(model);
     });
 
-    it("should be serialized", function (done) {
-      addUserCatalogMember(terria, model).then(() => {
-        const shareLink = buildShareLink(terria, viewState);
-        const params = decodeAndParseStartHash(shareLink);
-        const initSources = flattenInitSources(params.initSources);
+    it("should be serialized", async function () {
+      await addUserCatalogMember(terria, model);
+      const shareLink = buildShareLink(terria, viewState);
+      const params = decodeAndParseStartHash(shareLink);
+      const initSources = flattenInitSources(params.initSources);
 
-        expect(model.uniqueId).toBeDefined();
-        expect(isShareable(terria)(model.uniqueId ?? "")).toBe(true);
-        expect(initSources.models?.[USER_ADDED_CATEGORY_ID].members).toContain(
-          model.uniqueId
-        );
-
-        done();
-      });
+      expect(model.uniqueId).toBeDefined();
+      expect(isShareable(terria)(model.uniqueId ?? "")).toBe(true);
+      expect(initSources.models?.[USER_ADDED_CATEGORY_ID].members).toContain(
+        model.uniqueId
+      );
     });
 
-    it("should be added to workbench in generated url", function (done) {
-      addUserCatalogMember(terria, model)
-        .then(() => {
-          return terria.workbench.add(model);
-        })
-        .then(() => {
-          const shareLink = buildShareLink(terria, viewState);
-          const params = decodeAndParseStartHash(shareLink);
-          const initSources = flattenInitSources(params.initSources);
+    it("should be added to workbench in generated url", async function () {
+      await addUserCatalogMember(terria, model);
 
-          expect(initSources.workbench).toContain(model.uniqueId);
+      await terria.workbench.add(model);
 
-          done();
-        });
+      const shareLink = buildShareLink(terria, viewState);
+      const params = decodeAndParseStartHash(shareLink);
+      const initSources = flattenInitSources(params.initSources);
+
+      expect(initSources.workbench).toContain(model.uniqueId);
     });
   });
 

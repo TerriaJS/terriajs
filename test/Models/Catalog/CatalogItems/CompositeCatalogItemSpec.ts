@@ -17,7 +17,7 @@ describe("CompositeCatalogItem", function () {
     composite = new CompositeCatalogItem("test", terria);
   });
 
-  it("loads map items after members are added", function (done) {
+  it("loads map items after members are added", async function () {
     const item1 = new GeoJsonCatalogItem("item1", terria);
     const item2 = new WebMapServiceCatalogItem("item2", terria);
     const item3 = new WebMapServiceCatalogItem("item3", terria);
@@ -43,17 +43,13 @@ describe("CompositeCatalogItem", function () {
     composite.add(CommonStrata.definition, item1);
     composite.add(CommonStrata.definition, item2);
 
-    composite
-      .loadMapItems()
-      .then(() => {
-        expect(composite.mapItems.length).toBe(2);
-        composite.add(CommonStrata.definition, item3);
-        return composite.loadMapItems();
-      })
-      .then(() => {
-        expect(composite.mapItems.length).toBe(3);
-        done();
-      });
+    await composite.loadMapItems();
+
+    expect(composite.mapItems.length).toBe(2);
+    composite.add(CommonStrata.definition, item3);
+    await composite.loadMapItems();
+
+    expect(composite.mapItems.length).toBe(3);
   });
 
   it("updates from json, preserving order", function () {
@@ -107,8 +103,8 @@ describe("CompositeCatalogItem", function () {
     expect(item2.show).toEqual(false);
   });
 
-  // it("concatenates legends", function(done) {
-  //   composite
+  // it("concatenates legends", async function() {
+  //   await composite
   //     .updateFromJson({
   //       type: "composite",
   //       items: [
@@ -121,14 +117,10 @@ describe("CompositeCatalogItem", function () {
   //           legendUrl: "http://not.valid.either"
   //         }
   //       ]
-  //     })
-  //     .then(function() {
-  //       expect(composite.legendUrls.slice()).toEqual([
-  //         new LegendUrl("http://not.valid"),
-  //         new LegendUrl("http://not.valid.either")
-  //       ]);
-  //     })
-  //     .then(done)
-  //     .catch(fail);
+  //     });
+  //     expect(composite.legendUrls.slice()).toEqual([
+  //       new LegendUrl("http://not.valid"),
+  //       new LegendUrl("http://not.valid.either")
+  //     ]);
   // });
 });
