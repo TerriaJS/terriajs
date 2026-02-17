@@ -42,7 +42,6 @@ describe("ChartCustomComponent", function () {
       }
     };
     const chart = component.processNode(context, node, [], 0);
-    console.log(chart);
 
     expect(chart).toBeDefined();
     expect(chart?.key).toContain("chart-wrapper");
