@@ -32,12 +32,19 @@ describe("IonImageryCatalogItem", function () {
         "</TileMap>";
 
       worker.use(
-        http.get("https://example.com/v1/assets/12345/endpoint", () =>
-          HttpResponse.json({
-            type: "IMAGERY",
-            url: "https://example.com",
-            attributions: []
-          })
+        http.get(
+          "https://example.com/v1/assets/12345/endpoint",
+          ({ request }) => {
+            const url = new URL(request.url);
+            if (url.searchParams.get("access_token") !== "fakeAccessToken")
+              throw new Error(`Unexpected query params: ${url.search}`);
+
+            return HttpResponse.json({
+              type: "IMAGERY",
+              url: "https://example.com",
+              attributions: []
+            });
+          }
         ),
         http.get(
           "https://example.com/tilemapresource.xml",
