@@ -28,7 +28,7 @@ spy((event) => {
 
 beforeAll(async function () {
   jasmine.addMatchers(JasmineDOM);
-  console.log("Running tests with i18next language: " + i18next.language);
+
   await i18next.use(initReactI18next).init({
     lng: "cimode",
     debug: false,
