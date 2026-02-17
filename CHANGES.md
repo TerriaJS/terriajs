@@ -4,6 +4,7 @@
 
 - Capture default timeline state in share links including current time,
   playback etc.
+- Convert test `done` callbacks to async/await for modern test patterns.
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
