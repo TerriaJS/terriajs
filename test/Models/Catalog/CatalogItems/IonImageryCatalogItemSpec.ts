@@ -1,8 +1,10 @@
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import IonImageryCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/IonImageryCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("IonImageryCatalogItem", function () {
   const item = new IonImageryCatalogItem("test", new Terria());
@@ -13,17 +15,6 @@ describe("IonImageryCatalogItem", function () {
 
   describe("the mapItem", function () {
     beforeEach(async function () {
-      jasmine.Ajax.install();
-      jasmine.Ajax.stubRequest(
-        "https://example.com/v1/assets/12345/endpoint?access_token=fakeAccessToken"
-      ).andReturn({
-        responseText: JSON.stringify({
-          type: "IMAGERY",
-          url: "https://example.com",
-          attributions: []
-        })
-      });
-
       const validSampleXmlString =
         '<TileMap version="1.0.0" tilemapservice="http://tms.osgeo.org/1.0.0">' +
         "    <Title>NE2_HR_LC_SR_W_DR_recolored.tif</Title>" +
@@ -40,12 +31,22 @@ describe("IonImageryCatalogItem", function () {
         "   </TileSets>" +
         "</TileMap>";
 
-      jasmine.Ajax.stubRequest(
-        "https://example.com/tilemapresource.xml"
-      ).andReturn({
-        responseText: validSampleXmlString,
-        contentType: "text/xml"
-      });
+      worker.use(
+        http.get("https://example.com/v1/assets/12345/endpoint", () =>
+          HttpResponse.json({
+            type: "IMAGERY",
+            url: "https://example.com",
+            attributions: []
+          })
+        ),
+        http.get(
+          "https://example.com/tilemapresource.xml",
+          () =>
+            new HttpResponse(validSampleXmlString, {
+              headers: { "Content-Type": "text/xml" }
+            })
+        )
+      );
 
       runInAction(() => {
         item.setTrait("definition", "ionAssetId", 12345);
@@ -53,10 +54,6 @@ describe("IonImageryCatalogItem", function () {
         item.setTrait("definition", "ionServer", "https://example.com");
       });
       await item.loadMapItems();
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
     });
 
     it("correctly sets the `alpha` value", function () {

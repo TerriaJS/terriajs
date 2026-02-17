@@ -3,6 +3,8 @@ import CesiumTerrainCatalogItem from "../../../../lib/Models/Catalog/CatalogItem
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
+import { worker } from "../../../mocks/browser";
 
 describe("CesiumTerrainCatalogItem", function () {
   let terria: Terria;
@@ -19,18 +21,13 @@ describe("CesiumTerrainCatalogItem", function () {
   beforeEach(function () {
     terria = new Terria();
     item = new CesiumTerrainCatalogItem(undefined, terria);
-    jasmine.Ajax.install();
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
   });
 
   describe("loading", function () {
     it("rejects with an error when there is a network error", async function () {
-      jasmine.Ajax.stubRequest(/no-such-server/).andReturn({
-        status: undefined
-      });
+      worker.use(
+        http.get("http://no-such-server/*", () => HttpResponse.error())
+      );
       item.setTrait(CommonStrata.user, "url", "http://no-such-server");
       const result = await item.loadMapItems();
       expect(result.error?.message).toBeDefined(
@@ -39,10 +36,11 @@ describe("CesiumTerrainCatalogItem", function () {
     });
 
     it("can load terrain from a URL", async function () {
-      jasmine.Ajax.stubRequest(/foo/).andReturn({
-        status: 200,
-        responseJSON: validResponse
-      });
+      worker.use(
+        http.get("https://example.com/foo/*", () =>
+          HttpResponse.json(validResponse)
+        )
+      );
 
       item.setTrait(CommonStrata.user, "url", "https://example.com/foo/bar");
       const result = await item.loadMapItems();
@@ -53,20 +51,19 @@ describe("CesiumTerrainCatalogItem", function () {
     });
 
     it("can load terrain from `ionAssetId`", async function () {
-      // Stub request from IonResource
-      jasmine.Ajax.stubRequest(/424242/).andReturn({
-        status: 200,
-        responseJSON: {
-          url: "foo/bar",
-          attributions: []
-        }
-      });
-
-      // Stub request for terrain
-      jasmine.Ajax.stubRequest(/foo/).andReturn({
-        status: 200,
-        responseJSON: validResponse
-      });
+      worker.use(
+        // Stub request from IonResource
+        http.get("https://api.cesium.com/v1/assets/424242/endpoint", () =>
+          HttpResponse.json({
+            url: "https://example.com/foo/bar",
+            attributions: []
+          })
+        ),
+        // Stub request for terrain
+        http.get("https://example.com/foo/*", () =>
+          HttpResponse.json(validResponse)
+        )
+      );
 
       item.setTrait(CommonStrata.user, "ionAssetId", 424242);
       const result = await item.loadMapItems();
@@ -79,10 +76,11 @@ describe("CesiumTerrainCatalogItem", function () {
 
   describe("mapItems", function () {
     it("should be empty when `show` is false", async function () {
-      jasmine.Ajax.stubRequest(/foo/).andReturn({
-        status: 200,
-        responseJSON: validResponse
-      });
+      worker.use(
+        http.get("https://example.com/foo/*", () =>
+          HttpResponse.json(validResponse)
+        )
+      );
       item.setTrait(CommonStrata.user, "url", "https://example.com/foo/bar");
       await item.loadMapItems();
       runInAction(() => {
