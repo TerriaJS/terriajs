@@ -30,7 +30,8 @@ module.exports = function (config) {
       "/data": "/base/data",
       "/images": "/base/images",
       "/test": "/base/test",
-      "/build": "/base/build"
+      "/build": "/base/build",
+      "/mockServiceWorker.js": "/base/mockServiceWorker.js"
     },
 
     // list of files to exclude
