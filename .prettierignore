@@ -38,6 +38,7 @@ yarn.lock
 
 # Third party files
 /wwwroot/third_party
+/wwwroot/mockServiceWorker.js
 
 # Ignore some files
 doc/acknowledgements/attributions.md
