@@ -1,9 +1,11 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import CkanItemReference from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import { worker } from "../../../mocks/browser";
 
 import taxationStatisticsPackage from "../../../../wwwroot/test/CKAN/taxation-statistics-package.json";
 import taxationStatisticsWmsResource from "../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json";
@@ -21,38 +23,35 @@ describe("CkanItemReference", function () {
     });
     ckanItemReference = new CkanItemReference("test", terria);
 
-    jasmine.Ajax.install();
-    // Fail and log requests by default.
-    jasmine.Ajax.stubRequest(/.*/).andCallFunction((request) => {
-      console.dir(request);
-      request.respondWith({ status: 404 });
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/3/action/package_show?id=tax-stats-package"
-    ).andReturn({ responseJSON: taxationStatisticsPackage });
-
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/3/action/resource_show?id=tax-stats-wms-resource"
-    ).andReturn({
-      responseJSON: taxationStatisticsWmsResource
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/3/action/resource_show?id=wms-no-layers-resource"
-    ).andReturn({
-      responseJSON: wmsNoLayerResource
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/3/action/resource_show?id=vic-wms-resource"
-    ).andReturn({
-      responseJSON: vicWmsLayerResource
-    });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get(
+        "https://example.com/api/3/action/package_show",
+        ({ request }) => {
+          const url = new URL(request.url);
+          if (url.searchParams.get("id") !== "tax-stats-package")
+            throw new Error(`Unexpected query params: ${url.search}`);
+          return HttpResponse.json(taxationStatisticsPackage);
+        }
+      ),
+      http.get(
+        "https://example.com/api/3/action/resource_show",
+        ({ request }) => {
+          const url = new URL(request.url);
+          const id = url.searchParams.get("id");
+          if (id === "tax-stats-wms-resource")
+            return HttpResponse.json(taxationStatisticsWmsResource);
+          if (id === "wms-no-layers-resource")
+            return HttpResponse.json(wmsNoLayerResource);
+          if (id === "vic-wms-resource")
+            return HttpResponse.json(vicWmsLayerResource);
+          throw new Error(`Unexpected resource id: ${id}`);
+        }
+      ),
+      http.all("*", ({ request }) => {
+        console.dir(request.url);
+        return new HttpResponse(null, { status: 404 });
+      })
+    );
   });
 
   it("has a type and typeName", function () {
