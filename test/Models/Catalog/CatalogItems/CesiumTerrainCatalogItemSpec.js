@@ -21,7 +21,7 @@ describe("CesiumTerrainCatalogItem", function () {
     expect(item.typeName).toContain("Cesium");
   });
 
-  it("creates imagery provider with correct URL", function (done) {
+  it("creates imagery provider with correct URL", async function () {
     spyOn(loadWithXhr, "load").and.callFake(function (
       url,
       _responseType,
@@ -48,10 +48,7 @@ describe("CesiumTerrainCatalogItem", function () {
     item.url = "http://example.com/foo/bar";
     var terrainProvider = item._createTerrainProvider();
     expect(terrainProvider instanceof CesiumTerrainProvider).toBe(true);
-    terrainProvider.readyPromise
-      .then(function () {
-        expect(loadWithXhr.load.calls.any()).toBe(true);
-      })
-      .then(done);
+    await terrainProvider.readyPromise;
+    expect(loadWithXhr.load.calls.any()).toBe(true);
   });
 });

@@ -283,7 +283,7 @@ describe("Terria", function () {
     });
 
     describe("via loadMagdaConfig", function () {
-      it("should dereference uniqueId to `/`", function (done) {
+      it("should dereference uniqueId to `/`", async function () {
         expect(terria.catalog.group.uniqueId).toEqual("/");
 
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
@@ -293,21 +293,15 @@ describe("Terria", function () {
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
 
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-basic.json",
-            i18nOptions
-          })
-          .then(function () {
-            expect(terria.catalog.group.uniqueId).toEqual("/");
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
+        await terria.start({
+          configUrl: "test/Magda/map-config-basic.json",
+          i18nOptions
+        });
+
+        expect(terria.catalog.group.uniqueId).toEqual("/");
       });
 
-      it("works with basic initializationUrls", function (done) {
+      it("works with basic initializationUrls", async function () {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
           responseJSON: mapConfigBasicJson
@@ -315,27 +309,20 @@ describe("Terria", function () {
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
 
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-basic.json",
-            i18nOptions
-          })
-          .then(function () {
-            expect(terria.initSources.length).toEqual(1);
-            expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
-            if (isInitFromUrl(terria.initSources[0])) {
-              expect(terria.initSources[0].initUrl).toEqual(
-                mapConfigBasicJson.aspects["terria-config"]
-                  .initializationUrls[0]
-              );
-            } else {
-              throw "not init source";
-            }
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
+        await terria.start({
+          configUrl: "test/Magda/map-config-basic.json",
+          i18nOptions
+        });
+
+        expect(terria.initSources.length).toEqual(1);
+        expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
+        if (isInitFromUrl(terria.initSources[0])) {
+          expect(terria.initSources[0].initUrl).toEqual(
+            mapConfigBasicJson.aspects["terria-config"].initializationUrls[0]
+          );
+        } else {
+          throw "not init source";
+        }
       });
 
       it("works with v7initializationUrls", async function () {
@@ -410,37 +397,30 @@ describe("Terria", function () {
           throw "not init source";
         }
       });
-      it("parses dereferenced group aspect", async function (done) {
+      it("parses dereferenced group aspect", async function () {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           responseJSON: mapConfigDereferencedJson
         });
-        await terria
-          .start({
-            configUrl: "test/Magda/map-config-dereferenced.json",
-            i18nOptions
-          })
-          .then(function () {
-            const groupAspect = mapConfigDereferencedJson.aspects["group"];
-            const ids = groupAspect.members.map((member: any) => member.id);
-            expect(terria.catalog.group.uniqueId).toEqual("/");
-            // ensure user added data co-exists with dereferenced magda members
-            expect(terria.catalog.group.members.length).toEqual(3);
-            expect(terria.catalog.userAddedDataGroup).toBeDefined();
-            ids.forEach((id: string) => {
-              const model = terria.getModelById(MagdaReference, id);
-              if (!model) {
-                throw "no record id.";
-              }
-              expect(terria.modelIds).toContain(id);
-              expect(model.recordId).toEqual(id);
-            });
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
+        await terria.start({
+          configUrl: "test/Magda/map-config-dereferenced.json",
+          i18nOptions
+        });
+        const groupAspect = mapConfigDereferencedJson.aspects["group"];
+        const ids = groupAspect.members.map((member: any) => member.id);
+        expect(terria.catalog.group.uniqueId).toEqual("/");
+        // ensure user added data co-exists with dereferenced magda members
+        expect(terria.catalog.group.members.length).toEqual(3);
+        expect(terria.catalog.userAddedDataGroup).toBeDefined();
+        ids.forEach((id: string) => {
+          const model = terria.getModelById(MagdaReference, id);
+          if (!model) {
+            throw "no record id.";
+          }
+          expect(terria.modelIds).toContain(id);
+          expect(model.recordId).toEqual(id);
+        });
       });
     });
 
@@ -1116,23 +1096,17 @@ describe("Terria", function () {
       jasmine.Ajax.uninstall();
     });
 
-    it("initializes proxy with parameters from config file", function (done) {
-      terria
-        .start({
-          configUrl: "test/init/configProxy.json",
-          i18nOptions
-        })
-        .then(function () {
-          expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
-          expect(terria.corsProxy.proxyDomains).toEqual([
-            "example.com",
-            "csiro.au"
-          ]);
-          done();
-        })
-        .catch((_error) => {
-          done.fail();
-        });
+    it("initializes proxy with parameters from config file", async function () {
+      await terria.start({
+        configUrl: "test/init/configProxy.json",
+        i18nOptions
+      });
+
+      expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
+      expect(terria.corsProxy.proxyDomains).toEqual([
+        "example.com",
+        "csiro.au"
+      ]);
     });
   });
 

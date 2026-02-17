@@ -22,23 +22,19 @@ describe("CatalogMember", function () {
       };
     });
 
-    it("alters isLoading", function (done) {
-      member
-        .load()
-        .then(function () {
-          expect(member.isLoading).toBe(false);
-          done();
-        })
-        .catch(done.fail);
+    it("alters isLoading", async function () {
+      await member.load().then(function () {
+        expect(member.isLoading).toBe(false);
+      });
     });
 
-    it("returns a promise that allows otherwise to be chained", function (done) {
+    it("returns a promise that allows otherwise to be chained", async function () {
       member._load = function () {
         return Promise.reject();
       };
       expect(true).toBe(true); // stop it whinging about no expectations.
 
-      member.load().then(done.fail).catch(done);
+      await expect(member.load()).reject.toBeDefined();
     });
 
     it("returns the same promise for subsequent calls", function () {
@@ -118,8 +114,8 @@ describe("CatalogMember", function () {
   });
 
   describe("updateFromJson", function () {
-    it("merges the info property", function (done) {
-      member
+    it("merges the info property", async function () {
+      await member
         .updateFromJson({
           info: [
             {
@@ -152,9 +148,7 @@ describe("CatalogMember", function () {
           expect(member.info[0].content).toBe("New Value!");
           expect(member.info[1].name).toBe("Another Field");
           expect(member.info[1].content).toBe("Another value");
-        })
-        .then(done)
-        .catch(done.fail);
+        });
     });
   });
 });
