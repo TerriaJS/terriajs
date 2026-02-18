@@ -410,6 +410,26 @@ class StoryBuilder extends Component<
             <TextSpan isLink>{t("story.removeAllStories")}</TextSpan>
           </RawButton>
         </Box>
+        <Box
+          verticalCenter
+          paddedRatio={2}
+          css={`
+            border-bottom: 1px solid ${this.props.theme.darkLighter};
+          `}
+        >
+          <StyledIcon
+            glyph={Icon.GLYPHS.info}
+            styledWidth={"16px"}
+            fillColor={this.props.theme.infoColor}
+            css={`
+              flex-shrink: 0;
+            `}
+          />
+          <Spacing right={1} />
+          <Text small color={this.props.theme.infoColor}>
+            {t("story.hasSceneInfoMessage")}
+          </Text>
+        </Box>
         <Spacing bottom={2} />
         <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (

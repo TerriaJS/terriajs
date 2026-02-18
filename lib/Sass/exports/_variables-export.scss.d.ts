@@ -20,6 +20,7 @@ declare namespace VariablesExportScssNamespace {
     greyLighter: string;
     greyLighter2: string;
     greyLightest: string;
+    infoColor: string;
     inputHeight: string;
     inputHeightLarge: string;
     lg: string;

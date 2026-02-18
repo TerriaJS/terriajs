@@ -25,7 +25,7 @@
     max-width: 800px;
     width: 80vw;
     background: variables.$dark;
-    z-index: 9999;
+    z-index: variables.$notification-window-z-index;
     margin: 0 auto;
     color: variables.$text-dark;
     border: 1px solid variables.$dark-lighter;
