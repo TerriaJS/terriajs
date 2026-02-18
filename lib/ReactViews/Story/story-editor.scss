@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100;
+  z-index: variables.$notification-window-z-index;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,7 +25,6 @@
     max-width: 800px;
     width: 80vw;
     background: variables.$dark;
-    z-index: variables.$notification-window-z-index;
     margin: 0 auto;
     color: variables.$text-dark;
     border: 1px solid variables.$dark-lighter;
