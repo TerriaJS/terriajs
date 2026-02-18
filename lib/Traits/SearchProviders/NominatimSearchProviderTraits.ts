@@ -8,7 +8,7 @@ export default class NominatimSearchProviderTraits extends mixTraits(
   LocationSearchProviderTraits,
   SearchProviderMapCenterTraits
 ) {
-  url: string = "//nominatim.openstreetmap.org/search";
+  url: string = "https://nominatim.openstreetmap.org/search";
 
   @primitiveTrait({
     type: "string",
@@ -34,4 +34,8 @@ export default class NominatimSearchProviderTraits extends mixTraits(
   attributions: string[] = [
     "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>"
   ];
+
+  get autocompleteEnabled() {
+    return false;
+  }
 }
