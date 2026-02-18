@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Box from "../../Styled/Box";
@@ -188,7 +188,7 @@ class Description extends Component {
                   (dataUrl, _i) =>
                     (dataUrl.type?.startsWith("wfs") ||
                       dataUrl.type?.startsWith("wcs")) && (
-                      <>
+                      <Fragment key={dataUrl.url}>
                         {dataUrl.type?.startsWith("wfs") &&
                           parseCustomMarkdownToReact(
                             t("description.useLinkBelow", {
@@ -235,7 +235,7 @@ class Description extends Component {
                             {!dataUrl.title ? dataUrl.url : null}
                           </a>
                         </Box>{" "}
-                      </>
+                      </Fragment>
                     )
                 )}
               </>

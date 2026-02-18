@@ -1,6 +1,5 @@
+import { act, render, screen } from "@testing-library/react";
 import { runInAction } from "mobx";
-import { act } from "react-dom/test-utils";
-import { create, ReactTestRenderer } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -11,7 +10,6 @@ import Description from "../../../lib/ReactViews/Preview/Description";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
 describe("DescriptionSpec", function () {
-  let testRenderer: ReactTestRenderer;
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
@@ -28,23 +26,15 @@ describe("DescriptionSpec", function () {
   });
 
   it("renders metadataUrls", function () {
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <Description item={wmsItem} />
-        </ThemeProvider>
-      );
-    });
-
-    const metadataUrls = testRenderer.root.findAll(
-      (node) =>
-        node.props.className?.includes("description-metadataUrls") &&
-        node.type === "a"
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={wmsItem} />
+      </ThemeProvider>
     );
 
-    expect(metadataUrls.length).toEqual(1);
-
-    expect(metadataUrls[0].children[0]).toBe("http://examplemetadata.com");
+    expect(
+      screen.getByRole("link", { name: "http://examplemetadata.com" })
+    ).toBeVisible();
   });
 
   it("renders metadataUrl button", function () {
@@ -54,26 +44,13 @@ describe("DescriptionSpec", function () {
       });
     });
 
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <Description item={wmsItem} />
-        </ThemeProvider>
-      );
-    });
-
-    const metadataUrls = testRenderer.root.findAll(
-      (node) =>
-        node.props.className?.includes("description-metadataUrls") &&
-        node.type === "a"
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={wmsItem} />
+      </ThemeProvider>
     );
 
-    expect(metadataUrls.length).toEqual(1);
-    expect(typeof metadataUrls[0].children[0] !== "string").toBeTruthy();
-
-    const child: any = metadataUrls[0].children[0];
-
-    expect(child.props.children).toBe("Some Title");
+    expect(screen.queryByRole("link", { name: "Some Title" })).toBeVisible();
   });
 
   it("renders dataUrls", function () {
@@ -82,33 +59,25 @@ describe("DescriptionSpec", function () {
         metadataUrls: [{ title: "Some Title" }],
         dataUrls: [
           {
-            url: "http://exampledata.com",
+            url: "http://exampledata-data.com",
             type: "wfs-complete"
           }
         ]
       });
     });
 
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <Description item={wmsItem} />
-        </ThemeProvider>
-      );
-    });
-
-    const dataUrls = testRenderer.root.findAll(
-      (node) =>
-        node.props.className?.includes("description-dataUrls") &&
-        node.type === "a"
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={wmsItem} />
+      </ThemeProvider>
     );
 
-    expect(dataUrls.length).toEqual(1);
-
-    expect(dataUrls[0].children[0]).toBe("http://exampledata.com");
+    expect(
+      screen.getByRole("link", { name: "http://exampledata-data.com" })
+    ).toBeVisible();
   });
 
-  it("renders metadataUrl button", function () {
+  it("renders dataUrl with title", function () {
     runInAction(() => {
       updateModelFromJson(wmsItem, "definition", {
         metadataUrls: [{ title: "Some Title" }],
@@ -122,26 +91,13 @@ describe("DescriptionSpec", function () {
       });
     });
 
-    act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <Description item={wmsItem} />
-        </ThemeProvider>
-      );
-    });
-
-    const dataUrls = testRenderer.root.findAll(
-      (node) =>
-        node.props.className?.includes("description-dataUrls") &&
-        node.type === "a"
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={wmsItem} />
+      </ThemeProvider>
     );
 
-    expect(dataUrls.length).toEqual(1);
-    expect(typeof dataUrls[0].children[0] !== "string").toBeTruthy();
-
-    const child: any = dataUrls[0].children[0];
-
-    expect(child.props.children).toBe("some link");
+    expect(screen.queryByRole("link", { name: "some link" })).toBeVisible();
   });
 
   it("respects hideDefaultDescription", function () {
@@ -150,46 +106,48 @@ describe("DescriptionSpec", function () {
       geoJsonItem.setTrait(CommonStrata.definition, "description", "test");
     });
 
+    const { container, rerender } = render(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={geoJsonItem} />
+      </ThemeProvider>
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "description.name" })
+    ).toBeVisible();
+    expect(screen.getByText("test")).toBeVisible();
+
+    act(() =>
+      runInAction(() => {
+        geoJsonItem.setTrait(CommonStrata.definition, "description", "");
+      })
+    );
+
+    rerender(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={geoJsonItem} />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByText("description.dataNotLocal")).toBeVisible();
+
     act(() => {
-      testRenderer = create(
-        <ThemeProvider theme={terriaTheme}>
-          <Description item={geoJsonItem} />
-        </ThemeProvider>
-      );
+      runInAction(() => {
+        geoJsonItem.setTrait(
+          CommonStrata.definition,
+          "hideDefaultDescription",
+          true
+        );
+      });
     });
 
-    const showDescription = testRenderer.root.findAll(
-      (node) => node.type === "p"
+    rerender(
+      <ThemeProvider theme={terriaTheme}>
+        <Description item={geoJsonItem} />
+      </ThemeProvider>
     );
 
-    expect(showDescription.length).toEqual(1);
-    expect(showDescription[0].children[0]).toBe("test");
-
-    runInAction(() => {
-      geoJsonItem.setTrait(CommonStrata.definition, "description", "");
-    });
-
-    const showDefaultDescription = testRenderer.root.findAll(
-      (node) => node.type === "p"
-    );
-
-    expect(showDefaultDescription.length).toEqual(1);
-    expect(showDefaultDescription[0].children[0]).toBe(
-      "description.dataNotLocal"
-    );
-
-    runInAction(() => {
-      geoJsonItem.setTrait(
-        CommonStrata.definition,
-        "hideDefaultDescription",
-        true
-      );
-    });
-
-    const showNoDescription = testRenderer.root.findAll(
-      (node) => node.type === "p"
-    );
-
+    const showNoDescription = container.querySelectorAll("p");
     expect(showNoDescription.length).toEqual(0);
   });
 });

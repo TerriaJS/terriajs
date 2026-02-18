@@ -1,10 +1,5 @@
-import "../../../SpecMain";
-import {
-  act,
-  create,
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
+import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
@@ -13,13 +8,7 @@ import ItemSearchProvider, {
 import { registerItemSearchProvider } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProviders";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
-import ErrorComponent from "../../../../lib/ReactViews/Tools/ItemSearchTool/ErrorComponent";
-import ItemSearchTool, {
-  PropsType
-} from "../../../../lib/ReactViews/Tools/ItemSearchTool/ItemSearchTool";
-import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
-import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
-import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
+import ItemSearchTool from "../../../../lib/ReactViews/Tools/ItemSearchTool/ItemSearchTool";
 import { withThemeContext } from "../../withContext";
 import MockSearchableItem from "./MockSearchableItem";
 import i18next from "i18next";
@@ -49,9 +38,12 @@ describe("ItemSearchTool", function () {
   let viewState: ViewState;
   let item: MockSearchableItem;
   let itemSearchProvider: ItemSearchProvider;
-  let rendered: ReactTestRenderer;
 
-  beforeEach(function () {
+  beforeAll(async function () {
+    await i18next.changeLanguage("en");
+  });
+
+  beforeEach(async function () {
     registerItemSearchProvider("testProvider", TestItemSearchProvider);
     const terria: Terria = new Terria();
     viewState = new ViewState({
@@ -74,65 +66,70 @@ describe("ItemSearchTool", function () {
     }
   });
 
-  it("can be rendered", function () {
-    act(() => {
-      rendered = render({ item, itemSearchProvider, viewState });
-    });
-    const component = rendered.root.findByType(ItemSearchTool);
-    expect(component).toBeDefined();
+  afterAll(async function () {
+    await i18next.changeLanguage("cimode");
   });
 
-  it("initializes an describes the parameters when mounted", async function () {
+  it("can be rendered", async function () {
+    render(
+      withThemeContext(
+        <ItemSearchTool
+          item={item}
+          itemSearchProvider={itemSearchProvider}
+          viewState={viewState}
+        />
+      )
+    );
+
+    expect(screen.getByText("Search Item")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Exit" })).toBeVisible();
+    expect(screen.getByText("Loading search parameters")).toBeVisible();
+  });
+
+  it("initializes and describes the parameters when mounted", async function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
-    let renderPromise: Promise<void> | undefined;
-    act(() => {
-      renderPromise = new Promise((resolve) =>
-        render({
-          item,
-          itemSearchProvider,
-          viewState,
-          afterLoad: resolve
-        })
-      );
+    render(
+      withThemeContext(
+        <ItemSearchTool
+          item={item}
+          itemSearchProvider={itemSearchProvider}
+          viewState={viewState}
+        />
+      )
+    );
+
+    await waitFor(() => {
+      expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     });
-    await renderPromise;
-    expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
   });
 
   describe("loading", function () {
-    it("shows a Loading component while loading", function () {
-      act(() => {
-        rendered = render({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-      });
-      const progressText = rendered.root.findByType(Loading);
-      expect(progressText).toBeDefined();
-      expect(progressText.props.children).toEqual(
-        i18next.t("itemSearchTool.loading")
-      );
-    });
-
     it("shows an error message on load error", async function () {
       spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
         Promise.reject(new Error(`Something happened`))
       );
 
-      rendered = await renderAndLoad({
-        item,
-        itemSearchProvider,
-        viewState
-      });
-
-      const error = rendered.root.findByType(ErrorComponent);
-      expect(error).toBeDefined();
-      expect(error.props.children).toEqual(
-        i18next.t("itemSearchTool.loadError")
+      render(
+        withThemeContext(
+          <ItemSearchTool
+            item={item}
+            itemSearchProvider={itemSearchProvider}
+            viewState={viewState}
+          />
+        )
       );
+
+      expect(screen.getByText("Loading search parameters")).toBeVisible();
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Error loading search parameters. Check console for detailed errors."
+          )
+        ).toBeVisible();
+      });
     });
 
     it("shows a search from on successful load", async function () {
@@ -146,13 +143,20 @@ describe("ItemSearchTool", function () {
           }
         ])
       );
-      rendered = await renderAndLoad({
-        item,
-        itemSearchProvider,
-        viewState
+
+      const { container } = render(
+        withThemeContext(
+          <ItemSearchTool
+            item={item}
+            itemSearchProvider={itemSearchProvider}
+            viewState={viewState}
+          />
+        )
+      );
+
+      await waitFor(() => {
+        expect(container.querySelector("form")).toBeVisible();
       });
-      const searchForm = rendered.root.findByType(SearchForm);
-      expect(searchForm).toBeDefined();
     });
 
     it("it shows the search results", async function () {
@@ -160,38 +164,22 @@ describe("ItemSearchTool", function () {
         Promise.resolve([])
       );
 
-      const { root } = await renderAndLoad({
-        item,
-        itemSearchProvider,
-        viewState
+      const { container } = render(
+        withThemeContext(
+          <ItemSearchTool
+            item={item}
+            itemSearchProvider={itemSearchProvider}
+            viewState={viewState}
+          />
+        )
+      );
+      await waitFor(() => {
+        expect(container.querySelector("form")).toBeVisible();
       });
-      await submitForm(root);
-      const searchResults = root.findByType(SearchResults);
-      expect(searchResults).toBeDefined();
+      await userEvent.click(screen.getByRole("button", { name: "Search" }));
+      await waitFor(() => {
+        expect(within(container).getByText("0 matches found")).toBeVisible();
+      });
     });
   });
 });
-
-function render(props: Omit<PropsType, "i18n" | "t" | "tReady">) {
-  return create(withThemeContext(<ItemSearchTool {...props} />));
-}
-
-function renderAndLoad(
-  props: Omit<PropsType, "i18n" | "t" | "tReady">
-): Promise<ReactTestRenderer> {
-  return new Promise((resolve) => {
-    act(() => {
-      const rendered = render({
-        ...props,
-        afterLoad: () => resolve(rendered)
-      });
-    });
-  });
-}
-
-function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
-  const searchForm = root.findByType("form");
-  expect(searchForm).toBeDefined();
-  act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
-  return Promise.resolve(searchForm);
-}

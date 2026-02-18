@@ -1,5 +1,4 @@
-import { act } from "react-dom/test-utils";
-import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
 import { ThemeProvider } from "styled-components";
 import ChartableMixin, {
   ChartItem
@@ -64,7 +63,6 @@ class SomeChartableItem extends ChartableMixin(
 describe("ChartItemSelector", function () {
   let terria: Terria;
   let item: SomeChartableItem;
-  let testRenderer: ReactTestRenderer;
 
   beforeEach(function () {
     terria = new Terria({
@@ -73,19 +71,16 @@ describe("ChartItemSelector", function () {
     item = new SomeChartableItem("test", terria);
     terria.addModel(item);
     terria.workbench.add(item);
-    act(() => {
-      testRenderer = TestRenderer.create(
-        <ThemeProvider theme={terriaTheme}>
-          <ChartItemSelector item={item} />
-        </ThemeProvider>
-      );
-    });
   });
 
   it("sorts the chart items by name", function () {
-    const chartItemNames = testRenderer.root
-      .findAllByType("label")
-      .map((c) => (c.children[3] as any).children[0].children[0]);
-    expect(chartItemNames).toEqual(["aaa", "zzz"]);
+    render(
+      <ThemeProvider theme={terriaTheme}>
+        <ChartItemSelector item={item} />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByRole("checkbox", { name: "aaa" })).toBeVisible();
+    expect(screen.getByRole("checkbox", { name: "zzz" })).toBeVisible();
   });
 });

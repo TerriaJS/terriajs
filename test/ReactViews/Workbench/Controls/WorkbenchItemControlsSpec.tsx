@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/dom";
+import { fireEvent, screen } from "@testing-library/react";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

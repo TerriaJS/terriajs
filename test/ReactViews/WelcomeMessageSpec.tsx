@@ -3,7 +3,7 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import WelcomeMessage from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 import { renderWithContexts } from "./withContext";
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 
 describe("WelcomeMessage", function () {
   let terria: Terria;

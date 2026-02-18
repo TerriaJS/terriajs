@@ -1,9 +1,9 @@
+import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-import { renderWithContexts } from "../../../withContext";
 import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
-import { screen } from "@testing-library/dom";
+import { renderWithContexts } from "../../../withContext";
 
 describe("HelpPanel", function () {
   let terria: Terria;
