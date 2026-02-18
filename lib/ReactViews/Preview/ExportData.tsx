@@ -49,7 +49,7 @@ class ExportData extends Component<PropsType> {
     return (
       <div className={Styles.metadata}>
         <button onClick={this.exportDataClicked.bind(this, catalogItem)}>
-          Export data
+          {this.props.t("workbench.exportData")}
         </button>
       </div>
     );
