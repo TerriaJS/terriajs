@@ -29,15 +29,16 @@ import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
-import {
-  SelectableDimension,
-  SelectableDimensionCheckbox
-} from "../Models/SelectableDimensions/SelectableDimensions";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
-import Cesium3dTilesTraits, {
+import {
+  default as Cesium3DTilesTraits,
+  default as Cesium3dTilesTraits,
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
@@ -45,9 +46,6 @@ import Cesium3dTilesStyleMixin from "./Cesium3dTilesStyleMixin";
 import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Cesium3DTilesTraits from "../Traits/TraitsClasses/Cesium3dTilesTraits";
-import StratumOrder from "../Models/Definition/StratumOrder";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
