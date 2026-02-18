@@ -60,7 +60,6 @@ const StorySharePanel = createReactClass({
     return (
       <>
         <Button
-          fullWidth
           disabled={this.props.btnDisabled}
           title={this.props.btnTitle}
           primary
@@ -70,6 +69,9 @@ const StorySharePanel = createReactClass({
           textProps={{
             large: true
           }}
+          css={`
+            flex-shrink: 0;
+          `}
           onClick={this.openWithUserClick}
         >
           {this.props.btnText ? this.props.btnText : ""}
