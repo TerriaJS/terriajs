@@ -29,12 +29,16 @@ import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import Model from "../Models/Definition/Model";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import TerriaFeature from "../Models/Feature/Feature";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
-import Cesium3dTilesTraits, {
+import {
+  default as Cesium3DTilesTraits,
+  default as Cesium3dTilesTraits,
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
@@ -68,6 +72,23 @@ export class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
+class Cesium3dTilesLoadableStratum extends LoadableStratum(
+  Cesium3DTilesTraits
+) {
+  static stratumName = "cesium3dTilesLoadableStratum";
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new Cesium3dTilesLoadableStratum(newModel) as this;
+  }
+
+  get supportsReordering() {
+    // Enable reordering in workbench if draping is enabled
+    return this.drapeImagery;
+  }
+}
+
+StratumOrder.addLoadStratum(Cesium3dTilesLoadableStratum.stratumName);
+
 type BaseType = Model<Cesium3dTilesTraits>;
 
 function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
@@ -79,6 +100,11 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
+
+      this.strata.set(
+        Cesium3dTilesLoadableStratum.stratumName,
+        new Cesium3dTilesLoadableStratum(this)
+      );
     }
 
     get hasCesium3dTilesMixin() {

@@ -19,6 +19,7 @@ import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
 import FeaturePickingTraits from "./FeaturePickingTraits";
 import CesiumIonTraits from "./CesiumIonTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -109,6 +110,14 @@ export class OptionsTraits extends ModelTraits {
     description: "Whether to display the credits of this tileset on screen."
   })
   showCreditsOnScreen: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Asynchronously load draped imageries",
+    description:
+      "When true, Cesium does not wait for the draped imagery layers to load before the tileset mesh is rendered. This means while the imagery is being loaded the original tile texture will be shown."
+  })
+  asynchronouslyLoadImagery: boolean = true;
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(
@@ -125,6 +134,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   ShadowTraits,
   ClippingPlanesTraits,
   SplitterTraits,
+  LayerOrderingTraits,
   CesiumIonTraits
 ) {
   @objectTrait({
@@ -181,4 +191,12 @@ export default class Cesium3DTilesTraits extends mixTraits(
       "The light color when shading models. When undefined the scene's light color is used instead. eg: [255, 255, 255]."
   })
   lightColor?: number[];
+
+  @primitiveTrait({
+    name: "Drape imagery",
+    type: "boolean",
+    description:
+      "When true allows draping imagery on top of this tileset. Imagery items appearing above this catalog item in the workbench will be draped on top of the tileset."
+  })
+  drapeImagery?: boolean = false;
 }
