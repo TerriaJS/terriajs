@@ -112,7 +112,7 @@ class Timeline extends Component {
               <DateTimePicker
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
                 dates={objectifiedDates}
-                onChange={() => this.changeDateTime()}
+                onChange={this.changeDateTime}
                 openDirection="up"
                 isOpen={this.state.isPickerOpen}
                 onOpen={() => this.onOpenPicker()}
