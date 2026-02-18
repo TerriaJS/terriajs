@@ -20,6 +20,7 @@ import Cesium from "../../../Models/Cesium";
 import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
+  MapViewersKey,
   getViewerType,
   isViewerMode,
   setViewerMode
@@ -179,7 +180,9 @@ const SettingPanel: FC = observer(() => {
   };
 
   const currentViewer =
-    terria.mainViewer.viewerMode === ViewerMode.Cesium
+    terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+      ? "2dcesium"
+      : terria.mainViewer.viewerMode === ViewerMode.Cesium
       ? terria.mainViewer.viewerOptions.useTerrain
         ? "3d"
         : "3dsmooth"
@@ -216,13 +219,6 @@ const SettingPanel: FC = observer(() => {
     ? t("settingPanel.terrain.showUndergroundFeatures")
     : t("settingPanel.terrain.hideUndergroundFeatures");
 
-  if (
-    terria.configParameters.useCesiumIonTerrain ||
-    terria.configParameters.cesiumTerrainUrl
-  ) {
-    MapViewers["3d"].available = true;
-  }
-
   const supportsSide = isCesiumWithTerrain;
 
   let currentSide = sides.both;
@@ -247,6 +243,15 @@ const SettingPanel: FC = observer(() => {
     terria.mainViewer.baseMap &&
     getBaseMapStatusMessage(terria.mainViewer.baseMap, t);
 
+  const filteredMapViewers = Object.entries(MapViewers).filter(
+    ([key, viewerMode]) =>
+      viewerMode.available &&
+      terria.configParameters.mapViewers.includes(key as MapViewersKey)
+  );
+  const availableMapViewers = filteredMapViewers.length
+    ? filteredMapViewers
+    : [["2d", MapViewers["2d"]] as const];
+
   return (
     //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
@@ -266,11 +271,13 @@ const SettingPanel: FC = observer(() => {
           <Text as="label">{t("settingPanel.mapView")}</Text>
         </Box>
         <FlexGrid gap={1} elementsNo={3}>
-          {Object.entries(MapViewers).map(([key, viewerMode]) => (
+          {availableMapViewers.map(([key, viewerMode]) => (
             <SettingsButton
               key={key}
               isActive={key === currentViewer}
-              onClick={(event: any) => selectViewer(key as any, event)}
+              onClick={(event: MouseEvent<HTMLButtonElement>) =>
+                selectViewer(key as keyof typeof MapViewers, event)
+              }
             >
               <Text mini>{t(viewerMode.label)}</Text>
             </SettingsButton>

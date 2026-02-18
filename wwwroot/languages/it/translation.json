@@ -112,6 +112,7 @@
     },
     "viewerModeLabels": {
       "Leaflet": "2D",
+      "Cesium2D": "2D Cesium",
       "CesiumTerrain": "Terreno 3D",
       "CesiumEllipsoid": "3D Regolare"
     },

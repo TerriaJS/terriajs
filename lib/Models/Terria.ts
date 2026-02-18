@@ -123,7 +123,7 @@ import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
-import { isViewerMode, setViewerMode } from "./ViewerMode";
+import { isViewerMode, setViewerMode, MapViewersKey } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
@@ -372,6 +372,11 @@ export interface ConfigParameters {
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 
   /**
+   * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
+   */
+  mapViewers: MapViewersKey[];
+
+  /**
    * Keep catalog open when adding / removing items
    */
   keepCatalogOpen: boolean;
@@ -601,7 +606,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    mapViewers: ["3d", "3dsmooth", "2d"]
   };
 
   @observable

@@ -16,6 +16,8 @@
 - Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
 - WMTS read URL from operations metadata #7371
+- Allow using Cesium in `SCENE2D` mode (and WebMercator projection) as map viewer.
+- Add a new configuration parameter `mapViewers` to specify which mapViewers will be visible and usable in `SettingPanel`.
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add UI to show toast messages.
