@@ -67,6 +67,7 @@ module.exports = function (devMode) {
     terriaJSBasePath,
     config,
     devMode,
-    MiniCssExtractPlugin
+    MiniCssExtractPlugin,
+    tsPath: path.resolve(__dirname, "..", "tsconfig.json")
   });
 };

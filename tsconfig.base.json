@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esNext",
+    "module": "esNext",
+    "incremental": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "sourceMap": true,
+    "strict": true,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noUncheckedSideEffectImports": true,
+    "resolveJsonModule": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "ts-out"
+  }
+}

@@ -20,7 +20,8 @@ function configureWebpack({
   config,
   devMode,
   MiniCssExtractPlugin,
-  babelLoader
+  babelLoader,
+  tsPath = path.resolve(__dirname, "..", "tsconfig.lib.json")
 }) {
   const cesiumDir = path.dirname(
     require.resolve("terriajs-cesium/package.json")
@@ -170,7 +171,7 @@ function configureWebpack({
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         memoryLimit: 4096,
-        configFile: path.resolve(__dirname, "..", "tsconfig.json"),
+        configFile: tsPath,
         diagnosticOptions: {
           semantic: true,
           syntactic: true
