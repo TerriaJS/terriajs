@@ -308,11 +308,6 @@ function addViewSettings(
 ) {
   const viewer = terria.mainViewer;
 
-  // const time = {
-  //   dayNumber: terria.timelineClock.currentTime.dayNumber,
-  //   secondsOfDay: terria.timelineClock.currentTime.secondsOfDay
-  // };
-
   let viewerMode: ViewModeJson;
   if (terria.mainViewer.viewerMode === ViewerMode.Cesium) {
     if (terria.mainViewer.viewerOptions.useTerrain) {

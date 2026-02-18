@@ -9,6 +9,12 @@ import Terria from "./Terria";
 export default class DefaultTimelineModel extends DiscretelyTimeVaryingMixin(
   CreateModel(DiscretelyTimeVaryingTraits)
 ) {
+  static readonly type = "default-timeline";
+
+  get type() {
+    return DefaultTimelineModel.type;
+  }
+
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
 

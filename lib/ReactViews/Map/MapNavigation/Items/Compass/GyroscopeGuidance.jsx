@@ -15,7 +15,6 @@ import { COMPASS_LOCAL_PROPERTY_KEY } from "./Compass";
 
 GyroscopeGuidance.propTypes = {
   viewState: PropTypes.object.isRequired,
-  handleHelp: PropTypes.func,
   onClose: PropTypes.func.isRequired
 };
 

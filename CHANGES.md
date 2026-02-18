@@ -1,8 +1,14 @@
 # Change Log
 
-#### next release (8.11.3)
+#### next release (8.11.4)
 
+- Capture default timeline state in share links including current time,
+  playback etc.
 - [The next improvement]
+
+#### 8.11.3 - 2026-02-02
+
+- Change to OIDC publishing to npm
 
 #### 8.11.2 - 2026-01-15
 
