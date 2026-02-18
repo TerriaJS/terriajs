@@ -550,28 +550,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return [
         ...super.selectableDimensions,
         ...super.shadowDimensions,
-        ...super.clippingDimensions,
-        this.drapeImageryOption
+        ...super.clippingDimensions
       ];
-    }
-
-    @computed
-    get drapeImageryOption(): SelectableDimensionCheckbox {
-      return {
-        type: "checkbox",
-        id: "drapeImagery",
-        selectedId: this.drapeImagery ? "true" : "false",
-        disable: false,
-        options: [
-          { id: "true", name: "Allow dragging imagery on top" },
-          { id: "false", name: "Allow dragging imagery on top" }
-        ],
-        setDimensionValue: (stratumId, value) => {
-          const drapeImagery =
-            value === "true" ? true : value === "false" ? false : undefined;
-          this.setTrait(stratumId, "drapeImagery", drapeImagery);
-        }
-      };
     }
   }
 
