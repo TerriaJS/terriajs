@@ -1,21 +1,19 @@
 import i18next from "i18next";
-import { computed, makeObservable, override } from "mobx";
+import { action, computed, makeObservable, override } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import isDefined from "../../../Core/isDefined";
-import readXml from "../../../Core/readXml";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
+import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
-
-const kmzRegex = /\.kmz$/i;
 
 class KmlCatalogItem
   extends MappableMixin(
@@ -38,15 +36,18 @@ class KmlCatalogItem
 
   private _dataSource: KmlDataSource | undefined;
 
-  private _kmlFile?: File;
-
+  @action
   setFileInput(file: File) {
-    this._kmlFile = file;
+    this.setTrait(
+      CommonStrata.user,
+      "url",
+      URL.createObjectURL(file) + "#" + file.name
+    );
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._kmlFile);
+    return this.url?.startsWith("blob:") ?? false;
   }
 
   @override
@@ -65,12 +66,6 @@ class KmlCatalogItem
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
         kmlLoadInput = parser.parseFromString(this.kmlString, "text/xml");
-      } else if (isDefined(this._kmlFile)) {
-        if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
-          kmlLoadInput = this._kmlFile;
-        } else {
-          kmlLoadInput = await readXml(this._kmlFile);
-        }
       } else if (isDefined(this.ionResource)) {
         kmlLoadInput = this.ionResource;
       } else if (isDefined(this.url)) {
