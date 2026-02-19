@@ -63,7 +63,9 @@ const WarningBox: FC<{
                     showErrorNotification(props.viewState!, props.error!)
                   }
                 >
-                  <TextSpan primary>See details</TextSpan>
+                  <TextSpan primary isLink>
+                    See details
+                  </TextSpan>
                 </RawButton>
               </div>
             ) : null}
