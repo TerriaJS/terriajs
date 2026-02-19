@@ -2,7 +2,7 @@
 
 set -e
 
-GITHUB_BRANCH=${GITHUB_REF##*/}
+GITHUB_BRANCH=${GITHUB_REF_NAME}
 
 # Don't run for greenkeeper branches; there are too many!
 if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
@@ -10,7 +10,9 @@ if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:32}" | sed -e 's/./\L&/g' -e 's/[^-a-z0-9]/-/g' -e 's/-*$//')
+SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:32}" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^-a-z0-9]/-/g' -e 's/-*$//')
+echo $SAFE_BRANCH_NAME
+echo $GITHUB_BRANCH
 
 [[ $SAFE_BRANCH_NAME != $GITHUB_BRANCH ]] && echo "::warning file=buildprocess/ci-deploy.sh::Branch name sanitised to '${SAFE_BRANCH_NAME}' for kubernetes resources. This may work, however using branch names less than 32 characters long with [a-z0-9] and hyphen separators are preferred"
 
