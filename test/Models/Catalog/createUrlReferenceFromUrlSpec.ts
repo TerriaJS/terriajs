@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import isDefined from "../../../lib/Core/isDefined";
@@ -11,6 +12,7 @@ import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/Arc
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
+import { worker } from "../../mocks/browser";
 
 import waterNetworkLayer from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json";
 import waterNetworkLayer2 from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json";
@@ -90,15 +92,17 @@ describe("createUrlReferenceFromUrl", function () {
 
     let reference: UrlReference;
     beforeEach(async function () {
-      jasmine.Ajax.install();
-      // Fail all requests by default.
-      jasmine.Ajax.stubRequest(/.*/).andError({});
-      jasmine.Ajax.stubRequest(
-        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/[0-9]+\/query\?f=json.*$/i
-      ).andReturn({ responseJSON: waterNetworkLayer });
-      jasmine.Ajax.stubRequest(
-        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/2\/?\?.*/i
-      ).andReturn({ responseJSON: waterNetworkLayer2 });
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/:layerId/query",
+          () => HttpResponse.json(waterNetworkLayer)
+        ),
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2",
+          () => HttpResponse.json(waterNetworkLayer2)
+        ),
+        http.all("*", () => HttpResponse.error())
+      );
 
       const tempReference = await createUrlReferenceFromUrl(
         featureServerUrl,
@@ -110,10 +114,6 @@ describe("createUrlReferenceFromUrl", function () {
         throw new Error("Didn't successfully create a UrlReference");
       }
       reference = tempReference;
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
     });
 
     it("has a name and url on the reference", function () {
