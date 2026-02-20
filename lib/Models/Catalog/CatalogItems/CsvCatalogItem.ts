@@ -147,22 +147,39 @@ export default class CsvCatalogItem
     });
   }
 
-  public forceLoadTableData(): Promise<string[][]> {
+  private normalizeContent(csv: string): string {
+    const firstLine = csv.split("\n")[0];
+    const separator = firstLine.includes(";") ? ";" : ",";
+
+    if (separator === ";") {
+      return csv.replace(/(\d),(\d)/g, "$1.$2").replace(/;/g, ",");
+    }
+
+    return csv;
+  }
+
+  public async forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
+      const normalized = this.normalizeContent(this.csvString);
       return Csv.parseString(
-        this.csvString,
+        normalized,
         true,
         this.ignoreRowsStartingWithComment
       );
     } else if (this._csvFile !== undefined) {
-      return Csv.parseFile(
-        this._csvFile,
+      const text = await this._csvFile.text();
+      const normalized = this.normalizeContent(text);
+      return Csv.parseString(
+        normalized,
         true,
         this.ignoreRowsStartingWithComment
       );
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(
-        proxyCatalogItemUrl(this, this.url),
+      const response = await fetch(proxyCatalogItemUrl(this, this.url));
+      const text = await response.text();
+      const normalized = this.normalizeContent(text);
+      return Csv.parseString(
+        normalized,
         true,
         this.ignoreRowsStartingWithComment
       );
