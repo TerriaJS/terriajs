@@ -342,6 +342,11 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
                   this.readyData!
                 );
               });
+            } else if (
+              this.mixedStyle &&
+              this._dataSource instanceof GeoJsonDataSource
+            ) {
+              this.applyMixedStyle(this._dataSource);
             }
           },
           // Fire immediately, just in case reactions change while not observing mapItems
@@ -1210,6 +1215,32 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
       return toJS(options);
     }
 
+    applyMixedStyle(dataSource: GeoJsonDataSource) {
+      if (!this.mixedStyle || !this.terria.cesium) return;
+      const entities = dataSource.entities;
+      for (let i = 0; i < entities.values.length; ++i) {
+        const entity = entities.values[i];
+        const properties = entity.properties;
+        if (entity.point && properties) {
+          entity.point.color = new ConstantProperty(
+            this.activeTableStyle.tableColorMap.colorMap.mapValueToColor(
+              properties[
+                this.activeTableStyle.colorColumn?.name ?? ""
+              ].getValue()
+            )
+          );
+          entity.point.pixelSize = new ConstantProperty(
+            this.activeTableStyle.pointSizeMap.mapValueToPointSize(
+              properties[
+                this.activeTableStyle.pointSizeColumn?.name ?? ""
+              ].getValue()
+            )
+          );
+        }
+      }
+      this.terria.cesium.notifyRepaintRequired();
+    }
+
     protected async loadGeoJsonDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<GeoJsonDataSource> {
@@ -1379,6 +1410,9 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
           }
         }
       }
+
+      this.applyMixedStyle(dataSource);
+
       return dataSource;
     }
 
@@ -1423,7 +1457,11 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
      */
     @override
     get dataColumnMajor() {
-      if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
+      if (
+        !this.readyData ||
+        (!this.useTableStylingAndProtomaps && !this.mixedStyle)
+      )
+        return [];
 
       // Map from property name (column name) to column index
       const colMap = new Map<string, number>();

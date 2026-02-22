@@ -178,4 +178,12 @@ export class GeoJsonTraits extends mixTraits(
       "Allows to activate the clustering of entities, works only with Cesium as a viewer."
   })
   clustering?: ClusteringTraits;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "mixedStyle",
+    description:
+      "If true use Cesium primitives with some TableStyle properties."
+  })
+  mixedStyle = false;
 }
