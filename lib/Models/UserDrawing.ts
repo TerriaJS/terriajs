@@ -366,6 +366,68 @@ export default class UserDrawing extends MappableMixin(
     return Math.round(angleDeg * 100) / 100;
   }
 
+  private updateAreaLabel() {
+    this.otherEntities.entities.removeById("PolygonAreaLabel");
+
+    if (!this.closeLoop) return;
+
+    const positions = this.getPointsForShape();
+    if (!positions || positions.length < 3) return;
+
+    const labelPosition = new CallbackProperty(() => {
+      const pts = this.getPointsForShape();
+      if (!pts || pts.length < 3) return Cartesian3.ZERO;
+      const cartographics = pts.map((p) => Cartographic.fromCartesian(p));
+      const coords = cartographics.map((c) => [
+        (c.longitude * 180) / Math.PI,
+        (c.latitude * 180) / Math.PI
+      ]);
+      coords.push(coords[0]);
+      const centroid = turf.centroid(turf.polygon([coords]));
+      const [lon, lat] = centroid.geometry.coordinates;
+      return Cartographic.toCartesian(Cartographic.fromDegrees(lon, lat));
+    }, false) as any;
+
+    const labelText = new CallbackProperty(() => {
+      const pts = this.getPointsForShape();
+      if (!pts || pts.length < 3) return "";
+
+      const stopPoints = pts.map((p) => Cartographic.fromCartesian(p));
+
+      const areaSqM =
+        this.terria.measurableGeometryManager[
+          this.terria.measurableGeometryIndex
+        ]?.calculateGeodeticArea(stopPoints) ?? 0;
+
+      if (areaSqM <= 0) return "";
+      if (areaSqM >= 1_000_000)
+        return `${(areaSqM / 1_000_000).toFixed(2)} km²`;
+      if (areaSqM >= 10_000) return `${(areaSqM / 10_000).toFixed(2)} ha`;
+      return `${areaSqM.toFixed(1)} m²`;
+    }, false);
+
+    this.otherEntities.entities.add({
+      id: "PolygonAreaLabel",
+      name: "PolygonAreaLabel",
+      position: labelPosition,
+      label: {
+        text: labelText,
+        font: "bold 17px sans-serif",
+        style: LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Color.fromCssColorString("#E8A200"),
+        outlineColor: Color.BLACK,
+        outlineWidth: 3,
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        pixelOffset: new Cartesian2(0, 0),
+        verticalOrigin: VerticalOrigin.CENTER,
+        horizontalOrigin: HorizontalOrigin.CENTER
+      }
+    });
+
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
   private updateAngle() {
     this.otherEntities.entities.removeById("Angle");
     this.otherEntities.entities.removeById("Angle Label");
@@ -478,6 +540,7 @@ export default class UserDrawing extends MappableMixin(
         if (this.isAngleMeasuring) {
           this.updateAngle();
         }
+        this.updateAreaLabel();
       }
       this.prepareToAddNewPoint();
     });
@@ -719,6 +782,7 @@ export default class UserDrawing extends MappableMixin(
     if (this.isAngleMeasuring) {
       this.updateAngle();
     }
+    this.updateAreaLabel();
     if (isDefined(this.onPointClicked)) {
       this.onPointClicked(this.pointEntities);
     }
@@ -749,6 +813,7 @@ export default class UserDrawing extends MappableMixin(
     if (this.isAngleMeasuring) {
       this.updateAngle();
     }
+    this.updateAreaLabel();
     for (let i = index; i < points.length; ++i) {
       this.pointEntities.entities.add(points[i]);
     }
@@ -989,6 +1054,7 @@ export default class UserDrawing extends MappableMixin(
           } as any
         } as any) as Entity;
         this.closeLoop = true;
+        this.updateAreaLabel();
         // A point has not been added, but conceptually it has because the first point is now also the last point.
         if (typeof that.onPointClicked === "function") {
           that.onPointClicked(that.pointEntities);
@@ -1003,6 +1069,7 @@ export default class UserDrawing extends MappableMixin(
       ) {
         this.closeLoop = false;
         this.polygon = undefined;
+        this.updateAreaLabel();
 
         // Also let client of UserDrawing know if a point has been removed.
         if (typeof that.onPointClicked === "function") {
@@ -1015,6 +1082,7 @@ export default class UserDrawing extends MappableMixin(
         if (this.isAngleMeasuring) {
           this.updateAngle();
         }
+        this.updateAreaLabel();
         // If it gets down to 2 points, it should stop acting like a polygon.
         if (this.pointEntities.entities.values.length < 2 && this.closeLoop) {
           this.closeLoop = false;

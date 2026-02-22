@@ -326,7 +326,7 @@ export default class MeasurableGeometryManager {
     }
   }
 
-  private calculateGeodeticArea(stopPoints: Cartographic[]): number {
+  public calculateGeodeticArea(stopPoints: Cartographic[]): number {
     if (stopPoints.length < 3) return 0;
 
     const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
