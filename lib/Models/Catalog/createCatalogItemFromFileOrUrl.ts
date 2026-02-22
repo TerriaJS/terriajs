@@ -86,6 +86,9 @@ async function loadItem(
     newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
   } else if (HasLocalData.is(newCatalogItem)) {
     newCatalogItem.setFileInput(fileOrUrl);
+  } else {
+    const objectUrl = URL.createObjectURL(fileOrUrl);
+    newCatalogItem.setTrait(CommonStrata.user, "url", objectUrl);
   }
 
   return newCatalogItem;

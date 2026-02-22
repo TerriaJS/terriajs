@@ -194,6 +194,11 @@ const builtinLocalDataTypes: LocalDataType[] = [
     value: "shp",
     name: "core.dataType.shp",
     extensions: ["zip"]
+  },
+  {
+    value: "geotiff",
+    name: "GeoTIFF",
+    extensions: ["tif", "tiff"]
   }
 
   // Add next builtin local upload type

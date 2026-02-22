@@ -83,7 +83,7 @@ export default async function addUserFiles(
         terria.raiseErrorToUser(e);
         return undefined;
       });
-      promises.push();
+      promises.push(loadPromise);
     } else {
       loadPromise = loadCatalogItemFromFile(file);
       promises.push(loadPromise);
@@ -95,6 +95,11 @@ export default async function addUserFiles(
   }
 
   const addedItems = await Promise.all(promises);
+  tempCatalogItemList.forEach((item) => {
+    terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
+    terria.workbench.remove(item);
+  });
+
   // if addedItem has only undefined item, means init files
   // have been uploaded
   if (addedItems.every((item) => item === undefined)) {
@@ -105,10 +110,7 @@ export default async function addUserFiles(
     const items = addedItems.filter(
       (item) => isDefined(item) && !(item instanceof TerriaError)
     ) as BaseModel[];
-    tempCatalogItemList.forEach((item) => {
-      terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
-      terria.workbench.remove(item);
-    });
+
     items.forEach(
       (item) => TimeVarying.is(item) && terria.timelineStack.addToTop(item)
     );

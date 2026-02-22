@@ -60,7 +60,7 @@ export default async function addUserCatalogMember(
   } catch (e: any) {
     terria.raiseErrorToUser(e, {
       title: i18next.t("models.userData.addingDataErrorTitle"),
-      message: i18next.t("models.userData.addingDataErrorTitle")
+      message: i18next.t("models.userData.addingDataErrorMessage")
     });
     return e;
   }
