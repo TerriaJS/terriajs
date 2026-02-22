@@ -142,6 +142,22 @@ class SettingPanel extends React.Component<PropTypes> {
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
+  @action
+  toggleGlobeTranslucencyEnabled(event: ChangeEvent<HTMLInputElement>) {
+    event.stopPropagation();
+    this.props.terria.globeTranslucencyEnabled =
+      !this.props.terria.globeTranslucencyEnabled;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  @action
+  toggleEnableCollisionDetection(event: ChangeEvent<HTMLInputElement>) {
+    event.stopPropagation();
+    this.props.terria.enableCollisionDetection =
+      !this.props.terria.enableCollisionDetection;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
+
   onBaseMaximumScreenSpaceErrorChange(bmsse: number) {
     this.props.terria.setBaseMaximumScreenSpaceError(bmsse);
     this.props.terria.setLocalProperty(
@@ -300,6 +316,34 @@ class SettingPanel extends React.Component<PropTypes> {
                   >
                     <TextSpan>
                       {t("settingPanel.terrain.hideUnderground")}
+                    </TextSpan>
+                  </Checkbox>
+                  <Spacing bottom={2} />
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="globeTranslucencyEnabled"
+                    title={t(
+                      "settingPanel.terrain.globeTranslucencyEnabledTitle"
+                    )}
+                    isChecked={this.props.terria.globeTranslucencyEnabled}
+                    onChange={this.toggleGlobeTranslucencyEnabled.bind(this)}
+                  >
+                    <TextSpan>
+                      {t("settingPanel.terrain.globeTranslucencyEnabled")}
+                    </TextSpan>
+                  </Checkbox>
+                  <Spacing bottom={2} />
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="enableCollisionDetection"
+                    title={t(
+                      "settingPanel.terrain.enableCollisionDetectionTitle"
+                    )}
+                    isChecked={this.props.terria.enableCollisionDetection}
+                    onChange={this.toggleEnableCollisionDetection.bind(this)}
+                  >
+                    <TextSpan>
+                      {t("settingPanel.terrain.enableCollisionDetection")}
                     </TextSpan>
                   </Checkbox>
                 </>
