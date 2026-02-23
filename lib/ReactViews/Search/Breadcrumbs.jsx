@@ -9,18 +9,12 @@ import Text, { TextSpan } from "../../Styled/Text";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
-import styled from "styled-components";
 import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 
-const RawButtonAndUnderline = styled(RawButton)`
-  ${(props) => `
-  &:hover, &:focus {
-    text-decoration: underline ${props.theme.textDark};
-  }`}
-`;
+const RawButtonAndUnderline = RawButton;
 
 @observer
 class Breadcrumbs extends Component {
@@ -63,7 +57,7 @@ class Breadcrumbs extends Component {
           type="button"
           onClick={() => this.openInCatalog(ancestors.slice(i, i + 1))}
         >
-          <TextSpan small textDark>
+          <TextSpan small textDark isLink>
             {parent}
           </TextSpan>
         </RawButtonAndUnderline>
@@ -102,7 +96,7 @@ class Breadcrumbs extends Component {
           glyph={Icon.GLYPHS.globe}
         />
         <Spacing right={1.2} />
-        <Box flexWrap>
+        <Box flexWrap alignItemsFlexEnd>
           {parentGroups &&
             parentGroups.map((parent, i) => (
               <Fragment key={i}>

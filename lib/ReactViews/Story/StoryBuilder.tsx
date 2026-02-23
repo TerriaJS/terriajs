@@ -406,7 +406,8 @@ class StoryBuilder extends Component<
             textLight
             className={Styles.removeButton}
           >
-            <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
+            <Icon glyph={Icon.GLYPHS.remove} />{" "}
+            <TextSpan isLink>{t("story.removeAllStories")}</TextSpan>
           </RawButton>
         </Box>
         <Spacing bottom={2} />

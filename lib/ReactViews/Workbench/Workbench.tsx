@@ -100,7 +100,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.enableAll")}
               </TextSpan>
             </RawButton>
@@ -121,7 +121,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.disableAll")}
               </TextSpan>
             </RawButton>
@@ -143,7 +143,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.expandAll")}
               </TextSpan>
             </RawButton>
@@ -164,7 +164,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.collapseAll")}
               </TextSpan>
             </RawButton>
@@ -189,7 +189,7 @@ class Workbench extends Component<IProps> {
               styledWidth={"12px"}
               displayInline
             />
-            <TextSpan textLight small>
+            <TextSpan textLight small isLink>
               {t("workbench.removeAll")}
             </TextSpan>
           </RawButton>
