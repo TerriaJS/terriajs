@@ -7,6 +7,7 @@
 - Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
 - Underline text buttons
 - Replace node-fetch with node native fetch.
+- Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
