@@ -1,16 +1,16 @@
 "use strict";
 
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImageryState from "terriajs-cesium/Source/Scene/ImageryState";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { Event as CesiumEvent } from "terriajs-cesium";
+import { ImageryLayer } from "terriajs-cesium";
+import { ImageryProvider } from "terriajs-cesium";
+import { ImageryState } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
 import pollToPromise from "../../lib/Core/pollToPromise";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { RequestErrorEvent } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
 import runLater from "../../../../lib/Core/runLater";
-import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import { TimeIntervalCollection } from "terriajs-cesium";
+import { TimeInterval } from "terriajs-cesium";
 import Terria from "../../../../lib/Models/Terria";
 import ImageryLayerCatalogItem from "../../lib/Models/ImageryLayerCatalogItem";
 

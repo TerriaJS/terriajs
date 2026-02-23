@@ -1,11 +1,11 @@
 import i18next from "i18next";
 import { action, runInAction } from "mobx";
 import retry from "retry";
-import formatError from "terriajs-cesium/Source/Core/formatError";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { formatError } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
+import { TileProviderError } from "terriajs-cesium";
+import { ImageryProvider } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";

@@ -1,12 +1,12 @@
 import { Component } from "react";
 import { withTranslation, WithTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { IntersectionTests } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Ray } from "terriajs-cesium";
+import { Scene } from "terriajs-cesium";
 import {
   Category,
   ViewAction

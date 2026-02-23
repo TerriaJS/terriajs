@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { makeObservable, override, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Rectangle } from "terriajs-cesium";
 
 import {
   Category,

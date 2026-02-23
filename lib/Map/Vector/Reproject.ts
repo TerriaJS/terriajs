@@ -1,5 +1,5 @@
 import proj4 from "proj4";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import urijs from "urijs";
 import loadText from "../../Core/loadText";
 import Proj4Definitions from "./Proj4Definitions";

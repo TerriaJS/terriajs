@@ -7,17 +7,17 @@ import {
   observable,
   makeObservable
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
-import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartesian2 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { Credit as CesiumCredit } from "terriajs-cesium";
+import { defined } from "terriajs-cesium";
+import { Event as CesiumEvent } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { TileProviderError } from "terriajs-cesium";
+import { WebMercatorTilingScheme } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
+import { ImageryProvider } from "terriajs-cesium";
+import { SplitDirection } from "terriajs-cesium";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";

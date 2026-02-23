@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { VFC, useCallback, useEffect, useState } from "react";
 import styled, { css, keyframes, useTheme } from "styled-components";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import { EventHelper } from "terriajs-cesium";
 import { useViewState } from "../Context";
 
 export const ProgressBar: VFC = observer(() => {

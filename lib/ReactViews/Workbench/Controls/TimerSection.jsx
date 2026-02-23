@@ -1,7 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import Timer from "../../Generic/Timer/Timer";
 import { withTranslation } from "react-i18next";
 import Styles from "./timer-section.scss";

@@ -6,13 +6,13 @@ import {
   makeObservable,
   override
 } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { Cartographic } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
+import { ImageryProvider } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";

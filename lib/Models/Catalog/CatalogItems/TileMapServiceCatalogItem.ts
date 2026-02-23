@@ -1,5 +1,5 @@
 import { computed, makeObservable, observable, runInAction } from "mobx";
-import TileMapServiceImageryProvider from "terriajs-cesium/Source/Scene/TileMapServiceImageryProvider";
+import { TileMapServiceImageryProvider } from "terriajs-cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import TileMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/TileMapServiceCatalogItemTraits";

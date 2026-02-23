@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color } from "terriajs-cesium";
 
 export const GlobalTerriaStyles = createGlobalStyle`
 body {

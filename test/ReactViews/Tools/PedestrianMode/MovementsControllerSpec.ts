@@ -1,9 +1,9 @@
 import { action } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Camera from "terriajs-cesium/Source/Scene/Camera";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Camera } from "terriajs-cesium";
+import { Scene } from "terriajs-cesium";
 import LatLonHeight from "../../../../lib/Core/LatLonHeight";
 import Cesium from "../../../../lib/Models/Cesium";
 import Terria from "../../../../lib/Models/Terria";

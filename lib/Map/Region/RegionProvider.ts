@@ -1,5 +1,5 @@
 import { action, observable, runInAction, makeObservable } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError } from "terriajs-cesium";
 import CorsProxy from "../../Core/CorsProxy";
 import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";

@@ -1,4 +1,4 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import i18next from "i18next";

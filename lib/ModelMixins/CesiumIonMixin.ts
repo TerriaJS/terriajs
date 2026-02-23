@@ -1,5 +1,5 @@
 import { observable, runInAction } from "mobx";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import { IonResource } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";

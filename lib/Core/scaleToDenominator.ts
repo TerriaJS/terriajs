@@ -1,4 +1,4 @@
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { Ellipsoid } from "terriajs-cesium";
 
 export function scaleDenominatorToLevel(
   scaleDenominator: number | undefined,

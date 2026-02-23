@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 
 export default function loadArrayBuffer(
   urlOrResource: string,

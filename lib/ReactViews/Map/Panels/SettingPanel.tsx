@@ -12,7 +12,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { SplitDirection } from "terriajs-cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import { BaseMapItem } from "../../../Models/BaseMaps/BaseMapsModel";

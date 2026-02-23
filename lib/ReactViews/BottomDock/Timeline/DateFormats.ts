@@ -1,4 +1,4 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 
 /**
  * Formats a date according to the locale if provided, otherwise in a dd/mm/yyyy format.

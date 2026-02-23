@@ -1,6 +1,6 @@
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "terriajs-cesium";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";

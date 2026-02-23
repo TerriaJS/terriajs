@@ -2,7 +2,7 @@ import { Component } from "react";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import SearchHeader from "../Search/SearchHeader";
 import Styles from "./data-catalog.scss";
 import DataCatalogMember from "./DataCatalogMember";

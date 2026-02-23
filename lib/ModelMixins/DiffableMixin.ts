@@ -1,5 +1,5 @@
 import { computed, makeObservable, override } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";

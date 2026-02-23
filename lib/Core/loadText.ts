@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 
 async function loadText(urlOrResource: string | Resource): Promise<string> {
   const resource = (Resource as any).createIfNeeded(urlOrResource) as Resource;

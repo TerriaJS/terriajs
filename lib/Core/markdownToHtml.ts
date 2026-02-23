@@ -1,6 +1,6 @@
 import DOMPurify, { type Config as DomPurifyConfig } from "dompurify";
 import MarkdownIt from "markdown-it";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import { Term } from "../ReactViewModels/defaultTerms";
 import injectTerms from "./injectTerms";
 

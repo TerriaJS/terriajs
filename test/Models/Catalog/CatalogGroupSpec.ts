@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid } from "terriajs-cesium";
 import { getName } from "../../../lib/ModelMixins/CatalogMemberMixin";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";

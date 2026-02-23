@@ -1,5 +1,5 @@
-import defined from "terriajs-cesium/Source/Core/defined";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { defined } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
 import formatPropertyValue from "../../Core/formatPropertyValue";
 
 /**

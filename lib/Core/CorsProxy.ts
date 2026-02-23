@@ -1,4 +1,4 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import URI from "urijs";
 
 /**

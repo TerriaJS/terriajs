@@ -1,4 +1,4 @@
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import { Event as CesiumEvent } from "terriajs-cesium";
 import L from "leaflet";
 
 export default class LeafletScene {

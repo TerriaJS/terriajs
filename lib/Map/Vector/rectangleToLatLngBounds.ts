@@ -1,6 +1,6 @@
 import L from "leaflet";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
 
 /**
  * Converts a Cesium Rectangle into a Leaflet LatLngBounds.

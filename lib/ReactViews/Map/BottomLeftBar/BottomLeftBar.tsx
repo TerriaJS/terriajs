@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import type Cesium3DTilesCatalogItem from "../../../Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";

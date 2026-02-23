@@ -1,15 +1,15 @@
 import L from "leaflet";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
-import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
+import { BoundingSphere } from "terriajs-cesium";
+import { EventHelper } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { createGuid } from "terriajs-cesium";
+import { destroyObject } from "terriajs-cesium";
+import { BoundingSphereState } from "terriajs-cesium";
+import { CustomDataSource } from "terriajs-cesium";
+import { DataSource } from "terriajs-cesium";
+import { DataSourceCollection } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
+import { EntityCluster } from "terriajs-cesium";
 import isDefined from "../../Core/isDefined";
 import LeafletScene from "./LeafletScene";
 

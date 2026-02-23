@@ -13,7 +13,7 @@ import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import { GlTf } from "./GLTF";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 
 // List of supported image formats from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
 // + Cesium adds support for ktx2

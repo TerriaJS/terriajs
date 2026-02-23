@@ -7,18 +7,18 @@ import {
   observable,
   runInAction
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
-import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
-import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
-import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
+import { Cartesian2 } from "terriajs-cesium";
+import { Cartesian3 } from "terriajs-cesium";
+import { EasingFunction } from "terriajs-cesium";
+import { CreditDisplay } from "terriajs-cesium";
+import { Scene } from "terriajs-cesium";
+import { SceneTransforms } from "terriajs-cesium";
+import { TweenCollection } from "terriajs-cesium";
 import locationTargetIcon from "../../../wwwroot/images/NM-LocationTarget.svg";
 import isDefined from "../../Core/isDefined";
 
-declare module "terriajs-cesium/Source/Scene/Scene" {
-  export default interface Scene {
+declare module "terriajs-cesium" {
+  export interface Scene {
     tweens: TweenCollection;
     frameState: {
       creditDisplay: CreditDisplay;

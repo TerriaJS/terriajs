@@ -1,9 +1,9 @@
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { defined } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import UserDrawing from "../../Models/UserDrawing";
 import Styles from "./parameter-editors.scss";

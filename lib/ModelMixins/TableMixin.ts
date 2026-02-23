@@ -8,11 +8,11 @@ import {
   runInAction
 } from "mobx";
 import { ITransformer, createTransformer } from "mobx-utils";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { DeveloperError } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { CustomDataSource } from "terriajs-cesium";
+import { DataSource } from "terriajs-cesium";
+import { ImageryProvider } from "terriajs-cesium";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AbstractConstructor from "../Core/AbstractConstructor";

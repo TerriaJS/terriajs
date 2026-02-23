@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError } from "terriajs-cesium";
 
 function readText(file: Blob): Promise<string | undefined> {
   return new Promise((resolve, reject) => {

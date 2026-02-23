@@ -9,19 +9,19 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import { Cartesian2 } from "terriajs-cesium";
+import { Cartesian3 } from "terriajs-cesium";
+import { HeadingPitchRoll } from "terriajs-cesium";
+import { IonResource } from "terriajs-cesium";
+import { Matrix3 } from "terriajs-cesium";
+import { Matrix4 } from "terriajs-cesium";
+import { Quaternion } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
+import { Transforms } from "terriajs-cesium";
+import { Cesium3DTileColorBlendMode } from "terriajs-cesium";
+import { Cesium3DTileFeature } from "terriajs-cesium";
+import { Cesium3DTilePointFeature } from "terriajs-cesium";
+import { Cesium3DTileset } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import { JsonObject, isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";

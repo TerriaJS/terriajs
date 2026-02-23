@@ -14,7 +14,7 @@ import EnumerationParameterEditor from "./EnumerationParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
 import NumberParameterEditor from "./NumberParameterEditor";
 import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import Styles from "./parameter-editors.scss";
 import InfoParameterEditor from "./InfoParameterEditor";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";

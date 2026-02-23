@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { action, computed, makeObservable, override, runInAction } from "mobx";
 import Mustache from "mustache";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { DeveloperError } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
 import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";

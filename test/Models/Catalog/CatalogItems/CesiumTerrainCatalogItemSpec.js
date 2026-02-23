@@ -1,7 +1,7 @@
 "use strict";
 
 import CesiumTerrainCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
+import { CesiumTerrainProvider } from "terriajs-cesium";
 import loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
 

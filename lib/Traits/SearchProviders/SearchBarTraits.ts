@@ -1,4 +1,4 @@
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Rectangle } from "terriajs-cesium";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";

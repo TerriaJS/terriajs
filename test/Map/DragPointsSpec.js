@@ -3,7 +3,7 @@
 import DragPoints from "../../lib/Map/DragPoints/DragPoints";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
-import Entity from "terriajs-cesium/Source/DataSources/Entity.js";
+import { Entity } from "terriajs-cesium";
 
 describe("DragPoints", function () {
   var terria;

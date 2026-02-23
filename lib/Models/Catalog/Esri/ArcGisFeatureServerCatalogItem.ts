@@ -2,7 +2,7 @@ import { featureCollection } from "@turf/helpers";
 import { GeoJsonProperties, Geometry, GeometryCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import { WebMercatorTilingScheme } from "terriajs-cesium";
 import URI from "urijs";
 import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
 import isDefined from "../../../Core/isDefined";

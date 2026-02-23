@@ -1,4 +1,4 @@
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Rectangle } from "terriajs-cesium";
 import LatLonHeight from "../Core/LatLonHeight";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";

@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import readText from "./readText";
-import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import { RuntimeError } from "terriajs-cesium";
 
 let parser: DOMParser;
 

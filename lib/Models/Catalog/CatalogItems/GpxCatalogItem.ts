@@ -1,7 +1,7 @@
 import toGeoJSON from "@mapbox/togeojson";
 import i18next from "i18next";
 import { computed, makeObservable, override } from "mobx";
-import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
+import { getFilenameFromUri } from "terriajs-cesium";
 import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";

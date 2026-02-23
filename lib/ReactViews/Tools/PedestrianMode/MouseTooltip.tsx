@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian2 } from "terriajs-cesium";
+import { Scene } from "terriajs-cesium";
 import Text from "../../../Styled/Text";
 
 type MouseTooltipProps = {

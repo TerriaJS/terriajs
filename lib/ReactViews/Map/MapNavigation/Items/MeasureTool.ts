@@ -1,15 +1,17 @@
 import i18next from "i18next";
 import { RefObject, createRef } from "react";
-import ArcType from "terriajs-cesium/Source/Core/ArcType";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
-import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import PolygonGeometryLibrary from "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import {
+  ArcType,
+  Cartesian3,
+  Math as CesiumMath,
+  CustomDataSource,
+  Ellipsoid,
+  EllipsoidGeodesic,
+  EllipsoidTangentPlane,
+  PolygonGeometryLibrary,
+  PolygonHierarchy,
+  VertexFormat
+} from "terriajs-cesium";
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
 import ViewerMode from "../../../../Models/ViewerMode";

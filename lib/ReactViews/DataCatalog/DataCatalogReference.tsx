@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { MouseEvent } from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import addedByUser from "../../Core/addedByUser";
 import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";

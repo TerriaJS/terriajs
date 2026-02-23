@@ -1,5 +1,5 @@
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import { JulianDate } from "terriajs-cesium";
+import { PropertyBag } from "terriajs-cesium";
 import isDefined from "../../Core/isDefined";
 
 const simpleStyleIdentifiers = [

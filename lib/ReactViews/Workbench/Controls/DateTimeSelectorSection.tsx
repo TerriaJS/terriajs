@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { Component } from "react";
 import { WithTranslation, withTranslation, TFunction } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";

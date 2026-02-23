@@ -10,7 +10,7 @@ import {
   PolygonSymbolizer,
   Feature as ProtomapsFeature
 } from "protomaps-leaflet";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import { TimeInterval } from "terriajs-cesium";
 import { isJsonNumber } from "../../../Core/Json";
 import { NotNull, NotUndefined } from "../../../Core/TypeModifiers";
 import GeoJsonMixin, {

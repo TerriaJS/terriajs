@@ -1,5 +1,5 @@
-import Frozen from "terriajs-cesium/Source/Core/Frozen";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
+import { Frozen } from "terriajs-cesium";
+import { getTimestamp } from "terriajs-cesium";
 
 interface Options {
   pollInterval?: number;

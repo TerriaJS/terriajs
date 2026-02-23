@@ -4,13 +4,13 @@ import Terria from "../../lib/Models/Terria";
 import { getMountedInstance } from "./MoreShallowTools";
 
 import { MeasureTool } from "../../lib/ReactViews/Map/MapNavigation/MeasureTool";
-import Entity from "terriajs-cesium/Source/DataSources/Entity.js";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid.js";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty.js";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Entity } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { ConstantPositionProperty } from "terriajs-cesium";
+import { Cartesian3 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { CustomDataSource } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
 
 describe("MeasureTool-jsx", function () {
   let terria;

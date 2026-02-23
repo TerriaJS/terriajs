@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { SplitDirection } from "terriajs-cesium";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import Box from "../../Styled/Box";

@@ -1,7 +1,7 @@
 import { uniq } from "lodash-es";
 import { action, computed, makeObservable, runInAction } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import clone from "terriajs-cesium/Source/Core/clone";
+import { DeveloperError } from "terriajs-cesium";
+import { clone } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import { JsonObject, isJsonNumber, isJsonString } from "../Core/Json";

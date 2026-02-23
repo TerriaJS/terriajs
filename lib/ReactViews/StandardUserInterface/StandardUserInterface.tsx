@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { FC, DragEvent, ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { combine } from "terriajs-cesium";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";

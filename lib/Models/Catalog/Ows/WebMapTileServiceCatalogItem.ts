@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import defined from "terriajs-cesium/Source/Core/defined";
-import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
+import { defined } from "terriajs-cesium";
+import { GeographicTilingScheme } from "terriajs-cesium";
+import { WebMercatorTilingScheme } from "terriajs-cesium";
+import { WebMapTileServiceImageryProvider } from "terriajs-cesium";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";

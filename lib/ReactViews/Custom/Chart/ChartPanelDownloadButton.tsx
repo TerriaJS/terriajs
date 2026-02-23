@@ -1,7 +1,7 @@
 import FileSaver from "file-saver";
 import { runInAction, toJS } from "mobx";
 import { observer } from "mobx-react";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
+import { FeatureDetection } from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import Result from "../../../Core/Result";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";

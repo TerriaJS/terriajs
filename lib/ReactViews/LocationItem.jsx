@@ -1,5 +1,5 @@
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";

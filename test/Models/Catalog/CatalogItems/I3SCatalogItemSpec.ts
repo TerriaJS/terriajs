@@ -1,15 +1,15 @@
 import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { Cesium3DTileColorBlendMode } from "terriajs-cesium";
+import { ShadowMode } from "terriajs-cesium";
 import Terria from "../../../../lib/Models/Terria";
 import I3SCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/I3SCatalogItem";
-import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import { I3SDataProvider } from "terriajs-cesium";
+import { Cesium3DTileset } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
+import { Cesium3DTileFeature } from "terriajs-cesium";
+import { Cartesian2 } from "terriajs-cesium";
 
 const mockLayerData = {
   href: "layers/0/",

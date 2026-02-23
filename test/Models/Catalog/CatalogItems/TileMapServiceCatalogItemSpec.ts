@@ -1,4 +1,4 @@
-import TileMapServiceImageryProvider from "terriajs-cesium/Source/Scene/TileMapServiceImageryProvider";
+import { TileMapServiceImageryProvider } from "terriajs-cesium";
 import TileMapServiceCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/TileMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";

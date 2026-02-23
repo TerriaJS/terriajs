@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { combine } from "terriajs-cesium";
 import {
   FeatureCollectionWithCrs,
   toFeatureCollection

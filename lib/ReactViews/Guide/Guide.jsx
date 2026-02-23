@@ -30,7 +30,7 @@ import classNames from "classnames";
 import Styles from "./guide.scss";
 
 // import createReactClass from "create-react-class";
-// // import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+// // import { knockout } from "terriajs-cesium";
 
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";

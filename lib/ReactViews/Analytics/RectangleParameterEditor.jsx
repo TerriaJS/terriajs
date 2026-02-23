@@ -4,13 +4,13 @@ import { Component } from "react";
 
 import PropTypes from "prop-types";
 
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 
 import Styles from "./parameter-editors.scss";
 
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
 import UserDrawing from "../../Models/UserDrawing";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";

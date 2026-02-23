@@ -1,9 +1,9 @@
 import { reaction, runInAction } from "mobx";
-import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Request from "terriajs-cesium/Source/Core/Request";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import { GeographicTilingScheme } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
+import { Request } from "terriajs-cesium";
+import { WebMercatorTilingScheme } from "terriajs-cesium";
 import loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisImageServerImageryProvider from "../../../../lib/Map/ImageryProvider/ArcGisImageServerImageryProvider";
 import ArcGisImageServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisImageServerCatalogItem";

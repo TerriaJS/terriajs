@@ -7,20 +7,20 @@ import {
   reaction,
   runInAction
 } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Color from "terriajs-cesium/Source/Core/Color";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import { Cartesian3 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { Color } from "terriajs-cesium";
+import { createGuid } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { PolygonHierarchy } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
+import { CallbackProperty } from "terriajs-cesium";
+import { ConstantPositionProperty } from "terriajs-cesium";
+import { CustomDataSource } from "terriajs-cesium";
+import { DataSource } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
+import { PolylineGlowMaterialProperty } from "terriajs-cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints/DragPoints";

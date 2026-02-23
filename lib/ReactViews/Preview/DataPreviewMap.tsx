@@ -8,7 +8,7 @@ import {
 import { observer } from "mobx-react";
 import { FC, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Math as CesiumMath } from "terriajs-cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";

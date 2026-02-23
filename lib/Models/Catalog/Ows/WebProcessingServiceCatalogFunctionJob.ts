@@ -10,7 +10,7 @@ import {
   toJS
 } from "mobx";
 import Mustache from "mustache";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid } from "terriajs-cesium";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";

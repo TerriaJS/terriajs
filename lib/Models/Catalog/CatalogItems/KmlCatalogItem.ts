@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { computed, makeObservable, override } from "mobx";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
+import { Resource } from "terriajs-cesium";
+import { KmlDataSource } from "terriajs-cesium";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import isDefined from "../../../Core/isDefined";
 import readXml from "../../../Core/readXml";

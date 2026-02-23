@@ -14,9 +14,9 @@ import {
   TileSource,
   Zxy
 } from "protomaps-leaflet";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { Cartographic } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
 import {
   FeatureCollectionWithCrs,
   toFeatureCollection

@@ -1,4 +1,4 @@
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color } from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import { OutlineSymbolTraits } from "../../../Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/Table/PointSizeStyleTraits";

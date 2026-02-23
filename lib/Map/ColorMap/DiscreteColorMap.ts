@@ -1,4 +1,4 @@
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color } from "terriajs-cesium";
 import ColorMap from "./ColorMap";
 
 export interface DiscreteBin {

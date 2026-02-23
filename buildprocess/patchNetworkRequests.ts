@@ -1,6 +1,6 @@
 /* eslint-disable prefer-rest-params */
 import fetch, { Headers, Request, Response } from "node-fetch";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 import URI from "urijs";
 
 /** Patch XMLHttpRequest and Fetch so they work correctly in Node.js

@@ -1,4 +1,4 @@
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import { CustomDataSource } from "terriajs-cesium";
 import Terria from "../../Models/Terria";
 
 declare class DragPoints {

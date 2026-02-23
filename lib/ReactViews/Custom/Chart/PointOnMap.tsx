@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { useEffect } from "react";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid } from "terriajs-cesium";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import GeoJsonCatalogItem from "../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../../Models/Definition/CommonStrata";

@@ -1,5 +1,5 @@
 import { createTransformer } from "mobx-utils";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadXML from "../../../Core/loadXML";
 import { networkRequestError } from "../../../Core/TerriaError";

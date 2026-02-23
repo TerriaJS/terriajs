@@ -6,7 +6,7 @@ import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItem
 import ViewingControls from "../../../../lib/ReactViews/Workbench/Controls/ViewingControls";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Math as CesiumMath } from "terriajs-cesium";
 import {
   IdealZoomTraits,
   CameraTraits,

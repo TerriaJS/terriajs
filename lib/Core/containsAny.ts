@@ -1,4 +1,4 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 
 /**
  * Determins is a given string contains any of a number of possible strings.

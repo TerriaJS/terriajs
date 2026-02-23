@@ -1,6 +1,6 @@
 "use strict";
 
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { Cartographic } from "terriajs-cesium";
 import EarthGravityModel1996 from "../../lib/Map/Vector/EarthGravityModel1996";
 import gravityModel from "../../wwwroot/data/WW15MGH.DAC";
 

@@ -11,20 +11,22 @@
 //
 import debounce from "lodash-es/debounce";
 import { computed, runInAction, when } from "mobx";
-import { Ref, PureComponent } from "react";
-import { WithTranslation, withTranslation, TFunction } from "react-i18next";
+import { PureComponent, Ref } from "react";
+import { TFunction, WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import {
+  CameraFlightPath,
+  Cartesian2,
+  Cartesian3,
+  Event as CesiumEvent,
+  Math as CesiumMath,
+  Ellipsoid,
+  getTimestamp,
+  Matrix4,
+  Ray,
+  Scene,
+  Transforms
+} from "terriajs-cesium";
 import compassRotationMarker from "../../../../../../wwwroot/images/compass-rotation-marker.svg";
 import isDefined from "../../../../../Core/isDefined";
 import Terria from "../../../../../Models/Terria";

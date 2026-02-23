@@ -8,7 +8,7 @@ import {
   makeObservable
 } from "mobx";
 import { ReactNode, MouseEvent, ComponentType, Ref } from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import addedByUser from "../Core/addedByUser";
 import {
   Category,

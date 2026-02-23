@@ -7,19 +7,19 @@ import {
   toJS,
   untracked
 } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
-import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
+import { Cartesian3 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { clone } from "terriajs-cesium";
+import { Color } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { HeadingPitchRoll } from "terriajs-cesium";
+import { Matrix3 } from "terriajs-cesium";
+import { Matrix4 } from "terriajs-cesium";
+import { Transforms } from "terriajs-cesium";
+import { CustomDataSource } from "terriajs-cesium";
+import { DataSource } from "terriajs-cesium";
+import { ClippingPlane } from "terriajs-cesium";
+import { ClippingPlaneCollection } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import runLater from "../Core/runLater";

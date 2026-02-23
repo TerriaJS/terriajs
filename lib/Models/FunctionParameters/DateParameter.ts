@@ -1,4 +1,4 @@
-import Clock from "terriajs-cesium/Source/Core/Clock";
+import { Clock } from "terriajs-cesium";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, { Options } from "./FunctionParameter";
 import { makeObservable, override } from "mobx";

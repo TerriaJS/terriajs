@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
 import PropTypes from "prop-types";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid } from "terriajs-cesium";
 import { createTimer, startTimer as startTimerAnimation } from "./drawTimer";
 import Styles from "./timer.scss";
 

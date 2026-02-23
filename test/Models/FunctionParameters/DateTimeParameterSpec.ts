@@ -1,5 +1,5 @@
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { Clock } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
 import WebProcessingServiceCatalogFunction from "../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import DateTimeParameter from "../../../lib/Models/FunctionParameters/DateTimeParameter";

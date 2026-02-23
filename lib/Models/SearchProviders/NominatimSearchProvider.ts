@@ -1,8 +1,8 @@
 import { Feature, Point } from "geojson";
 import { makeObservable, runInAction } from "mobx";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
 import {
   Category,
   SearchAction

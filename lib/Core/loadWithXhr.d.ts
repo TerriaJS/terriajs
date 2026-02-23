@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 
 interface Options extends Resource.ConstructorOptions {
   responseType?: string;

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "terriajs-cesium";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Box from "../../../Styled/Box";

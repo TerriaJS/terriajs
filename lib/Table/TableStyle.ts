@@ -1,9 +1,9 @@
 import { BBox } from "geojson";
 import groupBy from "lodash-es/groupBy";
 import { computed, makeObservable } from "mobx";
-import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import { binarySearch } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { TimeInterval } from "terriajs-cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { isJsonNumber } from "../Core/Json";

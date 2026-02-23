@@ -1,13 +1,13 @@
 "use strict";
 
 import CameraView from "../../lib/Models/CameraView";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Cartesian3 } from "terriajs-cesium";
+import { Cartographic } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
 import CustomMatchers from "../Utility/CustomMatchers";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Ellipsoid } from "terriajs-cesium";
+import { HeadingPitchRange } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
 
 describe("CameraView", function () {
   describe("fromJson", function () {

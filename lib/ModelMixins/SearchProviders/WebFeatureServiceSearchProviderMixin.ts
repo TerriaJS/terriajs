@@ -1,5 +1,5 @@
 import { makeObservable, runInAction } from "mobx";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "terriajs-cesium";
 import URI from "urijs";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";

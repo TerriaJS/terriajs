@@ -6,11 +6,11 @@ import {
   TileSource,
   Zxy
 } from "protomaps-leaflet";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Request from "terriajs-cesium/Source/Core/Request";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Request } from "terriajs-cesium";
+import { Resource } from "terriajs-cesium";
+import { WebMercatorTilingScheme } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
 import {
   isGeometryCollection,
   isLine,

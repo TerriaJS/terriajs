@@ -1,14 +1,14 @@
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
 import { ReactTestRenderer } from "react-test-renderer";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import { Cartographic } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { JulianDate } from "terriajs-cesium";
+import { TimeInterval } from "terriajs-cesium";
+import { ConstantProperty } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
+import { PropertyBag } from "terriajs-cesium";
+import { TimeIntervalCollectionProperty } from "terriajs-cesium";
 import loadJson from "../../lib/Core/loadJson";
 import CatalogMemberMixin, {
   getName

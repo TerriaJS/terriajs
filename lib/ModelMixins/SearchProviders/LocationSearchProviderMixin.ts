@@ -1,7 +1,7 @@
 import { action, makeObservable } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Ellipsoid } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import Model from "../../Models/Definition/Model";

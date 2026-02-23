@@ -1,13 +1,13 @@
 "use strict";
 
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Cartographic } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
 import CesiumTileLayer from "../../lib/Map/CesiumTileLayer";
-import Color from "terriajs-cesium/Source/Core/Color";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { Color } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
+import { GeoJsonDataSource } from "terriajs-cesium";
+import { ImageryLayerFeatureInfo } from "terriajs-cesium";
 import L from "leaflet";
 import Leaflet from "../../lib/Models/Leaflet";
 import loadJson from "../../lib/Core/loadJson";

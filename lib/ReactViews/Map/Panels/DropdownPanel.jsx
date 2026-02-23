@@ -9,7 +9,7 @@ import BaseOuterPanel from "./BaseOuterPanel";
 
 import Styles from "./panel.scss";
 
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 
 const DropdownPanel = createReactClass({
   displayName: "DropdownPanel",

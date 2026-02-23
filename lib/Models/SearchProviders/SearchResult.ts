@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from "mobx";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "terriajs-cesium";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import { BaseModel } from "../Definition/Model";
 

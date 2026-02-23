@@ -1,4 +1,4 @@
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { SplitDirection } from "terriajs-cesium";
 
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";

@@ -9,10 +9,10 @@ import {
 import { observer } from "mobx-react";
 import { Component } from "react";
 import { withTranslation, TFunction } from "react-i18next";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { Cartesian3 } from "terriajs-cesium";
+import { Ellipsoid } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Entity } from "terriajs-cesium";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
 import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures";

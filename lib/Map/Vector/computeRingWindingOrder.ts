@@ -1,6 +1,6 @@
 import i18next from "i18next";
-import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { WindingOrder } from "terriajs-cesium";
+import { DeveloperError } from "terriajs-cesium";
 import Point from "@mapbox/point-geometry";
 
 /**

@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Rectangle } from "terriajs-cesium";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import describeCoverageXml from "../../wwwroot/test/WCS/DescribeCoverage.xml";

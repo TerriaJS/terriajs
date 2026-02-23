@@ -1,4 +1,4 @@
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid } from "terriajs-cesium";
 import SensorObservationServiceCatalogItem from "../../Models/Catalog/Ows/SensorObservationServiceCatalogItem";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../Models/Definition/Model";

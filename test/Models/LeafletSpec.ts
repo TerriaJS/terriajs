@@ -1,7 +1,7 @@
 import L from "leaflet";
 import { action, computed, when } from "mobx";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
 import CameraView from "../../lib/Models/CameraView";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

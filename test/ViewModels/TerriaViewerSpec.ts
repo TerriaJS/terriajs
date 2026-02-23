@@ -1,5 +1,5 @@
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

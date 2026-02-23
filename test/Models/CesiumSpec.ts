@@ -7,14 +7,14 @@ import {
   runInAction,
   when
 } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 } from "terriajs-cesium";
+import { CesiumTerrainProvider } from "terriajs-cesium";
+import { EllipsoidTerrainProvider } from "terriajs-cesium";
+import { Math as CesiumMath } from "terriajs-cesium";
+import { Rectangle } from "terriajs-cesium";
+import { Cesium3DTileset } from "terriajs-cesium";
+import { PrimitiveCollection } from "terriajs-cesium";
+import { Scene } from "terriajs-cesium";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
