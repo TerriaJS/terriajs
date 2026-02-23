@@ -1,10 +1,12 @@
-import { defined } from "terriajs-cesium";
-import { destroyObject } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { getTimestamp } from "terriajs-cesium";
-import { Matrix4 } from "terriajs-cesium";
-import { TaskProcessor } from "terriajs-cesium";
-import { CesiumWidget } from "terriajs-cesium";
+import {
+  defined,
+  destroyObject,
+  Event as CesiumEvent,
+  getTimestamp,
+  Matrix4,
+  TaskProcessor,
+  CesiumWidget
+} from "terriajs-cesium";
 import loadWithXhr from "../../Core/loadWithXhr";
 
 export default class CesiumRenderLoopPauser {

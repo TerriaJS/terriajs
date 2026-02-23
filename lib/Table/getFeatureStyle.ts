@@ -1,15 +1,17 @@
-import { Cartesian2 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { NearFarScalar } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { LabelGraphics } from "terriajs-cesium";
-import { PathGraphics } from "terriajs-cesium";
-import { PointGraphics } from "terriajs-cesium";
-import { Property } from "terriajs-cesium";
-import { HorizontalOrigin } from "terriajs-cesium";
-import { LabelStyle } from "terriajs-cesium";
-import { VerticalOrigin } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Color,
+  Math as CesiumMath,
+  NearFarScalar,
+  BillboardGraphics,
+  LabelGraphics,
+  PathGraphics,
+  PointGraphics,
+  Property,
+  HorizontalOrigin,
+  LabelStyle,
+  VerticalOrigin
+} from "terriajs-cesium";
 import { getMakiIcon, isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
 import ScaleByDistanceTraits from "../Traits/TraitsClasses/ScaleByDistanceTraits";
 import TableStyle from "./TableStyle";

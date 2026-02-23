@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { action, computed, makeObservable } from "mobx";
-import { RequestErrorEvent } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
+import { RequestErrorEvent, Resource } from "terriajs-cesium";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";

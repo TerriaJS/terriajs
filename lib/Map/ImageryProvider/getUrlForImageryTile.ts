@@ -1,6 +1,5 @@
-import { ImageryProvider } from "terriajs-cesium";
+import { ImageryProvider, Resource } from "terriajs-cesium";
 import URI from "urijs";
-import { Resource } from "terriajs-cesium";
 
 function getUrlForImageryTile(
   imageryProvider: ImageryProvider,

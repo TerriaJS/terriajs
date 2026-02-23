@@ -1,9 +1,7 @@
 import { action, makeObservable, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
-import { Cartesian3 } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
+import { Cartesian3, Ellipsoid, Math as CesiumMath } from "terriajs-cesium";
 import markerIcon from "../../../../wwwroot/images/difference-pin.png";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";

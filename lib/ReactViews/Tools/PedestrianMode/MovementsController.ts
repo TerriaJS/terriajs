@@ -1,17 +1,19 @@
 import { action, makeObservable } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { KeyboardEventModifier } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Matrix3 } from "terriajs-cesium";
-import { Quaternion } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
-import { ScreenSpaceEventHandler } from "terriajs-cesium";
-import { ScreenSpaceEventType } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Ellipsoid,
+  EllipsoidTerrainProvider,
+  KeyboardEventModifier,
+  Math as CesiumMath,
+  Matrix3,
+  Quaternion,
+  sampleTerrainMostDetailed,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  Scene
+} from "terriajs-cesium";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import Cesium from "../../../Models/Cesium";
 

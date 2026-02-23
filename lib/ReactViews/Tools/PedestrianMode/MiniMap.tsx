@@ -1,9 +1,7 @@
 import { action, autorun, computed } from "mobx";
 import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Cartesian3 } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import { Cartesian3, Rectangle, Scene } from "terriajs-cesium";
 import minimapNavIcon from "../../../../wwwroot/images/minimap-nav.svg";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Terria from "../../../Models/Terria";

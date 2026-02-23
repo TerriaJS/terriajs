@@ -1,11 +1,13 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  Ellipsoid,
+  Math as CesiumMath,
+  Rectangle,
+  Entity
+} from "terriajs-cesium";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import TerriaFeature from "../../lib/Models/Feature/Feature";

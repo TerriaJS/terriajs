@@ -1,6 +1,5 @@
 import { observable, makeObservable } from "mobx";
-import { ImageryProvider } from "terriajs-cesium";
-import { Request } from "terriajs-cesium";
+import { ImageryProvider, Request } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";

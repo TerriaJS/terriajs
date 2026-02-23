@@ -9,17 +9,19 @@ import {
   when
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import { Clock } from "terriajs-cesium";
-import { DeveloperError } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { RequestScheduler } from "terriajs-cesium";
-import { RuntimeError } from "terriajs-cesium";
-import { TerrainProvider } from "terriajs-cesium";
-import { buildModuleUrl } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
-import { queryToObject } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Clock,
+  DeveloperError,
+  Event as CesiumEvent,
+  RequestScheduler,
+  RuntimeError,
+  TerrainProvider,
+  buildModuleUrl,
+  defined,
+  queryToObject,
+  Entity,
+  SplitDirection
+} from "terriajs-cesium";
 import URI from "urijs";
 import {
   Category,

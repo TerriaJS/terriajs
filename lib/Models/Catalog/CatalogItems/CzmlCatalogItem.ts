@@ -1,8 +1,6 @@
 import i18next from "i18next";
 import { action, computed, observable, toJS, makeObservable } from "mobx";
-import { JulianDate } from "terriajs-cesium";
-import { CzmlDataSource } from "terriajs-cesium";
-import { DataSourceClock } from "terriajs-cesium";
+import { JulianDate, CzmlDataSource, DataSourceClock } from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";

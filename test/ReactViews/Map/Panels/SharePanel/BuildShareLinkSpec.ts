@@ -1,8 +1,10 @@
 import { action, runInAction } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { queryToObject } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Cartesian3,
+  queryToObject,
+  Entity,
+  SplitDirection
+} from "terriajs-cesium";
 import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import loadBlob from "../../../../../lib/Core/loadBlob";

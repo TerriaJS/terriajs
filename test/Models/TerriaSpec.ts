@@ -1,10 +1,12 @@
 import { action, runInAction, toJS, when } from "mobx";
-import { buildModuleUrl } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { RequestScheduler } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  buildModuleUrl,
+  Math as CesiumMath,
+  RequestScheduler,
+  CustomDataSource,
+  Entity,
+  SplitDirection
+} from "terriajs-cesium";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";

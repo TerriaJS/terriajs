@@ -1,11 +1,13 @@
 import { makeObservable, observable } from "mobx";
-import { Ellipsoid } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { Cesium3DTileFeature } from "terriajs-cesium";
-import { Cesium3DTilePointFeature } from "terriajs-cesium";
-import { ImageryLayer } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
+import {
+  Ellipsoid,
+  ConstantPositionProperty,
+  Entity,
+  Cesium3DTileFeature,
+  Cesium3DTilePointFeature,
+  ImageryLayer,
+  ImageryLayerFeatureInfo
+} from "terriajs-cesium";
 import JsonValue from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";

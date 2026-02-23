@@ -1,7 +1,9 @@
-import { Cartesian3 } from "terriajs-cesium";
-import { Quaternion } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { PointGraphics } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Quaternion,
+  BillboardGraphics,
+  PointGraphics
+} from "terriajs-cesium";
 
 export default interface VehicleData {
   /**

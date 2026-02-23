@@ -4,8 +4,7 @@ import { getMountedInstance } from "./MoreShallowTools";
 import Terria from "../../lib/Models/Terria";
 import ImageryLayerCatalogItem from "../../lib/Models/ImageryLayerCatalogItem";
 import { Timeline } from "../../lib/ReactViews/BottomDock/Timeline/Timeline";
-import { JulianDate } from "terriajs-cesium";
-import { DataSourceClock } from "terriajs-cesium";
+import { JulianDate, DataSourceClock } from "terriajs-cesium";
 
 describe("Timeline", function () {
   describe("dateTime format", function () {

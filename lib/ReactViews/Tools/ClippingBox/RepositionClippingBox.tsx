@@ -2,11 +2,13 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import { FC, Ref, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { ScreenSpaceEventHandler } from "terriajs-cesium";
-import { ScreenSpaceEventType } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  Scene
+} from "terriajs-cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import ClippingMixin from "../../../ModelMixins/ClippingMixin";
 import BoxDrawing from "../../../Models/BoxDrawing";

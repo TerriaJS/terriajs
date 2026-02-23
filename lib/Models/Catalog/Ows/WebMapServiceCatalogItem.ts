@@ -8,17 +8,19 @@
 import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { GeographicProjection } from "terriajs-cesium";
-import { GeographicTilingScheme } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { MapProjection } from "terriajs-cesium";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { combine } from "terriajs-cesium";
-import { GetFeatureInfoFormat } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { WebMapServiceImageryProvider } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  GeographicProjection,
+  GeographicTilingScheme,
+  JulianDate,
+  MapProjection,
+  WebMercatorTilingScheme,
+  combine,
+  GetFeatureInfoFormat,
+  ImageryLayerFeatureInfo,
+  WebMapServiceImageryProvider
+} from "terriajs-cesium";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";

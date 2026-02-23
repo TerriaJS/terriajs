@@ -1,7 +1,6 @@
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
-import { Ellipsoid } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
+import { Ellipsoid, Math as CesiumMath } from "terriajs-cesium";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";

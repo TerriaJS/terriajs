@@ -1,9 +1,11 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import { GeographicTilingScheme } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
+import {
+  GeographicTilingScheme,
+  JulianDate,
+  WebMercatorTilingScheme
+} from "terriajs-cesium";
 import URI from "urijs";
 import AsyncLoader from "../../../Core/AsyncLoader";
 import { JsonObject, isJsonObject } from "../../../Core/Json";

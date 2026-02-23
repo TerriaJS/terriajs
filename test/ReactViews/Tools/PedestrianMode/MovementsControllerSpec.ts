@@ -1,9 +1,11 @@
 import { action } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Camera } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  Math as CesiumMath,
+  Camera,
+  Scene
+} from "terriajs-cesium";
 import LatLonHeight from "../../../../lib/Core/LatLonHeight";
 import Cesium from "../../../../lib/Models/Cesium";
 import Terria from "../../../../lib/Models/Terria";

@@ -15,8 +15,7 @@ import {
   Position
 } from "geojson";
 import pointInPolygon from "point-in-polygon";
-import { defined } from "terriajs-cesium";
-import { WindingOrder } from "terriajs-cesium";
+import { defined, WindingOrder } from "terriajs-cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import {
   FeatureCollectionWithCrs,

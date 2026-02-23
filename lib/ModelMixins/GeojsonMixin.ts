@@ -21,31 +21,35 @@ import {
   toJS
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { clone } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { DeveloperError } from "terriajs-cesium";
-import { Iso8601 } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { PolygonHierarchy } from "terriajs-cesium";
-import { TimeInterval } from "terriajs-cesium";
-import { TimeIntervalCollection } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { ColorMaterialProperty } from "terriajs-cesium";
-import { ConstantProperty } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { CzmlDataSource } from "terriajs-cesium";
-import { DataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { EntityCollection } from "terriajs-cesium";
-import { GeoJsonDataSource } from "terriajs-cesium";
-import { PointGraphics } from "terriajs-cesium";
-import { PolygonGraphics } from "terriajs-cesium";
-import { PolylineGraphics } from "terriajs-cesium";
-import { Property } from "terriajs-cesium";
-import { HeightReference } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  clone,
+  Color,
+  DeveloperError,
+  Iso8601,
+  JulianDate,
+  PolygonHierarchy,
+  TimeInterval,
+  TimeIntervalCollection,
+  BillboardGraphics,
+  ColorMaterialProperty,
+  ConstantProperty,
+  CustomDataSource,
+  CzmlDataSource,
+  DataSource,
+  Entity,
+  EntityCollection,
+  GeoJsonDataSource,
+  PointGraphics,
+  PolygonGraphics,
+  PolylineGraphics,
+  Property,
+  HeightReference,
+  ImageryLayerFeatureInfo,
+  PinBuilder,
+  VerticalOrigin
+} from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
@@ -93,8 +97,6 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { ImageryParts, isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
-import { PinBuilder } from "terriajs-cesium";
-import { VerticalOrigin } from "terriajs-cesium";
 
 export const FEATURE_ID_PROP = "_id_";
 

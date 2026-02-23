@@ -1,15 +1,17 @@
 import { reaction, runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { Iso8601 } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { createGuid } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { GeoJsonDataSource } from "terriajs-cesium";
-import { HeightReference } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Color,
+  Iso8601,
+  JulianDate,
+  createGuid,
+  CustomDataSource,
+  Entity,
+  GeoJsonDataSource,
+  HeightReference
+} from "terriajs-cesium";
 import { JsonObject } from "../../../../lib/Core/Json";
 import StandardCssColors from "../../../../lib/Core/StandardCssColors";
 import loadJson from "../../../../lib/Core/loadJson";

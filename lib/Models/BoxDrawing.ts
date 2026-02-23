@@ -5,38 +5,40 @@ import {
   onBecomeObserved,
   onBecomeUnobserved
 } from "mobx";
-import { ArcType } from "terriajs-cesium";
-import { BoundingSphere } from "terriajs-cesium";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
-import { IntersectionTests } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { KeyboardEventModifier } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Matrix3 } from "terriajs-cesium";
-import { Matrix4 } from "terriajs-cesium";
-import { Plane } from "terriajs-cesium";
-import { Quaternion } from "terriajs-cesium";
-import { Ray } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
-import { ScreenSpaceEventHandler } from "terriajs-cesium";
-import { ScreenSpaceEventType } from "terriajs-cesium";
-import { TranslationRotationScale } from "terriajs-cesium";
-import { CallbackProperty } from "terriajs-cesium";
-import { ColorMaterialProperty } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { PlaneGraphics } from "terriajs-cesium";
-import { PolylineDashMaterialProperty } from "terriajs-cesium";
-import { PositionProperty } from "terriajs-cesium";
-import { Axis } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  ArcType,
+  BoundingSphere,
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Color,
+  Ellipsoid,
+  EllipsoidTerrainProvider,
+  HeadingPitchRoll,
+  IntersectionTests,
+  JulianDate,
+  KeyboardEventModifier,
+  Math as CesiumMath,
+  Matrix3,
+  Matrix4,
+  Plane,
+  Quaternion,
+  Ray,
+  Rectangle,
+  sampleTerrainMostDetailed,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  TranslationRotationScale,
+  CallbackProperty,
+  ColorMaterialProperty,
+  CustomDataSource,
+  Entity,
+  PlaneGraphics,
+  PolylineDashMaterialProperty,
+  PositionProperty,
+  Axis,
+  Scene
+} from "terriajs-cesium";
 import isDefined from "../Core/isDefined";
 import { CustomCursorType, getCustomCssCursor } from "./BoxDrawing/cursors";
 import Cesium from "./Cesium";

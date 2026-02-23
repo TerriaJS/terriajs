@@ -7,13 +7,15 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import { ArcGISTiledElevationTerrainProvider } from "terriajs-cesium";
-import { BoundingSphere } from "terriajs-cesium";
-import { Cartesian2 } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { Cesium3DTileColorBlendMode } from "terriajs-cesium";
-import { I3SDataProvider } from "terriajs-cesium";
-import { I3SNode } from "terriajs-cesium";
+import {
+  ArcGISTiledElevationTerrainProvider,
+  BoundingSphere,
+  Cartesian2,
+  Resource,
+  Cesium3DTileColorBlendMode,
+  I3SDataProvider,
+  I3SNode
+} from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin, {
   getName

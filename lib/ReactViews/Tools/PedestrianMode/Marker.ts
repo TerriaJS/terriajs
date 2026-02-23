@@ -1,8 +1,10 @@
-import { Cartesian3 } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { CallbackProperty } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
+import {
+  Cartesian3,
+  BillboardGraphics,
+  CallbackProperty,
+  CustomDataSource,
+  Entity
+} from "terriajs-cesium";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CreateModel from "../../../Models/Definition/CreateModel";
 import Terria from "../../../Models/Terria";

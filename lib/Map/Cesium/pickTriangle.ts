@@ -1,12 +1,14 @@
-import { BoundingSphere } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { IntersectionTests } from "terriajs-cesium";
-import { MapProjection } from "terriajs-cesium";
-import { Ray } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
-import { SceneMode } from "terriajs-cesium";
+import {
+  BoundingSphere,
+  Cartesian3,
+  Cartographic,
+  IntersectionTests,
+  MapProjection,
+  Ray,
+  defined,
+  Scene,
+  SceneMode
+} from "terriajs-cesium";
 
 type Tile = any;
 type GlobeSurfaceTile = any;

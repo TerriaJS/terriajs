@@ -12,12 +12,14 @@ import {
 import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import { Cartographic } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { createGuid } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Cartographic,
+  JulianDate,
+  Math as CesiumMath,
+  createGuid,
+  ImageryProvider,
+  SplitDirection
+} from "terriajs-cesium";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";

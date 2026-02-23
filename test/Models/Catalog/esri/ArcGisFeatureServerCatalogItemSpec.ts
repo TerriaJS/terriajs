@@ -1,8 +1,7 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import { GeomType } from "protomaps-leaflet";
-import { Color } from "terriajs-cesium";
-import { Request } from "terriajs-cesium";
+import { Color, Request, Rectangle } from "terriajs-cesium";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
@@ -21,7 +20,6 @@ import TablePointStyleTraits, {
   PointSymbolTraits
 } from "../../../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../../lib/Traits/TraitsClasses/Table/StyleTraits";
-import { Rectangle } from "terriajs-cesium";
 
 configure({
   enforceActions: "observed",

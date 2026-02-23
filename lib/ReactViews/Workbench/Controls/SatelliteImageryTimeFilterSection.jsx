@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import { Component } from "react";
-import { defined } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
+import { defined, Ellipsoid, Rectangle } from "terriajs-cesium";
 import MapInteractionMode from "../../../Models/MapInteractionMode";
 import Loader from "../../Loader";
 import LocationItem from "../../LocationItem.jsx";

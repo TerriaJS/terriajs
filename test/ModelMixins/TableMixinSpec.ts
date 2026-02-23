@@ -1,7 +1,11 @@
 import { runInAction } from "mobx";
-import { JulianDate } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { LabelStyle } from "terriajs-cesium";
+import {
+  JulianDate,
+  CustomDataSource,
+  LabelStyle,
+  HorizontalOrigin,
+  VerticalOrigin
+} from "terriajs-cesium";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -31,8 +35,6 @@ import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
-import { HorizontalOrigin } from "terriajs-cesium";
-import { VerticalOrigin } from "terriajs-cesium";
 import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
 import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
 import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv";

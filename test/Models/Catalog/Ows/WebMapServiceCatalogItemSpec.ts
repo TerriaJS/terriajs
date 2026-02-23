@@ -1,8 +1,10 @@
 import { autorun, runInAction } from "mobx";
-import { GeographicTilingScheme } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { WebMapServiceImageryProvider } from "terriajs-cesium";
+import {
+  GeographicTilingScheme,
+  Resource,
+  WebMercatorTilingScheme,
+  WebMapServiceImageryProvider
+} from "terriajs-cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

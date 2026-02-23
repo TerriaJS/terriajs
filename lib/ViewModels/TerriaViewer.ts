@@ -12,8 +12,7 @@ import {
   makeObservable
 } from "mobx";
 import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
+import { Event as CesiumEvent, Rectangle } from "terriajs-cesium";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CameraView from "../Models/CameraView";

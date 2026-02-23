@@ -1,8 +1,10 @@
 import { runInAction } from "mobx";
-import { Rectangle } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { BingMapsImageryProvider } from "terriajs-cesium";
-import { BingMapsStyle } from "terriajs-cesium";
+import {
+  Rectangle,
+  Resource,
+  BingMapsImageryProvider,
+  BingMapsStyle
+} from "terriajs-cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import BingMapsCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/BingMapsCatalogItem";
 import Terria from "../../../../lib/Models/Terria";

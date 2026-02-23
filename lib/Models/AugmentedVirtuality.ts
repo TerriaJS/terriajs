@@ -5,14 +5,16 @@ import {
   observable,
   runInAction
 } from "mobx";
-import { Cartesian3 as CesiumCartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Matrix3 as CesiumMatrix3 } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
-import { Camera } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian3 as CesiumCartesian3,
+  Cartographic,
+  EllipsoidTerrainProvider,
+  Math as CesiumMath,
+  Matrix3 as CesiumMatrix3,
+  sampleTerrainMostDetailed,
+  Camera,
+  Scene
+} from "terriajs-cesium";
 import Terria from "./Terria";
 
 interface EventLoopState {

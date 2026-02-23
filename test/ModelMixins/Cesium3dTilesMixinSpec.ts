@@ -1,12 +1,14 @@
 import { runInAction } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Matrix4 } from "terriajs-cesium";
-import { Cesium3DTileFeature } from "terriajs-cesium";
-import { Cesium3DTileset } from "terriajs-cesium";
-import { ClippingPlane } from "terriajs-cesium";
-import { ClippingPlaneCollection } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Color,
+  Math as CesiumMath,
+  Matrix4,
+  Cesium3DTileFeature,
+  Cesium3DTileset,
+  ClippingPlane,
+  ClippingPlaneCollection
+} from "terriajs-cesium";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";

@@ -4,10 +4,12 @@ import {
   PolygonSymbolizer,
   Feature as ProtomapsFeature
 } from "protomaps-leaflet";
-import { JulianDate } from "terriajs-cesium";
-import { TimeInterval } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
+import {
+  JulianDate,
+  TimeInterval,
+  ImageryLayerFeatureInfo,
+  ImageryProvider
+} from "terriajs-cesium";
 import isDefined from "../Core/isDefined";
 import { isJsonNumber } from "../Core/Json";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";

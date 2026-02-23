@@ -1,16 +1,19 @@
 import i18next from "i18next";
 import { computed, makeObservable, override } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
-import { Quaternion } from "terriajs-cesium";
-import { Transforms } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { ConstantProperty } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { ModelGraphics } from "terriajs-cesium";
-import { Axis } from "terriajs-cesium";
-import { HeightReference } from "terriajs-cesium";
+import {
+  Cartesian3,
+  HeadingPitchRoll,
+  Quaternion,
+  Transforms,
+  ConstantPositionProperty,
+  ConstantProperty,
+  CustomDataSource,
+  Entity,
+  ModelGraphics,
+  Axis,
+  HeightReference,
+  Resource
+} from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
@@ -18,7 +21,6 @@ import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import { Resource } from "terriajs-cesium";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 
 type BaseType = Model<GltfTraits>;

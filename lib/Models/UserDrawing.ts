@@ -7,20 +7,22 @@ import {
   reaction,
   runInAction
 } from "mobx";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { createGuid } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { PolygonHierarchy } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { CallbackProperty } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { CustomDataSource } from "terriajs-cesium";
-import { DataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { PolylineGlowMaterialProperty } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  Color,
+  createGuid,
+  Ellipsoid,
+  JulianDate,
+  PolygonHierarchy,
+  Rectangle,
+  CallbackProperty,
+  ConstantPositionProperty,
+  CustomDataSource,
+  DataSource,
+  Entity,
+  PolylineGlowMaterialProperty
+} from "terriajs-cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints/DragPoints";

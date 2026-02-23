@@ -1,10 +1,12 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import { Quaternion } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
+import {
+  Quaternion,
+  HeadingPitchRoll,
+  Matrix3,
+  Math as CesiumMath
+} from "terriajs-cesium";
 import updateModelFromJson from "../../Models/Definition/updateModelFromJson";
-import { Matrix3 } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
 import Model from "../../Models/Definition/Model";
 
 // Scratch variables used to avoid repeated object instantiation

@@ -1,15 +1,17 @@
 import debounce from "lodash-es/debounce";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { Intersections2D } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Ray } from "terriajs-cesium";
-import { TerrainProvider } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  EllipsoidTerrainProvider,
+  Event as CesiumEvent,
+  Intersections2D,
+  Math as CesiumMath,
+  Ray,
+  TerrainProvider,
+  sampleTerrainMostDetailed
+} from "terriajs-cesium";
 import isDefined from "../Core/isDefined";
 import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
 import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";

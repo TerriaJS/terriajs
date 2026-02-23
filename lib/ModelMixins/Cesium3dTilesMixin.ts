@@ -9,19 +9,21 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
-import { IonResource } from "terriajs-cesium";
-import { Matrix3 } from "terriajs-cesium";
-import { Matrix4 } from "terriajs-cesium";
-import { Quaternion } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { Transforms } from "terriajs-cesium";
-import { Cesium3DTileColorBlendMode } from "terriajs-cesium";
-import { Cesium3DTileFeature } from "terriajs-cesium";
-import { Cesium3DTilePointFeature } from "terriajs-cesium";
-import { Cesium3DTileset } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  HeadingPitchRoll,
+  IonResource,
+  Matrix3,
+  Matrix4,
+  Quaternion,
+  Resource,
+  Transforms,
+  Cesium3DTileColorBlendMode,
+  Cesium3DTileFeature,
+  Cesium3DTilePointFeature,
+  Cesium3DTileset
+} from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import { JsonObject, isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";

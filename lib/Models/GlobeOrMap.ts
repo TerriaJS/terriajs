@@ -1,16 +1,18 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { createGuid } from "terriajs-cesium";
-import { DeveloperError } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { ColorMaterialProperty } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { ConstantProperty } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Color,
+  createGuid,
+  DeveloperError,
+  Ellipsoid,
+  Rectangle,
+  ColorMaterialProperty,
+  ConstantPositionProperty,
+  ConstantProperty,
+  ImageryLayerFeatureInfo,
+  SplitDirection
+} from "terriajs-cesium";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";

@@ -5,9 +5,11 @@ import {
   observable,
   runInAction
 } from "mobx";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { WebMapServiceImageryProvider } from "terriajs-cesium";
+import {
+  ImageryLayerFeatureInfo,
+  ImageryProvider,
+  WebMapServiceImageryProvider
+} from "terriajs-cesium";
 import { DiscreteTimeAsJS } from "../../lib/ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";

@@ -14,10 +14,12 @@ import Mustache from "mustache";
 import { Component } from "react";
 import { TFunction, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Cartesian3 } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Ellipsoid,
+  JulianDate,
+  Math as CesiumMath
+} from "terriajs-cesium";
 import TerriaError from "../../Core/TerriaError";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";

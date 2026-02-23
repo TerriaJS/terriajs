@@ -1,6 +1,8 @@
 import { configure, runInAction } from "mobx";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { UrlTemplateImageryProvider } from "terriajs-cesium";
+import {
+  WebMercatorTilingScheme,
+  UrlTemplateImageryProvider
+} from "terriajs-cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import OpenStreetMapCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/OpenStreetMapCatalogItem";
 import Terria from "../../../../lib/Models/Terria";

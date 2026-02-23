@@ -7,17 +7,19 @@ import {
   observable,
   makeObservable
 } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Credit as CesiumCredit } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { TileProviderError } from "terriajs-cesium";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartographic,
+  Credit as CesiumCredit,
+  defined,
+  Event as CesiumEvent,
+  Math as CesiumMath,
+  TileProviderError,
+  WebMercatorTilingScheme,
+  ImageryLayerFeatureInfo,
+  ImageryProvider,
+  SplitDirection
+} from "terriajs-cesium";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";

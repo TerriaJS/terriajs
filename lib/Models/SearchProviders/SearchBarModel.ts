@@ -5,8 +5,7 @@ import {
   makeObservable,
   observable
 } from "mobx";
-import { DeveloperError } from "terriajs-cesium";
-import { RuntimeError } from "terriajs-cesium";
+import { DeveloperError, RuntimeError } from "terriajs-cesium";
 import { JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";

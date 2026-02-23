@@ -3,8 +3,10 @@ import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import moment from "moment";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { ArcGisMapServerImageryProvider } from "terriajs-cesium";
+import {
+  WebMercatorTilingScheme,
+  ArcGisMapServerImageryProvider
+} from "terriajs-cesium";
 import URI from "urijs";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";

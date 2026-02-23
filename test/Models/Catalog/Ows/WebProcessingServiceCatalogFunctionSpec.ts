@@ -1,6 +1,5 @@
 import { configure, reaction, runInAction } from "mobx";
-import { Cartographic } from "terriajs-cesium";
-import { GeoJsonDataSource } from "terriajs-cesium";
+import { Cartographic, GeoJsonDataSource } from "terriajs-cesium";
 import isDefined from "../../../../lib/Core/isDefined";
 import Result from "../../../../lib/Core/Result";
 import TerriaError from "../../../../lib/Core/TerriaError";

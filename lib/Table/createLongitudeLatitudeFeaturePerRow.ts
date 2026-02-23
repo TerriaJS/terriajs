@@ -1,11 +1,13 @@
-import { Cartesian3 } from "terriajs-cesium";
-import { TimeIntervalCollection } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { LabelGraphics } from "terriajs-cesium";
-import { PointGraphics } from "terriajs-cesium";
-import { PropertyBag } from "terriajs-cesium";
-import { HeightReference } from "terriajs-cesium";
+import {
+  Cartesian3,
+  TimeIntervalCollection,
+  BillboardGraphics,
+  ConstantPositionProperty,
+  LabelGraphics,
+  PointGraphics,
+  PropertyBag,
+  HeightReference
+} from "terriajs-cesium";
 import { JsonObject } from "../Core/Json";
 import TerriaFeature from "../Models/Feature/Feature";
 import { getFeatureStyle } from "./getFeatureStyle";

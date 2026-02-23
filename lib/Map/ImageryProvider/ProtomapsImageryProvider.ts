@@ -13,14 +13,16 @@ import {
   ZxySource,
   paint
 } from "protomaps-leaflet";
-import { Cartographic } from "terriajs-cesium";
-import { Credit } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { Request } from "terriajs-cesium";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
+import {
+  Cartographic,
+  Credit,
+  Event as CesiumEvent,
+  Math as CesiumMath,
+  Rectangle,
+  Request,
+  WebMercatorTilingScheme,
+  ImageryLayerFeatureInfo
+} from "terriajs-cesium";
 import { FeatureCollectionWithCrs } from "../../Core/GeoJson";
 import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";

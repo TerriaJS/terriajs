@@ -1,9 +1,11 @@
 import L from "leaflet";
-import { Cartographic } from "terriajs-cesium";
-import { EasingFunction } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { TweenCollection } from "terriajs-cesium";
+import {
+  Cartographic,
+  EasingFunction,
+  Ellipsoid,
+  Math as CesiumMath,
+  TweenCollection
+} from "terriajs-cesium";
 import selectionIndicatorUrl from "../../../wwwroot/images/NM-LocationTarget.svg";
 import isDefined from "../../Core/isDefined";
 import Leaflet from "../../Models/Leaflet";

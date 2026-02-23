@@ -1,7 +1,9 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import { WebMercatorTilingScheme } from "terriajs-cesium";
-import { ArcGisMapServerImageryProvider } from "terriajs-cesium";
+import {
+  WebMercatorTilingScheme,
+  ArcGisMapServerImageryProvider
+} from "terriajs-cesium";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";

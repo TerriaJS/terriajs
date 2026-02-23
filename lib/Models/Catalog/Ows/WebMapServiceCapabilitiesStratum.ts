@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
+import { Math as CesiumMath, Rectangle } from "terriajs-cesium";
 import URI from "urijs";
 import { JsonObject, isJsonArray, isJsonString } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";

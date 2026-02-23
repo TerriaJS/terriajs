@@ -13,54 +13,56 @@ import {
 } from "mobx";
 import { computedFn, fromPromise, IPromiseBasedObservable } from "mobx-utils";
 import ionCreditLogo from "terriajs-cesium/Source/Assets/Images/ion-credit.png";
-import { AssociativeArray } from "terriajs-cesium";
-import { BoundingSphere } from "terriajs-cesium";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { CesiumTerrainProvider } from "terriajs-cesium";
-import { createWorldTerrainAsync } from "terriajs-cesium";
-import { Credit } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
-import { destroyObject } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { Event } from "terriajs-cesium";
-import { EventHelper } from "terriajs-cesium";
-import { FeatureDetection } from "terriajs-cesium";
-import { HeadingPitchRange } from "terriajs-cesium";
-import { Ion } from "terriajs-cesium";
-import { IonResource } from "terriajs-cesium";
-import { KeyboardEventModifier } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Matrix4 } from "terriajs-cesium";
-import { PerspectiveFrustum } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { sampleTerrain } from "terriajs-cesium";
-import { ScreenSpaceEventHandler } from "terriajs-cesium";
-import { ScreenSpaceEventType } from "terriajs-cesium";
-import { TerrainProvider } from "terriajs-cesium";
-import { Transforms } from "terriajs-cesium";
-import { BoundingSphereState } from "terriajs-cesium";
-import { DataSource } from "terriajs-cesium";
-import { DataSourceCollection } from "terriajs-cesium";
-import { DataSourceDisplay } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { getElement } from "terriajs-cesium";
-import { Camera } from "terriajs-cesium";
-import { Cesium3DTileset } from "terriajs-cesium";
-import { CreditDisplay } from "terriajs-cesium";
-import { I3SDataProvider } from "terriajs-cesium";
-import { ImageryLayer } from "terriajs-cesium";
-import { ImageryLayerCollection } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { PrimitiveCollection } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
-import { SceneTransforms } from "terriajs-cesium";
-import { SingleTileImageryProvider } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
-import { CesiumWidget } from "terriajs-cesium";
+import {
+  AssociativeArray,
+  BoundingSphere,
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  CesiumTerrainProvider,
+  createWorldTerrainAsync,
+  Credit,
+  defined,
+  destroyObject,
+  Ellipsoid,
+  EllipsoidTerrainProvider,
+  Event,
+  EventHelper,
+  FeatureDetection,
+  HeadingPitchRange,
+  Ion,
+  IonResource,
+  KeyboardEventModifier,
+  Math as CesiumMath,
+  Matrix4,
+  PerspectiveFrustum,
+  Rectangle,
+  sampleTerrain,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  TerrainProvider,
+  Transforms,
+  BoundingSphereState,
+  DataSource,
+  DataSourceCollection,
+  DataSourceDisplay,
+  Entity,
+  getElement,
+  Camera,
+  Cesium3DTileset,
+  CreditDisplay,
+  I3SDataProvider,
+  ImageryLayer,
+  ImageryLayerCollection,
+  ImageryLayerFeatureInfo,
+  ImageryProvider,
+  PrimitiveCollection,
+  Scene,
+  SceneTransforms,
+  SingleTileImageryProvider,
+  SplitDirection,
+  CesiumWidget
+} from "terriajs-cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";

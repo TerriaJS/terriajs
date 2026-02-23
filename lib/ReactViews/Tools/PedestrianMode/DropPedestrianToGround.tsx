@@ -1,13 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { EllipsoidTerrainProvider } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
-import { ScreenSpaceEventHandler } from "terriajs-cesium";
-import { ScreenSpaceEventType } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  EllipsoidTerrainProvider,
+  sampleTerrainMostDetailed,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  Scene
+} from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import Cesium from "../../../Models/Cesium";
 import MouseTooltip from "./MouseTooltip";

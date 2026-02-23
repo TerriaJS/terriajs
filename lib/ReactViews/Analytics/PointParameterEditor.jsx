@@ -4,10 +4,12 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import { Cartographic } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
+import {
+  Cartographic,
+  Math as CesiumMath,
+  defined,
+  Ellipsoid
+} from "terriajs-cesium";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
 

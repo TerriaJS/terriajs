@@ -3,10 +3,12 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
-import { Cartesian2 } from "terriajs-cesium";
-import { EllipsoidGeodesic } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { Scene } from "terriajs-cesium";
+import {
+  Cartesian2,
+  EllipsoidGeodesic,
+  Event as CesiumEvent,
+  Scene
+} from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import Box from "../../../Styled/Box";
 import Text from "../../../Styled/Text";

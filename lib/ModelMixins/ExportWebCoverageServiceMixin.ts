@@ -1,8 +1,10 @@
 import i18next from "i18next";
 import { computed, runInAction, makeObservable } from "mobx";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { RequestErrorEvent } from "terriajs-cesium";
+import {
+  Math as CesiumMath,
+  Rectangle,
+  RequestErrorEvent
+} from "terriajs-cesium";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";

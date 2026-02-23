@@ -1,11 +1,13 @@
 "use strict";
 
-import { defined } from "terriajs-cesium";
+import {
+  defined,
+  CesiumWidget,
+  TileCoordinatesImageryProvider,
+  Math as CesiumMath
+} from "terriajs-cesium";
 import Terria from "../../lib/Models/Terria";
 import Cesium from "../../lib/Models/Cesium";
-import { CesiumWidget } from "terriajs-cesium";
-import { TileCoordinatesImageryProvider } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import AugmentedVirtuality from "../../lib/Models/AugmentedVirtuality";
 

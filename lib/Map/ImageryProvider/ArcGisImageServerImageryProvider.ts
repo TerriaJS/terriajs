@@ -1,20 +1,22 @@
 import { makeObservable } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Credit } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { Event as CesiumEvent } from "terriajs-cesium";
-import { GeographicProjection } from "terriajs-cesium";
-import { GeographicTilingScheme } from "terriajs-cesium";
-import { Math } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { Request } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { TilingScheme } from "terriajs-cesium";
-import { DiscardMissingTileImagePolicy } from "terriajs-cesium";
-import { ImageryLayerFeatureInfo } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { TileDiscardPolicy } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartographic,
+  Credit,
+  Ellipsoid,
+  Event as CesiumEvent,
+  GeographicProjection,
+  GeographicTilingScheme,
+  Math,
+  Rectangle,
+  Request,
+  Resource,
+  TilingScheme,
+  DiscardMissingTileImagePolicy,
+  ImageryLayerFeatureInfo,
+  ImageryProvider,
+  TileDiscardPolicy
+} from "terriajs-cesium";
 import { JsonObject } from "../../Core/Json";
 import { ImageServerIdentifyResult } from "../../Models/Catalog/Esri/ArcGisInterfaces";
 

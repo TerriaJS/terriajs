@@ -1,8 +1,7 @@
 import { Feature, Point } from "geojson";
 import i18next from "i18next";
 import { makeObservable, override, runInAction } from "mobx";
-import { Rectangle } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
+import { Rectangle, Resource } from "terriajs-cesium";
 import {
   Category,
   SearchAction

@@ -1,6 +1,5 @@
 import { computed, observable, makeObservable, runInAction } from "mobx";
-import { Credit } from "terriajs-cesium";
-import { BingMapsImageryProvider } from "terriajs-cesium";
+import { Credit, BingMapsImageryProvider } from "terriajs-cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import BingMapsCatalogItemTraits from "../../../Traits/TraitsClasses/BingMapsCatalogItemTraits";

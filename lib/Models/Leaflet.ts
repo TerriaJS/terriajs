@@ -10,19 +10,21 @@ import {
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Clock } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { EventHelper } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { DataSource } from "terriajs-cesium";
-import { DataSourceCollection } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
-import { SplitDirection } from "terriajs-cesium";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Clock,
+  Ellipsoid,
+  EventHelper,
+  Math as CesiumMath,
+  Rectangle,
+  DataSource,
+  DataSourceCollection,
+  Entity,
+  ImageryProvider,
+  SplitDirection
+} from "terriajs-cesium";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";

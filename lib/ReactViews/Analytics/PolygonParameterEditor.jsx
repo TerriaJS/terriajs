@@ -4,12 +4,10 @@ import { Component } from "react";
 
 import PropTypes from "prop-types";
 
-import { defined } from "terriajs-cesium";
+import { defined, Math as CesiumMath, Ellipsoid } from "terriajs-cesium";
 
 import Styles from "./parameter-editors.scss";
 
-import { Math as CesiumMath } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
 import UserDrawing from "../../Models/UserDrawing";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";

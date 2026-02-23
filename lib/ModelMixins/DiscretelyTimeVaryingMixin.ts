@@ -1,6 +1,5 @@
 import { action, computed, runInAction, makeObservable, override } from "mobx";
-import { binarySearch } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
+import { binarySearch, JulianDate } from "terriajs-cesium";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AbstractConstructor from "../Core/AbstractConstructor";

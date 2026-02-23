@@ -1,11 +1,9 @@
-import { Cesium3DTileStyle } from "terriajs-cesium";
+import { Cesium3DTileStyle, clone, Color } from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import Cesium3dTilesTraits from "../Traits/TraitsClasses/Cesium3dTilesTraits";
-import { clone } from "terriajs-cesium";
 import { computed, makeObservable, override, runInAction, toJS } from "mobx";
-import { Color } from "terriajs-cesium";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import StratumOrder from "../Models/Definition/StratumOrder";
 

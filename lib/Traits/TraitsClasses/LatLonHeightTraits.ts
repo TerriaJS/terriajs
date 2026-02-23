@@ -1,6 +1,4 @@
-import { Cartesian3 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
+import { Cartesian3, Cartographic, Math as CesiumMath } from "terriajs-cesium";
 import Result from "../../Core/Result";
 import Model from "../../Models/Definition/Model";
 import updateModelFromJson from "../../Models/Definition/updateModelFromJson";

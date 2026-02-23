@@ -24,8 +24,7 @@ import {
   withTranslation
 } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import { combine } from "terriajs-cesium";
-import { createGuid } from "terriajs-cesium";
+import { combine, createGuid } from "terriajs-cesium";
 import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import {
   Category,

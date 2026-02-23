@@ -1,12 +1,14 @@
 import i18next from "i18next";
 import { action, makeObservable } from "mobx";
-import { BoundingSphere } from "terriajs-cesium";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartographic } from "terriajs-cesium";
-import { sampleTerrainMostDetailed } from "terriajs-cesium";
-import { Cesium3DTile } from "terriajs-cesium";
-import { Cesium3DTileFeature } from "terriajs-cesium";
-import { Cesium3DTileset } from "terriajs-cesium";
+import {
+  BoundingSphere,
+  Cartesian2,
+  Cartographic,
+  sampleTerrainMostDetailed,
+  Cesium3DTile,
+  Cesium3DTileFeature,
+  Cesium3DTileset
+} from "terriajs-cesium";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";

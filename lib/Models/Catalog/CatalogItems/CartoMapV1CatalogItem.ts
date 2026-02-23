@@ -1,6 +1,5 @@
 import { computed, runInAction, makeObservable, override } from "mobx";
-import { Resource } from "terriajs-cesium";
-import { UrlTemplateImageryProvider } from "terriajs-cesium";
+import { Resource, UrlTemplateImageryProvider } from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";

@@ -1,10 +1,12 @@
 import { action, runInAction, makeObservable } from "mobx";
-import { Cartesian2 } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { Resource } from "terriajs-cesium";
-import { ConstantProperty } from "terriajs-cesium";
-import { PropertyBag } from "terriajs-cesium";
-import { ImageryProvider } from "terriajs-cesium";
+import {
+  Cartesian2,
+  JulianDate,
+  Resource,
+  ConstantProperty,
+  PropertyBag,
+  ImageryProvider
+} from "terriajs-cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";

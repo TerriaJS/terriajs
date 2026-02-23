@@ -8,24 +8,26 @@ import {
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
-import { Cartesian3 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { NearFarScalar } from "terriajs-cesium";
-import { Transforms } from "terriajs-cesium";
-import { BillboardGraphics } from "terriajs-cesium";
-import { ConstantPositionProperty } from "terriajs-cesium";
-import { ConstantProperty } from "terriajs-cesium";
-import { CustomDataSource as DataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { ModelGraphics } from "terriajs-cesium";
-import { PointGraphics } from "terriajs-cesium";
-import { PropertyBag } from "terriajs-cesium";
-import { Axis } from "terriajs-cesium";
-import { ColorBlendMode } from "terriajs-cesium";
-import { HeightReference } from "terriajs-cesium";
-import { ShadowMode } from "terriajs-cesium";
+import {
+  Cartesian3,
+  Color,
+  HeadingPitchRoll,
+  JulianDate,
+  NearFarScalar,
+  Transforms,
+  BillboardGraphics,
+  ConstantPositionProperty,
+  ConstantProperty,
+  CustomDataSource as DataSource,
+  Entity,
+  ModelGraphics,
+  PointGraphics,
+  PropertyBag,
+  Axis,
+  ColorBlendMode,
+  HeightReference,
+  ShadowMode
+} from "terriajs-cesium";
 import isDefined from "../../../Core/isDefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";

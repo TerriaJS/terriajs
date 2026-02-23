@@ -1,22 +1,24 @@
 import L, { LatLngBounds, LatLngBoundsLiteral, PolylineOptions } from "leaflet";
-import { AssociativeArray } from "terriajs-cesium";
-import { Cartesian2 } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
-import { Color } from "terriajs-cesium";
-import { destroyObject } from "terriajs-cesium";
-import { Ellipsoid } from "terriajs-cesium";
-import { JulianDate } from "terriajs-cesium";
-import { Math as CesiumMath } from "terriajs-cesium";
-import { PolygonHierarchy } from "terriajs-cesium";
-import { Rectangle } from "terriajs-cesium";
-import { writeTextToCanvas } from "terriajs-cesium";
-import { DataSource } from "terriajs-cesium";
-import { Entity } from "terriajs-cesium";
-import { EntityCluster } from "terriajs-cesium";
-import { EntityCollection } from "terriajs-cesium";
-import { PolylineDashMaterialProperty } from "terriajs-cesium";
-import { PolylineGlowMaterialProperty } from "terriajs-cesium";
-import { Property } from "terriajs-cesium";
+import {
+  AssociativeArray,
+  Cartesian2,
+  Cartesian3,
+  Color,
+  destroyObject,
+  Ellipsoid,
+  JulianDate,
+  Math as CesiumMath,
+  PolygonHierarchy,
+  Rectangle,
+  writeTextToCanvas,
+  DataSource,
+  Entity,
+  EntityCluster,
+  EntityCollection,
+  PolylineDashMaterialProperty,
+  PolylineGlowMaterialProperty,
+  Property
+} from "terriajs-cesium";
 import isDefined from "../../Core/isDefined";
 import { convertCesiumDashNumberToDashArray } from "../../Models/Catalog/Esri/esriStyleToTableStyle";
 import LeafletScene from "./LeafletScene";

@@ -8,8 +8,7 @@ import {
 } from "react";
 
 import * as React from "react";
-import { combine } from "terriajs-cesium";
-import { defined } from "terriajs-cesium";
+import { combine, defined } from "terriajs-cesium";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext

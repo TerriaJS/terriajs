@@ -1,24 +1,26 @@
 import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
-import { Cartesian2 } from "terriajs-cesium";
-import { IonResource } from "terriajs-cesium";
-import { Cesium3DTileFeature } from "terriajs-cesium";
-import { Cesium3DTileset } from "terriajs-cesium";
-import { Cesium3DTileStyle } from "terriajs-cesium";
-import { Cesium3DTileColorBlendMode } from "terriajs-cesium";
-import { ShadowMode } from "terriajs-cesium";
+import {
+  Cartesian2,
+  IonResource,
+  Cesium3DTileFeature,
+  Cesium3DTileset,
+  Cesium3DTileStyle,
+  Cesium3DTileColorBlendMode,
+  ShadowMode,
+  Matrix4,
+  Quaternion,
+  Matrix3,
+  HeadingPitchRoll,
+  Cartesian3
+} from "terriajs-cesium";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import { Matrix4 } from "terriajs-cesium";
 import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import { Quaternion } from "terriajs-cesium";
-import { Matrix3 } from "terriajs-cesium";
-import { HeadingPitchRoll } from "terriajs-cesium";
-import { Cartesian3 } from "terriajs-cesium";
 import {
   OptionsTraits,
   FilterTraits
