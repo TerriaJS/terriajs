@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
@@ -70,8 +70,6 @@ describe("StandardUserInterface", function () {
         version="test"
       />
     );
-
-    screen.debug(container);
 
     const sidePanelContainer = container.querySelector(".top-element");
     expect(sidePanelContainer).toBeInTheDocument();

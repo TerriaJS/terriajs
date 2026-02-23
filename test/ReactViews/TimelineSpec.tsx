@@ -50,7 +50,6 @@ describe("Timeline", function () {
       const { container } = render(
         withThemeContext(<Timeline terria={terria} />)
       );
-      screen.debug(container);
       expect(within(container).getByText("Jan")).toBeInTheDocument();
     });
 
