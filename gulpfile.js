@@ -18,7 +18,6 @@ function buildSpecs(done) {
 
   runWebpack(webpack, webpackConfig, done);
 }
-buildSpecs.displayName = "build-specs";
 
 function releaseSpecs(done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
@@ -27,7 +26,6 @@ function releaseSpecs(done) {
 
   runWebpack(webpack, webpackConfig, done);
 }
-releaseSpecs.displayName = "release-specs";
 
 function watchSpecs(done) {
   var watchWebpack = require("./buildprocess/watchWebpack");
@@ -36,7 +34,6 @@ function watchSpecs(done) {
 
   watchWebpack(webpack, webpackConfig, done);
 }
-watchSpecs.displayName = "watch-specs";
 
 function lint(done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
@@ -86,7 +83,6 @@ function copyCesiumWorkers() {
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
 }
-copyCesiumWorkers.displayName = "copy-cesium-workers";
 
 function copyCesiumThirdparty() {
   var path = require("path");
@@ -102,7 +98,6 @@ function copyCesiumThirdparty() {
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
 }
-copyCesiumThirdparty.displayName = "copy-cesium-thirdparty";
 
 function copyCesiumSourceAssets() {
   var path = require("path");
@@ -118,7 +113,6 @@ function copyCesiumSourceAssets() {
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
 }
-copyCesiumSourceAssets.displayName = "copy-cesium-source-assets";
 
 function testFirefox(done) {
   runKarma("./buildprocess/karma-firefox.conf.js", done);
@@ -270,7 +264,6 @@ const copyCesiumAssets = gulp.series(
   copyCesiumWorkers,
   copyCesiumThirdparty
 );
-copyCesiumAssets.displayName = "copy-cesium-assets";
 
 const build = gulp.series(copyCesiumAssets, buildSpecs);
 build.description = "Build non-minified version of TerriaJS tests.";
