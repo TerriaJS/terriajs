@@ -57,6 +57,18 @@ jobs:
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
 
+      - name: Update attributions.md
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: |
+          git config --global user.email "info@terria.io"
+          git config --global user.name "GitHub Actions"
+          yarn gulp code-attribution
+          git add doc/acknowledgements/attributions.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Update attributions.md for v${{ steps.detect.outputs.current-version }}"
+            git push
+          fi
+
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npx gulp lint release
