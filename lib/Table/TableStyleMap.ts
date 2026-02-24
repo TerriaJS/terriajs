@@ -1,5 +1,4 @@
 import { computed, makeObservable } from "mobx";
-import { PickProperties } from "ts-essentials";
 import JsonValue from "../Core/Json";
 import { NotUndefined } from "../Core/TypeModifiers";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -11,6 +10,10 @@ import {
   TableStyleMapTraits
 } from "../Traits/TraitsClasses/Table/StyleMapTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+
+type PickProperties<Type, Value> = {
+  [Key in keyof Type as Type[Key] extends Value ? Key : never]: Type[Key];
+};
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
   enabled?: boolean;
