@@ -21,10 +21,10 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
-      - uses: google-github-actions/setup-gcloud@v3.0.1
+      - uses: google-github-actions/auth@v2
         with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+      - uses: google-github-actions/setup-gcloud@v3.0.1
       - uses: google-github-actions/get-gke-credentials@v3.0.0
         with:
           cluster_name: ${{ secrets.GKE_CLUSTER }}
