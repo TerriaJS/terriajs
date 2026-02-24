@@ -25,15 +25,19 @@ TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
 git clone -b main https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
-sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
-sync-dependencies --source terriajs
+mkdir packages
+cd packages
+git clone -b $GITHUB_BRANCH --depth=1 https://github.com/TerriaJS/terriajs.git
+cd ..
+TERRIAJS_VERSION=$(node -p "require('./packages/terriajs/package.json').version")
+sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TERRIAJS_VERSION'"@g' package.json
+sync-dependencies --source terriajs --from ./packages/terriajs/package.json
 git config --global user.email "info@terria.io"
 git config --global user.name "GitHub Actions"
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
-yarn add -W moment@2.24.0
 yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
 
 pwd
