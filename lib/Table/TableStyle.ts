@@ -1,4 +1,4 @@
-import { BBox } from "@turf/helpers";
+import { BBox } from "geojson";
 import groupBy from "lodash-es/groupBy";
 import { computed, makeObservable } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
@@ -23,9 +23,9 @@ import { LabelSymbolTraits } from "../Traits/TraitsClasses/Table/LabelStyleTrait
 import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
 import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
-import { TrailSymbolTraits } from "../Traits/TraitsClasses/Table/TrailStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/Table/TrailStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";

@@ -1,5 +1,4 @@
 import { action, observable, runInAction, makeObservable } from "mobx";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CorsProxy from "../../Core/CorsProxy";
 import isDefined from "../../Core/isDefined";
@@ -203,14 +202,12 @@ export default class RegionProvider {
     this.layerName = properties.layerName;
     this.server = properties.server;
     this.serverSubdomains = properties.serverSubdomains;
-    this.serverMinZoom = defaultValue(properties.serverMinZoom, 0);
-    this.serverMaxZoom = defaultValue(properties.serverMaxZoom, Infinity);
-    this.serverMaxNativeZoom = defaultValue(
-      properties.serverMaxNativeZoom,
-      this.serverMaxZoom
-    );
+    this.serverMinZoom = properties.serverMinZoom ?? 0;
+    this.serverMaxZoom = properties.serverMaxZoom ?? Infinity;
+    this.serverMaxNativeZoom =
+      properties.serverMaxNativeZoom ?? this.serverMaxZoom;
     this.bbox = properties.bbox;
-    this.aliases = defaultValue(properties.aliases, [this.regionType]);
+    this.aliases = properties.aliases ?? [this.regionType];
     this.serverReplacements =
       properties.serverReplacements instanceof Array
         ? properties.serverReplacements.map(function (r) {
@@ -235,9 +232,9 @@ export default class RegionProvider {
 
     this.disambigProp = properties.disambigProp;
 
-    this.uniqueIdProp = defaultValue(properties.uniqueIdProp, "FID");
+    this.uniqueIdProp = properties.uniqueIdProp ?? "FID";
 
-    this.textCodes = defaultValue(properties.textCodes, false); // yes, it's singular...
+    this.textCodes = properties.textCodes ?? false; // yes, it's singular...
 
     this.regionIdsFile = properties.regionIdsFile;
     this.regionDisambigIdsFile = properties.regionDisambigIdsFile;

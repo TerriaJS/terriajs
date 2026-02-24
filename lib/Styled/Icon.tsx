@@ -102,8 +102,8 @@ import menuDotted from "../../wwwroot/images/icons/menu-dotted.svg";
 import cancel from "../../wwwroot/images/icons/cancel.svg";
 import user from "../../wwwroot/images/icons/user.svg";
 import datePicker from "../../wwwroot/images/icons/date-picker-icon.svg";
-import tour from "../../wwwroot/images/icons/take-the-tour-icon.svg";
-import layers from "../../wwwroot/images/icons/pulling-away-layers-icon.svg";
+import tour from "../../wwwroot/images/icons/take-the-tour.svg";
+import layers from "../../wwwroot/images/icons/pulling-away-layers.svg";
 import start from "../../wwwroot/images/icons/getting-started-icon.svg";
 import cube from "../../wwwroot/images/icons/interact.svg";
 import globe from "../../wwwroot/images/icons/globe.svg";
@@ -145,6 +145,7 @@ import minusList from "../../wwwroot/images/icons/dismiss-20.svg";
 import switchOn from "../../wwwroot/images/icons/switch-on.svg";
 import switchOff from "../../wwwroot/images/icons/switch-off.svg";
 import dragDrop from "../../wwwroot/images/icons/drag-drop.svg";
+import warning from "../../wwwroot/images/icons/warning.svg";
 
 // Icon
 export const GLYPHS = {
@@ -289,7 +290,8 @@ export const GLYPHS = {
   minusList,
   switchOn,
   switchOff,
-  dragDrop
+  dragDrop,
+  warning
 };
 
 export interface IconGlyph {

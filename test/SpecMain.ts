@@ -5,6 +5,8 @@ import { configure, spy } from "mobx";
 import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 import JasmineDOM from "@testing-library/jasmine-dom";
+import { initReactI18next } from "react-i18next";
+import english from "../wwwroot/languages/en/translation.json";
 
 configure({
   enforceActions: "always",
@@ -26,10 +28,15 @@ spy((event) => {
 
 beforeAll(async function () {
   jasmine.addMatchers(JasmineDOM);
-  await i18next.init({
+
+  await i18next.use(initReactI18next).init({
     lng: "cimode",
     debug: false,
-    resources: {}
+    resources: {
+      en: {
+        translation: english
+      }
+    }
   });
 });
 

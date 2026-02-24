@@ -19,7 +19,7 @@ let matches;
 const publicModules = new Set();
 //eslint-disable-next-line no-cond-assign
 while ((matches = regex.exec(declrationFileSource))) {
-  const moduleName = matches[2].match(/([^\s|\(]+)/);
+  const moduleName = matches[2].match(/([^\s(]+)/);
   publicModules.add(moduleName[1]);
 }
 

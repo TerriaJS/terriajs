@@ -79,14 +79,6 @@
   composes: label from "../../../Sass/common/_labels.scss";
 }
 
-.loader {
-  padding: 0px 0px 0px variables.$padding * 3 !important;
-
-  &:before {
-    top: 0px;
-  }
-}
-
 .btn--close-chart-panel {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;

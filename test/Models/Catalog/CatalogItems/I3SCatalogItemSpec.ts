@@ -69,6 +69,12 @@ describe("I3SCatalogItemSpec", function () {
     expect(item.isMappable).toBeTruthy();
   });
 
+  it("adds token to i3s provider resource", async function () {
+    item.setTrait("definition", "token", "test-token");
+    await item.loadMapItems();
+    expect(item.mapItems[0].resource.url).toContain("token=test-token");
+  });
+
   describe("after loading", function () {
     let dispose: () => void;
     beforeEach(async function () {

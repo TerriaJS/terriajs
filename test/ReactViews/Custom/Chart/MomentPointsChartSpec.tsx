@@ -1,14 +1,30 @@
+import { render } from "@testing-library/react";
 import { scaleLinear, scaleTime } from "@visx/scale";
-import { Glyph, GlyphSquare } from "@visx/glyph";
 import maxBy from "lodash-es/maxBy";
 import minBy from "lodash-es/minBy";
-import TestRenderer from "react-test-renderer";
 import MomentPointsChart from "../../../../lib/ReactViews/Custom/Chart/MomentPointsChart";
+
+function parseGlyphPositions(container: HTMLElement) {
+  const glyphs = container.querySelectorAll("g.visx-glyph");
+  return Array.from(glyphs).map((g) => {
+    const transform = g.getAttribute("transform") || "";
+    const match = transform.match(/translate\(\s*([^,\s]+)\s*,\s*([^)]+)\s*\)/);
+    return {
+      left: parseFloat(match?.[1] ?? "0"),
+      top: parseFloat(match?.[2] ?? "0")
+    };
+  });
+}
 
 describe("MomentPointsChart", function () {
   const chartItem = {
+    id: "chartitem",
+    item: {} as never,
     categoryName: "Points chart",
+    key: "key-chartitem",
     name: "chartitem",
+    type: "momentPoints" as const,
+    xAxis: { name: "xAxis", scale: "time" as const },
     points: [
       { x: new Date("2020-05-25"), y: 0.5 },
       { x: new Date("2020-05-26"), y: 0.5 },
@@ -17,8 +33,15 @@ describe("MomentPointsChart", function () {
       { x: new Date("2020-05-29"), y: 0.5 },
       { x: new Date("2020-05-30"), y: 0.5 }
     ],
+    domain: {
+      x: [new Date("2020-05-25").valueOf(), new Date("2020-05-30").valueOf()],
+      y: [0.5, 0.5]
+    },
     getColor: () => "red",
-    onClick: () => {}
+    onClick: () => {},
+    showInChartPanel: true,
+    isSelectedInWorkbench: true,
+    updateIsSelectedInWorkbench: () => {}
   };
 
   const scales = getScales(chartItem.points);
@@ -29,26 +52,36 @@ describe("MomentPointsChart", function () {
   };
 
   it("renders all points", function () {
-    const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
-    const glyphs = renderer.root.findAllByType(Glyph);
+    const { container } = render(
+      <svg>
+        <MomentPointsChart {...props} />
+      </svg>
+    );
+    const glyphs = container.querySelectorAll("g.visx-glyph");
     expect(glyphs.length).toBe(6);
   });
 
   it("renders the points at the correct positions", function () {
-    const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
-    const glyphs = renderer.root.findAllByType(Glyph);
+    const { container } = render(
+      <svg>
+        <MomentPointsChart {...props} />
+      </svg>
+    );
+    const positions = parseGlyphPositions(container);
     const xs = [0, 2, 4, 6, 8, 10];
-    glyphs.forEach((glyph, i) => {
-      expect(glyph.props.left).toEqual(xs[i]);
-      expect(glyph.props.top).toEqual(5);
+    positions.forEach((pos, i) => {
+      expect(pos.left).toEqual(xs[i]);
+      expect(pos.top).toEqual(5);
     });
   });
 
   it("renders the correct type of glyph", function () {
-    const renderer = TestRenderer.create(
-      <MomentPointsChart {...props} glyph="square" />
+    const { container } = render(
+      <svg>
+        <MomentPointsChart {...props} glyph="square" />
+      </svg>
     );
-    const glyphs = renderer.root.findAllByType(GlyphSquare);
+    const glyphs = container.querySelectorAll("g.visx-glyph");
     expect(glyphs.length).toBe(6);
   });
 
@@ -68,15 +101,17 @@ describe("MomentPointsChart", function () {
         basisItem,
         basisItemScales
       };
-      const renderer = TestRenderer.create(
-        <MomentPointsChart {...propsWithBasisItem} />
+      const { container } = render(
+        <svg>
+          <MomentPointsChart {...propsWithBasisItem} />
+        </svg>
       );
-      const glyphs = renderer.root.findAllByType(Glyph);
+      const positions = parseGlyphPositions(container);
       const xs = [0, 2, 4, 6, 8, 10];
       const ys = [0, 10, 2, 5, 8, 6];
-      glyphs.forEach((point, i) => {
-        expect(point.props.left).toEqual(xs[i]);
-        expect(point.props.top).toEqual(ys[i]);
+      positions.forEach((pos, i) => {
+        expect(pos.left).toEqual(xs[i]);
+        expect(pos.top).toEqual(ys[i]);
       });
     });
   });

@@ -274,7 +274,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       throw new TerriaError({
         sender: this,
         title: "Unsupported parameter type",
-        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
+        message: `The parameter '${input.Identifier}' is not a supported type of parameter.`
       });
     });
   }

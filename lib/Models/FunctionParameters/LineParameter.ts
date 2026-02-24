@@ -1,4 +1,4 @@
-import { Feature, LineString } from "@turf/helpers";
+import { Feature, LineString } from "geojson";
 import { computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import FunctionParameter, {

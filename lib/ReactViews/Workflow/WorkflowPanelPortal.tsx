@@ -35,7 +35,7 @@ const Container = styled.div<{ show: boolean }>`
   visibility: ${(p) => (p.show ? "visible" : "hidden")};
   margin-left: ${(p) => (p.show ? "0px" : `-${p.theme.workflowPanelWidth}px`)};
   opacity: ${(p) => (p.show ? 1 : 0)};
-  border-radius: ${(p) => p.theme.radiusXL}; ;
+  border-radius: ${(p) => p.theme.radiusXL};
 `;
 
 export default WorkflowPanelPortal;

@@ -23,6 +23,55 @@ describe("ApiTableCatalogItem", function () {
     jasmine.Ajax.uninstall();
   });
 
+  describe("query parameters", function () {
+    beforeEach(function () {
+      updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
+        idKey: "id",
+        queryParameters: [
+          { name: "commonparam", value: "foo" },
+          { name: "dateparam", value: "DATE!yymmdd" }
+        ],
+        apis: [
+          {
+            url: "https://terria.io/values.json",
+            queryParameters: [{ name: "apiparam", value: "bar" }]
+          }
+        ]
+      });
+
+      jasmine.Ajax.stubRequest(
+        "build/TerriaJS/data/regionMapping.json"
+      ).andReturn({ responseJSON: regionMapping });
+
+      jasmine.Ajax.stubRequest(
+        new RegExp("https://terria.io/values.json")
+      ).andReturn({
+        responseJSON: valueApiResponse
+      });
+    });
+
+    it("adds common queryParameters to URL", async function () {
+      await apiCatalogItem.loadMapItems();
+      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
+      const params = new URL(request.url).searchParams;
+      expect(params.get("commonparam")).toBe("foo");
+    });
+
+    it("adds api specific queryParameters to URL", async function () {
+      await apiCatalogItem.loadMapItems();
+      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
+      const params = new URL(request.url).searchParams;
+      expect(params.get("apiparam")).toBe("bar");
+    });
+
+    it("substitutes date values", async function () {
+      await apiCatalogItem.loadMapItems();
+      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
+      const params = new URL(request.url).searchParams;
+      expect(params.get("dateparam")).toMatch(/^[0-9]{6}$/);
+    });
+  });
+
   it("creates a table from api calls", async function () {
     runInAction(() => {
       updateModelFromJson(apiCatalogItem, CommonStrata.definition, {

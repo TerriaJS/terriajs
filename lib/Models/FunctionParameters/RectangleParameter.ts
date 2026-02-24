@@ -1,4 +1,3 @@
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
@@ -27,6 +26,6 @@ export default class RectangleParameter extends FunctionParameter<RectangleCoord
     options: Options
   ) {
     super(catalogFunction, options);
-    this.crs = defaultValue(options.crs, Reproject.TERRIA_CRS);
+    this.crs = options.crs ?? Reproject.TERRIA_CRS;
   }
 }

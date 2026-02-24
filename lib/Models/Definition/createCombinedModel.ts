@@ -109,18 +109,16 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
   get size(): number {
     return this.strata.size;
   }
-  [Symbol.iterator](): IterableIterator<
-    [string, StratumFromTraits<ModelTraits>]
-  > {
+  [Symbol.iterator](): MapIterator<[string, StratumFromTraits<ModelTraits>]> {
     return this.strata.entries();
   }
-  entries(): IterableIterator<[string, StratumFromTraits<ModelTraits>]> {
+  entries(): MapIterator<[string, StratumFromTraits<ModelTraits>]> {
     return this.strata.entries();
   }
-  keys(): IterableIterator<string> {
+  keys(): MapIterator<string> {
     return this.strata.keys();
   }
-  values(): IterableIterator<StratumFromTraits<ModelTraits>> {
+  values(): MapIterator<StratumFromTraits<ModelTraits>> {
     return this.strata.values();
   }
   get [Symbol.toStringTag](): string {

@@ -1,7 +1,8 @@
+import { Feature, Point } from "geojson";
 import { makeObservable, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import { Feature, Point } from "@turf/helpers";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import {
   Category,
   SearchAction
@@ -13,7 +14,6 @@ import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import Resource from "terriajs-cesium/Source/Core/Resource";
 
 export default class NominatimSearchProvider extends LocationSearchProviderMixin(
   CreateModel(NominatimSearchProviderTraits)
@@ -26,6 +26,12 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
 
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
+
+    console.warn(
+      "%c" +
+        "This map is using the Nominatim search provider. It is not recommended for production use, consider using a different search provider instead.",
+      "color: white; font-size: 24px; font-weight: bold; font-family: Helvetica, sans-serif;"
+    );
 
     makeObservable(this);
   }
@@ -123,6 +129,10 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
           content: "translate#viewModels.searchErrorOccurred"
         };
       });
+  }
+
+  supportsAutocomplete(): boolean {
+    return false;
   }
 }
 

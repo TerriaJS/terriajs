@@ -2,8 +2,18 @@ name: Deploy TerriaMap
 
 on: push
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id  }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
 jobs:
   deploy:
+    permissions:
+      contents: read # to fetch code (actions/checkout)
+      statuses: write # to create commit status (ci-deploy.sh)
     if: github.repository_owner == 'TerriaJS'
     runs-on: ubuntu-latest
     steps:

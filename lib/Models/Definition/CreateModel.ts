@@ -1,10 +1,10 @@
 import {
   action,
   computed,
+  makeObservable,
   observable,
   runInAction,
-  toJS,
-  makeObservable
+  toJS
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
@@ -15,7 +15,6 @@ import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
-import Terria from "../Terria";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
 import { isLoadableStratum } from "./LoadableStratum";
@@ -23,6 +22,7 @@ import ModelType, {
   ArrayElementTypes,
   BaseModel,
   ModelConstructor,
+  ModelConstructorParameters,
   ModelInterface
 } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
@@ -40,6 +40,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = Traits as any;
+
     readonly strata: Map<string, StratumTraits>;
 
     /**
@@ -52,15 +53,13 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     @observable
     readonly knownContainerUniqueIds: string[] = [];
 
-    constructor(
-      id: string | undefined,
-      terria: Terria,
-      sourceReference: BaseModel | undefined,
-      strata: Map<string, StratumTraits> | undefined
-    ) {
+    constructor(...args: ModelConstructorParameters) {
+      const [id, terria, sourceReference, strata] = args;
       super(id, terria, sourceReference);
+      this.strata =
+        (strata as Map<string, StratumTraits>) ||
+        observable.map<string, StratumTraits>();
       makeObservable(this);
-      this.strata = strata || observable.map<string, StratumTraits>();
     }
 
     dispose() {}

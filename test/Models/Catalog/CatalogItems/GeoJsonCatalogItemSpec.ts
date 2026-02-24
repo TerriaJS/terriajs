@@ -1606,7 +1606,10 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const imagery = geojson.mapItems[0];
 
-      if ("imageryProvider" in imagery) {
+      if (
+        "imageryProvider" in imagery &&
+        imagery.imageryProvider instanceof ProtomapsImageryProvider
+      ) {
         const highlight =
           imagery.imageryProvider.createHighlightImageryProvider(
             new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })

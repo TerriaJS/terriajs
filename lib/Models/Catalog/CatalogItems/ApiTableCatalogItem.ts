@@ -87,7 +87,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   protected loadDataFromApis() {
     const apisWithUrl = this.apis.filter((api) => api.url);
     const apiUrls = apisWithUrl.map((api) =>
-      proxyCatalogItemUrl(this, api.url!)
+      proxyCatalogItemUrl(this, this.addQueryParams(api))
     );
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {

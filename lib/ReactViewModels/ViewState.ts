@@ -203,12 +203,6 @@ export default class ViewState {
     }
   }
 
-  /**
-   * ID of the workbench item whose ViewingControls menu is currently open.
-   */
-  @observable
-  workbenchItemWithOpenControls: string | undefined = undefined;
-
   errorProvider: any | null = null;
 
   // default value is null, because user has not made decision to show or
@@ -372,6 +366,8 @@ export default class ViewState {
    * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
    */
   @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
+
+  @observable settingsPanelIsVisible: boolean = false;
 
   /**
    * The currently open tool
@@ -617,6 +613,14 @@ export default class ViewState {
     this.openAddData();
     this.searchState.catalogSearchText = query;
     this.searchState.searchCatalog();
+  }
+
+  /**
+   * Open settings panel
+   */
+  @action
+  openSettingsPanel(): void {
+    this.settingsPanelIsVisible = true;
   }
 
   @action

@@ -1,10 +1,10 @@
 import {
+  IReactionDisposer,
   action,
   autorun,
   computed,
-  IReactionDisposer,
-  observable,
-  makeObservable
+  makeObservable,
+  observable
 } from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
@@ -18,6 +18,8 @@ import TimeVarying, {
 import DefaultTimelineModel from "./DefaultTimelineModel";
 import CommonStrata from "./Definition/CommonStrata";
 import Terria from "./Terria";
+
+const DEFAULT_TIMELINE_MODEL_ID = "defaultTimeline";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -227,14 +229,16 @@ export default class TimelineStack {
 
   @action
   setAlwaysShowTimeline(show = true): void {
-    if (!show) {
-      this.defaultTimeVarying = undefined;
+    if (show) {
+      this.defaultTimeVarying = this.getOrCreateDefaultTimelineModel();
     } else {
-      this.defaultTimeVarying = new DefaultTimelineModel(
-        "defaultTimeVarying",
-        this.terria
-      );
+      if (this.defaultTimeVarying) {
+        // Unregister the model so that it doesn't appear in share links
+        this.terria.removeModelReferences(this.defaultTimeVarying);
+      }
+      this.defaultTimeVarying = undefined;
     }
+    this.terria.currentViewer.notifyRepaintRequired();
   }
 
   @computed
@@ -245,6 +249,18 @@ export default class TimelineStack {
       this.defaultTimeVarying.stopTimeAsJulianDate !== undefined &&
       this.defaultTimeVarying.currentTimeAsJulianDate !== undefined
     );
+  }
+
+  private getOrCreateDefaultTimelineModel(): DefaultTimelineModel {
+    let model = this.terria.getModelById(
+      DefaultTimelineModel,
+      DEFAULT_TIMELINE_MODEL_ID
+    );
+    if (!model) {
+      model = new DefaultTimelineModel(DEFAULT_TIMELINE_MODEL_ID, this.terria);
+      this.terria.addModel(model);
+    }
+    return model;
   }
 }
 

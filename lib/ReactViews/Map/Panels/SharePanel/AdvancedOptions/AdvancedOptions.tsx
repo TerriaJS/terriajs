@@ -50,6 +50,7 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
         <TextSpan
           fullWidth
           medium
+          isLink
           css={`
             display: flex;
           `}

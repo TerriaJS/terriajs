@@ -88,14 +88,6 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       viewState.updateAppRef(LOCATION_SEARCH_INPUT_NAME, locationSearchRef);
     }, [viewState]);
 
-    useEffect(() => {
-      // TODO(wing): why is this a reaction here and not in viewState itself?
-      // Close the search results when the Now Viewing changes (so that it's visible).
-      runInAction(() => {
-        viewState.searchState.showLocationSearchResults = false;
-      });
-    }, [viewState.searchState, viewState.terria.workbench.items]);
-
     const toggleShowLocationSearchResults = action((bool: boolean) => {
       viewState.searchState.showLocationSearchResults = bool;
     });
@@ -147,6 +139,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               onFocus={startLocationSearch}
               searchText={searchState.locationSearchText}
               placeholder={placeholder}
+              supportsAutocomplete={searchState.supportsAutocomplete}
             />
           </PresentationBox>
           {/* Results */}
@@ -158,8 +151,9 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               css={`
                 top: 100%;
                 background-color: ${theme.greyLightest};
-                max-height: calc(100vh - 120px);
+                max-height: calc(100vh - 200px);
                 border-radius: 0 0 ${theme.radiusLarge} ${theme.radiusLarge};
+                overflow: hidden;
               `}
             >
               {/* search {searchterm} in data catalog */}
@@ -182,30 +176,30 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                   overflow-y: auto;
                 `}
               >
-                {searchState.locationSearchResults.map((search) => (
-                  <LocationSearchResults
-                    theme={theme}
-                    key={search.searchProvider.uniqueId}
-                    terria={viewState.terria}
-                    viewState={viewState}
-                    search={search}
-                    locationSearchText={locationSearchText}
-                    onLocationClick={(result) => {
-                      if (!result.location) return;
-                      addMarker(viewState.terria, {
-                        name: result.name,
-                        location: result.location
-                      });
-                      result.clickAction?.();
-                      runInAction(() => {
-                        searchState.showLocationSearchResults = false;
-                      });
-                    }}
-                    isWaitingForSearchToStart={
-                      searchState.isWaitingToStartLocationSearch
-                    }
-                  />
-                ))}
+                {!searchState.isWaitingToStartLocationSearch &&
+                  searchState.locationSearchResults.map((search) => (
+                    <LocationSearchResults
+                      key={search.searchProvider.uniqueId}
+                      terria={viewState.terria}
+                      viewState={viewState}
+                      search={search}
+                      locationSearchText={locationSearchText}
+                      onLocationClick={(result) => {
+                        if (!result.location) return;
+                        addMarker(viewState.terria, {
+                          name: result.name,
+                          location: result.location
+                        });
+                        result.clickAction?.();
+                        runInAction(() => {
+                          searchState.showLocationSearchResults = false;
+                        });
+                      }}
+                      isWaitingForSearchToStart={
+                        searchState.isWaitingToStartLocationSearch
+                      }
+                    />
+                  ))}
               </Box>
             </Box>
           )}

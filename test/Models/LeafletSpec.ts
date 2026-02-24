@@ -1,5 +1,8 @@
 import L from "leaflet";
 import { action, computed, when } from "mobx";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CameraView from "../../lib/Models/CameraView";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
@@ -179,6 +182,49 @@ describe("Leaflet Model", function () {
       expect(longitude).not.toBeNaN();
       expect(latitude).not.toBeNaN();
       expect(height).toBe(0);
+    });
+  });
+
+  describe("getCurrentCameraView", function () {
+    const rectangleDegrees = ({ west, south, east, north }: Rectangle) => ({
+      west: CesiumMath.toDegrees(west),
+      south: CesiumMath.toDegrees(south),
+      east: CesiumMath.toDegrees(east),
+      north: CesiumMath.toDegrees(north)
+    });
+
+    describe("when initial camera view is set", function () {
+      const viewRectangle = {
+        west: 119.04785,
+        south: -33.6512,
+        east: 156.31347,
+        north: -22.83694
+      };
+
+      beforeEach(function () {
+        const initialView = CameraView.fromJson(viewRectangle);
+        leaflet.setInitialView(initialView);
+      });
+
+      it("returns the initial view", function () {
+        const r = rectangleDegrees(leaflet.getCurrentCameraView().rectangle);
+        expect(r.west).toBe(viewRectangle.west);
+        expect(r.south).toBe(viewRectangle.south);
+        expect(r.east).toBe(viewRectangle.east);
+        expect(r.north).toBe(viewRectangle.north);
+      });
+
+      it("returns a new view if the camera view changes", async function () {
+        await leaflet.doZoomTo(
+          Rectangle.fromDegrees(107.53236, -17.32317, 151.45236, 6.61319)
+        );
+        const view = leaflet.getCurrentCameraView();
+        const rectangle = rectangleDegrees(view.rectangle);
+        expect(rectangle.west).not.toBe(119.04785);
+        expect(rectangle.south).not.toBe(-33.6512);
+        expect(rectangle.east).not.toBe(156.31347);
+        expect(rectangle.north).not.toBe(-22.83694);
+      });
     });
   });
 });

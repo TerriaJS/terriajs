@@ -3,6 +3,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const webpack = require("webpack");
+const SvgSpriteWebpackPlugin = require("./svgs/SvgSpriteWebpackPlugin.js");
+const defaultBabelLoader = require("./defaultBabelLoader");
 
 /**
  * Supplements the given webpack config with options required to build TerriaJS
@@ -29,8 +31,7 @@ function configureWebpack({
 
   // Use empty polyfills for nodejs modules
   config.resolve.fallback = {
-    fs: false, // geojson-merge, assimp
-    stream: false, // geojson-merge -> geojson-stream
+    fs: false, // assimp
     crypto: false, // assismp.js
     path: false // assimp.js
   };
@@ -102,7 +103,17 @@ function configureWebpack({
     use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
-  // handle image imports
+  // Handle SVG icons with sprite loader
+  config.module.rules.push({
+    test: /\.svg$/,
+    include: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
+    loader: path.resolve(__dirname, "svgs", "svg-sprite-loader.js"),
+    options: {
+      namespace: "terriajs"
+    }
+  });
+
+  // handle other image imports
   config.module.rules.push({
     test: /\.(png|jpg|svg|gif)$/,
     include: [
@@ -113,43 +124,10 @@ function configureWebpack({
     type: "asset" // inlines if file size < 8KB
   });
 
-  // Convert imported svg icons into a sprite
-  // TODO: svg-sprite-loader has several security warnings - we need to find an alternative
-  config.module.rules.push({
-    test: /\.svg$/,
-    include: path.resolve(terriaJSBasePath, "wwwroot", "images", "icons"),
-    loader: require.resolve("svg-sprite-loader"),
-    options: {
-      esModule: false
-    }
-  });
-
-  config.devServer = config.devServer || {
-    stats: "minimal",
-    port: 3003,
-    open: true,
-    contentBase: "wwwroot/",
-    proxy: {
-      "*": {
-        target: "http://localhost:3001",
-        bypass: function (req, res, proxyOptions) {
-          if (
-            req.url.indexOf("/proxy") < 0 &&
-            req.url.indexOf("/proj4lookup") < 0 &&
-            req.url.indexOf("/convert") < 0 &&
-            req.url.indexOf("/proxyabledomains") < 0 &&
-            req.url.indexOf("/errorpage") < 0 &&
-            req.url.indexOf("/init") < 0 &&
-            req.url.indexOf("/serverconfig") < 0
-          ) {
-            return req.originalUrl;
-          }
-        }
-      }
-    }
-  };
-
   config.plugins = config.plugins || [];
+
+  // Add SVG Sprite Webpack Plugin
+  config.plugins.push(new SvgSpriteWebpackPlugin());
 
   // Do not import momentjs locale files
   // Saves ~500kb (unzipped)
@@ -172,7 +150,6 @@ function configureWebpack({
     })
   );
 
-  // Handle reference to Buffer in geojson-merge
   config.plugins.push(
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"]
@@ -269,31 +246,5 @@ function configureWebpack({
 
   return config;
 }
-
-const defaultBabelLoader = ({ devMode }) => ({
-  loader: "babel-loader",
-  options: {
-    cacheDirectory: true,
-    sourceMaps: !!devMode,
-    presets: [
-      [
-        "@babel/preset-env",
-        {
-          corejs: 3,
-          useBuiltIns: "usage"
-        }
-      ],
-      ["@babel/preset-react", { runtime: "automatic" }],
-      ["@babel/preset-typescript", { allowNamespaces: true }]
-    ],
-    plugins: [
-      ["@babel/plugin-proposal-decorators", { legacy: true }],
-      "babel-plugin-styled-components"
-    ],
-    assumptions: {
-      setPublicClassFields: false
-    }
-  }
-});
 
 module.exports = configureWebpack;

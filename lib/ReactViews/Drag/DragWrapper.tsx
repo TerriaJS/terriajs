@@ -4,7 +4,7 @@ import { useDraggable } from "./useDraggable";
 
 interface DragWrapperProps {
   handleSelector?: string;
-  css?: CSSProp;
+  wrapperCSS?: CSSProp;
   style?: React.CSSProperties;
   children: ReactNode;
 }
@@ -13,14 +13,14 @@ const DragWrapper: FC<DragWrapperProps> = ({
   children,
   handleSelector,
   style,
-  css
+  wrapperCSS
 }) => {
   const [ref] = useDraggable({
     handleSelector
   });
 
   return (
-    <div css={css} style={style} ref={ref}>
+    <div css={wrapperCSS} style={style} ref={ref}>
       {children}
     </div>
   );

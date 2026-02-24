@@ -1,4 +1,4 @@
-import { Feature, Point } from "@turf/helpers";
+import { Feature, Point } from "geojson";
 import { computed, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";

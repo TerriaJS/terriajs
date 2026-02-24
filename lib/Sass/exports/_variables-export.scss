@@ -39,6 +39,12 @@
   radiusSmall: variables.$radius-small;
   radiusXL: variables.$radius-xlarge;
 
+  // padding
+  padding: variables.$padding;
+  paddingSmall: variables.$padding-small;
+  paddingMini: variables.$padding-mini;
+  paddingTiny: variables.$padding-tiny;
+
   overlay: variables.$overlay;
   overlayInvert: variables.$overlay-invert;
 
@@ -51,6 +57,7 @@
   textDark: variables.$text-dark;
   textDarker: variables.$text-darker;
   textBlack: variables.$text-black;
+  textWarning: variables.$text-warning;
   turquoiseBlue: variables.$turquoise-blue;
   darkAlpha: variables.$dark-alpha;
   transparentDark: variables.$transparent-dark;

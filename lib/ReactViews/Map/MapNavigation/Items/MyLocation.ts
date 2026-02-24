@@ -122,7 +122,7 @@ export class MyLocation extends MapNavigationItemController {
           coordinates: [longitude, latitude]
         },
         properties: {
-          title: t("location.location"),
+          title: t<string>("location.location"),
           longitude: longitude,
           latitude: latitude
         }
@@ -149,6 +149,7 @@ export class MyLocation extends MapNavigationItemController {
           "stroke-width": 3
         })
       );
+      this._marker.setTrait(CommonStrata.user, "disableDepthTest", true);
 
       this.terria.workbench.add(this._marker);
     });

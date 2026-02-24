@@ -74,10 +74,7 @@ class MappablePreview extends Component {
             <DataPreviewMap
               terria={this.props.terria}
               previewed={catalogItem}
-              showMap={
-                !this.props.viewState.explorerPanelAnimating ||
-                this.props.viewState.useSmallScreenInterface
-              }
+              showMap
             />
           )}
         <button

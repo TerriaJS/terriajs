@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import isDefined from "../../Core/isDefined";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -50,10 +49,7 @@ export default async function addUserCatalogMember(
       dereferenced.setTrait(CommonStrata.user, "isOpen", true);
     }
 
-    if (
-      defaultValue(options.enable, true) &&
-      !GroupMixin.isMixedInto(dereferenced)
-    ) {
+    if ((options.enable ?? true) && !GroupMixin.isMixedInto(dereferenced)) {
       (await terria.workbench.add(dereferenced)).throwIfError();
     }
     return newCatalogItem;

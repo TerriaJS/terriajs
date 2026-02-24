@@ -1,4 +1,5 @@
-import { featureCollection, FeatureCollection } from "@turf/helpers";
+import { featureCollection } from "@turf/helpers";
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { get as _get, set as _set } from "lodash-es";
 import { computed, makeObservable, toJS } from "mobx";

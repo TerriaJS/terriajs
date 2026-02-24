@@ -1,4 +1,4 @@
-import { Feature as GeoJsonFeature } from "@turf/helpers";
+import { Feature as GeoJsonFeature } from "geojson";
 import {
   IReactionPublic,
   isObservableArray,

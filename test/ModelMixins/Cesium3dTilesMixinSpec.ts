@@ -1,14 +1,15 @@
 import { runInAction } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
-import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
-import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
+import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
+import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import Terria from "../../lib/Models/Terria";
 
 describe("Cesium3dTilesMixin", function () {
   let terria: Terria;
@@ -170,6 +171,27 @@ describe("Cesium3dTilesMixin", function () {
       );
       const selector = item.getSelectorForFeature(fakeTileFeature);
       expect(selector).toBe('${building-no} === 4242 && ${locality} === "foo"');
+    });
+  });
+
+  describe("tileset modelMatrix", function () {
+    describe("when no transformation traits are set", function () {
+      it("should be same as the root transform", function () {
+        expect(
+          cesium3dTiles.modelMatrix.equalsEpsilon(
+            Matrix4.fromArray([
+              -0.0010050878773394923, -0.010020359590716663,
+              0.00011650340166541126, 0, -0.006002102620114645,
+              0.0006957193601463293, 0.008057426370782056, 0,
+              -0.008024708312922119, 0.000734676293133252,
+              -0.006041166133112854, 0, -5088199.73081417, 465822.6898719493,
+              -3804844.213142962, 1
+            ]),
+            // Compare up to 6 digits precision
+            CesiumMath.EPSILON6
+          )
+        ).toBe(true);
+      });
     });
   });
 });

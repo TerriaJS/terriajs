@@ -63,7 +63,7 @@ class BottomDock extends Component<PropsType & MeasureElementProps> {
         {!this.props.viewState.useSmallScreenInterface && (
           <>
             <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
-            <ChartPanel terria={terria} viewState={this.props.viewState} />
+            <ChartPanel />
           </>
         )}
         {top && (

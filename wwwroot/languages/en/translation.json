@@ -86,7 +86,7 @@
       "copyName": "{{name}} (copy)"
     }
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom in",
     "zoomReset": "Reset zoom",
     "zoomOut": "Zoom out"
@@ -271,6 +271,17 @@
     "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Viewer mode switched",
+      "message": "The '{{newBaseMap}}' base map cannot be viewed in {{currentMode}}. The Map View has been changed to {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Base map switched",
+      "message": "The '{{currentBaseMap}}' base map cannot be viewed in {{mapMode}}. The Base Map has been changed to '{{newBaseMap}}'"
+    },
     "timeline": {
       "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
@@ -354,7 +365,8 @@
   },
   "story": {
     "panelTitle": "Story editor",
-    "panelBody": "Create and share interactive stories directly from your map",
+    "panelBody": "Create and share interactive stories directly from your map.",
+    "panelBodyCapped": "Each story is capped at {{ shareMaxRequestSize }} - split large data or many scenes into multiple stories to stay under the limit.",
     "gettingStarted": "Getting started",
     "gettingStartedTitle": "Getting started",
     "badgeBarLabel": "Scenes",
@@ -406,6 +418,7 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
+    "storiesTooLong": "This story exceeds the maximum size allowed. Try reducing the number of visible datasets, or capture fewer scenes.",
     "hideStoryPanel": "hide story builder",
     "loadSceneErrorTitle": "Error loading Story Scene",
     "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
@@ -621,7 +634,7 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbench": [
+  "emptyWorkbenchInfo": [
     {
       "heading": "Add a dataset here",
       "body": "When you add a dataset, its legend and settings appear here."
@@ -862,9 +875,11 @@
     },
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
-      "disclaimer": "Disclaimer",
-      "basemap": "Basemap",
-      "dataProvider": "Data provided by:"
+      "termsOfUse": "Terms of use",
+      "credits": "Credits",
+      "mapCredits": "Map credits",
+      "dataProvider": "Data provided by:",
+      "searchProvider": "Search provided by:"
     }
   },
   "models": {
@@ -1296,6 +1311,7 @@
     "shareData": {
       "generateErrorTitle": "Couldn't generate short URL.",
       "generateErrorMessage": "Something went wrong when trying to use the share data service to generate a short URL.",
+      "generateErrorDataExceedsLimitMessage": "Error: Share data exceeds limit",
       "expandErrorTitle": "Couldn't expand URL",
       "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time."
     },

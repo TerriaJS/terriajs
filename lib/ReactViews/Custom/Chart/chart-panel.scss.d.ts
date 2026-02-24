@@ -11,7 +11,6 @@ declare namespace ChartPanelScssNamespace {
     header: string;
     holder: string;
     inner: string;
-    loader: string;
     "section-label": string;
     sectionLabel: string;
   }

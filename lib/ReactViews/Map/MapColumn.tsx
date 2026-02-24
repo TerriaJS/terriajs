@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
 import ActionBarPortal from "../ActionBar/ActionBarPortal";
@@ -30,6 +30,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
     const viewState = useViewState();
     const theme = useTheme();
     const { t } = useTranslation();
+    const loaderRef = useRef(null);
 
     return (
       <Box
@@ -84,8 +85,11 @@ export const MapColumn: FC<IMapColumnProps> = observer(
           {!viewState.hideMapUi && (
             <>
               <ActionBarPortal show={viewState.isActionBarVisible} />
-              <SlideUpFadeIn isVisible={viewState.isMapZooming}>
-                <Toast>
+              <SlideUpFadeIn
+                isVisible={viewState.isMapZooming}
+                nodeRef={loaderRef}
+              >
+                <Toast ref={loaderRef}>
                   <Loader
                     message={t("toast.mapIsZooming")}
                     textProps={{

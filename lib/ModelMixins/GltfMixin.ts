@@ -19,6 +19,7 @@ import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 
 type BaseType = Model<GltfTraits>;
 
@@ -207,6 +208,11 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         dataSource.entities.add(modelEntity);
       }
       return [dataSource];
+    }
+
+    @override
+    get selectableDimensions(): SelectableDimension[] {
+      return [...super.selectableDimensions, ...super.shadowDimensions];
     }
   }
 

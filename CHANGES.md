@@ -1,6 +1,120 @@
 # Change Log
 
-#### next release (8.9.2)
+#### next release (8.11.4)
+
+- Capture default timeline state in share links including current time,
+  playback etc.
+- Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
+- Underline text buttons
+- Replace node-fetch with node native fetch.
+- Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
+- [The next improvement]
+
+#### 8.11.3 - 2026-02-02
+
+- Change to OIDC publishing to npm
+
+#### 8.11.2 - 2026-01-15
+
+- Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
+  - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
+- WMTS read URL from operations metadata #7371
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add UI to show toast messages.
+- Fix "Add data" button width for some languages #7726.
+- Make `<StoryPanel>` draggable
+
+#### 8.11.1 - 2025-12-04
+
+- ##### Security fixes
+  - Upgrades terriajs-server to v4.0.3. See [terriajs-server changes](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#security-fixes).
+- Fix translations key typo "zoomCotrol".
+- Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
+- Fix to show preview map when used outside the explorer panel.
+- Update `csv-geo-au` support to include the latest Australian Government regions.
+- Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
+- Keep camera steady when switching between viewer modes.
+- Fix sharing when using initfile.
+- Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
+
+#### 8.11.0 - 2025-10-09
+
+- **Breaking changes:**
+
+  - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
+    - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
+
+- Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
+- Fix app crash when encountering unsupported WPS input types.
+- Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
+- Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
+- Add coordinate position to MapboxSearchProvider results when using reverse geocoder functionality (configurable).
+- Removes webpack-dev-server from dependencies as it is no longer used.
+- Upgrade babel to the latest version 7.27/7.28
+- Fix analytics tracking for the MapboxSearchProvider.
+- Remove unmaintained @mapbox/geojson-merge dependency and replace it with a simple merge function.
+- Upgrade Typescript to `^5.9.2`. Also switched the `target` in `tsconfig.json` to `esnext`.
+- Upgrade `mobx` to version `^6.13.7`.
+- Upgraded `terriajs-cesium` to `21.0.0` and `terriajs-cesium-widgets` to `13.2.0`.
+- Fix zooming by mouse wheel in charts #7654
+
+#### 8.10.0 - 2025-07-08
+
+- **Breaking changes:**
+
+  - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
+    - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
+  - Update react and react-dom to version 18
+  - Update mobx-react to version 9
+    - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
+
+- Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
+- Add internationalization support to tinymce editor used in story editor
+- Add `MapboxSearchProvider` for geocoding using Mapbox.
+- Upgrade yarn to 1.22.22
+- Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
+- Apply clipping rectangle for `ArcGisFeatureServerCatalogItem` reducing the number of requests made to server in tiled mode.
+
+#### 8.9.5 - 2025-06-03
+
+- Upgrade terriajs-server to version 4.0.2
+
+#### 8.9.4 - 2025-06-03
+
+- Remove regenerator-runtime polyfill as generators are now widely supported. #7615
+- Remove direct usage of core-js polyfills. #7615
+- TSify `ChartPanel` and convert to a functional component #7581
+- Convert `Chart` component of `FeatureInfoPanelChart` to functional component. #7598
+- TSify `DataCatalogGroup` and convert to a functional component. #7575
+- TSify `BottomDockChart`, `ChartPanel`, `LineAndPointChart`, `LineChart`, `MomentLinesChart`, `MomentPointsChart`, `Chart Tooltip` to typescript and convert to functional components. #7617
+- Upgrade mkdocs to 1.6.1
+- Refactor the `DateTimePicker` component and split it into multiple components. #7585
+- Update data-attribution and terms of conditions links to point to terria.io. #7627
+- Hide the related maps button. #7627
+- Change `BingMapSearchProvider` to correctly logs bing search action. #7601
+- fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
+
+#### 8.9.3 - 2025-04-24
+
+- Remove unused d3-array dependency.
+- Update to plugin-error 2.0.1
+- TSify `MenuButton` and convert it to functional component. #7576
+- Convert `WorkbenchItem` to functional component #7564
+- Remove BrowserStack and SauceLabs gulp tasks.
+- Remove `test-travis` gulp task.
+- Allow to modify `lookupCookie` for i18next
+- TSify dropdown and convert it to a functional component. #7577
+- Convert SettingPanel to a functional component. #7589
+- Update html-to-react to 1.7.0
+- Pass explicit refs to css transition component to avoid findDomNode usage. #7590
+- TSify FadeIn component. #7590
+- Convert `ViewingControls` to a functional component. #7574
+- DOMPurify updated to 3.2.5 to fix CVE-2025-26791.
+- Fix pmtiles rendering issue. #7607
+- Remove unused types/rbush dependency.
+
+#### 8.9.2 - 2025-03-31
 
 - Replace clipboardjs with native browser clipboard
 - Update react-swipeable to v7. #7542
@@ -14,15 +128,13 @@
 - TSify `DataCatalogTab` and convert it to functional component #7476
 - Update to shpjs 6.1.0.
 - Enable `noUncheckedSideEffectImports` in `tsconfig.json` to get errors from tsc when non-existent modules are imported for side effects.
-- [The next improvement]
+- Return lat/lon as numbers from `geoJsonGeometryFromGeoRssSimpleGeometry` and `geoJsonGeometryFromW3cGeometry`.
+- Remove unused babel/parser dependency.
 
 #### 8.9.1 - 2025-03-24
 
 - Tweak `ArcGisFeatureServerCatalogItem.imageryProvider` to return undefined until metadata has finished loading
 - Fix scss theming regression by restoring webpack alias
-
-- Remove unused babel/parser dependency.
-- [The next improvement]
 
 #### 8.9.0 - 2025-03-17
 
@@ -175,6 +287,7 @@
 
 #### 8.7.5 - 2024-06-26
 
+- Add clustering trait to GeoJson (and consequently to WFS, ...) using Cesium as viewer.
 - TSify some `js` and `jsx` files and provide `.d.ts` ambient type files for a few others. This is so that running `tsc` on an external project that imports Terria code will typecheck successfully.
 - Upgraded a bunch of d3 dependencies for fixing security errors.
 - Show rectangle selector for WPS bounding box parameter

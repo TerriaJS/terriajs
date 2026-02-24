@@ -72,7 +72,10 @@ class HelpPanel extends Component {
         `}
       >
         <Box position="absolute" paddedRatio={3} topRight>
-          <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
+          <RawButton
+            onClick={() => this.props.viewState.hideHelpPanel()}
+            aria-label="Close help panel"
+          >
             <StyledIcon
               styledWidth={"16px"}
               fillColor={this.props.theme.textDark}

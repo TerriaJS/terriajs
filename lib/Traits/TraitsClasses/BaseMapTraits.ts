@@ -22,6 +22,14 @@ export class BaseMapTraits extends ModelTraits {
   })
   contrastColor?: string = "#ffffff";
 
+  @primitiveTrait({
+    type: "string",
+    name: "Background color",
+    description:
+      "Background color to use for the map container when showing this base map. This setting is currently only applicable in Leaflet or 2D mode. It is useful when the base map does not cover the entire screen and a background color matching the overall base map style is desired."
+  })
+  backgroundColor?: string;
+
   @modelReferenceTrait({
     factory: CatalogMemberFactory,
     name: "Base map item",

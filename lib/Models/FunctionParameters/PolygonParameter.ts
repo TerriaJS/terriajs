@@ -1,4 +1,4 @@
-import { Feature, Polygon } from "@turf/helpers";
+import { Feature, Polygon } from "geojson";
 import { computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import FunctionParameter, {
@@ -25,15 +25,7 @@ export default class PolygonParameter
   static formatValueForUrl(value: PolygonCoordinates) {
     return JSON.stringify({
       type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "Polygon",
-            coordinates: value
-          }
-        }
-      ]
+      features: [PolygonParameter.getGeoJsonFeature(value)]
     });
   }
 
