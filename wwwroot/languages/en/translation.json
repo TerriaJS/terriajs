@@ -400,8 +400,8 @@
       "placeholder": "Enter a title here",
       "cancelBtn": "cancel",
       "cancelEditing": "Cancel",
-      "saveBtn": "save",
-      "saveStory": "Save"
+      "saveBtn": "done",
+      "saveStory": "Done"
     },
     "locationBtn": "center scene",
     "exitBtn": "exit story",

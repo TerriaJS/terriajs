@@ -32,73 +32,29 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const [advancedOptions, setAdvancedOptions] = useState(false);
-
-  const toogleAdvancedOptions = () => {
-    setAdvancedOptions((prevState) => !prevState);
-  };
-
   return (
-    <Box column>
-      <RawButton
-        onClick={toogleAdvancedOptions}
-        css={`
-          display: flex;
-          align-items: center;
-        `}
+    <Box column gap={2}>
+      {/* IncludeStoryCheckbox */}
+      <Checkbox
+        textProps={{ medium: true }}
+        id="includeStory"
+        title="Include Story in Share"
+        isChecked={includeStoryInShare}
+        onChange={includeStoryInShareOnChange}
       >
-        <TextSpan
-          fullWidth
-          medium
-          isLink
-          css={`
-            display: flex;
-          `}
-        >
-          {t("share.btnAdvanced")}
-        </TextSpan>
-        {advancedOptions ? (
-          <AdvanceOptionsIcon glyph={GLYPHS.opened} />
-        ) : (
-          <AdvanceOptionsIcon glyph={GLYPHS.closed} />
-        )}
-      </RawButton>
-
-      {advancedOptions && (
-        <>
-          <StyledHr />
-          <Box column>
-            {/* IncludeStoryCheckbox */}
-            <Checkbox
-              textProps={{ medium: true }}
-              id="includeStory"
-              title="Include Story in Share"
-              isChecked={includeStoryInShare}
-              onChange={includeStoryInShareOnChange}
-            >
-              <TextSpan>{t("includeStory.message")}</TextSpan>
-            </Checkbox>
-            <Spacing bottom={1} />
-            {/* ShortenWithServiceCheckbox */}
-            <Checkbox
-              textProps={{ medium: true }}
-              id="shortenUrl"
-              isChecked={shouldShorten}
-              onChange={shouldShortenOnChange}
-              isDisabled={!canShortenUrl}
-            >
-              <TextSpan>{t("share.shortenUsingService")}</TextSpan>
-            </Checkbox>
-            <Spacing bottom={2} />
-            <EmbedSection shareUrl={shareUrl?.current} />
-          </Box>
-        </>
-      )}
+        <TextSpan>{t("includeStory.message")}</TextSpan>
+      </Checkbox>
+      {/* ShortenWithServiceCheckbox */}
+      <Checkbox
+        textProps={{ medium: true }}
+        id="shortenUrl"
+        isChecked={shouldShorten}
+        onChange={shouldShortenOnChange}
+        isDisabled={!canShortenUrl}
+      >
+        <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+      </Checkbox>
+      <EmbedSection shareUrl={shareUrl?.current} />
     </Box>
   );
 };
-
-const AdvanceOptionsIcon = styled(StyledIcon).attrs({
-  styledWidth: "10px",
-  light: true
-})``;

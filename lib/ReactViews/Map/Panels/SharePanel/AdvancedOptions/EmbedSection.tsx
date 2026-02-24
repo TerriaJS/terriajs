@@ -7,6 +7,7 @@ import { TextSpan } from "../../../../../Styled/Text";
 import Input from "../../../../../Styled/Input";
 
 import { IShareUrlRef } from "../ShareUrl";
+import Spacing from "../../../../../Styled/Spacing";
 
 interface IEmbedSectionProps {
   shareUrl: IShareUrlRef | null;
@@ -22,6 +23,7 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
   return (
     <Box column>
       <TextSpan medium>{t("share.embedTitle")}</TextSpan>
+      <Spacing bottom={1} />
       <Explanation>{t("share.embedDescription")}</Explanation>
       <Input
         large

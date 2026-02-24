@@ -11,7 +11,6 @@ import { canShorten } from "./BuildShareLink";
 import { PrintSection } from "./Print/PrintSection";
 import { shouldShorten as shouldShortenDefault } from "./SharePanel";
 import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
-import { StyledHr } from "./StyledHr";
 
 interface ISharePanelContentProps {
   terria: Terria;
@@ -49,7 +48,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   return (
     <Box paddedRatio={2} column>
       <Text medium>{t("clipboard.shareURL")}</Text>
-      <Spacing bottom={1} />
+      <Spacing bottom={2} />
       <ShareUrl
         theme="dark"
         inputTheme="dark"
@@ -62,9 +61,6 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       >
         <ShareUrlBookmark viewState={viewState} />
       </ShareUrl>
-      <Spacing bottom={2} />
-      <PrintSection viewState={viewState} />
-      <StyledHr />
       <AdvancedOptions
         canShortenUrl={canShortenUrl}
         shouldShorten={shouldShorten}
@@ -73,6 +69,8 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
         includeStoryInShareOnChange={includeStoryInShareOnChange}
         shareUrl={shareUrlRef}
       />
+      <Spacing bottom={2} />
+      <PrintSection viewState={viewState} />
     </Box>
   );
 };

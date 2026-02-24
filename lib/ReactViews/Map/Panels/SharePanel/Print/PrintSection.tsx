@@ -9,6 +9,7 @@ import Box from "../../../../../Styled/Box";
 import { TextSpan } from "../../../../../Styled/Text";
 import Button from "../../../../../Styled/Button";
 import { downloadImg } from "./PrintView";
+import Spacing from "../../../../../Styled/Spacing";
 
 interface IPrintSectionProps {
   viewState: ViewState;
@@ -37,8 +38,9 @@ export const PrintSection: FC<IPrintSectionProps> = ({ viewState }) => {
   return (
     <Box column>
       <TextSpan medium>{t("share.printTitle")}</TextSpan>
+      <Spacing bottom={1} />
       <Explanation>{t("share.printExplanation")}</Explanation>
-      <Box gap>
+      <Box gap={2}>
         <PrintButton
           primary
           fullWidth
