@@ -12,7 +12,6 @@
   - Or using GitHub web interface https://github.com/TerriaJS/terriajs/compare/8.2.25...main (change the version and master/next to match the previous release and branch)
   - Finalise the heading of the version to be released with version number and date.
   - Add a heading above for upcoming changes to be documented under.
-- Update code attibutions using `yarn gulp code-attribution`
 - Commit and push your changes on a branch and make a PR to `main` branch.
 - Get someone to review and merge the PR.
 - Wait for slack notification of successful/failed publish.
@@ -25,6 +24,7 @@ This method should not be used to publish versions at the tip of `main` or anoth
 - Checkout and pull the branch of `terriajs` to be deployed, run `yarn install` if necessary.
 - Bump the version number in `package.json`. Follow [semver](http://semver.org/).
 - Appropriately update CHANGES.md, ensuring that changes are listed in their correct sections.
+- Update code attibutions using `yarn gulp code-attribution`
 - Commit and push your changes and make a PR to the branch to be deployed.
 - Get someone to review and merge the PR.
 - Fetch and checkout the merge commit made by merging the PR.
