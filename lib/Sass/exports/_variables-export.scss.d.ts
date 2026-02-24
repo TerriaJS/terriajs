@@ -62,6 +62,7 @@ declare namespace VariablesExportScssNamespace {
     textLight: string;
     textLightDimmed: string;
     textLightTranslucent: string;
+    textSuccess: string;
     textWarning: string;
     toolPrimaryColor: string;
     trainerHeight: string;

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import Box from "../Styled/Box";
 import Button from "../Styled/Button";
 import Icon, { StyledIcon } from "../Styled/Icon";
@@ -28,6 +28,7 @@ interface ClipboardProps {
 const Clipboard: FC<ClipboardProps> = (props) => {
   const { theme, rounded, text, inputTheme, inputPlaceholder, onCopy } = props;
   const { t } = useTranslation();
+  const styledTheme = useTheme();
   const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
 
   const handleCopy = async () => {
@@ -110,9 +111,16 @@ const Clipboard: FC<ClipboardProps> = (props) => {
                 margin: 8px;
                 margin-left: 0;
                 display: inline-block;
+                ${status === CopyStatus.Success &&
+                `fill: ${styledTheme.textSuccess};`}
               `}
             />
-            <TooltipText>
+            <TooltipText
+              css={`
+                ${status === CopyStatus.Success &&
+                `color: ${styledTheme.textSuccess};`}
+              `}
+            >
               {status === CopyStatus.Success
                 ? t("clipboard.success")
                 : t("clipboard.unsuccessful")}
