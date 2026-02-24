@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import { ThemeProvider } from "styled-components";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";

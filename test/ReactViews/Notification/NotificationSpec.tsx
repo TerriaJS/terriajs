@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { renderWithContexts } from "../withContext";

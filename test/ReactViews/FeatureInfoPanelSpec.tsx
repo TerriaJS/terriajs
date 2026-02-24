@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 
-import { screen, waitFor, within } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
@@ -87,7 +87,7 @@ describe("FeatureInfoPanel", function () {
 
     terria.pickedFeatures = pickedFeatures;
     terria.workbench.items = [simple1, simple2];
-    const { container } = renderWithContexts(
+    renderWithContexts(
       <FeatureInfoPanel viewState={viewState} t={(key) => key} />,
       viewState
     );
@@ -98,12 +98,8 @@ describe("FeatureInfoPanel", function () {
     );
 
     expect(screen.queryByText("loader.loadingMessage")).not.toBeInTheDocument();
-    expect(
-      within(container).getByRole("button", { name: "simple1 - Foo" })
-    ).toBeVisible();
-    expect(
-      within(container).getByRole("button", { name: "simple2 - Bar" })
-    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "simple1 - Foo" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "simple2 - Bar" })).toBeVisible();
   });
 
   it('opens a feature info section with "featureInfo.noInfoAvailable" message when the feature has no properties', async function () {
