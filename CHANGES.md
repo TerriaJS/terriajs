@@ -8,6 +8,7 @@
 - Underline text buttons
 - Replace node-fetch with node native fetch.
 - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
+- TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
@@ -46,7 +47,6 @@
     - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
 
 - Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
-- TSify most of `lib/Core`.
 - Fix app crash when encountering unsupported WPS input types.
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
 - Adds new `TileMapServiceCatalogItem` for loading Tile Map Service (TMS) imagery tilesets.
