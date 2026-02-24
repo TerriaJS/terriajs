@@ -8,6 +8,7 @@
 - Underline text buttons
 - Replace node-fetch with node native fetch.
 - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
+- TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
