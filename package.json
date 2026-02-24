@@ -105,7 +105,7 @@
     "flexsearch": "0.7.21",
     "fs-extra": "^7.0.1",
     "geojson-vt": "^3.2.1",
-    "gulp": "^5.0.0",
+    "gulp": "^5.0.1",
     "hoist-non-react-statics": "^3.3.2",
     "html-to-react": "^1.7.0",
     "i18next": "^21.8.13",
