@@ -72,17 +72,15 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     if (this.props.catalogShare) {
       return (
         <Box fullWidth column paddedRatio={3}>
-          <Text medium textDark>
-            {t("clipboard.shareURL")}
-          </Text>
+          <Text medium>{t("clipboard.shareURL")}</Text>
           <Spacing bottom={1} />
           <ShareUrl
             terria={terria}
             viewState={viewState}
             includeStories
             shouldShorten={shouldShorten(terria)}
-            theme="light"
-            inputTheme="light"
+            theme="dark"
+            inputTheme="dark"
           />
         </Box>
       );
@@ -97,8 +95,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
             includeStories
             shouldShorten={shouldShorten(terria)}
             theme="dark"
-            inputTheme="light"
-            rounded
+            inputTheme="dark"
           />
         </Box>
       );
@@ -127,7 +124,6 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
         [Styles.storyShare]: storyShare
       }),
       inner: classNames(Styles.dropdownInner, {
-        [Styles.catalogShareInner]: catalogShare,
         [Styles.storyShareInner]: storyShare
       }),
       icon: "share"
