@@ -1,10 +1,9 @@
 /**
  * base tooltipwrapperraw repurposed from magda, with some a11y modifications
  */
-import { ReactNode, FC, createRef, Component } from "react";
+import { ReactNode, FC, createRef, Component, useId } from "react";
 import ReactDOM from "react-dom";
 import { withTheme, DefaultTheme } from "styled-components";
-import { useUID } from "react-uid";
 import { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
@@ -242,8 +241,8 @@ export const TooltipWithButtonLauncher: FC<ButtonLauncherProps> = (props) => {
   const { launcherComponent, children, dismissOnLeave, orientation, ...rest } =
     props;
 
-  const idForAria = `ButtonLauncher-${useUID()}`;
-  const idForChildAria = `ButtonLauncher-child-${useUID()}`;
+  const idForAria = useId();
+  const idForChildAria = useId();
 
   return (
     <TooltipWrapper

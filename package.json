@@ -146,7 +146,6 @@
     "react-select": "^5.10.0",
     "react-swipeable": "^7.0.2",
     "react-transition-group": "^4.3.0",
-    "react-uid": "^2.3.0",
     "react-virtual": "^2.10.4",
     "resolve-url-loader": "^5.0.0",
     "retry": "^0.12.0",
