@@ -34,9 +34,9 @@ import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox";
 import TourIndicator from "./TourIndicator";
-import TourOverlay from "./TourOverlay";
+import TourOverlay from "./TourOverlay.jsx";
 import TourPrefaceBox from "./TourPrefaceBox";
-import TourProgressDot from "./TourProgressDot";
+import TourProgressDot from "./TourProgressDot.jsx";
 
 /**
  * Indicator bar/"dots" on progress of tour.
