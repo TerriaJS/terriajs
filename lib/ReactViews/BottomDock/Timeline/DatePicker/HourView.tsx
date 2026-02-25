@@ -11,13 +11,13 @@ interface HourViewProps {
   onSelectHour: (hour: number) => void;
 }
 
-export const HourView: React.FC<HourViewProps> = ({
+export const HourView = ({
   year,
   month,
   day,
   datesObject,
   onSelectHour
-}) => {
+}: HourViewProps) => {
   const dayData = datesObject;
   const timeOptions = dayData.dates.map((m) => ({
     value: m,

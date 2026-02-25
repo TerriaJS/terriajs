@@ -15,7 +15,7 @@ interface DayViewProps {
   onBackToMonth: () => void;
 }
 
-export const DayView: React.FC<DayViewProps> = ({
+export const DayView = ({
   year,
   month,
   datesObject,
@@ -23,7 +23,7 @@ export const DayView: React.FC<DayViewProps> = ({
   onSelectDay,
   onBackToYear,
   onBackToMonth
-}) => {
+}: DayViewProps) => {
   const { t } = useTranslation();
 
   const dayObject = datesObject;
