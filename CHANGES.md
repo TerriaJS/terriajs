@@ -10,6 +10,7 @@
 - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
 - TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
 - Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
+- Fix splitter failing for local file catalog items by storing file data as blob URLs in the `url` trait instead of private instance fields, ensuring `duplicateModel()` preserves the data. [#7762](https://github.com/TerriaJS/terriajs/pull/7762)
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
