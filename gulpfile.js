@@ -1,7 +1,3 @@
-/*eslint-env node*/
-/*eslint no-sync: 0*/
-/* eslint-disable @typescript-eslint/no-require-imports */
-
 "use strict";
 
 // Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,

@@ -7,10 +7,7 @@ interface YearViewProps {
   onSelectYear: (year: number) => void;
 }
 
-export const YearView: React.FC<YearViewProps> = ({
-  datesObject,
-  onSelectYear
-}) => {
+export const YearView = ({ datesObject, onSelectYear }: YearViewProps) => {
   if (!datesObject.dates || datesObject.dates.length <= 12) {
     return null;
   }
