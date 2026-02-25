@@ -33,7 +33,7 @@ import {
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox";
-import TourIndicator from "./TourIndicator.jsx";
+import TourIndicator from "./TourIndicator";
 import TourOverlay from "./TourOverlay.jsx";
 import TourPrefaceBox from "./TourPrefaceBox";
 import TourProgressDot from "./TourProgressDot.jsx";
