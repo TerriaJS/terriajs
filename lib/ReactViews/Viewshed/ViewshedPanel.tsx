@@ -84,7 +84,7 @@ const ViewshedPanel = observer((props: Props) => {
             style={{ textAlign: "center" }}
             title={t("viewshed.targetHeightInputTitle")}
           >
-            {t("viewshed.observerHeightInput")}
+            {t("viewshed.targetHeightInput")}
           </Text>
           <Box>
             <Input
