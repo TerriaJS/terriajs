@@ -2,7 +2,6 @@ import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import isDefined from "../../../lib/Core/isDefined";
-import loadBlob from "../../../lib/Core/loadBlob";
 import CsvCatalogItem from "../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import createUrlReferenceFromUrl from "../../../lib/Models/Catalog/CatalogReferences/createUrlReferenceFromUrl";
@@ -16,6 +15,7 @@ import { worker } from "../../mocks/browser";
 
 import waterNetworkLayer from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json";
 import waterNetworkLayer2 from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json";
+import LatLonValCsv from "../../../wwwroot/test/csv/lat_lon_val.csv";
 
 describe("createUrlReferenceFromUrl", function () {
   let terria: Terria;
@@ -63,13 +63,10 @@ describe("createUrlReferenceFromUrl", function () {
   });
 
   it("should create an catalog item (CSVCatalogItem) from File (csv) without specifying a dataType", async function () {
-    const fileUrl = "test/csv/lat_lon_val.csv";
+    const file: File = new File([LatLonValCsv], "lat_lon_val.csv", {
+      lastModified: 0
+    });
 
-    const blob = await loadBlob(fileUrl);
-    const file: File = Object.assign(blob, {
-      lastModified: 0,
-      name: "lat_lon_val.csv"
-    }) as File;
     const item = await createCatalogItemFromFileOrUrl(terria, file);
     expect(item).toBeDefined();
     if (item !== undefined) {
