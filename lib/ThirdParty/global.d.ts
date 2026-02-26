@@ -8,3 +8,5 @@ declare module "*.jpg";
 declare module "*.css";
 declare module "*.geojson";
 declare module "*.pbf";
+declare module "*.czml";
+declare module "*.kml";

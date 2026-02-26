@@ -35,7 +35,7 @@ import waterNetworkMulti2Json from "../../../../wwwroot/test/ArcGisFeatureServer
 import waterNetworkMultiLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layer.json";
 import waterNetworkMultiLayerBJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layerB.json";
 import tilePbfPath from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/test-tile.pbf";
-import featurePickGeojson from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/feature-pick.geojson"  with { type: "json" };
+import featurePickGeojson from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/feature-pick.geojson" with { type: "json" };
 
 configure({
   enforceActions: "observed",

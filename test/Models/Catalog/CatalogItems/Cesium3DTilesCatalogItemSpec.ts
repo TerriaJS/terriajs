@@ -141,7 +141,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           item.setTrait("definition", "ionAccessToken", "fakeToken");
           item.setTrait("definition", "ionServer", "fakeServer");
         });
-        spyOn(IonResource, "fromAssetId").and.callThrough();
+        spyOn(IonResource, "fromAssetId").and.callFake(() => {});
         try {
           await item.loadMapItems();
         } catch {}

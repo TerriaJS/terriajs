@@ -33,6 +33,8 @@ import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import { worker } from "../mocks/browser";
+import { http, HttpResponse } from "msw";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -188,6 +190,8 @@ describeIfSupported("Cesium Model", function () {
     }
 
     it("correctly removes all the primitives, imageries and datasources from the scene when they are removed from the viewer", async function () {
+      worker.use(http.get("wms-*", () => HttpResponse.text()));
+
       let items = await loadItems([
         create3dTilesCatalogItem(0),
         createImageryItem(0),
@@ -266,6 +270,8 @@ describeIfSupported("Cesium Model", function () {
       let items: MappableMixin.Instance[];
 
       beforeEach(async function () {
+        worker.use(http.get("wms-3", () => HttpResponse.text()));
+
         items = await loadItems([
           create3dTilesCatalogItem(0),
           createImageryItem(1),
@@ -547,6 +553,13 @@ describeIfSupported("Cesium Model", function () {
     });
 
     it("should thow a warning when 'cesiumTerrainUrl' is invalid", async function () {
+      worker.use(
+        http.get(
+          "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1/layer.json",
+          () => HttpResponse.error()
+        )
+      );
+
       runInAction(() => {
         terria2.configParameters.cesiumTerrainUrl =
           "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1"; // An invalid url

@@ -5,7 +5,6 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
-import loadBlob from "../../../../../lib/Core/loadBlob";
 import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
 import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
@@ -22,6 +21,8 @@ import {
   isShareable,
   SHARE_VERSION
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+
+import bikeRacksGeoJson from "../../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
 
 let terria: Terria;
 let viewState: ViewState;
@@ -69,7 +70,10 @@ describe("BuildShareLink", function () {
       const modelId = "Test";
       const model = new GeoJsonCatalogItem(modelId, terria);
 
-      const blob = await loadBlob("test/GeoJSON/bike_racks.geojson", {});
+      const blob = new Blob([JSON.stringify(bikeRacksGeoJson)], {
+        type: "application/json"
+      });
+
       model.setFileInput(blob as File);
       terria.addModel(model);
 
@@ -90,7 +94,9 @@ describe("BuildShareLink", function () {
       const modelId = "Test";
       const model = new GeoJsonCatalogItem(modelId, terria);
 
-      const blob = await loadBlob("test/GeoJSON/bike_racks.geojson", {});
+      const blob = new Blob([JSON.stringify(bikeRacksGeoJson)], {
+        type: "application/json"
+      });
 
       model.setFileInput(blob as File);
       terria.addModel(model);
