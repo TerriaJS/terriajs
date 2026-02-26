@@ -79,8 +79,6 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
             viewState={viewState}
             includeStories
             shouldShorten={shouldShorten(terria)}
-            theme="dark"
-            inputTheme="dark"
           />
         </Box>
       );
@@ -94,8 +92,6 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
             viewState={viewState}
             includeStories
             shouldShorten={shouldShorten(terria)}
-            theme="dark"
-            inputTheme="dark"
           />
         </Box>
       );

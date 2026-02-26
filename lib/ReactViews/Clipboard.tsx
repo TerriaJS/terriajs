@@ -15,8 +15,6 @@ enum CopyStatus {
 }
 
 interface ClipboardProps {
-  theme: "dark" | "light";
-  rounded?: boolean;
   text?: string;
   inputTheme?: "light" | "dark";
   inputPlaceholder?: string;
@@ -26,7 +24,7 @@ interface ClipboardProps {
 }
 
 const Clipboard: FC<ClipboardProps> = (props) => {
-  const { theme, rounded, text, inputTheme, inputPlaceholder, onCopy } = props;
+  const { text, inputTheme, inputPlaceholder, onCopy } = props;
   const { t } = useTranslation();
   const styledTheme = useTheme();
   const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
@@ -55,7 +53,6 @@ const Clipboard: FC<ClipboardProps> = (props) => {
     }
   }, [status, props.timeout]);
 
-  const isLightTheme = theme === "light";
   const canCopy = !!navigator.clipboard;
 
   return (
@@ -70,10 +67,6 @@ const Clipboard: FC<ClipboardProps> = (props) => {
           placeholder={inputPlaceholder ?? t("share.shortLinkShortening")}
           readOnly
           onClick={(e) => e.currentTarget.select()}
-          css={`
-            ${rounded && canCopy && "border-radius: 32px 0 0 32px;"}
-            ${rounded && !canCopy && "border-radius: 32px;"}
-          `}
         />
         {canCopy && (
           <Button
@@ -82,7 +75,6 @@ const Clipboard: FC<ClipboardProps> = (props) => {
             css={`
               width: 80px;
               border-radius: 0 2px 2px 0;
-              ${rounded && `border-radius:  0 32px 32px 0;`}
             `}
             textProps={{ large: true }}
           >
@@ -99,8 +91,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
             `}
           >
             <StyledIcon
-              light={!isLightTheme}
-              realDark={isLightTheme}
+              light
               glyph={
                 status === CopyStatus.Success
                   ? Icon.GLYPHS.selected
