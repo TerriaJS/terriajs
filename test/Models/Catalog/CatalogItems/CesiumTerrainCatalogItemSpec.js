@@ -1,9 +1,10 @@
 "use strict";
 
+import { http, HttpResponse } from "msw";
 import CesiumTerrainCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("CesiumTerrainCatalogItem", function () {
   var terria;
@@ -22,33 +23,21 @@ describe("CesiumTerrainCatalogItem", function () {
   });
 
   it("creates imagery provider with correct URL", async function () {
-    spyOn(loadWithXhr, "load").and.callFake(function (
-      url,
-      _responseType,
-      _method,
-      _data,
-      _headers,
-      deferred,
-      _overrideMimeType,
-      _preferText,
-      _timeout
-    ) {
-      expect(url.indexOf("http://example.com/foo/bar")).toBe(0);
-      deferred.resolve(
-        JSON.stringify({
+    worker.use(
+      http.get("http://example.com/foo/bar/layer.json", () =>
+        HttpResponse.json({
           tilejson: "2.1.0",
           format: "heightmap-1.0",
           version: "1.0.0",
           scheme: "tms",
           tiles: ["{z}/{x}/{y}.terrain?v={version}"]
         })
-      );
-    });
+      )
+    );
 
     item.url = "http://example.com/foo/bar";
     var terrainProvider = item._createTerrainProvider();
     expect(terrainProvider instanceof CesiumTerrainProvider).toBe(true);
     await terrainProvider.readyPromise;
-    expect(loadWithXhr.load.calls.any()).toBe(true);
   });
 });
