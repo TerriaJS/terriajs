@@ -10,10 +10,10 @@ import {
   isValidElement,
   cloneElement,
   useEffect,
-  useRef
+  useRef,
+  useId
 } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { useUID } from "react-uid";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -393,7 +393,7 @@ interface StyledLabelProps {
 
 const StyledLabel: FC<StyledLabelProps> = (props: StyledLabelProps) => {
   const { viewState, label, textProps } = props;
-  const id = useUID();
+  const id = useId();
   const childrenWithId = Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
     if (isValidElement(child)) {
