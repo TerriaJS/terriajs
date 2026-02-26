@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/SensorObservationServiceCatalogItem";
@@ -5,6 +6,7 @@ import Terria from "../../../../lib/Models/Terria";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
 import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
+import { worker } from "../../../mocks/browser";
 
 import GetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml";
 import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml";
@@ -17,15 +19,11 @@ describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
 
   beforeEach(function () {
-    jasmine.Ajax.install();
-    jasmine.Ajax.addCustomParamParser({
-      // @ts-expect-error mock xhr object
-      test: (xhr) => /^application\/soap\+xml/.test(xhr.contentType()),
-      parse: (paramString) => paramString
-    });
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      )
+    );
 
     item = new SensorObservationServiceCatalogItem("test", new Terria());
     item.setTrait(CommonStrata.user, "url", "https://sos.example.com");
@@ -58,10 +56,6 @@ describe("SensorObservationServiceCatalogItem", function () {
     );
   });
 
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
-  });
-
   describe("when constructed", function () {
     it("correctly sets the sourceReference", function () {
       const terria = new Terria();
@@ -89,55 +83,111 @@ describe("SensorObservationServiceCatalogItem", function () {
   });
 
   describe("features table", function () {
-    beforeEach(function () {
-      jasmine.Ajax.stubRequest(
-        "https://sos.example.com/",
-        /<sos:GetFeatureOfInterest/
-      ).andReturn({ responseText: GetFeatureOfInterestResponse });
-    });
-
     describe("when loading", function () {
       it("makes a GetFeatureOfInterest request", async function () {
-        await item.loadMapItems();
-        const req = jasmine.Ajax.requests.filter("https://sos.example.com/")[0];
-        expect(req.url).toBe("https://sos.example.com/");
-        expect(req.method).toBe("POST");
-        expect(req.data()).toContain("sos:GetFeatureOfInterest");
-        expect(req.data()).toContain("/foiRetrieval/");
-        expect(req.data()).toContain(
-          "<sos:observedProperty>Storage Level</sos:observedProperty>"
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (
+              !body.includes("sos:GetFeatureOfInterest") ||
+              !body.includes("/foiRetrieval/") ||
+              !body.includes(
+                "<sos:observedProperty>Storage Level</sos:observedProperty>"
+              ) ||
+              !body.includes(
+                "<sos:observedProperty>Ph</sos:observedProperty>"
+              ) ||
+              !body.includes("<sos:procedure>Daily Mean</sos:procedure>") ||
+              !body.includes("<sos:procedure>Yearly Mean</sos:procedure>")
+            ) {
+              return HttpResponse.error();
+            }
+
+            if (/<sos:GetFeatureOfInterest/.test(body)) {
+              return new HttpResponse(GetFeatureOfInterestResponse, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return new HttpResponse(null, { status: 404 });
+          })
         );
-        expect(req.data()).toContain(
-          "<sos:observedProperty>Ph</sos:observedProperty>"
-        );
-        expect(req.data()).toContain(
-          "<sos:procedure>Daily Mean</sos:procedure>"
-        );
-        expect(req.data()).toContain(
-          "<sos:procedure>Yearly Mean</sos:procedure>"
-        );
+
+        const result = await item.loadMapItems();
+
+        expect(result.error).toBeUndefined();
       });
 
       describe("when `filterByProcedures` is false", function () {
         it("should not add any procedures to the request", async function () {
+          worker.use(
+            http.post("https://sos.example.com/", async ({ request }) => {
+              const body = await request.text();
+              if (body.includes("sos:procedure")) {
+                return HttpResponse.error();
+              }
+
+              if (/<sos:GetFeatureOfInterest/.test(body)) {
+                return new HttpResponse(GetFeatureOfInterestResponse, {
+                  headers: { "Content-Type": "text/xml" }
+                });
+              }
+              return new HttpResponse(null, { status: 404 });
+            })
+          );
+
           item.setTrait(CommonStrata.user, "filterByProcedures", false);
-          await runInAction(() => item.loadMapItems());
-          const req = jasmine.Ajax.requests.mostRecent();
-          expect(req.data()).not.toContain("<sos:procedure>");
+          const response = await runInAction(() => item.loadMapItems());
+          expect(response.error).toBeUndefined();
         });
       });
 
       it("throws an error if features is empty", async function () {
-        jasmine.Ajax.stubRequest(
-          "https://sos.example.com/",
-          /<sos:GetFeatureOfInterest/
-        ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (/<sos:GetFeatureOfInterest/.test(body)) {
+              return new HttpResponse(EmptyGetFeatureOfInterestResponse, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return new HttpResponse(null, { status: 404 });
+          })
+        );
         const ex = (await item.loadMapItems()).error;
         expect(ex).toBeDefined();
       });
     });
 
     describe("when loaded", function () {
+      beforeEach(function () {
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (
+              !body.includes("sos:GetFeatureOfInterest") ||
+              !body.includes("/foiRetrieval/") ||
+              !body.includes(
+                "<sos:observedProperty>Storage Level</sos:observedProperty>"
+              ) ||
+              !body.includes(
+                "<sos:observedProperty>Ph</sos:observedProperty>"
+              ) ||
+              !body.includes("<sos:procedure>Daily Mean</sos:procedure>") ||
+              !body.includes("<sos:procedure>Yearly Mean</sos:procedure>")
+            ) {
+              return HttpResponse.error();
+            }
+
+            if (/<sos:GetFeatureOfInterest/.test(body)) {
+              return new HttpResponse(GetFeatureOfInterestResponse, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return new HttpResponse(null, { status: 404 });
+          })
+        );
+      });
+
       it("defines all feature columns", async function () {
         await item.loadMapItems();
         expect(item.tableColumns.map((c) => c.name)).toEqual([
@@ -231,14 +281,43 @@ describe("SensorObservationServiceCatalogItem", function () {
 
   describe("observations table", function () {
     beforeEach(function () {
-      jasmine.Ajax.stubRequest(
-        "https://sos.example.com/",
-        /<sos:GetObservation[\s\S]*Yearly/
-      ).andReturn({ responseText: GetObservationResponseYearly });
-      jasmine.Ajax.stubRequest(
-        "https://sos.example.com/",
-        /<sos:GetObservation[\s\S]*Daily/
-      ).andReturn({ responseText: GetObservationResponseDaily });
+      worker.use(
+        http.post("https://sos.example.com/", async ({ request }) => {
+          const body = await request.text();
+          if (
+            !body.includes("sos:GetObservation") ||
+            !body.includes("/core/") ||
+            !body.includes(
+              "<sos:observedProperty>Storage Level</sos:observedProperty>"
+            ) ||
+            !body.includes(
+              "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
+            ) ||
+            !body.includes(
+              "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+            ) ||
+            !body.includes(
+              "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+            ) ||
+            !body.includes(
+              "<gml:endPosition>2020-03-26T03:56:15.025Z</gml:endPosition>"
+            )
+          ) {
+            return HttpResponse.error();
+          }
+          if (/<sos:GetObservation[\s\S]*Yearly/.test(body)) {
+            return new HttpResponse(GetObservationResponseYearly, {
+              headers: { "Content-Type": "text/xml" }
+            });
+          }
+          if (/<sos:GetObservation[\s\S]*Daily/.test(body)) {
+            return new HttpResponse(GetObservationResponseDaily, {
+              headers: { "Content-Type": "text/xml" }
+            });
+          }
+          return new HttpResponse(null, { status: 404 });
+        })
+      );
       item.setTrait(CommonStrata.user, "showAsChart", true);
       item.setTrait(
         CommonStrata.user,
@@ -251,49 +330,55 @@ describe("SensorObservationServiceCatalogItem", function () {
 
     describe("when loading", function () {
       it("makes a GetObservation request", async function () {
-        await runInAction(() => item.loadMapItems());
-        const req = jasmine.Ajax.requests.mostRecent();
-        expect(req.url).toBe("https://sos.example.com/");
-        expect(req.method).toBe("POST");
-        expect(req.data()).toContain("sos:GetObservation");
-        expect(req.data()).toContain("/core/");
-        expect(req.data()).toContain(
-          "<sos:observedProperty>Storage Level</sos:observedProperty>"
-        );
-        expect(req.data()).toContain(
-          "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
-        );
-        expect(req.data()).toContain(
-          "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
-        );
-        expect(req.data()).toContain(
-          "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
-        );
-        expect(req.data()).toContain(
-          "<gml:endPosition>2020-03-26T03:56:15.025Z</gml:endPosition>"
-        );
+        const result = await runInAction(() => item.loadMapItems());
+
+        expect(result.error).toBeUndefined();
       });
 
       it("sets the procedure based on active style", async function () {
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+
+            if (body.includes("<sos:procedure>Yearly Mean</sos:procedure>")) {
+              return HttpResponse.error();
+            }
+            if (body.includes("<sos:procedure>Daily Mean</sos:procedure>")) {
+              return new HttpResponse(GetObservationResponseDaily, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return HttpResponse.error();
+          })
+        );
         item.setTrait(CommonStrata.user, "activeStyle", "Daily Mean");
 
-        await item.loadMapItems();
+        const resultDaily = await item.loadMapItems();
 
-        let req = jasmine.Ajax.requests.mostRecent();
+        expect(resultDaily.error).toBeUndefined();
 
-        expect(req.data()).toContain(
-          "<sos:procedure>Daily Mean</sos:procedure>"
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (body.includes("<sos:procedure>Daily Mean</sos:procedure>")) {
+              return HttpResponse.error();
+            }
+            if (body.includes("<sos:procedure>Yearly Mean</sos:procedure>")) {
+              return new HttpResponse(GetObservationResponseYearly, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+
+            return HttpResponse.error();
+          })
         );
 
         item.setTrait(CommonStrata.user, "activeStyle", "Yearly Mean");
 
         // Shouldn't have to force this...
-        await item.loadMapItems(true);
+        const responseYearly = await item.loadMapItems(true);
 
-        req = jasmine.Ajax.requests.mostRecent();
-        expect(req.data()).toContain(
-          "<sos:procedure>Yearly Mean</sos:procedure>"
-        );
+        expect(responseYearly.error).toBeUndefined();
       });
     });
 

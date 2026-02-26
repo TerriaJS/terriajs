@@ -1,9 +1,10 @@
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import { ApiTableCatalogItem } from "../../../../lib/Models/Catalog/CatalogItems/ApiTableCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import proxyCatalogItemUrl from "../../../../lib/Models/Catalog/proxyCatalogItemUrl";
 import Terria from "../../../../lib/Models/Terria";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import { worker } from "../../../mocks/browser";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 import positionApiResponse from "../../../../wwwroot/test/JSON-api/position_api_response.json";
@@ -16,11 +17,6 @@ describe("ApiTableCatalogItem", function () {
   beforeEach(function () {
     terria = new Terria();
     apiCatalogItem = new ApiTableCatalogItem("test", terria);
-    jasmine.Ajax.install();
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
   });
 
   describe("query parameters", function () {
@@ -39,36 +35,51 @@ describe("ApiTableCatalogItem", function () {
         ]
       });
 
-      jasmine.Ajax.stubRequest(
-        "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseJSON: regionMapping });
-
-      jasmine.Ajax.stubRequest(
-        new RegExp("https://terria.io/values.json")
-      ).andReturn({
-        responseJSON: valueApiResponse
-      });
+      worker.use(
+        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+          HttpResponse.json(regionMapping)
+        )
+      );
     });
 
     it("adds common queryParameters to URL", async function () {
+      worker.use(
+        http.get("https://terria.io/values.json", ({ request }) => {
+          if (new URL(request.url).searchParams.get("commonparam") !== "foo")
+            return HttpResponse.error();
+          return HttpResponse.json(valueApiResponse);
+        })
+      );
       await apiCatalogItem.loadMapItems();
-      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
-      const params = new URL(request.url).searchParams;
-      expect(params.get("commonparam")).toBe("foo");
+      expect(apiCatalogItem.dataColumnMajor).toBeDefined();
     });
 
     it("adds api specific queryParameters to URL", async function () {
+      worker.use(
+        http.get("https://terria.io/values.json", ({ request }) => {
+          if (new URL(request.url).searchParams.get("apiparam") !== "bar")
+            return HttpResponse.error();
+          return HttpResponse.json(valueApiResponse);
+        })
+      );
       await apiCatalogItem.loadMapItems();
-      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
-      const params = new URL(request.url).searchParams;
-      expect(params.get("apiparam")).toBe("bar");
+      expect(apiCatalogItem.dataColumnMajor).toBeDefined();
     });
 
     it("substitutes date values", async function () {
+      worker.use(
+        http.get("https://terria.io/values.json", ({ request }) => {
+          if (
+            !/^[0-9]{6}$/.test(
+              new URL(request.url).searchParams.get("dateparam") ?? ""
+            )
+          )
+            return HttpResponse.error();
+          return HttpResponse.json(valueApiResponse);
+        })
+      );
       await apiCatalogItem.loadMapItems();
-      const request = jasmine.Ajax.requests.filter(/values\.json/)[0];
-      const params = new URL(request.url).searchParams;
-      expect(params.get("dateparam")).toMatch(/^[0-9]{6}$/);
+      expect(apiCatalogItem.dataColumnMajor).toBeDefined();
     });
   });
 
@@ -102,42 +113,36 @@ describe("ApiTableCatalogItem", function () {
       });
     });
 
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
-
-    jasmine.Ajax.stubRequest(
-      proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/position.json")
-    ).andReturn({
-      responseJSON: positionApiResponse
-    });
-    jasmine.Ajax.stubRequest(
-      proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/values.json")
-    ).andReturn({
-      responseJSON: valueApiResponse
-    });
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      ),
+      http.get("https://terria.io/position.json", () =>
+        HttpResponse.json(positionApiResponse)
+      ),
+      http.get("https://terria.io/values.json", () =>
+        HttpResponse.json(valueApiResponse)
+      )
+    );
 
     await apiCatalogItem.loadMapItems();
     const table = apiCatalogItem.dataColumnMajor;
     expect(table).toBeDefined();
     const definedTable: string[][] = table!;
-    // count columns
-    expect(definedTable.length).toBe(3); // value, latitude, longitude
-    // count rows
-    expect(definedTable[0].length).toBe(4); // header + 3 value rows
+    expect(definedTable.length).toBe(3);
+    expect(definedTable[0].length).toBe(4);
   });
 
   describe("behaviour of `responseDataPath` option", function () {
     beforeEach(function () {
-      jasmine.Ajax.stubRequest(
-        "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseJSON: regionMapping });
-
-      jasmine.Ajax.stubRequest(
-        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/position.json")
-      ).andReturn({
-        responseJSON: positionApiResponse
-      });
+      worker.use(
+        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+          HttpResponse.json(regionMapping)
+        ),
+        http.get("https://terria.io/position.json", () =>
+          HttpResponse.json(positionApiResponse)
+        )
+      );
 
       runInAction(() => {
         updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
@@ -175,30 +180,30 @@ describe("ApiTableCatalogItem", function () {
         "responseDataPath",
         "records.nested.values"
       );
-      jasmine.Ajax.stubRequest(
-        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/values.json")
-      ).andReturn({
-        responseJSON: {
-          records: {
-            nested: {
-              values: [
-                {
-                  id: 1,
-                  value: 8
-                },
-                {
-                  id: 2,
-                  value: 9
-                },
-                {
-                  id: 3,
-                  value: 7
-                }
-              ]
+      worker.use(
+        http.get("https://terria.io/values.json", () =>
+          HttpResponse.json({
+            records: {
+              nested: {
+                values: [
+                  {
+                    id: 1,
+                    value: 8
+                  },
+                  {
+                    id: 2,
+                    value: 9
+                  },
+                  {
+                    id: 3,
+                    value: 7
+                  }
+                ]
+              }
             }
-          }
-        }
-      });
+          })
+        )
+      );
 
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
@@ -214,30 +219,30 @@ describe("ApiTableCatalogItem", function () {
         "responseDataPath",
         "records[0]"
       );
-      jasmine.Ajax.stubRequest(
-        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/values.json")
-      ).andReturn({
-        responseJSON: {
-          records: [
-            [
-              {
-                id: 1,
-                value: 8
-              },
-              {
-                id: 2,
-                value: 9
-              }
-            ],
-            [
-              {
-                id: 3,
-                value: 7
-              }
+      worker.use(
+        http.get("https://terria.io/values.json", () =>
+          HttpResponse.json({
+            records: [
+              [
+                {
+                  id: 1,
+                  value: 8
+                },
+                {
+                  id: 2,
+                  value: 9
+                }
+              ],
+              [
+                {
+                  id: 3,
+                  value: 7
+                }
+              ]
             ]
-          ]
-        }
-      });
+          })
+        )
+      );
 
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
@@ -253,32 +258,32 @@ describe("ApiTableCatalogItem", function () {
         "responseDataPath",
         "records[].fields"
       );
-      jasmine.Ajax.stubRequest(
-        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/values.json")
-      ).andReturn({
-        responseJSON: {
-          records: [
-            {
-              fields: {
-                id: 1,
-                value: 8
+      worker.use(
+        http.get("https://terria.io/values.json", () =>
+          HttpResponse.json({
+            records: [
+              {
+                fields: {
+                  id: 1,
+                  value: 8
+                }
+              },
+              {
+                fields: {
+                  id: 2,
+                  value: 9
+                }
+              },
+              {
+                fields: {
+                  id: 3,
+                  value: 7
+                }
               }
-            },
-            {
-              fields: {
-                id: 2,
-                value: 9
-              }
-            },
-            {
-              fields: {
-                id: 3,
-                value: 7
-              }
-            }
-          ]
-        }
-      });
+            ]
+          })
+        )
+      );
 
       await apiCatalogItem.loadMapItems();
       const table = apiCatalogItem.dataColumnMajor;
@@ -291,15 +296,14 @@ describe("ApiTableCatalogItem", function () {
 
   describe("supports apiColumns", function () {
     beforeEach(function () {
-      jasmine.Ajax.stubRequest(
-        "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseJSON: regionMapping });
-
-      jasmine.Ajax.stubRequest(
-        proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/position.json")
-      ).andReturn({
-        responseJSON: positionApiResponse
-      });
+      worker.use(
+        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+          HttpResponse.json(regionMapping)
+        ),
+        http.get("https://terria.io/position.json", () =>
+          HttpResponse.json(positionApiResponse)
+        )
+      );
 
       runInAction(() => {
         updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
