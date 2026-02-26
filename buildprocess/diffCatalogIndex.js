@@ -1,4 +1,4 @@
-const fse = require("fs-extra");
+const fs = require("node:fs");
 
 /** Print list of datasets that have been removed/added between two catalog index
  *
@@ -26,11 +26,11 @@ function itemPath(item, index) {
 
 // Sorting isn't necessary here - but it makes it easier to compare JSON objects by hand if needed
 const oldCatalogIndex = sortIndex(
-  JSON.parse(fse.readFileSync(oldPath).toString())
+  JSON.parse(fs.readFileSync(oldPath).toString())
 );
 
 const newCatalogIndex = sortIndex(
-  JSON.parse(fse.readFileSync(newPath).toString())
+  JSON.parse(fs.readFileSync(newPath).toString())
 );
 
 const oldKeys = new Set(Object.keys(oldCatalogIndex));
