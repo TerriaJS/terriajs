@@ -124,6 +124,12 @@ function configureWebpack({
     type: "asset" // inlines if file size < 8KB
   });
 
+  config.module.rules.push({
+    test: /\.pbf$/,
+    // include: path.resolve(terriaJSBasePath, "test"),
+    type: "asset/resource" // emits a separate file and exports the URL
+  });
+
   config.plugins = config.plugins || [];
 
   // Add SVG Sprite Webpack Plugin

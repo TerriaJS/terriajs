@@ -52,7 +52,11 @@ beforeAll(async function () {
   });
 });
 
-afterEach(function () {
+beforeEach(function () {
+  worker.resetHandlers();
+});
+
+afterAll(function () {
   worker.resetHandlers();
 });
 
