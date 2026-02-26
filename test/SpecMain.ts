@@ -37,7 +37,7 @@ beforeAll(async function () {
     await reg.unregister();
   }
   await worker.start({
-    onUnhandledRequest: "bypass",
+    onUnhandledRequest: "error",
     quiet: true
   });
 

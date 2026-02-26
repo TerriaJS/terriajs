@@ -11,6 +11,8 @@ import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import { worker } from "../mocks/browser";
+import { http, HttpResponse } from "msw";
 
 describe("Leaflet Model", function () {
   let terria: Terria;
@@ -22,6 +24,8 @@ describe("Leaflet Model", function () {
   let terriaProgressEvt: jasmine.Spy;
 
   beforeEach(function () {
+    worker.use(http.get("http://example.com", () => HttpResponse.text("")));
+
     terria = new Terria({
       baseUrl: "./"
     });
