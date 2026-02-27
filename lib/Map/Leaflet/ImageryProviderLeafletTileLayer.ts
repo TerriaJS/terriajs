@@ -1,12 +1,6 @@
 import i18next from "i18next";
 import L, { TileEvent } from "leaflet";
-import {
-  autorun,
-  computed,
-  IReactionDisposer,
-  observable,
-  makeObservable
-} from "mobx";
+import { autorun, IReactionDisposer, observable, makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
@@ -21,6 +15,7 @@ import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
+import getClipsForSplitter from "./getClipsForSplitter";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
@@ -97,47 +92,29 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         return;
       }
 
+      if (
+        this.splitDirection === SplitDirection.NONE ||
+        !this.leaflet.size ||
+        !this.leaflet.nw ||
+        !this.leaflet.se
+      ) {
+        container.style.clipPath = "none";
+        return;
+      }
+
+      const clips = getClipsForSplitter({
+        size: this.leaflet.size,
+        nw: this.leaflet.nw,
+        se: this.leaflet.se,
+        splitPosition: this.splitPosition
+      });
+
       if (this.splitDirection === SplitDirection.LEFT) {
-        const { left: clipLeft } = this._clipsForSplitter;
-        container.style.clip = clipLeft;
-      } else if (this.splitDirection === SplitDirection.RIGHT) {
-        const { right: clipRight } = this._clipsForSplitter;
-        container.style.clip = clipRight;
+        container.style.clipPath = clips.left;
       } else {
-        container.style.clip = "auto";
+        container.style.clipPath = clips.right;
       }
     });
-  }
-
-  @computed
-  get _clipsForSplitter() {
-    let clipLeft = "";
-    let clipRight = "";
-    let clipPositionWithinMap;
-    let clipX;
-
-    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
-      clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
-      clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
-      clipLeft =
-        "rect(" +
-        [this.leaflet.nw.y, clipX, this.leaflet.se.y, this.leaflet.nw.x].join(
-          "px,"
-        ) +
-        "px)";
-      clipRight =
-        "rect(" +
-        [this.leaflet.nw.y, this.leaflet.se.x, this.leaflet.se.y, clipX].join(
-          "px,"
-        ) +
-        "px)";
-    }
-    return {
-      left: clipLeft,
-      right: clipRight,
-      clipPositionWithinMap: clipPositionWithinMap,
-      clipX: clipX
-    };
   }
 
   _tileOnError(_done: unknown, _tile: unknown, _e: unknown) {

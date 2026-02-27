@@ -36,6 +36,7 @@ import ImageryProviderLeafletTileLayer from "../Map/Leaflet/ImageryProviderLeafl
 import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/Leaflet/LeafletScene";
 import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
+import getClipsForSplitter from "../Map/Leaflet/getClipsForSplitter";
 import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
 import L from "../Map/LeafletPatched";
 import PickedFeatures, {
@@ -984,27 +985,20 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
-  getClipsForSplitter(): any {
-    let clipLeft: string = "";
-    let clipRight: string = "";
-    let clipPositionWithinMap: number = 0;
-    let clipX: number = 0;
-    if (this.terria.showSplitter) {
-      const map = this.map;
-      const size = map.getSize();
-      const nw = map.containerPointToLayerPoint([0, 0]);
-      const se = map.containerPointToLayerPoint(size);
-      clipPositionWithinMap = size.x * this.terria.splitPosition;
-      clipX = Math.round(nw.x + clipPositionWithinMap);
-      clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
-      clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
+  getClipsForSplitter() {
+    if (!this.terria.showSplitter) {
+      return { left: "", right: "", clipPositionWithinMap: 0, clipX: 0 };
     }
 
+    const size = this.map.getSize();
+    const nw = this.map.containerPointToLayerPoint([0, 0]);
+    const se = this.map.containerPointToLayerPoint(size);
+    const splitPosition = this.terria.splitPosition;
+    const clips = getClipsForSplitter({ size, nw, se, splitPosition });
+
     return {
-      left: clipLeft,
-      right: clipRight,
-      clipPositionWithinMap: clipPositionWithinMap,
-      clipX: clipX
+      ...clips,
+      clipPositionWithinMap: size.x * splitPosition
     };
   }
 
@@ -1021,7 +1015,7 @@ export default class Leaflet extends GlobeOrMap {
     this._attributionControl.remove();
 
     try {
-      // html2canvas can't handle the clip style which is used for the splitter. So if the splitter is active, we render
+      // html2canvas can't handle the clip-path style which is used for the splitter. So if the splitter is active, we render
       // a left image and a right image and compose them. Also remove the splitter drag thumb.
       let promise: any;
       if (this.terria.showSplitter) {
@@ -1031,17 +1025,17 @@ export default class Leaflet extends GlobeOrMap {
         promise = html2canvas(this.map.getContainer(), {
           useCORS: true,
           ignoreElements: (element: HTMLElement) =>
-            (element.style.clip !== undefined &&
-              element.style.clip !== null &&
-              element.style.clip.replace(/ /g, "") === clipRight) ||
+            (element.style.clipPath !== undefined &&
+              element.style.clipPath !== null &&
+              element.style.clipPath.replace(/ /g, "") === clipRight) ||
             this.isSplitterDragThumb(element)
         }).then((leftCanvas: HTMLCanvasElement) => {
           return html2canvas(this.map.getContainer(), {
             useCORS: true,
             ignoreElements: (element: HTMLElement) =>
-              (element.style.clip !== undefined &&
-                element.style.clip !== null &&
-                element.style.clip.replace(/ /g, "") === clipLeft) ||
+              (element.style.clipPath !== undefined &&
+                element.style.clipPath !== null &&
+                element.style.clipPath.replace(/ /g, "") === clipLeft) ||
               this.isSplitterDragThumb(element)
           }).then((rightCanvas: HTMLCanvasElement) => {
             const combined = document.createElement("canvas");
