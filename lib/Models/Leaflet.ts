@@ -37,7 +37,9 @@ import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/Leaflet/LeafletScene";
 import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
 import getClipsForSplitter from "../Map/Leaflet/getClipsForSplitter";
-import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
+import LeafletVisualizer, {
+  LeafletGeomVisualizer
+} from "../Map/Leaflet/LeafletVisualizer";
 import L from "../Map/LeafletPatched";
 import PickedFeatures, {
   ProviderCoords,
@@ -181,6 +183,10 @@ export default class Leaflet extends GlobeOrMap {
     this._eventHelper.add(this.terria.timelineClock.onTick, ((clock: Clock) => {
       this.dataSourceDisplay.update(clock.currentTime);
     }) as any);
+
+    this._eventHelper.add(this.dataSources.dataSourceAdded, () => {
+      this._applySplitterToDataSources();
+    });
 
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
@@ -890,9 +896,9 @@ export default class Leaflet extends GlobeOrMap {
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
         ) {
-          const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
+          const layers = this.getImageryLayersForItem(item);
           layers.forEach(
             action((layer) => {
               if (showSplitter) {
@@ -906,8 +912,57 @@ export default class Leaflet extends GlobeOrMap {
           );
         }
       });
+      this._applySplitterToDataSources();
       this.notifyRepaintRequired();
     });
+  }
+
+  _applySplitterToDataSources() {
+    const items = this.terria.mainViewer.items.get();
+    const showSplitter = this.terria.showSplitter;
+    const splitPosition = this.terria.splitPosition;
+
+    items.forEach((item) => {
+      if (
+        !MappableMixin.isMixedInto(item) ||
+        !hasTraits(item, SplitterTraits, "splitDirection")
+      ) {
+        return;
+      }
+
+      const splitDirection = item.splitDirection;
+      const visualizers = this.getVisualizersForItem(item);
+      visualizers.forEach(
+        action((visualizer) => {
+          if (showSplitter) {
+            visualizer.splitDirection = splitDirection;
+            visualizer.splitPosition = splitPosition;
+          } else {
+            visualizer.splitDirection = SplitDirection.NONE;
+            visualizer.splitPosition = splitPosition;
+          }
+        })
+      );
+    });
+  }
+
+  getVisualizersForItem(item: MappableMixin.Instance): LeafletGeomVisualizer[] {
+    const result: LeafletGeomVisualizer[] = [];
+    const dataSources = item.mapItems.filter(isDataSource);
+    for (const ds of dataSources) {
+      if (!this.dataSources.contains(ds)) {
+        continue;
+      }
+      const visualizers = (ds as any).visualizers;
+      if (Array.isArray(visualizers)) {
+        for (const v of visualizers) {
+          if (v instanceof LeafletGeomVisualizer) {
+            result.push(v);
+          }
+        }
+      }
+    }
+    return result;
   }
 
   getImageryLayersForItem(
