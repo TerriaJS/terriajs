@@ -1,4 +1,4 @@
-# 13. Mock Service Worker (MSW) for HTTP Mocking in Tests
+# 14. Mock Service Worker (MSW) for HTTP Mocking in Tests
 
 Date: 2026-02-17
 
