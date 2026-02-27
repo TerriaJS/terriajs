@@ -1,4 +1,5 @@
 import L, { LatLngBounds, LatLngBoundsLiteral, PolylineOptions } from "leaflet";
+import { autorun, IReactionDisposer, makeObservable, observable } from "mobx";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -17,8 +18,10 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import { convertCesiumDashNumberToDashArray } from "../../Models/Catalog/Esri/esriStyleToTableStyle";
+import getClipsForSplitter from "./getClipsForSplitter";
 import LeafletScene from "./LeafletScene";
 
 interface PointDetails {
@@ -98,25 +101,44 @@ const tmpImage =
  */
 let prevBoundsType = 0;
 
+let paneCounter = 0;
+
 /**
  * A {@link Visualizer} which maps {@link Entity#point} to Leaflet primitives.
  **/
-class LeafletGeomVisualizer {
+export class LeafletGeomVisualizer {
   private readonly _featureGroup: L.FeatureGroup;
   private readonly _entitiesToVisualize: AssociativeArray;
   private readonly _entityHash: EntityHash;
+  private readonly _disposeSplitterReaction: IReactionDisposer;
+
+  readonly paneName: string;
+  readonly paneElement: HTMLElement;
+
+  @observable splitDirection: SplitDirection = SplitDirection.NONE;
+  @observable splitPosition: number = 0.5;
 
   constructor(
     readonly leafletScene: LeafletScene,
     readonly entityCollection: EntityCollection
   ) {
+    makeObservable(this);
+
+    this.paneName = `terriajs-geom-visualizer-${paneCounter++}`;
+    this.paneElement = leafletScene.map.createPane(this.paneName);
+    this.paneElement.style.zIndex = "500";
+
     entityCollection.collectionChanged.addEventListener(
       this._onCollectionChanged,
       this
     );
-    this._featureGroup = L.featureGroup().addTo(leafletScene.map);
+    this._featureGroup = L.featureGroup([], { pane: this.paneName }).addTo(
+      leafletScene.map
+    );
     this._entitiesToVisualize = new AssociativeArray();
     this._entityHash = {};
+
+    this._disposeSplitterReaction = this._reactToSplitterChange();
 
     this._onCollectionChanged(
       entityCollection,
@@ -124,6 +146,33 @@ class LeafletGeomVisualizer {
       [],
       []
     );
+  }
+
+  private _reactToSplitterChange(): IReactionDisposer {
+    return autorun(() => {
+      if (this.splitDirection === SplitDirection.NONE) {
+        this.paneElement.style.clipPath = "none";
+        return;
+      }
+
+      const map = this.leafletScene.map;
+      const size = map.getSize();
+      const nw = map.containerPointToLayerPoint([0, 0]);
+      const se = map.containerPointToLayerPoint(size);
+
+      const clips = getClipsForSplitter({
+        size,
+        nw,
+        se,
+        splitPosition: this.splitPosition
+      });
+
+      if (this.splitDirection === SplitDirection.LEFT) {
+        this.paneElement.style.clipPath = clips.left;
+      } else {
+        this.paneElement.style.clipPath = clips.right;
+      }
+    });
   }
 
   private _onCollectionChanged(
@@ -302,7 +351,8 @@ class LeafletGeomVisualizer {
         fillOpacity: color.alpha,
         color: outlineColor.toCssColorString(),
         weight: outlineWidth,
-        opacity: outlineColor.alpha
+        opacity: outlineColor.alpha,
+        pane: this.paneName
       };
 
       layer = details.layer = L.circleMarker(
@@ -445,7 +495,10 @@ class LeafletGeomVisualizer {
 
     let redrawIcon = false;
     if (!isDefined(geomLayer)) {
-      const markerOptions = { icon: L.icon({ iconUrl: tmpImage }) };
+      const markerOptions = {
+        icon: L.icon({ iconUrl: tmpImage }),
+        pane: this.paneName
+      };
       marker = L.marker(latlng, markerOptions);
       marker.on("click", featureClicked.bind(undefined, this, entity));
       marker.on("mousedown", featureMousedown.bind(undefined, this, entity));
@@ -574,7 +627,10 @@ class LeafletGeomVisualizer {
 
     let redrawLabel = false;
     if (!isDefined(geomLayer)) {
-      const markerOptions = { icon: L.icon({ iconUrl: tmpImage }) };
+      const markerOptions = {
+        icon: L.icon({ iconUrl: tmpImage }),
+        pane: this.paneName
+      };
       marker = L.marker(latlng, markerOptions);
       marker.on("click", featureClicked.bind(undefined, this, entity));
       marker.on("mousedown", featureMousedown.bind(undefined, this, entity));
@@ -719,7 +775,8 @@ class LeafletGeomVisualizer {
         fillOpacity: fillColor.alpha,
         weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
-        opacity: outlineColor.alpha
+        opacity: outlineColor.alpha,
+        pane: this.paneName
       };
 
       if (outline && dashArray) {
@@ -857,7 +914,8 @@ class LeafletGeomVisualizer {
         fillOpacity: fillColor.alpha,
         weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
-        opacity: outlineColor.alpha
+        opacity: outlineColor.alpha,
+        pane: this.paneName
       };
 
       if (outline && dashArray) {
@@ -989,7 +1047,8 @@ class LeafletGeomVisualizer {
     const polylineOptions: PolylineOptions = {
       color: color.toCssColorString(),
       weight: width,
-      opacity: color.alpha
+      opacity: color.alpha,
+      pane: this.paneName
     };
 
     if (dashArray) {
@@ -1044,6 +1103,8 @@ class LeafletGeomVisualizer {
    * Removes and destroys all primitives created by this instance.
    */
   destroy() {
+    this._disposeSplitterReaction();
+
     const entities = this._entitiesToVisualize.values;
     const entityHash = this._entityHash;
 
@@ -1056,6 +1117,11 @@ class LeafletGeomVisualizer {
       this
     );
     this.leafletScene.map.removeLayer(this._featureGroup);
+
+    if (this.paneElement.parentNode) {
+      this.paneElement.parentNode.removeChild(this.paneElement);
+    }
+
     return destroyObject(this);
   }
 

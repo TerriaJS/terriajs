@@ -1,17 +1,12 @@
 import L from "leaflet";
-import {
-  autorun,
-  computed,
-  IReactionDisposer,
-  observable,
-  makeObservable
-} from "mobx";
+import { autorun, IReactionDisposer, observable, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Leaflet from "../../Models/Leaflet";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import getClipsForSplitter from "./getClipsForSplitter";
 
 export interface ImageryProviderWithGridLayerSupport extends ImageryProvider {
   requestImageForCanvas: (
@@ -70,48 +65,29 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
         return;
       }
 
+      if (
+        this.splitDirection === SplitDirection.NONE ||
+        !this.leaflet.size ||
+        !this.leaflet.nw ||
+        !this.leaflet.se
+      ) {
+        container.style.clipPath = "none";
+        return;
+      }
+
+      const clips = getClipsForSplitter({
+        size: this.leaflet.size,
+        nw: this.leaflet.nw,
+        se: this.leaflet.se,
+        splitPosition: this.splitPosition
+      });
+
       if (this.splitDirection === SplitDirection.LEFT) {
-        const { left: clipLeft } = this._clipsForSplitter;
-        container.style.clip = clipLeft;
-      } else if (this.splitDirection === SplitDirection.RIGHT) {
-        const { right: clipRight } = this._clipsForSplitter;
-        container.style.clip = clipRight;
+        container.style.clipPath = clips.left;
       } else {
-        container.style.clip = "auto";
+        container.style.clipPath = clips.right;
       }
     });
-  }
-
-  @computed
-  get _clipsForSplitter() {
-    let clipLeft = "";
-    let clipRight = "";
-    let clipPositionWithinMap;
-    let clipX;
-
-    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
-      clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
-      clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
-      clipLeft =
-        "rect(" +
-        [this.leaflet.nw.y, clipX, this.leaflet.se.y, this.leaflet.nw.x].join(
-          "px,"
-        ) +
-        "px)";
-      clipRight =
-        "rect(" +
-        [this.leaflet.nw.y, this.leaflet.se.x, this.leaflet.se.y, clipX].join(
-          "px,"
-        ) +
-        "px)";
-    }
-
-    return {
-      left: clipLeft,
-      right: clipRight,
-      clipPositionWithinMap: clipPositionWithinMap,
-      clipX: clipX
-    };
   }
 
   createTile(tilePoint: L.Coords, done: L.DoneCallback) {
