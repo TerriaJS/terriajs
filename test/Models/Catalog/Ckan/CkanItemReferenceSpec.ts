@@ -47,8 +47,7 @@ describe("CkanItemReference", function () {
           throw new Error(`Unexpected resource id: ${id}`);
         }
       ),
-      http.all("*", ({ request }) => {
-        console.dir(request.url);
+      http.all("*", () => {
         return new HttpResponse(null, { status: 404 });
       })
     );
