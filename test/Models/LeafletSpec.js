@@ -340,7 +340,7 @@ describe("Leaflet Model", function () {
           // The reset happens in a runLater, which a second click will always come behind in a browser,
           // but this isn't guaranteed in unit tests because they're just two setTimeouts racing each other,
           // so give this a healthy 50ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
-          await runLater(50);
+          await runLater(() => {}, 50);
           click({
             latlng: latlng
           });

@@ -44,30 +44,27 @@ describeIfSupported("KmlCatalogItem", function () {
   });
 
   it("can load a KML file by provided XML data", async function () {
-    await loadXML("test/KML/vic_police.kml").then(function (xml) {
-      kml.data = xml;
-      kml.dataSourceUrl = "anything.kml";
-      kml.load();
-      expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
-    });
+    const xml = await loadXML("test/KML/vic_police.kml");
+    kml.data = xml;
+    kml.dataSourceUrl = "anything.kml";
+    await kml.load();
+    expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
   });
 
   it("can load a KML file by provided Blob", async function () {
-    await loadBlob("test/KML/vic_police.kml").then(function (blob) {
-      kml.data = blob;
-      kml.dataSourceUrl = "anything.kml";
-      kml.load();
-      expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
-    });
+    const blob = await loadBlob("test/KML/vic_police.kml");
+    kml.data = blob;
+    kml.dataSourceUrl = "anything.kml";
+    await kml.load();
+    expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
   });
 
   it("can load a KML file by provided string", async function () {
-    await loadText("test/KML/vic_police.kml").then(function (s) {
-      kml.data = s;
-      kml.dataSourceUrl = "anything.kml";
-      kml.load();
-      expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
-    });
+    const text = await loadText("test/KML/vic_police.kml");
+    kml.data = text;
+    kml.dataSourceUrl = "anything.kml";
+    await kml.load();
+    expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
   });
 
   it("can load a KMZ file by URL", async function () {
@@ -78,12 +75,11 @@ describeIfSupported("KmlCatalogItem", function () {
   });
 
   it("can load a KMZ file by provided Blob", async function () {
-    await loadBlob("test/KML/vic_police.kmz").then(function (blob) {
-      kml.data = blob;
-      kml.dataSourceUrl = "anything.kmz";
-      kml.load();
-      expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
-    });
+    const blob = await loadBlob("test/KML/vic_police.kmz");
+    kml.data = blob;
+    kml.dataSourceUrl = "anything.kmz";
+    kml.load();
+    expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
   });
 
   describe("error handling", function () {
@@ -100,35 +96,33 @@ describeIfSupported("KmlCatalogItem", function () {
     });
 
     it("fails gracefully when the provided string is not XML", async function () {
-      await loadText("test/CZML/simple.czml").then(function (s) {
-        kml.data = s;
-        kml.dataSourceUrl = "anything.czml";
+      const text = await loadText("test/CZML/simple.czml");
+      kml.data = text;
+      kml.dataSourceUrl = "anything.czml";
 
-        kml
-          .load()
-          .then(function () {
-            throw new Error("Load should not succeed.");
-          })
-          .catch(function (e) {
-            expect(e instanceof TerriaError).toBe(true);
-          });
-      });
+      await kml
+        .load()
+        .then(function () {
+          throw new Error("Load should not succeed.");
+        })
+        .catch(function (e) {
+          expect(e instanceof TerriaError).toBe(true);
+        });
     });
 
     it("fails gracefully when the provided blob is not XML", async function () {
-      await loadBlob("test/CZML/simple.czml").then(function (blob) {
-        kml.data = blob;
-        kml.dataSourceUrl = "anything.czml";
+      const blob = await loadBlob("test/CZML/simple.czml");
+      kml.data = blob;
+      kml.dataSourceUrl = "anything.czml";
 
-        kml
-          .load()
-          .then(function () {
-            throw new Error("Load should not succeed.");
-          })
-          .catch(function (e) {
-            expect(e instanceof TerriaError).toBe(true);
-          });
-      });
+      await kml
+        .load()
+        .then(function () {
+          throw new Error("Load should not succeed.");
+        })
+        .catch(function (e) {
+          expect(e instanceof TerriaError).toBe(true);
+        });
     });
   });
 });
