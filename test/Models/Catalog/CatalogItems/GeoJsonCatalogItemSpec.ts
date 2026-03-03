@@ -833,7 +833,7 @@ describe("GeoJsonCatalogItemSpec", () => {
           ?.toCssColorString()
       ).toBe("rgb(103,0,13)");
 
-      expect(geojson.disableSplitter).toBeTruthy();
+      expect(geojson.disableSplitter).toBeFalsy();
     });
 
     it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {
@@ -963,7 +963,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(geojson.useTableStylingAndProtomaps).toBeFalsy();
 
       expect(geojson.legends.length).toBe(0);
-      expect(geojson.disableSplitter).toBeTruthy();
+      expect(geojson.disableSplitter).toBeFalsy();
     });
 
     it("correctly matches feature _id_ with table rowId - with features with empty geoms", async () => {
@@ -1403,10 +1403,20 @@ describe("GeoJsonCatalogItemSpec", () => {
       ).toBeUndefined();
     });
 
-    it("cesium - points - splitter disabled", async function () {
+    it("cesium - points - splitter enabled", async function () {
       terria.addModel(geojson);
       const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      await geojson.loadMapItems();
+
+      expect(geojson.disableSplitter).toBeFalsy();
+    });
+
+    it("cesium - only polygons - splitter disabled", async function () {
+      terria.addModel(geojson);
+      const geojsonString = await loadText("test/GeoJSON/api.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
       await geojson.loadMapItems();
 
       expect(geojson.disableSplitter).toBeTruthy();
