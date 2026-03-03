@@ -34,6 +34,7 @@ const MouseTooltip: FC<MouseTooltipProps> = (props) => {
   });
 
   useEffect(function setCursor() {
+    // eslint-disable-next-line react-hooks/immutability
     scene.canvas.style.cursor = `crosshair`;
     return () => {
       scene.canvas.style.cursor = `auto`;
