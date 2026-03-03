@@ -1,7 +1,12 @@
 import { MeasurableGeometry } from "./MeasurableGeometryManager";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Terria from "../../Models/Terria";
-import MeasurableGeometryExporter from "./MeasurableGeometryExporter";
+import MeasurableGeometryExporter, {
+  SUFFIX_POLYGON,
+  SUFFIX_LINES,
+  SUFFIX_POINTS,
+  SUFFIX_MULTIPATH
+} from "./MeasurableGeometryExporter";
 import i18next from "i18next";
 
 export interface DownloadLink {
@@ -22,7 +27,10 @@ export default class MeasurableDownload {
     if (!rawName) return "";
 
     const withoutExtension = rawName.replace(/\.[^/.]+$/, "");
-    return withoutExtension.replace(/_[^_]*$/, "");
+    const suffixRegex = new RegExp(
+      `(?:(?:${SUFFIX_POLYGON}|${SUFFIX_LINES}|${SUFFIX_POINTS})(?:${SUFFIX_MULTIPATH})?)+$`
+    );
+    return withoutExtension.replace(suffixRegex, "");
   }
 
   async generateAllFormatLinks(
