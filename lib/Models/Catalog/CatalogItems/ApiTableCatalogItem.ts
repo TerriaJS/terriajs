@@ -288,8 +288,8 @@ function getResponseDataPath(data: JsonValue, jsonPath: string) {
     path === ""
       ? data
       : Array.isArray(data)
-      ? _map(data, path)
-      : _get(data, path);
+        ? _map(data, path)
+        : _get(data, path);
   return pathSegments.reduce(
     (nextData, segment) => getPath(nextData, segment),
     data
