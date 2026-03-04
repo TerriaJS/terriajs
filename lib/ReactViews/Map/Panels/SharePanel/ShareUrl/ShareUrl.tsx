@@ -131,7 +131,7 @@ export const ShareUrl = forwardRef<
         }
       />
       {children}
-      <Spacing bottom={2} />
+      <Spacing bottom={3} />
       <ShareUrlWarning
         terria={terria}
         viewState={viewState}
