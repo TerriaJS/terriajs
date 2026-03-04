@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -5,6 +6,7 @@ import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
 import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType from "../../lib/Table/TableColumnType";
+import { worker } from "../mocks/browser";
 
 import regionMapping from "../../wwwroot/data/regionMapping.json";
 
@@ -349,14 +351,11 @@ describe("TableColumn", function () {
 
   describe("valuesAsDates", function () {
     beforeEach(function () {
-      jasmine.Ajax.install();
-      jasmine.Ajax.stubRequest(
-        "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseJSON: regionMapping });
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
+      worker.use(
+        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+          HttpResponse.json(regionMapping)
+        )
+      );
     });
 
     it("defaults to dd/mm/yyyy dates", async function () {
@@ -455,14 +454,11 @@ describe("TableColumn", function () {
 
   describe("column transformation", function () {
     beforeEach(function () {
-      jasmine.Ajax.install();
-      jasmine.Ajax.stubRequest(
-        "build/TerriaJS/data/regionMapping.json"
-      ).andReturn({ responseJSON: regionMapping });
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
+      worker.use(
+        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+          HttpResponse.json(regionMapping)
+        )
+      );
     });
 
     it("simple expression", async function () {

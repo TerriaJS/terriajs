@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import { ThemeProvider } from "styled-components";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -16,6 +17,7 @@ import Terria from "../../lib/Models/Terria";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import { worker } from "../mocks/browser";
 
 import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
 import lgaCodeJson from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
@@ -154,22 +156,19 @@ describe("DimensionSelectorSection", function () {
   });
 
   it("shows csv region mapping options", async function () {
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({
-      responseJSON: regionMapping
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
-    ).andReturn({
-      responseJSON: lgaCodeJson
-    });
-
-    jasmine.Ajax.stubRequest("test/csv/lga_code_2015.csv").andReturn({
-      responseText: lgaCode2015
-    });
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
+        () => HttpResponse.json(lgaCodeJson)
+      ),
+      http.get(
+        "*/test/csv/lga_code_2015.csv",
+        () => new HttpResponse(lgaCode2015)
+      )
+    );
 
     const csvItem = new CsvCatalogItem("some-csv", terria, undefined);
 
@@ -203,8 +202,6 @@ describe("DimensionSelectorSection", function () {
         name: "models.tableData.manualRegionMapping"
       })
     ).toBeVisible();
-
-    jasmine.Ajax.uninstall();
   });
 
   describe("when given a SelectableDimensionCheckboxGroup", function () {
