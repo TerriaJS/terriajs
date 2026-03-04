@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import Box from "../Styled/Box";
@@ -21,15 +21,26 @@ interface ClipboardProps {
   // needed for testing
   timeout?: number;
   onCopy?: (contents: string) => void;
+  createdMessage?: string;
 }
 
 const Clipboard: FC<ClipboardProps> = (props) => {
-  const { text, inputTheme, inputPlaceholder, onCopy } = props;
+  const { text, inputTheme, inputPlaceholder, onCopy, createdMessage } = props;
   const { t } = useTranslation();
   const styledTheme = useTheme();
   const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
+  const [showCreatedMessage, setShowCreatedMessage] = useState(false);
+  const prevTextRef = useRef(text);
+
+  useEffect(() => {
+    if (createdMessage && !prevTextRef.current && text) {
+      setShowCreatedMessage(true);
+    }
+    prevTextRef.current = text;
+  }, [text, createdMessage]);
 
   const handleCopy = async () => {
+    setShowCreatedMessage(false);
     try {
       if (text) {
         await navigator.clipboard.writeText(text);
@@ -54,6 +65,13 @@ const Clipboard: FC<ClipboardProps> = (props) => {
   }, [status, props.timeout]);
 
   const canCopy = !!navigator.clipboard;
+
+  const statusMessage =
+    status === CopyStatus.Error
+      ? t("clipboard.unsuccessful")
+      : status === CopyStatus.Success
+      ? t("clipboard.success")
+      : createdMessage;
 
   return (
     <ClipboardDiv>
@@ -82,7 +100,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
           </Button>
         )}
       </Box>
-      {canCopy && status !== CopyStatus.Default && (
+      {(canCopy && status !== CopyStatus.Default) || showCreatedMessage ? (
         <>
           <Spacing bottom={2} />
           <Box
@@ -93,32 +111,30 @@ const Clipboard: FC<ClipboardProps> = (props) => {
             <StyledIcon
               light
               glyph={
-                status === CopyStatus.Success
-                  ? Icon.GLYPHS.selected
-                  : Icon.GLYPHS.close
+                status === CopyStatus.Error
+                  ? Icon.GLYPHS.close
+                  : Icon.GLYPHS.selected
               }
               styledWidth="20px"
               css={`
                 margin: 8px;
                 margin-left: 0;
                 display: inline-block;
-                ${status === CopyStatus.Success &&
+                ${status !== CopyStatus.Error &&
                 `fill: ${styledTheme.textSuccess};`}
               `}
             />
             <TooltipText
               css={`
-                ${status === CopyStatus.Success &&
+                ${status !== CopyStatus.Error &&
                 `color: ${styledTheme.textSuccess};`}
               `}
             >
-              {status === CopyStatus.Success
-                ? t("clipboard.success")
-                : t("clipboard.unsuccessful")}
+              {statusMessage}
             </TooltipText>
           </Box>
         </>
-      )}
+      ) : null}
     </ClipboardDiv>
   );
 };

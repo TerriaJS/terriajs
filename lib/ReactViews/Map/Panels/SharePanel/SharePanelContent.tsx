@@ -4,13 +4,14 @@ import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
 import Spacing from "../../../../Styled/Spacing";
-import Text from "../../../../Styled/Text";
+import Text, { TextSpan } from "../../../../Styled/Text";
 import { useCallbackRef } from "../../../useCallbackRef";
-import { AdvancedOptions } from "./AdvancedOptions";
 import { canShorten } from "./BuildShareLink";
 import { PrintSection } from "./Print/PrintSection";
 import { shouldShorten as shouldShortenDefault } from "./SharePanel";
 import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
+import Checkbox from "../../../../Styled/Checkbox";
+import { EmbedSection } from "./Embed/EmbedSection";
 
 interface ISharePanelContentProps {
   terria: Terria;
@@ -46,9 +47,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   }, [terria]);
 
   return (
-    <Box paddedRatio={2} column>
+    <Box paddedRatio={3} column>
       <Text medium>{t("clipboard.shareURL")}</Text>
-      <Spacing bottom={2} />
+      <Spacing bottom={3} />
       <ShareUrl
         terria={terria}
         viewState={viewState}
@@ -59,16 +60,28 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       >
         <ShareUrlBookmark viewState={viewState} />
       </ShareUrl>
-      <AdvancedOptions
-        canShortenUrl={canShortenUrl}
-        shouldShorten={shouldShorten}
-        shouldShortenOnChange={shouldShortenOnChange}
-        includeStoryInShare={includeStoryInShare}
-        includeStoryInShareOnChange={includeStoryInShareOnChange}
-        shareUrl={shareUrlRef}
-      />
-      <Spacing bottom={2} />
+      <Checkbox
+        textProps={{ medium: true }}
+        id="includeStory"
+        title="Include Story in Share"
+        isChecked={includeStoryInShare}
+        onChange={includeStoryInShareOnChange}
+      >
+        <TextSpan>{t("includeStory.message")}</TextSpan>
+      </Checkbox>
+      <Checkbox
+        textProps={{ medium: true }}
+        id="shortenUrl"
+        isChecked={shouldShorten}
+        onChange={shouldShortenOnChange}
+        isDisabled={!canShortenUrl}
+      >
+        <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+      </Checkbox>
+      <Spacing bottom={3} />
       <PrintSection viewState={viewState} />
+      <Spacing bottom={3} />
+      <EmbedSection shareUrl={shareUrlRef?.current} />
     </Box>
   );
 };

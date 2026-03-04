@@ -117,6 +117,11 @@ export const ShareUrl = forwardRef<
       <Clipboard
         text={shareUrl}
         inputPlaceholder={placeholder}
+        createdMessage={
+          includeStories && terria.stories && terria.stories.length > 0
+            ? t("share.storyLinkCreated")
+            : t("share.shareLinkCreated")
+        }
         onCopy={(text) =>
           terria.analytics?.logEvent(
             Category.share,
