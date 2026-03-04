@@ -4,7 +4,7 @@
 
 We take security seriously at TerriaJS. If you discover a vulnerability in TerriaJS software, please report it to us responsibly using the following steps:
 
-1. **GitHub Security**: Report a vulnerability from the Security tab of this repository.
+1. **Contact Us**: Report a vulnerability to [security@terria.io](mailto:security@terria.io) or from the Security tab of this repository.
 2. **Provide Information**: Include as much information as possible to help us verify the vulnerability. This may include:
    - Steps to reproduce the vulnerability
    - Potential impact assessment
