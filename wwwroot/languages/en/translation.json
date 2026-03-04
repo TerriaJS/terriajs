@@ -215,7 +215,7 @@
     "btnAdvanced": "Advanced options",
     "embedTitle": "Embed map",
     "embedDescription": "To embed, copy this code to embed this map into an HTML page:",
-    "shortenUsingService": "Shorten the share URL using a web service",
+    "shortenUsingService": "Shorten the share link",
     "btnCatalogShareText": "Share",
     "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
@@ -230,6 +230,7 @@
     "convertErrorTitle": "Could not upgrade share link to V8",
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
     "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
+    "shareStoryLink": "Share Story link",
     "storyLinkCreated": "Story link created",
     "shareLinkCreated": "Share link created"
   },
@@ -622,12 +623,12 @@
   "clipboard": {
     "success": "Copied to clipboard",
     "unsuccessful": "Copy unsuccessful...",
-    "shareURL": "Share URL",
+    "shareURL": "Share Link",
     "shareExplanation": "Anyone with this URL will be able to access this map.",
     "copy": "Copy"
   },
   "includeStory": {
-    "message": "Include Story in Share"
+    "message": "Include current Story in link"
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",

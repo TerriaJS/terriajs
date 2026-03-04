@@ -85,7 +85,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     } else if (this.props.storyShare) {
       return (
         <Box fullWidth column paddedRatio={3}>
-          <Text medium>{t("clipboard.shareURL")}</Text>
+          <Text medium>{t("share.shareStoryLink")}</Text>
           <Spacing bottom={1} />
           <ShareUrl
             terria={terria}

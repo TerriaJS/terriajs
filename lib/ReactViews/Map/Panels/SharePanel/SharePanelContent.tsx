@@ -60,15 +60,17 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       >
         <ShareUrlBookmark viewState={viewState} />
       </ShareUrl>
-      <Checkbox
-        textProps={{ medium: true }}
-        id="includeStory"
-        title="Include Story in Share"
-        isChecked={includeStoryInShare}
-        onChange={includeStoryInShareOnChange}
-      >
-        <TextSpan>{t("includeStory.message")}</TextSpan>
-      </Checkbox>
+      {terria.stories && terria.stories.length > 0 && (
+        <Checkbox
+          textProps={{ medium: true }}
+          id="includeStory"
+          title="Include Story in Share"
+          isChecked={includeStoryInShare}
+          onChange={includeStoryInShareOnChange}
+        >
+          <TextSpan>{t("includeStory.message")}</TextSpan>
+        </Checkbox>
+      )}
       <Checkbox
         textProps={{ medium: true }}
         id="shortenUrl"
