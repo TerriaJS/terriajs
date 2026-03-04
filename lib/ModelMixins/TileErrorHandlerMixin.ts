@@ -199,8 +199,8 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
         return this === (baseMap as any)
           ? true
           : baseMap instanceof CompositeCatalogItem
-          ? baseMap.memberModels.includes(this)
-          : false;
+            ? baseMap.memberModels.includes(this)
+            : false;
       };
       /** End helper methods **/
 
@@ -383,8 +383,9 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 }
 
 namespace TileErrorHandlerMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof TileErrorHandlerMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof TileErrorHandlerMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model?.hasTileErrorHandlerMixin;
