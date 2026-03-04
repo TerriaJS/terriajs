@@ -62,8 +62,3 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
 const Explanation = styled(TextSpan)`
   opacity: 0.8;
 `;
-
-const CollapseIcon = styled(StyledIcon)<{ $isOpen: boolean }>`
-  transition: transform 0.2s ease;
-  ${(props) => props.$isOpen && "transform: rotate(90deg);"}
-`;

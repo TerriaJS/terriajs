@@ -71,7 +71,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
           >
             <TextSpan>{t("includeStory.message")}</TextSpan>
           </Checkbox>
-          <Spacing bottom={1} />
+          <Spacing bottom={2} />
         </>
       )}
       <Checkbox
