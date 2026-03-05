@@ -386,7 +386,7 @@
     "delete": "Delete",
     "untitledScene": "untitled scene",
     "doesNotExist": "Story does not exist",
-    "saveInstructions": "Click Save & share to create a new link.",
+    "saveInstructions": "Click share to create a new story link.",
     "removeAllStories": "Remove all scenes",
     "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
     "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",

@@ -428,7 +428,7 @@ class StoryBuilder extends Component<
               `}
             />
             <Spacing right={1} />
-            <TextSpan small color={this.props.theme.infoColor}>
+            <TextSpan medium color={this.props.theme.infoColor}>
               {t("story.saveInstructions")}
             </TextSpan>
           </Box>
