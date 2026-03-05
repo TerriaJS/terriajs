@@ -25,12 +25,12 @@ const WarningBox = styled(Box).attrs({
   rounded: true,
   column: true
 })`
-  background: #feb938;
-  color: #552800;
+  background: ${(props) => props.theme.infoColor};
+  color: ${(props) => props.theme.dark};
 `;
 
 const WarningLink = styled.a`
-  color: #552800;
+  color: ${(props) => props.theme.dark};
   text-decoration: underline;
   cursor: pointer;
 `;
