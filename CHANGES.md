@@ -15,6 +15,7 @@
 - Remove ts-essentials dependency and replace with custom type utility.
 - Remove fs-extra dependency and replace with native fs.
 - Convert test `done` callbacks to async/await for modern test patterns.
+- Update Checkbox component icon and remove unused indeterminate prop.
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
