@@ -6,17 +6,16 @@ export interface HiddenCheckboxProps extends HTMLProps<HTMLInputElement> {
   onChange?: ChangeEventHandler<HTMLInputElement>;
   value?: number | string;
   name?: string;
-  isIndeterminate?: boolean;
 }
 export default forwardRef(function HiddenCheckbox(
-  { isIndeterminate, ...props }: HiddenCheckboxProps,
+  props: HiddenCheckboxProps,
   ref: Ref<HTMLInputElement>
 ) {
   return (
     <input
       type="checkbox"
       ref={ref}
-      aria-checked={isIndeterminate ? "mixed" : props.checked}
+      aria-checked={props.checked}
       css={{
         appearance: "none",
         clip: "rect(0 0 0 0)",

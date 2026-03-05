@@ -20,7 +20,6 @@ import backward from "../../wwwroot/images/icons/backward.svg";
 import barChart from "../../wwwroot/images/icons/bar-chart.svg";
 import bulb from "../../wwwroot/images/icons/bulb.svg";
 import controls from "../../wwwroot/images/icons/controls.svg";
-import checkboxIndeterminate from "../../wwwroot/images/icons/checkbox-indeterminate.svg";
 import checkboxOff from "../../wwwroot/images/icons/checkbox-off.svg";
 import checkboxOn from "../../wwwroot/images/icons/checkbox-on.svg";
 import close from "../../wwwroot/images/icons/close.svg";
@@ -166,7 +165,6 @@ export const GLYPHS = {
   barChart,
   bulb,
   controls,
-  checkboxIndeterminate,
   checkboxOff,
   checkboxOn,
   close,

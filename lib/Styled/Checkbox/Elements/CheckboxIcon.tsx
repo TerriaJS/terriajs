@@ -42,13 +42,6 @@ const CheckboxIcon: FC<CheckboxIconProps> = (props: CheckboxIconProps) => {
         `}
       />
     );
-  } else if (props.isIndeterminate) {
-    return (
-      <StyledCheckboxIcon
-        isSwitch={props.isSwitch}
-        glyph={GLYPHS.checkboxIndeterminate}
-      />
-    );
   } else {
     return (
       <StyledCheckboxIcon
