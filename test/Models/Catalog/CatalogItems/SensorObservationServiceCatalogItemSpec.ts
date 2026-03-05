@@ -103,12 +103,9 @@ describe("SensorObservationServiceCatalogItem", function () {
               return HttpResponse.error();
             }
 
-            if (/<sos:GetFeatureOfInterest/.test(body)) {
-              return new HttpResponse(GetFeatureOfInterestResponse, {
-                headers: { "Content-Type": "text/xml" }
-              });
-            }
-            return new HttpResponse(null, { status: 404 });
+            return new HttpResponse(GetFeatureOfInterestResponse, {
+              headers: { "Content-Type": "text/xml" }
+            });
           })
         );
 
@@ -126,7 +123,7 @@ describe("SensorObservationServiceCatalogItem", function () {
                 return HttpResponse.error();
               }
 
-              if (/<sos:GetFeatureOfInterest/.test(body)) {
+              if (body.includes("<sos:GetFeatureOfInterest")) {
                 return new HttpResponse(GetFeatureOfInterestResponse, {
                   headers: { "Content-Type": "text/xml" }
                 });
@@ -145,7 +142,7 @@ describe("SensorObservationServiceCatalogItem", function () {
         worker.use(
           http.post("https://sos.example.com/", async ({ request }) => {
             const body = await request.text();
-            if (/<sos:GetFeatureOfInterest/.test(body)) {
+            if (body.includes("<sos:GetFeatureOfInterest")) {
               return new HttpResponse(EmptyGetFeatureOfInterestResponse, {
                 headers: { "Content-Type": "text/xml" }
               });
@@ -178,7 +175,7 @@ describe("SensorObservationServiceCatalogItem", function () {
               return HttpResponse.error();
             }
 
-            if (/<sos:GetFeatureOfInterest/.test(body)) {
+            if (body.includes("<sos:GetFeatureOfInterest")) {
               return new HttpResponse(GetFeatureOfInterestResponse, {
                 headers: { "Content-Type": "text/xml" }
               });
