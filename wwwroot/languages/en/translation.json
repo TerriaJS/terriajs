@@ -214,7 +214,7 @@
     "printViewButton": "Show Print View",
     "btnAdvanced": "Advanced options",
     "embedTitle": "Embed map",
-    "embedDescription": "To embed, copy this code to embed this map into an HTML page:",
+    "embedDescription": "Copy this code to embed the map in an HTML page.",
     "shortenUsingService": "Shorten the share link",
     "btnCatalogShareText": "Share",
     "btnStoryShareText": "Share",
