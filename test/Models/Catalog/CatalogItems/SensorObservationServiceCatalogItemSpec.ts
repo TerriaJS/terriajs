@@ -278,43 +278,6 @@ describe("SensorObservationServiceCatalogItem", function () {
 
   describe("observations table", function () {
     beforeEach(function () {
-      worker.use(
-        http.post("https://sos.example.com/", async ({ request }) => {
-          const body = await request.text();
-          if (
-            !body.includes("sos:GetObservation") ||
-            !body.includes("/core/") ||
-            !body.includes(
-              "<sos:observedProperty>Storage Level</sos:observedProperty>"
-            ) ||
-            !body.includes(
-              "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
-            ) ||
-            !body.includes(
-              "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
-            ) ||
-            !body.includes(
-              "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
-            ) ||
-            !body.includes(
-              "<gml:endPosition>2020-03-26T03:56:15.025Z</gml:endPosition>"
-            )
-          ) {
-            return HttpResponse.error();
-          }
-          if (/<sos:GetObservation[\s\S]*Yearly/.test(body)) {
-            return new HttpResponse(GetObservationResponseYearly, {
-              headers: { "Content-Type": "text/xml" }
-            });
-          }
-          if (/<sos:GetObservation[\s\S]*Daily/.test(body)) {
-            return new HttpResponse(GetObservationResponseDaily, {
-              headers: { "Content-Type": "text/xml" }
-            });
-          }
-          return new HttpResponse(null, { status: 404 });
-        })
-      );
       item.setTrait(CommonStrata.user, "showAsChart", true);
       item.setTrait(
         CommonStrata.user,
@@ -327,6 +290,44 @@ describe("SensorObservationServiceCatalogItem", function () {
 
     describe("when loading", function () {
       it("makes a GetObservation request", async function () {
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (
+              !body.includes("sos:GetObservation") ||
+              !body.includes("/core/") ||
+              !body.includes(
+                "<sos:observedProperty>Storage Level</sos:observedProperty>"
+              ) ||
+              !body.includes(
+                "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
+              ) ||
+              !body.includes(
+                "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+              ) ||
+              !body.includes(
+                "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+              ) ||
+              !body.includes(
+                "<gml:endPosition>2020-03-26T03:56:15.025Z</gml:endPosition>"
+              )
+            ) {
+              return HttpResponse.error();
+            }
+            if (/<sos:GetObservation[\s\S]*Yearly/.test(body)) {
+              return new HttpResponse(GetObservationResponseYearly, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            if (/<sos:GetObservation[\s\S]*Daily/.test(body)) {
+              return new HttpResponse(GetObservationResponseDaily, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return new HttpResponse(null, { status: 404 });
+          })
+        );
+
         const result = await runInAction(() => item.loadMapItems());
 
         expect(result.error).toBeUndefined();
@@ -381,6 +382,44 @@ describe("SensorObservationServiceCatalogItem", function () {
 
     describe("when loaded", function () {
       beforeEach(async function () {
+        worker.use(
+          http.post("https://sos.example.com/", async ({ request }) => {
+            const body = await request.text();
+            if (
+              !body.includes("sos:GetObservation") ||
+              !body.includes("/core/") ||
+              !body.includes(
+                "<sos:observedProperty>Storage Level</sos:observedProperty>"
+              ) ||
+              !body.includes(
+                "<sos:featureOfInterest>feature1</sos:featureOfInterest>"
+              ) ||
+              !body.includes(
+                "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+              ) ||
+              !body.includes(
+                "<gml:beginPosition>2020-01-26T03:56:15.025Z</gml:beginPosition>"
+              ) ||
+              !body.includes(
+                "<gml:endPosition>2020-03-26T03:56:15.025Z</gml:endPosition>"
+              )
+            ) {
+              return HttpResponse.error();
+            }
+            if (/<sos:GetObservation[\s\S]*Yearly/.test(body)) {
+              return new HttpResponse(GetObservationResponseYearly, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            if (/<sos:GetObservation[\s\S]*Daily/.test(body)) {
+              return new HttpResponse(GetObservationResponseDaily, {
+                headers: { "Content-Type": "text/xml" }
+              });
+            }
+            return new HttpResponse(null, { status: 404 });
+          })
+        );
+
         await runInAction(() => item.loadMapItems());
       });
 
