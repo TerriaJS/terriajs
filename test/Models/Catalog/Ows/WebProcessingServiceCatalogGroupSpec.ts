@@ -42,7 +42,6 @@ describe("WebProcessingServiceCatalogGroup", function () {
           });
         })
       );
-      await wpsGroup.loadMembers();
       const result = await wpsGroup.loadMembers();
       expect(result.error).toBeUndefined();
     });
