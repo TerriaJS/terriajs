@@ -129,8 +129,10 @@ describe("ApiTableCatalogItem", function () {
     const table = apiCatalogItem.dataColumnMajor;
     expect(table).toBeDefined();
     const definedTable: string[][] = table!;
-    expect(definedTable.length).toBe(3);
-    expect(definedTable[0].length).toBe(4);
+    // count columns
+    expect(definedTable.length).toBe(3); // value, latitude, longitude
+    // count rows
+    expect(definedTable[0].length).toBe(4); // header + 3 value rows
   });
 
   describe("behaviour of `responseDataPath` option", function () {

@@ -549,6 +549,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines the name - with no layers specified", function () {
+      // Using name from MapServer metadata
       expect(item.name).toBe(
         "Australia 250K Topographic Hydrography and Marine Layers"
       );
@@ -556,11 +557,13 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("defines the name - with single layer specified", function () {
       item.setTrait(CommonStrata.definition, "layers", "21");
+      // Using name from layer 21 metadata
       expect(item.name).toBe("Watercourses All Rivers Labels");
     });
 
     it("defines the name - with multiple layers specified", function () {
       item.setTrait(CommonStrata.definition, "layers", "21,22");
+      // Using name from MapServer metadata - we don't support combining names across multiple layers
       expect(item.name).toBe(
         "Australia 250K Topographic Hydrography and Marine Layers"
       );
@@ -571,23 +574,31 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines maximum scale - with no layers specified", function () {
+      // With no layer specified, we expect rectangle to be calculated using all layer metadata
+
       expect(item.maximumScale).toBeDefined();
       expect(item.maximumScale).toEqual(0);
     });
 
     it("defines maximum scale - with single layer specified", function () {
+      // With a single layer specified, we expect rectangle to be calculated using layer metadata
+
       item.setTrait(CommonStrata.definition, "layers", "3");
+
       expect(item.maximumScale).toBeDefined();
       expect(item.maximumScale).toEqual(70000);
     });
 
     it("defines maximum scale - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect rectangle to be a union of all calculated rectangles from each layer metadata.
       item.setTrait(CommonStrata.definition, "layers", "19,20");
       expect(item.maximumScale).toBeDefined();
       expect(item.maximumScale).toEqual(300001);
     });
 
     it("defines a rectangle - with no layers specified", function () {
+      // With no layer specified, we expect rectangle to be calculated using MapServer metadata
+
       expect(item.rectangle).toBeDefined();
       expect(item.rectangle.west).toEqual(97.90759300700006);
       expect(item.rectangle.south).toEqual(-54.25906877199998);
@@ -596,7 +607,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines a rectangle - with single layer specified", function () {
+      // With a single layer specified, we expect rectangle to be calculated using layer metadata
+
       item.setTrait(CommonStrata.definition, "layers", "3");
+
       expect(item.rectangle).toBeDefined();
       expect(item.rectangle.west).toEqual(113.11904000000004);
       expect(item.rectangle.south).toEqual(-43.66633999999999);
@@ -605,7 +619,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines a rectangle - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect rectangle to be a union of all calculated rectangles from each layer metadata.
+
       item.setTrait(CommonStrata.definition, "layers", "4,5");
+
       expect(item.rectangle).toBeDefined();
       expect(item.rectangle.west).toEqual(112.92034999999998);
       expect(item.rectangle.south).toEqual(-43.65735999999998);
@@ -614,6 +631,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines info - no layer specified", function () {
+      // With no layer specified, we expect to only get description and copyright text from MapServer metadata
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
           i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
@@ -627,6 +645,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines info - with single layer specified", function () {
+      // With a single layer specified, we expect to get description and copyright text from Layer metadata (in addition to description from MapServer metadata)
       item.setTrait(CommonStrata.definition, "layers", "0");
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
@@ -645,6 +664,8 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     it("defines info - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect to only get description and copyright text from MapServer metadata.
+      // We currently don't support showing description and copyright text if more than 1 layer is specified
       item.setTrait(CommonStrata.definition, "layers", "0,1");
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
@@ -673,7 +694,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.legends).toBeDefined();
 
       expect(item.legends?.length).toBe(1);
-      expect(item.legends[0].items.length).toBe(2);
+      expect(item.legends[0].items.length).toBe(2); // Note we expect 2 legends here instead of 3 because there are two legends with the same imageUrl
       expect(item.legends[0].items[0].imageUrl).toBe(
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//dLP/z9roPw4QXgAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
       );
@@ -726,7 +747,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       }
       expect(item.startTime).toBe("2004-11-26T09:43:22.000000000Z");
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
-      const expectedTimeQueryString = 1572789600000;
+      const expectedTimeQueryString = 1572789600000; // from json file
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
@@ -742,7 +763,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         );
         item.setTrait(CommonStrata.user, "timeWindowUnit", "year");
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
       const expectedTimeQueryString = defaultCurrentTime;
       const imageryProvider = item.mapItems[0]
@@ -760,7 +781,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         );
         item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
       const expectedTimeQueryString = defaultCurrentTime;
       const imageryProvider = item.mapItems[0]
@@ -779,7 +800,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
         item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const toTime = defaultCurrentTime + twoWeekTime;
       await item.loadMapItems();
@@ -801,7 +822,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
         item.setTrait(CommonStrata.user, "isForwardTimeWindow", true);
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const toTime = defaultCurrentTime + twoWeekTime;
       await item.loadMapItems();
@@ -823,7 +844,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
         item.setTrait(CommonStrata.user, "isForwardTimeWindow", false);
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const fromTime = defaultCurrentTime - twoWeekTime;
       await item.loadMapItems();
@@ -844,7 +865,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.user, "timeWindowDuration", 0);
         item.setTrait(CommonStrata.user, "timeWindowUnit", "year");
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
@@ -862,7 +883,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
         item.setTrait(CommonStrata.user, "timeWindowUnit", "fortnight");
       });
-      const defaultCurrentTime = 1572789600000;
+      const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
