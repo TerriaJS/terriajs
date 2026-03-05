@@ -287,7 +287,18 @@
     "qualityLabel": "Qualitat",
     "performanceLabel": "Rendiment",
     "nativeResolutionLabel": "Premeu per deixar d'utilitzar la resolució {{resolution1}} i començar a utilitzar la resolució {{resolution2}}",
-    "btnTitle": "Canvia la vista"
+    "btnTitle": "Canvia la vista",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ El mapa base seleccionat només es pot visualitzar en {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Mode de visualització canviat",
+      "message": "El mapa base '{{newBaseMap}}' no es pot visualitzar a {{currentMode}}. La vista de mapa s'ha canviat a {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Mapa base canviat",
+      "message": "El mapa base '{{currentBaseMap}}' no es pot visualitzar a {{mapMode}}. El mapa base s'ha canviat a '{{newBaseMap}}'"
+    }
   },
   "feedback": {
     "feedbackPreamble": "Ens encantaria saber de tu!",
@@ -915,7 +926,7 @@
       "missingUrlTitle": "No es pot carregar FeatureServer",
       "missingUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis FeatureServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceTitle": "Capa invàlida de l'ArcGIS Feature Service",
-      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions WFS ({{maxFeatures}})."
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService ({{maxFeatures}})."
     },
     "arcGisFeatureServerCatalogGroup": {
       "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
@@ -1234,7 +1245,7 @@
       "locationHeadingFeatureInfo": "Ubicació",
       "availableStreamsHeadingFeatureInfo": "Fluxos disponibles",
       "noStreamsMessageFeatureInfo": "No hi ha fluxos en aquesta ubicació.",
-      "missingSenapsBaseUrl": "No s'ha proporcionat l'URL base de Senaps. Has iniciat sessió?"
+      "missingSenapsBaseUrl": "No s'ha proporcionat l'Url base de Senaps. Has iniciat sessió?"
     },
     "placesLikeMe": {
       "regionsLikeThisDescription": "Identifica regions que _s'assemblen més_ a una regió determinada segons un conjunt de característiques.",
