@@ -102,7 +102,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
       </Box>
       {(canCopy && status !== CopyStatus.Default) || showCreatedMessage ? (
         <>
-          <Spacing bottom={2} />
+          <Spacing bottom={1} />
           <Box verticalCenter>
             <StyledIcon
               light

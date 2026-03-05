@@ -37,7 +37,9 @@ export const PrintSection: FC<IPrintSectionProps> = ({ viewState }) => {
 
   return (
     <Box column>
-      <TextSpan medium>{t("share.printTitle")}</TextSpan>
+      <TextSpan semiBold medium>
+        {t("share.printTitle")}
+      </TextSpan>
       <Spacing bottom={1} />
       <Explanation>{t("share.printExplanation")}</Explanation>
       <Spacing bottom={1} />

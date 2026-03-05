@@ -34,7 +34,7 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
             width: 100%;
           `}
         >
-          <TextSpan isLink medium>
+          <TextSpan semiBold isLink medium>
             {t("share.embedTitle")}
           </TextSpan>
           <StyledIcon

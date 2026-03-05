@@ -48,8 +48,10 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
 
   return (
     <Box paddedRatio={3} column>
-      <Text medium>{t("clipboard.shareURL")}</Text>
-      <Spacing bottom={3} />
+      <Text semiBold medium>
+        {t("clipboard.shareURL")}
+      </Text>
+      <Spacing bottom={1} />
       <ShareUrl
         terria={terria}
         viewState={viewState}
@@ -84,9 +86,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       >
         <TextSpan>{t("share.shortenUsingService")}</TextSpan>
       </Checkbox>
-      <Spacing bottom={3} />
+      <Spacing bottom={4} />
       <PrintSection viewState={viewState} />
-      <Spacing bottom={3} />
+      <Spacing bottom={4} />
       <EmbedSection shareUrl={shareUrlRef?.current} />
     </Box>
   );
