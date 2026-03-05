@@ -15,6 +15,12 @@
 - Remove ts-essentials dependency and replace with custom type utility.
 - Remove fs-extra dependency and replace with native fs.
 - Convert test `done` callbacks to async/await for modern test patterns.
+- Story Panel and Share Panel UX improvements:
+  - Update Share Panel layout
+  - Remove light theme variant of Clipboard
+  - Simplify Clipboard component and add success message.
+  - Add Story Builder instructions behind a config parameter.
+- Fix Scene capture popup z-index appearing underneath the workbench.
 - [The next improvement]
 
 #### 8.11.3 - 2026-02-02
