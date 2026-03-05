@@ -1,24 +1,29 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
+import { worker } from "../../../mocks/browser";
 import mapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json";
+import legendJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/legend.json";
+import layersJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/layers.json";
+import layer31Json from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/31.json";
+import tokenJson from "../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/token.json";
+import singleFusedMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/mapserver.json";
+import singleFusedLegendJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/legend.json";
+import singleFusedLayersJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/layers.json";
+import timeEnabledJson from "../../../../wwwroot/test/ArcGisMapServer/time-enabled.json";
+import layerWithTilesMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/LayerWithTiles/mapserver.json";
+import layerWithTilesLegendJson from "../../../../wwwroot/test/ArcGisMapServer/LayerWithTiles/legend.json";
+import layerWithTilesLayersJson from "../../../../wwwroot/test/ArcGisMapServer/LayerWithTiles/layers.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisMapServerCatalogItem", function () {
   const mapServerUrl =
@@ -30,46 +35,91 @@ describe("ArcGisMapServerCatalogItem", function () {
 
   beforeEach(function () {
     item = new ArcGisMapServerCatalogItem("test", new Terria());
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to GA's servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
-      url = url.replace("http://example.com/42/", "");
 
-      if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        url = url.replace(/MapServer\/31\/?\?.*/i, "31.json");
-        args[0] =
-          "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/" +
-          url;
-      } else if (url.match("SingleFusedMapCache/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
-      } else if (url.match("/token")) {
-        args[0] =
-          "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/token.json";
-        args[1] = "text";
-        args[2] = "GET";
-        args[3] = undefined;
-        return realLoadWithXhr(...args);
-      } else if (url.match("/cadastre_history/MapServer")) {
-        args[0] = "test/ArcGisMapServer/time-enabled.json";
-      } else if (url.match("/LayerWithTiles/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        args[0] = "test/ArcGisMapServer/LayerWithTiles/" + url;
-      }
+    worker.use(
+      // Dynamic_National_Map_Hydrography_and_Marine handlers (most specific first)
+      http.get(
+        "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Legend",
+        () => HttpResponse.json(legendJson)
+      ),
+      http.get(
+        "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Layers",
+        () => HttpResponse.json(layersJson)
+      ),
+      http.get(
+        "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31",
+        () => HttpResponse.json(layer31Json)
+      ),
+      http.get("*/Dynamic_National_Map_Hydrography_and_Marine/MapServer", () =>
+        HttpResponse.json(mapServerJson)
+      ),
 
-      return realLoadWithXhr(...args);
-    });
+      // SingleFusedMapCache handlers
+      http.get("*/SingleFusedMapCache/MapServer/Legend", () =>
+        HttpResponse.json(singleFusedLegendJson)
+      ),
+      http.get("*/SingleFusedMapCache/MapServer/Layers", () =>
+        HttpResponse.json(singleFusedLayersJson)
+      ),
+      http.get("*/SingleFusedMapCache/MapServer", () =>
+        HttpResponse.json(singleFusedMapServerJson)
+      ),
+
+      // Token endpoint
+      http.get("*/token", () => new HttpResponse(JSON.stringify(tokenJson))),
+      http.post("*/token", () => new HttpResponse(JSON.stringify(tokenJson))),
+
+      // cadastre_history (time-enabled)
+      http.get("*/cadastre_history/MapServer/Legend", () =>
+        HttpResponse.json(legendJson)
+      ),
+      http.get("*/cadastre_history/MapServer/Layers", () =>
+        HttpResponse.json(layersJson)
+      ),
+      http.get("*/cadastre_history/MapServer", () =>
+        HttpResponse.json(timeEnabledJson)
+      ),
+
+      // foo (rectangle test) — error on legend/layers so rectangle comes from root fullExtent only
+      http.get("*/foo/MapServer/Legend", () => HttpResponse.error()),
+      http.get("*/foo/MapServer/Layers", () => HttpResponse.error()),
+
+      // LayerWithTiles handlers
+      http.get("*/LayerWithTiles/MapServer/Legend", () =>
+        HttpResponse.json(layerWithTilesLegendJson)
+      ),
+      http.get("*/LayerWithTiles/MapServer/Layers", () =>
+        HttpResponse.json(layerWithTilesLayersJson)
+      ),
+      http.get("*/LayerWithTiles/MapServer", () =>
+        HttpResponse.json(layerWithTilesMapServerJson)
+      ),
+
+      // Catch-all for tile export requests triggered by Cesium's imagery provider.
+      // Returns a 1x1 transparent PNG to prevent unhandled network errors.
+      http.get("*/MapServer/export", () => {
+        const pixel = new Uint8Array([
+          137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0,
+          1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 10, 73, 68,
+          65, 84, 120, 156, 98, 0, 0, 0, 2, 0, 1, 226, 33, 188, 51, 0, 0, 0, 0,
+          73, 69, 78, 68, 174, 66, 96, 130
+        ]);
+        return new HttpResponse(pixel, {
+          headers: { "Content-Type": "image/png" }
+        });
+      }),
+      http.get("*/MapServer/tile/*", () => {
+        const pixel = new Uint8Array([
+          137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0,
+          1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 10, 73, 68,
+          65, 84, 120, 156, 98, 0, 0, 0, 2, 0, 1, 226, 33, 188, 51, 0, 0, 0, 0,
+          73, 69, 78, 68, 174, 66, 96, 130
+        ]);
+        return new HttpResponse(pixel, {
+          headers: { "Content-Type": "image/png" }
+        });
+      })
+    );
   });
 
   it("has a type and type name", function () {
@@ -84,9 +134,19 @@ describe("ArcGisMapServerCatalogItem", function () {
       item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       item.setTrait(CommonStrata.definition, "token", "test-token");
     });
+    worker.use(
+      http.get(
+        "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer",
+        ({ request }) => {
+          if (new URL(request.url).searchParams.get("token") !== "test-token")
+            return HttpResponse.error();
+          return HttpResponse.json(mapServerJson);
+        }
+      )
+    );
     await item.loadMetadata();
-    expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
-      mapServerUrl + "?token=test-token&f=json"
+    expect(item.name).toBe(
+      "Australia 250K Topographic Hydrography and Marine Layers"
     );
   });
 
@@ -155,25 +215,57 @@ describe("ArcGisMapServerCatalogItem", function () {
         });
       });
 
-      it("fetches the token", async function () {
-        await item.loadMapItems();
-        expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
-          "http://example.com/token"
-        );
-      });
-
-      it("adds the token to subsequent requests", async function () {
-        await item.loadMapItems();
-        const tokenre = /token=fakeToken/;
-        expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
-        expect(tokenre.test(loadWithXhr.load.calls.argsFor(2)[0])).toBeTruthy();
-        expect(tokenre.test(loadWithXhr.load.calls.argsFor(3)[0])).toBeTruthy();
-      });
-
-      it("passes the token to the imageryProvider", async function () {
+      it("fetches the token and passes it to the imageryProvider", async function () {
         await item.loadMapItems();
         const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
+      });
+
+      it("adds the token to subsequent requests", async function () {
+        worker.use(
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !== "fakeToken"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(layer31Json);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Legend",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !== "fakeToken"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(legendJson);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Layers",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !== "fakeToken"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(layersJson);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !== "fakeToken"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(mapServerJson);
+            }
+          )
+        );
+        await item.loadMapItems();
+        expect(item.layersArray.length).toBe(1);
       });
     });
 
@@ -191,11 +283,54 @@ describe("ArcGisMapServerCatalogItem", function () {
       });
 
       it("adds the token to subsequent requests", async function () {
+        worker.use(
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !==
+                "some-token-in-config"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(layer31Json);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Legend",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !==
+                "some-token-in-config"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(legendJson);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer/Layers",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !==
+                "some-token-in-config"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(layersJson);
+            }
+          ),
+          http.get(
+            "*/Dynamic_National_Map_Hydrography_and_Marine/MapServer",
+            ({ request }) => {
+              if (
+                new URL(request.url).searchParams.get("token") !==
+                "some-token-in-config"
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(mapServerJson);
+            }
+          )
+        );
         await item.loadMapItems();
-
-        const tokenre = /token=some-token-in-config/;
-        expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
-        expect(tokenre.test(loadWithXhr.load.calls.argsFor(2)[0])).toBeTruthy();
+        expect(item.layersArray.length).toBe(1);
       });
 
       it("passes the token to the imageryProvider", async function () {
@@ -456,9 +591,7 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("defines maximum scale - with multiple layers specified", function () {
       // With a multiple layers specified, we expect rectangle to be a union of all calculated rectangles from each layer metadata.
-
       item.setTrait(CommonStrata.definition, "layers", "19,20");
-
       expect(item.maximumScale).toBeDefined();
       expect(item.maximumScale).toEqual(300001);
     });
@@ -813,20 +946,21 @@ describe("ArcGisMapServerCatalogItem", function () {
   });
 
   describe("rectangle", function () {
-    beforeEach(function () {
-      jasmine.Ajax.install();
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
-
     it("can generate rectangle from an extent in CRS EPSG:7844", async function () {
-      mapServerJson.fullExtent.spatialReference.wkid = 7844;
+      const modifiedJson = {
+        ...mapServerJson,
+        fullExtent: {
+          ...mapServerJson.fullExtent,
+          spatialReference: {
+            ...mapServerJson.fullExtent.spatialReference,
+            wkid: 7844
+          }
+        }
+      };
 
-      jasmine.Ajax.stubRequest(/.*?\/foo\/MapServer.*/).andReturn({
-        responseJSON: mapServerJson
-      });
+      worker.use(
+        http.get("*/foo/MapServer", () => HttpResponse.json(modifiedJson))
+      );
 
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());

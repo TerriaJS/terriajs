@@ -1,10 +1,10 @@
-import "jasmine-ajax";
-import JsonValue from "../../../lib/Core/Json";
+import { http, HttpResponse } from "msw";
 import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
 import Csv from "../../../lib/Table/Csv";
 import heightCsv from "../../../wwwroot/test/IndexedItemSearchProvider/0.csv";
 import areaCsv from "../../../wwwroot/test/IndexedItemSearchProvider/1.csv";
 import resultsDataCsv from "../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv";
+import { worker } from "../../mocks/browser";
 
 const validIndexRoot = {
   resultsDataUrl: "resultsData.csv",
@@ -41,32 +41,27 @@ const validIndexRoot = {
 };
 
 describe("IndexedItemSearchProvider", function () {
-  beforeEach(function () {
-    jasmine.Ajax.install();
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
-  });
-
   describe("construction", function () {
     it("can be constructed", function () {
-      return new IndexedItemSearchProvider(
-        { indexRootUrl: "indexRoot.json" },
-        []
-      );
+      expect(
+        new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" }, [])
+      ).toBeDefined();
     });
   });
 
   describe("load", function () {
     it("can be loaded", async function () {
+      worker.use(
+        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot))
+      );
+
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
         },
         []
       );
-      stubRequest("indexRoot.json", validIndexRoot);
+
       let error;
       try {
         await provider.initialize();
@@ -77,13 +72,17 @@ describe("IndexedItemSearchProvider", function () {
     });
 
     it("throws an error if the indexRoot file cannot be parsed", async function () {
+      worker.use(
+        http.get("*/indexRoot.json", () => HttpResponse.json({})),
+        http.get("*/resultsData.csv", () => new HttpResponse(resultsDataCsv))
+      );
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
         },
         []
       );
-      stubRequest("indexRoot.json", {});
+
       let error;
       try {
         await provider.initialize();
@@ -98,13 +97,17 @@ describe("IndexedItemSearchProvider", function () {
 
   describe("describeParameters", function () {
     it("returns the parameters", async function () {
+      worker.use(
+        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot))
+      );
+
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
         },
         [{ id: "street_address", queryOptions: { prefix: "true" } }]
       );
-      stubRequest("indexRoot.json", validIndexRoot);
+
       await provider.initialize();
       const parameters = await provider.describeParameters();
       expect(parameters).toEqual([
@@ -141,7 +144,6 @@ describe("IndexedItemSearchProvider", function () {
 
   describe("search", function () {
     let provider: IndexedItemSearchProvider;
-    let parameterValues: Map<string, any>;
 
     beforeEach(async function () {
       provider = new IndexedItemSearchProvider(
@@ -150,20 +152,25 @@ describe("IndexedItemSearchProvider", function () {
         },
         []
       );
-      stubRequest("indexRoot.json", validIndexRoot);
-      stubRequest("resultsData.csv", resultsDataCsv);
-      stubRequest("0.csv", heightCsv);
-      stubRequest("1.csv", areaCsv);
-      const heightRows = await Csv.parseString(heightCsv);
-      const areaRows = await Csv.parseString(areaCsv);
-      parameterValues = new Map([
-        ["height", { start: heightRows[4][1], end: heightRows[10][1] }],
-        ["area", { start: areaRows[6][1], end: areaRows[8][1] }]
-      ]);
-      await provider.initialize();
     });
 
     it("returns matching results", async function () {
+      worker.use(
+        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot)),
+        http.get("*/resultsData.csv", () => new HttpResponse(resultsDataCsv)),
+        http.get("*/0.csv", () => new HttpResponse(heightCsv)),
+        http.get("*/1.csv", () => new HttpResponse(areaCsv))
+      );
+
+      await provider.initialize();
+
+      const heightRows = await Csv.parseString(heightCsv);
+      const areaRows = await Csv.parseString(areaCsv);
+      const parameterValues = new Map([
+        ["height", { start: heightRows[4][1], end: heightRows[10][1] }],
+        ["area", { start: areaRows[6][1], end: areaRows[8][1] }]
+      ]);
+
       const results = await provider.search(parameterValues);
       expect(results).toEqual([
         {
@@ -190,18 +197,39 @@ describe("IndexedItemSearchProvider", function () {
     });
 
     it("should load the index and data files only once", async function () {
+      let requestCount = 0;
+      worker.use(
+        http.get("*/indexRoot.json", () => {
+          requestCount++;
+          return HttpResponse.json(validIndexRoot);
+        }),
+        http.get("*/resultsData.csv", () => {
+          requestCount++;
+          return new HttpResponse(resultsDataCsv);
+        }),
+        http.get("*/0.csv", () => {
+          requestCount++;
+          return new HttpResponse(heightCsv);
+        }),
+        http.get("*/1.csv", () => {
+          requestCount++;
+          return new HttpResponse(areaCsv);
+        })
+      );
+
+      await provider.initialize();
+
+      const heightRows = await Csv.parseString(heightCsv);
+      const areaRows = await Csv.parseString(areaCsv);
+      const parameterValues = new Map([
+        ["height", { start: heightRows[4][1], end: heightRows[10][1] }],
+        ["area", { start: areaRows[6][1], end: areaRows[8][1] }]
+      ]);
+
       await provider.search(parameterValues);
-      const finalCount = jasmine.Ajax.requests.count();
-      expect(finalCount).toEqual(4);
+      expect(requestCount).toBe(4);
       await provider.search(parameterValues);
-      expect(jasmine.Ajax.requests.count()).toEqual(finalCount);
+      expect(requestCount).toBe(4);
     });
   });
 });
-
-function stubRequest(url: string, response: JsonValue) {
-  jasmine.Ajax.stubRequest(url).andReturn({
-    responseText:
-      typeof response === "string" ? response : JSON.stringify(response)
-  });
-}
