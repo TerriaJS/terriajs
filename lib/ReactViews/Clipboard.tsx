@@ -5,8 +5,8 @@ import Box from "../Styled/Box";
 import Button from "../Styled/Button";
 import Icon, { StyledIcon } from "../Styled/Icon";
 import Input from "../Styled/Input";
-import { verticalAlign } from "../Styled/mixins";
 import Spacing from "../Styled/Spacing";
+import { TextSpan } from "../Styled/Text";
 
 enum CopyStatus {
   Success,
@@ -103,11 +103,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
       {(canCopy && status !== CopyStatus.Default) || showCreatedMessage ? (
         <>
           <Spacing bottom={2} />
-          <Box
-            css={`
-              line-height: 10px;
-            `}
-          >
+          <Box verticalCenter>
             <StyledIcon
               light
               glyph={
@@ -115,23 +111,24 @@ const Clipboard: FC<ClipboardProps> = (props) => {
                   ? Icon.GLYPHS.close
                   : Icon.GLYPHS.selected
               }
-              styledWidth="20px"
+              styledWidth="16px"
               css={`
-                margin: 8px;
+                margin: 5px;
                 margin-left: 0;
                 display: inline-block;
                 ${status !== CopyStatus.Error &&
                 `fill: ${styledTheme.textSuccess};`}
               `}
             />
-            <TooltipText
+            <TextSpan
+              medium
               css={`
                 ${status !== CopyStatus.Error &&
                 `color: ${styledTheme.textSuccess};`}
               `}
             >
               {statusMessage}
-            </TooltipText>
+            </TextSpan>
           </Box>
         </>
       ) : null}
@@ -143,9 +140,4 @@ export default Clipboard;
 
 const ClipboardDiv = styled.div`
   position: relative;
-`;
-
-const TooltipText = styled.span`
-  ${verticalAlign("absolute")}
-  left: 30px;
 `;

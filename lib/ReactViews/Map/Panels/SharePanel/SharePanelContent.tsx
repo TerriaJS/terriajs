@@ -60,6 +60,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       >
         <ShareUrlBookmark viewState={viewState} />
       </ShareUrl>
+      <Spacing bottom={1} />
       {terria.stories && terria.stories.length > 0 && (
         <>
           <Checkbox
