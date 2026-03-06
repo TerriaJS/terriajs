@@ -729,6 +729,9 @@
         }
       }
     },
+    "globeClipping": {
+      "enableMessage": "Taglia il globo attorno ai dati"
+    },
     "webMapTileServiceCatalogItem": {
       "noUsableTileMatrixTitle": "Avvertimento",
       "serviceDescription": "Descrizione del Servizio",

@@ -1744,6 +1744,9 @@
         }
       }
     },
+    "globeClipping": {
+      "enableMessage": "Clip globe from data"
+    },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
     },

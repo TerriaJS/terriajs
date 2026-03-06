@@ -14,6 +14,7 @@ import QueryableCatalogItemTraits from "./QueryableCatalogItemTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
+import GlobeClippingTraits from "./GlobeClippingTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
@@ -41,6 +42,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  GlobeClippingTraits,
   ClusterizableCatalogItemTraits,
   QueryableCatalogItemTraits,
   SearchableCatalogItemTraits,

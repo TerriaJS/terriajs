@@ -105,6 +105,7 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
+import GlobeClippingMixin from "./GlobeClippingMixin";
 import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import MeasurableGeometryMixin from "./MeasurableGeometryMixin";
@@ -250,7 +251,9 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
   abstract class GeoJsonMixin extends QueryableCatalogItemMixin(
     SearchableCatalogItemMixin(
       MeasurableGeometryMixin(
-        TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
+        GlobeClippingMixin(
+          TableMixin(FeatureInfoUrlTemplateMixin(UrlMixin(Base)))
+        )
       )
     )
   ) {
@@ -455,6 +458,10 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
       } catch (e) {
         return this._exportDataFallback();
       }
+    }
+
+    get data(): DataSource | undefined {
+      return this._dataSource;
     }
 
     @override
