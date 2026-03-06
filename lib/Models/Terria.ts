@@ -179,6 +179,10 @@ export interface ConfigParameters {
    */
   storyEnabled: boolean;
   /**
+   * Whether to show the saving instructions message in the story builder panel. Defaults to false.
+   */
+  showStorySaveInstructions?: boolean;
+  /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
   interceptBrowserPrint?: boolean;
@@ -534,6 +538,7 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
+    showStorySaveInstructions: false,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
