@@ -226,9 +226,8 @@ export default abstract class GlobeOrMap {
     }
 
     // Lazy import here to avoid cyclic dependencies.
-    const { default: GeoJsonCatalogItem } = await import(
-      "./Catalog/CatalogItems/GeoJsonCatalogItem"
-    );
+    const { default: GeoJsonCatalogItem } =
+      await import("./Catalog/CatalogItems/GeoJsonCatalogItem");
 
     if (isDefined(feature)) {
       let hasGeometry = false;

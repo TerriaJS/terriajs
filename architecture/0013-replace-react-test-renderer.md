@@ -21,7 +21,6 @@ TerriaJS component tests currently rely on two React testing libraries that are 
 2. **Shallow rendering is removed in React 19.** `react-test-renderer/shallow` (the `createRenderer` API) is gone entirely. Tests using `react-shallow-testutils` and the `MoreShallowTools.ts` utility module will not work at all.
 
 3. **Tests assert on implementation, not behavior.** The dominant patterns — `findByType(ComponentName)`, `findByProps({ someProp: value })`, `findAllWithType(InternalComponent)` — couple tests to internal component structure. These tests break when components are refactored even if user-visible behavior is unchanged. For example:
-
    - `rendered.root.findByType(SearchForm)` — asserts that a specific child component type exists in the tree
    - `findAllWithType(result, DataCatalogMember)` — counts internal component instances
    - `findByProps({ active: true })` — inspects internal prop values

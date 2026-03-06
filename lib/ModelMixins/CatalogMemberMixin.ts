@@ -236,8 +236,9 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof CatalogMemberMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogMemberMixin;
   }

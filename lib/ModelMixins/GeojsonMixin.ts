@@ -573,21 +573,20 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             dataSource.clustering.pixelRange = this.clustering.pixelRange;
             dataSource.clustering.minimumClusterSize =
               this.clustering.minimumClusterSize;
-            dataSource.clustering.clusterEvent.addEventListener(function (
-              entities,
-              cluster
-            ) {
-              cluster.label.show = false;
-              cluster.billboard.verticalOrigin = VerticalOrigin.BOTTOM;
-              cluster.billboard.image = pinBuilder
-                .fromText(
-                  entities.length.toLocaleString(),
-                  Color.fromCssColorString(pinBackgroundColor),
-                  pinSize
-                )
-                .toDataURL();
-              cluster.billboard.show = true;
-            });
+            dataSource.clustering.clusterEvent.addEventListener(
+              function (entities, cluster) {
+                cluster.label.show = false;
+                cluster.billboard.verticalOrigin = VerticalOrigin.BOTTOM;
+                cluster.billboard.image = pinBuilder
+                  .fromText(
+                    entities.length.toLocaleString(),
+                    Color.fromCssColorString(pinBackgroundColor),
+                    pinSize
+                  )
+                  .toDataURL();
+                cluster.billboard.show = true;
+              }
+            );
           }
 
           runInAction(() => {
@@ -1281,8 +1280,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace GeoJsonMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof GeoJsonMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof GeoJsonMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.isGeoJson;
   }

@@ -180,7 +180,9 @@ $chart-height: 250px !default;
 
 $border-color: rgba(#fff, 0.15) !default;
 $border-style: 1px solid $border-color !default;
-$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24) !default;
+$box-shadow:
+  0 0 2px 0 rgba(0, 0, 0, 0.12),
+  0 2px 2px 0 rgba(0, 0, 0, 0.24) !default;
 
 $radius-xlarge: 8px !default;
 $radius-large: 4px !default;

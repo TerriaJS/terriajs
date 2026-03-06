@@ -64,12 +64,12 @@ const FeatureInfoPanelChart: FC<FeatureInfoPanelChartPropTypes> = observer(
     const chartStatus = notChartable
       ? "chart.noData"
       : isLoading
-      ? "chart.loading"
-      : loadingFailed
-      ? "chart.noData"
-      : noData
-      ? "chart.noData"
-      : undefined;
+        ? "chart.loading"
+        : loadingFailed
+          ? "chart.noData"
+          : noData
+            ? "chart.noData"
+            : undefined;
 
     const canShowChart = chartStatus === undefined;
     const margin = { ...defaultMargin, ...props.margin };
