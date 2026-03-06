@@ -26,7 +26,6 @@ const Checkbox = forwardRef(function Checkbox(
     isDisabled = false,
     isSwitch = false,
     defaultChecked = false,
-    isIndeterminate = false,
     onChange: onChangeProps,
     title,
     name,
@@ -117,7 +116,6 @@ const Checkbox = forwardRef(function Checkbox(
       />
       <CheckboxIcon
         isSwitch={isSwitch}
-        isIndeterminate={isIndeterminate}
         isChecked={isChecked}
         isDisabled={isDisabled}
       />
