@@ -15,6 +15,11 @@ import DataUri from "../../Core/DataUri";
 import { MeasurableGeometry } from "./MeasurableGeometryManager";
 import { DownloadLink } from "./MeasurableGeometryDownload";
 
+export const SUFFIX_POLYGON = "_polygon";
+export const SUFFIX_LINES = "_lines";
+export const SUFFIX_POINTS = "_points";
+export const SUFFIX_MULTIPATH = "_multipath";
+
 export default class MeasurableGeometryExporter {
   static async generateAllDownloadLinks(
     geom: MeasurableGeometry,
@@ -44,13 +49,13 @@ export default class MeasurableGeometryExporter {
 
       if (geom.onlyPoints) {
         return (
-          !download.download?.includes("_lines") &&
-          !download.download?.includes("_polygon")
+          !download.download?.includes(SUFFIX_LINES) &&
+          !download.download?.includes(SUFFIX_POLYGON)
         );
       } else if (geom.isClosed) {
         return true;
       } else {
-        return !download.download?.includes("_polygon");
+        return !download.download?.includes(SUFFIX_POLYGON);
       }
     });
   }
@@ -76,7 +81,7 @@ export default class MeasurableGeometryExporter {
               polygonKml
             )
           : false,
-        download: `${name}_polygon_multipath.kml`,
+        download: `${name}${SUFFIX_POLYGON}${SUFFIX_MULTIPATH}.kml`,
         label: `Multi ${i18next.t("downloadData.polygon")} KML`
       },
       {
@@ -87,7 +92,7 @@ export default class MeasurableGeometryExporter {
               linesKml
             )
           : false,
-        download: `${name}_lines_multipath.kml`,
+        download: `${name}${SUFFIX_LINES}${SUFFIX_MULTIPATH}.kml`,
         label: `Multi ${i18next.t("downloadData.lines")} KML`
       }
     ];
@@ -111,7 +116,7 @@ export default class MeasurableGeometryExporter {
               polygonKml
             )
           : false,
-        download: `${name}_polygon.kml`,
+        download: `${name}${SUFFIX_POLYGON}.kml`,
         label: `${i18next.t("downloadData.polygon")} KML`
       },
       {
@@ -122,7 +127,7 @@ export default class MeasurableGeometryExporter {
               linesKml
             )
           : false,
-        download: `${name}_lines.kml`,
+        download: `${name}${SUFFIX_LINES}.kml`,
         label: `${i18next.t("downloadData.lines")} KML`
       },
       {
@@ -133,7 +138,7 @@ export default class MeasurableGeometryExporter {
               pointsKml
             )
           : false,
-        download: `${name}_points.kml`,
+        download: `${name}${SUFFIX_POINTS}.kml`,
         label: `${i18next.t("downloadData.points")} KML`
       }
     ];
@@ -375,7 +380,7 @@ export default class MeasurableGeometryExporter {
       {
         key: "csv",
         href: DataUri.make("csv", this.generateCsvData(geom)),
-        download: `${name}_points.csv`,
+        download: `${name}${SUFFIX_POINTS}.csv`,
         label: "CSV"
       }
     ];
@@ -461,13 +466,13 @@ export default class MeasurableGeometryExporter {
       {
         key: "gpxTracks",
         href: DataUri.make("xml", this.generateGpxTracks(geom, name)),
-        download: `${name}_lines.gpx`,
+        download: `${name}${SUFFIX_LINES}.gpx`,
         label: `${i18next.t("downloadData.lines")} GPX`
       },
       {
         key: "gpxWaypoints",
         href: DataUri.make("xml", this.generateGpxWaypoints(geom, name)),
-        download: `${name}_points.gpx`,
+        download: `${name}${SUFFIX_POINTS}.gpx`,
         label: `${i18next.t("downloadData.points")} GPX`
       }
     ];
@@ -542,7 +547,7 @@ export default class MeasurableGeometryExporter {
           "json",
           this.generateMultiPathJsonPolygon(geomList, name)
         ),
-        download: `${name}_polygon_multipath.geojson`,
+        download: `${name}${SUFFIX_POLYGON}${SUFFIX_MULTIPATH}.geojson`,
         label: `Multi ${i18next.t("downloadData.polygon")} GEOJSON`
       },
       {
@@ -551,7 +556,7 @@ export default class MeasurableGeometryExporter {
           "json",
           this.generateMultiPathJsonLineStrings(geomList, name, ellipsoid)
         ),
-        download: `${name}_lines_multipath.geojson`,
+        download: `${name}${SUFFIX_LINES}${SUFFIX_MULTIPATH}.geojson`,
         label: `Multi ${i18next.t("downloadData.lines")} GEOJSON`
       }
     ];
@@ -566,7 +571,7 @@ export default class MeasurableGeometryExporter {
       {
         key: "jsonPolygon",
         href: DataUri.make("json", this.generateJsonPolygon(geom, name)),
-        download: `${name}_polygon.geojson`,
+        download: `${name}${SUFFIX_POLYGON}.geojson`,
         label: `${i18next.t("downloadData.polygon")} GEOJSON`
       },
       {
@@ -575,7 +580,7 @@ export default class MeasurableGeometryExporter {
           "json",
           this.generateJsonLineStrings(geom, name, ellipsoid)
         ),
-        download: `${name}_lines.geojson`,
+        download: `${name}${SUFFIX_LINES}.geojson`,
         label: `${i18next.t("downloadData.lines")} GEOJSON`
       },
       {
@@ -584,7 +589,7 @@ export default class MeasurableGeometryExporter {
           "json",
           this.generateJsonPoints(geom, name, ellipsoid)
         ),
-        download: `${name}_points.geojson`,
+        download: `${name}${SUFFIX_POINTS}.geojson`,
         label: `${i18next.t("downloadData.points")} GEOJSON`
       }
     ];
