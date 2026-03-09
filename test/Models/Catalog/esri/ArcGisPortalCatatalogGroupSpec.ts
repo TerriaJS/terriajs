@@ -1,23 +1,22 @@
 import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../lib/Models/Terria";
 import ArcGisPortalCatalogGroup, {
   ArcGisPortalStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisPortalCatalogGroup";
 import i18next from "i18next";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
+import { worker } from "../../../mocks/browser";
+
+import searchResultJson from "../../../../wwwroot/test/ArcGisPortal/search-result.json";
+import groupSearchResultsJson from "../../../../wwwroot/test/ArcGisPortal/group-search-results.json";
+import group2dfaItemsSearchJson from "../../../../wwwroot/test/ArcGisPortal/group-2dfa6cfea7774d9585700059e1fc8219-items-search.json";
+import groupC86aItemsSearchJson from "../../../../wwwroot/test/ArcGisPortal/group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisPortalCatalogGroup", function () {
   let terria: Terria;
@@ -34,29 +33,40 @@ describe("ArcGisPortalCatalogGroup", function () {
       "url",
       "https://portal.spatial.nsw.gov.au/portal"
     );
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      if (
-        args[0].indexOf(
-          "rest/content/groups/2dfa6cfea7774d9585700059e1fc8219"
-        ) > -1
-      )
-        args[0] =
-          "test/ArcGisPortal/group-2dfa6cfea7774d9585700059e1fc8219-items-search.json";
-      else if (
-        args[0].indexOf(
-          "rest/content/groups/c86af18fa4a74336b1feee2a0ee4883d"
-        ) > -1
-      )
-        args[0] =
-          "test/ArcGisPortal/group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json";
-      else if (args[0].indexOf("rest/community/groups?") > -1)
-        args[0] = "test/ArcGisPortal/group-search-results.json";
-      else args[0] = "test/ArcGisPortal/search-result.json";
 
-      return realLoadWithXhr(...args);
-    });
+    worker.use(
+      // Group-specific items searches
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/content/groups/2dfa6cfea7774d9585700059e1fc8219/search",
+        () => HttpResponse.json(group2dfaItemsSearchJson)
+      ),
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/content/groups/c86af18fa4a74336b1feee2a0ee4883d/search",
+        () => HttpResponse.json(groupC86aItemsSearchJson)
+      ),
+      // "Spatial Services Gallery" group — excluded via excludeMembers, but still fetched by the API
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/content/groups/c6bf5249df1448629db37636aa0c5880/search",
+        () =>
+          HttpResponse.json({
+            total: 0,
+            start: 1,
+            num: 0,
+            nextStart: -1,
+            results: []
+          })
+      ),
+      // Community groups search
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/community/groups",
+        () => HttpResponse.json(groupSearchResultsJson)
+      ),
+      // Default: search result
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/search",
+        () => HttpResponse.json(searchResultJson)
+      )
+    );
   });
 
   it("has a type and typeName", function () {
