@@ -15,6 +15,7 @@
 - Remove ts-essentials dependency and replace with custom type utility.
 - Remove fs-extra dependency and replace with native fs.
 - Convert test `done` callbacks to async/await for modern test patterns.
+- Update Checkbox component icon and remove unused indeterminate prop.
 - Story Panel and Share Panel UX improvements:
   - Update Share Panel layout
   - Remove light theme variant of Clipboard
