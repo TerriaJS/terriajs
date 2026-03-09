@@ -1,13 +1,15 @@
+import { http, HttpResponse } from "msw";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import { isJsonObject } from "../../../../lib/Core/Json";
 import CartoMapV3CatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CartoMapV3CatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 import tableResponse from "../../../../wwwroot/test/CartoMapV3/table-response.json";
 import tableGeoJsonResponse from "../../../../wwwroot/test/CartoMapV3/table-geojson-response.json";
 import queryResponse from "../../../../wwwroot/test/CartoMapV3/query-response.json";
 import queryGeoJsonResponse from "../../../../wwwroot/test/CartoMapV3/query-geojson-response.json";
+import { isJsonObject } from "../../../../lib/Core/Json";
 
 describe("CartoMapV3CatalogItemSpec", function () {
   let item: CartoMapV3CatalogItem;
@@ -15,12 +17,7 @@ describe("CartoMapV3CatalogItemSpec", function () {
   beforeEach(function () {
     item = new CartoMapV3CatalogItem("test", new Terria());
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(/.*/).andError({});
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(http.all("*", () => HttpResponse.error()));
   });
 
   it("has a type", function () {
@@ -43,16 +40,24 @@ describe("CartoMapV3CatalogItemSpec", function () {
       );
       item.setTrait(CommonStrata.definition, "cartoColumns", ["COLUMN_1"]);
 
-      jasmine.Ajax.stubRequest(
-        "https://BASE_URL/v3/maps/CONNECTION_NAME/table?name=TABLE_NAME&columns=COLUMN_1&geo_column=GEO_COLUMN_NAME"
-      ).andReturn({
-        responseJSON: tableResponse
-      });
-      jasmine.Ajax.stubRequest(
-        "https://example.com/table/geojson.json"
-      ).andReturn({
-        responseJSON: tableGeoJsonResponse
-      });
+      worker.use(
+        http.get(
+          "https://BASE_URL/v3/maps/CONNECTION_NAME/table",
+          ({ request }) => {
+            const url = new URL(request.url);
+            if (
+              url.searchParams.get("name") !== "TABLE_NAME" ||
+              url.searchParams.get("columns") !== "COLUMN_1" ||
+              url.searchParams.get("geo_column") !== "GEO_COLUMN_NAME"
+            )
+              throw new Error(`Unexpected query params: ${url.search}`);
+            return HttpResponse.json(tableResponse);
+          }
+        ),
+        http.get("https://example.com/table/geojson.json", () =>
+          HttpResponse.json(tableGeoJsonResponse)
+        )
+      );
     });
 
     it("gets correct GeoJSON url", async function () {
@@ -90,29 +95,24 @@ describe("CartoMapV3CatalogItemSpec", function () {
         "GEO_COLUMN_NAME"
       );
 
-      jasmine.Ajax.stubRequest(
-        "https://BASE_URL/v3/maps/CONNECTION_NAME/query"
-      ).andCallFunction((req) => {
-        const body = req.data();
-        // Only respond if correct body parameters
-        if (
-          isJsonObject(body) &&
-          body.q === "SOME_QUERY" &&
-          body.geo_column === "GEO_COLUMN_NAME"
-        ) {
-          req.respondWith({
-            responseJSON: queryResponse
-          });
-        } else {
-          req.responseError();
-        }
-      });
-
-      jasmine.Ajax.stubRequest(
-        "https://example.com/query/geojson.json"
-      ).andReturn({
-        responseJSON: queryGeoJsonResponse
-      });
+      worker.use(
+        http.post(
+          "https://BASE_URL/v3/maps/CONNECTION_NAME/query",
+          async ({ request }) => {
+            const body = await request.json();
+            if (
+              !isJsonObject(body) ||
+              body.q !== "SOME_QUERY" ||
+              body.geo_column !== "GEO_COLUMN_NAME"
+            )
+              throw new Error(`Unexpected body: ${JSON.stringify(body)}`);
+            return HttpResponse.json(queryResponse);
+          }
+        ),
+        http.get("https://example.com/query/geojson.json", () =>
+          HttpResponse.json(queryGeoJsonResponse)
+        )
+      );
     });
 
     it("gets correct GeoJSON url", async function () {

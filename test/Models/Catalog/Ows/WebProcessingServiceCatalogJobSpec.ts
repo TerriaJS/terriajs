@@ -1,9 +1,11 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import isDefined from "../../../../lib/Core/isDefined";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
+import { worker } from "../../../mocks/browser";
 
 // For more tests see - test\Models\WebProcessingServiceCatalogFunctionSpec.ts
 
@@ -37,14 +39,11 @@ describe("WebProcessingServiceCatalogFunctionJob", function () {
       ]);
       item.setTrait(CommonStrata.user, "jobStatus", "finished");
     });
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      )
+    );
   });
 
   it("has a type & typeName", function () {

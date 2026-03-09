@@ -184,7 +184,7 @@ class Workbench extends Component<IProps> {
             `}
           >
             <StyledIcon
-              glyph={Icon.GLYPHS.remove}
+              glyph={Icon.GLYPHS.cancel}
               light
               styledWidth={"12px"}
               displayInline
