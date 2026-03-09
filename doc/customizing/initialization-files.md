@@ -83,7 +83,7 @@ Init files can be edited two ways:
 | `showSplitter`    | no       | **`boolean`**                                                                                                                                                                                         | `false` | Show splitter initally.                                                                                                                                                                                                                                                                  |
 | `splitPosition`   | no       | **`number`**                                                                                                                                                                                          | `0.5`   | The position of splitter.                                                                                                                                                                                                                                                                |
 | `workbench`       | no       | **`string[]`**                                                                                                                                                                                        |         | List of items ids to initially add to workbench.                                                                                                                                                                                                                                         |
-| `parameters`      | no       | [**`parameters`**](#parameters)                                                                                                                                                                       |         | Parameter overrides applied from init files (e.g. branding).                                                                                                                                                                                                                             |
+| `parameters`      | no       | [**`parameters`**](#parameters)                                                                                                                                                                       |         | Parameter overrides applied from init files (e.g. branding and theme).                                                                                                                                                                                                                   |
 | `previewedItemId` | no       | **`string`**                                                                                                                                                                                          |         | ID of the catalog member that is currently being previewed.                                                                                                                                                                                                                              |
 | `settings`        | no       | [**`settings`**](#advanced-settings)                                                                                                                                                                  |         | Additional (more advanced) settings.                                                                                                                                                                                                                                                     |
 
@@ -306,13 +306,14 @@ Definition of the baseMap model.
 
 ### <a id="parameters"></a>`parameters`
 
-Parameter overrides that are applied when the init file is loaded. These override values from the main `config.json` `parameters` object, allowing per-init-file customization of branding.
+Parameter overrides that are applied when the init file is loaded. These override values from the main `config.json` `parameters` object, allowing per-init-file customization of branding and theme.
 
 | Name                    | Required | Type           | Default | Description                                                                                                       |
 | ----------------------- | -------- | -------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
 | `brandBarElements`      | no       | **`string[]`** |         | An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` for small screens). |
 | `brandBarSmallElements` | no       | **`string[]`** |         | An array of strings of HTML that fill up the top left logo space - used for small screens.                        |
 | `displayOneBrand`       | no       | **`number`**   | `0`     | Index of which `brandBarElements` to show for mobile header. Used if `brandBarSmallElements` is not defined.      |
+| `theme`                 | no       | **`object`**   | `{}`    | Partial theme colors overrides merged into the existing UI theme from an init file.                               |
 
 **Example**
 
@@ -325,7 +326,22 @@ Parameter overrides that are applied when the init file is loaded. These overrid
     "brandBarSmallElements": [
       "<a href='https://example.com'><img src='images/my-logo-small.png' height='30' /></a>"
     ],
-    "displayOneBrand": 0
+    "displayOneBrand": 0,
+    "theme": {
+      "colorPrimary": "red",
+      "colorSecondary": "red",
+      "textLight": "red",
+      "textLightTranslucent": "orange",
+      "textLightDimmed": "red",
+      "textDark": "red",
+      "textDarker": "red",
+      "textBlack": "red",
+      "turquoiseBlue": "red",
+      "dark": "#00ff008f",
+      "darkTranslucent": "orange",
+      "darkWithOverlay": "red",
+      "darkLighter": "red"
+    }
   },
   "catalog": [...]
 }

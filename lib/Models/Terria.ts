@@ -1976,6 +1976,11 @@ export default class Terria {
       this.storyPromptShown++;
     }
 
+    // Add theme settings
+    if (isJsonObject(initData.parameters?.theme)) {
+      Object.assign(this.configParameters.theme, initData.parameters?.theme);
+    }
+
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
