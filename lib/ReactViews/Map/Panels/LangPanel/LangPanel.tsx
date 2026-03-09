@@ -37,7 +37,7 @@ const LangPanel = (props: Props) => {
       mobileIcon={Icon.GLYPHS.globe}
       smallScreen={props.smallScreen}
     >
-      <Box styledPadding={"20px 10px 10px 10px"}>
+      <Box paddedRatio={3}>
         <Ul
           spaced
           lined

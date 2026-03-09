@@ -17,7 +17,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard theme="dark" text="test" timeout={100} />
+        <Clipboard text="test" timeout={100} />
       </ThemeProvider>
     );
 
@@ -47,7 +47,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard theme="dark" text="test" />
+        <Clipboard text="test" />
       </ThemeProvider>
     );
 
@@ -60,7 +60,7 @@ describe("Clipboard", function () {
 
     render(
       <ThemeProvider theme={terriaTheme}>
-        <Clipboard theme="dark" timeout={100} />
+        <Clipboard timeout={100} />
       </ThemeProvider>
     );
 

@@ -30,9 +30,6 @@ interface IShareUrlProps {
   viewState: ViewState;
   includeStories: boolean;
   shouldShorten: boolean;
-  theme: "light" | "dark";
-  inputTheme?: "light" | "dark";
-  rounded?: boolean;
   callback?: () => void;
 }
 
@@ -45,17 +42,7 @@ export const ShareUrl = forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(
-  {
-    terria,
-    viewState,
-    includeStories,
-    shouldShorten,
-    children,
-    theme,
-    inputTheme,
-    rounded,
-    callback
-  },
+  { terria, viewState, includeStories, shouldShorten, children, callback },
   forwardRef
 ) {
   const { t } = useTranslation();
@@ -125,16 +112,16 @@ export const ShareUrl = forwardRef<
 
   return (
     <>
-      <Explanation textDark={theme === "light"}>
-        {t("clipboard.shareExplanation")}
-      </Explanation>
+      <Explanation>{t("clipboard.shareExplanation")}</Explanation>
       <Spacing bottom={1} />
       <Clipboard
-        theme={theme}
         text={shareUrl}
         inputPlaceholder={placeholder}
-        inputTheme={inputTheme}
-        rounded={rounded}
+        createdMessage={
+          includeStories && terria.stories && terria.stories.length > 0
+            ? t("share.storyLinkCreated")
+            : t("share.shareLinkCreated")
+        }
         onCopy={(text) =>
           terria.analytics?.logEvent(
             Category.share,
@@ -144,7 +131,6 @@ export const ShareUrl = forwardRef<
         }
       />
       {children}
-      <Spacing bottom={2} />
       <ShareUrlWarning
         terria={terria}
         viewState={viewState}
