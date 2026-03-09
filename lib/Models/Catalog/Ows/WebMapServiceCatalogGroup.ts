@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { action, computed, runInAction, makeObservable } from "mobx";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -42,11 +43,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     const capabilities = await WebMapServiceCapabilities.fromUrl(
-      proxyCatalogItemUrl(
-        catalogItem,
-        catalogItem.getCapabilitiesUrl,
-        catalogItem.getCapabilitiesCacheDuration
-      )
+      new Resource({
+        url: proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        ),
+        headers:
+          catalogItem.useAuthentication && catalogItem.terria.userAuthToken
+            ? {
+                Authorization: catalogItem.terria.userAuthToken
+              }
+            : undefined
+      })
     );
     return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
@@ -305,6 +314,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
       this.catalogGroup.hideLegendInWorkbench
     );
 
+    if (this.catalogGroup.useAuthentication) {
+      model.setTrait(CommonStrata.definition, "useAuthentication", true);
+    }
+
     // Copy over ExportWebCoverageTraits if `linkedWcsUrl` has been set
     // See WebMapServiceCatalogGroupTraits.perLayerLinkedWcs for more info
     if (this.catalogGroup.perLayerLinkedWcs?.linkedWcsUrl) {
@@ -376,7 +389,10 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     let getCapabilitiesStratum = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum | undefined;
-    if (getCapabilitiesStratum === undefined) {
+    if (
+      getCapabilitiesStratum === undefined ||
+      (this.useAuthentication && this.terria.userAuthToken)
+    ) {
       getCapabilitiesStratum = await GetCapabilitiesStratum.load(this);
       runInAction(() => {
         this.strata.set(

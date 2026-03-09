@@ -1,5 +1,6 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import isDefined from "../../../Core/isDefined";
 import loadXML from "../../../Core/loadXML";
 import TerriaError from "../../../Core/TerriaError";
@@ -174,8 +175,10 @@ function buildSrsNameObject(layer: any): SrsNamesForLayer {
 }
 
 export default class WebFeatureServiceCapabilities {
-  static fromUrl: (url: string) => Promise<WebFeatureServiceCapabilities> =
-    createTransformer((url: string) => {
+  static fromUrl: (
+    url: string | Resource
+  ) => Promise<WebFeatureServiceCapabilities> = createTransformer(
+    (url: string | Resource) => {
       return loadXML(url).then(function (capabilitiesXml: any) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
@@ -189,7 +192,8 @@ export default class WebFeatureServiceCapabilities {
 
         return new WebFeatureServiceCapabilities(capabilitiesXml, json);
       });
-    });
+    }
+  );
 
   readonly service: CapabilitiesService;
   readonly outputTypes: string[] | undefined;

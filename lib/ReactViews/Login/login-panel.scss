@@ -1,0 +1,119 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.panel {
+  background: $feature-info-bg;
+  color: $feature-info-color;
+  border-radius: $radius-small;
+  display: none;
+  min-width: 280px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  svg {
+    fill: $feature-info-color;
+  }
+
+  a {
+    @include link($feature-info-bg);
+  }
+}
+
+.is-collapsed {
+  .body {
+    display: none;
+  }
+}
+
+.is-visible {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.is-loading {
+  cursor: wait;
+
+  * {
+    cursor: wait !important;
+  }
+}
+
+.is-translucent {
+  opacity: 0.6;
+}
+
+.header {
+  background: $feature-info-header-bg;
+  line-height: $modal-header-height;
+  border-radius: $radius-small $radius-small 0 0;
+}
+
+.btnPanelHeading {
+  padding: 6px 12px;
+  color: $feature-info-btn-color;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.headerIcon {
+  width: 16px;
+  height: 16px;
+  fill: $feature-info-btn-color;
+}
+
+.body {
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: scrollbars from "../../Sass/common/_base.scss";
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: $font-size-feature-info;
+  padding: 12px 16px;
+}
+
+.fieldGroup {
+  margin-bottom: 10px;
+}
+
+.messageBox {
+  border-radius: $radius-small;
+  padding: 6px 10px;
+  margin: 8px 0;
+}
+
+.messageError {
+  background: rgba(220, 53, 69, 0.15);
+  border: 1px solid rgba(220, 53, 69, 0.4);
+  color: #ff6b7a;
+}
+
+.messageInfo {
+  background: rgba(23, 162, 184, 0.15);
+  border: 1px solid rgba(23, 162, 184, 0.4);
+  color: #5bc0de;
+}
+
+.loadingIndicator {
+  margin: 8px 0;
+  text-align: center;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.buttonRow {
+  margin-top: 12px;
+}

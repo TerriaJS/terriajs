@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import TerriaError from "../../../Core/TerriaError";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
@@ -49,11 +50,19 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 
     if (!isDefined(capabilities))
       capabilities = await WebFeatureServiceCapabilities.fromUrl(
-        proxyCatalogItemUrl(
-          catalogItem,
-          catalogItem.getCapabilitiesUrl,
-          catalogItem.getCapabilitiesCacheDuration
-        )
+        new Resource({
+          url: proxyCatalogItemUrl(
+            catalogItem,
+            catalogItem.getCapabilitiesUrl,
+            catalogItem.getCapabilitiesCacheDuration
+          ),
+          headers:
+            catalogItem.useAuthentication && catalogItem.terria.userAuthToken
+              ? {
+                  Authorization: catalogItem.terria.userAuthToken
+                }
+              : undefined
+        })
       );
 
     return new GetCapabilitiesStratum(catalogItem, capabilities);
@@ -421,7 +430,17 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       )
       .toString();
 
-    const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
+    const getFeatureResponse = await loadText(
+      new Resource({
+        url: proxyCatalogItemUrl(this, url),
+        headers:
+          this.useAuthentication && this.terria.userAuthToken
+            ? {
+                Authorization: this.terria.userAuthToken
+              }
+            : undefined
+      })
+    );
 
     // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
     if (

@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import { JsonObject, isJsonArray, isJsonString } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
@@ -62,14 +63,23 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       });
     }
 
-    if (!isDefined(capabilities))
+    if (!isDefined(capabilities)) {
       capabilities = await WebMapServiceCapabilities.fromUrl(
-        proxyCatalogItemUrl(
-          catalogItem,
-          catalogItem.getCapabilitiesUrl,
-          catalogItem.getCapabilitiesCacheDuration
-        )
+        new Resource({
+          url: proxyCatalogItemUrl(
+            catalogItem,
+            catalogItem.getCapabilitiesUrl,
+            catalogItem.getCapabilitiesCacheDuration
+          ),
+          headers:
+            catalogItem.useAuthentication && catalogItem.terria.userAuthToken
+              ? {
+                  Authorization: catalogItem.terria.userAuthToken
+                }
+              : undefined
+        })
       );
+    }
 
     return new WebMapServiceCapabilitiesStratum(catalogItem, capabilities);
   }

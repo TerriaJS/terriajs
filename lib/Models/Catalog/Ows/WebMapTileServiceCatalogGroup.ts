@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { action, computed, runInAction, makeObservable } from "mobx";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -44,11 +45,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     const capabilities = await WebMapTileServiceCapabilities.fromUrl(
-      proxyCatalogItemUrl(
-        catalogItem,
-        catalogItem.getCapabilitiesUrl,
-        catalogItem.getCapabilitiesCacheDuration
-      )
+      new Resource({
+        url: proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        ),
+        headers:
+          catalogItem.useAuthentication && catalogItem.terria.userAuthToken
+            ? {
+                Authorization: catalogItem.terria.userAuthToken
+              }
+            : undefined
+      })
     );
     return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
@@ -202,6 +211,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "isExperiencingIssues",
       this.catalogGroup.isExperiencingIssues
     );
+    if (this.catalogGroup.useAuthentication) {
+      model.setTrait(CommonStrata.definition, "useAuthentication", true);
+    }
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 

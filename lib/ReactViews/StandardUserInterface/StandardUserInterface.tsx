@@ -48,6 +48,7 @@ import PlayPathPanel from "../MeasurableGeometry/PlayPathPanel";
 import QueryWindow from "../QueryWindow/QueryWindow";
 import { MessageModal } from "../MessageModal/MessageModal";
 import ViewshedPanel from "../Viewshed/ViewshedPanel";
+import LoginPanel from "../Login/LoginPanel";
 
 export const animationDuration = 250;
 
@@ -305,6 +306,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                 terria={props.terria}
                 viewState={props.viewState}
               />
+              <LoginPanel terria={props.terria} viewState={props.viewState} />
             </div>
             <DragDropFile />
             <DragDropNotification />

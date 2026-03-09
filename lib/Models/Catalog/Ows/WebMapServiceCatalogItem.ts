@@ -15,6 +15,7 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
@@ -230,7 +231,8 @@ class WebMapServiceCatalogItem
   protected async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-      undefined
+        undefined &&
+      (!this.useAuthentication || !this.terria.userAuthToken)
     )
       return;
     const stratum = await WebMapServiceCapabilitiesStratum.load(this);
@@ -589,7 +591,15 @@ class WebMapServiceCatalogItem
       const srs = this.useWmsVersion130 ? undefined : this.crs;
 
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
-        url: proxyCatalogItemUrl(this, baseUrl.toString()),
+        url: new Resource({
+          url: proxyCatalogItemUrl(this, baseUrl.toString()),
+          headers:
+            this.useAuthentication && this.terria.userAuthToken
+              ? {
+                  Authorization: this.terria.userAuthToken
+                }
+              : undefined
+        }),
         layers: this.validLayers.length > 0 ? this.validLayers.join(",") : "",
         parameters,
         crs,

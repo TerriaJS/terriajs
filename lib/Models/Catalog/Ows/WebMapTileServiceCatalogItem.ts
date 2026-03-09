@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { computed, runInAction, makeObservable, override } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
@@ -60,11 +61,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     if (!isDefined(capabilities))
       capabilities = await WebMapTileServiceCapabilities.fromUrl(
-        proxyCatalogItemUrl(
-          catalogItem,
-          catalogItem.getCapabilitiesUrl,
-          catalogItem.getCapabilitiesCacheDuration
-        )
+        new Resource({
+          url: proxyCatalogItemUrl(
+            catalogItem,
+            catalogItem.getCapabilitiesUrl,
+            catalogItem.getCapabilitiesCacheDuration
+          ),
+          headers:
+            catalogItem.useAuthentication && catalogItem.terria.userAuthToken
+              ? {
+                  Authorization: catalogItem.terria.userAuthToken
+                }
+              : undefined
+        })
       );
 
     return new GetCapabilitiesStratum(catalogItem, capabilities);
@@ -537,7 +546,15 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     }
 
     const imageryProvider = new WebMapTileServiceImageryProvider({
-      url: proxyCatalogItemUrl(this, baseUrl),
+      url: new Resource({
+        url: proxyCatalogItemUrl(this, baseUrl.toString()),
+        headers:
+          this.useAuthentication && this.terria.userAuthToken
+            ? {
+                Authorization: this.terria.userAuthToken
+              }
+            : undefined
+      }),
       layer: layerIdentifier,
       style: this.style,
       tileMatrixSetID: tileMatrixSet.id,

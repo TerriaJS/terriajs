@@ -2,6 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'loginBtn': string;
+  'loginContainer': string;
+  'logoutCancelBtn': string;
+  'logoutConfirmActions': string;
+  'logoutConfirmBtn': string;
+  'logoutConfirmMessage': string;
+  'logoutConfirmPanel': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

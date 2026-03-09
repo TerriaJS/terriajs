@@ -1,5 +1,6 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadXML from "../../../Core/loadXML";
 import { networkRequestError } from "../../../Core/TerriaError";
@@ -159,8 +160,10 @@ export function getRectangleFromLayer(
 }
 
 export default class WebMapServiceCapabilities {
-  static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> =
-    createTransformer((url: string) => {
+  static fromUrl: (
+    url: string | Resource
+  ) => Promise<WebMapServiceCapabilities> = createTransformer(
+    (url: string | Resource) => {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
         if (!capabilitiesXml || !defined(json.Capability)) {
@@ -174,7 +177,8 @@ export default class WebMapServiceCapabilities {
 
         return new WebMapServiceCapabilities(capabilitiesXml, json);
       });
-    });
+    }
+  );
 
   get Service(): CapabilitiesService {
     return this.json.Service;

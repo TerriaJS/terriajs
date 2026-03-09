@@ -16,4 +16,12 @@ export default class GetCapabilitiesTraits extends ModelTraits {
     description: "The amount of time to cache GetCapabilities responses."
   })
   getCapabilitiesCacheDuration: string = "1d";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use authentication",
+    description:
+      "If true, catalog item try to use the setted authentication method."
+  })
+  useAuthentication: boolean = false;
 }

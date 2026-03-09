@@ -275,7 +275,23 @@
   },
   "login": {
     "loginTitle": "Login",
-    "logoutTitle": "Logout"
+    "logoutTitle": "Logout",
+    "logoutConfirmTitle": "Conferma logout",
+    "logoutConfirmMessage": "Vuoi effettuare il logout?",
+    "logoutConfirmOk": "Logout",
+    "logoutConfirmCancel": "Annulla",
+    "loginPanelHeader": "Autenticazione utente",
+    "loginPanelUsername": "Username",
+    "loginPanelUsernameTitle": "Inserisci il nome utente",
+    "loginPanelPassword": "Password",
+    "loginPanelPasswordTitle": "Inserisci la password",
+    "loginPanelOk": "Login",
+    "loginPanelCancel": "Cancella",
+    "loginPanelLoading": "Autenticazione in corso...",
+    "loginPanelInvalidCredentials": "Nome utente o password non validi. Controlla le credenziali e riprova.",
+    "loginPanelConnectionProblem": "Impossibile raggiungere il servizio di autenticazione. Verifica la connessione internet e riprova.",
+    "loginPanelGenericError": "Si è verificato un errore imprevisto durante il login. Riprova più tardi.",
+    "loginPanelMissingFields": "Inserisci sia il nome utente che la password."
   },
   "settingPanel": {
     "performanceLabel": "Prestazioni",

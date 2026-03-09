@@ -1,5 +1,10 @@
 @import "~terriajs-variables";
 
+.loginContainer {
+  position: relative;
+  pointer-events: auto;
+}
+
 .loginBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   composes: btn--map from "../../../../Sass/common/_buttons.scss";
@@ -14,4 +19,48 @@
       fill: #ffffff;
     }
   }
+}
+
+.logoutConfirmPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 120;
+  min-width: 230px;
+  padding: 10px;
+  border-radius: $radius-small;
+  border: $border-style;
+  background: $dark;
+  color: $text-light;
+  box-shadow: $box-shadow;
+}
+
+.logoutConfirmMessage {
+  font-size: $font-size-mini;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.logoutConfirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.logoutConfirmBtn,
+.logoutCancelBtn {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  border-radius: $radius-small;
+  font-size: $font-size-mini;
+  padding: 5px 10px;
+}
+
+.logoutConfirmBtn {
+  background: $color-primary;
+  color: $text-light;
+}
+
+.logoutCancelBtn {
+  background: $overlay;
+  color: $text-light;
 }

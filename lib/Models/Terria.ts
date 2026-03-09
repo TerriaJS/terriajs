@@ -134,6 +134,11 @@ import MeasurableGeometryManager, {
 
 // import overrides from "../Overrides/defaults.jsx";
 
+export enum LoginProfileServiceType {
+  Cohesion = "Cohesion",
+  Geoserver = "Geoserver"
+}
+
 export interface ConfigParameters {
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
@@ -424,6 +429,11 @@ export interface ConfigParameters {
    * Url to login service
    */
   userProfileLoginServiceUrl?: string;
+
+  /**
+   * User profiling type
+   */
+  userProfileLoginServiceType?: LoginProfileServiceType;
 
   /**
    * Types of user profile
@@ -725,6 +735,7 @@ export default class Terria {
     mapViewers: ["3d", "3dsmooth", "2d"],
     userProfilesDefinition: undefined,
     userProfileLoginServiceUrl: undefined,
+    userProfileLoginServiceType: undefined,
     pickSize: undefined,
     cesiumGlobeColor: undefined,
     polylineWidth: undefined,

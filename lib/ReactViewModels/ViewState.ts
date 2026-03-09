@@ -266,6 +266,8 @@ export default class ViewState {
   @observable isPlayPathTour: boolean = false;
   @observable isMeasurableTour: boolean = false;
 
+  @observable isLoginPanelVisible: boolean = false;
+
   @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
   @observable currentTourIndex: number = -1;

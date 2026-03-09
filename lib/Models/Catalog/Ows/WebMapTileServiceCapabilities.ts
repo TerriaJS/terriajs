@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import loadXML from "../../../Core/loadXML";
 import { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
@@ -127,8 +128,10 @@ export interface TileMatrix {
 }
 
 export default class WebMapTileServiceCapabilities {
-  static fromUrl: (url: string) => Promise<WebMapTileServiceCapabilities> =
-    createTransformer((url: string) => {
+  static fromUrl: (
+    url: string | Resource
+  ) => Promise<WebMapTileServiceCapabilities> = createTransformer(
+    (url: string | Resource) => {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
         if (!capabilitiesXml || !defined(json.ServiceIdentification)) {
@@ -147,7 +150,8 @@ export default class WebMapTileServiceCapabilities {
 
         return new WebMapTileServiceCapabilities(capabilitiesXml, json);
       });
-    });
+    }
+  );
 
   readonly layers: WmtsLayer[];
   readonly tileMatrixSets: TileMatrixSet[];

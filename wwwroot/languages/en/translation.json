@@ -474,7 +474,23 @@
   },
   "login": {
     "loginTitle": "Login",
-    "logoutTitle": "Logout"
+    "logoutTitle": "Logout",
+    "logoutConfirmTitle": "Confirm logout",
+    "logoutConfirmMessage": "Do you want to log out?",
+    "logoutConfirmOk": "Logout",
+    "logoutConfirmCancel": "Cancel",
+    "loginPanelHeader": "User authentication",
+    "loginPanelUsername": "Username",
+    "loginPanelUsernameTitle": "Enter your username",
+    "loginPanelPassword": "Password",
+    "loginPanelPasswordTitle": "Enter your password",
+    "loginPanelOk": "Login",
+    "loginPanelCancel": "Cancel",
+    "loginPanelLoading": "Authenticating...",
+    "loginPanelInvalidCredentials": "Invalid username or password. Please check your credentials and try again.",
+    "loginPanelConnectionProblem": "Unable to reach the authentication service. Please check your internet connection and try again.",
+    "loginPanelGenericError": "An unexpected error occurred during login. Please try again later.",
+    "loginPanelMissingFields": "Please enter both username and password."
   },
   "helpPanel": {
     "btnText": "Help",
