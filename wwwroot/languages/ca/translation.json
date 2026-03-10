@@ -209,7 +209,7 @@
     "printViewButton": "Mostra la vista d'impressió",
     "btnAdvanced": "Opcions avançades",
     "embedTitle": "Inserir mapa",
-    "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
+    "shortenUsingService": "Escurceu l'enllaç per compartir",
     "btnStoryShareText": "Compartir",
     "btnMapShareText": "Compartir / Imprimir",
     "btnCatalogShareTitle": "Comparteix el teu catàleg amb altres persones",
@@ -229,7 +229,10 @@
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
     "downloadMap": "Descarregar mapa (png)",
     "getShareSaveHelpMessage": "Com desar enllaços compartits",
-    "embedDescription": "Per inserir, copieu aquest codi per inserir aquest mapa en una pàgina HTML:"
+    "embedDescription": "Copieu aquest codi per inserir aquest mapa en una pàgina HTML.",
+    "shareStoryLink": "Comparteix l'enllaç de la història",
+    "storyLinkCreated": "Enllaç de la història creat",
+    "shareLinkCreated": "Enllaç de compartició creat"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -364,7 +367,7 @@
     "deleteStory": "esborrar",
     "untitledScene": "escena sense títol",
     "doesNotExist": "La història no existeix",
-    "removeAllStories": "Esborra-ho tot",
+    "removeAllStories": "Esborra totes les escenes",
     "play": "Jugar",
     "previousBtn": "anar a l'escena anterior",
     "untitled": "escena sense títol",
@@ -382,9 +385,9 @@
     "editor": {
       "cancelEditing": "Cancel·lar",
       "placeholder": "Introduïu un títol",
-      "saveBtn": "desar",
+      "saveBtn": "fet",
       "cancelBtn": "cancel·lar",
-      "saveStory": "Desar",
+      "saveStory": "Fet",
       "descriptionLabel": "Descripció",
       "modalHeader": "Editor d'històries - Capturador d'escenes",
       "titleLabel": "Títol (obligatori)"
@@ -408,7 +411,8 @@
     "next": "Següent",
     "restart": "Reinicia",
     "panelBodyCapped": "Cada història té un límit de {{ shareMaxRequestSize }}: divideix dades grans o moltes escenes en diverses històries per mantenir-te per sota del límit.",
-    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes."
+    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes.",
+    "saveInstructions": "Feu clic a compartir per crear un enllaç d'història nou."
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -609,8 +613,8 @@
   "clipboard": {
     "success": "Copiat al porta-retalls",
     "unsuccessful": "Còpia fallida...",
-    "shareURL": "Compartiu URL",
-    "shareExplanation": "Qualsevol persona amb aquest URL podrà accedir a aquest mapa.",
+    "shareURL": "Compartiu l'enllaç",
+    "shareExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa.",
     "copy": "Copia"
   },
   "dragDrop": {
@@ -2209,7 +2213,7 @@
     "controls": {
       "title": "Controls"
     },
-    "dropPedestrianTooltipMessage": "<b>Feu clic amb el botó esquerre</b> per seleccionar la ubicació <br /><b>Clic dret / Esc</b> per cancel·lar"
+    "dropPedestrianTooltipMessage": "<b>Clic esquerre</b> per seleccionar la ubicació de descàrrega<br /><b>Clic dret / Esc</b> per cancel·lar"
   },
   "toast": {
     "mapIsZooming": "Carregant el zoom ideal..."
@@ -2264,7 +2268,7 @@
     }
   },
   "includeStory": {
-    "message": "Inclou la història a Share"
+    "message": "Inclou la història actual a l'enllaç"
   },
   "selectableDimensions": {
     "colorRemove": "Eliminar",
