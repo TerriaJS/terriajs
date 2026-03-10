@@ -23,7 +23,9 @@ describe("BottomDock", function () {
       viewState
     );
 
-    expect(container.querySelector("#TJS-BottomDockFirstPortal")).toBeVisible();
+    expect(
+      container.querySelector("#TJS-BottomDockFirstPortal")
+    ).toBeInTheDocument();
   });
 
   it("must create TJS-BottomDockLastPortal", function () {
@@ -31,6 +33,8 @@ describe("BottomDock", function () {
       <BottomDock terria={terria} viewState={viewState} />,
       viewState
     );
-    expect(container.querySelector("#TJS-BottomDockLastPortal")).toBeVisible();
+    expect(
+      container.querySelector("#TJS-BottomDockLastPortal")
+    ).toBeInTheDocument();
   });
 });

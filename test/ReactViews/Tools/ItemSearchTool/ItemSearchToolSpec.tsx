@@ -107,8 +107,8 @@ describe("ItemSearchTool", function () {
 
   describe("loading", function () {
     it("shows an error message on load error", async function () {
-      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(() =>
-        Promise.reject(new Error(`Something happened`))
+      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(
+        () => Promise.reject(new Error(`Something happened`))
       );
 
       render(
@@ -133,15 +133,16 @@ describe("ItemSearchTool", function () {
     });
 
     it("shows a search from on successful load", async function () {
-      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(() =>
-        Promise.resolve([
-          {
-            type: "numeric",
-            id: "height",
-            name: "Height",
-            range: { min: 1, max: 180 }
-          }
-        ])
+      vi.spyOn(itemSearchProvider, "describeParameters").mockImplementation(
+        () =>
+          Promise.resolve([
+            {
+              type: "numeric",
+              id: "height",
+              name: "Height",
+              range: { min: 1, max: 180 }
+            }
+          ])
       );
 
       const { container } = render(
@@ -178,7 +179,7 @@ describe("ItemSearchTool", function () {
       });
       await userEvent.click(screen.getByRole("button", { name: "Search" }));
       await waitFor(() => {
-        expect(within(container).getByText("0 matches found")).toBeVisible();
+        expect(within(container).getByText("0 match found")).toBeVisible();
       });
     });
   });

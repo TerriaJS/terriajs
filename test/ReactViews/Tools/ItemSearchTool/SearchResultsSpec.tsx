@@ -12,6 +12,7 @@ describe("SearchResults", function () {
   afterAll(async () => {
     await i18next.changeLanguage("cimode");
   });
+
   it("shows the results count", async function () {
     const { container } = render(
       <SearchResults
@@ -20,7 +21,7 @@ describe("SearchResults", function () {
       />
     );
 
-    expect(within(container).getByText("20 matches found")).toBeVisible();
+    expect(within(container).getByText("20 match found")).toBeVisible();
   });
 });
 

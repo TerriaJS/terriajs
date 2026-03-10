@@ -45,7 +45,7 @@ describe("CzmlCatalogItem", function () {
       czml.setTrait(CommonStrata.user, "forceProxy", true);
       const load = vi.spyOn(CzmlDataSource, "load");
       await czml.loadMapItems();
-      expect(load.mock.lastCall[0]).toBe(
+      expect(load.mock.lastCall?.[0]).toBe(
         "proxy/https://someexternalurl/"
       );
     });

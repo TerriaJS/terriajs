@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import range from "lodash-es/range";
 import {
   IObservableValue,
@@ -18,7 +17,6 @@ import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollectio
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
-import supportsWebGL from "../../lib/Core/supportsWebGL";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
@@ -34,12 +32,12 @@ import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import { Mock } from "vitest";
+import { http, HttpResponse, passthrough } from "msw";
 import { worker } from "../mocks/browser";
-import { http, HttpResponse } from "msw";
+import wmsGetCapabilitiesXml from "../../wwwroot/test/WMS/wms_crs.xml";
 
-const describeIfSupported = supportsWebGL() ? describe : describe.skip;
-
-describeIfSupported("Cesium Model", function () {
+describe("Cesium Model", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
   let container: HTMLElement;
@@ -51,6 +49,10 @@ describeIfSupported("Cesium Model", function () {
     terria = new Terria({
       baseUrl: "../"
     });
+
+    // Disable Ion terrain to avoid async terrain loading that creates
+    // unhandled rejections. Terrain-specific tests override this.
+    terria.configParameters.useCesiumIonTerrain = false;
 
     // Use an observable box so that we can dynamically change the viewer items
     // from specs
@@ -191,7 +193,27 @@ describeIfSupported("Cesium Model", function () {
     }
 
     it("correctly removes all the primitives, imageries and datasources from the scene when they are removed from the viewer", async function () {
-      worker.use(http.get("wms-*", () => HttpResponse.text()));
+      // Prevent PrimitiveCollection.remove from auto-destroying tilesets.
+      // The same ImageryLayer instances are shared between tileset imagery
+      // collections and the scene's imagery collection (via computedFn
+      // memoization). When a tileset is auto-destroyed on removal, it
+      // destroys its imagery layers — which may still be in the scene
+      // collection, causing a DeveloperError when syncImageryCollection
+      // tries to remove/destroy them again.
+      cesium.terriaPrimitives.destroyPrimitives = false;
+      cesium.cesiumWidget.useDefaultRenderLoop = false;
+
+      worker.use(
+        http.get("wms-*", ({ request }) => {
+          const url = new URL(request.url);
+          if (url.searchParams.get("request") === "GetCapabilities") {
+            return HttpResponse.xml(wmsGetCapabilitiesXml);
+          }
+
+          return HttpResponse.error();
+        }),
+        http.get("*", () => passthrough())
+      );
 
       let items = await loadItems([
         create3dTilesCatalogItem(0),
@@ -271,8 +293,32 @@ describeIfSupported("Cesium Model", function () {
       let items: MappableMixin.Instance[];
 
       beforeEach(async function () {
-        worker.use(http.get("wms-3", () => HttpResponse.text()));
+        worker.use(
+          http.get("*/tileset.json", () => {
+            passthrough();
+          }),
+          http.get("*/build/Cesium/*", () => {
+            passthrough();
+          }),
+          http.get("*wms-*", ({ request }) => {
+            const url = new URL(request.url);
+            if (url.searchParams.get("request") === "GetCapabilities") {
+              return HttpResponse.xml(wmsGetCapabilitiesXml);
+            }
 
+            return HttpResponse.error();
+          })
+        );
+
+        // Prevent PrimitiveCollection.remove from auto-destroying tilesets.
+        // The same ImageryLayer instances are shared between tileset imagery
+        // collections and the scene's imagery collection (via computedFn
+        // memoization). When a tileset is auto-destroyed on removal, it
+        // destroys its imagery layers — which may still be in the scene
+        // collection, causing a DeveloperError when syncImageryCollection
+        // tries to remove/destroy them again.
+        cesium.terriaPrimitives.destroyPrimitives = false;
+        cesium.cesiumWidget.useDefaultRenderLoop = false;
         items = await loadItems([
           create3dTilesCatalogItem(0),
           createImageryItem(1),
@@ -283,10 +329,12 @@ describeIfSupported("Cesium Model", function () {
         runInAction(() => viewerItems.set(items));
       });
 
-      it("must add the imageries that are placed above a tileset to the tileset's own imagery collection", function () {
+      it("must add the imageries that are placed above a tileset to the tileset's own imagery collection", async function () {
         const tileset0 = items[0].mapItems[0] as Cesium3DTileset;
         const tileset1 = items[2].mapItems[0] as Cesium3DTileset;
         const tileset2 = items[4].mapItems[0] as Cesium3DTileset;
+
+        await runLater(() => {});
 
         expect(tileset0.imageryLayers.length).toBe(0);
         expect(tileset1.imageryLayers.length).toBe(1);
@@ -396,10 +444,9 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = vi.spyOn(
-        cesium as any,
-        "createTerrainProviderFromIonAssetId"
-      ).mockReturnValue(Promise.resolve(fakeIonTerrainProvider));
+      const createSpy = vi
+        .spyOn(cesium as any, "createTerrainProviderFromIonAssetId")
+        .mockReturnValue(Promise.resolve(fakeIonTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -414,10 +461,9 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", async function () {
       const fakeUrlTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = vi.spyOn(
-        cesium as any,
-        "createTerrainProviderFromUrl"
-      ).mockReturnValue(Promise.resolve(fakeUrlTerrainProvider));
+      const createSpy = vi
+        .spyOn(cesium as any, "createTerrainProviderFromUrl")
+        .mockReturnValue(Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -432,10 +478,9 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", async function () {
       const fakeCesiumWorldTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = vi.spyOn(
-        cesium as any,
-        "createWorldTerrain"
-      ).mockReturnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
+      const createSpy = vi
+        .spyOn(cesium as any, "createWorldTerrain")
+        .mockReturnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -554,6 +599,14 @@ describeIfSupported("Cesium Model", function () {
     });
 
     it("should thow a warning when 'cesiumTerrainUrl' is invalid", async function () {
+      // Cesium's XHR layer creates internal promises that reject with
+      // RequestErrorEvent when the network request fails. These rejections
+      // happen outside the promise chain that catchTerrainProviderDown handles,
+      // so we must suppress them here.
+      const suppressRejection = (e: PromiseRejectionEvent) =>
+        e.preventDefault();
+      window.addEventListener("unhandledrejection", suppressRejection);
+
       worker.use(
         http.get(
           "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1/layer.json",
@@ -569,6 +622,8 @@ describeIfSupported("Cesium Model", function () {
       cesium2 = new Cesium(terriaViewer2, container2);
 
       await terrainLoadPromise(cesium2);
+      // Wait for Cesium's internal XHR rejection promises to settle
+      await new Promise((r) => setTimeout(r, 200));
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -579,6 +634,8 @@ describeIfSupported("Cesium Model", function () {
       expect(currentNotificationTitle).toBe(
         "map.cesium.terrainServerErrorTitle"
       );
+
+      window.removeEventListener("unhandledrejection", suppressRejection);
     });
   });
 

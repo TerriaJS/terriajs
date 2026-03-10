@@ -276,7 +276,7 @@ describe("DimensionSelectorSection", function () {
           id: "group",
           type: "group",
           name: "Selectable group",
-          isOpen: false,
+          isOpen: true,
           selectableDimensions: [
             {
               id: "checkbox-1",

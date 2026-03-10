@@ -15,10 +15,7 @@ describe("DataPreviewMapSpec", () => {
     terria = new Terria({
       baseUrl: "./"
     });
-    // Mock as no-op: actual Leaflet init is fragile in parallel test runs
-    attachSpy = vi
-      .spyOn(TerriaViewer.prototype, "attach")
-      .mockImplementation(() => {});
+    attachSpy = vi.spyOn(TerriaViewer.prototype, "attach");
   });
 
   afterEach(() => {

@@ -143,7 +143,7 @@ export class GetFeatureInfoFormat extends ModelTraits {
     description:
       "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', 'text' or 'csv'. If type is 'csv', then featureInfoContext will contain timeSeries object (see \"Customizing the Feature Info Template\" in documentation)"
   })
-  type?: "json" | "xml" | "html" | "text" | "csv" | undefined;
+  type?: "json" | "xml" | "html" | "text" | "csv" | undefined = "json";
 
   @primitiveTrait({
     type: "string",

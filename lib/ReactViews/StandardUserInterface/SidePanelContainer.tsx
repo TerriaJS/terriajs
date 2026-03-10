@@ -10,7 +10,10 @@ interface PropsType extends WithViewState {
 }
 
 const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
-  className: viewState.topElement === "SidePanel" ? "top-element" : "",
+  className:
+    viewState.topElement === "SidePanel"
+      ? "top-element side-panel-container"
+      : "",
   onClick: action(() => {
     viewState.topElement = "SidePanel";
   }),

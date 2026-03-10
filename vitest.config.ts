@@ -216,7 +216,7 @@ function geojsonPlugin(): Plugin {
   return {
     name: "geojson-as-json",
     transform(_code: string, id: string) {
-      if (id.endsWith(".geojson")) {
+      if (id.endsWith(".geojson") || id.endsWith(".czml")) {
         const content = readFileSync(id, "utf-8");
         return {
           code: `export default ${content};`,

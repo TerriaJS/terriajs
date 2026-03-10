@@ -15,6 +15,12 @@ describe("TableColumn", function () {
 
   beforeEach(function () {
     tableModel = new CsvCatalogItem("test", new Terria(), undefined);
+
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      )
+    );
   });
 
   describe("title", function () {
@@ -350,14 +356,6 @@ describe("TableColumn", function () {
   });
 
   describe("valuesAsDates", function () {
-    beforeEach(function () {
-      worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        )
-      );
-    });
-
     it("defaults to dd/mm/yyyy dates", async function () {
       tableModel.setTrait(
         CommonStrata.user,

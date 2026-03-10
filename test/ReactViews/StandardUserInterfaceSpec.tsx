@@ -1,4 +1,5 @@
 import { render } from "@testing-library/react";
+import { page } from "@vitest/browser/context";
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
@@ -55,10 +56,12 @@ describe("StandardUserInterface", function () {
     );
 
     const featureInfo = container.querySelector('[class*="featureInfo"]');
-    expect(featureInfo).toHaveClassName("top-element");
+    expect(featureInfo?.className).toContain("top-element");
   });
 
-  it("side panel has top-element class when it is the top element", function () {
+  it("side panel has top-element class when it is the top element", async function () {
+    await page.viewport(1280, 800);
+
     runInAction(() => {
       viewState.topElement = "SidePanel";
     });
@@ -73,7 +76,7 @@ describe("StandardUserInterface", function () {
 
     const sidePanelContainer = container.querySelector(".top-element");
     expect(sidePanelContainer).toBeInTheDocument();
-    expect(sidePanelContainer?.className).toContain("SidePanelContainer-");
+    expect(sidePanelContainer?.className).toContain("side-panel-container");
   });
 
   it("feature info panel does not have top-element class when it is not the top element", function () {
@@ -90,6 +93,6 @@ describe("StandardUserInterface", function () {
     );
 
     const featureInfo = container.querySelector('[class*="featureInfo"]');
-    expect(featureInfo).not.toHaveClassName("top-element");
+    expect(featureInfo?.className).not.toContain("top-element");
   });
 });

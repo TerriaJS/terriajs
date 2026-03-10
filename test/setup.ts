@@ -1,15 +1,19 @@
-import "../lib/Core/prerequisites";
+import i18next from "i18next";
 import { configure, spy } from "mobx";
 import { http, HttpResponse } from "msw";
-import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+import "../lib/Core/prerequisites";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
-import { worker } from "./mocks/browser";
 import regionMapping from "../wwwroot/data/regionMapping.json";
+import english from "../wwwroot/languages/en/translation.json";
+import { worker } from "./mocks/browser";
 
 configure({
   enforceActions: "always",
-  computedRequiresReaction: false,
-  reactionRequiresObservable: false,
+  computedRequiresReaction: true,
+  // Turn off safeDescriptors required for spying on computed items
+  // TODO: mobx docs says this should only be enabled when need and not globally,
+  // see if we can remove this global setting
   safeDescriptors: false
 });
 
@@ -53,17 +57,22 @@ beforeAll(async () => {
     )
   );
 
-  await i18next.init({
+  await i18next.use(initReactI18next).init({
     lng: "cimode",
     debug: false,
-    resources: {}
+    resources: {
+      en: {
+        translation: english
+      }
+    }
   });
 });
 
-afterEach(() => {
+beforeEach(function () {
   worker.resetHandlers();
 });
 
-afterAll(() => {
+afterAll(function () {
+  worker.resetHandlers();
   worker.stop();
 });
