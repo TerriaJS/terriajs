@@ -36,6 +36,8 @@ import { cleanup, screen, within } from "@testing-library/react";
 import { act } from "react";
 import { worker } from "../mocks/browser";
 
+import json from "../../wwwroot/test/init/czml-with-template-0.json";
+
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
   const thousand = Intl.NumberFormat().format(1000);
@@ -1239,9 +1241,6 @@ describe("FeatureInfoSection", function () {
     });
 
     it("uses and completes a string-form featureInfoTemplate", async function () {
-      const json =
-        await import("../../wwwroot/test/init/czml-with-template-0.json");
-
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,

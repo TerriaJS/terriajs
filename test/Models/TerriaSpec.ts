@@ -184,57 +184,38 @@ describe("TerriaSpec", function () {
     it("applies initSources in correct order", async function () {
       expect(terria.initSources.length).toEqual(0);
       worker.use(
-        http.get(
-          "*/config.json",
-          () =>
-            new HttpResponse(
-              JSON.stringify({
-                initializationUrls: ["something"]
-              })
-            )
+        http.get("*/config.json", () =>
+          HttpResponse.json({
+            initializationUrls: ["something"]
+          })
         ),
-        http.get(
-          "*/init/something.json",
-          () =>
-            new HttpResponse(
-              JSON.stringify({
-                workbench: ["test"],
-                catalog: [
-                  { id: "test", type: "czml", url: "test.czml" },
-                  { id: "test-2", type: "czml", url: "test-2.czml" }
-                ],
-                showSplitter: false,
-                splitPosition: 0.5
-              })
-            )
+        http.get("*/init/something.json", () =>
+          HttpResponse.json({
+            workbench: ["test"],
+            catalog: [
+              { id: "test", type: "czml", url: "test.czml" },
+              { id: "test-2", type: "czml", url: "test-2.czml" }
+            ],
+            showSplitter: false,
+            splitPosition: 0.5
+          })
         ),
-        http.get(
-          "https://application.url/init/hash-init.json",
-          () =>
-            new HttpResponse(
-              JSON.stringify({
-                // Override workbench in "init/something.json"
-                workbench: ["test-2"],
-                showSplitter: true
-              })
-            )
+        http.get("https://application.url/init/hash-init.json", () =>
+          HttpResponse.json({
+            // Override workbench in "init/something.json"
+            workbench: ["test-2"],
+            showSplitter: true
+          })
         ),
         // This model is added to the workbench in "init/something.json" - which is loaded before "https://application.url/init/hash-init.json"
         // So we add a long delay to make sure that `workbench` is overridden by `hash-init.json`
         http.get("*/test.czml", async () => {
           await new Promise((resolve) => setTimeout(resolve, 500));
-          return new HttpResponse(
-            JSON.stringify([{ id: "document", version: "1.0" }]),
-            { headers: { "Content-Type": "text/json" } }
-          );
+          return HttpResponse.json([{ id: "document", version: "1.0" }]);
         }),
         // Note: no delay for "test-2.czml" - which is added to `workbench` by `hash-init.json
-        http.get(
-          "*/test-2.czml",
-          () =>
-            new HttpResponse(
-              JSON.stringify([{ id: "document", version: "1.0" }])
-            )
+        http.get("*/test-2.czml", () =>
+          HttpResponse.json([{ id: "document", version: "1.0" }])
         )
       );
 
@@ -257,26 +238,24 @@ describe("TerriaSpec", function () {
       expect(terria.initSources.length).toEqual(0);
 
       worker.use(
-        http.get(
-          "*/path/to/config/configUrl.json",
-          () =>
-            new HttpResponse(
-              JSON.stringify({
-                initializationUrls: ["something"],
-                parameters: {
-                  applicationUrl: "https://application.url/",
-                  initFragmentPaths: [
-                    "path/to/init/",
-                    "https://hostname.com/some/other/path/"
-                  ]
-                }
-              })
-            )
+        http.get("*/path/to/config/configUrl.json", () =>
+          HttpResponse.json({
+            initializationUrls: ["something"],
+            parameters: {
+              applicationUrl: "https://application.url/",
+              initFragmentPaths: [
+                "path/to/init/",
+                "https://hostname.com/some/other/path/"
+              ]
+            }
+          })
         ),
-        http.get(
-          "https://hostname.com/*",
-          () => new HttpResponse(JSON.stringify({}))
-        )
+        http.get("*/init/something.json", () =>
+          HttpResponse.json({
+            catalog: []
+          })
+        ),
+        http.get("https://hostname.com/*", () => HttpResponse.json({}))
       );
 
       await terria.start({
@@ -358,14 +337,10 @@ describe("TerriaSpec", function () {
         );
         const groupName = "Simple converter test";
         worker.use(
-          http.get(
-            "https://example.foo.bar/initv7.json",
-            () =>
-              new HttpResponse(
-                JSON.stringify({
-                  catalog: [{ name: groupName, type: "group", items: [] }]
-                })
-              )
+          http.get("https://example.foo.bar/initv7.json", () =>
+            HttpResponse.json({
+              catalog: [{ name: groupName, type: "group", items: [] }]
+            })
           )
         );
         // no init sources before starting
@@ -494,30 +469,25 @@ describe("TerriaSpec", function () {
       expect(terria.initSources.length).toEqual(0);
 
       worker.use(
-        http.get(
-          "*/path/to/config/configUrl.json",
-          () =>
-            new HttpResponse(
-              JSON.stringify({
-                initializationUrls: ["something"],
-                parameters: {
-                  applicationUrl: "https://application.url/",
-                  initFragmentPaths: [
-                    "path/to/init/",
-                    "https://hostname.com/some/other/path/"
-                  ]
-                }
-              })
-            )
+        http.get("*/path/to/config/configUrl.json", () =>
+          HttpResponse.json({
+            initializationUrls: ["something"],
+            parameters: {
+              applicationUrl: "https://application.url/",
+              initFragmentPaths: [
+                "path/to/init/",
+                "https://hostname.com/some/other/path/"
+              ]
+            }
+          })
         ),
-        http.get(
-          "https://application.url/*",
-          () => new HttpResponse(JSON.stringify({}))
+        http.get("*/init/something.json", () =>
+          HttpResponse.json({
+            catalog: []
+          })
         ),
-        http.get(
-          "https://hostname.com/*",
-          () => new HttpResponse(JSON.stringify({}))
-        )
+        http.get("https://application.url/*", () => HttpResponse.json({})),
+        http.get("https://hostname.com/*", () => HttpResponse.json({}))
       );
 
       await terria.start({
@@ -553,14 +523,8 @@ describe("TerriaSpec", function () {
       expect(terria.initSources.length).toEqual(0);
 
       worker.use(
-        http.get(
-          "*/configUrl.json",
-          () => new HttpResponse(JSON.stringify({}))
-        ),
-        http.get(
-          "http://something/*",
-          () => new HttpResponse(JSON.stringify({}))
-        )
+        http.get("*/configUrl.json", () => HttpResponse.json({})),
+        http.get("http://something/*", () => HttpResponse.json({}))
       );
 
       await terria.start({
@@ -952,7 +916,7 @@ describe("TerriaSpec", function () {
         // Track how many times configUrl has been requested to serve different responses
         let configRequestCount = 0;
         worker.use(
-          http.get("*/serverconfig/*", () => new HttpResponse("{}")),
+          http.get("*/serverconfig/*", () => HttpResponse.json({})),
           http.get(
             "https://magda.example.com/api/v0/registry/records/6b24aa39-1aa7-48d1-b6a6-9e755aff4476",
             () => HttpResponse.json(magdaRecord1)
@@ -1311,10 +1275,7 @@ describe("TerriaSpec", function () {
           ),
           http.get(
             "https://mapprod1.environment.nsw.gov.au/arcgis/services/VIS/Vegetation_SouthCoast_SCIVI_V14_E_2230/MapServer/WMSServer",
-            () =>
-              new HttpResponse(wmsCapabilitiesXml, {
-                headers: { "Content-Type": "text/xml" }
-              })
+            () => HttpResponse.xml(wmsCapabilitiesXml)
           )
         );
 
@@ -1778,7 +1739,10 @@ describe("TerriaSpec", function () {
               }
             }
           ],
-          workbench: ["points"]
+          workbench: ["points"],
+          baseMaps: {
+            enabledBaseMaps: []
+          }
         };
         worker.use(
           http.get("*/serverconfig/*", () => HttpResponse.json({})),
