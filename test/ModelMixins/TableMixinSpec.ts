@@ -590,6 +590,14 @@ describe("TableMixin", function () {
       worker.use(
         http.get("*/additionalRegion.json", () =>
           HttpResponse.json(additionalRegionMapping)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaNameStates)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaName)
         )
       );
 
@@ -628,6 +636,14 @@ describe("TableMixin", function () {
       worker.use(
         http.get("*/additionalRegion.json", () =>
           HttpResponse.json(additionalRegionMapping)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaNameStates)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaName)
         )
       );
 

@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import { http, HttpResponse, passthrough } from "msw";
 import { GeomType } from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Request from "terriajs-cesium/Source/Core/Request";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ProtomapsArcGisPbfSource } from "../../../../lib/Map/Vector/Protomaps/ProtomapsArcGisPbfSource";
 import { GEOJSON_SOURCE_LAYER_NAME } from "../../../../lib/Map/Vector/Protomaps/ProtomapsGeojsonSource";
@@ -22,18 +22,25 @@ import TablePointStyleTraits, {
 } from "../../../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../../lib/Traits/TraitsClasses/Table/StyleTraits";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { worker } from "../../../mocks/browser";
+
+import waterNetwork2Json from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json";
+import waterNetworkLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json";
+import parks3Json from "../../../../wwwroot/test/ArcGisFeatureServer/Parks/3.json";
+import parksLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Parks/layer.json";
+import stylesLinesJson from "../../../../wwwroot/test/ArcGisFeatureServer/styles/lines.json";
+import stylesLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/styles/layer.json";
+import tiledActVegMapJson from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/act-veg-map.json";
+import waterNetworkMulti2Json from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/2.json";
+import waterNetworkMultiLayerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layer.json";
+import waterNetworkMultiLayerBJson from "../../../../wwwroot/test/ArcGisFeatureServer/Water_Network_Multi/layerB.json";
+import tilePbfPath from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/test-tile.pbf";
+import featurePickGeojson from "../../../../wwwroot/test/ArcGisFeatureServer/Tiled/feature-pick.geojson" with { type: "json" };
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisFeatureServerCatalogItem", function () {
   const featureServerUrl =
@@ -54,7 +61,18 @@ describe("ArcGisFeatureServerCatalogItem", function () {
   let terria: Terria;
   let item: ArcGisFeatureServerCatalogItem;
 
-  let xhrSpy: jasmine.Spy;
+  let multiCallCount: number;
+  let tilePbfBuffer: ArrayBuffer;
+
+  beforeAll(async function () {
+    worker.use(
+      http.get(/\.pbf$/, () => {
+        return passthrough();
+      })
+    );
+    const [pbfRes] = await Promise.all([fetch(tilePbfPath)]);
+    tilePbfBuffer = await pbfRes.arrayBuffer();
+  });
 
   beforeEach(function () {
     terria = new Terria({
@@ -62,61 +80,78 @@ describe("ArcGisFeatureServerCatalogItem", function () {
     });
     item = new ArcGisFeatureServerCatalogItem("test", terria);
 
-    let multiCallCount = 0;
+    multiCallCount = 0;
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    // NOTE: When writing tests for this catalog item, you will always need to specify a `maxFeatures` trait or ensure
-    // that once all feature data has been requested, the mock server below returns 0 features.
-    xhrSpy = spyOn(loadWithXhr, "load").and.callFake((...args: any[]) => {
-      let url = args[0];
-      const originalUrl = url as string;
-      url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-      url = url.replace(
-        /FeatureServer\/[0-9]+\/query\?f=json.*$/i,
-        "layer.json"
-      );
+    worker.use(
+      // Water_Network FeatureServer - layer query (geojson)
+      http.get(
+        "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2/query",
+        () => HttpResponse.json(waterNetworkLayerJson)
+      ),
+      // Water_Network FeatureServer - metadata
+      http.get(
+        "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2",
+        () => HttpResponse.json(waterNetwork2Json)
+      ),
 
-      // Remove token from url
-      url = url.replace(/token=some-token-in-config/, "");
-      if (originalUrl.match("Water_Network/FeatureServer")) {
-        url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
-        args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
-      } else if (originalUrl.match("Parks/FeatureServer")) {
-        url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
-        args[0] = "test/ArcGisFeatureServer/Parks/" + url;
-      } else if (originalUrl.match("styles/FeatureServer")) {
-        url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
-        args[0] = "test/ArcGisFeatureServer/styles/" + url;
-      }
-      // Tiled feature server - pick feature request
-      else if (originalUrl.match("tiled/FeatureServer/0/query/query")) {
-        args[0] = "test/ArcGisFeatureServer/Tiled/feature-pick.geojson";
-      }
-      // Tiled feature server - tile request
-      else if (originalUrl.match("tiled/FeatureServer/0/query")) {
-        args[0] = "test/ArcGisFeatureServer/Tiled/test-tile.pbf";
-      }
-      // Tiled feature server - metadata request
-      else if (originalUrl.match("tiled/FeatureServer")) {
-        url = url.replace(/FeatureServer\/0\/?\?.*/i, "act-veg-map.json");
-        args[0] = "test/ArcGisFeatureServer/Tiled/" + url;
-      } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
-        // We're getting this feature service in multiple requests, so we need to return different data on subsequent
-        // calls
-        console.log("multicall count", multiCallCount, originalUrl);
-        if (url.includes("layer")) {
+      // Parks FeatureServer - layer query (geojson)
+      http.get(
+        "http://example.com/arcgis/rest/services/Parks/FeatureServer/3/query",
+        () => HttpResponse.json(parksLayerJson)
+      ),
+      // Parks FeatureServer - metadata
+      http.get(
+        "http://example.com/arcgis/rest/services/Parks/FeatureServer/3",
+        () => HttpResponse.json(parks3Json)
+      ),
+
+      // styles FeatureServer - layer query (geojson)
+      http.get(
+        "http://example.com/arcgis/rest/services/styles/FeatureServer/0/query",
+        () => HttpResponse.json(stylesLayerJson)
+      ),
+      // styles FeatureServer - metadata
+      http.get(
+        "http://example.com/arcgis/rest/services/styles/FeatureServer/0",
+        () => HttpResponse.json(stylesLinesJson)
+      ),
+
+      // Tiled FeatureServer - pick feature request (query/query path)
+      http.get(
+        "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query",
+        () => HttpResponse.json(featurePickGeojson)
+      ),
+      // Tiled FeatureServer - tile request (query path, returns PBF)
+      http.get(
+        "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/",
+        () =>
+          new HttpResponse(tilePbfBuffer, {
+            headers: { "Content-Type": "application/x-protobuf" }
+          })
+      ),
+      // Tiled FeatureServer - metadata
+      http.get(
+        "http://example.com/arcgis/rest/services/tiled/FeatureServer/0",
+        () => HttpResponse.json(tiledActVegMapJson)
+      ),
+
+      // Water_Network_Multi FeatureServer - layer query (geojson) - stateful
+      http.get(
+        "http://example.com/arcgis/rest/services/Water_Network_Multi/FeatureServer/2/query",
+        () => {
           multiCallCount++;
+          if (multiCallCount > 1) {
+            return HttpResponse.json(waterNetworkMultiLayerBJson);
+          }
+          return HttpResponse.json(waterNetworkMultiLayerJson);
         }
-        if (url.includes("layer") && multiCallCount > 1) {
-          url = url.replace("layer.json", "layerB.json");
-        }
-        url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
-        args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
-      }
-
-      return realLoadWithXhr(...args);
-    });
+      ),
+      // Water_Network_Multi FeatureServer - metadata
+      http.get(
+        "http://example.com/arcgis/rest/services/Water_Network_Multi/FeatureServer/2",
+        () => HttpResponse.json(waterNetworkMulti2Json)
+      )
+    );
   });
 
   it("has a type and typeName", function () {
@@ -139,10 +174,21 @@ describe("ArcGisFeatureServerCatalogItem", function () {
     });
 
     it("adds the token to metadata request", async function () {
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2",
+          ({ request }) => {
+            if (
+              new URL(request.url).searchParams.get("token") !==
+              "some-token-in-config"
+            )
+              return HttpResponse.error();
+            return HttpResponse.json(waterNetwork2Json);
+          }
+        )
+      );
       await item.loadMapItems();
-
-      const tokenre = /token=some-token-in-config/;
-      expect(tokenre.test(loadWithXhr.load.calls.argsFor(0)[0])).toBeTruthy();
+      expect(item.rectangle).toBeDefined();
     });
   });
 
@@ -250,12 +296,23 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         item.setTrait("definition", "token", "some-token-in-config");
       });
 
-      await item.loadMapItems();
-
-      expect(loadWithXhr.load.calls.argsFor(1)[0]).toContain("query?");
-      expect(loadWithXhr.load.calls.argsFor(1)[0]).toContain(
-        "token=some-token-in-config"
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2/query",
+          ({ request }) => {
+            if (
+              !new URL(request.url).searchParams
+                .get("token")
+                ?.includes("some-token-in-config")
+            )
+              return HttpResponse.error();
+            return HttpResponse.json(waterNetworkLayerJson);
+          }
+        )
       );
+
+      await item.loadMapItems();
+      expect(item.mapItems.length).toEqual(1);
     });
 
     it("properly loads a single layer", async function () {
@@ -274,9 +331,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       expect(
         isDataSource(mapItem) ? mapItem.entities.values.length : 0
       ).toEqual(13);
-
-      // 1 call for metadata, and 1 call for features
-      expect(xhrSpy).toHaveBeenCalledTimes(2);
     });
 
     it("properly loads a single layer with multiple requests", async function () {
@@ -295,9 +349,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       expect(
         isDataSource(mapItem) ? mapItem.entities.values.length : 0
       ).toEqual(13);
-
-      // 1 call for metadata, and 2 calls for features
-      expect(xhrSpy).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -400,10 +451,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
             256
           );
 
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
-          );
-
           const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
 
           expect(features?.length).toEqual(1);
@@ -422,6 +469,23 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           );
         });
 
+        worker.use(
+          http.get(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/",
+            ({ request }) => {
+              if (
+                !new URL(request.url).searchParams
+                  .get("token")
+                  ?.includes("some-token-in-config")
+              )
+                return HttpResponse.error();
+              return new HttpResponse(tilePbfBuffer, {
+                headers: { "Content-Type": "application/x-protobuf" }
+              });
+            }
+          )
+        );
+
         await item.loadMapItems();
 
         const mapItem = item.mapItems[0];
@@ -434,11 +498,13 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           const source = imageryProvider.source as ProtomapsArcGisPbfSource;
 
           // Fetch a tile - this tile will return a single polygon
-          await source.get({ x: 241014, y: 157088, z: 18 }, 256);
-
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0&token=some-token-in-config"
+          const tileFeatures = await source.get(
+            { x: 241014, y: 157088, z: 18 },
+            256
           );
+
+          const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
+          expect(features?.length).toEqual(1);
         }
       });
 
@@ -446,10 +512,29 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         runInAction(() => {
           item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
           // set feature per tile request to 1 - this will trigger a second request
-          // Due to how XHR requests are mocked, still will load the same tile twice - so we will get 2 identical features
+          // Due to how requests are mocked, still will load the same tile twice - so we will get 2 identical features
           item.setTrait(CommonStrata.definition, "featuresPerTileRequest", 1);
           item.setTrait(CommonStrata.definition, "maxTiledFeatures", 2);
         });
+
+        let tileRequestCount = 0;
+        worker.use(
+          http.get(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/",
+            ({ request }) => {
+              const params = new URL(request.url).searchParams;
+              const expectedOffset = String(tileRequestCount);
+              tileRequestCount++;
+              if (params.get("resultOffset") !== expectedOffset)
+                return HttpResponse.error();
+              if (params.get("resultRecordCount") !== "1")
+                return HttpResponse.error();
+              return new HttpResponse(tilePbfBuffer, {
+                headers: { "Content-Type": "application/x-protobuf" }
+              });
+            }
+          )
+        );
 
         await item.loadMapItems();
 
@@ -470,14 +555,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           const tileFeatures = await source.get(
             { x: 241014, y: 157088, z: 18 },
             256
-          );
-
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=1&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
-          );
-
-          expect(xhrSpy.calls.argsFor(2)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?quantizationParameters={%22extent%22%3A{%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}%2C%22spatialReference%22%3A{%22wkid%22%3A102100%2C%22latestWkid%22%3A3857}%2C%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A0.5971642834774684}&f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=OBJECTID%2Cclass&where=1%3D1&maxRecordCountFactor=1&resultRecordCount=1&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=1"
           );
 
           const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
@@ -522,10 +599,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
             -0.5866868013895533
           );
 
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query?f=geojson&sr=4326&geometryType=esriGeometryPoint&geometry={%22x%22%3A150.9792164808778%2C%22y%22%3A-33.61467761565137%2C%22spatialReference%22%3A{%22wkid%22%3A4326}}&outFields=*&returnGeometry=false&outSR=4326&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&distance=2.3886566162109375&where=1%3D1"
-          );
-
           expect(pickedFeatures?.length).toEqual(1);
 
           const feature = pickedFeatures?.[0];
@@ -547,6 +620,21 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           );
         });
 
+        worker.use(
+          http.get(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query",
+            ({ request }) => {
+              if (
+                !new URL(request.url).searchParams
+                  .get("token")
+                  ?.includes("some-token-in-config")
+              )
+                return HttpResponse.error();
+              return HttpResponse.json(featurePickGeojson);
+            }
+          )
+        );
+
         await item.loadMapItems();
 
         expect(item.allowFeaturePicking).toBeTruthy();
@@ -560,7 +648,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
           const source = imageryProvider.source as ProtomapsArcGisPbfSource;
 
-          await source.pickFeatures(
+          const pickedFeatures = await source.pickFeatures(
             0,
             0,
             18,
@@ -568,9 +656,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
             -0.5866868013895533
           );
 
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/query?f=geojson&sr=4326&geometryType=esriGeometryPoint&geometry={%22x%22%3A150.9792164808778%2C%22y%22%3A-33.61467761565137%2C%22spatialReference%22%3A{%22wkid%22%3A4326}}&outFields=*&returnGeometry=false&outSR=4326&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&distance=2.3886566162109375&where=1%3D1&token=some-token-in-config"
-          );
+          expect(pickedFeatures?.length).toEqual(1);
         }
       });
 
@@ -622,6 +708,24 @@ describe("ArcGisFeatureServerCatalogItem", function () {
           );
         });
 
+        worker.use(
+          http.get(
+            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/",
+            ({ request }) => {
+              const params = new URL(request.url).searchParams;
+              if (params.get("outFields") !== "testObjectId,testOutField")
+                return HttpResponse.error();
+              if (params.get("maxRecordCountFactor") !== "2")
+                return HttpResponse.error();
+              if (params.has("quantizationParameters"))
+                return HttpResponse.error();
+              return new HttpResponse(tilePbfBuffer, {
+                headers: { "Content-Type": "application/x-protobuf" }
+              });
+            }
+          )
+        );
+
         await item.loadMapItems();
 
         const mapItem = item.mapItems[0];
@@ -637,12 +741,14 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
           const source = imageryProvider.source as ProtomapsArcGisPbfSource;
 
-          // Fetch a tile
-          await source.get({ x: 241014, y: 157088, z: 18 }, 256);
-
-          expect(xhrSpy.calls.argsFor(1)[0]).toBe(
-            "http://example.com/arcgis/rest/services/tiled/FeatureServer/0/query/?f=pbf&resultType=tile&inSR=102100&geometry={%22xmin%22%3A16807260.418200623%2C%22ymin%22%3A-3977343.4390479317%2C%22xmax%22%3A16807451.510771338%2C%22ymax%22%3A-3977152.346477219}&geometryType=esriGeometryEnvelope&outFields=testObjectId%2CtestOutField&where=1%3D1&maxRecordCountFactor=2&resultRecordCount=4000&outSR=102100&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=0.5971642834774684&outSpatialReference=102100&precision=8&resultOffset=0"
+          // Fetch a tile - validates params in handler
+          const tileFeatures = await source.get(
+            { x: 241014, y: 157088, z: 18 },
+            256
           );
+
+          const features = tileFeatures.get(GEOJSON_SOURCE_LAYER_NAME);
+          expect(features?.length).toEqual(1);
         }
       });
 

@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
+import { http, passthrough } from "msw";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -8,7 +9,6 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
-import loadJson from "../../lib/Core/loadJson";
 import CatalogMemberMixin, {
   getName
 } from "../../lib/ModelMixins/CatalogMemberMixin";
@@ -34,6 +34,9 @@ import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import { cleanup, screen, within } from "@testing-library/react";
 import { act } from "react";
+import { worker } from "../mocks/browser";
+
+import json from "../../wwwroot/test/init/czml-with-template-0.json";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -1228,10 +1231,16 @@ describe("FeatureInfoSection", function () {
   });
 
   describe("CZML templating", function () {
-    beforeEach(function () {});
+    beforeEach(function () {
+      worker.use(
+        http.get("test/CZML/withProperties.czml", () => passthrough()),
+        http.get("test/CZML/withTimeVaryingProperties.czml", () =>
+          passthrough()
+        )
+      );
+    });
 
     it("uses and completes a string-form featureInfoTemplate", async function () {
-      const json = await loadJson("test/init/czml-with-template-0.json");
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,
@@ -1264,7 +1273,9 @@ describe("FeatureInfoSection", function () {
     });
 
     it("uses and completes a time-varying, string-form featureInfoTemplate", async function () {
-      const json = await loadJson("test/init/czml-with-template-1.json");
+      const json =
+        await import("../../wwwroot/test/init/czml-with-template-1.json");
+
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,

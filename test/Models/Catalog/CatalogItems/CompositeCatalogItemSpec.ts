@@ -1,10 +1,15 @@
+import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import CompositeCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import { runInAction } from "mobx";
+import { worker } from "../../../mocks/browser";
+
+import bikeracksJson from "../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
+import singleMetadataUrl from "../../../../wwwroot/test/WMS/single_metadata_url.xml";
 
 describe("CompositeCatalogItem", function () {
   let terria: Terria;
@@ -15,6 +20,15 @@ describe("CompositeCatalogItem", function () {
       baseUrl: "./"
     });
     composite = new CompositeCatalogItem("test", terria);
+
+    worker.use(
+      http.get("test/GeoJSON/bike_racks.geojson", () =>
+        HttpResponse.json(bikeracksJson)
+      ),
+      http.get("test/WMS/single_metadata_url.xml", () =>
+        HttpResponse.xml(singleMetadataUrl)
+      )
+    );
   });
 
   it("loads map items after members are added", async function () {

@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, passthrough } from "msw";
 import { setupWorker } from "msw/browser";
 import { TERRAIN_TILE, LAYER_JSON } from "../fixtures/terrain/terrain";
 
@@ -6,6 +6,24 @@ import { TERRAIN_TILE, LAYER_JSON } from "../fixtures/terrain/terrain";
 // These serve minimal valid responses for Cesium Ion terrain loading
 // so tests never hit real external APIs.
 export const worker = setupWorker(
+  http.get("/build/Cesium/*", () => {
+    passthrough();
+  }),
+  http.get("/test/*", () => {
+    passthrough();
+  }),
+  http.get("/build/*.js", () => {
+    passthrough();
+  }),
+  http.get("/languages/*.json", () => {
+    passthrough();
+  }),
+  http.get("/images/*", () => {
+    passthrough();
+  }),
+  http.get("/data/*", () => {
+    passthrough();
+  }),
   // Ion asset endpoint → return a mock terrain server URL
   http.get("https://api.cesium.com/v1/assets/:assetId/endpoint", ({ params }) =>
     HttpResponse.json({
