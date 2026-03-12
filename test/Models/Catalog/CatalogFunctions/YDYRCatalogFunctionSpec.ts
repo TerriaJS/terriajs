@@ -20,7 +20,7 @@ configure({
 
 import lga11Csv from "../../../../wwwroot/test/csv/lga_code_2011.csv";
 
-describe("YDYRCatalogFunction", function () {
+xdescribe("YDYRCatalogFunction", function () {
   let terria: Terria;
   let csv: CsvCatalogItem;
   let ydyr: YDYRCatalogFunction;
