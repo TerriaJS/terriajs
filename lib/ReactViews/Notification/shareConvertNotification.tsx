@@ -55,7 +55,7 @@ export const shareConvertNotification = (
             text-align: left;
           `}
         >
-          <TextSpan textLight bold medium>
+          <TextSpan textLight bold medium isLink>
             {parseCustomMarkdownToReact(
               i18next.t("share.convertNotificationHelp")
             )}
@@ -69,7 +69,7 @@ export const shareConvertNotification = (
             text-align: left;
           `}
         >
-          <TextSpan textLight bold medium>
+          <TextSpan textLight bold medium isLink>
             {parseCustomMarkdownToReact(
               i18next.t("share.convertNotificationFeedback")
             )}

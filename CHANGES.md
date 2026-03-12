@@ -1,6 +1,34 @@
 # Change Log
 
-#### next release (8.11.2)
+#### next release (8.11.4)
+
+- Capture default timeline state in share links including current time,
+  playback etc.
+- Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
+- Underline text buttons
+- Replace node-fetch with node native fetch.
+- Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
+- TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
+- Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
+- Fix splitter failing for local file catalog items by storing file data as blob URLs in the `url` trait instead of private instance fields, ensuring `duplicateModel()` preserves the data. [#7762](https://github.com/TerriaJS/terriajs/pull/7762)
+- Replace react-uid with react useId hook for generating unique ids.
+- Remove ts-essentials dependency and replace with custom type utility.
+- Remove fs-extra dependency and replace with native fs.
+- Convert test `done` callbacks to async/await for modern test patterns.
+- Update Checkbox component icon and remove unused indeterminate prop.
+- Story Panel and Share Panel UX improvements:
+  - Update Share Panel layout
+  - Remove light theme variant of Clipboard
+  - Simplify Clipboard component and add success message.
+  - Add Story Builder instructions behind a config parameter.
+- Fix Scene capture popup z-index appearing underneath the workbench.
+- [The next improvement]
+
+#### 8.11.3 - 2026-02-02
+
+- Change to OIDC publishing to npm
+
+#### 8.11.2 - 2026-01-15
 
 - Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
   - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
@@ -10,6 +38,8 @@
 - Add UI to show toast messages.
 - Make `<StoryPanel>` draggable
 - [The next improvement]
+- Fix "Add data" button width for some languages #7726.
+- Make `<StoryPanel>` draggable
 
 #### 8.11.1 - 2025-12-04
 

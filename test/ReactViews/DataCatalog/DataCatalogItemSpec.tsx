@@ -1,16 +1,16 @@
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import i18next from "i18next";
 import { runInAction } from "mobx";
-import { findAllWithType } from "react-shallow-testutils";
+import runLater from "../../../lib/Core/runLater";
 import CatalogMemberMixin from "../../../lib/ModelMixins/CatalogMemberMixin";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import CatalogItemComponent, {
-  ButtonState
-} from "../../../lib/ReactViews/DataCatalog/CatalogItem";
 import DataCatalogItem from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
-import { getShallowRenderedOutput } from "../MoreShallowTools";
+import { withThemeContext } from "../withContext";
 
 describe("DataCatalogItem", () => {
   let terria: Terria;
@@ -19,7 +19,11 @@ describe("DataCatalogItem", () => {
   let wmsItem: WebMapServiceCatalogItem;
   let removable: boolean;
 
-  beforeEach(() => {
+  beforeAll(async () => {
+    await i18next.changeLanguage("en");
+  });
+
+  beforeEach(async () => {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -45,187 +49,357 @@ describe("DataCatalogItem", () => {
     spyOn(viewState, "switchMobileView");
   });
 
-  describe("text click", () => {
-    beforeEach(() => {
-      getRenderedProp("onTextClick")();
-    });
+  afterAll(async function () {
+    await i18next.changeLanguage("cimode");
+  });
 
-    assertPreviewed();
-    assertNotAdded();
+  it("text click", async () => {
+    render(
+      withThemeContext(
+        <DataCatalogItem
+          viewState={viewState}
+          item={item}
+          removable={removable}
+          terria={terria}
+        />
+      )
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: item.name }));
+
+    expect(viewState.viewCatalogMember).toHaveBeenCalledWith(item);
+    expect(viewState.switchMobileView).toHaveBeenCalledWith(
+      viewState.mobileViewOptions.preview
+    );
+    expect(terria.workbench.contains(item)).toBe(false);
   });
 
   describe("button click", () => {
-    describe("when not on mobile and with a non-invokeable layer and not user supplied", () => {
-      beforeEach(() => {
-        clickAddButton({});
-      });
-      assertAdded();
+    it("when not on mobile and with a non-invokeable layer and not user supplied", async () => {
+      render(
+        withThemeContext(
+          <DataCatalogItem
+            viewState={viewState}
+            item={item}
+            removable={removable}
+            terria={terria}
+          />
+        )
+      );
+
+      await userEvent.click(screen.getByRole("button", { name: "Add" }));
+
+      expect(terria.workbench.contains(item)).toBe(true);
     });
 
-    describe("when on mobile and not user supplied", () => {
-      beforeEach(() => {
-        runInAction(() => {
-          viewState.useSmallScreenInterface = true;
-        });
-        clickAddButton({});
+    it("when on mobile and not user supplied", async () => {
+      runInAction(() => {
+        viewState.useSmallScreenInterface = true;
       });
+      render(
+        withThemeContext(
+          <DataCatalogItem
+            viewState={viewState}
+            item={item}
+            removable={removable}
+            terria={terria}
+          />
+        )
+      );
 
-      assertPreviewed();
-      assertNotAdded();
+      await userEvent.click(screen.getByRole("button", { name: "Preview" }));
+
+      expect(viewState.viewCatalogMember).toHaveBeenCalledWith(item);
+      expect(viewState.switchMobileView).toHaveBeenCalledWith(
+        viewState.mobileViewOptions.preview
+      );
+      expect(terria.workbench.contains(item)).toBe(false);
     });
 
-    describe("when with an invokeable layer", () => {
-      beforeEach(() => {
-        item = new WebProcessingServiceCatalogFunction("test-wps", terria);
-        clickAddButton({});
-      });
+    it("when with an invokeable layer", async () => {
+      item = new WebProcessingServiceCatalogFunction("test-wps", terria);
+      render(
+        withThemeContext(
+          <DataCatalogItem
+            viewState={viewState}
+            item={item}
+            removable={removable}
+            terria={terria}
+          />
+        )
+      );
 
-      assertPreviewed();
-      assertNotAdded();
+      await userEvent.click(screen.getByRole("button", { name: "" }));
+
+      expect(viewState.viewCatalogMember).toHaveBeenCalledWith(item);
+      expect(viewState.switchMobileView).toHaveBeenCalledWith(
+        viewState.mobileViewOptions.preview
+      );
+      expect(terria.workbench.contains(item)).toBe(false);
     });
 
     describe("close modal after added data when not user supplied", () => {
-      beforeEach(() => {
-        clickAddButton({});
+      it("closes the explorer panel visible", async () => {
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        await userEvent.click(screen.getByRole("button", { name: "Add" }));
+
+        // runLater is needed to wait for the state to update after the click, which then causes the explorer panel to close
+        await runLater(() => {}, 100);
+        expect(viewState.explorerPanelIsVisible).toBe(false);
       });
-      afterEach(() => {
+
+      it("doesn't close the explorer panel if keepCatalogOpen is set", async () => {
+        runInAction(() => {
+          terria.configParameters.keepCatalogOpen = true;
+        });
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        await userEvent.click(screen.getByRole("button", { name: "Add" }));
+        await runLater(() => {}, 100);
         expect(viewState.explorerPanelIsVisible).toBe(true);
-        expect(viewState.mobileView).not.toBeNull();
       });
     });
 
     describe("does not close modal", () => {
-      it("when control key pressed", () => {
-        clickAddButton({ ctrlKey: true });
+      it("when control key pressed", async () => {
+        const user = userEvent.setup();
+
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+        await user.keyboard("{Control>}");
+        await user.click(screen.getByRole("button", { name: "Add" }));
+        await user.keyboard("{/Control}");
+
+        expect(viewState.explorerPanelIsVisible).toBe(true);
+        expect(viewState.mobileView).not.toBeNull();
       });
 
-      it("when shift key pressed", () => {
-        clickAddButton({ shiftKey: true });
-      });
+      it("when shift key pressed", async () => {
+        const user = userEvent.setup();
 
-      afterEach(() => {
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        await user.keyboard("{Shift>}");
+        await user.click(screen.getByRole("button", { name: "Add" }));
+        await user.keyboard("{/Shift}");
+
         expect(viewState.explorerPanelIsVisible).toBe(true);
         expect(viewState.mobileView).not.toBeNull();
       });
     });
-
-    function clickAddButton(event: any) {
-      getRenderedProp("onBtnClick")(event);
-    }
   });
 
   describe("renders", () => {
     it("a single <CatalogItem />", () => {
-      expect(
-        findAllWithType(renderShallow(), CatalogItemComponent).length
-      ).toBe(1);
+      render(
+        withThemeContext(
+          <DataCatalogItem
+            viewState={viewState}
+            item={item}
+            removable={removable}
+            terria={terria}
+          />
+        )
+      );
+
+      expect(screen.getAllByRole("button", { name: "Add" }).length).toBe(1);
     });
 
     describe("btnState prop as", () => {
       it('"loading" if item is loading', () => {
         runInAction(() => {
           (wmsItem as any)._metadataLoader._isLoading = true;
+          viewState.useSmallScreenInterface = true;
         });
-        viewState.useSmallScreenInterface = true;
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Loading);
+
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(2);
+        expect(
+          screen.getByRole("button", { name: "Loading..." })
+        ).toBeVisible();
       });
 
       it('"preview" if on mobile and not loading', () => {
-        viewState.useSmallScreenInterface = true;
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Preview);
+        runInAction(() => {
+          viewState.useSmallScreenInterface = true;
+        });
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(2);
+        expect(screen.getByRole("button", { name: "Preview" })).toBeVisible();
       });
 
       it('"remove" if item is enabled and not loading and not on mobile', async () => {
         // user supplied data does not have add/remove button, regardless
         // if they have trash button
         await terria.workbench.add(wmsItem);
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Remove);
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(2);
+        expect(
+          screen.getByRole("button", { name: "Remove from map" })
+        ).toBeVisible();
       });
 
       it('"add" if item removable but NOT enabled', () => {
         // If removable, btnstate should still be add or remove
         removable = true;
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Add);
-        expect(getRenderedProp("trashable")).toBe(true);
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(3);
+        expect(screen.getByRole("button", { name: "Add" })).toBeVisible();
+        expect(
+          screen.queryByRole("button", { name: "Remove from catalogue" })
+        ).toBeVisible();
       });
 
       it('"remove" if item removable but enabled', async () => {
         // If removable, btnstate should still be add or remove
         await terria.workbench.add(wmsItem);
         removable = true;
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Remove);
-        expect(getRenderedProp("trashable")).toBe(true);
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(3);
+        expect(
+          screen.getByRole("button", { name: "Remove from map" })
+        ).toBeVisible();
+        expect(
+          screen.queryByRole("button", { name: "Remove from catalogue" })
+        ).toBeVisible();
       });
 
       it('"add" if item is not invokeable, not enabled and not loading and not on mobile', () => {
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Add);
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
+
+        expect(screen.getAllByRole("button").length).toBe(2);
+        expect(screen.getByRole("button", { name: "Add" })).toBeVisible();
       });
 
       it('"stats" if item is invokeable, not user-supplied, not enabled and not loading and not on mobile', () => {
         item = new WebProcessingServiceCatalogFunction("test-wps", terria);
-        expect(getRenderedProp("btnState")).toBe(ButtonState.Stats);
-      });
-    });
 
-    describe("isSelected prop as", () => {
-      describe("true when", () => {
-        it("item is the currently previewed data item", async () => {
-          await viewState.viewCatalogMember(wmsItem);
-          expect(getRenderedProp("selected")).toBe(true);
-        });
-      });
+        render(
+          withThemeContext(
+            <DataCatalogItem
+              viewState={viewState}
+              item={item}
+              removable={removable}
+              terria={terria}
+            />
+          )
+        );
 
-      describe("false when", () => {
-        it("item is NOT the current previewed item", () => {
-          expect(getRenderedProp("selected")).toBe(false);
-        });
+        expect(screen.getAllByRole("button").length).toBe(2);
+        expect(screen.getByRole("button", { name: "" })).toBeVisible();
       });
     });
 
     it("sets the CatalogItem text as the item name", () => {
       wmsItem.setTrait(CommonStrata.definition, "name", "TEST!!!");
-      expect(getRenderedProp("text")).toBe("TEST!!!");
+
+      render(
+        withThemeContext(
+          <DataCatalogItem
+            viewState={viewState}
+            item={item}
+            removable={removable}
+            terria={terria}
+          />
+        )
+      );
+
+      expect(screen.getByText("TEST!!!")).toBeVisible();
     });
   });
-
-  function assertPreviewed() {
-    it("sets preview item", () => {
-      expect(viewState.viewCatalogMember).toHaveBeenCalledWith(item);
-    });
-
-    it("switches mobile view to preview", () => {
-      expect(viewState.switchMobileView).toHaveBeenCalledWith(
-        viewState.mobileViewOptions.preview
-      );
-    });
-  }
-
-  function assertAdded() {
-    it("adds item to workbench", () => {
-      expect(terria.workbench.contains(item)).toBe(true);
-    });
-  }
-
-  function assertNotAdded() {
-    it("doesn't add item to workbench", () => {
-      expect(terria.workbench.contains(item)).toBe(false);
-    });
-  }
-
-  function getRenderedProp(propName: string) {
-    return findAllWithType(renderShallow(), CatalogItemComponent)[0].props[
-      propName
-    ];
-  }
-
-  function renderShallow() {
-    return getShallowRenderedOutput(
-      <DataCatalogItem
-        viewState={viewState}
-        item={item}
-        removable={removable}
-        terria={terria}
-      />
-    );
-  }
 });

@@ -32,7 +32,7 @@ describe("MagdaReference", function () {
     }
   };
 
-  it("can dereference to a group", function (done) {
+  it("can dereference to a group", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -43,18 +43,13 @@ describe("MagdaReference", function () {
       recordGroupWithOneCsv
     );
 
-    model
-      .loadReference()
-      .then(() => {
-        expect(model.target instanceof CatalogGroup).toBe(true);
-        const group = model.target as CatalogGroup;
-        expect(group.isOpen).toBe(false);
-      })
-      .then(done)
-      .catch(done.fail);
+    await model.loadReference();
+    expect(model.target instanceof CatalogGroup).toBe(true);
+    const group = model.target as CatalogGroup;
+    expect(group.isOpen).toBe(false);
   });
 
-  it("dereferenced group contains expected item", function (done) {
+  it("dereferenced group contains expected item", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -65,22 +60,17 @@ describe("MagdaReference", function () {
       recordGroupWithOneCsv
     );
 
-    model
-      .loadReference()
-      .then(() => {
-        const group = model.target as CatalogGroup;
-        expect(group.members.length).toBe(1);
-        expect(group.members[0]).toBe(
-          recordGroupWithOneCsv.aspects.group.members[0].id
-        );
-        expect(group.memberModels.length).toBe(1);
-        expect(group.memberModels[0] instanceof CsvCatalogItem).toBe(true);
-      })
-      .then(done)
-      .catch(done.fail);
+    await model.loadReference();
+    const group = model.target as CatalogGroup;
+    expect(group.members.length).toBe(1);
+    expect(group.members[0]).toBe(
+      recordGroupWithOneCsv.aspects.group.members[0].id
+    );
+    expect(group.memberModels.length).toBe(1);
+    expect(group.memberModels[0] instanceof CsvCatalogItem).toBe(true);
   });
 
-  it("definition trait can override traits of dereferenced member", function (done) {
+  it("definition trait can override traits of dereferenced member", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -94,17 +84,12 @@ describe("MagdaReference", function () {
       isOpen: true
     });
 
-    model
-      .loadReference()
-      .then(() => {
-        const group = model.target as CatalogGroup;
-        expect(group.isOpen).toBe(true);
-      })
-      .then(done)
-      .catch(done.fail);
+    await model.loadReference();
+    const group = model.target as CatalogGroup;
+    expect(group.isOpen).toBe(true);
   });
 
-  it("override trait can override traits of the members of a dereferenced group", function (done) {
+  it("override trait can override traits of the members of a dereferenced group", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -124,18 +109,13 @@ describe("MagdaReference", function () {
       ]
     });
 
-    model
-      .loadReference()
-      .then(() => {
-        const group = model.target as CatalogGroup;
-        const csv = group.memberModels[0] as CsvCatalogItem;
-        expect(csv.url).toBe("somethingelse.csv");
-      })
-      .then(done)
-      .catch(done.fail);
+    await model.loadReference();
+    const group = model.target as CatalogGroup;
+    const csv = group.memberModels[0] as CsvCatalogItem;
+    expect(csv.url).toBe("somethingelse.csv");
   });
 
-  it("changes to override trait affect members of a dereferenced group", function (done) {
+  it("changes to override trait affect members of a dereferenced group", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -155,33 +135,26 @@ describe("MagdaReference", function () {
       ]
     });
 
-    Promise.resolve()
-      .then(async () => {
-        await model.loadReference();
+    await Promise.resolve();
+    await model.loadReference();
 
-        const group = model.target as CatalogGroup;
-        const csv = group.memberModels[0] as CsvCatalogItem;
-        expect(csv.url).toBe("first.csv");
+    const group = model.target as CatalogGroup;
+    const csv = group.memberModels[0] as CsvCatalogItem;
+    expect(csv.url).toBe("first.csv");
 
-        runInAction(() => {
-          const override: any = model.getTrait(
-            CommonStrata.definition,
-            "override"
-          );
-          override.members[0].url = "second.csv";
-        });
+    runInAction(() => {
+      const override: any = model.getTrait(CommonStrata.definition, "override");
+      override.members[0].url = "second.csv";
+    });
 
-        await model.loadReference();
+    await model.loadReference();
 
-        const group2 = model.target as CatalogGroup;
-        const csv2 = group2.memberModels[0] as CsvCatalogItem;
-        expect(csv2.url).toBe("second.csv");
-      })
-      .then(done)
-      .catch(done.fail);
+    const group2 = model.target as CatalogGroup;
+    const csv2 = group2.memberModels[0] as CsvCatalogItem;
+    expect(csv2.url).toBe("second.csv");
   });
 
-  it("changes to Magda record affect members of a dereferenced group", function (done) {
+  it("changes to Magda record affect members of a dereferenced group", async function () {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -201,30 +174,26 @@ describe("MagdaReference", function () {
       ]
     });
 
-    Promise.resolve()
-      .then(async () => {
-        await model.loadReference();
+    await Promise.resolve();
+    await model.loadReference();
 
-        const group = model.target as CatalogGroup;
-        const csv = group.memberModels[0] as CsvCatalogItem;
-        expect(csv.name).toContain("A thing");
+    const group = model.target as CatalogGroup;
+    const csv = group.memberModels[0] as CsvCatalogItem;
+    expect(csv.name).toContain("A thing");
 
-        runInAction(() => {
-          const magdaRecord: any = model.getTrait(
-            CommonStrata.definition,
-            "magdaRecord"
-          );
-          magdaRecord.aspects.group.members[0].name = "!!!";
-        });
+    runInAction(() => {
+      const magdaRecord: any = model.getTrait(
+        CommonStrata.definition,
+        "magdaRecord"
+      );
+      magdaRecord.aspects.group.members[0].name = "!!!";
+    });
 
-        await model.loadReference();
+    await model.loadReference();
 
-        const group2 = model.target as CatalogGroup;
-        const csv2 = group2.memberModels[0] as CsvCatalogItem;
-        expect(csv2.name).toBe("!!!");
-      })
-      .then(done)
-      .catch(done.fail);
+    const group2 = model.target as CatalogGroup;
+    const csv2 = group2.memberModels[0] as CsvCatalogItem;
+    expect(csv2.name).toBe("!!!");
   });
 
   it("loads valid items and ignores broken items", async function () {
@@ -315,7 +284,7 @@ describe("MagdaReference", function () {
     expect(unknown.target).toBeUndefined();
   });
 
-  it("can add record aspects by override", function (done) {
+  it("can add record aspects by override", async function () {
     const theMagdaItemId = "a magda item id";
     const theRecordName = "Test Record";
     const theRecordId = "test-record-id";
@@ -392,11 +361,10 @@ describe("MagdaReference", function () {
       theCatalogItemName
     );
     expect(catalogItem!.uniqueId).toBe(theRecordId);
-    done();
   });
 
   describe("UI access type", function () {
-    it("returns 'public' when magda v1 access control says the record is public", function (done) {
+    it("returns 'public' when magda v1 access control says the record is public", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -410,10 +378,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeTruthy();
-      done();
     });
 
-    it("does not return 'public' when magda v1 access control does not say the record is public", function (done) {
+    it("does not return 'public' when magda v1 access control does not say the record is public", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -427,10 +394,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeFalsy();
-      done();
     });
 
-    it("does not return 'public' when magda v2 access control says the record belongs to an org unit without constraint exemption being set.", function (done) {
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit without constraint exemption being set.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -444,10 +410,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeFalsy();
-      done();
     });
 
-    it("returns 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to true.", function (done) {
+    it("returns 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to true.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -462,10 +427,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeTruthy();
-      done();
     });
 
-    it("does not return 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to false.", function (done) {
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to false.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -480,10 +444,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeFalsy();
-      done();
     });
 
-    it("returns 'public' when magda v2 access control does not say the record belongs to an org unit.", function (done) {
+    it("returns 'public' when magda v2 access control does not say the record belongs to an org unit.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -497,10 +460,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeTruthy();
-      done();
     });
 
-    it("returns value depends on magda v2 access control if magda v1 access control also exists.", function (done) {
+    it("returns value depends on magda v2 access control if magda v1 access control also exists.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -545,11 +507,9 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeFalsy();
-
-      done();
     });
 
-    it("returns 'public' when there are no any access control aspects.", function (done) {
+    it("returns 'public' when there are no any access control aspects.", async function () {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -561,7 +521,6 @@ describe("MagdaReference", function () {
         }
       });
       expect(reference.accessType === "public").toBeTruthy();
-      done();
     });
 
     it("returns `super.accessType` when magdaRecord is unset", function () {

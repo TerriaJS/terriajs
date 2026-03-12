@@ -1,40 +1,31 @@
-import { act, create, ReactTestRenderer } from "react-test-renderer";
+import { render, within } from "@testing-library/react";
+import i18next from "i18next";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
 import Terria from "../../../../lib/Models/Terria";
-import SearchResults, {
-  ResultsCount,
-  SearchResultsProps
-} from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
+import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
 import MockSearchableItem from "./MockSearchableItem";
 
 describe("SearchResults", function () {
+  beforeAll(async () => {
+    await i18next.changeLanguage("en");
+  });
+  afterAll(async () => {
+    await i18next.changeLanguage("cimode");
+  });
   it("shows the results count", async function () {
-    const { root } = await render({
-      item: new MockSearchableItem(undefined, new Terria()),
-      results: sampleResults(20)
-    });
-    const resultsCount = root.findByType(ResultsCount);
-    expect(resultsCount.props).toEqual(
-      jasmine.objectContaining({
-        count: 20
-      })
+    const { container } = render(
+      <SearchResults
+        item={new MockSearchableItem(undefined, new Terria())}
+        results={sampleResults(20)}
+      />
     );
+
+    expect(within(container).getByText("20 matches found")).toBeVisible();
   });
 });
 
-function render(
-  props: Omit<SearchResultsProps, "i18n" | "t" | "tReady">
-): Promise<ReactTestRenderer> {
-  let rendered: ReactTestRenderer;
-  act(() => {
-    rendered = create(<SearchResults {...props} />);
-  });
-  // @ts-expect-error assigned in callback
-  return rendered;
-}
-
 function sampleResults(count: number): ItemSearchResult[] {
-  return [...Array(count)].map((i) => ({
+  return [...Array(count)].map((_, i) => ({
     id: `building-${i}`,
     idPropertyName: "building-id",
     featureCoordinate: {

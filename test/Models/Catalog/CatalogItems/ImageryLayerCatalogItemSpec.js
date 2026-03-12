@@ -188,38 +188,30 @@ describe("ImageryLayerCatalogItem", function () {
       });
     }
 
-    it("ignores errors in disabled layers", function (done) {
+    it("ignores errors in disabled layers", async function () {
       spyOn(globeOrMap, "isImageryLayerShown").and.returnValue(false);
       const fetchImage = failLoad(503, 10);
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(1);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(1);
     });
 
-    it("retries images that fail with a 503 error", function (done) {
+    it("retries images that fail with a 503 error", async function () {
       const fetchImage = failLoad(503, 2);
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         return imagery.state === ImageryState.RECEIVED;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(4);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(4);
     });
 
-    it("eventually gives up on a tile that only succeeds when loaded via blob", function (done) {
+    it("eventually gives up on a tile that only succeeds when loaded via blob", async function () {
       const fetchImage = spyOn(Resource.prototype, "fetchImage").and.callFake(
         function (options) {
           if (options.preferBlob) {
@@ -236,17 +228,13 @@ describe("ImageryLayerCatalogItem", function () {
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toBeGreaterThan(5);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toBeGreaterThan(5);
     });
 
-    it("ignores any number of 404 errors if treat404AsError is false", function (done) {
+    it("ignores any number of 404 errors if treat404AsError is false", async function () {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = false;
 
@@ -260,21 +248,17 @@ describe("ImageryLayerCatalogItem", function () {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
     });
 
-    it("ignores any number of 403 errors if treat403AsError is false", function (done) {
+    it("ignores any number of 403 errors if treat403AsError is false", async function () {
       const fetchImage = failLoad(403, 100);
       catalogItem.treat403AsError = false;
 
@@ -288,21 +272,17 @@ describe("ImageryLayerCatalogItem", function () {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
     });
 
-    it("doesn't disable the layer after only five 404s if treat404AsError is true", function (done) {
+    it("doesn't disable the layer after only five 404s if treat404AsError is true", async function () {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = true;
       catalogItem.isShown = true;
@@ -317,22 +297,18 @@ describe("ImageryLayerCatalogItem", function () {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
-          expect(catalogItem.isShown).toBe(true);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(catalogItem.isShown).toBe(true);
     });
 
-    it("disables the layer after six 404s if treat404AsError is true", function (done) {
+    it("disables the layer after six 404s if treat404AsError is true", async function () {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = true;
       catalogItem.isShown = true;
@@ -347,19 +323,15 @@ describe("ImageryLayerCatalogItem", function () {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function () {
+      await pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
-      })
-        .then(function () {
-          expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
-          expect(catalogItem.isShown).toBe(false);
-        })
-        .then(done)
-        .catch(done.fail);
+      });
+      expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+      expect(catalogItem.isShown).toBe(false);
     });
   });
 });

@@ -1,8 +1,6 @@
 /* eslint-disable prefer-rest-params */
-import fetch, { Headers, Request, Response } from "node-fetch";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
-
 /** Cached lightweight JSDOM window reused across calls to avoid leaking instances. */
 let _cachedJsdomWindow: { XMLHttpRequest: any; DOMParser: any } | undefined;
 
@@ -52,7 +50,7 @@ export default function patchNetworkRequests(
 
   // Add basic auth token for all XMLHttpRequest/fetch that use baseUrl hostname
 
-  const baseHostname = URI(baseUrl).hostname();
+  const baseHostname = new URL(baseUrl).hostname;
 
   if (opts.xhr) {
     console.log(`${tag}Applying XMLHttpRequest patch to ${baseUrl}`);

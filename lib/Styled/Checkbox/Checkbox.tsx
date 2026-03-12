@@ -8,9 +8,9 @@ import {
   ReactElement,
   Ref,
   useCallback,
-  useState
+  useState,
+  useId
 } from "react";
-import { useUID } from "react-uid";
 import { TextSpan } from "../Text";
 import { SpacingSpan } from "../Spacing";
 import CheckboxIcon from "./Elements/CheckboxIcon";
@@ -26,7 +26,6 @@ const Checkbox = forwardRef(function Checkbox(
     isDisabled = false,
     isSwitch = false,
     defaultChecked = false,
-    isIndeterminate = false,
     onChange: onChangeProps,
     title,
     name,
@@ -54,7 +53,7 @@ const Checkbox = forwardRef(function Checkbox(
   // Use isChecked from the state if it is controlled
   const isChecked =
     isCheckedProp === undefined ? isCheckedState : isCheckedProp;
-  const id = useUID();
+  const id = useId();
 
   // Add props to children
   const childrenWithProps = Children.map(children, (child) => {
@@ -117,7 +116,6 @@ const Checkbox = forwardRef(function Checkbox(
       />
       <CheckboxIcon
         isSwitch={isSwitch}
-        isIndeterminate={isIndeterminate}
         isChecked={isChecked}
         isDisabled={isDisabled}
       />

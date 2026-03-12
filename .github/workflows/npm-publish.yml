@@ -11,19 +11,18 @@ concurrency:
   group: npm-publish
   cancel-in-progress: false
 
-permissions: {}
-
 jobs:
   publish:
     permissions:
       contents: write # to create and push a tag
       actions: read
+      id-token: write
     name: Publish to NPM
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
@@ -42,8 +41,9 @@ jobs:
 
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
 
@@ -57,6 +57,18 @@ jobs:
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
 
+      - name: Update attributions.md
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: |
+          git config --global user.email "info@terria.io"
+          git config --global user.name "GitHub Actions"
+          yarn gulp code-attribution
+          git add doc/acknowledgements/attributions.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Update attributions.md for v${{ steps.detect.outputs.current-version }}"
+            git push
+          fi
+
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npx gulp lint release
@@ -68,7 +80,7 @@ jobs:
         run: npm publish --tag ${NPM_TAG}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ""
 
       # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
       #  action-detect-and-tag-new-version. It also allows for a bit better message customisation

@@ -1,9 +1,11 @@
+import { http, HttpResponse } from "msw";
 import i18next from "i18next";
 import GetCapabilitiesMixin from "../../../../lib/ModelMixins/GetCapabilitiesMixin";
 import WebFeatureServiceCatalogItem, {
   GetCapabilitiesStratum
 } from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("WebFeatureServiceCatalogItem", function () {
   let terria: Terria;
@@ -109,36 +111,33 @@ describe("WebFeatureServiceCatalogItem", function () {
       wfs.setTrait("definition", "url", "test/WFS/getCapabilities.xml");
       wfs.setTrait("definition", "typeNames", "name_of_feature_type");
 
-      jasmine.Ajax.install();
-
-      jasmine.Ajax.stubRequest(
-        `test/WFS/getCapabilities.xml?service=WFS&request=GetFeature&typeName=name_of_feature_type&version=1.1.0&outputFormat=JSON&srsName=urn%3Ax-ogc%3Adef%3Acrs%3AEPSG%3A4326&maxFeatures=1000`
-      ).andReturn({
-        responseJSON: {
-          type: "FeatureCollection",
-          name: "Test data",
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                someProp: "someValue"
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [143.876421625763385, -37.565365204704129, 0.0],
-                  [143.878406116725529, -37.565587782094575, 0.0],
-                  [143.878637784265578, -37.565655550547291, 0.0]
-                ]
+      worker.use(
+        http.get("*/test/WFS/getCapabilities.xml", ({ request }) => {
+          const url = new URL(request.url);
+          if (url.searchParams.get("request") !== "GetFeature")
+            throw new Error(`Unexpected query params: ${url.search}`);
+          return HttpResponse.json({
+            type: "FeatureCollection",
+            name: "Test data",
+            features: [
+              {
+                type: "Feature",
+                properties: {
+                  someProp: "someValue"
+                },
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [143.876421625763385, -37.565365204704129, 0.0],
+                    [143.878406116725529, -37.565587782094575, 0.0],
+                    [143.878637784265578, -37.565655550547291, 0.0]
+                  ]
+                }
               }
-            }
-          ]
-        }
-      });
-    });
-
-    afterEach(() => {
-      jasmine.Ajax.uninstall();
+            ]
+          });
+        })
+      );
     });
 
     it("fetches GeoJSON", async () => {

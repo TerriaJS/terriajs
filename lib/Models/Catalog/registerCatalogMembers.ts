@@ -1,3 +1,4 @@
+import DefaultTimelineModel from "../DefaultTimelineModel";
 import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
 import CatalogGroup from "./CatalogGroup";
@@ -70,6 +71,10 @@ import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
   CatalogMemberFactory.register(StubCatalogItem.type, StubCatalogItem);
+  CatalogMemberFactory.register(
+    DefaultTimelineModel.type,
+    DefaultTimelineModel
+  );
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,
     WebMapServiceCatalogItem

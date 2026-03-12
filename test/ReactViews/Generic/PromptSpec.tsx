@@ -1,15 +1,12 @@
-import { create } from "react-test-renderer";
-import { act } from "react-dom/test-utils";
+import { render, screen } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 import Prompt from "../../../lib/ReactViews/Generic/Prompt";
-import Caret from "../../../lib/ReactViews/Generic/Caret";
 
 describe("HelpPrompt", function () {
   let terria: Terria;
   let viewState: ViewState;
-  let testRenderer: any;
 
   beforeEach(function () {
     terria = new Terria({
@@ -27,22 +24,19 @@ describe("HelpPrompt", function () {
         terria.configParameters.showWelcomeMessage = true;
         viewState.showWelcomeMessage = true;
       });
-      act(() => {
-        testRenderer = create(
-          <Prompt
-            isVisible={
-              terria.configParameters.showWelcomeMessage &&
-              !viewState.showWelcomeMessage
-            }
-            displayDelay={0}
-            dismissText={""}
-            dismissAction={() => {}}
-            content={<>foo</>}
-          />
-        );
-      });
-      const promptCaret = testRenderer.root.findAllByType(Caret);
-      expect(promptCaret.length).toBeFalsy();
+      render(
+        <Prompt
+          isVisible={
+            terria.configParameters.showWelcomeMessage &&
+            !viewState.showWelcomeMessage
+          }
+          displayDelay={0}
+          dismissText={""}
+          dismissAction={() => {}}
+          content={<>foo</>}
+        />
+      );
+      expect(screen.queryByText("foo")).not.toBeInTheDocument();
     });
 
     it("renders when welcome message is not visible", function () {
@@ -50,22 +44,20 @@ describe("HelpPrompt", function () {
         terria.configParameters.showWelcomeMessage = true;
         viewState.showWelcomeMessage = false;
       });
-      act(() => {
-        testRenderer = create(
-          <Prompt
-            isVisible={
-              (terria.configParameters.showWelcomeMessage ?? false) &&
-              !viewState.showWelcomeMessage
-            }
-            displayDelay={0}
-            dismissText={""}
-            dismissAction={() => {}}
-            content={<>foo</>}
-          />
-        );
-      });
-      const promptCaret = testRenderer.root.findAllByType(Caret);
-      expect(promptCaret.length).toBeTruthy();
+      render(
+        <Prompt
+          isVisible={
+            (terria.configParameters.showWelcomeMessage ?? false) &&
+            !viewState.showWelcomeMessage
+          }
+          displayDelay={0}
+          dismissText={""}
+          dismissAction={() => {}}
+          content={<>foo</>}
+        />
+      );
+
+      expect(screen.getByText("foo")).toBeVisible();
     });
   });
 
@@ -74,22 +66,19 @@ describe("HelpPrompt", function () {
       runInAction(() => {
         terria.configParameters.showWelcomeMessage = false;
       });
-      act(() => {
-        testRenderer = create(
-          <Prompt
-            isVisible={
-              (terria.configParameters.showWelcomeMessage ?? false) &&
-              !viewState.showWelcomeMessage
-            }
-            displayDelay={0}
-            dismissText={""}
-            dismissAction={() => {}}
-            content={<>foo</>}
-          />
-        );
-      });
-      const promptCaret = testRenderer.root.findAllByType(Caret);
-      expect(promptCaret.length).toBeFalsy();
+      render(
+        <Prompt
+          isVisible={
+            (terria.configParameters.showWelcomeMessage ?? false) &&
+            !viewState.showWelcomeMessage
+          }
+          displayDelay={0}
+          dismissText={""}
+          dismissAction={() => {}}
+          content={<>foo</>}
+        />
+      );
+      expect(screen.queryByText("foo")).not.toBeInTheDocument();
     });
   });
 });

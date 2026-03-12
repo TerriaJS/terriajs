@@ -35,7 +35,9 @@ describe("All Catalog models", () => {
       .filter(
         ([modelName, model]) =>
           !ReferenceMixin.isMixedInto(model) &&
-          !["stub", "group", "cesium-terrain"].includes(modelName)
+          !["stub", "group", "cesium-terrain", "default-timeline"].includes(
+            modelName
+          )
       )
       .forEach(([modelName, model]) => {
         return expect(

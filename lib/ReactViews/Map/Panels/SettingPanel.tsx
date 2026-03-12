@@ -263,7 +263,7 @@ const SettingPanel: FC = observer(() => {
         viewState.settingsPanelIsVisible = isOpen;
       })}
     >
-      <Box padded column>
+      <Box paddedRatio={3} column>
         <Box paddedVertically={1}>
           <Text as="label">{t("settingPanel.mapView")}</Text>
         </Box>

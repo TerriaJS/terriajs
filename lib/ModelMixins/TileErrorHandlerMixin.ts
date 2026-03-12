@@ -19,6 +19,9 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
+const LEAFLET_EMPTY_IMAGE_URL =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
 type ModelType = Model<
   MappableTraits & ImageryProviderTraits & CatalogMemberTraits
 > &
@@ -113,7 +116,6 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
         tileProviderError.retry = false;
         return;
       }
-
       /** Helper methods **/
 
       // Give up loading this (definitively, unexpectedly bad) tile and
@@ -271,13 +273,24 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
           } catch (error: any) {
             // This attempt failed. We'll either retry (for 500s) or give up
             // depending on the status code.
-            const e: Error & { statusCode?: number } = error || {};
+            const e: Error & {
+              statusCode?: number;
+              target?: HTMLImageElement;
+            } = error || {};
+
             if (e.statusCode === undefined) {
               if (runInAction(() => ignoreUnknownTileErrors)) {
                 tellMapToSilentlyGiveUp();
-              } else if ((e as any).target !== undefined) {
+              } else if (e.target !== undefined) {
                 // This is a failed image element, which means we got a 200 response but
                 // could not load it as an image.
+
+                // If image element is Leaflet's empty pixel ignore this error (See: https://github.com/Leaflet/Leaflet/issues/9311)
+                if (e.target.src === LEAFLET_EMPTY_IMAGE_URL) {
+                  tellMapToSilentlyGiveUp();
+                  return;
+                }
+
                 failTile({
                   name: i18next.t("models.imageryLayer.tileErrorTitle"),
                   message: i18next.t("models.imageryLayer.tileErrorMessageII", {
