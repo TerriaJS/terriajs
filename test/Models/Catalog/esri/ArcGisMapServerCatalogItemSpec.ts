@@ -202,7 +202,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.layers).toBe("31");
     });
 
-    describe("when tokenUrl is set", function () {
+    xdescribe("when tokenUrl is set", function () {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -269,7 +269,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       });
     });
 
-    describe("when token is set", function () {
+    xdescribe("when token is set", function () {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());

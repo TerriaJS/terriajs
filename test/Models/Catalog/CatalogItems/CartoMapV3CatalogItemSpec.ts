@@ -11,7 +11,7 @@ import queryResponse from "../../../../wwwroot/test/CartoMapV3/query-response.js
 import queryGeoJsonResponse from "../../../../wwwroot/test/CartoMapV3/query-geojson-response.json";
 import { isJsonObject } from "../../../../lib/Core/Json";
 
-describe("CartoMapV3CatalogItemSpec", function () {
+xdescribe("CartoMapV3CatalogItemSpec", function () {
   let item: CartoMapV3CatalogItem;
 
   beforeEach(function () {

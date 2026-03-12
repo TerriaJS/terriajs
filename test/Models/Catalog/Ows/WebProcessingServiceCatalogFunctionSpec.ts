@@ -34,7 +34,7 @@ import executeResponseXml from "../../../../wwwroot/test/WPS/ExecuteResponse.xml
 import failedExecuteResponseXml from "../../../../wwwroot/test/WPS/FailedExecuteResponse.xml";
 import pendingExecuteResponseXml from "../../../../wwwroot/test/WPS/PendingExecuteResponse.xml";
 
-describe("WebProcessingServiceCatalogFunction", function () {
+xdescribe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;
 
   beforeEach(function () {

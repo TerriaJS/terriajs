@@ -37,9 +37,7 @@
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add UI to show toast messages.
 - Make `<StoryPanel>` draggable
-- [The next improvement]
 - Fix "Add data" button width for some languages #7726.
-- Make `<StoryPanel>` draggable
 
 #### 8.11.1 - 2025-12-04
 
