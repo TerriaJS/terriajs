@@ -91,8 +91,7 @@ export type OptionRenderer = (option: {
 }) => ReactNode;
 
 export interface SelectableDimensionEnum
-  extends SelectableDimensionBase<string>,
-    EnumDimension {
+  extends SelectableDimensionBase<string>, EnumDimension {
   type?: undefined | "select";
   /** Render ReactNodes for each option - instead of plain label */
   optionRenderer?: OptionRenderer;
@@ -100,21 +99,22 @@ export interface SelectableDimensionEnum
 
 /** Similar to SelectableDimensionEnum, but supports multiple selected values */
 export interface SelectableDimensionMultiEnum
-  extends SelectableDimensionBase<string[]>,
-    MultiEnumDimension {
+  extends SelectableDimensionBase<string[]>, MultiEnumDimension {
   type?: undefined | "select-multi";
   /** Render ReactNodes for each option - instead of plain label */
   optionRenderer?: OptionRenderer;
 }
 
 export interface SelectableDimensionCheckbox
-  extends SelectableDimensionBase<"true" | "false">,
+  extends
+    SelectableDimensionBase<"true" | "false">,
     EnumDimension<"true" | "false"> {
   type: "checkbox";
 }
 
 export interface SelectableDimensionCheckboxGroup
-  extends SelectableDimensionBase<"true" | "false">,
+  extends
+    SelectableDimensionBase<"true" | "false">,
     Omit<SelectableDimensionGroup, "type">,
     EnumDimension<"true" | "false"> {
   type: "checkbox-group";
@@ -132,32 +132,27 @@ export interface SelectableDimensionCheckboxGroup
 }
 
 export interface SelectableDimensionButton
-  extends SelectableDimensionBase<true>,
-    ButtonDimension {
+  extends SelectableDimensionBase<true>, ButtonDimension {
   type: "button";
 }
 
 export interface SelectableDimensionNumeric
-  extends SelectableDimensionBase<number>,
-    NumericalDimension {
+  extends SelectableDimensionBase<number>, NumericalDimension {
   type: "numeric";
 }
 
 export interface SelectableDimensionText
-  extends SelectableDimensionBase<string>,
-    TextDimension {
+  extends SelectableDimensionBase<string>, TextDimension {
   type: "text";
 }
 
 export interface SelectableDimensionColor
-  extends SelectableDimensionBase<string>,
-    ColorDimension {
+  extends SelectableDimensionBase<string>, ColorDimension {
   type: "color";
 }
 
 export interface SelectableDimensionGroup
-  extends Omit<SelectableDimensionBase, "setDimensionValue">,
-    Dimension {
+  extends Omit<SelectableDimensionBase, "setDimensionValue">, Dimension {
   type: "group";
 
   /** Group is **closed** by default */

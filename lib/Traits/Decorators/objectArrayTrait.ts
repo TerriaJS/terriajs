@@ -29,8 +29,9 @@ export enum MergeStrategy {
   None = "none"
 }
 
-export interface ObjectArrayTraitOptions<T extends ModelTraits>
-  extends TraitOptions {
+export interface ObjectArrayTraitOptions<
+  T extends ModelTraits
+> extends TraitOptions {
   type: TraitsConstructorWithRemoval<T>;
   idProperty: keyof T | "index";
   modelClass?: ModelConstructor<Model<T>>;

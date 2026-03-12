@@ -50,7 +50,7 @@ const NotificationWindow = createReactClass({
     const title =
       typeof this.props.title === "function"
         ? this.props.title(this.props.viewState)
-        : this.props.title ?? "";
+        : (this.props.title ?? "");
 
     let message =
       typeof this.props.message === "function"

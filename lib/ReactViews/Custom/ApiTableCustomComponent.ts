@@ -6,8 +6,7 @@ import ChartCustomComponent, {
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
 
-interface ApiTableCustomChartComponentAttributes
-  extends ChartCustomComponentAttributes {
+interface ApiTableCustomChartComponentAttributes extends ChartCustomComponentAttributes {
   /**
    * The catalog JSON for an ApiTableCatalogItem as a string
    */

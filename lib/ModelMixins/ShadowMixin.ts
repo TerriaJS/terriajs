@@ -64,8 +64,9 @@ function ShadowMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace ShadowMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ShadowMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof ShadowMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasShadows;
   }

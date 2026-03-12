@@ -14,8 +14,9 @@ import Trait, { TraitOptions } from "../Trait";
 import traitsClassToModelClass from "../traitsClassToModelClass";
 import TraitsConstructor from "../TraitsConstructor";
 
-export interface ObjectTraitOptions<T extends ModelTraits>
-  extends TraitOptions {
+export interface ObjectTraitOptions<
+  T extends ModelTraits
+> extends TraitOptions {
   type: TraitsConstructor<T>;
   modelClass?: ModelConstructor<Model<T>>;
   isNullable?: boolean;

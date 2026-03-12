@@ -198,10 +198,9 @@ function WebFeatureServiceSearchProviderMixin<
 }
 
 namespace WebFeatureServiceSearchProviderMixin {
-  export interface Instance
-    extends InstanceType<
-      ReturnType<typeof WebFeatureServiceSearchProviderMixin>
-    > {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof WebFeatureServiceSearchProviderMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.isWebFeatureServiceSearchProviderMixin;

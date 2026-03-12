@@ -65,8 +65,9 @@ function SearchProviderMixin<
 }
 
 namespace SearchProviderMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof SearchProviderMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof SearchProviderMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasSearchProviderMixin;
