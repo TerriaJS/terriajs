@@ -1241,7 +1241,7 @@ describe("FeatureInfoSection", function () {
     it("uses and completes a string-form featureInfoTemplate", async function () {
       const json =
         await import("../../wwwroot/test/init/czml-with-template-0.json");
-      console.log({ json });
+
       const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,

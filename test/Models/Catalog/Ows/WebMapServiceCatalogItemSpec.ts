@@ -354,7 +354,7 @@ describe("WebMapServiceCatalogItem", function () {
     });
     try {
       await wms.loadMetadata();
-      console.log(wms);
+
       expect(mapItems.length).toBe(1);
       expect(mapItems[0].alpha).toBeCloseTo(0.8);
       expect(
@@ -431,7 +431,7 @@ describe("WebMapServiceCatalogItem", function () {
     });
     try {
       await wms.loadMetadata();
-      console.log(wms);
+
       expect(mapItems.length).toBe(1);
       expect(mapItems[0].alpha).toBeCloseTo(0.8);
       expect(
