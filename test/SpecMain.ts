@@ -1,6 +1,5 @@
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
-import "jasmine-ajax";
 import { configure, spy } from "mobx";
 import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
