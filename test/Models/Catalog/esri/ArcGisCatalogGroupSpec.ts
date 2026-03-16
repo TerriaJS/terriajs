@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import { http, HttpResponse } from "msw";
 import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
@@ -11,18 +11,29 @@ import ArcGisMapServerCatalogGroup, {
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
+
+import servicesJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/services.json";
+import agpJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/AGP.json";
+import elevationJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/Elevation.json";
+import hotspotMSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/911CallsHotspotMS.json";
+import censusMSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/CensusMS.json";
+import commercialDamageAssessmentFSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/CommercialDamageAssessmentFS.json";
+import commercialDamageAssessmentMSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/CommercialDamageAssessmentMS.json";
+import communityAddressingFSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/CommunityAddressingFS.json";
+import communityAddressingMSJson from "../../../../wwwroot/test/ArcGisServer/sampleserver6/CommunityAddressingMS.json";
+
+import redlandsMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Redlands_Emergency_Vehicles/mapServer.json";
+import redlandsFeatureServerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Redlands_Emergency_Vehicles/featureServer.json";
+
+import singleFusedMapCacheMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/mapserver.json";
+import singleFusedMapCacheLegendJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/legend.json";
+import singleFusedMapCacheLayersJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/layers.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisCatalogGroup", function () {
   const arcgisServerUrl = "http://example.com/arcgis/rest/services/";
@@ -39,64 +50,77 @@ describe("ArcGisCatalogGroup", function () {
     });
     group = new ArcGisCatalogGroup("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
+    worker.use(
+      // Sub-folder services: AGP, Elevation (with and without trailing slash)
+      http.get("http://example.com/arcgis/rest/services/AGP", () =>
+        HttpResponse.json(agpJson)
+      ),
+      http.get("http://example.com/arcgis/rest/services/AGP/", () =>
+        HttpResponse.json(agpJson)
+      ),
+      http.get("http://example.com/arcgis/rest/services/Elevation", () =>
+        HttpResponse.json(elevationJson)
+      ),
+      http.get("http://example.com/arcgis/rest/services/Elevation/", () =>
+        HttpResponse.json(elevationJson)
+      ),
 
-      // Remove token from url if it exists so we can test that it is added
-      if (url.includes("&token=test-token")) {
-        url = url.replace("&token=test-token", "");
-      }
+      // Individual MapServer/FeatureServer services (from the services listing)
+      http.get(
+        "http://example.com/arcgis/rest/services/911CallsHotspotMS/MapServer",
+        () => HttpResponse.json(hotspotMSJson)
+      ),
+      http.get(
+        "http://example.com/arcgis/rest/services/CensusMS/MapServer",
+        () => HttpResponse.json(censusMSJson)
+      ),
+      http.get(
+        "http://example.com/arcgis/rest/services/CommercialDamageAssessmentFS/FeatureServer",
+        () => HttpResponse.json(commercialDamageAssessmentFSJson)
+      ),
+      http.get(
+        "http://example.com/arcgis/rest/services/CommercialDamageAssessmentMS/MapServer",
+        () => HttpResponse.json(commercialDamageAssessmentMSJson)
+      ),
+      http.get(
+        "http://example.com/arcgis/rest/services/CommunityAddressingFS/FeatureServer",
+        () => HttpResponse.json(communityAddressingFSJson)
+      ),
+      http.get(
+        "http://example.com/arcgis/rest/services/CommunityAddressingMS/MapServer",
+        () => HttpResponse.json(communityAddressingMSJson)
+      ),
 
-      if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
-        args[0] = "test/ArcGisMapServer/Redlands_Emergency_Vehicles/" + url;
-      } else if (url.match("Redlands_Emergency_Vehicles/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(/FeatureServer\/?\?f=json$/i, "featureServer.json");
-        args[0] = "test/ArcGisFeatureServer/Redlands_Emergency_Vehicles/" + url;
-      } else if (url.match("arcgis/rest/services/")) {
-        url = url.replace(/^.*\/services/, "services");
-        url = url.replace(/services\/?\?f=json$/i, "services.json");
-        url = url.replace(/services\/AGP\/?\?.*/i, "AGP.json");
-        url = url.replace(/services\/Elevation\/?\?.*/i, "Elevation.json");
-        url = url.replace(
-          /services\/911CallsHotspotMS\/MapServer\/?\?.*/i,
-          "911CallsHotspotMS.json"
-        );
-        url = url.replace(
-          /services\/CensusMS\/MapServer\/?\?.*/i,
-          "CensusMS.json"
-        );
-        url = url.replace(
-          /services\/CommercialDamageAssessmentFS\/FeatureServer\/?\?.*/i,
-          "CommercialDamageAssessmentFS.json"
-        );
-        url = url.replace(
-          /services\/CommercialDamageAssessmentMS\/MapServer\/?\?.*/i,
-          "CommercialDamageAssessmentMS.json"
-        );
-        url = url.replace(
-          /services\/CommunityAddressingFS\/FeatureServer\/?\?.*/i,
-          "CommunityAddressingFS.json"
-        );
-        url = url.replace(
-          /services\/CommunityAddressingMS\/MapServer\/?\?.*/i,
-          "CommunityAddressingMS.json"
-        );
-        args[0] = "test/ArcGisServer/sampleserver6/" + url;
-      } else if (url.match("SingleFusedMapCache/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
-      }
+      // ArcGIS Server services root
+      http.get("http://example.com/arcgis/rest/services/", () =>
+        HttpResponse.json(servicesJson)
+      ),
 
-      return realLoadWithXhr(...args);
-    });
+      // Redlands MapServer
+      http.get(
+        "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer",
+        () => HttpResponse.json(redlandsMapServerJson)
+      ),
+
+      // Redlands FeatureServer
+      http.get(
+        "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/FeatureServer",
+        () => HttpResponse.json(redlandsFeatureServerJson)
+      ),
+
+      // SingleFusedMapCache MapServer (different host)
+      http.get(
+        "http://www.example.com/SingleFusedMapCache/MapServer/Layers",
+        () => HttpResponse.json(singleFusedMapCacheLayersJson)
+      ),
+      http.get(
+        "http://www.example.com/SingleFusedMapCache/MapServer/Legend",
+        () => HttpResponse.json(singleFusedMapCacheLegendJson)
+      ),
+      http.get("http://www.example.com/SingleFusedMapCache/MapServer", () =>
+        HttpResponse.json(singleFusedMapCacheMapServerJson)
+      )
+    );
   });
 
   it("has a type and typeName", function () {
@@ -270,10 +294,15 @@ describe("ArcGisCatalogGroup", function () {
     });
 
     it("Uses token in url", async function () {
-      await group.loadMembers();
-      expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
-        arcgisServerUrl + "?f=json&token=test-token"
+      worker.use(
+        http.get("http://example.com/arcgis/rest/services/", ({ request }) => {
+          if (new URL(request.url).searchParams.get("token") !== "test-token")
+            return HttpResponse.error();
+          return HttpResponse.json(servicesJson);
+        })
       );
+      await group.loadMembers();
+      expect(group.members.length).toBe(8);
     });
 
     it("Correctly passes token to members", async function () {

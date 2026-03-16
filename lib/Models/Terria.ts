@@ -190,6 +190,10 @@ export interface ConfigParameters {
    */
   storyEnabled: boolean;
   /**
+   * Whether to show the saving instructions message in the story builder panel. Defaults to false.
+   */
+  showStorySaveInstructions?: boolean;
+  /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
   interceptBrowserPrint?: boolean;
@@ -612,6 +616,7 @@ export default class Terria {
     feedbackRequestHeaders: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
+    showStorySaveInstructions: false,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -2256,10 +2261,7 @@ export default class Terria {
 
   getLocalProperty(key: string): string | boolean | null {
     try {
-      if (
-        typeof window === "undefined" ||
-        !defined(window.localStorage)
-      ) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return null;
       }
     } catch (_e) {
@@ -2277,10 +2279,7 @@ export default class Terria {
 
   setLocalProperty(key: string, value: string | boolean): boolean {
     try {
-      if (
-        typeof window === "undefined" ||
-        !defined(window.localStorage)
-      ) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return false;
       }
     } catch (_e) {

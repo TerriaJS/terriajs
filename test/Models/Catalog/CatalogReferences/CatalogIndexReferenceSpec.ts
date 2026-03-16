@@ -1,8 +1,10 @@
+import { http, HttpResponse } from "msw";
 import CatalogIndexReference from "../../../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 import MagdaReference from "../../../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("CatalogIndexReference", function () {
   let terria: Terria;
@@ -13,14 +15,6 @@ describe("CatalogIndexReference", function () {
 
   describe("loadReference", function () {
     describe("when a parent container is a deeply nested reference", function () {
-      beforeEach(function () {
-        jasmine.Ajax.install();
-      });
-
-      afterEach(function () {
-        jasmine.Ajax.uninstall();
-      });
-
       it("recursively loads all the references to fully expand the references", async function () {
         // We are setting up the following hierarchy: MagdaReference -> TerriaReference -> Group -> Leaf
         // and asserting that we load the reference containers all the way down to the Leaf node
@@ -34,7 +28,7 @@ describe("CatalogIndexReference", function () {
               definition: {
                 name: "Group",
                 description: "Group",
-                url: "example.org/catalog.json"
+                url: "https://example.org/catalog.json"
               },
               id: "some-group",
               type: "terria-reference"
@@ -45,17 +39,19 @@ describe("CatalogIndexReference", function () {
         });
 
         // The terria-reference points to a group containg a 'leaf' node.
-        jasmine.Ajax.stubRequest("example.org/catalog.json").andReturn({
-          responseJSON: {
-            catalog: [
-              {
-                type: "group",
-                name: "Group",
-                members: [{ id: "leaf", type: "csv", name: "leaf" }]
-              }
-            ]
-          }
-        });
+        worker.use(
+          http.get("https://example.org/catalog.json", () =>
+            HttpResponse.json({
+              catalog: [
+                {
+                  type: "group",
+                  name: "Group",
+                  members: [{ id: "leaf", type: "csv", name: "leaf" }]
+                }
+              ]
+            })
+          )
+        );
 
         const leafIndex = new CatalogIndexReference("leaf", terria);
         terria.addModel(parent);

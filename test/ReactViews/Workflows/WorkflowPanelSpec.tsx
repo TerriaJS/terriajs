@@ -1,4 +1,4 @@
-import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
+import { render } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
@@ -6,7 +6,6 @@ import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
 describe("WorkflowPanel", function () {
   let terria: Terria;
   let viewState: ViewState;
-  let testRenderer: ReactTestRenderer;
 
   beforeEach(function () {
     terria = new Terria({
@@ -22,42 +21,37 @@ describe("WorkflowPanel", function () {
 
   it("sets isWorkflowPanelActive when opened", function () {
     expect(viewState.terria.isWorkflowPanelActive).toBe(false);
-    act(() => {
-      TestRenderer.create(
-        <WorkflowPanel
-          viewState={viewState}
-          title="test"
-          icon={{ id: "test-icon" }}
-          closeButtonText="close"
-          onClose={() => {}}
-        >
-          children
-        </WorkflowPanel>
-      );
-    });
+    render(
+      <WorkflowPanel
+        viewState={viewState}
+        title="test"
+        icon={{ id: "test-icon" }}
+        closeButtonText="close"
+        onClose={() => {}}
+      >
+        children
+      </WorkflowPanel>
+    );
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
   });
 
-  it("unsets isWorkflowPanelActive sidepanel when closed", function (done) {
-    act(() => {
-      testRenderer = TestRenderer.create(
-        <WorkflowPanel
-          viewState={viewState}
-          title="test"
-          icon={{ id: "test-icon" }}
-          closeButtonText="close"
-          onClose={() => {}}
-        >
-          test
-        </WorkflowPanel>
-      );
-    });
+  it("unsets isWorkflowPanelActive sidepanel when closed", async function () {
+    const { unmount } = render(
+      <WorkflowPanel
+        viewState={viewState}
+        title="test"
+        icon={{ id: "test-icon" }}
+        closeButtonText="close"
+        onClose={() => {}}
+      >
+        test
+      </WorkflowPanel>
+    );
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
-    testRenderer.unmount();
+    unmount();
     // Wait for the unmount to complete, this will be properly fixed as part of testing environment improvement
     setTimeout(() => {
       expect(viewState.terria.isWorkflowPanelActive).toBe(false);
     }, 0);
-    done();
   });
 });

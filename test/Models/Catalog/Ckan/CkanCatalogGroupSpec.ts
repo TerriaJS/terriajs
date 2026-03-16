@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import URI from "urijs";
+import { http, HttpResponse } from "msw";
 import { JsonObject } from "../../../../lib/Core/Json";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
@@ -15,18 +15,13 @@ import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapS
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
+import searchResult from "../../../../wwwroot/test/CKAN/search-result.json";
+import { worker } from "../../../mocks/browser";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("CkanCatalogGroup", function () {
   let terria: Terria;
@@ -39,13 +34,15 @@ describe("CkanCatalogGroup", function () {
     });
     ckanCatalogGroup = new CkanCatalogGroup("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      args[0] = "test/CKAN/search-result.json";
-
-      return realLoadWithXhr(...args);
-    });
+    // Intercept all CKAN API requests and return the fixture data
+    worker.use(
+      http.get("*/api/3/action/package_search", () =>
+        HttpResponse.json(searchResult)
+      ),
+      http.get("*/api/3/action/package_show", () =>
+        HttpResponse.json(searchResult)
+      )
+    );
   });
 
   it("has a type and typeName", function () {

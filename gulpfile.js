@@ -11,31 +11,31 @@
 var gulp = require("gulp");
 var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
 
-gulp.task("build-specs", function (done) {
+function buildSpecs(done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
   var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   runWebpack(webpack, webpackConfig, done);
-});
+}
 
-gulp.task("release-specs", function (done) {
+function releaseSpecs(done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
   var webpackConfig = require("./buildprocess/webpack.config.make.js")(false);
 
   runWebpack(webpack, webpackConfig, done);
-});
+}
 
-gulp.task("watch-specs", function (done) {
+function watchSpecs(done) {
   var watchWebpack = require("./buildprocess/watchWebpack");
   var webpack = require("webpack");
   var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
 
   watchWebpack(webpack, webpackConfig, done);
-});
+}
 
-gulp.task("lint", function (done) {
+function lint(done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
   var path = require("path");
 
@@ -52,9 +52,10 @@ gulp.task("lint", function (done) {
   ]);
 
   done();
-});
+}
+lint.description = "Run ESLint.";
 
-gulp.task("reference-guide", function (done) {
+function jsdoc(done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
 
   runExternalModule("jsdoc/jsdoc.js", [
@@ -64,9 +65,11 @@ gulp.task("reference-guide", function (done) {
   ]);
 
   done();
-});
+}
+jsdoc.description = "Build developer reference documentation.";
+jsdoc.displayName = "reference-guide";
 
-gulp.task("copy-cesium-workers", function () {
+function copyCesiumWorkers() {
   var path = require("path");
 
   var cesiumPackage = require.resolve("terriajs-cesium/package.json");
@@ -79,9 +82,9 @@ gulp.task("copy-cesium-workers", function () {
       encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
-});
+}
 
-gulp.task("copy-cesium-thirdparty", function () {
+function copyCesiumThirdparty() {
   var path = require("path");
 
   var cesiumPackage = require.resolve("terriajs-cesium/package.json");
@@ -94,9 +97,9 @@ gulp.task("copy-cesium-thirdparty", function () {
       encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
-});
+}
 
-gulp.task("copy-cesium-source-assets", function () {
+function copyCesiumSourceAssets() {
   var path = require("path");
 
   var cesiumPackage = require.resolve("terriajs-cesium/package.json");
@@ -109,15 +112,18 @@ gulp.task("copy-cesium-source-assets", function () {
       encoding: false
     })
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
-});
+}
 
-gulp.task("test-firefox", function (done) {
+function testFirefox(done) {
   runKarma("./buildprocess/karma-firefox.conf.js", done);
-});
+}
+testFirefox.description = "Run tests with Firefox.";
+testFirefox.displayName = "test-firefox";
 
-gulp.task("test", function (done) {
+function test(done) {
   runKarma("./buildprocess/karma-local.conf.js", done);
-});
+}
+test.description = "Run tests.";
 
 function runKarma(configFile, done) {
   const { Server } = require("karma");
@@ -141,7 +147,7 @@ search:
 # Attributions
 `;
 
-gulp.task("code-attribution", function userAttribution(done) {
+function codeAttribution(done) {
   var spawnSync = require("child_process").spawnSync;
   const { writeFileSync } = require("node:fs");
 
@@ -163,101 +169,132 @@ gulp.task("code-attribution", function userAttribution(done) {
     );
   }
   done();
-});
+}
+codeAttribution.description = "Generate doc/acknowledgements/attributions.md.";
+codeAttribution.displayName = "code-attribution";
 
-gulp.task("build-for-doc-generation", function buildForDocGeneration(done) {
+function buildForDocGeneration(done) {
   var runWebpack = require("./buildprocess/runWebpack.js");
   var webpack = require("webpack");
   var webpackConfig = require("./buildprocess/webpack-tools.config.js")();
 
   runWebpack(webpack, webpackConfig, done);
-});
+}
 
-gulp.task(
-  "render-guide",
-  gulp.series(
-    function copyToBuild(done) {
-      const fs = require("node:fs");
-      fs.cpSync("doc", "build/doc", { recursive: true });
-      done();
-    },
-    function generateMemberPages(done) {
-      const fs = require("node:fs");
-      const PluginError = require("plugin-error");
-      const spawnSync = require("child_process").spawnSync;
+const renderGuide = gulp.series(
+  function copyToBuild(done) {
+    const fs = require("node:fs");
+    fs.cpSync("doc", "build/doc", { recursive: true });
+    done();
+  },
+  function generateMemberPages(done) {
+    const fs = require("node:fs");
+    const PluginError = require("plugin-error");
+    const spawnSync = require("child_process").spawnSync;
 
-      fs.mkdirSync("build/doc/connecting-to-data/catalog-type-details", {
-        recursive: true
-      });
+    fs.mkdirSync("build/doc/connecting-to-data/catalog-type-details", {
+      recursive: true
+    });
 
-      const result = spawnSync("node", ["generateDocs.js"], {
+    const result = spawnSync("node", ["generateDocs.js"], {
+      cwd: "build",
+      stdio: "inherit",
+      shell: false
+    });
+
+    if (result.status !== 0) {
+      throw new PluginError(
+        "user-doc",
+        "Generating catalog members pages exited with an error.",
+        { showStack: false }
+      );
+    }
+    done();
+  },
+  function mkdocs(done) {
+    const PluginError = require("plugin-error");
+    const spawnSync = require("child_process").spawnSync;
+
+    const result = spawnSync(
+      "mkdocs",
+      ["build", "--clean", "--config-file", "mkdocs.yml"],
+      {
         cwd: "build",
         stdio: "inherit",
         shell: false
-      });
-
-      if (result.status !== 0) {
-        throw new PluginError(
-          "user-doc",
-          "Generating catalog members pages exited with an error.",
-          { showStack: false }
-        );
       }
-      done();
-    },
-    function mkdocs(done) {
-      const PluginError = require("plugin-error");
-      const spawnSync = require("child_process").spawnSync;
-
-      const result = spawnSync(
-        "mkdocs",
-        ["build", "--clean", "--config-file", "mkdocs.yml"],
+    );
+    if (result.status !== 0) {
+      throw new PluginError(
+        "user-doc",
+        `Mkdocs exited with an error. Maybe you didn't install mkdocs and other python dependencies in requirements.txt - see https://docs.terria.io/guide/contributing/development-environment/#documentation?`,
         {
-          cwd: "build",
-          stdio: "inherit",
-          shell: false
+          showStack: false
         }
       );
-      if (result.status !== 0) {
-        throw new PluginError(
-          "user-doc",
-          `Mkdocs exited with an error. Maybe you didn't install mkdocs and other python dependencies in requirements.txt - see https://docs.terria.io/guide/contributing/development-environment/#documentation?`,
-          {
-            showStack: false
-          }
-        );
-      }
-      done();
     }
-  )
+    done();
+  }
+);
+renderGuide.description = "Build user guide documentation.";
+renderGuide.displayName = "render-guide";
+
+const docs = gulp.series(
+  gulp.parallel(codeAttribution, buildForDocGeneration),
+  renderGuide,
+  function copyIndex(done) {
+    var fs = require("node:fs");
+    fs.cpSync("doc/index-redirect.html", "wwwroot/doc/index.html");
+    done();
+  }
+);
+docs.description = "Generate developer- and user-documentation.";
+
+function terriajsServer(done) {
+  terriajsServerGulpTask(3002)(done);
+}
+terriajsServer.description = "Start TerriaJS server.";
+terriajsServer.displayName = "terriajs-server";
+terriajsServer.flags = {
+  "--terriajsServerArg": "Argument to pass to terriaJsServer"
+};
+
+const copyCesiumAssets = gulp.series(
+  copyCesiumSourceAssets,
+  copyCesiumWorkers,
+  copyCesiumThirdparty
 );
 
-gulp.task(
-  "docs",
-  gulp.series(
-    gulp.parallel("code-attribution", "build-for-doc-generation"),
-    "render-guide",
-    function docs(done) {
-      var fs = require("node:fs");
-      fs.cpSync("doc/index-redirect.html", "wwwroot/doc/index.html");
-      done();
-    }
-  )
-);
+const build = gulp.series(copyCesiumAssets, buildSpecs);
+build.description = "Build non-minified version of TerriaJS tests.";
 
-gulp.task("terriajs-server", terriajsServerGulpTask(3002));
+const release = gulp.series(copyCesiumAssets, releaseSpecs);
+release.description = "Build minified version of TerriaJS tests.";
 
-gulp.task(
-  "copy-cesium-assets",
-  gulp.series(
-    "copy-cesium-source-assets",
-    "copy-cesium-workers",
-    "copy-cesium-thirdparty"
-  )
-);
-gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
-gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
-gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));
-gulp.task("dev", gulp.parallel("terriajs-server", "watch"));
-gulp.task("post-npm-install", gulp.series("copy-cesium-assets"));
-gulp.task("default", gulp.series("lint", "build"));
+const watch = gulp.series(copyCesiumAssets, watchSpecs);
+watch.description = "Build TerriaJS tests when there are source changes.";
+
+const dev = gulp.parallel(terriajsServer, watch);
+dev.description = "Start TerriaJS server and watch for source changes.";
+
+const postNpmInstall = copyCesiumAssets;
+postNpmInstall.description = "Copy Cesium assets after installation.";
+postNpmInstall.displayName = "post-npm-install";
+
+const lintBuild = gulp.series(lint, build);
+lintBuild.description = "Run ESLint followed by build.";
+
+exports.lint = lint;
+exports.build = build;
+exports.watch = watch;
+exports.dev = dev;
+exports.terriajsServer = terriajsServer;
+exports.docs = docs;
+exports.jsdoc = jsdoc;
+exports.renderGuide = renderGuide;
+exports.codeAttribution = codeAttribution;
+exports.test = test;
+exports.testFirefox = testFirefox;
+exports.release = release;
+exports.postNpmInstall = postNpmInstall;
+exports.default = lintBuild;

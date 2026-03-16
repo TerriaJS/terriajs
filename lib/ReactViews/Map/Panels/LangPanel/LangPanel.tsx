@@ -3,6 +3,7 @@ import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
 import Icon from "../../../../Styled/Icon";
+import { TextSpan } from "../../../../Styled/Text";
 import Ul, { Li } from "../../../../Styled/List";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "../../MenuBar/menu-bar.scss";
@@ -37,7 +38,7 @@ const LangPanel = (props: Props) => {
       mobileIcon={Icon.GLYPHS.globe}
       smallScreen={props.smallScreen}
     >
-      <Box styledPadding={"20px 10px 10px 10px"}>
+      <Box paddedRatio={3}>
         <Ul
           spaced
           lined
@@ -52,7 +53,7 @@ const LangPanel = (props: Props) => {
           ).map(([key, value]) => (
             <Li key={key}>
               <RawButton onClick={() => i18n.changeLanguage(key)}>
-                {value}
+                <TextSpan isLink>{value}</TextSpan>
               </RawButton>
             </Li>
           ))}

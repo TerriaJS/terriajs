@@ -1,19 +1,19 @@
-import MobileHeader from "../../../lib/ReactViews/Mobile/MobileHeader";
-import { act } from "react-dom/test-utils";
-import { ReactTestRenderer } from "react-test-renderer";
+import { screen } from "@testing-library/react";
+import i18next from "i18next";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import { createWithContexts } from "../withContext";
+import MobileHeader from "../../../lib/ReactViews/Mobile/MobileHeader";
 import processCustomElements from "../../../lib/ReactViews/StandardUserInterface/processCustomElements";
-import SearchBox from "../../../lib/ReactViews/Search/SearchBox";
-import i18next, { i18n } from "i18next";
+import { renderWithContexts } from "../withContext";
 
 describe("MobileHeader", function () {
   let terria: Terria;
   let viewState: ViewState;
-  let i18n: i18n;
 
-  beforeEach(async function () {
+  beforeAll(async function () {
+    await i18next.changeLanguage("en");
+  });
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -21,11 +21,11 @@ describe("MobileHeader", function () {
       terria: terria,
       catalogSearchProvider: undefined
     });
-    i18n = i18next.createInstance();
-    await i18n.init();
   });
 
-  let testRenderer: ReactTestRenderer;
+  afterAll(async function () {
+    await i18next.changeLanguage("cimode");
+  });
 
   it("should render search for locations for small screen", function () {
     const isSmallScreen = true;
@@ -33,27 +33,20 @@ describe("MobileHeader", function () {
 
     viewState.searchState.showMobileLocationSearch = true;
 
-    act(() => {
-      testRenderer = createWithContexts(
-        viewState,
-        <MobileHeader
-          menuItems={customElements.menu}
-          menuLeftItems={customElements.menuLeft}
-          i18n={i18n}
-        />
-      );
-    });
+    renderWithContexts(
+      <MobileHeader
+        menuItems={customElements.menu}
+        menuLeftItems={customElements.menuLeft}
+      />,
+      viewState
+    );
 
-    const searchBox = testRenderer.root.findAllByType(SearchBox);
-    expect(searchBox.length).toBe(1);
-    expect(searchBox[0].props.alwaysShowClear).toBe(true);
-    expect(searchBox[0].props.autoFocus).toBe(true);
-    expect(searchBox[0].props.searchText).toBe("");
-    expect(searchBox[0].props.placeholder).toBe("search.placeholder");
-    // CI  GabrielBB/xvfb test does not check name properly.
-    expect(searchBox[0].props.onDoSearch.name).toBeDefined(); //.toBe("bound searchLocations");
-    expect(searchBox[0].props.onSearchTextChanged.name).toBeDefined(); //.toBe("bound changeLocationSearchText");
-    expect(searchBox[0].props.onClear.name).toBeDefined(); //.toBe("bound closeLocationSearch");
+    const searchInputs = screen.getAllByRole("textbox");
+    expect(searchInputs.length).toBe(1);
+    expect(searchInputs[0]).toHaveAttribute(
+      "placeholder",
+      "Search for locations"
+    );
   });
 
   it("should render search for catalogue for small screen", function () {
@@ -62,24 +55,19 @@ describe("MobileHeader", function () {
 
     viewState.searchState.showMobileCatalogSearch = true;
 
-    act(() => {
-      testRenderer = createWithContexts(
-        viewState,
-        <MobileHeader
-          menuItems={customElements.menu}
-          menuLeftItems={customElements.menuLeft}
-        />
-      );
-    });
+    renderWithContexts(
+      <MobileHeader
+        menuItems={customElements.menu}
+        menuLeftItems={customElements.menuLeft}
+      />,
+      viewState
+    );
 
-    const searchBox = testRenderer.root.findAllByType(SearchBox);
-    expect(searchBox.length).toBe(1);
-    expect(searchBox[0].props.autoFocus).toBe(true);
-    expect(searchBox[0].props.searchText).toBe("");
-    expect(searchBox[0].props.placeholder).toBe("search.searchCatalogue");
-    // CI  GabrielBB/xvfb test does not check name properly.
-    expect(searchBox[0].props.onDoSearch.name).toBeDefined(); //.toBe("bound searchCatalog");
-    expect(searchBox[0].props.onSearchTextChanged.name).toBeDefined(); //.toBe("bound changeCatalogSearchText");
-    expect(searchBox[0].props.onClear.name).toBeDefined(); //.toBe("bound closeCatalogSearch");
+    const searchInputs = screen.getAllByRole("textbox");
+    expect(searchInputs.length).toBe(1);
+    expect(searchInputs[0]).toHaveAttribute(
+      "placeholder",
+      "Search the catalogue"
+    );
   });
 });

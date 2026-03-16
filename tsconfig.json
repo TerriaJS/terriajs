@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noUncheckedSideEffectImports": true,
+    "isolatedModules": true,
     "outDir": "ts-out",
     "resolveJsonModule": true,
     "typeRoots": [

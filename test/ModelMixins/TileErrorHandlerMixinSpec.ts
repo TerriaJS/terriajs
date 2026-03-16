@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import L from "leaflet";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
@@ -214,6 +215,19 @@ describe("TileErrorHandlerMixin", function () {
       expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
         i18next.t("models.imageryLayer.tileErrorMessageII")
       );
+    });
+
+    it("ignores error if target src is Leaflet's empty image URL", async function () {
+      try {
+        const tileProviderError: TileProviderError = newError(undefined);
+        tileProviderError.error = {
+          ...tileProviderError.error,
+          target: { src: L.Util.emptyImageUrl }
+        } as Error;
+        await onTileLoadError(item, tileProviderError);
+      } catch {}
+      expect(item.tileFailures).toBe(0);
+      expect(raiseEvent.calls.count()).toBe(0);
     });
 
     it("otherwise, it fails with unknown error", async function () {

@@ -1,6 +1,7 @@
+import { runInAction, when } from "mobx";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import DefaultTimelineModel from "../../lib/Models/DefaultTimelineModel";
 import Terria from "../../lib/Models/Terria";
-import { when } from "mobx";
 
 describe("TimelineStack", function () {
   let terria: Terria;
@@ -58,5 +59,37 @@ describe("TimelineStack", function () {
     wms2.setTrait("user", "isPaused", true);
     await when(() => terria.timelineStack.top?.isPaused === true);
     expect(terria.timelineStack.clock.shouldAnimate).toBe(false);
+  });
+
+  describe("toggling 'always show timeline'", function () {
+    const DEFAULT_TIMELINE_MODEL_ID = "defaultTimeline";
+
+    it("adds the default timeline model to terria when enabled", function () {
+      expect(terria.timelineStack.alwaysShowingTimeline).toBe(false);
+      expect(
+        terria.getModelById(DefaultTimelineModel, DEFAULT_TIMELINE_MODEL_ID)
+      ).toBeUndefined();
+      runInAction(() => {
+        terria.timelineStack.setAlwaysShowTimeline(true);
+      });
+      expect(
+        terria.getModelById(DefaultTimelineModel, DEFAULT_TIMELINE_MODEL_ID)
+      ).toBe(terria.timelineStack.defaultTimeVarying as any);
+    });
+
+    it("removes the default timeline model from terria when disabled", function () {
+      runInAction(() => {
+        terria.timelineStack.setAlwaysShowTimeline(true);
+      });
+      expect(
+        terria.getModelById(DefaultTimelineModel, DEFAULT_TIMELINE_MODEL_ID)
+      ).toBe(terria.timelineStack.defaultTimeVarying as any);
+      runInAction(() => {
+        terria.timelineStack.setAlwaysShowTimeline(false);
+      });
+      expect(
+        terria.getModelById(DefaultTimelineModel, DEFAULT_TIMELINE_MODEL_ID)
+      ).toBe(undefined);
+    });
   });
 });

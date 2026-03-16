@@ -33,7 +33,8 @@ export default function mixTraits<
   T11 extends ModelTraits = ModelTraits,
   T12 extends ModelTraits = ModelTraits,
   T13 extends ModelTraits = ModelTraits,
-  T14 extends ModelTraits = ModelTraits
+  T14 extends ModelTraits = ModelTraits,
+  T15 extends ModelTraits = ModelTraits
 >(
   Traits1?: TraitsConstructor<T1>,
   Traits2?: TraitsConstructor<T2>,
@@ -48,9 +49,10 @@ export default function mixTraits<
   Traits11?: TraitsConstructor<T11>,
   Traits12?: TraitsConstructor<T12>,
   Traits13?: TraitsConstructor<T13>,
-  Traits14?: TraitsConstructor<T14>
+  Traits14?: TraitsConstructor<T14>,
+  Traits15?: TraitsConstructor<T15>
 ): TraitsConstructor<
-  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14
+  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14 & T15
 > {
   const traitsClasses = filterOutUndefined([
     Traits1,
@@ -66,7 +68,8 @@ export default function mixTraits<
     Traits11,
     Traits12,
     Traits13,
-    Traits14
+    Traits14,
+    Traits15
   ]);
   const traitsInstances = traitsClasses.map((TraitsClass) => new TraitsClass());
   const keysValues = traitsInstances.reduce((result, traitsInstance) => {
