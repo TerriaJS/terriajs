@@ -110,17 +110,21 @@ export const ShareUrl = forwardRef<
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [terria, viewState, shouldShorten, includeStories]);
 
+  const hasStory = includeStories && terria.stories && terria.stories.length;
+
   return (
     <>
-      <Explanation>{t("clipboard.shareExplanation")}</Explanation>
+      <Explanation>
+        {hasStory
+          ? t("clipboard.storyExplanation")
+          : t("clipboard.shareExplanation")}
+      </Explanation>
       <Spacing bottom={1} />
       <Clipboard
         text={shareUrl}
         inputPlaceholder={placeholder}
         createdMessage={
-          includeStories && terria.stories && terria.stories.length > 0
-            ? t("share.storyLinkCreated")
-            : t("share.shareLinkCreated")
+          hasStory ? t("share.storyLinkCreated") : t("share.shareLinkCreated")
         }
         onCopy={(text) =>
           terria.analytics?.logEvent(

@@ -231,7 +231,7 @@
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
     "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
     "shareStoryLink": "Share story link",
-    "storyLinkCreated": "Story link created",
+    "storyLinkCreated": "Saved as new story",
     "shareLinkCreated": "Share link created"
   },
   "countDatasets": {
@@ -625,6 +625,7 @@
     "unsuccessful": "Copy unsuccessful...",
     "shareURL": "Share link",
     "shareExplanation": "Anyone with this link will be able to access this map.",
+    "storyExplanation": "Anyone with this link will be able to access this map.",
     "copy": "Copy"
   },
   "includeStory": {
