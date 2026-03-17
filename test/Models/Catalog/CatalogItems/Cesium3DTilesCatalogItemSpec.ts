@@ -226,7 +226,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             });
           });
 
-          it("sets the shadow mode", function () {
+          it("sets the shadow mode after blend", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
