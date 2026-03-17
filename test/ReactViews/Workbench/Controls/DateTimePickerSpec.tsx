@@ -4,7 +4,7 @@ import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapS
 import Terria from "../../../../lib/Models/Terria";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 
-describe("DateTimePicker", function () {
+describe("Workbench DateTimePicker", function () {
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 

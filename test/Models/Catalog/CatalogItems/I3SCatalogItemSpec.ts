@@ -131,7 +131,7 @@ describe("I3SCatalogItemSpec", function () {
             });
           });
 
-          it("sets the shadow mode", function () {
+          it("sets the shadow mode after blend", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0].layers[0].tileset;
             expect(tileset?.shadows).toBe(ShadowMode.CAST_ONLY);

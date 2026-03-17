@@ -4,7 +4,7 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 
-describe("FeatureInfoPanel", function () {
+describe("FeatureInfoPanelViewModel", function () {
   let viewState: ViewState;
   let terria: Terria;
 
