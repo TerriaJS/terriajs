@@ -729,7 +729,7 @@ describe("TerriaSpec", function () {
     describe("using story route", function () {
       beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
-        // to make the specs work with Karma runner
+        // to make the specs work with browser runner
         terria.updateParameters({
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
