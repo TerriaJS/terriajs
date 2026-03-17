@@ -6,6 +6,31 @@
   font-family: $font-base;
 }
 
+.twoColRoot {
+  @media (max-width: ($sm - 1)) {
+    flex-direction: column;
+    overflow-y: auto;
+
+    .dataTypeTab {
+      display: none;
+    }
+
+    .left-col {
+      width: 100%;
+      border-right: 0;
+      border-bottom: 1px solid $grey-lighter;
+    }
+  }
+}
+
+.previewCol {
+  width: 100%;
+
+  @media (min-width: $sm) {
+    width: 60%;
+  }
+}
+
 .data-catalog {
   composes: list-reset from "../../../../Sass/common/_base.scss";
   border-top: 1px solid $grey-lighter;
