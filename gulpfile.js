@@ -283,8 +283,22 @@ release.description = "Build minified version of TerriaJS tests.";
 const watch = gulp.series(copyCesiumAssets, watchSpecs);
 watch.description = "Build TerriaJS tests when there are source changes.";
 
-const dev = gulp.parallel(terriajsServer, watch);
-dev.description = "Start TerriaJS server and watch for source changes.";
+function serveTests(done) {
+  import("./spec/support/jasmine-browser.mjs").then(function (mod) {
+    var { Server } = require("jasmine-browser-runner");
+    var server = new Server(mod.default);
+    server.start().then(function () {
+      console.log("Jasmine test runner: http://localhost:" + mod.default.port);
+    });
+  }, done);
+}
+serveTests.description =
+  "Start jasmine-browser-runner server for interactive testing.";
+serveTests.displayName = "serve-tests";
+
+const dev = gulp.parallel(terriajsServer, watch, serveTests);
+dev.description =
+  "Start TerriaJS server, watch for source changes, and serve tests.";
 
 const postNpmInstall = copyCesiumAssets;
 postNpmInstall.description = "Copy Cesium assets after installation.";
@@ -297,6 +311,7 @@ exports.lint = lint;
 exports.build = build;
 exports.watch = watch;
 exports.dev = dev;
+exports.serveTests = serveTests;
 exports.terriajsServer = terriajsServer;
 exports.docs = docs;
 exports.jsdoc = jsdoc;
