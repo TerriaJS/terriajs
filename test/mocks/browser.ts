@@ -7,7 +7,6 @@ import { TERRAIN_TILE, LAYER_JSON } from "../fixtures/terrain/terrain";
 // so tests never hit real external APIs.
 export const worker = setupWorker(
   http.get("/", () => passthrough()),
-  http.get("__jasmine__/*", () => passthrough()),
   http.get("*chrome-extension*", () => passthrough()),
   http.get("/build/TerriaJS/*", () => passthrough()),
 

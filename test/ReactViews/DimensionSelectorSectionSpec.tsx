@@ -204,67 +204,67 @@ describe("DimensionSelectorSection", function () {
     ).toBeVisible();
   });
 
-  describe("when given a SelectableDimensionCheckboxGroup", function () {
-    let mockItem: TestCatalogItem;
+  // xdescribe("when given a SelectableDimensionCheckboxGroup", function () {
+  //   let mockItem: TestCatalogItem;
 
-    beforeEach(function () {
-      mockItem = new TestCatalogItem("what", terria);
-      mockItem.selectableDimensionsValue = [
-        {
-          id: "checkbox-group1",
-          type: "checkbox-group",
-          selectedId: "true",
-          options: [
-            {
-              id: "true",
-              name: "true"
-            },
-            {
-              id: "false",
-              name: "false"
-            }
-          ],
-          setDimensionValue: () => {},
-          selectableDimensions: [
-            {
-              id: "checkbox-1",
-              type: "checkbox",
-              name: "Checkbox 1",
-              selectedId: "true",
-              options: [
-                { id: "true", name: "When checked" },
-                { id: "false", name: "When unchecked" }
-              ],
-              setDimensionValue: () => {}
-            },
-            {
-              id: "select-1",
-              type: "select",
-              name: "Dropdown 1",
-              selectedId: "true",
-              options: [
-                { id: "option-1", name: "Option 1" },
-                { id: "option-2", name: "Option 2" }
-              ],
-              setDimensionValue: () => {}
-            },
-            {
-              disable: true,
-              id: "select-2",
-              type: "select",
-              name: "Dropdown 2",
-              selectedId: "true",
-              options: [
-                { id: "option-3", name: "Option 3" },
-                { id: "option-4", name: "Option 4" }
-              ],
-              setDimensionValue: () => {}
-            }
-          ]
-        }
-      ];
-    });
-  });
+  //   beforeEach(function () {
+  //     mockItem = new TestCatalogItem("what", terria);
+  //     mockItem.selectableDimensionsValue = [
+  //       {
+  //         id: "checkbox-group1",
+  //         type: "checkbox-group",
+  //         selectedId: "true",
+  //         options: [
+  //           {
+  //             id: "true",
+  //             name: "true"
+  //           },
+  //           {
+  //             id: "false",
+  //             name: "false"
+  //           }
+  //         ],
+  //         setDimensionValue: () => {},
+  //         selectableDimensions: [
+  //           {
+  //             id: "checkbox-1",
+  //             type: "checkbox",
+  //             name: "Checkbox 1",
+  //             selectedId: "true",
+  //             options: [
+  //               { id: "true", name: "When checked" },
+  //               { id: "false", name: "When unchecked" }
+  //             ],
+  //             setDimensionValue: () => {}
+  //           },
+  //           {
+  //             id: "select-1",
+  //             type: "select",
+  //             name: "Dropdown 1",
+  //             selectedId: "true",
+  //             options: [
+  //               { id: "option-1", name: "Option 1" },
+  //               { id: "option-2", name: "Option 2" }
+  //             ],
+  //             setDimensionValue: () => {}
+  //           },
+  //           {
+  //             disable: true,
+  //             id: "select-2",
+  //             type: "select",
+  //             name: "Dropdown 2",
+  //             selectedId: "true",
+  //             options: [
+  //               { id: "option-3", name: "Option 3" },
+  //               { id: "option-4", name: "Option 4" }
+  //             ],
+  //             setDimensionValue: () => {}
+  //           }
+  //         ]
+  //       }
+  //     ];
+  //   });
+  // });
 
   describe("when given a SelectableDimensionGroup", function () {
     let mockItem: TestCatalogItem;

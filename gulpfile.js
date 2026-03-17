@@ -114,30 +114,39 @@ function copyCesiumSourceAssets() {
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
 }
 
+async function runJasmineBrowser(browserName) {
+  var { runSpecs } = require("jasmine-browser-runner");
+  var config = (await import("./spec/support/jasmine-browser.mjs")).default;
+  if (browserName) {
+    config = Object.assign({}, config, { browser: browserName });
+  }
+  await runSpecs(config);
+}
+
 function testFirefox(done) {
-  runKarma("./buildprocess/karma-firefox.conf.js", done);
+  runJasmineBrowser("headlessFirefox").then(
+    function () {
+      done();
+    },
+    function (e) {
+      done(e);
+    }
+  );
 }
 testFirefox.description = "Run tests with Firefox.";
 testFirefox.displayName = "test-firefox";
 
 function test(done) {
-  runKarma("./buildprocess/karma-local.conf.js", done);
-}
-test.description = "Run tests.";
-
-function runKarma(configFile, done) {
-  const { Server } = require("karma");
-  const path = require("path");
-  const server = new Server(
-    {
-      configFile: path.join(__dirname, configFile)
+  runJasmineBrowser().then(
+    function () {
+      done();
     },
     function (e) {
-      return done(e);
+      done(e);
     }
   );
-  server.start();
 }
+test.description = "Run tests.";
 
 const attributionTemplate = `---
 search:

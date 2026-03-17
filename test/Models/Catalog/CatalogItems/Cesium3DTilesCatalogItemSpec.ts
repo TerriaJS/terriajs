@@ -141,7 +141,8 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           item.setTrait("definition", "ionAccessToken", "fakeToken");
           item.setTrait("definition", "ionServer", "fakeServer");
         });
-        spyOn(IonResource, "fromAssetId").and.callFake(() => {});
+        // @ts-expect-error: spy on static method
+        spyOn(IonResource, "fromAssetId").and.callFake(async () => {});
         try {
           await item.loadMapItems();
         } catch {}

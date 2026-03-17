@@ -175,23 +175,20 @@ describe("Cesium3dTilesMixin", function () {
   });
 
   describe("tileset modelMatrix", function () {
-    describe("when no transformation traits are set", function () {
-      it("should be same as the root transform", function () {
-        expect(
-          cesium3dTiles.modelMatrix.equalsEpsilon(
-            Matrix4.fromArray([
-              -0.0010050878773394923, -0.010020359590716663,
-              0.00011650340166541126, 0, -0.006002102620114645,
-              0.0006957193601463293, 0.008057426370782056, 0,
-              -0.008024708312922119, 0.000734676293133252,
-              -0.006041166133112854, 0, -5088199.73081417, 465822.6898719493,
-              -3804844.213142962, 1
-            ]),
-            // Compare up to 6 digits precision
-            CesiumMath.EPSILON6
-          )
-        ).toBe(true);
-      });
+    it("when no transformation traits are set - should be same as the root transform", function () {
+      expect(
+        cesium3dTiles.modelMatrix.equalsEpsilon(
+          Matrix4.fromArray([
+            -0.0010050878773394923, -0.010020359590716663,
+            0.00011650340166541126, 0, -0.006002102620114645,
+            0.0006957193601463293, 0.008057426370782056, 0,
+            -0.008024708312922119, 0.000734676293133252, -0.006041166133112854,
+            0, -5088199.73081417, 465822.6898719493, -3804844.213142962, 1
+          ]),
+          // Compare up to 6 digits precision
+          CesiumMath.EPSILON6
+        )
+      ).toBe(true);
     });
   });
 });
