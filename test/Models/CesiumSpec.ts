@@ -36,6 +36,8 @@ import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
 import { http, HttpResponse } from "msw";
 
+import wmsCapabilities from "../../wwwroot/test/WMS/wms_1_1_1.xml";
+
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
 describeIfSupported("Cesium Model", function () {
@@ -190,7 +192,7 @@ describeIfSupported("Cesium Model", function () {
     }
 
     it("correctly removes all the primitives, imageries and datasources from the scene when they are removed from the viewer", async function () {
-      worker.use(http.get("wms-*", () => HttpResponse.text()));
+      worker.use(http.get("wms-*", () => HttpResponse.xml(wmsCapabilities)));
 
       let items = await loadItems([
         create3dTilesCatalogItem(0),
@@ -270,7 +272,7 @@ describeIfSupported("Cesium Model", function () {
       let items: MappableMixin.Instance[];
 
       beforeEach(async function () {
-        worker.use(http.get("wms-3", () => HttpResponse.text()));
+        worker.use(http.get("wms-3", () => HttpResponse.xml(wmsCapabilities)));
 
         items = await loadItems([
           create3dTilesCatalogItem(0),

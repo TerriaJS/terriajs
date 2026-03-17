@@ -275,6 +275,12 @@ describe("Workbench", function () {
 
     beforeEach(function () {
       testItem = new WebMapServiceCatalogItem("test-item", terria);
+      testItem.setTrait(
+        "definition",
+        "url",
+        "test/WMS/single_metadata_url.xml"
+      );
+      terria.addModel(testItem);
     });
 
     it("triggers an initial message notification when an item is added to the workbench", async function () {
@@ -299,7 +305,8 @@ describe("Workbench", function () {
       updateModelFromJson(testItem, CommonStrata.user, {
         initialMessage: {
           title: "Hello, world",
-          content: "This is a test message"
+          content: "This is a test message",
+          showAsToast: true
         }
       });
 
