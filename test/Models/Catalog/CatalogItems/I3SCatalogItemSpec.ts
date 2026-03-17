@@ -32,7 +32,7 @@ describe("I3SCatalogItemSpec", function () {
   const testUrl = "/test/Cesium3DTiles/tileset.json";
 
   beforeAll(function () {
-    spyOn(Resource.prototype, "fetchJson").and.callFake(function fetch() {
+    spyOn(Resource.prototype, "fetchJson").and.callFake(() => {
       return Promise.resolve(mockProviderData);
     });
     spyOn(Cesium3DTileset, "fromUrl").and.callFake(async () => {
