@@ -662,8 +662,8 @@ describe("TerriaSpec", function () {
           BaseModel,
           "itemDEF"
         ) as WebMapServiceCatalogItem;
-        terria.workbench.add(model1);
-        terria.workbench.add(model2);
+        await terria.workbench.add(model1);
+        await terria.workbench.add(model2);
         expect(terria.workbench.itemIds).toContain("itemABC");
         expect(terria.workbench.itemIds).toContain("itemDEF");
         expect(newTerria.workbench.itemIds).toEqual([]);
@@ -679,7 +679,7 @@ describe("TerriaSpec", function () {
           BaseModel,
           "itemABC"
         ) as WebMapServiceCatalogItem;
-        terria.workbench.add(model1);
+        await terria.workbench.add(model1);
 
         runInAction(() => {
           terria.showSplitter = true;
@@ -867,7 +867,7 @@ describe("TerriaSpec", function () {
         );
         expect(csv).toBeDefined("csv not found in source terria");
         if (csv === undefined) return;
-        terria.workbench.add(csv);
+        await terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
@@ -1035,7 +1035,7 @@ describe("TerriaSpec", function () {
         );
         expect(csv).toBeDefined("Can't dereference csv in source terria");
         if (csv === undefined) return;
-        terria.workbench.add(csv);
+        await terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);
 
         const shareLink = buildShareLink(terria, viewState);
@@ -1116,8 +1116,8 @@ describe("TerriaSpec", function () {
       terria.addModel(model);
     });
 
-    it("removes the model from workbench", function () {
-      terria.workbench.add(model);
+    it("removes the model from workbench", async function () {
+      await terria.workbench.add(model);
       terria.removeModelReferences(model);
       expect(terria.workbench).not.toContain(model);
     });
@@ -1283,15 +1283,15 @@ describe("TerriaSpec", function () {
         loadMapItemsArcGisMap = spyOn(
           ArcGisMapServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
+        ).and.callFake(() => Promise.resolve(Result.none()));
         loadMapItemsArcGisFeature = spyOn(
           ArcGisFeatureServerCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
+        ).and.callFake(() => Promise.resolve(Result.none()));
         loadMapItemsWms = spyOn(
           WebMapServiceCatalogItem.prototype,
           "loadMapItems"
-        ).and.returnValue(Promise.resolve(Result.none()));
+        ).and.callFake(() => Promise.resolve(Result.none()));
       });
 
       it("when a workbench item is a simple map server group", async function () {
@@ -1511,7 +1511,7 @@ describe("TerriaSpec", function () {
 
       await terria.start({ configUrl: "test-config.json" });
 
-      terria.applyInitData({
+      await terria.applyInitData({
         initData: {
           settings: {
             baseMaximumScreenSpaceError: 1,
@@ -1543,7 +1543,7 @@ describe("TerriaSpec", function () {
   describe("basemaps", function () {
     it("when no base maps are specified load defaultBaseMaps", async function () {
       await terria.start({ configUrl: "test-config.json" });
-      terria.applyInitData({
+      await terria.applyInitData({
         initData: {}
       });
       await terria.loadInitSources();
