@@ -9,6 +9,9 @@ export const worker = setupWorker(
   http.get("/", () => {
     passthrough();
   }),
+  http.get("__jasmine__/*", () => {
+    passthrough();
+  }),
   http.get("*chrome-extension*", () => {
     passthrough();
   }),
