@@ -6,15 +6,29 @@ import { TERRAIN_TILE, LAYER_JSON } from "../fixtures/terrain/terrain";
 // These serve minimal valid responses for Cesium Ion terrain loading
 // so tests never hit real external APIs.
 export const worker = setupWorker(
-  http.get("/build/Cesium/*", () => {
+  http.get("/", () => {
     passthrough();
   }),
-  http.get("/test/*", () => {
+  http.get("*chrome-extension*", () => {
+    passthrough();
+  }),
+  http.get("/build/TerriaJS/*", () => {
+    passthrough();
+  }),
+
+  http.get("/build/Cesium/*", () => {
     passthrough();
   }),
   http.get("/build/*.js", () => {
     passthrough();
   }),
+  http.get("/build/*.svg", () => {
+    passthrough();
+  }),
+  http.get("/test/*", () => {
+    passthrough();
+  }),
+
   http.get("/languages/*.json", () => {
     passthrough();
   }),
