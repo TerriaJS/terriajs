@@ -1,6 +1,5 @@
 import { observer } from "mobx-react";
 import React from "react";
-import classNames from "classnames";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { DefaultTheme, withTheme } from "styled-components";
 import { RelatedMap } from "../../Models/RelatedMaps";
@@ -31,21 +30,9 @@ class RelatedMaps extends React.Component<PropTypes> {
   render() {
     const t = this.props.t;
     const smallScreen = this.props.viewState.useSmallScreenInterface;
-    const outerClass = !smallScreen
-      ? classNames(
-          Styles.relatedMapsOuter,
-          this.props.viewState.isMapFullScreen
-            ? Styles.relatedMapsOuterFullscreen
-            : null,
-          this.props.viewState.trainerBarVisible
-            ? Styles.relatedMapsOuterTrainerBar
-            : null
-        )
-      : undefined;
     const dropdownTheme = {
       inner: Styles.dropdownInner,
       btn: Styles.relatedMapsBtn,
-      outer: outerClass,
       icon: "gallery"
     };
 
