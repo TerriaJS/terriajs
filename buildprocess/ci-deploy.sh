@@ -33,7 +33,6 @@ git commit -a -m 'temporary commit' # so the version doesn't indicate local modi
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
-yarn add -W moment@2.24.0
 yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
 
 pwd
