@@ -183,14 +183,12 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "prepublish": "gulp post-npm-install",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "gulp": "gulp",
     "start": "terriajs-server --port 3002",
     "build-tools": "vite build --config buildprocess/vite.config.tools.ts",
     "watch-tools": "vite build --watch --config buildprocess/vite.config.tools.ts",
     "build-docs": "yarn build-tools && node build/generateDocs.js",
-    "postinstall": "gulp post-npm-install",
     "prettier": "prettier --write .",
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check .",
