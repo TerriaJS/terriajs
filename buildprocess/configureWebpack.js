@@ -73,15 +73,13 @@ function configureWebpack({
     use: [babelLoader]
   });
 
-  // Allow XML in the Models directory to be required-in as raw text.
+  // Allow XML in the Models and test directory to be required-in as raw text.
   config.module.rules.push({
     test: /\.(xml|kml)$/,
-    include: path.resolve(terriaJSBasePath, "lib", "Models"),
-    type: "asset/source" // inlines xml as raw text
-  });
-
-  config.module.rules.push({
-    test: /\.(xml|kml)$/,
+    include: [
+      path.resolve(terriaJSBasePath, "lib", "Models"),
+      path.resolve(terriaJSBasePath, "test")
+    ],
     type: "asset/source" // inlines xml as raw text
   });
 
