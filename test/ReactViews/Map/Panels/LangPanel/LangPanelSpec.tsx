@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../../lib/Models/Terria";
 import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPanel";
+import { worker } from "../../../../mocks/browser";
 
 describe("LangPanel", function () {
   let terria: Terria;
@@ -19,27 +21,34 @@ describe("LangPanel", function () {
   });
 
   it("should render if language are provided in config", async function () {
-    terria.updateParameters({
-      languageConfiguration: {
-        enabled: true,
-        debug: false,
-        languages: {
-          cimode: "cimode",
-          en: "English",
-          fr: "Français",
-          af: "Afrikaans"
-        },
-        fallbackLanguage: "en"
-      }
-    });
-    await terria.start({ configUrl: "./" });
+    worker.use(
+      http.get("serverconfig", () => HttpResponse.json({})),
+      http.get("test-config.json", () =>
+        HttpResponse.json({
+          parameters: {
+            languageConfiguration: {
+              enabled: true,
+              debug: false,
+              languages: {
+                cimode: "cimode",
+                en: "English",
+                fr: "Français",
+                af: "Afrikaans"
+              },
+              fallbackLanguage: "en"
+            }
+          }
+        })
+      )
+    );
+    await terria.start({ configUrl: "test-config.json" });
 
     render(<LangPanel terria={terria} smallScreen={false} />);
 
-    screen.getByRole("button", { name: "cimode" });
+    expect(screen.getByRole("button", { name: "cimode" })).toBeVisible();
     await userEvent.click(screen.getByRole("button", { name: "cimode" }));
-    screen.getByRole("button", { name: "English" });
-    screen.getByRole("button", { name: "Français" });
-    screen.getByRole("button", { name: "Afrikaans" });
+    expect(screen.getByRole("button", { name: "English" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Français" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Afrikaans" })).toBeVisible();
   });
 });

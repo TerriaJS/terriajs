@@ -34,7 +34,10 @@ describe("ArcGisMapServerCatalogItem", function () {
   let item: ArcGisMapServerCatalogItem;
 
   beforeEach(function () {
-    item = new ArcGisMapServerCatalogItem("test", new Terria());
+    item = new ArcGisMapServerCatalogItem(
+      "test",
+      new Terria({ baseUrl: "./" })
+    );
 
     worker.use(
       // Dynamic_National_Map_Hydrography_and_Marine handlers (most specific first)
@@ -165,7 +168,10 @@ describe("ArcGisMapServerCatalogItem", function () {
   describe("loadMapItems", function () {
     it("can load all layers", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
@@ -174,7 +180,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load specific layers", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
         item.setTrait(CommonStrata.definition, "layers", "31,32");
       });
@@ -184,7 +193,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load specific layers - and ignore invalid layers", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
         item.setTrait(CommonStrata.definition, "layers", "31,32,ahhhh,200");
       });
@@ -194,7 +206,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a single layer given in the URL", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
       });
       await item.loadMapItems();
@@ -205,7 +220,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     describe("when tokenUrl is set", function () {
       beforeEach(() => {
         runInAction(() => {
-          item = new ArcGisMapServerCatalogItem("test", new Terria());
+          item = new ArcGisMapServerCatalogItem(
+            "test",
+            new Terria({ baseUrl: "./" })
+          );
           item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
           item.setTrait(
             CommonStrata.definition,
@@ -272,7 +290,10 @@ describe("ArcGisMapServerCatalogItem", function () {
     describe("when token is set", function () {
       beforeEach(() => {
         runInAction(() => {
-          item = new ArcGisMapServerCatalogItem("test", new Terria());
+          item = new ArcGisMapServerCatalogItem(
+            "test",
+            new Terria({ baseUrl: "./" })
+          );
           item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
           item.setTrait(
             CommonStrata.definition,
@@ -344,7 +365,10 @@ describe("ArcGisMapServerCatalogItem", function () {
   describe("after loading", function () {
     beforeEach(async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
@@ -435,20 +459,23 @@ describe("ArcGisMapServerCatalogItem", function () {
           expect(imageryProvider.enablePickFeatures).toBe(true);
         });
 
-        it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", function () {
+        it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", async function () {
           item.setTrait(
             CommonStrata.definition,
             "hideLayerAfterMinScaleDenominator",
             true
           );
           spyOn(item.terria, "raiseErrorToUser");
-          imageryProvider.requestImage(0, 0, 100);
+          await imageryProvider.requestImage(0, 0, 100);
           expect(item.scaleWorkbenchInfo).toBeDefined();
         });
 
         it("usePreCachedTilesIfAvailable = false if requesting specific layers", async function () {
           runInAction(() => {
-            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item = new ArcGisMapServerCatalogItem(
+              "test",
+              new Terria({ baseUrl: "./" })
+            );
             item.setTrait(
               CommonStrata.definition,
               "url",
@@ -468,7 +495,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
         it("usePreCachedTilesIfAvailable = false if requesting layer ID in url path", async function () {
           runInAction(() => {
-            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item = new ArcGisMapServerCatalogItem(
+              "test",
+              new Terria({ baseUrl: "./" })
+            );
             item.setTrait(
               CommonStrata.definition,
               "url",
@@ -487,7 +517,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
         it("usePreCachedTilesIfAvailable = false if parameters have been specified", async function () {
           runInAction(() => {
-            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item = new ArcGisMapServerCatalogItem(
+              "test",
+              new Terria({ baseUrl: "./" })
+            );
             item.setTrait(
               CommonStrata.definition,
               "url",
@@ -510,7 +543,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
         it("usePreCachedTilesIfAvailable = true if not requesting specific layers", async function () {
           runInAction(() => {
-            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item = new ArcGisMapServerCatalogItem(
+              "test",
+              new Terria({ baseUrl: "./" })
+            );
             item.setTrait(
               CommonStrata.definition,
               "url",
@@ -529,7 +565,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
         it("usePreCachedTilesIfAvailable = true if requesting all layers", async function () {
           runInAction(() => {
-            item = new ArcGisMapServerCatalogItem("test", new Terria());
+            item = new ArcGisMapServerCatalogItem(
+              "test",
+              new Terria({ baseUrl: "./" })
+            );
             item.setTrait(
               CommonStrata.definition,
               "url",
@@ -734,7 +773,10 @@ describe("ArcGisMapServerCatalogItem", function () {
   describe("time-enabled layer", function () {
     it("can load a layer, querying time without window", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -755,7 +797,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time without window if timeWindowDuration is not defined", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -773,7 +818,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time without window if timeWindowUnit is not defined", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -791,7 +839,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time with default forward window", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -812,7 +863,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time with explicit forward window", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -834,7 +888,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time with backward time window", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -856,7 +913,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time without window if timeWindowDuration is 0", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -874,7 +934,10 @@ describe("ArcGisMapServerCatalogItem", function () {
 
     it("can load a layer, querying time without window if timeWindowUnit is invalid", async function () {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -894,7 +957,10 @@ describe("ArcGisMapServerCatalogItem", function () {
   describe("TilesOnly + single fused map cache server", function () {
     beforeEach(async () => {
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",
@@ -959,11 +1025,16 @@ describe("ArcGisMapServerCatalogItem", function () {
       };
 
       worker.use(
-        http.get("*/foo/MapServer", () => HttpResponse.json(modifiedJson))
+        http.get("*/foo/MapServer", () => HttpResponse.json(modifiedJson)),
+        http.get("*/foo/MapServer/layers", () => HttpResponse.json({})),
+        http.get("*/foo/MapServer/legend", () => HttpResponse.json({}))
       );
 
       runInAction(() => {
-        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item = new ArcGisMapServerCatalogItem(
+          "test",
+          new Terria({ baseUrl: "./" })
+        );
         item.setTrait(
           CommonStrata.definition,
           "url",

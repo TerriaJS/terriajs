@@ -256,7 +256,6 @@ describe("ArcGisImageServer", function () {
     });
 
     it("sets basic traits", function () {
-      console.log(imageServerItem);
       expect(imageServerItem.name).toBe("Some name");
       expect(imageServerItem.description).toBe("Some description");
       expect(imageServerItem.rectangle.east).toBe(179.6875);

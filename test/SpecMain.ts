@@ -37,7 +37,11 @@ beforeAll(async function () {
     await reg.unregister();
   }
   await worker.start({
-    onUnhandledRequest: "bypass",
+    onUnhandledRequest: (request, print) => {
+      print.error();
+      fail(`Unhandled ${request.method} request to ${request.url}`);
+      throw new Error(`Unhandled ${request.method} request to ${request.url}`);
+    },
     quiet: true
   });
 
@@ -52,7 +56,11 @@ beforeAll(async function () {
   });
 });
 
-afterEach(function () {
+beforeEach(function () {
+  worker.resetHandlers();
+});
+
+afterAll(function () {
   worker.resetHandlers();
 });
 

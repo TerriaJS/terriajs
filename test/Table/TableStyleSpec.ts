@@ -22,6 +22,7 @@ import regionMapping from "../../wwwroot/data/regionMapping.json";
 import SedCods from "../../wwwroot/data/regionids/region_map-SED_CODE18_SED_2018.json";
 import Sa4Codes from "../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
 import Sa4Names from "../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json";
+import Sa4Names2021 from "../../wwwroot/data/regionids/region_map-SA4_NAME_2021_SA4_2021.json";
 import LatLonCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
 import SedCsv from "../../wwwroot/test/csv/SED_2018_SED_CODE18.csv";
 import YouthUnEmployCsv from "../../wwwroot/test/csv/youth-unemployment-rate-2018.csv";
@@ -51,6 +52,10 @@ describe("TableStyle", function () {
       http.get(
         "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json",
         () => HttpResponse.json(Sa4Names)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_NAME_2021_SA4_2021.json",
+        () => HttpResponse.json(Sa4Names2021)
       ),
       http.all("*", () => HttpResponse.error())
     );
