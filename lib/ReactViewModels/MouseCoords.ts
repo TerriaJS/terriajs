@@ -16,7 +16,7 @@ import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
-import gridFileUrl from "../../wwwroot/data/WW15MGH.DAC";
+import gridFileUrl from "../../assets/WW15MGH.DAC";
 
 interface Cancelable {
   cancel: () => void;

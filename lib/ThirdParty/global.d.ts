@@ -1,5 +1,5 @@
 declare module "*.DAC";
-declare module "*.css";
+declare module "*.css?raw";
 declare module "*.csv";
 declare module "*.xml";
 declare module "*.svg";

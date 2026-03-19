@@ -1,4 +1,4 @@
-_Region mapping_ is the process of matching a value in a CSV file to a pre-defined boundary, such as a postcode, local government area or electorate. The allowed boundaries for a given TerriaJS instance are given in a file such as `wwwroot/data/regionMapping.json`.
+_Region mapping_ is the process of matching a value in a CSV file to a pre-defined boundary, such as a postcode, local government area or electorate. The allowed boundaries for a given TerriaJS instance are given in a file such as `assets/regionMapping/regionMapping.json`.
 
 ---
 
@@ -40,7 +40,7 @@ _Region mapping_ is the process of matching a value in a CSV file to a pre-defin
 
 ## Configure the regions in your TerriaJS-based map
 
-Modify `wwwroot/data/regionMapping.json`. Add a section like this:
+Modify `assets/regionMapping/regionMapping.json`. Add a section like this:
 
         "SA4": {
             "layerName":"region_map:FID_SA4_2011_AUST",

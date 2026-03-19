@@ -4,11 +4,11 @@ name: Find region mapping alias duplicates
 on:
   push:
     paths:
-      - "wwwroot/data/regionMapping.json"
+      - "assets/regionMapping/regionMapping.json"
       - "buildprocess/find-region-mapping-alias-duplicates.js"
   pull_request:
     paths:
-      - "wwwroot/data/regionMapping.json"
+      - "assets/regionMapping/regionMapping.json"
       - "buildprocess/find-region-mapping-alias-duplicates.js"
 
 permissions:

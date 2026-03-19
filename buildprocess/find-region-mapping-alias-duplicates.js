@@ -1,6 +1,6 @@
 const fs = require("fs");
 const regions = JSON.parse(
-  fs.readFileSync("wwwroot/data/regionMapping.json")
+  fs.readFileSync("assets/regionMapping/regionMapping.json")
 ).regionWmsMap;
 
 const aliasToType = new Map();
