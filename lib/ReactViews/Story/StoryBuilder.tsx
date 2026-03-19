@@ -26,7 +26,7 @@ import {
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
+import dataStoriesImg from "../../../assets/images/data-stories-getting-started.jpg";
 import {
   Category,
   StoryAction

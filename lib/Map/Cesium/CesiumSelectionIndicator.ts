@@ -14,7 +14,7 @@ import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
-import locationTargetIcon from "../../../wwwroot/images/NM-LocationTarget.svg";
+import locationTargetIcon from "../../../assets/images/NM-LocationTarget.svg";
 import isDefined from "../../Core/isDefined";
 
 declare module "terriajs-cesium/Source/Scene/Scene" {

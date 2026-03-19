@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Box from "../../../../Styled/Box";
-import logo from "../../../../../wwwroot/images/terria-watermark.svg";
+import logo from "../../../../../assets/images/terria-watermark.svg";
 
 export const TerriaLogo: FC = () => {
   return (

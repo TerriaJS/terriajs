@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { Component } from "react";
 import { withTranslation } from "react-i18next";
 // if we must use a placeholder image,
-// do not bundle in the full res `wwwroot/images/bing-aerial-labels-wide.png`
+// do not bundle in the full res `assets/images/bing-aerial-labels-wide.png`
 // image as it's a 1.4mb png
-// import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide-low-quality.jpg";
+// import bingAerialBackground from "../../assets/images/bing-aerial-labels-wide-low-quality.jpg";
 import styled, { withTheme } from "styled-components";
 import Box from "../Styled/Box";
 import Button from "../Styled/Button";

@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import heightControlsImage from "../../../../wwwroot/images/height-controls.svg";
-import mouseControlsImage from "../../../../wwwroot/images/mouse-control.svg";
-import wasdControlsImage from "../../../../wwwroot/images/wasd.svg";
+import heightControlsImage from "../../../../assets/images/height-controls.svg";
+import mouseControlsImage from "../../../../assets/images/mouse-control.svg";
+import wasdControlsImage from "../../../../assets/images/wasd.svg";
 import Cesium from "../../../Models/Cesium";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";

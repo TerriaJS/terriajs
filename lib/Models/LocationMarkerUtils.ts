@@ -5,7 +5,7 @@ import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
-import markerIcon from "../../wwwroot/images/map-pin.png";
+import markerIcon from "../../assets/images/map-pin.png";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
   "TerriaJS Location Marker Points";

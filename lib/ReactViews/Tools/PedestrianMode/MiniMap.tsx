@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import minimapNavIcon from "../../../../wwwroot/images/minimap-nav.svg";
+import minimapNavIcon from "../../../../assets/images/minimap-nav.svg";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";

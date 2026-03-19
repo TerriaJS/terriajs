@@ -25,7 +25,7 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import compassRotationMarker from "../../../../../../wwwroot/images/compass-rotation-marker.svg";
+import compassRotationMarker from "../../../../../../assets/images/compass-rotation-marker.svg";
 import isDefined from "../../../../../Core/isDefined";
 import Terria from "../../../../../Models/Terria";
 import ViewState from "../../../../../ReactViewModels/ViewState";
