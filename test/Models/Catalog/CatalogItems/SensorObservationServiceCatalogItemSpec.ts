@@ -1,19 +1,17 @@
-import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import { http, HttpResponse } from "msw";
 import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/SensorObservationServiceCatalogItem";
-import Terria from "../../../../lib/Models/Terria";
-import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
-import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
+import Terria from "../../../../lib/Models/Terria";
+import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
+import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import { worker } from "../../../mocks/browser";
 
 import GetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml?raw";
 import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml?raw";
 import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml?raw";
 import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml?raw";
-
-import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
 
 describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;

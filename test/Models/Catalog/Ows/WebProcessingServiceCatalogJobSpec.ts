@@ -1,15 +1,11 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import { http, HttpResponse } from "msw";
 import isDefined from "../../../../lib/Core/isDefined";
+import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
-import { worker } from "../../../mocks/browser";
 
 // For more tests see - test\Models\WebProcessingServiceCatalogFunctionSpec.ts
-
-import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
 
 configure({
   enforceActions: "observed",

@@ -1,5 +1,5 @@
-import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
@@ -7,16 +7,15 @@ import TableColumnType from "../../../../lib/Table/TableColumnType";
 import { ModelOverrideTraits } from "../../../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 import { worker } from "../../../mocks/browser";
 
-import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
-import steCodes from "../../../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json";
 import isoCodes from "../../../../assets/regionMapping/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json";
+import steCodes from "../../../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json";
 import dataflowNoRegionData from "../../../../wwwroot/test/SDMX-JSON/data-noregion.csv?raw";
-import dataflowRegionData from "../../../../wwwroot/test/SDMX-JSON/data-region.csv?raw";
 import dataflowRegionTimeData from "../../../../wwwroot/test/SDMX-JSON/data-region-time.csv?raw";
+import dataflowRegionData from "../../../../wwwroot/test/SDMX-JSON/data-region.csv?raw";
 import dataflowSingleRegionTimeData from "../../../../wwwroot/test/SDMX-JSON/data-single-region-time.csv?raw";
 import dataflowNoRegion from "../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json";
-import dataflowRegion from "../../../../wwwroot/test/SDMX-JSON/dataflow-region.json";
 import dataflowRegionTime from "../../../../wwwroot/test/SDMX-JSON/dataflow-region-time.json";
+import dataflowRegion from "../../../../wwwroot/test/SDMX-JSON/dataflow-region.json";
 
 describe("SdmxJsonCatalogItem", function () {
   let terria: Terria;

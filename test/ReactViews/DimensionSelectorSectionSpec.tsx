@@ -19,9 +19,8 @@ import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import { worker } from "../mocks/browser";
 
-import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv?raw";
 import lgaCodeJson from "../../assets/regionMapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
-import regionMapping from "../../assets/regionMapping/regionMapping.json";
+import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv?raw";
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))

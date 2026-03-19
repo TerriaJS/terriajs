@@ -1,14 +1,10 @@
-import { http, HttpResponse } from "msw";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
-import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType from "../../lib/Table/TableColumnType";
-import { worker } from "../mocks/browser";
-
-import regionMapping from "../../assets/regionMapping/regionMapping.json";
+import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 
 describe("TableColumn", function () {
   let tableModel: CsvCatalogItem;

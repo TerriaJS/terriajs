@@ -1,4 +1,4 @@
-import FileSaver from "file-saver";
+// import FileSaver from "file-saver";
 import { runInAction, toJS } from "mobx";
 import { observer } from "mobx-react";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
@@ -65,7 +65,7 @@ async function download(items: TableMixin.Instance[]) {
     loadMapResults.raiseError(items[0].terria, "Could not download chart data");
   }
 
-  const synthesized = synthesizeNameAndValueArrays(items);
+  // const synthesized = synthesizeNameAndValueArrays(items);
 
   // Could implement this using TaskProcessor, but requires webpack magic.
   // const worker = await import("worker-loader!./downloadHrefWorker").then(

@@ -1,5 +1,5 @@
-import { http, HttpResponse } from "msw";
 import { configure, reaction, runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../../../lib/Core/isDefined";
@@ -22,17 +22,15 @@ import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 import "../../../SpecHelpers";
 
-import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
-
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-import processDescriptionsXml from "../../../../wwwroot/test/WPS/ProcessDescriptions.xml?raw";
 import executeResponseXml from "../../../../wwwroot/test/WPS/ExecuteResponse.xml?raw";
 import failedExecuteResponseXml from "../../../../wwwroot/test/WPS/FailedExecuteResponse.xml?raw";
 import pendingExecuteResponseXml from "../../../../wwwroot/test/WPS/PendingExecuteResponse.xml?raw";
+import processDescriptionsXml from "../../../../wwwroot/test/WPS/ProcessDescriptions.xml?raw";
 
 describe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;

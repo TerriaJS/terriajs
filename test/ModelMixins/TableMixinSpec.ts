@@ -1,8 +1,10 @@
-import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -12,7 +14,7 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
-import { worker } from "../mocks/browser";
+import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableLabelStyleTraits, {
   EnumLabelSymbolTraits,
@@ -33,25 +35,22 @@ import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
-import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
-import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
-import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
-import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv?raw";
 import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv?raw";
-import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv?raw";
 import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv?raw";
 import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv?raw";
+import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv?raw";
+import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv?raw";
+import { worker } from "../mocks/browser";
 
+import regionIdsLgaName from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
+import regionIdsLgaNameStates from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
+import regionIdsLgaCode from "../../assets/regionMapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionIdsSte from "../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
+import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv?raw";
+import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv?raw";
 import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv?raw";
 import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv?raw";
-import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv?raw";
-import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv?raw";
-import regionMapping from "../../assets/regionMapping/regionMapping.json";
 import additionalRegionMapping from "../../wwwroot/test/regionMapping/additionalRegion.json";
-import regionIdsSte from "../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
-import regionIdsLgaName from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
-import regionIdsLgaCode from "../../assets/regionMapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
-import regionIdsLgaNameStates from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
 const NUMBER_OF_REGION_MAPPING_TYPES = 154;
 
