@@ -1,13 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { Plugin } from "vite";
-
-interface IconDir {
-  dir: string;
-  namespace: string;
-}
-
 /**
  * Vite plugin that collects SVG icons from configured directories, compiles
  * them into `<symbol>` elements via svg-sprite, and injects them into the HTML.
@@ -17,18 +10,18 @@ interface IconDir {
  *
  * Individual SVG imports return `{ id: "namespace-iconname" }` matching the
  * shape expected by the Icon component (`<use xlinkHref={"#" + glyph.id} />`).
+ *
+ * @param {{ dir: string; namespace: string }[]} iconDirs
+ * @returns {import("vite").Plugin}
  */
-export function svgSpritePlugin(iconDirs: IconDir[]): Plugin {
-  const iconRegistry = new Map<
-    string,
-    Map<string, { path: string; content: string }>
-  >();
+export function svgSpritePlugin(iconDirs) {
+  const iconRegistry = new Map();
 
   function scanIconDirs() {
     for (const { dir, namespace } of iconDirs) {
       if (!fs.existsSync(dir)) continue;
 
-      const icons = new Map<string, { path: string; content: string }>();
+      const icons = new Map();
       for (const file of fs.readdirSync(dir)) {
         if (!file.endsWith(".svg")) continue;
         const filePath = path.join(dir, file);
@@ -41,9 +34,9 @@ export function svgSpritePlugin(iconDirs: IconDir[]): Plugin {
     }
   }
 
-  async function buildSprites(): Promise<string[]> {
+  async function buildSprites() {
     const SVGSpriter = (await import("svg-sprite")).default;
-    const spriteDivs: string[] = [];
+    const spriteDivs = [];
 
     for (const [namespace, icons] of iconRegistry.entries()) {
       const spriter = new SVGSpriter({
@@ -53,7 +46,7 @@ export function svgSpritePlugin(iconDirs: IconDir[]): Plugin {
         svg: { xmlDeclaration: false, doctypeDeclaration: false },
         shape: {
           id: {
-            generator: (svg: string) =>
+            generator: (svg) =>
               `${namespace}-${path.basename(svg.replace(/\s+/g, "_"), ".svg")}`
           },
           transform: [
@@ -82,7 +75,7 @@ export function svgSpritePlugin(iconDirs: IconDir[]): Plugin {
   }
 
   // Pre-compile the sprite once at startup
-  let spriteHtmlPromise: Promise<string> | undefined;
+  let spriteHtmlPromise;
 
   return {
     name: "svg-sprite",

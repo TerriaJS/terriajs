@@ -1,23 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { UserConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
-import { momentLocalePlugin } from "./vite-plugins/assetPlugins.ts";
-import { cesiumDebugStripPlugin } from "./vite-plugins/cesiumPlugin.ts";
-import { scssCssModulesPlugin } from "./vite-plugins/scssCssModulesPlugin.ts";
-import { svgSpritePlugin } from "./vite-plugins/svgSpritePlugin.ts";
+import { momentLocalePlugin } from "./vite-plugins/assetPlugins.mjs";
+import { cesiumDebugStripPlugin } from "./vite-plugins/cesiumPlugin.mjs";
+import { scssCssModulesPlugin } from "./vite-plugins/scssCssModulesPlugin.mjs";
+import { svgSpritePlugin } from "./vite-plugins/svgSpritePlugin.mjs";
 
-interface ConfigureViteOptions {
-  terriaJSBasePath: string;
-  extraIconDirs?: Array<{ dir: string; namespace: string }>;
-  terriaVariablesPath?: string;
-  buildOutputPath?: string;
-}
-
-function findPackageDir(name: string, searchPaths: string[]): string {
+/**
+ * @param {string} name
+ * @param {string[]} searchPaths
+ * @returns {string}
+ */
+function findPackageDir(name, searchPaths) {
   for (const base of searchPaths) {
     const candidate = path.join(base, "node_modules", name);
     if (fs.existsSync(path.join(candidate, "package.json"))) return candidate;
@@ -27,7 +24,16 @@ function findPackageDir(name: string, searchPaths: string[]): string {
   );
 }
 
-export function configureVite(options: ConfigureViteOptions): UserConfig {
+/**
+ * @param {{
+ *   terriaJSBasePath: string;
+ *   extraIconDirs?: { dir: string; namespace: string }[];
+ *   terriaVariablesPath?: string;
+ *   buildOutputPath?: string;
+ * }} options
+ * @returns {import("vite").UserConfig}
+ */
+export function configureVite(options) {
   const {
     terriaJSBasePath,
     extraIconDirs = [],
@@ -39,7 +45,7 @@ export function configureVite(options: ConfigureViteOptions): UserConfig {
   } = options;
 
   // Walk up from terriaJSBasePath to find node_modules (handles monorepo hoisting)
-  const searchPaths: string[] = [];
+  const searchPaths = [];
   let dir = terriaJSBasePath;
   while (dir !== path.dirname(dir)) {
     searchPaths.push(dir);
@@ -54,7 +60,7 @@ export function configureVite(options: ConfigureViteOptions): UserConfig {
     css: {
       modules: {
         localsConvention: "camelCase",
-        generateScopedName(name: string, filename: string) {
+        generateScopedName(name, filename) {
           let basename = path.basename(filename, path.extname(filename));
           basename = basename.replace(/\.module$/, "");
           return `tjs-${basename}__${name}`;

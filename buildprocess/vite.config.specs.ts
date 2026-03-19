@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import glob from "fast-glob";
 import { defineConfig, mergeConfig, type Plugin } from "vite";
 
-import { configureVite } from "./configureVite.ts";
+import { configureVite } from "./configureVite.mjs";
 
 const terriaJSBasePath = path.resolve(__dirname, "..");
 

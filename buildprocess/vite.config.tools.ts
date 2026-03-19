@@ -3,7 +3,7 @@ import path from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig, mergeConfig } from "vite";
 
-import { configureVite } from "./configureVite.ts";
+import { configureVite } from "./configureVite.mjs";
 
 const terriaJSBasePath = path.resolve(__dirname, "..");
 

@@ -1,10 +1,11 @@
-import type { Plugin } from "vite";
-
 /**
  * Strip Cesium debug pragmas in production builds.
  * Removes code between //>>includeStart('debug') and //>>includeEnd('debug').
+ *
+ * @param {string} cesiumDir
+ * @returns {import("vite").Plugin}
  */
-export function cesiumDebugStripPlugin(cesiumDir: string): Plugin {
+export function cesiumDebugStripPlugin(cesiumDir) {
   const pragmaRegex =
     /\/\/>>includeStart\('debug', pragmas\.debug\);?[^]*?\/\/>>includeEnd\('debug'\);?/g;
 

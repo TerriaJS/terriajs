@@ -1,7 +1,5 @@
 import fs from "node:fs";
 
-import type { Plugin } from "vite";
-
 const VIRTUAL_EXT = ".module.scss";
 const REAL_EXT = ".scss";
 
@@ -15,8 +13,10 @@ const REAL_EXT = ".scss";
  *
  * `composes: from` is handled by vite-css-modules which routes composed
  * dependencies through Vite's module graph for proper deduplication.
+ *
+ * @returns {import("vite").Plugin}
  */
-export function scssCssModulesPlugin(): Plugin {
+export function scssCssModulesPlugin() {
   return {
     name: "scss-css-modules",
     enforce: "pre",
