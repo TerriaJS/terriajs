@@ -154,11 +154,11 @@
     "vite-css-modules": "^1.14.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.2.0",
     "@types/node": "^24.3.1",
     "@types/svg-sprite": "^0.0.39",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "babel-plugin-styled-components": "^1.10.7",
     "bufferutil": "^4.0.8",
     "eslint": "^8.57.1",
@@ -180,6 +180,7 @@
     "svg-sprite": "^2.0.4",
     "terriajs-server": "^4.0.3",
     "utf-8-validate": "^6.0.3",
+    "vite-plugin-static-copy": "^3.3.0",
     "yaml": "^1.10.0"
   },
   "scripts": {
@@ -193,7 +194,7 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node && husky install"
+    "prepare": "husky install"
   },
   "msw": {
     "workerDirectory": [
