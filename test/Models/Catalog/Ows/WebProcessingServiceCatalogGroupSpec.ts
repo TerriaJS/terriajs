@@ -6,7 +6,7 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 
-import GetCapabilitiesXml from "../../../../wwwroot/test/WPS/GetCapabilities.xml";
+import GetCapabilitiesXml from "../../../../wwwroot/test/WPS/GetCapabilities.xml?raw";
 
 describe("WebProcessingServiceCatalogGroup", function () {
   let terria: Terria;

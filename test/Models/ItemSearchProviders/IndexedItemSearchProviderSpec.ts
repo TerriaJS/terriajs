@@ -1,9 +1,9 @@
 import { http, HttpResponse } from "msw";
 import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
 import Csv from "../../../lib/Table/Csv";
-import heightCsv from "../../../wwwroot/test/IndexedItemSearchProvider/0.csv";
-import areaCsv from "../../../wwwroot/test/IndexedItemSearchProvider/1.csv";
-import resultsDataCsv from "../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv";
+import heightCsv from "../../../wwwroot/test/IndexedItemSearchProvider/0.csv?raw";
+import areaCsv from "../../../wwwroot/test/IndexedItemSearchProvider/1.csv?raw";
+import resultsDataCsv from "../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv?raw";
 import { worker } from "../../mocks/browser";
 
 const validIndexRoot = {

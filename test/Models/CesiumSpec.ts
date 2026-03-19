@@ -36,7 +36,7 @@ import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
 import { http, HttpResponse } from "msw";
 
-import wmsCapabilities from "../../wwwroot/test/WMS/wms_1_1_1.xml";
+import wmsCapabilities from "../../wwwroot/test/WMS/wms_1_1_1.xml?raw";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 

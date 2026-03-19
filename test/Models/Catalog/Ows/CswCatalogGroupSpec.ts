@@ -9,10 +9,10 @@ import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { worker } from "../../../mocks/browser";
 
-import getDomainXml from "../../../../wwwroot/test/csw/Example1GetDomain.xml";
-import getRecordsPage1Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage1.xml";
-import getRecordsPage2Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage2.xml";
-import getRecordsPage3Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage3.xml";
+import getDomainXml from "../../../../wwwroot/test/csw/Example1GetDomain.xml?raw";
+import getRecordsPage1Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage1.xml?raw";
+import getRecordsPage2Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage2.xml?raw";
+import getRecordsPage3Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage3.xml?raw";
 
 describe("CswCatalogGroup", function () {
   let terria: Terria;

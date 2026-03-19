@@ -27,7 +27,7 @@ import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import KmlCatalogItem from "../CatalogItems/KmlCatalogItem";
 import ArcGisMapServerCatalogItem from "../Esri/ArcGisMapServerCatalogItem";
-import defaultGetRecordsTemplate from "../Ows/CswGetRecordsTemplate.xml";
+import defaultGetRecordsTemplate from "../Ows/CswGetRecordsTemplate.xml?raw";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { BoundingBox } from "./OwsInterfaces";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";

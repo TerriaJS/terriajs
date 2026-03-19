@@ -17,7 +17,7 @@ import { worker } from "../../../mocks/browser";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
-import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv";
+import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv?raw";
 
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;

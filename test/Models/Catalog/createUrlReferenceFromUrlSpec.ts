@@ -15,7 +15,7 @@ import { worker } from "../../mocks/browser";
 
 import waterNetworkLayer from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json";
 import waterNetworkLayer2 from "../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json";
-import LatLonValCsv from "../../../wwwroot/test/csv/lat_lon_val.csv";
+import LatLonValCsv from "../../../wwwroot/test/csv/lat_lon_val.csv?raw";
 
 describe("createUrlReferenceFromUrl", function () {
   let terria: Terria;

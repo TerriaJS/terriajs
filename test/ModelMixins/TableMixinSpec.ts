@@ -36,16 +36,16 @@ import TableTrailStyleTraits, {
 import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
-import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
-import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv";
-import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv";
-import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
-import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv";
+import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv?raw";
+import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv?raw";
+import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv?raw";
+import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv?raw";
+import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv?raw";
 
-import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv";
-import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv";
-import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv";
-import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv";
+import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv?raw";
+import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv?raw";
+import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv?raw";
+import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv?raw";
 import regionMapping from "../../wwwroot/data/regionMapping.json";
 import additionalRegionMapping from "../../wwwroot/test/regionMapping/additionalRegion.json";
 import regionIdsSte from "../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json";

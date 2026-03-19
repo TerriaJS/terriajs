@@ -19,7 +19,7 @@ import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import { worker } from "../mocks/browser";
 
-import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
+import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv?raw";
 import lgaCodeJson from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
 import regionMapping from "../../wwwroot/data/regionMapping.json";
 

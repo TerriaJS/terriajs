@@ -8,10 +8,10 @@ import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticSty
 import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 import { worker } from "../../../mocks/browser";
 
-import GetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml";
-import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml";
-import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml";
-import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml";
+import GetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml?raw";
+import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml?raw";
+import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml?raw";
+import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml?raw";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 

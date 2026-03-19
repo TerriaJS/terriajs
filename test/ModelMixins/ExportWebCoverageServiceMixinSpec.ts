@@ -4,8 +4,8 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { worker } from "../mocks/browser";
-import describeCoverageXml from "../../wwwroot/test/WCS/DescribeCoverage.xml";
-import wmsGetCapabilitiesXml from "../../wwwroot/test/WMS/wms_crs.xml";
+import describeCoverageXml from "../../wwwroot/test/WCS/DescribeCoverage.xml?raw";
+import wmsGetCapabilitiesXml from "../../wwwroot/test/WMS/wms_crs.xml?raw";
 
 describe("ExportWebCoverageServiceMixin", function () {
   let terria: Terria;

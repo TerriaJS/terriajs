@@ -34,7 +34,7 @@ import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import executeWpsTemplate from "./ExecuteWpsTemplate.xml";
+import executeWpsTemplate from "./ExecuteWpsTemplate.xml?raw";
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits

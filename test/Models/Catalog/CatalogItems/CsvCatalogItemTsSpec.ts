@@ -4,7 +4,7 @@ import { runInAction } from "mobx";
 import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 
-import latLonDateValueCsv from "../../../../wwwroot/test/csv/lat_lon_date_value.csv";
+import latLonDateValueCsv from "../../../../wwwroot/test/csv/lat_lon_date_value.csv?raw";
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("CsvCatalogItem", function () {

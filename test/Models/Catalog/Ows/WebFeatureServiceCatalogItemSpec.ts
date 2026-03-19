@@ -6,7 +6,7 @@ import WebFeatureServiceCatalogItem, {
 } from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
-import getCapabilities from "../../../../wwwroot/test/WFS/getCapabilities.xml";
+import getCapabilities from "../../../../wwwroot/test/WFS/getCapabilities.xml?raw";
 
 describe("WebFeatureServiceCatalogItem", function () {
   let terria: Terria;

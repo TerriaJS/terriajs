@@ -9,7 +9,7 @@ import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 
 import bikeracksJson from "../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
-import singleMetadataUrl from "../../../../wwwroot/test/WMS/single_metadata_url.xml";
+import singleMetadataUrl from "../../../../wwwroot/test/WMS/single_metadata_url.xml?raw";
 
 describe("CompositeCatalogItem", function () {
   let terria: Terria;

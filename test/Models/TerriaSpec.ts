@@ -54,7 +54,7 @@ import mapServerWithErrorJson from "../../wwwroot/test/Terria/applyInitData/MapS
 import magdaGroupRecordJson from "../../wwwroot/test/Terria/applyInitData/MagdaReference/group_record.json";
 import magdaWmsRecordJson from "../../wwwroot/test/Terria/applyInitData/MagdaReference/wms_record.json";
 import esriFeatureServerJson from "../../wwwroot/test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
-import wmsCapabilitiesXml from "../../wwwroot/test/Terria/applyInitData/WmsServer/capabilities.xml";
+import wmsCapabilitiesXml from "../../wwwroot/test/Terria/applyInitData/WmsServer/capabilities.xml?raw";
 import storyJson from "../../wwwroot/test/stories/TerriaJS App/my-story.json";
 
 // i18nOptions for CI

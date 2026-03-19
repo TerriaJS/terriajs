@@ -26,7 +26,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import defaultRequestTemplate from "./SensorObservationServiceRequestTemplate.xml";
+import defaultRequestTemplate from "./SensorObservationServiceRequestTemplate.xml?raw";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;

@@ -29,10 +29,10 @@ configure({
   computedRequiresReaction: true
 });
 
-import processDescriptionsXml from "../../../../wwwroot/test/WPS/ProcessDescriptions.xml";
-import executeResponseXml from "../../../../wwwroot/test/WPS/ExecuteResponse.xml";
-import failedExecuteResponseXml from "../../../../wwwroot/test/WPS/FailedExecuteResponse.xml";
-import pendingExecuteResponseXml from "../../../../wwwroot/test/WPS/PendingExecuteResponse.xml";
+import processDescriptionsXml from "../../../../wwwroot/test/WPS/ProcessDescriptions.xml?raw";
+import executeResponseXml from "../../../../wwwroot/test/WPS/ExecuteResponse.xml?raw";
+import failedExecuteResponseXml from "../../../../wwwroot/test/WPS/FailedExecuteResponse.xml?raw";
+import pendingExecuteResponseXml from "../../../../wwwroot/test/WPS/PendingExecuteResponse.xml?raw";
 
 describe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;
