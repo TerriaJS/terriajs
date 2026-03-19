@@ -10,7 +10,7 @@ import "tinymce/themes/silver";
 import "tinymce/models/dom";
 /* Import a skin (can be a custom skin instead of the default) */
 // import "!!style-loader!css-loader!tinymce/skins/ui/oxide/skin.min.css";
-import "!!style-loader!css-loader!./editor.skin.min.css"; // Custom borderless skin
+import "./editor.skin.min.css"; // Custom borderless skin
 
 /* Import TinyMCE plugins */
 import "tinymce/plugins/media";
@@ -21,8 +21,8 @@ import "tinymce/plugins/table";
 import "tinymce/plugins/autolink";
 
 // Extra css to enable proper behaviour of tinymce, including image resize handles
-import contentCss from "tinymce/skins/content/default/content.min.css";
-import contentUiCss from "tinymce/skins/ui/oxide/content.min.css";
+import contentCss from "tinymce/skins/content/default/content.min.css?raw";
+import contentUiCss from "tinymce/skins/ui/oxide/content.min.css?raw";
 
 interface ITinyEditorProps {
   html: string;

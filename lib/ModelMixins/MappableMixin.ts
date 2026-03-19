@@ -65,11 +65,9 @@ export class ImageryParts {
     this.clippingRectangle = options.clippingRectangle;
     this.show = options.show ?? true;
   }
-}
 
-// This discriminator only discriminates between ImageryParts and DataSource
-export namespace ImageryParts {
-  export function is(object: MapItem): object is ImageryParts {
+  // This discriminator only discriminates between ImageryParts and DataSource
+  static is(object: MapItem): object is ImageryParts {
     return "imageryProvider" in object;
   }
 }

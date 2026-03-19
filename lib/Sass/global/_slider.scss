@@ -2,7 +2,7 @@
 @use "../../Sass/common/_variables";
 
 :global {
-  @include meta.load-css("~rc-slider/assets/index");
+  @include meta.load-css("rc-slider/assets/index");
 
   .rc-slider {
     margin-right: 5px;

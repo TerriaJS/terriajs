@@ -68,21 +68,21 @@ async function download(items: TableMixin.Instance[]) {
   const synthesized = synthesizeNameAndValueArrays(items);
 
   // Could implement this using TaskProcessor, but requires webpack magic.
-  const worker = await import("worker-loader!./downloadHrefWorker").then(
-    (labelLayoutWorker) => new labelLayoutWorker.default()
-  );
+  // const worker = await import("worker-loader!./downloadHrefWorker").then(
+  //   (labelLayoutWorker) => new labelLayoutWorker.default()
+  // );
 
   // console.log('names and value arrays', synthesized.names, synthesized.values);
-  if (synthesized.values && synthesized.values.length > 0) {
-    worker.postMessage(synthesized);
-    worker.onmessage = (event: any) => {
-      // console.log('got worker message', event.data.slice(0, 60), '...');
-      const blob = new Blob([event.data], {
-        type: "text/csv;charset=utf-8"
-      });
-      FileSaver.saveAs(blob, "chart data.csv");
-    };
-  }
+  // if (synthesized.values && synthesized.values.length > 0) {
+  //   worker.postMessage(synthesized);
+  //   worker.onmessage = (event: any) => {
+  //     // console.log('got worker message', event.data.slice(0, 60), '...');
+  //     const blob = new Blob([event.data], {
+  //       type: "text/csv;charset=utf-8"
+  //     });
+  //     FileSaver.saveAs(blob, "chart data.csv");
+  //   };
+  // }
 }
 
 export const ChartPanelDownloadButton = observer(
