@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import babel from "@rolldown/plugin-babel";
 import { patchCssModules } from "vite-css-modules";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
@@ -93,6 +94,22 @@ export function configureVite(options) {
     assetsInclude: ["**/*.pbf", "**/*.DAC"],
 
     plugins: [
+      babel({
+        exclude: /node_modules\/(?!terriajs\b)/,
+        assumptions: { setPublicClassFields: false },
+        presets: [
+          {
+            preset: () => ({
+              presets: ["@babel/preset-typescript"],
+              plugins: [
+                ["@babel/plugin-proposal-decorators", { legacy: true }],
+                ["@babel/plugin-transform-class-properties"]
+              ]
+            }),
+            rolldown: { filter: { code: "@" } }
+          }
+        ]
+      }),
       viteStaticCopy({
         targets: [
           {

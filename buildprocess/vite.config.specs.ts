@@ -87,16 +87,9 @@ export default defineConfig(({ mode }) => {
       jsonExtensionsPlugin(),
       specsEntryPlugin(),
       react({
-        include: /\.[jt]sx?$/,
+        include: /\.[jt]sx$/,
         babel: {
-          plugins: [
-            ["@babel/plugin-proposal-decorators", { legacy: true }],
-            ["@babel/transform-class-properties"],
-            "babel-plugin-styled-components"
-          ],
-          assumptions: {
-            setPublicClassFields: false
-          }
+          plugins: ["babel-plugin-styled-components"]
         }
       })
     ]

@@ -154,6 +154,7 @@
     "vite-css-modules": "^1.14.0"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.2",
     "@types/node": "^24.3.1",
     "@types/svg-sprite": "^0.0.39",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
