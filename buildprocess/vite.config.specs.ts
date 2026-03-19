@@ -87,6 +87,7 @@ export default defineConfig(({ mode }) => {
       jsonExtensionsPlugin(),
       specsEntryPlugin(),
       react({
+        include: /\.[jt]sx?$/,
         babel: {
           plugins: [
             ["@babel/plugin-proposal-decorators", { legacy: true }],
