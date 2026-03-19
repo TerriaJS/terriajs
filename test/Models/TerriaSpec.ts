@@ -210,7 +210,6 @@ describe("TerriaSpec", function () {
         // This model is added to the workbench in "init/something.json" - which is loaded before "https://application.url/init/hash-init.json"
         // So we add a long delay to make sure that `workbench` is overridden by `hash-init.json`
         http.get("*/test.czml", async () => {
-          await new Promise((resolve) => setTimeout(resolve, 500));
           return HttpResponse.json([{ id: "document", version: "1.0" }]);
         }),
         // Note: no delay for "test-2.czml" - which is added to `workbench` by `hash-init.json
@@ -218,7 +217,6 @@ describe("TerriaSpec", function () {
           HttpResponse.json([{ id: "document", version: "1.0" }])
         )
       );
-
       await terria.start({
         configUrl: `config.json`,
         i18nOptions
