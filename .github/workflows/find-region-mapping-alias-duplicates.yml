@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           sparse-checkout: |
-            wwwroot/data/regionMapping.json
+            assets/regionMapping/regionMapping.json
             buildprocess/find-region-mapping-alias-duplicates.js
           sparse-checkout-cone-mode: false
 
