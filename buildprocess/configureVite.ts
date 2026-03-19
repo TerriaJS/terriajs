@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { createRequire } from "node:module";
 
 import type { UserConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
@@ -10,8 +9,6 @@ import { momentLocalePlugin } from "./vite-plugins/assetPlugins.ts";
 import { cesiumDebugStripPlugin } from "./vite-plugins/cesiumPlugin.ts";
 import { scssCssModulesPlugin } from "./vite-plugins/scssCssModulesPlugin.ts";
 import { svgSpritePlugin } from "./vite-plugins/svgSpritePlugin.ts";
-
-const require = createRequire(import.meta.url);
 
 interface ConfigureViteOptions {
   terriaJSBasePath: string;
@@ -93,7 +90,11 @@ export function configureVite(options: ConfigureViteOptions): UserConfig {
       viteStaticCopy({
         targets: [
           {
-            src: require.resolve("assimpjs/dist/assimpjs.wasm"),
+            src: path.join(
+              findPackageDir("assimpjs", searchPaths),
+              "dist",
+              "assimpjs.wasm"
+            ),
             dest: buildOutputPath
           },
           {
