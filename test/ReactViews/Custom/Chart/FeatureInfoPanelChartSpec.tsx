@@ -15,8 +15,6 @@ import parseCustomHtmlToReact from "../../../../lib/ReactViews/Custom/parseCusto
 import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 import { worker } from "../../../mocks/browser";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
-
 import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv?raw";
 
 describe("FeatureInfoPanelChart", function () {
@@ -41,9 +39,6 @@ describe("FeatureInfoPanelChart", function () {
     CustomComponent.register(new CsvChartCustomComponent());
 
     worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
       http.get("*/test/csv_nongeo/x_height.csv", () => new HttpResponse(csv))
     );
   });

@@ -12,7 +12,7 @@ describe("Legend", function () {
       baseUrl: "./"
     });
     terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+      "./regionMapping/regionMapping.json";
   });
 
   describe(" - with image", function () {

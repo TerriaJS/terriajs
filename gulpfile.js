@@ -9,30 +9,56 @@
 // the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require("gulp");
-var terriajsServerGulpTask = require("./buildprocess/terriajsServerGulpTask");
+
+function runVite(args, done) {
+  var spawn = require("child_process").spawn;
+  var child = spawn("npx", ["vite"].concat(args), {
+    stdio: "inherit",
+    cwd: __dirname
+  });
+  child.on("close", function (code) {
+    done(code ? new Error("Vite exited with code " + code) : undefined);
+  });
+}
 
 function buildSpecs(done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
-
-  runWebpack(webpack, webpackConfig, done);
+  runVite(
+    [
+      "build",
+      "--config",
+      "buildprocess/vite.config.specs.ts",
+      "--mode",
+      "development"
+    ],
+    done
+  );
 }
 
 function releaseSpecs(done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(false);
-
-  runWebpack(webpack, webpackConfig, done);
+  runVite(
+    [
+      "build",
+      "--config",
+      "buildprocess/vite.config.specs.ts",
+      "--mode",
+      "production"
+    ],
+    done
+  );
 }
 
 function watchSpecs(done) {
-  var watchWebpack = require("./buildprocess/watchWebpack");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack.config.make.js")(true);
-
-  watchWebpack(webpack, webpackConfig, done);
+  runVite(
+    [
+      "build",
+      "--watch",
+      "--config",
+      "buildprocess/vite.config.specs.ts",
+      "--mode",
+      "development"
+    ],
+    done
+  );
 }
 
 function lint(done) {
@@ -68,51 +94,6 @@ function jsdoc(done) {
 }
 jsdoc.description = "Build developer reference documentation.";
 jsdoc.displayName = "reference-guide";
-
-function copyCesiumWorkers() {
-  var path = require("path");
-
-  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
-  var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumWorkersRoot = path.join(cesiumRoot, "Build", "Workers");
-
-  return gulp
-    .src([path.join(cesiumWorkersRoot, "**")], {
-      base: cesiumWorkersRoot,
-      encoding: false
-    })
-    .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
-}
-
-function copyCesiumThirdparty() {
-  var path = require("path");
-
-  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
-  var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumThirdPartyRoot = path.join(cesiumRoot, "Source", "ThirdParty");
-
-  return gulp
-    .src([path.join(cesiumThirdPartyRoot, "**")], {
-      base: cesiumThirdPartyRoot,
-      encoding: false
-    })
-    .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
-}
-
-function copyCesiumSourceAssets() {
-  var path = require("path");
-
-  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
-  var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumAssetsRoot = path.join(cesiumRoot, "Source", "Assets");
-
-  return gulp
-    .src([path.join(cesiumAssetsRoot, "**")], {
-      base: cesiumAssetsRoot,
-      encoding: false
-    })
-    .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
-}
 
 async function runJasmineBrowser(browserName) {
   var { runSpecs } = require("jasmine-browser-runner");
@@ -183,11 +164,7 @@ codeAttribution.description = "Generate doc/acknowledgements/attributions.md.";
 codeAttribution.displayName = "code-attribution";
 
 function buildForDocGeneration(done) {
-  var runWebpack = require("./buildprocess/runWebpack.js");
-  var webpack = require("webpack");
-  var webpackConfig = require("./buildprocess/webpack-tools.config.js")();
-
-  runWebpack(webpack, webpackConfig, done);
+  runVite(["build", "--config", "buildprocess/vite.config.tools.ts"], done);
 }
 
 const renderGuide = gulp.series(
@@ -259,28 +236,13 @@ const docs = gulp.series(
 );
 docs.description = "Generate developer- and user-documentation.";
 
-function terriajsServer(done) {
-  terriajsServerGulpTask(3002)(done);
-}
-terriajsServer.description = "Start TerriaJS server.";
-terriajsServer.displayName = "terriajs-server";
-terriajsServer.flags = {
-  "--terriajsServerArg": "Argument to pass to terriaJsServer"
-};
-
-const copyCesiumAssets = gulp.series(
-  copyCesiumSourceAssets,
-  copyCesiumWorkers,
-  copyCesiumThirdparty
-);
-
-const build = gulp.series(copyCesiumAssets, buildSpecs);
+const build = gulp.series(buildSpecs);
 build.description = "Build non-minified version of TerriaJS tests.";
 
-const release = gulp.series(copyCesiumAssets, releaseSpecs);
+const release = gulp.series(releaseSpecs);
 release.description = "Build minified version of TerriaJS tests.";
 
-const watch = gulp.series(copyCesiumAssets, watchSpecs);
+const watch = gulp.series(watchSpecs);
 watch.description = "Build TerriaJS tests when there are source changes.";
 
 function serveTests(done) {
@@ -296,13 +258,8 @@ serveTests.description =
   "Start jasmine-browser-runner server for interactive testing.";
 serveTests.displayName = "serve-tests";
 
-const dev = gulp.parallel(terriajsServer, watch, serveTests);
-dev.description =
-  "Start TerriaJS server, watch for source changes, and serve tests.";
-
-const postNpmInstall = copyCesiumAssets;
-postNpmInstall.description = "Copy Cesium assets after installation.";
-postNpmInstall.displayName = "post-npm-install";
+const dev = gulp.parallel(watch, serveTests);
+dev.description = "Watch for source changes and serve tests.";
 
 const lintBuild = gulp.series(lint, build);
 lintBuild.description = "Run ESLint followed by build.";
@@ -312,7 +269,6 @@ exports.build = build;
 exports.watch = watch;
 exports.dev = dev;
 exports.serveTests = serveTests;
-exports.terriajsServer = terriajsServer;
 exports.docs = docs;
 exports.jsdoc = jsdoc;
 exports.renderGuide = renderGuide;
@@ -320,5 +276,4 @@ exports.codeAttribution = codeAttribution;
 exports.test = test;
 exports.testFirefox = testFirefox;
 exports.release = release;
-exports.postNpmInstall = postNpmInstall;
 exports.default = lintBuild;

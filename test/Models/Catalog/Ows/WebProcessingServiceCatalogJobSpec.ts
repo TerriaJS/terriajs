@@ -9,7 +9,7 @@ import { worker } from "../../../mocks/browser";
 
 // For more tests see - test\Models\WebProcessingServiceCatalogFunctionSpec.ts
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
 
 configure({
   enforceActions: "observed",
@@ -39,11 +39,6 @@ describe("WebProcessingServiceCatalogFunctionJob", function () {
       ]);
       item.setTrait(CommonStrata.user, "jobStatus", "finished");
     });
-    worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      )
-    );
   });
 
   it("has a type & typeName", function () {

@@ -150,7 +150,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
       this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: i18next.t("AR.manualAlignmentTitle"),
         message: i18next.t("AR.manualAlignmentMessage", {
-          img: '<img width="100%" src="./build/TerriaJS/images/ar-realign-guide.gif" />'
+          img: '<img width="100%" src="./images/ar-realign-guide.gif" />'
         }),
         confirmText: i18next.t("AR.confirmText")
       });

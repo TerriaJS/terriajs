@@ -5,7 +5,6 @@ import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 
 import latLonDateValueCsv from "../../../../wwwroot/test/csv/lat_lon_date_value.csv?raw";
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("CsvCatalogItem", function () {
   let terria: Terria;
@@ -14,11 +13,6 @@ describe("CsvCatalogItem", function () {
   beforeEach(function () {
     terria = new Terria();
     csv = new CsvCatalogItem("test", terria, undefined);
-    worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      )
-    );
   });
 
   it("filters out duplicate discrete times", async function () {

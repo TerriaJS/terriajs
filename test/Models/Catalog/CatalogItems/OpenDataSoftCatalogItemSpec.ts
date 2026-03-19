@@ -8,7 +8,6 @@ import { worker } from "../../../mocks/browser";
 import dataset from "../../../../wwwroot/test/ods/weather-station-dataset.json";
 import groupBy from "../../../../wwwroot/test/ods/weather-station-groupby.json";
 import weatherStationData from "../../../../wwwroot/test/ods/weather-station-100.json";
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 describe("OpenDataSoftCatalogItem", function () {
   let terria: Terria;
@@ -30,9 +29,6 @@ describe("OpenDataSoftCatalogItem", function () {
             return HttpResponse.json(weatherStationData);
           throw new Error(`Unexpected query params: ${url.search}`);
         }
-      ),
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
       )
     );
 

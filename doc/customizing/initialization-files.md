@@ -262,7 +262,7 @@ Definition of the base map model.
           "id": "basemap-positron",
           "name": "Base map positron customized name",
         },
-        "image": "build/TerriaJS/images/time-series-guide.jpg"
+        "image": "images/time-series-guide.jpg"
       },
       {
         "item": {
@@ -274,11 +274,11 @@ Definition of the base map model.
           "subdomains": ["a", "b", "c", "d"],
           "opacity": 1.0
         },
-        "image": "build/TerriaJS/images/Australia.png"
+        "image": "images/Australia.png"
       },
       {
         "item": "//Surface Geology",
-        "image": "build/TerriaJS/images/Australia.png"
+        "image": "images/Australia.png"
       }
     ],
     "defaultBaseMapId": "basemap-positron",

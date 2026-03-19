@@ -6,7 +6,6 @@ import Terria from "../../../../lib/Models/Terria";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import { worker } from "../../../mocks/browser";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 import positionApiResponse from "../../../../wwwroot/test/JSON-api/position_api_response.json";
 import valueApiResponse from "../../../../wwwroot/test/JSON-api/value_api_response.json";
 
@@ -34,12 +33,6 @@ describe("ApiTableCatalogItem", function () {
           }
         ]
       });
-
-      worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        )
-      );
     });
 
     it("adds common queryParameters to URL", async function () {
@@ -114,9 +107,6 @@ describe("ApiTableCatalogItem", function () {
     });
 
     worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
       http.get("https://terria.io/position.json", () =>
         HttpResponse.json(positionApiResponse)
       ),
@@ -138,9 +128,6 @@ describe("ApiTableCatalogItem", function () {
   describe("behaviour of `responseDataPath` option", function () {
     beforeEach(function () {
       worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        ),
         http.get("https://terria.io/position.json", () =>
           HttpResponse.json(positionApiResponse)
         )
@@ -299,9 +286,6 @@ describe("ApiTableCatalogItem", function () {
   describe("supports apiColumns", function () {
     beforeEach(function () {
       worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        ),
         http.get("https://terria.io/position.json", () =>
           HttpResponse.json(positionApiResponse)
         )

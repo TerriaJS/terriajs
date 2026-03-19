@@ -5,7 +5,7 @@ import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 import JasmineDOM from "@testing-library/jasmine-dom";
 import { initReactI18next } from "react-i18next";
-import english from "../wwwroot/languages/en/translation.json";
+import english from "../assets/languages/en/translation.json";
 import { worker } from "./mocks/browser";
 
 configure({

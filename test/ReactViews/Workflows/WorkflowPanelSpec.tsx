@@ -12,7 +12,7 @@ describe("WorkflowPanel", function () {
       baseUrl: "./"
     });
     terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+      "./regionMapping/regionMapping.json";
     viewState = new ViewState({
       terria,
       catalogSearchProvider: undefined

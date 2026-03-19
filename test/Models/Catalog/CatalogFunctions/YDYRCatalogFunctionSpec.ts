@@ -9,9 +9,8 @@ import YDYRCatalogFunctionJob from "../../../../lib/Models/Catalog/CatalogFuncti
 import { worker } from "../../../mocks/browser";
 import "../../../SpecHelpers";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
-import sa4regionCodes from "../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
-import lga2011RegionCodes from "../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json";
+import sa4regionCodes from "../../../../assets/regionMapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
+import lga2011RegionCodes from "../../../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json";
 
 configure({
   enforceActions: "observed",
@@ -61,9 +60,6 @@ describe("YDYRCatalogFunction", function () {
       http.get(
         "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
         () => HttpResponse.json(lga2011RegionCodes)
-      ),
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
       )
     );
 

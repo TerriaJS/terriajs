@@ -46,12 +46,12 @@ import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv?ra
 import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv?raw";
 import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv?raw";
 import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv?raw";
-import regionMapping from "../../wwwroot/data/regionMapping.json";
+import regionMapping from "../../assets/regionMapping/regionMapping.json";
 import additionalRegionMapping from "../../wwwroot/test/regionMapping/additionalRegion.json";
-import regionIdsSte from "../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
-import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
-import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
-import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
+import regionIdsSte from "../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
+import regionIdsLgaName from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
+import regionIdsLgaCode from "../../assets/regionMapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionIdsLgaNameStates from "../../assets/regionMapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
 const NUMBER_OF_REGION_MAPPING_TYPES = 154;
 
@@ -66,9 +66,6 @@ describe("TableMixin", function () {
     item = new CsvCatalogItem("test", terria, undefined);
 
     worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
       http.get(
         "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json",
         () => HttpResponse.json(regionIdsSte)
@@ -586,25 +583,17 @@ describe("TableMixin", function () {
     it("loads regionProviderLists on loadMapItems - with multiple regionMappingDefinitionsUrl", async function () {
       // We add "additionalRegion.json" - which defines two region types
       // - "SOME_OTHER_REGION" - which is just another region type
-      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "assets/regionMapping/regionMapping.json"
       worker.use(
         http.get("*/additionalRegion.json", () =>
           HttpResponse.json(additionalRegionMapping)
-        ),
-        http.get(
-          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
-          () => HttpResponse.json(regionIdsLgaNameStates)
-        ),
-        http.get(
-          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
-          () => HttpResponse.json(regionIdsLgaName)
         )
       );
 
       terria.updateParameters({
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",
-          "build/TerriaJS/data/regionMapping.json"
+          "regionMapping/regionMapping.json"
         ]
       });
 
@@ -623,7 +612,7 @@ describe("TableMixin", function () {
         NUMBER_OF_REGION_MAPPING_TYPES
       );
 
-      // Item region provider should match from "additionalRegion.json" (as it comes before "build/TerriaJS/data/regionMapping.json")
+      // Item region provider should match from "additionalRegion.json" (as it comes before "assets/regionMapping/regionMapping.json")
       expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
         "Local Government Areas 2011 by name (ABS) !!!! OVERRIDDEN"
       );
@@ -632,26 +621,18 @@ describe("TableMixin", function () {
     it("loads regionProviderLists on loadMapItems - will use regionMappingDefinitionsUrl instead of regionMappingDefinitionsUrls", async function () {
       // We add "additionalRegion.json" - which defines two region types
       // - "SOME_OTHER_REGION" - which is just another region type
-      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "assets/regionMapping/regionMapping.json"
       worker.use(
         http.get("*/additionalRegion.json", () =>
           HttpResponse.json(additionalRegionMapping)
-        ),
-        http.get(
-          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
-          () => HttpResponse.json(regionIdsLgaNameStates)
-        ),
-        http.get(
-          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
-          () => HttpResponse.json(regionIdsLgaName)
         )
       );
 
       terria.updateParameters({
-        regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
+        regionMappingDefinitionsUrl: "regionMapping/regionMapping.json",
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",
-          "build/TerriaJS/data/regionMapping.json"
+          "regionMapping/regionMapping.json"
         ]
       });
 
@@ -669,7 +650,7 @@ describe("TableMixin", function () {
         NUMBER_OF_REGION_MAPPING_TYPES
       );
 
-      // Item region provider should match from "build/TerriaJS/data/regionMapping.json"
+      // Item region provider should match from "assets/regionMapping/regionMapping.json"
       expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
         "Local Government Areas 2011 by name (ABS)"
       );

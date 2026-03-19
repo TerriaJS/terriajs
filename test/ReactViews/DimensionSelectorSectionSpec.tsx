@@ -20,8 +20,8 @@ import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTra
 import { worker } from "../mocks/browser";
 
 import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv?raw";
-import lgaCodeJson from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
-import regionMapping from "../../wwwroot/data/regionMapping.json";
+import lgaCodeJson from "../../assets/regionMapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionMapping from "../../assets/regionMapping/regionMapping.json";
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
@@ -157,9 +157,6 @@ describe("DimensionSelectorSection", function () {
 
   it("shows csv region mapping options", async function () {
     worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
       http.get(
         "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
         () => HttpResponse.json(lgaCodeJson)

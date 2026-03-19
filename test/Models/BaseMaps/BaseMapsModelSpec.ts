@@ -85,7 +85,7 @@ describe("BaseMapModel", () => {
           maximumLevel: 7,
           opacity: 1.0
         },
-        image: "build/TerriaJS/images/natural-earth.png",
+        image: "assets/images/natural-earth.png",
         contrastColor: "#000000"
       })
     );

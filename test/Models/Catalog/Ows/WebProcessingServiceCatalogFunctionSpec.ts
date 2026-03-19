@@ -22,7 +22,7 @@ import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
 import "../../../SpecHelpers";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
 
 configure({
   enforceActions: "observed",
@@ -67,10 +67,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
         return new HttpResponse(executeResponseXml, {
           headers: { "Content-Type": "text/xml" }
         });
-      }),
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      )
+      })
     );
   });
 

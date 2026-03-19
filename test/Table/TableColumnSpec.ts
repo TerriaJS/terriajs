@@ -8,7 +8,7 @@ import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits
 import TableColumnType from "../../lib/Table/TableColumnType";
 import { worker } from "../mocks/browser";
 
-import regionMapping from "../../wwwroot/data/regionMapping.json";
+import regionMapping from "../../assets/regionMapping/regionMapping.json";
 
 describe("TableColumn", function () {
   let tableModel: CsvCatalogItem;
@@ -350,14 +350,6 @@ describe("TableColumn", function () {
   });
 
   describe("valuesAsDates", function () {
-    beforeEach(function () {
-      worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        )
-      );
-    });
-
     it("defaults to dd/mm/yyyy dates", async function () {
       tableModel.setTrait(
         CommonStrata.user,
@@ -453,14 +445,6 @@ describe("TableColumn", function () {
   });
 
   describe("column transformation", function () {
-    beforeEach(function () {
-      worker.use(
-        http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-          HttpResponse.json(regionMapping)
-        )
-      );
-    });
-
     it("simple expression", async function () {
       tableModel.setTrait(CommonStrata.user, "csvString", "num\n1\n2\n3\n4\n");
       tableModel.setTrait(CommonStrata.user, "columns", [

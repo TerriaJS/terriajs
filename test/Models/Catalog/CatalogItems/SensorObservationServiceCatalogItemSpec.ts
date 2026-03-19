@@ -13,18 +13,12 @@ import EmptyGetFeatureOfInterestResponse from "../../../../wwwroot/test/sos/GetF
 import GetObservationResponseDaily from "../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml?raw";
 import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml?raw";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
+import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
 
 describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
 
   beforeEach(function () {
-    worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      )
-    );
-
     item = new SensorObservationServiceCatalogItem("test", new Terria());
     item.setTrait(CommonStrata.user, "url", "https://sos.example.com");
     const proc1 = item.addObject(CommonStrata.user, "procedures", "proc1");

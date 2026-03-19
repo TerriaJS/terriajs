@@ -16,7 +16,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         mapStyle: "AerialWithLabelsOnDemand",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial-labels.png",
+      image: "images/bing-aerial-labels.png",
       contrastColor: "#ffffff"
     });
 
@@ -28,7 +28,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         mapStyle: "Aerial",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial.png",
+      image: "images/bing-aerial.png",
       contrastColor: "#ffffff"
     });
     baseMaps.push({
@@ -39,7 +39,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         mapStyle: "RoadOnDemand",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-maps-roads.png",
+      image: "images/bing-maps-roads.png",
       contrastColor: "#000000"
     });
   } else if (terria.configParameters.useCesiumIonBingImagery === true) {
@@ -51,7 +51,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         ionAssetId: 3,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial-labels.png",
+      image: "images/bing-aerial-labels.png",
       contrastColor: "#ffffff"
     });
 
@@ -63,7 +63,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         ionAssetId: 2,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial.png",
+      image: "images/bing-aerial.png",
       contrastColor: "#ffffff"
     });
     baseMaps.push({
@@ -74,7 +74,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         ionAssetId: 4,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-maps-roads.png",
+      image: "images/bing-maps-roads.png",
       contrastColor: "#000000"
     });
   }
@@ -90,7 +90,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
       maximumLevel: 7,
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/natural-earth.png",
+    image: "images/natural-earth.png",
     contrastColor: "#000000"
   });
 
@@ -104,7 +104,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
         "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>",
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/openstreetmap.png",
+    image: "images/openstreetmap.png",
     contrastColor: "#000000"
   });
 

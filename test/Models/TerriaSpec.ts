@@ -95,13 +95,13 @@ describe("TerriaSpec", function () {
         baseUrl: "some/path/to/terria"
       });
       const path = new URL(terria.cesiumBaseUrl).pathname;
-      expect(path).toBe("/some/path/to/terria/build/Cesium/build/");
+      expect(path).toBe("/some/path/to/terria/cesiumAssets/");
     });
 
     it("should update the baseUrl setting in the cesium module", function () {
       expect(
         buildModuleUrl("Assets/some/image.png").endsWith(
-          "/build/Cesium/build/Assets/some/image.png"
+          "/cesiumAssets/Assets/some/image.png"
         )
       ).toBe(true);
 
@@ -111,7 +111,7 @@ describe("TerriaSpec", function () {
       });
       expect(
         buildModuleUrl("Assets/some/image.png").endsWith(
-          "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
+          "/some/path/to/terria/cesiumAssets/Assets/some/image.png"
         )
       ).toBe(true);
     });
@@ -789,7 +789,7 @@ describe("TerriaSpec", function () {
           JSON.stringify({
             initializationUrls: [],
             parameters: {
-              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
+              regionMappingDefinitionsUrls: ["regionMapping/regionMapping.json"]
             }
           })
         )}`;
@@ -1573,7 +1573,7 @@ describe("TerriaSpec", function () {
                     maximumLevel: 7,
                     opacity: 1.0
                   },
-                  image: "build/TerriaJS/images/natural-earth.png",
+                  image: "assets/images/natural-earth.png",
                   contrastColor: "#000000"
                 },
                 {

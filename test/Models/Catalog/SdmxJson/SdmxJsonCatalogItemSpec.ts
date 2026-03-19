@@ -7,9 +7,9 @@ import TableColumnType from "../../../../lib/Table/TableColumnType";
 import { ModelOverrideTraits } from "../../../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 import { worker } from "../../../mocks/browser";
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
-import steCodes from "../../../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json";
-import isoCodes from "../../../../wwwroot/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json";
+import regionMapping from "../../../../assets/regionMapping/regionMapping.json";
+import steCodes from "../../../../assets/regionMapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json";
+import isoCodes from "../../../../assets/regionMapping/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json";
 import dataflowNoRegionData from "../../../../wwwroot/test/SDMX-JSON/data-noregion.csv?raw";
 import dataflowRegionData from "../../../../wwwroot/test/SDMX-JSON/data-region.csv?raw";
 import dataflowRegionTimeData from "../../../../wwwroot/test/SDMX-JSON/data-region-time.csv?raw";
@@ -24,9 +24,6 @@ describe("SdmxJsonCatalogItem", function () {
 
   beforeEach(async function () {
     worker.use(
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
       http.get(
         "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_CODE16.json",
         () => HttpResponse.json(steCodes)

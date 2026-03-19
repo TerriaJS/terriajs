@@ -212,9 +212,9 @@ export interface ConfigParameters {
   useCesiumIonBingImagery?: boolean;
   /**
    * The OAuth2 application ID to use to allow login to Cesium ion on the "Add Data" panel. The referenced application must be configured on
-   * Cesium ion with a Redirect URI of `[TerriaMap Base URL]/build/TerriaJS/cesium-ion-oauth2.html`. For example, if users access your TerriaJS
+   * Cesium ion with a Redirect URI of `[TerriaMap Base URL]/assets/cesium-ion-oauth2.html`. For example, if users access your TerriaJS
    * application at `https://example.com/AwesomeMap` then the Redirect URI must be exactly
-   * `https://example.com/AwesomeMap/build/TerriaJS/cesium-ion-oauth2.html`.
+   * `https://example.com/AwesomeMap/assets/cesium-ion-oauth2.html`.
    */
   cesiumIonOAuth2ApplicationID?: number;
   /**
@@ -428,7 +428,7 @@ interface TerriaOptions {
   appBaseHref?: string;
   /**
    * Base url where TerriaJS resources can be found.
-   * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
+   * Normally "./" in any TerriaMap and "./" in specs
    */
   baseUrl?: string;
 
@@ -462,7 +462,7 @@ export default class Terria {
     "/"
   );
   /** Base URL to Terria resources */
-  readonly baseUrl: string = "build/TerriaJS/";
+  readonly baseUrl: string = "./";
 
   /**
    * Base URL used by Cesium to link to images and other static assets.
@@ -529,7 +529,7 @@ export default class Terria {
     defaultMaximumShownFeatureInfos: 100,
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: undefined,
-    regionMappingDefinitionsUrls: ["build/TerriaJS/data/regionMapping.json"],
+    regionMappingDefinitionsUrls: ["regionMapping/regionMapping.json"],
     proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
@@ -753,7 +753,7 @@ export default class Terria {
     // (e.g. Node.js) and no absolute URL is passed as an option for `appBaseHref`. In this case,
     // send a relative URL to cesium
     const cesiumBaseUrlRelative =
-      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`;
+      options.cesiumBaseUrl ?? `${this.baseUrl}cesiumAssets/`;
     this.cesiumBaseUrl = ensureSuffix(
       new URI(cesiumBaseUrlRelative).absoluteTo(this.appBaseHref).toString(),
       "/"

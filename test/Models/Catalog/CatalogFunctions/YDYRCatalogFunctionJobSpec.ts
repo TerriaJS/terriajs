@@ -9,10 +9,6 @@ import "../../../SpecHelpers";
 
 // For more tests see - test\Models\YDYRCatalogFunctionSpec.ts
 
-import regionMapping from "../../../../wwwroot/data/regionMapping.json";
-import sa4regionCodes from "../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
-import lga2011RegionCodes from "../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json";
-
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
@@ -47,18 +43,7 @@ describe("YDYRCatalogFunctionJob", function () {
         return new HttpResponse(
           `{"key":"someResultKey","report":{"Quality Control":"OK (Model is performing better than baseline), providing full result"}}`
         );
-      }),
-      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
-        HttpResponse.json(regionMapping)
-      ),
-      http.get(
-        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json",
-        () => HttpResponse.json(sa4regionCodes)
-      ),
-      http.get(
-        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
-        () => HttpResponse.json(lga2011RegionCodes)
-      )
+      })
     );
 
     terria = new Terria();
