@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const wwwroot = path.resolve(__dirname, "../../wwwroot");
+const wwwroot = path.resolve(__dirname, "../wwwroot");
 
 export default {
   srcDir: "wwwroot",

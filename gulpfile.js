@@ -116,7 +116,7 @@ function copyCesiumSourceAssets() {
 
 async function runJasmineBrowser(browserName) {
   var { runSpecs } = require("jasmine-browser-runner");
-  var config = (await import("./spec/support/jasmine-browser.mjs")).default;
+  var config = (await import("./test/jasmine-browser.mjs")).default;
   if (browserName) {
     config = Object.assign({}, config, { browser: browserName });
   }
@@ -284,7 +284,7 @@ const watch = gulp.series(copyCesiumAssets, watchSpecs);
 watch.description = "Build TerriaJS tests when there are source changes.";
 
 function serveTests(done) {
-  import("./spec/support/jasmine-browser.mjs").then(function (mod) {
+  import("./test/jasmine-browser.mjs").then(function (mod) {
     var { Server } = require("jasmine-browser-runner");
     var server = new Server(mod.default);
     server.start().then(function () {
