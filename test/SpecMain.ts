@@ -70,4 +70,4 @@ jasmine.getEnv().addReporter({
     )
 });
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

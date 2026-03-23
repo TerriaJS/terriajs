@@ -141,7 +141,8 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           item.setTrait("definition", "ionAccessToken", "fakeToken");
           item.setTrait("definition", "ionServer", "fakeServer");
         });
-        spyOn(IonResource, "fromAssetId").and.callFake(() => {});
+        // @ts-expect-error: spy on static method
+        spyOn(IonResource, "fromAssetId").and.callFake(async () => {});
         try {
           await item.loadMapItems();
         } catch {}
@@ -225,7 +226,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             });
           });
 
-          it("sets the shadow mode", function () {
+          it("sets the shadow mode after blend", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);

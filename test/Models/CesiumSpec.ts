@@ -36,6 +36,8 @@ import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
 import { http, HttpResponse } from "msw";
 
+import wmsCapabilities from "../../wwwroot/test/WMS/wms_1_1_1.xml";
+
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
 describeIfSupported("Cesium Model", function () {
@@ -190,7 +192,7 @@ describeIfSupported("Cesium Model", function () {
     }
 
     it("correctly removes all the primitives, imageries and datasources from the scene when they are removed from the viewer", async function () {
-      worker.use(http.get("wms-*", () => HttpResponse.text()));
+      worker.use(http.get("wms-*", () => HttpResponse.xml(wmsCapabilities)));
 
       let items = await loadItems([
         create3dTilesCatalogItem(0),
@@ -270,7 +272,7 @@ describeIfSupported("Cesium Model", function () {
       let items: MappableMixin.Instance[];
 
       beforeEach(async function () {
-        worker.use(http.get("wms-3", () => HttpResponse.text()));
+        worker.use(http.get("wms-3", () => HttpResponse.xml(wmsCapabilities)));
 
         items = await loadItems([
           create3dTilesCatalogItem(0),
@@ -364,10 +366,9 @@ describeIfSupported("Cesium Model", function () {
           },
           { addModelToTerria: true }
         ).throwIfUndefined() as CesiumTerrainCatalogItem;
-        spyOn(
-          workbenchTerrainItem as any,
-          "loadTerrainProvider"
-        ).and.returnValue(new CesiumTerrainProvider());
+        spyOn(workbenchTerrainItem as any, "loadTerrainProvider").and.resolveTo(
+          new CesiumTerrainProvider()
+        );
         (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
@@ -398,7 +399,7 @@ describeIfSupported("Cesium Model", function () {
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
-      ).and.returnValue(Promise.resolve(fakeIonTerrainProvider));
+      ).and.callFake(() => Promise.resolve(fakeIonTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -416,7 +417,7 @@ describeIfSupported("Cesium Model", function () {
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromUrl"
-      ).and.returnValue(Promise.resolve(fakeUrlTerrainProvider));
+      ).and.callFake(() => Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -431,10 +432,9 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", async function () {
       const fakeCesiumWorldTerrainProvider = new CesiumTerrainProvider();
-      const createSpy = spyOn(
-        cesium as any,
-        "createWorldTerrain"
-      ).and.returnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
+      const createSpy = spyOn(cesium as any, "createWorldTerrain").and.callFake(
+        () => Promise.resolve(fakeCesiumWorldTerrainProvider)
+      );
 
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
