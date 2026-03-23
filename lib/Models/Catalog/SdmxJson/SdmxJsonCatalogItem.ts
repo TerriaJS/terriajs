@@ -151,7 +151,7 @@ export default class SdmxJsonCatalogItem
         headers: {
           Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
         }
-      }).fetch();
+      }).fetchText();
 
       if (!isDefined(csvString)) {
         throw new TerriaError({

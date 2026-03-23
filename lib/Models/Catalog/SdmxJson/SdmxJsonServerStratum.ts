@@ -431,53 +431,64 @@ export function parseSdmxUrn(urn?: string) {
 
 export async function loadSdmxJsonStructure(
   url: string,
-  allowNotImplemeted: false
+  allowNotImplemented: false
 ): Promise<SdmxJsonStructureMessage>;
 export async function loadSdmxJsonStructure(
   url: string,
-  allowNotImplemeted: true
+  allowNotImplemented: true
 ): Promise<SdmxJsonStructureMessage | undefined>;
 export async function loadSdmxJsonStructure(
   url: string,
-  allowNotImplemeted: boolean
+  allowNotImplemented: boolean
 ) {
   try {
-    return JSON.parse(
-      await new Resource({
-        url,
-        headers: {
-          Accept:
-            "application/vnd.sdmx.structure+json; charset=utf-8; version=1.0"
-        }
-      }).fetch()
-    ) as SdmxJsonStructureMessage;
-  } catch (error) {
-    // If SDMX server has returned an error message
-    if (error instanceof RequestErrorEvent && isDefined(error.response)) {
-      if (!allowNotImplemeted) {
-        throw new TerriaError({
-          title: i18next.t(
-            "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
-          ),
-          message: sdmxErrorString.has(error.statusCode)
-            ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
-            : `${error.response}`
-        });
+    const response = await new Resource({
+      url,
+      headers: {
+        Accept:
+          "application/vnd.sdmx.structure+json; charset=utf-8; version=1.0"
       }
-      // Not sure what happened (maybe CORS)
-    } else if (!allowNotImplemeted) {
+    }).fetchText();
+
+    if (response === undefined) {
       throw new TerriaError({
         title: i18next.t(
           "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
         ),
-        message: `Unkown error occurred${
-          isDefined(error)
-            ? typeof error === "string"
-              ? `: ${error}`
-              : `: ${JSON.stringify(error)}`
-            : ""
-        }`
+        message: `Failed to fetch SDMX structure from ${url}`
       });
+    }
+
+    return JSON.parse(response) as SdmxJsonStructureMessage;
+  } catch (error) {
+    // If SDMX server has returned an error message
+    if (error instanceof RequestErrorEvent && isDefined(error.response)) {
+      const terriaError = new TerriaError({
+        title: i18next.t(
+          "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
+        ),
+        message: sdmxErrorString.has(error.statusCode)
+          ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+          : `${error.response}`
+      });
+
+      if (!allowNotImplemented) {
+        throw terriaError;
+      } else {
+        terriaError.log();
+      }
+
+      // Not sure what happened (maybe CORS)
+    } else {
+      const terriaError = TerriaError.from(error, {
+        title: i18next.t("models.sdmxServerStratum.sdmxStructureLoadErrorTitle")
+      });
+
+      if (!allowNotImplemented) {
+        throw terriaError;
+      } else {
+        terriaError.log();
+      }
     }
   }
 }
