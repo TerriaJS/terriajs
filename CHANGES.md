@@ -4,13 +4,18 @@
 
 - Update prettier to v3.
   - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
+- Test environment modernization:
+  - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries.(#7755, #7763)
+  - Replace jasmine-ajax and fetch-mock with `msw` for mocking API requests in tests. (#7766, #7767, #7795, #7796, #7797, #7801)
+  - Replace karma test runner with jasmine-browser-runner and upgrade jasmine to v6. (#7807)
+  - Test runner is now exposed at port so to run tests in the browser, run `yarn gulp dev` and open `http://localhost:9876` in the browser.
+  - If you have custom tests this might require significant changes to your tests, so please reach out if you need help with this.
 
 - Capture default timeline state in share links including current time,
   playback etc.
 - Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
 - Underline text buttons
 - Replace node-fetch with node native fetch.
-- Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
 - TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
 - Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
 - Fix splitter failing for local file catalog items by storing file data as blob URLs in the `url` trait instead of private instance fields, ensuring `duplicateModel()` preserves the data. [#7762](https://github.com/TerriaJS/terriajs/pull/7762)
