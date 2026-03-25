@@ -16,6 +16,7 @@ interface CssExports {
   'left-col': string;
   'leftCol': string;
   'oneCol': string;
+  'previewCol': string;
   'root': string;
   'tab-list': string;
   'tab-list__btn': string;
@@ -25,6 +26,7 @@ interface CssExports {
   'tabList': string;
   'tabListBtn': string;
   'tabListItem': string;
+  'twoColRoot': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -127,6 +127,7 @@ class MyDataTab extends React.Component {
     return (
       <Box
         className={classNames(Styles.root, {
+          [Styles.twoColRoot]: showTwoColumn,
           [className]: className !== undefined
         })}
       >
@@ -197,7 +198,7 @@ class MyDataTab extends React.Component {
           {!this.state.activeTab && this.renderPromptBox()}
         </div>
         {showTwoColumn && (
-          <Box styledWidth="60%">
+          <Box className={Styles.previewCol}>
             <DataPreview
               terria={this.props.terria}
               viewState={this.props.viewState}
