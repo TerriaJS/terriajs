@@ -1,6 +1,8 @@
 # Change Log
 
-#### next release (8.11.4)
+#### next release (8.12.1)
+
+#### 8.12.0 - 2026-03-27
 
 - Update prettier to v3.
   - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
