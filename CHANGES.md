@@ -30,7 +30,7 @@
   - Simplify Clipboard component and add success message.
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
-- [The next improvement]
+- [Documentation] Replace obsolete Nexis dataset example with LGA 2025 data in model-dimensions.md
 
 #### 8.11.3 - 2026-02-02
 
