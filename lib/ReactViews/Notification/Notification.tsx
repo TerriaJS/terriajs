@@ -13,7 +13,7 @@ const Notification = observer(() => {
   const ignore =
     typeof notification?.ignore === "function"
       ? notification.ignore()
-      : notification?.ignore ?? false;
+      : (notification?.ignore ?? false);
 
   useEffect(() => {
     if (ignore) {

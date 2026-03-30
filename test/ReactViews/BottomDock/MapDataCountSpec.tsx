@@ -25,10 +25,10 @@ describe("MapDataCount", function () {
     expect(screen.getByText("countDatasets.noMapDataEnabled")).toBeVisible();
   });
 
-  it("renders count of datasets on map", function () {
+  it("renders count of datasets on map", async function () {
     const simple1 = new SimpleCatalogItem("simple1", terria);
     terria.addModel(simple1);
-    terria.workbench.add(simple1);
+    await terria.workbench.add(simple1);
 
     render(<MapDataCount terria={terria} viewState={viewState} />);
 

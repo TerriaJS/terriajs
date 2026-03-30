@@ -1,1 +1,2222 @@
-{}
+{
+  "general": {
+    "close": "ປິດ",
+    "open": "ເປີດ",
+    "prev": "ກ່ອນໜ້າ",
+    "next": "ຖັດໄປ",
+    "skip": "ຂ້າມ",
+    "back": "ກັບຄືນ",
+    "delete": "ລຶບ",
+    "cancel": "ຍົກເລີກ",
+    "confirm": "ຢືນຢັນ"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "trainer": {
+    "expandTrainer": "ສະແດງລາຍລະອຽດຂັ້ນຕອນເພີ່ມເຕີມ",
+    "collapseTrainer": "ເຊື່ອງລາຍລະອຽດຂັ້ນຕອນ",
+    "showAllSteps": "ສະແດງຂັ້ນຕອນທັງໝົດ",
+    "hideAllSteps": "ເຊື່ອງຂັ້ນຕອນທັງໝົດ"
+  },
+  "tour": {
+    "preface": {
+      "title": "ເບິ່ງແນະນຳການໃຊ້ງານ",
+      "content": "ບໍ່ແນ່ໃຈວ່າຈະເລີ່ມຈາກໃສ? ລອງເບິ່ງການແນະນຳຄຸນສົມບັດຫຼັກຂອງຊອບແວພວກເຮົາຢ່າງວ່ອງໄວ ແລະ ຮຽນຮູ້ກ່ຽວກັບບາງຟັງຊັນທີ່ສຳຄັນເພື່ອຊ່ວຍໃຫ້ທ່ານເລີ່ມຕົ້ນໄດ້ງ່າຍຂຶ້ນ.",
+      "close": "ໄວ້ເທື່ອໜ້າ",
+      "start": "ເລີ່ມຕົ້ນການແນະນຳ"
+    },
+    "finish": "ສຳເລັດ",
+    "locationSearchInput": {
+      "content": "## ຄົ້ນຫາສະຖານທີ່\n\nປ້ອນຊື່ທ້ອງຖິ່ນ ຫຼື ທີ່ຢູ່ ເພື່ອຄົ້ນຫາຈຸດທີ່ໜ້າສົນໃຈໃນແຜນທີ່ໄດ້ຢ່າງງ່າຍດາຍ."
+    },
+    "exploreMapDataButton": {
+      "content": "## ສຳຫຼວດຂໍ້ມູນ Digital Twin\n\nຄົ້ນຫາລາຍການຂໍ້ມູນ (Data Catalogue) ຂອງ Terria ທີ່ມີຢູ່ ແລະ ເພີ່ມເຂົ້າໃນ Digital Twin ໄດ້ທີ່ນີ້. ທ່ານສາມາດເພີ່ມຊຸດຂໍ້ມູນຫຼາຍຊຸດພ້ອມກັນໄດ້, ແລະ ທ່ານຈະເຫັນລາຍການຂໍ້ມູນເຫຼົ່ານັ້ນສະແດງຢູ່ໃນແຜງຂໍ້ມູນ Digital Twin ດ້ານລຸ່ມ."
+    },
+    "sidePanelUploadButton": {
+      "content": "## ອັບໂຫຼດຂໍ້ມູນ\n\nທ່ານສາມາດອັບໂຫຼດຂໍ້ມູນຂອງທ່ານເອງລົງໃນແຜນທີ່ເພື່ອເບິ່ງຮ່ວມກັບຊຸດຂໍ້ມູນອື່ນໆ. ອັບໂຫຼດໄຟລ໌ ຫຼື ລິງກ໌ໄປຫາຊຸດຂໍ້ມູນ ຫຼື ບໍລິການຂໍ້ມູນອອນລາຍທີ່ມີຢູ່. ຮູບແບບຂໍ້ມູນທີ່ຮອງຮັບລວມມີ CSV, GeoJSON, KML, GPX ແລະ CZML."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## ການຕັ້ງຄ່າແຜນທີ່\n\nປັບແຕ່ງການຕັ້ງຄ່າແຜນທີ່ ເຊັ່ນ: ແຜນທີ່ພື້ນຖານ, ພູມສັນຖານ 2D/3D ແລະ ຄຸນນະພາບຂອງຮູບພາບແຜນທີ່ ເພື່ອເພີ່ມປະສິດທິພາບການເຮັດວຽກ."
+    },
+    "menuBarStoryButton": {
+      "content": "## ເລື່ອງລາວ (Stories)\n\nເລື່ອງລາວຊ່ວຍໃຫ້ທ່ານສາມາດເພີ່ມຂໍ້ມູນບໍລິບົດໃຫ້ກັບຊຸດຂໍ້ມູນເພື່ອສ້າງການເລົ່າເລື່ອງທີ່ມີຊີວິດຊີວາ. ສ້າງເລື່ອງລາວຂໍ້ມູນຂອງທ່ານເອງໂດຍໃຊ້ເຄື່ອງມື Story Editor, ແລະ ແບ່ງປັນມັນຜ່ານແຜງ 'ແບ່ງປັນ' (Share) ເມື່ອທ່ານເຮັດສຳເລັດ."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## ການຄວບຄຸມມຸມມອງ\n\nຢູ່ບ່ອນນີ້ທ່ານສາມາດປ່ຽນມຸມມອງຂອງແຜນທີ່ໄດ້. ທ່ານສາມາດປ່ຽນທິດທາງຂອງມຸມມອງໄດ້ໂດຍການໃຊ້ວົງແຫວນດ້ານນອກ, ແລະ ທ່ານສາມາດປັບອຽງມຸມກ້ອງໄດ້ໂດຍການໃຊ້ວົງແຫວນດ້ານໃນ. ຄລິກສອງຄັ້ງເພື່ອຕັ້ງຄ່າມຸມມອງໃໝ່."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## ປຽບທຽບ\n\nຄຸນສົມບັດທີ່ໂດດເດັ່ນຂອງ Terria ແມ່ນຄວາມສາມາດໃນການປຽບທຽບຊຸດຂໍ້ມູນໂດຍການໃຊ້ຕົວແບ່ງໜ້າຈໍ. ສຳລັບຊຸດຂໍ້ມູນທີ່ມີອົງປະກອບຂອງລຳດັບເວລາ ເຊັ່ນ: ຮູບພາບຈາກດາວທຽມ, ທ່ານສາມາດປຽບທຽບວັນທີຍ້ອນຫຼັງ ແລະ ໄປໜ້າໄດ້ ໂດຍການຄລິກທີ່ຕົວເລືອກວັນທີ."
+    }
+  },
+  "measure": {
+    "measureTool": "ເຄື່ອງມືວັດແທກ",
+    "measureToolTitle": "ວັດແທກເສັ້ນ",
+    "measureDistance": "ວັດແທກໄລຍະຫ່າງລະຫວ່າງສະຖານທີ່"
+  },
+  "location": {
+    "errorGettingLocation": "ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນທີ່ຕັ້ງ",
+    "browserCannotProvide": "ບຣາວເຊີຂອງທ່ານບໍ່ສາມາດລະບຸທີ່ຕັ້ງຂອງທ່ານໄດ້.",
+    "myLocation": "ທີ່ຕັ້ງຂອງຂ້ອຍ",
+    "location": "ທີ່ຕັ້ງ",
+    "originError": "ບຣາວເຊີຂອງທ່ານສາມາດລະບຸທີ່ຕັ້ງໄດ້ສະເພາະຕອນທີ່ໃຊ້ HTTPS ເທົ່ານັ້ນ. ທ່ານອາດຈະສາມາດໃຊ້ {{secureUrl}} ແທນໄດ້.",
+    "centreMap": "ປັບແຜນທີ່ໃຫ້ຢູ່ກາງຕາມທີ່ຕັ້ງປັດຈຸບັນຂອງທ່ານ",
+    "permissionDenied": "ການອະນຸຍາດເຂົ້າເຖິງທີ່ຕັ້ງຖືກປະຕິເສດ. ກະລຸນາກວດສອບການຕັ້ງຄ່າບຣາວເຊີຂອງທ່ານ.",
+    "positionUnavailable": "ຂໍ້ມູນທີ່ຕັ້ງຂອງທ່ານບໍ່ພ້ອມໃຊ້ງານ.",
+    "timeout": "ການດຶງຂໍ້ມູນທີ່ຕັ້ງຂອງທ່ານໃຊ້ເວລາດົນເກີນໄປ. ກະລຸນາລອງໃໝ່ໃນພາຍຫຼັງ."
+  },
+  "splitterTool": {
+    "errorTitle": "ບໍ່ສາມາດປຽບທຽບລາຍການຂໍ້ມູນໄດ້.",
+    "duplicateModelErrorMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ແຍກລາຍການຂໍ້ມູນ `\"{{name}}\"`. ລາຍການຂໍ້ມູນນີ້ອາດຈະບໍ່ຮອງຮັບຟັງຊັນ \"ປຽບທຽບ\"",
+    "modelNotFoundErrorMessage": "ບໍ່ພົບ Model ID `\"{{id}}\"`",
+    "toggleSplitterToolTitle": "ປຽບທຽບ",
+    "toggleSplitterTool": "ເປີດໃຊ້ການປຽບທຽບແບບແບ່ງໜ້າຈໍລະຫວ່າງຊຸດຂໍ້ມູນສອງຊຸດທີ່ແຕກຕ່າງກັນ",
+    "toggleSplitterToolDisabled": "ກະລຸນາປິດຄຸນສົມບັດການປຽບທຽບແບບແບ່ງໜ້າຈໍອື່ນໆ ເພື່ອເປີດໃຊ້ການປຽບທຽບແບບມາດຕະຖານ",
+    "title": "ລາກໄປທາງຊ້າຍ ຫຼື ຂວາ ເພື່ອປັບມຸມມອງ",
+    "workbench": {
+      "goleftTitle": "ສະແດງຢູ່ເບື້ອງຊ້າຍ",
+      "goleft": "ຊ້າຍ",
+      "bothTitle": "ສະແດງທັງສອງເບື້ອງ",
+      "both": "ທັງສອງ",
+      "gorightTitle": "ສະແດງຢູ່ເບື້ອງຂວາ",
+      "goright": "ຂວາ",
+      "copyName": "{{name}} (ສຳເນົາ)"
+    }
+  },
+  "zoomControl": {
+    "zoomIn": "ຂະຫຍາຍເຂົ້າ",
+    "zoomReset": "ຕັ້ງຄ່າການຂະຫຍາຍໃໝ່",
+    "zoomOut": "ຂະຫຍາຍອອກ"
+  },
+  "compass": {
+    "description": "ລາກວົງແຫວນດ້ານນອກ: ໝູນມຸມມອງ.\nລາກແກນໝູນດ້ານໃນ: ໝູນຮອບແບບອິດສະຫຼະ.\nຄລິກສອງຄັ້ງ: ຕັ້ງຄ່າມຸມມອງໃໝ່.\nຄຳແນະນຳ: ທ່ານຍັງສາມາດໝູນຮອບແບບອິດສະຫຼະໄດ້ໂດຍການກົດປຸ່ມ CTRL ຄ້າງໄວ້ແລ້ວລາກແຜນທີ່.",
+    "title": "ຄລິກແລ້ວລາກເພື່ອໝູນກ້ອງ",
+    "guidanceBtnTitle": "ຄຳແນະນຳການໃຊ້ແກນໝູນ",
+    "guidanceBtnText": "ເບິ່ງຄຳແນະນຳລະອຽດກ່ຽວກັບວິທີການໃຊ້ເຂັມທິດ",
+    "guidance": {
+      "title": "ການຄວບຄຸມແກນໝູນ",
+      "outerRingTitle": "ວົງແຫວນດ້ານນອກ",
+      "outerRingDescription": "ລາກວົງແຫວນດ້ານນອກເປັນວົງມົນເພື່ອໝູນມຸມມອງແຜນທີ່ໄດ້ 360 ອົງສາ.",
+      "innerCircleTitle": "ວົງມົນດ້ານໃນ",
+      "innerCircleDescription1": "ຄລິກທີ່ຈຸດກາງແລ້ວຄ່ອຍໆລາກຂຶ້ນ, ລົງ, ຊ້າຍ ຫຼື ຂວາ ເພື່ອປັບອຽງ ແລະ ໝູນແຜນທີ່ໄປພ້ອມໆກັນ.",
+      "innerCircleDescription2": "ຄລິກສອງຄັ້ງທີ່ນີ້ເພື່ອຕັ້ງຄ່າມຸມມອງກັບໄປເປັນຄ່າເລີ່ມຕົ້ນ.",
+      "ctrlDragDescription": "ທ່ານຍັງສາມາດປັບອຽງ ແລະ ໝູນແຜນທີ່ໄດ້ໂດຍການກົດປຸ່ມ CTRL ຄ້າງໄວ້ແລ້ວລາກແຜນທີ່.",
+      "dismissText": "ປິດ ແລະ ບໍ່ຕ້ອງສະແດງອີກ"
+    }
+  },
+  "AR": {
+    "title": "ຄຸນສົມບັດທົດລອງ: Augmented Reality (AR)",
+    "experimentalFeatureMessage": "ໂໝດ Augmented Reality (AR) ຢູ່ໃນຂັ້ນຕອນການທົດສອບ (Beta). ໂໝດນີ້ຖືກອອກແບບມາເພື່ອໃຊ້ກັບອຸປະກອນມືຖືລຸ້ນໃໝ່ທີ່ມີປະສິດທິພາບສູງເທົ່ານັ້ນ. <br /><br />ຄຳເຕືອນ: ໂໝດນີ້ອາດຈະໃຊ້ຂໍ້ມູນອິນເຕີເນັດເປັນຈຳນວນຫຼາຍ, ກະລຸນາລະວັງຄ່າບໍລິການຂໍ້ມູນຈາກຜູ້ໃຫ້ບໍລິການເຄືອຂ່າຍຂອງທ່ານ. <br /><br />ຄວາມແມ່ນຍຳຂອງໂໝດນີ້ຂຶ້ນຢູ່ກັບຄວາມແມ່ນຍຳຂອງເຂັມທິດພາຍໃນອຸປະກອນມືຖືຂອງທ່ານ.",
+    "confirmText": "ເຂົ້າໃຈແລ້ວ",
+    "manualAlignmentTitle": "ການປັບຕຳແໜ່ງດ້ວຍຕົນເອງ",
+    "manualAlignmentMessage": "ປັບອຸປະກອນມືຖືຂອງທ່ານໃຫ້ກົງກັບການວາງທິດທາງຂອງແຜນທີ່ໃນປັດຈຸບັນ, ແລ້ວຄລິກທີ່ເຂັມທິດທີ່ກຳລັງກະພິບ. ຖ້າບໍ່ມີຈຸດສັງເກດໃດໆໃນແຜນທີ່, ທ່ານສາມາດຍ້າຍແຜນທີ່ໂດຍການລາກ ຫຼື ຫຍໍ້-ຂະຫຍາຍ ຈົນກວ່າຈະເຫັນຈຸດສັງເກດທີ່ຮູ້ຈັກ ກ່ອນທີ່ຈະປັບອຸປະກອນໃຫ້ກົງກັບແຜນທີ່. <br /><div>{{img}}</div> <br />ຄຳແນະນຳ: ດວງອາທິດ ຫຼື ດວງເດືອນ ມັກຈະເປັນຈຸດສັງເກດທີ່ດີໃນການປັບທິດທາງ ຖ້າທ່ານຢູ່ໃນສະຖານທີ່ທີ່ບໍ່ຄຸ້ນເຄີຍ (ລະວັງຢ່າເບິ່ງດວງອາທິດຕົງໆ ເພາະອາດເປັນອັນຕະລາຍຕໍ່ດວງຕາ).",
+    "resetAlignmentTitle": "ຕັ້ງຄ່າການປັບຕຳແໜ່ງໃໝ່",
+    "resetAlignmentMessage": "ກຳລັງຕັ້ງຄ່າການປັບຕຳແໜ່ງຕາມເຂັມທິດໃໝ່. ຖ້າການປັບຕຳແໜ່ງບໍ່ກົງກັບໂລກຕົວຈິງ, ໃຫ້ລອງແກວ່ງອຸປະກອນຂອງທ່ານເປັນຮູບເລກ 8 ເພື່ອປັບເຂັມທິດໃໝ່. ສາມາດເຮັດໄດ້ທຸກເວລາ.<br /> <br />ຫຼີກເວັ້ນສະຖານທີ່ທີ່ມີສະໜາມແມ່ເຫຼັກ ຫຼື ວັດຖຸໂລຫະ ເພາະອາດເຮັດໃຫ້ເຂັມທິດຂອງອຸປະກອນເຮັດວຽກຜິດພາດ.",
+    "arTool": "ເຄື່ອງມື augmented reality",
+    "btnHover": "ປ່ຽນລະດັບຄວາມສູງການລອຍ",
+    "btnRealign": "ເປີດ/ປິດ ການປັບຕຳແໜ່ງດ້ວຍຕົນເອງ",
+    "btnResetRealign": "ຕັ້ງຄ່າການປັບຕຳແໜ່ງເຂັມທິດໃໝ່"
+  },
+  "tool": {
+    "closeButtonTitle": "ປິດເຄື່ອງມື {{toolName}}",
+    "loadingError": {
+      "title": "ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດເຄື່ອງມື {{toolName}}",
+      "message": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມໂຫຼດເຄື່ອງມືນີ້ຈາກເຊີເວີ. ກະລຸນາລອງໃໝ່."
+    },
+    "exitBtnTitle": "ອອກ",
+    "button": {
+      "open": "ອອກຈາກ {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "ສ່ວນຕ່າງ",
+    "close": "ປິດ",
+    "instructions": {
+      "setDateA": "ກຳນົດວັນທີ A",
+      "setDateB": "ກຳນົດວັນທີ B",
+      "changeDates": "ປ່ຽນວັນທີ",
+      "paneDescription": "ສະແດງພາບ ແລະ ປຽບທຽບຄວາມແຕກຕ່າງຂອງຂໍ້ມູນລະຫວ່າງສອງວັນທີໃນສະຖານທີ່ດຽວກັນ."
+    },
+    "choosePreview": "ເລືອກຮູບແບບການສະແດງຕົວຢ່າງ",
+    "chooseDifference": "ເລືອກຮູບແບບການສະແດງສ່ວນຕ່າງ",
+    "differenceResultsTitle": "ຜົນການກວດສອບການປ່ຽນແປງ",
+    "labels": {
+      "area": "ພື້ນທີ່",
+      "dates": "ວັນທີ",
+      "dateComparisonA": "ວັນທີປຽບທຽບ A",
+      "dateComparisonB": "ວັນທີປຽບທຽບ B",
+      "sourceDataset": "ຊຸດຂໍ້ມູນຕົ້ນສະບັບ",
+      "previewStyle": "ຮູບແບບການສະແດງຕົວຢ່າງ",
+      "differenceOutput": "ຮູບແບບການສະແດງສ່ວນຕ່າງ",
+      "generateDiffButtonText": "ສ້າງການກວດສອບການປ່ຽນແປງ",
+      "disabledButtonPrompt": "ໝາຍເຫດ: ຕ້ອງເລືອກສະຖານທີ່ ແລະ ວັນທີ ເພື່ອດຳເນີນການກວດສອບການປ່ຽນແປງ",
+      "areaFilterSelection": "ເລືອກຕົວກອງພື້ນທີ່",
+      "saveToWorkbench": "ບັນທຶກລົງໃນແຜງວຽກ"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "ຍັງບໍ່ໄດ້ເລືອກສະຖານທີ່!",
+        "description": "ເພື່ອຕອງວັນທີຂອງຮູບພາບຕາມສະຖານທີ່, ໃຫ້ຂະຫຍາຍເຂົ້າ ແລະ ເລືອກຈຸດທີ່ໜ້າສົນໃຈໃນແຜນທີ່"
+      },
+      "locationSelected": {
+        "title": "ເລືອກສະຖານທີ່ ແລະ ຕອງວັນທີແລ້ວ",
+        "description": "ຫາກຕ້ອງການປ່ຽນ, ໃຫ້ຄລິກທີ່ຈຸດອື່ນໃນແຜນທີ່"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "ເລືອກສະຖານທີ່ທີ່ຊັດເຈນ",
+        "beforePick": "ພວກເຮົາຕ້ອງການຂໍ້ມູນນີ້ເພື່ອດຳເນີນການກວດສອບການປ່ຽນແປງ.",
+        "afterPick": "ຄລິກທີ່ຈຸດອື່ນເພື່ອປ່ຽນພື້ນທີ່ທີ່ເລືອກ"
+      },
+      "nextMessages": {
+        "title": "ທ່ານໄດ້ເລືອກສະຖານທີ່ {{latitude}} {{longitude}}",
+        "beforePick": "ຄລິກທີ່ຈຸດອື່ນເພື່ອປ່ຽນການເລືອກ",
+        "afterPick": "ຄລິກທີ່ຈຸດອື່ນເພື່ອປ່ຽນການເລືອກ"
+      },
+      "errorMessages": {
+        "title": "ເລືອກສະຖານທີ່ທີ່ຊັດເຈນ",
+        "beforePick": "ບໍ່ສາມາດລະບຸພາບຖ່າຍໃນສະຖານທີ່ນີ້ໄດ້! ກະລຸນາເລືອກສະຖານທີ່ອື່ນ ຫຼື ປ່ຽນລະດັບການຂະຫຍາຍ.",
+        "afterPick": "ຄລິກທີ່ຈຸດອື່ນເພື່ອປ່ຽນການເລືອກ"
+      }
+    },
+    "datePicker": {
+      "back": "ກັບຄືນ",
+      "previousDateTitle": "ວັນທີກ່ອນໜ້າ",
+      "nextDateTitle": "ວັນທີຖັດໄປ",
+      "dateButtonTitle": "ເລືອກວັນທີ"
+    }
+  },
+  "legend": {
+    "lat": "Lat",
+    "lon": "Lon",
+    "zone": "ZONE",
+    "e": "E",
+    "n": "ເອນ",
+    "elev": "ລະດັບສູງ"
+  },
+  "languagePanel": {
+    "changeLanguage": "ປ່ຽນພາສາ"
+  },
+  "share": {
+    "browserPrint": "ເພື່ອຜົນການພິມທີ່ດີກວ່າ, ກະລຸນາໃຊ້ປຸ່ມ 'ພິມ' ຂອງ {{appName}} ແທນການໃຊ້ຟັງຊັນການພິມຂອງບຣາວເຊີ.",
+    "shortLinkShortening": "ກຳລັງສ້າງລິງກ໌ສັ້ນ...",
+    "shortLinkError": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມເຮັດໃຫ້ URL ສັ້ນລົງ. ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດ ແລະ ລອງໃໝ່.",
+    "localDataNote": "<0><0>ໝາຍເຫດ:</0></0><1>ແຫຼ່ງຂໍ້ມູນຕໍ່ໄປນີ້ຈະບໍ່ຖືກແບ່ງປັນ ເພາະວ່າມັນປະກອບມີຂໍ້ມູນຈາກລະບົບພາຍໃນນີ້ ຫຼື ຈາກບໍລິການອອນລາຍທີ່ຕ້ອງມີການຢືນຢັນຕົວຕົນ. ເພື່ອແບ່ງປັນແຫຼ່ງຂໍ້ມູນເຫຼົ່ານີ້, ໃຫ້ເຜີຍແຜ່ຂໍ້ມູນໃນເວັບເຊີເວີ ແລະ <2>ເພີ່ມພວກມັນໂດຍໃຊ້ URL</2>.</1>",
+    "generatingUrl": "ກຳລັງສ້າງ URL ສຳລັບແບ່ງປັນ...",
+    "printTitle": "ພິມແຜນທີ່",
+    "printExplanation": "ເປີດແຜນທີ່ໃນເວີຊັນທີ່ສາມາດພິມໄດ້.",
+    "downloadMap": "ດາວໂຫຼດແຜນທີ່ (png)",
+    "printViewButton": "ສະແດງມຸມມອງການພິມ",
+    "btnAdvanced": "ຕົວເລືອກຂັ້ນສູງ",
+    "embedTitle": "ຝັງແຜນທີ່",
+    "embedDescription": "ຫາກຕ້ອງການຝັງແຜນທີ່, ໃຫ້ສຳເນົາລະຫັດນີ້ເພື່ອໄປຝັງໃນໜ້າ HTML:",
+    "shortenUsingService": "ເຮັດໃຫ້ URL ສັ້ນລົງໂດຍໃຊ້ບໍລິການເວັບ",
+    "btnCatalogShareText": "ແບ່ງປັນ",
+    "btnStoryShareText": "ແບ່ງປັນ",
+    "btnMapShareText": "ແບ່ງປັນ / ພິມ",
+    "btnCatalogShareTitle": "ແບ່ງປັນລາຍການຂໍ້ມູນຂອງທ່ານໃຫ້ກັບຜູ້ອື່ນ",
+    "btnStoryShareTitle": "ແບ່ງປັນເລື່ອງລາວຂອງທ່ານໃຫ້ກັບຜູ້ອື່ນ",
+    "btnMapShareTitle": "ແບ່ງປັນແຜນທີ່ຂອງທ່ານໃຫ້ກັບຜູ້ອື່ນ",
+    "convertNotificationTitle": "ແຈ້ງການ: ອັບເກຣດລິງກ໌ແບ່ງປັນແລ້ວ",
+    "convertNotificationMessage": "ລິງກ໌ແບ່ງປັນນີ້ສ້າງຂຶ້ນຈາກ TerriaJS ເວີຊັນເກົ່າ. ເຖິງແມ່ນວ່າພວກເຮົາຈະພະຍາຍາມຮັກສາລິງກ໌ໄວ້, ແຕ່ທ່ານອາດຈະພົບກັບບັນຫາໃນການສະແດງຂໍ້ມູນ. \n\nຫາກທ່ານເປັນຜູ້ໃຊ້ລິງກ໌ແບ່ງປັນນີ້, ໃຫ້ຄລິກ OK ເພື່ອປິດຂໍ້ຄວາມເຕືອນ ແລະ ເຂົ້າເຖິງຂໍ້ມູນຕໍ່ໄປ.",
+    "convertNotificationHelp": "ຫາກທ່ານເປັນຜູ້ສ້າງລິງກ໌ແບ່ງປັນ, ໃຫ້ກວດເບິ່ງເມນູ 'ຊ່ວຍເຫຼືອ' ເພື່ອເບິ່ງຄຳແນະນຳໃນການອັບເດດລິງກ໌.",
+    "convertNotificationFeedback": "ສຳລັບຄຳຖາມ ຫຼື ຄຳຄິດເຫັນ, ໃຫ້ຄລິກທີ່ນີ້.",
+    "convertNotificationWarningsTitle": "ລາຍລະອຽດທາງເຕັກນິກ",
+    "convertErrorTitle": "ບໍ່ສາມາດອັບເກຣດລິງກ໌ແບ່ງປັນເປັນ V8 ໄດ້",
+    "convertErrorMessage": "ລິງກ໌ແບ່ງປັນນີ້ສ້າງຂຶ້ນຈາກ TerriaJS ເວີຊັນເກົ່າ. ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມອັບເກຣດຂໍ້ມູນການແບ່ງປັນ.",
+    "getShareSaveHelpMessage": "ວິທີການຄັ່ນໜ້າ (Bookmark) ລິງກ໌ແບ່ງປັນ"
+  },
+  "countDatasets": {
+    "btnText": "ເລີ່ມຕົ້ນວັນທີ",
+    "loadError": "ໂຫຼດບໍ່ສຳເລັດ.",
+    "countingMessage": "ກຳລັງນັບ, ກະລຸນາລໍຖ້າ...",
+    "totals": "<div>ລາຍການຂໍ້ມູນປະກອບມີ {{items}} ລາຍການ ໃນ {{groups}} ກຸ່ມ.</div>",
+    "subTotals": "<div> {{name}}: {{items}} ລາຍການ / {{groups}} ກຸ່ມ</div>",
+    "recount": "ນັບໃໝ່",
+    "title": "ນັບຈຳນວນຊຸດຂໍ້ມູນ",
+    "btnCount": "ນັບຈຳນວນຊຸດຂໍ້ມູນ",
+    "noMapDataEnabled": "ບໍ່ມີການເປີດໃຊ້ຂໍ້ມູນແຜນທີ່",
+    "mapDataState_0": "ເປີດໃຊ້ {{count}} ຊຸດຂໍ້ມູນໃນແຜນທີ່"
+  },
+  "toolsPanel": {
+    "btnText": "ເຄື່ອງມື",
+    "btnTitle": "ຊຸດເຄື່ອງມືຂັ້ນສູງ"
+  },
+  "settingPanel": {
+    "viewerModeLabels": {
+      "CesiumTerrain": "ພູມສັນຖານ 3D",
+      "CesiumEllipsoid": "3D ແບບລຽບ",
+      "Leaflet": "2D"
+    },
+    "qualityLabels": {
+      "maximumPerformance": "ເນັ້ນປະສິດທິພາບສູງສຸດ, ຄຸນນະພາບຕ່ຳ",
+      "balancedPerformance": "ສົມດຸນລະຫວ່າງປະສິດທິພາບ ແລະ ຄຸນນະພາບ",
+      "lowerPerformance": "ເນັ້ນຄຸນນະພາບສູງສຸດ, ປະສິດທິພາບຕ່ຳ"
+    },
+    "nativeResolutionLabel": "ກົດເພື່ອຢຸດໃຊ້ຄວາມລະອຽດ {{resolution1}} ແລະ ເລີ່ມໃຊ້ຄວາມລະອຽດ {{resolution2}}",
+    "native": "ດັ້ງເດີມ",
+    "screen": "ໜ້າຈໍ",
+    "btnTitle": "ປ່ຽນມຸມມອງ",
+    "btnText": "ການຕັ້ງຄ່າແຜນທີ່",
+    "mapView": "ມຸມມອງແຜນທີ່",
+    "baseMap": "ແຜນທີ່ພື້ນຖານ",
+    "imageOptimisation": "ການປັບແຕ່ງຮູບພາບ",
+    "nativeResolutionHeader": "ໃຊ້ຄວາມລະອຽດດັ້ງເດີມຂອງອຸປະກອນ",
+    "mapQuality": "ຄຸນນະພາບແຜນທີ່:",
+    "qualityLabel": "ຄຸນນະພາບ",
+    "performanceLabel": "ປະສິດທິພາບ",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ ແຜນທີ່ພື້ນຖານທີ່ເລືອກສາມາດເບິ່ງໄດ້ໃນໂໝດ {{viewerMode}} ເທົ່ານັ້ນ"
+    },
+    "viewerModeSwitched": {
+      "title": "ປ່ຽນໂໝດການເບິ່ງແລ້ວ",
+      "message": "ແຜນທີ່ພື້ນຖານ '{{newBaseMap}}' ບໍ່ສາມາດເບິ່ງໄດ້ໃນໂໝດ {{currentMode}}. ມຸມມອງແຜນທີ່ໄດ້ຖືກປ່ຽນເປັນ {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "ປ່ຽນແຜນທີ່ພື້ນຖານແລ້ວ",
+      "message": "ແຜນທີ່ພື້ນຖານ '{{currentBaseMap}}' ບໍ່ສາມາດເບິ່ງໄດ້ໃນໂໝດ {{mapMode}}. ແຜນທີ່ພື້ນຖານໄດ້ຖືກປ່ຽນເປັນ '{{newBaseMap}}'"
+    },
+    "timeline": {
+      "title": "ລຳດັບເວລາ",
+      "alwaysShowLabel": "ກົດເພື່ອສະແດງລຳດັບເວລາສະເພາະເມື່ອມີຊຸດຂໍ້ມູນທີ່ມີການປ່ຽນແປງຕາມເວລາໃນແຜງວຽກ",
+      "hideLabel": "ກົດເພື່ອສະແດງລຳດັບເວລາຕະຫຼອດເວລາ ເຖິງແມ່ນວ່າຈະບໍ່ມີຊຸດຂໍ້ມູນທີ່ມີການປ່ຽນແປງຕາມເວລາໃນແຜງວຽກ",
+      "alwaysShow": "ສະແດງຕະຫຼອດ"
+    },
+    "terrain": {
+      "hideUnderground": "ພູມສັນຖານເຊື່ອງລັກສະນະໃຕ້ດິນ",
+      "showUndergroundFeatures": "ກົດເພື່ອເລີ່ມສະແດງລັກສະນະທີ່ຢູ່ກ້ອງພື້ນຜິວພູມສັນຖານ",
+      "hideUndergroundFeatures": "ກົດເພື່ອເລີ່ມເຊື່ອງລັກສະນະທີ່ຢູ່ກ້ອງພື້ນຜິວພູມສັນຖານ",
+      "sideLabel": "ສະແດງພູມສັນຖານໃນເບື້ອງ",
+      "left": "ຊ້າຍ",
+      "both": "ທັງສອງ",
+      "right": "ຂວາ"
+    }
+  },
+  "feedback": {
+    "feedbackPreamble": "ພວກເຮົາຢາກໄດ້ຍິນຄຳຄິດເຫັນຈາກທ່ານ!",
+    "title": "ຄຳຄິດເຫັນ",
+    "close": "ປິດຄຳຄິດເຫັນ",
+    "yourName": "ຊື່ຂອງທ່ານ (ບໍ່ບັງຄັບ)",
+    "email": "ທີ່ຢູ່ອີເມລ (ບໍ່ບັງຄັບ)<br/><em>ພວກເຮົາບໍ່ສາມາດຕິດຕໍ່ກັບທ່ານໄດ້ຫາກບໍ່ມີຂໍ້ມູນນີ້!</em>",
+    "commentQuestion": "ຄຳຄິດເຫັນ ຫຼື ຄຳຖາມ",
+    "shareWithDevelopers": "ແບ່ງປັນມຸມມອງແຜນທີ່ຂອງຂ້ອຍໃຫ້ກັບຜູ້ພັດທະນາ {{appName}}",
+    "cancel": "ຍົກເລີກ",
+    "sending": "ກຳລັງສົ່ງ...",
+    "send": "ສົ່ງ",
+    "feedbackBtnText": "ສົ່ງຄຳຄິດເຫັນ",
+    "minLength": "ຄຳຄິດເຫັນຕ້ອງມີຄວາມຍາວຢ່າງໜ້ອຍ {{minLength}} ຕົວອັກສອນ"
+  },
+  "helpPanel": {
+    "btnText": "ວິທີໃຊ້",
+    "menuPaneTitle": "ພວກເຮົາມີໄວ້ເພື່ອຊ່ວຍທ່ານ",
+    "menuPaneBody": "ຄົ້ນຫາຄຳແນະນຳທີ່ມີປະໂຫຍດກ່ຽວກັບວິທີການໃຊ້ TerriaJS ໂດຍການກວດເບິ່ງຄູ່ມືດ້ານລຸ່ມ ຫຼື ຕິດຕໍ່ທີມງານໄດ້ທີ່ [{{supportEmail}}]({{supportEmail}})",
+    "promptMessage": "ຄົ້ນຫາການແນະນຳການໃຊ້ງານ, ວິດີໂອສາທິດ ແລະ ເນື້ອຫາຊ່ວຍເຫຼືອອື່ນໆໄດ້ທີ່ນີ້",
+    "dismissText": "ເຂົ້າໃຈແລ້ວ, ຂອບໃຈ!",
+    "takeTour": "ເບິ່ງແນະນຳການໃຊ້ງານ",
+    "mapUserGuide": "ຄູ່ມືຜູ້ໃຊ້ແຜນທີ່"
+  },
+  "sui": {
+    "notifications": {
+      "title": "ແຜນທີ່ນີ້ມີເລື່ອງລາວ (Story) ປະກອບຢູ່",
+      "message": "ທ່ານຕ້ອງການເບິ່ງຕອນນີ້ເລີຍຫຼືບໍ່?",
+      "confirmText": "ແມ່ນ",
+      "denyText": "ໄວ້ເທື່ອໜ້າ"
+    },
+    "showWorkbench": "ສຳຫຼວດຊຸດຂໍ້ມູນ [{{count}}]",
+    "hideWorkbench": "ເຊື່ອງແຜງວຽກ"
+  },
+  "featureInfo": {
+    "catalogItem": {
+      "moreThanMax": "ພົບລັກສະນະ {{catalogItemName}} ຫຼາຍກວ່າ {{maximum}} ລາຍການ.",
+      "featuresFound": "ພົບລັກສະນະ {{catalogItemName}} ຈຳນວນ {{featCount}} ລາຍການ.",
+      "featureInfoShown": "{{maximum}} ລາຍການທຳອິດຖືກສະແດງຢູ່ດ້ານລຸ່ມ."
+    },
+    "download": "ດາວໂຫຼດຕາຕະລາງນີ້",
+    "pickLocation": "ເລືອກສະຖານທີ່",
+    "clickMap": "ຄລິກໃສ່ແຜນທີ່ເພື່ອຮຽນຮູ້ເພີ່ມເຕີມກ່ຽວກັບສະຖານທີ່",
+    "noDataAvailable": "ບໍ່ມີຂໍ້ມູນໃນບໍລິເວນນີ້ - ກະລຸນາລອງສະຖານທີ່ອື່ນ.",
+    "clickToAddData": "ຄລິກ '$t(addData.addDataBtnText)' ເພື່ອເພີ່ມຂໍ້ມູນລົງໃນແຜນທີ່.",
+    "userSelection": "ສິ່ງທີ່ຜູ້ໃຊ້ເລືອກ",
+    "panelHeading": "ຂໍ້ມູນລັກສະນະ",
+    "btnCloseFeature": "ປິດແຜງຂໍ້ມູນ",
+    "satelliteSuggestionBtn": "ສະແດງ {{catalogItemName}} ໃນສະຖານທີ່ນີ້",
+    "locationMarker": "ເຄື່ອງໝາຍລະບຸສະຖານທີ່",
+    "noInfoAvailable": "ບໍ່ມີຂໍ້ມູນ",
+    "siteData": "ຂໍ້ມູນສະຖານທີ່",
+    "latLon": "Lat / Lon ",
+    "showRawData": "ສະແດງຂໍ້ມູນດິບ",
+    "showCuratedData": "ສະແດງຂໍ້ມູນທີ່ຖືກຄັດສັນແລ້ວ"
+  },
+  "welcomeMessage": {
+    "title": "ມາເລີ່ມຕົ້ນການໃຊ້ງານກັນເລີຍ",
+    "welcomeMessage": "ສົນໃຈຄົ້ນຫາ ແລະ ສຳຫຼວດຂໍ້ມູນບໍ?<br/>ເລີ່ມຕົ້ນໃຊ້ງານໄດ້ທັນທີ ຫຼື ກວດເບິ່ງຕົວເລືອກຄູ່ມືຊ່ວຍເຫຼືອຕໍ່ໄປນີ້.",
+    "welcomeMessageOnMobile": "ສົນໃຈຄົ້ນຫາ ແລະ ສຳຫຼວດຂໍ້ມູນບໍ?",
+    "tourBtnText": "ເບິ່ງແນະນຳການໃຊ້ງານ",
+    "helpBtnText": "ຂ້ອຍຕ້ອງການຄວາມຊ່ວຍເຫຼືອ",
+    "exploreDataBtnText": "ສຳຫຼວດຂໍ້ມູນແຜນທີ່",
+    "searchBtnText": "ຄົ້ນຫາສະຖານທີ່",
+    "dismissText": "ປິດຂໍ້ຄວາມ ແລະ ບໍ່ຕ້ອງສະແດງໃຫ້ຂ້ອຍເຫັນອີກ"
+  },
+  "story": {
+    "panelTitle": "ເຄື່ອງມືແກ້ໄຂເລື່ອງລາວ",
+    "panelBody": "ສ້າງ ແລະ ແບ່ງປັນເລື່ອງລາວແບບໂຕ້ຕອບໄດ້ໂດຍກົງຈາກແຜນທີ່ຂອງທ່ານ.",
+    "panelBodyCapped": "ແຕ່ລະເລື່ອງລາວຖືກຈຳກັດຢູ່ທີ່ {{ shareMaxRequestSize }} - ໃຫ້ແບ່ງຂໍ້ມູນຂະໜາດໃຫຍ່ ຫຼື ຫຼາຍສາກອອກເປັນຫຼາຍເລື່ອງລາວເພື່ອບໍ່ໃຫ້ເກີນຂີດຈຳກັດ.",
+    "gettingStarted": "ເລີ່ມຕົ້ນການໃຊ້ງານ",
+    "gettingStartedTitle": "ເລີ່ມຕົ້ນການໃຊ້ງານ",
+    "badgeBarLabel": "ສາກ",
+    "share": "ແບ່ງປັນ",
+    "viewStory": "ເບິ່ງ",
+    "view": "ເບິ່ງ",
+    "editStory": "ແກ້ໄຂ",
+    "edit": "ແກ້ໄຂ",
+    "expand": "ຂະຫຍາຍ",
+    "collapse": "ຫຍໍ້",
+    "recaptureStory": "ບັນທຶກໃໝ່",
+    "recapture": "ບັນທຶກໃໝ່",
+    "deleteStory": "ລຶບ",
+    "delete": "ລຶບ",
+    "untitledScene": "ສາກທີ່ບໍ່ມີຊື່",
+    "doesNotExist": "ບໍ່ມີເລື່ອງລາວນີ້",
+    "removeAllStories": "ລຶບທັງໝົດ",
+    "removeAllStoriesDialog_0": "ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລຶບ {{ count }} ສາກ?",
+    "removeStoryDialog": "ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລຶບ '<1>{{storyName}}</1>'?",
+    "preview": "ສະແດງຕົວຢ່າງເລື່ອງລາວ",
+    "play": "ຫຼິ້ນ",
+    "playStory": "ເລື່ອງລາວ",
+    "captureSceneTitle": "ບັນທຶກສາກປັດຈຸບັນ",
+    "captureScene": "ບັນທຶກສາກ",
+    "editor": {
+      "modalHeader": "ເຄື່ອງມືແກ້ໄຂເລື່ອງລາວ - ການບັນທຶກສາກ",
+      "titleLabel": "ຊື່ເລື່ອງ (ຈຳເປັນ)",
+      "descriptionLabel": "ຄຳອະທິບາຍ",
+      "placeholder": "ປ້ອນຊື່ເລື່ອງທີ່ນີ້",
+      "cancelBtn": "ຍົກເລີກ",
+      "cancelEditing": "ຍົກເລີກ",
+      "saveBtn": "ບັນທຶກ",
+      "saveStory": "ຊ່ວຍປະຢັດ"
+    },
+    "locationBtn": "ປັບສາກໃຫ້ຢູ່ກາງ",
+    "exitBtn": "ອອກຈາກເລື່ອງລາວ",
+    "previousBtn": "ໄປທີ່ສາກກ່ອນໜ້າ",
+    "prev": "ກ່ອນໜ້າ",
+    "untitled": "ສາກທີ່ບໍ່ມີຊື່",
+    "navBtn": "ໄປທີ່ເລື່ອງລາວ {{title}}",
+    "nextBtn": "ໄປທີ່ສາກຖັດໄປ",
+    "next": "ຖັດໄປ",
+    "restart": "ເລີ່ມໃໝ່",
+    "navBtnMobile": "ໄປທີ່ເລື່ອງລາວ {{title}}",
+    "promptHtml1": "<0>ທ່ານສາມາດເບິ່ງ ແລະ ສ້າງເລື່ອງລາວໄດ້ທຸກເວລາໂດຍການຄລິກທີ່ນີ້.</0>",
+    "promptHtml2": "<0><0>ຂໍແນະນຳ</0><1>ເລື່ອງລາວຂໍ້ມູນ (Data Stories)</1><2>ສ້າງ ແລະ ແບ່ງປັນເລື່ອງລາວແບບໂຕ້ຕອບໄດ້ໂດຍກົງຈາກແຜນທີ່ຂອງທ່ານ.</2></0>",
+    "story": "ເລື່ອງລາວ",
+    "dismissText": "ເຂົ້າໃຈແລ້ວ, ຂອບໃຈ!",
+    "mobileViewStory": "ເບິ່ງເລື່ອງລາວ {{storiesLength}}",
+    "storyEditor": "ເຄື່ອງມືແກ້ໄຂເລື່ອງລາວ",
+    "storiesTooLong": "ເລື່ອງລາວນີ້ມີຂະໜາດເກີນທີ່ກຳນົດໄວ້. ລອງຫຼຸດຈຳນວນຊຸດຂໍ້ມູນທີ່ສະແດງ ຫຼື ບັນທຶກສາກໃຫ້ໜ້ອຍລົງ.",
+    "hideStoryPanel": "ເຊື່ອງເຄື່ອງມືສ້າງເລື່ອງລາວ",
+    "loadSceneErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດສາກເລື່ອງລາວ",
+    "loadSceneErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫຼດຂໍ້ມູນສຳລັບສາກເລື່ອງລາວ: `{{title}}`."
+  },
+  "satelliteGuidance": {
+    "menuTitle": "ທ່ານສາມາດເຂົ້າເຖິງຄູ່ມືແຜນທີ່ໄດ້ທຸກເວລາໃນ <2>ເມນູຊ່ວຍເຫຼືອ</2>.",
+    "dismissText": "ເຂົ້າໃຈແລ້ວ, ຂອບໃຈ!",
+    "titleI": "ພາບຖ່າຍດາວທຽມ: ຂ້ອຍຈະຕ້ອງເຮັດແນວໃດ...?",
+    "bodyI": "ຄູ່ມືແບບວ່ອງໄວເພື່ອໃຫ້ໄດ້ປະໂຫຍດສູງສຸດຈາກພາບຖ່າຍດາວທຽມຍ້ອນຫຼັງ.",
+    "prevI": "ບໍ່, ຂອບໃຈ",
+    "nextI": "ເບິ່ງຄູ່ມື",
+    "titleII": "ພາບຖ່າຍດາວທຽມຂອງຂ້ອຍຢູ່ໃສ?",
+    "bodyII": "ທ່ານອາດຈະຕ້ອງປັບລະດັບການຂະຫຍາຍເພື່ອໃຫ້ເຫັນພາບຖ່າຍດາວທຽມໃນແຜນທີ່.",
+    "titleIII": "ກຳລັງໂຫຼດພາບຖ່າຍຍ້ອນຫຼັງ",
+    "bodyIII": "ໃນແຜງວຽກຂອງທ່ານ, ໃຫ້ຄລິກທີ່ລາຍການວັນທີທີ່ບັນທຶກ ແລະ ເລືອກຈາກເວລາທີ່ມີຢູ່ເພື່ອໂຫຼດພາບຖ່າຍຍ້ອນຫຼັງ.",
+    "titleIV": "ການຕອງພາບຖ່າຍຕາມສະຖານທີ່",
+    "bodyIV": "ພາບຖ່າຍດາວທຽມອາດຈະບໍ່ມີໃຫ້ບໍລິການໃນເວລາ ແລະ ສະຖານທີ່ທີ່ທ່ານຕ້ອງການສະເໝີໄປ. ຖ້າທ່ານຕ້ອງການເບິ່ງພາບຖ່າຍສະເພາະສະຖານທີ່ໃດໜຶ່ງ, ໃຫ້ຄລິກ ‘ຕອງຕາມສະຖານທີ່’ ໃນແຜງວຽກຂອງທ່ານ.",
+    "titleV": "ຂ້ອຍຈະເບິ່ງພາບຖ່າຍແບບສີປະສົມ (False-colour) ໄດ້ແນວໃດ?",
+    "bodyV": "ທ່ານສາມາດນຳໃຊ້ຮູບແບບຕ່າງໆ ເຊັ່ນ: ສີປະສົມ ກັບພາບຖ່າຍດາວທຽມໄດ້ ໂດຍການຄລິກທີ່ລາຍການຮູບແບບໃນແຜງວຽກຂອງທ່ານ."
+  },
+  "addData": {
+    "addDataBtnText": "ສຳຫຼວດຂໍ້ມູນ",
+    "btnHide": "ເຊື່ອງ",
+    "load": "ໂຫຼດຂໍ້ມູນຈາກເຄື່ອງ/ເວັບ",
+    "closeDataPanel": "ປິດແຜງຂໍ້ມູນ",
+    "done": "ສຳເຣັດແລ້ວ",
+    "data": "ຂໍ້ມູນ",
+    "myData": "ຂໍ້ມູນຂອງຂ້ອຍ",
+    "modalTitle": "ສຳຫຼວດຂໍ້ມູນ",
+    "dataCatalogue": "ລາຍການຂໍ້ມູນ",
+    "searchPlaceholderWhole": "ຄົ້ນຫາໃນລາຍການທັງໝົດ",
+    "searchPlaceholder": "ຄົ້ນຫາໃນລາຍການ",
+    "localAdd": "ເພີ່ມໄຟລ໌ຈາກເຄື່ອງ",
+    "localFileType": "<0>ຂັ້ນຕອນທີ 1:</0> ເລືອກປະເພດໄຟລ໌",
+    "localFile": "<0>ຂັ້ນຕອນທີ 2:</0> ເລືອກໄຟລ໌",
+    "webAdd": "ເພີ່ມຂໍ້ມູນຈາກເວັບ",
+    "webFileType": "<0>ຂັ້ນຕອນທີ 1:</0> ເລືອກປະເພດໄຟລ໌ ຫຼື ບໍລິການເວັບ",
+    "webFile": "<0>ຂັ້ນຕອນທີ 2:</0> ປ້ອນ URL ຂອງໄຟລ໌ຂໍ້ມູນ ຫຼື ບໍລິການເວັບ",
+    "urlInputBtn": "ຕື່ມຂໍ້ມູນ",
+    "browse": "ຄົ້ນຫາ...",
+    "localTitle": "ເພີ່ມຂໍ້ມູນຈາກເຄື່ອງ",
+    "webTitle": "ເພີ່ມຂໍ້ມູນຈາກເວັບ",
+    "dragDrop": "ລາກ ແລະ ວາງ",
+    "infoText": "<0>ລາກ ແລະ ວາງໄຟລ໌ທີ່ນີ້ເພື່ອເບິ່ງໃນແຜນທີ່</0><1>(ໄຟລ໌ຈະບໍ່ຖືກບັນທຶກ ຫຼື ອັບໂຫຼດລົງອິນເຕີເນັດ)</1>",
+    "back": "ກັບຄືນ",
+    "note": "<0>ໝາຍເຫດ: </0>ຂໍ້ມູນທີ່ເພີ່ມດ້ວຍວິທີນີ້ຈະບໍ່ຖືກບັນທຶກ ຫຼື ສະແດງໃຫ້ຜູ້ອື່ນເຫັນ."
+  },
+  "search": {
+    "resultsLabel": "ຜົນການຄົ້ນຫາ",
+    "done": "ສຳເຣັດແລ້ວ",
+    "data": "ຂໍ້ມູນ",
+    "searchInDataCatalog": "ຄົ້ນຫາ '{{locationSearchText}}' ໃນລາຍການຂໍ້ມູນ",
+    "search": "ຄົ້ນຫາ '{{searchText}}' ໃນລາຍການຂໍ້ມູນ",
+    "viewLess": "ສະແດງຜົນການຄົ້ນຫາ {{name}} ໜ້ອຍລົງ",
+    "viewMore": "ສະແດງຜົນການຄົ້ນຫາ {{name}} ເພີ່ມເຕີມ",
+    "placeholder": "ຄົ້ນຫາສະຖານທີ່",
+    "searchCatalogue": "ຄົ້ນຫາໃນລາຍການ"
+  },
+  "mobile": {
+    "toggleNavigation": "ເປີດ/ປິດ ການນຳທາງ",
+    "addDataBtnText": "ຂໍ້ມູນ",
+    "doneBtnText": "ສຳເຣັດແລ້ວ"
+  },
+  "preview": {
+    "doesNotContainGeospatialData": "ໄຟລ໌ນີ້ບໍ່ມີຂໍ້ມູນພູມສັນຖານ (Geospatial).",
+    "selectToPreviewDataset": "ເລືອກຊຸດຂໍ້ມູນເພື່ອເບິ່ງຕົວຢ່າງ",
+    "selectMultipleDatasets": "<0>ກົດ <strong>Shift</strong> ແລ້ວຄລິກ</0><1 /><2>ເພື່ອເພີ່ມຫຼາຍຊຸດຂໍ້ມູນ</2>",
+    "selectToPreviewSeparator": "ຫຼື",
+    "goToTheMap": "ໄປທີ່ແຜນທີ່",
+    "loading": "ກຳລັງໂຫຼດຕົວຢ່າງ...",
+    "preview": "ຕົວຢ່າງ {{appName}}",
+    "previewItemErrorTitle": "ບໍ່ສາມາດສະແດງຕົວຢ່າງລາຍການຂໍ້ມູນໄດ້.",
+    "previewItemErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫຼດລາຍການຂໍ້ມູນ.",
+    "noPreviewAvailable": "ບໍ່ມີຕົວຢ່າງໃຫ້ເບິ່ງ",
+    "dataPreviewLoading": "ກຳລັງໂຫຼດຕົວຢ່າງຂໍ້ມູນ...",
+    "dataPreview": "ຕົວຢ່າງຂໍ້ມູນ",
+    "dataPreviewError": "ເກີດຂໍ້ຜິດພາດໃນການສະແດງຕົວຢ່າງຂໍ້ມູນ",
+    "removeFromMap": "ລຶບອອກຈາກແຜນທີ່",
+    "addToMap": "ເພີ່ມລົງໃນແຜນທີ່",
+    "disclaimer": "ຂໍ້ຄວາມປະຕິເສດຄວາມຮັບຜິດຊອບ",
+    "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+    "datasetDescription": "ຄຳອະທິບາຍຊຸດຂໍ້ມູນ",
+    "serviceDescription": "ຄຳອະທິບາຍບໍລິການ",
+    "resourceDescription": "ຄຳອະທິບາຍຊັບພະຍາກອນ",
+    "licence": "ໃບອະນຸຍາດ",
+    "accessConstraints": "ຂໍ້ຈຳກັດການເຂົ້າເຖິງ",
+    "fees": "ຄ່າທຳນຽມ",
+    "author": "ຜູ້ຂຽນ",
+    "contact": "ຕິດຕໍ່ພົວພັນ",
+    "created": "ສ້າງເມື່ອ",
+    "modified": "ດັດແປງ",
+    "updateFrequency": "ຄວາມຖີ່ໃນການອັບເດດ",
+    "dataCustodian": "ຜູ້ເບິ່ງແຍງຂໍ້ມູນ",
+    "mayBeExperiencingIssues": "ຊຸດຂໍ້ມູນນີ້ອາດຈະກຳລັງພົບບັນຫາໃນຂະນະນີ້"
+  },
+  "description": {
+    "name": "ລາຍລະອຽດ",
+    "dataLocal": "ໄຟລ໌ນີ້ມີຢູ່ສະເພາະໃນບຣາວເຊີຂອງທ່ານເທົ່ານັ້ນ. ເພື່ອແບ່ງປັນ, ທ່ານຕ້ອງໂຫຼດມັນລົງໃນເວັບເຊີເວີສາທາລະນະ.",
+    "dataNotLocal": "ກະລຸນາຕິດຕໍ່ຜູ້ໃຫ້ບໍລິການຂໍ້ມູນນີ້ສຳລັບຂໍ້ມູນເພີ່ມເຕີມ, ລວມທັງຂໍ້ມູນກ່ຽວກັບສິດການນຳໃຊ້ ແລະ ຂໍ້ຈຳກັດຕ່າງໆ.",
+    "wms": "ນີ້ຄື <1>ບໍລິການ WMS</1>, ເຊິ່ງສ້າງຮູບພາບແຜນທີ່ຕາມການຮ້ອງຂໍ. ສາມາດນຳໃຊ້ໃນຊອບແວ GIS ດ້ວຍ URL ນີ້:",
+    "wfs": "ນີ້ຄື <1>ບໍລິການ WFS</1>, ເຊິ່ງສົ່ງຂໍ້ມູນພູມສັນຖານດິບຕາມການຮ້ອງຂໍ. ສາມາດນຳໃຊ້ໃນຊອບແວ GIS ດ້ວຍ URL ນີ້:",
+    "layerName": "ຊື່ຊັ້ນຂໍ້ມູນ",
+    "typeName": "ຊື່ປະເພດ",
+    "metadataUrls": "ລິງກ໌ຂໍ້ມູນເມຕາ (Metadata)",
+    "dataUrl": "ລິງກ໌ຂໍ້ມູນ",
+    "useLinkBelow": "ໃຊ້ລິງກ໌ດ້ານລຸ່ມເພື່ອດາວໂຫຼດຂໍ້ມູນ. ເບິ່ງ {{link}} ສຳລັບຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບການປັບແຕ່ງພາລາມິເຕີ URL.",
+    "downloadInFormat": "ດາວໂຫຼດຂໍ້ມູນທີ່ເລືອກໃນຮູບແບບ {{format}}",
+    "downloadNotSupported": "ຂໍອະໄພ, ບຣາວເຊີຂອງທ່ານບໍ່ຮອງຮັບຟັງຊັນທີ່ຈຳເປັນໃນການດາວໂຫຼດຂໍ້ມູນນີ້ເປັນໄຟລ໌. ກະລຸນາໃຊ້ $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), ຫຼື $t(browsers.safari) ເພື່ອດາວໂຫຼດຂໍ້ມູນນີ້.",
+    "useTheLinkToDownload": "ໃຊ້ລິງກ໌ດ້ານລຸ່ມເພື່ອດາວໂຫຼດຂໍ້ມູນໂດຍກົງ.",
+    "downloadData": "ດາວໂຫຼດຂໍ້ມູນ",
+    "dataSourceDetails": "ລາຍລະອຽດແຫຼ່ງຂໍ້ມູນ",
+    "dataServiceDetails": "ລາຍລະອຽດບໍລິການຂໍ້ມູນ",
+    "dataCustodian": "ຜູ້ເບິ່ງແຍງຂໍ້ມູນ"
+  },
+  "workbench": {
+    "colorScaleRangeTitle": "ຊ່ວງລະດັບສີບໍ່ຖືກຕ້ອງ",
+    "colorScaleRangeMin": "ຄ່ານ້ອຍສຸດຕ້ອງເປັນຕົວເລກ.",
+    "colorScaleRangeMax": "ຄ່າໃຫຍ່ສຸດຕ້ອງເປັນຕົວເລກ.",
+    "colorScaleRangeMinSmallerThanMax": "ຄ່ານ້ອຍສຸດຂອງຊ່ວງລະດັບສີຕ້ອງໜ້ອຍກວ່າຄ່າໃຫຍ່ສຸດ.",
+    "colorScaleRange": "ຊ່ວງລະດັບສີ",
+    "rangeMax": "ໃຫຍ່ສຸດ:",
+    "rangeMin": "ນ້ອຍສຸດ:",
+    "colorScaleUpdateRange": "ອັບເດດຊ່ວງ",
+    "displayPercent": "ສະແດງເປັນເປີເຊັນຂອງຍອດລວມພາກພື້ນ",
+    "opacity": "ຄວາມໂປ່ງໃສ: {{opacity}} %",
+    "zoomToTitle": "ຂະຫຍາຍໄປຕາມຂອບເຂດ",
+    "zoomTo": "ລະດັບຂະຫຍາຍທີ່ເໝາະສົມ",
+    "openFeatureTitle": "ຂະຫຍາຍໄປຫາຂໍ້ມູນ",
+    "openFeature": "ຂະຫຍາຍໄປຫາ",
+    "previewItemTitle": "ກ່ຽວກັບຂໍ້ມູນນີ້",
+    "showMoreActionsTitle": "ສະແດງການດຳເນີນການເພີ່ມເຕີມ",
+    "previewItem": "ກ່ຽວກັບຂໍ້ມູນ",
+    "splitItemTitle": "ເຮັດສຳເນົາ ແລະ ສະແດງຕົວແບ່ງ",
+    "splitItem": "ປຽບທຽບ",
+    "diffImageTitle": "ເບິ່ງຄວາມແຕກຕ່າງຂອງຮູບພາບລະຫວ່າງສອງວັນທີ",
+    "diffImage": "ສ່ວນຕ່າງ",
+    "exportDataTitle": "ສົ່ງອອກຂໍ້ມູນແຜນທີ່",
+    "exportData": "ສົ່ງອອກ",
+    "removeFromMapTitle": "ລຶບຂໍ້ມູນນີ້ອອກ",
+    "removeFromMap": "ລຶບອອກ",
+    "label": "ຊຸດຂໍ້ມູນ",
+    "removeAll": "ລຶບທັງໝົດ",
+    "collapseAll": "ຫຍໍ້ທັງໝົດ",
+    "expandAll": "ຂະຫຍາຍທັງໝົດ",
+    "disableAll": "ປິດໃຊ້ງານທັງໝົດ",
+    "enableAll": "ເປີດໃຊ້ງານທັງໝົດ",
+    "toggleVisibility": "ສະແດງ/ເຊື່ອງ ຂໍ້ມູນ",
+    "addItemErrorTitle": "ບໍ່ສາມາດເພີ່ມລາຍການຂໍ້ມູນລົງໃນແຜງວຽກໄດ້.",
+    "addItemErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫຼດລາຍການຂໍ້ມູນ.",
+    "searchItem": "ຄົ້ນຫາ",
+    "searchItemTitle": "ຄົ້ນຫາ",
+    "splitScreenMode": "ໂໝດແບ່ງໜ້າຈໍ"
+  },
+  "dateTime": {
+    "selectorLabel": "ເວລາ:",
+    "back": "ກັບຄືນ",
+    "previous": "ເວລາກ່ອນໜ້າ",
+    "selectTime": "ເລືອກເວລາ",
+    "outOfRange": "ບໍ່ຢູ່ໃນຊ່ວງເວລາໃນຂະນະນີ້.",
+    "next": "ເວລາຖັດໄປ",
+    "useTimeline": "ໃຊ້ລຳດັບເວລາ",
+    "availableTimeChart": "ສະແດງເວລາທີ່ມີຢູ່ເທິງແຜນພູມ",
+    "timeline": {
+      "textCell": "ຊື່ຂອງຊຸດຂໍ້ມູນທີ່ສະແດງຊ່ວງເວລາ",
+      "gotoStart": "ໄປທີ່ຈຸດເລີ່ມຕົ້ນ",
+      "togglePlay": "ຫຼິ້ນ",
+      "playSlower": "ຫຼິ້ນຊ້າລົງ",
+      "playFaster": "ຫຼິ້ນໄວຂຶ້ນ"
+    }
+  },
+  "satellite": {
+    "pickPoint": "ເລືອກຈຸດໂດຍການຄລິກໃສ່ແຜນທີ່.",
+    "querying": "ກຳລັງກວດສອບຕຳແໜ່ງ...",
+    "filterByLocation": "ຕອງຕາມສະຖານທີ່",
+    "infoGroup": "ສະແດງສະເພາະເວລາທີ່ມີການບັນທຶກສຳລັບ:",
+    "removeFilter": "ລົບຕົວກອງ",
+    "zoomTo": "ຂະຫຍາຍໄປຫາ",
+    "newLocation": "ສະຖານທີ່ໃໝ່"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "ການອັບເດດຂໍ້ມູນຄັ້ງຖັດໄປໃນເວລາ {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "ການອັບເດດຂໍ້ມູນຄັ້ງຖັດໄປໃນອີກ {{timeCountdown}}"
+  },
+  "concept": {
+    "active": {
+      "edit": "ແກ້ໄຂເງື່ອນໄຂ",
+      "remove": "ລຶບເງື່ອນໄຂ"
+    },
+    "inactive": {
+      "cancel": "ຍົກເລີກ",
+      "newText": "ເງື່ອນໄຂໃໝ່"
+    },
+    "summary": {
+      "addMoreText": "ເພີ່ມເງື່ອນໄຂ",
+      "addFirstText": "ເພີ່ມເງື່ອນໄຂໃໝ່"
+    }
+  },
+  "clipboard": {
+    "success": "ສຳເນົາລົງໃນຄລິບບອດແລ້ວ",
+    "unsuccessful": "ສຳເນົາບໍ່ສຳເລັດ...",
+    "shareURL": "URL ແບ່ງປັນ",
+    "shareExplanation": "ທຸກຄົນທີ່ມີ URL ນີ້ຈະສາມາດເຂົ້າເຖິງແຜນທີ່ນີ້ໄດ້.",
+    "copy": "ສຳເນົາ"
+  },
+  "includeStory": {
+    "message": "ລວມເລື່ອງລາວໃນການແບ່ງປັນ"
+  },
+  "dragDrop": {
+    "text": "<0>ລາກ ແລະ ວາງ</0><1>ຂໍ້ມູນຂອງທ່ານບ່ອນໃດກໍໄດ້ເພື່ອເບິ່ງໃນແຜນທີ່<1>",
+    "notification_0": "<0>\"{{fileNames}}\"</0> ຖືກເພີ່ມລົງໃນ <4>ຂໍ້ມູນຂອງຂ້ອຍ</4> ແລ້ວ."
+  },
+  "loader": {
+    "loadingMessage": "ກຳລັງໂຫຼດ"
+  },
+  "emptyWorkbenchInfo": [
+    {
+      "heading": "ເພີ່ມຊຸດຂໍ້ມູນທີ່ນີ້",
+      "body": "ເມື່ອທ່ານເພີ່ມຊຸດຂໍ້ມູນ, ຄຳອະທິບາຍສັນຍາລັກ ແລະ ການຕັ້ງຄ່າຈະປາກົດຂຶ້ນຢູ່ທີ່ນີ້."
+    },
+    {
+      "heading": "ເລີ່ມຕົ້ນການໃຊ້ງານ",
+      "list": [
+        "ຄລິກ 'ສຳຫຼວດຂໍ້ມູນ' ເພື່ອເບິ່ງຊຸດຂໍ້ມູນທີ່ມີຢູ່",
+        "ອັບໂຫຼດຂໍ້ມູນຂອງທ່ານເອງຜ່ານ 'ອັບໂຫຼດຂໍ້ມູນ'",
+        "ຄົ້ນຫາຂໍ້ມູນທີ່ທ່ານເພີ່ມໃນແຜງນີ້"
+      ]
+    },
+    {
+      "heading": "ສິ່ງທີ່ທ່ານສາມາດເຮັດໄດ້",
+      "list": [
+        "ສະແດງ ຫຼື ເເຊື່ອງຂໍ້ມູນ",
+        "ປັບຄວາມໂປ່ງໃສ",
+        "ປຽບທຽບແບບແບ່ງໜ້າຈໍ",
+        "ປ່ຽນຮູບແບບ (ສີ, ເສັ້ນ, ສັນຍາລັກ)",
+        "ເບິ່ງວັນທີ ແລະ ເວລາທີ່ແຕກຕ່າງກັນ (ຫາກຮອງຮັບ)"
+      ]
+    },
+    {
+      "body": "ໃຊ້ແຜງນີ້ເພື່ອສຳຫຼວດຂໍ້ມູນ, ຈັດການການຕັ້ງຄ່າ ແລະ ສ້າງສາກແຜນທີ່ ຫຼື ເລື່ອງລາວຂອງທ່ານ."
+    }
+  ],
+  "dataCatalog": {
+    "groupRemove": "ລຶບກຸ່ມນີ້ອອກ",
+    "groupEmpty": "ກຸ່ມນີ້ວ່າງເປົ່າ"
+  },
+  "catalogItem": {
+    "privateIndicatorTitle": "ຊຸດຂໍ້ມູນສ່ວນຕົວ",
+    "loading": "ກຳລັງໂຫຼດ...",
+    "remove": "ລຶບອອກ",
+    "add": "ເພີ່ມ",
+    "trash": "ລຶບອອກຈາກລາຍການ",
+    "removeFromMap": "ລຶບອອກຈາກແຜນທີ່",
+    "preview": "ສະແດງຕົວຢ່າງ"
+  },
+  "chart": {
+    "sectionLabel": "ແຜນພູມ",
+    "closePanel": "ປິດແຜງ",
+    "expand": "ຂະຫຍາຍ",
+    "download": "ດາວໂຫຼດ",
+    "showItemInChart": "ສະແດງ {{value}} ໃນແຜນພູມ",
+    "loading": "ກຳລັງໂຫຼດຂໍ້ມູນແຜນພູມ...",
+    "noData": "ບໍ່ພົບຂໍ້ມູນແຜນພູມ."
+  },
+  "viewModels": {
+    "searchNoLocations": "ຂໍອະໄພ, ບໍ່ມີສະຖານທີ່ທີ່ກົງກັບຄຳຄົ້ນຫາຂອງທ່ານ.",
+    "searchErrorOccurred": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຄົ້ນຫາ. ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດ ຫຼື ລອງໃໝ່ໃນພາຍຫຼັງ.",
+    "searchMinCharacters_0": "ທ່ານຕ້ອງປ້ອນຢ່າງໜ້ອຍ {{count}} ຕົວອັກສອນ",
+    "searchAddresses": "ທີ່ຢູ່",
+    "searchPlaceNames": "ຊື່ສະຖານທີ່ທາງການ",
+    "searchNoPlaceNames": "ຂໍອະໄພ, ບໍ່ມີຊື່ສະຖານທີ່ທາງການທີ່ກົງກັບຄຳຄົ້ນຫາຂອງທ່ານ.",
+    "searchLocations": "ສະຖານທີ່",
+    "searchCatalogueItem": "ລາຍການໃນລາຍການຂໍ້ມູນ",
+    "searchNoCatalogueItem": "ຂໍອະໄພ, ບໍ່ມີລາຍການຂໍ້ມູນທີ່ກົງກັບຄຳຄົ້ນຫາຂອງທ່ານ.",
+    "inMultipleLocations": "ໃນຫຼາຍສະຖານທີ່ ລວມທັງ: ",
+    "inDataCatalogue": "ໃນລາຍການຂໍ້ມູນ"
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableTitle": "ປະສິດທິພາບ WebGL ຕ່ຳ",
+    "slowWebGLAvailableMessage": "ບຣາວເຊີຂອງທ່ານລາຍງານວ່າມີບັນຫາປະສິດທິພາບໃນການສະແດງ {{appName}} ໃນຮູບແບບ 3D, ດັ່ງນັ້ນທ່ານຈະເຫັນສະເພາະຮູບແບບ 2D. ເພື່ອປະສົບການ 3D ທີ່ສົມບູນ, ກະລຸນາລອງໃຊ້ບຣາວເຊີອື່ນ, ອັບເກຣດໄດຣເວີກາດຈໍ ຫຼື ອັບເກຣດລະບົບປະຕິບັດການຂອງທ່ານ.",
+    "slowWebGLAvailableMessageII": "{{appName}} ເຮັດວຽກໄດ້ດີທີ່ສຸດກັບບຣາວເຊີທີ່ຮອງຮັບ {{webGL}} ລວມທັງເວີຊັນຫຼ້າສຸດຂອງ $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), ແລະ $t(browsers.safari). ບຣາວເຊີຂອງທ່ານເບິ່ງຄືວ່າບໍ່ຮອງຮັບ WebGL, ດັ່ງນັ້ນທ່ານຈະເຫັນສະເພາະຮູບແບບ 2D.",
+    "webGLNotSupportedTitle": "ບໍ່ຮອງຮັບ WebGL",
+    "webGLNotSupportedOrSlowTitle": "ບໍ່ຮອງຮັບ WebGL ຫຼື ເຮັດວຽກຊ້າເກີນໄປ",
+    "webGLNotSupportedOrSlowMessage": "ບຣາວເຊີຂອງທ່ານບໍ່ສາມາດສະແດງແຜນທີ່ໃນຮູບແບບ 3D ໄດ້, ອາດຈະເປັນຍ້ອນບໍ່ຮອງຮັບ WebGL ຫຼື ບຣາວເຊີລາຍງານວ່າ WebGL ຈະເຮັດວຽກຊ້າຫຼາຍ. ກະລຸນາລອງໃຊ້ບຣາວເຊີອື່ນ ເຊັ່ນ ເວີຊັນຫຼ້າສຸດຂອງ $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), ຫຼື $t(browsers.safari). ໃນບາງກໍລະນີ, ທ່ານອາດຈະຕ້ອງອັບເກຣດໄດຣເວີກາດຈໍ ຫຼື ລະບົບປະຕິບັດການເພື່ອເບິ່ງແບບ 3D ໃນ {{appName}}."
+  },
+  "analytics": {
+    "selectLocation": "ເລືອກສະຖານທີ່",
+    "point": "ຈຸດ (lat/lon)",
+    "polygon": "ຮູບຫຼາຍແຈ (Polygon)",
+    "existingPolygon": "ຮູບຫຼາຍແຈທີ່ມີຢູ່ແລ້ວ",
+    "nothingSelected": "ຍັງບໍ່ໄດ້ເລືອກຫຍັງເລີຍ, ກະລຸນາໃຊ້ປຸ່ມດ້ານເທິງເພື່ອເລືອກ.",
+    "runAnalysis": "ເລີ່ມການວິເຄາະ",
+    "clickToDrawLine": "ຄລິກເພື່ອແຕ້ມເສັ້ນ",
+    "enterValidCoords": "ກະລຸນາປ້ອນພິກັດທີ່ຖືກຕ້ອງ (ຕົວຢ່າງ: 131.0361, -25.3450).",
+    "selectPoint": "ເລືອກຈຸດໂດຍການຄລິກໃສ່ແຜນທີ່.",
+    "clickToDrawPolygon": "ຄລິກເພື່ອແຕ້ມຮູບຫຼາຍແຈ",
+    "shiftToDrawRectangle": "ກົດປຸ່ມ SHIFT ຄ້າງໄວ້ ແລະ ກົດປຸ່ມຊ້າຍຂອງເມົາສ໌ເພື່ອແຕ້ມຮູບສີ່ແຈ",
+    "clickToDrawRectangle": "ຄລິກເພື່ອແຕ້ມຮູບສີ່ແຈ",
+    "selectedPolygon": "ຮູບຫຼາຍແຈທີ່ເລືອກ",
+    "regionName": "ຊື່ພາກພື້ນ",
+    "selectExistingPolygon": "ເລືອກຮູບຫຼາຍແຈທີ່ມີຢູ່ແລ້ວ"
+  },
+  "core": {
+    "errors": {
+      "tooDeepAddedByUser": "ກວດພົບລາຍການຂໍ້ມູນເຖິງ 100 ລາຍການໃນຂະນະທີ່ກວດສອບ addedByUser ໃນ ID: \"{{memberId}}\"? ກະລຸນາກວດສອບວ່າບໍ່ມີກຸ່ມລາຍການຂໍ້ມູນທີ່ອ້າງອີງຊ້ອນກັນ (Recursive)."
+    },
+    "userAddedData": "ຂໍ້ມູນທີ່ຜູ້ໃຊ້ເພີ່ມເອງ",
+    "chartData": "ຂໍ້ມູນແຜນພູມ",
+    "dataUri": {
+      "errorTitle": "ບຣາວເຊີບໍ່ຮອງຮັບການດາວໂຫຼດຂໍ້ມູນ",
+      "errorMessage": "ຂໍອະໄພ, ບຣາວເຊີຂອງ Microsoft (ລວມທັງ Internet Explorer ແລະ Edge ທຸກເວີຊັນ) ບໍ່ຮອງຮັບຟັງຊັນ data URI ທີ່ຈຳເປັນໃນການດາວໂຫຼດຂໍ້ມູນເປັນໄຟລ໌. ເພື່ອດາວໂຫຼດ, ໃຫ້ສຳເນົາ URI ຕໍ່ໄປນີ້ໄປໃສ່ບຣາວເຊີອື່ນ ເຊັ່ນ $t(browsers.chrome), $t(browsers.firefox), ຫຼື $t(browsers.safari): {{href}}"
+    },
+    "dataType": {
+      "auto": "ປະເພດໄຟລ໌",
+      "wms-group": "ເຊີເວີ Web Map Service (WMS)",
+      "wmts-group": "ເຊີເວີ Web Map Tile Service (WMTS)",
+      "wfs-group": "ເຊີເວີ Web Feature Service (WFS)",
+      "wps-getCapabilities": "ເຊີເວີ Web Processing Service (WPS)",
+      "esri-group": "ເຊີເວີ Esri ArcGIS",
+      "esri-mapServer": "Esri ArcGIS MapServer (ຊັ້ນຂໍ້ມູນດຽວ)",
+      "esri-imageServer": "Esri ArcGIS ImageServer (ຊັ້ນຂໍ້ມູນດຽວ)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (ຊັ້ນຂໍ້ມູນດຽວ)",
+      "3d-tiles": "3D Tiles",
+      "open-street-map": "ເຊີເວີ Open Street Map",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Opendatasoft Portal",
+      "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
+      "kml": "KML ຫຼື KMZ",
+      "csv": "CSV",
+      "czml": "CZML",
+      "gpx": "GPX",
+      "json": "Terria Catalog",
+      "carto": "Carto V1",
+      "carto-v3": "Carto V3",
+      "gltf": "glTF",
+      "shp": "Shapefile",
+      "socrata-group": "ເຊີເວີ Socrata",
+      "assimp-local": "ຕົວແປງໄຟລ໌ 3D (zip) (ຄຸນສົມບັດທົດລອງ)",
+      "assimp-local-description": "**ຄຳເຕືອນ:** ຕົວແປງໄຟລ໌ 3D ແມ່ນຢູ່ໃນຂັ້ນຕອນທົດລອງ. \nເບິ່ງລາຍການ [ຮູບແບບທີ່ຮອງຮັບ](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md). \nໄຟລ໌ຕ້ອງຖືກບີບອັດເປັນ ZIP.",
+      "assimp-remote": "ຕົວແປງໄຟລ໌ 3D (ຄຸນສົມບັດທົດລອງ)",
+      "assimp-remote-description": "**ຄຳເຕືອນ:** ຕົວແປງໄຟລ໌ 3D ແມ່ນຢູ່ໃນຂັ້ນຕອນທົດລອງ. \nເບິ່ງລາຍການ [ຮູບແບບທີ່ຮອງຮັບ](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md). \nຮອງຮັບໄຟລ໌ ZIP ເຊັ່ນກັນ.",
+      "ifc": "IFC",
+      "cog": "Cloud Optimised Geotiff",
+      "i3s": "I3S",
+      "cesium-ion": "Cesium ion"
+    },
+    "printWindow": {
+      "errorTitle": "ເກີດຂໍ້ຜິດພາດໃນການພິມ",
+      "errorMessage": "ການພິມບໍ່ເລີ່ມຕົ້ນພາຍໃນ 10 ວິນາທີ. ບຣາວເຊີນີ້ອາດຈະບໍ່ຮອງຮັບການພິມ?",
+      "printMediaStart": "ເລີ່ມພິມສື່",
+      "printMediaEnd": "ສິ້ນສຸດການພິມສື່",
+      "onbeforeprint": "onbeforeprint",
+      "onafterprint": "onafterprint"
+    },
+    "consoleAnalytics": {
+      "started": "ເລີ່ມຕົ້ນ ConsoleAnalytics ແລ້ວ.",
+      "startedNoenableConsoleAnalytics": "ເລີ່ມຕົ້ນ ConsoleAnalytics ແລ້ວ, ແຕ່ `configParameters.enableConsoleAnalytics` ບໍ່ໄດ້ຖືກກຳນົດ ຫຼື ຖືກຕັ້ງເປັນ false.",
+      "logStartedWithGAParameters": "ເລີ່ມຕົ້ນ ConsoleAnalytics ແລ້ວ ແຕ່ພົບຄີ `googleAnalyticsKey` ຫຼື `googleAnalyticsOptions` ໃນ `configParameters`"
+    },
+    "googleAnalytics": {
+      "log": "ການຕິດຕາມ Google Analytics ຖືກປິດໃຊ້ງານ ເພາະບໍ່ໄດ້ລະບຸ terria.configParameters.googleAnalyticsKey",
+      "logEnabledOnDevelopment": "Google Analytics ຖືກເລີ່ມຕົ້ນໃນສະພາບແວດລ້ອມ `development`"
+    },
+    "readText": {
+      "fileRequired": "ຈຳເປັນຕ້ອງມີໄຟລ໌"
+    },
+    "readXml": {
+      "xmlError": "ໄຟລ໌ບໍ່ມີ XML ທີ່ຖືກຕ້ອງ."
+    },
+    "serverConfig": {
+      "failedToGet": "ບໍ່ສາມາດດຶງຂໍ້ມູນການຕັ້ງຄ່າເຊີເວີຈາກ {{serverConfigUrl}}. ນີ້ອາດໝາຍຄວາມວ່າບໍລິການຕ່າງໆ ເຊັ່ນ proxy, convert ແລະ ການສ້າງ URL ສັ້ນ ອາດຈະບໍ່ເຮັດວຽກ."
+    },
+    "terriaError": {
+      "defaultTitle": "ເກີດຂໍ້ຜິດພາດຂຶ້ນ",
+      "defaultMessage": "ຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ",
+      "defaultCombineTitle": "ເກີດຂໍ້ຜິດພາດຫຼາຍປະການ",
+      "defaultCombineMessage": "ລາຍລະອຽດຂອງຂໍ້ຜິດພາດຢູ່ດ້ານລຸ່ມ",
+      "networkRequestTitle": "ເກີດຂໍ້ຜິດພາດໃນການຮ້ອງຂໍເຄືອຂ່າຍ",
+      "networkRequestMessage": "ຂໍ້ມູນອາດຈະບໍ່ພ້ອມໃຊ້ງານ ຫຼື ສະແດງຜົນບໍ່ຖືກຕ້ອງ ເນື່ອງຈາກການຂັດຂ້ອງຂອງບໍລິການຜູ້ເບິ່ງແຍງຂໍ້ມູນ. ກະລຸນາລອງໂຫຼດແຜນທີ່ໃໝ່, ເຂົ້າເຖິງຂໍ້ມູນໃນພາຍຫຼັງ ຫຼື ເລືອກຊຸດຂໍ້ມູນອື່ນ. <feedbacklink feedback-message='ຫາກບັນຫາຍັງຄົງມີຢູ່, ກະລຸນາສົ່ງຄຳຄິດເຫັນທີ່ນີ້.' email-message='ຫາກບັນຫາຍັງຄົງມີຢູ່, ກະລຸນາແຈ້ງໄປທີ່ {{email}}'/>",
+      "networkRequestMessageDetailed": "ນີ້ອາດຈະບົ່ງບອກເຖິງສາເຫດໃດໜຶ່ງດັ່ງນີ້:\n\n* ບໍ່ສາມາດລະບຸຊື່ໂຮສ (hostname) ຂອງເຊີເວີໄດ້\n* ເຊີເວີບໍ່ຕອບສະໜອງຕໍ່ການຮ້ອງຂໍ - ຫຼື ບໍ່ພ້ອມໃຊ້ງານຊົ່ວຄາວ\n* ເຊີເວີປະຕິເສດການເຂົ້າເຖິງ [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) ສຳລັບ URL ນີ້\n* ມີບັນຫາກັບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານ\n\nຫາກທ່ານປ້ອນລິງກ໌ດ້ວຍຕົນເອງ, ກະລຸນາກວດສອບວ່າລິງກ໌ນັ້ນຖືກຕ້ອງຫຼືບໍ່."
+    },
+    "unverifiedExternalLink": {
+      "title": "ຄຳເຕືອນ: ລິງກ໌ທີ່ບໍ່ໄດ້ຮັບການຢືນຢັນ",
+      "message": "ທ່ານກຳລັງຈະເປີດ: \n\n`{{url}}`  \n\nລິງກ໌ນີ້ຍັງບໍ່ໄດ້ຮັບການຢືນຢັນ ແລະ ອາດຈະບໍ່ປອດໄພ.",
+      "denyText": "ຍົກເລີກ",
+      "confirmText": "ເປີດໃນແທັບໃໝ່"
+    }
+  },
+  "map": {
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses ຕ້ອງໄດ້ຮັບການຈັດຕັ້ງປະຕິບັດໃນ derived class."
+    },
+    "cesium": {
+      "stoppedRenderingTitle": "ແຜນທີ່ 3D ບໍ່ສາມາດສະແດງຜົນໄດ້",
+      "stoppedRenderingMessage": "ນີ້ອາດຈະເກີດຈາກຊຸດຂໍ້ມູນທີ່ຫາພໍເພີ່ມເຂົ້າໃນແຜງວຽກ - ກະລຸນາລອງລຶບມັນອອກ. ຫາກວິທີນີ້ບໍ່ສາມາດແກ້ໄຂບັນຫາໄດ້, ທ່ານອາດຈະຕ້ອງໂຫຼດ {{appName}} ໃໝ່.",
+      "devError": "ຈຳເປັນຕ້ອງມີ Cesium.",
+      "failedToObtain": "ບໍ່ສາມາດດຶງຂໍ້ມູນແຜ່ນຮູບພາບ (Tile) X: {{x}} Y: {{y}} Level: {{level}} ໄດ້.",
+      "notWebMercatorTilingScheme": "ຊຸດຂໍ້ມູນນີ້ບໍ່ສາມາດສະແດງໃນແຜນທີ່ 2D ໄດ້ ເພາະບໍ່ຮອງຮັບລະບົບພິກັດ Web Mercator (EPSG:3857).",
+      "unusalTilingScheme": "ຊຸດຂໍ້ມູນນີ້ບໍ່ສາມາດສະແດງໃນແຜນທີ່ 2D ໄດ້ ເພາະໃຊ້ຮູບແບບການແບ່ງແຜ່ນຮູບພາບ (Tiling scheme) ທີ່ບໍ່ເປັນໄປຕາມມາດຕະຖານ ແລະ ບໍ່ຮອງຮັບ.",
+      "terrainServerErrorTitle": "ເຊີເວີພູມສັນຖານບໍ່ຕອບສະໜອງ",
+      "terrainServerErrorMessage": " ເຊີເວີພູມສັນຖານບໍ່ຕອບສະໜອງໃນຂະນະນີ້. ທ່ານຍັງສາມາດໃຊ້ຄຸນສົມບັດທັງໝົດຂອງ {{appName}} ໄດ້ ແຕ່ຈະບໍ່ມີລາຍລະອຽດພູມສັນຖານໃນໂໝດ 3D. ພວກເຮົາຂໍອະໄພໃນຄວາມບໍ່ສະດວກ. ກະລຸນາລອງໃໝ່ໃນພາຍຫຼັງ. ຫາກບັນຫາຍັງຄົງມີຢູ່, ກະລຸນາຕິດຕໍ່ພວກເຮົາຜ່ານອີເມລທີ່ {{supportEmail}}."
+    },
+    "computeRingWindingOrder": {
+      "devError": "ຄາດຫວັງຈຸດປະເພດ {x:number, y:number}"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "ຕົວແປການສະແດງຜົນ"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "ແຕ້ມຂອບເຂດ",
+      "extent": "ຂອບເຂດ"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "ອົງປະກອບຈຸດ GML ຂາດອົງປະກອບ pos.",
+      "missingExteriorRing": "ຮູບຫຼາຍແຈ GML ຂາດວົງແຫວນດ້ານນອກ (Exterior ring).",
+      "missingPosList": "ວົງແຫວນດ້ານນອກຂອງຮູບຫຼາຍແຈ GML ຂາດ posList.",
+      "containsUnsupportedFeatureType": "GML ມີປະເພດລັກສະນະທີ່ບໍ່ຮອງຮັບ: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS ມີປະເພດລັກສະນະທີ່ບໍ່ຮອງຮັບ: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS ທີ່ມີເລຂາຄະນິດແບບ W3C ມີປະເພດລັກສະນະທີ່ບໍ່ຮອງຮັບ: {{type}}"
+    },
+    "gnafAddressGeocoder": {
+      "noAddresses": "ໂຄງສ້າງຕາຕະລາງນີ້ບໍ່ມີທີ່ຢູ່!",
+      "noAddresses2": "ເຖິງແມ່ນວ່າໂຄງສ້າງຕາຕະລາງຈະລາຍງານວ່າມີຄໍລຳທີ່ຢູ່, ແຕ່ມັນບໍ່ມີຂໍ້ມູນທີ່ຢູ່",
+      "suburb": "ເຂດຊານເມືອງ",
+      "state": "ສະຖານະ",
+      "postcode": "ລະຫັດໄປສະນີ",
+      "matchedAddresses": "ທີ່ຢູ່ທີ່ກົງກັນ",
+      "lon": "Lon",
+      "lat": "Lat",
+      "score": "ຄະແນນ",
+      "poBox": "ຕູ້ ປນ.",
+      "postOfficeBox": "ຕູ້ໄປສະນີ"
+    },
+    "imageryProviderHooks": {
+      "devError": "ບໍ່ມີບໍລິບົດ (Context) ສຳລັບການປ່ຽນສີຮູບພາບ."
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "MapboxVectorTileImageryProvider ຕ້ອງການຊື່ຊັ້ນຂໍ້ມູນທີ່ສົ່ງມາໃນ options.layerName",
+      "requireStyles": "MapboxVectorTileImageryProvider ຕ້ອງການຟັງຊັນການກຳນົດຮູບແບບທີ່ສົ່ງມາໃນ options.styleFunc",
+      "moreThanFourTiles": "ຂອບເຂດ ແລະ ລະດັບຕ່ຳສຸດຂອງຜູ້ໃຫ້ບໍລິການພາບຖ່າຍລະບຸວ່າມີ {{tileCount}} ແຜ່ນຮູບພາບໃນລະດັບຕ່ຳສຸດ. ບໍ່ຮອງຮັບຜູ້ໃຫ້ບໍລິການພາບຖ່າຍທີ່ມີຫຼາຍກວ່າສີ່ແຜ່ນໃນລະດັບຕ່ຳສຸດ.",
+      "maxLevelError": "ລະດັບສູງສຸດສູງເກີນໄປສຳລັບຊຸດຂໍ້ມູນ"
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "ການຈັບຄູ່ພາກພື້ນ CSV",
+      "csvRegionMappingMessageZeroFound": "ບໍ່ພົບຊື່ພາກພື້ນສຳລັບປະເພດພາກພື້ນ {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "ບໍ່ພົບຂອບເຂດພາກພື້ນສຳລັບພາກພື້ນ {{regionName}}",
+      "csvRegionMappingMessageLoadError": "ບໍ່ສາມາດໂຫຼດຂອບເຂດພາກພື້ນສຳລັບພາກພື້ນ {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "ການໃຫ້ກຽດແຫຼ່ງຂໍ້ມູນ",
+      "termsOfUse": "ເງື່ອນໄຂການນຳໃຊ້",
+      "credits": "ເຄຣດິດ",
+      "mapCredits": "ເຄຣດິດແຜນທີ່",
+      "dataProvider": "ຂໍ້ມູນສະໜອງໂດຍ:",
+      "searchProvider": "ການຄົ້ນຫາສະໜອງໂດຍ:"
+    }
+  },
+  "models": {
+    "userData": {
+      "addingDataErrorTitle": "ບໍ່ສາມາດເພີ່ມຂໍ້ມູນໄດ້",
+      "addingDataErrorMessage": "ບໍ່ສາມາດເພີ່ມຂໍ້ມູນທີ່ລະບຸໄດ້ ເພາະຂໍ້ມູນບໍ່ຖືກຕ້ອງ ຫຼື ບໍ່ຢູ່ໃນຮູບແບບທີ່ຮອງຮັບ.",
+      "fileApiNotSupportedTitle": "ບໍ່ຮອງຮັບ File API",
+      "fileApiNotSupportedMessage": "ຂໍອະໄພ, ບຣາວເຊີຂອງທ່ານບໍ່ຮອງຮັບ File API ເຊິ່ງ {{appName}} ຈຳເປັນຕ້ອງໃຊ້ເພື່ອເພີ່ມຂໍ້ມູນຈາກໄຟລ໌ໃນລະບົບຂອງທ່ານ. ກະລຸນາອັບເກຣດບຣາວເຊີຂອງທ່ານ. ເພື່ອປະສົບການທີ່ດີທີ່ສຸດ, ພວກເຮົາແນະນຳໃຫ້ໃຊ້ເວີຊັນຫຼ້າສຸດຂອງ {{chrome}}, {{firefox}} ຫຼື {{edge}}."
+    },
+    "arcGisService": {
+      "name": "ກຸ່ມບໍລິການ ArcGIS",
+      "invalidServerTitle": "ເຊີເວີ ArcGIS ບໍ່ຖືກຕ້ອງ",
+      "invalidServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS REST. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ ArcGIS REST ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS REST."
+    },
+    "arcGisFeatureServer": {
+      "name": "ArcGIS Feature Server",
+      "nameGroup": "ກຸ່ມ ArcGIS Feature Server",
+      "invalidServiceTitle": "ບໍລິການ ArcGIS Feature ບໍ່ຖືກຕ້ອງ",
+      "invalidServiceMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Feature. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ Feature Service ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Feature."
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "name": "ກຸ່ມ ArcGIS Feature Server",
+      "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+      "serviceDescription": "ຄຳອະທິບາຍບໍລິການ",
+      "copyrightText": "ຂໍ້ຄວາມລິຂະສິດ",
+      "invalidServiceTitle": "ບໍລິການ ArcGIS Feature ບໍ່ຖືກຕ້ອງ",
+      "invalidServiceMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Feature. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ Feature Service ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Feature."
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "name": "Esri ArcGIS FeatureServer",
+      "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+      "serviceDescription": "ຄຳອະທິບາຍບໍລິການ",
+      "copyrightText": "ຂໍ້ຄວາມລິຂະສິດ",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫຼດ FeatureServer ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫຼດ ArcGis FeatureServer ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "invalidServiceTitle": "ຊັ້ນບໍລິການ ArcGIS Feature ບໍ່ຖືກຕ້ອງ",
+      "invalidServiceMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Feature. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນຊັ້ນບໍລິການ Feature Service ທີ່ຖືກຕ້ອງ.",
+      "reachedMaxFeatureLimit": "ຄຳເຕືອນ: ຊັ້ນຂໍ້ມູນນີ້ຮອດຂີດຈຳກັດລັກສະນະຂອງ FeatureService ແລ້ວ ({{maxFeatures}})."
+    },
+    "arcGisMapServerCatalogGroup": {
+      "name": "ກຸ່ມ ArcGIS Map Server",
+      "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+      "serviceDescription": "ຄຳອະທິບາຍບໍລິການ",
+      "copyrightText": "ຂໍ້ຄວາມລິຂະສິດ",
+      "invalidServiceTitle": "ບໍລິການ ArcGIS Map ບໍ່ຖືກຕ້ອງ",
+      "invalidServiceMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Map. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ Map Service ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Map.",
+      "singleFusedMapCacheLayerName": "ທຸກຊັ້ນຂໍ້ມູນ"
+    },
+    "arcGisMapServerCatalogItem": {
+      "name": "Esri ArcGIS MapServer",
+      "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+      "serviceDescription": "ຄຳອະທິບາຍບໍລິການ",
+      "copyrightText": "ຂໍ້ຄວາມລິຂະສິດ",
+      "invalidUrlTitle": "ບໍ່ສາມາດໂຫຼດ MapServer ໄດ້",
+      "invalidUrlMessage": "ບໍ່ສາມາດໂຫຼດ ArcGis MapServer ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "noLayersFoundTitle": "ບໍ່ສາມາດໂຫຼດ ArcGIS MapServer ໄດ້.",
+      "noLayersFoundMessage": "Esri ArcGIS MapServer '{{name}}' ບໍ່ມີຊັ້ນຂໍ້ມູນໃດໆທີ່ຈະສະແດງ."
+    },
+    "arcGisImageServerCatalogItem": {
+      "name": "Esri ArcGIS ImageServer",
+      "invalidUrlTitle": "ບໍ່ສາມາດໂຫຼດ ImageServer ໄດ້",
+      "invalidUrlMessage": "ບໍ່ສາມາດໂຫຼດ ArcGis ImageServer ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "invalidServiceTitle": "ບໍລິການ ArcGIS Image ບໍ່ຖືກຕ້ອງ",
+      "invalidServiceMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະຮ້ອງຂໍບໍລິການ ArcGIS Image. ການຕອບສະໜອງຈາກເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ Image Service ທີ່ຖືກຕ້ອງ.",
+      "rasterFunction": "ຟັງຊັນ Raster"
+    },
+    "bing": {
+      "name": "Bing Maps"
+    },
+    "wcs": {
+      "asyncResultLoadingMetadata": "ກຳລັງໂຫຼດ WCS:\nບໍລິການ {{name}} ເວລາ {{timestamp}}.\n\n*ກຳລັງໂຫຼດຂໍ້ມູນເມຕາ (`DescribeCoverage`)*",
+      "asyncResultDescription": "ນີ້ແມ່ນຜົນຂອງການສົ່ງອອກຂໍ້ມູນຈາກບໍລິການ {{name}} ເວລາ {{timestamp}} ດ້ວຍພາລາມິເຕີຂາເຂົ້າດ້ານລຸ່ມ.",
+      "asyncPendingDescription": "ກຳລັງໂຫຼດ WCS:\nບໍລິການ {{name}} ເວລາ {{timestamp}}.\n\n*ກຳລັງດາວໂຫຼດ coverage*",
+      "exportFailedTitle": "ການສົ່ງອອກຂໍ້ມູນບໍ່ສຳເລັດ",
+      "exportFailedMessage": "ບໍລິການ Web Coverage Service ລົ້ມເຫຼວ",
+      "exportFailedMessageII": "ບໍລິການ Web Coverage Service ລົ້ມເຫຼວ: {{error}}"
+    },
+    "cartoMap": {
+      "name": "Carto Map",
+      "noUrlTitle": "ບໍ່ມີ URL",
+      "noUrlMessage": "ບໍ່ພົບ URL ທີ່ສາມາດໃຊ້ງານໄດ້ສຳລັບຊັ້ນຂໍ້ມູນ Carto Map."
+    },
+    "cesiumTerrain": {
+      "name": "Cesium Terrain",
+      "name3D": "Cesium 3D Tiles",
+      "notSupportedErrorTitle": "ບໍ່ຮອງຮັບໃນຮູບແບບ 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" ບໍ່ສາມາດສະແດງໃນມຸມມອງ 2D ໄດ້. ກະລຸນາປ່ຽນເປັນ 3D ແລະ ລອງໃໝ່.",
+      "errorRenderingTitle": "ເກີດຂໍ້ຜິດພາດໃນການສະແດງຜົນ 3D",
+      "errorRenderingMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະສະແດງຜົນ 3D. ນີ້ອາດຈະເປັນຍ້ອນຂໍ້ຜິດພາດຂອງ {{appName}} ຫຼື ຄວາມບໍ່ເຂົ້າກັນຂອງລະບົບ ຫຼື ບຣາວເຊີຂອງທ່ານ. ພວກເຮົາຈະປ່ຽນເປັນຮູບແບບ 2D ເພື່ອໃຫ້ທ່ານສາມາດເຮັດວຽກຕໍ່ໄປໄດ້."
+    },
+    "ckan": {
+      "nameServer": "ເຊີເວີ CKAN",
+      "errorLoadingTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫຼດລາຍການຂໍ້ມູນ CKAN",
+      "errorLoadingMessage": "ຄຳນິຍາມສຳລັບລາຍການຂໍ້ມູນ CKAN ນີ້ບໍ່ມີການສອບຖາມຕົວກອງ (Filter query) ທີ່ຖືກຕ້ອງ.",
+      "corsErrorMessage": "ບໍ່ສາມາດດຶງຂໍ້ມູນແພັກເກັດຈາກເຊີເວີ CKAN ນີ້ໄດ້.",
+      "name": "ຊັບພະຍາກອນ CKAN",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "datasetDescription": "ຄຳອະທິບາຍຊຸດຂໍ້ມູນ",
+      "dataDescription": "ຄຳອະທິບາຍຂໍ້ມູນ",
+      "resourceDescription": "ຄຳອະທິບາຍຊັບພະຍາກອນ",
+      "datasetCustodian": "ຜູ້ຄຸ້ມຄອງຊຸດຂໍ້ມູນ",
+      "licence": "ໃບອະນຸຍາດ",
+      "author": "ຜູ້ຂຽນ",
+      "contact_point": "ຕິດຕໍ່ພົວພັນ",
+      "metadata_created": "ສ້າງຂຶ້ນເມື່ອ",
+      "metadata_modified": "ດັດແກ້ເມື່ອ",
+      "update_freq": "ຄວາມຖີ່ໃນການອັບເດດ",
+      "idsNotSpecifiedTitle": "ຕ້ອງລະບຸ resourceId ຫຼື datasetId",
+      "idsNotSpecifiedMessage": "CkanCatalogItem ຮຽກຮ້ອງໃຫ້ລະບຸ resourceId ຫຼື datasetId ຢ່າງໃດຢ່າງໜຶ່ງ.",
+      "errorRetrievingUrlTitle": "ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນ URL ຂອງ CKAN",
+      "errorRetrievingUrlMessage": "ບໍ່ສາມາດດຶງຂໍ້ມູນ URL ໃນຮູບແບບ JSON ໄດ້: {{url}}.",
+      "invalidCkanTitle": "ຂໍ້ມູນ JSON ຂອງຊັບພະຍາກອນ CKAN ບໍ່ຖືກຕ້ອງ",
+      "invalidCkanMessage": "ຊັບພະຍາກອນທີ່ໄດ້ຮັບຈາກເຊີເວີ CKAN ເບິ່ງຄືວ່າບໍ່ມີ package_id.",
+      "notCompatibleTitle": "ບໍ່ພົບຊັບພະຍາກອນທີ່ເຂົ້າກັນໄດ້",
+      "notCompatibleMessageI": "ຊຸດຂໍ້ມູນ CKAN ບໍ່ມີຊັບພະຍາກອນທີ່ມີ ID {{resourceId}} ຫຼື ມັນບໍ່ຢູ່ໃນຮູບແບບທີ່ຮອງຮັບ.",
+      "notCompatibleMessageII": "ຊຸດຂໍ້ມູນ CKAN ບໍ່ມີຊັບພະຍາກອນໃດໆ ທີ່ຢູ່ໃນຮູບແບບທີ່ຮອງຮັບ."
+    },
+    "arcgisPortal": {
+      "nameGroup": "ກຸ່ມ ArcGIS Portal",
+      "errorLoadingTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດລາຍການຂໍ້ມູນ ArcGIS Portal",
+      "errorLoadingMessage": "ການກໍານົດຄ່າສໍາລັບລາຍການ ArcGIS Portal ນີ້ ບໍ່ມີຄໍາສັ່ງກອງຂໍ້ມູນທີ່ຖືກຕ້ອງ.",
+      "corsErrorMessage": "ບໍ່ສາມາດດຶງຂໍ້ມູນແພັກເກັດຈາກເຊີເວີ ArcGIS Portal ນີ້ໄດ້. ",
+      "name": "ລາຍການ ArcGIS Portal",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "datasetDescription": "ລາຍລະອຽດຊຸດຂໍ້ມູນ",
+      "licence": "ໃບອະນຸຍາດ",
+      "openInPortal": "ເປີດໃນ ArcGIS Portal",
+      "idsNotSpecifiedTitle": "ຕ້ອງລະບຸ resourceId ຫຼື datasetId",
+      "idsNotSpecifiedMessage": "ລາຍການ ArcGIS Portal ຕ້ອງການໃຫ້ລະບຸ itemId.",
+      "errorRetrievingUrlTitle": "ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນ URL ຂອງ ArcGIS Portal",
+      "errorRetrievingUrlMessage": "ບໍ່ສາມາດດຶງຂໍ້ມູນ URL ໃນຮູບແບບ JSON ໄດ້: {{url}}."
+    },
+    "catalog": {
+      "name": "ລາຍການທີ່ບໍ່ມີຊື່",
+      "group": "ກຸ່ມ",
+      "idForMatchingErrorTitle": "ຄຸນສົມບັດຂາດຫາຍໄປ",
+      "idForMatchingErrorMessage": "ວັດຖຸໃນແບບຈໍາລອງຕ້ອງມີຄຸນສົມບັດ `id`, `localId`, ຫຼື `name`.",
+      "catalogMemberMustHaveName": "ສະມາຊິກໃນລາຍການທີ່ສ້າງຂຶ້ນໃໝ່ຕ້ອງມີຊື່.",
+      "catalogMemberMustHaveType": "ສະມາຊິກໃນລາຍການຕ້ອງມີປະເພດ.",
+      "userAddedDataGroup": "ກຸ່ມສໍາລັບຂໍ້ມູນທີ່ຖືກເພີ່ມໂດຍຜູ້ໃຊ້ຜ່ານແຖບ ເພີ່ມຂໍ້ມູນ.",
+      "chartDataGroup": "ກຸ່ມສໍາລັບຂໍ້ມູນແຜນພູມ.",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "stubCreationFailure": "ບໍ່ສາມາດສ້າງ stub ສໍາລັບລາຍການຂໍ້ມູນ {{item}}",
+      "unsupportedTypeTitle": "ບໍ່ຮູ້ຈັກປະເພດ",
+      "unsupportedTypeMessage": "ບໍ່ສາມາດສ້າງແບບຈໍາລອງປະເພດທີ່ບໍ່ຮູ້ຈັກ {{type}}.",
+      "unsupportedFileTypeTitle": "ປະເພດໄຟລ໌ທີ່ບໍ່ຮອງຮັບ",
+      "unsupportedFileTypeMessage": "ຮູບແບບໄຟລ໌ນີ້ບໍ່ໄດ້ຮັບການຮອງຮັບໂດຍ {{appName}}. ຮູບແບບໄຟລ໌ທີ່ຮອງຮັບລວມມີ: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (ໃນ {{link}})</li><li>Shapefile (.zip)</li></ul>",
+      "upload": "ອັບໂຫລດຂໍ້ມູນ",
+      "mustHaveType": "ແຕ່ລະລາຍການຕ້ອງມີປະເພດ.",
+      "compositesError": "ລາຍການປະສົມ (Composites) ບໍ່ສາມາດມີລາຍການປະສົມອື່ນຊ້ອນຢູ່ຂ້າງໃນໄດ້.",
+      "convertErrorTitle": "ບໍ່ສາມາດອັບເກຣດລາຍການຂໍ້ມູນເປັນເວີຊັນ V8 ໄດ້",
+      "convertErrorMessage": "ໄຟລ໌ລາຍການຂໍ້ມູນນີ້ແມ່ນອີງໃສ່ TerriaJS ເວີຊັນເກົ່າ - ເຊິ່ງເປັນຊອບແວທີ່ຂັບເຄື່ອນແຜນທີ່ເວັບນີ້. ເກີດຂໍ້ຜິດພາດໃນການພະຍາຍາມອັບເກຣດຂໍ້ມູນລາຍການສໍາລັບ {{url}}.",
+      "addAll": "ເພີ່ມທັງໝົດ",
+      "removeAll": "ລຶບທັງໝົດ"
+    },
+    "createParameter": {
+      "unsupportedErrorTitle": "ປະເພດພາຣາມິເຕີຂອງຟັງຊັນບໍ່ໄດ້ຮັບການຮອງຮັບ",
+      "unsupportedErrorMessage": "ບໍ່ຮູ້ຈັກປະເພດພາຣາມິເຕີຂອງຟັງຊັນ: {{type}}."
+    },
+    "csv": {
+      "name": "ຄ່າທີ່ຂັ້ນດ້ວຍຈຸດ (CSV)",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "unexpectedTypeTitle": "ປະເພດຂໍ້ມູນ CSV ບໍ່ຖືກຕ້ອງຕາມທີ່ຄາດໄວ້",
+      "unexpectedTypeMessage": "ຂໍ້ມູນ CsvCatalogItem ຄວນຈະເປັນ Blob, ໄຟລ໌ ຫຼື ຂໍ້ຄວາມ, ແຕ່ບໍ່ແມ່ນປະເພດເຫຼົ່ານີ້.",
+      "unableToLoadTitle": "ບໍ່ສາມາດໂຫລດໄຟລ໌ CSV ໄດ້",
+      "unableToLoadMessage": "ເບິ່ງຂໍ້ກໍານົດ <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> ສໍາລັບຮູບແບບ CSV ທີ່ຮອງຮັບ.\n\n {{message}}",
+      "unableToLoadItemTitle": "ບໍ່ມີ CSV ໃຫ້ບໍລິການ",
+      "unableToLoadItemMessage": "ບໍ່ສາມາດໂຫລດລາຍການຂໍ້ມູນ CSV ໄດ້ ເພາະວ່າບໍ່ໄດ້ກໍານົດຄ່າຄຸນສົມບັດ `url` ຫຼື `csvString`."
+    },
+    "csw": {
+      "name": "ບໍລິການລາຍການຂໍ້ມູນ (CSW)",
+      "unknownError": "ເຊີເວີ CSW ລາຍງານຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ.",
+      "exceptionMessage": "ເຊີເວີ CSW ລາຍງານຂໍ້ຜິດພາດ:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "ບໍ່ສາມາດໂຫລດ CSW ໄດ້",
+      "notUseableTitle": "ບໍລິການລາຍການຂໍ້ມູນບໍ່ສາມາດໃຊ້ງານໄດ້.  \n\n {{message}}",
+      "notUseableMessage": "ໄດ້ຮັບການຕອບສະໜອງທີ່ບໍ່ຖືກຕ້ອງເມື່ອຮຽກໃຊ້ GetDomain ໃນເຊີເວີ CSW.",
+      "errorLoadingRecordsTitle": "ບໍ່ສາມາດໂຫລດຂໍ້ມູນ CSW ໄດ້.",
+      "errorLoadingRecordsMessage": "ໄດ້ຮັບການຕອບສະໜອງທີ່ບໍ່ຖືກຕ້ອງເມື່ອຮຽກໃຊ້ GetRecords ໃນ CSW",
+      "checkCORSDomain": "ບໍ່ສາມາດປະຕິບັດຄໍາສັ່ງ GetDomain ໃນເຊີເວີ CSW ນີ້ໄດ້.",
+      "checkCORSRecords": "ບໍ່ສາມາດປະຕິບັດຄໍາສັ່ງ GetRecords ໃນເຊີເວີ CSW ນີ້ໄດ້.",
+      "dataResponsibility": "ຄວາມຮັບຜິດຊອບຕໍ່ຂໍ້ມູນ",
+      "links": "ລິ້ງ",
+      "metadataURL": "URL ຂອງຂໍ້ມູນເມຕາເດຕາ",
+      "checkCORS": "ບໍ່ສາມາດປະຕິບັດຄໍາສັ່ງ GetRecords ໃນເຊີເວີ CSW ນີ້ໄດ້.",
+      "cors": "CORS",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດບໍລິການລາຍການຂໍ້ມູນ (CSW) ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດບໍລິການລາຍການຂໍ້ມູນ (CSW) ໄດ້ ເພາະວ່າກຸ່ມລາຍການຂໍ້ມູນບໍ່ມີ `url`."
+    },
+    "czml": {
+      "name": "ພາສາ Cesium (CZML)",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "errorLoadingTitle": "ບໍ່ສາມາດໂຫລດ CZML ໄດ້",
+      "errorLoadingMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ໂຫລດໄຟລ໌ CZML.",
+      "unableToLoadItemTitle": "ບໍ່ມີ CZML ໃຫ້ບໍລິການ",
+      "unableToLoadItemMessage": "ບໍ່ສາມາດໂຫລດລາຍການຂໍ້ມູນ CZML ໄດ້ ເພາະວ່າບໍ່ໄດ້ກໍານົດຄ່າຄຸນສົມບັດ `url`, `czmlData`, ຫຼື `czmlString`."
+    },
+    "function": {
+      "unknownFormaterTitle": "ບໍ່ຮູ້ຈັກຮູບແບບຕົວຈັດການ (formatter)",
+      "unknownFormaterMessage": "ບໍ່ຮູ້ຈັກຮູບແບບຕົວຈັດການພາຣາມິເຕີຂອງຟັງຊັນ {{formatter}}.\n\nຮູບແບບຕົວຈັດການທີ່ຖືກຕ້ອງແມ່ນ:\n\n"
+    },
+    "geoJson": {
+      "name": "GeoJSON",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "errorLoadingTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດ GeoJSON",
+      "errorParsingMessage": "ເກີດຂໍ້ຜິດພາດໃນການແປງຂໍ້ມູນທີ່ໃຫ້ມາເປັນ JSON. ນີ້ອາດຈະໝາຍຄວາມວ່າໄຟລ໌ບໍ່ຖືກຕ້ອງ ຫຼື ບໍ່ໄດ້ຮັບການຮອງຮັບ.",
+      "errorLoadingMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດໄຟລ໌ GeoJSON. ນີ້ອາດຈະໝາຍຄວາມວ່າໄຟລ໌ບໍ່ຖືກຕ້ອງ ຫຼື ບໍ່ໄດ້ຮັບການຮອງຮັບ.",
+      "couldNotLoadTitle": "ບໍ່ສາມາດໂຫລດ JSON ໄດ້",
+      "couldNotLoadMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ດຶງຂໍ້ມູນ JSON ຈາກລິ້ງທີ່ໃຫ້ມາ. (CORS)",
+      "unableToLoadItemTitle": "ບໍ່ມີ GeoJSON ໃຫ້ບໍລິການ",
+      "unableToLoadItemMessage": "ບໍ່ສາມາດໂຫລດລາຍການຂໍ້ມູນ GeoJSON ໄດ້ ເພາະວ່າບໍ່ໄດ້ກໍານົດຄ່າຄຸນສົມບັດ `url`, `geoJsonData`, ຫຼື `geoJsonString`.",
+      "unsupportedBrowserTitle": "ເວັບບຣາວເຊີທີ່ບໍ່ຮອງຮັບ",
+      "unsupportedBrowserMessage": "ຂໍໂທດ, ເວັບບຣາວເຊີຂອງທ່ານບໍ່ຮອງຮັບ File API, ເຊິ່ງ {{appName}} ຈໍາເປັນຕ້ອງໃຊ້ເພື່ອໂຫລດຊຸດຂໍ້ມູນນີ້. ກະລຸນາອັບເກຣດເວັບບຣາວເຊີຂອງທ່ານ. ເພື່ອປະສົບການທີ່ດີທີ່ສຸດ, ພວກເຮົາແນະນໍາໃຫ້ໃຊ້ເວີຊັນຫຼ້າສຸດຂອງ $t(browsers.chrome) ຫຼື $t(browsers.firefox) ຫຼື $t(browsers.edge) ຫຼື $t(browsers.safari)."
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "getToken": {
+      "errorTitle": "ຂໍ້ຜິດພາດຂອງ Token",
+      "invalidToken": "<p>ເຊີເວີໂທເຄັນຕອບສະໜອງດ້ວຍໂທເຄັນທີ່ບໍ່ຖືກຕ້ອງ.</p><p>ກະລຸນາແຈ້ງບັນຫາໂດຍການສົ່ງອີເມວໄປທີ່ {{email}}</p>",
+      "unableToRequest": "<p>ບໍ່ສາມາດຮ້ອງຂໍໂທເຄັນຈາກເຊີເວີໂທເຄັນໄດ້.</p><p>ກະລຸນາແຈ້ງບັນຫາໂດຍການສົ່ງອີເມວໄປທີ່ {{email}}</p>"
+    },
+    "gltf": {
+      "name": "ຮູບແບບ GL Transmission (glTF)",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "notSupportedErrorTitle": "ບໍ່ຮອງຮັບໃນໂໝດ 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" ບໍ່ສາມາດສະແດງໃນມຸມມອງ 2D ໄດ້. ກະລຸນາປ່ຽນເປັນ 3D ແລ້ວລອງໃໝ່ອີກຄັ້ງ.",
+      "error": "ຜິດພາດ",
+      "unableToRetrieve": "ບໍ່ສາມາດດຶງລາຍລະອຽດຂອງຟີເຈີຈາກ:\n\n{{url}}"
+    },
+    "gpx": {
+      "name": "GPX",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "errorLoadingTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດ GPX",
+      "errorLoadingMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດໄຟລ໌ GPX. ນີ້ອາດຈະໝາຍຄວາມວ່າໄຟລ໌ບໍ່ຖືກຕ້ອງ ຫຼື ບໍ່ໄດ້ຮັບການຮອງຮັບໂດຍ {{appName}}."
+    },
+    "georss": {
+      "name": "GeoRSS",
+      "subtitle": "ຄຳບັນຍາຍຮອງ",
+      "updated": "ອັບເດດແລ້ວ",
+      "category": "ໝວດໝູ່",
+      "description": "ລາຍລະອຽດ",
+      "copyrightText": "ຂໍ້ຄວາມລິຂະສິດ",
+      "link": "ລິ້ງ",
+      "author": "ຜູ້ຂຽນ",
+      "errorLoadingTitle": "ບໍ່ສາມາດໂຫລດ GeoRSS ໄດ້",
+      "errorLoadingMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດໄຟລ໌ GeoRSS.",
+      "unableToLoadItemTitle": "ບໍ່ມີ GeoRSS ໃຫ້ບໍລິການ",
+      "unableToLoadItemMessage": "ບໍ່ສາມາດໂຫລດລາຍການຂໍ້ມູນ GeoRSS ໄດ້ ເພາະວ່າບໍ່ໄດ້ກໍານົດຄ່າຄຸນສົມບັດ `url` ຫຼື `geoRss`."
+    },
+    "imageryLayer": {
+      "intervalSupportErrorTitle": "ບໍ່ຮອງຮັບຊ່ວງເວລາ (Intervals)",
+      "intervalSupportErrorMessage": "ຂໍໂທດ, ລາຍການຂໍ້ມູນ {{typeName}} ({{type}}) ໃນປະຈຸບັນຍັງບໍ່ສາມາດເຮັດໃຫ້ປ່ຽນແປງຕາມເວລາໄດ້ໂດຍການກໍານົດຄຸນສົມບັດ \"intervals\".",
+      "resolvingAvailability": "ກຳລັງກວດສອບຄວາມພ້ອມໃນການໃຊ້ງານທີ່ຕັ້ງນີ້...",
+      "accessingBaseMapErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການເຂົ້າເຖິງແຜນທີ່ພື້ນຖານ",
+      "accessingBaseMapErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມດາວໂຫລດແຜ່ນແຜນທີ່ (tiles) ສໍາລັບແຜນທີ່ພື້ນຖານ:<p><center>{{name}} </center></p> ກະລຸນາເລືອກແຜນທີ່ພື້ນຖານອື່ນ ໂດຍໃຊ້ປຸ່ມ ແຜນທີ່ ຢູ່ມຸມຂວາເທິງ.",
+      "accessingCatalogItemErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການເຂົ້າເຖິງລາຍການຂໍ້ມູນ",
+      "accessingCatalogItemErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມດາວໂຫລດແຜ່ນແຜນທີ່ສໍາລັບລາຍການຂໍ້ມູນ:<p><center>{{name}}</center></p> ລາຍການຂໍ້ມູນນີ້ໄດ້ຖືກເຊື່ອງໄວ້ຈາກແຜນທີ່. ທ່ານສາມາດສະແດງມັນໃໝ່ໄດ້ໃນແຖບ ກໍາລັງເບິ່ງ ເພື່ອລອງໃໝ່.",
+      "tileErrorTitle": "ຂໍ້ຜິດພາດຂອງແຜ່ນແຜນທີ່ (Tile)",
+      "tileErrorMessage": "ແຜ່ນແຜນທີ່ທີ່ມີ URL:\n{{url}}\n ໂຫລດສຳເລັດເມື່ອໃຊ້ XMLHttpRequest ແຕ່ຫຼົ້ມເຫຼວຫຼາຍຄັ້ງເມື່ອໂຫລດໂດຍກົງຜ່ານ Cesium ຫຼື Leaflet.\n ນີ້ອາດຈະໝາຍຄວາມວ່າເຊີເວີມີຄວາມອ່ອນໄຫວຫຼາຍຕໍ່ request headers ທີ່ສົ່ງໄປ ຫຼື ເຊີເວີບໍ່ມີຄວາມສະຖຽນ.",
+      "tileErrorMessageII": "ໄດ້ຮັບການຕອບສະໜອງ 200 (OK) ຈາກ URL:\n{{url}}\nແຕ່ບໍ່ສາມາດໂຫລດເປັນຮູບພາບໄດ້.",
+      "unknownTileErrorTitle": "ຂໍ້ຜິດພາດຂອງແຜ່ນແຜນທີ່ທີ່ບໍ່ຮູ້ຈັກ",
+      "unknownTileErrorMessage": "ໃນຂະນະທີ່ເຂົ້າເຖິງ URL:\n{{url}}\nນີ້ອາດຈະເກີດຈາກສາເຫດໃດໜຶ່ງດັ່ງນີ້:\n* ບໍ່ສາມາດແປງຊື່ໂຮສ (hostname) ຂອງເຊີເວີໄດ້,\n* ເຊີເວີບໍ່ຕອບສະໜອງຕໍ່ການຮ້ອງຂໍ, ຫຼື\n* ເຊີເວີປະຕິເສດການເຂົ້າເຖິງ Cross-Origin Resource Sharing (CORS) ສໍາລັບ URL ນີ້ (ເບິ່ງລາຍລະອຽດທີ່ https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
+      "unableToDisplayTitle": "ບໍ່ສາມາດສະແດງຊຸດຂໍ້ມູນໄດ້",
+      "unableToDisplayMessage": "{{name}} ບໍ່ສາມາດສະແດງໃນ 2D ໄດ້ ເພາະວ່າມັນບໍ່ຮອງຮັບລະບົບພິກັດມາດຕະຖານ Web Mercator (EPSG:3857). ກະລຸນາປ່ຽນເປັນ 3D ຖ້າລະບົບຂອງທ່ານຮອງຮັບ, ອັບເດດຊຸດຂໍ້ມູນໃຫ້ຮອງຮັບລະບົບພິກັດນີ້, ຫຼື ໃຊ້ຊຸດຂໍ້ມູນອື່ນ.",
+      "unableToShowLocTitle": "ບໍ່ສາມາດສະແດງໃນທີ່ຕັ້ງນີ້ໄດ້",
+      "unableToShowLocMessage": "{{name}} ບໍ່ສາມາດສະແດງໃນທີ່ຕັ້ງນີ້ໄດ້ ເພາະວ່າບໍ່ຮູ້ເວລາທີ່ບັນທຶກຂໍ້ມູນ. ບໍ່ພົບຄຸນສົມບັດ {{featureTimesProperty}}."
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedTitle": "ການຮຽກໃຊ້ບໍລິການຫຼົ້ມເຫຼວ",
+      "invocationFailedMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນທີ່ເຊີເວີໃນຂະນະທີ່ກໍາລັງປະມວນຜົນ {{invocationName}}."
+    },
+    "ionImagery": {
+      "name": "ພາບຖ່າຍ Cesium Ion"
+    },
+    "kml": {
+      "name": "KML ຫຼື KMZ",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "unexpectedTypeTitle": "ປະເພດຂໍ້ມູນ KML ບໍ່ຖືກຕ້ອງຕາມທີ່ຄາດໄວ້",
+      "unexpectedTypeMessage": "KmlCatalogItem.data ຄວນຈະເປັນ XML Document, Blob ຫຼື ໄຟລ໌, ແຕ່ບໍ່ແມ່ນປະເພດໃດເລີຍໃນນີ້. ນີ້ອາດຈະໝາຍເຖິງຂໍ້ຜິດພາດໃນ {{appName}} ຫຼື ການໃຊ້ {{appName}} API ທີ່ບໍ່ຖືກຕ້ອງ.",
+      "errorLoadingTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດ KML ຫຼື KMZ",
+      "errorLoadingMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດໄຟລ໌ KML ຫຼື KMZ. ນີ້ອາດຈະໝາຍຄວາມວ່າໄຟລ໌ບໍ່ຖືກຕ້ອງ ຫຼື ບໍ່ໄດ້ຮັບການຮອງຮັບໂດຍ {{appName}}.",
+      "unableToLoadItemTitle": "ບໍ່ມີ KML ໃຫ້ບໍລິການ",
+      "unableToLoadItemMessage": "ບໍ່ສາມາດໂຫລດລາຍການຂໍ້ມູນ KML/KMZ ໄດ້ ເພາະວ່າບໍ່ໄດ້ກໍານົດຄ່າຄຸນສົມບັດ `url`, `kmlData` ຫຼື `kmlString`."
+    },
+    "magda": {
+      "name": "ການເຜີຍແຜ່ MAGDA",
+      "dataSourceErrorMessage": "ແຫຼ່ງຂໍ້ມູນນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "serviceErrorMessage": "ການບໍລິການນີ້ບໍ່ມີລາຍລະອຽດໃດໆ.",
+      "distributionDesc": "ລາຍລະອຽດການເຜີຍແຜ່",
+      "idsNotSpecifiedTitle": "ຕ້ອງລະບຸ recordId",
+      "idsNotSpecifiedMessage": "MagdaReference ຕ້ອງການໃຫ້ລະບຸ recordId.",
+      "retrieveErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນບັນທຶກ MAGDA",
+      "retrieveErrorMessage": "ບໍ່ໄດ້ລະບຸ ID ຂອງການເຜີຍແຜ່ ຫຼື ຊຸດຂໍ້ມູນ",
+      "notCompatibleTitle": "ບໍ່ພົບການເຜີຍແຜ່ທີ່ເຂົ້າກັນໄດ້",
+      "notCompatibleMessageI": "ຊຸດຂໍ້ມູນ MAGDA ບໍ່ມີການເຜີຍແຜ່ທີ່ມີ ID {{distributionId}} ຫຼື ມັນບໍ່ຢູ່ໃນຮູບແບບທີ່ຮອງຮັບ.",
+      "notCompatibleMessageII": "ຊຸດຂໍ້ມູນ MAGDA ບໍ່ມີການເຜີຍແຜ່ໃດໆ ທີ່ຢູ່ໃນຮູບແບບທີ່ຮອງຮັບ."
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "ບໍ່ສາມາດໂຫລດສະມາຊິກຈາກລາຍການຂໍ້ມູນພາຍນອກໄດ້"
+    },
+    "mapboxMap": {
+      "name": "ແຜນທີ່ Mapbox"
+    },
+    "mapboxVectorTile": {
+      "name": "Mapbox Vector Tile"
+    },
+    "mapboxStyle": {
+      "name": "ຮູບແບບ Mapbox (Style)"
+    },
+    "senaps": {
+      "name": "ສະຖານທີ່ Senaps",
+      "retrieveErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການປະມວນຜົນລາຍການຂໍ້ມູນ Senaps",
+      "generalErrorMessage": "ພົບຂໍ້ຜິດພາດໃນການປະມວນຜົນຂໍ້ມູນ Senaps",
+      "missingKeyErrorMessage": "ຄວນເພີ່ມ Senaps API Key ໃນການຕັ້ງຄ່າ terriajs-server ໂດຍໃຊ້ຕົວເລືອກ appendParamToQueryString",
+      "locationHeadingFeatureInfo": "ທີ່ຕັ້ງ",
+      "availableStreamsHeadingFeatureInfo": "ສະຕຣີມຂໍ້ມູນທີ່ມີໃຫ້",
+      "noStreamsMessageFeatureInfo": "ບໍ່ມີສະຕຣີມຂໍ້ມູນໃນທີ່ຕັ້ງນີ້.",
+      "missingSenapsBaseUrl": "ບໍ່ໄດ້ລະບຸ Senaps base URL. ທ່ານໄດ້ເຂົ້າສູ່ລະບົບແລ້ວຫຼືບໍ່?"
+    },
+    "openStreetMap": {
+      "name": "Open Street Map"
+    },
+    "placesLikeMe": {
+      "regionsLikeThisName": "ພາກພື້ນທີ່ຄ້າຍຄືກັນນີ້",
+      "regionsLikeThisDescription": "ລະບຸພາກພື້ນທີ່ _ຄ້າຍຄືກັນທີ່ສຸດ_ ກັບພາກພື້ນທີ່ກໍານົດ ໂດຍອີງຕາມລັກສະນະສະເພາະ.",
+      "regionTypeName": "ປະເພດພາກພື້ນ",
+      "regionTypeDescription": "ປະເພດຂອງພາກພື້ນທີ່ຈະວິເຄາະ.",
+      "regionName": "ພາກພື້ນ",
+      "regionDescription": "ພາກພື້ນທີ່ຈະວິເຄາະ. ການວິເຄາະຈະກໍານົດວ່າພາກພື້ນໃດທີ່ມີຄວາມຄ້າຍຄືກັນກັບພາກພື້ນນີ້ຫຼາຍທີ່ສຸດ.",
+      "characteristics": "ລັກສະນະສະເພາະ",
+      "characteristicsDescription": "ລັກສະນະສະເພາະຂອງພາກພື້ນທີ່ຈະລວມເຂົ້າໃນການວິເຄາະ.",
+      "name": "ສະຖານທີ່ທີ່ຄ້າຍຄືກັບຂ້ອຍ",
+      "regioNotSelectedName": "ຍັງບໍ່ໄດ້ເລືອກພາກພື້ນ",
+      "regioNotSelectedDescription": "ທ່ານຕ້ອງເລືອກພາກພື້ນໃດໜຶ່ງ.",
+      "placesLike": "ສະຖານທີ່ທີ່ຄ້າຍຄືກັບ {{regionName}}",
+      "likenessesError": "ລາຍຊື່ຄວາມຄ້າຍຄືກັນ ແລະ ລາຍຊື່ລະຫັດພາກພື້ນມີຈໍານວນຂໍ້ມູນບໍ່ເທົ່າກັນ."
+    },
+    "raiseError": {
+      "errorTitle": "ເກີດຂໍ້ຜິດພາດຂຶ້ນ",
+      "notificationFeedback": "ສໍາລັບຄໍາຖາມ ຫຼື ຄໍາຄິດເຫັນ, ຄລິກທີ່ນີ້.",
+      "notificationFeedbackEmail": "ສໍາລັບຄໍາຖາມ ຫຼື ຄໍາຄິດເຫັນ, ກະລຸນາຕິດຕໍ່ {{email}}",
+      "developerDetails": "ລາຍລະອຽດສໍາລັບນັກພັດທະນາ"
+    },
+    "regionMapping": {
+      "noDataForDate": "ບໍ່ມີຂໍ້ມູນສໍາລັບວັນທີທີ່ເລືອກ.",
+      "noDataForRegion": "ບໍ່ມີຂໍ້ມູນສໍາລັບພາກພື້ນທີ່ເລືອກ.",
+      "outdatedBrowserTitle": "ເວັບບຣາວເຊີເກົ່າເກີນໄປ",
+      "outdatedBrowserMessage": "ທ່ານກໍາລັງໃຊ້ເວັບບຣາວເຊີທີ່ເກົ່າຫຼາຍ ເຊິ່ງບໍ່ສາມາດສະແດງຊຸດຂໍ້ມູນແບບ \"ຜັງພາກພື້ນ\" ເຊັ່ນນີ້ໄດ້. ກະລຸນາອັບເກຣດເປັນເວີຊັນຫຼ້າສຸດຂອງ $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), ຫຼື $t(browsers.safari) ໂດຍໄວທີ່ສຸດ.",
+      "invalidServerTypeTitle": "serverType {{serverType}} ໃນ regionMapping.json ບໍ່ຖືກຕ້ອງ",
+      "invalidServerTypeMessage": "ຄາດຫວັງວ່າ serverType ຈະເປັນ \"WMS\" ຫຼື \"vector\" ແຕ່ໄດ້ຮັບ \"{{serverType}}\"",
+      "notRecognised": "ຊື່ພາກພື້ນເຫຼົ່ານີ້ {{notRecognisedText}} ",
+      "notRecognisedText": "ບໍ່ໄດ້ຮັບການຍອມຮັບ",
+      "moreThanOneValue": "ພາກພື້ນເຫຼົ່ານີ້ມີ {{moreThanOneValueText}}",
+      "moreThanOneValueText": "ຫຼາຍກວ່າໜຶ່ງຄ່າ",
+      "msg": "ປຶກສາ {{link}} ເພື່ອເບິ່ງວິທີການຈັດຮູບແບບໄຟລ໌.",
+      "csvSpecification": "ຂໍ້ກໍານົດ CSV-geo-au",
+      "issuesLoadingTitle": "ພບບັນຫາໃນການໂຫລດ {{name}}"
+    },
+    "feedback": {
+      "thanksTitle": "ຂອບໃຈສໍາລັບຄໍາຄິດເຫັນຂອງທ່ານ!",
+      "thanksMessage": "ຄໍາຄິດເຫັນຂອງທ່ານຊ່ວຍໃຫ້ {{appName}} ດີຂຶ້ນ",
+      "unableToSendTitle": "ບໍ່ສາມາດສົ່ງຄໍາຄິດເຫັນໄດ້",
+      "unableToSendMessage": "ຂໍອະໄພຢ່າງສູງ, ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ພະຍາຍາມສົ່ງຄໍາຄິດເຫັນຂອງທ່ານ. ກະລຸນາສົ່ງທາງອີເມວໄປທີ່ {{email}} ແທນ."
+    },
+    "resultPending": {
+      "name": "ກຳລັງລໍຖ້າຜົນລັດ"
+    },
+    "sensorObservationService": {
+      "procedure": "ຂັ້ນຕອນການເຮັດວຽກ",
+      "property": "ຄຸນສົມບັດ",
+      "sos": "SOS",
+      "alreadyLoadingTitle": "ຂໍ້ມູນກຳລັງໂຫລດຢູ່",
+      "alreadyLoadingMessage": "ຂໍ້ມູນຂອງທ່ານກຳລັງໂຫລດ. ທ່ານຈະສາມາດປ່ຽນການສະແດງຜົນໄດ້ເມື່ອມັນໂຫລດສຳເລັດ",
+      "unknownError": "ເຊີເວີລາຍງານຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ.",
+      "exceptionMessage": "ເຊີເວີລາຍງານຂໍ້ຜິດພາດ: \n\n {{exceptionText}}",
+      "missingBody": "ເຊີເວີຕອບສະໜອງໂດຍບໍ່ມີເນື້ອຫາຂໍ້ມູນ (missing body).",
+      "noFeatures": "ບໍ່ມີຟີເຈີໃດທີ່ກົງກັບຄໍາຄົ້ນຫາຂອງທ່ານ.",
+      "unknownFormat": "ເຊີເວີຕອບສະໜອງດ້ວຍຮູບແບບຟີເຈີທີ່ບໍ່ຮູ້ຈັກ.",
+      "noMatchingFeatures": "ບໍລິການ Sensor Observation ບໍ່ໄດ້ສົ່ງຄືນຟີເຈີໃດໆ ທີ່ກົງກັບຄໍາຄົ້ນຫາຂອງທ່ານ."
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "ເບິ່ງໜ້າຊຸດຂໍ້ມູນ"
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "ການຮ້ອງຂໍໂຄງສ້າງ SDMX ຫຼົ້ມເຫຼວ",
+      "loadDataErrorTitle": "ບໍ່ສາມາດໂຫລດກຸ່ມ SDMX ໄດ້",
+      "loadDataErrorMessage": "ເຊີເວີບໍ່ມີກະແສຂໍ້ມູນ (dataflows)"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "ບໍ່ສາມາດໂຫລດກະແສຂໍ້ມູນ SDMX ໄດ້",
+      "loadDataErrorMessage": {
+        "invalidResponse": "ວັດຖຸ JSON ບໍ່ຖືກຕ້ອງ",
+        "noDatastructure": "ບໍ່ພົບໂຄງສ້າງຂໍ້ມູນສໍາລັບກະແສຂໍ້ມູນ {{catalogItem.dataflowId}}",
+        "noDataflow": "ກະແສຂໍ້ມູນ {{catalogItem.dataflowId}} ບໍ່ຖືກຕ້ອງ"
+      },
+      "defaultUnitMeasure": "ຫົວໜ່ວຍ"
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "ເບິ່ງໂດຍ",
+        "time": "ໄລຍະເວລາ (Time-series)",
+        "region": "ພາກພື້ນ"
+      },
+      "loadDataErrorTitle": "ບໍ່ສາມາດໂຫລດຂໍ້ມູນ SDMX ສໍາລັບ {{name}} ໄດ້",
+      "loadDataErrorMessage": "ການຕອບສະໜອງຈາກ {{csvUrl}} ບໍ່ຖືກຕ້ອງ",
+      "noResultsWithDimensions": "ບໍ່ພົບຜົນລັດ. ກະລຸນາເລືອກຄ່າ Dimension ອື່ນໃນແຖບເຄື່ອງມື ທີ່ແຕກຕ່າງຈາກຄ່າຕໍ່ໄປນີ້:  \n\n{{dimensions}}"
+    },
+    "time": {
+      "invalidDate": "ວັນທີບໍ່ຖືກຕ້ອງ",
+      "invalidInitialTimeSource": "ກໍານົດ initialTimeSource ໃນໄຟລ໌ຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ: {{initialTimeSource}}"
+    },
+    "shareData": {
+      "generateErrorTitle": "ບໍ່ສາມາດສ້າງ URL ແບບສັ້ນໄດ້.",
+      "generateErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມໃຊ້ບໍລິການແບ່ງປັນຂໍ້ມູນເພື່ອສ້າງ URL ແບບສັ້ນ.",
+      "generateErrorDataExceedsLimitMessage": "ຂໍ້ຜິດພາດ: ຂໍ້ມູນທີ່ແບ່ງປັນເກີນຂີດຈໍາກັດ",
+      "expandErrorTitle": "ບໍ່ສາມາດຂະຫຍາຍ URL ໄດ້",
+      "expandErrorMessage": "ບໍ່ພົບການບໍລິການແບ່ງປັນຂໍ້ມູນທີ່ໃຊ້ເພື່ອເປີດ {{appName}}. ນີ້ອາດຈະໝາຍເຖິງຂໍ້ຜິດພາດໃນລິ້ງ ຫຼື ການບໍລິການບໍ່ພ້ອມໃຊ້ງານໃນເວລານີ້."
+    },
+    "socrataServer": {
+      "name": "ເຊີເວີ Socrata",
+      "retrieveErrorMessage": "ບໍ່ສາມາດດຶງຂໍ້ມູນແພັກເກັດຈາກເຊີເວີ Socrata ນີ້ໄດ້.",
+      "description": "ລາຍລະອຽດ",
+      "licence": "ໃບອະນຸຍາດ",
+      "attributes": "ຄຸນລັກສະນະ",
+      "tags": "ແທັກ"
+    },
+    "spatialDetailing": {
+      "name": "ລາຍລະອຽດທາງພື້ນທີ່ (Spatial Detailing)",
+      "description": "ຄາດຄະເນລັກສະນະຂອງພາກພື້ນທີ່ມີຄວາມລະອຽດສູງ ໂດຍການຮຽນຮູ້ ແລະ ນໍາໃຊ້ຄວາມສໍາພັນຂອງຂໍ້ມູນທີ່ມີຄວາມລະອຽດຕໍ່າ ກັບລັກສະນະການສໍາມະໂນຄົວ.",
+      "regionTypeToPredictName": "ປະເພດພາກພື້ນທີ່ຈະຄາດຄະເນ",
+      "regionTypeToPredictDescription": "ປະເພດຂອງພາກພື້ນທີ່ຕ້ອງການຄາດຄະເນລັກສະນະສະເພາະ.",
+      "coarseDataRegionTypeName": "ປະເພດພາກພື້ນຂອງຂໍ້ມູນລະອຽດຕໍ່າ",
+      "coarseDataRegionTypeDescription": "ປະເພດຂອງພາກພື້ນທີ່ກ່ຽວຂ້ອງກັບລັກສະນະຂໍ້ມູນຂາເຂົ້າທີ່ມີຄວາມລະອຽດຕໍ່າ.",
+      "aggregationName": "ການລວມຂໍ້ມູນ (Aggregation)",
+      "aggregationDescription": "ກໍານົດວ່າຄ່າຂອງພາກພື້ນລະອຽດຕໍ່າຖືກລວມເຂົ້າກັນແນວໃດ. ເປັນ True ຖ້າຄ່າແມ່ນຄ່າສະເລ່ຍຂອງທັງພາກພື້ນ, ຫຼື ເປັນ False ຖ້າຄ່າແມ່ນຄ່າລວມຂອງທັງພາກພື້ນ.",
+      "aggregationTrueName": "ການລວມຂໍ້ມູນແບບຄ່າສະເລ່ຍ",
+      "aggregationTrueDescription": "ຄ່າໃນພາກພື້ນແມ່ນຄ່າສະເລ່ຍຂອງຕົວຢ່າງໃນພາກພື້ນ. ຕົວຢ່າງ: ລາຍໄດ້ສະເລ່ຍຂອງຄົວເຮືອນ.",
+      "aggregationFalseName": "ການລວມຂໍ້ມູນແບບຄ່າລວມ",
+      "aggregationFalseDescription": "ຄ່າໃນພາກພື້ນແມ່ນຄ່າລວມຂອງຕົວຢ່າງໃນພາກພື້ນ. ຕົວຢ່າງ: ຈໍານວນປະຊາກອນທັງໝົດ.",
+      "characteristicToPredictName": "ລັກສະນະທີ່ຈະຄາດຄະເນ",
+      "characteristicToPredictDescription": "ລັກສະນະທີ່ຈະຄາດຄະເນສໍາລັບແຕ່ລະພາກພື້ນ.",
+      "spatialDetailingOf": "ລາຍລະອຽດທາງພື້ນທີ່ຂອງ {{of}} ທີ່ {{at}}",
+      "wrongNumberOfElements": "ລາຍຊື່ຂອງຄ່າ ແລະ ລາຍຊື່ລະຫັດພາກພື້ນມີຈໍານວນຂໍ້ມູນບໍ່ເທົ່າກັນ"
+    },
+    "tableData": {
+      "noData": "ບໍ່ມີຂໍ້ມູນທີ່ຈະສະແດງ",
+      "unsupportedCharactersTitle": "ມີຕົວອັກສອນທີ່ບໍ່ຖືກຕ້ອງໃນຖັນ ເສັ້ນຂະໜານ (lat) ແລະ ເສັ້ນແວງ (long)",
+      "unsupportedCharactersMessage": "ບໍ່ສາມາດແປຄວາມໝາຍຂອງຄູ່ ເສັ້ນແວງ ແລະ ເສັ້ນຂະໜານ {{longitude}}, {{latitude}}",
+      "bulkGeocoderInfoTitle": "ຂໍ້ມູນການລະບຸພິກັດແບບກຸ່ມ (Bulk Geocoder)",
+      "bulkGeocoderInfoMessage": "ໄຟລ໌ CSV ມີທີ່ຢູ່, ແຕ່ {{number}} ແຫ່ງ ບໍ່ສາມາດລະບຸຕໍາແໜ່ງໃນແຜນທີ່ໄດ້: ",
+      "bulkGeocoderInfo2Message": "ມີທີ່ຢູ່ {{nullAddresses}} ແຫ່ງ ທີ່ຂາດຫາຍໄປຈາກໄຟລ໌ CSV.",
+      "bulkGeocoderErrorTitle": "ຂໍ້ຜິດພາດຂອງການລະບຸພິກັດແບບກຸ່ມ",
+      "bulkGeocoderErrorMessage": "ບໍ່ສາມາດແປງທີ່ຢູ່ເປັນພິກັດ lat-long ໄດ້ ເພາະເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ດຶງຂໍ້ມູນພິກັດ. ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດ ຫຼື ລອງໃໝ່ອີກຄັ້ງໃນພາຍຫຼັງ.",
+      "legendZFilterLabel": "ຄ່າທີ່ສູງ/ຕໍ່າຜິດປົກກະຕິ (Extreme values)",
+      "legendNullLabel": "(ບໍ່ມີຄ່າ)",
+      "activeStyle": "ຕົວແປທີ່ສະແດງ",
+      "styleDisabledLabel": "ປິດການໃຊ້ງານຮູບແບບ",
+      "zFilterEnabled": "ເຊື່ອງຄ່າທີ່ຜິດປົກກະຕິໄວ້ (ຄລິກເພື່ອສະແດງ)",
+      "zFilterDisabled": "ກວດພົບຄ່າທີ່ຜິດປົກກະຕິ (ຄລິກເພື່ອເຊື່ອງ)",
+      "timeDimensionEnabled": "ເປີດໃຊ້ງານມິຕິເວລາ (ຄລິກເພື່ອປິດ)",
+      "timeDimensionDisabled": "ປິດໃຊ້ງານມິຕິເວລາ (ຄລິກເພື່ອເປີດ)",
+      "editStyle": "ແກ້ໄຂຮູບແບບ",
+      "custom": "ກຳນົດເອງ",
+      "regionMapping": "ຜັງພາກພື້ນ",
+      "regionColumn": "ຖັນພາກພື້ນ",
+      "manualRegionMapping": "ການເຮັດຜັງພາກພື້ນດ້ວຍຕົນເອງ"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "ບໍ່ຮອງຮັບໃນໂໝດ 2D",
+      "notSupportedErrorMessage": "{{name}} ບໍ່ສາມາດສະແດງໃນມຸມມອງ 2D ໄດ້. ກະລຸນາປ່ຽນເປັນ 3D ແລ້ວລອງໃໝ່ອີກຄັ້ງ"
+    },
+    "terria": {
+      "loadConfigErrorTitle": "ບໍ່ສາມາດໂຫລດການຕັ້ງຄ່າແຜນທີ່ Terria ໄດ້",
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` ບໍ່ໄດ້ຮັບການຮອງຮັບໃນເວີຊັນ v8 ອີກຕໍ່ໄປ",
+      "initErrorTitle": "ບໍ່ສາມາດເລີ່ມຕົ້ນການບໍລິການໄດ້",
+      "initErrorMessage": "ເກີດບັນຫາກັບເຊີເວີ Terria. ນີ້ອາດຈະເຮັດໃຫ້ບາງຊັ້ນຂໍ້ມູນ ຫຼື ບໍລິການແປງຂໍ້ມູນບໍ່ສາມາດໃຊ້ງານໄດ້.",
+      "urlLoadErrorTitle": "ເກີດບັນຫາໃນການໂຫລດ URL",
+      "urlLoadErrorMessage": "ເກີດບັນຫາຂຶ້ນໃນຂະນະທີ່ກຳລັງເລີ່ມຕົ້ນ Terria ດ້ວຍພາຣາມິເຕີ URL.",
+      "loadModelErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດແບບຈໍາລອງ `{{model}}`.",
+      "loadingMagdaInitSourceErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຫຼ່ງຂໍ້ມູນເລີ່ມຕົ້ນຂອງ Magda",
+      "loadingMagdaInitSourceErrorMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ໂຫລດຂໍ້ມູນເລີ່ມຕົ້ນຈາກບັນທຶກ Magda `{{url}}`.",
+      "loadingInitSourcesErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດການຕັ້ງຄ່າແຜນທີ່",
+      "loadingInitSourcesErrorMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ໂຫລດການຕັ້ງຄ່າແຜນທີ່ {{appName}} &mdash; ມັນອາດຈະສະແດງຜົນບໍ່ຖືກຕ້ອງ. ກະລຸນາລອງໂຫລດແຜນທີ່ໃໝ່, ແລະ ຖ້າບັນຫາຍັງຄືເກົ່າ, ກະລຸນາແຈ້ງບັນຫາໂດຍການສົ່ງອີເມວໄປທີ່ {{email}}, ຫຼື ທ່ານສາມາດກົດປຸ່ມຂ້າງລຸ່ມນີ້.",
+      "loadingInitSourceErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຫຼ່ງຂໍ້ມູນເລີ່ມຕົ້ນ",
+      "loadingInitSourceErrorMessage": "ບໍ່ສາມາດໂຫລດຂໍ້ມູນເລີ່ມຕົ້ນຈາກ `{{fragment}}` ໄດ້ ເພາະບໍ່ມີການກໍານົດ initFragmentPaths ໄວ້.",
+      "loadingInitSourceError2Message": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ໂຫລດຂໍ້ມູນເລີ່ມຕົ້ນຈາກ: \n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ໂຫລດໄຟລ໌ JSON {{url}}.",
+      "loadingBaseMapsErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຜນທີ່ພື້ນຖານ",
+      "loadingBaseMapErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຜນທີ່ພື້ນຖານ: `{{name}}`",
+      "loadingShareDataErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດຂໍ້ມູນທີ່ແບ່ງປັນ",
+      "parsingStartDataErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນການແປຂໍ້ມູນ JSON ເລີ່ມຕົ້ນ.",
+      "loadingWorkbenchItemErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດລາຍການໃນແຖບເຄື່ອງມື: `{{name}}`",
+      "disclaimer": "ຂໍ້ຄວາມປະຕິເສດຄວາມຮັບຜິດຊອບ",
+      "buttonTitleConfirm": "ຂ້ອຍຍອມຮັບ"
+    },
+    "terriaJSONcatalog": {
+      "name": "ຟັງຊັນລາຍການຂໍ້ມູນ Terria JSON",
+      "misconfiguredErrorTitle": "ໄຟລ໌ເລີ່ມຕົ້ນ (init file) ຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ",
+      "misconfiguredErrorMessage": "ການບໍລິການບໍ່ໄດ້ຕັ້ງຄ່າສໍາລັບ TerriaJsonCatalogFunction HTTP 202.",
+      "misconfiguredError2Message": "ການຕັ້ງຄ່າ HTTP 202 {{url}} ບໍ່ພົບໃນການຕອບສະໜອງ {{xhr}}",
+      "serviceResponseErrorTitle": "ການຕອບສະໜອງຂອງບໍລິການບໍ່ແມ່ນຂໍ້ຄວາມ JSON",
+      "serviceResponseErrorMessage": "TerriaJsonCatalogFunction ຄວນຈະໄດ້ຮັບຂໍ້ຄວາມ JSON, ແຕ່ໄດ້ຮັບ {{xhr}}",
+      "requestFailedTitle": "ການຮ້ອງຂໍຫຼົ້ມເຫຼວ",
+      "requestFailedMessage": "ການຮ້ອງຂໍຫຼົ້ມເຫຼວດ້ວຍລະຫັດສະຖານະ {{status}}.",
+      "asyncResultDescription": "ນີ້ແມ່ນຜົນລັດຈາກການຮຽກໃຊ້ຂະບວນການ ຫຼື ບໍລິການ {{name}} ເມື່ອ {{timestamp}} ດ້ວຍພາຣາມິເຕີຂາເຂົ້າຂ້າງລຸ່ມນີ້.",
+      "loadingInitSourceErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຫຼ່ງຂໍ້ມູນເລີ່ມຕົ້ນ",
+      "loadingInitSourceErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດແຫຼ່ງຂໍ້ມູນເລີ່ມຕົ້ນ {{fragment}} ເພາະບໍ່ມີການກໍານົດ initFragmentPaths ໄວ້.",
+      "loadingInitSourceError2Message": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ໂຫລດຂໍ້ມູນເລີ່ມຕົ້ນຈາກ: \n*`{{loadSource}}`*.",
+      "disclaimer": "ຂໍ້ຄວາມປະຕິເສດຄວາມຮັບຜິດຊອບ",
+      "buttonTitleConfirm": "ຂ້ອຍຍອມຮັບ"
+    },
+    "thredds": {
+      "nameGroup": "ກຸ່ມລາຍການ THREDDS"
+    },
+    "threddsItem": {
+      "name": "ການອ້າງອີງລາຍການ THREDDS"
+    },
+    "urlTemplateMapServer": {
+      "name": "ເຊີເວີແຜນທີ່ແບບ URL Template"
+    },
+    "userDrawing": {
+      "devError": "ຈຳເປັນຕ້ອງມີ Terria instance.",
+      "messageHeader": "ແຕ້ມເທິງແຜນທີ່",
+      "pointEntities": "ຈຸດ",
+      "otherEntities": "ເສັ້ນ ແລະ ຮູບຫຼາຍຫຼ່ຽມ",
+      "line": "ເສັ້ນ",
+      "firstPoint": "ຈຸດທຳອິດ",
+      "btnCancel": "ຍົກເລີກ",
+      "btnDone": "ສຳເລັດ",
+      "clickToAddFirstPoint": "ຄລິກເພື່ອເພີ່ມຈຸດ",
+      "clickToAddAnotherPoint": "ຄລິກເພື່ອເພີ່ມຈຸດອື່ນ",
+      "clickToRedrawRectangle": "ຄລິກທີ່ຈຸດອື່ນເພື່ອແຕ້ມຮູບສີ່ຫຼ່ຽມໃໝ່",
+      "anotherPoint": "ຈຸດອື່ນ",
+      "userPolygon": "ຮູບຫຼາຍຫຼ່ຽມຂອງຜູ້ໃຊ້"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "wfsServer": "ເຊີເວີ Web Feature Service (WFS)",
+      "invalidWFSServerTitle": "ເຊີເວີ WFS ບໍ່ຖືກຕ້ອງ",
+      "invalidWFSServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WFS. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WFS.",
+      "abstract": "ລາຍລະອຽດບໍລິການ Web Feature Service",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງບໍລິການ Web Feature Service",
+      "fees": "ຄ່າທໍານຽມບໍລິການ Web Feature Service"
+    },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "Web Feature Service (WFS)",
+      "dataDescription": "ລາຍລະອຽດຂໍ້ມູນ",
+      "abstract": "ລາຍລະອຽດບໍລິການ Web Feature Service",
+      "serviceDescription": "ລາຍລະອຽດການບໍລິການ",
+      "metadataUrls": "ລິ້ງຂໍ້ມູນເມຕາເດຕາ",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງ",
+      "serviceContact": "ຜູ້ຕິດຕໍ່ບໍລິການ",
+      "getCapabilitiesUrl": "URL ຂອງ GetCapabilities",
+      "noLayerFoundTitle": "ບໍ່ພົບຊັ້ນຂໍ້ມູນ",
+      "noLayerFoundMessage": "ຊຸດຂໍ້ມູນ WFS '{{name}}' ບໍ່ມີຊັ້ນຂໍ້ມູນທີ່ກົງກັບ '{{typeNames}}'. ອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ເຊີເວີ WFS ມີການປ່ຽນແປງ.",
+      "missingDataTitle": "ຂໍ້ມູນຂາດຫາຍ",
+      "missingDataMessage": "ຊຸດຂໍ້ມູນ WFS '{{name}}' ບໍ່ໄດ້ສົ່ງຄືນຂໍ້ມູນໃດໆ. ອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ທີ່ຢູ່ເຊີເວີມີການປ່ຽນແປງ.",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດ GetCapabilities ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດເອກະສານ GetCapabilities ຂອງບໍລິການ Web Feature Service (WFS) ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "reachedMaxFeatureLimit": "ຄຳເຕືອນ: ຊັ້ນຂໍ້ມູນນີ້ຮອດຂີດຈໍາກັດຂອງຟີເຈີ WFS ແລ້ວ ({{maxFeatures}})"
+    },
+    "webMapServiceCatalogGroup": {
+      "wmsServer": "ເຊີເວີ Web Map Service (WMS)",
+      "invalidWMSServerTitle": "ເຊີເວີ WMS ບໍ່ຖືກຕ້ອງ",
+      "invalidWMSServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WMS. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WMS.",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດ GetCapabilities ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດເອກະສານ GetCapabilities ຂອງບໍລິການ Web Map Service (WMS) ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "abstract": "ລາຍລະອຽດບໍລິການ Web Map Service",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງບໍລິການ Web Map Service",
+      "fees": "ຄ່າທໍານຽມບໍລິການ Web Map Service"
+    },
+    "webMapServiceCatalogItem": {
+      "wms": "Web Map Service (WMS)",
+      "dataDescription": "ລາຍລະອຽດຂໍ້ມູນ",
+      "serviceDescription": "ລາຍລະອຽດການບໍລິການ",
+      "metadataUrls": "ລິ້ງຂໍ້ມູນເມຕາເດຕາ",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງ",
+      "serviceContact": "ຜູ້ຕິດຕໍ່ບໍລິການ",
+      "getCapabilitiesUrl": "URL ຂອງ GetCapabilities",
+      "defaultStyleLabel": "ຮູບແບບເລີ່ມຕົ້ນ",
+      "noLayerFoundTitle": "ບໍ່ພົບຊັ້ນຂໍ້ມູນ",
+      "noLayerFoundMessage": "ຊຸດຂໍ້ມູນ WMS '{{name}}' ບໍ່ມີຊັ້ນຂໍ້ມູນທີ່ກົງກັບ '{{layers}}'. ອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ເຊີເວີ WMS ມີການປ່ຽນແປງ.",
+      "badlyFormatedTitle": "ຮູບແບບຄວາມຖີ່ (periodicity) ບໍ່ຖືກຕ້ອງ",
+      "badlyFormatedMessage": "ຊຸດຂໍ້ມູນ '{{name}}' ມີຮູບແບບຄວາມຖີ່ທີ່ບໍ່ຖືກຕ້ອງ '{{isoSegments}}'. ຄລິກປຸ່ມ ຂໍ້ມູນ ຂອງຊຸດຂໍ້ມູນເພື່ອເບິ່ງລາຍລະອຽດເພີ່ມເຕີມ ແລະ ຜູ້ຄຸ້ມຄອງຂໍ້ມູນ.",
+      "missingDataTitle": "ຂໍ້ມູນຂາດຫາຍ",
+      "missingDataMessage": "ຊຸດຂໍ້ມູນ WMS '{{name}}' ບໍ່ໄດ້ສົ່ງຄືນຂໍ້ມູນໃດໆ.{{line}}{{line}}ອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ທີ່ຢູ່ເຊີເວີມີການປ່ຽນແປງ.",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດ GetCapabilities ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດເອກະສານ GetCapabilities ຂອງບໍລິການ Web Map Service (WMS) ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`."
+    },
+    "webMapTileServiceCatalogGroup": {
+      "wmtsServer": "ເຊີເວີ Web Map Tile Service (WMTS)",
+      "invalidWMTSServerTitle": "ເຊີເວີ WMTS ບໍ່ຖືກຕ້ອງ",
+      "invalidWMTSServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WMTS. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WMTS.",
+      "abstract": "ລາຍລະອຽດບໍລິການ Web Map Service",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງບໍລິການ Web Map Service",
+      "fees": "ຄ່າທໍານຽມບໍລິການ Web Map Service",
+      "invalidCapabilitiesTitle": "GetCapabilities ບໍ່ຖືກຕ້ອງ",
+      "invalidCapabilitiesMessage": "ດຶງຂໍ້ມູນຈາກ URL {{url}} ສຳເລັດແລ້ວ ແຕ່ເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ຂອງບໍລິການ Web Map Tile Service (WMTS) ທີ່ຖືກຕ້ອງ. \n\nອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ທີ່ຢູ່ເຊີເວີມີການປ່ຽນແປງ."
+    },
+    "webMapTileServiceCatalogItem": {
+      "wmts": "Web Map Tile Service (WMTS)",
+      "dataDescription": "ລາຍລະອຽດຂໍ້ມູນ",
+      "serviceDescription": "ລາຍລະອຽດການບໍລິການ",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງ",
+      "fees": "ຄ່າທໍານຽມບໍລິການ Web Map Tile Service",
+      "serviceContact": "ຜູ້ຕິດຕໍ່ບໍລິການ",
+      "getCapabilitiesUrl": "URL ຂອງ GetCapabilities",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດ GetCapabilities ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດເອກະສານ GetCapabilities ຂອງບໍລິການ Web Map Tile Service (WMTS) ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "noUsableTileMatrixTitle": "ຄຳເຕືອນ",
+      "noUsableTileMatrixMessage": "ຊັ້ນຂໍ້ມູນ WMTS ນີ້ບໍ່ໄດ້ຕັ້ງຄ່າ Web Mercator tile matrix - ມັນອາດຈະສະແດງຜົນບໍ່ຖືກຕ້ອງ"
+    },
+    "webProcessingService": {
+      "wps": "Web Processing Service (WPS)",
+      "invalidWPSServerTitle": "ເຊີເວີ WPS ບໍ່ຖືກຕ້ອງ",
+      "invalidWPSServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ {{endpoint}} ໃນເຊີເວີ WPS ສໍາລັບຂະບວນການ {{name}}. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ {{endpoint}} ທີ່ຖືກຕ້ອງ.",
+      "processDescriptionErrorTitle": "ຂະບວນການບໍ່ມີລາຍລະອຽດ (process description)",
+      "processDescriptionErrorMessage": "WPS DescribeProcess ສໍາລັບຂະບວນການນີ້ບໍ່ມີ ProcessDescription ລວມຢູ່.",
+      "processInputErrorTitle": "ຂະບວນການບໍ່ມີຂໍ້ມູນຂາເຂົ້າ (inputs)",
+      "processInputErrorMessage": "ຂະບວນການ WPS ນີ້ບໍ່ໄດ້ລະບຸຂໍ້ມູນຂາເຂົ້າໃດໆ.",
+      "unsupportedParameterErrorTitle": "ປະເພດພາຣາມິເຕີບໍ່ໄດ້ຮັບການຮອງຮັບ",
+      "unsupportedParameterErrorMessage": "ພາຣາມິເຕີ {{identifier}} ບໍ່ແມ່ນປະເພດພາຣາມິເຕີທີ່ຮອງຮັບ.",
+      "invalidResponseErrorTitle": "ການຕອບສະໜອງຂອງເຊີເວີ WPS ບໍ່ຖືກຕ້ອງ",
+      "invalidResponseErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ເຂົ້າເຖິງສະຖານະໃນເຊີເວີ WPS ສໍາລັບຂະບວນການ {{name}}.",
+      "invalidResponseError2Title": "ການຕອບສະໜອງຈາກເຊີເວີ WPS ບໍ່ຖືກຕ້ອງ",
+      "invalidResponseError2Message": "ການຕອບສະໜອງຈາກເຊີເວີ WPS ບໍ່ມີອົງປະກອບ Status (ສະຖານະ).",
+      "failureReasonUnknowError": "ບໍ່ຮູ້ສາເຫດຂອງຄວາມຫຼົ້ມເຫຼວ.",
+      "asyncShortReportFailed": "ການຮຽກໃຊ້ບໍລິການ Web Processing ຫຼົ້ມເຫຼວ. ເບິ່ງລາຍລະອຽດເພີ່ມເຕີມໄດ້ທີ່ແຖບ ຂໍ້ມູນ.",
+      "errorDetails": "ລາຍລະອຽດຂໍ້ຜິດພາດ",
+      "resultPendingDescription": "ນີ້ແມ່ນຜົນລັດຈາກການຮຽກໃຊ້ຂະບວນການ ຫຼື ບໍລິການ {{name}} ເມື່ອ {{timestamp}} ດ້ວຍພາຣາມິເຕີຂາເຂົ້າຂ້າງລຸ່ມນີ້.",
+      "regionTypeDescription": "ປະເພດຂອງພາກພື້ນທີ່ຈະວິເຄາະ.",
+      "regionTypeName": "ປະເພດພາກພື້ນ",
+      "regionParameterName": "ພາຣາມິເຕີພາກພື້ນ",
+      "wpsServer": "ເຊີເວີ Web Processing Service (WPS)",
+      "wpsResult": "ຜົນລັດຂອງບໍລິການ Web Processing"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "typeName": "ເຊີເວີ Web Processing Service (WPS)",
+      "missingUrlTitle": "ບໍ່ສາມາດໂຫລດ GetCapabilities ໄດ້",
+      "missingUrlMessage": "ບໍ່ສາມາດໂຫລດເອກະສານ GetCapabilities ຂອງບໍລິການ Web Processing Service (WPS) ໄດ້ ເພາະລາຍການຂໍ້ມູນບໍ່ມີ `url`.",
+      "invalidCapabilitiesTitle": "GetCapabilities ບໍ່ຖືກຕ້ອງ",
+      "invalidCapabilitiesMessage": "ດຶງຂໍ້ມູນຈາກ URL {{url}} ສຳເລັດແລ້ວ ແຕ່ເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ຂອງບໍລິການ Web Processing Service (WPS) ທີ່ຖືກຕ້ອງ. \n\nອາດຈະເປັນເພາະໄຟລ໌ລາຍການຂໍ້ມູນຕັ້ງຄ່າບໍ່ຖືກຕ້ອງ ຫຼື ທີ່ຢູ່ເຊີເວີມີການປ່ຽນແປງ.",
+      "invalidServerTitle": "ເຊີເວີ WPS ບໍ່ຖືກຕ້ອງ",
+      "invalidServerMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetCapabilities ໃນເຊີເວີ WPS. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GetCapabilities ທີ່ຖືກຕ້ອງ.",
+      "abstract": "ລາຍລະອຽດບໍລິການ Web Processing Service",
+      "accessConstraints": "ຂໍ້ຈໍາກັດການເຂົ້າເຖິງບໍລິການ Web Processing Service",
+      "fees": "ຄ່າທໍານຽມບໍລິການ Web Processing Service",
+      "providerName": "ຊື່ຜູ້ໃຫ້ບໍລິການ Web Processing Service",
+      "providerSite": "ເວັບໄຊທ໌ຜູ້ໃຫ້ບໍລິການ Web Processing Service"
+    },
+    "wfsFeatures": {
+      "featuresGroup": "ກຸ່ມຂອງຟີເຈີໃນເຊີເວີ Web Feature Service (WFS)",
+      "queryErrorTitle": "ເກີດຂໍ້ຜິດພາດໃນການສອບຖາມຂໍ້ມູນເຊີເວີ WFS",
+      "queryErrorMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetFeature ໃນເຊີເວີ WFS. ການຕອບສະໜອງຂອງເຊີເວີເບິ່ງຄືວ່າບໍ່ແມ່ນເອກະສານ GeoJSON ທີ່ຖືກຕ້ອງ.",
+      "groupNotAvailableTitle": "ກຸ່ມບໍ່ພ້ອມໃຊ້ງານ",
+      "groupNotAvailableMessage": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຮຽກໃຊ້ GetFeature ໃນເຊີເວີ WFS."
+    },
+    "shadow": {
+      "name": "ເງົາ",
+      "options": {
+        "none": "ບໍ່ມີ",
+        "cast": "ສະແດງເງົາເທົ່ານັ້ນ",
+        "receive": "ຮັບເງົາເທົ່ານັ້ນ",
+        "both": "ທັງສະແດງ ແລະ ຮັບເງົາ"
+      }
+    },
+    "clippingBox": {
+      "groupName": "ກ່ອງຕັດ (Clipping Box)",
+      "clipModel": "ຕັດແບບຈໍາລອງ",
+      "showClippingBox": "ສະແດງກ່ອງຕັດ",
+      "keepBoxAboveGround": "ສະເພາະເໜືອພື້ນດິນເທົ່ານັ້ນ",
+      "clipDirection": {
+        "name": "ທິດທາງການຕັດ",
+        "options": {
+          "inside": "ຕັດພາຍໃນກ່ອງ",
+          "outside": "ຕັດພາຍນອກກ່ອງ"
+        }
+      }
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "**ໝາຍເຫດ:** ຊຸດຂໍ້ມູນນີ້ບໍ່ສາມາດສະແດງໃນມຸມມອງ 2D ໄດ້. ກະລຸນາປ່ຽນເປັນໂໝດແຜນທີ່ 3D."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "ຊຸດຂໍ້ມູນບໍ່ພ້ອມໃຊ້ງານໃນມາດຕາສ່ວນນີ້, ກະລຸນາຊູມເຂົ້າເພື່ອເບິ່ງ",
+      "scaleZoomOut": "ຊຸດຂໍ້ມູນບໍ່ພ້ອມໃຊ້ງານໃນມາດຕາສ່ວນນີ້, ກະລຸນາຊູມອອກເພື່ອເບິ່ງ"
+    },
+    "tableStyling": {
+      "hideAdvancedOptions": "ເຊື່ອງຕົວເລືອກຂັ້ນສູງ",
+      "showAdvancedOptions": "ສະແດງຕົວເລືອກຂັ້ນສູງ",
+      "copyUserStratum": "ຄັດລອກ user stratum ໄປຍັງຄລິບບອດ",
+      "name": "ຮູບແບບ",
+      "reset": "ຄືນຄ່າເປັນຮູບແບບເລີ່ມຕົ້ນ",
+      "data": {
+        "name": "ຂໍ້ມູນ",
+        "selectableDimensions": {
+          "dataset": {
+            "name": "ຊຸດຂໍ້ມູນ"
+          },
+          "tableStyle": {
+            "name": "ຮູບແບບ"
+          },
+          "tableStyleType": {
+            "name": "ສັນຍະລັກ",
+            "options": {
+              "fill": {
+                "name": "ສີພື້ນ"
+              },
+              "pointSize": {
+                "name": "ຂະໜາດຈຸດ"
+              },
+              "point": {
+                "name": "ຮູບແບບ ຈຸດ/ຕົວໝາຍ"
+              },
+              "outline": {
+                "name": "ສີເສັ້ນຂອບ"
+              },
+              "label": {
+                "name": "ຮູບແບບປ້າຍຊື່"
+              },
+              "trail": {
+                "name": "ຮູບແບບເສັ້ນທາງ (Trail)"
+              }
+            }
+          }
+        }
+      },
+      "fill": {
+        "name": "ສີພື້ນ",
+        "selectableDimensions": {
+          "tableColorColumn": {
+            "name": "ຕົວແປ"
+          },
+          "dataType": {
+            "name": "ປະເພດຖັນ (ຂັ້ນສູງ)"
+          },
+          "type": {
+            "name": "ປະເພດ",
+            "undefinedLabel": "ກະລຸນາລະບຸ",
+            "options": {
+              "noStyle": {
+                "name": "ບໍ່ມີຮູບແບບ"
+              },
+              "sequentialContinuous": {
+                "name": "ຕາມລຳດັບ (ຕໍ່ເນື່ອງ)"
+              },
+              "sequentialDiscrete": {
+                "name": "ຕາມລຳດັບ (ບໍ່ຕໍ່ເນື່ອງ)"
+              },
+              "divergingContinuous": {
+                "name": "ແບບແຍກອອກ (ຕໍ່ເນື່ອງ)"
+              },
+              "divergingDiscrete": {
+                "name": "ແບບແຍກອອກ (ບໍ່ຕໍ່ເນື່ອງ)"
+              },
+              "qualitative": {
+                "name": "ທາງຄຸນນະພາບ (Qualitative)"
+              },
+              "customQualitative": {
+                "name": "ກຳນົດເອງ (ທາງຄຸນນະພາບ)"
+              },
+              "customDiscrete": {
+                "name": "ກຳນົດເອງ (ບໍ່ຕໍ່ເນື່ອງ)"
+              }
+            }
+          },
+          "scheme": {
+            "name": "ຊຸດສີ (Scheme)"
+          },
+          "numberOfBins": {
+            "name": "ຈຳນວນກຸ່ມຂໍ້ມູນ (Bins)"
+          }
+        }
+      },
+      "min": {
+        "name": "ຕໍ່າສຸດ"
+      },
+      "displayRange": {
+        "name": "ຊ່ວງການສະແດງຜົນ",
+        "selectableDimensions": {
+          "max": {
+            "name": "ສູງສຸດ"
+          }
+        }
+      },
+      "bins": {
+        "name": "ກຸ່ມຂໍ້ມູນ (Bins)",
+        "selectableDimensions": {
+          "start": {
+            "name": "{{value1}} ຫາ {{value2}}",
+            "selectableDimensions": {
+              "color": {
+                "name": "ສີ"
+              },
+              "start": {
+                "name": "ເລີ່ມຕົ້ນ"
+              },
+              "stop": {
+                "name": "ສິ້ນສຸດ"
+              }
+            }
+          }
+        }
+      },
+      "colors": {
+        "name": "ສີ",
+        "selectableDimensions": {
+          "color": {
+            "name": "ສີ"
+          },
+          "value": {
+            "name": "ຄ່າ"
+          },
+          "remove": {
+            "value": "ລຶບອອກ"
+          },
+          "add": {
+            "value": "ເພີ່ມສີ"
+          }
+        }
+      },
+      "nullColor": {
+        "name": "ສີເລີ່ມຕົ້ນ"
+      },
+      "outlierColor": {
+        "name": "ສີຂອງຄ່າທີ່ຜິດປົກກະຕິ (Outlier)"
+      },
+      "additionalColors": {
+        "name": "ສີເພີ່ມເຕີມ",
+        "selectableDimensions": {
+          "regionColor": {
+            "name": "ສີພາກພື້ນ"
+          },
+          "nullColor": {
+            "name": "ສີເລີ່ມຕົ້ນ"
+          },
+          "outlierColor": {
+            "name": "ສີຂອງຄ່າທີ່ຜິດປົກກະຕິ"
+          }
+        }
+      },
+      "pointSize": {
+        "name": "ຂະໜາດຈຸດ",
+        "selectableDimensions": {
+          "pointSizeColumn": {
+            "name": "ຕົວແປ"
+          },
+          "pointSizeNull": {
+            "name": "ຂະໜາດເລີ່ມຕົ້ນ"
+          },
+          "pointSizesFactor": {
+            "name": "ຕົວຄູນຂະໜາດ"
+          },
+          "pointSizeOffset": {
+            "name": "ໄລຍະຫ່າງຂະໜາດ (Offset)"
+          }
+        }
+      },
+      "regionMapping": {
+        "name": "ຜັງພາກພື້ນ"
+      },
+      "legend": {
+        "name": "ຄຳອະທິບາຍສັນຍະລັກ",
+        "selectableDimensions": {
+          "legendTitle": {
+            "name": "ຫົວຂໍ້"
+          },
+          "legendTicks": {
+            "name": "ຂີດບອກລະດັບ (Ticks)"
+          },
+          "title": {
+            "name": "ຫົວຂໍ້ລາຍການ {{index}}"
+          }
+        }
+      },
+      "styleOptions": {
+        "name": "ຕົວເລືອກຮູບແບບ",
+        "selectableDimensions": {
+          "styleTitle": {
+            "name": "ຫົວຂໍ້"
+          },
+          "longitudeColumn": {
+            "name": "ຖັນເສັ້ນແວງ (Longitude)"
+          },
+          "latitudeColumn": {
+            "name": "ຖັນເສັ້ນຂະໜານ (Latitude)"
+          }
+        }
+      },
+      "timeOptions": {
+        "name": "ຕົວເລືອກເວລາ",
+        "selectableDimensions": {
+          "tableTimeColumn": {
+            "name": "ຖັນເວລາ"
+          },
+          "tableEndTimeColumn": {
+            "name": "ຖັນເວລາສິ້ນສຸດ"
+          },
+          "tableTimeIdColumns": {
+            "name": "ຖັນ ID"
+          },
+          "tableTimeIsSampled": {
+            "name": "ແມ່ນຂໍ້ມູນຕົວຢ່າງ (Is Sampled)",
+            "options": {
+              "true": {
+                "name": "ແມ່ນ"
+              },
+              "false": {
+                "name": "ບໍ່ແມ່ນ"
+              }
+            }
+          },
+          "tableTimeDisplayDuration": {
+            "name": "ໄລຍະເວລາທີ່ສະແດງ"
+          },
+          "tableTimeSpreadStartTime": {
+            "name": "ກະຈາຍເວລາເລີ່ມຕົ້ນ",
+            "options": {
+              "true": {
+                "name": "ແມ່ນ"
+              },
+              "false": {
+                "name": "ບໍ່ແມ່ນ"
+              }
+            }
+          },
+          "tableTimeSpreadFinishTime": {
+            "name": "ກະຈາຍເວລາສິ້ນສຸດ",
+            "options": {
+              "true": {
+                "name": "ແມ່ນ"
+              },
+              "false": {
+                "name": "ບໍ່ແມ່ນ"
+              }
+            }
+          }
+        }
+      },
+      "workbenchOptions": {
+        "name": "ຕົວເລືອກແຖບເຄື່ອງມື",
+        "selectableDimensions": {
+          "tableStyleEnalbed": {
+            "name": "ສະແດງຮູບແບບໃນແຖບເຄື່ອງມື",
+            "options": {
+              "true": {
+                "name": "ກຳລັງສະແດງຮູບແບບ"
+              },
+              "false": {
+                "name": "ເຊື່ອງຮູບແບບ"
+              }
+            }
+          },
+          "showDisableStyleOption": {
+            "name": "ສະແດງຕົວເລືອກປິດຮູບແບບ"
+          },
+          "showDisableTimeOption": {
+            "name": "ສະແດງຕົວເລືອກປິດເວລາ"
+          },
+          "enableManualRegionMapping": {
+            "name": "ເປີດໃຊ້ງານການເຮັດຜັງພາກພື້ນດ້ວຍຕົນເອງ"
+          }
+        }
+      },
+      "variableAndColumn": {
+        "name": "ຕົວແປ/ຖັນ",
+        "selectableDimensions": {
+          "columnTitle": {
+            "name": "ຫົວຂໍ້"
+          },
+          "columnUnits": {
+            "name": "ຫົວໜ່ວຍ"
+          }
+        }
+      },
+      "style": {
+        "selectableDimensions": {
+          "column": {
+            "name": "ຕົວແປ"
+          },
+          "styleType": {
+            "name": "ປະເພດ",
+            "undefinedLabel": "ກະລຸນາລະບຸ",
+            "constant": {
+              "name": "ບໍ່ມີຮູບແບບ"
+            },
+            "bin": {
+              "name": "ບໍ່ຕໍ່ເນື່ອງ (Discrete)"
+            },
+            "enum": {
+              "name": "ທາງຄຸນນະພາບ"
+            }
+          },
+          "enum": {
+            "name": "ຮູບແບບ Enum",
+            "selectableDimensions": {
+              "enum": {
+                "noValue": "ບໍ່ມີຄ່າ",
+                "selectableDimensions": {
+                  "value": {
+                    "name": "ຄ່າ"
+                  },
+                  "remove": {
+                    "value": "ລຶບອອກ"
+                  }
+                },
+                "add": {
+                  "value": "ເພີ່ມຮູບແບບສໍາລັບຄ່າ"
+                }
+              }
+            }
+          },
+          "bin": {
+            "name": "ຮູບແບບ Bin",
+            "selectableDimensions": {
+              "add": {
+                "value": "ເພີ່ມຮູບແບບກຸ່ມຂໍ້ມູນ (Bin)"
+              },
+              "bin": {
+                "noValue": "ບໍ່ມີຄ່າ",
+                "range": "{{value1}} ຫາ {{value2}}",
+                "selectableDimensions": {
+                  "start": {
+                    "name": "ເລີ່ມຕົ້ນ"
+                  },
+                  "stop": {
+                    "name": "ສິ້ນສຸດ"
+                  },
+                  "remove": {
+                    "value": "ລຶບອອກ"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "null": {
+          "name": "ເລີ່ມຕົ້ນ"
+        }
+      },
+      "point": {
+        "name": "ຮູບແບບຕົວໝາຍ",
+        "selectableDimensions": {
+          "marker": {
+            "name": "ຕົວໝາຍ",
+            "tooltip": "ຕົວໝາຍຮອງຮັບ URL ແລະ base64 ຂອງຮູບແບບຮູບພາບທີ່ຮອງຮັບ (ເຊັ່ນ PNG, SVG)"
+          },
+          "rotation": {
+            "name": "ການໝຸນ"
+          },
+          "height": {
+            "name": "ຄວາມສູງ"
+          },
+          "width": {
+            "name": "ຄວາມກວ້າງ"
+          }
+        }
+      },
+      "outline": {
+        "name": "ຮູບແບບເສັ້ນຂອບ",
+        "selectableDimensions": {
+          "color": {
+            "name": "ສີ"
+          },
+          "width": {
+            "name": "ຄວາມກວ້າງ"
+          }
+        }
+      },
+      "label": {
+        "name": "ຮູບແບບປ້າຍຊື່",
+        "selectableDimensions": {
+          "column": {
+            "name": "ຖັນປ້າຍຊື່"
+          },
+          "font": {
+            "name": "ຕົວອັກສອນ (Font)"
+          },
+          "style": {
+            "name": "ຮູບແບບປ້າຍຊື່",
+            "options": {
+              "fill": {
+                "name": "ໃສ່ສີພື້ນເທົ່ານັ້ນ"
+              },
+              "outline": {
+                "name": "ໃສ່ເສັ້ນຂອບເທົ່ານັ້ນ"
+              },
+              "fillAndOutline": {
+                "name": "ໃສ່ທັງສີພື້ນ ແລະ ເສັ້ນຂອບ"
+              }
+            }
+          },
+          "scale": {
+            "name": "ມາດຕາສ່ວນ"
+          },
+          "fillColor": {
+            "name": "ສີພື້ນ"
+          },
+          "outlineColor": {
+            "name": "ສີເສັ້ນຂອບ"
+          },
+          "outlineWidth": {
+            "name": "ຄວາມກວ້າງເສັ້ນຂອບ"
+          },
+          "horizontalOrigin": {
+            "name": "ຈຸດເລີ່ມຕົ້ນແນວນອນ",
+            "options": {
+              "left": {
+                "name": "ຊ້າຍ"
+              },
+              "center": {
+                "name": "ກາງ"
+              },
+              "right": {
+                "name": "ຂວາ"
+              }
+            }
+          },
+          "verticalOrigin": {
+            "name": "ຈຸດເລີ່ມຕົ້ນແນວຕັ້ງ",
+            "options": {
+              "top": {
+                "name": "ເທິງ"
+              },
+              "center": {
+                "name": "ກາງ"
+              },
+              "baseline": {
+                "name": "ເສັ້ນພື້ນຖານ (Baseline)"
+              },
+              "bottom": {
+                "name": "ລຸ່ມ"
+              }
+            }
+          },
+          "offsetX": {
+            "name": "ໄລຍະຫ່າງພິກເຊວ X"
+          },
+          "offsetY": {
+            "name": "ໄລຍະຫ່າງພິກເຊວ Y"
+          }
+        }
+      },
+      "trail": {
+        "selectableDimensions": {
+          "leadTime": {
+            "name": "ເວລາລ່ວງໜ້າ (ວິນາທີ)"
+          },
+          "trailTime": {
+            "name": "ເວລາເສັ້ນທາງ (ວິນາທີ)"
+          },
+          "width": {
+            "name": "ຄວາມກວ້າງ"
+          },
+          "resolution": {
+            "name": "ຄວາມລະອຽດ"
+          },
+          "growColor": {
+            "name": "ສີການເຮືອງແສງ"
+          },
+          "growPower": {
+            "name": "ກຳລັງການເຮືອງແສງ"
+          },
+          "taperPower": {
+            "name": "ກຳລັງການຮຽວ (Taper)"
+          },
+          "solidColor": {
+            "name": "ສີພື້ນແຂງ"
+          },
+          "trailStyleOptions": {
+            "name": "ຕົວເລືອກຮູບແບບເສັ້ນທາງ (Trail)",
+            "selectableDimensions": {
+              "material": {
+                "name": "ປະເພດວັດສະດຸ",
+                "options": {
+                  "solidColor": {
+                    "name": "ສີພື້ນແຂງ"
+                  },
+                  "polylineGlow": {
+                    "name": "ການເຮືອງແສງຂອງເສັ້ນ"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cogCatalogItem": {
+      "experimentalReprojectionWarning": "COG ນີ້ບໍ່ໄດ້ຢູ່ໃນລະບົບພິກັດພື້ນເມືອງ (EPSG:4326 ຫຼື EPSG:3857). ການແປງພິກັດໃໝ່ (Reprojecting) ຍັງຢູ່ໃນຂັ້ນຕອນທົດລອງ ແລະ ອາດຈະບໍ່ເຮັດວຽກຕາມທີ່ຄາດໄວ້. ຖ້າທ່ານສາມາດຈັດການຂໍ້ມູນຕົ້ນທາງໄດ້ ພວກເຮົາແນະນໍາໃຫ້ແປງພິກັດເປັນ EPSG:4326 ຫຼື EPSG:3857 ໂດຍໃຊ້ GDAL ຫຼື ເຄື່ອງມືທີ່ຄ້າຍຄືກັນ."
+    }
+  },
+  "searchProvider": {
+    "noSearchProviders": "ບໍ່ມີການຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຄົ້ນຫາ",
+    "models": {
+      "unsupportedTypeTitle": "ບໍ່ຮູ້ຈັກປະເພດ",
+      "unsupportedTypeMessage": "ບໍ່ສາມາດສ້າງແບບຈໍາລອງປະເພດທີ່ບໍ່ຮູ້ຈັກ {{type}}.",
+      "idForMatchingErrorTitle": "ຄຸນສົມບັດຂາດຫາຍໄປ",
+      "idForMatchingErrorMessage": "ວັດຖຸໃນແບບຈໍາລອງຕ້ອງມີຄຸນສົມບັດ `id`, `localId`, ຫຼື `name`."
+    }
+  },
+  "deltaTool": {
+    "titlePrefix": "ການກວດສອບການປ່ຽນແປງ",
+    "description": "ເຄື່ອງມືນີ້ຊ່ວຍສະແດງໃຫ້ເຫັນຄວາມແຕກຕ່າງລະຫວ່າງພາບຖ່າຍທີ່ບັນທຶກໃນສອງຊ່ວງເວລາທີ່ແຕກຕ່າງກັນ.",
+    "pickLocation": "ເພື່ອເບິ່ງພາບຖ່າຍທີ່ມີໃຫ້, ກະລຸນາເລືອກສະຖານທີ່ທີ່ທ່ານສົນໃຈໃນແຜນທີ່ດ້ານກົງກັນຂ້າມ.",
+    "cancelBtn": "ຍົກເລີກ",
+    "generateDeltaBtn": "ສ້າງແຜນທີ່ຄວາມແຕກຕ່າງ",
+    "selectedLocation": "ສະຖານທີ່ທີ່ເລືອກ",
+    "primaryImage": "ຮູບພາບຫຼັກ",
+    "secondaryImage": "ຮູບພາບຮອງ",
+    "pickerMessage": {
+      "pickFirst": "ເລືອກຈຸດໂດຍການຄລິກໃສ່ແຜນທີ່",
+      "pickAnother": "ຄລິກທີ່ຈຸດອື່ນເພື່ອປ່ຽນການເລືອກ",
+      "pickError": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມດຶງພາບຖ່າຍໃນທີ່ຕັ້ງນີ້! ກະລຸນາເລືອກຈຸດໃໝ່ອີກຄັ້ງໂດຍການຄລິກໃສ່ແຜນທີ່."
+    },
+    "catalogItem": {
+      "description": "ຊັ້ນຂໍ້ມູນນີ້ສະແດງໃຫ້ເຫັນຄວາມແຕກຕ່າງລະຫວ່າງພາບຖ່າຍທີ່ບັນທຶກໃນສອງຊ່ວງເວລາທີ່ແຕກຕ່າງກັນ"
+    },
+    "loadingError": {
+      "title": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດເຄື່ອງມື Delta",
+      "message": "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ພະຍາຍາມໂຫລດເຄື່ອງມື Delta ຈາກເຊີເວີ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ."
+    }
+  },
+  "term": {
+    "missingContent": "ເນື້ອຫາຂາດຫາຍ"
+  },
+  "mapNavigation": {
+    "additionalTools": "ເຄື່ອງມືເພີ່ມເຕີມ",
+    "additionalToolsTitle": "ເປີດເຄື່ອງມືເພີ່ມເຕີມ"
+  },
+  "itemSearchTool": {
+    "toolLoadError": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດເຄື່ອງມືຄົ້ນຫາ.",
+    "title": "ຄົ້ນຫາ {{itemName}}",
+    "loading": "ກຳລັງໂຫລດພາຣາມິເຕີການຄົ້ນຫາ",
+    "loadError": "ເກີດຂໍ້ຜິດພາດໃນການໂຫລດພາຣາມິເຕີການຄົ້ນຫາ. ກວດສອບ console ສໍາລັບລາຍລະອຽດ.",
+    "noParameters": "ບໍ່ພົບພາຣາມິເຕີທີ່ສາມາດຄົ້ນຫາໄດ້",
+    "searching": "ກຳລັງຄົ້ນຫາ",
+    "searchError": "ການຄົ້ນຫາຫຼົ້ມເຫຼວ. ກວດສອບ console ສໍາລັບລາຍລະອຽດ.",
+    "numericParameter": {
+      "minimum": "ຕ່ຳສຸດ",
+      "maximum": "ສູງສຸດ"
+    },
+    "searchBtnText": "ຄົ້ນຫາ",
+    "resetBtnText": "ລ້າງຂໍ້ມູນຂາເຂົ້າ",
+    "backBtnText": "ຄົ້ນຫາອີກຄັ້ງ",
+    "resultsCount_0": "ພົບ {{count}} ລາຍການທີ່ກົງກັນ",
+    "actions": {
+      "highlightAll": "ເນັ້ນທັງໝົດ",
+      "showMatchingOnly": "ສະແດງສະເພາະທີ່ກົງກັນ"
+    }
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "ຂາດຕົວເລືອກ `indexRootUrl` ໃນການຕັ້ງຄ່າການຄົ້ນຫາຂອງລາຍການ.",
+    "errorParsingIndexRoot": "ເກີດຂໍ້ຜິດພາດໃນການແປໄຟລ໌ indexRoot: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "ໂໝດຄົນຍ່າງ",
+    "dropPedestrianTooltipMessage": "<b>ຄລິກຊ້າຍ</b> ເພື່ອເລືອກທີ່ຕັ້ງທີ່ຈະວາງ<br /><b>ຄລິກຂວາ / Esc</b> ເພື່ອຍົກເລີກ",
+    "controls": {
+      "title": "ການຄວບຄຸມ"
+    }
+  },
+  "notification": {
+    "title": "ຂໍ້ຄວາມ"
+  },
+  "toast": {
+    "mapIsZooming": "ກຳລັງໂຫລດລະດັບການຊູມທີ່ເໝາະສົມ..."
+  },
+  "printView": {
+    "loading": "ກຳລັງສ້າງມຸມມອງການພິມ..."
+  },
+  "compare": {
+    "title": "ປຽບທຽບ",
+    "done": "ສຳເລັດ",
+    "leftPanel": "ແຖບດ້ານຊ້າຍ",
+    "rightPanel": "ແຖບດ້ານຂວາ",
+    "entireMap": {
+      "title": "ແຜນທີ່ທັງໝົດ",
+      "emptyText": "ເພີ່ມຂໍ້ມູນໃໝ່ເພື່ອສະແດງໃນທົ່ວແຜນທີ່ຜ່ານເມນູຈຸດສາມຈຸດຂ້າງເທິງ."
+    },
+    "entireMapMenu": {
+      "browse": "ເລືອກເບິ່ງຂໍ້ມູນແຜນທີ່",
+      "sendAllToFront": "ຍ້າຍທັງໝົດມາໄວ້ທາງໜ້າ",
+      "sendAllToBack": "ຍ້າຍທັງໝົດໄປໄວ້ທາງຫຼັງ",
+      "hideAll": "ເຊື່ອງທັງໝົດ"
+    },
+    "info": "ປຽບທຽບຊຸດຂໍ້ມູນທາງພື້ນທີ່ຈາກແຖບເຄື່ອງມືຂອງທ່ານແບບຄູ່ຂ້າງກັນໃນແຜນທີ່.",
+    "dataset": {
+      "label": "ຊຸດຂໍ້ມູນ",
+      "selectOne": "ເລືອກໜຶ່ງລາຍການ"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "ບໍ່ໄດ້ລະບຸ"
+    },
+    "dateButton": {
+      "left": "ຊ້າຍ",
+      "right": "ຂວາ",
+      "select": "ເລືອກວັນທີ"
+    },
+    "dateLocationFilter": {
+      "filter": "ກອງວັນທີຕາມທີ່ຕັ້ງ",
+      "loading": "ກຳລັງໂຫລດຕົວປະມວນຜົນ...",
+      "cancel": "ຍົກເລີກ",
+      "location": "ກຳລັງສະແດງພາບຖ່າຍທີ່ມີໃຫ້ສໍາລັບ {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "ເລືອກທີ່ຕັ້ງ",
+      "mouseTooltipMessage": "ຄລິກຂວາເພື່ອຍົກເລີກ"
+    }
+  },
+  "selectableDimensions": {
+    "undefinedLabel": "ບໍ່ໄດ້ລະບຸ",
+    "enabled": "ເປີດໃຊ້ງານ",
+    "disabled": "ປິດໃຊ້ງານ",
+    "colorAdd": "ເພີ່ມ",
+    "colorRemove": "ລຶບອອກ",
+    "invalid": "ບໍ່ຖືກຕ້ອງ"
+  },
+  "relatedMaps": {
+    "buttonText": "ແຜນທີ່ທີ່ກ່ຽວຂ້ອງ",
+    "buttonTitle": "ເບິ່ງແຜນທີ່ທີ່ກ່ຽວຂ້ອງ",
+    "panelHeading": "ແຜນທີ່ທີ່ກ່ຽວຂ້ອງ",
+    "panelText": "ການຄລິກທີ່ແຜນທີ່ດ້ານລຸ່ມຈະເປີດມັນໃນໜ້າຕ່າງ ຫຼື ແຖບໃໝ່."
+  }
+}

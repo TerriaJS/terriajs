@@ -5,8 +5,7 @@ import {
   ICompositeBarItemController
 } from "../CompositeBar/CompositeBarItemController";
 
-export interface IMapNavigationItemController
-  extends ICompositeBarItemController {
+export interface IMapNavigationItemController extends ICompositeBarItemController {
   width?: number;
   height?: number;
 }

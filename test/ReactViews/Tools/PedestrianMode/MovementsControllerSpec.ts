@@ -12,6 +12,7 @@ import {
   MAX_VERTICAL_LOOK_ANGLE,
   PEDESTRIAN_HEIGHT
 } from "../../../../lib/ReactViews/Tools/PedestrianMode/PedestrianMode";
+import { setViewerMode } from "../../../../lib/Models/ViewerMode";
 
 describe("MovementsController", function () {
   let cesium: Cesium;
@@ -21,6 +22,7 @@ describe("MovementsController", function () {
 
   beforeEach(async function () {
     const terria = new Terria();
+    setViewerMode("3dsmooth", terria.mainViewer);
     const container = document.createElement("div");
     terria.mainViewer.attach(container);
     await terria.mainViewer.viewerLoadPromise;
@@ -137,6 +139,12 @@ describe("MovementsController", function () {
   });
 
   describe("when animating", function () {
+    beforeEach(function () {
+      camera.position = Cartographic.toCartesian(
+        Cartographic.fromDegrees(76.93, 8.52, 1)
+      );
+    });
+
     it("automatically switches to fly mode when moving up", function () {
       controller.mode = "walk";
       controller.activeMovements.add("up");

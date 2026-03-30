@@ -132,7 +132,7 @@ And start the development web server by running (also from the TerriaJS and not 
 yarn start
 ```
 
-The test suite is run by opening a web browser on [http://localhost:3002/SpecRunner.html](http://localhost:3002/SpecRunner.html). The source code for the specs is found in the `test/` directory.
+The test suite is run by opening a web browser on [http://localhost:9876](http://localhost:9876). The source code for the specs is found in the `test/` directory.
 
 ## TerriaJS Gulp Tasks
 

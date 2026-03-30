@@ -146,8 +146,9 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace MinMaxLevelMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof MinMaxLevelMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof MinMaxLevelMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.supportsMinMaxLevel;
   }

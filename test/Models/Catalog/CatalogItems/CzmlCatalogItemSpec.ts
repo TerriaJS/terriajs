@@ -1,11 +1,15 @@
+import { http, HttpResponse } from "msw";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
-import loadBlob from "../../../../lib/Core/loadBlob";
-import loadJson from "../../../../lib/Core/loadJson";
-import loadText from "../../../../lib/Core/loadText";
+
 import TerriaError from "../../../../lib/Core/TerriaError";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CzmlCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CzmlCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
+
+import verysimpleCzml from "../../../../wwwroot/test/CZML/verysimple.czml" with { type: "json" };
+import vehicleCzml from "../../../../wwwroot/test/CZML/Vehicle.czml" with { type: "json" };
+import simpleCzml from "../../../../wwwroot/test/CZML/simple.czml" with { type: "json" };
 
 describe("CzmlCatalogItem", function () {
   let terria: Terria;
@@ -16,6 +20,17 @@ describe("CzmlCatalogItem", function () {
       baseUrl: "./"
     });
     czml = new CzmlCatalogItem("test", terria);
+
+    worker.use(
+      http.get("test/CZML/verysimple.czml", () =>
+        HttpResponse.json(verysimpleCzml)
+      ),
+      http.get("test/CZML/Vehicle.czml", () => HttpResponse.json(vehicleCzml)),
+      http.get("test/CZML/simple.czml", () => HttpResponse.json(simpleCzml)),
+      http.get("test/KML/vic_police.kml", () =>
+        HttpResponse.text("test string that is not JSON")
+      )
+    );
   });
 
   describe("loading a very simple CZML file", function () {
@@ -36,21 +51,25 @@ describe("CzmlCatalogItem", function () {
     });
 
     it("works by string", async function () {
-      const czmlString = await loadText("test/CZML/verysimple.czml");
-      czml.setTrait(CommonStrata.user, "czmlString", czmlString);
+      czml.setTrait(
+        CommonStrata.user,
+        "czmlString",
+        JSON.stringify(verysimpleCzml)
+      );
       await czml.loadMapItems();
       expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
     });
 
     it("works by json object", async function () {
-      const czmlJson = await loadJson("test/CZML/verysimple.czml");
-      czml.setTrait(CommonStrata.user, "czmlData", czmlJson);
+      czml.setTrait(CommonStrata.user, "czmlData", verysimpleCzml);
       await czml.loadMapItems();
       expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
     });
 
     it("works by blob", async function () {
-      const blob = (await loadBlob("test/CZML/verysimple.czml")) as File;
+      const blob = new Blob([JSON.stringify(verysimpleCzml)], {
+        type: "application/json"
+      }) as File;
       czml.setFileInput(blob);
       await czml.loadMapItems();
       expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
@@ -65,14 +84,19 @@ describe("CzmlCatalogItem", function () {
     });
 
     it("works by string", async function () {
-      const czmlString = await loadText("test/CZML/Vehicle.czml");
-      czml.setTrait(CommonStrata.user, "czmlString", czmlString);
+      czml.setTrait(
+        CommonStrata.user,
+        "czmlString",
+        JSON.stringify(vehicleCzml)
+      );
       await czml.loadMapItems();
       expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
     });
 
     it("works by blob", async function () {
-      const blob = (await loadBlob("test/CZML/Vehicle.czml")) as File;
+      const blob = new Blob([JSON.stringify(vehicleCzml)], {
+        type: "application/json"
+      }) as File;
       czml.setFileInput(blob);
       await czml.loadMapItems();
       expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
@@ -117,15 +141,20 @@ describe("CzmlCatalogItem", function () {
     });
 
     it("fails gracefully when the provided string is not JSON", async function () {
-      const invalidCzmlString = await loadText("test/KML/vic_police.kml");
-      czml.setTrait(CommonStrata.user, "czmlString", invalidCzmlString);
+      czml.setTrait(
+        CommonStrata.user,
+        "czmlString",
+        "test string that is not JSON"
+      );
       const error = (await czml.loadMapItems()).error;
 
       expect(error instanceof TerriaError).toBe(true);
     });
 
     it("fails gracefully when the provided blob is not JSON", async function () {
-      const invalidBlob = (await loadBlob("test/KML/vic_police.kml")) as File;
+      const invalidBlob = new Blob(["test string that is not JSON"], {
+        type: "text/plain"
+      }) as File;
       czml.setFileInput(invalidBlob);
       const error = (await czml.loadMapItems()).error;
 

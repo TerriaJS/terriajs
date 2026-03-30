@@ -68,8 +68,10 @@ export function closeWorkflow(viewStateOrTerria: ViewState | Terria) {
 }
 
 /** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
-export interface SelectableDimensionWorkflowGroup
-  extends Omit<SelectableDimensionGroup, "selectableDimensions" | "placement"> {
+export interface SelectableDimensionWorkflowGroup extends Omit<
+  SelectableDimensionGroup,
+  "selectableDimensions" | "placement"
+> {
   /** Group is **open** by default */
   isOpen?: boolean;
 

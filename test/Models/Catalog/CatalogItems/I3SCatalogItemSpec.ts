@@ -32,10 +32,10 @@ describe("I3SCatalogItemSpec", function () {
   const testUrl = "/test/Cesium3DTiles/tileset.json";
 
   beforeAll(function () {
-    spyOn(Resource.prototype, "fetchJson").and.callFake(function fetch() {
+    spyOn(Resource.prototype, "fetchJson").and.callFake(() => {
       return Promise.resolve(mockProviderData);
     });
-    spyOn(Cesium3DTileset, "fromUrl").and.callFake(() => {
+    spyOn(Cesium3DTileset, "fromUrl").and.callFake(async () => {
       const tileset = new Cesium3DTileset({});
       /* @ts-expect-error Mock the root tile so that i3s property can be appended */
       tileset._root = {};
@@ -131,7 +131,7 @@ describe("I3SCatalogItemSpec", function () {
             });
           });
 
-          it("sets the shadow mode", function () {
+          it("sets the shadow mode after blend", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0].layers[0].tileset;
             expect(tileset?.shadows).toBe(ShadowMode.CAST_ONLY);

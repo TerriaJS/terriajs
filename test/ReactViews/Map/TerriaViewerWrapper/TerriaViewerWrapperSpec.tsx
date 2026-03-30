@@ -41,7 +41,7 @@ describe("TerriaViewerWrapper", function () {
 
       renderWithContexts(<TerriaViewerWrapper />, viewState);
       const container = screen.queryByTestId("mapContainer");
-      console.log(container?.dataset, container?.classList);
+
       expect(container).toHaveStyle(`background-color: rgb(0, 255, 0)`);
     });
   });

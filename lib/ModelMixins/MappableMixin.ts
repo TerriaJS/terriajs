@@ -240,8 +240,9 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace MappableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof MappableMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof MappableMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

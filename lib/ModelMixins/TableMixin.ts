@@ -883,8 +883,9 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace TableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof TableMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof TableMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasTableMixin;

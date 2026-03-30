@@ -9,8 +9,7 @@ import ChartCustomComponent, {
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
 
-interface CsvChartCustomComponentAttributes
-  extends ChartCustomComponentAttributes {
+interface CsvChartCustomComponentAttributes extends ChartCustomComponentAttributes {
   /** If present, the chart is updated from [poll-sources] every [poll-seconds] seconds.
    *  TODO: Returned data is merged into existing data and shown. */
   pollSeconds?: number;

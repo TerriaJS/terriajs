@@ -70,8 +70,8 @@ const Clipboard: FC<ClipboardProps> = (props) => {
     status === CopyStatus.Error
       ? t("clipboard.unsuccessful")
       : status === CopyStatus.Success
-      ? t("clipboard.success")
-      : createdMessage;
+        ? t("clipboard.success")
+        : createdMessage;
 
   return (
     <ClipboardDiv>

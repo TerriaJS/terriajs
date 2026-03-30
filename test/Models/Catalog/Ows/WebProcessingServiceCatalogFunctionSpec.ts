@@ -232,7 +232,7 @@ xdescribe("WebProcessingServiceCatalogFunction", function () {
           () => {
             if (!job.refreshEnabled) {
               expect(job.jobStatus).toBe("finished");
-              job.downloadResults().then(() => resolve());
+              return job.downloadResults().then(() => resolve());
             }
           },
           { fireImmediately: true }
@@ -244,7 +244,7 @@ xdescribe("WebProcessingServiceCatalogFunction", function () {
     });
 
     it("stops polling if pendingItem is removed from the workbench", async function () {
-      spyOn(wps.terria.workbench, "add").and.returnValue(
+      spyOn(wps.terria.workbench, "add").and.callFake(() =>
         Promise.resolve(Result.none())
       ); // do nothing
       worker.use(

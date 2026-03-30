@@ -94,7 +94,10 @@ export function combineModelStrata(
 }
 
 class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
-  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {
+  constructor(
+    readonly top: BaseModel,
+    readonly bottom: BaseModel
+  ) {
     makeObservable(this);
   }
 
