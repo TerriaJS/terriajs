@@ -49,8 +49,9 @@ function CesiumIonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace CesiumIonMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CesiumIonMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof CesiumIonMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCesiumIonMixin;
   }
