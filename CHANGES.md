@@ -1,8 +1,16 @@
 # Change Log
 
-#### next release (8.12.1)
+#### next release (8.12.3)
 
 - [The next improvement]
+
+#### 8.12.2 - 2026-03-27
+
+- Update attributions to make publish workflow pass.
+
+#### 8.12.1 - 2026-03-27
+
+- Fix `npm-publish.yml` workflow.
 
 #### 8.12.0 - 2026-03-27
 
