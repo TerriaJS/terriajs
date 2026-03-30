@@ -14,7 +14,7 @@ concurrency:
 jobs:
   publish:
     permissions:
-      contents: write # to create and push a tag
+      contents: write # to create and push a tag and updated attributions
       actions: read
       id-token: write
     name: Publish to NPM
@@ -66,7 +66,7 @@ jobs:
           git add doc/acknowledgements/attributions.md
           if ! git diff --cached --quiet; then
             git commit -m "Update attributions.md for v${{ steps.detect.outputs.current-version }}"
-            git push
+            git push origin HEAD:${{ github.ref_name }}
           fi
 
       - name: Lint and build terriajs
