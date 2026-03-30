@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.11.4)
+#### next release (8.12.1)
+
+- [The next improvement]
+
+#### 8.12.0 - 2026-03-27
 
 - Update prettier to v3.
   - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
@@ -31,6 +35,7 @@
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
 - [Documentation] Replace obsolete Nexis dataset example with LGA 2025 data in model-dimensions.md
+- Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
 
 #### 8.11.3 - 2026-02-02
 
