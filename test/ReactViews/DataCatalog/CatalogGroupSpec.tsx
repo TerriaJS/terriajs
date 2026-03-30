@@ -3,7 +3,7 @@ import CatalogGroup from "../../../lib/ReactViews/DataCatalog/CatalogGroup";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
-describe("CatalogGroup", () => {
+describe("CatalogGroup React", () => {
   describe("Loading", () => {
     it("Shows loader", () => {
       render(

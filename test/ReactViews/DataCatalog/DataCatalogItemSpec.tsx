@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import runLater from "../../../lib/Core/runLater";
 import CatalogMemberMixin from "../../../lib/ModelMixins/CatalogMemberMixin";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
@@ -153,9 +152,9 @@ describe("DataCatalogItem", () => {
 
         await userEvent.click(screen.getByRole("button", { name: "Add" }));
 
-        // runLater is needed to wait for the state to update after the click, which then causes the explorer panel to close
-        await runLater(() => {}, 100);
-        expect(viewState.explorerPanelIsVisible).toBe(false);
+        await waitFor(() => {
+          expect(viewState.explorerPanelIsVisible).toBe(false);
+        });
       });
 
       it("doesn't close the explorer panel if keepCatalogOpen is set", async () => {
@@ -174,8 +173,9 @@ describe("DataCatalogItem", () => {
         );
 
         await userEvent.click(screen.getByRole("button", { name: "Add" }));
-        await runLater(() => {}, 100);
-        expect(viewState.explorerPanelIsVisible).toBe(true);
+        await waitFor(() =>
+          expect(viewState.explorerPanelIsVisible).toBe(true)
+        );
       });
     });
 

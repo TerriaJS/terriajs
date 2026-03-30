@@ -47,8 +47,9 @@ import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
-interface Cesium3DTilesCatalogItemIface
-  extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+interface Cesium3DTilesCatalogItemIface extends InstanceType<
+  ReturnType<typeof Cesium3dTilesMixin>
+> {}
 
 export class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
@@ -557,8 +558,9 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace Cesium3dTilesMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof Cesium3dTilesMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCesium3dTilesMixin;
   }

@@ -10,9 +10,7 @@
             "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
             "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
           ],
-          "knownContainerUniqueIds": [
-            "/"
-          ],
+          "knownContainerUniqueIds": ["/"],
           "type": "group"
         },
         "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson": {
@@ -20,9 +18,7 @@
           "dereferenced": {
             "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
           },
-          "knownContainerUniqueIds": [
-            "__User-Added_Data__"
-          ],
+          "knownContainerUniqueIds": ["__User-Added_Data__"],
           "type": "url-reference"
         },
         "/": {
@@ -70,9 +66,7 @@
                       "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
                       "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
                     ],
-                    "knownContainerUniqueIds": [
-                      "/"
-                    ],
+                    "knownContainerUniqueIds": ["/"],
                     "type": "group"
                   },
                   "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson": {
@@ -80,9 +74,7 @@
                     "dereferenced": {
                       "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
                     },
-                    "knownContainerUniqueIds": [
-                      "__User-Added_Data__"
-                    ],
+                    "knownContainerUniqueIds": ["__User-Added_Data__"],
                     "type": "url-reference"
                   },
                   "/": {

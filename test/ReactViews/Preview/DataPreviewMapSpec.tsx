@@ -78,6 +78,9 @@ describe("DataPreviewMapSpec", () => {
       <DataPreviewMap terria={terria} previewed={geojson} showMap />
     );
 
+    await waitFor(() => {
+      expect(attachSpy).toHaveBeenCalledTimes(1);
+    });
     await waitFor(() =>
       expect(container.querySelector(".leaflet-container")).toBeVisible()
     );

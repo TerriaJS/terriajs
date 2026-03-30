@@ -86,9 +86,7 @@ export const PROTOMAPS_TILE_BUFFER = 32;
 /** Tile cache tile size for protomaps-leaflet */
 const TILE_CACHE_TILE_SIZE = 1024;
 
-export default class ProtomapsImageryProvider
-  implements ImageryProviderWithGridLayerSupport
-{
+export default class ProtomapsImageryProvider implements ImageryProviderWithGridLayerSupport {
   private readonly terria: Terria;
 
   // Imagery provider properties

@@ -1,10 +1,12 @@
+import { http, passthrough } from "msw";
 import loadBlob from "../../../../lib/Core/loadBlob";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
 import AssImpCatalogItem from "../../../../lib/Models/Catalog/Gltf/AssImpCatalogItem";
+import { GlTf } from "../../../../lib/Models/Catalog/Gltf/GLTF";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
-import { GlTf } from "../../../../lib/Models/Catalog/Gltf/GLTF";
+import { worker } from "../../../mocks/browser";
 
 describe("AssImpCatalogItem", function () {
   let model: AssImpCatalogItem;
@@ -19,6 +21,12 @@ describe("AssImpCatalogItem", function () {
       ],
       baseUrl: "some-base-url/"
     });
+
+    worker.use(
+      http.get("/test/AssImp/cube_with_materials.obj", () => passthrough()),
+      http.get("/test/AssImp/cube_with_materials.mtl", () => passthrough()),
+      http.get("/build/assimpjs.wasm", () => passthrough())
+    );
   });
 
   it("is Mappable", function () {

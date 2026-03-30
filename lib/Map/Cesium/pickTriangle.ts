@@ -12,8 +12,7 @@ type Tile = any;
 type GlobeSurfaceTile = any;
 type TerrainEncoding = any;
 
-export interface PickTriangleResult
-  extends PickTriangleFromGlobeSurfaceTileResult {
+export interface PickTriangleResult extends PickTriangleFromGlobeSurfaceTileResult {
   tile: Tile;
 }
 

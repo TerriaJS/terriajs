@@ -191,9 +191,9 @@ class MapNavigationBase extends Component<PropTypes> {
       this.orientation === Orientation.VERTICAL
         ? this.navigationRef.current.clientHeight
         : this.navigationRef.current.parentElement?.parentElement
-        ? this.navigationRef.current.parentElement?.parentElement?.clientWidth -
-          100
-        : this.navigationRef.current.clientWidth;
+          ? this.navigationRef.current.parentElement?.parentElement
+              ?.clientWidth - 100
+          : this.navigationRef.current.clientWidth;
 
     for (let i = 0; i < itemsToShow.length; i++) {
       size += this.itemSizeInBar.get(itemsToShow[i].id) || 0;

@@ -64,12 +64,13 @@ export default async function toggleItemOnMapFromCatalog(
 
   addOrRemoveFromTimelineStack(viewState.terria, item, op);
 
+  viewState.terria.analytics?.logEvent(
+    Category.dataSource,
+    analyticsEvents[op],
+    getPath(item)
+  );
+
   if (viewState.terria.workbench.contains(item) && !keepCatalogOpen) {
     viewState.closeCatalog();
-    viewState.terria.analytics?.logEvent(
-      Category.dataSource,
-      analyticsEvents[op],
-      getPath(item)
-    );
   }
 }
