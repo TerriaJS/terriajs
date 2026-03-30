@@ -1002,10 +1002,10 @@
   resolved "https://registry.yarnpkg.com/@bazel/runfiles/-/runfiles-6.5.0.tgz#63cf7b77b91b54873e75f7a08fabec215c6888be"
   integrity sha512-RzahvqTkfpY2jsDxo8YItPX+/iZ6hbiikw1YhE0bA9EKBR5Og8Pa6FHn9PO9M0zaXRVsr0GFQLKbB/0rzy9SzA==
 
-"@cesium/engine@npm:terriajs-cesium@22.3.0":
-  version "22.3.0"
-  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-22.3.0.tgz#bdc108a3ff63dc84dd0f09261ae6807667ecb15d"
-  integrity sha512-kU2QXI5Tj2/hKudvdRRLVq+n9W7r3EVjyfzcRa8TiLop6Ch48BQNnmyW5lRqX/CXvn+AEI8fGbppK7LlzD16EA==
+"@cesium/engine@npm:terriajs-cesium@23.0.2":
+  version "23.0.2"
+  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-23.0.2.tgz#c27d7de825965f9e184ab330d54b5a5de39b3bc0"
+  integrity sha512-siIZQotpM1dKu/ESV6OPx1zHu2z68y5obX7yhRXdlCuJdIIea9NWywL6rz7u2JDpe1xaPTUN76D+coqSLijvAw==
   dependencies:
     "@cesium/wasm-splats" "^0.1.0-alpha.2"
     "@spz-loader/core" "0.3.0"
@@ -8883,18 +8883,18 @@ teex@^1.0.1:
   dependencies:
     streamx "^2.12.5"
 
-terriajs-cesium-widgets@14.3.1:
-  version "14.3.1"
-  resolved "https://registry.yarnpkg.com/terriajs-cesium-widgets/-/terriajs-cesium-widgets-14.3.1.tgz#42820410609ed14b8aa5294261e007e003f5b94b"
-  integrity sha512-mFkhQ7Jyq/3eviKIK1OsBb2Roe3tBtk71RAuQiLmb4GP0x3Dg9+f2/nSxNrHgRE2bO0tn1ccpztQjzdl2rjk+Q==
+terriajs-cesium-widgets@14.4.2:
+  version "14.4.2"
+  resolved "https://registry.yarnpkg.com/terriajs-cesium-widgets/-/terriajs-cesium-widgets-14.4.2.tgz#71d00a85baecb5da6ba092862ce811e307e68133"
+  integrity sha512-PlyTGOi/iI7ei+rtbCeOmRcn0pipnxOtorIgu9356PTETqeLP4vvfnFBPK5GYhc0tHZUSsbTSZD78dJADF2e2Q==
   dependencies:
-    "@cesium/engine" "npm:terriajs-cesium@22.3.0"
+    "@cesium/engine" "npm:terriajs-cesium@23.0.2"
     nosleep.js "^0.12.0"
 
-terriajs-cesium@22.3.1:
-  version "22.3.1"
-  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-22.3.1.tgz#06d669d7b5d28aff8dcfcd828742a56f23063bef"
-  integrity sha512-nth0nL7VCJzS6WutEYQw2kPK+ievergl3OU/wEGaoH9Wg/bLDM17geO/j48JZTmcwl595Irecswe569IjksZIg==
+terriajs-cesium@23.0.2:
+  version "23.0.2"
+  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-23.0.2.tgz#c27d7de825965f9e184ab330d54b5a5de39b3bc0"
+  integrity sha512-siIZQotpM1dKu/ESV6OPx1zHu2z68y5obX7yhRXdlCuJdIIea9NWywL6rz7u2JDpe1xaPTUN76D+coqSLijvAw==
   dependencies:
     "@cesium/wasm-splats" "^0.1.0-alpha.2"
     "@spz-loader/core" "0.3.0"
