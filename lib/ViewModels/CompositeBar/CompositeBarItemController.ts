@@ -14,9 +14,7 @@ export interface ICompositeBarItemController {
   itemRef: RefObject<HTMLDivElement>;
 }
 
-export abstract class CompositeBarItemController
-  implements ICompositeBarItemController
-{
+export abstract class CompositeBarItemController implements ICompositeBarItemController {
   static id: string;
   itemRef: RefObject<HTMLDivElement> = createRef();
 

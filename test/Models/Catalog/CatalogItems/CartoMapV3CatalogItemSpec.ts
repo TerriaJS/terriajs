@@ -71,7 +71,6 @@ xdescribe("CartoMapV3CatalogItemSpec", function () {
     it("renders GeoJSON", async function () {
       (await item.loadMapItems()).throwIfError();
 
-      console.log(item.mapItems);
       expect(item.mapItems.length).toBe(1);
       expect(item.mapItems[0] instanceof CustomDataSource).toBeTruthy();
       expect(

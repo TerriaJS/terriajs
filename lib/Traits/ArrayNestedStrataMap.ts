@@ -10,9 +10,10 @@ import TraitsConstructor from "./TraitsConstructor";
  * A strata map where the strata are obtained from a sub-property of another
  * parent strata map.
  */
-export default class ArrayNestedStrataMap<T extends ModelTraits>
-  implements Map<string, StratumFromTraits<T>>
-{
+export default class ArrayNestedStrataMap<T extends ModelTraits> implements Map<
+  string,
+  StratumFromTraits<T>
+> {
   constructor(
     readonly parentModel: Stratified<ModelTraits>,
     readonly parentProperty: string,
@@ -166,8 +167,9 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
   }
 }
 
-export interface TraitsConstructorWithRemoval<T extends ModelTraits>
-  extends TraitsConstructor<T> {
+export interface TraitsConstructorWithRemoval<
+  T extends ModelTraits
+> extends TraitsConstructor<T> {
   isRemoval?: (instance: StratumFromTraits<T>) => boolean;
 }
 

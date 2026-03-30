@@ -75,6 +75,9 @@ describe("YDYRCatalogFunctionJob", function () {
     job.setTrait(CommonStrata.user, "jobStatus", "running");
     job.setTrait(CommonStrata.user, "refreshEnabled", true);
     job.setTrait(CommonStrata.definition, "jobId", "someStatusId");
+
+    // Override the 2-second polling interval to speed up tests
+    Object.defineProperty(job, "refreshInterval", { get: () => 0.01 });
   });
 
   it("has a type & typeName", function () {
@@ -84,8 +87,8 @@ describe("YDYRCatalogFunctionJob", function () {
 
   describe("start polling after added to workbench", function () {
     let dispose: () => void;
-    beforeEach(() => {
-      terria.workbench.add(job);
+    beforeEach(async () => {
+      await terria.workbench.add(job);
       dispose = reaction(
         () => job.mapItems,
         () => {}

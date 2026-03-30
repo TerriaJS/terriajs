@@ -12,7 +12,7 @@ class TestSearchProvider extends SearchProviderMixin(
   public override logEvent = jasmine.createSpy();
   public override doSearch = jasmine
     .createSpy()
-    .and.returnValue(Promise.resolve());
+    .and.callFake(() => Promise.resolve());
 }
 
 describe("SearchProviderMixin", () => {

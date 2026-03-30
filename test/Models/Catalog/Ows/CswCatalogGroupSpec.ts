@@ -17,7 +17,7 @@ import getRecordsPage3Xml from "../../../../wwwroot/test/csw/Example1GetRecordsP
 xdescribe("CswCatalogGroup", function () {
   let terria: Terria;
   let group: CswCatalogGroup;
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

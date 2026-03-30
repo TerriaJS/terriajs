@@ -1,6 +1,5 @@
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
-import "jasmine-ajax";
 import { configure, spy } from "mobx";
 import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
@@ -37,7 +36,11 @@ beforeAll(async function () {
     await reg.unregister();
   }
   await worker.start({
-    onUnhandledRequest: "bypass",
+    onUnhandledRequest: (request, print) => {
+      print.error();
+      fail(`Unhandled ${request.method} request to ${request.url}`);
+      throw new Error(`Unhandled ${request.method} request to ${request.url}`);
+    },
     quiet: true
   });
 
@@ -52,7 +55,11 @@ beforeAll(async function () {
   });
 });
 
-afterEach(function () {
+beforeEach(function () {
+  worker.resetHandlers();
+});
+
+afterAll(function () {
   worker.resetHandlers();
 });
 
@@ -63,4 +70,4 @@ jasmine.getEnv().addReporter({
     )
 });
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

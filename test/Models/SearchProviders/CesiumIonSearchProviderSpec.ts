@@ -28,11 +28,17 @@ describe("CesiumIonSearchProvider", () => {
     });
     searchProvider = new CesiumIonSearchProvider("test-cesium-ion", terria);
     searchProvider.setTrait(CommonStrata.definition, "key", "testkey");
-    searchProvider.setTrait(CommonStrata.definition, "url", "api.test.com");
+    searchProvider.setTrait(
+      CommonStrata.definition,
+      "url",
+      "http://api.test.com"
+    );
   });
 
   it("Handles valid results", async () => {
-    worker.use(http.get("*/api.test.com", () => HttpResponse.json(fixture)));
+    worker.use(
+      http.get("http://api.test.com", () => HttpResponse.json(fixture))
+    );
 
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;
@@ -42,7 +48,7 @@ describe("CesiumIonSearchProvider", () => {
   });
 
   it("Handles empty result", async () => {
-    worker.use(http.get("*/api.test.com", () => HttpResponse.json([])));
+    worker.use(http.get("http://api.test.com", () => HttpResponse.json([])));
 
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;
@@ -53,7 +59,11 @@ describe("CesiumIonSearchProvider", () => {
   });
 
   it("Handles error", async () => {
-    worker.use(http.get("*/api.test.com", () => HttpResponse.error()));
+    worker.use(
+      http.get("http://api.test.com", () =>
+        HttpResponse.json({}, { status: 401 })
+      )
+    );
 
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;

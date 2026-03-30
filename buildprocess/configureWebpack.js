@@ -73,10 +73,13 @@ function configureWebpack({
     use: [babelLoader]
   });
 
-  // Allow XML in the Models directory to be required-in as raw text.
+  // Allow XML in the Models and test directory to be required-in as raw text.
   config.module.rules.push({
-    test: /\.xml$/,
-    include: path.resolve(terriaJSBasePath, "lib", "Models"),
+    test: /\.(xml|kml)$/,
+    include: [
+      path.resolve(terriaJSBasePath, "lib", "Models"),
+      path.resolve(terriaJSBasePath, "test")
+    ],
     type: "asset/source" // inlines xml as raw text
   });
 
@@ -122,6 +125,12 @@ function configureWebpack({
     ],
     exclude: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
     type: "asset" // inlines if file size < 8KB
+  });
+
+  config.module.rules.push({
+    test: /\.pbf$/,
+    // include: path.resolve(terriaJSBasePath, "test"),
+    type: "asset/resource" // emits a separate file and exports the URL
   });
 
   config.plugins = config.plugins || [];

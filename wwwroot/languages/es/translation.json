@@ -84,7 +84,11 @@
     "userData": {
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
-      "internetExplorer": "Internet Explorer 11"
+      "internetExplorer": "Internet Explorer 11",
+      "addingDataErrorTitle": "Los datos no han podido ser añadidos",
+      "addingDataErrorMessage": "Los datos especificados no han sido añadidos porque son inválidos o porque no tienen el formato esperado.",
+      "fileApiNotSupportedTitle": "API de archivo no soportada",
+      "fileApiNotSupportedMessage": "Disculpa, tu navegador no soporta la API del archivo que requiere la apicacíon {{appName}} para añadir los datos del archivo al sistema. Por favor actualiza tu navegador. Para una mejor experiencia, recomendamos la ultima versión de {{chrome}}, {{firefox}}, o {{edge}}."
     },
     "socrataServer": {
       "tags": "Etiquetas",
@@ -99,13 +103,15 @@
       "firefox": "Mozilla Firefox"
     },
     "csw": {
-      "links": "Enlaces"
+      "links": "Enlaces",
+      "cors": "CORS (Intercambio de recursos de origen cruzado)"
     },
     "catalog": {
       "cancel": "Cancelar",
       "upload": "Subir datos",
       "unsupportedFileTypeTitle": "Tipo de archivo no soportado",
-      "group": "Grupo"
+      "group": "Grupo",
+      "unsupportedTypeTitle": "Tipo de dato desconocido"
     },
     "ckan": {
       "update_freq": "Frecuencia de actualización",
@@ -419,7 +425,12 @@
       }
     },
     "georss": {
-      "author": "Autor"
+      "author": "Autor",
+      "subtitle": "Subtítulo",
+      "updated": "Actualizado",
+      "category": "Categoría",
+      "description": "Descripción",
+      "link": "Enlace"
     },
     "senaps": {
       "locationHeadingFeatureInfo": "Localización"
@@ -434,18 +445,34 @@
     "sensorObservationService": {
       "procedure": "Procedimiento",
       "property": "Propiedad",
-      "sos": "SOS"
+      "sos": "SOS",
+      "exceptionMessage": "El servidor reportó una excepción:\n\n {{exceptionText}}",
+      "missingBody": "El servidor respondió con un \"cuerpo del mensaje ausente\".",
+      "noFeatures": "No existen entidades espaciales que cumplan con los criterios de la busqueda.",
+      "unknownFormat": "El servidor respondió con un formato desconocido.",
+      "noMatchingFeatures": "El servicio de \"Sensor Observation Service (SOS)\" no retornó ninguna entidad espacial que coincida con la busqueda."
     },
     "sdmxJsonDataflowStratum": {
-      "defaultUnitMeasure": "Unidades"
+      "defaultUnitMeasure": "Unidades",
+      "loadDataErrorTitle": "No se ha podido cargar el flujo de datos SDMX",
+      "loadDataErrorMessage": {
+        "invalidResponse": "Objeto JSON inválido",
+        "noDatastructure": "No ha sido posible encontrar estructuras de datos para el flujo de datos {{catalogItem.dataflowId}}",
+        "noDataflow": "El flujo de datos {{catalogItem.dataflowId}} es inválido"
+      }
     },
     "sdmxCatalogItem": {
       "viewBy": {
-        "region": "Región"
-      }
+        "region": "Región",
+        "title": "Visto por",
+        "time": "Serie temporal"
+      },
+      "loadDataErrorTitle": "La carga de los datos SDMX {{name}} ha fallado",
+      "loadDataErrorMessage": "Respuesta invalida de '{{csvUrl}}'",
+      "noResultsWithDimensions": "Los resultados no han sido encontrados. Por favor selecciona unos valores de las dimensiones diferentes en el banco de trabajo diferentes a los siguentes:\n\n{{dimensions}}"
     },
     "time": {
-      "invalidDate": "Fecha no válida"
+      "invalidDate": "Fecha inválida"
     },
     "terriaJSONcatalog": {
       "buttonTitleConfirm": "Estoy de acuerdo"
@@ -461,6 +488,54 @@
       "options": {
         "none": "Ninguno"
       }
+    },
+    "bing": {
+      "name": "Bing Maps"
+    },
+    "cesiumTerrain": {
+      "name": "Cesium Terrain"
+    },
+    "arcgisPortal": {
+      "licence": "Licencia"
+    },
+    "csv": {
+      "name": "Valores Delimitados por Comas (CSV)"
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "gpx": {
+      "name": "GPX"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "Ver pagina de conjunto de datos"
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "La solicitud de estructura SDMX ha fallada",
+      "loadDataErrorTitle": "La carga del grupo SDMX ha fallado",
+      "loadDataErrorMessage": "El servidor no tiene flujos de datos"
+    },
+    "arcGisService": {
+      "name": "Grupo de servicio ArcGIS",
+      "invalidServerTitle": "Servidor ArcGIS inválido",
+      "invalidServerMessage": "Ocurrió un error al invocar el servicio de ArcGIS REST. La respuesta del servidor no parece ser un documento ArcGIS REST válido.",
+      "groupNotAvailableTitle": "Grupo no disponible",
+      "groupNotAvailableMessage": "Occurió un error al invocar el servicio ArcGIS REST."
+    },
+    "arcGisFeatureServer": {
+      "invalidServiceTitle": "ArcGIS Servicio de Entidades inválido"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "serviceDescription": "Descripción del Servicio",
+      "dataDescription": "Descripción de los Datos",
+      "copyrightText": "Texto de Derechos de Autor"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "serviceDescription": "Descripción del Servicio",
+      "dataDescription": "Descipción de los Datos"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "groupNotAvailableTitle": "Grupo no disponible"
     }
   },
   "analytics": {
@@ -612,14 +687,16 @@
     "localFile": "<0>Paso 2:</0> Seleccionar archivo",
     "webTitle": "Añadir datos web",
     "dataCatalogue": "Catálogo de datos",
-    "localFileType": "<0>Paso 1:</0> Seleccionar tipo de archivo"
+    "localFileType": "<0>Paso 1:</0> Seleccionar tipo de archivo",
+    "data": "Datos",
+    "modalTitle": "Explorar Datos"
   },
   "satelliteGuidance": {
     "prevI": "No, gracias",
     "titleI": "Imágenes por satélite: ¿Cómo puedo...?",
     "bodyI": "Una guía súper rápida para sacar el máximo partido a las imágenes históricas por satélite.",
     "nextI": "Ver guía",
-    "titleII": "¿Dónde está mi imagen satélite?",
+    "titleII": "¿Dónde está mi imagen satelital?",
     "bodyIII": "En su banco de trabajo de datos, haga clic en el desplegable de la fecha de captura y seleccione entre las horas disponibles para cargar las imágenes históricas.",
     "titleIV": "Filtrar las imágenes por ubicación",
     "menuTitle": "Puedes acceder a las guías de los mapas en cualquier momento buscando en el <2>menú de ayuda</2>",
@@ -637,7 +714,10 @@
       "saveBtn": "guardar",
       "cancelBtn": "cancelar",
       "cancelEditing": "Cancelar",
-      "placeholder": "Introduzca un título aquí"
+      "placeholder": "Introduzca un título aquí",
+      "modalHeader": "Editor de escenas - Captura de escena",
+      "titleLabel": "Título (requerido)",
+      "descriptionLabel": "Descripción"
     },
     "removeAllStories": "Eliminar Todas",
     "delete": "Eliminar",
@@ -684,7 +764,9 @@
     "restart": "Reiniciar",
     "navBtnMobile": "Ir a la historia {{title}}",
     "dismissText": "Entendido, Gracias!",
-    "mobileViewStory": "Ver Historias{{storiesLength}}"
+    "mobileViewStory": "Ver Historias{{storiesLength}}",
+    "panelBodyCapped": "Cada historia está limitada al tamaño {{ shareMaxRequestSize }} - divide los datos o las escenas en múltiples historias para que te mantengas en el límite.",
+    "storiesTooLong": "Esta historia excede el tamaño máximo permido. Intenta reducir el número de datos visibles o captura menos escenas."
   },
   "featureInfo": {
     "noInfoAvailable": "No hay información disponible",
@@ -705,8 +787,8 @@
       "featuresFound": "{{featCount}} {catalogItemName} elementos fueron encontrados.",
       "moreThanMax": "Se encontraron más de {{maximum}} {{catalogItemName}} elementos."
     },
-    "showRawData": "Mostrar datos en crudo",
-    "showCuratedData": "Mostrar datos organizados"
+    "showRawData": "Mostrar datos en bruto",
+    "showCuratedData": "Mostrar datos depurados"
   },
   "feedback": {
     "feedbackBtnText": "Danos tu opinión",
@@ -730,7 +812,9 @@
     "myLocation": "Mi localización",
     "browserCannotProvide": "Su navegador no puede proporcionar su localización.",
     "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Puede utilizar {{secureUrl}} en su lugar.",
-    "permissionDenied": "Permiso denegado para obtener tu localización. Por favor, revisa la configuración de tu navegador."
+    "permissionDenied": "Permiso denegado para obtener tu localización. Por favor, revisa la configuración de tu navegador.",
+    "positionUnavailable": "Tu información de localización no está diponible.",
+    "timeout": "Obtener tu información de ubicación tomó mucho tiempo. Por favor intenta de nuevo."
   },
   "countDatasets": {
     "loadError": "No se pudo cargar.",
@@ -741,8 +825,9 @@
     "subTotals": "<div> {{name}}: {{items}} elementos/ {{groups}} grupos</div>",
     "totals": "<div>El catálogo contiene {{items}} elementos en {{groups}} grupos.</div>",
     "countingMessage": "Contando, por favor espere…",
-    "mapDataState": "{{count}} conjunto de datos habilitado en el mapa",
-    "mapDataState_plural": "{{count}} conjunto de datos habilitado en el mapa",
+    "mapDataState_0": "{{count}} conjunto de datos habilitado en el mapa",
+    "mapDataState_1": "{{count}} conjuntos de datos habilitados en el mapa",
+    "mapDataState_2": "{{count}} conjuntos de datos habilitados en el mapa",
     "noMapDataEnabled": "No hay datos cartográficos habilitados"
   },
   "share": {
@@ -814,7 +899,18 @@
       "both": "Ambos",
       "right": "Derecha"
     },
-    "btnText": "Configuraciones del mapa"
+    "btnText": "Configuraciones del mapa",
+    "baseMapStatus": {
+      "requiresViewerMode": "El mapa seleccionado solo puede ser visualizacdo en el modo {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Cambiado odo de visualización",
+      "message": "El mapa base '{{newBaseMap}}' no puede ser visualizado en el modo {{currentMode}}. La Vista del Mapa ha sido cambiada a {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Mapa Base cambiado",
+      "message": "El Mapa Base '{{currentBaseMap}}' no puede ser visualizado en el modo {{mapMode}}. El Mapa Base ha sido cambiado a '{{newBaseMap}}'"
+    }
   },
   "toolsPanel": {
     "btnText": "Herramienta",
@@ -971,14 +1067,14 @@
   "tool": {
     "closeButtonTitle": "Cerrar {{toolName}} herramienta",
     "loadingError": {
-      "message": "Se ha producido un error al intentar cargar esta herramienta desde el servidor. Por favor, inténtelo de nuevo",
+      "message": "Se ha producido un error al intentar cargar esta herramienta desde el servidor. Por favor, inténtelo de nuevo.",
       "title": "Error al cargar la herramienta {{toolName}}"
     },
     "button": {
-      "open": "Salir {{toolNameLowerCase}}",
+      "open": "Salir de {{toolNameLowerCase}}",
       "closed": "{{Nombre de la herramienta}}"
     },
-    "exitBtnTitle": "Salida"
+    "exitBtnTitle": "Salir"
   },
   "diffTool": {
     "instructions": {
@@ -995,19 +1091,20 @@
       "area": "Area",
       "dates": "Fechas",
       "previewStyle": "Estilo de vista previa",
-      "dateComparisonA": "Comparación de datos A",
-      "dateComparisonB": "Comparación de datos B",
+      "dateComparisonA": "Comparación de fecha A",
+      "dateComparisonB": "Comparación de fecha B",
       "sourceDataset": "Conjunto de datos de origen",
-      "disabledButtonPrompt": "Nota: Las locación y las fechas deberán ser seleccionada para proceder con la detección del cambio",
-      "areaFilterSelection": "Selección del filtro de área"
+      "disabledButtonPrompt": "Nota: Las ubicación y las fechas deberán ser seleccionadas para proceder con la detección del cambios",
+      "areaFilterSelection": "Selección del filtro de área",
+      "saveToWorkbench": "Guardar en el banco de trabajo"
     },
     "choosePreview": "Elija un estilo de vista previa",
-    "chooseDifference": "Elija una salida de diferente",
-    "differenceResultsTitle": "Cambia la detección de cambios",
+    "chooseDifference": "Elija un formato de salida diferente",
+    "differenceResultsTitle": "Cambiar los resultados de la detección",
     "locationDisplay": {
       "noLocationSelected": {
-        "title": "No se ha seleccionado ninguna ubicación.",
-        "description": "Para filtrar el selector de fecha de la imagen por ubicación, por favor seleccione un punto en el mapa"
+        "title": "No se ha seleccionado ninguna ubicación!",
+        "description": "Para filtrar el selector de fecha de la imagen por ubicación, por favor amplíe la imagen y seleccione un punto de interés en el mapa"
       },
       "locationSelected": {
         "title": "Ubicación seleccionada y fechas filtradas",
@@ -1036,7 +1133,8 @@
       "previousDateTitle": "Fecha anterior",
       "nextDateTitle": "Fecha siguiente",
       "dateButtonTitle": "Seleccione una fecha"
-    }
+    },
+    "close": "Cerrar"
   },
   "languagePanel": {
     "changeLanguage": "Cambiar lenguaje"
@@ -1054,7 +1152,7 @@
     "welcomeMessage": "¿Está interesado en el descubrimiento y la exploración de datos? <br/>Entre directamente y comience o consulte las siguientes opciones de la guía de ayuda.",
     "exploreDataBtnText": "Explorar los datos del mapa",
     "title": "Vamos a empezar",
-    "helpBtnText": "Necesitaré ayuda",
+    "helpBtnText": "Necesito ayuda",
     "searchBtnText": "Buscar una ubicación",
     "dismissText": "Cierra el mensaje y no me vuelvas a mostrar esto",
     "welcomeMessageOnMobile": "¿Le interesa el descubrimiento y la exploración de datos?",
@@ -1062,7 +1160,10 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>Arrastrar y soltar</0><1>Sus datos en cualquier lugar para verlos en el mapa<1>"
+    "text": "<0>Arrastrar y soltar</0><1>Sus datos en cualquier lugar para verlos en el mapa<1>",
+    "notification_0": "<0>\"{{fileNames}}\"</0> ha sido añadido a <4>My Data</4>.",
+    "notification_1": "<0>\"{{fileNames}}\"</0> han sido añadidos a <4>My Data</4>.",
+    "notification_2": ""
   },
   "timer": {
     "nextScheduledUpdateTime": "Próxima actualización de datos a {{scheduledUpdateTime}}",
@@ -1108,7 +1209,7 @@
       "czml": "CZML",
       "wms-group": "Servidor del Servicio de Mapas en la Web (WMS)",
       "carto-v3": "Carto V3",
-      "auto": "Tipo de carpeta",
+      "auto": "Tipo de archivo",
       "esri-group": "Esri ArcGIS Servidor",
       "open-street-map": "Open Street mapa",
       "sdmx-group": "SDMX-JSON",
@@ -1120,7 +1221,9 @@
       "assimp-remote": "Convertidor de archivos 3D (experimental)",
       "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip",
       "esri-imageServer": "Esri ArcGIS ImageServer (capa única)",
-      "i3s": "I3S"
+      "i3s": "I3S",
+      "cog": "COG (GeoTIFF optimizado para la nube)",
+      "cesium-ion": "Cesium Ion"
     },
     "printWindow": {
       "errorTitle": "Error de impresión",
@@ -1172,7 +1275,8 @@
       "failedToObtain": "No se pudo obtener la imagen X: {{x}} Y: {{y}} Nivel: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
       "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
-      "terrainServerErrorMessage": " El servidor de terreno no responde por el momento.  Puede seguir utilizando todas las functiones de {{appName}} pero no habrá detalles de terreno en el modo 3D.  Lamentamos los inconvenientes ocasionados.  Por favor intente nuevamente más tarde, el servidor debería responder correctamente.  Si el problema continúa contáctese por correo electrónico a {{supportEmail}}."
+      "terrainServerErrorMessage": " El servidor de terreno no responde por el momento.  Puede seguir utilizando todas las functiones de {{appName}} pero no habrá detalles de terreno en el modo 3D.  Lamentamos los inconvenientes ocasionados.  Por favor intente nuevamente más tarde, el servidor debería responder correctamente.  Si el problema continúa contáctese por correo electrónico a {{supportEmail}}.",
+      "terrainServerErrorTitle": "Servidor de terreno no responde"
     },
     "displayVariablesConcept": {
       "defaultName": "Visualización de la variable"
@@ -1217,11 +1321,24 @@
     },
     "mapboxVectorTileImageryProvider": {
       "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa",
-      "requireStyles": "MapboxVectorTileImageryProvider requiere una función de estilo como parámetro en options.styleFunc"
+      "requireStyles": "MapboxVectorTileImageryProvider requiere una función de estilo como parámetro en options.styleFunc",
+      "moreThanFourTiles": "Las propiedades 'rectangle' y 'minimumLevel' indican que hay {{tileCount}} cuadrículas al mínimo nivel. Proveedores de imágenes con menos de cuatro cuadrículas no son compatibles.",
+      "maxLevelError": "Nivel máximo demasiado alto para el conjunto de datos"
     },
     "extraCreditLinks": {
       "dataAttribution": "Atribución de los datos",
-      "disclaimer": "Descargo de responsabilidad"
+      "disclaimer": "Descargo de responsabilidad",
+      "termsOfUse": "Términos de uso",
+      "credits": "Atribución",
+      "mapCredits": "Atribución del mapa",
+      "dataProvider": "Datos proporcionados por:",
+      "searchProvider": "Búsqueda proporcionada por:"
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "Mapeo de regiones basado en CSV",
+      "csvRegionMappingMessageZeroFound": "Ningún nombre de región fue encontrado para la el tipo de región {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "Ningún límite regional fue encontrado para la región {{regionName}}",
+      "csvRegionMappingMessageLoadError": "No ha sido posible cargar los límites regionales para la región {{regionName}}: {{exception}}"
     }
   },
   "relatedMaps": {

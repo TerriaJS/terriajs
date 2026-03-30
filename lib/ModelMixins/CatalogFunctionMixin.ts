@@ -86,8 +86,9 @@ function CatalogFunctionMixin<T extends AbstractConstructor<BaseType>>(
 }
 
 namespace CatalogFunctionMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CatalogFunctionMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof CatalogFunctionMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionMixin;
   }

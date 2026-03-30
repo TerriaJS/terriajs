@@ -188,8 +188,9 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
 }
 
 namespace FeatureInfoUrlTemplateMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof FeatureInfoUrlTemplateMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof FeatureInfoUrlTemplateMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasFeatureInfoUrlTemplateMixin;
   }

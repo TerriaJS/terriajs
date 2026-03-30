@@ -88,7 +88,7 @@ describe("TimeFilterMixin", function () {
         fakeImageryFeature.properties = {
           availabilityAtLocation: ["2023-01-02", "2023-01-03"]
         };
-        spyOn(imageryProvider, "pickFeatures").and.returnValue(
+        spyOn(imageryProvider, "pickFeatures").and.callFake(() =>
           Promise.resolve([fakeImageryFeature])
         );
 
@@ -121,7 +121,7 @@ describe("TimeFilterMixin", function () {
       fakeImageryFeature.properties = {
         availabilityAtLocation: ["2023-01-02", "2023-01-03"]
       };
-      spyOn(imageryProvider, "pickFeatures").and.returnValue(
+      spyOn(imageryProvider, "pickFeatures").and.callFake(() =>
         Promise.resolve([fakeImageryFeature])
       );
 
@@ -227,11 +227,11 @@ describe("TimeFilterMixin", function () {
           const spy0 = spyOn(
             item.imageryProviders[0],
             "pickFeatures"
-          ).and.returnValue(Promise.resolve([featureInfo1]));
+          ).and.callFake(() => Promise.resolve([featureInfo1]));
           const spy1 = spyOn(
             item.imageryProviders[1],
             "pickFeatures"
-          ).and.returnValue(Promise.resolve([featureInfo2]));
+          ).and.callFake(() => Promise.resolve([featureInfo2]));
 
           await item.setTimeFilterFromLocation({
             // Position to pick

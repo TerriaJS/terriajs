@@ -114,30 +114,39 @@ function copyCesiumSourceAssets() {
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Assets"));
 }
 
+async function runJasmineBrowser(browserName) {
+  var { runSpecs } = require("jasmine-browser-runner");
+  var config = (await import("./test/jasmine-browser.mjs")).default;
+  if (browserName) {
+    config = Object.assign({}, config, { browser: browserName });
+  }
+  await runSpecs(config);
+}
+
 function testFirefox(done) {
-  runKarma("./buildprocess/karma-firefox.conf.js", done);
+  runJasmineBrowser("headlessFirefox").then(
+    function () {
+      done();
+    },
+    function (e) {
+      done(e);
+    }
+  );
 }
 testFirefox.description = "Run tests with Firefox.";
 testFirefox.displayName = "test-firefox";
 
 function test(done) {
-  runKarma("./buildprocess/karma-local.conf.js", done);
-}
-test.description = "Run tests.";
-
-function runKarma(configFile, done) {
-  const { Server } = require("karma");
-  const path = require("path");
-  const server = new Server(
-    {
-      configFile: path.join(__dirname, configFile)
+  runJasmineBrowser().then(
+    function () {
+      done();
     },
     function (e) {
-      return done(e);
+      done(e);
     }
   );
-  server.start();
 }
+test.description = "Run tests.";
 
 const attributionTemplate = `---
 search:
@@ -274,8 +283,22 @@ release.description = "Build minified version of TerriaJS tests.";
 const watch = gulp.series(copyCesiumAssets, watchSpecs);
 watch.description = "Build TerriaJS tests when there are source changes.";
 
-const dev = gulp.parallel(terriajsServer, watch);
-dev.description = "Start TerriaJS server and watch for source changes.";
+function serveTests(done) {
+  import("./test/jasmine-browser.mjs").then(function (mod) {
+    var { Server } = require("jasmine-browser-runner");
+    var server = new Server(mod.default);
+    server.start().then(function () {
+      console.log("Jasmine test runner: http://localhost:" + mod.default.port);
+    });
+  }, done);
+}
+serveTests.description =
+  "Start jasmine-browser-runner server for interactive testing.";
+serveTests.displayName = "serve-tests";
+
+const dev = gulp.parallel(terriajsServer, watch, serveTests);
+dev.description =
+  "Start TerriaJS server, watch for source changes, and serve tests.";
 
 const postNpmInstall = copyCesiumAssets;
 postNpmInstall.description = "Copy Cesium assets after installation.";
@@ -288,6 +311,7 @@ exports.lint = lint;
 exports.build = build;
 exports.watch = watch;
 exports.dev = dev;
+exports.serveTests = serveTests;
 exports.terriajsServer = terriajsServer;
 exports.docs = docs;
 exports.jsdoc = jsdoc;

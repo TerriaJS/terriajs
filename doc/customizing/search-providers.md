@@ -31,7 +31,6 @@ To generate the catalog index:
 
 - `yarn build-tools`
 - `node ./build/generateCatalogIndex.js -c config-url -b base-url` where
-
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
   - For example `node ./build/generateCatalogIndex.js -c http://localhost:3001/config.json -b http://localhost:3001/`

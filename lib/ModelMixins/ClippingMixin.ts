@@ -620,8 +620,9 @@ function zoomToDataSourceWithTimeout(
 }
 
 namespace ClippingMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ClippingMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof ClippingMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model?.hasClippingMixin === true;

@@ -38,7 +38,6 @@ Some very brief benefits for dropping IE11:
 
 - How does this impact on the community? Any backlash if we drop IE11? We still
   get some community request/feedback on IE11
-
   - We've yet to gauge this, but there is movement at large for the community to
     drop support.
   - The community itself is going to run into more and more products and

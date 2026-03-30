@@ -214,8 +214,7 @@ class AddData extends Component {
       } else {
         return result;
       }
-    },
-    []);
+    }, []);
 
     const remoteDataType =
       this.props.viewState.remoteDataType ?? this.state.remoteDataTypes[0];
