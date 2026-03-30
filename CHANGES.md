@@ -2,6 +2,8 @@
 
 #### next release (8.12.1)
 
+- [The next improvement]
+
 #### 8.12.0 - 2026-03-27
 
 - Update prettier to v3.
@@ -32,7 +34,7 @@
   - Simplify Clipboard component and add success message.
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
-- [The next improvement]
+- Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
 
 #### 8.11.3 - 2026-02-02
 
