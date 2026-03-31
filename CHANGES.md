@@ -2,7 +2,7 @@
 
 #### next release (8.12.3)
 
-- [The next improvement]
+- Refactor analytics into `lib/Core/analytics/` module, make `analytics` always defined using `NoopAnalytics` default, and remove auto-detection logic from `Terria`. Analytics instance must now be supplied via `TerriaOptions` or defaults to no-op. ([7817](https://github.com/TerriaJS/terriajs/pull/7817))
 
 #### 8.12.2 - 2026-03-27
 
