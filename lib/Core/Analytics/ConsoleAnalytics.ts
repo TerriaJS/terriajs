@@ -1,5 +1,5 @@
-import isDefined from "../Core/isDefined";
-import { Analytics } from "../Models/Terria";
+import isDefined from "../isDefined";
+import { Analytics } from "./types";
 import i18next from "i18next";
 
 export default class ConsoleAnalytics implements Analytics {

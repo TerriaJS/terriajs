@@ -6,7 +6,7 @@ import { Trans, withTranslation } from "react-i18next";
 import {
   Category,
   DatatabAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../Core/Analytics/analyticEvents";
 import getDataType from "../../../../Core/getDataType";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
 import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
@@ -105,7 +105,7 @@ class AddData extends Component {
   async handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
-    this.props.terria.analytics?.logEvent(
+    this.props.terria.analytics.logEvent(
       Category.dataTab,
       DatatabAction.addDataUrl,
       url

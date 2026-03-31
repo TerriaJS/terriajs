@@ -20,7 +20,7 @@ import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import { useViewState, withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
-import { Category, HelpAction } from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, HelpAction } from "../../Core/Analytics/analyticEvents";
 import { runInAction } from "mobx";
 
 const BoxHelpfulHints = styled(Box)`
@@ -85,7 +85,7 @@ const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
               textLight
               transparentBg
               onClick={() => {
-                viewState.terria.analytics?.logEvent(
+                viewState.terria.analytics.logEvent(
                   Category.help,
                   HelpAction.takeTour
                 );
