@@ -11,7 +11,7 @@ import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../Core/Analytics/analyticEvents";
 import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
@@ -120,7 +120,7 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
     terria.workbench.remove(item);
     terria.removeSelectedFeaturesForModel(item);
     if (TimeVarying.is(item)) viewState.terria.timelineStack.remove(item);
-    viewState.terria.analytics?.logEvent(
+    viewState.terria.analytics.logEvent(
       Category.dataSource,
       DataSourceAction.removeFromWorkbench,
       getPath(item)

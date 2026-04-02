@@ -6,7 +6,7 @@ import styled, { withTheme } from "styled-components";
 import {
   Category,
   HelpAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../Core/Analytics/analyticEvents";
 import { isJsonString } from "../../../../Core/Json";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
@@ -48,7 +48,7 @@ class HelpPanelItem extends Component {
           isSelected={itemSelected}
           role={paneMode === "externalLink" ? "link" : undefined}
           onClick={() => {
-            this.props.terria.analytics?.logEvent(
+            this.props.terria.analytics.logEvent(
               Category.help,
               HelpAction.itemSelected,
               title

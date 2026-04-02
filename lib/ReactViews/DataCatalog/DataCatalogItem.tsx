@@ -4,7 +4,7 @@ import { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
-import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
+import { DataSourceAction } from "../../Core/Analytics/analyticEvents";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";

@@ -3,10 +3,7 @@ import { makeObservable, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import {
-  Category,
-  SearchAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import loadJson from "../../Core/loadJson";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import NominatimSearchProviderTraits from "../../Traits/SearchProviders/NominatimSearchProviderTraits";
@@ -37,7 +34,7 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
   }
 
   protected logEvent(searchText: string) {
-    this.terria.analytics?.logEvent(
+    this.terria.analytics.logEvent(
       Category.search,
       SearchAction.nominatim,
       searchText
