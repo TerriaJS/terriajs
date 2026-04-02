@@ -1,0 +1,25 @@
+import URI from "urijs";
+import { JsonObject } from "./Json";
+import loadJson5 from "./loadJson5";
+
+/**
+ * Fetches and parses a TerriaJS config file from the given URL.
+ *
+ * This is a pure fetch utility — it returns the raw config object.
+ * Callers are responsible for applying the config to a Terria instance
+ * via `terria.applyConfig(config.parameters)` and building init sources
+ * via `buildInitSourcesFromConfig()`.
+ */
+export const loadConfig = async (
+  configUrl: string,
+  headers?: Record<string, string>
+): Promise<{ config: JsonObject; baseUri: URI }> => {
+  const raw = await loadJson5(configUrl, headers);
+  const baseUri = new URI(configUrl).filename("");
+
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+    throw new Error(`Config at "${configUrl}" did not return a JSON object.`);
+  }
+
+  return { config: raw as JsonObject, baseUri };
+};

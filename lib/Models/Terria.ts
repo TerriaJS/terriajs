@@ -31,7 +31,6 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
 import {
-  JsonArray,
   JsonObject,
   isJsonBoolean,
   isJsonNumber,
@@ -45,7 +44,6 @@ import TerriaError, {
   TerriaErrorOverrides,
   TerriaErrorSeverity
 } from "../Core/TerriaError";
-import { Complete } from "../Core/TypeModifiers";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
@@ -53,6 +51,7 @@ import getPath from "../Core/getPath";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
+import { loadConfig } from "../Core/loadConfig";
 import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import { getUriWithoutPath } from "../Core/uriHelpers";
@@ -76,7 +75,6 @@ import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
 import CatalogProvider from "./Catalog/CatalogProvider";
-import { MagdaReferenceHeaders } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
@@ -94,6 +92,8 @@ import InitSource, {
   InitSourceFromData,
   StartData,
   StoryData,
+  buildInitSourcesFromConfig,
+  generateInitFragmentSource,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
@@ -115,14 +115,10 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import { defaultLoadConfig } from "./defaultLoadConfig";
-
-/** Keep export for experimentation */
-export { defaultLoadConfig };
 
 interface StartOptions {
   /**
-   * URL of the Terria config to load. Used (via {@link defaultLoadConfig}) when
+   * URL of the Terria config to load. Used (via {@link loadConfig}) when
    * `loadConfig` is not supplied.
    */
   configUrl?: string;
@@ -133,16 +129,14 @@ interface StartOptions {
   /**
    * Loads the Terria config. Supply this to load config from somewhere other
    * than a URL (e.g. a non-browser/SSR environment). Use the exported
-   * {@link defaultLoadConfig} helper for the standard behaviour. When omitted,
-   * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
+   * {@link loadConfig} helper for the standard behaviour. When omitted,
+   * `configUrl`/`configUrlHeaders` are loaded via {@link loadConfig}.
    *
    * @experimental - not ready for general consumption!
    */
   loadConfig?: () => Promise<{
     config: JsonObject;
     baseUri: URI;
-    /** The URL the config was loaded from, if known. */
-    configUrl?: string;
   }>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
@@ -595,54 +589,11 @@ export default class Terria {
   }
 
   setupInitializationUrls(baseUri: URI, config: any): void {
-    const initializationUrls: string[] = config?.initializationUrls || [];
-    const initSources: InitSource[] = initializationUrls.map((url) => ({
-      name: `Init URL from config ${url}`,
-      errorSeverity: TerriaErrorSeverity.Error,
-      ...generateInitializationUrl(
-        baseUri,
-        this.configParameters.initFragmentPaths,
-        url
-      )
-    }));
-
-    // look for v7 catalogs -> push v7-v8 conversion to initSources
-    if (Array.isArray(config?.v7initializationUrls)) {
-      initSources.push(
-        ...(config.v7initializationUrls as JsonArray)
-          .filter(isJsonString)
-          .map((v7initUrl) => ({
-            name: `V7 Init URL from config ${v7initUrl}`,
-            errorSeverity: TerriaErrorSeverity.Error,
-            data: (async () => {
-              try {
-                const [{ convertCatalog }, catalog] = await Promise.all([
-                  import("catalog-converter"),
-                  loadJson5(v7initUrl)
-                ]);
-                const convert = convertCatalog(catalog, { generateIds: false });
-                console.log(
-                  `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
-                );
-                convert.messages.forEach((message) =>
-                  console.log(`- ${message.path.join(".")}: ${message.message}`)
-                );
-                return new Result({
-                  data: (convert.result as JsonObject | null) || {}
-                });
-              } catch (error) {
-                return Result.error(error, {
-                  title: { key: "models.catalog.convertErrorTitle" },
-                  message: {
-                    key: "models.catalog.convertErrorMessage",
-                    parameters: { url: v7initUrl }
-                  }
-                });
-              }
-            })()
-          }))
-      );
-    }
+    const initSources: InitSource[] = buildInitSourcesFromConfig(
+      config,
+      baseUri,
+      this.configParameters.initFragmentPaths
+    );
     this.initSources.push(...initSources);
   }
 
@@ -669,11 +620,10 @@ export default class Terria {
     let launchUrlForAnalytics = options.applicationUrl?.href;
 
     try {
-      const loadConfig =
+      const loadConfigFunc =
         options.loadConfig ??
-        (() =>
-          defaultLoadConfig(options.configUrl ?? "", options.configUrlHeaders));
-      const { config, baseUri } = await loadConfig();
+        (() => loadConfig(options.configUrl ?? "", options.configUrlHeaders));
+      const { config, baseUri } = await loadConfigFunc();
       launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
 
       runInAction(() => {
@@ -1716,29 +1666,6 @@ export default class Terria {
   }
 }
 
-function generateInitializationUrl(
-  baseUri: URI,
-  initFragmentPaths: string[],
-  url: string
-): InitSource {
-  if (url.toLowerCase().substring(url.length - 5) !== ".json") {
-    return {
-      options: initFragmentPaths.map((fragmentPath) => {
-        return {
-          initUrl: new URI(fragmentPath)
-            .segment(url)
-            .suffix("json")
-            .absoluteTo(baseUri)
-            .toString()
-        };
-      })
-    };
-  }
-  return {
-    initUrl: new URI(url).absoluteTo(baseUri).toString()
-  };
-}
-
 async function interpretHash(
   terria: Terria,
   hashParams: HashParams,
@@ -1752,7 +1679,7 @@ async function interpretHash(
 
   runInAction(() => {
     hashParams.initFragments.forEach((fragment) => {
-      const initSourceFile = generateInitializationUrl(
+      const initSourceFile = generateInitFragmentSource(
         baseUri,
         terria.configParameters.initFragmentPaths,
         fragment
