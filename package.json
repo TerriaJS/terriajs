@@ -179,7 +179,7 @@
     "husky": "^8.0.3",
     "jasmine-browser-runner": "^4.0.0",
     "jasmine-core": "^6.1.0",
-    "jsdom": "^17.0.0",
+    "jsdom": "^29.0.1",
     "jsdom-global": "^3.0.2",
     "minimist": "^1.2.8",
     "msw": "^2.12.9",
