@@ -189,7 +189,7 @@
     "pretty-quick": "^4.2.2",
     "sass": "^1.81.0",
     "svg-sprite": "^2.0.4",
-    "terriajs-server": "^4.0.3",
+    "terriajs-server": "5.0.0-alpha.2",
     "utf-8-validate": "^6.0.3",
     "yaml": "^1.10.0"
   },
