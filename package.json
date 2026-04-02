@@ -173,7 +173,7 @@
     "fast-glob": "^3.3.2",
     "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "jasmine-browser-runner": "^4.0.0",
     "jasmine-core": "^6.1.0",
     "minimist": "^1.2.8",
@@ -200,7 +200,7 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node && husky install"
+    "prepare": "yarn build-for-node && husky"
   },
   "msw": {
     "workerDirectory": [
