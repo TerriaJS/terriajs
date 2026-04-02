@@ -156,7 +156,6 @@
     "typescript": "^5.9.2",
     "urijs": "^1.18.12",
     "webpack": "^5.105.4",
-    "webpack-cli": "^7.0.2",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
