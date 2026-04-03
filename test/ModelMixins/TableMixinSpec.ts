@@ -601,7 +601,7 @@ describe("TableMixin", function () {
         )
       );
 
-      terria.updateParameters({
+      terria.applyConfig({
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",
           "build/TerriaJS/data/regionMapping.json"
@@ -647,7 +647,7 @@ describe("TableMixin", function () {
         )
       );
 
-      terria.updateParameters({
+      terria.applyConfig({
         regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",

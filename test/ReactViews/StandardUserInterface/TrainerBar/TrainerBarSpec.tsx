@@ -28,7 +28,7 @@ describe("TrainerBar", function () {
 
     it("renders nothing when setTrainerBarVisible is false", function () {
       runInAction(() => {
-        terria.updateParameters({
+        terria.applyConfig({
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
@@ -46,7 +46,7 @@ describe("TrainerBar", function () {
 
     it("renders a button to toggle visibility", function () {
       runInAction(() => {
-        terria.updateParameters({
+        terria.applyConfig({
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
