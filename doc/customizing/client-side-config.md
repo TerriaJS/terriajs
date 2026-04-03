@@ -56,7 +56,7 @@ It is also possible to add version 7 init files using the `v7initializationUrls`
 
 ## Parameters
 
-**The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/Terria.ts#L101) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).**
+**The best reference is [`interface ConfigParameters`](../../lib/Models/TerriaConfig.ts#L14).**
 
 Specifies various options for configuring TerriaJS:
 
