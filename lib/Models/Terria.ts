@@ -21,6 +21,13 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
+import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
+import {
+  Category,
+  DataSourceAction,
+  LaunchAction
+} from "../Core/Analytics/analyticEvents";
+import { Analytics } from "../Core/Analytics/types";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
@@ -39,14 +46,6 @@ import TerriaError, {
   TerriaErrorOverrides,
   TerriaErrorSeverity
 } from "../Core/TerriaError";
-import { Complete } from "../Core/TypeModifiers";
-import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
-import {
-  Category,
-  DataSourceAction,
-  LaunchAction
-} from "../Core/Analytics/analyticEvents";
-import { Analytics } from "../Core/Analytics/types";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
@@ -67,13 +66,8 @@ import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import NotificationState from "../ReactViewModels/NotificationState";
-import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
-import { Term, defaultTerms } from "../ReactViewModels/defaultTerms";
-import { ICredit } from "../ReactViews/Map/BottomBar/Credits";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import { SearchBarTraits } from "../Traits/SearchProviders/SearchBarTraits";
-import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -83,20 +77,14 @@ import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
 import CatalogProvider from "./Catalog/CatalogProvider";
-import MagdaReference, {
-  MagdaReferenceHeaders
-} from "./Catalog/CatalogReferences/MagdaReference";
+import MagdaReference from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
-import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
 import hasTraits from "./Definition/hasTraits";
 import updateModelFromJson from "./Definition/updateModelFromJson";
 import upsertModelFromJson from "./Definition/upsertModelFromJson";
-import {
-  ErrorServiceOptions,
-  ErrorServiceProvider
-} from "./ErrorServiceProviders/ErrorService";
+import { ErrorServiceProvider } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
@@ -111,275 +99,19 @@ import InitSource, {
   isInitFromOptions,
   isInitFromUrl
 } from "./InitSource";
-import Internationalization, {
-  I18nStartOptions,
-  LanguageConfiguration
-} from "./Internationalization";
+import Internationalization, { I18nStartOptions } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
-import { StoryVideoSettings } from "./StoryVideoSettings";
+import { ConfigParameters, TerriaConfig } from "./TerriaConfig";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
-export interface ConfigParameters {
-  /**
-   * TerriaJS uses this name whenever it needs to display the name of the application.
-   */
-  appName?: string;
-  /**
-   * The email address shown when things go wrong.
-   */
-  supportEmail?: string;
-  /**
-   * The maximum number of "feature info" boxes that can be displayed when clicking a point.
-   */
-  defaultMaximumShownFeatureInfos: number;
-  /**
-   * URL of the JSON file that contains index of catalog.
-   */
-  catalogIndexUrl?: string;
-  /**
-   * **Deprecated** - please use regionMappingDefinitionsUrls array instead. If this is defined, it will override `regionMappingDefinitionsUrls`
-   */
-  regionMappingDefinitionsUrl?: string | undefined;
-  /**
-   * URLs of the JSON file that defines region mapping for CSV files. First matching region will be used (in array order)
-   */
-  regionMappingDefinitionsUrls: string[];
-  /**
-   * URL of Proj4 projection lookup service (part of TerriaJS-Server).
-   */
-  proj4ServiceBaseUrl?: string;
-  /**
-   * URL of CORS proxy service (part of TerriaJS-Server)
-   */
-  corsProxyBaseUrl?: string;
-  /**
-   * @deprecated
-   */
-  proxyableDomainsUrl?: string;
-  serverConfigUrl?: string;
-  shareUrl?: string;
-  /**
-   * URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear.
-   */
-  feedbackUrl?: string;
-  /**
-   * An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.
-   */
-  initFragmentPaths: string[];
-  /**
-   * Whether the story is enabled. If false story function button won't be available.
-   */
-  storyEnabled: boolean;
-  /**
-   * Whether to show the saving instructions message in the story builder panel. Defaults to false.
-   */
-  showStorySaveInstructions?: boolean;
-  /**
-   * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
-   */
-  interceptBrowserPrint?: boolean;
-  /**
-   * True to create a separate explorer panel tab for each top-level catalog group to list its items in.
-   */
-  tabbedCatalog?: boolean;
-  /**
-   * True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.
-   */
-  useCesiumIonTerrain?: boolean;
-  /**
-   * The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true.
-   */
-  cesiumTerrainUrl?: string;
-  /**
-   * The Cesium Ion Asset ID to use for Cesium terrain in the 3D Terrain viewer. `cesiumIonAccessToken` will be used to authenticate. This property is ignored if "useCesiumIonTerrain" is set to true.
-   */
-  cesiumTerrainAssetId?: number;
-  /**
-   * The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
-   */
-  cesiumIonAccessToken?: string;
-  /**
-   * True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.
-   */
-  useCesiumIonBingImagery?: boolean;
-  /**
-   * The OAuth2 application ID to use to allow login to Cesium ion on the "Add Data" panel. The referenced application must be configured on
-   * Cesium ion with a Redirect URI of `[TerriaMap Base URL]/build/TerriaJS/cesium-ion-oauth2.html`. For example, if users access your TerriaJS
-   * application at `https://example.com/AwesomeMap` then the Redirect URI must be exactly
-   * `https://example.com/AwesomeMap/build/TerriaJS/cesium-ion-oauth2.html`.
-   */
-  cesiumIonOAuth2ApplicationID?: number;
-  /**
-   * Specifies where to store the Cesium ion login token. Valid values are:
-   *   - `page` (default) - The login token is associated with the current page load. Even simply reloading the current page will clear the token. This is the safest option.
-   *   - `sessionStorage` - The login token is associated with a browser session, which means it is shared/accessible from any page hosted on the same domain and running in the same browser tab.
-   *   - `localStorage` - The login token is shared/accessible from any page hosted on the same domain, even when running in different tabs or after exiting and restarted the web browser.
-   */
-  cesiumIonLoginTokenPersistence?: string;
-  /**
-   * Whether or not Cesium ion assets added via the "Add Data" panel will be shared with others via share links. If true, users will be asked to select a Cesium ion token when adding assets,
-   * and this choice must be made carefully to avoid exposing more Cesium ion assets than intended. If false (the default), the user's login token will be used, which is safe because this
-   * token will not be shared with others.
-   */
-  cesiumIonAllowSharingAddedAssets?: boolean;
-  /**
-   * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
-   */
-  bingMapsKey?: string;
-  hideTerriaLogo?: boolean;
-  /**
-   * An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).
-   */
-  brandBarElements?: string[];
-  /**
-   * An array of strings of HTML that fill up the top left logo space - used for small screens.
-   */
-  brandBarSmallElements?: string[];
-  /**
-   * Index of which `brandBarElements` to show for mobile header. This will be used if `this.brandBarSmallElements` is undefined.
-   */
-  displayOneBrand?: number;
-  /**
-   * True to disable the "Centre map at your current location" button.
-   */
-  disableMyLocation?: boolean;
-  disableSplitter?: boolean;
-
-  disablePedestrianMode?: boolean;
-
-  experimentalFeatures?: boolean;
-  magdaReferenceHeaders?: MagdaReferenceHeaders;
-  locationSearchBoundingBox?: number[];
-  /**
-   * A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
-   */
-  googleAnalyticsKey?: string;
-
-  /**
-   * Options for Google Analytics
-   */
-  googleAnalyticsOptions?: unknown;
-
-  /**
-   * Error service provider configuration.
-   */
-  errorService?: ErrorServiceOptions;
-
-  globalDisclaimer?: any;
-  /**
-   * True to display welcome message on startup.
-   */
-  showWelcomeMessage?: boolean;
-
-  // TODO: make themeing TS
-  /** Theme overrides, this is applied in StandardUserInterface and merged in order of highest priority:
-   *  `StandardUserInterface.jsx` `themeOverrides` prop -> `theme` config parameter (this object) -> default `terriaTheme` (see `StandardTheme.jsx`)
-   */
-  theme?: any;
-  /**
-   * Video to show in welcome message.
-   */
-  welcomeMessageVideo?: any;
-  /**
-   * Video to show in Story Builder.
-   */
-  storyVideo?: StoryVideoSettings;
-  /**
-   * True to display in-app guides.
-   */
-  showInAppGuides?: boolean;
-  /**
-   * The content to be displayed in the help panel.
-   */
-  helpContent?: HelpContentItem[];
-  helpContentTerms?: Term[];
-  /**
-   *
-   */
-  languageConfiguration?: LanguageConfiguration;
-  /**
-   * Custom concurrent request limits for domains in Cesium's RequestScheduler. Cesium's default is 6 per domain (the maximum allowed by browsers unless the server supports http2). For servers supporting http2 try 12-24 to have more parallel requests. Setting this too high will undermine Cesium's prioritised request scheduling and important data may load slower. Format is {"domain_without_protocol:port": number}.
-   */
-  customRequestSchedulerLimits?: Record<string, number>;
-
-  /**
-   * Whether to load persisted viewer mode from local storage.
-   */
-  persistViewerMode?: boolean;
-
-  /**
-   * Whether to open the add data explorer panel on load.
-   */
-  openAddData?: boolean;
-
-  /**
-   * Text showing at the top of feedback form.
-   */
-  feedbackPreamble?: string;
-
-  /**
-   * Text showing at the bottom of feedback form.
-   */
-  feedbackPostamble?: string;
-  /**
-   * Minimum length of feedback comment.
-   */
-  feedbackMinLength?: number;
-
-  /** Maximum zoom level for Leaflet map */
-  leafletMaxZoom: number;
-
-  /** If undefined, then Leaflet's default attribution will be used */
-  leafletAttributionPrefix?: string;
-
-  /**
-   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
-   */
-  extraCreditLinks?: ICredit[];
-
-  /**
-   * Configurable discalimer that shows up in print view
-   */
-  printDisclaimer?: { url: string; text: string };
-
-  /**
-   * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
-   */
-  storyRouteUrlPrefix?: string;
-
-  /**
-   * For Console Analytics
-   */
-  enableConsoleAnalytics?: boolean;
-
-  relatedMaps?: RelatedMap[];
-
-  /**
-   * Optional plugin configuration
-   */
-  plugins?: Record<string, any>;
-
-  aboutButtonHrefUrl?: string | null;
-
-  /**
-   * The search bar allows requesting information from various search services at once.
-   */
-  searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
-  searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
-
-  /**
-   * Keep catalog open when adding / removing items
-   */
-  keepCatalogOpen: boolean;
-}
+export type { ConfigParameters } from "./TerriaConfig";
 
 interface StartOptions {
   configUrl: string;
@@ -485,8 +217,15 @@ export default class Terria {
     )
   );
 
-  appName: string = "TerriaJS App";
-  supportEmail: string = "info@terria.io";
+  @computed
+  get appName(): string {
+    return this.configParameters.appName;
+  }
+
+  @computed
+  get supportEmail(): string {
+    return this.configParameters.supportEmail;
+  }
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -506,92 +245,7 @@ export default class Terria {
    */
   readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
-  @observable
-  readonly configParameters: Complete<ConfigParameters> = {
-    appName: "TerriaJS App",
-    supportEmail: "info@terria.io",
-    defaultMaximumShownFeatureInfos: 100,
-    catalogIndexUrl: undefined,
-    regionMappingDefinitionsUrl: undefined,
-    regionMappingDefinitionsUrls: ["build/TerriaJS/data/regionMapping.json"],
-    proj4ServiceBaseUrl: "proj4def/",
-    corsProxyBaseUrl: "proxy/",
-    proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
-    serverConfigUrl: "serverconfig/",
-    shareUrl: "share",
-    feedbackUrl: undefined,
-    initFragmentPaths: ["init/"],
-    storyEnabled: true,
-    showStorySaveInstructions: false,
-    interceptBrowserPrint: true,
-    tabbedCatalog: false,
-    useCesiumIonTerrain: true,
-    cesiumTerrainUrl: undefined,
-    cesiumTerrainAssetId: undefined,
-    cesiumIonAccessToken: undefined,
-    useCesiumIonBingImagery: undefined,
-    cesiumIonOAuth2ApplicationID: undefined,
-    cesiumIonLoginTokenPersistence: "page",
-    cesiumIonAllowSharingAddedAssets: false,
-    bingMapsKey: undefined,
-    hideTerriaLogo: false,
-    brandBarElements: undefined,
-    brandBarSmallElements: undefined,
-    displayOneBrand: 0,
-    disableMyLocation: undefined,
-    disableSplitter: undefined,
-    disablePedestrianMode: false,
-    keepCatalogOpen: false,
-    experimentalFeatures: undefined,
-    magdaReferenceHeaders: undefined,
-    locationSearchBoundingBox: undefined,
-    googleAnalyticsKey: undefined,
-    errorService: undefined,
-    globalDisclaimer: undefined,
-    theme: {},
-    showWelcomeMessage: false,
-    welcomeMessageVideo: {
-      videoTitle: "Getting started with the map",
-      videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
-      placeholderImage:
-        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
-    },
-    storyVideo: {
-      videoUrl: "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
-    },
-    showInAppGuides: false,
-    helpContent: [],
-    helpContentTerms: defaultTerms,
-    languageConfiguration: undefined,
-    customRequestSchedulerLimits: undefined,
-    persistViewerMode: true,
-    openAddData: false,
-    feedbackPreamble: "translate#feedback.feedbackPreamble",
-    feedbackPostamble: undefined,
-    feedbackMinLength: 0,
-    leafletMaxZoom: 18,
-    leafletAttributionPrefix: undefined,
-    extraCreditLinks: [
-      // Default credit links (shown at the bottom of the Cesium map)
-      {
-        text: "map.extraCreditLinks.dataAttribution",
-        url: "https://terria.io/attributions"
-      },
-      {
-        text: "map.extraCreditLinks.termsOfUse",
-        url: "https://terria.io/demo-terms"
-      }
-    ],
-    printDisclaimer: undefined,
-    storyRouteUrlPrefix: undefined,
-    enableConsoleAnalytics: undefined,
-    googleAnalyticsOptions: undefined,
-    relatedMaps: [],
-    aboutButtonHrefUrl: "about.html",
-    plugins: undefined,
-    searchBarConfig: undefined,
-    searchProviders: []
-  };
+  readonly configParameters = new TerriaConfig();
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -624,10 +278,6 @@ export default class Terria {
    * ```
    */
   private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
-
-  private _loadPersistedSettings: { baseMapPromise?: Promise<void> } = {
-    baseMapPromise: undefined
-  };
 
   @computed
   get baseMapContrastColor() {
@@ -1021,7 +671,7 @@ export default class Terria {
       }
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
-          this.updateParameters(config.parameters);
+          this.applyConfig(config.parameters);
         }
         this.setupInitializationUrls(baseUri, config);
       });
@@ -1324,15 +974,8 @@ export default class Terria {
   }
 
   @action
-  updateParameters(parameters: ConfigParameters | JsonObject): void {
-    Object.entries(parameters).forEach(([key, value]) => {
-      if (Object.hasOwnProperty.call(this.configParameters, key)) {
-        (this.configParameters as any)[key] = value;
-      }
-    });
-
-    this.appName = this.configParameters.appName ?? this.appName;
-    this.supportEmail = this.configParameters.supportEmail ?? this.supportEmail;
+  applyConfig(config: Partial<ConfigParameters>): void {
+    this.configParameters.apply(config);
   }
 
   protected async forceLoadInitSources(): Promise<void> {
@@ -2025,7 +1668,7 @@ export default class Terria {
     const configParams = aspects["terria-config"]?.parameters;
 
     if (configParams) {
-      this.updateParameters(configParams);
+      this.applyConfig(configParams);
     }
 
     const initObj = aspects["terria-init"];
