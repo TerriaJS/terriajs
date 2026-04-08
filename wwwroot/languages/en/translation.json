@@ -1774,6 +1774,10 @@
       "hideAdvancedOptions": "Hide advanced options",
       "showAdvancedOptions": "Show advanced options",
       "copyUserStratum": "Copy user stratum to clipboard",
+      "manageUserStyle": "Manage user style",
+      "exportUserStyle": "Export user style",
+      "importUserStyle": "Import user style",
+      "importUserStyleFailed": "Failed to import user style JSON",
       "name": "Style",
       "reset": "Reset to default style",
       "data": {

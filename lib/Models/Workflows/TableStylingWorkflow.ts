@@ -8,8 +8,10 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
+import mergeWith from "lodash-es/mergeWith";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import { isJsonObject, JsonObject } from "../../Core/Json";
 import TerriaError from "../../Core/TerriaError";
 import ConstantColorMap from "../../Map/ColorMap/ConstantColorMap";
 import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
@@ -41,6 +43,7 @@ import { EnumColorTraits } from "../../Traits/TraitsClasses/Table/ColorStyleTrai
 import CommonStrata from "../Definition/CommonStrata";
 import Model from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
+import saveStratumToJson from "../Definition/saveStratumToJson";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import {
   FlatSelectableDimension,
@@ -150,17 +153,29 @@ export default class TableStylingWorkflow
             this.showAdvancedOptions = !this.showAdvancedOptions;
           })
         },
+        {
+          text: i18next.t("models.tableStyling.exportUserStyle"),
+          onSelect: () => {
+            this.exportUserStyleToJsonFile();
+          }
+        },
+        {
+          text: i18next.t("models.tableStyling.importUserStyle"),
+          onSelect: () => {
+            this.importUserStyleFromJsonFile();
+          }
+        },
         this.showAdvancedOptions
           ? {
               text: i18next.t("models.tableStyling.copyUserStratum"),
               onSelect: () => {
                 const stratum = JSON.stringify(
-                  this.item.strata.get(CommonStrata.user)
+                  this.getCatalogStyleStrata(),
+                  undefined,
+                  2
                 );
                 try {
-                  navigator.clipboard.writeText(
-                    JSON.stringify(this.item.strata.get(CommonStrata.user))
-                  );
+                  navigator.clipboard.writeText(stratum);
                 } catch (e) {
                   TerriaError.from(e).raiseError(
                     this.item.terria,
@@ -2790,6 +2805,137 @@ export default class TableStylingWorkflow
       // Show advanced table options
       ...(this.showAdvancedOptions ? this.advancedTableDimensions : [])
     ]);
+  }
+
+  private importUserStyleFromJsonFile() {
+    try {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json,application/json";
+
+      input.onchange = () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        file
+          .text()
+          .then((fileContents) => {
+            const parsed = JSON.parse(fileContents) as JsonObject;
+            if (!isJsonObject(parsed)) {
+              throw new Error("Invalid JSON format");
+            }
+            updateModelFromJson(
+              this.item,
+              CommonStrata.user,
+              parsed,
+              true
+            ).raiseError(this.item.terria, {
+              title: i18next.t("models.tableStyling.importUserStyleFailed")
+            });
+
+            this.setColorSchemeTypeFromPalette();
+          })
+          .catch((e) => {
+            TerriaError.from(e).raiseError(this.item.terria, {
+              title: i18next.t("models.tableStyling.importUserStyleFailed")
+            });
+          });
+      };
+
+      input.click();
+    } catch (e) {
+      TerriaError.from(e).raiseError(this.item.terria, {
+        title: i18next.t("models.tableStyling.importUserStyleFailed")
+      });
+    }
+  }
+
+  private exportUserStyleToJsonFile() {
+    const userStyleJson = JSON.stringify(this.getCatalogStyleStrata(), null, 2);
+    try {
+      const rawFileNameBase =
+        this.item.uniqueId ?? this.tableStyle.id ?? "table-style";
+      const fileNameBase = (
+        rawFileNameBase.split(/[\\/]/).pop() ?? rawFileNameBase
+      )
+        .split(/[?#]/)[0]
+        .replace(/\.[^/.]+$/, "");
+      const safeFileNameBase =
+        fileNameBase
+          .replace(/[^a-zA-Z0-9_.-]+/g, "_")
+          .replace(/^_+|_+$/g, "") || "table-style";
+      const blob = new Blob([userStyleJson], {
+        type: "application/json;charset=utf-8"
+      });
+      const downloadUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = downloadUrl;
+      anchor.download = `${safeFileNameBase}-user-style.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (e) {
+      TerriaError.from(e).raiseError(
+        this.item.terria,
+        "Failed to save user style JSON file. User stratum should be printed to console."
+      );
+    }
+  }
+
+  private getCatalogStyleStrata(): {
+    activeStyle: string;
+    styles: JsonObject[];
+  } {
+    const activeStyle = this.tableStyle.id;
+    const mergedStyle = this.getMergedStyleTraitsJson(activeStyle);
+
+    return {
+      activeStyle,
+      styles: [
+        {
+          id: activeStyle,
+          ...mergedStyle
+        }
+      ]
+    };
+  }
+
+  private getMergedStyleTraitsJson(styleId: string): JsonObject {
+    const style = this.item.styles?.find((s) => s.id === styleId);
+    const defaultStyle = this.item.defaultStyle;
+
+    const result: JsonObject = {};
+    const mergeCustomizer = (_objValue: any, srcValue: any) => {
+      if (Array.isArray(srcValue)) return srcValue;
+      return undefined;
+    };
+
+    const stratumIds = Array.from(this.item.strata.keys());
+    stratumIds.forEach((stratumId) => {
+      const defaultStyleStratum = defaultStyle?.strata.get(stratumId);
+      if (defaultStyleStratum) {
+        mergeWith(
+          result,
+          saveStratumToJson(
+            defaultStyle.traits,
+            defaultStyleStratum
+          ) as JsonObject,
+          mergeCustomizer
+        );
+      }
+
+      const styleStratum = style?.strata.get(stratumId);
+      if (style && styleStratum) {
+        mergeWith(
+          result,
+          saveStratumToJson(style.traits, styleStratum) as JsonObject,
+          mergeCustomizer
+        );
+      }
+    });
+
+    delete result.hidden;
+    return result;
   }
 
   /**

@@ -1137,7 +1137,11 @@
       "3dTypeIn2dMode": "**Nota:** Questo set di dati non può essere visualizzato nel visualizzatore 2D. Passa a una delle modalità di mappa 3D."
     },
     "tableStyling": {
-      "showAdvancedOptions": "Mostra opzioni avanzate"
+      "showAdvancedOptions": "Mostra opzioni avanzate",
+      "manageUserStyle": "Gestisci stile utente",
+      "exportUserStyle": "Esporta stile utente",
+      "importUserStyle": "Importa stile utente",
+      "importUserStyleFailed": "Importazione dello stile utente JSON non riuscita"
     }
   },
   "map": {
