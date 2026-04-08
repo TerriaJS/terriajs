@@ -4,9 +4,6 @@ on:
     branches:
       - main
 
-env:
-  NPM_TAG: latest
-
 concurrency:
   group: npm-publish
   cancel-in-progress: false
@@ -39,6 +36,14 @@ jobs:
             echo "TerriaJS $LOCAL_VERSION is not published yet, proceeding with publish"
             echo "version=$LOCAL_VERSION" >> "$GITHUB_OUTPUT"
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
+
+            if [[ "$LOCAL_VERSION" == *"-"* ]]; then
+              NPM_TAG=$(echo "$LOCAL_VERSION" | sed 's/[^-]*-\([^.]*\).*/\1/')
+            else
+              NPM_TAG="latest"
+            fi
+            echo "NPM tag to use: $NPM_TAG"
+            echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Set up Node.js for NPM
@@ -78,7 +83,7 @@ jobs:
 
       - name: Publish package to NPM
         if: steps.detect.outputs.should_publish == 'true'
-        run: npm publish --tag ${NPM_TAG}
+        run: npm publish --tag ${{ steps.detect.outputs.npm_tag }}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
           NODE_AUTH_TOKEN: ""
