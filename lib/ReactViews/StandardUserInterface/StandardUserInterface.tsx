@@ -45,6 +45,7 @@ import { terriaTheme } from "./StandardTheme";
 import MeasurablePanel from "../MeasurableGeometry/MeasurablePanel";
 import MeasurableDownloadPanel from "../MeasurableGeometry/MeasurableDownloadPanel";
 import PlayPathPanel from "../MeasurableGeometry/PlayPathPanel";
+import MicrozonationPanel from "../Microzonation/MicrozonationPanel";
 import QueryWindow from "../QueryWindow/QueryWindow";
 import { MessageModal } from "../MessageModal/MessageModal";
 import ViewshedPanel from "../Viewshed/ViewshedPanel";
@@ -142,6 +143,10 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
     const showStoryBuilder =
       props.viewState.storyBuilderShown &&
       !props.viewState.useSmallScreenInterface;
+    const showMicrozonationPanel =
+      props.viewState.microzonationPanelShown &&
+      !props.viewState.useSmallScreenInterface &&
+      props.terria.configParameters?.microzonationEnabled;
     const showStoryPanel =
       props.terria.configParameters.storyEnabled &&
       props.terria.stories.length > 0 &&
@@ -315,6 +320,12 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
             <StoryBuilder
               isVisible={showStoryBuilder}
+              animationDuration={animationDuration}
+            />
+          )}
+          {showMicrozonationPanel && (
+            <MicrozonationPanel
+              isVisible={showMicrozonationPanel}
               animationDuration={animationDuration}
             />
           )}

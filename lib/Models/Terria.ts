@@ -190,6 +190,21 @@ export interface ConfigParameters {
    * Whether the story is enabled. If false story function button won't be available.
    */
   storyEnabled: boolean;
+
+  /**
+   * Enables seismic microzonation panel.
+   */
+  microzonationEnabled?: boolean;
+
+  /**
+   * WFS configuration for the seismic microzonation service.
+   */
+  microzonationConfig?: {
+    url: string;
+    typeName: string;
+    outputFormat?: string;
+  };
+
   /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
@@ -662,6 +677,8 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
+    microzonationEnabled: false,
+    microzonationConfig: undefined,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,

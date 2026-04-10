@@ -14,6 +14,8 @@ import ColorPanel from "../Panels/ColorPanel/ColorPanel";
 import LoginButton from "./LoginButton/LoginButton";
 import StoryButton from "./StoryButton/StoryButton";
 import HelpButton from "./HelpButton/HelpButton";
+import EmergencyPlansButton from "./EmergencyPlansButton/EmergencyPlansButton";
+import MicrozonationButton from "./MicrozonationButton/MicrozonationButton";
 import Styles from "./menu-bar.scss";
 
 const StyledMenuBar = styled.div`
@@ -36,6 +38,7 @@ const MenuBar = observer((props) => {
   };
 
   const storyEnabled = terria.configParameters.storyEnabled;
+  const microzonationEnabled = terria.configParameters?.microzonationEnabled;
   const loginEnabled = terria.configParameters.userProfileLoginServiceUrl;
   const enableTools = terria.userProperties.get("tools") === "1";
 
@@ -96,6 +99,24 @@ const MenuBar = observer((props) => {
           <ul className={classNames(Styles.menu)}>
             <li className={Styles.menuItem}>
               <StoryButton
+                terria={terria}
+                viewState={viewState}
+                theme={props.theme}
+              />
+            </li>
+          </ul>
+        )}
+        {microzonationEnabled && (
+          <ul className={classNames(Styles.menu)}>
+            <li className={Styles.menuItem}>
+              <MicrozonationButton
+                terria={terria}
+                viewState={viewState}
+                theme={props.theme}
+              />
+            </li>
+            <li className={Styles.menuItem}>
+              <EmergencyPlansButton
                 terria={terria}
                 viewState={viewState}
                 theme={props.theme}
