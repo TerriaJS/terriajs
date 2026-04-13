@@ -683,7 +683,7 @@ export default class Terria {
 
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
-          this.applyConfig(config.parameters);
+          this.updateConfig(config.parameters);
         }
         this.setupInitializationUrls(baseUri, config);
       });
@@ -985,7 +985,7 @@ export default class Terria {
   }
 
   @action
-  applyConfig(config: Partial<ConfigParameters>): void {
+  updateConfig(config: Partial<ConfigParameters>): void {
     this.configParameters.apply(config);
   }
 
