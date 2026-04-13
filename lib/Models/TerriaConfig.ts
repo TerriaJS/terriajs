@@ -16,11 +16,11 @@ export interface ConfigParameters {
    * TerriaJS uses this name whenever it needs to display the name of the
    * application.
    */
-  appName?: string;
+  appName: string | undefined;
   /**
    * The email address shown when things go wrong.
    */
-  supportEmail?: string;
+  supportEmail: string | undefined;
   /**
    * The maximum number of "feature info" boxes that can be displayed when
    * clicking a point.
@@ -29,12 +29,12 @@ export interface ConfigParameters {
   /**
    * URL of the JSON file that contains index of catalog.
    */
-  catalogIndexUrl?: string;
+  catalogIndexUrl: string | undefined;
   /**
    * **Deprecated** - please use regionMappingDefinitionsUrls array instead. If
    * this is defined, it will override `regionMappingDefinitionsUrls`
    */
-  regionMappingDefinitionsUrl?: string | undefined;
+  regionMappingDefinitionsUrl: string | undefined;
   /**
    * URLs of the JSON file that defines region mapping for CSV files. First
    * matching region will be used (in array order)
@@ -43,22 +43,22 @@ export interface ConfigParameters {
   /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */
-  proj4ServiceBaseUrl?: string;
+  proj4ServiceBaseUrl: string | undefined;
   /**
    * URL of CORS proxy service (part of TerriaJS-Server)
    */
-  corsProxyBaseUrl?: string;
+  corsProxyBaseUrl: string | undefined;
   /**
    * @deprecated
    */
-  proxyableDomainsUrl?: string;
-  serverConfigUrl?: string;
-  shareUrl?: string;
+  proxyableDomainsUrl: string | undefined;
+  serverConfigUrl: string | undefined;
+  shareUrl: string | undefined;
   /**
    * URL of the service used to send feedback.  If not specified, the "Give
    * Feedback" button will not appear.
    */
-  feedbackUrl?: string;
+  feedbackUrl: string | undefined;
   /**
    * An array of base paths to use to try to use to resolve init fragments in
    * the URL.  For example, if this property is `[ "init/",
@@ -76,50 +76,50 @@ export interface ConfigParameters {
    * Whether to show the saving instructions message in the story builder panel.
    * Defaults to false.
    */
-  showStorySaveInstructions?: boolean;
+  showStorySaveInstructions: boolean | undefined;
   /**
    * True (the default) to intercept the browser's print feature and use a
    * custom one accessible through the Share panel.
    */
-  interceptBrowserPrint?: boolean;
+  interceptBrowserPrint: boolean | undefined;
   /**
    * True to create a separate explorer panel tab for each top-level catalog
    * group to list its items in.
    */
-  tabbedCatalog?: boolean;
+  tabbedCatalog: boolean | undefined;
   /**
    * True to use Cesium World Terrain from Cesium ion. False to use terrain from
    * the URL specified with the `"cesiumTerrainUrl"` property. If this property
    * is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a
    * smooth ellipsoid instead of a terrain surface. Defaults to true.
    */
-  useCesiumIonTerrain?: boolean;
+  useCesiumIonTerrain: boolean | undefined;
   /**
    * The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized
    * mesh format. This property is ignored if "useCesiumIonTerrain" is set to
    * true.
    */
-  cesiumTerrainUrl?: string;
+  cesiumTerrainUrl: string | undefined;
   /**
    * The Cesium Ion Asset ID to use for Cesium terrain in the 3D Terrain viewer.
    * `cesiumIonAccessToken` will be used to authenticate. This property is
    * ignored if "useCesiumIonTerrain" is set to true.
    */
-  cesiumTerrainAssetId?: number;
+  cesiumTerrainAssetId: number | undefined;
   /**
    * The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true
    * and this property is not specified, the Cesium default Ion key will be
    * used. It is a violation of the Ion terms of use to use the default key in a
    * deployed application.
    */
-  cesiumIonAccessToken?: string;
+  cesiumIonAccessToken: string | undefined;
   /**
    * True to use Bing Maps from Cesium ion (Cesium World Imagery). By default,
    * Ion will be used, unless the `bingMapsKey` property is specified, in which
    * case that will be used instead. To disable the Bing Maps layers entirely,
    * set this property to false and set `bingMapsKey` to null.
    */
-  useCesiumIonBingImagery?: boolean;
+  useCesiumIonBingImagery: boolean | undefined;
   /**
    * The OAuth2 application ID to use to allow login to Cesium ion on the "Add
    * Data" panel. The referenced application must be configured on Cesium ion
@@ -129,7 +129,7 @@ export interface ConfigParameters {
    * Redirect URI must be exactly
    * `https://example.com/AwesomeMap/build/TerriaJS/cesium-ion-oauth2.html`.
    */
-  cesiumIonOAuth2ApplicationID?: number;
+  cesiumIonOAuth2ApplicationID: number | undefined;
   /**
    * Specifies where to store the Cesium ion login token. Valid values are:
    *   - `page` (default) - The login token is associated with the current page
@@ -142,7 +142,7 @@ export interface ConfigParameters {
    *     hosted on the same domain, even when running in different tabs or after
    *     exiting and restarted the web browser.
    */
-  cesiumIonLoginTokenPersistence?: string;
+  cesiumIonLoginTokenPersistence: string | undefined;
   /**
    * Whether or not Cesium ion assets added via the "Add Data" panel will be
    * shared with others via share links. If true, users will be asked to select
@@ -151,7 +151,7 @@ export interface ConfigParameters {
    * (the default), the user's login token will be used, which is safe because
    * this token will not be shared with others.
    */
-  cesiumIonAllowSharingAddedAssets?: boolean;
+  cesiumIonAllowSharingAddedAssets: boolean | undefined;
   /**
    * A [Bing Maps API
    * key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for
@@ -159,56 +159,56 @@ export interface ConfigParameters {
    * searching. It is your responsibility to request a key and comply with all
    * terms and conditions.
    */
-  bingMapsKey?: string;
-  hideTerriaLogo?: boolean;
+  bingMapsKey: string | undefined;
+  hideTerriaLogo: boolean | undefined;
   /**
    * An array of strings of HTML that fill up the top left logo space (see
    * `brandBarSmallElements` or `displayOneBrand` for small screens).
    */
-  brandBarElements?: string[];
+  brandBarElements: string[] | undefined;
   /**
    * An array of strings of HTML that fill up the top left logo space - used for
    * small screens.
    */
-  brandBarSmallElements?: string[];
+  brandBarSmallElements: string[] | undefined;
   /**
    * Index of which `brandBarElements` to show for mobile header. This will be
    * used if `this.brandBarSmallElements` is undefined.
    */
-  displayOneBrand?: number;
+  displayOneBrand: number | undefined;
   /**
    * True to disable the "Centre map at your current location" button.
    */
-  disableMyLocation?: boolean;
-  disableSplitter?: boolean;
+  disableMyLocation: boolean | undefined;
+  disableSplitter: boolean | undefined;
 
-  disablePedestrianMode?: boolean;
+  disablePedestrianMode: boolean | undefined;
 
-  experimentalFeatures?: boolean;
-  magdaReferenceHeaders?: MagdaReferenceHeaders;
-  locationSearchBoundingBox?: number[];
+  experimentalFeatures: boolean | undefined;
+  magdaReferenceHeaders: MagdaReferenceHeaders | undefined;
+  locationSearchBoundingBox: number[] | undefined;
   /**
    * A Google API key for [Google Analytics](https://analytics.google.com).  If
    * specified, TerriaJS will send various events about how it's used to Google
    * Analytics.
    */
-  googleAnalyticsKey?: string;
+  googleAnalyticsKey: string | undefined;
 
   /**
    * Options for Google Analytics
    */
-  googleAnalyticsOptions?: unknown;
+  googleAnalyticsOptions: unknown | undefined;
 
   /**
    * Error service provider configuration.
    */
-  errorService?: ErrorServiceOptions;
+  errorService: ErrorServiceOptions | undefined;
 
-  globalDisclaimer?: any;
+  globalDisclaimer: any | undefined;
   /**
    * True to display welcome message on startup.
    */
-  showWelcomeMessage?: boolean;
+  showWelcomeMessage: boolean | undefined;
 
   // TODO: make themeing TS
   /** Theme overrides, this is applied in StandardUserInterface and merged in
@@ -216,28 +216,28 @@ export interface ConfigParameters {
    *  prop -> `theme` config parameter (this object) -> default `terriaTheme`
    *  (see `StandardTheme.jsx`)
    */
-  theme?: any;
+  theme: any | undefined;
   /**
    * Video to show in welcome message.
    */
-  welcomeMessageVideo?: any;
+  welcomeMessageVideo: any | undefined;
   /**
    * Video to show in Story Builder.
    */
-  storyVideo?: StoryVideoSettings;
+  storyVideo: StoryVideoSettings | undefined;
   /**
    * True to display in-app guides.
    */
-  showInAppGuides?: boolean;
+  showInAppGuides: boolean | undefined;
   /**
    * The content to be displayed in the help panel.
    */
-  helpContent?: HelpContentItem[];
-  helpContentTerms?: Term[];
+  helpContent: HelpContentItem[] | undefined;
+  helpContentTerms: Term[] | undefined;
   /**
    *
    */
-  languageConfiguration?: LanguageConfiguration;
+  languageConfiguration: LanguageConfiguration | undefined;
   /**
    * Custom concurrent request limits for domains in Cesium's RequestScheduler.
    * Cesium's default is 6 per domain (the maximum allowed by browsers unless
@@ -246,74 +246,74 @@ export interface ConfigParameters {
    * prioritised request scheduling and important data may load slower. Format
    * is {"domain_without_protocol:port": number}.
    */
-  customRequestSchedulerLimits?: Record<string, number>;
+  customRequestSchedulerLimits: Record<string, number> | undefined;
 
   /**
    * Whether to load persisted viewer mode from local storage.
    */
-  persistViewerMode?: boolean;
+  persistViewerMode: boolean | undefined;
 
   /**
    * Whether to open the add data explorer panel on load.
    */
-  openAddData?: boolean;
+  openAddData: boolean | undefined;
 
   /**
    * Text showing at the top of feedback form.
    */
-  feedbackPreamble?: string;
+  feedbackPreamble: string | undefined;
 
   /**
    * Text showing at the bottom of feedback form.
    */
-  feedbackPostamble?: string;
+  feedbackPostamble: string | undefined;
   /**
    * Minimum length of feedback comment.
    */
-  feedbackMinLength?: number;
+  feedbackMinLength: number | undefined;
 
   /** Maximum zoom level for Leaflet map */
   leafletMaxZoom: number;
 
   /** If undefined, then Leaflet's default attribution will be used */
-  leafletAttributionPrefix?: string;
+  leafletAttributionPrefix: string | undefined;
 
   /**
    * Extra links to show in the credit line at the bottom of the map (currently
    * only the Cesium map).
    */
-  extraCreditLinks?: ICredit[];
+  extraCreditLinks: ICredit[] | undefined;
 
   /**
    * Configurable discalimer that shows up in print view
    */
-  printDisclaimer?: { url: string; text: string };
+  printDisclaimer: { url: string; text: string } | undefined;
 
   /**
    * Prefix to which `:story-id` is added to fetch JSON for stories when using
    * /story/:story-id routes. Should end in /
    */
-  storyRouteUrlPrefix?: string;
+  storyRouteUrlPrefix: string | undefined;
 
   /**
    * For Console Analytics
    */
-  enableConsoleAnalytics?: boolean;
+  enableConsoleAnalytics: boolean | undefined;
 
-  relatedMaps?: RelatedMap[];
+  relatedMaps: RelatedMap[] | undefined;
 
   /**
    * Optional plugin configuration
    */
-  plugins?: Record<string, any>;
+  plugins: Record<string, any> | undefined;
 
-  aboutButtonHrefUrl?: string | null;
+  aboutButtonHrefUrl: string | null | undefined;
 
   /**
    * The search bar allows requesting information from various search services
    * at once.
    */
-  searchBarConfig?: ModelPropertiesFromTraits<SearchBarTraits>;
+  searchBarConfig: ModelPropertiesFromTraits<SearchBarTraits> | undefined;
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 
   /**
@@ -334,7 +334,7 @@ export interface ConfigParameters {
  * config.apply(parseHashParams(location.hash));
  * config.apply(readLocalStorage(localStorage));
  */
-export class TerriaConfig {
+export class TerriaConfig implements ConfigParameters {
   @observable appName: string = "TerriaJS App";
   @observable supportEmail: string = "info@terria.io";
   @observable defaultMaximumShownFeatureInfos: number = 100;
