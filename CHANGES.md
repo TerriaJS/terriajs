@@ -8,6 +8,7 @@
   - Replace unmaintained jsdom-global with maintained global-jsom.
   - Upgrade babel packages to latest versions (7.28.0/7.29.0).
   - Upgrade webpack to version 5.105.4.
+- Upgrade eslint to v10 and migrate to eslint flat config.
 
 #### 8.12.2 - 2026-03-27
 
