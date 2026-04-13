@@ -728,7 +728,7 @@ describe("TerriaSpec", function () {
       beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with browser runner
-        terria.applyConfig({
+        terria.updateConfig({
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
 
@@ -1859,18 +1859,18 @@ describe("TerriaSpec", function () {
 
   describe("applyConfig()", function () {
     it("applies known config parameters", function () {
-      terria.applyConfig({ appName: "MyMap" });
+      terria.updateConfig({ appName: "MyMap" });
       expect(terria.appName).toBe("MyMap");
     });
 
     it("updates configParameters properties", function () {
-      terria.applyConfig({ supportEmail: "help@example.com" });
+      terria.updateConfig({ supportEmail: "help@example.com" });
       expect(terria.configParameters.supportEmail).toBe("help@example.com");
     });
 
     it("ignores unknown keys", function () {
       expect(() =>
-        terria.applyConfig({ unknownKey: "value" } as any)
+        terria.updateConfig({ unknownKey: "value" } as any)
       ).not.toThrow();
     });
   });
