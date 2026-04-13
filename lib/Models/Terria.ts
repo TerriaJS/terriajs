@@ -112,8 +112,6 @@ import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import { defaultLoadConfig } from "./defaultLoadConfig";
 
-export type { ConfigParameters } from "./TerriaConfig";
-
 /** Keep export for experimentation */
 export { defaultLoadConfig };
 
