@@ -111,8 +111,6 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
-export type { ConfigParameters } from "./TerriaConfig";
-
 interface StartOptions {
   configUrl: string;
   configUrlHeaders?: {
