@@ -10,6 +10,7 @@ const PrintViewMap = (props: Props) => {
   const [isError, setError] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMap(null);
     props.screenshot.then(setMap).catch(() => setError(true));
   }, [props.screenshot]);

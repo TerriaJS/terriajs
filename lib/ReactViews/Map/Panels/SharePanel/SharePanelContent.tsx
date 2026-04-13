@@ -46,6 +46,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
     });
   }, [terria]);
 
+  // eslint-disable-next-line react-hooks/refs
+  const shareUrl = shareUrlRef?.current;
+
   return (
     <Box paddedRatio={3} column>
       <Text semiBold medium>
@@ -89,7 +92,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       <Spacing bottom={4} />
       <PrintSection viewState={viewState} />
       <Spacing bottom={4} />
-      <EmbedSection shareUrl={shareUrlRef?.current} />
+      <EmbedSection shareUrl={shareUrl} />
     </Box>
   );
 };

@@ -171,6 +171,7 @@ export function getFont(obj: any, fontSubMap: Record<string, FontSub>) {
   }
   if (text_size.stops) {
     let base = 1.4;
+    // eslint-disable-next-line no-useless-assignment
     if (text_size.base) base = text_size.base;
     else text_size.base = base;
     const t = numberFn(text_size);
