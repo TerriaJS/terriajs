@@ -973,7 +973,7 @@ export default class Terria {
 
   @action
   updateConfig(config: Partial<ConfigParameters>): void {
-    this.configParameters.apply(config);
+    this.configParameters.update(config);
   }
 
   protected async forceLoadInitSources(): Promise<void> {

@@ -437,7 +437,7 @@ export class TerriaConfig implements ConfigParameters {
    * existing values.
    */
   @action
-  apply(partial: Partial<ConfigParameters>): void {
+  update(partial: Partial<ConfigParameters>): void {
     (Object.entries(partial) as [keyof ConfigParameters, unknown][]).forEach(
       ([key, value]) => {
         if (key in this && value !== undefined) {

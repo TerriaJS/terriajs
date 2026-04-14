@@ -33,10 +33,10 @@ describe("TerriaConfig", function () {
     });
   });
 
-  describe("apply config", function () {
+  describe("update config", function () {
     it("updates only the specified fields, leaving others at default", function () {
       const config = new TerriaConfig();
-      config.apply({ appName: "My App" });
+      config.update({ appName: "My App" });
 
       expect(config.appName).toBe("My App");
       expect(config.supportEmail).toBe("info@terria.io"); // default unchanged
@@ -44,29 +44,29 @@ describe("TerriaConfig", function () {
 
     it("does not overwrite existing value when undefined is applied", function () {
       const config = new TerriaConfig();
-      config.apply({ appName: undefined });
+      config.update({ appName: undefined });
 
       expect(config.appName).toBe("TerriaJS App");
     });
 
     it("uses last value when the same field is applied twice", function () {
       const config = new TerriaConfig();
-      config.apply({ appName: "First" });
-      config.apply({ appName: "Second" });
+      config.update({ appName: "First" });
+      config.update({ appName: "Second" });
 
       expect(config.appName).toBe("Second");
     });
 
     it("silently ignores unknown keys", function () {
       const config = new TerriaConfig();
-      expect(() => config.apply({ unknownKey: "value" } as any)).not.toThrow();
+      expect(() => config.update({ unknownKey: "value" } as any)).not.toThrow();
       expect((config as any).unknownKey).toBeUndefined();
     });
 
     it("accumulates multiple sequential applies", function () {
       const config = new TerriaConfig();
-      config.apply({ appName: "My App" });
-      config.apply({ supportEmail: "support@example.com" });
+      config.update({ appName: "My App" });
+      config.update({ supportEmail: "support@example.com" });
 
       expect(config.appName).toBe("My App");
       expect(config.supportEmail).toBe("support@example.com");
@@ -74,7 +74,7 @@ describe("TerriaConfig", function () {
 
     it("can override array fields", function () {
       const config = new TerriaConfig();
-      config.apply({ initFragmentPaths: ["custom/", "fallback/"] });
+      config.update({ initFragmentPaths: ["custom/", "fallback/"] });
 
       expect(config.initFragmentPaths).toEqual(["custom/", "fallback/"]);
     });
