@@ -33,6 +33,7 @@
 - Deprecate MagdaReference model from terria core, as we are not aware of any implementations using it. If you need this model please reach out to the Terria team to discuss your use case and alternatives.
 - Drop support for loading magda config by default - If you need support for loading magda config, you can provide your own implementation of loadConfig function and load magda config in it.
 - Extract Terria config parameters from `Terria` class in a separate `TerriaConfig` data store. Config parameters can be update using new `applyConfig` method on `Terria` class, while previous `updateParameters` method is now removed. ([7819](https://github.com/TerriaJS/terriajs/pull/7819))
+- Extract Terria config parameters from `Terria` class in a separate `TerriaConfig` data store. Config parameters can be update using new `updateConfig` method on `Terria` class, while previous `updateParameters` method is now removed. ([7819](https://github.com/TerriaJS/terriajs/pull/7819))
 
 #### 8.12.2 - 2026-03-27
 
