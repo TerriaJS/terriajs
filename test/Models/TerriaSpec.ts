@@ -1857,7 +1857,7 @@ describe("TerriaSpec", function () {
     });
   });
 
-  describe("applyConfig()", function () {
+  describe("updateConfig()", function () {
     it("applies known config parameters", function () {
       terria.updateConfig({ appName: "MyMap" });
       expect(terria.appName).toBe("MyMap");

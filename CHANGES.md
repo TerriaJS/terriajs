@@ -9,7 +9,7 @@
   - Upgrade babel packages to latest versions (7.28.0/7.29.0).
   - Upgrade webpack to version 5.105.4.
 - Upgrade eslint to v10 and migrate to eslint flat config.
-- Extract Terria config parameters from `Terria` class in a separate `TerriaConfig` data store. Config parameters can be update using new `applyConfig` method on `Terria` class, while previous `updateParameters` method is now removed. ([7819](https://github.com/TerriaJS/terriajs/pull/7819))
+- Extract Terria config parameters from `Terria` class in a separate `TerriaConfig` data store. Config parameters can be update using new `updateConfig` method on `Terria` class, while previous `updateParameters` method is now removed. ([7819](https://github.com/TerriaJS/terriajs/pull/7819))
 
 #### 8.12.2 - 2026-03-27
 
