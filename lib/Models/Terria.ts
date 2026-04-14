@@ -1696,10 +1696,7 @@ export default class Terria {
     });
   }
 
-  async initCorsProxy(
-    config: ConfigParameters,
-    serverConfig: any
-  ): Promise<void> {
+  async initCorsProxy(config: TerriaConfig, serverConfig: any): Promise<void> {
     if (config.proxyableDomainsUrl) {
       console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
     }
@@ -1931,7 +1928,7 @@ async function interpretStartData(
 }
 
 function setCustomRequestSchedulerDomainLimits(
-  customDomainLimits: ConfigParameters["customRequestSchedulerLimits"]
+  customDomainLimits: TerriaConfig["customRequestSchedulerLimits"]
 ) {
   if (isDefined(customDomainLimits)) {
     Object.entries(customDomainLimits).forEach(([domain, limit]) => {
