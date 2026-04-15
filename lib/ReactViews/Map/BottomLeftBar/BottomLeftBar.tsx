@@ -9,7 +9,6 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Icon from "../../../Styled/Icon";
 import Text from "../../../Styled/Text";
-import MapDataCount from "../../BottomDock/MapDataCount";
 import { useViewState } from "../../Context";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import MapIconButton from "../../MapIconButton/MapIconButton";
@@ -64,11 +63,6 @@ const BottomLeftBar: FC = observer(() => {
 
   return (
     <BottomLeftContainer theme={theme} css={"left: 2%; margin-bottom: 1%"}>
-      <MapDataCount
-        terria={viewState.terria}
-        viewState={viewState}
-        elementConfig={viewState.terria.elements.get("map-data-count")}
-      />
       {shouldShowPlayStoryButton(viewState) ? (
         <Box paddedHorizontally={2}>
           <MapIconButton
