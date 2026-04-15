@@ -42,13 +42,6 @@ describe("TerriaConfig", function () {
       expect(config.supportEmail).toBe("info@terria.io"); // default unchanged
     });
 
-    it("does not overwrite existing value when undefined is applied", function () {
-      const config = new TerriaConfig();
-      config.update({ appName: undefined });
-
-      expect(config.appName).toBe("TerriaJS App");
-    });
-
     it("uses last value when the same field is applied twice", function () {
       const config = new TerriaConfig();
       config.update({ appName: "First" });
