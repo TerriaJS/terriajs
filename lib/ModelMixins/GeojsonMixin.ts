@@ -1299,6 +1299,15 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
         }
 
         // Billboard
+        runInAction(() => {
+          if (entity.billboard) {
+            entity.billboard.heightReference = new ConstantProperty(
+              this.clampToGround
+                ? HeightReference.CLAMP_TO_GROUND
+                : HeightReference.NONE
+            );
+          }
+        });
         if (isDefined(entity.billboard) && isDefined(styles.markerUrl)) {
           entity.billboard = new BillboardGraphics({
             image: new ConstantProperty(styles.markerUrl),
