@@ -1,5 +1,6 @@
 import { uniq } from "lodash-es";
 import { isObservableArray, runInAction } from "mobx";
+import { isJsonObject } from "../../Core/Json";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
@@ -9,17 +10,41 @@ import { BaseModel } from "./Model";
 
 export default function updateModelFromJson(
   model: BaseModel,
-  stratumName: string,
+  defaultStratumName: string,
   json: Partial<ModelJson>,
   replaceStratum: boolean = false
 ): Result<undefined> {
-  const traits = model.traits;
-
   const errors: TerriaError[] = [];
+
+  updateModelFromJsonInternal(
+    model,
+    defaultStratumName,
+    json,
+    errors,
+    replaceStratum
+  );
+
+  return new Result(
+    undefined,
+    TerriaError.combine(
+      errors,
+      `Error updating model \`${model.uniqueId}\` from JSON for stratum \`${defaultStratumName}\``
+    )
+  );
+}
+
+function updateModelFromJsonInternal(
+  model: BaseModel,
+  currentStratumName: string,
+  json: Partial<ModelJson>,
+  errors: TerriaError[],
+  replaceStratum: boolean = false
+) {
+  const traits = model.traits;
 
   runInAction(() => {
     if (replaceStratum) {
-      model.strata.set(stratumName, createStratumInstance(model));
+      model.strata.set(currentStratumName, createStratumInstance(model));
     }
 
     Object.keys(json).forEach((propertyName) => {
@@ -27,14 +52,17 @@ export default function updateModelFromJson(
         propertyName === "id" ||
         propertyName === "type" ||
         propertyName === "localId" ||
-        propertyName === "shareKeys"
+        propertyName === "shareKeys" ||
+        propertyName === "strata"
       ) {
         return;
       }
 
       const trait = traits[propertyName];
       if (trait === undefined) {
-        errors.push(
+        pushStratumError(
+          errors,
+          currentStratumName,
           new TerriaError({
             title: "Unknown property",
             message: `The property \`${propertyName}\` is not valid for type \`${
@@ -47,35 +75,79 @@ export default function updateModelFromJson(
 
       const jsonValue = json[propertyName];
       if (jsonValue === undefined) {
-        model.setTrait(stratumName, propertyName, undefined);
+        model.setTrait(currentStratumName, propertyName, undefined);
       } else {
         let newTrait = trait
-          .fromJson(model, stratumName, jsonValue)
-          .pushErrorTo(errors);
+          .fromJson(model, currentStratumName, jsonValue)
+          .pushErrorTo(
+            errors,
+            `Error updating stratum \`${currentStratumName}\``
+          );
 
         if (isDefined(newTrait)) {
           // We want to merge members of groups with the same name/id
           if (propertyName === "members") {
             newTrait = mergeWithExistingMembers(
               model,
-              stratumName,
+              currentStratumName,
               propertyName,
               newTrait
             );
           }
-          model.setTrait(stratumName, propertyName, newTrait);
+          model.setTrait(currentStratumName, propertyName, newTrait);
         }
       }
     });
   });
 
-  return new Result(
-    undefined,
-    TerriaError.combine(
+  updateNestedStrataFromJson(model, currentStratumName, json.strata, errors);
+}
+
+function updateNestedStrataFromJson(
+  model: BaseModel,
+  currentStratumName: string,
+  strata: ModelJson["strata"],
+  errors: TerriaError[]
+) {
+  if (strata === undefined) {
+    return;
+  }
+
+  if (!isJsonObject(strata, false)) {
+    pushStratumError(
       errors,
-      `Error updating model \`${model.uniqueId}\` from JSON`
-    )
-  );
+      currentStratumName,
+      new TerriaError({
+        title: "Invalid strata",
+        message: "The property `strata` must be a JSON object."
+      })
+    );
+    return;
+  }
+
+  Object.entries(strata).forEach(([nestedStratumName, nestedJson]) => {
+    if (!isJsonObject(nestedJson, false)) {
+      pushStratumError(
+        errors,
+        nestedStratumName,
+        new TerriaError({
+          title: "Invalid strata",
+          message: `The value for stratum \`${nestedStratumName}\` must be a JSON object.`
+        })
+      );
+      return;
+    }
+
+    updateModelFromJsonInternal(model, nestedStratumName, nestedJson, errors);
+  });
+}
+
+function pushStratumError(
+  errors: TerriaError[],
+  stratumName: string,
+  error: unknown
+) {
+  errors.push(TerriaError.from(error, `Error updating stratum \`${stratumName}\``));
 }
 
 function mergeWithExistingMembers(
