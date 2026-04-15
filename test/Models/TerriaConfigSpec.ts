@@ -7,6 +7,19 @@ describe("TerriaConfig", function () {
       expect(config.appName).toBe("TerriaJS App");
     });
 
+    // Viewer settings default to match former Terria observable defaults
+    it("has false default for useNativeResolution", function () {
+      expect(new TerriaConfig().useNativeResolution).toBe(false);
+    });
+
+    it("has default baseMaximumScreenSpaceError of 2", function () {
+      expect(new TerriaConfig().baseMaximumScreenSpaceError).toBe(2);
+    });
+
+    it("has undefined default for shortenShareUrls", function () {
+      expect(new TerriaConfig().shortenShareUrls).toBeUndefined();
+    });
+
     it("has the expected default supportEmail", function () {
       const config = new TerriaConfig();
       expect(config.supportEmail).toBe("info@terria.io");
@@ -56,7 +69,7 @@ describe("TerriaConfig", function () {
       expect((config as any).unknownKey).toBeUndefined();
     });
 
-    it("accumulates multiple sequential applies", function () {
+    it("accumulates multiple sequential updates", function () {
       const config = new TerriaConfig();
       config.update({ appName: "My App" });
       config.update({ supportEmail: "support@example.com" });

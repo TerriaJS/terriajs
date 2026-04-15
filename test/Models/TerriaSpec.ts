@@ -1091,8 +1091,8 @@ describe("TerriaSpec", function () {
 
       await terria.loadInitSources();
 
-      expect(terria.baseMaximumScreenSpaceError).toBe(1);
-      expect(terria.useNativeResolution).toBeTruthy();
+      expect(terria.configParameters.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.configParameters.useNativeResolution).toBeTruthy();
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(
@@ -1101,7 +1101,9 @@ describe("TerriaSpec", function () {
       );
 
       expect(terria.terrainSplitDirection).toBe(SplitDirection.LEFT);
-      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
+      expect(
+        terria.configParameters.depthTestAgainstTerrainEnabled
+      ).toBeTruthy();
     });
   });
 

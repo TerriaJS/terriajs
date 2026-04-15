@@ -409,6 +409,12 @@ export class TerriaConfig {
   @observable
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[] = [];
   @observable zoomMapOnPreviewedItem: boolean = false;
+  // Viewer settings — defaults match former Terria observable defaults
+  @observable useNativeResolution: boolean = false;
+  @observable baseMaximumScreenSpaceError: number = 2;
+  @observable shortenShareUrls: boolean | undefined = undefined;
+
+  @observable depthTestAgainstTerrainEnabled: boolean = false;
 
   constructor() {
     makeObservable(this);
