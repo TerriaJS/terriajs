@@ -211,7 +211,8 @@ export default class Cesium extends GlobeOrMap {
       ),
       scene3DOnly: true,
       shadows: true,
-      useBrowserRecommendedResolution: !this.terria.useNativeResolution,
+      useBrowserRecommendedResolution:
+        !this.terria.configParameters.useNativeResolution,
       targetFrameRate: 30
     };
 
@@ -428,7 +429,7 @@ export default class Cesium extends GlobeOrMap {
         ? this.terria.terrainSplitDirection
         : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
-        this.terria.depthTestAgainstTerrainEnabled;
+        this.terria.configParameters.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection =
           this.scene.globe.splitDirection;
@@ -438,9 +439,9 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeResolutionReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution =
-        !this.terria.useNativeResolution;
+        !this.terria.configParameters.useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
-        this.terria.baseMaximumScreenSpaceError;
+        this.terria.configParameters.baseMaximumScreenSpaceError;
     });
   }
 

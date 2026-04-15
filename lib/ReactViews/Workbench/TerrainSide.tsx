@@ -57,8 +57,8 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
     const toggleDepthTestAgainstTerrainEnabled = (event: any) => {
       event.stopPropagation();
       runInAction(() => {
-        terria.depthTestAgainstTerrainEnabled =
-          !terria.depthTestAgainstTerrainEnabled;
+        terria.configParameters.depthTestAgainstTerrainEnabled =
+          !terria.configParameters.depthTestAgainstTerrainEnabled;
       });
       terria.currentViewer.notifyRepaintRequired();
     };
@@ -70,7 +70,8 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
 
     const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
     const depthTestAgainstTerrainEnabled =
-      supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
+      supportsDepthTestAgainstTerrain &&
+      terria.configParameters.depthTestAgainstTerrainEnabled;
 
     const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
       ? t("settingPanel.terrain.showUndergroundFeatures")

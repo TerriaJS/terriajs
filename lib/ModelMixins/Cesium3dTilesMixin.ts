@@ -311,7 +311,8 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           ? this.options.maximumScreenSpaceError / 2.0
           : 8;
       this.tileset.maximumScreenSpaceError =
-        tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
+        tilesetBaseSse *
+        this.terria.configParameters.baseMaximumScreenSpaceError;
 
       this.tileset.modelMatrix = this.modelMatrix;
 

@@ -361,6 +361,12 @@ export class TerriaConfig {
     | undefined = undefined;
   @observable
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[] = [];
+  // Viewer settings — defaults match former Terria observable defaults
+  @observable useNativeResolution: boolean = false;
+  @observable baseMaximumScreenSpaceError: number = 2;
+  @observable shortenShareUrls: boolean | undefined = undefined;
+
+  @observable depthTestAgainstTerrainEnabled: boolean = false;
 
   constructor() {
     makeObservable(this);

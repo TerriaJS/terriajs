@@ -329,12 +329,14 @@ function addViewSettings(
   initSource.splitPosition = terria.splitPosition;
 
   initSource.settings = {
-    baseMaximumScreenSpaceError: terria.baseMaximumScreenSpaceError,
-    useNativeResolution: terria.useNativeResolution,
+    baseMaximumScreenSpaceError:
+      terria.configParameters.baseMaximumScreenSpaceError,
+    useNativeResolution: terria.configParameters.useNativeResolution,
     alwaysShowTimeline: terria.timelineStack.alwaysShowingTimeline,
     baseMapId: viewer.baseMap?.uniqueId,
     terrainSplitDirection: terria.terrainSplitDirection,
-    depthTestAgainstTerrainEnabled: terria.depthTestAgainstTerrainEnabled
+    depthTestAgainstTerrainEnabled:
+      terria.configParameters.depthTestAgainstTerrainEnabled
   };
 
   if (isDefined(viewState)) {
