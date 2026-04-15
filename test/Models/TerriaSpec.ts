@@ -728,7 +728,7 @@ describe("TerriaSpec", function () {
       beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with browser runner
-        terria.updateParameters({
+        terria.updateConfig({
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
 
@@ -1854,6 +1854,24 @@ describe("TerriaSpec", function () {
         expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(9.3557);
         expect(height).toBeCloseTo(591140.7251);
       });
+    });
+  });
+
+  describe("updateConfig()", function () {
+    it("applies known config parameters", function () {
+      terria.updateConfig({ appName: "MyMap" });
+      expect(terria.appName).toBe("MyMap");
+    });
+
+    it("updates configParameters properties", function () {
+      terria.updateConfig({ supportEmail: "help@example.com" });
+      expect(terria.configParameters.supportEmail).toBe("help@example.com");
+    });
+
+    it("ignores unknown keys", function () {
+      expect(() =>
+        terria.updateConfig({ unknownKey: "value" } as any)
+      ).not.toThrow();
     });
   });
 });

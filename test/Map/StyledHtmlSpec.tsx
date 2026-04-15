@@ -43,7 +43,7 @@ describe("StyledHtml", function () {
         content: "data that is spatial, spluh"
       };
       runInAction(() => {
-        terria.updateParameters({
+        terria.updateConfig({
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
