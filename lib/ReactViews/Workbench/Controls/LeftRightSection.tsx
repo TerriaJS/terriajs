@@ -70,7 +70,7 @@ const LeftRightSection: FC<ILeftRightSection> = observer(
       !hasTraits(item, SplitterTraits, "splitDirection") ||
       item.disableSplitter ||
       !defined(splitDirection) ||
-      !item.terria.showSplitter
+      !item.terria.configParameters.showSplitter
     ) {
       return null;
     }

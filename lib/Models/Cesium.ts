@@ -425,8 +425,9 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.cesiumWidget.terrainProvider = this.terrainProvider;
-      this.scene.globe.splitDirection = this.terria.showSplitter
-        ? this.terria.terrainSplitDirection
+      this.scene.globe.splitDirection = this.terria.configParameters
+        .showSplitter
+        ? this.terria.configParameters.terrainSplitDirection
         : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.configParameters.depthTestAgainstTerrainEnabled;
@@ -996,14 +997,14 @@ export default class Cesium extends GlobeOrMap {
   _reactToSplitterChanges() {
     const disposeSplitPositionChange = autorun(() => {
       if (this.scene) {
-        this.scene.splitPosition = this.terria.splitPosition;
+        this.scene.splitPosition = this.terria.configParameters.splitPosition;
         this.notifyRepaintRequired();
       }
     });
 
     const disposeSplitDirectionChange = autorun(() => {
       const items = this.terriaViewer.items.get();
-      const showSplitter = this.terria.showSplitter;
+      const showSplitter = this.terria.configParameters.showSplitter;
       items.forEach((item) => {
         if (
           MappableMixin.isMixedInto(item) &&
@@ -1648,7 +1649,7 @@ export default class Cesium extends GlobeOrMap {
               });
 
               if (
-                this.terria.showSplitter &&
+                this.terria.configParameters.showSplitter &&
                 isDefined(result.pickPosition) &&
                 ignoreSplitter === false
               ) {
@@ -1772,7 +1773,7 @@ export default class Cesium extends GlobeOrMap {
 
           // If we're using the splitter, draw the split position as a vertical white line.
           let canvas = cesiumCanvas;
-          if (this.terria.showSplitter) {
+          if (this.terria.configParameters.showSplitter) {
             canvas = document.createElement("canvas");
             canvas.width = cesiumCanvas.width;
             canvas.height = cesiumCanvas.height;
@@ -1781,7 +1782,8 @@ export default class Cesium extends GlobeOrMap {
             if (context !== undefined && context !== null) {
               context.drawImage(cesiumCanvas, 0, 0);
 
-              const x = this.terria.splitPosition * cesiumCanvas.width;
+              const x =
+                this.terria.configParameters.splitPosition * cesiumCanvas.width;
               context.strokeStyle = this.terria.baseMapContrastColor;
               context.beginPath();
               context.moveTo(x, 0);

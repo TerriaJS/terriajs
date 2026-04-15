@@ -55,7 +55,7 @@ class WorkbenchList extends Component<IProps> {
         column
         flex="1"
       >
-        {this.props.terria.showSplitter && (
+        {this.props.terria.configParameters.showSplitter && (
           <WorkbenchSplitScreen terria={this.props.terria} />
         )}
         <Sortable

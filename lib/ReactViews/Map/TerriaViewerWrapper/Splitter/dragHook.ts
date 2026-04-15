@@ -1,4 +1,3 @@
-import { runInAction } from "mobx";
 import {
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
@@ -99,9 +98,9 @@ export const useDragHook = (
       splitFractionX = Math.min(maxX, Math.max(minX, splitFractionX));
       splitFractionY = Math.min(maxY, Math.max(minY, splitFractionY));
 
-      runInAction(() => {
-        viewState.terria.splitPosition = splitFractionX;
-        viewState.terria.splitPositionVertical = splitFractionY;
+      viewState.terria.updateConfig({
+        splitPosition: splitFractionX,
+        splitPositionVertical: splitFractionY
       });
 
       e.preventDefault();
