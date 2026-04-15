@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import type CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Box from "../../../Styled/Box";
@@ -46,9 +47,9 @@ const DataCatalogTab = observer(function DataCatalogTab(
     });
   };
 
-  const search = () => {
+  const search = useCallback(() => {
     viewState.searchState.searchCatalog();
-  };
+  }, [viewState]);
 
   return (
     <div className={Styles.root}>
@@ -59,7 +60,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
               <SearchBox
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
-                onDoSearch={() => search()}
+                onDoSearch={search}
                 placeholder={searchPlaceholder}
                 debounceDuration={
                   terria.catalogReferencesLoaded
