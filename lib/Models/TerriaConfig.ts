@@ -368,14 +368,13 @@ export class TerriaConfig {
 
   /**
    * Merges `partial` into this config. Only fields present in
-   * `ConfigParameters` are accepted; `undefined` values do not overwrite
-   * existing values.
+   * `ConfigParameters` are accepted.
    */
   @action
   update(partial: Partial<ConfigParameters>): void {
     (Object.entries(partial) as [keyof TerriaConfig, unknown][]).forEach(
       ([key, value]) => {
-        if (key in this && value !== undefined) {
+        if (key in this) {
           (this as any)[key] = value;
         }
       }
