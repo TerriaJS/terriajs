@@ -38,15 +38,21 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
       runInAction(() => {
         switch (side) {
           case sides.left:
-            terria.terrainSplitDirection = SplitDirection.LEFT;
-            terria.showSplitter = true;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.LEFT,
+              showSplitter: true
+            });
             break;
           case sides.right:
-            terria.terrainSplitDirection = SplitDirection.RIGHT;
-            terria.showSplitter = true;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.RIGHT,
+              showSplitter: true
+            });
             break;
           case sides.both:
-            terria.terrainSplitDirection = SplitDirection.NONE;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.NONE
+            });
             break;
         }
 
@@ -79,7 +85,7 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
 
     let currentSide = sides.both;
     if (isCesiumWithTerrain) {
-      switch (terria.terrainSplitDirection) {
+      switch (terria.configParameters.terrainSplitDirection) {
         case SplitDirection.LEFT:
           currentSide = sides.left;
           break;

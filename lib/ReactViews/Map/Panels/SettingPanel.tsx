@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { action } from "mobx";
+import { action, untracked } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import {
@@ -137,15 +137,22 @@ const SettingPanel: FC = observer(() => {
 
       switch (side) {
         case sides.left:
-          terria.terrainSplitDirection = SplitDirection.LEFT;
-          terria.showSplitter = true;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.LEFT,
+            showSplitter: true
+          });
           break;
         case sides.right:
-          terria.terrainSplitDirection = SplitDirection.RIGHT;
-          terria.showSplitter = true;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.RIGHT,
+            showSplitter: true
+          });
           break;
         case sides.both:
-          terria.terrainSplitDirection = SplitDirection.NONE;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.NONE,
+            showSplitter: false
+          });
           break;
       }
 
@@ -231,7 +238,7 @@ const SettingPanel: FC = observer(() => {
 
   let currentSide = sides.both;
   if (supportsSide) {
-    switch (terria.terrainSplitDirection) {
+    switch (terria.configParameters.terrainSplitDirection) {
       case SplitDirection.LEFT:
         currentSide = sides.left;
         break;

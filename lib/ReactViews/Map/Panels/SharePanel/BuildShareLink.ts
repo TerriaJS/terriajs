@@ -325,8 +325,8 @@ function addViewSettings(
   initSource.homeCamera = terria.mainViewer.homeCamera.toJson();
   initSource.viewerMode = viewerMode;
 
-  initSource.showSplitter = terria.showSplitter;
-  initSource.splitPosition = terria.splitPosition;
+  initSource.showSplitter = terria.configParameters.showSplitter;
+  initSource.splitPosition = terria.configParameters.splitPosition;
 
   initSource.settings = {
     baseMaximumScreenSpaceError:
@@ -334,7 +334,7 @@ function addViewSettings(
     useNativeResolution: terria.configParameters.useNativeResolution,
     alwaysShowTimeline: terria.timelineStack.alwaysShowingTimeline,
     baseMapId: viewer.baseMap?.uniqueId,
-    terrainSplitDirection: terria.terrainSplitDirection,
+    terrainSplitDirection: terria.configParameters.terrainSplitDirection,
     depthTestAgainstTerrainEnabled:
       terria.configParameters.depthTestAgainstTerrainEnabled
   };

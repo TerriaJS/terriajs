@@ -78,11 +78,13 @@ const DiffTool: React.FC<PropsType> = observer((props: PropsType) => {
   useEffect(() => {
     const terria = viewState.terria;
     const originalSettings = {
-      showSplitter: terria.showSplitter,
+      showSplitter: terria.configParameters.showSplitter,
       isMapFullScreen: viewState.isMapFullScreen
     };
     runInAction(() => {
-      terria.showSplitter = true;
+      terria.updateConfig({
+        showSplitter: true
+      });
       sourceItem.setTrait(CommonStrata.user, "show", false);
       terria.elements.set("timeline", { visible: false });
     });
@@ -101,7 +103,9 @@ const DiffTool: React.FC<PropsType> = observer((props: PropsType) => {
 
     return () => {
       runInAction(() => {
-        terria.showSplitter = originalSettings.showSplitter;
+        terria.updateConfig({
+          showSplitter: originalSettings.showSplitter
+        });
         viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
         sourceItem.setTrait(CommonStrata.user, "show", true);
         terria.elements.set("timeline", { visible: true });
@@ -332,7 +336,9 @@ const Main: React.FC<MainPropsType> = observer((props) => {
       if (diffItemProperties) {
         updateModelFromJson(diffItem, CommonStrata.user, diffItemProperties);
       }
-      terria.showSplitter = false;
+      terria.updateConfig({
+        showSplitter: false
+      });
     });
   }, [
     currentDiffStyle,
@@ -352,7 +358,9 @@ const Main: React.FC<MainPropsType> = observer((props) => {
       terria.overlays.add(leftItem);
       terria.overlays.add(rightItem);
       terria.workbench.remove(diffItem);
-      terria.showSplitter = true;
+      terria.updateConfig({
+        showSplitter: true
+      });
       leftItem.setTrait(
         CommonStrata.user,
         "splitDirection",

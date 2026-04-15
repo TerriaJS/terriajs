@@ -10,6 +10,7 @@ import { ErrorServiceOptions } from "./ErrorServiceProviders/ErrorService";
 import { LanguageConfiguration } from "./Internationalization";
 import { RelatedMap } from "./RelatedMaps";
 import { StoryVideoSettings } from "./StoryVideoSettings";
+import { SplitDirection } from "terriajs-cesium";
 
 type OnlyProps<T> = {
   [K in keyof T as T[K] extends (...args: never) => unknown ? never : K]: T[K];
@@ -365,6 +366,11 @@ export class TerriaConfig {
   @observable useNativeResolution: boolean = false;
   @observable baseMaximumScreenSpaceError: number = 2;
   @observable shortenShareUrls: boolean | undefined = undefined;
+
+  @observable showSplitter: boolean = false;
+  @observable splitPosition: number = 0.5;
+  @observable splitPositionVertical: number = 0.5;
+  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
 
   @observable depthTestAgainstTerrainEnabled: boolean = false;
 

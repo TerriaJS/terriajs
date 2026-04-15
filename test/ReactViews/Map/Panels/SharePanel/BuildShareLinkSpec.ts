@@ -324,7 +324,7 @@ describe("BuildShareLink", function () {
       setViewerMode("2d", terria.mainViewer);
       terria.timelineStack.setAlwaysShowTimeline(true);
       await terria.mainViewer.setBaseMap(testBaseMap);
-      terria.terrainSplitDirection = SplitDirection.LEFT;
+      terria.configParameters.terrainSplitDirection = SplitDirection.LEFT;
       terria.configParameters.depthTestAgainstTerrainEnabled = true;
 
       const shareLink = buildShareLink(terria, viewState);

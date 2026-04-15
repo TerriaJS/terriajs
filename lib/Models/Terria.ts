@@ -300,12 +300,6 @@ export default class Terria {
   @observable serverConfig: any; // TODO
   @observable shareDataService: ShareDataService | undefined;
 
-  /* Splitter controls */
-  @observable showSplitter = false;
-  @observable splitPosition = 0.5;
-  @observable splitPositionVertical = 0.5;
-  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
-
   @observable stories: StoryData[] = [];
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
@@ -1402,11 +1396,15 @@ export default class Terria {
     }
 
     if (isJsonBoolean(initData.showSplitter)) {
-      this.showSplitter = initData.showSplitter;
+      this.updateConfig({
+        showSplitter: initData.showSplitter
+      });
     }
 
     if (isJsonNumber(initData.splitPosition)) {
-      this.splitPosition = initData.splitPosition;
+      this.updateConfig({
+        splitPosition: initData.splitPosition
+      });
     }
 
     if (isJsonObject(initData.settings)) {
@@ -1420,6 +1418,10 @@ export default class Terria {
         }),
         ...(isJsonBoolean(initData.settings.shortenShareUrls) && {
           shortenShareUrls: initData.settings.shortenShareUrls as boolean
+        }),
+        ...(isJsonNumber(initData.settings.terrainSplitDirection) && {
+          terrainSplitDirection: initData.settings
+            .terrainSplitDirection as SplitDirection
         }),
         ...(isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled) && {
           depthTestAgainstTerrainEnabled: initData.settings
@@ -1437,9 +1439,6 @@ export default class Terria {
             (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
         );
-      }
-      if (isJsonNumber(initData.settings.terrainSplitDirection)) {
-        this.terrainSplitDirection = initData.settings.terrainSplitDirection;
       }
     }
 

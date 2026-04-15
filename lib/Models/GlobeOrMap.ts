@@ -205,7 +205,8 @@ export default abstract class GlobeOrMap {
       return;
     }
 
-    const splitterX = container.clientWidth * this.terria.splitPosition;
+    const splitterX =
+      container.clientWidth * this.terria.configParameters.splitPosition;
     if (position.x <= splitterX) {
       return SplitDirection.LEFT;
     } else {
