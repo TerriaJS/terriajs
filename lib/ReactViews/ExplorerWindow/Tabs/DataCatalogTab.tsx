@@ -10,6 +10,7 @@ import Breadcrumbs from "../../Search/Breadcrumbs";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox";
 import Styles from "./data-catalog-tab.scss";
 import CatalogSearchProvider from "../../../Models/SearchProviders/CatalogSearchProvider";
+import { useCallback } from "react";
 
 interface DataCatalogTabProps {
   items?: unknown[];
@@ -39,9 +40,9 @@ const DataCatalogTab = observer(function DataCatalogTab(
     });
   };
 
-  const search = () => {
+  const search = useCallback(() => {
     viewState.searchState.searchCatalog();
-  };
+  }, [viewState]);
 
   return (
     <div className={Styles.root}>
@@ -52,7 +53,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
               <SearchBox
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
-                onDoSearch={() => search()}
+                onDoSearch={search}
                 placeholder={searchPlaceholder}
                 debounceDuration={
                   terria.catalogReferencesLoaded

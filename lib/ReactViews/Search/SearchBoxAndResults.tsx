@@ -1,7 +1,7 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import { useEffect, useRef, type FC } from "react";
+import { useCallback, useEffect, useRef, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
@@ -113,9 +113,9 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
       }
     };
 
-    const search = () => {
+    const search = useCallback(() => {
       viewState.searchState.searchLocations();
-    };
+    }, [viewState]);
 
     const startLocationSearch = () => {
       toggleShowLocationSearchResults(true);

@@ -97,13 +97,13 @@ class MobileHeader extends Component {
     });
   }
 
-  searchLocations() {
+  searchLocations = () => {
     this.props.viewState.searchState.searchLocations();
-  }
+  };
 
-  searchCatalog() {
+  searchCatalog = () => {
     this.props.viewState.searchState.searchCatalog();
-  }
+  };
 
   toggleView(viewname) {
     runInAction(() => {
@@ -136,7 +136,7 @@ class MobileHeader extends Component {
           <SearchBox
             searchText={searchState.locationSearchText}
             onSearchTextChanged={this.changeLocationSearchText.bind(this)}
-            onDoSearch={this.searchLocations.bind(this)}
+            onDoSearch={this.searchLocations}
             placeholder={applyTranslationIfExists(
               viewState.terria.searchBarModel.placeholder,
               this.props.i18n
@@ -150,7 +150,7 @@ class MobileHeader extends Component {
           <SearchBox
             searchText={searchState.catalogSearchText}
             onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
-            onDoSearch={this.searchCatalog.bind(this)}
+            onDoSearch={this.searchCatalog}
             placeholder={t("search.searchCatalogue")}
             onClear={this.closeCatalogSearch.bind(this)}
             autoFocus
