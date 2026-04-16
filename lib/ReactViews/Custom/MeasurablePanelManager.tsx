@@ -8,9 +8,18 @@ import markerIcon from "./Chart/markerIcon.js";
 export default class MeasurablePanelManager {
   private static billboardCollection: BillboardCollection | null = null;
   private static terria: Terria;
+  private static pointerOverChart = false;
 
   static initialize(terria: Terria) {
     MeasurablePanelManager.terria = terria;
+  }
+
+  static setPointerOverChart(value: boolean) {
+    MeasurablePanelManager.pointerOverChart = value;
+  }
+
+  static isPointerOverChart() {
+    return MeasurablePanelManager.pointerOverChart;
   }
 
   private static initializeCollection() {

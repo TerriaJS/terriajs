@@ -8,7 +8,7 @@ import Styles from "./chart-panel.scss";
 import { action } from "mobx";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Terria from "../../../Models/Terria";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { Cartographic } from "terriajs-cesium";
 import MeasurablePanelManager from "../MeasurablePanelManager";
 
 import i18next from "i18next";
@@ -96,25 +96,28 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
       const pointIndex = chartItems
         ?.find((item) => item.key === ChartKeys.GroundChart)
         ?.points.findIndex((elem) => elem === newPoint);
-      if (!pointIndex) return;
+      if (pointIndex === -1 || pointIndex === undefined) return;
       const coords =
         terria?.measurableGeomList[terria.measurableGeometryIndex]
           ?.sampledPoints?.[pointIndex];
       if (!coords) return;
 
-      const airPointIndex = chartItems
-        ?.find((item) => item.key === ChartKeys.AirChart)
-        ?.points.findIndex(
-          (elem) =>
-            Math.abs(elem.x - newPoint.x) <=
-            terria.measurableGeomSamplingStep + 5
-        );
+      const airPoints = chartItems?.find(
+        (item) => item.key === ChartKeys.AirChart
+      )?.points;
+
+      const airPointIndex =
+        airPoints?.findIndex((elem) => Math.abs(elem.x - newPoint.x) < 1e-5) ??
+        -1;
+
       viewState.setSelectedStopPointIdx(
-        airPointIndex && airPointIndex !== -1 ? airPointIndex : null
+        airPointIndex !== -1 ? airPointIndex : null
       );
 
       MeasurablePanelManager.addMarker(coords);
     } else if (newPoint === undefined) {
+      chartPoint.current = undefined;
+      viewState.setSelectedStopPointIdx(null);
       MeasurablePanelManager.removeAllMarkers();
       terria.currentViewer.notifyRepaintRequired();
     }
@@ -124,8 +127,8 @@ const MeasurableGeometryChartPanel = observer((props: Props) => {
     if (measurableGeomList && measurableGeomList[measurableGeometryIndex]) {
       const airData = fetchPathDataChart(
         measurableGeomList[measurableGeometryIndex].stopPoints,
-        measurableGeomList[measurableGeometryIndex].stopAirDistances,
-        measurableGeomList[measurableGeometryIndex].airDistance
+        measurableGeomList[measurableGeometryIndex].stopGroundDistances,
+        measurableGeomList[measurableGeometryIndex].groundDistance
       );
       const groundData = fetchPathDataChart(
         measurableGeomList[measurableGeometryIndex].sampledPoints,

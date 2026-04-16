@@ -28,7 +28,7 @@ import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
 import LineAndPointChart from "./LineAndPointChart";
 import PointOnMap from "./PointOnMap";
-import { Cartographic } from "terriajs-cesium";
+import MeasurablePanelManager from "../MeasurablePanelManager";
 import { terriaTheme } from "../../StandardUserInterface";
 import html2canvas from "html2canvas";
 
@@ -96,7 +96,9 @@ class Chart extends React.Component {
 
   @observable.ref zoomedXScale;
   @observable mouseCoords;
-
+  @observable.ref forcedPoint = undefined;
+  zoomXRef = React.createRef();
+  hoverAutorunDisposer = undefined;
   constructor(props) {
     super(props);
     makeObservable(this);
@@ -108,7 +110,7 @@ class Chart extends React.Component {
       .map((chartItem) => {
         return {
           ...chartItem,
-          points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
+          points: [...chartItem.points].sort((p1, p2) => p1.x - p2.x)
         };
       })
       .filter((chartItem) => chartItem.points.length > 0);
@@ -183,9 +185,15 @@ class Chart extends React.Component {
 
   @computed
   get cursorX() {
-    if (this.pointsNearMouse.length > 0)
+    if (this.forcedPoint) {
+      return this.xScale(this.forcedPoint.x);
+    }
+
+    if (this.pointsNearMouse.length > 0) {
       return this.xScale(this.pointsNearMouse[0].point.x);
-    return this.mouseCoords && this.mouseCoords.x;
+    }
+
+    return this.mouseCoords?.x;
   }
 
   @computed
@@ -246,12 +254,19 @@ class Chart extends React.Component {
     this.mouseCoords = coords;
   }
 
+  @action
+  setForcedPoint(point) {
+    this.forcedPoint = point;
+  }
+
   setMouseCoordsFromEvent(event) {
     const coords = localPoint(
       event.target.ownerSVGElement || event.target,
       event
     );
     if (!coords) return;
+
+    this.setForcedPoint(undefined);
     this.setMouseCoords({
       x: coords.x - this.adjustedMargin.left,
       y: coords.y - this.adjustedMargin.top
@@ -259,84 +274,87 @@ class Chart extends React.Component {
   }
 
   componentDidMount() {
-    function cartesianDistance(x1, y1, z1, x2, y2, z2) {
-      return Math.sqrt(
-        Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2)
-      );
-    }
-
-    function calculateTotalCartesianDistance(points) {
-      let totalDistance = 0;
-
-      for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-
-        const prevCartesian = Cartographic.toCartesian(prev);
-        const currCartesian = Cartographic.toCartesian(curr);
-
-        if (prevCartesian && currCartesian) {
-          totalDistance += cartesianDistance(
-            prevCartesian.x,
-            prevCartesian.y,
-            prevCartesian.z,
-            currCartesian.x,
-            currCartesian.y,
-            currCartesian.z
-          );
-        }
-      }
-
-      return totalDistance;
-    }
-
     this.disposeReaction = reaction(
       () =>
-        this.props.selectedStopPointIdx || this.props.selectedSampledPointIdx,
-      (idx) => {
-        if (typeof idx === "number" && this.props.chartItems) {
-          const isStopPointSelected = this.props.selectedStopPointIdx !== null;
+        `${this.props.selectedSampledPointIdx}:${this.props.selectedStopPointIdx}`,
+      () => {
+        if (MeasurablePanelManager.isPointerOverChart()) return;
 
-          const points = isStopPointSelected
-            ? this.props.terria.measurableGeomList[
-                this.props.terria.measurableGeometryIndex
-              ].stopPoints
-            : this.props.terria.measurableGeomList[
-                this.props.terria.measurableGeometryIndex
-              ].sampledPoints;
+        const { selectedSampledPointIdx, selectedStopPointIdx } = this.props;
+        const isStopPointSelected =
+          (selectedSampledPointIdx === null ||
+            selectedSampledPointIdx === undefined) &&
+          selectedStopPointIdx !== null &&
+          selectedStopPointIdx !== undefined;
 
-          const sumDistances = isStopPointSelected
-            ? this.props.terria.measurableGeomList[
-                this.props.terria.measurableGeometryIndex
-              ].stopAirDistances
-                .slice(0, idx + 1)
-                .reverse()
-                .reduce((acc, distance) => acc + distance, 0)
-            : calculateTotalCartesianDistance(
-                points.slice(0, idx + 1).reverse()
-              );
+        const idx = isStopPointSelected
+          ? selectedStopPointIdx
+          : selectedSampledPointIdx;
+
+        if (typeof idx !== "number" || !this.props.chartItems) {
+          this.setForcedPoint(undefined);
+          this.setMouseCoords(undefined);
+          return;
+        }
+
+        const geom =
+          this.props.terria.measurableGeomList[
+            this.props.terria.measurableGeometryIndex
+          ];
+
+        if (isStopPointSelected) {
+          const stopPoint = geom?.stopPoints?.[idx];
+          if (!stopPoint) {
+            this.setForcedPoint(undefined);
+            this.setMouseCoords(undefined);
+            return;
+          }
+
+          const x = geom.stopGroundDistances
+            .slice(0, idx + 1)
+            .reduce((acc, distance) => acc + (distance ?? 0), 0);
 
           const selectedPoint = {
-            x: sumDistances,
-            y: points[idx].height
+            x,
+            y: stopPoint.height
           };
 
-          // Simulate the mouse coords from the selected point coords in the chart.
-          const xCoord = this.xScale(selectedPoint.x);
-          const yCoord = this.yAxes[0].scale(selectedPoint.y);
-
+          this.setForcedPoint(selectedPoint);
           this.setMouseCoords({
-            x: xCoord,
-            y: yCoord
+            x: this.xScale(selectedPoint.x),
+            y: this.yAxes[0].scale(selectedPoint.y)
           });
-        } else {
-          this.setMouseCoords(undefined);
+          return;
         }
+
+        const sampledPoint = geom?.sampledPoints?.[idx];
+        if (!sampledPoint) {
+          this.setForcedPoint(undefined);
+          this.setMouseCoords(undefined);
+          return;
+        }
+
+        const sumDistances = (geom.sampledDistances ?? [])
+          .slice(0, idx + 1)
+          .reduce((acc, distance) => acc + (distance ?? 0), 0);
+
+        const selectedPoint = {
+          x: sumDistances,
+          y: sampledPoint.height
+        };
+
+        this.setForcedPoint(undefined);
+        this.setMouseCoords({
+          x: this.xScale(selectedPoint.x),
+          y: this.yAxes[0].scale(selectedPoint.y)
+        });
       }
     );
   }
 
   componentWillUnmount() {
+    MeasurablePanelManager.setPointerOverChart(false);
+
     if (this.disposeReaction) {
       this.disposeReaction();
     }
@@ -344,28 +362,37 @@ class Chart extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Unset zoom scale if any chartItems are added or removed
-    if (prevProps.chartItems.length !== this.props.chartItems.length) {
+    if (prevProps.chartItems !== this.props.chartItems) {
       this.setZoomedXScale(undefined);
+      this.setMouseCoords(undefined);
+      this.setForcedPoint(undefined);
+      this.zoomXRef.current?.resetZoom();
+      this.chartPoint = { current: undefined };
     }
 
-    // When pointsNearMouse changes, call onPointMouseNear callback to create the placeholder
-    autorun(() => {
-      if (
-        this.pointsNearMouse &&
-        this.pointsNearMouse.length > 0 &&
-        this.props.onPointMouseNear
-      ) {
-        const pointNearMouse = this.pointsNearMouse.find(
-          (elem) =>
-            elem.chartItem.key ===
-              this.props.chartItemKeyForPointMouseNear.AirChart ||
-            elem.chartItem.key ===
-              this.props.chartItemKeyForPointMouseNear.GroundChart
-        );
-        if (pointNearMouse) {
-          this.props.onPointMouseNear(pointNearMouse.point);
-        }
+    // Dispose the previous autorun so we do not stack listeners on every update
+    if (this.hoverAutorunDisposer) {
+      this.hoverAutorunDisposer();
+      this.hoverAutorunDisposer = undefined;
+    }
+
+    // Keep hover state in sync with the current mouse position.
+    // Important: also emit undefined when nothing is near the mouse.
+    this.hoverAutorunDisposer = autorun(() => {
+      if (this.forcedPoint) {
+        this.props.onPointMouseNear?.(this.forcedPoint);
+        return;
       }
+
+      const pointNearMouse = this.pointsNearMouse.find(
+        (elem) =>
+          elem.chartItem.key ===
+            this.props.chartItemKeyForPointMouseNear.AirChart ||
+          elem.chartItem.key ===
+            this.props.chartItemKeyForPointMouseNear.GroundChart
+      );
+
+      this.props.onPointMouseNear?.(pointNearMouse?.point);
     });
   }
 
@@ -408,10 +435,13 @@ class Chart extends React.Component {
     return (
       <div
         className={Styles.chart}
+        onMouseEnter={() => MeasurablePanelManager.setPointerOverChart(true)}
+        onMouseLeave={() => MeasurablePanelManager.setPointerOverChart(false)}
         ref={this.chartRef}
         style={{ background: terriaTheme.charcoalGrey }}
       >
         <ZoomX
+          ref={this.zoomXRef}
           surface="#zoomSurface"
           initialScale={this.initialXScale}
           scaleExtent={[1, Infinity]}
@@ -445,10 +475,12 @@ class Chart extends React.Component {
             <svg
               width="100%"
               height={height}
-              onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
+              onMouseMove={(e) => {
+                this.setMouseCoordsFromEvent(e);
+              }}
               onMouseLeave={() => {
                 this.setMouseCoords(undefined);
-                // On mouseLeave event remove position placeholder
+                this.setForcedPoint(undefined);
                 this.props.onPointMouseNear(undefined);
               }}
             >
@@ -495,7 +527,7 @@ class Chart extends React.Component {
                     height={this.plotHeight}
                     fill="transparent"
                   />
-                  {this.cursorX && (
+                  {this.cursorX !== null && this.cursorX !== undefined && (
                     <Cursor x={this.cursorX} stroke={defaultGridColor} />
                   )}
                   <Plot
