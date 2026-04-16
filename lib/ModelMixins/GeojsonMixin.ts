@@ -682,7 +682,7 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
         } else {
           const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
 
-          if (this.clustering.enabled || this.clusterize) {
+          if (this.clustering.enabled) {
             const pinBackgroundColor = this.clustering.pinBackgroundColor;
             const pinSize = this.clustering.pinSize;
 
